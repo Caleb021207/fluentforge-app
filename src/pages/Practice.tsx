@@ -30,16 +30,36 @@ const Practice = () => {
     setInput("");
     setIsLoading(true);
 
-    // Simulated AI response - Replace with actual API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/chat-with-tutor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get AI response');
+      }
+
+      const data = await response.json();
+      
       const assistantMessage: ChatMessage = {
         role: "assistant",
-        content: "¡Hola! Let me help you practice Spanish. I noticed you said: " + input,
-        translation: "Translation: Hello! Let me help you practice Spanish.",
+        content: data.content,
+        translation: data.translation,
       };
+
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to get response from AI tutor. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error:', error);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
