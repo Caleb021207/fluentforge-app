@@ -14,8 +14,29 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (!openAIApiKey) {
+    console.error('OpenAI API key is not set');
+    return new Response(
+      JSON.stringify({ error: 'OpenAI API key is not configured' }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
+  }
+
   try {
     const { message } = await req.json();
+
+    if (!message) {
+      return new Response(
+        JSON.stringify({ error: 'Message is required' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -24,21 +45,36 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4',
         messages: [
           {
             role: 'system',
             content: `You are a helpful Spanish language tutor. Your goal is to help users practice Spanish through conversation.
             When users write in English, respond in Spanish with an English translation.
             When users write in Spanish, help correct any grammar mistakes and explain the corrections.
-            Keep responses concise and focused on language learning.`
+            Keep responses concise and focused on language learning.
+            Always structure your response like this:
+            [Spanish response]
+            Translation: [English translation]`
           },
           { role: 'user', content: message }
         ],
+        temperature: 0.7,
+        max_tokens: 500,
       }),
     });
 
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`OpenAI API error: ${JSON.stringify(error)}`);
+    }
+
     const data = await response.json();
+    
+    if (!data.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response from OpenAI API');
+    }
+
     let content = data.choices[0].message.content;
     let translation = '';
 
@@ -49,14 +85,22 @@ serve(async (req) => {
       translation = translation.trim();
     }
 
-    return new Response(JSON.stringify({ content, translation }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ content, translation }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
   } catch (error) {
     console.error('Error in chat-with-tutor function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ 
+        error: 'Failed to get AI response', 
+        details: error.message 
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
   }
 });
