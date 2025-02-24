@@ -16,12 +16,13 @@ const Index = () => {
             Welcome to <span className="text-lingua-primary">Lingua.AI</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8">
-            Your personal AI-powered language learning companion. Start your journey to fluency today.
+            Your personal AI-powered language learning companion. Start your journey
+            to fluency today.
           </p>
           <div className="space-x-4">
-            <Link to="/lessons">
+            <Link to="/placement-quiz">
               <Button size="lg" className="bg-lingua-primary hover:bg-lingua-primary/90">
-                Start Learning
+                Take Placement Quiz
               </Button>
             </Link>
             <Link to="/practice">
