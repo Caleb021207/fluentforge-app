@@ -6,6 +6,7 @@ import Index from "../pages/Index";
 import NotFound from "../pages/NotFound";
 import PlacementQuiz from "../pages/PlacementQuiz";
 import Lessons from "../pages/Lessons";
+import Practice from "../pages/Practice";
 
 const Layout = () => {
   return (
@@ -17,6 +18,7 @@ const Layout = () => {
             <Route path="/" element={<Index />} />
             <Route path="/placement-quiz" element={<PlacementQuiz />} />
             <Route path="/lessons" element={<Lessons />} />
+            <Route path="/practice" element={<Practice />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
