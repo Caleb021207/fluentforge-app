@@ -62,4 +62,52 @@ const AIWritingPromptExercise: React.FC<AIWritingPromptExerciseProps> = ({
           </div>
           
           {currentPrompt?.topics.length > 0 && (
-            <div className="
+            <div className="mb-4">
+              <p className="font-medium mb-2">Choose a topic:</p>
+              <div className="flex flex-wrap gap-2">
+                {currentPrompt.topics.map((topic, index) => (
+                  <Button
+                    key={index}
+                    variant={selectedTopic === topic ? "default" : "outline"}
+                    onClick={() => setSelectedTopic(topic)}
+                    className="text-sm"
+                  >
+                    {topic}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <div className="mb-4">
+            <Textarea
+              value={userResponse}
+              onChange={(e) => setUserResponse(e.target.value)}
+              placeholder="Write your response here..."
+              className="min-h-[150px] resize-none"
+            />
+            <div className="flex justify-between mt-2 text-sm text-gray-500">
+              <span>Word count: {wordCount}</span>
+              {!hasMinWords && (
+                <span className="text-amber-600">
+                  {currentPrompt?.minWords - wordCount} more words needed
+                </span>
+              )}
+            </div>
+          </div>
+          
+          <Button
+            onClick={submitResponse}
+            disabled={!hasMinWords}
+            className="w-full"
+          >
+            <Send className="h-4 w-4 mr-2" />
+            Submit
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AIWritingPromptExercise;
