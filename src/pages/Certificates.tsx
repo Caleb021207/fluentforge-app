@@ -2,13 +2,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import ReadingCertification from "@/components/certifications/ReadingCertification";
 import WritingCertification from "@/components/certifications/WritingCertification";
 import SpeakingListeningCertification from "@/components/certifications/SpeakingListeningCertification";
+import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
 type CertificationAttempt = {
   id: string;
@@ -47,12 +47,6 @@ const Certificates = () => {
     return acc;
   }, {} as Record<string, CertificationAttempt>);
 
-  const chartData = attempts?.map(attempt => ({
-    date: format(new Date(attempt.completed_at), 'MMM d'),
-    score: attempt.score,
-    type: attempt.certification_type
-  }));
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -79,7 +73,7 @@ const Certificates = () => {
                   <Progress value={recentScores[type].score} className="mb-2" />
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Score: {recentScores[type].score}%</span>
-                    <span>Level: {recentScores[type].level}</span>
+                    <span>Level: {determineLevel(recentScores[type].score)}</span>
                   </div>
                 </>
               ) : (
@@ -89,37 +83,6 @@ const Certificates = () => {
           </Card>
         ))}
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Score History</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[300px]">
-            {chartData && chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis domain={[0, 100]} />
-                  <Tooltip />
-                  <Line 
-                    type="monotone" 
-                    dataKey="score" 
-                    stroke="#2563eb" 
-                    strokeWidth={2}
-                    dot={{ fill: '#2563eb' }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex h-full items-center justify-center text-gray-500">
-                No certification history available
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>
@@ -142,7 +105,7 @@ const Certificates = () => {
                     </div>
                     <div className="text-right">
                       <div className="font-medium">{attempt.score}%</div>
-                      <div className="text-sm text-gray-600">Level {attempt.level}</div>
+                      <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
                     </div>
                   </div>
                 ))
@@ -160,3 +123,4 @@ const Certificates = () => {
 };
 
 export default Certificates;
+

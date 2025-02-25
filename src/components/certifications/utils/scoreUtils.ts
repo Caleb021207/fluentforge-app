@@ -6,8 +6,7 @@ export const calculateScore = (selectedAnswers: number[], questions: any[]) => {
   return Math.round((correctAnswers / questions.length) * 100);
 };
 
-export const determineLevel = (score: number, startingLevel: string, questions: any[]) => {
-  // Fixed level determination based on score ranges
+export const determineLevel = (score: number) => {
   if (score >= 90) return 'C2';
   if (score >= 80) return 'C1';
   if (score >= 70) return 'B2';
@@ -16,3 +15,4 @@ export const determineLevel = (score: number, startingLevel: string, questions: 
   if (score >= 40) return 'A1';
   return 'A1'; // Default to A1 for scores below 40
 };
+
