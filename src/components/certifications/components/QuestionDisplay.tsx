@@ -23,31 +23,28 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
   onNext,
 }) => {
   return (
-    <div className="space-y-6 w-full max-w-full overflow-x-hidden">
-      <div className="p-3 sm:p-4 bg-gray-50 rounded-lg">
-        <p className="mb-4 break-words text-sm sm:text-base">{question.text}</p>
+    <div className="space-y-6">
+      <div className="p-4 bg-gray-50 rounded-lg">
+        <p className="mb-4">{question.text}</p>
         <RadioGroup 
           onValueChange={onAnswerSelect}
           value={selectedAnswer?.toString()}
-          className="space-y-2"
         >
           {question.options.map((option, index) => (
-            <div key={index} className="flex items-start space-x-2 mb-2">
-              <RadioGroupItem value={index.toString()} id={`option-${index}`} className="mt-1" />
-              <Label htmlFor={`option-${index}`} className="flex-1 text-xs sm:text-sm md:text-base">{option}</Label>
+            <div key={index} className="flex items-center space-x-2">
+              <RadioGroupItem value={index.toString()} id={`option-${index}`} />
+              <Label htmlFor={`option-${index}`}>{option}</Label>
             </div>
           ))}
         </RadioGroup>
       </div>
       <div className="flex justify-between items-center">
-        <div className="text-xs sm:text-sm text-gray-600">
+        <div className="text-sm text-gray-600">
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </div>
         <Button 
           onClick={onNext}
           disabled={selectedAnswer === undefined}
-          size="sm"
-          className="ml-2 px-2 sm:px-4"
         >
           {currentQuestionIndex === totalQuestions - 1 ? 'Complete' : 'Next'}
         </Button>
