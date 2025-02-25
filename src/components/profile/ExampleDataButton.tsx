@@ -12,12 +12,12 @@ const ExampleDataButton = () => {
   const handleSeedData = async () => {
     setIsLoading(true);
     try {
-      // Add A1-B1 level certification scores for existing profile
+      // Add B1 level certification scores for existing profile
       const result = await addExampleCertificationScores();
       if (result && result.success && result.userId) {
         toast({
           title: "Success!",
-          description: `Added A1-B1 certification scores for user profile: ${result.userId}`,
+          description: `Added B1 level certification scores for user profile: ${result.userId}`,
         });
       } else {
         toast({
@@ -49,10 +49,10 @@ const ExampleDataButton = () => {
       {isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Adding A1-B1 Scores...
+          Adding B1 Level Scores...
         </>
       ) : (
-        "Add A1-B1 Certification Scores"
+        "Add B1 Level Certification Scores"
       )}
     </Button>
   );

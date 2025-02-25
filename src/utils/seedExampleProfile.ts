@@ -28,27 +28,26 @@ export const createExampleProfile = async () => {
 
     if (profileError) throw profileError;
 
-    // Create certification attempts consistently at A2 level
-    // Note: A2 level scores typically range between 17-32% according to scoreUtils.ts
+    // Create certification attempts at B1 level (scores in the 33-49% range for B1)
     const certifications = [
       {
         certification_type: "reading",
-        score: 30, // A2 level score
-        level: "A2",
+        score: 40, // B1 level score (33-49% range)
+        level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(), // 30 days ago
       },
       {
         certification_type: "writing",
-        score: 25, // A2 level score
-        level: "A2",
+        score: 38, // B1 level score (33-49% range)
+        level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 25).toISOString(), // 25 days ago
       },
       {
         certification_type: "speaking_listening",
-        score: 28, // A2 level score
-        level: "A2",
+        score: 42, // B1 level score (33-49% range)
+        level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(), // 20 days ago
       }
@@ -60,8 +59,8 @@ export const createExampleProfile = async () => {
 
     if (certError) throw certError;
 
-    // Create lesson progress data - let's assume the user has made progress appropriate for A2 level
-    // We'll create progress for lessons in A1 and A2 levels
+    // Create lesson progress data - let's add more progress appropriate for B1 level
+    // We'll create progress for lessons in A1, A2 and B1 levels
     const lessonProgressEntries = [];
     
     // Completed A1 lessons
@@ -72,20 +71,33 @@ export const createExampleProfile = async () => {
         lesson_id: i,
         progress: 100,
         completed: true,
-        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (45 - i * 2)).toISOString(),
+        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (90 - i * 2)).toISOString(),
         xp_earned: Math.floor(Math.random() * 50) + 50, // 50-100 XP per lesson
       });
     }
     
-    // Partially completed A2 lessons
-    for (let i = 1; i <= 8; i++) {
+    // Completed A2 lessons
+    for (let i = 1; i <= 10; i++) {
       lessonProgressEntries.push({
         user_id: userId,
         level: "A2",
         lesson_id: i,
+        progress: 100,
+        completed: true,
+        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (60 - i * 2)).toISOString(),
+        xp_earned: Math.floor(Math.random() * 50) + 50, // 50-100 XP per lesson
+      });
+    }
+    
+    // Partially completed B1 lessons
+    for (let i = 1; i <= 10; i++) {
+      lessonProgressEntries.push({
+        user_id: userId,
+        level: "B1",
+        lesson_id: i,
         progress: i <= 5 ? 100 : Math.floor(Math.random() * 60) + 20, // First 5 lessons complete, others in progress
         completed: i <= 5,
-        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (25 - i * 2)).toISOString(),
+        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (30 - i * 2)).toISOString(),
         xp_earned: i <= 5 ? Math.floor(Math.random() * 50) + 50 : Math.floor(Math.random() * 30), // 50-100 XP for completed lessons, lower for incomplete
       });
     }
@@ -103,7 +115,7 @@ export const createExampleProfile = async () => {
   }
 };
 
-// Function to add certification scores to existing user
+// Function to add B1 level certification scores to existing user
 export const addExampleCertificationScores = async () => {
   try {
     // Find the example user first
@@ -135,73 +147,30 @@ export const addExampleCertificationScores = async () => {
       // Continue despite error - we'll just add new attempts
     }
 
-    // Create scores for each certification type at each level A1-B1
-    // A1 (0-16%), A2 (17-32%), B1 (33-49%)
+    // Create B1 level scores for each certification type (33-49% range for B1)
     const certifications = [
-      // Reading certifications
+      // B1 level Reading certification - score in the middle of B1 range (33-49%)
       {
         certification_type: "reading",
-        score: 10, // A1 level - middle of the range (0-16%)
-        level: "A1",
-        user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 90).toISOString(), // 90 days ago
-      },
-      {
-        certification_type: "reading",
-        score: 25, // A2 level - middle of the range (17-32%)
-        level: "A2",
-        user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 60).toISOString(), // 60 days ago
-      },
-      {
-        certification_type: "reading",
-        score: 40, // B1 level - middle of the range (33-49%)
+        score: 40, // B1 level score
         level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(), // 30 days ago
       },
       
-      // Writing certifications
+      // B1 level Writing certification - score in the middle of B1 range (33-49%)
       {
         certification_type: "writing",
-        score: 8, // A1 level - middle of the range (0-16%)
-        level: "A1",
-        user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 85).toISOString(), // 85 days ago
-      },
-      {
-        certification_type: "writing",
-        score: 22, // A2 level - middle of the range (17-32%)
-        level: "A2",
-        user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 55).toISOString(), // 55 days ago
-      },
-      {
-        certification_type: "writing",
-        score: 42, // B1 level - middle of the range (33-49%)
+        score: 38, // B1 level score
         level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 25).toISOString(), // 25 days ago
       },
       
-      // Speaking certifications - using speaking_listening type as per schema
+      // B1 level Speaking/Listening certification - score in the middle of B1 range (33-49%)
       {
         certification_type: "speaking_listening",
-        score: 12, // A1 level - middle of the range (0-16%)
-        level: "A1",
-        user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 80).toISOString(), // 80 days ago
-      },
-      {
-        certification_type: "speaking_listening",
-        score: 28, // A2 level - middle of the range (17-32%)
-        level: "A2",
-        user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 50).toISOString(), // 50 days ago
-      },
-      {
-        certification_type: "speaking_listening",
-        score: 38, // B1 level - middle of the range (33-49%)
+        score: 42, // B1 level score
         level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(), // 20 days ago
