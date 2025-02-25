@@ -44,14 +44,16 @@ serve(async (req) => {
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('OpenAI API error:', error);
-      throw new Error(error.error?.message || 'Failed to get response from OpenAI');
-    }
-
     const data = await response.json();
     console.log('OpenAI response:', data);
+
+    // Check for API errors
+    if (!response.ok) {
+      if (data.error?.code === 'insufficient_quota') {
+        throw new Error('OpenAI API quota exceeded. Please check your billing details.');
+      }
+      throw new Error(data.error?.message || 'Failed to get response from OpenAI');
+    }
 
     if (!data.choices?.[0]?.message?.content) {
       throw new Error('Invalid response structure from OpenAI');
@@ -60,7 +62,6 @@ serve(async (req) => {
     let content = data.choices[0].message.content;
     let translation = '';
 
-    // If the response contains a translation, split it
     if (content.includes('\nTranslation:')) {
       [content, translation] = content.split('\nTranslation:');
       content = content.trim();
@@ -74,8 +75,15 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in chat-with-tutor function:', error);
+    const errorMessage = error.message.includes('quota exceeded')
+      ? 'The AI service is currently unavailable due to quota limits. Please try again later.'
+      : error.message;
+    
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: errorMessage,
+        details: error.message 
+      }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
