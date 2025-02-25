@@ -102,21 +102,21 @@ const Layout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lingua-secondary to-white">
+    <div className="min-h-screen bg-gradient-to-br from-lingua-secondary to-white overflow-x-hidden w-full">
       {!user && (
-        <div className="w-full bg-white border-b p-4 flex justify-center items-center space-x-4">
-          <p className="text-gray-600">Sign in to track your progress and earn certificates</p>
+        <div className="w-full bg-white border-b py-2 px-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          <p className="text-gray-600 text-sm sm:text-base text-center">Sign in to track your progress</p>
           <div className="space-x-2">
             <Button onClick={() => {
               setIsLogin(true);
               setIsAuthDialogOpen(true);
-            }} variant="default">
+            }} variant="default" size="sm" className="text-xs sm:text-sm">
               Sign In
             </Button>
             <Button onClick={() => {
               setIsLogin(false);
               setIsAuthDialogOpen(true);
-            }} variant="outline">
+            }} variant="outline" size="sm" className="text-xs sm:text-sm">
               Sign Up
             </Button>
           </div>
@@ -124,17 +124,17 @@ const Layout = () => {
       )}
 
       {user && (
-        <div className="w-full bg-white border-b p-4 flex justify-between items-center">
+        <div className="w-full bg-white border-b py-2 px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <div className="flex items-center">
-            <span className="text-sm text-gray-600 mr-2">Signed in as:</span>
-            <span className="font-medium">{user.email}</span>
+            <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">Signed in as:</span>
+            <span className="font-medium text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">{user.email}</span>
           </div>
           <LogoutButton />
         </div>
       )}
 
       <Dialog open={isAuthDialogOpen} onOpenChange={setIsAuthDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md max-w-[90vw] rounded-lg">
           <DialogHeader>
             <DialogTitle>{isLogin ? "Sign In" : "Create Account"}</DialogTitle>
             <DialogDescription>
@@ -151,6 +151,7 @@ const Layout = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="text-sm"
               />
             </div>
             <div>
@@ -160,13 +161,14 @@ const Layout = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="text-sm"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Button type="submit">
+              <Button type="submit" className="text-sm">
                 {isLogin ? "Sign In" : "Create Account"}
               </Button>
-              <Button type="button" variant="outline" onClick={handleGoogleLogin}>
+              <Button type="button" variant="outline" onClick={handleGoogleLogin} className="text-sm">
                 Continue with Google
               </Button>
             </div>
@@ -174,7 +176,7 @@ const Layout = () => {
               type="button"
               variant="link"
               onClick={() => setIsLogin(!isLogin)}
-              className="w-full"
+              className="w-full text-sm"
             >
               {isLogin
                 ? "Don't have an account? Sign up"
@@ -186,17 +188,19 @@ const Layout = () => {
 
       <div className="flex flex-col md:flex-row min-h-screen">
         <Navigation />
-        <main className="flex-1 p-4 md:p-8 mb-16 md:mb-0 md:ml-64">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/placement-quiz" element={<PlacementQuiz />} />
-            <Route path="/lessons" element={<Lessons />} />
-            <Route path="/practice" element={<Practice />} />
-            <Route path="/certificates" element={<Certificates />} />
-            <Route path="/progress" element={<ProgressPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 mb-16 md:mb-0 md:ml-64 overflow-x-hidden w-full">
+          <div className="max-w-full">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/placement-quiz" element={<PlacementQuiz />} />
+              <Route path="/lessons" element={<Lessons />} />
+              <Route path="/practice" element={<Practice />} />
+              <Route path="/certificates" element={<Certificates />} />
+              <Route path="/progress" element={<ProgressPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </main>
       </div>
     </div>

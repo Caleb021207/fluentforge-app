@@ -1,84 +1,34 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-
-// Data and utils
-import { lessonsByLevel, Lesson } from "@/data/lessonData";
+import LevelSelector from "@/components/lessons/LevelSelector";
+import LessonsList from "@/components/lessons/LessonsList";
+import LessonView from "@/components/lessons/LessonView";
+import { useUserProgress } from "@/components/lessons/hooks/useUserProgress";
+import { LevelName, Lesson, LessonStats } from "@/components/lessons/types";
+import lessonsByLevel from "@/components/lessons/data/lessonData";
 import { 
   calculateTotalXP, 
   calculateEarnedXP,
   calculateTotalLessonsCount,
   calculateCompletedLessonsCount
-} from "@/utils/lessonUtils";
-
-// Components
-import LessonHeader from "@/components/lessons/LessonHeader";
-import LessonGrid from "@/components/lessons/LessonGrid";
-import LessonView from "@/components/lessons/LessonView";
-import LessonStats from "@/components/lessons/LessonStats";
+} from "@/components/lessons/utils/lessonUtils";
 
 const Lessons = () => {
   const [searchParams] = useSearchParams();
-  const level = searchParams.get("level") || "beginner";
-  const [lessons, setLessons] = useState<Lesson[]>(lessonsByLevel[level] || []);
+  const level = (searchParams.get("level") || "beginner") as LevelName;
   const { toast } = useToast();
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userProgress, setUserProgress] = useState<Record<string, any>>({});
   
-  useEffect(() => {
-    const fetchUserProgress = async () => {
-      setIsLoading(true);
-      
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (session?.user) {
-          const { data, error } = await supabase
-            .from('lesson_progress')
-            .select('*')
-            .eq('user_id', session.user.id)
-            .eq('level', level);
-            
-          if (error) throw error;
-          
-          const progressMap = {};
-          if (data) {
-            data.forEach(item => {
-              progressMap[item.lesson_id] = item.progress;
-            });
-          }
-          
-          setUserProgress(progressMap);
-          
-          const updatedLessons = lessonsByLevel[level].map(lesson => ({
-            ...lesson,
-            progress: progressMap[lesson.id] || 0
-          }));
-          
-          setLessons(updatedLessons);
-        } else {
-          setLessons(lessonsByLevel[level]);
-        }
-      } catch (error) {
-        console.error("Error fetching lesson progress:", error);
-        setLessons(lessonsByLevel[level]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchUserProgress();
-  }, [level]);
-
+  const { lessons, isLoading } = useUserProgress(level);
+  
   const totalXP = calculateTotalXP(lessons);
   const earnedXP = calculateEarnedXP(lessons);
   const totalLessonsCount = calculateTotalLessonsCount(lessonsByLevel);
   const completedLessonsCount = calculateCompletedLessonsCount(lessonsByLevel);
 
-  const stats = {
+  const stats: LessonStats = {
     totalLessons: totalLessonsCount,
     completedLessons: completedLessonsCount,
     totalXP: totalXP,
@@ -100,6 +50,7 @@ const Lessons = () => {
   };
 
   const handleCompleteLesson = () => {
+    // When lesson is completed, update the UI and potentially store progress
     toast({
       title: "Lesson Completed",
       description: "Congratulations! You've earned XP for completing this lesson.",
@@ -107,28 +58,29 @@ const Lessons = () => {
     setActiveLessonId(null);
   };
 
+  const activeLesson = activeLessonId 
+    ? lessons.find(l => l.id === activeLessonId) 
+    : null;
+
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto px-4 max-w-4xl">
       <div className="grid gap-6">
-        <LessonHeader currentLevel={level} onLevelChange={handleLevelChange} />
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Spanish Lessons</h1>
+          <LevelSelector currentLevel={level} onLevelChange={handleLevelChange} />
+        </div>
         
-        {!activeLessonId && !isLoading && (
-          <LessonStats {...stats} />
-        )}
-        
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : activeLessonId ? (
+        {activeLessonId && activeLesson ? (
           <LessonView
-            lesson={lessons.find(l => l.id === activeLessonId)!}
+            lesson={activeLesson}
             onClose={() => setActiveLessonId(null)}
             onComplete={handleCompleteLesson}
           />
         ) : (
-          <LessonGrid 
+          <LessonsList 
             lessons={lessons} 
-            onStartLesson={handleStartLesson} 
-            isLoading={isLoading} 
+            onSelectLesson={handleStartLesson} 
+            isLoading={isLoading}
           />
         )}
       </div>

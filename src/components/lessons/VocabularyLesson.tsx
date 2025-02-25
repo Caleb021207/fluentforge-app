@@ -103,17 +103,17 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
   };
 
   return (
-    <ScrollArea className="h-[calc(100vh-12rem)] px-4">
+    <ScrollArea className="h-[calc(100vh-12rem)] px-2 sm:px-4">
       <div className="space-y-8 max-w-4xl mx-auto">
         <Card className="p-4">
           <div className="flex justify-between items-center mb-4">
             <div className="space-y-2">
               <h3 className="font-medium">Progress</h3>
-              <Progress value={progress} className="h-2 w-[200px]" />
+              <Progress value={progress} className="h-2 w-[160px] sm:w-[200px]" />
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold">{score}</p>
-              <p className="text-sm text-muted-foreground">points</p>
+              <p className="text-xl sm:text-2xl font-bold">{score}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">points</p>
             </div>
           </div>
         </Card>
@@ -138,14 +138,14 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
             const shuffledTranslations = getShuffledTranslations(group);
             
             return (
-              <Card key={groupIndex} className="p-4">
-                <CardHeader>
-                  <CardTitle className="text-lg">Set {groupIndex + 1}</CardTitle>
+              <Card key={groupIndex} className="p-2 sm:p-4">
+                <CardHeader className="p-2 sm:p-6">
+                  <CardTitle className="text-base sm:text-lg">Set {groupIndex + 1}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid md:grid-cols-2 gap-6">
+                <CardContent className="p-2 sm:p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-2">
-                      <h4 className="font-medium mb-2">Spanish Words</h4>
+                      <h4 className="font-medium mb-2 text-sm sm:text-base">Spanish Words</h4>
                       {shuffledGroup.map((pair) => (
                         <motion.div
                           key={pair.word}
@@ -155,16 +155,17 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                         >
                           <Button
                             variant={selectedWord?.word === pair.word ? "default" : "outline"}
-                            className={`w-full justify-start ${
+                            className={`w-full justify-start text-xs sm:text-sm text-left ${
                               matchedPairs.has(pair.word) ? "bg-green-100 text-green-800" : ""
                             }`}
                             onClick={() => !matchedPairs.has(pair.word) && handleSelection('word', pair.word, groupIndex)}
                             disabled={matchedPairs.has(pair.word)}
+                            size="sm"
                           >
-                            {matchedPairs.has(pair.word) ? <Check className="h-4 w-4 mr-2" /> : <Puzzle className="h-4 w-4 mr-2" />}
-                            {pair.word}
+                            {matchedPairs.has(pair.word) ? <Check className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" /> : <Puzzle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />}
+                            <span className="truncate flex-1">{pair.word}</span>
                             <Volume2 
-                              className="ml-auto h-4 w-4 cursor-pointer hover:text-blue-500"
+                              className="ml-auto h-3 w-3 sm:h-4 sm:w-4 cursor-pointer hover:text-blue-500 flex-shrink-0"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 playAudio(pair.word);
@@ -176,7 +177,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                     </div>
 
                     <div className="space-y-2">
-                      <h4 className="font-medium mb-2">English Translations</h4>
+                      <h4 className="font-medium mb-2 text-sm sm:text-base">English Translations</h4>
                       {shuffledTranslations.map((translation) => (
                         <motion.div
                           key={translation}
@@ -186,7 +187,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                         >
                           <Button
                             variant={selectedTranslation?.translation === translation ? "default" : "outline"}
-                            className={`w-full justify-start ${
+                            className={`w-full justify-start text-xs sm:text-sm text-left ${
                               vocabPairs.some(pair => {
                                 return pair.translation === translation && matchedPairs.has(pair.word);
                               }) ? "bg-green-100 text-green-800" : ""
@@ -202,15 +203,16 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                             disabled={vocabPairs.some(pair => {
                               return pair.translation === translation && matchedPairs.has(pair.word);
                             })}
+                            size="sm"
                           >
                             {vocabPairs.some(pair => {
                               return pair.translation === translation && matchedPairs.has(pair.word);
                             }) ? (
-                              <Check className="h-4 w-4 mr-2" />
+                              <Check className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                             ) : (
-                              <Puzzle className="h-4 w-4 mr-2" />
+                              <Puzzle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                             )}
-                            {translation}
+                            <span className="truncate">{translation}</span>
                           </Button>
                         </motion.div>
                       ))}
@@ -222,18 +224,18 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
           })}
         </div>
 
-        <Card className="p-4 mt-4">
+        <Card className="p-2 sm:p-4 mt-4">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Matched: {matchedPairs.size}/{vocabulary.length}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Attempts: {attempts}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm font-medium">
+              <p className="text-xs sm:text-sm font-medium">
                 Accuracy: {attempts > 0 ? Math.round((matchedPairs.size / attempts) * 100) : 0}%
               </p>
             </div>

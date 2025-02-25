@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { 
   MessageCircle,
   BookOpen,
@@ -10,38 +9,12 @@ import {
   Utensils,
   Briefcase,
   GraduationCap,
-  Trophy,
-  Star
+  Trophy
 } from "lucide-react";
+import { Lesson, LevelName } from "../types";
+import React from "react";
 
-export interface Challenge {
-  type: string;
-  description: string;
-  xpReward: number;
-  timeLimit?: number;
-  unlocked: boolean;
-}
-
-export interface Lesson {
-  id: number;
-  title: string;
-  description: string;
-  duration: string;
-  icon: React.ReactNode;
-  vocabulary: string[];
-  xpPoints: number;
-  difficulty: "Easy" | "Medium" | "Hard";
-  progress?: number;
-  cefrLevel: string;
-  challenges: Challenge[];
-  requiresVoice?: boolean;
-  unlockRequirement?: {
-    type: "level" | "xp" | "lessons";
-    value: number;
-  };
-}
-
-export const lessonsByLevel: Record<string, Lesson[]> = {
+const lessonsByLevel: Record<LevelName, Lesson[]> = {
   beginner: [
     {
       id: 1,
@@ -418,3 +391,5 @@ export const lessonsByLevel: Record<string, Lesson[]> = {
     },
   ],
 };
+
+export default lessonsByLevel;
