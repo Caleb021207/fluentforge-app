@@ -7,8 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import ReadingCertification from "@/components/certifications/ReadingCertification";
 import WritingCertification from "@/components/certifications/WritingCertification";
+import SpeakingListeningCertification from "@/components/certifications/SpeakingListeningCertification";
 
-// Define the type for our certification attempts
 type CertificationAttempt = {
   id: string;
   certification_type: 'reading' | 'writing' | 'speaking' | 'listening';
@@ -18,7 +18,6 @@ type CertificationAttempt = {
 };
 
 const Certificates = () => {
-  // Fetch certification attempts
   const { data: attempts, isLoading } = useQuery({
     queryKey: ['certification-attempts'],
     queryFn: async () => {
@@ -32,7 +31,6 @@ const Certificates = () => {
     },
   });
 
-  // Calculate most recent scores for each type
   const recentScores = attempts?.reduce((acc, attempt) => {
     if (!acc[attempt.certification_type] || 
         new Date(attempt.completed_at) > new Date(acc[attempt.certification_type].completed_at)) {
@@ -41,7 +39,6 @@ const Certificates = () => {
     return acc;
   }, {} as Record<string, CertificationAttempt>);
 
-  // Prepare data for the chart
   const chartData = attempts?.map(attempt => ({
     date: format(new Date(attempt.completed_at), 'MMM d'),
     score: attempt.score,
@@ -56,13 +53,12 @@ const Certificates = () => {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Certification Progress</h1>
       
-      {/* Reading Certification Test */}
       <ReadingCertification />
       
-      {/* Writing Certification Test */}
       <WritingCertification />
       
-      {/* Recent Scores */}
+      <SpeakingListeningCertification />
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {['reading', 'writing', 'speaking', 'listening'].map((type) => (
           <Card key={type}>
@@ -86,7 +82,6 @@ const Certificates = () => {
         ))}
       </div>
 
-      {/* Score Trends Chart */}
       <Card>
         <CardHeader>
           <CardTitle>Score History</CardTitle>
@@ -118,7 +113,6 @@ const Certificates = () => {
         </CardContent>
       </Card>
 
-      {/* Attempt History */}
       <Card>
         <CardHeader>
           <CardTitle>Recent Attempts</CardTitle>
