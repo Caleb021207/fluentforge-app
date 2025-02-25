@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Loader2 } from 'lucide-react';
 
 interface VocabularyProgressProps {
   score: number;
@@ -9,6 +10,7 @@ interface VocabularyProgressProps {
   matchedCount: number;
   totalCount: number;
   attempts: number;
+  isSaving?: boolean;
 }
 
 const VocabularyProgress: React.FC<VocabularyProgressProps> = ({
@@ -17,6 +19,7 @@ const VocabularyProgress: React.FC<VocabularyProgressProps> = ({
   matchedCount,
   totalCount,
   attempts,
+  isSaving = false,
 }) => {
   return (
     <>
@@ -44,9 +47,13 @@ const VocabularyProgress: React.FC<VocabularyProgressProps> = ({
             </p>
           </div>
           <div className="text-right">
-            <p className="text-sm font-medium">
+            <p className="text-sm font-medium flex items-center">
               Accuracy: {attempts > 0 ? Math.round((matchedCount / attempts) * 100) : 0}%
+              {isSaving && <Loader2 className="ml-2 h-3 w-3 animate-spin text-muted-foreground" />}
             </p>
+            {isSaving && (
+              <p className="text-xs text-muted-foreground">Saving progress...</p>
+            )}
           </div>
         </div>
       </Card>

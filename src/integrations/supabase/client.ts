@@ -62,6 +62,41 @@ export type Database = {
           user_id?: string;
         };
       };
+      vocabulary_progress: {
+        Row: {
+          id: string;
+          user_id: string;
+          unit_id: number;
+          lesson_id: number;
+          matched_pairs: string[];
+          score: number;
+          attempts: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          unit_id: number;
+          lesson_id: number;
+          matched_pairs: string[];
+          score: number;
+          attempts: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          unit_id?: number;
+          lesson_id?: number;
+          matched_pairs?: string[];
+          score?: number;
+          attempts?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
   };
 };

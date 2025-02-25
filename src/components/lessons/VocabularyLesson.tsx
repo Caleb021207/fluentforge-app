@@ -1,21 +1,35 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import VocabularySet from './vocabulary/VocabularySet';
 import FeedbackDisplay from './vocabulary/FeedbackDisplay';
 import VocabularyProgress from './vocabulary/VocabularyProgress';
 import { playAudio } from './vocabulary/audioUtils';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 interface VocabularyLessonProps {
   vocabulary: string[];
   onComplete: () => void;
+  unitId?: number;
+  lessonId?: number;
 }
 
-const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => {
+const VocabularyLesson = ({ 
+  vocabulary, 
+  onComplete, 
+  unitId = 0, 
+  lessonId = 0 
+}: VocabularyLessonProps) => {
   const [matchedPairs, setMatchedPairs] = useState<Set<string>>(new Set());
   const [attempts, setAttempts] = useState(0);
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState<'correct' | 'incorrect' | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const { toast } = useToast();
   
   // Create a lookup map for quick vocabulary matching
   const vocabMap = useMemo(() => {
@@ -39,6 +53,117 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 
   const [selectedWord, setSelectedWord] = useState<{ word: string; groupIndex: number } | null>(null);
   const [selectedTranslation, setSelectedTranslation] = useState<{ translation: string; groupIndex: number } | null>(null);
+
+  // Get current user and load progress on mount
+  useEffect(() => {
+    const loadUserAndProgress = async () => {
+      try {
+        // Get current user
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          setIsLoading(false);
+          return;
+        }
+        
+        setUserId(user.id);
+        
+        // Load progress for this lesson
+        const { data, error } = await supabase
+          .from('vocabulary_progress')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('unit_id', unitId)
+          .eq('lesson_id', lessonId)
+          .single();
+        
+        if (error && error.code !== 'PGRST116') {
+          // PGRST116 is "no rows returned" which is expected for new lessons
+          console.error('Error loading progress:', error);
+          toast({
+            title: 'Error loading progress',
+            description: 'There was a problem loading your progress.',
+            variant: 'destructive',
+          });
+        }
+        
+        // If we have saved progress, restore it
+        if (data) {
+          setScore(data.score);
+          setAttempts(data.attempts);
+          
+          const newMatchedPairs = new Set<string>(data.matched_pairs);
+          setMatchedPairs(newMatchedPairs);
+          
+          toast({
+            title: 'Progress Loaded',
+            description: 'Your previous progress has been loaded.',
+          });
+        }
+      } catch (error) {
+        console.error('Error in loadUserAndProgress:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadUserAndProgress();
+  }, [unitId, lessonId, toast]);
+
+  // Save progress whenever it changes
+  const saveProgress = async () => {
+    if (!userId || matchedPairs.size === 0) return;
+    
+    setIsSaving(true);
+    
+    try {
+      const matchedPairsArray = Array.from(matchedPairs);
+      
+      const { error } = await supabase
+        .from('vocabulary_progress')
+        .upsert({
+          user_id: userId,
+          unit_id: unitId,
+          lesson_id: lessonId,
+          matched_pairs: matchedPairsArray,
+          score,
+          attempts,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'user_id,unit_id,lesson_id'
+        });
+        
+      if (error) {
+        console.error('Error saving progress:', error);
+        toast({
+          title: 'Error Saving Progress',
+          description: 'There was a problem saving your progress.',
+          variant: 'destructive',
+        });
+        return;
+      }
+      
+      toast({
+        title: 'Progress Saved',
+        description: 'Your progress has been saved.',
+      });
+    } catch (error) {
+      console.error('Error in saveProgress:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Debounced save progress when score or attempts change
+  useEffect(() => {
+    if (userId && matchedPairs.size > 0) {
+      const timer = setTimeout(() => {
+        saveProgress();
+      }, 2000); // Save after 2 seconds of inactivity
+      
+      return () => clearTimeout(timer);
+    }
+  }, [score, attempts, matchedPairs.size, userId]);
 
   const handleSelection = (
     type: 'word' | 'translation',
@@ -72,8 +197,12 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
         
         // Check completion with the updated matchedPairs size
         if (matchedPairs.size + 1 === vocabulary.length) {
-          // Use setTimeout to ensure state updates complete before calling onComplete
-          setTimeout(() => onComplete(), 1200);
+          // Force a save before completing
+          const saveAndComplete = async () => {
+            await saveProgress();
+            setTimeout(() => onComplete(), 1200);
+          };
+          saveAndComplete();
         }
       } else {
         setScore(prev => Math.max(0, prev - 5));
@@ -93,6 +222,14 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 
   const progress = (matchedPairs.size / vocabulary.length) * 100;
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-12rem)]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <ScrollArea className="h-[calc(100vh-12rem)] px-4">
       <div className="space-y-8 max-w-4xl mx-auto">
@@ -102,6 +239,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
           matchedCount={matchedPairs.size}
           totalCount={vocabulary.length}
           attempts={attempts}
+          isSaving={isSaving}
         />
 
         <FeedbackDisplay feedbackType={showFeedback} />
