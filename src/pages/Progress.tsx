@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { User } from "@supabase/supabase-js";
 
 interface ProgressData {
   date: string;
@@ -27,47 +28,48 @@ const ProgressPage = () => {
   const [progressData, setProgressData] = useState<ProgressData[]>([]);
   const [recommendations, setRecommendations] = useState<SkillRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchProgressData();
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      if (user) {
+        fetchProgressData(user.id);
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    getCurrentUser();
   }, []);
 
-  const fetchProgressData = async () => {
+  const fetchProgressData = async (userId: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        toast({
-          title: "Authentication Required",
-          description: "Please sign in to view your progress.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // Fetch certification attempts
       const { data: attempts, error } = await supabase
         .from('certification_attempts')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .order('completed_at', { ascending: true });
 
       if (error) throw error;
 
-      // Process data for the chart
-      const processedData = processAttemptsData(attempts);
-      setProgressData(processedData);
-
-      // Get AI recommendations
-      await getAIRecommendations(attempts);
-      
+      if (attempts && attempts.length > 0) {
+        const processedData = processAttemptsData(attempts);
+        setProgressData(processedData);
+        await getAIRecommendations(attempts);
+      } else {
+        toast({
+          title: "No Progress Data",
+          description: "Complete some certification attempts to see your progress!",
+        });
+      }
     } catch (error) {
       console.error('Error fetching progress data:', error);
       toast({
         title: "Error",
-        description: "Failed to load progress data",
+        description: "Failed to load progress data. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -102,17 +104,27 @@ const ProgressPage = () => {
       });
 
       if (error) throw error;
-
-      setRecommendations(data.recommendations);
+      if (data?.recommendations) {
+        setRecommendations(data.recommendations);
+      }
     } catch (error) {
       console.error('Error getting AI recommendations:', error);
       toast({
         title: "Error",
-        description: "Failed to generate learning recommendations",
+        description: "Failed to generate learning recommendations. Please try again later.",
         variant: "destructive",
       });
     }
   };
+
+  if (!user) {
+    return (
+      <div className="text-center py-8">
+        <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
+        <p>Please sign in to view your progress.</p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -128,71 +140,79 @@ const ProgressPage = () => {
         Your Learning Progress
       </h1>
 
-      {/* Progress Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Score Trends</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={progressData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="reading" stroke="#2563eb" name="Reading" />
-                <Line type="monotone" dataKey="writing" stroke="#16a34a" name="Writing" />
-                <Line type="monotone" dataKey="speaking" stroke="#dc2626" name="Speaking" />
-                <Line type="monotone" dataKey="listening" stroke="#9333ea" name="Listening" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Skill-specific Recommendations */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {recommendations.map((rec) => (
-          <Card key={rec.skill}>
+      {progressData.length > 0 ? (
+        <>
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                {rec.skill}
-                <span className="text-sm font-normal">Current Level: {rec.currentLevel}</span>
-              </CardTitle>
+              <CardTitle>Score Trends</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-medium mb-2 text-green-600">Strengths</h4>
-                  <ul className="list-disc list-inside space-y-1">
-                    {rec.strengths.map((strength, idx) => (
-                      <li key={idx} className="text-sm text-gray-600">{strength}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2 text-yellow-600">Areas for Improvement</h4>
-                  <ul className="list-disc list-inside space-y-1">
-                    {rec.weaknesses.map((weakness, idx) => (
-                      <li key={idx} className="text-sm text-gray-600">{weakness}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2 text-blue-600">Recommendations</h4>
-                  <ul className="list-disc list-inside space-y-1">
-                    {rec.recommendations.map((recommendation, idx) => (
-                      <li key={idx} className="text-sm text-gray-600">{recommendation}</li>
-                    ))}
-                  </ul>
-                </div>
+              <div className="h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={progressData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="reading" stroke="#2563eb" name="Reading" />
+                    <Line type="monotone" dataKey="writing" stroke="#16a34a" name="Writing" />
+                    <Line type="monotone" dataKey="speaking" stroke="#dc2626" name="Speaking" />
+                    <Line type="monotone" dataKey="listening" stroke="#9333ea" name="Listening" />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {recommendations.map((rec) => (
+              <Card key={rec.skill}>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    {rec.skill}
+                    <span className="text-sm font-normal">Current Level: {rec.currentLevel}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium mb-2 text-green-600">Strengths</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {rec.strengths.map((strength, idx) => (
+                          <li key={idx} className="text-sm text-gray-600">{strength}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-2 text-yellow-600">Areas for Improvement</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {rec.weaknesses.map((weakness, idx) => (
+                          <li key={idx} className="text-sm text-gray-600">{weakness}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-2 text-blue-600">Recommendations</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {rec.recommendations.map((recommendation, idx) => (
+                          <li key={idx} className="text-sm text-gray-600">{recommendation}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </>
+      ) : (
+        <Card>
+          <CardContent className="text-center py-8">
+            <p className="text-lg text-gray-600">Complete some certification attempts to see your progress!</p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
