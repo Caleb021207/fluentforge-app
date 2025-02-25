@@ -42,8 +42,8 @@ const DashboardPage = () => {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
         
-        // Check if this is the example profile (case-insensitive)
-        if (user?.email?.toLowerCase() === "example@gmail.com") {
+        // Check if this is the example profile
+        if (user?.email === "Example@gmail.com") {
           setIsExampleProfile(true);
         }
         

@@ -1,11 +1,11 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { addExampleCertificationScores } from "@/utils/seedExampleProfile";
+import { createExampleProfile, addExampleCertificationScores } from "@/utils/seedExampleProfile";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-const ExampleDataButton = ({ size = "sm", className = "mt-4" }) => {
+const ExampleDataButton = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -43,8 +43,8 @@ const ExampleDataButton = ({ size = "sm", className = "mt-4" }) => {
       onClick={handleSeedData}
       disabled={isLoading}
       variant="outline"
-      size={size}
-      className={className}
+      size="sm"
+      className="mt-4"
     >
       {isLoading ? (
         <>
