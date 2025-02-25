@@ -1,33 +1,12 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Trophy, Star } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  BookOpen,
-  MessageCircle,
-  Trophy,
-  Rocket,
-  GraduationCap,
-  Globe,
-  Heart,
-  Coffee,
-  Home,
-  Clock,
-  Users,
-  Briefcase,
-  Utensils,
-  Plane,
-  Music,
-  Phone,
-  Star,
-  Mic,
-  Puzzle,
-  Headphones,
-  Brain,
-  Award,
-} from "lucide-react";
+import LevelSelector from "@/components/lessons/LevelSelector";
+import LessonCard from "@/components/lessons/LessonCard";
+import LessonView from "@/components/lessons/LessonView";
 
 interface Challenge {
   type: string;
@@ -368,7 +347,17 @@ const Lessons = () => {
   const totalXP = lessons.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
   const earnedXP = lessons.reduce((acc, lesson) => acc + (lesson.progress || 0) / 100 * lesson.xpPoints, 0);
 
-  const handleStartLesson = (lesson: Lesson) => {
+  const handleLevelChange = (newLevel: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("level", newLevel);
+    window.history.pushState({}, "", `?${newSearchParams.toString()}`);
+    window.location.reload();
+  };
+
+  const handleStartLesson = (lessonId: number) => {
+    const lesson = lessons.find(l => l.id === lessonId);
+    if (!lesson) return;
+
     if (lesson.requiresVoice) {
       navigator.mediaDevices.getUserMedia({ audio: true })
         .then(() => {
@@ -376,7 +365,7 @@ const Lessons = () => {
             title: "Microphone Access Granted",
             description: "You can now participate in voice challenges!",
           });
-          setActiveLessonId(lesson.id);
+          setActiveLessonId(lessonId);
         })
         .catch(() => {
           toast({
@@ -386,7 +375,7 @@ const Lessons = () => {
           });
         });
     } else {
-      setActiveLessonId(lesson.id);
+      setActiveLessonId(lessonId);
     }
   };
 
@@ -427,120 +416,16 @@ const Lessons = () => {
               <Progress value={(earnedXP / totalXP) * 100} className="h-2" />
             </div>
 
-            <div className="flex space-x-4 my-4">
-              <Button
-                variant={level === "beginner" ? "default" : "outline"}
-                onClick={() => {
-                  const newSearchParams = new URLSearchParams(searchParams);
-                  newSearchParams.set("level", "beginner");
-                  window.history.pushState({}, "", `?${newSearchParams.toString()}`);
-                  window.location.reload();
-                }}
-              >
-                Beginner (A1-A2)
-              </Button>
-              <Button
-                variant={level === "intermediate" ? "default" : "outline"}
-                onClick={() => {
-                  const newSearchParams = new URLSearchParams(searchParams);
-                  newSearchParams.set("level", "intermediate");
-                  window.history.pushState({}, "", `?${newSearchParams.toString()}`);
-                  window.location.reload();
-                }}
-              >
-                Intermediate (B1-B2)
-              </Button>
-              <Button
-                variant={level === "advanced" ? "default" : "outline"}
-                onClick={() => {
-                  const newSearchParams = new URLSearchParams(searchParams);
-                  newSearchParams.set("level", "advanced");
-                  window.history.pushState({}, "", `?${newSearchParams.toString()}`);
-                  window.location.reload();
-                }}
-              >
-                Advanced (C1-C2)
-              </Button>
-            </div>
+            <LevelSelector currentLevel={level} onLevelChange={handleLevelChange} />
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {lessons.map((lesson) => (
-              <Card key={lesson.id} className="p-6 hover:shadow-lg transition-shadow">
-                <div className="flex items-start space-x-4">
-                  <div className={`p-2 rounded-lg ${
-                    lesson.requiresVoice 
-                      ? "bg-purple-100" 
-                      : "bg-lingua-primary/10"
-                  }`}>
-                    {lesson.icon}
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-xl font-semibold">{lesson.title}</h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          {lesson.requiresVoice && (
-                            <div className="flex items-center text-sm text-purple-600 bg-purple-50 px-2 py-1 rounded">
-                              <Mic className="h-4 w-4 mr-1" />
-                              Voice Required
-                            </div>
-                          )}
-                          <span className={`px-2 py-1 rounded text-sm ${
-                            lesson.difficulty === "Easy" 
-                              ? "bg-green-100 text-green-800"
-                              : lesson.difficulty === "Medium"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-purple-100 text-purple-800"
-                          }`}>
-                            {lesson.difficulty}
-                          </span>
-                          <span className="text-sm text-gray-500">{lesson.duration}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-gray-600">{lesson.description}</p>
-                    
-                    <div className="border-t border-gray-100 pt-4 mt-4">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Challenges:</h4>
-                      <div className="space-y-2">
-                        {lesson.challenges.map((challenge, idx) => (
-                          <div key={idx} className="flex items-center justify-between text-sm">
-                            <div className="flex items-center gap-2">
-                              {challenge.unlocked ? (
-                                <Puzzle className="h-4 w-4 text-green-500" />
-                              ) : (
-                                <Award className="h-4 w-4 text-gray-400" />
-                              )}
-                              <span className={challenge.unlocked ? "text-gray-700" : "text-gray-400"}>
-                                {challenge.description}
-                              </span>
-                            </div>
-                            <span className="text-yellow-600 font-medium">+{challenge.xpReward} XP</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-4">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-500">Progress</span>
-                          <span className="text-gray-500">{lesson.progress || 0}%</span>
-                        </div>
-                        <Progress value={lesson.progress || 0} className="h-2" />
-                      </div>
-                      <Button 
-                        size="sm" 
-                        className="ml-4"
-                        onClick={() => handleStartLesson(lesson)}
-                      >
-                        {lesson.progress ? "Continue" : "Start"} ({lesson.xpPoints} XP)
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </Card>
+              <LessonCard
+                key={lesson.id}
+                lesson={lesson}
+                onStart={handleStartLesson}
+              />
             ))}
           </div>
         </motion.div>

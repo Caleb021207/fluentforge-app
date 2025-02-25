@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import VocabularyLesson from './VocabularyLesson';
 import { useToast } from '@/components/ui/use-toast';
-import { Award, ArrowLeft, VolumeUp } from 'lucide-react';
+import { Award, ArrowLeft, Volume2 } from 'lucide-react';
 
 interface LessonViewProps {
   onClose: () => void;
@@ -100,4 +98,3 @@ const LessonView = ({ lesson, onClose }: LessonViewProps) => {
 };
 
 export default LessonView;
-
