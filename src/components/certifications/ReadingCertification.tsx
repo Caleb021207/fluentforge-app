@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Question } from "./types/reading";
-import { allQuestions } from "./data/readingQuestions";
-import QuestionDisplay from "./components/QuestionDisplay";
+import { READING_QUESTIONS } from "./data/readingQuestions";
+import { QuestionDisplay } from "./components/QuestionDisplay";
 import { calculateScore, determineLevel } from "./utils/scoreUtils";
 
 const ReadingCertification = () => {
@@ -28,7 +28,7 @@ const ReadingCertification = () => {
     newAnswers[currentQuestion] = answerIndex;
     setSelectedAnswers(newAnswers);
 
-    if (currentQuestion < allQuestions.length - 1) {
+    if (currentQuestion < READING_QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       handleCompletion(newAnswers);
@@ -36,7 +36,7 @@ const ReadingCertification = () => {
   };
 
   const handleCompletion = async (answers: number[]) => {
-    const score = calculateScore(answers, allQuestions);
+    const score = calculateScore(answers, READING_QUESTIONS);
     const level = determineLevel(score);
 
     try {
@@ -99,7 +99,7 @@ const ReadingCertification = () => {
   }
 
   if (isComplete) {
-    const score = calculateScore(selectedAnswers, allQuestions);
+    const score = calculateScore(selectedAnswers, READING_QUESTIONS);
     const level = determineLevel(score);
 
     return (
@@ -121,12 +121,15 @@ const ReadingCertification = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Question {currentQuestion + 1} of {allQuestions.length}</CardTitle>
+        <CardTitle>Question {currentQuestion + 1} of {READING_QUESTIONS.length}</CardTitle>
       </CardHeader>
       <CardContent>
         <QuestionDisplay
-          question={allQuestions[currentQuestion]}
-          onAnswer={handleAnswer}
+          question={READING_QUESTIONS[currentQuestion]}
+          currentQuestionIndex={currentQuestion}
+          totalQuestions={READING_QUESTIONS.length}
+          onAnswerSelect={(answer) => handleAnswer(parseInt(answer))}
+          onNext={() => {}}
         />
       </CardContent>
     </Card>
