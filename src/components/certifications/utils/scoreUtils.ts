@@ -18,19 +18,27 @@ export const determineLevel = (score: number) => {
 export const getLevelDescription = (level: string) => {
   switch (level) {
     case 'C2':
-      return 'Mastery - Can understand virtually everything heard or read. Can express themselves spontaneously, very fluently and precisely.';
+      return 'Mastery level: Reading - Can understand virtually any text, including abstract or complex documents. Writing - Can produce clear, flowing, complex texts in an appropriate style. Speaking - Can express themselves spontaneously and very fluently with precision in complex situations. Listening - Can understand any native speaker, even on abstract and complex topics.';
     case 'C1':
-      return 'Advanced - Can understand a wide range of demanding texts and recognize implicit meaning. Can use language flexibly and effectively.';
+      return 'Advanced level: Reading - Can understand long, complex texts and recognize implicit meaning. Writing - Can produce clear, well-structured texts on complex subjects. Speaking - Can express ideas fluently and spontaneously without obvious searching for expressions. Listening - Can understand extended speech even when not clearly structured.';
     case 'B2':
-      return 'Upper Intermediate - Can understand the main ideas of complex texts. Can interact with a degree of fluency and spontaneity.';
+      return 'Upper Intermediate: Reading - Can understand complex texts and technical articles. Writing - Can write clear, detailed text on a wide range of subjects. Speaking - Can interact with fluency and spontaneity with native speakers. Listening - Can understand extended speech and lectures, following complex lines of argument.';
     case 'B1':
-      return 'Intermediate - Can understand the main points of clear standard input on familiar matters. Can deal with most situations likely to arise while traveling.';
+      return 'Intermediate: Reading - Can understand texts on familiar matters. Writing - Can write simple connected text on familiar topics. Speaking - Can deal with most situations likely to arise while traveling. Listening - Can understand the main points of clear standard speech on familiar matters.';
     case 'A2':
-      return 'Elementary - Can understand sentences and frequently used expressions. Can communicate in simple and routine tasks.';
+      return 'Elementary: Reading - Can understand short, simple texts. Writing - Can write short, simple notes and messages. Speaking - Can communicate in simple and routine tasks requiring direct exchange of information. Listening - Can understand phrases and common vocabulary on basic personal and family information.';
     case 'A1':
-      return 'Beginner - Can understand and use familiar everyday expressions and very basic phrases. Can introduce themselves and others.';
+      return 'Beginner: Reading - Can understand familiar names, words, and simple sentences. Writing - Can write short, simple phrases and fill out forms. Speaking - Can interact in a simple way with basic phrases and expressions. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
     default:
       return '';
   }
 };
 
+export const CEFR_TO_ACTFL = {
+  'C2': 'Distinguished / Superior',
+  'C1': 'Advanced High',
+  'B2': 'Advanced Mid / Advanced Low',
+  'B1': 'Intermediate High / Intermediate Mid',
+  'A2': 'Intermediate Low / Novice High',
+  'A1': 'Novice Mid / Novice Low'
+};

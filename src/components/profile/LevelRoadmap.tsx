@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, TrendingUp, BarChart } from "lucide-react";
-import { getLevelDescription } from "@/components/certifications/utils/scoreUtils";
+import { getLevelDescription, CEFR_TO_ACTFL } from "@/components/certifications/utils/scoreUtils";
 
 interface LevelRoadmapProps {
   currentLevel: string;
@@ -116,7 +116,19 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
             <span>{getRemainingTime()}</span>
           </div>
 
-          <div className="grid gap-4 mt-4">
+          <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-4">
+            <h4 className="text-sm font-medium mb-2">CEFR to ACTFL Conversion</h4>
+            <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+              {Object.entries(CEFR_TO_ACTFL).map(([cefr, actfl]) => (
+                <div key={cefr} className="flex justify-between">
+                  <span className="font-medium">{cefr}:</span>
+                  <span>{actfl}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-4">
             {CEFR_LEVELS.map((level, index) => {
               const currentLevelIndex = CEFR_LEVELS.indexOf(currentLevel);
               const targetLevelIndex = CEFR_LEVELS.indexOf(targetLevel);
