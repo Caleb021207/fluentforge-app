@@ -1,25 +1,25 @@
 
 import { useEffect, useState } from "react";
-import { seedExampleProfile } from "@/utils/seedExampleProfile";
+import { createExampleProfile } from "@/utils/seedExampleProfile";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
 const ExampleDataPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<{userId: string, attemptsAdded: number} | null>(null);
+  const [result, setResult] = useState<{userId: string, success: boolean} | null>(null);
   const { toast } = useToast();
 
   const handleSeedData = async () => {
     setIsLoading(true);
     try {
-      const seedResult = await seedExampleProfile();
+      const seedResult = await createExampleProfile();
       setResult(seedResult || null);
       
-      if (seedResult) {
+      if (seedResult && seedResult.success) {
         toast({
           title: "Success!",
-          description: `Added ${seedResult.attemptsAdded} example data points to profile.`,
+          description: `Added example data for user profile with ID: ${seedResult.userId}.`,
         });
       } else {
         toast({
@@ -51,11 +51,11 @@ const ExampleDataPage = () => {
           </p>
           <ul className="list-disc pl-6 space-y-2 mb-4">
             <li>User profile with learning goals</li>
-            <li>60 certification attempts (5 for each level A1-B1 in reading/writing/speaking/listening)</li>
-            <li>Progressive scores showing improvement over time</li>
+            <li>Certification attempts for A2 level across all skills</li>
+            <li>Lesson progress for A1 (completed) and A2 (in progress)</li>
           </ul>
           <p className="text-sm text-gray-500">
-            Note: Make sure the Example@gmail.com account has been created before using this tool.
+            Note: This will create a new Example@gmail.com account with password 123456.
           </p>
         </div>
 
@@ -74,12 +74,12 @@ const ExampleDataPage = () => {
           )}
         </Button>
 
-        {result && (
+        {result && result.success && (
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
             <h3 className="font-semibold text-green-800 mb-2">Success!</h3>
-            <p>Added {result.attemptsAdded} certification attempts for user {result.userId}</p>
+            <p>Added example data for user {result.userId}</p>
             <p className="mt-2 text-sm">
-              You can now login with Example@gmail.com to see the populated profile.
+              You can now login with Example@gmail.com (password: 123456) to see the populated profile.
             </p>
           </div>
         )}

@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { seedExampleProfile } from "@/utils/seedExampleProfile";
+import { createExampleProfile } from "@/utils/seedExampleProfile";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -12,11 +12,11 @@ const ExampleDataButton = () => {
   const handleSeedData = async () => {
     setIsLoading(true);
     try {
-      const result = await seedExampleProfile();
-      if (result) {
+      const result = await createExampleProfile();
+      if (result && result.success) {
         toast({
           title: "Success!",
-          description: `Added ${result.attemptsAdded} example data points to profile.`,
+          description: `Added example data for user profile.`,
         });
       } else {
         toast({
