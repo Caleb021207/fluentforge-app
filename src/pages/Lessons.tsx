@@ -1,9 +1,9 @@
-
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/components/ui/use-toast";
 import {
   BookOpen,
   MessageCircle,
@@ -22,7 +22,20 @@ import {
   Music,
   Phone,
   Star,
+  Mic,
+  Puzzle,
+  Headphones,
+  Brain,
+  Award,
 } from "lucide-react";
+
+interface Challenge {
+  type: string;
+  description: string;
+  xpReward: number;
+  timeLimit?: number;
+  unlocked: boolean;
+}
 
 interface Lesson {
   id: number;
@@ -34,7 +47,290 @@ interface Lesson {
   xpPoints: number;
   difficulty: "Easy" | "Medium" | "Hard";
   progress?: number;
+  cefrLevel: string;
+  challenges: Challenge[];
+  requiresVoice?: boolean;
+  unlockRequirement?: {
+    type: "level" | "xp" | "lessons";
+    value: number;
+  };
 }
+
+const lessonsByLevel: Record<string, Lesson[]> = {
+  beginner: [
+    {
+      id: 1,
+      title: "Basic Greetings",
+      description: "Learn essential Spanish greetings and introductions through interactive exercises.",
+      duration: "15 min",
+      icon: <MessageCircle className="h-6 w-6" />,
+      vocabulary: ["Hello - Hola", "Good morning - Buenos días", "Good evening - Buenas noches"],
+      xpPoints: 50,
+      difficulty: "Easy",
+      progress: 80,
+      cefrLevel: "A1",
+      challenges: [
+        {
+          type: "vocabulary",
+          description: "Match 10 greeting words with their meanings",
+          xpReward: 20,
+          unlocked: true,
+        },
+        {
+          type: "quiz",
+          description: "Multiple choice quiz on greetings",
+          xpReward: 30,
+          unlocked: true,
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: "Numbers 1-20",
+      description: "Master counting in Spanish through interactive games and exercises.",
+      duration: "20 min",
+      icon: <BookOpen className="h-6 w-6" />,
+      vocabulary: ["One - Uno", "Two - Dos", "Three - Tres"],
+      xpPoints: 75,
+      difficulty: "Easy",
+      progress: 60,
+      cefrLevel: "A1",
+      challenges: [
+        {
+          type: "matching",
+          description: "Match numbers with their Spanish words",
+          xpReward: 25,
+          unlocked: true,
+        },
+        {
+          type: "quiz",
+          description: "Speed quiz: Type the correct number in Spanish",
+          xpReward: 50,
+          timeLimit: 60,
+          unlocked: false,
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: "Family Members",
+      description: "Learn words for family relations (Madre, Padre, Hermano)",
+      duration: "25 min",
+      icon: <Users className="h-6 w-6" />,
+      vocabulary: ["Mother - Madre", "Father - Padre", "Sister - Hermana"],
+      xpPoints: 100,
+      difficulty: "Medium",
+      progress: 30,
+      cefrLevel: "A1",
+      challenges: [
+        {
+          type: "matching",
+          description: "Match family members with their Spanish names",
+          xpReward: 30,
+          unlocked: true,
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "Basic Phrases",
+      description: "Essential everyday Spanish phrases",
+      duration: "20 min",
+      icon: <Globe className="h-6 w-6" />,
+      vocabulary: ["Please - Por favor", "Thank you - Gracias", "You're welcome - De nada"],
+      xpPoints: 80,
+      difficulty: "Easy",
+      progress: 0,
+      cefrLevel: "A1",
+      challenges: [
+        {
+          type: "quiz",
+          description: "Multiple choice quiz on basic phrases",
+          xpReward: 20,
+          unlocked: true,
+        },
+      ],
+    },
+  ],
+  intermediate: [
+    {
+      id: 1,
+      title: "Present Tense Verbs",
+      description: "Practice conjugating regular verbs through interactive exercises.",
+      duration: "30 min",
+      icon: <Rocket className="h-6 w-6" />,
+      vocabulary: ["To speak - Hablar", "To eat - Comer", "To live - Vivir"],
+      xpPoints: 150,
+      difficulty: "Medium",
+      progress: 40,
+      cefrLevel: "B1",
+      challenges: [
+        {
+          type: "conjugation",
+          description: "Conjugate verbs in present tense",
+          xpReward: 50,
+          unlocked: true,
+        },
+        {
+          type: "conversation",
+          description: "AI roleplay using present tense verbs",
+          xpReward: 100,
+          unlocked: false,
+        },
+      ],
+      requiresVoice: true,
+    },
+    {
+      id: 2,
+      title: "Daily Routines",
+      description: "Describe your daily activities in Spanish",
+      duration: "25 min",
+      icon: <Clock className="h-6 w-6" />,
+      vocabulary: ["I wake up - Me despierto", "I shower - Me ducho", "I have breakfast - Desayuno"],
+      xpPoints: 120,
+      difficulty: "Medium",
+      progress: 0,
+      cefrLevel: "B1",
+      challenges: [
+        {
+          type: "writing",
+          description: "Write a short paragraph about your daily routine",
+          xpReward: 30,
+          unlocked: true,
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: "Food & Dining",
+      description: "Restaurant vocabulary and ordering food",
+      duration: "30 min",
+      icon: <Utensils className="h-6 w-6" />,
+      vocabulary: ["Restaurant - Restaurante", "Menu - Menú", "Bill - La cuenta"],
+      xpPoints: 140,
+      difficulty: "Medium",
+      progress: 0,
+      cefrLevel: "B1",
+      challenges: [
+        {
+          type: "matching",
+          description: "Match food items with their Spanish names",
+          xpReward: 30,
+          unlocked: true,
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "Shopping & Money",
+      description: "Learn to shop and discuss prices in Spanish",
+      duration: "25 min",
+      icon: <Briefcase className="h-6 w-6" />,
+      vocabulary: ["How much? - ¿Cuánto cuesta?", "Expensive - Caro", "Cheap - Barato"],
+      xpPoints: 130,
+      difficulty: "Medium",
+      progress: 0,
+      cefrLevel: "B1",
+      challenges: [
+        {
+          type: "quiz",
+          description: "Multiple choice quiz on shopping and money",
+          xpReward: 20,
+          unlocked: true,
+        },
+      ],
+    },
+  ],
+  advanced: [
+    {
+      id: 1,
+      title: "Past Tenses",
+      description: "Master the differences between Preterite and Imperfect through immersive practice.",
+      duration: "40 min",
+      icon: <GraduationCap className="h-6 w-6" />,
+      vocabulary: ["I went - Fui", "I used to go - Iba", "I had - Tenía"],
+      xpPoints: 200,
+      difficulty: "Hard",
+      progress: 0,
+      cefrLevel: "C1",
+      challenges: [
+        {
+          type: "storytelling",
+          description: "Create a story using past tenses",
+          xpReward: 100,
+          unlocked: true,
+        },
+        {
+          type: "debate",
+          description: "AI-powered debate using past tenses",
+          xpReward: 150,
+          unlocked: false,
+        },
+      ],
+      requiresVoice: true,
+    },
+    {
+      id: 2,
+      title: "Subjunctive Mood",
+      description: "Master the Spanish subjunctive in various contexts",
+      duration: "45 min",
+      icon: <Trophy className="h-6 w-6" />,
+      vocabulary: ["I hope that - Espero que", "I want that - Quiero que", "It's important that - Es importante que"],
+      xpPoints: 250,
+      difficulty: "Hard",
+      progress: 0,
+      cefrLevel: "C1",
+      challenges: [
+        {
+          type: "writing",
+          description: "Write a short essay on the subjunctive mood",
+          xpReward: 30,
+          unlocked: true,
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: "Business Spanish",
+      description: "Professional vocabulary and formal communication",
+      duration: "35 min",
+      icon: <Briefcase className="h-6 w-6" />,
+      vocabulary: ["Meeting - Reunión", "Deadline - Fecha límite", "Project - Proyecto"],
+      xpPoints: 180,
+      difficulty: "Hard",
+      progress: 0,
+      cefrLevel: "C1",
+      challenges: [
+        {
+          type: "matching",
+          description: "Match business terms with their Spanish equivalents",
+          xpReward: 30,
+          unlocked: true,
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "Idiomatic Expressions",
+      description: "Common Spanish idioms and their meanings",
+      duration: "30 min",
+      icon: <MessageCircle className="h-6 w-6" />,
+      vocabulary: ["It's a piece of cake - Es pan comido", "To be broke - Estar pelado", "To pull someone's leg - Tomar el pelo"],
+      xpPoints: 220,
+      difficulty: "Hard",
+      progress: 0,
+      cefrLevel: "C1",
+      challenges: [
+        {
+          type: "quiz",
+          description: "Multiple choice quiz on idiomatic expressions",
+          xpReward: 20,
+          unlocked: true,
+        },
+      ],
+    },
+  ],
+};
 
 const getLevelColor = (level: string) => {
   switch (level) {
@@ -62,155 +358,33 @@ const getCefrLevel = (level: string) => {
   }
 };
 
-const lessonsByLevel: Record<string, Lesson[]> = {
-  beginner: [
-    {
-      id: 1,
-      title: "Basic Greetings",
-      description: "Learn essential Spanish greetings and introductions (Hola, Buenos días, etc.)",
-      duration: "15 min",
-      icon: <MessageCircle className="h-6 w-6" />,
-      vocabulary: ["Hello - Hola", "Good morning - Buenos días", "Good evening - Buenas noches"],
-      xpPoints: 50,
-      difficulty: "Easy",
-      progress: 80,
-    },
-    {
-      id: 2,
-      title: "Numbers 1-20",
-      description: "Master counting in Spanish (Uno, Dos, Tres...)",
-      duration: "20 min",
-      icon: <BookOpen className="h-6 w-6" />,
-      vocabulary: ["One - Uno", "Two - Dos", "Three - Tres"],
-      xpPoints: 75,
-      difficulty: "Easy",
-      progress: 60,
-    },
-    {
-      id: 3,
-      title: "Family Members",
-      description: "Learn words for family relations (Madre, Padre, Hermano)",
-      duration: "25 min",
-      icon: <Users className="h-6 w-6" />,
-      vocabulary: ["Mother - Madre", "Father - Padre", "Sister - Hermana"],
-      xpPoints: 100,
-      difficulty: "Medium",
-      progress: 30,
-    },
-    {
-      id: 4,
-      title: "Basic Phrases",
-      description: "Essential everyday Spanish phrases",
-      duration: "20 min",
-      icon: <Globe className="h-6 w-6" />,
-      vocabulary: ["Please - Por favor", "Thank you - Gracias", "You're welcome - De nada"],
-      xpPoints: 80,
-      difficulty: "Easy",
-      progress: 0,
-    },
-  ],
-  intermediate: [
-    {
-      id: 1,
-      title: "Present Tense Verbs",
-      description: "Master regular -ar, -er, -ir verbs in present tense",
-      duration: "30 min",
-      icon: <Rocket className="h-6 w-6" />,
-      vocabulary: ["To speak - Hablar", "To eat - Comer", "To live - Vivir"],
-      xpPoints: 150,
-      difficulty: "Medium",
-      progress: 40,
-    },
-    {
-      id: 2,
-      title: "Daily Routines",
-      description: "Describe your daily activities in Spanish",
-      duration: "25 min",
-      icon: <Clock className="h-6 w-6" />,
-      vocabulary: ["I wake up - Me despierto", "I shower - Me ducho", "I have breakfast - Desayuno"],
-      xpPoints: 120,
-      difficulty: "Medium",
-      progress: 0,
-    },
-    {
-      id: 3,
-      title: "Food & Dining",
-      description: "Restaurant vocabulary and ordering food",
-      duration: "30 min",
-      icon: <Utensils className="h-6 w-6" />,
-      vocabulary: ["Restaurant - Restaurante", "Menu - Menú", "Bill - La cuenta"],
-      xpPoints: 140,
-      difficulty: "Medium",
-      progress: 0,
-    },
-    {
-      id: 4,
-      title: "Shopping & Money",
-      description: "Learn to shop and discuss prices in Spanish",
-      duration: "25 min",
-      icon: <Briefcase className="h-6 w-6" />,
-      vocabulary: ["How much? - ¿Cuánto cuesta?", "Expensive - Caro", "Cheap - Barato"],
-      xpPoints: 130,
-      difficulty: "Medium",
-      progress: 0,
-    },
-  ],
-  advanced: [
-    {
-      id: 1,
-      title: "Past Tenses",
-      description: "Learn when to use Preterite vs Imperfect",
-      duration: "40 min",
-      icon: <GraduationCap className="h-6 w-6" />,
-      vocabulary: ["I went - Fui", "I used to go - Iba", "I had - Tenía"],
-      xpPoints: 200,
-      difficulty: "Hard",
-      progress: 0,
-    },
-    {
-      id: 2,
-      title: "Subjunctive Mood",
-      description: "Master the Spanish subjunctive in various contexts",
-      duration: "45 min",
-      icon: <Trophy className="h-6 w-6" />,
-      vocabulary: ["I hope that - Espero que", "I want that - Quiero que", "It's important that - Es importante que"],
-      xpPoints: 250,
-      difficulty: "Hard",
-      progress: 0,
-    },
-    {
-      id: 3,
-      title: "Business Spanish",
-      description: "Professional vocabulary and formal communication",
-      duration: "35 min",
-      icon: <Briefcase className="h-6 w-6" />,
-      vocabulary: ["Meeting - Reunión", "Deadline - Fecha límite", "Project - Proyecto"],
-      xpPoints: 180,
-      difficulty: "Hard",
-      progress: 0,
-    },
-    {
-      id: 4,
-      title: "Idiomatic Expressions",
-      description: "Common Spanish idioms and their meanings",
-      duration: "30 min",
-      icon: <MessageCircle className="h-6 w-6" />,
-      vocabulary: ["It's a piece of cake - Es pan comido", "To be broke - Estar pelado", "To pull someone's leg - Tomar el pelo"],
-      xpPoints: 220,
-      difficulty: "Hard",
-      progress: 0,
-    },
-  ],
-};
-
 const Lessons = () => {
   const [searchParams] = useSearchParams();
   const level = searchParams.get("level") || "beginner";
   const lessons = lessonsByLevel[level];
+  const { toast } = useToast();
   
-  // Calculate total XP for current level
   const totalXP = lessons.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
   const earnedXP = lessons.reduce((acc, lesson) => acc + (lesson.progress || 0) / 100 * lesson.xpPoints, 0);
+
+  const handleStartLesson = (lesson: Lesson) => {
+    if (lesson.requiresVoice) {
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(() => {
+          toast({
+            title: "Microphone Access Granted",
+            description: "You can now participate in voice challenges!",
+          });
+        })
+        .catch(() => {
+          toast({
+            title: "Microphone Access Required",
+            description: "Please allow microphone access to participate in voice challenges.",
+            variant: "destructive",
+          });
+        });
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -221,13 +395,19 @@ const Lessons = () => {
         className="space-y-8"
       >
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <h1 className="text-3xl font-bold text-lingua-text">
               Spanish Lessons <span className={`text-xl ${getLevelColor(level)}`}>({getCefrLevel(level)})</span>
             </h1>
-            <div className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-yellow-500" />
-              <span className="font-semibold">{Math.round(earnedXP)} / {totalXP} XP</span>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-yellow-500" />
+                <span className="font-semibold">Daily Streak: 5 🔥</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="h-5 w-5 text-yellow-500" />
+                <span className="font-semibold">{Math.round(earnedXP)} / {totalXP} XP</span>
+              </div>
             </div>
           </div>
           
@@ -235,11 +415,6 @@ const Lessons = () => {
             <Progress value={(earnedXP / totalXP) * 100} className="h-2" />
           </div>
 
-          <p className="text-gray-600">
-            Browse our comprehensive English to Spanish curriculum. Feel free to start with any lesson
-            that interests you, though we recommend following the order for the best learning experience.
-          </p>
-          
           <div className="flex space-x-4 my-4">
             <Button
               variant={level === "beginner" ? "default" : "outline"}
@@ -250,7 +425,7 @@ const Lessons = () => {
                 window.location.reload();
               }}
             >
-              Beginner
+              Beginner (A1-A2)
             </Button>
             <Button
               variant={level === "intermediate" ? "default" : "outline"}
@@ -261,7 +436,7 @@ const Lessons = () => {
                 window.location.reload();
               }}
             >
-              Intermediate
+              Intermediate (B1-B2)
             </Button>
             <Button
               variant={level === "advanced" ? "default" : "outline"}
@@ -272,7 +447,7 @@ const Lessons = () => {
                 window.location.reload();
               }}
             >
-              Advanced
+              Advanced (C1-C2)
             </Button>
           </div>
         </div>
@@ -281,40 +456,73 @@ const Lessons = () => {
           {lessons.map((lesson) => (
             <Card key={lesson.id} className="p-6 hover:shadow-lg transition-shadow">
               <div className="flex items-start space-x-4">
-                <div className="p-2 bg-lingua-primary/10 rounded-lg">
+                <div className={`p-2 rounded-lg ${
+                  lesson.requiresVoice 
+                    ? "bg-purple-100" 
+                    : "bg-lingua-primary/10"
+                }`}>
                   {lesson.icon}
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between items-start">
-                    <h3 className="text-xl font-semibold">{lesson.title}</h3>
-                    <span className={`px-2 py-1 rounded text-sm ${
-                      lesson.difficulty === "Easy" 
-                        ? "bg-green-100 text-green-800"
-                        : lesson.difficulty === "Medium"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-purple-100 text-purple-800"
-                    }`}>
-                      {lesson.difficulty}
-                    </span>
+                    <div>
+                      <h3 className="text-xl font-semibold">{lesson.title}</h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        {lesson.requiresVoice && (
+                          <div className="flex items-center text-sm text-purple-600 bg-purple-50 px-2 py-1 rounded">
+                            <Mic className="h-4 w-4 mr-1" />
+                            Voice Required
+                          </div>
+                        )}
+                        <span className={`px-2 py-1 rounded text-sm ${
+                          lesson.difficulty === "Easy" 
+                            ? "bg-green-100 text-green-800"
+                            : lesson.difficulty === "Medium"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-purple-100 text-purple-800"
+                        }`}>
+                          {lesson.difficulty}
+                        </span>
+                        <span className="text-sm text-gray-500">{lesson.duration}</span>
+                      </div>
+                    </div>
                   </div>
                   <p className="text-gray-600">{lesson.description}</p>
-                  <div className="pt-2">
-                    <h4 className="font-medium text-sm text-gray-700">Key Vocabulary:</h4>
-                    <ul className="text-sm text-gray-600 list-disc list-inside mt-1">
-                      {lesson.vocabulary.map((word, index) => (
-                        <li key={index}>{word}</li>
+                  
+                  <div className="border-t border-gray-100 pt-4 mt-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Challenges:</h4>
+                    <div className="space-y-2">
+                      {lesson.challenges.map((challenge, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2">
+                            {challenge.unlocked ? (
+                              <Puzzle className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Award className="h-4 w-4 text-gray-400" />
+                            )}
+                            <span className={challenge.unlocked ? "text-gray-700" : "text-gray-400"}>
+                              {challenge.description}
+                            </span>
+                          </div>
+                          <span className="text-yellow-600 font-medium">+{challenge.xpReward} XP</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
+
                   <div className="flex items-center justify-between pt-4">
                     <div className="space-y-1 flex-1">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">{lesson.duration}</span>
+                        <span className="text-gray-500">Progress</span>
                         <span className="text-gray-500">{lesson.progress || 0}%</span>
                       </div>
                       <Progress value={lesson.progress || 0} className="h-2" />
                     </div>
-                    <Button size="sm" className="ml-4">
+                    <Button 
+                      size="sm" 
+                      className="ml-4"
+                      onClick={() => handleStartLesson(lesson)}
+                    >
                       {lesson.progress ? "Continue" : "Start"} ({lesson.xpPoints} XP)
                     </Button>
                   </div>
