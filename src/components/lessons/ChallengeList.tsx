@@ -9,7 +9,11 @@ interface Challenge {
   unlocked: boolean;
 }
 
-const ChallengeList = ({ challenges }: { challenges: Challenge[] }) => {
+interface ChallengeListProps {
+  challenges: Challenge[];
+}
+
+const ChallengeList = ({ challenges = [] }: ChallengeListProps) => {
   return (
     <div className="space-y-2">
       <h4 className="text-sm font-medium text-gray-700 mb-2">Challenges:</h4>

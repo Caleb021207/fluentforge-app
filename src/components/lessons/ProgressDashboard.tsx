@@ -14,10 +14,20 @@ interface ProgressStats {
 }
 
 interface ProgressDashboardProps {
-  stats: ProgressStats;
+  stats?: ProgressStats;
 }
 
-const ProgressDashboard = ({ stats }: ProgressDashboardProps) => {
+const defaultStats: ProgressStats = {
+  totalLessons: 20,
+  completedLessons: 5,
+  totalXP: 1000,
+  earnedXP: 250,
+  currentStreak: 3,
+  nextLevel: "A2",
+  nextMilestone: 500
+};
+
+const ProgressDashboard = ({ stats = defaultStats }: ProgressDashboardProps) => {
   const progressPercentage = (stats.completedLessons / stats.totalLessons) * 100;
   const xpProgressPercentage = (stats.earnedXP / stats.totalXP) * 100;
 

@@ -34,6 +34,31 @@ const Lessons = () => {
     });
   };
 
+  // Mock lesson data for LessonCard with all required properties
+  const createLessonCardData = (lesson) => {
+    return {
+      id: lesson.id,
+      title: lesson.title,
+      description: lesson.description,
+      duration: "15 min", // Default duration
+      icon: <BookOpen className="h-5 w-5 text-primary" />, // Default icon
+      vocabulary: [],
+      xpPoints: lesson.xpReward,
+      difficulty: "Medium" as const, // TypeScript needs this const assertion
+      progress: 0,
+      cefrLevel: "A1",
+      challenges: [
+        {
+          type: "standard",
+          description: "Complete the lesson",
+          xpReward: lesson.xpReward,
+          unlocked: true
+        }
+      ],
+      requiresVoice: false
+    };
+  };
+
   return (
     <div className="container mx-auto">
       <div className="grid grid-cols-1 gap-6">
@@ -63,7 +88,7 @@ const Lessons = () => {
               {unit.lessons.map((lesson) => (
                 <LessonCard 
                   key={lesson.id}
-                  lesson={lesson}
+                  lesson={createLessonCardData(lesson)}
                   onStart={(lessonId) => handleStartLesson(unit.id)}
                 />
               ))}
