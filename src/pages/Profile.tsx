@@ -10,6 +10,7 @@ import { User } from "@supabase/supabase-js";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload } from "lucide-react";
 import { getLevelDescription } from "@/components/certifications/utils/scoreUtils";
+import type { Profile } from "@/types/database";
 
 interface ProfileData {
   displayName: string;
@@ -51,7 +52,7 @@ const ProfilePage = () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', userId)
+        .eq('id', userId)
         .single();
 
       if (error) throw error;
@@ -139,7 +140,7 @@ const ProfilePage = () => {
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ avatar_url: publicUrl })
-        .eq('user_id', user?.id);
+        .eq('id', user?.id);
 
       if (updateError) throw updateError;
 
@@ -161,14 +162,13 @@ const ProfilePage = () => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user?.id,
+        .update({
           display_name: profileData.displayName,
           learning_goal: profileData.learningGoal,
           target_level: profileData.targetLevel,
           target_date: profileData.targetDate,
-          avatar_url: avatarUrl,
-        });
+        })
+        .eq('id', user?.id);
 
       if (error) throw error;
 
@@ -345,3 +345,4 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
