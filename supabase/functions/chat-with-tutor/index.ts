@@ -15,8 +15,21 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Check for API key first
+  if (!openAIApiKey) {
+    console.error('OpenAI API key is not set');
+    return new Response(
+      JSON.stringify({ error: 'OpenAI API key is not configured' }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
+  }
+
   try {
     const { message } = await req.json();
+    console.log('Received message:', message);
 
     if (!message) {
       return new Response(
@@ -28,8 +41,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('Processing message:', message);
-
+    console.log('Making request to OpenAI API');
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -57,27 +69,40 @@ serve(async (req) => {
     });
 
     const data = await response.json();
+    console.log('Raw OpenAI response:', data);
     
     if (!response.ok) {
       console.error('OpenAI API error:', data);
-      throw new Error(`OpenAI API error: ${JSON.stringify(data)}`);
+      return new Response(
+        JSON.stringify({ error: `OpenAI API error: ${JSON.stringify(data)}` }),
+        { 
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
 
-    console.log('Received response from OpenAI:', data);
-    
     if (!data.choices?.[0]?.message?.content) {
-      throw new Error('Invalid response from OpenAI API');
+      console.error('Invalid response structure from OpenAI:', data);
+      return new Response(
+        JSON.stringify({ error: 'Invalid response from OpenAI API' }),
+        { 
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
 
     let content = data.choices[0].message.content;
     let translation = '';
 
-    // Split content and translation if response contains both
     if (content.includes('Translation:')) {
       [content, translation] = content.split('Translation:');
       content = content.trim();
       translation = translation.trim();
     }
+
+    console.log('Processed response:', { content, translation });
 
     return new Response(
       JSON.stringify({ content, translation }),
