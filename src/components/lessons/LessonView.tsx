@@ -19,6 +19,7 @@ import ShortAnswerExercise from './exercises/ShortAnswerExercise';
 import SentenceCorrectionExercise from './exercises/SentenceCorrectionExercise';
 import AIWritingPromptExercise from './exercises/AIWritingPromptExercise';
 import SpeechToTextExercise from './exercises/SpeechToTextExercise';
+import UnitPathwayView from './UnitPathwayView';
 
 interface Exercise {
   id: number;
@@ -60,6 +61,7 @@ interface LessonViewProps {
 }
 
 const LessonView = ({ unit, onClose, onComplete }: LessonViewProps) => {
+  const [showPathway, setShowPathway] = useState(true);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -175,6 +177,17 @@ const LessonView = ({ unit, onClose, onComplete }: LessonViewProps) => {
     }
   };
 
+  const handleStartLesson = (lessonIndex: number) => {
+    setCurrentLessonIndex(lessonIndex);
+    setCurrentExerciseIndex(0);
+    setShowPathway(false);
+    setProgress(calculateProgress());
+  };
+
+  const backToPathway = () => {
+    setShowPathway(true);
+  };
+
   const renderExercise = () => {
     if (!currentExercise) return null;
 
@@ -221,6 +234,16 @@ const LessonView = ({ unit, onClose, onComplete }: LessonViewProps) => {
     }
   };
 
+  if (showPathway) {
+    return (
+      <UnitPathwayView 
+        unit={unit} 
+        onClose={onClose} 
+        onStartLesson={handleStartLesson} 
+      />
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl">
@@ -228,7 +251,7 @@ const LessonView = ({ unit, onClose, onComplete }: LessonViewProps) => {
           <Button 
             variant="ghost" 
             className="absolute left-4 top-4"
-            onClick={onClose}
+            onClick={backToPathway}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Lessons

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -48,7 +47,6 @@ interface Lesson {
   };
 }
 
-// Define the Exercise interface that will be used in the Unit interface
 interface Exercise {
   id: number;
   type: string;
@@ -65,7 +63,6 @@ interface Exercise {
   timeLimit?: number; // in seconds
 }
 
-// Define the LessonForUnit interface that will be used in the Unit interface
 interface LessonForUnit {
   id: number;
   title: string;
@@ -74,7 +71,6 @@ interface LessonForUnit {
   xpReward: number;
 }
 
-// Define the Unit interface that matches what LessonView expects
 interface Unit {
   id: number;
   title: string;
@@ -84,7 +80,6 @@ interface Unit {
   xpPoints: number;
 }
 
-// Define the Basic Greetings unit with 5 lessons and 5 questions each
 const basicGreetingsUnit: Unit = {
   id: 1,
   title: "Basic Greetings",
@@ -158,7 +153,7 @@ const basicGreetingsUnit: Unit = {
         {
           id: 5,
           type: "sentence-correction",
-          question: "Correct this greeting: 'Buenos noches'",
+          question: "Correct this greeting: 'Buenas noches'",
           answer: "Buenas noches",
           points: 15,
           feedback: {
@@ -920,29 +915,21 @@ const Lessons = () => {
     }
   };
 
-  const handleLessonComplete = (lessonId: number) => {
-    const lesson = lessons.find(l => l.id === lessonId);
-    if (!lesson) return;
-
+  const handleLessonComplete = () => {
     toast({
-      title: "Lesson Complete! 🎉",
-      description: `You've earned ${lesson.xpPoints} XP!`,
+      title: "Unit Complete! 🎉",
+      description: `You've earned ${basicGreetingsUnit.xpPoints} XP!`,
     });
-
-    lesson.progress = 100;
     setActiveLessonId(null);
   };
 
-  const activeLessonData = lessons.find(l => l.id === activeLessonId);
-
-  // Use the defined unit directly instead of converting from a lesson
   return (
     <div className="max-w-5xl mx-auto p-6">
-      {activeLessonData ? (
+      {activeLessonId ? (
         <LessonView
           unit={basicGreetingsUnit}
           onClose={() => setActiveLessonId(null)}
-          onComplete={() => handleLessonComplete(activeLessonData.id)}
+          onComplete={handleLessonComplete}
         />
       ) : (
         <motion.div
