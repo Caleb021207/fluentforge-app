@@ -9,6 +9,7 @@ import ReadingCertification from "@/components/certifications/ReadingCertificati
 import WritingCertification from "@/components/certifications/WritingCertification";
 import SpeakingListeningCertification from "@/components/certifications/SpeakingListeningCertification";
 import { determineLevel, getLevelDescription } from "@/components/certifications/utils/scoreUtils";
+import ExampleDataButton from "@/components/profile/ExampleDataButton";
 
 type CertificationAttempt = {
   id: string;
@@ -79,6 +80,20 @@ const Certificates = () => {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Certification Progress</h1>
+      
+      {/* Example Data Button for testing */}
+      <Card className="bg-blue-50 border-blue-200">
+        <CardHeader>
+          <CardTitle>Example Data Tools</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-600 mb-4">
+            Click the button below to add example B1 level certification scores for all skills.
+            This is for testing purposes only.
+          </p>
+          <ExampleDataButton />
+        </CardContent>
+      </Card>
       
       {compositeScore && (
         <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
