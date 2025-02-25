@@ -4,47 +4,44 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { READING_QUESTIONS } from "./data/readingQuestions";
-import { QuestionDisplay } from "./components/QuestionDisplay";
+import { Question } from "./types/reading";
+import { allQuestions } from "./data/readingQuestions";
+import QuestionDisplay from "./components/QuestionDisplay";
 import { calculateScore, determineLevel } from "./utils/scoreUtils";
 
 const ReadingCertification = () => {
-  const [isStarted, setIsStarted] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
   const { toast } = useToast();
-
-  // Use all questions instead of filtering by level
-  const questions = READING_QUESTIONS;
 
   const handleStart = () => {
     setIsStarted(true);
-    setCurrentQuestionIndex(0);
+    setCurrentQuestion(0);
     setSelectedAnswers([]);
-    setIsCompleted(false);
+    setIsComplete(false);
   };
 
-  const handleAnswerSelect = (value: string) => {
+  const handleAnswer = (answerIndex: number) => {
     const newAnswers = [...selectedAnswers];
-    newAnswers[currentQuestionIndex] = parseInt(value);
+    newAnswers[currentQuestion] = answerIndex;
     setSelectedAnswers(newAnswers);
-  };
 
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+    if (currentQuestion < allQuestions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
     } else {
-      completeTest();
+      handleCompletion(newAnswers);
     }
   };
 
-  const completeTest = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+  const handleCompletion = async (answers: number[]) => {
+    const score = calculateScore(answers, allQuestions);
+    const level = determineLevel(score);
 
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
       if (!user) {
         toast({
           title: "Authentication Required",
@@ -54,10 +51,6 @@ const ReadingCertification = () => {
         return;
       }
 
-      const score = calculateScore(selectedAnswers, questions);
-      // Determine level based on all questions, starting from A1
-      const level = determineLevel(score, 'A1', questions);
-
       const { error } = await supabase
         .from('certification_attempts')
         .insert([
@@ -65,98 +58,76 @@ const ReadingCertification = () => {
             certification_type: 'reading',
             score,
             level,
-            completed_at: new Date().toISOString(),
             user_id: user.id,
           }
         ]);
 
       if (error) throw error;
 
+      setIsComplete(true);
       toast({
-        title: "Certification Completed!",
-        description: `You scored ${score}%. Level achieved: ${level}`,
+        title: "Reading Assessment Complete",
+        description: `You achieved a score of ${score}% at level ${level}`,
       });
-
-      setIsCompleted(true);
     } catch (error) {
-      console.error('Error submitting reading certification:', error);
+      console.error("Error submitting reading assessment:", error);
       toast({
         title: "Error",
-        description: "Failed to save certification result",
+        description: "Failed to submit reading assessment",
         variant: "destructive",
       });
     }
   };
 
-  const renderCEFRRubric = () => {
-    const levels = [
-      { level: 'C2', range: '90-100%', description: 'Mastery' },
-      { level: 'C1', range: '80-89%', description: 'Advanced' },
-      { level: 'B2', range: '70-79%', description: 'Upper Intermediate' },
-      { level: 'B1', range: '60-69%', description: 'Intermediate' },
-      { level: 'A2', range: '50-59%', description: 'Elementary' },
-      { level: 'A1', range: '40-49%', description: 'Beginner' },
-    ];
+  if (!isStarted) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Reading Certification Test</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-gray-600">
+              Test your Spanish reading comprehension skills. You'll be presented with a series of
+              passages and questions to assess your level.
+            </p>
+            <Button onClick={handleStart}>Start Test</Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isComplete) {
+    const score = calculateScore(selectedAnswers, allQuestions);
+    const level = determineLevel(score);
 
     return (
-      <div className="mt-8 border rounded-lg p-4">
-        <h3 className="text-lg font-semibold mb-4">CEFR Level Rubric</h3>
-        <div className="grid grid-cols-3 gap-2 text-sm">
-          <div className="font-medium">Level</div>
-          <div className="font-medium">Score Range</div>
-          <div className="font-medium">Description</div>
-          {levels.map((level) => (
-            <React.Fragment key={level.level}>
-              <div className="py-2">{level.level}</div>
-              <div className="py-2">{level.range}</div>
-              <div className="py-2">{level.description}</div>
-            </React.Fragment>
-          ))}
-        </div>
-        <p className="mt-4 text-sm text-gray-600">
-          Note: Your level is determined proportionally based on your performance across all questions. 
-          Every 5 questions represent one CEFR level, starting from A1 (questions 1-5) up to C2 (questions 26-30).
-        </p>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Test Complete</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p>Your score: {score}%</p>
+            <p>Your level: {level}</p>
+            <Button onClick={handleStart}>Take Test Again</Button>
+          </div>
+        </CardContent>
+      </Card>
     );
-  };
+  }
 
   return (
-    <Card className="mb-6">
+    <Card>
       <CardHeader>
-        <CardTitle>Reading Certification Test - All Levels (A1-C2)</CardTitle>
+        <CardTitle>Question {currentQuestion + 1} of {allQuestions.length}</CardTitle>
       </CardHeader>
       <CardContent>
-        {!isStarted ? (
-          <div className="space-y-4">
-            <p className="text-gray-600">
-              Test your Spanish reading comprehension skills across all CEFR levels (A1-C2). 
-              Questions will progressively get more challenging. Your final level will be determined 
-              based on your overall performance.
-            </p>
-            <div className="flex gap-4">
-              <Button onClick={handleStart}>Start Test</Button>
-            </div>
-            {renderCEFRRubric()}
-          </div>
-        ) : isCompleted ? (
-          <div className="space-y-4">
-            <p className="text-gray-600">
-              Test completed! Check your results below.
-            </p>
-            <Button onClick={handleStart}>Take Test Again</Button>
-            {renderCEFRRubric()}
-          </div>
-        ) : (
-          <QuestionDisplay
-            question={questions[currentQuestionIndex]}
-            currentQuestionIndex={currentQuestionIndex}
-            totalQuestions={questions.length}
-            selectedAnswer={selectedAnswers[currentQuestionIndex]}
-            onAnswerSelect={handleAnswerSelect}
-            onNext={handleNext}
-          />
-        )}
+        <QuestionDisplay
+          question={allQuestions[currentQuestion]}
+          onAnswer={handleAnswer}
+        />
       </CardContent>
     </Card>
   );

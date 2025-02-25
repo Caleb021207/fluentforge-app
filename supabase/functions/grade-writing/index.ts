@@ -18,6 +18,13 @@ serve(async (req) => {
   try {
     const { essay, prompt, targetLevel } = await req.json();
 
+    // Log the incoming request
+    console.log('Grading submission:', {
+      promptLength: prompt.length,
+      essayLength: essay.length,
+      targetLevel
+    });
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -29,45 +36,59 @@ serve(async (req) => {
         messages: [
           { 
             role: 'system', 
-            content: `You are an expert Spanish language examiner for CEFR certifications. Evaluate the following response based on the target level ${targetLevel}. Provide:
-            1. A numerical score (0-100)
-            2. The appropriate CEFR level (A1-C2)
-            3. Detailed feedback on grammar, vocabulary, and structure
-            
-            Use these score ranges for levels:
-            - C2: 90-100%
-            - C1: 80-89%
-            - B2: 70-79%
-            - B1: 60-69%
-            - A2: 50-59%
-            - A1: 40-49%
-            
-            Return your evaluation as a JSON object with score, level, and feedback fields.`
+            content: `You are an expert Spanish language examiner following the CEFR framework. 
+            Evaluate the following Spanish writing submission based on these specific criteria:
+
+            1. Adherence to prompt
+            2. Grammar accuracy
+            3. Vocabulary range and appropriateness
+            4. Text structure and coherence
+            5. Overall language level demonstrated
+
+            Score ranges and corresponding CEFR levels:
+            - 90-100%: C2 (Near-native mastery)
+            - 80-89%: C1 (Advanced)
+            - 70-79%: B2 (Upper Intermediate)
+            - 60-69%: B1 (Intermediate)
+            - 50-59%: A2 (Elementary)
+            - Below 50%: A1 (Beginner)
+
+            Return your evaluation as a JSON object with:
+            {
+              "score": (numerical score 0-100),
+              "level": (CEFR level based on score ranges above),
+              "feedback": (detailed feedback in English explaining the score and areas for improvement)
+            }`
           },
           { 
             role: 'user', 
-            content: `Writing Prompt: ${prompt}\n\nStudent's Response: ${essay}` 
+            content: `Writing Prompt: ${prompt}\n\nStudent's Response:\n${essay}` 
           }
         ],
       }),
     });
 
     const data = await response.json();
+    console.log('OpenAI Response:', data);
+
     let result;
-    
     try {
+      // Try to parse the AI's response as JSON
       result = JSON.parse(data.choices[0].message.content);
     } catch (e) {
-      // If JSON parsing fails, create a structured response from the text
-      const text = data.choices[0].message.content;
+      // If JSON parsing fails, extract information from the text response
+      const content = data.choices[0].message.content;
+      console.log('Failed to parse AI response as JSON:', content);
+      
+      // Default to conservative scoring if parsing fails
       result = {
-        score: 70,
-        level: targetLevel,
-        feedback: text,
+        score: 60, // Default to B1 level
+        level: 'B1',
+        feedback: content
       };
     }
 
-    // Log the evaluation result
+    // Log the final evaluation result
     console.log('Writing evaluation result:', result);
 
     return new Response(
