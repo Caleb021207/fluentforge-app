@@ -14,17 +14,19 @@ const LessonGrid = ({ lessons, onStartLesson, isLoading }: LessonGridProps) => {
   }
 
   return (
-    <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {lessons.map((lesson) => (
-        <LessonCard
-          key={lesson.id}
-          lesson={{
-            ...lesson,
-            icon: lesson.icon as JSX.Element
-          }}
-          onStart={() => onStartLesson(lesson.id)}
-        />
-      ))}
+    <div className="mx-auto" style={{ maxWidth: "33%" }}>
+      <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
+        {lessons.map((lesson) => (
+          <LessonCard
+            key={lesson.id}
+            lesson={{
+              ...lesson,
+              icon: lesson.icon as JSX.Element
+            }}
+            onStart={() => onStartLesson(lesson.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
