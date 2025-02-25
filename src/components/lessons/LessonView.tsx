@@ -19,7 +19,6 @@ import ShortAnswerExercise from './exercises/ShortAnswerExercise';
 import SentenceCorrectionExercise from './exercises/SentenceCorrectionExercise';
 import AIWritingPromptExercise from './exercises/AIWritingPromptExercise';
 import SpeechToTextExercise from './exercises/SpeechToTextExercise';
-import AIConversationExercise from './exercises/AIConversationExercise';
 
 interface Exercise {
   id: number;
@@ -212,8 +211,6 @@ const LessonView = ({ unit, onClose, onComplete }: LessonViewProps) => {
         return <AIWritingPromptExercise {...commonProps} />;
       case 'speech-to-text':
         return <SpeechToTextExercise {...commonProps} />;
-      case 'ai-conversation':
-        return <AIConversationExercise {...commonProps} />;
       case 'vocabulary':
         return <VocabularyLesson
                 vocabulary={unit.vocabulary}
