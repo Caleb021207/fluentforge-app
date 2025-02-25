@@ -103,45 +103,48 @@ export const seedExampleProfile = async () => {
     .eq('user_id', userId);
 
   // Generate certification attempt data
-  const startDate = new Date('2023-07-01');
   const certificationTypes = ['reading', 'writing', 'speaking', 'listening'];
   const levels = ['A1', 'A2', 'B1'];
-  
-  let counter = 0;
   const attempts = [];
-
-  // Create 5 attempts for each level and type (total 60 attempts)
+  
+  // Create exactly one attempt for each level and type
+  // The first date is 6 months ago, and each subsequent test is one month later
+  const startDate = new Date();
+  startDate.setMonth(startDate.getMonth() - 6); // Start 6 months ago
+  
+  let attemptCount = 0;
+  
   for (const level of levels) {
     for (const type of certificationTypes) {
-      // For each level and type, create 5 attempts with increasing scores
-      for (let i = 0; i < 5; i++) {
-        // Calculate base score depending on level
-        let baseScore = 0;
-        switch (level) {
-          case 'A1': baseScore = 40; break;
-          case 'A2': baseScore = 60; break;
-          case 'B1': baseScore = 75; break;
-        }
-        
-        // Add progress within level (0-15% improvement)
-        const progressScore = baseScore + (i * 3);
-        
-        // Calculate date (each attempt is 2-3 weeks apart)
-        const attemptDate = new Date(startDate);
-        attemptDate.setDate(attemptDate.getDate() + (counter * 16) + Math.floor(Math.random() * 5));
-        
-        attempts.push({
-          id: crypto.randomUUID(),
-          user_id: userId,
-          certification_type: type,
-          level,
-          score: Math.min(progressScore, 99), // Cap at 99
-          completed_at: attemptDate.toISOString(),
-          created_at: attemptDate.toISOString()
-        });
-        
-        counter++;
+      // Calculate date (each attempt is one month apart)
+      const attemptDate = new Date(startDate);
+      attemptDate.setMonth(attemptDate.getMonth() + attemptCount);
+      
+      // Calculate score based on level
+      let score = 0;
+      switch (level) {
+        case 'A1': 
+          score = 55 + Math.floor(Math.random() * 10); // 55-64%
+          break;
+        case 'A2': 
+          score = 65 + Math.floor(Math.random() * 10); // 65-74%
+          break;
+        case 'B1': 
+          score = 75 + Math.floor(Math.random() * 15); // 75-89%
+          break;
       }
+      
+      attempts.push({
+        id: crypto.randomUUID(),
+        user_id: userId,
+        certification_type: type,
+        level,
+        score,
+        completed_at: attemptDate.toISOString(),
+        created_at: attemptDate.toISOString()
+      });
+      
+      attemptCount++;
     }
   }
 
@@ -159,4 +162,3 @@ export const seedExampleProfile = async () => {
     lessonsAdded: lessonProgress.length
   };
 };
-
