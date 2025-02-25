@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -36,27 +37,54 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const getCurrentUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
-        await fetchProfileData(user.id);
-        await fetchLatestLevel(user.id);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+        if (user) {
+          await fetchProfileData(user.id);
+          await fetchLatestLevel(user.id);
+        }
+      } catch (error) {
+        console.error('Error getting user:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load user data",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     getCurrentUser();
-  }, []);
+  }, [toast]);
 
   const fetchProfileData = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('user_profiles')
         .select('*')
-        .eq('user_id', userId)
+        .eq('id', userId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Profile doesn't exist yet, create it
+          const { error: createError } = await supabase
+            .from('user_profiles')
+            .insert({
+              id: userId,
+              display_name: '',
+              learning_goal: '',
+              target_level: 'B2',
+              target_date: '',
+            });
+          
+          if (createError) throw createError;
+          return;
+        }
+        throw error;
+      }
 
       if (data) {
         setProfileData(prev => ({
@@ -140,11 +168,11 @@ const ProfilePage = () => {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      if (!event.target.files || !event.target.files[0]) return;
+      if (!event.target.files || !event.target.files[0] || !user) return;
 
       const file = event.target.files[0];
       const fileExt = file.name.split('.').pop();
-      const filePath = `${user?.id}/avatar.${fileExt}`;
+      const filePath = `${user.id}/avatar.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -159,9 +187,9 @@ const ProfilePage = () => {
       setAvatarUrl(publicUrl);
 
       const { error: updateError } = await supabase
-        .from('profiles')
+        .from('user_profiles')
         .update({ avatar_url: publicUrl })
-        .eq('user_id', user?.id);
+        .eq('id', user.id);
 
       if (updateError) throw updateError;
 
@@ -180,11 +208,13 @@ const ProfilePage = () => {
   };
 
   const handleProfileUpdate = async () => {
+    if (!user) return;
+    
     try {
       const { error } = await supabase
-        .from('profiles')
+        .from('user_profiles')
         .upsert({
-          user_id: user?.id,
+          id: user.id,
           display_name: profileData.displayName,
           learning_goal: profileData.learningGoal,
           target_level: profileData.targetLevel,
