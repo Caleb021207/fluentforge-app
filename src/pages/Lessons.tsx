@@ -1,7 +1,20 @@
+
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Trophy, Star } from "lucide-react";
+import { 
+  MessageCircle,
+  BookOpen,
+  Users,
+  Globe,
+  Rocket,
+  Clock,
+  Utensils,
+  Briefcase,
+  GraduationCap,
+  Trophy,
+  Star
+} from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
 import LevelSelector from "@/components/lessons/LevelSelector";
