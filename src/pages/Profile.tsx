@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import LevelRoadmap from "@/components/profile/LevelRoadmap";
 import LearningGoals from "@/components/profile/LearningGoals";
-import ExampleDataButton from "@/components/profile/ExampleDataButton";
+import ManualScoreForm from "@/components/profile/ManualScoreForm";
 
 interface ProfileData {
   currentLevel: string;
@@ -319,7 +319,7 @@ const DashboardPage = () => {
           testScores={testScores}
         />
         
-        {isExampleProfile && <ExampleDataButton />}
+        {isExampleProfile && <ManualScoreForm />}
       </div>
     </div>
   );
