@@ -20,6 +20,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
   const [matchedPairs, setMatchedPairs] = useState<Set<string>>(new Set());
   const [attempts, setAttempts] = useState(0);
   const [score, setScore] = useState(0);
+  const [showFeedback, setShowFeedback] = useState<'correct' | 'incorrect' | null>(null);
 
   useEffect(() => {
     const words = vocabulary.map(pair => pair.split(' - ')[0]);
@@ -35,6 +36,16 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
       [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
     return newArray;
+  };
+
+  const playAudio = async (text: string) => {
+    try {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-ES';
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.error("Error playing audio:", error);
+    }
   };
 
   const handleSelection = (type: 'word' | 'translation', value: string) => {
@@ -56,16 +67,23 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
       if (isMatch) {
         setMatchedPairs(prev => new Set([...prev, word]));
         setScore(prev => prev + 10);
+        setShowFeedback('correct');
         if (matchedPairs.size + 1 === vocabulary.length) {
           onComplete();
         }
       } else {
         setScore(prev => Math.max(0, prev - 5));
+        setShowFeedback('incorrect');
       }
 
       setAttempts(prev => prev + 1);
-      setSelectedWord(null);
-      setSelectedTranslation(null);
+      
+      // Reset selections after a brief delay
+      setTimeout(() => {
+        setSelectedWord(null);
+        setSelectedTranslation(null);
+        setShowFeedback(null);
+      }, 1000);
     }
   };
 
@@ -85,6 +103,18 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
           </div>
         </div>
       </Card>
+
+      {showFeedback && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`text-center p-4 rounded-lg ${
+            showFeedback === 'correct' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          }`}
+        >
+          {showFeedback === 'correct' ? "¡Correcto! 🎉" : "¡Inténtalo de nuevo! 💪"}
+        </motion.div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
@@ -111,7 +141,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                     className="ml-auto h-4 w-4 cursor-pointer hover:text-blue-500"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Text-to-speech functionality can be added here
+                      playAudio(word);
                     }}
                   />
                 </Button>
@@ -190,3 +220,4 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 };
 
 export default VocabularyLesson;
+
