@@ -28,6 +28,19 @@ const Lessons = () => {
   const totalLessonsCount = calculateTotalLessonsCount(lessonsByLevel);
   const completedLessonsCount = calculateCompletedLessonsCount(lessonsByLevel);
 
+  const getLevelCEFR = (level: LevelName) => {
+    switch (level) {
+      case "beginner":
+        return "(A1-A2)";
+      case "intermediate":
+        return "(B1-B2)";
+      case "advanced":
+        return "(C1-C2)";
+      default:
+        return "(A1-A2)";
+    }
+  };
+
   const stats: LessonStats = {
     totalLessons: totalLessonsCount,
     completedLessons: completedLessonsCount,
@@ -50,7 +63,6 @@ const Lessons = () => {
   };
 
   const handleCompleteLesson = () => {
-    // When lesson is completed, update the UI and potentially store progress
     toast({
       title: "Lesson Completed",
       description: "Congratulations! You've earned XP for completing this lesson.",
@@ -65,7 +77,9 @@ const Lessons = () => {
   return (
     <div className="container mx-auto px-4 pb-16">
       <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-1">Spanish Lessons <span className="text-green-600 font-normal">(A1-A2)</span></h1>
+        <h1 className="text-2xl font-bold mb-1">
+          Spanish Lessons <span className="text-green-600 font-normal">{getLevelCEFR(level)}</span>
+        </h1>
         
         <div className="mb-6">
           <LevelSelector currentLevel={level} onLevelChange={handleLevelChange} />
@@ -90,3 +104,4 @@ const Lessons = () => {
 };
 
 export default Lessons;
+

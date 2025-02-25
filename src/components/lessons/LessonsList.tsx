@@ -48,8 +48,8 @@ const LessonsList: React.FC<LessonsListProps> = ({
                           <span className="text-green-500 mr-2">✓</span>
                           <span className="text-sm">{challenge.description}</span>
                         </div>
-                        {challenge.xp && (
-                          <span className="text-yellow-600 font-medium text-xs">+{challenge.xp} XP</span>
+                        {challenge.xpReward && (
+                          <span className="text-yellow-600 font-medium text-xs">+{challenge.xpReward} XP</span>
                         )}
                       </div>
                     ))}
@@ -87,3 +87,4 @@ const LessonsList: React.FC<LessonsListProps> = ({
 };
 
 export default LessonsList;
+
