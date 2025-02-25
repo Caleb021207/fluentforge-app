@@ -1,11 +1,11 @@
 
 import { useEffect, useState } from "react";
-import { createExampleProfile } from "@/utils/seedExampleProfile";
+import { createExampleProfile, addExampleCertificationScores } from "@/utils/seedExampleProfile";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-// Define a type that matches what createExampleProfile can return
+// Define a type that matches what our profile functions can return
 type ExampleProfileResult = {
   success: boolean;
   userId?: string;
@@ -47,6 +47,36 @@ const ExampleDataPage = () => {
     }
   };
 
+  const handleAddCertScores = async () => {
+    setIsLoading(true);
+    try {
+      const scoreResult = await addExampleCertificationScores();
+      setResult(scoreResult || null);
+      
+      if (scoreResult && scoreResult.success) {
+        toast({
+          title: "Success!",
+          description: `Added 50% certification scores for user profile: ${scoreResult.userId}`,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: scoreResult?.error || "Failed to add certification scores. See console for details.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding certification scores:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add certification scores. See console for details.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
@@ -66,20 +96,47 @@ const ExampleDataPage = () => {
           </p>
         </div>
 
-        <Button
-          onClick={handleSeedData}
-          disabled={isLoading}
-          className="w-full"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Adding Example Data...
-            </>
-          ) : (
-            "Generate Example Data"
-          )}
-        </Button>
+        <div className="flex flex-col space-y-4">
+          <Button
+            onClick={handleSeedData}
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding Example Data...
+              </>
+            ) : (
+              "Generate Example Data"
+            )}
+          </Button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Or</span>
+            </div>
+          </div>
+
+          <Button
+            onClick={handleAddCertScores}
+            disabled={isLoading}
+            variant="outline"
+            className="w-full"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding Certification Scores...
+              </>
+            ) : (
+              "Add 50% Certification Scores Only"
+            )}
+          </Button>
+        </div>
 
         {result && result.success && result.userId && (
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">

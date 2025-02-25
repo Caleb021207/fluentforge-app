@@ -102,3 +102,73 @@ export const createExampleProfile = async () => {
     return { success: false, error };
   }
 };
+
+// New function to add certification scores to existing user
+export const addExampleCertificationScores = async () => {
+  try {
+    // Find the example user first
+    const { data: userData, error: userError } = await supabase.auth
+      .signInWithPassword({
+        email: "example@gmail.com", 
+        password: "123456"
+      });
+
+    if (userError) {
+      console.error("Could not find example user:", userError);
+      return { success: false, error: "Could not find example user. Please create an example profile first." };
+    }
+
+    const userId = userData.user?.id;
+    
+    if (!userId) {
+      return { success: false, error: "User ID not found" };
+    }
+
+    // Clear any existing certification attempts for this user
+    const { error: deleteError } = await supabase
+      .from("certification_attempts")
+      .delete()
+      .eq("user_id", userId);
+
+    if (deleteError) {
+      console.error("Error deleting existing certification attempts:", deleteError);
+      // Continue despite error - we'll just add new attempts
+    }
+
+    // Add new certification attempts with 50% score (mid-B1 level)
+    const certifications = [
+      {
+        certification_type: "reading",
+        score: 50,
+        level: "B1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(), // 7 days ago
+      },
+      {
+        certification_type: "writing",
+        score: 50,
+        level: "B1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days ago
+      },
+      {
+        certification_type: "speaking_listening",
+        score: 50,
+        level: "B1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+      }
+    ];
+
+    const { error: certError } = await supabase
+      .from("certification_attempts")
+      .insert(certifications);
+
+    if (certError) throw certError;
+
+    return { success: true, userId };
+  } catch (error) {
+    console.error("Error adding certification scores:", error);
+    return { success: false, error };
+  }
+};
