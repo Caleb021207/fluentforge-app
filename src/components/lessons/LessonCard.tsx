@@ -17,32 +17,32 @@ const LessonCard = ({ lesson, onStart }: LessonCardProps) => {
   const challengeDescriptions = challenges.map(challenge => challenge.description);
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden shadow-sm">
-      <CardHeader className="p-3">
-        <div className="flex items-center gap-2">
-          <div className="text-primary text-sm">{icon}</div>
-          <CardTitle className="text-base">{title}</CardTitle>
+    <Card className="h-full flex flex-col overflow-hidden">
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="text-primary">{icon}</div>
+          <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
         </div>
-        <CardDescription className="text-xs mt-1">{description}</CardDescription>
+        <CardDescription className="text-xs sm:text-sm">{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 p-3 pt-0">
+      <CardContent className="flex-1">
         {challenges && challenges.length > 0 && (
-          <div className="mt-1">
-            <h4 className="text-xs font-medium mb-1">Challenges:</h4>
+          <div className="mt-2">
+            <h4 className="text-sm font-medium mb-2">Challenges:</h4>
             <ChallengeList challenges={challengeDescriptions} />
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col items-stretch gap-1 p-3 pt-0">
+      <CardFooter className="flex flex-col items-stretch gap-2 pt-2">
         <div className="w-full flex items-center justify-between text-xs text-muted-foreground">
           <span>Progress</span>
           <span>{progress}%</span>
         </div>
-        <Progress value={progress} className="h-1" />
-        <div className="flex items-center justify-between w-full mt-1">
+        <Progress value={progress} className="h-2" />
+        <div className="flex items-center justify-between w-full mt-2">
           <span className="text-xs text-muted-foreground">{duration}</span>
           {onStart && (
-            <Button size="sm" onClick={onStart} className="h-7 text-xs">
+            <Button size="sm" onClick={onStart} className="px-3 py-1 h-auto text-xs sm:text-sm">
               Start Lesson
             </Button>
           )}
