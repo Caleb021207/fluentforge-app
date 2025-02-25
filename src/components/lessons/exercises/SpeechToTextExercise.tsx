@@ -125,4 +125,10 @@ const SpeechToTextExercise: React.FC<SpeechToTextExerciseProps> = ({
               ? "Listening... Speak clearly" 
               : "Press the microphone and speak the phrase in Spanish"}
           </p>
-        </div
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default SpeechToTextExercise;
