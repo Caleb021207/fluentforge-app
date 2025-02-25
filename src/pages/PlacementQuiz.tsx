@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -74,12 +73,28 @@ const PlacementQuiz = () => {
     return determineLevel(score);
   };
 
+  const getStartingLevel = () => {
+    const recommendedLevel = getRecommendedLevel();
+    // CEFR levels in ascending order
+    const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
+    const currentLevelIndex = levels.indexOf(recommendedLevel);
+    
+    // If the recommended level is A1 (or invalid), keep them at A1
+    if (currentLevelIndex <= 0) {
+      return "a1";
+    }
+    
+    // Otherwise, return one level below the recommended level
+    return levels[currentLevelIndex - 1].toLowerCase();
+  };
+
   const startQuiz = () => {
     setQuizState("quiz");
   };
 
   const goToLessons = () => {
-    const level = getRecommendedLevel().toLowerCase();
+    // Use the starting level (one below recommended) instead of the recommended level
+    const level = getStartingLevel();
     navigate(`/lessons?level=${level}`);
   };
 
@@ -180,8 +195,10 @@ const PlacementQuiz = () => {
   }
 
   if (quizState === "results") {
-    const level = getRecommendedLevel();
-    const levelDescription = getLevelDescription(level);
+    const recommendedLevel = getRecommendedLevel();
+    const startingLevel = getStartingLevel().toUpperCase();
+    const levelDescription = getLevelDescription(recommendedLevel);
+    const startingLevelDescription = getLevelDescription(startingLevel);
     
     return (
       <div className="max-w-3xl mx-auto p-6">
@@ -201,18 +218,23 @@ const PlacementQuiz = () => {
               <div className="space-y-6">
                 <div className="flex flex-col items-center justify-center py-6">
                   <div className="flex items-center justify-center w-24 h-24 rounded-full bg-lingua-primary text-white text-4xl font-bold mb-4">
-                    {level}
+                    {recommendedLevel}
                   </div>
-                  <h2 className="text-2xl font-bold mb-2">Your level: {level}</h2>
+                  <h2 className="text-2xl font-bold mb-2">Your level: {recommendedLevel}</h2>
                   <p className="text-center text-gray-600 max-w-md">{levelDescription}</p>
                 </div>
                 
                 <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="font-semibold text-lg mb-2">Next Steps</h3>
                   <p className="mb-4">
-                    We've customized your learning journey based on your proficiency level. 
-                    You'll start with lessons appropriate for {level} students.
+                    To ensure a solid foundation, we'll start you at level {startingLevel}, which is one level below your 
+                    assessed proficiency. This will help you build confidence while reviewing important concepts.
                   </p>
+                  {startingLevel !== recommendedLevel && (
+                    <p className="p-3 bg-blue-50 rounded border border-blue-100 text-sm">
+                      <strong>Starting level ({startingLevel}):</strong> {startingLevelDescription}
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
