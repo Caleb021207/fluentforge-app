@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { createExampleProfile, addExampleCertificationScores } from "@/utils/seedExampleProfile";
+import { addExampleCertificationScores } from "@/utils/seedExampleProfile";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -12,12 +12,12 @@ const ExampleDataButton = () => {
   const handleSeedData = async () => {
     setIsLoading(true);
     try {
-      // Add 50% certification scores instead of creating a new profile
+      // Add A1-B1 level certification scores for existing profile
       const result = await addExampleCertificationScores();
       if (result && result.success && result.userId) {
         toast({
           title: "Success!",
-          description: `Added 50% certification scores for user profile: ${result.userId}`,
+          description: `Added A1-B1 certification scores for user profile: ${result.userId}`,
         });
       } else {
         toast({
@@ -49,10 +49,10 @@ const ExampleDataButton = () => {
       {isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Adding 50% Scores...
+          Adding A1-B1 Scores...
         </>
       ) : (
-        "Add 50% Certification Scores"
+        "Add A1-B1 Certification Scores"
       )}
     </Button>
   );

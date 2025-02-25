@@ -103,7 +103,7 @@ export const createExampleProfile = async () => {
   }
 };
 
-// New function to add certification scores to existing user
+// Function to add certification scores to existing user
 export const addExampleCertificationScores = async () => {
   try {
     // Find the example user first
@@ -135,28 +135,76 @@ export const addExampleCertificationScores = async () => {
       // Continue despite error - we'll just add new attempts
     }
 
-    // Add new certification attempts with 50% score (mid-B1 level)
+    // Create scores for each certification type at each level A1-B1
+    // A1 (0-16%), A2 (17-32%), B1 (33-49%)
     const certifications = [
+      // Reading certifications
       {
         certification_type: "reading",
-        score: 50,
+        score: 10, // A1 level - middle of the range (0-16%)
+        level: "A1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 90).toISOString(), // 90 days ago
+      },
+      {
+        certification_type: "reading",
+        score: 25, // A2 level - middle of the range (17-32%)
+        level: "A2",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 60).toISOString(), // 60 days ago
+      },
+      {
+        certification_type: "reading",
+        score: 40, // B1 level - middle of the range (33-49%)
         level: "B1",
         user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(), // 7 days ago
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(), // 30 days ago
+      },
+      
+      // Writing certifications
+      {
+        certification_type: "writing",
+        score: 8, // A1 level - middle of the range (0-16%)
+        level: "A1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 85).toISOString(), // 85 days ago
       },
       {
         certification_type: "writing",
-        score: 50,
+        score: 22, // A2 level - middle of the range (17-32%)
+        level: "A2",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 55).toISOString(), // 55 days ago
+      },
+      {
+        certification_type: "writing",
+        score: 42, // B1 level - middle of the range (33-49%)
         level: "B1",
         user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days ago
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 25).toISOString(), // 25 days ago
+      },
+      
+      // Speaking certifications - using speaking_listening type as per schema
+      {
+        certification_type: "speaking_listening",
+        score: 12, // A1 level - middle of the range (0-16%)
+        level: "A1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 80).toISOString(), // 80 days ago
       },
       {
         certification_type: "speaking_listening",
-        score: 50,
+        score: 28, // A2 level - middle of the range (17-32%)
+        level: "A2",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 50).toISOString(), // 50 days ago
+      },
+      {
+        certification_type: "speaking_listening",
+        score: 38, // B1 level - middle of the range (33-49%)
         level: "B1",
         user_id: userId,
-        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(), // 20 days ago
       }
     ];
 
