@@ -42,9 +42,9 @@ const ExampleDataButton = () => {
     <Button
       onClick={handleSeedData}
       disabled={isLoading}
-      variant="outline"
-      size="sm"
-      className="mt-4"
+      variant="default"
+      size="lg"
+      className="mt-4 w-full"
     >
       {isLoading ? (
         <>
