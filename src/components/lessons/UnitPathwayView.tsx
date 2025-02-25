@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Check, ChevronRight, BookOpen, MessageCircle, Award } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Exercise {
   id: number;
@@ -47,7 +48,7 @@ const UnitPathwayView = ({ unit, onClose, onStartLesson }: UnitPathwayViewProps)
 
   return (
     <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl">
+      <Card className="w-full max-w-4xl max-h-[90vh] flex flex-col">
         <CardHeader className="relative">
           <Button 
             variant="ghost" 
@@ -71,7 +72,7 @@ const UnitPathwayView = ({ unit, onClose, onStartLesson }: UnitPathwayViewProps)
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-6 flex-grow overflow-hidden flex flex-col">
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Unit Vocabulary</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -88,45 +89,47 @@ const UnitPathwayView = ({ unit, onClose, onStartLesson }: UnitPathwayViewProps)
             </div>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-4 flex-grow overflow-hidden">
             <h3 className="text-lg font-semibold">Lessons Pathway</h3>
             
-            <div className="space-y-4">
-              {unit.lessons.map((lesson, index) => (
-                <div 
-                  key={lesson.id} 
-                  className="relative flex items-center bg-white rounded-lg border border-gray-200 p-4 hover:border-primary/50 transition-colors"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                    {getLessonIcon(lesson)}
-                  </div>
-                  
-                  <div className="flex-grow">
-                    <h4 className="font-medium">Lesson {index + 1}: {lesson.title}</h4>
-                    <p className="text-sm text-muted-foreground">{lesson.description}</p>
-                    <div className="flex items-center mt-1 space-x-3">
-                      <span className="text-xs flex items-center text-yellow-600">
-                        <Award className="h-3 w-3 mr-1" />
-                        {lesson.xpReward} XP
-                      </span>
-                      <span className="text-xs flex items-center text-blue-600">
-                        <MessageCircle className="h-3 w-3 mr-1" />
-                        {lesson.exercises.length} exercises
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-2"
-                    onClick={() => onStartLesson(index)}
+            <ScrollArea className="h-[calc(100%-2rem)] pr-4">
+              <div className="space-y-4 pb-4">
+                {unit.lessons.map((lesson, index) => (
+                  <div 
+                    key={lesson.id} 
+                    className="relative flex items-center bg-white rounded-lg border border-gray-200 p-4 hover:border-primary/50 transition-colors"
                   >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
-                </div>
-              ))}
-            </div>
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                      {getLessonIcon(lesson)}
+                    </div>
+                    
+                    <div className="flex-grow">
+                      <h4 className="font-medium">Lesson {index + 1}: {lesson.title}</h4>
+                      <p className="text-sm text-muted-foreground">{lesson.description}</p>
+                      <div className="flex items-center mt-1 space-x-3">
+                        <span className="text-xs flex items-center text-yellow-600">
+                          <Award className="h-3 w-3 mr-1" />
+                          {lesson.xpReward} XP
+                        </span>
+                        <span className="text-xs flex items-center text-blue-600">
+                          <MessageCircle className="h-3 w-3 mr-1" />
+                          {lesson.exercises.length} exercises
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-2"
+                      onClick={() => onStartLesson(index)}
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
           </div>
         </CardContent>
       </Card>
