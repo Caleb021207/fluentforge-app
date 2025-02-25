@@ -23,7 +23,7 @@ interface SkillRecommendation {
   recommendations: string[];
 }
 
-const Progress = () => {
+const ProgressPage = () => {
   const [progressData, setProgressData] = useState<ProgressData[]>([]);
   const [recommendations, setRecommendations] = useState<SkillRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -197,4 +197,4 @@ const Progress = () => {
   );
 };
 
-export default Progress;
+export default ProgressPage;
