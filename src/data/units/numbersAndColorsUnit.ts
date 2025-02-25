@@ -31,9 +31,15 @@ export const numbersAndColorsUnit: Unit = {
       exercises: [
         {
           id: 1,
-          type: "vocabulary",
-          question: "Learn these numbers in Spanish",
-          points: 10,
+          type: "multiple-choice",
+          question: "How do you say 'one' in Spanish?",
+          options: ["Uno", "Dos", "Tres", "Cuatro"],
+          answer: "Uno",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Uno' means 'one' in Spanish.",
+            incorrect: "Incorrect. 'Uno' means 'one' in Spanish."
+          }
         },
         {
           id: 2,
@@ -51,12 +57,39 @@ export const numbersAndColorsUnit: Unit = {
           id: 3,
           type: "word-matching",
           question: "Match the Spanish numbers with their English translations",
-          options: ["uno", "dos", "tres", "cuatro"],
-          answer: ["one", "two", "three", "four"],
+          pairs: [
+            { word: "uno", match: "one" },
+            { word: "dos", match: "two" },
+            { word: "tres", match: "three" },
+            { word: "cuatro", match: "four" }
+          ],
           points: 10,
           feedback: {
             correct: "Great job matching the numbers!",
             incorrect: "Some matches were incorrect. Please try again."
+          }
+        },
+        {
+          id: 4,
+          type: "fill-in-blanks",
+          question: "Fill in the blanks: Los números ___ y ___ son 'cinco' y 'seis' en español.",
+          answer: ["five", "six"],
+          points: 10,
+          feedback: {
+            correct: "¡Perfecto! 'Cinco' means 'five' and 'seis' means 'six'.",
+            incorrect: "The correct answers are 'five' and 'six'."
+          }
+        },
+        {
+          id: 5,
+          type: "sentence-building",
+          question: "Build a sentence counting from 1 to 3 in Spanish",
+          options: ["Uno,", "dos,", "tres", "cuatro", "cinco"],
+          answer: ["Uno,", "dos,", "tres"],
+          points: 10,
+          feedback: {
+            correct: "¡Excelente! 'Uno, dos, tres' is correct.",
+            incorrect: "The correct sequence is 'Uno, dos, tres'."
           }
         }
       ]
@@ -69,9 +102,15 @@ export const numbersAndColorsUnit: Unit = {
       exercises: [
         {
           id: 1,
-          type: "vocabulary",
-          question: "Learn these colors in Spanish",
-          points: 10,
+          type: "multiple-choice",
+          question: "How do you say 'red' in Spanish?",
+          options: ["Rojo", "Azul", "Verde", "Amarillo"],
+          answer: "Rojo",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Rojo' means 'red' in Spanish.",
+            incorrect: "Incorrect. 'Rojo' means 'red' in Spanish."
+          }
         },
         {
           id: 2,
@@ -96,6 +135,33 @@ export const numbersAndColorsUnit: Unit = {
           feedback: {
             correct: "¡Excelente! 'El coche es azul' means 'The car is blue'.",
             incorrect: "The correct sentence is 'El coche es azul' (The car is blue)."
+          }
+        },
+        {
+          id: 4,
+          type: "word-matching",
+          question: "Match these colors with their English translations",
+          pairs: [
+            { word: "verde", match: "green" },
+            { word: "amarillo", match: "yellow" },
+            { word: "negro", match: "black" },
+            { word: "blanco", match: "white" }
+          ],
+          points: 10,
+          feedback: {
+            correct: "¡Perfecto! You matched all the colors correctly.",
+            incorrect: "Some matches were incorrect. Please try again."
+          }
+        },
+        {
+          id: 5,
+          type: "fill-in-blanks",
+          question: "Complete the sentence: El cielo es ___ y el sol es ___.",
+          answer: ["azul", "amarillo"],
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'El cielo es azul y el sol es amarillo' means 'The sky is blue and the sun is yellow'.",
+            incorrect: "The correct answers are 'azul' (blue) and 'amarillo' (yellow)."
           }
         }
       ]

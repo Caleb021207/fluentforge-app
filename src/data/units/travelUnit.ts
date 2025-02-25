@@ -31,9 +31,15 @@ export const travelUnit: Unit = {
       exercises: [
         {
           id: 1,
-          type: "vocabulary",
-          question: "Learn these direction-related words",
-          points: 10,
+          type: "multiple-choice",
+          question: "How do you say 'Where is...?' in Spanish?",
+          options: ["¿Dónde está...?", "¿Cómo es...?", "¿Cuánto cuesta...?", "¿Qué hora es...?"],
+          answer: "¿Dónde está...?",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! '¿Dónde está...?' means 'Where is...?' in Spanish.",
+            incorrect: "Incorrect. '¿Dónde está...?' means 'Where is...?' in Spanish."
+          }
         },
         {
           id: 2,
@@ -63,6 +69,33 @@ export const travelUnit: Unit = {
             correct: "¡Perfecto! '¿Dónde está el hospital?' means 'Where is the hospital?'",
             incorrect: "The correct order is '¿Dónde está el hospital?' which means 'Where is the hospital?'"
           }
+        },
+        {
+          id: 4,
+          type: "fill-in-blanks",
+          question: "Complete the sentence: El museo está ___ del parque, a la ___.",
+          answer: ["cerca", "derecha"],
+          points: 10,
+          feedback: {
+            correct: "¡Perfecto! 'El museo está cerca del parque, a la derecha' means 'The museum is near the park, to the right'.",
+            incorrect: "The correct answers are 'cerca' (near) and 'derecha' (right)."
+          }
+        },
+        {
+          id: 5,
+          type: "word-matching",
+          question: "Match these direction words with their meanings",
+          pairs: [
+            { word: "derecha", match: "right" },
+            { word: "izquierda", match: "left" },
+            { word: "cerca", match: "near" },
+            { word: "lejos", match: "far" }
+          ],
+          points: 10,
+          feedback: {
+            correct: "¡Excelente! You matched all direction words correctly.",
+            incorrect: "Some matches were incorrect. Please try again."
+          }
         }
       ]
     },
@@ -74,9 +107,15 @@ export const travelUnit: Unit = {
       exercises: [
         {
           id: 1,
-          type: "vocabulary",
-          question: "Learn these transportation-related words",
-          points: 10,
+          type: "multiple-choice",
+          question: "How do you say 'train station' in Spanish?",
+          options: ["Estación de tren", "Estación de autobús", "Parada de taxi", "Terminal de aeropuerto"],
+          answer: "Estación de tren",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Estación de tren' means 'train station'.",
+            incorrect: "Incorrect. 'Estación de tren' means 'train station'."
+          }
         },
         {
           id: 2,
@@ -113,6 +152,17 @@ export const travelUnit: Unit = {
             correct: "¡Excelente! You correctly transcribed 'El tren sale a las nueve de la mañana' (The train leaves at nine in the morning).",
             incorrect: "The correct transcription is 'El tren sale a las nueve de la mañana' (The train leaves at nine in the morning)."
           }
+        },
+        {
+          id: 5,
+          type: "fill-in-blanks",
+          question: "Complete the sentence: El ___ llega a la ___ a las diez.",
+          answer: ["autobús", "estación"],
+          points: 10,
+          feedback: {
+            correct: "¡Perfecto! 'El autobús llega a la estación a las diez' means 'The bus arrives at the station at ten'.",
+            incorrect: "The correct answers are 'autobús' (bus) and 'estación' (station)."
+          }
         }
       ]
     },
@@ -124,14 +174,25 @@ export const travelUnit: Unit = {
       exercises: [
         {
           id: 1,
-          type: "vocabulary",
-          question: "Learn these hotel-related words",
-          points: 10,
+          type: "multiple-choice",
+          question: "How do you ask for a room with two beds in Spanish?",
+          options: [
+            "Quisiera una habitación con una cama", 
+            "Quisiera una habitación con dos camas", 
+            "Quisiera una habitación con baño", 
+            "Quisiera una habitación con vista"
+          ],
+          answer: "Quisiera una habitación con dos camas",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Quisiera una habitación con dos camas' means 'I would like a room with two beds'.",
+            incorrect: "Incorrect. 'Quisiera una habitación con dos camas' means 'I would like a room with two beds'."
+          }
         },
         {
           id: 2,
           type: "fill-in-blanks",
-          question: "Complete the sentence: 'Quisiera una _____ con vista al _____.'",
+          question: "Complete the polite request: 'Quisiera una _____ con vista al _____.'",
           answer: ["habitación", "mar"],
           points: 10,
           feedback: {
@@ -167,6 +228,22 @@ export const travelUnit: Unit = {
           feedback: {
             correct: "¡Correcto! 'No fumar' means 'No smoking'.",
             incorrect: "Incorrect. The sign says 'No fumar' which means 'No smoking'."
+          }
+        },
+        {
+          id: 5,
+          type: "word-matching",
+          question: "Match these hotel-related words with their meanings",
+          pairs: [
+            { word: "habitación", match: "room" },
+            { word: "llave", match: "key" },
+            { word: "recepción", match: "front desk" },
+            { word: "ascensor", match: "elevator" }
+          ],
+          points: 10,
+          feedback: {
+            correct: "¡Excelente! You matched all hotel-related words correctly.",
+            incorrect: "Some matches were incorrect. Please try again."
           }
         }
       ]
