@@ -12,6 +12,7 @@ const SpeakingListeningCertification = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [responses, setResponses] = useState<string[]>([]);
+  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
   const { toast } = useToast();
 
   const conversation = useConversation({
@@ -48,6 +49,23 @@ const SpeakingListeningCertification = () => {
     initMicrophone();
   }, [toast]);
 
+  // Timer effect
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isStarted && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            endTest();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isStarted, timeLeft]);
+
   const startTest = async () => {
     try {
       const {
@@ -68,10 +86,11 @@ const SpeakingListeningCertification = () => {
       });
       setIsStarted(true);
       setResponses([]);
+      setTimeLeft(180); // Reset timer to 3 minutes
       
       toast({
         title: "Test Started",
-        description: "The AI examiner will now assess your speaking and listening skills.",
+        description: "The AI examiner will now assess your speaking and listening skills. You have 3 minutes.",
       });
     } catch (error) {
       console.error("Error starting test:", error);
@@ -126,6 +145,7 @@ const SpeakingListeningCertification = () => {
     try {
       await conversation.endSession();
       setIsStarted(false);
+      setTimeLeft(180); // Reset timer
       
       // Calculate the score based on the AI's responses
       const { score, level } = calculateScore(responses);
@@ -165,6 +185,12 @@ const SpeakingListeningCertification = () => {
     }
   };
 
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -177,14 +203,14 @@ const SpeakingListeningCertification = () => {
               This test will assess both your speaking and listening skills through
               a conversation with an AI examiner. The AI will evaluate your
               pronunciation, fluency, comprehension, and ability to respond
-              appropriately.
+              appropriately. The test will last exactly 3 minutes.
             </p>
             <div className="space-y-2">
               <p className="text-sm text-gray-500">Requirements:</p>
               <ul className="list-disc list-inside text-sm text-gray-500">
                 <li>Working microphone</li>
                 <li>Quiet environment</li>
-                <li>15-20 minutes of uninterrupted time</li>
+                <li>3 minutes of uninterrupted time</li>
               </ul>
             </div>
             <Button
@@ -198,9 +224,12 @@ const SpeakingListeningCertification = () => {
         ) : (
           <div className="space-y-6">
             <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-2">
                 The AI examiner is listening. Speak clearly and answer the questions
                 to the best of your ability.
+              </p>
+              <p className="text-lg font-semibold text-center">
+                Time Remaining: {formatTime(timeLeft)}
               </p>
             </div>
             <Button
@@ -218,4 +247,3 @@ const SpeakingListeningCertification = () => {
 };
 
 export default SpeakingListeningCertification;
-
