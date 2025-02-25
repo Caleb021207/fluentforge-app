@@ -43,14 +43,51 @@ const UserInfo = ({
     try {
       setIsSaving(true);
       
-      const { error } = await supabase
+      // Check if user_profiles table exists
+      const { error: checkError } = await supabase
         .from('user_profiles')
-        .update({ 
-          display_name: newDisplayName 
-        })
-        .eq('id', user.id);
+        .select('id')
+        .limit(1);
 
-      if (error) throw error;
+      // If table doesn't exist, create it via RPC
+      if (checkError && checkError.code === '42P01') {
+        await supabase.rpc('create_profile_tables');
+        
+        // Insert the user profile after creating tables
+        await supabase
+          .from('user_profiles')
+          .insert({
+            id: user.id,
+            display_name: newDisplayName,
+            target_level: 'B2',
+          });
+      } else {
+        // Update existing profile
+        const { error } = await supabase
+          .from('user_profiles')
+          .update({ 
+            display_name: newDisplayName 
+          })
+          .eq('id', user.id);
+
+        if (error) {
+          console.error('Update error:', error);
+          // If we get "not found" error, try inserting instead
+          if (error.code === 'PGRST116') {
+            const { error: insertError } = await supabase
+              .from('user_profiles')
+              .insert({
+                id: user.id,
+                display_name: newDisplayName,
+                target_level: 'B2',
+              });
+              
+            if (insertError) throw insertError;
+          } else {
+            throw error;
+          }
+        }
+      }
 
       setProfileData((prev: any) => ({
         ...prev,
@@ -67,7 +104,7 @@ const UserInfo = ({
       console.error('Error updating profile:', error);
       toast({
         title: "Error",
-        description: "Failed to update profile information",
+        description: "Failed to update profile information. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -83,29 +120,39 @@ const UserInfo = ({
       const fileExt = file.name.split('.').pop();
       const filePath = `${user.id}/avatar.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { upsert: true });
+      // Check if avatars storage bucket exists
+      try {
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, file, { upsert: true });
 
-      if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
+        const { data: { publicUrl } } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
 
-      setAvatarUrl(publicUrl);
+        setAvatarUrl(publicUrl);
 
-      const { error: updateError } = await supabase
-        .from('user_profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('id', user.id);
+        const { error: updateError } = await supabase
+          .from('user_profiles')
+          .update({ avatar_url: publicUrl })
+          .eq('id', user.id);
 
-      if (updateError) throw updateError;
+        if (updateError) throw updateError;
 
-      toast({
-        title: "Success",
-        description: "Profile picture updated successfully",
-      });
+        toast({
+          title: "Success",
+          description: "Profile picture updated successfully",
+        });
+      } catch (error) {
+        console.error('Error uploading to avatars bucket:', error);
+        toast({
+          title: "Error",
+          description: "Failed to upload profile picture. Storage bucket may not exist.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error uploading avatar:', error);
       toast({

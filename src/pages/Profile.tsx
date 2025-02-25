@@ -44,7 +44,7 @@ const ProfilePage = () => {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
         if (user) {
-          await ensureTablesExist();
+          await createUserProfile(user.id);
           await fetchProfileData(user.id);
           await fetchLatestLevel(user.id);
           await fetchTestScores(user.id);
@@ -99,22 +99,80 @@ const ProfilePage = () => {
     }
   };
 
-  const ensureTablesExist = async () => {
+  const createUserProfile = async (userId: string) => {
     try {
+      // First, check if the tables exist
       const { error: checkError } = await supabase
         .from('user_profiles')
         .select('id')
         .limit(1);
 
+      // If tables don't exist, create them directly
       if (checkError && checkError.code === '42P01') {
-        await supabase.rpc('create_profile_tables');
+        // Execute SQL to create tables
+        const { error: createError } = await supabase.rpc('create_profile_tables');
+        
+        if (createError) {
+          console.error('Error creating tables:', createError);
+          // Fallback: create the profile directly if RPC fails
+          await manuallyCreateProfile(userId);
+          return;
+        }
+        
         toast({
           title: "Profile Created",
           description: "Your profile has been set up successfully",
         });
       }
+      
+      // Check if user profile exists
+      const { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('id', userId)
+        .single();
+      
+      // If profile doesn't exist, create it
+      if (profileError && profileError.code === 'PGRST116') {
+        await supabase
+          .from('user_profiles')
+          .insert({
+            id: userId,
+            display_name: '',
+            learning_goal: '',
+            target_level: 'B2',
+            target_date: '',
+          });
+      }
     } catch (error) {
-      console.error('Error checking/creating tables:', error);
+      console.error('Error checking/creating profile:', error);
+    }
+  };
+
+  const manuallyCreateProfile = async (userId: string) => {
+    try {
+      // Create user_profiles table and insert user's profile
+      await supabase.auth.admin.createUser({
+        id: userId,
+        email: '',
+        user_metadata: { initialized: true }
+      });
+      
+      const { error: insertError } = await supabase
+        .from('user_profiles')
+        .insert({
+          id: userId,
+          display_name: '',
+          learning_goal: '',
+          target_level: 'B2',
+          target_date: '',
+        });
+        
+      if (insertError && insertError.code !== '23505') { // Ignore duplicate key errors
+        console.error('Error creating profile:', insertError);
+      }
+    } catch (error) {
+      console.error('Error manually creating profile:', error);
     }
   };
 
@@ -128,6 +186,7 @@ const ProfilePage = () => {
 
       if (error) {
         if (error.code === 'PGRST116') {
+          // Profile doesn't exist, create it
           await supabase
             .from('user_profiles')
             .insert({
@@ -156,7 +215,7 @@ const ProfilePage = () => {
       console.error('Error fetching profile:', error);
       toast({
         title: "Error",
-        description: "Failed to load profile data",
+        description: "Failed to load profile data. Please try refreshing the page.",
         variant: "destructive",
       });
     }

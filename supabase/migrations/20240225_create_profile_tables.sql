@@ -8,7 +8,7 @@ as $$
 begin
   -- Create user_profiles table if it doesn't exist
   create table if not exists public.user_profiles (
-    id uuid primary key references auth.users(id),
+    id uuid primary key,
     display_name text,
     learning_goal text,
     target_level text,
@@ -20,7 +20,7 @@ begin
   -- Create certification_attempts table if it doesn't exist
   create table if not exists public.certification_attempts (
     id uuid default gen_random_uuid() primary key,
-    user_id uuid references auth.users(id),
+    user_id uuid,
     certification_type text not null,
     level text not null,
     score integer not null,
