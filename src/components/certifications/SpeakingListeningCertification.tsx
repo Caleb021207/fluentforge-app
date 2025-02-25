@@ -11,11 +11,15 @@ const SpeakingListeningCertification = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [responses, setResponses] = useState<string[]>([]);
   const { toast } = useToast();
 
   const conversation = useConversation({
     onMessage: (message) => {
       console.log("Message received:", message);
+      if (message.type === "llm_response") {
+        setResponses(prev => [...prev, message.content]);
+      }
     },
     onError: (error) => {
       toast({
@@ -60,9 +64,10 @@ const SpeakingListeningCertification = () => {
       }
 
       await conversation.startSession({
-        agentId: "2rNEBxdJ814y7dcdZSOb", // Replace with your actual agent ID
+        agentId: "trained-examiner-id", // Replace with your trained examiner agent ID
       });
       setIsStarted(true);
+      setResponses([]);
       
       toast({
         title: "Test Started",
@@ -78,21 +83,59 @@ const SpeakingListeningCertification = () => {
     }
   };
 
+  const calculateScore = (responses: string[]) => {
+    // This is a simplified scoring algorithm
+    // You should adjust these weights based on your requirements
+    let totalScore = 0;
+    let fluencyScore = 0;
+    let comprehensionScore = 0;
+    let grammarScore = 0;
+    let vocabularyScore = 0;
+
+    responses.forEach(response => {
+      // Look for specific keywords in the AI's responses
+      if (response.toLowerCase().includes("fluent") || response.toLowerCase().includes("natural")) {
+        fluencyScore += 20;
+      }
+      if (response.toLowerCase().includes("understood") || response.toLowerCase().includes("correct response")) {
+        comprehensionScore += 20;
+      }
+      if (response.toLowerCase().includes("grammar") || response.toLowerCase().includes("structure")) {
+        grammarScore += 20;
+      }
+      if (response.toLowerCase().includes("vocabulary") || response.toLowerCase().includes("word choice")) {
+        vocabularyScore += 20;
+      }
+    });
+
+    // Calculate the total score (max 100)
+    totalScore = Math.min(100, (fluencyScore + comprehensionScore + grammarScore + vocabularyScore) / 4);
+    
+    // Determine CEFR level based on score
+    let level = "A1";
+    if (totalScore >= 90) level = "C2";
+    else if (totalScore >= 80) level = "C1";
+    else if (totalScore >= 70) level = "B2";
+    else if (totalScore >= 60) level = "B1";
+    else if (totalScore >= 50) level = "A2";
+
+    return { score: Math.round(totalScore), level };
+  };
+
   const endTest = async () => {
     try {
       await conversation.endSession();
       setIsStarted(false);
       
+      // Calculate the score based on the AI's responses
+      const { score, level } = calculateScore(responses);
+
       // Save the test results
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (!user) return;
-
-      // You would need to implement the logic to calculate the score and level
-      const score = 80; // This should be calculated based on the conversation
-      const level = "B1"; // This should be determined based on the performance
 
       const { error } = await supabase
         .from('certification_attempts')
@@ -110,7 +153,7 @@ const SpeakingListeningCertification = () => {
 
       toast({
         title: "Test Completed",
-        description: `You've completed the speaking and listening test. Score: ${score}%`,
+        description: `You've completed the speaking and listening test. Score: ${score}% (${level})`,
       });
     } catch (error) {
       console.error("Error ending test:", error);
@@ -175,3 +218,4 @@ const SpeakingListeningCertification = () => {
 };
 
 export default SpeakingListeningCertification;
+
