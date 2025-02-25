@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Book, MessageSquare, User, Award, BarChart } from "lucide-react";
+import { Book, MessageSquare, LayoutDashboard, Award, BarChart } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
@@ -13,7 +13,7 @@ const Navigation = () => {
     { icon: MessageSquare, label: "Practice", path: "/practice" },
     { icon: Award, label: "Certificates", path: "/certificates" },
     { icon: BarChart, label: "Progress", path: "/progress" },
-    { icon: User, label: "Profile", path: "/profile" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/profile" },
   ];
 
   return (

@@ -1,16 +1,14 @@
 
 import { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useToast } from "@/hooks/use-toast";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
-import UserInfo from "@/components/profile/UserInfo";
-import LearningGoals from "@/components/profile/LearningGoals";
 import LevelRoadmap from "@/components/profile/LevelRoadmap";
+import LearningGoals from "@/components/profile/LearningGoals";
 
 interface ProfileData {
-  displayName: string;
   currentLevel: string;
   learningGoal: string;
   targetLevel: string;
@@ -24,17 +22,15 @@ interface TestScores {
   listening?: number;
 }
 
-const ProfilePage = () => {
+const DashboardPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [profileData, setProfileData] = useState<ProfileData>({
-    displayName: "",
     currentLevel: "",
     learningGoal: "",
     targetLevel: "B2",
     targetDate: "",
   });
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [testScores, setTestScores] = useState<TestScores>({});
   const { toast } = useToast();
 
@@ -118,11 +114,6 @@ const ProfilePage = () => {
           await manuallyCreateProfile(userId);
           return;
         }
-        
-        toast({
-          title: "Profile Created",
-          description: "Your profile has been set up successfully",
-        });
       }
       
       // Check if user profile exists
@@ -204,12 +195,10 @@ const ProfilePage = () => {
       if (profile) {
         setProfileData(prev => ({
           ...prev,
-          displayName: profile.display_name || '',
           learningGoal: profile.learning_goal || '',
           targetLevel: profile.target_level || 'B2',
           targetDate: profile.target_date || ''
         }));
-        setAvatarUrl(profile.avatar_url);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -289,7 +278,7 @@ const ProfilePage = () => {
     return (
       <div className="text-center py-8">
         <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
-        <p>Please sign in to view your profile.</p>
+        <p>Please sign in to view your dashboard.</p>
       </div>
     );
   }
@@ -304,24 +293,17 @@ const ProfilePage = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-lingua-text mb-4">
-        Your Profile
+      <h1 className="text-3xl font-bold text-lingua-text mb-4 flex items-center gap-2">
+        <LayoutDashboard className="h-7 w-7" />
+        Language Learning Dashboard
       </h1>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <UserInfo
-          user={user}
-          displayName={profileData.displayName}
-          setProfileData={setProfileData}
-          avatarUrl={avatarUrl}
-          setAvatarUrl={setAvatarUrl}
-        />
-        
+      <div className="grid gap-6">
         <LearningGoals
           user={user}
           profileData={profileData}
           setProfileData={setProfileData}
-          avatarUrl={avatarUrl}
+          avatarUrl={null}
         />
 
         <LevelRoadmap
@@ -335,4 +317,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default DashboardPage;

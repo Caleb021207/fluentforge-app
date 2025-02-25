@@ -13,7 +13,6 @@ interface LearningGoalsProps {
     learningGoal: string;
     targetLevel: string;
     targetDate: string;
-    displayName: string;
   };
   setProfileData: (data: any) => void;
   avatarUrl: string | null;
