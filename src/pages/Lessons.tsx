@@ -622,4 +622,155 @@ const numbersAndColorsUnit: Unit = {
           feedback: {
             correct: "¡Correcto! 'Verde' means 'green'.",
             incorrect: "¡Incorrecto! 'Verde' means 'green'."
-          
+          }
+        },
+        {
+          id: 4,
+          type: "fill-in-blanks",
+          question: "Complete: La banana es _____. (The banana is yellow)",
+          answer: "amarilla",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'La banana es amarilla.' - 'The banana is yellow.'",
+            incorrect: "¡Incorrecto! The correct answer is 'amarilla'."
+          }
+        },
+        {
+          id: 5,
+          type: "multiple-choice",
+          question: "What is 'negro' in English?",
+          options: ["White", "Black", "Blue", "Gray"],
+          answer: "Black",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Negro' means 'black'.",
+            incorrect: "¡Incorrecto! 'Negro' means 'black'."
+          }
+        }
+      ]
+    },
+    {
+      id: 4,
+      title: "More Colors",
+      description: "Learn additional colors and practice color combinations",
+      xpReward: 25,
+      exercises: [
+        {
+          id: 1,
+          type: "multiple-choice",
+          question: "How do you say 'white' in Spanish?",
+          options: ["Negro", "Blanco", "Gris", "Marrón"],
+          answer: "Blanco",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Blanco' means 'white'.",
+            incorrect: "¡Incorrecto! 'Blanco' means 'white'."
+          }
+        },
+        {
+          id: 2,
+          type: "fill-in-blanks",
+          question: "The orange is _____. (orange color)",
+          answer: "naranja",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'La naranja es naranja.' - 'The orange is orange.'",
+            incorrect: "¡Incorrecto! The correct answer is 'naranja'."
+          }
+        },
+        {
+          id: 3,
+          type: "multiple-choice",
+          question: "Which color is 'morado' in English?",
+          options: ["Brown", "Gray", "Purple", "Pink"],
+          answer: "Purple",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Morado' means 'purple'.",
+            incorrect: "¡Incorrecto! 'Morado' means 'purple'."
+          }
+        },
+        {
+          id: 4,
+          type: "fill-in-blanks",
+          question: "Complete: El cielo y el mar son _____. (The sky and the sea are blue)",
+          answer: "azules",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'El cielo y el mar son azules.' - 'The sky and sea are blue.'",
+            incorrect: "¡Incorrecto! The correct answer is 'azules' (plural form)."
+          }
+        },
+        {
+          id: 5,
+          type: "sentence-correction",
+          question: "Correct this sentence: 'La manzana es verde.'",
+          answer: "La manzana es verde.",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'La manzana es verde.' is correct - 'The apple is green.'",
+            incorrect: "¡Incorrecto! 'La manzana es verde.' is already correct."
+          }
+        }
+      ]
+    },
+    {
+      id: 5,
+      title: "Combining Numbers & Colors",
+      description: "Practice using numbers and colors together in sentences",
+      xpReward: 30,
+      exercises: [
+        {
+          id: 1,
+          type: "fill-in-blanks",
+          question: "Complete: Tengo _____ lápices rojos. (I have two red pencils)",
+          answer: "dos",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'Tengo dos lápices rojos.' - 'I have two red pencils.'",
+            incorrect: "¡Incorrecto! The correct answer is 'dos'."
+          }
+        },
+        {
+          id: 2,
+          type: "multiple-choice",
+          question: "How would you say 'five blue shirts' in Spanish?",
+          options: ["cinco camisas azules", "azul cinco camisas", "camisas cinco azules", "azules camisas cinco"],
+          answer: "cinco camisas azules",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Cinco camisas azules' is correct.",
+            incorrect: "¡Incorrecto! The correct phrase is 'cinco camisas azules'."
+          }
+        },
+        {
+          id: 3,
+          type: "fill-in-blanks",
+          question: "Complete: Hay _____ flores amarillas en el jardín. (There are ten yellow flowers in the garden)",
+          answer: "diez",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'Hay diez flores amarillas en el jardín.'",
+            incorrect: "¡Incorrecto! The correct answer is 'diez'."
+          }
+        },
+        {
+          id: 4,
+          type: "sentence-correction",
+          question: "Correct this sentence: 'Tengo una coche rojo.'",
+          answer: "Tengo un coche rojo.",
+          points: 15,
+          feedback: {
+            correct: "¡Correcto! 'Tengo un coche rojo.' is correct (coche is masculine).",
+            incorrect: "¡Incorrecto! It should be 'Tengo un coche rojo.' (coche is masculine)."
+          }
+        },
+        {
+          id: 5,
+          type: "multiple-choice",
+          question: "What does 'tres casas blancas' mean?",
+          options: ["three white houses", "thirty white houses", "three blue houses", "white three houses"],
+          answer: "three white houses",
+          points: 5,
+          feedback: {
+            correct:
