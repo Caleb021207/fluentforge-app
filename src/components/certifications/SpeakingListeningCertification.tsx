@@ -64,7 +64,7 @@ const SpeakingListeningCertification = () => {
       }
 
       await conversation.startSession({
-        agentId: "trained-examiner-id", // Replace with your trained examiner agent ID
+        agentId: "2rNEBxdJ814y7dcdZSOb", // Using your actual agent ID
       });
       setIsStarted(true);
       setResponses([]);
