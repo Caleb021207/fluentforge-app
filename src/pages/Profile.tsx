@@ -20,6 +20,25 @@ interface ProfileData {
   targetDate: string;
 }
 
+interface UserProfile {
+  id: string;
+  display_name: string;
+  learning_goal: string;
+  target_level: string;
+  target_date: string;
+  avatar_url: string | null;
+}
+
+interface CertificationAttempt {
+  certification_type: string;
+  completed_at: string;
+  created_at: string;
+  id: string;
+  level: string;
+  score: number;
+  user_id: string;
+}
+
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 const ProfilePage = () => {
@@ -63,7 +82,7 @@ const ProfilePage = () => {
     try {
       const { data, error } = await supabase
         .from('user_profiles')
-        .select('*')
+        .select<'user_profiles', UserProfile>('*')
         .eq('id', userId)
         .single();
 
@@ -72,7 +91,7 @@ const ProfilePage = () => {
           // Profile doesn't exist yet, create it
           const { error: createError } = await supabase
             .from('user_profiles')
-            .insert({
+            .insert<Partial<UserProfile>>({
               id: userId,
               display_name: '',
               learning_goal: '',
@@ -110,7 +129,7 @@ const ProfilePage = () => {
     try {
       const { data: attempts, error } = await supabase
         .from('certification_attempts')
-        .select('*')
+        .select<'certification_attempts', CertificationAttempt>('*')
         .eq('user_id', userId)
         .order('completed_at', { ascending: false });
 
@@ -188,7 +207,7 @@ const ProfilePage = () => {
 
       const { error: updateError } = await supabase
         .from('user_profiles')
-        .update({ avatar_url: publicUrl })
+        .update<Partial<UserProfile>>({ avatar_url: publicUrl })
         .eq('id', user.id);
 
       if (updateError) throw updateError;
@@ -213,7 +232,7 @@ const ProfilePage = () => {
     try {
       const { error } = await supabase
         .from('user_profiles')
-        .upsert({
+        .upsert<UserProfile>({
           id: user.id,
           display_name: profileData.displayName,
           learning_goal: profileData.learningGoal,
