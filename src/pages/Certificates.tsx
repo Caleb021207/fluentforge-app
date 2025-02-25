@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import ReadingCertification from "@/components/certifications/ReadingCertification";
+import WritingCertification from "@/components/certifications/WritingCertification";
 
 // Define the type for our certification attempts
 type CertificationAttempt = {
@@ -57,6 +58,9 @@ const Certificates = () => {
       
       {/* Reading Certification Test */}
       <ReadingCertification />
+      
+      {/* Writing Certification Test */}
+      <WritingCertification />
       
       {/* Recent Scores */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
