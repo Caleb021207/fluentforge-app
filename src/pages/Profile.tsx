@@ -47,11 +47,7 @@ const DashboardPage = () => {
         }
       } catch (error) {
         console.error('Error getting user:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load user data",
-          variant: "destructive",
-        });
+        // Removed error toast here
       } finally {
         setIsLoading(false);
       }
@@ -92,6 +88,7 @@ const DashboardPage = () => {
       if (error) throw error;
     } catch (error) {
       console.error('Error updating target level:', error);
+      // Removed error toast here
     }
   };
 
@@ -137,6 +134,7 @@ const DashboardPage = () => {
       }
     } catch (error) {
       console.error('Error checking/creating profile:', error);
+      // Removed error toast here
     }
   };
 
@@ -164,6 +162,7 @@ const DashboardPage = () => {
       }
     } catch (error) {
       console.error('Error manually creating profile:', error);
+      // Removed error toast here
     }
   };
 
@@ -189,7 +188,8 @@ const DashboardPage = () => {
             });
           return;
         }
-        throw error;
+        console.error('Error fetching profile:', error);
+        return;
       }
 
       if (profile) {
@@ -202,11 +202,7 @@ const DashboardPage = () => {
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load profile data. Please try refreshing the page.",
-        variant: "destructive",
-      });
+      // Removed error toast here and just log the error
     }
   };
 
@@ -244,6 +240,7 @@ const DashboardPage = () => {
       }
     } catch (error) {
       console.error('Error fetching level:', error);
+      // Removed error toast here
     }
   };
 
@@ -271,6 +268,7 @@ const DashboardPage = () => {
       }
     } catch (error) {
       console.error('Error fetching test scores:', error);
+      // Removed error toast here
     }
   };
 
