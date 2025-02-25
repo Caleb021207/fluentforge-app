@@ -18,13 +18,19 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState<'correct' | 'incorrect' | null>(null);
   
+  // Parse vocabulary into separate words and translations
+  const vocabPairs = vocabulary.map(pair => {
+    const [word, translation] = pair.split(' - ');
+    return { word, translation };
+  });
+  
   // Split vocabulary into groups of 6 pairs for each card
-  const vocabGroups = vocabulary.reduce((acc, curr, i) => {
+  const vocabGroups = vocabPairs.reduce((acc, curr, i) => {
     const groupIndex = Math.floor(i / 6);
     if (!acc[groupIndex]) acc[groupIndex] = [];
     acc[groupIndex].push(curr);
     return acc;
-  }, [] as string[][]);
+  }, [] as Array<Array<{ word: string; translation: string }>>);
 
   const [selectedWord, setSelectedWord] = useState<{ word: string; groupIndex: number } | null>(null);
   const [selectedTranslation, setSelectedTranslation] = useState<{ translation: string; groupIndex: number } | null>(null);
@@ -57,10 +63,9 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
       const word = type === 'word' ? value : selectedWord!.word;
       const translation = type === 'translation' ? value : selectedTranslation!.translation;
       
-      const isMatch = vocabulary.some(pair => {
-        const [w, t] = pair.split(' - ');
-        return (w === word && t === translation);
-      });
+      const isMatch = vocabPairs.some(pair => 
+        pair.word === word && pair.translation === translation
+      );
 
       if (isMatch) {
         setMatchedPairs(prev => new Set([...prev, word]));
@@ -85,6 +90,17 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
   };
 
   const progress = (matchedPairs.size / vocabulary.length) * 100;
+
+  // Shuffle the translations independently for each group
+  const getShuffledTranslations = (group) => {
+    const translations = [...group.map(pair => pair.translation)];
+    // Fisher-Yates shuffle algorithm
+    for (let i = translations.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [translations[i], translations[j]] = [translations[j], translations[i]];
+    }
+    return translations;
+  };
 
   return (
     <ScrollArea className="h-[calc(100vh-12rem)] px-4">
@@ -116,8 +132,10 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 
         <div className="grid gap-6">
           {vocabGroups.map((group, groupIndex) => {
-            const words = group.map(pair => pair.split(' - ')[0]);
-            const translations = group.map(pair => pair.split(' - ')[1]);
+            // Shuffle the words within this group
+            const shuffledGroup = [...group].sort(() => Math.random() - 0.5);
+            // Get a separately shuffled list of translations
+            const shuffledTranslations = getShuffledTranslations(group);
             
             return (
               <Card key={groupIndex} className="p-4">
@@ -128,28 +146,28 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <h4 className="font-medium mb-2">Spanish Words</h4>
-                      {words.map((word) => (
+                      {shuffledGroup.map((pair) => (
                         <motion.div
-                          key={word}
+                          key={pair.word}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
                         >
                           <Button
-                            variant={selectedWord?.word === word ? "default" : "outline"}
+                            variant={selectedWord?.word === pair.word ? "default" : "outline"}
                             className={`w-full justify-start ${
-                              matchedPairs.has(word) ? "bg-green-100 text-green-800" : ""
+                              matchedPairs.has(pair.word) ? "bg-green-100 text-green-800" : ""
                             }`}
-                            onClick={() => !matchedPairs.has(word) && handleSelection('word', word, groupIndex)}
-                            disabled={matchedPairs.has(word)}
+                            onClick={() => !matchedPairs.has(pair.word) && handleSelection('word', pair.word, groupIndex)}
+                            disabled={matchedPairs.has(pair.word)}
                           >
-                            {matchedPairs.has(word) ? <Check className="h-4 w-4 mr-2" /> : <Puzzle className="h-4 w-4 mr-2" />}
-                            {word}
+                            {matchedPairs.has(pair.word) ? <Check className="h-4 w-4 mr-2" /> : <Puzzle className="h-4 w-4 mr-2" />}
+                            {pair.word}
                             <Volume2 
                               className="ml-auto h-4 w-4 cursor-pointer hover:text-blue-500"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                playAudio(word);
+                                playAudio(pair.word);
                               }}
                             />
                           </Button>
@@ -159,7 +177,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 
                     <div className="space-y-2">
                       <h4 className="font-medium mb-2">English Translations</h4>
-                      {translations.map((translation) => (
+                      {shuffledTranslations.map((translation) => (
                         <motion.div
                           key={translation}
                           initial={{ opacity: 0, y: 20 }}
@@ -169,28 +187,24 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                           <Button
                             variant={selectedTranslation?.translation === translation ? "default" : "outline"}
                             className={`w-full justify-start ${
-                              vocabulary.some(pair => {
-                                const [word, trans] = pair.split(' - ');
-                                return trans === translation && matchedPairs.has(word);
+                              vocabPairs.some(pair => {
+                                return pair.translation === translation && matchedPairs.has(pair.word);
                               }) ? "bg-green-100 text-green-800" : ""
                             }`}
                             onClick={() => {
-                              const isMatched = vocabulary.some(pair => {
-                                const [word, trans] = pair.split(' - ');
-                                return trans === translation && matchedPairs.has(word);
+                              const isMatched = vocabPairs.some(pair => {
+                                return pair.translation === translation && matchedPairs.has(pair.word);
                               });
                               if (!isMatched) {
                                 handleSelection('translation', translation, groupIndex);
                               }
                             }}
-                            disabled={vocabulary.some(pair => {
-                              const [word, trans] = pair.split(' - ');
-                              return trans === translation && matchedPairs.has(word);
+                            disabled={vocabPairs.some(pair => {
+                              return pair.translation === translation && matchedPairs.has(pair.word);
                             })}
                           >
-                            {vocabulary.some(pair => {
-                              const [word, trans] = pair.split(' - ');
-                              return trans === translation && matchedPairs.has(word);
+                            {vocabPairs.some(pair => {
+                              return pair.translation === translation && matchedPairs.has(pair.word);
                             }) ? (
                               <Check className="h-4 w-4 mr-2" />
                             ) : (
@@ -231,4 +245,3 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 };
 
 export default VocabularyLesson;
-
