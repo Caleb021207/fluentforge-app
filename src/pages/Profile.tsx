@@ -64,6 +64,41 @@ const ProfilePage = () => {
     getCurrentUser();
   }, [toast]);
 
+  // Effect to update target level when current level changes
+  useEffect(() => {
+    if (profileData.currentLevel) {
+      const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+      const currentLevelIndex = CEFR_LEVELS.indexOf(profileData.currentLevel);
+      
+      // If current level is valid and not the highest level
+      if (currentLevelIndex !== -1 && currentLevelIndex < CEFR_LEVELS.length - 1) {
+        const nextLevel = CEFR_LEVELS[currentLevelIndex + 1];
+        setProfileData(prev => ({
+          ...prev,
+          targetLevel: nextLevel
+        }));
+        
+        // Update the target level in the database
+        if (user) {
+          updateTargetLevel(user.id, nextLevel);
+        }
+      }
+    }
+  }, [profileData.currentLevel, user]);
+
+  const updateTargetLevel = async (userId: string, targetLevel: string) => {
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ target_level: targetLevel })
+        .eq('id', userId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error updating target level:', error);
+    }
+  };
+
   const ensureTablesExist = async () => {
     try {
       const { error: checkError } = await supabase
