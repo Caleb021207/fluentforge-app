@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -88,17 +89,15 @@ const Practice = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat-with-tutor', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+        body: { message: input }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to get AI response');
+      if (error) {
+        throw error;
       }
 
-      const data = await response.json();
+      console.log('Response from AI tutor:', data);
       
       const assistantMessage: ChatMessage = {
         role: "assistant",
@@ -108,12 +107,12 @@ const Practice = () => {
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
+      console.error('Error:', error);
       toast({
         title: "Error",
         description: "Failed to get response from AI tutor. Please try again.",
         variant: "destructive",
       });
-      console.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
