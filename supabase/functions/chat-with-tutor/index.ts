@@ -33,19 +33,21 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are a Spanish language tutor. Your goal is to help users practice Spanish through conversation.
-            When users write in English, respond in Spanish with an English translation.
-            When users write in Spanish, help correct any grammar mistakes and explain the corrections.
-            Keep responses concise and focused on language learning.`
+            content: `You are a knowledgeable and patient Spanish language tutor. 
+            If user writes in English, respond in Spanish and provide the English translation below prefixed with "Translation:".
+            If user writes in Spanish, help correct any grammar or vocabulary mistakes, explain the corrections in English, and provide encouragement.
+            Keep responses friendly but concise, focused on language learning.
+            Maintain a consistent format with corrections and explanations clearly separated.`
           },
           { role: 'user', content: message }
         ],
         temperature: 0.7,
+        max_tokens: 500,
       }),
     });
 
     const data = await response.json();
-    console.log('OpenAI response:', data);
+    console.log('OpenAI API Response:', data);
 
     // Check for API errors
     if (!response.ok) {
@@ -62,11 +64,14 @@ serve(async (req) => {
     let content = data.choices[0].message.content;
     let translation = '';
 
+    // Handle translation format
     if (content.includes('\nTranslation:')) {
       [content, translation] = content.split('\nTranslation:');
       content = content.trim();
       translation = translation.trim();
     }
+
+    console.log('Formatted response:', { content, translation });
 
     return new Response(
       JSON.stringify({ content, translation }),
@@ -75,10 +80,14 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in chat-with-tutor function:', error);
-    const errorMessage = error.message.includes('quota exceeded')
-      ? 'The AI service is currently unavailable due to quota limits. Please try again later.'
-      : error.message;
     
+    let errorMessage = 'Failed to get response from AI tutor. Please try again.';
+    if (error.message.includes('quota exceeded')) {
+      errorMessage = 'The AI service is currently unavailable due to quota limits. Please try again later.';
+    } else if (error.message.includes('API key not configured')) {
+      errorMessage = 'The AI service is not properly configured. Please contact support.';
+    }
+
     return new Response(
       JSON.stringify({ 
         error: errorMessage,
