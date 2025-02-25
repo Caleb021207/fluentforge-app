@@ -92,11 +92,6 @@ const Certificates = () => {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Certification Progress</h1>
       
-      {/* Manual Score Form - shown to all logged in users */}
-      {isLoggedIn && (
-        <ManualScoreForm />
-      )}
-      
       {compositeScore && (
         <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
           <CardHeader>
@@ -210,6 +205,13 @@ const Certificates = () => {
           </ScrollArea>
         </CardContent>
       </Card>
+      
+      {/* ManualScoreForm positioned at the bottom */}
+      {isLoggedIn && (
+        <div className="mt-12 mb-8">
+          <ManualScoreForm />
+        </div>
+      )}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 
 const certificationTypes = [
   { value: "reading", label: "Reading" },
@@ -29,6 +29,7 @@ const ManualScoreForm = () => {
   const [certType, setCertType] = useState("reading");
   const [level, setLevel] = useState("B1");
   const [score, setScore] = useState("40");
+  const [isVisible, setIsVisible] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,6 +76,9 @@ const ManualScoreForm = () => {
         title: "Success!",
         description: `Added ${level} level ${certType} certification score`,
       });
+      
+      // Hide the form after successful submission
+      setIsVisible(false);
     } catch (error) {
       console.error("Error adding certification score:", error);
       toast({
@@ -87,10 +91,32 @@ const ManualScoreForm = () => {
     }
   };
 
+  if (!isVisible) {
+    return (
+      <div className="flex justify-center mt-8">
+        <Button
+          onClick={() => setIsVisible(true)}
+          variant="outline"
+          className="flex items-center gap-2"
+        >
+          <PlusCircle size={16} />
+          Add Certification Score
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <Card>
-      <CardHeader>
+    <Card className="mt-8">
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Add Certification Score</CardTitle>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => setIsVisible(false)}
+        >
+          Cancel
+        </Button>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">

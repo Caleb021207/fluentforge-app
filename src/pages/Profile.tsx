@@ -318,9 +318,10 @@ const DashboardPage = () => {
           targetDate={profileData.targetDate}
           testScores={testScores}
         />
-        
-        {isExampleProfile && <ManualScoreForm />}
       </div>
+      
+      {/* ManualScoreForm positioned at the bottom */}
+      {user && <ManualScoreForm />}
     </div>
   );
 };
