@@ -16,6 +16,11 @@ export interface Exercise {
     incorrect: string;
   };
   timeLimit?: number;
+  pairs?: Array<{
+    word: string;
+    match: string;
+    isImage?: boolean;
+  }>;
 }
 
 export interface Lesson {
