@@ -38,6 +38,8 @@ serve(async (req) => {
       );
     }
 
+    console.log('Sending request to OpenAI with message:', message);
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -45,7 +47,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
@@ -70,6 +72,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
+    console.log('Received response from OpenAI:', data);
     
     if (!data.choices?.[0]?.message?.content) {
       throw new Error('Invalid response from OpenAI API');
