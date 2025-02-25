@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Clock } from 'lucide-react';
@@ -52,6 +52,13 @@ const TimedQuizExercise: React.FC<TimedQuizExerciseProps> = ({
       }
     }, 1000);
   };
+
+  const getButtonVariant = (index: number) => {
+    if (selectedOption === null) return "outline";
+    if (index === currentQuestion.correctAnswer) return "default";
+    if (index === selectedOption && index !== currentQuestion.correctAnswer) return "destructive";
+    return "outline";
+  };
   
   return (
     <div className="space-y-6">
@@ -87,11 +94,7 @@ const TimedQuizExercise: React.FC<TimedQuizExerciseProps> = ({
               <Button
                 key={index}
                 onClick={() => handleOptionSelect(index)}
-                variant={selectedOption === null ? "outline" : 
-                  selectedOption === index ? 
-                    (index === currentQuestion.correctAnswer ? "success" : "destructive") : 
-                    index === currentQuestion.correctAnswer ? "success" : "outline"
-                }
+                variant={getButtonVariant(index)}
                 disabled={selectedOption !== null}
                 className="w-full justify-start text-left h-auto py-3 px-4"
               >
@@ -106,3 +109,4 @@ const TimedQuizExercise: React.FC<TimedQuizExerciseProps> = ({
 };
 
 export default TimedQuizExercise;
+

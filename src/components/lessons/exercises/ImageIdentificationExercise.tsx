@@ -49,6 +49,13 @@ const ImageIdentificationExercise: React.FC<ImageIdentificationExerciseProps> = 
       }
     }, 1000);
   };
+
+  const getButtonVariant = (index: number) => {
+    if (selectedOption === null) return "outline";
+    if (index === currentItem.correctAnswer) return "default";
+    if (index === selectedOption && index !== currentItem.correctAnswer) return "destructive";
+    return "outline";
+  };
   
   return (
     <div className="space-y-6">
@@ -70,15 +77,14 @@ const ImageIdentificationExercise: React.FC<ImageIdentificationExerciseProps> = 
               <Button
                 key={index}
                 onClick={() => handleOptionSelect(index)}
-                variant={selectedOption === null ? "outline" : 
-                  selectedOption === index ? 
-                    (index === currentItem.correctAnswer ? "success" : "destructive") : 
-                    index === currentItem.correctAnswer ? "success" : "outline"
-                }
+                variant={getButtonVariant(index)}
                 disabled={selectedOption !== null}
                 className="w-full justify-start text-left h-auto py-3 px-4"
               >
                 {option}
+                {selectedOption !== null && index === currentItem.correctAnswer && (
+                  <Check className="ml-auto h-4 w-4" />
+                )}
               </Button>
             ))}
           </div>
@@ -94,3 +100,4 @@ const ImageIdentificationExercise: React.FC<ImageIdentificationExerciseProps> = 
 };
 
 export default ImageIdentificationExercise;
+
