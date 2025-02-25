@@ -4,6 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import ChallengeList from "./ChallengeList";
 
+interface Challenge {
+  type: string;
+  description: string;
+  xpReward: number;
+  timeLimit?: number;
+  unlocked: boolean;
+}
+
 interface LessonCardProps {
   lesson: {
     id: number;
@@ -11,7 +19,7 @@ interface LessonCardProps {
     description: string;
     duration: string;
     icon: JSX.Element;
-    challenges?: string[];
+    challenges?: Challenge[];
     progress?: number;
   };
   onStart?: () => void;
@@ -19,6 +27,9 @@ interface LessonCardProps {
 
 const LessonCard = ({ lesson, onStart }: LessonCardProps) => {
   const { title, description, duration, icon, challenges = [], progress = 0 } = lesson;
+
+  // Convert Challenge[] to string[] for ChallengeList component
+  const challengeDescriptions = challenges.map(challenge => challenge.description);
 
   return (
     <Card className="h-full flex flex-col overflow-hidden">
@@ -33,7 +44,7 @@ const LessonCard = ({ lesson, onStart }: LessonCardProps) => {
         {challenges && challenges.length > 0 && (
           <div className="mt-2">
             <h4 className="text-sm font-medium mb-2">Challenges:</h4>
-            <ChallengeList challenges={challenges} />
+            <ChallengeList challenges={challengeDescriptions} />
           </div>
         )}
       </CardContent>

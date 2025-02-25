@@ -567,7 +567,7 @@ const Lessons = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto px-4 max-w-4xl">
       <div className="grid gap-6">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Spanish Lessons</h1>
@@ -583,7 +583,7 @@ const Lessons = () => {
             onComplete={handleCompleteLesson}
           />
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2">
             {lessons.map((lesson) => (
               <LessonCard
                 key={lesson.id}
