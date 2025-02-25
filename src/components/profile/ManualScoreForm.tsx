@@ -107,9 +107,9 @@ const ManualScoreForm = () => {
   }
 
   return (
-    <Card className="mt-8">
+    <Card className="mt-8 max-w-md mx-auto">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Add Certification Score</CardTitle>
+        <CardTitle className="text-lg sm:text-xl">Add Certification Score</CardTitle>
         <Button 
           variant="ghost" 
           size="sm" 
@@ -126,7 +126,7 @@ const ManualScoreForm = () => {
               value={certType} 
               onValueChange={setCertType}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select certification type" />
               </SelectTrigger>
               <SelectContent>
@@ -145,7 +145,7 @@ const ManualScoreForm = () => {
               value={level} 
               onValueChange={setLevel}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
               <SelectContent>
@@ -166,6 +166,7 @@ const ManualScoreForm = () => {
               max="100"
               value={score}
               onChange={(e) => setScore(e.target.value)}
+              className="w-full"
             />
           </div>
           
