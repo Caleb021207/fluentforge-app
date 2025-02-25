@@ -47,6 +47,22 @@ const Certificates = () => {
     return acc;
   }, {} as Record<string, CertificationAttempt>);
 
+  const calculateCompositeScore = () => {
+    if (!recentScores) return null;
+
+    const scoreTypes = ['reading', 'writing', 'speaking', 'listening'];
+    const scores = scoreTypes.map(type => recentScores[type]?.score || 0);
+    const totalScore = scores.reduce((sum, score) => sum + score, 0);
+    const averageScore = Math.round(totalScore / scoreTypes.length);
+
+    return {
+      score: averageScore,
+      level: determineLevel(averageScore)
+    };
+  };
+
+  const compositeScore = calculateCompositeScore();
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -54,6 +70,30 @@ const Certificates = () => {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Certification Progress</h1>
+      
+      {compositeScore && (
+        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
+          <CardHeader>
+            <CardTitle>Overall Language Proficiency Certificate</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl font-semibold text-blue-900">
+                CEFR Level {compositeScore.level}
+              </h2>
+              <p className="text-gray-600">
+                Overall Score: {compositeScore.score}%
+              </p>
+              <div className="p-4 border rounded-lg bg-white">
+                <p className="text-sm text-gray-600">
+                  This certificate represents your current language proficiency level based on your most recent test scores across all four skills: reading, writing, speaking, and listening.
+                </p>
+              </div>
+            </div>
+            <Progress value={compositeScore.score} className="h-2" />
+          </CardContent>
+        </Card>
+      )}
       
       <ReadingCertification />
       
@@ -123,4 +163,3 @@ const Certificates = () => {
 };
 
 export default Certificates;
-
