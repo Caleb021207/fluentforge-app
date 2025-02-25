@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -21,9 +22,16 @@ const Certificates = () => {
   const { data: attempts, isLoading } = useQuery({
     queryKey: ['certification-attempts'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('certification_attempts')
         .select('*')
+        .eq('user_id', user.id)
         .order('completed_at', { ascending: false });
 
       if (error) throw error;

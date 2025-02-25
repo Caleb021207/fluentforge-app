@@ -2,6 +2,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -16,36 +18,39 @@ serve(async (req) => {
   try {
     const { essay, prompt, targetLevel } = await req.json();
 
-    const systemPrompt = `You are an expert Spanish language examiner for CEFR certifications. 
-Evaluate the following essay response based on the given prompt. 
-Provide a score (0-100), determine if the level matches the target level ${targetLevel}, 
-and give constructive feedback focusing on:
-1. Grammar and syntax
-2. Vocabulary usage
-3. Overall coherence and structure
-4. Areas for improvement
-
-Format your response as JSON with score, level, and feedback fields.`;
-
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Prompt: ${prompt}\n\nEssay: ${essay}` }
+          { 
+            role: 'system', 
+            content: `You are an expert Spanish language examiner for CEFR certifications. Evaluate the following response based on the target level ${targetLevel}. Provide:
+            1. A numerical score (0-100)
+            2. The appropriate CEFR level (A1-C2)
+            3. Detailed feedback on grammar, vocabulary, and structure
+            
+            Use these score ranges for levels:
+            - C2: 90-100%
+            - C1: 80-89%
+            - B2: 70-79%
+            - B1: 60-69%
+            - A2: 50-59%
+            - A1: 40-49%
+            
+            Return your evaluation as a JSON object with score, level, and feedback fields.`
+          },
+          { 
+            role: 'user', 
+            content: `Writing Prompt: ${prompt}\n\nStudent's Response: ${essay}` 
+          }
         ],
-        temperature: 0.7,
       }),
     });
-
-    if (!response.ok) {
-      throw new Error('Failed to get assessment from AI');
-    }
 
     const data = await response.json();
     let result;
@@ -56,11 +61,14 @@ Format your response as JSON with score, level, and feedback fields.`;
       // If JSON parsing fails, create a structured response from the text
       const text = data.choices[0].message.content;
       result = {
-        score: 70, // Default score
+        score: 70,
         level: targetLevel,
         feedback: text,
       };
     }
+
+    // Log the evaluation result
+    console.log('Writing evaluation result:', result);
 
     return new Response(
       JSON.stringify(result),
