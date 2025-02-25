@@ -10,56 +10,18 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Log headers for debugging
-  console.log('Request headers:', Object.fromEntries(req.headers.entries()));
-
   try {
-    // Verify API key
+    const { message } = await req.json();
+    console.log('Received message:', message);
+
     if (!openAIApiKey) {
-      console.error('OpenAI API key is missing');
-      return new Response(
-        JSON.stringify({ error: 'OpenAI API key is not configured' }),
-        { 
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
+      throw new Error('OpenAI API key not configured');
     }
 
-    // Parse request body
-    let body;
-    try {
-      body = await req.json();
-      console.log('Received request body:', body);
-    } catch (error) {
-      console.error('Error parsing request body:', error);
-      return new Response(
-        JSON.stringify({ error: 'Invalid JSON in request body' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    const { message } = body;
-    if (!message) {
-      console.error('Message is missing from request');
-      return new Response(
-        JSON.stringify({ error: 'Message is required' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    console.log('Making request to OpenAI API...');
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -71,59 +33,39 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are a helpful Spanish language tutor. Your goal is to help users practice Spanish through conversation.
+            content: `You are a Spanish language tutor. Your goal is to help users practice Spanish through conversation.
             When users write in English, respond in Spanish with an English translation.
             When users write in Spanish, help correct any grammar mistakes and explain the corrections.
-            Keep responses concise and focused on language learning.
-            Structure your response like this:
-            [Spanish response]
-            Translation: [English translation]`
+            Keep responses concise and focused on language learning.`
           },
           { role: 'user', content: message }
         ],
         temperature: 0.7,
-        max_tokens: 500,
       }),
     });
 
-    const data = await response.json();
-    console.log('OpenAI API response:', data);
-    
     if (!response.ok) {
-      console.error('OpenAI API error:', data);
-      return new Response(
-        JSON.stringify({ 
-          error: 'OpenAI API error', 
-          details: data.error?.message || 'Unknown error'
-        }),
-        { 
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
+      const error = await response.json();
+      console.error('OpenAI API error:', error);
+      throw new Error(error.error?.message || 'Failed to get response from OpenAI');
     }
 
+    const data = await response.json();
+    console.log('OpenAI response:', data);
+
     if (!data.choices?.[0]?.message?.content) {
-      console.error('Invalid response structure from OpenAI:', data);
-      return new Response(
-        JSON.stringify({ error: 'Invalid response structure from OpenAI API' }),
-        { 
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
+      throw new Error('Invalid response structure from OpenAI');
     }
 
     let content = data.choices[0].message.content;
     let translation = '';
 
-    if (content.includes('Translation:')) {
-      [content, translation] = content.split('Translation:');
+    // If the response contains a translation, split it
+    if (content.includes('\nTranslation:')) {
+      [content, translation] = content.split('\nTranslation:');
       content = content.trim();
       translation = translation.trim();
     }
-
-    console.log('Processing successful. Sending response:', { content, translation });
 
     return new Response(
       JSON.stringify({ content, translation }),
@@ -131,15 +73,12 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Unexpected error in chat-with-tutor function:', error);
+    console.error('Error in chat-with-tutor function:', error);
     return new Response(
-      JSON.stringify({ 
-        error: 'Internal server error', 
-        details: error.message 
-      }),
-      {
+      JSON.stringify({ error: error.message }),
+      { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
   }
