@@ -1,11 +1,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
+import { Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
 interface LearningGoalsProps {
   user: User | null;
@@ -19,101 +18,119 @@ interface LearningGoalsProps {
   avatarUrl: string | null;
 }
 
-const LearningGoals = ({ user, profileData, setProfileData, avatarUrl }: LearningGoalsProps) => {
-  const { toast } = useToast();
+const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
+  const [estimatedWeeks, setEstimatedWeeks] = useState<number | null>(null);
+  const [progressRate, setProgressRate] = useState<number | null>(null);
 
-  const handleProfileUpdate = async () => {
-    if (!user) return;
-    
-    try {
-      const { error } = await supabase
-        .from('user_profiles')
-        .upsert({
-          id: user.id,
-          display_name: profileData.displayName,
-          learning_goal: profileData.learningGoal,
-          target_level: profileData.targetLevel,
-          target_date: profileData.targetDate,
-          avatar_url: avatarUrl,
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Profile updated successfully",
-      });
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update profile",
-        variant: "destructive",
-      });
+  useEffect(() => {
+    if (user) {
+      calculateEstimatedTime();
     }
+  }, [user, profileData.targetLevel]);
+
+  const calculateEstimatedTime = async () => {
+    try {
+      // Fetch user's certification attempts
+      const { data: attempts } = await supabase
+        .from('certification_attempts')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('completed_at', { ascending: true });
+
+      if (!attempts || attempts.length === 0) {
+        setEstimatedWeeks(24); // Default estimation if no attempts
+        return;
+      }
+
+      // Calculate average improvement rate
+      const scores = attempts.map(attempt => attempt.score);
+      const firstScore = scores[0];
+      const lastScore = scores[scores.length - 1];
+      const weeksBetween = Math.ceil(
+        (new Date(attempts[attempts.length - 1].completed_at).getTime() - 
+         new Date(attempts[0].completed_at).getTime()) / 
+        (1000 * 60 * 60 * 24 * 7)
+      ) || 1;
+
+      const improvementRate = (lastScore - firstScore) / weeksBetween;
+      setProgressRate(improvementRate);
+
+      // Calculate current level score range
+      const currentLevelScore = lastScore;
+      const currentLevel = determineLevel(currentLevelScore);
+      const targetLevel = profileData.targetLevel;
+
+      // Estimate weeks needed based on level difference
+      const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+      const currentLevelIndex = CEFR_LEVELS.indexOf(currentLevel);
+      const targetLevelIndex = CEFR_LEVELS.indexOf(targetLevel);
+      const levelDifference = targetLevelIndex - currentLevelIndex;
+
+      // Assuming each level requires approximately 15-20 points improvement
+      const pointsNeeded = levelDifference * 17;
+      const estimatedWeeks = Math.ceil(pointsNeeded / (improvementRate || 0.5));
+      
+      setEstimatedWeeks(Math.max(estimatedWeeks, 4)); // Minimum 4 weeks
+    } catch (error) {
+      console.error('Error calculating estimated time:', error);
+      setEstimatedWeeks(24); // Default fallback
+    }
+  };
+
+  const getEstimatedDate = () => {
+    if (!estimatedWeeks) return null;
+    const date = new Date();
+    date.setDate(date.getDate() + (estimatedWeeks * 7));
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Learning Goals</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Calendar className="h-5 w-5" />
+          Level Achievement Timeline
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="learningGoal">What do you want to achieve?</Label>
-          <Input
-            id="learningGoal"
-            value={profileData.learningGoal}
-            onChange={(e) =>
-              setProfileData((prev: any) => ({
-                ...prev,
-                learningGoal: e.target.value,
-              }))
-            }
-            placeholder="E.g., Improve business English"
-          />
+        <div className="text-center space-y-2">
+          <p className="text-lg font-medium">
+            Targeting CEFR Level: {profileData.targetLevel}
+          </p>
+          <p className="text-sm text-gray-600">
+            {estimatedWeeks ? (
+              <>
+                Estimated achievement in{' '}
+                <span className="font-semibold text-lingua-primary">
+                  {estimatedWeeks} weeks
+                </span>
+                <br />
+                (around {getEstimatedDate()})
+              </>
+            ) : (
+              'Calculating estimation...'
+            )}
+          </p>
+          {progressRate !== null && progressRate > 0 && (
+            <p className="text-xs text-green-600">
+              Your current learning pace: +{progressRate.toFixed(1)} points per week
+            </p>
+          )}
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="targetLevel">Target CEFR Level</Label>
-          <select
-            id="targetLevel"
-            className="w-full p-2 border rounded-md"
-            value={profileData.targetLevel}
-            onChange={(e) =>
-              setProfileData((prev: any) => ({
-                ...prev,
-                targetLevel: e.target.value,
-              }))
-            }
-          >
-            <option value="A1">A1 - Beginner</option>
-            <option value="A2">A2 - Elementary</option>
-            <option value="B1">B1 - Intermediate</option>
-            <option value="B2">B2 - Upper Intermediate</option>
-            <option value="C1">C1 - Advanced</option>
-            <option value="C2">C2 - Mastery</option>
-          </select>
+        
+        <div className="border rounded-lg p-4 bg-gray-50">
+          <h4 className="font-medium mb-2">Tips to reach your goal faster:</h4>
+          <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
+            <li>Practice consistently every day</li>
+            <li>Complete all certification attempts</li>
+            <li>Focus on areas where you score lowest</li>
+            <li>Use AI conversation practice regularly</li>
+          </ul>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="targetDate">Target Date</Label>
-          <Input
-            id="targetDate"
-            type="date"
-            value={profileData.targetDate}
-            onChange={(e) =>
-              setProfileData((prev: any) => ({
-                ...prev,
-                targetDate: e.target.value,
-              }))
-            }
-          />
-        </div>
-
-        <Button onClick={handleProfileUpdate} className="w-full">
-          Save Changes
-        </Button>
       </CardContent>
     </Card>
   );
