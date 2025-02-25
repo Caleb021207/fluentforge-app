@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,6 +35,7 @@ const ProfilePage = () => {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
         if (user) {
+          await ensureTablesExist();
           await fetchProfileData(user.id);
           await fetchLatestLevel(user.id);
         }
@@ -53,6 +53,25 @@ const ProfilePage = () => {
 
     getCurrentUser();
   }, [toast]);
+
+  const ensureTablesExist = async () => {
+    try {
+      const { error: checkError } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .limit(1);
+
+      if (checkError && checkError.code === '42P01') {
+        await supabase.rpc('create_profile_tables');
+        toast({
+          title: "Profile Created",
+          description: "Your profile has been set up successfully",
+        });
+      }
+    } catch (error) {
+      console.error('Error checking/creating tables:', error);
+    }
+  };
 
   const fetchProfileData = async (userId: string) => {
     try {
