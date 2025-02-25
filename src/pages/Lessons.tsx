@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -556,6 +557,15 @@ const Lessons = () => {
     setActiveLessonId(lessonId);
   };
 
+  const handleCompleteLesson = () => {
+    // When lesson is completed, update the UI and potentially store progress
+    toast({
+      title: "Lesson Completed",
+      description: "Congratulations! You've earned XP for completing this lesson.",
+    });
+    setActiveLessonId(null);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="grid gap-6">
@@ -570,6 +580,7 @@ const Lessons = () => {
           <LessonView
             lesson={lessons.find(l => l.id === activeLessonId)!}
             onClose={() => setActiveLessonId(null)}
+            onComplete={handleCompleteLesson}
           />
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
