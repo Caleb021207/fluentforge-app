@@ -23,7 +23,7 @@ const LessonsList: React.FC<LessonsListProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 px-0 mx-auto w-full">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:max-w-4xl mx-auto">
       {lessons.map((lesson) => (
         <LessonCard
           key={lesson.id}

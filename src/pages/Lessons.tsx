@@ -63,10 +63,10 @@ const Lessons = () => {
     : null;
 
   return (
-    <div className="container mx-auto px-4 max-w-4xl">
+    <div className="container mx-auto px-4">
       <div className="grid gap-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Spanish Lessons</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Spanish Lessons</h1>
           <LevelSelector currentLevel={level} onLevelChange={handleLevelChange} />
         </div>
         
