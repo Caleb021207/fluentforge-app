@@ -93,7 +93,7 @@ const ManualScoreForm = () => {
 
   if (!isVisible) {
     return (
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-4 sm:mt-8">
         <Button
           onClick={() => setIsVisible(true)}
           variant="outline"
@@ -107,31 +107,33 @@ const ManualScoreForm = () => {
   }
 
   return (
-    <Card className="mt-8 max-w-md mx-auto">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg sm:text-xl">Add Certification Score</CardTitle>
+    <Card className="mt-4 sm:mt-8 max-w-md mx-auto">
+      <CardHeader className="flex flex-row items-center justify-between py-3 px-4 sm:px-6 sm:py-4">
+        <CardTitle className="text-base sm:text-lg">Add Certification Score</CardTitle>
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={() => setIsVisible(false)}
+          className="h-8 w-8 p-0 sm:h-9 sm:w-9"
         >
-          Cancel
+          <span className="sr-only">Cancel</span>
+          <X className="h-4 w-4" />
         </Button>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Certification Type</label>
+      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          <div className="space-y-1 sm:space-y-2">
+            <label className="text-xs sm:text-sm font-medium">Certification Type</label>
             <Select 
               value={certType} 
               onValueChange={setCertType}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full text-xs sm:text-sm h-8 sm:h-10">
                 <SelectValue placeholder="Select certification type" />
               </SelectTrigger>
               <SelectContent>
                 {certificationTypes.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
+                  <SelectItem key={type.value} value={type.value} className="text-xs sm:text-sm">
                     {type.label}
                   </SelectItem>
                 ))}
@@ -139,18 +141,18 @@ const ManualScoreForm = () => {
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Level</label>
+          <div className="space-y-1 sm:space-y-2">
+            <label className="text-xs sm:text-sm font-medium">Level</label>
             <Select 
               value={level} 
               onValueChange={setLevel}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full text-xs sm:text-sm h-8 sm:h-10">
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
               <SelectContent>
                 {levels.map((l) => (
-                  <SelectItem key={l.value} value={l.value}>
+                  <SelectItem key={l.value} value={l.value} className="text-xs sm:text-sm">
                     {l.label}
                   </SelectItem>
                 ))}
@@ -158,26 +160,26 @@ const ManualScoreForm = () => {
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Score (0-100)</label>
+          <div className="space-y-1 sm:space-y-2">
+            <label className="text-xs sm:text-sm font-medium">Score (0-100)</label>
             <Input
               type="number"
               min="0"
               max="100"
               value={score}
               onChange={(e) => setScore(e.target.value)}
-              className="w-full"
+              className="w-full text-xs sm:text-sm h-8 sm:h-10"
             />
           </div>
           
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full"
+            className="w-full h-8 sm:h-10"
           >
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                 Adding Score...
               </>
             ) : (
@@ -189,5 +191,7 @@ const ManualScoreForm = () => {
     </Card>
   );
 };
+
+import { X } from "lucide-react";
 
 export default ManualScoreForm;

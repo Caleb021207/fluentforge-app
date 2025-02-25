@@ -49,39 +49,39 @@ const LessonView = ({ lesson, onClose, onComplete }: LessonViewProps) => {
   const currentChallenge = lesson.challenges[currentStep];
 
   return (
-    <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl">
-        <CardHeader className="relative">
+    <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+      <Card className="w-full max-w-4xl overflow-hidden">
+        <CardHeader className="relative py-3 px-3 sm:py-4 sm:px-6">
           <Button 
             variant="ghost" 
-            className="absolute left-4 top-4"
+            className="absolute left-2 top-2 sm:left-4 sm:top-4 h-8 w-8 sm:h-9 sm:w-9 p-0"
             onClick={onClose}
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Lessons
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Back to Lessons</span>
           </Button>
-          <div className="text-center pt-8">
-            <CardTitle className="text-2xl font-bold">{lesson.title}</CardTitle>
-            <p className="text-muted-foreground mt-2">{lesson.description}</p>
+          <div className="text-center pt-6 sm:pt-8">
+            <CardTitle className="text-xl sm:text-2xl font-bold">{lesson.title}</CardTitle>
+            <p className="text-muted-foreground mt-2 text-xs sm:text-sm">{lesson.description}</p>
           </div>
           <div className="mt-4">
-            <div className="flex justify-between text-sm mb-2">
+            <div className="flex justify-between text-xs sm:text-sm mb-2">
               <span>Progress</span>
               <span>{Math.round(progress)}%</span>
             </div>
             <Progress value={progress} className="h-2" />
           </div>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-3 sm:p-6">
           {currentChallenge && (
             <>
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-semibold">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h3 className="text-base sm:text-lg font-semibold">
                   Challenge {currentStep + 1}/{lesson.challenges.length}
                 </h3>
-                <div className="flex items-center gap-2">
-                  <Award className="h-5 w-5 text-yellow-500" />
-                  <span className="font-medium">{currentChallenge.xpReward} XP</span>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <Award className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500" />
+                  <span className="font-medium text-xs sm:text-sm">{currentChallenge.xpReward} XP</span>
                 </div>
               </div>
               

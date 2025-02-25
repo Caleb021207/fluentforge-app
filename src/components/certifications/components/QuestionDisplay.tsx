@@ -23,17 +23,18 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
   onNext,
 }) => {
   return (
-    <div className="space-y-6">
-      <div className="p-4 bg-gray-50 rounded-lg">
-        <p className="mb-4 break-words">{question.text}</p>
+    <div className="space-y-6 w-full max-w-full overflow-x-hidden">
+      <div className="p-3 sm:p-4 bg-gray-50 rounded-lg">
+        <p className="mb-4 break-words text-sm sm:text-base">{question.text}</p>
         <RadioGroup 
           onValueChange={onAnswerSelect}
           value={selectedAnswer?.toString()}
+          className="space-y-2"
         >
           {question.options.map((option, index) => (
             <div key={index} className="flex items-start space-x-2 mb-2">
               <RadioGroupItem value={index.toString()} id={`option-${index}`} className="mt-1" />
-              <Label htmlFor={`option-${index}`} className="flex-1 text-sm sm:text-base">{option}</Label>
+              <Label htmlFor={`option-${index}`} className="flex-1 text-xs sm:text-sm md:text-base">{option}</Label>
             </div>
           ))}
         </RadioGroup>
