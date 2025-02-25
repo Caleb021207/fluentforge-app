@@ -88,6 +88,39 @@ const ReadingCertification = () => {
     }
   };
 
+  const renderCEFRRubric = () => {
+    const levels = [
+      { level: 'C2', range: '90-100%', description: 'Mastery' },
+      { level: 'C1', range: '80-89%', description: 'Advanced' },
+      { level: 'B2', range: '70-79%', description: 'Upper Intermediate' },
+      { level: 'B1', range: '60-69%', description: 'Intermediate' },
+      { level: 'A2', range: '50-59%', description: 'Elementary' },
+      { level: 'A1', range: '40-49%', description: 'Beginner' },
+    ];
+
+    return (
+      <div className="mt-8 border rounded-lg p-4">
+        <h3 className="text-lg font-semibold mb-4">CEFR Level Rubric</h3>
+        <div className="grid grid-cols-3 gap-2 text-sm">
+          <div className="font-medium">Level</div>
+          <div className="font-medium">Score Range</div>
+          <div className="font-medium">Description</div>
+          {levels.map((level) => (
+            <React.Fragment key={level.level}>
+              <div className="py-2">{level.level}</div>
+              <div className="py-2">{level.range}</div>
+              <div className="py-2">{level.description}</div>
+            </React.Fragment>
+          ))}
+        </div>
+        <p className="mt-4 text-sm text-gray-600">
+          Note: Your level is determined proportionally based on your performance across all questions. 
+          Every 5 questions represent one CEFR level, starting from A1 (questions 1-5) up to C2 (questions 26-30).
+        </p>
+      </div>
+    );
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -104,6 +137,7 @@ const ReadingCertification = () => {
             <div className="flex gap-4">
               <Button onClick={handleStart}>Start Test</Button>
             </div>
+            {renderCEFRRubric()}
           </div>
         ) : isCompleted ? (
           <div className="space-y-4">
@@ -111,6 +145,7 @@ const ReadingCertification = () => {
               Test completed! Check your results below.
             </p>
             <Button onClick={handleStart}>Take Test Again</Button>
+            {renderCEFRRubric()}
           </div>
         ) : (
           <QuestionDisplay
