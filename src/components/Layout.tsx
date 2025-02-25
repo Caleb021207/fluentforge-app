@@ -8,6 +8,7 @@ import PlacementQuiz from "../pages/PlacementQuiz";
 import Lessons from "../pages/Lessons";
 import Practice from "../pages/Practice";
 import Certificates from "../pages/Certificates";
+import ProgressPage from "../pages/Progress";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
@@ -180,6 +181,7 @@ const Layout = () => {
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/practice" element={<Practice />} />
             <Route path="/certificates" element={<Certificates />} />
+            <Route path="/progress" element={<ProgressPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
