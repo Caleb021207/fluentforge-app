@@ -38,18 +38,32 @@ const WritingCertification = () => {
   };
 
   const handleSubmit = async () => {
-    const wordCount = countWords(essay);
-    if (wordCount < currentPrompt.minWords) {
-      toast({
-        title: "Too Short",
-        description: `Please write at least ${currentPrompt.minWords} words. Current: ${wordCount} words.`,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
     try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to submit your certification attempt.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const wordCount = countWords(essay);
+      if (wordCount < currentPrompt.minWords) {
+        toast({
+          title: "Too Short",
+          description: `Please write at least ${currentPrompt.minWords} words. Current: ${wordCount} words.`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setIsSubmitting(true);
+      
       const response = await fetch("/api/functions/v1/grade-writing", {
         method: "POST",
         headers: {
@@ -67,13 +81,14 @@ const WritingCertification = () => {
 
       // Save the certification attempt
       const { error } = await supabase
-        .from("certification_attempts")
+        .from('certification_attempts')
         .insert([
           {
-            certification_type: "writing",
+            certification_type: 'writing',
             score,
             level,
             completed_at: new Date().toISOString(),
+            user_id: user.id,
           }
         ]);
 
@@ -167,3 +182,4 @@ const WritingCertification = () => {
 };
 
 export default WritingCertification;
+
