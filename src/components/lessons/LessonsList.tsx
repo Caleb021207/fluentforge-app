@@ -15,11 +15,15 @@ const LessonsList: React.FC<LessonsListProps> = ({
   isLoading 
 }) => {
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-pulse">Loading lessons...</div>
+      </div>
+    );
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 px-0 mx-auto w-full">
       {lessons.map((lesson) => (
         <LessonCard
           key={lesson.id}
