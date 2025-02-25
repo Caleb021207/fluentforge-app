@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import LevelRoadmap from "@/components/profile/LevelRoadmap";
 import LearningGoals from "@/components/profile/LearningGoals";
+import ExampleDataButton from "@/components/profile/ExampleDataButton";
 
 interface ProfileData {
   currentLevel: string;
@@ -32,6 +33,7 @@ const DashboardPage = () => {
     targetDate: "",
   });
   const [testScores, setTestScores] = useState<TestScores>({});
+  const [isExampleProfile, setIsExampleProfile] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -39,6 +41,12 @@ const DashboardPage = () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
+        
+        // Check if this is the example profile
+        if (user?.email === "Example@gmail.com") {
+          setIsExampleProfile(true);
+        }
+        
         if (user) {
           await createUserProfile(user.id);
           await fetchProfileData(user.id);
@@ -310,6 +318,8 @@ const DashboardPage = () => {
           targetDate={profileData.targetDate}
           testScores={testScores}
         />
+        
+        {isExampleProfile && <ExampleDataButton />}
       </div>
     </div>
   );
