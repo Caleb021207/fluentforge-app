@@ -20,7 +20,10 @@ export const basicUnit: Unit = {
     "sí - yes",
     "no - no",
     "disculpe - excuse me",
-    "lo siento - I'm sorry"
+    "lo siento - I'm sorry",
+    "me llamo - my name is",
+    "¿cómo te llamas? - what's your name?",
+    "mucho gusto - nice to meet you"
   ],
   lessons: [
     {
@@ -68,6 +71,18 @@ export const basicUnit: Unit = {
           feedback: {
             correct: "¡Perfecto! 'Buenos días, ¿cómo estás?' means 'Good morning, how are you?'",
             incorrect: "The correct answer is 'Buenos días, ¿cómo estás?' which means 'Good morning, how are you?'"
+          }
+        },
+        {
+          id: 5,
+          type: "sentence-building",
+          question: "Build a sentence to introduce yourself using 'Me llamo'",
+          options: ["Me", "llamo", "Juan", "y", "soy", "estudiante"],
+          answer: "Me llamo Juan y soy estudiante",
+          points: 10,
+          feedback: {
+            correct: "¡Muy bien! You've successfully introduced yourself.",
+            incorrect: "Try again. A proper introduction starts with 'Me llamo' (My name is)."
           }
         }
       ]
