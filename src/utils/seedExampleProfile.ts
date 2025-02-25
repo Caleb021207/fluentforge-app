@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 
 export const createExampleProfile = async () => {
@@ -44,8 +45,15 @@ export const createExampleProfile = async () => {
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 25).toISOString(), // 25 days ago
       },
       {
-        certification_type: "speaking_listening",
+        certification_type: "speaking",
         score: 42, // B1 level score (33-49% range)
+        level: "B1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(), // 20 days ago
+      },
+      {
+        certification_type: "listening",
+        score: 41, // B1 level score (33-49% range)
         level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(), // 20 days ago
@@ -114,14 +122,15 @@ export const createExampleProfile = async () => {
   }
 };
 
-// Function to add B1 level certification scores to existing user
+// This function is kept for reference but is no longer used in the UI
+// We've replaced it with a manual form to add certification scores
 export const addExampleCertificationScores = async () => {
   try {
     // Get current user
     const { data: { user } } = await supabase.auth.getUser();
     
-    if (!user || user.email !== 'example@gmail.com') {
-      throw new Error('Must be logged in as example@gmail.com');
+    if (!user) {
+      throw new Error('Must be logged in to add certification scores');
     }
 
     const userId = user.id;
@@ -130,18 +139,7 @@ export const addExampleCertificationScores = async () => {
       return { success: false, error: "User ID not found" };
     }
 
-    // Clear any existing certification attempts for this user
-    const { error: deleteError } = await supabase
-      .from("certification_attempts")
-      .delete()
-      .eq("user_id", userId);
-
-    if (deleteError) {
-      console.error("Error deleting existing certification attempts:", deleteError);
-      // Continue despite error - we'll just add new attempts
-    }
-
-    // Create B1 level scores for each certification type (33-49% range for B1)
+    // Create certification scores for each certification type
     const certifications = [
       {
         certification_type: "reading",

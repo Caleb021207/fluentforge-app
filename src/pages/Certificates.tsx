@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -8,8 +9,8 @@ import ReadingCertification from "@/components/certifications/ReadingCertificati
 import WritingCertification from "@/components/certifications/WritingCertification";
 import SpeakingListeningCertification from "@/components/certifications/SpeakingListeningCertification";
 import { determineLevel, getLevelDescription } from "@/components/certifications/utils/scoreUtils";
-import ExampleDataButton from "@/components/profile/ExampleDataButton";
 import { useEffect, useState } from "react";
+import ManualScoreForm from "@/components/profile/ManualScoreForm";
 
 type CertificationAttempt = {
   id: string;
@@ -29,17 +30,17 @@ const rubricData = [
 ];
 
 const Certificates = () => {
-  const [isExampleUser, setIsExampleUser] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      setIsExampleUser(user?.email === 'example@gmail.com');
+      setIsLoggedIn(!!user);
     };
     checkUser();
   }, []);
 
-  const { data: attempts, isLoading } = useQuery({
+  const { data: attempts, isLoading, refetch } = useQuery({
     queryKey: ['certification-attempts'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -91,20 +92,9 @@ const Certificates = () => {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Certification Progress</h1>
       
-      {/* Example Data Button for testing - only show for example@gmail.com */}
-      {isExampleUser && (
-        <Card className="bg-blue-50 border-blue-200">
-          <CardHeader>
-            <CardTitle>Example Data Tools</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-600 mb-4">
-              Click the button below to add example B1 level certification scores for all skills.
-              This is for testing purposes only.
-            </p>
-            <ExampleDataButton />
-          </CardContent>
-        </Card>
+      {/* Manual Score Form - shown to all logged in users */}
+      {isLoggedIn && (
+        <ManualScoreForm />
       )}
       
       {compositeScore && (
