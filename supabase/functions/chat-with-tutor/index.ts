@@ -15,23 +15,41 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Check for API key first
-  if (!openAIApiKey) {
-    console.error('OpenAI API key is not set');
-    return new Response(
-      JSON.stringify({ error: 'OpenAI API key is not configured' }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
-  }
+  // Log headers for debugging
+  console.log('Request headers:', Object.fromEntries(req.headers.entries()));
 
   try {
-    const { message } = await req.json();
-    console.log('Received message:', message);
+    // Verify API key
+    if (!openAIApiKey) {
+      console.error('OpenAI API key is missing');
+      return new Response(
+        JSON.stringify({ error: 'OpenAI API key is not configured' }),
+        { 
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
 
+    // Parse request body
+    let body;
+    try {
+      body = await req.json();
+      console.log('Received request body:', body);
+    } catch (error) {
+      console.error('Error parsing request body:', error);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON in request body' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    const { message } = body;
     if (!message) {
+      console.error('Message is missing from request');
       return new Response(
         JSON.stringify({ error: 'Message is required' }),
         { 
@@ -41,7 +59,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('Making request to OpenAI API');
+    console.log('Making request to OpenAI API...');
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -69,12 +87,15 @@ serve(async (req) => {
     });
 
     const data = await response.json();
-    console.log('Raw OpenAI response:', data);
+    console.log('OpenAI API response:', data);
     
     if (!response.ok) {
       console.error('OpenAI API error:', data);
       return new Response(
-        JSON.stringify({ error: `OpenAI API error: ${JSON.stringify(data)}` }),
+        JSON.stringify({ 
+          error: 'OpenAI API error', 
+          details: data.error?.message || 'Unknown error'
+        }),
         { 
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -85,7 +106,7 @@ serve(async (req) => {
     if (!data.choices?.[0]?.message?.content) {
       console.error('Invalid response structure from OpenAI:', data);
       return new Response(
-        JSON.stringify({ error: 'Invalid response from OpenAI API' }),
+        JSON.stringify({ error: 'Invalid response structure from OpenAI API' }),
         { 
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -102,7 +123,7 @@ serve(async (req) => {
       translation = translation.trim();
     }
 
-    console.log('Processed response:', { content, translation });
+    console.log('Processing successful. Sending response:', { content, translation });
 
     return new Response(
       JSON.stringify({ content, translation }),
@@ -110,10 +131,10 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in chat-with-tutor function:', error);
+    console.error('Unexpected error in chat-with-tutor function:', error);
     return new Response(
       JSON.stringify({ 
-        error: 'Failed to get AI response', 
+        error: 'Internal server error', 
         details: error.message 
       }),
       {
