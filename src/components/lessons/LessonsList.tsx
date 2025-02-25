@@ -19,7 +19,7 @@ const LessonsList: React.FC<LessonsListProps> = ({
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {lessons.map((lesson) => (
         <LessonCard
           key={lesson.id}
