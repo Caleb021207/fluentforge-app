@@ -47,4 +47,4 @@ const VocabularyWord: React.FC<VocabularyWordProps> = ({
   );
 };
 
-export default VocabularyWord;
+export default React.memo(VocabularyWord);

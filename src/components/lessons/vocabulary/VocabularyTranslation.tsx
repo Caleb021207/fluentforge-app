@@ -38,4 +38,4 @@ const VocabularyTranslation: React.FC<VocabularyTranslationProps> = ({
   );
 };
 
-export default VocabularyTranslation;
+export default React.memo(VocabularyTranslation);

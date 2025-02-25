@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import VocabularySet from './vocabulary/VocabularySet';
 import FeedbackDisplay from './vocabulary/FeedbackDisplay';
@@ -17,13 +17,25 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState<'correct' | 'incorrect' | null>(null);
   
-  // Split vocabulary into groups of 6 pairs for each card
-  const vocabGroups = vocabulary.reduce((acc, curr, i) => {
-    const groupIndex = Math.floor(i / 6);
-    if (!acc[groupIndex]) acc[groupIndex] = [];
-    acc[groupIndex].push(curr);
-    return acc;
-  }, [] as string[][]);
+  // Create a lookup map for quick vocabulary matching
+  const vocabMap = useMemo(() => {
+    const map = new Map<string, string>();
+    vocabulary.forEach(pair => {
+      const [word, translation] = pair.split(' - ');
+      map.set(word, translation);
+    });
+    return map;
+  }, [vocabulary]);
+  
+  // Split vocabulary into groups of 6 pairs for each card - memoize this computation
+  const vocabGroups = useMemo(() => {
+    return vocabulary.reduce((acc, curr, i) => {
+      const groupIndex = Math.floor(i / 6);
+      if (!acc[groupIndex]) acc[groupIndex] = [];
+      acc[groupIndex].push(curr);
+      return acc;
+    }, [] as string[][]);
+  }, [vocabulary]);
 
   const [selectedWord, setSelectedWord] = useState<{ word: string; groupIndex: number } | null>(null);
   const [selectedTranslation, setSelectedTranslation] = useState<{ translation: string; groupIndex: number } | null>(null);
@@ -46,17 +58,22 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
       const word = type === 'word' ? value : selectedWord!.word;
       const translation = type === 'translation' ? value : selectedTranslation!.translation;
       
-      const isMatch = vocabulary.some(pair => {
-        const [w, t] = pair.split(' - ');
-        return (w === word && t === translation);
-      });
+      // Use the map for O(1) lookup instead of iterating through vocabulary
+      const isMatch = vocabMap.get(word) === translation;
 
       if (isMatch) {
-        setMatchedPairs(prev => new Set([...prev, word]));
+        setMatchedPairs(prev => {
+          const newSet = new Set(prev);
+          newSet.add(word);
+          return newSet;
+        });
         setScore(prev => prev + 10);
         setShowFeedback('correct');
+        
+        // Check completion with the updated matchedPairs size
         if (matchedPairs.size + 1 === vocabulary.length) {
-          onComplete();
+          // Use setTimeout to ensure state updates complete before calling onComplete
+          setTimeout(() => onComplete(), 1200);
         }
       } else {
         setScore(prev => Math.max(0, prev - 5));
@@ -65,6 +82,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 
       setAttempts(prev => prev + 1);
       
+      // Reset selection after delay
       setTimeout(() => {
         setSelectedWord(null);
         setSelectedTranslation(null);
@@ -90,6 +108,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 
         <div className="grid gap-6">
           {vocabGroups.map((group, groupIndex) => {
+            // Memoize word and translation arrays at render time
             const words = group.map(pair => pair.split(' - ')[0]);
             const translations = group.map(pair => pair.split(' - ')[1]);
             

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import VocabularyWord from './VocabularyWord';
 import VocabularyTranslation from './VocabularyTranslation';
@@ -27,6 +27,22 @@ const VocabularySet: React.FC<VocabularySetProps> = ({
   handleSelection,
   playAudio,
 }) => {
+  // Create a translation lookup map for quick matching checks
+  const translationMatchMap = useMemo(() => {
+    const map = new Map<string, string>();
+    vocabulary.forEach(pair => {
+      const [word, translation] = pair.split(' - ');
+      map.set(translation, word);
+    });
+    return map;
+  }, [vocabulary]);
+
+  // Check if a translation is matched using the lookup map
+  const isTranslationMatched = (translation: string) => {
+    const word = translationMatchMap.get(translation);
+    return word ? matchedPairs.has(word) : false;
+  };
+
   return (
     <Card key={groupIndex} className="p-4">
       <CardHeader>
@@ -55,10 +71,7 @@ const VocabularySet: React.FC<VocabularySetProps> = ({
                 key={translation}
                 translation={translation}
                 isSelected={selectedTranslation?.translation === translation}
-                isMatched={vocabulary.some(pair => {
-                  const [word, trans] = pair.split(' - ');
-                  return trans === translation && matchedPairs.has(word);
-                })}
+                isMatched={isTranslationMatched(translation)}
                 onSelect={() => handleSelection('translation', translation, groupIndex)}
               />
             ))}
@@ -69,4 +82,4 @@ const VocabularySet: React.FC<VocabularySetProps> = ({
   );
 };
 
-export default VocabularySet;
+export default React.memo(VocabularySet);
