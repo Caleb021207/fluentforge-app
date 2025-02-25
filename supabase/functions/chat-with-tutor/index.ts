@@ -10,19 +10,9 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
-  }
-
-  if (!openAIApiKey) {
-    console.error('OpenAI API key is not set');
-    return new Response(
-      JSON.stringify({ error: 'OpenAI API key is not configured' }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
   }
 
   try {
@@ -55,7 +45,7 @@ serve(async (req) => {
             When users write in English, respond in Spanish with an English translation.
             When users write in Spanish, help correct any grammar mistakes and explain the corrections.
             Keep responses concise and focused on language learning.
-            Always structure your response like this:
+            Structure your response like this:
             [Spanish response]
             Translation: [English translation]`
           },
@@ -66,13 +56,13 @@ serve(async (req) => {
       }),
     });
 
+    const data = await response.json();
+    
     if (!response.ok) {
-      const error = await response.json();
-      console.error('OpenAI API error:', error);
-      throw new Error(`OpenAI API error: ${JSON.stringify(error)}`);
+      console.error('OpenAI API error:', data);
+      throw new Error(`OpenAI API error: ${JSON.stringify(data)}`);
     }
 
-    const data = await response.json();
     console.log('Received response from OpenAI:', data);
     
     if (!data.choices?.[0]?.message?.content) {
