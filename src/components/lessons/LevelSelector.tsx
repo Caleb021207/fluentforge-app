@@ -10,20 +10,20 @@ const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProps) => {
   return (
     <div className="flex space-x-4 my-4">
       <Button
-        variant={currentLevel === "beginner" ? "default" : "outline"}
-        onClick={() => onLevelChange("beginner")}
+        variant={currentLevel === "A1" ? "default" : "outline"}
+        onClick={() => onLevelChange("A1")}
       >
         Beginner (A1-A2)
       </Button>
       <Button
-        variant={currentLevel === "intermediate" ? "default" : "outline"}
-        onClick={() => onLevelChange("intermediate")}
+        variant={currentLevel === "B1" ? "default" : "outline"}
+        onClick={() => onLevelChange("B1")}
       >
         Intermediate (B1-B2)
       </Button>
       <Button
-        variant={currentLevel === "advanced" ? "default" : "outline"}
-        onClick={() => onLevelChange("advanced")}
+        variant={currentLevel === "C1" ? "default" : "outline"}
+        onClick={() => onLevelChange("C1")}
       >
         Advanced (C1-C2)
       </Button>

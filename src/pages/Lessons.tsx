@@ -79,22 +79,33 @@ const Lessons = () => {
         </div>
 
         {/* Render lesson units */}
-        {filteredUnits.map((unit, index) => (
-          <div key={unit.id} className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">{unit.title}</h2>
-            <p className="text-gray-600 mb-6">{unit.description}</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {unit.lessons.map((lesson) => (
-                <LessonCard 
-                  key={lesson.id}
-                  lesson={createLessonCardData(lesson)}
-                  onStart={(lessonId) => handleStartLesson(unit.id)}
-                />
-              ))}
+        {filteredUnits.length > 0 ? (
+          filteredUnits.map((unit) => (
+            <div key={unit.id} className="mb-12">
+              <h2 className="text-2xl font-bold mb-4">{unit.title}</h2>
+              <p className="text-gray-600 mb-6">{unit.description}</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {unit.lessons.map((lesson) => (
+                  <LessonCard 
+                    key={lesson.id}
+                    lesson={createLessonCardData(lesson)}
+                    onStart={() => handleStartLesson(unit.id)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <p className="text-gray-500 mb-4">No lessons available for this level yet.</p>
+              <Button onClick={() => setCurrentCEFRLevel("A1")}>
+                View Beginner Lessons
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {showLessonView && selectedUnit !== null && (
