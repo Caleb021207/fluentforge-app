@@ -56,7 +56,7 @@ const Layout = () => {
     <div className="min-h-screen bg-gradient-to-br from-lingua-secondary to-white">
       <Textarea 
         className="w-full h-24 p-4 font-mono text-sm" 
-        value="google-site-verification: google123.html"
+        value='<meta name="google-site-verification" content="rzbcrRRdlW8pdBIDqgmE6W_R8U1jDjrRAozB5I0YcuI" />'
         readOnly
       />
       {!user && (
