@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import ReadingCertification from "@/components/certifications/ReadingCertification";
 import WritingCertification from "@/components/certifications/WritingCertification";
 import SpeakingListeningCertification from "@/components/certifications/SpeakingListeningCertification";
-import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { determineLevel, getLevelDescription } from "@/components/certifications/utils/scoreUtils";
 
 type CertificationAttempt = {
   id: string;
@@ -17,6 +17,15 @@ type CertificationAttempt = {
   level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   completed_at: string;
 };
+
+const rubricData = [
+  { level: 'C2', range: '84-100%' },
+  { level: 'C1', range: '67-83%' },
+  { level: 'B2', range: '50-66%' },
+  { level: 'B1', range: '33-49%' },
+  { level: 'A2', range: '17-32%' },
+  { level: 'A1', range: '0-16%' },
+];
 
 const Certificates = () => {
   const { data: attempts, isLoading } = useQuery({
@@ -91,6 +100,32 @@ const Certificates = () => {
               </div>
             </div>
             <Progress value={compositeScore.score} className="h-2" />
+            
+            {/* CEFR Level Rubric */}
+            <div className="mt-6 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">CEFR Level Rubric</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {rubricData.map((item) => (
+                  <div key={item.level} className="p-2 bg-white rounded border text-center">
+                    <div className="font-medium">Level {item.level}</div>
+                    <div className="text-sm text-gray-600">{item.range}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Level Descriptions */}
+            <div className="mt-6 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">CEFR Level Descriptions</h3>
+              <div className="grid gap-4">
+                {rubricData.map((item) => (
+                  <div key={item.level} className="p-4 bg-white rounded border">
+                    <h4 className="font-medium mb-2">Level {item.level}</h4>
+                    <p className="text-sm text-gray-600">{getLevelDescription(item.level)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
