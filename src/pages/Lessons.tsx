@@ -48,6 +48,42 @@ interface Lesson {
   };
 }
 
+// Define the Exercise interface that will be used in the Unit interface
+interface Exercise {
+  id: number;
+  type: string;
+  question: string;
+  options?: string[];
+  answer?: string | string[];
+  image?: string;
+  audio?: string;
+  points: number;
+  feedback?: {
+    correct: string;
+    incorrect: string;
+  };
+  timeLimit?: number; // in seconds
+}
+
+// Define the LessonForUnit interface that will be used in the Unit interface
+interface LessonForUnit {
+  id: number;
+  title: string;
+  description: string;
+  exercises: Exercise[];
+  xpReward: number;
+}
+
+// Define the Unit interface that matches what LessonView expects
+interface Unit {
+  id: number;
+  title: string;
+  description: string;
+  vocabulary: string[];
+  lessons: LessonForUnit[];
+  xpPoints: number;
+}
+
 const lessonsByLevel: Record<string, Lesson[]> = {
   beginner: [
     {
@@ -547,11 +583,44 @@ const Lessons = () => {
 
   const activeLessonData = lessons.find(l => l.id === activeLessonId);
 
+  // Convert a normal Lesson to a Unit format that LessonView can handle
+  const convertLessonToUnit = (lesson: Lesson): Unit => {
+    // Create example exercises for the lesson
+    const exercises: Exercise[] = lesson.challenges.map((challenge, index) => ({
+      id: index + 1,
+      type: challenge.type,
+      question: challenge.description,
+      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      answer: "Option 1", // Default correct answer
+      points: challenge.xpReward,
+      feedback: {
+        correct: "¡Correcto! Well done!",
+        incorrect: "¡Inténtalo de nuevo! Try again!"
+      }
+    }));
+
+    // Create a unit with the lesson data
+    return {
+      id: lesson.id,
+      title: lesson.title,
+      description: lesson.description,
+      vocabulary: lesson.vocabulary,
+      lessons: [{
+        id: 1,
+        title: lesson.title,
+        description: lesson.description,
+        exercises: exercises,
+        xpReward: lesson.xpPoints
+      }],
+      xpPoints: lesson.xpPoints
+    };
+  };
+
   return (
     <div className="max-w-5xl mx-auto p-6">
       {activeLessonData ? (
         <LessonView
-          lesson={activeLessonData}
+          unit={convertLessonToUnit(activeLessonData)}
           onClose={() => setActiveLessonId(null)}
           onComplete={() => handleLessonComplete(activeLessonData.id)}
         />
