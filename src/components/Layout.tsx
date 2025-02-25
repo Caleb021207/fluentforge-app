@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
+import { Textarea } from "./ui/textarea";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -53,6 +54,11 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-lingua-secondary to-white">
+      <Textarea 
+        className="w-full h-24 p-4 font-mono text-sm" 
+        value="google-site-verification: google123.html"
+        readOnly
+      />
       {!user && (
         <div className="w-full bg-white border-b p-4 flex justify-center items-center space-x-4">
           <p className="text-gray-600">Sign in to track your progress and earn certificates</p>
