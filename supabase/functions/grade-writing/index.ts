@@ -18,13 +18,6 @@ serve(async (req) => {
   try {
     const { essay, prompt, targetLevel } = await req.json();
 
-    // Log the incoming request
-    console.log('Grading submission:', {
-      promptLength: prompt.length,
-      essayLength: essay.length,
-      targetLevel
-    });
-
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -39,11 +32,11 @@ serve(async (req) => {
             content: `You are an expert Spanish language examiner following the CEFR framework. 
             Evaluate the following Spanish writing submission based on these specific criteria:
 
-            1. Adherence to prompt
-            2. Grammar accuracy
-            3. Vocabulary range and appropriateness
-            4. Text structure and coherence
-            5. Overall language level demonstrated
+            1. Language accuracy (grammar, spelling, punctuation)
+            2. Vocabulary range and appropriateness
+            3. Text organization and coherence
+            4. Task completion and content relevance
+            5. Overall CEFR level demonstrated
 
             Score ranges and corresponding CEFR levels:
             - 90-100%: C2 (Near-native mastery)
@@ -82,14 +75,11 @@ serve(async (req) => {
       
       // Default to conservative scoring if parsing fails
       result = {
-        score: 60, // Default to B1 level
+        score: 60,
         level: 'B1',
         feedback: content
       };
     }
-
-    // Log the final evaluation result
-    console.log('Writing evaluation result:', result);
 
     return new Response(
       JSON.stringify(result),

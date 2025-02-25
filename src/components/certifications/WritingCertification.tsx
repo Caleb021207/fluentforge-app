@@ -64,23 +64,20 @@ const WritingCertification = () => {
 
       setIsSubmitting(true);
       
-      const response = await fetch("/api/functions/v1/grade-writing", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({
+      const { data: gradeResult, error: gradeError } = await supabase.functions.invoke('grade-writing', {
+        body: {
           essay,
           prompt: currentPrompt.prompt,
           targetLevel: currentPrompt.level,
-        }),
+        },
       });
 
-      const { score, level, feedback } = await response.json();
+      if (gradeError) throw gradeError;
+
+      const { score, level, feedback } = gradeResult;
 
       // Save the certification attempt
-      const { error } = await supabase
+      const { error: saveError } = await supabase
         .from('certification_attempts')
         .insert([
           {
@@ -92,7 +89,7 @@ const WritingCertification = () => {
           }
         ]);
 
-      if (error) throw error;
+      if (saveError) throw saveError;
 
       setFeedback(feedback);
       toast({
@@ -163,7 +160,7 @@ const WritingCertification = () => {
                   onClick={handleSubmit}
                   disabled={isSubmitting || countWords(essay) < currentPrompt.minWords}
                 >
-                  Submit
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>
             </div>
@@ -182,4 +179,3 @@ const WritingCertification = () => {
 };
 
 export default WritingCertification;
-
