@@ -15,6 +15,10 @@ interface Exercise {
   audio?: string;
   points: number;
   timeLimit?: number;
+  feedback?: {
+    correct: string;
+    incorrect: string;
+  };
 }
 
 interface MultipleChoiceExerciseProps {
@@ -32,7 +36,15 @@ const MultipleChoiceExercise: React.FC<MultipleChoiceExerciseProps> = ({
 
   const handleSubmit = () => {
     if (selectedOption === null) return;
-    const isCorrect = selectedOption === exercise.answer;
+    
+    // Handle both string and string[] answer types
+    let isCorrect = false;
+    if (Array.isArray(exercise.answer)) {
+      isCorrect = exercise.answer.includes(selectedOption);
+    } else if (typeof exercise.answer === 'string') {
+      isCorrect = selectedOption === exercise.answer;
+    }
+    
     onAnswer(isCorrect);
   };
 
@@ -69,7 +81,10 @@ const MultipleChoiceExercise: React.FC<MultipleChoiceExerciseProps> = ({
             className="space-y-3"
           >
             {exercise.options?.map((option, index) => (
-              <div key={index} className="flex items-center space-x-2 p-3 border rounded-md hover:bg-gray-50 transition-colors">
+              <div 
+                key={index} 
+                className="flex items-center space-x-2 p-3 border rounded-md hover:bg-gray-50 transition-colors"
+              >
                 <RadioGroupItem value={option} id={`option-${index}`} />
                 <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer">
                   {option}

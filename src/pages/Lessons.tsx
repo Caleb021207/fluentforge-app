@@ -84,6 +84,359 @@ interface Unit {
   xpPoints: number;
 }
 
+// Define the Basic Greetings unit with 5 lessons and 5 questions each
+const basicGreetingsUnit: Unit = {
+  id: 1,
+  title: "Basic Greetings",
+  description: "Learn essential Spanish greetings and introductions through interactive exercises.",
+  vocabulary: [
+    "Hola - Hello",
+    "Buenos días - Good morning",
+    "Buenas tardes - Good afternoon",
+    "Buenas noches - Good night",
+    "¿Cómo estás? - How are you?",
+    "Bien, gracias - Fine, thank you",
+    "Mucho gusto - Nice to meet you",
+    "Hasta luego - See you later",
+    "Por favor - Please",
+    "Gracias - Thank you"
+  ],
+  lessons: [
+    {
+      id: 1,
+      title: "Greetings Basics",
+      description: "Learn the most common Spanish greetings",
+      xpReward: 20,
+      exercises: [
+        {
+          id: 1,
+          type: "multiple-choice",
+          question: "How do you say 'Hello' in Spanish?",
+          options: ["Hola", "Adiós", "Gracias", "Por favor"],
+          answer: "Hola",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Hola' means 'Hello'.",
+            incorrect: "¡Incorrecto! 'Hola' means 'Hello'."
+          }
+        },
+        {
+          id: 2,
+          type: "multiple-choice",
+          question: "Which phrase means 'Good morning'?",
+          options: ["Buenas noches", "Buenos días", "Buenas tardes", "Hasta luego"],
+          answer: "Buenos días",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Buenos días' means 'Good morning'.",
+            incorrect: "¡Incorrecto! 'Buenos días' means 'Good morning'."
+          }
+        },
+        {
+          id: 3,
+          type: "fill-in-blanks",
+          question: "Complete the greeting: '_____ tardes' (Good afternoon)",
+          answer: "Buenas",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'Buenas tardes' means 'Good afternoon'.",
+            incorrect: "¡Incorrecto! The correct answer is 'Buenas'."
+          }
+        },
+        {
+          id: 4,
+          type: "multiple-choice",
+          question: "How do you say 'Good night' in Spanish?",
+          options: ["Buenos días", "Buenas tardes", "Buenas noches", "Hola"],
+          answer: "Buenas noches",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Buenas noches' means 'Good night'.",
+            incorrect: "¡Incorrecto! 'Buenas noches' means 'Good night'."
+          }
+        },
+        {
+          id: 5,
+          type: "sentence-correction",
+          question: "Correct this greeting: 'Buenos noches'",
+          answer: "Buenas noches",
+          points: 15,
+          feedback: {
+            correct: "¡Correcto! 'Buenas noches' is the correct form.",
+            incorrect: "¡Incorrecto! It should be 'Buenas noches' (feminine form)."
+          }
+        }
+      ]
+    },
+    {
+      id: 2,
+      title: "Asking How Someone Is",
+      description: "Learn to ask how someone is feeling in Spanish",
+      xpReward: 25,
+      exercises: [
+        {
+          id: 1,
+          type: "multiple-choice",
+          question: "How do you ask 'How are you?' in Spanish?",
+          options: ["¿Cómo te llamas?", "¿Cómo estás?", "¿De dónde eres?", "¿Qué hora es?"],
+          answer: "¿Cómo estás?",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! '¿Cómo estás?' means 'How are you?'",
+            incorrect: "¡Incorrecto! '¿Cómo estás?' means 'How are you?'"
+          }
+        },
+        {
+          id: 2,
+          type: "fill-in-blanks",
+          question: "Complete the response: 'Estoy _____, gracias.' (I'm fine, thank you)",
+          answer: "bien",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'Estoy bien, gracias' means 'I'm fine, thank you'",
+            incorrect: "¡Incorrecto! The correct answer is 'bien'"
+          }
+        },
+        {
+          id: 3,
+          type: "multiple-choice",
+          question: "Which of these is a common response to '¿Cómo estás?'",
+          options: ["Mucho gusto", "De nada", "Muy bien, gracias", "Hasta mañana"],
+          answer: "Muy bien, gracias",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Muy bien, gracias' means 'Very well, thank you'",
+            incorrect: "¡Incorrecto! 'Muy bien, gracias' is a common response"
+          }
+        },
+        {
+          id: 4,
+          type: "multiple-choice",
+          question: "What does 'Estoy mal' mean?",
+          options: ["I'm good", "I'm great", "I'm bad/not well", "I'm hungry"],
+          answer: "I'm bad/not well",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Estoy mal' means 'I'm bad/not well'",
+            incorrect: "¡Incorrecto! 'Estoy mal' means 'I'm bad/not well'"
+          }
+        },
+        {
+          id: 5,
+          type: "sentence-correction",
+          question: "Correct this phrase: '¿Cómo está?'",
+          answer: ["¿Cómo estás?", "¿Cómo está usted?"],
+          points: 15,
+          feedback: {
+            correct: "¡Correcto! You've correctly identified the appropriate form",
+            incorrect: "¡Incorrecto! '¿Cómo está?' needs a subject or to be informal '¿Cómo estás?'"
+          }
+        }
+      ]
+    },
+    {
+      id: 3,
+      title: "Meeting People",
+      description: "Learn essential phrases for meeting new people",
+      xpReward: 30,
+      exercises: [
+        {
+          id: 1,
+          type: "multiple-choice",
+          question: "How do you say 'Nice to meet you' in Spanish?",
+          options: ["Hasta luego", "Buenas noches", "Mucho gusto", "¿Cómo estás?"],
+          answer: "Mucho gusto",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Mucho gusto' means 'Nice to meet you'",
+            incorrect: "¡Incorrecto! 'Mucho gusto' means 'Nice to meet you'"
+          }
+        },
+        {
+          id: 2,
+          type: "fill-in-blanks",
+          question: "Complete the introduction: 'Me _____ Juan.' (My name is Juan)",
+          answer: "llamo",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'Me llamo Juan' means 'My name is Juan'",
+            incorrect: "¡Incorrecto! The correct answer is 'llamo'"
+          }
+        },
+        {
+          id: 3,
+          type: "multiple-choice",
+          question: "How do you ask someone's name in Spanish?",
+          options: ["¿Cómo estás?", "¿Cómo te llamas?", "¿De dónde eres?", "¿Cuántos años tienes?"],
+          answer: "¿Cómo te llamas?",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! '¿Cómo te llamas?' means 'What's your name?'",
+            incorrect: "¡Incorrecto! '¿Cómo te llamas?' means 'What's your name?'"
+          }
+        },
+        {
+          id: 4,
+          type: "multiple-choice",
+          question: "Which phrase would you use to introduce yourself?",
+          options: ["Encantado", "Hasta pronto", "Mucho gusto", "Me llamo María"],
+          answer: "Me llamo María",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Me llamo María' means 'My name is María'",
+            incorrect: "¡Incorrecto! 'Me llamo María' means 'My name is María'"
+          }
+        },
+        {
+          id: 5,
+          type: "fill-in-blanks",
+          question: "Complete: 'Soy de _____.' (I am from _____)",
+          answer: ["España", "México", "Colombia", "Argentina", "Chile", "Perú"],
+          points: 15,
+          feedback: {
+            correct: "¡Correcto! 'Soy de [country]' means 'I am from [country]'",
+            incorrect: "¡Incorrecto! You need to enter a Spanish-speaking country"
+          }
+        }
+      ]
+    },
+    {
+      id: 4,
+      title: "Saying Goodbye",
+      description: "Learn different ways to say goodbye in Spanish",
+      xpReward: 25,
+      exercises: [
+        {
+          id: 1,
+          type: "multiple-choice",
+          question: "How do you say 'See you later' in Spanish?",
+          options: ["Adiós", "Hasta luego", "Hasta mañana", "Buenas noches"],
+          answer: "Hasta luego",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Hasta luego' means 'See you later'",
+            incorrect: "¡Incorrecto! 'Hasta luego' means 'See you later'"
+          }
+        },
+        {
+          id: 2,
+          type: "multiple-choice",
+          question: "Which phrase means 'Goodbye'?",
+          options: ["Hola", "Gracias", "Adiós", "Por favor"],
+          answer: "Adiós",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Adiós' means 'Goodbye'",
+            incorrect: "¡Incorrecto! 'Adiós' means 'Goodbye'"
+          }
+        },
+        {
+          id: 3,
+          type: "fill-in-blanks",
+          question: "Complete the phrase: 'Hasta _____' (See you tomorrow)",
+          answer: "mañana",
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! 'Hasta mañana' means 'See you tomorrow'",
+            incorrect: "¡Incorrecto! The correct answer is 'mañana'"
+          }
+        },
+        {
+          id: 4,
+          type: "multiple-choice",
+          question: "What does 'Nos vemos' mean?",
+          options: ["Nice to meet you", "How are you?", "See you", "Thank you"],
+          answer: "See you",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Nos vemos' means 'See you'",
+            incorrect: "¡Incorrecto! 'Nos vemos' means 'See you'"
+          }
+        },
+        {
+          id: 5,
+          type: "sentence-correction",
+          question: "Correct this goodbye: 'Hasta manaña'",
+          answer: "Hasta mañana",
+          points: 15,
+          feedback: {
+            correct: "¡Correcto! 'Hasta mañana' is the correct spelling",
+            incorrect: "¡Incorrecto! The correct spelling is 'Hasta mañana'"
+          }
+        }
+      ]
+    },
+    {
+      id: 5,
+      title: "Courtesy Phrases",
+      description: "Learn essential polite expressions in Spanish",
+      xpReward: 30,
+      exercises: [
+        {
+          id: 1,
+          type: "multiple-choice",
+          question: "How do you say 'Please' in Spanish?",
+          options: ["Gracias", "De nada", "Por favor", "Perdón"],
+          answer: "Por favor",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Por favor' means 'Please'",
+            incorrect: "¡Incorrecto! 'Por favor' means 'Please'"
+          }
+        },
+        {
+          id: 2,
+          type: "multiple-choice",
+          question: "Which phrase means 'Thank you'?",
+          options: ["De nada", "Gracias", "Perdón", "Por favor"],
+          answer: "Gracias",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Gracias' means 'Thank you'",
+            incorrect: "¡Incorrecto! 'Gracias' means 'Thank you'"
+          }
+        },
+        {
+          id: 3,
+          type: "multiple-choice",
+          question: "How do you say 'You're welcome' in Spanish?",
+          options: ["Por favor", "Gracias", "De nada", "Lo siento"],
+          answer: "De nada",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'De nada' means 'You're welcome'",
+            incorrect: "¡Incorrecto! 'De nada' means 'You're welcome'"
+          }
+        },
+        {
+          id: 4,
+          type: "fill-in-blanks",
+          question: "Complete: '_____, no hablo español.' (Sorry, I don't speak Spanish)",
+          answer: ["Perdón", "Lo siento", "Disculpe"],
+          points: 10,
+          feedback: {
+            correct: "¡Correcto! You've used the correct expression for 'Sorry'",
+            incorrect: "¡Incorrecto! You can use 'Perdón', 'Lo siento', or 'Disculpe'"
+          }
+        },
+        {
+          id: 5,
+          type: "multiple-choice",
+          question: "What does 'Con permiso' mean?",
+          options: ["Excuse me", "I'm sorry", "Thank you", "You're welcome"],
+          answer: "Excuse me",
+          points: 5,
+          feedback: {
+            correct: "¡Correcto! 'Con permiso' means 'Excuse me' (when passing by)",
+            incorrect: "¡Incorrecto! 'Con permiso' means 'Excuse me' (when passing by)"
+          }
+        }
+      ]
+    }
+  ],
+  xpPoints: 130
+};
+
 const lessonsByLevel: Record<string, Lesson[]> = {
   beginner: [
     {
@@ -491,11 +844,10 @@ const getCefrLevel = (level: string) => {
 const Lessons = () => {
   const [searchParams] = useSearchParams();
   const level = searchParams.get("level") || "beginner";
-  const lessons = lessonsByLevel[level] || [];  // Add fallback to empty array
+  const lessons = lessonsByLevel[level] || [];  
   const { toast } = useToast();
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
   
-  // Add null checks and default values to prevent "reduce of undefined" errors
   const calculateTotalXP = (lessonsArray: Lesson[] = []) => {
     return lessonsArray.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
   };
@@ -583,44 +935,12 @@ const Lessons = () => {
 
   const activeLessonData = lessons.find(l => l.id === activeLessonId);
 
-  // Convert a normal Lesson to a Unit format that LessonView can handle
-  const convertLessonToUnit = (lesson: Lesson): Unit => {
-    // Create example exercises for the lesson
-    const exercises: Exercise[] = lesson.challenges.map((challenge, index) => ({
-      id: index + 1,
-      type: challenge.type,
-      question: challenge.description,
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-      answer: "Option 1", // Default correct answer
-      points: challenge.xpReward,
-      feedback: {
-        correct: "¡Correcto! Well done!",
-        incorrect: "¡Inténtalo de nuevo! Try again!"
-      }
-    }));
-
-    // Create a unit with the lesson data
-    return {
-      id: lesson.id,
-      title: lesson.title,
-      description: lesson.description,
-      vocabulary: lesson.vocabulary,
-      lessons: [{
-        id: 1,
-        title: lesson.title,
-        description: lesson.description,
-        exercises: exercises,
-        xpReward: lesson.xpPoints
-      }],
-      xpPoints: lesson.xpPoints
-    };
-  };
-
+  // Use the defined unit directly instead of converting from a lesson
   return (
     <div className="max-w-5xl mx-auto p-6">
       {activeLessonData ? (
         <LessonView
-          unit={convertLessonToUnit(activeLessonData)}
+          unit={basicGreetingsUnit}
           onClose={() => setActiveLessonId(null)}
           onComplete={() => handleLessonComplete(activeLessonData.id)}
         />
