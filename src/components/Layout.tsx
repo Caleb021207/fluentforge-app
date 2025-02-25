@@ -7,6 +7,7 @@ import NotFound from "../pages/NotFound";
 import PlacementQuiz from "../pages/PlacementQuiz";
 import Lessons from "../pages/Lessons";
 import Practice from "../pages/Practice";
+import Certificates from "../pages/Certificates";
 
 const Layout = () => {
   return (
@@ -19,6 +20,7 @@ const Layout = () => {
             <Route path="/placement-quiz" element={<PlacementQuiz />} />
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/practice" element={<Practice />} />
+            <Route path="/certificates" element={<Certificates />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
