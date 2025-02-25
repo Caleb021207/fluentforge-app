@@ -14,9 +14,9 @@ const ReadingCertification = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [isCompleted, setIsCompleted] = useState(false);
   const { toast } = useToast();
-  const [currentLevel, setCurrentLevel] = useState<string>('A1');
 
-  const questionsForLevel = READING_QUESTIONS.filter(q => q.level === currentLevel);
+  // Use all questions instead of filtering by level
+  const questions = READING_QUESTIONS;
 
   const handleStart = () => {
     setIsStarted(true);
@@ -32,7 +32,7 @@ const ReadingCertification = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < questionsForLevel.length - 1) {
+    if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
       completeTest();
@@ -54,8 +54,9 @@ const ReadingCertification = () => {
         return;
       }
 
-      const score = calculateScore(selectedAnswers, questionsForLevel);
-      const level = determineLevel(score, currentLevel, READING_QUESTIONS);
+      const score = calculateScore(selectedAnswers, questions);
+      // Determine level based on all questions, starting from A1
+      const level = determineLevel(score, 'A1', questions);
 
       const { error } = await supabase
         .from('certification_attempts')
@@ -90,14 +91,15 @@ const ReadingCertification = () => {
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>Reading Certification Test - Level {currentLevel}</CardTitle>
+        <CardTitle>Reading Certification Test - All Levels (A1-C2)</CardTitle>
       </CardHeader>
       <CardContent>
         {!isStarted ? (
           <div className="space-y-4">
             <p className="text-gray-600">
-              Test your Spanish reading comprehension skills. You'll be presented with
-              various types of questions to determine your CEFR level.
+              Test your Spanish reading comprehension skills across all CEFR levels (A1-C2). 
+              Questions will progressively get more challenging. Your final level will be determined 
+              based on your overall performance.
             </p>
             <div className="flex gap-4">
               <Button onClick={handleStart}>Start Test</Button>
@@ -112,9 +114,9 @@ const ReadingCertification = () => {
           </div>
         ) : (
           <QuestionDisplay
-            question={questionsForLevel[currentQuestionIndex]}
+            question={questions[currentQuestionIndex]}
             currentQuestionIndex={currentQuestionIndex}
-            totalQuestions={questionsForLevel.length}
+            totalQuestions={questions.length}
             selectedAnswer={selectedAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
             onNext={handleNext}
