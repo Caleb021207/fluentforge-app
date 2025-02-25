@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -454,22 +455,40 @@ const getCefrLevel = (level: string) => {
 const Lessons = () => {
   const [searchParams] = useSearchParams();
   const level = searchParams.get("level") || "beginner";
-  const lessons = lessonsByLevel[level];
+  const lessons = lessonsByLevel[level] || [];  // Add fallback to empty array
   const { toast } = useToast();
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
   
-  const totalXP = lessons.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
-  const earnedXP = lessons.reduce((acc, lesson) => acc + (lesson.progress || 0) / 100 * lesson.xpPoints, 0);
+  // Add null checks and default values to prevent "reduce of undefined" errors
+  const calculateTotalXP = (lessonsArray: Lesson[] = []) => {
+    return lessonsArray.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
+  };
 
-  const totalLessonsCount = Object.values(lessonsByLevel).reduce(
-    (acc, levelLessons) => acc + levelLessons.length,
-    0
-  );
+  const calculateEarnedXP = (lessonsArray: Lesson[] = []) => {
+    return lessonsArray.reduce((acc, lesson) => 
+      acc + ((lesson.progress || 0) / 100 * lesson.xpPoints), 0);
+  };
 
-  const completedLessonsCount = Object.values(lessonsByLevel).reduce(
-    (acc, levelLessons) => acc + levelLessons.filter(lesson => (lesson.progress || 0) === 100).length,
-    0
-  );
+  const totalXP = calculateTotalXP(lessons);
+  const earnedXP = calculateEarnedXP(lessons);
+
+  const calculateTotalLessonsCount = () => {
+    return Object.values(lessonsByLevel).reduce(
+      (acc, levelLessons) => acc + (levelLessons?.length || 0),
+      0
+    );
+  };
+
+  const calculateCompletedLessonsCount = () => {
+    return Object.values(lessonsByLevel).reduce(
+      (acc, levelLessons) => acc + ((levelLessons || [])
+        .filter(lesson => (lesson.progress || 0) === 100).length),
+      0
+    );
+  };
+
+  const totalLessonsCount = calculateTotalLessonsCount();
+  const completedLessonsCount = calculateCompletedLessonsCount();
 
   const stats = {
     totalLessons: totalLessonsCount,
