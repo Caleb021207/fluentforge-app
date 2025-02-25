@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -462,7 +461,6 @@ const Lessons = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userProgress, setUserProgress] = useState<Record<string, any>>({});
   
-  // Add null checks and default values to prevent "reduce of undefined" errors
   const calculateTotalXP = (lessonsArray: Lesson[] = []) => {
     return lessonsArray.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
   };
@@ -487,17 +485,14 @@ const Lessons = () => {
     );
   };
 
-  // Fetch user's lesson progress from database
   useEffect(() => {
     const fetchUserProgress = async () => {
       setIsLoading(true);
       
       try {
-        // Get current user
         const { data: { session } } = await supabase.auth.getSession();
         
         if (session?.user) {
-          // Fetch user's lesson progress
           const { data, error } = await supabase
             .from('lesson_progress')
             .select('*')
@@ -506,7 +501,6 @@ const Lessons = () => {
             
           if (error) throw error;
           
-          // Create a map of lesson progress by lesson ID
           const progressMap = {};
           if (data) {
             data.forEach(item => {
@@ -516,7 +510,6 @@ const Lessons = () => {
           
           setUserProgress(progressMap);
           
-          // Update lessons with progress data
           const updatedLessons = lessonsByLevel[level].map(lesson => ({
             ...lesson,
             progress: progressMap[lesson.id] || 0
@@ -524,12 +517,10 @@ const Lessons = () => {
           
           setLessons(updatedLessons);
         } else {
-          // No user logged in, use default lessons
           setLessons(lessonsByLevel[level]);
         }
       } catch (error) {
         console.error("Error fetching lesson progress:", error);
-        // Fall back to default lessons data
         setLessons(lessonsByLevel[level]);
       } finally {
         setIsLoading(false);
@@ -561,4 +552,39 @@ const Lessons = () => {
     window.location.reload();
   };
 
-  const handleStartLe
+  const handleStartLesson = (lessonId: number) => {
+    setActiveLessonId(lessonId);
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <div className="grid gap-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Spanish Lessons</h1>
+          <LevelSelector currentLevel={level} onLevelChange={handleLevelChange} />
+        </div>
+        
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : activeLessonId ? (
+          <LessonView
+            lesson={lessons.find(l => l.id === activeLessonId)!}
+            onClose={() => setActiveLessonId(null)}
+          />
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {lessons.map((lesson) => (
+              <LessonCard
+                key={lesson.id}
+                lesson={lesson}
+                onStart={() => handleStartLesson(lesson.id)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Lessons;
