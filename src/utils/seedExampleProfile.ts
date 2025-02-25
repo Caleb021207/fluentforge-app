@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export const createExampleProfile = async () => {
@@ -118,19 +117,14 @@ export const createExampleProfile = async () => {
 // Function to add B1 level certification scores to existing user
 export const addExampleCertificationScores = async () => {
   try {
-    // Find the example user first
-    const { data: userData, error: userError } = await supabase.auth
-      .signInWithPassword({
-        email: "example@gmail.com", 
-        password: "123456"
-      });
-
-    if (userError) {
-      console.error("Could not find example user:", userError);
-      return { success: false, error: "Could not find example user. Please create an example profile first." };
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user || user.email !== 'example@gmail.com') {
+      throw new Error('Must be logged in as example@gmail.com');
     }
 
-    const userId = userData.user?.id;
+    const userId = user.id;
     
     if (!userId) {
       return { success: false, error: "User ID not found" };
@@ -149,7 +143,6 @@ export const addExampleCertificationScores = async () => {
 
     // Create B1 level scores for each certification type (33-49% range for B1)
     const certifications = [
-      // B1 level Reading certification - score in the middle of B1 range (33-49%)
       {
         certification_type: "reading",
         score: 40, // B1 level score
@@ -157,8 +150,6 @@ export const addExampleCertificationScores = async () => {
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(), // 30 days ago
       },
-      
-      // B1 level Writing certification - score in the middle of B1 range (33-49%)
       {
         certification_type: "writing",
         score: 38, // B1 level score
@@ -166,11 +157,16 @@ export const addExampleCertificationScores = async () => {
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 25).toISOString(), // 25 days ago
       },
-      
-      // B1 level Speaking/Listening certification - score in the middle of B1 range (33-49%)
       {
-        certification_type: "speaking_listening",
+        certification_type: "speaking",
         score: 42, // B1 level score
+        level: "B1",
+        user_id: userId,
+        completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(), // 20 days ago
+      },
+      {
+        certification_type: "listening",
+        score: 41, // B1 level score
         level: "B1",
         user_id: userId,
         completed_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(), // 20 days ago
