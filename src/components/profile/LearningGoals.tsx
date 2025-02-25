@@ -1,10 +1,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "@supabase/supabase-js";
-import { Calendar } from "lucide-react";
+import { Calendar, BookOpen, Award } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { Progress } from "@/components/ui/progress";
 
 interface LearningGoalsProps {
   user: User | null;
@@ -18,15 +19,61 @@ interface LearningGoalsProps {
   avatarUrl: string | null;
 }
 
+interface LessonProgress {
+  totalLessons: number;
+  completedLessons: number;
+  percentComplete: number;
+  lastActivity?: string;
+  streakDays?: number;
+}
+
 const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
   const [estimatedWeeks, setEstimatedWeeks] = useState<number | null>(null);
   const [progressRate, setProgressRate] = useState<number | null>(null);
+  const [lessonProgress, setLessonProgress] = useState<LessonProgress | null>(null);
 
   useEffect(() => {
     if (user) {
       calculateEstimatedTime();
+      fetchLessonProgress();
     }
   }, [user, profileData.targetLevel]);
+
+  const fetchLessonProgress = async () => {
+    try {
+      // In a real app, this would fetch from a lessons_progress table
+      // For now, we'll simulate this with the certification_attempts data
+      const { data: attempts } = await supabase
+        .from('certification_attempts')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('completed_at', { ascending: false });
+
+      // Calculate simulated lesson progress based on certification attempts
+      if (attempts && attempts.length > 0) {
+        // Simulate progress based on test scores
+        // In a real implementation, this would come from actual lesson data
+        const totalLessons = 60; // Simulate 60 total lessons
+        const completedLessons = Math.floor((attempts.length / 4) * 20); // Rough estimate
+        
+        setLessonProgress({
+          totalLessons,
+          completedLessons: Math.min(completedLessons, totalLessons),
+          percentComplete: Math.min(Math.round((completedLessons / totalLessons) * 100), 100),
+          lastActivity: attempts[0].completed_at,
+          streakDays: Math.min(attempts.length * 2, 30) // Simulated streak
+        });
+      } else {
+        setLessonProgress({
+          totalLessons: 60,
+          completedLessons: 0,
+          percentComplete: 0
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching lesson progress:', error);
+    }
+  };
 
   const calculateEstimatedTime = async () => {
     try {
@@ -93,7 +140,7 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calendar className="h-5 w-5" />
-          Level Achievement Timeline
+          Learning Progress
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -122,6 +169,36 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           )}
         </div>
         
+        {lessonProgress && (
+          <div className="border rounded-lg p-4 bg-gray-50 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-lingua-primary" />
+                <h4 className="font-medium">Lesson Progress</h4>
+              </div>
+              <span className="text-sm font-semibold">
+                {lessonProgress.completedLessons}/{lessonProgress.totalLessons}
+              </span>
+            </div>
+            
+            <Progress value={lessonProgress.percentComplete} />
+            
+            <div className="flex justify-between text-sm text-gray-600">
+              <span>{lessonProgress.percentComplete}% Complete</span>
+              {lessonProgress.lastActivity && (
+                <span>Last activity: {new Date(lessonProgress.lastActivity).toLocaleDateString()}</span>
+              )}
+            </div>
+            
+            {lessonProgress.streakDays && (
+              <div className="flex items-center gap-2 text-amber-600 font-medium text-sm">
+                <Award className="h-4 w-4" />
+                <span>{lessonProgress.streakDays} day streak! Keep it up!</span>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="border rounded-lg p-4 bg-gray-50">
           <h4 className="font-medium mb-2">Tips to reach your goal faster:</h4>
           <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">

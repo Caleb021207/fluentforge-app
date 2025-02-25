@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +17,13 @@ interface ProfileData {
   targetDate: string;
 }
 
+interface TestScores {
+  reading?: number;
+  writing?: number;
+  speaking?: number;
+  listening?: number;
+}
+
 const ProfilePage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +35,7 @@ const ProfilePage = () => {
     targetDate: "",
   });
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [testScores, setTestScores] = useState<TestScores>({});
   const { toast } = useToast();
 
   useEffect(() => {
@@ -38,6 +47,7 @@ const ProfilePage = () => {
           await ensureTablesExist();
           await fetchProfileData(user.id);
           await fetchLatestLevel(user.id);
+          await fetchTestScores(user.id);
         }
       } catch (error) {
         console.error('Error getting user:', error);
@@ -154,6 +164,33 @@ const ProfilePage = () => {
     }
   };
 
+  const fetchTestScores = async (userId: string) => {
+    try {
+      const { data: attempts, error } = await supabase
+        .from('certification_attempts')
+        .select('*')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false });
+
+      if (error) throw error;
+
+      if (attempts && attempts.length > 0) {
+        const latestScores: TestScores = {};
+        
+        // Get the most recent score for each certification type
+        attempts.forEach(attempt => {
+          if (latestScores[attempt.certification_type] === undefined) {
+            latestScores[attempt.certification_type] = attempt.score;
+          }
+        });
+        
+        setTestScores(latestScores);
+      }
+    } catch (error) {
+      console.error('Error fetching test scores:', error);
+    }
+  };
+
   if (!user) {
     return (
       <div className="text-center py-8">
@@ -197,6 +234,7 @@ const ProfilePage = () => {
           currentLevel={profileData.currentLevel}
           targetLevel={profileData.targetLevel}
           targetDate={profileData.targetDate}
+          testScores={testScores}
         />
       </div>
     </div>

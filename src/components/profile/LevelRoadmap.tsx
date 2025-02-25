@@ -1,18 +1,24 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, TrendingUp } from "lucide-react";
+import { Calendar, TrendingUp, BarChart } from "lucide-react";
 import { getLevelDescription } from "@/components/certifications/utils/scoreUtils";
 
 interface LevelRoadmapProps {
   currentLevel: string;
   targetLevel: string;
   targetDate: string;
+  testScores?: {
+    reading?: number;
+    writing?: number;
+    speaking?: number;
+    listening?: number;
+  };
 }
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
-const LevelRoadmap = ({ currentLevel, targetLevel, targetDate }: LevelRoadmapProps) => {
+const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: LevelRoadmapProps) => {
   const calculateProgressToNextLevel = () => {
     const currentLevelIndex = CEFR_LEVELS.indexOf(currentLevel);
     const targetLevelIndex = CEFR_LEVELS.indexOf(targetLevel);
@@ -57,6 +63,53 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate }: LevelRoadmapPro
               <span className="text-sm text-gray-600">{calculateProgressToNextLevel()}%</span>
             </div>
           </div>
+
+          {testScores && (
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+              <div className="flex items-center gap-2 mb-3">
+                <BarChart className="h-4 w-4 text-lingua-primary" />
+                <h3 className="font-medium">Your Test Scores</h3>
+              </div>
+              <div className="grid gap-2">
+                {testScores.reading !== undefined && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Reading:</span>
+                    <div className="flex items-center gap-2">
+                      <Progress value={testScores.reading} className="w-24 h-2" />
+                      <span className="text-sm font-medium">{testScores.reading}%</span>
+                    </div>
+                  </div>
+                )}
+                {testScores.writing !== undefined && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Writing:</span>
+                    <div className="flex items-center gap-2">
+                      <Progress value={testScores.writing} className="w-24 h-2" />
+                      <span className="text-sm font-medium">{testScores.writing}%</span>
+                    </div>
+                  </div>
+                )}
+                {testScores.speaking !== undefined && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Speaking:</span>
+                    <div className="flex items-center gap-2">
+                      <Progress value={testScores.speaking} className="w-24 h-2" />
+                      <span className="text-sm font-medium">{testScores.speaking}%</span>
+                    </div>
+                  </div>
+                )}
+                {testScores.listening !== undefined && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Listening:</span>
+                    <div className="flex items-center gap-2">
+                      <Progress value={testScores.listening} className="w-24 h-2" />
+                      <span className="text-sm font-medium">{testScores.listening}%</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Calendar className="h-4 w-4" />
