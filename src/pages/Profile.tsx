@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -18,42 +17,6 @@ interface ProfileData {
   learningGoal: string;
   targetLevel: string;
   targetDate: string;
-}
-
-interface Database {
-  public: {
-    Tables: {
-      user_profiles: {
-        Row: {
-          id: string;
-          display_name: string;
-          learning_goal: string;
-          target_level: string;
-          target_date: string;
-          avatar_url: string | null;
-        };
-        Insert: {
-          id: string;
-          display_name?: string;
-          learning_goal?: string;
-          target_level?: string;
-          target_date?: string;
-          avatar_url?: string | null;
-        };
-      };
-      certification_attempts: {
-        Row: {
-          certification_type: string;
-          completed_at: string;
-          created_at: string;
-          id: string;
-          level: string;
-          score: number;
-          user_id: string;
-        };
-      };
-    };
-  };
 }
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -97,16 +60,16 @@ const ProfilePage = () => {
 
   const fetchProfileData = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data: profile, error } = await supabase
         .from('user_profiles')
-        .select()
+        .select('*')
         .eq('id', userId)
         .single();
 
       if (error) {
         if (error.code === 'PGRST116') {
           // Profile doesn't exist yet, create it
-          const { error: createError } = await supabase
+          await supabase
             .from('user_profiles')
             .insert({
               id: userId,
@@ -115,22 +78,20 @@ const ProfilePage = () => {
               target_level: 'B2',
               target_date: '',
             });
-          
-          if (createError) throw createError;
           return;
         }
         throw error;
       }
 
-      if (data) {
+      if (profile) {
         setProfileData(prev => ({
           ...prev,
-          displayName: data.display_name || '',
-          learningGoal: data.learning_goal || '',
-          targetLevel: data.target_level || 'B2',
-          targetDate: data.target_date || ''
+          displayName: profile.display_name || '',
+          learningGoal: profile.learning_goal || '',
+          targetLevel: profile.target_level || 'B2',
+          targetDate: profile.target_date || ''
         }));
-        setAvatarUrl(data.avatar_url);
+        setAvatarUrl(profile.avatar_url);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -146,7 +107,7 @@ const ProfilePage = () => {
     try {
       const { data: attempts, error } = await supabase
         .from('certification_attempts')
-        .select()
+        .select('*')
         .eq('user_id', userId)
         .order('completed_at', { ascending: false });
 
@@ -498,4 +459,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
