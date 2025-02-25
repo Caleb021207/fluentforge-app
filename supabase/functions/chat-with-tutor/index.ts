@@ -15,12 +15,26 @@ serve(async (req) => {
   }
 
   try {
-    const { message } = await req.json();
-    console.log('Received message:', message);
+    const { message, requestType } = await req.json();
+    console.log('Received message:', message, 'Request type:', requestType);
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
     }
+
+    const systemMessage = requestType === 'assessment' 
+      ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their Spanish language skills in the following areas:
+         - Reading proficiency
+         - Writing ability
+         - Speaking competency
+         - Listening comprehension
+         Also provide an overall estimated proficiency level (A1-C2).
+         Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`
+      : `You are a knowledgeable and patient Spanish language tutor. 
+         If user writes in English, respond in Spanish and provide the English translation below prefixed with "Translation:".
+         If user writes in Spanish, help correct any grammar or vocabulary mistakes, explain the corrections in English, and provide encouragement.
+         Keep responses friendly but concise, focused on language learning.
+         Maintain a consistent format with corrections and explanations clearly separated.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -31,14 +45,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          {
-            role: 'system',
-            content: `You are a knowledgeable and patient Spanish language tutor. 
-            If user writes in English, respond in Spanish and provide the English translation below prefixed with "Translation:".
-            If user writes in Spanish, help correct any grammar or vocabulary mistakes, explain the corrections in English, and provide encouragement.
-            Keep responses friendly but concise, focused on language learning.
-            Maintain a consistent format with corrections and explanations clearly separated.`
-          },
+          { role: 'system', content: systemMessage },
           { role: 'user', content: message }
         ],
         temperature: 0.7,
@@ -49,7 +56,6 @@ serve(async (req) => {
     const data = await response.json();
     console.log('OpenAI API Response:', data);
 
-    // Check for API errors
     if (!response.ok) {
       if (data.error?.code === 'insufficient_quota') {
         throw new Error('OpenAI API quota exceeded. Please check your billing details.');
@@ -61,10 +67,23 @@ serve(async (req) => {
       throw new Error('Invalid response structure from OpenAI');
     }
 
+    if (requestType === 'assessment') {
+      try {
+        const assessment = JSON.parse(data.choices[0].message.content);
+        console.log('Formatted assessment:', assessment);
+        return new Response(
+          JSON.stringify({ assessment }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        console.error('Error parsing assessment JSON:', error);
+        throw new Error('Failed to parse assessment response');
+      }
+    }
+
     let content = data.choices[0].message.content;
     let translation = '';
 
-    // Handle translation format
     if (content.includes('\nTranslation:')) {
       [content, translation] = content.split('\nTranslation:');
       content = content.trim();

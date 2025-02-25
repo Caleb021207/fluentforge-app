@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Mic, MicOff } from "lucide-react";
+import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,11 +13,20 @@ interface ChatMessage {
   translation?: string;
 }
 
+interface SkillAssessment {
+  reading: string;
+  writing: string;
+  speaking: string;
+  listening: string;
+  overallLevel: string;
+}
+
 const Practice = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
+  const [skillAssessment, setSkillAssessment] = useState<SkillAssessment | null>(null);
   const { toast } = useToast();
 
   const conversation = useConversation({
@@ -72,6 +81,35 @@ const Practice = () => {
         description: "Failed to start voice conversation. Please try again.",
         variant: "destructive",
       });
+    }
+  };
+
+  const requestSkillAssessment = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+        body: { 
+          message: "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.",
+          requestType: "assessment"
+        }
+      });
+
+      if (error) throw error;
+
+      setSkillAssessment(data.assessment);
+      toast({
+        title: "Assessment Complete",
+        description: "Your language skills have been evaluated!",
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to get skill assessment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -146,7 +184,52 @@ const Practice = () => {
               </>
             )}
           </Button>
+          <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
+            Get Skills Assessment
+          </Button>
         </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3 mb-8">
+        {skillAssessment && (
+          <>
+            <Card className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <BookOpen className="h-5 w-5 text-lingua-primary" />
+                <h3 className="font-semibold">Reading</h3>
+              </div>
+              <p className="text-sm text-gray-600">{skillAssessment.reading}</p>
+            </Card>
+            <Card className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <FileText className="h-5 w-5 text-lingua-primary" />
+                <h3 className="font-semibold">Writing</h3>
+              </div>
+              <p className="text-sm text-gray-600">{skillAssessment.writing}</p>
+            </Card>
+            <Card className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Volume2 className="h-5 w-5 text-lingua-primary" />
+                <h3 className="font-semibold">Speaking</h3>
+              </div>
+              <p className="text-sm text-gray-600">{skillAssessment.speaking}</p>
+            </Card>
+            <Card className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Headphones className="h-5 w-5 text-lingua-primary" />
+                <h3 className="font-semibold">Listening</h3>
+              </div>
+              <p className="text-sm text-gray-600">{skillAssessment.listening}</p>
+            </Card>
+            <Card className="p-4 md:col-span-2">
+              <div className="flex items-center gap-2 mb-2">
+                <MessageCircle className="h-5 w-5 text-lingua-primary" />
+                <h3 className="font-semibold">Overall Level</h3>
+              </div>
+              <p className="text-sm text-gray-600">{skillAssessment.overallLevel}</p>
+            </Card>
+          </>
+        )}
       </div>
 
       <Card className="mb-4 p-6">
