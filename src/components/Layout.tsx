@@ -24,6 +24,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Input } from "./ui/input";
+import LogoutButton from "./auth/LogoutButton";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -119,6 +120,16 @@ const Layout = () => {
               Sign Up
             </Button>
           </div>
+        </div>
+      )}
+
+      {user && (
+        <div className="w-full bg-white border-b p-4 flex justify-between items-center">
+          <div className="flex items-center">
+            <span className="text-sm text-gray-600 mr-2">Signed in as:</span>
+            <span className="font-medium">{user.email}</span>
+          </div>
+          <LogoutButton />
         </div>
       )}
 
