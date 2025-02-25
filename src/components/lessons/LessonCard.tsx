@@ -3,25 +3,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import ChallengeList from "./ChallengeList";
-
-interface Challenge {
-  type: string;
-  description: string;
-  xpReward: number;
-  timeLimit?: number;
-  unlocked: boolean;
-}
+import { Lesson } from "./types";
 
 interface LessonCardProps {
-  lesson: {
-    id: number;
-    title: string;
-    description: string;
-    duration: string;
-    icon: JSX.Element;
-    challenges?: Challenge[];
-    progress?: number;
-  };
+  lesson: Lesson;
   onStart?: () => void;
 }
 
