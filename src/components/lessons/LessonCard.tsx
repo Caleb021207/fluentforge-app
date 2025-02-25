@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -42,50 +41,48 @@ const LessonCard = ({ lesson, onStart }: LessonCardProps) => {
   };
 
   return (
-    <Card className="p-6 hover:shadow-lg transition-shadow">
-      <div className="flex items-start space-x-4">
-        <div className={`p-2 rounded-lg ${
+    <Card className="p-3 hover:shadow-lg transition-shadow">
+      <div className="flex flex-col space-y-2">
+        <div className={`p-1.5 rounded-lg w-fit ${
           lesson.requiresVoice 
             ? "bg-purple-100" 
             : "bg-lingua-primary/10"
         }`}>
           {lesson.icon}
         </div>
-        <div className="flex-1 space-y-2">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-xl font-semibold">{lesson.title}</h3>
-              <div className="flex items-center gap-2 mt-1">
-                {lesson.requiresVoice && (
-                  <div className="flex items-center text-sm text-purple-600 bg-purple-50 px-2 py-1 rounded">
-                    <span className="h-4 w-4 mr-1">🎤</span>
-                    Voice Required
-                  </div>
-                )}
-                <span className={`px-2 py-1 rounded text-sm ${getDifficultyColor(lesson.difficulty)}`}>
-                  {lesson.difficulty}
-                </span>
-                <span className="text-sm text-gray-500">{lesson.duration}</span>
-              </div>
+        <div className="space-y-2">
+          <div>
+            <h3 className="text-base font-semibold truncate">{lesson.title}</h3>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {lesson.requiresVoice && (
+                <div className="flex items-center text-xs text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">
+                  <span className="h-3 w-3 mr-0.5">🎤</span>
+                  Voice
+                </div>
+              )}
+              <span className={`px-1.5 py-0.5 rounded text-xs ${getDifficultyColor(lesson.difficulty)}`}>
+                {lesson.difficulty}
+              </span>
+              <span className="text-xs text-gray-500">{lesson.duration}</span>
             </div>
           </div>
-          <p className="text-gray-600">{lesson.description}</p>
+          <p className="text-xs text-gray-600 line-clamp-2">{lesson.description}</p>
           
-          <div className="border-t border-gray-100 pt-4 mt-4">
+          <div className="border-t border-gray-100 pt-2">
             <ChallengeList challenges={lesson.challenges} />
           </div>
 
-          <div className="flex items-center justify-between pt-4">
-            <div className="space-y-1 flex-1">
-              <div className="flex justify-between text-sm">
+          <div className="flex flex-col pt-2 gap-2">
+            <div className="space-y-1">
+              <div className="flex justify-between text-xs">
                 <span className="text-gray-500">Progress</span>
                 <span className="text-gray-500">{lesson.progress || 0}%</span>
               </div>
-              <Progress value={lesson.progress || 0} className="h-2" />
+              <Progress value={lesson.progress || 0} className="h-1.5" />
             </div>
             <Button 
               size="sm" 
-              className="ml-4"
+              className="w-full text-xs py-1"
               onClick={() => onStart(lesson.id)}
             >
               {lesson.progress ? "Continue" : "Start"} ({lesson.xpPoints} XP)
