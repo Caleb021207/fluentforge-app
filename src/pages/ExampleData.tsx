@@ -5,9 +5,16 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
+// Define a type that matches what createExampleProfile can return
+type ExampleProfileResult = {
+  success: boolean;
+  userId?: string;
+  error?: any;
+};
+
 const ExampleDataPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<{userId: string, success: boolean} | null>(null);
+  const [result, setResult] = useState<ExampleProfileResult | null>(null);
   const { toast } = useToast();
 
   const handleSeedData = async () => {
@@ -74,7 +81,7 @@ const ExampleDataPage = () => {
           )}
         </Button>
 
-        {result && result.success && (
+        {result && result.success && result.userId && (
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
             <h3 className="font-semibold text-green-800 mb-2">Success!</h3>
             <p>Added example data for user {result.userId}</p>

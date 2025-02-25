@@ -13,10 +13,10 @@ const ExampleDataButton = () => {
     setIsLoading(true);
     try {
       const result = await createExampleProfile();
-      if (result && result.success) {
+      if (result && result.success && result.userId) {
         toast({
           title: "Success!",
-          description: `Added example data for user profile.`,
+          description: `Added example data for user profile: ${result.userId}`,
         });
       } else {
         toast({
