@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -360,6 +359,26 @@ const Lessons = () => {
   const totalXP = lessons.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
   const earnedXP = lessons.reduce((acc, lesson) => acc + (lesson.progress || 0) / 100 * lesson.xpPoints, 0);
 
+  const totalLessonsCount = Object.values(lessonsByLevel).reduce(
+    (acc, levelLessons) => acc + levelLessons.length,
+    0
+  );
+
+  const completedLessonsCount = Object.values(lessonsByLevel).reduce(
+    (acc, levelLessons) => acc + levelLessons.filter(lesson => (lesson.progress || 0) === 100).length,
+    0
+  );
+
+  const stats = {
+    totalLessons: totalLessonsCount,
+    completedLessons: completedLessonsCount,
+    totalXP: totalXP,
+    earnedXP: earnedXP,
+    currentStreak: 5,
+    nextLevel: "B1",
+    nextMilestone: 1000,
+  };
+
   const handleLevelChange = (newLevel: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("level", newLevel);
@@ -392,6 +411,19 @@ const Lessons = () => {
     }
   };
 
+  const handleLessonComplete = (lessonId: number) => {
+    const lesson = lessons.find(l => l.id === lessonId);
+    if (!lesson) return;
+
+    toast({
+      title: "Lesson Complete! 🎉",
+      description: `You've earned ${lesson.xpPoints} XP!`,
+    });
+
+    lesson.progress = 100;
+    setActiveLessonId(null);
+  };
+
   const activeLessonData = lessons.find(l => l.id === activeLessonId);
 
   return (
@@ -400,6 +432,7 @@ const Lessons = () => {
         <LessonView
           lesson={activeLessonData}
           onClose={() => setActiveLessonId(null)}
+          onComplete={() => handleLessonComplete(activeLessonData.id)}
         />
       ) : (
         <motion.div
@@ -413,22 +446,10 @@ const Lessons = () => {
               <h1 className="text-3xl font-bold text-lingua-text">
                 Spanish Lessons <span className={`text-xl ${getLevelColor(level)}`}>({getCefrLevel(level)})</span>
               </h1>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-yellow-500" />
-                  <span className="font-semibold">Daily Streak: 5 🔥</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-yellow-500" />
-                  <span className="font-semibold">{Math.round(earnedXP)} / {totalXP} XP</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="w-full bg-gray-100 rounded-full h-2 mb-6">
-              <Progress value={(earnedXP / totalXP) * 100} className="h-2" />
             </div>
 
+            <ProgressDashboard stats={stats} />
+            
             <LevelSelector currentLevel={level} onLevelChange={handleLevelChange} />
           </div>
 
@@ -443,6 +464,14 @@ const Lessons = () => {
           </div>
         </motion.div>
       )}
+    </div>
+  );
+};
+
+const ProgressDashboard = ({ stats }) => {
+  return (
+    <div className="w-full bg-gray-100 rounded-full h-2 mb-6">
+      <Progress value={(stats.earnedXP / stats.totalXP) * 100} className="h-2" />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { Award, ArrowLeft, Volume2 } from 'lucide-react';
 
 interface LessonViewProps {
   onClose: () => void;
+  onComplete: () => void;
   lesson: {
     id: number;
     title: string;
@@ -23,7 +25,7 @@ interface LessonViewProps {
   };
 }
 
-const LessonView = ({ lesson, onClose }: LessonViewProps) => {
+const LessonView = ({ lesson, onClose, onComplete }: LessonViewProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const { toast } = useToast();
@@ -38,6 +40,7 @@ const LessonView = ({ lesson, onClose }: LessonViewProps) => {
         title: "Lesson Complete! 🎉",
         description: `You've earned ${earnedXP + xpEarned} XP points!`,
       });
+      onComplete();
     } else {
       setCurrentStep((prev) => prev + 1);
     }
@@ -88,7 +91,7 @@ const LessonView = ({ lesson, onClose }: LessonViewProps) => {
                   onComplete={() => handleComplete(currentChallenge.xpReward)}
                 />
               )}
-              {/* Add more challenge types here */}
+              {/* Add more challenge types here as needed */}
             </>
           )}
         </CardContent>

@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Puzzle, Check, X } from 'lucide-react';
+import { Puzzle, Check, X, Volume2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Progress } from '@/components/ui/progress';
 
 interface VocabularyLessonProps {
   vocabulary: string[];
@@ -11,12 +12,14 @@ interface VocabularyLessonProps {
 }
 
 const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => {
+  const [currentStep, setCurrentStep] = useState(0);
   const [shuffledWords, setShuffledWords] = useState<string[]>([]);
   const [translations, setTranslations] = useState<string[]>([]);
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [selectedTranslation, setSelectedTranslation] = useState<string | null>(null);
   const [matchedPairs, setMatchedPairs] = useState<Set<string>>(new Set());
   const [attempts, setAttempts] = useState(0);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     const words = vocabulary.map(pair => pair.split(' - ')[0]);
@@ -41,12 +44,10 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
       setSelectedTranslation(value);
     }
 
-    // Check if we have a pair selected
     if ((type === 'word' && selectedTranslation) || (type === 'translation' && selectedWord)) {
       const word = type === 'word' ? value : selectedWord!;
       const translation = type === 'translation' ? value : selectedTranslation!;
       
-      // Find if it's a correct match
       const isMatch = vocabulary.some(pair => {
         const [w, t] = pair.split(' - ');
         return (w === word && t === translation);
@@ -54,9 +55,12 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 
       if (isMatch) {
         setMatchedPairs(prev => new Set([...prev, word]));
+        setScore(prev => prev + 10);
         if (matchedPairs.size + 1 === vocabulary.length) {
           onComplete();
         }
+      } else {
+        setScore(prev => Math.max(0, prev - 5));
       }
 
       setAttempts(prev => prev + 1);
@@ -65,8 +69,23 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
     }
   };
 
+  const progress = (matchedPairs.size / vocabulary.length) * 100;
+
   return (
     <div className="space-y-8">
+      <Card className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <div className="space-y-2">
+            <h3 className="font-medium">Progress</h3>
+            <Progress value={progress} className="h-2 w-[200px]" />
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold">{score}</p>
+            <p className="text-sm text-muted-foreground">points</p>
+          </div>
+        </div>
+      </Card>
+
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <h4 className="font-medium mb-4">Spanish Words</h4>
@@ -88,6 +107,13 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
                 >
                   {matchedPairs.has(word) ? <Check className="h-4 w-4 mr-2" /> : <Puzzle className="h-4 w-4 mr-2" />}
                   {word}
+                  <Volume2 
+                    className="ml-auto h-4 w-4 cursor-pointer hover:text-blue-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Text-to-speech functionality can be added here
+                    }}
+                  />
                 </Button>
               </motion.div>
             ))}
@@ -142,7 +168,7 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
         </div>
       </div>
 
-      <Card className="p-4">
+      <Card className="p-4 mt-4">
         <div className="flex justify-between items-center">
           <div>
             <p className="text-sm text-muted-foreground">
@@ -164,4 +190,3 @@ const VocabularyLesson = ({ vocabulary, onComplete }: VocabularyLessonProps) => 
 };
 
 export default VocabularyLesson;
-
