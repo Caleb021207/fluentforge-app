@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { User } from "@supabase/supabase-js";
+import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
+import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
 interface ProgressData {
   date: string;
@@ -16,17 +18,9 @@ interface ProgressData {
   listening: number;
 }
 
-interface SkillRecommendation {
-  skill: string;
-  currentLevel: string;
-  strengths: string[];
-  weaknesses: string[];
-  recommendations: string[];
-}
-
 const ProgressPage = () => {
   const [progressData, setProgressData] = useState<ProgressData[]>([]);
-  const [recommendations, setRecommendations] = useState<SkillRecommendation[]>([]);
+  const [recommendations, setRecommendations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
@@ -58,7 +52,7 @@ const ProgressPage = () => {
       if (attempts && attempts.length > 0) {
         const processedData = processAttemptsData(attempts);
         setProgressData(processedData);
-        await getAIRecommendations(attempts);
+        generateRecommendations(attempts);
       } else {
         toast({
           title: "No Progress Data",
@@ -97,24 +91,37 @@ const ProgressPage = () => {
     return Array.from(dataMap.values());
   };
 
-  const getAIRecommendations = async (attempts: any[]) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('analyze-progress', {
-        body: { attempts }
-      });
-
-      if (error) throw error;
-      if (data?.recommendations) {
-        setRecommendations(data.recommendations);
+  const generateRecommendations = (attempts: any[]) => {
+    const latestScores: Record<string, number> = {};
+    const skills = ['reading', 'writing', 'speaking', 'listening'];
+    
+    // Get the latest score for each skill
+    skills.forEach(skill => {
+      const skillAttempts = attempts.filter(a => a.certification_type === skill);
+      if (skillAttempts.length > 0) {
+        const latestAttempt = skillAttempts.reduce((latest: any, current: any) => {
+          return new Date(current.completed_at) > new Date(latest.completed_at) ? current : latest;
+        });
+        latestScores[skill] = latestAttempt.score;
       }
-    } catch (error) {
-      console.error('Error getting AI recommendations:', error);
-      toast({
-        title: "Error",
-        description: "Failed to generate learning recommendations. Please try again later.",
-        variant: "destructive",
-      });
-    }
+    });
+
+    // Generate recommendations based on CEFR levels
+    const newRecommendations = skills.map(skill => {
+      const score = latestScores[skill] || 0;
+      const level = determineLevel(score);
+      const recommendation = getRecommendationsForLevel(skill, level);
+      
+      if (recommendation) {
+        return {
+          ...recommendation,
+          currentLevel: level
+        };
+      }
+      return null;
+    }).filter(Boolean);
+
+    setRecommendations(newRecommendations);
   };
 
   if (!user) {
@@ -179,7 +186,7 @@ const ProgressPage = () => {
                     <div>
                       <h4 className="font-medium mb-2 text-green-600">Strengths</h4>
                       <ul className="list-disc list-inside space-y-1">
-                        {rec.strengths.map((strength, idx) => (
+                        {rec.strengths.map((strength: string, idx: number) => (
                           <li key={idx} className="text-sm text-gray-600">{strength}</li>
                         ))}
                       </ul>
@@ -187,7 +194,7 @@ const ProgressPage = () => {
                     <div>
                       <h4 className="font-medium mb-2 text-yellow-600">Areas for Improvement</h4>
                       <ul className="list-disc list-inside space-y-1">
-                        {rec.weaknesses.map((weakness, idx) => (
+                        {rec.weaknesses.map((weakness: string, idx: number) => (
                           <li key={idx} className="text-sm text-gray-600">{weakness}</li>
                         ))}
                       </ul>
@@ -195,7 +202,7 @@ const ProgressPage = () => {
                     <div>
                       <h4 className="font-medium mb-2 text-blue-600">Recommendations</h4>
                       <ul className="list-disc list-inside space-y-1">
-                        {rec.recommendations.map((recommendation, idx) => (
+                        {rec.recommendations.map((recommendation: string, idx: number) => (
                           <li key={idx} className="text-sm text-gray-600">{recommendation}</li>
                         ))}
                       </ul>
@@ -218,3 +225,4 @@ const ProgressPage = () => {
 };
 
 export default ProgressPage;
+
