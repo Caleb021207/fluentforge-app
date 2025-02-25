@@ -62,6 +62,44 @@ export type Database = {
           user_id?: string;
         };
       };
+      lesson_progress: {
+        Row: {
+          id: string;
+          user_id: string;
+          level: string;
+          lesson_id: number;
+          progress: number;
+          completed: boolean;
+          last_accessed: string | null;
+          xp_earned: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          level: string;
+          lesson_id: number;
+          progress: number;
+          completed: boolean;
+          last_accessed?: string | null;
+          xp_earned?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          level?: string;
+          lesson_id?: number;
+          progress?: number;
+          completed?: boolean;
+          last_accessed?: string | null;
+          xp_earned?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
   };
 };

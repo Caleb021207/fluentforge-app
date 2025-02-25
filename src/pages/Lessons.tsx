@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import LevelSelector from "@/components/lessons/LevelSelector";
 import LessonCard from "@/components/lessons/LessonCard";
 import LessonView from "@/components/lessons/LessonView";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Challenge {
   type: string;
@@ -455,9 +456,11 @@ const getCefrLevel = (level: string) => {
 const Lessons = () => {
   const [searchParams] = useSearchParams();
   const level = searchParams.get("level") || "beginner";
-  const lessons = lessonsByLevel[level] || [];  // Add fallback to empty array
+  const [lessons, setLessons] = useState<Lesson[]>(lessonsByLevel[level] || []);
   const { toast } = useToast();
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userProgress, setUserProgress] = useState<Record<string, any>>({});
   
   // Add null checks and default values to prevent "reduce of undefined" errors
   const calculateTotalXP = (lessonsArray: Lesson[] = []) => {
@@ -468,9 +471,6 @@ const Lessons = () => {
     return lessonsArray.reduce((acc, lesson) => 
       acc + ((lesson.progress || 0) / 100 * lesson.xpPoints), 0);
   };
-
-  const totalXP = calculateTotalXP(lessons);
-  const earnedXP = calculateEarnedXP(lessons);
 
   const calculateTotalLessonsCount = () => {
     return Object.values(lessonsByLevel).reduce(
@@ -487,6 +487,60 @@ const Lessons = () => {
     );
   };
 
+  // Fetch user's lesson progress from database
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      setIsLoading(true);
+      
+      try {
+        // Get current user
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          // Fetch user's lesson progress
+          const { data, error } = await supabase
+            .from('lesson_progress')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .eq('level', level);
+            
+          if (error) throw error;
+          
+          // Create a map of lesson progress by lesson ID
+          const progressMap = {};
+          if (data) {
+            data.forEach(item => {
+              progressMap[item.lesson_id] = item.progress;
+            });
+          }
+          
+          setUserProgress(progressMap);
+          
+          // Update lessons with progress data
+          const updatedLessons = lessonsByLevel[level].map(lesson => ({
+            ...lesson,
+            progress: progressMap[lesson.id] || 0
+          }));
+          
+          setLessons(updatedLessons);
+        } else {
+          // No user logged in, use default lessons
+          setLessons(lessonsByLevel[level]);
+        }
+      } catch (error) {
+        console.error("Error fetching lesson progress:", error);
+        // Fall back to default lessons data
+        setLessons(lessonsByLevel[level]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchUserProgress();
+  }, [level]);
+
+  const totalXP = calculateTotalXP(lessons);
+  const earnedXP = calculateEarnedXP(lessons);
   const totalLessonsCount = calculateTotalLessonsCount();
   const completedLessonsCount = calculateCompletedLessonsCount();
 
@@ -507,94 +561,4 @@ const Lessons = () => {
     window.location.reload();
   };
 
-  const handleStartLesson = (lessonId: number) => {
-    const lesson = lessons.find(l => l.id === lessonId);
-    if (!lesson) return;
-
-    if (lesson.requiresVoice) {
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(() => {
-          toast({
-            title: "Microphone Access Granted",
-            description: "You can now participate in voice challenges!",
-          });
-          setActiveLessonId(lessonId);
-        })
-        .catch(() => {
-          toast({
-            title: "Microphone Access Required",
-            description: "Please allow microphone access to participate in voice challenges.",
-            variant: "destructive",
-          });
-        });
-    } else {
-      setActiveLessonId(lessonId);
-    }
-  };
-
-  const handleLessonComplete = (lessonId: number) => {
-    const lesson = lessons.find(l => l.id === lessonId);
-    if (!lesson) return;
-
-    toast({
-      title: "Lesson Complete! 🎉",
-      description: `You've earned ${lesson.xpPoints} XP!`,
-    });
-
-    lesson.progress = 100;
-    setActiveLessonId(null);
-  };
-
-  const activeLessonData = lessons.find(l => l.id === activeLessonId);
-
-  return (
-    <div className="max-w-5xl mx-auto p-6">
-      {activeLessonData ? (
-        <LessonView
-          lesson={activeLessonData}
-          onClose={() => setActiveLessonId(null)}
-          onComplete={() => handleLessonComplete(activeLessonData.id)}
-        />
-      ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-8"
-        >
-          <div className="space-y-4">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-              <h1 className="text-3xl font-bold text-lingua-text">
-                Spanish Lessons <span className={`text-xl ${getLevelColor(level)}`}>({getCefrLevel(level)})</span>
-              </h1>
-            </div>
-
-            <ProgressDashboard stats={stats} />
-            
-            <LevelSelector currentLevel={level} onLevelChange={handleLevelChange} />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {lessons.map((lesson) => (
-              <LessonCard
-                key={lesson.id}
-                lesson={lesson}
-                onStart={handleStartLesson}
-              />
-            ))}
-          </div>
-        </motion.div>
-      )}
-    </div>
-  );
-};
-
-const ProgressDashboard = ({ stats }) => {
-  return (
-    <div className="w-full bg-gray-100 rounded-full h-2 mb-6">
-      <Progress value={(stats.earnedXP / stats.totalXP) * 100} className="h-2" />
-    </div>
-  );
-};
-
-export default Lessons;
+  const handleStartLe
