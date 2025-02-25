@@ -1,5 +1,5 @@
 
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export interface Challenge {
   type: string;
@@ -14,7 +14,7 @@ export interface Lesson {
   title: string;
   description: string;
   duration: string;
-  icon: ReactElement;
+  icon: ReactNode;
   vocabulary: string[];
   xpPoints: number;
   difficulty: "Easy" | "Medium" | "Hard";

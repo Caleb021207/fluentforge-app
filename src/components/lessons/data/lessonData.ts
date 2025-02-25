@@ -12,6 +12,7 @@ import {
   Trophy
 } from "lucide-react";
 import { Lesson, LevelName } from "../types";
+import React from "react";
 
 const lessonsByLevel: Record<LevelName, Lesson[]> = {
   beginner: [
@@ -20,7 +21,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Basic Greetings",
       description: "Learn essential Spanish greetings and introductions through interactive exercises.",
       duration: "15 min",
-      icon: <MessageCircle className="h-6 w-6" />,
+      icon: React.createElement(MessageCircle, { className: "h-6 w-6" }),
       vocabulary: [
         "Hola - Hello",
         "Buenos días - Good morning",
@@ -51,7 +52,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Numbers 1-20",
       description: "Master counting in Spanish through interactive games and exercises.",
       duration: "20 min",
-      icon: <BookOpen className="h-6 w-6" />,
+      icon: React.createElement(BookOpen, { className: "h-6 w-6" }),
       vocabulary: [
         "Uno - One",
         "Dos - Two",
@@ -87,7 +88,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Colors",
       description: "Learn common colors in Spanish",
       duration: "15 min",
-      icon: <Globe className="h-6 w-6" />,
+      icon: React.createElement(Globe, { className: "h-6 w-6" }),
       vocabulary: [
         "Rojo - Red",
         "Azul - Blue",
@@ -118,7 +119,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Family Members",
       description: "Learn words for family relations",
       duration: "25 min",
-      icon: <Users className="h-6 w-6" />,
+      icon: React.createElement(Users, { className: "h-6 w-6" }),
       vocabulary: [
         "Madre - Mother",
         "Padre - Father",
@@ -151,7 +152,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Common Objects",
       description: "Learn everyday objects and items",
       duration: "20 min",
-      icon: <BookOpen className="h-6 w-6" />,
+      icon: React.createElement(BookOpen, { className: "h-6 w-6" }),
       vocabulary: [
         "Mesa - Table",
         "Silla - Chair",
@@ -182,7 +183,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Food & Drinks",
       description: "Learn common food and drink vocabulary",
       duration: "25 min",
-      icon: <Utensils className="h-6 w-6" />,
+      icon: React.createElement(Utensils, { className: "h-6 w-6" }),
       vocabulary: [
         "Agua - Water",
         "Pan - Bread",
@@ -217,7 +218,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Present Tense Verbs",
       description: "Practice conjugating regular verbs through interactive exercises.",
       duration: "30 min",
-      icon: <Rocket className="h-6 w-6" />,
+      icon: React.createElement(Rocket, { className: "h-6 w-6" }),
       vocabulary: ["To speak - Hablar", "To eat - Comer", "To live - Vivir"],
       xpPoints: 150,
       difficulty: "Medium",
@@ -244,7 +245,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Daily Routines",
       description: "Describe your daily activities in Spanish",
       duration: "25 min",
-      icon: <Clock className="h-6 w-6" />,
+      icon: React.createElement(Clock, { className: "h-6 w-6" }),
       vocabulary: ["I wake up - Me despierto", "I shower - Me ducho", "I have breakfast - Desayuno"],
       xpPoints: 120,
       difficulty: "Medium",
@@ -264,7 +265,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Food & Dining",
       description: "Restaurant vocabulary and ordering food",
       duration: "30 min",
-      icon: <Utensils className="h-6 w-6" />,
+      icon: React.createElement(Utensils, { className: "h-6 w-6" }),
       vocabulary: ["Restaurant - Restaurante", "Menu - Menú", "Bill - La cuenta"],
       xpPoints: 140,
       difficulty: "Medium",
@@ -284,7 +285,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Shopping & Money",
       description: "Learn to shop and discuss prices in Spanish",
       duration: "25 min",
-      icon: <Briefcase className="h-6 w-6" />,
+      icon: React.createElement(Briefcase, { className: "h-6 w-6" }),
       vocabulary: ["How much? - ¿Cuánto cuesta?", "Expensive - Caro", "Cheap - Barato"],
       xpPoints: 130,
       difficulty: "Medium",
@@ -306,7 +307,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Past Tenses",
       description: "Master the differences between Preterite and Imperfect through immersive practice.",
       duration: "40 min",
-      icon: <GraduationCap className="h-6 w-6" />,
+      icon: React.createElement(GraduationCap, { className: "h-6 w-6" }),
       vocabulary: ["I went - Fui", "I used to go - Iba", "I had - Tenía"],
       xpPoints: 200,
       difficulty: "Hard",
@@ -333,7 +334,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Subjunctive Mood",
       description: "Master the Spanish subjunctive in various contexts",
       duration: "45 min",
-      icon: <Trophy className="h-6 w-6" />,
+      icon: React.createElement(Trophy, { className: "h-6 w-6" }),
       vocabulary: ["I hope that - Espero que", "I want that - Quiero que", "It's important that - Es importante que"],
       xpPoints: 250,
       difficulty: "Hard",
@@ -353,7 +354,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Business Spanish",
       description: "Professional vocabulary and formal communication",
       duration: "35 min",
-      icon: <Briefcase className="h-6 w-6" />,
+      icon: React.createElement(Briefcase, { className: "h-6 w-6" }),
       vocabulary: ["Meeting - Reunión", "Deadline - Fecha límite", "Project - Proyecto"],
       xpPoints: 180,
       difficulty: "Hard",
@@ -373,7 +374,7 @@ const lessonsByLevel: Record<LevelName, Lesson[]> = {
       title: "Idiomatic Expressions",
       description: "Common Spanish idioms and their meanings",
       duration: "30 min",
-      icon: <MessageCircle className="h-6 w-6" />,
+      icon: React.createElement(MessageCircle, { className: "h-6 w-6" }),
       vocabulary: ["It's a piece of cake - Es pan comido", "To be broke - Estar pelado", "To pull someone's leg - Tomar el pelo"],
       xpPoints: 220,
       difficulty: "Hard",
