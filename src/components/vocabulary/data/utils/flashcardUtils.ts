@@ -1,40 +1,24 @@
 
-import React from "react";
-import { FlashcardSet, Flashcard } from "../../types";
+import { FlashcardSet } from "../../types";
+import { LucideIcon } from "lucide-react";
 
-// Helper for creating flashcard sets
 export const createFlashcardSet = (
   id: string,
   title: string,
   description: string,
-  level: any,
-  category: any,
+  level: string,
+  category: string,
   cardCount: number,
-  icon: any
-): FlashcardSet => ({
-  id,
-  title,
-  description,
-  level,
-  category,
-  cardCount,
-  icon: React.createElement(icon, { className: "h-6 w-6" }),
-});
-
-// The following functions are now implemented directly in flashcardData.ts
-// and are kept here for reference or future use
-
-// Function to get all flashcard sets
-export const getAllFlashcardSets = (): FlashcardSet[] => {
-  return [];
-};
-
-// Function to get flashcard sets by level
-export const getFlashcardSetsByLevel = (level: string): FlashcardSet[] => {
-  return [];
-};
-
-// Function to get flashcards by set ID
-export const getFlashcardsBySetId = (setId: string): Flashcard[] => {
-  return [];
+  IconComponent: LucideIcon
+): FlashcardSet => {
+  return {
+    id,
+    title,
+    description,
+    level,
+    category,
+    cardCount,
+    icon: <IconComponent size={24} />,
+    masteredCount: 0,
+  };
 };
