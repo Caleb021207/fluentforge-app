@@ -51,6 +51,11 @@ import { b1SocialRelationshipsFlashcards } from "./flashcards/b1SocialRelationsh
 import { b1FoodCuisineFlashcards } from "./flashcards/b1FoodCuisineFlashcards";
 import { b1HobbiesInterestsFlashcards } from "./flashcards/b1HobbiesInterestsFlashcards";
 import { b1EnvironmentFlashcards } from "./flashcards/b1EnvironmentFlashcards";
+import { b2SubjunctiveFlashcards } from "./flashcards/b2SubjunctiveFlashcards";
+import { b2ConditionalHypotheticalFlashcards } from "./flashcards/b2ConditionalHypotheticalFlashcards";
+import { b2ImperfectConjugationsFlashcards } from "./flashcards/b2ImperfectConjugationsFlashcards";
+import { b2PerfectTensesFlashcards } from "./flashcards/b2PerfectTensesFlashcards";
+import { b2ComplexPhrasesFlashcards } from "./flashcards/b2ComplexPhrasesFlashcards";
 
 // Combine all flashcard sets by CEFR level
 export const flashcardSets: Record<string, FlashcardSet[]> = {
@@ -109,6 +114,11 @@ export const sampleFlashcards: Record<string, Flashcard[]> = {
   "b1-food-cuisine": b1FoodCuisineFlashcards,
   "b1-hobbies-interests": b1HobbiesInterestsFlashcards,
   "b1-environment": b1EnvironmentFlashcards,
+  "b2-subjunctive": b2SubjunctiveFlashcards,
+  "b2-conditional-hypothetical": b2ConditionalHypotheticalFlashcards,
+  "b2-imperfect-conjugations": b2ImperfectConjugationsFlashcards,
+  "b2-perfect-tenses": b2PerfectTensesFlashcards,
+  "b2-complex-phrases": b2ComplexPhrasesFlashcards,
 };
 
 // Function to get all flashcard sets
