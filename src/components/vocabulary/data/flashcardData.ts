@@ -40,7 +40,7 @@ import { a2SocialFlashcards } from "./flashcards/a2SocialFlashcards";
 import { a2TravelFlashcards } from "./flashcards/a2TravelFlashcards";
 import { a2WeatherFlashcards } from "./flashcards/a2WeatherFlashcards";
 import { a2WorkFlashcards } from "./flashcards/a2WorkFlashcards";
-import { a2DateTimeFlashcards } from "./flashcards/a2DateTime";
+import { a2DatesTimesFlashcards } from "./flashcards/a2DateTime";
 import { a2PeopleFlashcards } from "./flashcards/a2People";
 
 // B1 flashcards
@@ -198,7 +198,7 @@ const flashcardMap: Record<string, Flashcard[]> = {
   "a2-travel": a2TravelFlashcards,
   "a2-weather": a2WeatherFlashcards,
   "a2-work": a2WorkFlashcards,
-  "a2-date-time": a2DateTimeFlashcards,
+  "a2-date-time": a2DatesTimesFlashcards,
   "a2-people": a2PeopleFlashcards,
   
   // B1 flashcards

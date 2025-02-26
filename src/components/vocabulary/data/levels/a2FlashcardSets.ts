@@ -24,7 +24,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     Users
   ),
   createFlashcardSet(
-    "a2-dates-times",
+    "a2-date-time",
     "Dates & Times",
     "Vocabulary for talking about dates and time",
     "A2",
