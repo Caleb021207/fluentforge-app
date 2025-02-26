@@ -1,3 +1,4 @@
+
 import { BookOpen, Laptop, Clock, Briefcase, MessageSquare, Book, Globe, Heart, Music, Home, ShoppingBag, Plane, Users, Utensils, Camera } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
@@ -10,7 +11,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Professional vocabulary for the workplace",
     "B1",
     "Business",
-    25,  // Set to 25 based on the flashcard count
+    25,
     Briefcase
   ),
   createFlashcardSet(
@@ -19,7 +20,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Words related to computers and modern tech",
     "B1",
     "Technology",
-    25,  // Set to 25 based on the flashcard count
+    25,
     Laptop
   ),
   createFlashcardSet(
@@ -28,7 +29,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Learn to speak about the past in Spanish",
     "B1",
     "Academic",
-    30,  // Set to 30 based on the flashcard count
+    25,
     Clock
   ),
   createFlashcardSet(
@@ -37,7 +38,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Essential irregular verbs for intermediate Spanish",
     "B1",
     "Academic",
-    25,  // Set to 25 based on the flashcard count
+    25,
     Book
   ),
   createFlashcardSet(
@@ -46,7 +47,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Useful expressions for everyday conversations",
     "B1",
     "Social",
-    25,  // Set to 25 based on the flashcard count
+    25,
     MessageSquare
   ),
   createFlashcardSet(
@@ -55,7 +56,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Common idiomatic expressions and cultural sayings",
     "B1",
     "Social",
-    30,
+    25,
     Globe
   ),
   createFlashcardSet(
@@ -100,7 +101,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Intermediate travel and tourism vocabulary",
     "B1",
     "Travel",
-    30,
+    25,  // Updated to match actual number of flashcards
     Plane
   ),
   createFlashcardSet(
@@ -140,3 +141,4 @@ export const b1FlashcardSets: FlashcardSet[] = [
     Globe
   )
 ];
+
