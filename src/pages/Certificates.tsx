@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -206,12 +205,7 @@ const Certificates = () => {
         </CardContent>
       </Card>
       
-      {/* ManualScoreForm positioned at the bottom */}
-      {isLoggedIn && (
-        <div className="mt-12 mb-8">
-          <ManualScoreForm />
-        </div>
-      )}
+      
     </div>
   );
 };
