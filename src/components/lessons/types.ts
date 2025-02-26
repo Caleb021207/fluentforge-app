@@ -1,12 +1,21 @@
 
 import { ReactElement, ReactNode } from "react";
 
+export interface Question {
+  id: number;
+  question: string;
+  options?: string[];
+  correctAnswer: string;
+  type: "multiple-choice" | "text-input" | "matching";
+}
+
 export interface Challenge {
   type: string;
   description: string;
   xpReward: number;
   timeLimit?: number;
   unlocked: boolean;
+  questions?: Question[];
 }
 
 export interface Lesson {
@@ -26,6 +35,17 @@ export interface Lesson {
     type: "level" | "xp" | "lessons";
     value: number;
   };
+}
+
+export interface Unit {
+  id: number;
+  title: string;
+  description: string;
+  level: LevelName;
+  cefrLevel: string;
+  lessons: Lesson[];
+  progress?: number;
+  icon: ReactNode;
 }
 
 export type LevelName = "beginner" | "intermediate" | "advanced";
