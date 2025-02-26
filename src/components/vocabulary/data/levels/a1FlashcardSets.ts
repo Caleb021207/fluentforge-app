@@ -59,4 +59,32 @@ export const a1FlashcardSets: FlashcardSet[] = [
     56,
     Calculator
   ),
+  createFlashcardSet(
+    "a1-classroom",
+    "Classroom & School",
+    "Common classroom objects and school vocabulary",
+    "A1",
+    "Basics",
+    25,
+    BookOpen
+  ),
+  createFlashcardSet(
+    "a1-personal-info",
+    "Personal Information",
+    "Words and phrases for sharing personal details",
+    "A1",
+    "Basics",
+    25,
+    MessageCircle
+  ),
+  createFlashcardSet(
+    "a1-directions",
+    "Simple Directions",
+    "Basic words for locations and directions",
+    "A1",
+    "Basics",
+    25,
+    Link
+  )
 ];
+

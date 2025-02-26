@@ -1,4 +1,3 @@
-
 import { FlashcardSet, Flashcard } from "../types";
 import { a1FlashcardSets } from "./levels/a1FlashcardSets";
 import { a2FlashcardSets } from "./levels/a2FlashcardSets";
@@ -12,6 +11,9 @@ import { a1VerbsConjugationsFlashcards } from "./flashcards/a1VerbsConjugationsF
 import { a1GreetingsFlashcards } from "./flashcards/a1GreetingsFlashcards";
 import { a1FoodFlashcards } from "./flashcards/a1FoodFlashcards";
 import { a1NumbersColorsFlashcards } from "./flashcards/a1NumbersColorsFlashcards";
+import { a1ClassroomFlashcards } from "./flashcards/a1ClassroomFlashcards";
+import { a1PersonalInfoFlashcards } from "./flashcards/a1PersonalInfoFlashcards";
+import { a1DirectionsFlashcards } from "./flashcards/a1DirectionsFlashcards";
 import { a2TravelFlashcards } from "./flashcards/a2TravelFlashcards";
 import { a2SocialFlashcards } from "./flashcards/a2SocialFlashcards";
 import { a2DatesTimesFlashcards } from "./flashcards/a2DateTime";
@@ -37,6 +39,9 @@ export const sampleFlashcards: Record<string, Flashcard[]> = {
   "a1-greetings": a1GreetingsFlashcards,
   "a1-food": a1FoodFlashcards,
   "a1-numbers-colors": a1NumbersColorsFlashcards,
+  "a1-classroom": a1ClassroomFlashcards,
+  "a1-personal-info": a1PersonalInfoFlashcards,
+  "a1-directions": a1DirectionsFlashcards,
   "a2-travel": a2TravelFlashcards,
   "a2-social": a2SocialFlashcards,
   "a2-dates-times": a2DatesTimesFlashcards,
