@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Book, MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut } from "lucide-react";
+import { BookOpen, MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +36,7 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
-    { icon: Book, label: "Lessons", path: "/lessons" },
+    { icon: BookOpen, label: "Vocabulary", path: "/vocabulary" },
     { icon: MessageSquare, label: "Practice", path: "/practice" },
     { icon: Award, label: "Certificates", path: "/certificates" },
     { icon: BarChart, label: "Progress", path: "/progress" },
@@ -93,7 +93,9 @@ const Navigation = () => {
                 >
                   <Button
                     variant={isActive ? "default" : "ghost"}
-                    className="w-full justify-start"
+                    className={`w-full justify-start ${
+                      isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
+                    }`}
                   >
                     <Icon className="h-5 w-5 md:mr-2" />
                     <span className="hidden md:inline">{item.label}</span>

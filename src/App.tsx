@@ -9,7 +9,7 @@ import Practice from "@/pages/Practice";
 import Profile from "@/pages/Profile";
 import Progress from "@/pages/Progress";
 import NotFound from "@/pages/NotFound";
-import Lessons from "@/pages/Lessons";
+import Vocabulary from "@/pages/Vocabulary";
 import ExampleData from "@/pages/ExampleData";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -29,7 +29,7 @@ function App() {
             <Route path="/practice" element={<Practice />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/progress" element={<Progress />} />
-            <Route path="/lessons" element={<Lessons />} />
+            <Route path="/vocabulary" element={<Vocabulary />} />
             <Route path="/example-data" element={<ExampleData />} />
             <Route path="*" element={<NotFound />} />
           </Route>
