@@ -12,10 +12,10 @@ import { a1FoodFlashcards } from "./flashcards/a1FoodFlashcards";
 import { a1NumbersColorsFlashcards } from "./flashcards/a1NumbersColorsFlashcards";
 import { a2TravelFlashcards } from "./flashcards/a2TravelFlashcards";
 import { a2SocialFlashcards } from "./flashcards/a2SocialFlashcards";
-import { a2DatesTimesFlashcards } from "./flashcards/a2DatesTimesFlashcards";
+import { a2DatesTimesFlashcards } from "./flashcards/a2DateTime";
 import { a2WeatherFlashcards } from "./flashcards/a2WeatherFlashcards";
 import { a2FamilyFlashcards } from "./flashcards/a2FamilyFlashcards";
-import { a2PeopleFlashcards } from "./flashcards/a2PeopleFlashcards";
+import { a2PeopleFlashcards } from "./flashcards/a2People";
 
 // Combine all flashcard sets by CEFR level
 export const flashcardSets: Record<string, FlashcardSet[]> = {
