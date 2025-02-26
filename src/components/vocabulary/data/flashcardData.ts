@@ -41,6 +41,16 @@ import { b1TechnologyFlashcards } from "./flashcards/b1TechnologyFlashcards";
 import { b1PastTenseFlashcards } from "./flashcards/b1PastTenseFlashcards";
 import { b1IrregularVerbsFlashcards } from "./flashcards/b1IrregularVerbsFlashcards";
 import { b1IntermediatePhrasesFlashcards } from "./flashcards/b1IntermediatePhrasesFlashcards";
+import { b1CulturalExpressionsFlashcards } from "./flashcards/b1CulturalExpressionsFlashcards";
+import { b1EmotionsFeelingsFlashcards } from "./flashcards/b1EmotionsFeelingsFlashcards";
+import { b1EntertainmentFlashcards } from "./flashcards/b1EntertainmentFlashcards";
+import { b1HomeLivingFlashcards } from "./flashcards/b1HomeLivingFlashcards";
+import { b1ShoppingCommerceFlashcards } from "./flashcards/b1ShoppingCommerceFlashcards";
+import { b1TravelTourismFlashcards } from "./flashcards/b1TravelTourismFlashcards";
+import { b1SocialRelationshipsFlashcards } from "./flashcards/b1SocialRelationshipsFlashcards";
+import { b1FoodCuisineFlashcards } from "./flashcards/b1FoodCuisineFlashcards";
+import { b1HobbiesInterestsFlashcards } from "./flashcards/b1HobbiesInterestsFlashcards";
+import { b1EnvironmentFlashcards } from "./flashcards/b1EnvironmentFlashcards";
 
 // Combine all flashcard sets by CEFR level
 export const flashcardSets: Record<string, FlashcardSet[]> = {
@@ -89,6 +99,16 @@ export const sampleFlashcards: Record<string, Flashcard[]> = {
   "b1-past-tense": b1PastTenseFlashcards,
   "b1-irregular-verbs": b1IrregularVerbsFlashcards,
   "b1-intermediate-phrases": b1IntermediatePhrasesFlashcards,
+  "b1-cultural-expressions": b1CulturalExpressionsFlashcards,
+  "b1-emotions-feelings": b1EmotionsFeelingsFlashcards,
+  "b1-entertainment": b1EntertainmentFlashcards,
+  "b1-home-living": b1HomeLivingFlashcards,
+  "b1-shopping-commerce": b1ShoppingCommerceFlashcards,
+  "b1-travel-tourism": b1TravelTourismFlashcards,
+  "b1-social-relationships": b1SocialRelationshipsFlashcards,
+  "b1-food-cuisine": b1FoodCuisineFlashcards,
+  "b1-hobbies-interests": b1HobbiesInterestsFlashcards,
+  "b1-environment": b1EnvironmentFlashcards,
 };
 
 // Function to get all flashcard sets
