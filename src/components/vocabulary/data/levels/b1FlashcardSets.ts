@@ -11,7 +11,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Professional vocabulary for the workplace",
     "B1",
     "Business",
-    25,
+    0,  // Updated to 0 since the actual flashcards haven't been implemented yet
     Briefcase
   ),
   createFlashcardSet(
@@ -20,7 +20,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Words related to computers and modern tech",
     "B1",
     "Technology",
-    25,
+    0,  // Updated to 0 since the actual flashcards haven't been implemented yet
     Laptop
   ),
 ];
