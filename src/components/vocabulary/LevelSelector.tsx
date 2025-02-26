@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 interface LevelSelectorProps {
   currentLevel: string;
   onLevelChange: (level: string) => void;
+  onB1Selected?: () => void;
 }
 
-const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProps) => {
+const LevelSelector = ({ currentLevel, onLevelChange, onB1Selected }: LevelSelectorProps) => {
   const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
   
   const levelDescriptions: Record<string, string> = {
@@ -16,6 +17,15 @@ const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProps) => {
     "B2": "Upper Intermediate",
     "C1": "Advanced",
     "C2": "Proficient"
+  };
+  
+  const handleLevelClick = (level: string) => {
+    onLevelChange(level);
+    
+    // If B1 is clicked and we have a handler for it, call it
+    if (level === "B1" && onB1Selected) {
+      onB1Selected();
+    }
   };
   
   return (
@@ -30,7 +40,7 @@ const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProps) => {
                 ? "bg-lingua-primary hover:bg-lingua-primary/90" 
                 : ""
             }`}
-            onClick={() => onLevelChange(level)}
+            onClick={() => handleLevelClick(level)}
           >
             <span className="font-bold mr-2">{level}</span>
             <span className="text-xs">{levelDescriptions[level]}</span>

@@ -1,17 +1,28 @@
 
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import LevelSelector from "@/components/vocabulary/LevelSelector";
 import FlashcardSetsList from "@/components/vocabulary/FlashcardSetsList";
 import FlashcardView from "@/components/vocabulary/FlashcardView";
 import { getFlashcardSetsByLevel, getFlashcardsBySetId, getAllFlashcardSets } from "@/components/vocabulary/data/flashcardData";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const Vocabulary = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const level = searchParams.get("level") || "A1";
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [activeSetId, setActiveSetId] = useState<string | null>(null);
+  const [showPracticeDialog, setShowPracticeDialog] = useState(false);
   
   // Fetch flashcard sets for the current level
   const flashcardSets = getFlashcardSetsByLevel(level);
@@ -29,6 +40,15 @@ const Vocabulary = () => {
   const handleLevelChange = (newLevel: string) => {
     setSearchParams({ level: newLevel });
     setActiveSetId(null);
+  };
+
+  const handleB1Selected = () => {
+    setShowPracticeDialog(true);
+  };
+
+  const handleGoToPractice = () => {
+    setShowPracticeDialog(false);
+    navigate("/practice");
   };
 
   const handleSelectSet = (setId: string) => {
@@ -78,6 +98,7 @@ const Vocabulary = () => {
             <LevelSelector 
               currentLevel={level} 
               onLevelChange={handleLevelChange} 
+              onB1Selected={handleB1Selected}
             />
           </div>
           
@@ -100,6 +121,31 @@ const Vocabulary = () => {
           </div>
         </div>
       </div>
+
+      {/* B1 Level Practice Recommendation Dialog */}
+      <Dialog open={showPracticeDialog} onOpenChange={setShowPracticeDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Ready for Conversation Practice?</DialogTitle>
+            <DialogDescription>
+              Congratulations on reaching the B1 level! At this stage, it's highly recommended that you begin practicing real conversations to improve your fluency.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 bg-blue-50 rounded-md my-2">
+            <p className="text-sm">
+              Now that you've mastered intermediate vocabulary, try our AI Practice feature to engage in text conversations and practice everyday spoken Spanish.
+            </p>
+          </div>
+          <DialogFooter className="flex justify-end space-x-2 mt-4">
+            <Button variant="outline" onClick={() => setShowPracticeDialog(false)}>
+              Maybe Later
+            </Button>
+            <Button onClick={handleGoToPractice} className="bg-lingua-primary hover:bg-lingua-primary/90">
+              Go to Practice
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
