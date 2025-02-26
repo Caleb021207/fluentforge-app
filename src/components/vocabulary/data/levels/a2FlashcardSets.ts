@@ -11,7 +11,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for basic travel situations",
     "A2",
     "Travel",
-    25,
+    30,  // Updated to 30 to reflect the actual count
     Globe
   ),
   createFlashcardSet(
@@ -29,7 +29,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for talking about dates and time",
     "A2",
     "Basics",
-    25,
+    40,  // Updated to 40 to reflect the actual count
     Clock
   ),
   createFlashcardSet(
