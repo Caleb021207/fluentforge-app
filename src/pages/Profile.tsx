@@ -7,7 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import LevelRoadmap from "@/components/profile/LevelRoadmap";
 import LearningGoals from "@/components/profile/LearningGoals";
-import ManualScoreForm from "@/components/profile/ManualScoreForm";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileData {
   currentLevel: string;
@@ -35,6 +36,7 @@ const DashboardPage = () => {
   const [testScores, setTestScores] = useState<TestScores>({});
   const [isExampleProfile, setIsExampleProfile] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -280,19 +282,29 @@ const DashboardPage = () => {
     }
   };
 
-  if (!user) {
-    return (
-      <div className="text-center py-8">
-        <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
-        <p>Please sign in to view your dashboard.</p>
-      </div>
-    );
-  }
+  const handleSignIn = () => {
+    navigate("/");
+  };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-lingua-primary" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="text-center py-8">
+        <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
+        <p className="mb-6">Please sign in to view your dashboard and track your language learning progress.</p>
+        <Button 
+          onClick={handleSignIn} 
+          className="bg-lingua-primary hover:bg-lingua-primary/90"
+        >
+          Sign In
+        </Button>
       </div>
     );
   }
@@ -319,9 +331,6 @@ const DashboardPage = () => {
           testScores={testScores}
         />
       </div>
-      
-      {/* ManualScoreForm positioned at the bottom */}
-      {user && <ManualScoreForm />}
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -20,6 +20,24 @@ const Index = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsSignedIn(!!user);
+    };
+    checkUser();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,16 +105,27 @@ const Index = () => {
             to fluency today.
           </p>
           <div className="space-x-4">
-            <Button 
-              size="lg" 
-              className="bg-lingua-primary hover:bg-lingua-primary/90"
-              onClick={() => {
-                setIsLogin(true);
-                setIsAuthDialogOpen(true);
-              }}
-            >
-              Sign In
-            </Button>
+            {!isSignedIn ? (
+              <Button 
+                size="lg" 
+                className="bg-lingua-primary hover:bg-lingua-primary/90"
+                onClick={() => {
+                  setIsLogin(true);
+                  setIsAuthDialogOpen(true);
+                }}
+              >
+                Sign In
+              </Button>
+            ) : (
+              <Link to="/profile">
+                <Button 
+                  size="lg" 
+                  className="bg-lingua-primary hover:bg-lingua-primary/90"
+                >
+                  Go to Dashboard
+                </Button>
+              </Link>
+            )}
             <Link to="/practice">
               <Button size="lg" variant="outline">
                 Practice with AI
