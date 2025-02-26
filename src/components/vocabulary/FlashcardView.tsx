@@ -6,6 +6,15 @@ import { ArrowLeft, ArrowRight, Rotate3D, Volume, X, CheckCircle } from "lucide-
 import { Flashcard } from "./types";
 import { useToast } from "@/components/ui/use-toast";
 import FlashcardQuiz from "./FlashcardQuiz";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useNavigate } from "react-router-dom";
 
 interface FlashcardViewProps {
   flashcards: Flashcard[];
@@ -18,7 +27,9 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
   const [flipped, setFlipped] = useState(false);
   const [completed, setCompleted] = useState<number[]>([]);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showPracticeDialog, setShowPracticeDialog] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const currentCard = flashcards[currentIndex];
   const totalCards = flashcards.length;
@@ -34,6 +45,11 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
           description: `You've reviewed all ${totalCards} cards in this set. Ready for a quiz?`,
         });
         setShowQuiz(true);
+        
+        // Show practice recommendation dialog if this is a B1 level flashcard
+        if (currentCard && currentCard.level === "B1") {
+          setShowPracticeDialog(true);
+        }
       } else {
         toast({
           title: "Set completed!",
@@ -73,6 +89,11 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
             variant: "default",
           });
           setShowQuiz(true);
+          
+          // Show practice recommendation dialog if this is a B1 level flashcard
+          if (currentCard && currentCard.level === "B1") {
+            setShowPracticeDialog(true);
+          }
         }, 1000);
       }
     }
@@ -98,7 +119,18 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
       title: "Quiz completed!",
       description: `You scored ${score}% on this quiz. Great job!`,
     });
-    onClose();
+    
+    // Show practice recommendation dialog if this is a B1 level flashcard
+    if (currentCard && currentCard.level === "B1") {
+      setShowPracticeDialog(true);
+    } else {
+      onClose();
+    }
+  };
+  
+  const handleGoToPractice = () => {
+    setShowPracticeDialog(false);
+    navigate("/practice");
   };
   
   if (showQuiz) {
@@ -217,6 +249,31 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
           </Button>
         </div>
       )}
+
+      {/* B1 Level Practice Recommendation Dialog */}
+      <Dialog open={showPracticeDialog} onOpenChange={setShowPracticeDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Ready for Conversation Practice?</DialogTitle>
+            <DialogDescription>
+              Congratulations on reaching the B1 level! At this stage, it's highly recommended that you begin practicing real conversations to improve your fluency.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 bg-blue-50 rounded-md my-2">
+            <p className="text-sm">
+              Now that you've mastered intermediate vocabulary, try our AI Practice feature to engage in text conversations and practice everyday spoken Spanish.
+            </p>
+          </div>
+          <DialogFooter className="flex justify-end space-x-2 mt-4">
+            <Button variant="outline" onClick={() => setShowPracticeDialog(false)}>
+              Maybe Later
+            </Button>
+            <Button onClick={handleGoToPractice} className="bg-lingua-primary hover:bg-lingua-primary/90">
+              Go to Practice
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
