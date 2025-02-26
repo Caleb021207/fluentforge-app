@@ -1,5 +1,4 @@
-
-import { BookOpen, MessageCircle, Utensils, Calculator, Link, BookMarked } from "lucide-react";
+import { BookOpen, MessageCircle, Utensils, Calculator, Link, BookMarked, Clock, Calendar, Briefcase, Home, Cloud, ShoppingBag, Shirt, Bus } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
 
@@ -85,6 +84,86 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basics",
     25,
     Link
+  ),
+  createFlashcardSet(
+    "a1-time",
+    "Days & Time",
+    "Days of the week and basic time expressions",
+    "A1",
+    "Basics",
+    20,
+    Clock
+  ),
+  createFlashcardSet(
+    "a1-calendar",
+    "Months & Dates",
+    "Months and date-related vocabulary",
+    "A1",
+    "Basics",
+    20,
+    Calendar
+  ),
+  createFlashcardSet(
+    "a1-professions",
+    "Basic Professions",
+    "Common jobs and occupations",
+    "A1",
+    "Basics",
+    25,
+    Briefcase
+  ),
+  createFlashcardSet(
+    "a1-daily-routines",
+    "Daily Routines",
+    "Common daily activities and schedules",
+    "A1",
+    "Basics",
+    25,
+    Clock
+  ),
+  createFlashcardSet(
+    "a1-house",
+    "House & Home",
+    "Basic house vocabulary and furniture",
+    "A1",
+    "Basics",
+    30,
+    Home
+  ),
+  createFlashcardSet(
+    "a1-weather",
+    "Basic Weather",
+    "Simple weather expressions",
+    "A1",
+    "Basics",
+    20,
+    Cloud
+  ),
+  createFlashcardSet(
+    "a1-shopping",
+    "Shopping Basics",
+    "Essential shopping vocabulary",
+    "A1",
+    "Basics",
+    25,
+    ShoppingBag
+  ),
+  createFlashcardSet(
+    "a1-clothing",
+    "Basic Clothing",
+    "Common clothing items",
+    "A1",
+    "Basics",
+    25,
+    Shirt
+  ),
+  createFlashcardSet(
+    "a1-transportation",
+    "Transportation",
+    "Basic transportation vocabulary",
+    "A1",
+    "Basics",
+    25,
+    Bus
   )
 ];
-

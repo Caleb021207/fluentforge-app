@@ -1,3 +1,4 @@
+
 import { FlashcardSet, Flashcard } from "../types";
 import { a1FlashcardSets } from "./levels/a1FlashcardSets";
 import { a2FlashcardSets } from "./levels/a2FlashcardSets";
@@ -14,6 +15,15 @@ import { a1NumbersColorsFlashcards } from "./flashcards/a1NumbersColorsFlashcard
 import { a1ClassroomFlashcards } from "./flashcards/a1ClassroomFlashcards";
 import { a1PersonalInfoFlashcards } from "./flashcards/a1PersonalInfoFlashcards";
 import { a1DirectionsFlashcards } from "./flashcards/a1DirectionsFlashcards";
+import { a1TimeFlashcards } from "./flashcards/a1TimeFlashcards";
+import { a1CalendarFlashcards } from "./flashcards/a1CalendarFlashcards";
+import { a1ProfessionsFlashcards } from "./flashcards/a1ProfessionsFlashcards";
+import { a1DailyRoutinesFlashcards } from "./flashcards/a1DailyRoutinesFlashcards";
+import { a1HouseFlashcards } from "./flashcards/a1HouseFlashcards";
+import { a1WeatherFlashcards } from "./flashcards/a1WeatherFlashcards";
+import { a1ShoppingFlashcards } from "./flashcards/a1ShoppingFlashcards";
+import { a1ClothingFlashcards } from "./flashcards/a1ClothingFlashcards";
+import { a1TransportationFlashcards } from "./flashcards/a1TransportationFlashcards";
 import { a2TravelFlashcards } from "./flashcards/a2TravelFlashcards";
 import { a2SocialFlashcards } from "./flashcards/a2SocialFlashcards";
 import { a2DatesTimesFlashcards } from "./flashcards/a2DateTime";
@@ -42,6 +52,15 @@ export const sampleFlashcards: Record<string, Flashcard[]> = {
   "a1-classroom": a1ClassroomFlashcards,
   "a1-personal-info": a1PersonalInfoFlashcards,
   "a1-directions": a1DirectionsFlashcards,
+  "a1-time": a1TimeFlashcards,
+  "a1-calendar": a1CalendarFlashcards,
+  "a1-professions": a1ProfessionsFlashcards,
+  "a1-daily-routines": a1DailyRoutinesFlashcards,
+  "a1-house": a1HouseFlashcards,
+  "a1-weather": a1WeatherFlashcards,
+  "a1-shopping": a1ShoppingFlashcards,
+  "a1-clothing": a1ClothingFlashcards,
+  "a1-transportation": a1TransportationFlashcards,
   "a2-travel": a2TravelFlashcards,
   "a2-social": a2SocialFlashcards,
   "a2-dates-times": a2DatesTimesFlashcards,
