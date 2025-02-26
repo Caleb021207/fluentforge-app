@@ -7,12 +7,13 @@ import LessonsList from "@/components/lessons/LessonsList";
 import LessonView from "@/components/lessons/LessonView";
 import { useUserProgress } from "@/components/lessons/hooks/useUserProgress";
 import { LevelName, Lesson, LessonStats } from "@/components/lessons/types";
-import lessonsByLevel from "@/components/lessons/data/lessonData";
+import unitsByLevel from "@/components/lessons/data/lessonData";
 import { 
   calculateTotalXP, 
   calculateEarnedXP,
   calculateTotalLessonsCount,
-  calculateCompletedLessonsCount
+  calculateCompletedLessonsCount,
+  calculateLessonStats
 } from "@/components/lessons/utils/lessonUtils";
 
 const Lessons = () => {
@@ -23,10 +24,9 @@ const Lessons = () => {
   
   const { lessons, isLoading } = useUserProgress(level);
   
-  const totalXP = calculateTotalXP(lessons);
-  const earnedXP = calculateEarnedXP(lessons);
-  const totalLessonsCount = calculateTotalLessonsCount(lessonsByLevel);
-  const completedLessonsCount = calculateCompletedLessonsCount(lessonsByLevel);
+  // We can now either use the utility functions directly with the lessons array
+  // or use the calculateLessonStats function for a complete stats object
+  const stats: LessonStats = calculateLessonStats(unitsByLevel);
 
   const getLevelCEFR = (level: LevelName) => {
     switch (level) {
@@ -39,16 +39,6 @@ const Lessons = () => {
       default:
         return "(A1-A2)";
     }
-  };
-
-  const stats: LessonStats = {
-    totalLessons: totalLessonsCount,
-    completedLessons: completedLessonsCount,
-    totalXP: totalXP,
-    earnedXP: earnedXP,
-    currentStreak: 5,
-    nextLevel: "B1",
-    nextMilestone: 1000,
   };
 
   const handleLevelChange = (newLevel: string) => {

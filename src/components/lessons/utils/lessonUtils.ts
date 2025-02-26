@@ -1,56 +1,73 @@
 
-import { Lesson, LevelName } from "../types";
+import { Lesson, LessonStats, LevelName, Unit } from "../types";
+import unitsByLevel from "../data/lessonData";
 
-export const getLevelColor = (level: string): string => {
-  switch (level) {
-    case "beginner":
-      return "text-green-600";
-    case "intermediate":
-      return "text-blue-600";
-    case "advanced":
-      return "text-purple-600";
-    default:
-      return "text-gray-600";
-  }
+// Helper function to get all lessons from units
+const getAllLessons = (units: Unit[]): Lesson[] => {
+  return units.flatMap(unit => unit.lessons);
 };
 
-export const getCefrLevel = (level: string): string => {
-  switch (level) {
-    case "beginner":
-      return "A1-A2";
-    case "intermediate":
-      return "B1-B2";
-    case "advanced":
-      return "C1-C2";
-    default:
-      return "";
-  }
+export const calculateTotalXP = (lessons: Lesson[]): number => {
+  return lessons.reduce((total, lesson) => total + (lesson.xpPoints || 0), 0);
 };
 
-export const calculateTotalXP = (lessonsArray: Lesson[] = []): number => {
-  return lessonsArray.reduce((acc, lesson) => acc + lesson.xpPoints, 0);
+export const calculateEarnedXP = (lessons: Lesson[]): number => {
+  return lessons.reduce((total, lesson) => {
+    const progress = lesson.progress || 0;
+    const xpPoints = lesson.xpPoints || 0;
+    return total + (progress / 100) * xpPoints;
+  }, 0);
 };
 
-export const calculateEarnedXP = (lessonsArray: Lesson[] = []): number => {
-  return lessonsArray.reduce(
-    (acc, lesson) => acc + ((lesson.progress || 0) / 100) * lesson.xpPoints,
-    0
-  );
+export const calculateTotalLessonsCount = (unitsByLevel: Record<LevelName, Unit[]>): number => {
+  let total = 0;
+  
+  Object.values(unitsByLevel).forEach(units => {
+    units.forEach(unit => {
+      total += unit.lessons.length;
+    });
+  });
+  
+  return total;
 };
 
-export const calculateTotalLessonsCount = (lessonsByLevel: Record<string, Lesson[]>): number => {
-  return Object.values(lessonsByLevel).reduce(
-    (acc, levelLessons) => acc + (levelLessons?.length || 0),
-    0
-  );
+export const calculateCompletedLessonsCount = (unitsByLevel: Record<LevelName, Unit[]>): number => {
+  let completed = 0;
+  
+  Object.values(unitsByLevel).forEach(units => {
+    units.forEach(unit => {
+      unit.lessons.forEach(lesson => {
+        if ((lesson.progress || 0) >= 100) {
+          completed++;
+        }
+      });
+    });
+  });
+  
+  return completed;
 };
 
-export const calculateCompletedLessonsCount = (lessonsByLevel: Record<string, Lesson[]>): number => {
-  return Object.values(lessonsByLevel).reduce(
-    (acc, levelLessons) =>
-      acc +
-      (levelLessons || []).filter((lesson) => (lesson.progress || 0) === 100)
-        .length,
-    0
-  );
+export const calculateLessonStats = (unitsByLevel: Record<LevelName, Unit[]>): LessonStats => {
+  const totalLessons = calculateTotalLessonsCount(unitsByLevel);
+  const completedLessons = calculateCompletedLessonsCount(unitsByLevel);
+  
+  // Calculate total XP across all levels
+  let totalXP = 0;
+  let earnedXP = 0;
+  
+  Object.values(unitsByLevel).forEach(units => {
+    const allLessons = getAllLessons(units);
+    totalXP += calculateTotalXP(allLessons);
+    earnedXP += calculateEarnedXP(allLessons);
+  });
+  
+  return {
+    totalLessons,
+    completedLessons,
+    totalXP,
+    earnedXP,
+    currentStreak: 0, // This would need to be calculated from user data
+    nextLevel: "B1", // This would need to be determined based on user progress
+    nextMilestone: 1000, // This would be a target XP value for the next level
+  };
 };

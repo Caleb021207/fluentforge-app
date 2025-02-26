@@ -1,8 +1,13 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Lesson, UserProgress, LevelName } from "../types";
-import lessonsByLevel from "../data/lessonData";
+import { Lesson, UserProgress, LevelName, Unit } from "../types";
+import unitsByLevel from "../data/lessonData";
+
+// Helper function to flatten lessons from units
+const getLessonsFromUnits = (units: Unit[]): Lesson[] => {
+  return units.flatMap(unit => unit.lessons);
+};
 
 export const useUserProgress = (level: LevelName) => {
   const [userProgress, setUserProgress] = useState<UserProgress>({});
@@ -34,18 +39,24 @@ export const useUserProgress = (level: LevelName) => {
           
           setUserProgress(progressMap);
           
-          const updatedLessons = lessonsByLevel[level].map(lesson => ({
+          // Get lessons from units and update their progress
+          const allLessons = getLessonsFromUnits(unitsByLevel[level]);
+          const updatedLessons = allLessons.map(lesson => ({
             ...lesson,
             progress: progressMap[lesson.id] || 0
           }));
           
           setLessons(updatedLessons);
         } else {
-          setLessons(lessonsByLevel[level]);
+          // Get lessons from units if no user is logged in
+          const allLessons = getLessonsFromUnits(unitsByLevel[level]);
+          setLessons(allLessons);
         }
       } catch (error) {
         console.error("Error fetching lesson progress:", error);
-        setLessons(lessonsByLevel[level]);
+        // Get lessons from units as fallback
+        const allLessons = getLessonsFromUnits(unitsByLevel[level]);
+        setLessons(allLessons);
       } finally {
         setIsLoading(false);
       }

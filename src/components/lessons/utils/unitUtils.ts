@@ -1,6 +1,11 @@
 
 import unitsByLevel from "../data/lessonData";
-import { Lesson, Unit } from "../types";
+import { Lesson, Unit, LevelName } from "../types";
+
+// Helper function to get all lessons from units
+const getAllLessons = (units: Unit[]): Lesson[] => {
+  return units.flatMap(unit => unit.lessons);
+};
 
 export const calculateTotalXP = (units: Unit[]) => {
   return units.reduce((total, unit) => {
@@ -20,7 +25,7 @@ export const calculateEarnedXP = (units: Unit[]) => {
   }, 0);
 };
 
-export const calculateTotalLessonsCount = (unitsByLevel: Record<string, Unit[]>) => {
+export const calculateTotalLessonsCount = (unitsByLevel: Record<LevelName, Unit[]>) => {
   return Object.values(unitsByLevel).reduce((total, units) => {
     const unitLessons = units.reduce((unitsTotal, unit) => {
       return unitsTotal + unit.lessons.length;
@@ -29,7 +34,7 @@ export const calculateTotalLessonsCount = (unitsByLevel: Record<string, Unit[]>)
   }, 0);
 };
 
-export const calculateCompletedLessonsCount = (unitsByLevel: Record<string, Unit[]>) => {
+export const calculateCompletedLessonsCount = (unitsByLevel: Record<LevelName, Unit[]>) => {
   return Object.values(unitsByLevel).reduce((total, units) => {
     const completedLessons = units.reduce((unitsTotal, unit) => {
       const unitCompletedLessons = unit.lessons.reduce((lessonsTotal, lesson) => {
