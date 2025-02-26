@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { FlashcardSet } from "../types";
 
@@ -30,13 +29,6 @@ export const isLevelUnlocked = async (
     return true;
   }
 
-  // Get the prerequisite level
-  const prerequisiteLevel = LEVEL_DEPENDENCIES[level];
-  
-  if (!prerequisiteLevel) {
-    return true; // No prerequisite means it's unlocked
-  }
-
   try {
     // Check if user has passed a certification for this level or higher
     const { data: certData, error: certError } = await supabase
@@ -53,18 +45,30 @@ export const isLevelUnlocked = async (
       const ceferLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
       const requiredLevelIndex = ceferLevels.indexOf(level.replace('-C2', ''));
       
-      // If any certification meets or exceeds the required level
+      // If any certification meets or exceeds the required level, unlock this level
+      // and all levels below it
       for (const cert of certData) {
         const certLevelIndex = ceferLevels.indexOf(cert.level);
+        // Check if certification level is equal or higher than required level
         if (certLevelIndex >= requiredLevelIndex) {
+          return true;
+        }
+        // If user is certified at a lower level, automatically unlock all levels up to 
+        // their certified level
+        if (certLevelIndex >= 0 && requiredLevelIndex <= certLevelIndex) {
           return true;
         }
       }
     }
 
-    // If no certification, check if completed prerequisite level flashcard sets
-    // In a real implementation, this would query user progress from the database
-    // For now, we'll use localStorage as a simple way to store progress
+    // If no valid certification found, check completion of prerequisite level
+    const prerequisiteLevel = LEVEL_DEPENDENCIES[level];
+    
+    if (!prerequisiteLevel) {
+      return true; // No prerequisite means it's unlocked
+    }
+    
+    // Check if completed prerequisite level flashcard sets
     const progressKey = `flashcard_progress_${userId}`;
     const progressStr = localStorage.getItem(progressKey);
     const progress = progressStr ? JSON.parse(progressStr) : {};
