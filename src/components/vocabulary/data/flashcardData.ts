@@ -7,6 +7,8 @@ import { b2FlashcardSets } from "./levels/b2FlashcardSets";
 import { c1FlashcardSets } from "./levels/c1FlashcardSets";
 import { c2FlashcardSets } from "./levels/c2FlashcardSets";
 import { a1BasicsFlashcards } from "./flashcards/a1BasicsFlashcards";
+import { a1ConnectorWordsFlashcards } from "./flashcards/a1ConnectorWordsFlashcards";
+import { a1VerbsConjugationsFlashcards } from "./flashcards/a1VerbsConjugationsFlashcards";
 import { a1GreetingsFlashcards } from "./flashcards/a1GreetingsFlashcards";
 import { a1FoodFlashcards } from "./flashcards/a1FoodFlashcards";
 import { a1NumbersColorsFlashcards } from "./flashcards/a1NumbersColorsFlashcards";
@@ -30,6 +32,8 @@ export const flashcardSets: Record<string, FlashcardSet[]> = {
 // Map of all flashcards organized by set ID
 export const sampleFlashcards: Record<string, Flashcard[]> = {
   "a1-basics": a1BasicsFlashcards,
+  "a1-connector-words": a1ConnectorWordsFlashcards,
+  "a1-verbs-conjugations": a1VerbsConjugationsFlashcards,
   "a1-greetings": a1GreetingsFlashcards,
   "a1-food": a1FoodFlashcards,
   "a1-numbers-colors": a1NumbersColorsFlashcards,

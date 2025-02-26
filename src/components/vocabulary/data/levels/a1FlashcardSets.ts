@@ -1,5 +1,5 @@
 
-import { BookOpen, MessageCircle, Utensils, Calculator } from "lucide-react";
+import { BookOpen, MessageCircle, Utensils, Calculator, Link, BookMarked } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
 
@@ -13,6 +13,24 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basics",
     25,
     BookOpen
+  ),
+  createFlashcardSet(
+    "a1-connector-words",
+    "Essential Connector Words",
+    "Important connecting words and phrases",
+    "A1",
+    "Basics",
+    25,
+    Link
+  ),
+  createFlashcardSet(
+    "a1-verbs-conjugations",
+    "Essential Verbs & Conjugations",
+    "Common verbs and their basic conjugations",
+    "A1",
+    "Basics",
+    30,
+    BookMarked
   ),
   createFlashcardSet(
     "a1-greetings",
