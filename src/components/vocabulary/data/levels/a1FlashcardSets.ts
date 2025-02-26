@@ -23,6 +23,24 @@ export const a1FlashcardSets: FlashcardSet[] = [
     Link
   ),
   createFlashcardSet(
+    "a1-ar-verbs",
+    "-AR Verb Conjugations",
+    "Basic conjugations of regular -AR verbs",
+    "A1",
+    "Basics",
+    20,
+    BookOpen
+  ),
+  createFlashcardSet(
+    "a1-erir-verbs",
+    "-ER/-IR Verb Conjugations",
+    "Basic conjugations of regular -ER and -IR verbs",
+    "A1",
+    "Basics",
+    20,
+    BookOpen
+  ),
+  createFlashcardSet(
     "a1-verbs-conjugations",
     "Essential Verbs & Conjugations",
     "Common verbs and their basic conjugations",
@@ -165,23 +183,5 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basics",
     25,
     Bus
-  ),
-  createFlashcardSet(
-    "a1-ar-verbs",
-    "-AR Verb Conjugations",
-    "Basic conjugations of regular -AR verbs",
-    "A1",
-    "Basics",
-    20,
-    BookOpen
-  ),
-  createFlashcardSet(
-    "a1-erir-verbs",
-    "-ER/-IR Verb Conjugations",
-    "Basic conjugations of regular -ER and -IR verbs",
-    "A1",
-    "Basics",
-    20,
-    BookOpen
   )
 ];
