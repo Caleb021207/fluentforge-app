@@ -1,11 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import LevelSelector from "@/components/vocabulary/LevelSelector";
 import FlashcardSetsList from "@/components/vocabulary/FlashcardSetsList";
 import FlashcardView from "@/components/vocabulary/FlashcardView";
-import { getFlashcardSetsByLevel, getFlashcardsBySetId, getAllFlashcardSets } from "@/components/vocabulary/data/flashcardData";
+import { getFlashcardSetsByLevel, getFlashcardsBySetId, getAllFlashcardSets, updateFlashcardSetProgress } from "@/components/vocabulary/data/flashcardData";
 import {
   Dialog,
   DialogContent,
@@ -87,11 +87,21 @@ const Vocabulary = () => {
     }
   };
 
-  const handleCompleteStudy = () => {
-    toast({
-      title: "Study session completed",
-      description: "Great job! Your progress has been saved.",
-    });
+  const handleCompleteStudy = (score?: number) => {
+    if (activeSetId && score !== undefined) {
+      // Update the completion status and score for this set
+      updateFlashcardSetProgress(activeSetId, true, score);
+      
+      toast({
+        title: "Study session completed",
+        description: `Great job! You scored ${score}% and your progress has been saved.`,
+      });
+    } else {
+      toast({
+        title: "Study session completed",
+        description: "Your progress has been saved.",
+      });
+    }
     setActiveSetId(null);
   };
 
@@ -133,6 +143,7 @@ const Vocabulary = () => {
                 flashcards={flashcardsForActiveSet}
                 onClose={() => setActiveSetId(null)}
                 setTitle={activeSet.title}
+                onComplete={handleCompleteStudy}
               />
             ) : (
               <>

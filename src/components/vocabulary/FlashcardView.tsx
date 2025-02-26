@@ -11,9 +11,10 @@ interface FlashcardViewProps {
   flashcards: Flashcard[];
   onClose: () => void;
   setTitle: string;
+  onComplete: (score?: number) => void;
 }
 
-const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) => {
+const FlashcardView = ({ flashcards, onClose, setTitle, onComplete }: FlashcardViewProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [completed, setCompleted] = useState<number[]>([]);
@@ -98,7 +99,7 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
       title: "Quiz completed!",
       description: `You scored ${score}% on this quiz. Great job!`,
     });
-    onClose();
+    onComplete(score);
   };
   
   if (showQuiz) {
@@ -118,7 +119,7 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">{setTitle}</h2>
-        <Button variant="ghost" size="icon" onClick={onClose}>
+        <Button variant="ghost" size="icon" onClick={() => onComplete()}>
           <X className="h-5 w-5" />
         </Button>
       </div>
