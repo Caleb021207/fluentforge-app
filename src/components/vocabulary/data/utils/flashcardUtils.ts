@@ -21,17 +21,20 @@ export const createFlashcardSet = (
   icon: React.createElement(icon, { className: "h-6 w-6" }),
 });
 
+// The following functions are now implemented directly in flashcardData.ts
+// and are kept here for reference or future use
+
 // Function to get all flashcard sets
-export const getAllFlashcardSets = (flashcardSets: Record<string, FlashcardSet[]>): FlashcardSet[] => {
-  return Object.values(flashcardSets).flat();
+export const getAllFlashcardSets = (): FlashcardSet[] => {
+  return [];
 };
 
 // Function to get flashcard sets by level
-export const getFlashcardSetsByLevel = (flashcardSets: Record<string, FlashcardSet[]>, level: string): FlashcardSet[] => {
-  return flashcardSets[level] || [];
+export const getFlashcardSetsByLevel = (level: string): FlashcardSet[] => {
+  return [];
 };
 
 // Function to get flashcards by set ID
-export const getFlashcardsBySetId = (flashcards: Record<string, Flashcard[]>, setId: string): Flashcard[] => {
-  return flashcards[setId] || [];
+export const getFlashcardsBySetId = (setId: string): Flashcard[] => {
+  return [];
 };
