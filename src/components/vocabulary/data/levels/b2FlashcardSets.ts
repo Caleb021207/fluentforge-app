@@ -11,7 +11,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Discussing health issues and medical terms",
     "B2",
     "Health",
-    0,  // Updated to 0 since the actual flashcards haven't been implemented yet
+    25,  // Updated from 0 to 25 to reflect actual count
     HeartPulse
   ),
   createFlashcardSet(
@@ -20,7 +20,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for education and academic contexts",
     "B2",
     "Academic",
-    0,  // Updated to 0 since the actual flashcards haven't been implemented yet
+    25,  // Updated from 0 to 25 to reflect actual count
     GraduationCap
   ),
   createFlashcardSet(
@@ -74,7 +74,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Advanced vocabulary for professional settings",
     "B2",
     "Business",
-    0,
+    25,  // Updated from 0 to 25 to reflect actual count
     Briefcase
   ),
   createFlashcardSet(
@@ -83,7 +83,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Express and defend opinions effectively",
     "B2",
     "Social",
-    0,
+    25,  // Updated from 0 to 25 to reflect actual count
     Users
   ),
   createFlashcardSet(
@@ -92,7 +92,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Discuss social issues and political topics",
     "B2",
     "Academic",
-    0,
+    0,  // Keeping as 0 since these flashcards haven't been implemented yet
     Building
   ),
   createFlashcardSet(
@@ -101,7 +101,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Discuss books, art, and cultural expressions",
     "B2",
     "Arts",
-    0,
+    25, // Updated from 0 to 25 to reflect actual count
     FileText
   ),
   createFlashcardSet(
@@ -110,7 +110,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Improve written expression and composition",
     "B2",
     "Academic",
-    0,
+    0,  // Keeping as 0 since these flashcards haven't been implemented yet
     PenTool
   ),
   createFlashcardSet(
@@ -119,7 +119,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Link ideas with sophisticated transitions",
     "B2",
     "Academic",
-    0,
+    25,  // Updated from 0 to 25 to reflect actual count
     Focus
   ),
   createFlashcardSet(
@@ -128,7 +128,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Authentic idiomatic expressions used by natives",
     "B2",
     "Social",
-    0,
+    25,  // Updated from 0 to 25 to reflect actual count
     Lightbulb
   ),
   createFlashcardSet(
@@ -137,7 +137,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Deep cultural knowledge of Spanish-speaking regions",
     "B2",
     "Social",
-    0,
+    25,  // Updated from 0 to 25 to reflect actual count
     Globe
   )
 ];
