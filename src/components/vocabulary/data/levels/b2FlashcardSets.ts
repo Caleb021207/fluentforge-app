@@ -11,7 +11,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Discussing health issues and medical terms",
     "B2",
     "Health",
-    35,
+    25,
     HeartPulse
   ),
   createFlashcardSet(
@@ -20,7 +20,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for education and academic contexts",
     "B2",
     "Academic",
-    45,
+    25,
     GraduationCap
   ),
 ];

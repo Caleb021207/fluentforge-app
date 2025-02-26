@@ -11,7 +11,7 @@ export const c1FlashcardSets: FlashcardSet[] = [
     "Discussing literature, art, and cultural topics",
     "C1",
     "Arts",
-    40,
+    25,
     Palette
   ),
   createFlashcardSet(
@@ -20,7 +20,7 @@ export const c1FlashcardSets: FlashcardSet[] = [
     "Advanced business and negotiation terminology",
     "C1",
     "Business",
-    35,
+    25,
     Briefcase
   ),
 ];

@@ -47,7 +47,7 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basic food and drink vocabulary",
     "A1",
     "Food",
-    30,
+    25,
     Utensils
   ),
   createFlashcardSet(
@@ -56,7 +56,7 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basic numbers and colors vocabulary",
     "A1",
     "Basics",
-    56,
+    25,
     Calculator
   ),
   createFlashcardSet(
@@ -128,7 +128,7 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basic house vocabulary and furniture",
     "A1",
     "Basics",
-    30,
+    25,
     Home
   ),
   createFlashcardSet(
@@ -137,7 +137,7 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Simple weather expressions",
     "A1",
     "Basics",
-    20,
+    25,
     Cloud
   ),
   createFlashcardSet(
@@ -168,4 +168,3 @@ export const a1FlashcardSets: FlashcardSet[] = [
     Bus
   )
 ];
-

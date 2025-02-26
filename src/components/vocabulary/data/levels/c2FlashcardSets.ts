@@ -11,7 +11,7 @@ export const c2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for academic research and publishing",
     "C2",
     "Academic",
-    50,
+    25,
     GraduationCap
   ),
   createFlashcardSet(
@@ -20,7 +20,7 @@ export const c2FlashcardSets: FlashcardSet[] = [
     "Advanced idioms and expressions",
     "C2",
     "Social",
-    45,
+    25,
     Users
   ),
 ];

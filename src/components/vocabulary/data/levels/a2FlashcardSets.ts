@@ -11,7 +11,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for basic travel situations",
     "A2",
     "Travel",
-    30,
+    25,
     Globe
   ),
   createFlashcardSet(
@@ -29,7 +29,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for talking about dates and time",
     "A2",
     "Basics",
-    40,
+    25,
     Clock
   ),
   createFlashcardSet(
