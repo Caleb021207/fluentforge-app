@@ -1,5 +1,5 @@
 
-import { Briefcase, Laptop } from "lucide-react";
+import { BookOpen, Laptop, Clock, Briefcase } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
 
@@ -11,7 +11,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Professional vocabulary for the workplace",
     "B1",
     "Business",
-    0,  // Updated to 0 since the actual flashcards haven't been implemented yet
+    25,  // Updated to 25 to reflect the actual count
     Briefcase
   ),
   createFlashcardSet(
@@ -20,7 +20,16 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Words related to computers and modern tech",
     "B1",
     "Technology",
-    0,  // Updated to 0 since the actual flashcards haven't been implemented yet
+    25,  // Updated to 25 to reflect the actual count
     Laptop
   ),
+  createFlashcardSet(
+    "b1-past-tense",
+    "Past Tense & Conjugations",
+    "Learn to speak about the past in Spanish",
+    "B1",
+    "Academic",
+    30,  // Set to 30 based on the flashcard count
+    Clock
+  )
 ];
