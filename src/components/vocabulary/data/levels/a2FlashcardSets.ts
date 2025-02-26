@@ -29,7 +29,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for talking about dates and time",
     "A2",
     "Basics",
-    1,
+    40,
     Clock
   ),
   createFlashcardSet(
