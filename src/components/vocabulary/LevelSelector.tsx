@@ -1,6 +1,12 @@
 
 import { Button } from "@/components/ui/button";
-import { Info, Book } from "lucide-react";
+import { Info, Book, Lock } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface LevelSelectorProps {
   currentLevel: string;
@@ -9,6 +15,7 @@ interface LevelSelectorProps {
   onB2Selected?: () => void;
   onC1C2Selected?: () => void;
   onGrammarSelected?: () => void;
+  unlockedLevels?: Record<string, boolean>;
 }
 
 const LevelSelector = ({ 
@@ -17,7 +24,8 @@ const LevelSelector = ({
   onB1Selected,
   onB2Selected,
   onC1C2Selected,
-  onGrammarSelected
+  onGrammarSelected,
+  unlockedLevels = { "A1": true, "Grammar": true }
 }: LevelSelectorProps) => {
   const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
   
@@ -35,6 +43,11 @@ const LevelSelector = ({
   };
   
   const handleLevelClick = (level: string) => {
+    // Check if the level is unlocked
+    if (!unlockedLevels[level]) {
+      return;
+    }
+    
     onLevelChange(level);
     
     // Call appropriate handler based on the level selected
@@ -52,22 +65,42 @@ const LevelSelector = ({
   return (
     <div className="space-y-3">
       <div className="flex flex-col space-y-2">
-        {levels.map((level) => (
-          <Button
-            key={level}
-            variant={currentLevel === level ? "default" : "outline"}
-            className={`justify-start ${
-              currentLevel === level 
-                ? "bg-lingua-primary hover:bg-lingua-primary/90" 
-                : ""
-            }`}
-            onClick={() => handleLevelClick(level)}
-          >
-            {icons[level]}
-            <span className="font-bold mr-2">{level}</span>
-            <span className="text-xs">{levelDescriptions[level]}</span>
-          </Button>
-        ))}
+        {levels.map((level) => {
+          const isLocked = !unlockedLevels[level];
+          
+          return (
+            <TooltipProvider key={level}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Button
+                      variant={currentLevel === level ? "default" : "outline"}
+                      className={`justify-start w-full ${
+                        currentLevel === level 
+                          ? "bg-lingua-primary hover:bg-lingua-primary/90" 
+                          : ""
+                      } ${
+                        isLocked ? "opacity-70" : ""
+                      }`}
+                      onClick={() => handleLevelClick(level)}
+                      disabled={isLocked}
+                    >
+                      {icons[level]}
+                      <span className="font-bold mr-2">{level}</span>
+                      <span className="text-xs">{levelDescriptions[level]}</span>
+                      {isLocked && <Lock className="h-4 w-4 ml-auto" />}
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                {isLocked && (
+                  <TooltipContent>
+                    <p>Complete the previous level with at least 75% accuracy<br/>or pass a certification exam to unlock</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+          );
+        })}
       </div>
     </div>
   );

@@ -6,7 +6,17 @@ import LevelSelector from "@/components/vocabulary/LevelSelector";
 import FlashcardSetsList from "@/components/vocabulary/FlashcardSetsList";
 import FlashcardView from "@/components/vocabulary/FlashcardView";
 import GrammarRules from "@/components/vocabulary/GrammarRules";
-import { getFlashcardSetsByLevel, getFlashcardsForSet, getAllFlashcardSets, updateFlashcardSetProgress } from "@/components/vocabulary/data/flashcardData";
+import { 
+  getFlashcardSetsByLevel, 
+  getFlashcardsForSet, 
+  getAllFlashcardSets, 
+  updateFlashcardSetProgress 
+} from "@/components/vocabulary/data/flashcardData";
+import {
+  isLevelUnlocked,
+  saveFlashcardSetProgress
+} from "@/components/vocabulary/utils/levelUnlockUtils";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 
 const Vocabulary = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +37,38 @@ const Vocabulary = () => {
   const [showPracticeDialog, setShowPracticeDialog] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("Ready for Conversation Practice?");
   const [dialogDescription, setDialogDescription] = useState("");
+  const [unlockedLevels, setUnlockedLevels] = useState<Record<string, boolean>>({
+    "A1": true,
+    "Grammar": true
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  
+  // Get the current authenticated user
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+      
+      // Check which levels are unlocked
+      await checkUnlockedLevels(data.user?.id);
+      setIsLoading(false);
+    };
+    
+    fetchUser();
+  }, []);
+  
+  // Check which levels are unlocked for the current user
+  const checkUnlockedLevels = async (userId?: string) => {
+    const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
+    const unlocked: Record<string, boolean> = {};
+    
+    for (const lvl of levels) {
+      unlocked[lvl] = await isLevelUnlocked(lvl, userId);
+    }
+    
+    setUnlockedLevels(unlocked);
+  };
   
   // Fetch flashcard sets for the current level
   const flashcardSets = getFlashcardSetsByLevel(level);
@@ -41,23 +84,39 @@ const Vocabulary = () => {
     : [];
   
   const handleLevelChange = (newLevel: string) => {
+    // Check if level is unlocked
+    if (!unlockedLevels[newLevel]) {
+      toast({
+        title: "Level Locked",
+        description: `You need to complete the previous level with at least 75% accuracy or pass a certification exam to unlock ${newLevel}.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setSearchParams({ level: newLevel });
     setActiveSetId(null);
   };
 
   const handleB1Selected = () => {
+    if (!unlockedLevels["B1"]) return;
+    
     setDialogTitle("Ready for Conversation Practice?");
     setDialogDescription("Congratulations on reaching the B1 level! At this stage, it's highly recommended that you begin practicing real conversations to improve your fluency.");
     setShowPracticeDialog(true);
   };
 
   const handleB2Selected = () => {
+    if (!unlockedLevels["B2"]) return;
+    
     setDialogTitle("Advanced Conversation Practice");
     setDialogDescription("Great job reaching B2 level! At this upper intermediate stage, you should be able to discuss a wide range of topics with increased fluency and accuracy.");
     setShowPracticeDialog(true);
   };
 
   const handleC1C2Selected = () => {
+    if (!unlockedLevels["C1-C2"]) return;
+    
     setDialogTitle("Advanced Proficiency");
     setDialogDescription("Excellent work reaching the advanced C1-C2 levels! At this stage, you should focus on mastering nuanced expression, idioms, and native-like fluency through extensive conversation practice.");
     setShowPracticeDialog(true);
@@ -91,6 +150,14 @@ const Vocabulary = () => {
       // Update the completion status and score for this set
       updateFlashcardSetProgress(activeSetId, true, score);
       
+      // Save the progress for level unlocking
+      if (user?.id) {
+        saveFlashcardSetProgress(user.id, level, activeSetId, score);
+        
+        // Check if this completion unlocks a new level
+        checkUnlockedLevels(user.id);
+      }
+      
       toast({
         title: "Study session completed",
         description: `Great job! You scored ${score}% and your progress has been saved.`,
@@ -119,6 +186,12 @@ const Vocabulary = () => {
   // Determine if we should show grammar content instead of flashcards
   const showGrammar = level === "Grammar";
 
+  if (isLoading) {
+    return <div className="container mx-auto px-4 py-8 flex justify-center items-center">
+      <p>Loading vocabulary levels...</p>
+    </div>;
+  }
+
   return (
     <div className="container mx-auto px-4 pb-16">
       <div className="max-w-4xl mx-auto">
@@ -136,6 +209,7 @@ const Vocabulary = () => {
               onB2Selected={handleB2Selected}
               onC1C2Selected={handleC1C2Selected}
               onGrammarSelected={handleGrammarSelected}
+              unlockedLevels={unlockedLevels}
             />
           </div>
           

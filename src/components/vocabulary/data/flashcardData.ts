@@ -5,6 +5,8 @@ import { a2FlashcardSets } from './levels/a2FlashcardSets';
 import { b1FlashcardSets } from './levels/b1FlashcardSets';
 import { b2FlashcardSets } from './levels/b2FlashcardSets';
 import { c1c2FlashcardSets } from './levels/c1c2FlashcardSets';
+import { saveFlashcardSetProgress } from '../utils/levelUnlockUtils';
+import { supabase } from '@/integrations/supabase/client';
 
 // Import individual flashcard decks
 // A2 Level
@@ -107,10 +109,24 @@ export const getFlashcardsForSet = (setId: string) => {
 };
 
 // Function to update the progress of a flashcard set
-export const updateFlashcardSetProgress = (setId: string, completed: boolean, score?: number) => {
+export const updateFlashcardSetProgress = async (setId: string, completed: boolean, score?: number) => {
   // In a real app, this would update the user's progress in a database
-  // For now, we'll just log the update
   console.log(`Updated set ${setId}: completed=${completed}, score=${score}`);
+
+  // Get the current user
+  const { data } = await supabase.auth.getUser();
+  const userId = data.user?.id;
+  
+  if (userId && score !== undefined) {
+    // Get the set's level
+    const allSets = getAllFlashcardSets();
+    const set = allSets.find(s => s.id === setId);
+    
+    if (set) {
+      // Save the progress for level unlocking
+      saveFlashcardSetProgress(userId, set.level, setId, score);
+    }
+  }
 };
 
 // Alias getFlashcardsForSet as getFlashcardsBySetId for backward compatibility
