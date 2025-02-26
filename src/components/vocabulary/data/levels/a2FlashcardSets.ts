@@ -38,7 +38,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Terms for discussing weather conditions",
     "A2",
     "Basics",
-    1,
+    25,
     Cloud
   ),
   createFlashcardSet(
@@ -56,7 +56,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for describing appearance and personality",
     "A2",
     "Social",
-    1,
+    25,
     User
   ),
 ];

@@ -38,7 +38,7 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basic numbers and colors vocabulary",
     "A1",
     "Basics",
-    25,
+    56,
     Calculator
   ),
 ];
