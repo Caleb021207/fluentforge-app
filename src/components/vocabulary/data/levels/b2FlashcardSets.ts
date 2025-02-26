@@ -29,7 +29,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Master the Spanish subjunctive in various contexts",
     "B2",
     "Academic",
-    0,
+    25,
     BookOpen
   ),
   createFlashcardSet(
@@ -38,7 +38,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Express conditional and hypothetical situations",
     "B2",
     "Academic",
-    0,
+    25,
     Brain
   ),
   createFlashcardSet(
@@ -47,7 +47,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Advanced uses of imperfect tense (-ía forms)",
     "B2",
     "Academic",
-    0,
+    25,
     Book
   ),
   createFlashcardSet(
@@ -56,7 +56,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Present perfect, past perfect, and future perfect",
     "B2",
     "Academic",
-    0,
+    25,
     Clock
   ),
   createFlashcardSet(
@@ -65,7 +65,7 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Sophisticated phrases for fluent conversation",
     "B2",
     "Social",
-    0,
+    25,
     MessageSquare
   ),
   createFlashcardSet(

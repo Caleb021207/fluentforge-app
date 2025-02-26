@@ -81,5 +81,125 @@ export const b2PerfectTensesFlashcards: Flashcard[] = [
     example: "Hace dos años que vivo aquí. (I have been living here for two years.)",
     level: "B2",
     category: "Academic"
+  },
+  {
+    id: "b2-perf-11",
+    term: "yo he comido",
+    definition: "I have eaten",
+    example: "He comido en ese restaurante muchas veces. (I have eaten at that restaurant many times.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-12",
+    term: "tú has vivido",
+    definition: "you have lived",
+    example: "¿Has vivido alguna vez en el extranjero? (Have you ever lived abroad?)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-13",
+    term: "él/ella/usted ha visto",
+    definition: "he/she/you (formal) has seen",
+    example: "Ella ha visto esa película tres veces. (She has seen that movie three times.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-14",
+    term: "nosotros/as hemos hablado",
+    definition: "we have spoken",
+    example: "Hemos hablado de esto antes. (We have spoken about this before.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-15",
+    term: "vosotros/as habéis terminado",
+    definition: "you all have finished",
+    example: "¿Habéis terminado ya la tarea? (Have you all finished the homework yet?)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-16",
+    term: "ellos/ellas/ustedes han salido",
+    definition: "they/you all (formal) have gone out",
+    example: "Ellos han salido hace media hora. (They left half an hour ago.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-17",
+    term: "pretérito perfecto con 'ya'",
+    definition: "present perfect with 'already'",
+    example: "Ya he leído ese libro. (I have already read that book.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-18",
+    term: "pretérito perfecto con 'todavía no'",
+    definition: "present perfect with 'not yet'",
+    example: "Todavía no he visto esa película. (I haven't seen that movie yet.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-19",
+    term: "pretérito perfecto con 'nunca'",
+    definition: "present perfect with 'never'",
+    example: "Nunca he estado en Japón. (I have never been to Japan.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-20",
+    term: "pretérito perfecto con 'alguna vez'",
+    definition: "present perfect with 'ever'",
+    example: "¿Has estado alguna vez en México? (Have you ever been to Mexico?)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-21",
+    term: "diferencias entre pretérito perfecto e indefinido",
+    definition: "differences between present perfect and simple past",
+    example: "He estado en París (experiencia) vs. Estuve en París el año pasado (momento específico). (I have been to Paris (experience) vs. I was in Paris last year (specific moment).)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-22",
+    term: "pretérito perfecto compuesto",
+    definition: "present perfect continuous",
+    example: "He estado estudiando toda la tarde. (I have been studying all afternoon.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-23",
+    term: "participios irregulares",
+    definition: "irregular participles",
+    example: "escrito (written), hecho (done), puesto (put)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-24",
+    term: "pluscuamperfecto para acciones anteriores",
+    definition: "past perfect for previous actions",
+    example: "Cuando llegué, ya habían cenado. (When I arrived, they had already had dinner.)",
+    level: "B2",
+    category: "Academic"
+  },
+  {
+    id: "b2-perf-25",
+    term: "futuro perfecto para especulaciones sobre el pasado",
+    definition: "future perfect for speculation about the past",
+    example: "Habrán llegado ya a casa. (They will have arrived home by now.)",
+    level: "B2",
+    category: "Academic"
   }
 ];
