@@ -1,6 +1,7 @@
 
 import { FlashcardSet } from "../../types";
 import { LucideIcon } from "lucide-react";
+import React from "react";
 
 export const createFlashcardSet = (
   id: string,
@@ -18,7 +19,7 @@ export const createFlashcardSet = (
     level,
     category,
     cardCount,
-    icon: <IconComponent size={24} />,
+    icon: React.createElement(IconComponent, { size: 24 }),
     masteredCount: 0,
   };
 };
