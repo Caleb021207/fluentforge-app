@@ -81,5 +81,125 @@ export const a1ClothingFlashcards: Flashcard[] = [
     example: "Las gafas son nuevas.",
     level: "A1",
     category: "Basics"
+  },
+  {
+    id: "11",
+    term: "camiseta",
+    definition: "t-shirt",
+    example: "Me gusta esta camiseta.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "12",
+    term: "jersey",
+    definition: "sweater",
+    example: "El jersey es de lana.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "13",
+    term: "sudadera",
+    definition: "sweatshirt",
+    example: "Mi sudadera es cómoda.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "14",
+    term: "vaqueros",
+    definition: "jeans",
+    example: "Los vaqueros son azules.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "15",
+    term: "botas",
+    definition: "boots",
+    example: "Las botas son para la lluvia.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "16",
+    term: "zapatillas",
+    definition: "sneakers/trainers",
+    example: "Uso zapatillas para correr.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "17",
+    term: "bufanda",
+    definition: "scarf",
+    example: "La bufanda es larga.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "18",
+    term: "guantes",
+    definition: "gloves",
+    example: "Los guantes son de cuero.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "19",
+    term: "pijama",
+    definition: "pajamas",
+    example: "Mi pijama es cómodo.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "20",
+    term: "bañador",
+    definition: "swimsuit",
+    example: "Llevo mi bañador a la playa.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "21",
+    term: "corbata",
+    definition: "tie",
+    example: "La corbata es elegante.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "22",
+    term: "cinturón",
+    definition: "belt",
+    example: "El cinturón es de cuero.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "23",
+    term: "ropa",
+    definition: "clothes",
+    example: "Compro ropa nueva.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "24",
+    term: "ropa interior",
+    definition: "underwear",
+    example: "La ropa interior está en el cajón.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "25",
+    term: "talla",
+    definition: "size",
+    example: "¿Qué talla usas?",
+    level: "A1",
+    category: "Basics"
   }
 ];

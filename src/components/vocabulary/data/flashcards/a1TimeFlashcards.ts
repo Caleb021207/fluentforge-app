@@ -81,5 +81,125 @@ export const a1TimeFlashcards: Flashcard[] = [
     example: "Ayer fui al cine.",
     level: "A1",
     category: "Basics"
+  },
+  {
+    id: "11",
+    term: "hora",
+    definition: "hour/time",
+    example: "¿Qué hora es?",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "12",
+    term: "minuto",
+    definition: "minute",
+    example: "Espera un minuto, por favor.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "13",
+    term: "segundo",
+    definition: "second",
+    example: "Llego en un segundo.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "14",
+    term: "reloj",
+    definition: "clock/watch",
+    example: "Miro mi reloj.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "15",
+    term: "por la mañana",
+    definition: "in the morning",
+    example: "Estudio por la mañana.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "16",
+    term: "por la tarde",
+    definition: "in the afternoon/evening",
+    example: "Trabajo por la tarde.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "17",
+    term: "por la noche",
+    definition: "at night",
+    example: "Duermo por la noche.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "18",
+    term: "semana",
+    definition: "week",
+    example: "La semana tiene siete días.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "19",
+    term: "mes",
+    definition: "month",
+    example: "El mes de enero tiene 31 días.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "20",
+    term: "año",
+    definition: "year",
+    example: "El año tiene doce meses.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "21",
+    term: "temprano",
+    definition: "early",
+    example: "Me levanto temprano.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "22",
+    term: "tarde",
+    definition: "late",
+    example: "Llego tarde a clase.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "23",
+    term: "ahora",
+    definition: "now",
+    example: "Ahora estudio español.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "24",
+    term: "después",
+    definition: "after/later",
+    example: "Comemos después.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "25",
+    term: "antes",
+    definition: "before",
+    example: "Estudio antes de la cena.",
+    level: "A1",
+    category: "Basics"
   }
 ];
