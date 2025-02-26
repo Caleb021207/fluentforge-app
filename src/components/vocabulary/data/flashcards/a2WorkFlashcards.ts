@@ -143,3 +143,63 @@ export const a2WorkFlashcards: Flashcard[] = [
     term: "la promoción",
     definition: "promotion",
     example: "Recibí una promoción el mes pasado.",
+    level: "A2",
+    category: "Business"
+  },
+  {
+    id: "a2-work-19",
+    term: "los beneficios",
+    definition: "benefits",
+    example: "La empresa ofrece buenos beneficios.",
+    level: "A2",
+    category: "Business"
+  },
+  {
+    id: "a2-work-20",
+    term: "el equipo",
+    definition: "team",
+    example: "Somos un equipo de diez personas.",
+    level: "A2",
+    category: "Business"
+  },
+  {
+    id: "a2-work-21",
+    term: "el cliente",
+    definition: "client",
+    example: "Tenemos una reunión con un cliente importante.",
+    level: "A2",
+    category: "Business"
+  },
+  {
+    id: "a2-work-22",
+    term: "el objetivo",
+    definition: "goal/objective",
+    example: "Necesitamos alcanzar nuestros objetivos.",
+    level: "A2",
+    category: "Business"
+  },
+  {
+    id: "a2-work-23",
+    term: "el plazo",
+    definition: "deadline",
+    example: "Tenemos un plazo de dos semanas.",
+    level: "A2",
+    category: "Business"
+  },
+  {
+    id: "a2-work-24",
+    term: "la responsabilidad",
+    definition: "responsibility",
+    example: "Tengo muchas responsabilidades en mi trabajo.",
+    level: "A2",
+    category: "Business"
+  },
+  {
+    id: "a2-work-25",
+    term: "el ascenso",
+    definition: "promotion",
+    example: "Espero recibir un ascenso el próximo año.",
+    level: "A2",
+    category: "Business"
+  }
+];

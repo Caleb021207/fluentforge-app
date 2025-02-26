@@ -30,6 +30,12 @@ import { a2DatesTimesFlashcards } from "./flashcards/a2DateTime";
 import { a2WeatherFlashcards } from "./flashcards/a2WeatherFlashcards";
 import { a2FamilyFlashcards } from "./flashcards/a2FamilyFlashcards";
 import { a2PeopleFlashcards } from "./flashcards/a2People";
+import { a2FoodRestaurantsFlashcards } from "./flashcards/a2FoodRestaurantsFlashcards";
+import { a2HealthBodyFlashcards } from "./flashcards/a2HealthBodyFlashcards";
+import { a2ShoppingMoneyFlashcards } from "./flashcards/a2ShoppingMoneyFlashcards";
+import { a2HobbiesFlashcards } from "./flashcards/a2HobbiesFlashcards";
+import { a2WorkFlashcards } from "./flashcards/a2WorkFlashcards";
+import { a2EducationFlashcards } from "./flashcards/a2EducationFlashcards";
 
 // Combine all flashcard sets by CEFR level
 export const flashcardSets: Record<string, FlashcardSet[]> = {
@@ -67,6 +73,12 @@ export const sampleFlashcards: Record<string, Flashcard[]> = {
   "a2-weather": a2WeatherFlashcards,
   "a2-family": a2FamilyFlashcards,
   "a2-people": a2PeopleFlashcards,
+  "a2-food-restaurants": a2FoodRestaurantsFlashcards,
+  "a2-health-body": a2HealthBodyFlashcards,
+  "a2-shopping-money": a2ShoppingMoneyFlashcards,
+  "a2-hobbies": a2HobbiesFlashcards,
+  "a2-work": a2WorkFlashcards,
+  "a2-education": a2EducationFlashcards,
 };
 
 // Function to get all flashcard sets
