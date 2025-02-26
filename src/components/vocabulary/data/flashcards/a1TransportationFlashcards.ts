@@ -63,4 +63,63 @@ export const a1TransportationFlashcards: Flashcard[] = [
     term: "barco",
     definition: "boat/ship",
     example: "El barco está en el puerto.",
-    level:
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "9",
+    term: "moto",
+    definition: "motorcycle",
+    example: "Mi hermano tiene una moto nueva.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "10",
+    term: "caminar",
+    definition: "to walk",
+    example: "Me gusta caminar por el parque.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "11",
+    term: "parada",
+    definition: "stop (bus/train)",
+    example: "La parada de autobús está allí.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "12",
+    term: "estación",
+    definition: "station",
+    example: "La estación de tren está cerca.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "13",
+    term: "aeropuerto",
+    definition: "airport",
+    example: "Vamos al aeropuerto a las 5.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "14",
+    term: "billete",
+    definition: "ticket",
+    example: "Necesito comprar un billete de tren.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "15",
+    term: "viajar",
+    definition: "to travel",
+    example: "Me encanta viajar en verano.",
+    level: "A1",
+    category: "Basics"
+  }
+];
