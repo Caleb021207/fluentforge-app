@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { FlashcardSet } from "../types";
 
@@ -41,23 +42,31 @@ export const isLevelUnlocked = async (
     if (certError) {
       console.error('Error checking certifications:', certError);
     } else if (certData && certData.length > 0) {
-      // Check if user has achieved this level or higher in certification
+      // Get CEFR levels in order from lowest to highest
       const ceferLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-      const requiredLevelIndex = ceferLevels.indexOf(level.replace('-C2', ''));
       
-      // If any certification meets or exceeds the required level, unlock this level
-      // and all levels below it
+      // Clean up the level name (remove -C2 if present)
+      const cleanLevel = level.replace('-C2', '');
+      const requiredLevelIndex = ceferLevels.indexOf(cleanLevel);
+      
+      if (requiredLevelIndex === -1) {
+        return false; // Invalid level
+      }
+      
+      // Find the highest certification level the user has achieved
+      let highestCertLevelIndex = -1;
       for (const cert of certData) {
         const certLevelIndex = ceferLevels.indexOf(cert.level);
-        // Check if certification level is equal or higher than required level
-        if (certLevelIndex >= requiredLevelIndex) {
-          return true;
+        if (certLevelIndex > highestCertLevelIndex) {
+          highestCertLevelIndex = certLevelIndex;
         }
-        // If user is certified at a lower level, automatically unlock all levels up to 
-        // their certified level
-        if (certLevelIndex >= 0 && requiredLevelIndex <= certLevelIndex) {
-          return true;
-        }
+      }
+      
+      // If the user's highest certification level is equal to or higher than the required level,
+      // or if the level the user wants to access is lower than or equal to their certified level,
+      // then unlock the level
+      if (highestCertLevelIndex >= requiredLevelIndex) {
+        return true;
       }
     }
 
