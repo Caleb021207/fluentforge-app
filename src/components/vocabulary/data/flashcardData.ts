@@ -43,6 +43,16 @@ export const getAllFlashcardSets = () => {
   ];
 };
 
+// Function to get flashcard sets by level
+export const getFlashcardSetsByLevel = (level: string) => {
+  if (level === "A1") return a1FlashcardSets;
+  if (level === "A2") return a2FlashcardSets;
+  if (level === "B1") return b1FlashcardSets;
+  if (level === "B2") return b2FlashcardSets;
+  if (level === "C1-C2") return c1c2FlashcardSets;
+  return [];
+};
+
 // Get flashcards for a specific set ID
 export const getFlashcardsForSet = (setId: string) => {
   // A2 Flashcards
@@ -77,3 +87,13 @@ export const getFlashcardsForSet = (setId: string) => {
   // Default empty array if no match
   return [];
 };
+
+// Function to update the progress of a flashcard set
+export const updateFlashcardSetProgress = (setId: string, completed: boolean, score?: number) => {
+  // In a real app, this would update the user's progress in a database
+  // For now, we'll just log the update
+  console.log(`Updated set ${setId}: completed=${completed}, score=${score}`);
+};
+
+// Alias getFlashcardsForSet as getFlashcardsBySetId for backward compatibility
+export const getFlashcardsBySetId = getFlashcardsForSet;

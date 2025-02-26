@@ -6,7 +6,7 @@ import LevelSelector from "@/components/vocabulary/LevelSelector";
 import FlashcardSetsList from "@/components/vocabulary/FlashcardSetsList";
 import FlashcardView from "@/components/vocabulary/FlashcardView";
 import GrammarRules from "@/components/vocabulary/GrammarRules";
-import { getFlashcardSetsByLevel, getFlashcardsBySetId, getAllFlashcardSets, updateFlashcardSetProgress } from "@/components/vocabulary/data/flashcardData";
+import { getFlashcardSetsByLevel, getFlashcardsForSet, getAllFlashcardSets, updateFlashcardSetProgress } from "@/components/vocabulary/data/flashcardData";
 import {
   Dialog,
   DialogContent,
@@ -37,7 +37,7 @@ const Vocabulary = () => {
   
   // Get flashcards for the active set
   const flashcardsForActiveSet = activeSetId 
-    ? getFlashcardsBySetId(activeSetId)
+    ? getFlashcardsForSet(activeSetId)
     : [];
   
   const handleLevelChange = (newLevel: string) => {
@@ -75,7 +75,7 @@ const Vocabulary = () => {
   const handleSelectSet = (setId: string) => {
     setActiveSetId(setId);
     // In a real app, we would fetch the flashcards for this set from the API
-    const cards = getFlashcardsBySetId(setId);
+    const cards = getFlashcardsForSet(setId);
     if (cards.length === 0) {
       toast({
         title: "No flashcards available",
