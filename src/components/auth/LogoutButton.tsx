@@ -6,7 +6,12 @@ import { useState } from "react";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const LogoutButton = () => {
+interface LogoutButtonProps {
+  iconOnly?: boolean;
+  onClose?: () => void;
+}
+
+const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,6 +28,10 @@ const LogoutButton = () => {
         description: "You have been signed out of your account",
       });
       
+      if (onClose) {
+        onClose();
+      }
+      
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -35,6 +44,20 @@ const LogoutButton = () => {
       setIsLoading(false);
     }
   };
+
+  if (iconOnly) {
+    return (
+      <Button 
+        onClick={handleLogout} 
+        variant="ghost" 
+        className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+        disabled={isLoading}
+      >
+        <LogOut className="h-5 w-5 mr-2" />
+        <span>Sign Out</span>
+      </Button>
+    );
+  }
 
   return (
     <Button 

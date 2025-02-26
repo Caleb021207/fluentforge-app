@@ -1,12 +1,39 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Book, MessageSquare, LayoutDashboard, Award, BarChart, Menu, X } from "lucide-react";
+import { Book, MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import LogoutButton from "./auth/LogoutButton";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
 
 const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      setIsLoggedIn(!!data.session);
+    };
+    
+    checkAuth();
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        setIsLoggedIn(true);
+      } else if (event === 'SIGNED_OUT') {
+        setIsLoggedIn(false);
+      }
+    });
+    
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const navItems = [
     { icon: Book, label: "Lessons", path: "/lessons" },
@@ -74,7 +101,21 @@ const Navigation = () => {
                 </Link>
               );
             })}
+            
+            {/* Logout button for mobile - only shown when menu is expanded */}
+            {isLoggedIn && isOpen && (
+              <div className="md:hidden mt-4 pt-4 border-t">
+                <LogoutButton iconOnly={true} onClose={() => setIsOpen(false)} />
+              </div>
+            )}
           </div>
+          
+          {/* Logout button for desktop */}
+          {isLoggedIn && (
+            <div className="hidden md:block mt-auto pt-4 border-t mt-8">
+              <LogoutButton />
+            </div>
+          )}
         </div>
       </nav>
     </>
