@@ -20,7 +20,7 @@ export const b1FlashcardSets: FlashcardSet[] = [
     "Words related to computers and modern tech",
     "B1",
     "Technology",
-    25,  // Updated to 25 to reflect the actual count
+    25,  // Set to 25 based on the flashcard count
     Laptop
   ),
   createFlashcardSet(
