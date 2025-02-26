@@ -23,6 +23,8 @@ const Vocabulary = () => {
   const navigate = useNavigate();
   const [activeSetId, setActiveSetId] = useState<string | null>(null);
   const [showPracticeDialog, setShowPracticeDialog] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("Ready for Conversation Practice?");
+  const [dialogDescription, setDialogDescription] = useState("");
   
   // Fetch flashcard sets for the current level
   const flashcardSets = getFlashcardSetsByLevel(level);
@@ -43,6 +45,26 @@ const Vocabulary = () => {
   };
 
   const handleB1Selected = () => {
+    setDialogTitle("Ready for Conversation Practice?");
+    setDialogDescription("Congratulations on reaching the B1 level! At this stage, it's highly recommended that you begin practicing real conversations to improve your fluency.");
+    setShowPracticeDialog(true);
+  };
+
+  const handleB2Selected = () => {
+    setDialogTitle("Advanced Conversation Practice");
+    setDialogDescription("Great job reaching B2 level! At this upper intermediate stage, you should be able to discuss a wide range of topics with increased fluency and accuracy.");
+    setShowPracticeDialog(true);
+  };
+
+  const handleC1Selected = () => {
+    setDialogTitle("Near-Native Conversation Skills");
+    setDialogDescription("Impressive! At C1, you're approaching advanced proficiency. Our AI Practice feature can help you refine your expression and discuss complex topics like a native speaker.");
+    setShowPracticeDialog(true);
+  };
+
+  const handleC2Selected = () => {
+    setDialogTitle("Mastery Level Achieved");
+    setDialogDescription("Congratulations on reaching C2! You now have mastery of the language. Challenge yourself with our AI Practice feature to maintain your proficiency through advanced discussions.");
     setShowPracticeDialog(true);
   };
 
@@ -99,6 +121,9 @@ const Vocabulary = () => {
               currentLevel={level} 
               onLevelChange={handleLevelChange} 
               onB1Selected={handleB1Selected}
+              onB2Selected={handleB2Selected}
+              onC1Selected={handleC1Selected}
+              onC2Selected={handleC2Selected}
             />
           </div>
           
@@ -122,18 +147,18 @@ const Vocabulary = () => {
         </div>
       </div>
 
-      {/* B1 Level Practice Recommendation Dialog */}
+      {/* Practice Recommendation Dialog */}
       <Dialog open={showPracticeDialog} onOpenChange={setShowPracticeDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Ready for Conversation Practice?</DialogTitle>
+            <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogDescription>
-              Congratulations on reaching the B1 level! At this stage, it's highly recommended that you begin practicing real conversations to improve your fluency.
+              {dialogDescription}
             </DialogDescription>
           </DialogHeader>
           <div className="p-4 bg-blue-50 rounded-md my-2">
             <p className="text-sm">
-              Now that you've mastered intermediate vocabulary, try our AI Practice feature to engage in text conversations and practice everyday spoken Spanish.
+              Now that you've reached an advanced vocabulary level, try our AI Practice feature to engage in text conversations and practice everyday spoken Spanish.
             </p>
           </div>
           <DialogFooter className="flex justify-end space-x-2 mt-4">
