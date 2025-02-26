@@ -61,11 +61,21 @@ import { b1TravelTourismFlashcards } from "./flashcards/b1TravelTourismFlashcard
 import { b1WorkFlashcards } from "./flashcards/b1WorkFlashcards";
 
 // B2 flashcards
-import { b2ComplexPhrasesFlashcards } from "./flashcards/b2ComplexPhrasesFlashcards";
+import { b2SubjunctiveFlashcards } from "./flashcards/b2SubjunctiveFlashcards";
 import { b2ConditionalHypotheticalFlashcards } from "./flashcards/b2ConditionalHypotheticalFlashcards";
 import { b2ImperfectConjugationsFlashcards } from "./flashcards/b2ImperfectConjugationsFlashcards";
 import { b2PerfectTensesFlashcards } from "./flashcards/b2PerfectTensesFlashcards";
-import { b2SubjunctiveFlashcards } from "./flashcards/b2SubjunctiveFlashcards";
+import { b2ComplexPhrasesFlashcards } from "./flashcards/b2ComplexPhrasesFlashcards";
+import { b2HealthFlashcards } from "./flashcards/b2HealthFlashcards";
+import { b2AcademicFlashcards } from "./flashcards/b2AcademicFlashcards";
+import { b2BusinessProfessionalFlashcards } from "./flashcards/b2BusinessProfessionalFlashcards";
+import { b2DebateDiscussionFlashcards } from "./flashcards/b2DebateDiscussionFlashcards";
+import { b2PoliticsSocietyFlashcards } from "./flashcards/b2PoliticsSocietyFlashcards";
+import { b2LiteratureArtsFlashcards } from "./flashcards/b2LiteratureArtsFlashcards";
+import { b2WritingStylesFlashcards } from "./flashcards/b2WritingStylesFlashcards";
+import { b2AdvancedConnectorsFlashcards } from "./flashcards/b2AdvancedConnectorsFlashcards";
+import { b2IdiomsExpressionsFlashcards } from "./flashcards/b2IdiomsExpressionsFlashcards";
+import { b2CulturalInsightsFlashcards } from "./flashcards/b2CulturalInsightsFlashcards";
 
 // Storage key for localStorage
 const FLASHCARD_PROGRESS_KEY = 'lingua-flashcard-progress';
@@ -218,12 +228,22 @@ const flashcardMap: Record<string, Flashcard[]> = {
   "b1-travel-tourism": b1TravelTourismFlashcards,
   "b1-work": b1WorkFlashcards,
   
-  // B2 flashcards - ensuring these are properly mapped
+  // B2 flashcards
   "b2-subjunctive": b2SubjunctiveFlashcards,
   "b2-conditional-hypothetical": b2ConditionalHypotheticalFlashcards,
   "b2-imperfect-conjugations": b2ImperfectConjugationsFlashcards,
   "b2-perfect-tenses": b2PerfectTensesFlashcards,
   "b2-complex-phrases": b2ComplexPhrasesFlashcards,
+  "b2-health": b2HealthFlashcards,
+  "b2-academic": b2AcademicFlashcards,
+  "b2-business-professional": b2BusinessProfessionalFlashcards,
+  "b2-debate-discussion": b2DebateDiscussionFlashcards,
+  "b2-politics-society": b2PoliticsSocietyFlashcards,
+  "b2-literature-arts": b2LiteratureArtsFlashcards,
+  "b2-writing-styles": b2WritingStylesFlashcards,
+  "b2-advanced-connectors": b2AdvancedConnectorsFlashcards,
+  "b2-idioms-expressions": b2IdiomsExpressionsFlashcards,
+  "b2-cultural-insights": b2CulturalInsightsFlashcards,
 };
 
 // Get flashcards by set ID
