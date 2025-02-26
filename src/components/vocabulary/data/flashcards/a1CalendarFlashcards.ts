@@ -97,5 +97,70 @@ export const a1CalendarFlashcards: Flashcard[] = [
     example: "La Navidad es en diciembre.",
     level: "A1",
     category: "Basics"
+  },
+  {
+    id: "13",
+    term: "el calendario",
+    definition: "calendar",
+    example: "Miro el calendario todos los días.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "14",
+    term: "la fecha",
+    definition: "date",
+    example: "¿Cuál es la fecha de hoy?",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "15",
+    term: "la estación",
+    definition: "season",
+    example: "El verano es mi estación favorita.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "16",
+    term: "la primavera",
+    definition: "spring",
+    example: "La primavera empieza en marzo.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "17",
+    term: "el verano",
+    definition: "summer",
+    example: "En verano hace calor.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "18",
+    term: "el otoño",
+    definition: "autumn/fall",
+    example: "Las hojas caen en otoño.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "19",
+    term: "el invierno",
+    definition: "winter",
+    example: "En invierno nieva.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "20",
+    term: "el cumpleaños",
+    definition: "birthday",
+    example: "Mi cumpleaños es en julio.",
+    level: "A1",
+    category: "Basics"
   }
 ];
+

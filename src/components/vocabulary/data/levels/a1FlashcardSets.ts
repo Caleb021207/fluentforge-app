@@ -1,3 +1,4 @@
+
 import { BookOpen, MessageCircle, Utensils, Calculator, Link, BookMarked, Clock, Calendar, Briefcase, Home, Cloud, ShoppingBag, Shirt, Bus } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
@@ -91,7 +92,7 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Days of the week and basic time expressions",
     "A1",
     "Basics",
-    20,
+    25,
     Clock
   ),
   createFlashcardSet(
@@ -109,7 +110,7 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Common jobs and occupations",
     "A1",
     "Basics",
-    25,
+    20,
     Briefcase
   ),
   createFlashcardSet(
@@ -167,3 +168,4 @@ export const a1FlashcardSets: FlashcardSet[] = [
     Bus
   )
 ];
+
