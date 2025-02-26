@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, Rotate3D, VolumeUp, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Rotate3D, Volume, X } from "lucide-react";
 import { Flashcard } from "./types";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -107,7 +107,7 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
                     speakText(currentCard.term);
                   }}
                 >
-                  <VolumeUp className="h-5 w-5" />
+                  <Volume className="h-5 w-5" />
                 </Button>
               </div>
             ) : (
