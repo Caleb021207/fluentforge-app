@@ -1,5 +1,5 @@
 
-import { Globe, Users, Clock, Cloud, Users2, User } from "lucide-react";
+import { Globe, Users, Clock, Cloud, Users2, User, Utensils, Heart, ShoppingCart, Gamepad2, Briefcase, GraduationCap } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
 
@@ -58,5 +58,59 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Social",
     25,
     User
+  ),
+  createFlashcardSet(
+    "a2-food-restaurants",
+    "Food & Restaurants",
+    "Vocabulary for ordering food and dining out",
+    "A2",
+    "Food",
+    25,
+    Utensils
+  ),
+  createFlashcardSet(
+    "a2-health-body",
+    "Health & Body",
+    "Basic medical terms and body parts",
+    "A2",
+    "Health",
+    25,
+    Heart
+  ),
+  createFlashcardSet(
+    "a2-shopping-money",
+    "Shopping & Money",
+    "Advanced shopping and commerce vocabulary",
+    "A2",
+    "Social",
+    25,
+    ShoppingCart
+  ),
+  createFlashcardSet(
+    "a2-hobbies",
+    "Hobbies & Free Time",
+    "Activities, sports, and entertainment vocabulary",
+    "A2",
+    "Social",
+    25,
+    Gamepad2
+  ),
+  createFlashcardSet(
+    "a2-work",
+    "Work & Jobs",
+    "Basic workplace vocabulary and job terms",
+    "A2",
+    "Business",
+    25,
+    Briefcase
+  ),
+  createFlashcardSet(
+    "a2-education",
+    "Education",
+    "School subjects and academic vocabulary",
+    "A2",
+    "Academic",
+    25,
+    GraduationCap
   ),
 ];
