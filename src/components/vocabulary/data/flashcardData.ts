@@ -1,4 +1,3 @@
-
 import { FlashcardSet, Flashcard } from "../types";
 import { a1FlashcardSets } from "./levels/a1FlashcardSets";
 import { a2FlashcardSets } from "./levels/a2FlashcardSets";
@@ -56,8 +55,9 @@ import { b2ConditionalHypotheticalFlashcards } from "./flashcards/b2ConditionalH
 import { b2ImperfectConjugationsFlashcards } from "./flashcards/b2ImperfectConjugationsFlashcards";
 import { b2PerfectTensesFlashcards } from "./flashcards/b2PerfectTensesFlashcards";
 import { b2ComplexPhrasesFlashcards } from "./flashcards/b2ComplexPhrasesFlashcards";
+import { a1ArVerbConjugationsFlashcards } from "./flashcards/a1ArVerbConjugationsFlashcards";
+import { a1ErIrVerbConjugationsFlashcards } from "./flashcards/a1ErIrVerbConjugationsFlashcards";
 
-// Combine all flashcard sets by CEFR level
 export const flashcardSets: Record<string, FlashcardSet[]> = {
   A1: a1FlashcardSets,
   A2: a2FlashcardSets,
@@ -67,7 +67,6 @@ export const flashcardSets: Record<string, FlashcardSet[]> = {
   C2: c2FlashcardSets,
 };
 
-// Map of all flashcards organized by set ID
 export const sampleFlashcards: Record<string, Flashcard[]> = {
   "a1-basics": a1BasicsFlashcards,
   "a1-connector-words": a1ConnectorWordsFlashcards,
@@ -119,19 +118,18 @@ export const sampleFlashcards: Record<string, Flashcard[]> = {
   "b2-imperfect-conjugations": b2ImperfectConjugationsFlashcards,
   "b2-perfect-tenses": b2PerfectTensesFlashcards,
   "b2-complex-phrases": b2ComplexPhrasesFlashcards,
+  "a1-ar-verbs": a1ArVerbConjugationsFlashcards,
+  "a1-erir-verbs": a1ErIrVerbConjugationsFlashcards,
 };
 
-// Function to get all flashcard sets
 export const getAllFlashcardSets = (): FlashcardSet[] => {
   return Object.values(flashcardSets).flat();
 };
 
-// Function to get flashcard sets by level
 export const getFlashcardSetsByLevel = (level: string): FlashcardSet[] => {
   return flashcardSets[level] || [];
 };
 
-// Function to get flashcards by set ID
 export const getFlashcardsBySetId = (setId: string): Flashcard[] => {
   return sampleFlashcards[setId] || [];
 };

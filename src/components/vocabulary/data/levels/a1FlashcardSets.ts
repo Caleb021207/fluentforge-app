@@ -1,4 +1,3 @@
-
 import { BookOpen, MessageCircle, Utensils, Calculator, Link, BookMarked, Clock, Calendar, Briefcase, Home, Cloud, ShoppingBag, Shirt, Bus } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
@@ -166,5 +165,23 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Basics",
     25,
     Bus
+  ),
+  createFlashcardSet(
+    "a1-ar-verbs",
+    "-AR Verb Conjugations",
+    "Basic conjugations of regular -AR verbs",
+    "A1",
+    "Basics",
+    20,
+    BookOpen
+  ),
+  createFlashcardSet(
+    "a1-erir-verbs",
+    "-ER/-IR Verb Conjugations",
+    "Basic conjugations of regular -ER and -IR verbs",
+    "A1",
+    "Basics",
+    20,
+    BookOpen
   )
 ];
