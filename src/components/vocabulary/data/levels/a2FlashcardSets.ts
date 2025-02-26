@@ -47,7 +47,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Words for family members and relationships",
     "A2",
     "Social",
-    1,
+    25,
     Users2
   ),
   createFlashcardSet(
