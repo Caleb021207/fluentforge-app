@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 
 const WRITING_PROMPTS = [
   {
@@ -26,6 +27,7 @@ const WritingCertification = () => {
   const [essay, setEssay] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [detailedFeedback, setDetailedFeedback] = useState<any | null>(null);
   const { toast } = useToast();
 
   // Randomly select a prompt when starting the test
@@ -76,6 +78,17 @@ const WritingCertification = () => {
 
       const { score, level, feedback } = gradeResult;
 
+      // Get CEFR recommendations for the achieved level
+      const levelRecommendations = getRecommendationsForLevel('writing', level);
+      
+      // Set the detailed feedback
+      setDetailedFeedback({
+        score,
+        level,
+        generalFeedback: feedback,
+        recommendations: levelRecommendations
+      });
+
       // Save the certification attempt
       const { error: saveError } = await supabase
         .from('certification_attempts')
@@ -112,6 +125,7 @@ const WritingCertification = () => {
     setIsStarted(true);
     setEssay("");
     setFeedback(null);
+    setDetailedFeedback(null);
   };
 
   return (
@@ -165,10 +179,55 @@ const WritingCertification = () => {
               </div>
             </div>
 
-            {feedback && (
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-medium mb-2">Feedback:</h3>
-                <p className="text-gray-700 whitespace-pre-wrap">{feedback}</p>
+            {detailedFeedback && (
+              <div className="mt-6 space-y-4">
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <h3 className="font-medium text-lg mb-2">Your Results</h3>
+                  <div className="mb-2">
+                    <span className="font-medium">Score:</span> {detailedFeedback.score}%
+                  </div>
+                  <div className="mb-2">
+                    <span className="font-medium">CEFR Level:</span> {detailedFeedback.level}
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <h3 className="font-medium text-lg mb-2">Feedback on Your Writing</h3>
+                  <p className="text-gray-700 whitespace-pre-wrap mb-4">{feedback}</p>
+                </div>
+
+                {detailedFeedback.recommendations && (
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <h3 className="font-medium text-lg mb-3">Your Writing Profile</h3>
+                    
+                    <div className="mb-4">
+                      <h4 className="font-medium text-md mb-2">Strengths:</h4>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {detailedFeedback.recommendations.strengths.map((strength: string, i: number) => (
+                          <li key={i} className="text-gray-700">{strength}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="font-medium text-md mb-2">Areas for Improvement:</h4>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {detailedFeedback.recommendations.weaknesses.map((weakness: string, i: number) => (
+                          <li key={i} className="text-gray-700">{weakness}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div className="mb-2">
+                      <h4 className="font-medium text-md mb-2">Recommendations:</h4>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {detailedFeedback.recommendations.recommendations.map((recommendation: string, i: number) => (
+                          <li key={i} className="text-gray-700">{recommendation}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -7,13 +7,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { Question } from "./types/reading";
 import { READING_QUESTIONS } from "./data/readingQuestions";
 import { QuestionDisplay } from "./components/QuestionDisplay";
-import { calculateScore, determineLevel } from "./utils/scoreUtils";
+import { calculateScore, determineLevel, getLevelDescription } from "./utils/scoreUtils";
+import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 
 const ReadingCertification = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+  const [levelRecommendations, setLevelRecommendations] = useState<any | null>(null);
   const { toast } = useToast();
 
   const handleStart = () => {
@@ -21,6 +23,7 @@ const ReadingCertification = () => {
     setCurrentQuestion(0);
     setSelectedAnswers([]);
     setIsComplete(false);
+    setLevelRecommendations(null);
   };
 
   const handleAnswer = (answerIndex: number) => {
@@ -38,6 +41,9 @@ const ReadingCertification = () => {
   const handleCompletion = async (answers: number[]) => {
     const score = calculateScore(answers, READING_QUESTIONS);
     const level = determineLevel(score);
+    const recommendations = getRecommendationsForLevel('reading', level);
+    
+    setLevelRecommendations(recommendations);
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -101,16 +107,59 @@ const ReadingCertification = () => {
   if (isComplete) {
     const score = calculateScore(selectedAnswers, READING_QUESTIONS);
     const level = determineLevel(score);
+    const levelDescription = getLevelDescription(level);
 
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Test Complete</CardTitle>
+          <CardTitle>Reading Assessment Complete</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <p>Your score: {score}%</p>
-            <p>Your level: {level}</p>
+          <div className="space-y-6">
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <h3 className="font-medium text-lg mb-2">Your Results</h3>
+              <div className="mb-2">
+                <span className="font-medium">Score:</span> {score}%
+              </div>
+              <div className="mb-2">
+                <span className="font-medium">CEFR Level:</span> {level}
+              </div>
+              <p className="text-sm text-gray-700 mt-2">{levelDescription}</p>
+            </div>
+
+            {levelRecommendations && (
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-medium text-lg mb-3">Your Reading Profile</h3>
+                
+                <div className="mb-4">
+                  <h4 className="font-medium text-md mb-2">Strengths:</h4>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {levelRecommendations.strengths.map((strength: string, i: number) => (
+                      <li key={i} className="text-gray-700">{strength}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="font-medium text-md mb-2">Areas for Improvement:</h4>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {levelRecommendations.weaknesses.map((weakness: string, i: number) => (
+                      <li key={i} className="text-gray-700">{weakness}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="mb-2">
+                  <h4 className="font-medium text-md mb-2">Recommendations:</h4>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {levelRecommendations.recommendations.map((recommendation: string, i: number) => (
+                      <li key={i} className="text-gray-700">{recommendation}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            
             <Button onClick={handleStart}>Take Test Again</Button>
           </div>
         </CardContent>
