@@ -121,5 +121,85 @@ export const a1TransportationFlashcards: Flashcard[] = [
     example: "Me encanta viajar en verano.",
     level: "A1",
     category: "Basics"
+  },
+  {
+    id: "16",
+    term: "conducir",
+    definition: "to drive",
+    example: "Mi padre conduce al trabajo todos los días.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "17",
+    term: "conductor",
+    definition: "driver",
+    example: "El conductor del autobús es muy amable.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "18",
+    term: "pasajero",
+    definition: "passenger",
+    example: "Hay muchos pasajeros en el tren.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "19",
+    term: "maleta",
+    definition: "suitcase",
+    example: "Mi maleta es grande y pesada.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "20",
+    term: "mapa",
+    definition: "map",
+    example: "Necesito un mapa de la ciudad.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "21",
+    term: "tranvía",
+    definition: "tram",
+    example: "El tranvía pasa cada diez minutos.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "22",
+    term: "autopista",
+    definition: "highway",
+    example: "La autopista está muy congestionada.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "23",
+    term: "calle",
+    definition: "street",
+    example: "Vivo en la calle Principal.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "24",
+    term: "semáforo",
+    definition: "traffic light",
+    example: "Para cuando el semáforo está rojo.",
+    level: "A1",
+    category: "Basics"
+  },
+  {
+    id: "25",
+    term: "llegar",
+    definition: "to arrive",
+    example: "El tren llega a las nueve.",
+    level: "A1",
+    category: "Basics"
   }
 ];
