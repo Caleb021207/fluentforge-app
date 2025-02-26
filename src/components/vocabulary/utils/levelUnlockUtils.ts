@@ -25,7 +25,7 @@ export const isLevelUnlocked = async (
     return level === "A1" || level === "Grammar";
   }
 
-  // A1 and Grammar are always unlocked
+  // A1 and Grammar are always unlocked for logged-in users
   if (level === "A1" || level === "Grammar") {
     return true;
   }
