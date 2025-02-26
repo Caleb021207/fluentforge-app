@@ -32,6 +32,15 @@ import { b2SubjunctiveFlashcards } from './flashcards/b2SubjunctiveFlashcards';
 import { b2AcademicFlashcards } from './flashcards/b2AcademicFlashcards';
 import { b2LiteratureArtsFlashcards } from './flashcards/b2LiteratureArtsFlashcards';
 
+// C1-C2 Level
+import { c1ArtsFlashcards } from './flashcards/c1ArtsFlashcards';
+import { c1BusinessFlashcards } from './flashcards/c1BusinessFlashcards';
+import { c2AcademicFlashcards } from './flashcards/c2AcademicFlashcards';
+import { c2SocialFlashcards } from './flashcards/c2SocialFlashcards';
+import { c1c2LiteratureFlashcards } from './flashcards/c1c2LiteratureFlashcards';
+import { c1c2GlobalAffairsFlashcards } from './flashcards/c1c2GlobalAffairsFlashcards';
+import { c1c2MedicalScientificFlashcards } from './flashcards/c1c2MedicalScientificFlashcards';
+
 // Helper function to combine all flashcard sets
 export const getAllFlashcardSets = () => {
   return [
@@ -83,6 +92,15 @@ export const getFlashcardsForSet = (setId: string) => {
   if (setId === "b2-subjunctive") return b2SubjunctiveFlashcards;
   if (setId === "b2-academic") return b2AcademicFlashcards;
   if (setId === "b2-literature-arts") return b2LiteratureArtsFlashcards;
+  
+  // C1-C2 Flashcards
+  if (setId === "c1-arts") return c1ArtsFlashcards;
+  if (setId === "c1-business") return c1BusinessFlashcards;
+  if (setId === "c2-academic") return c2AcademicFlashcards;
+  if (setId === "c2-social") return c2SocialFlashcards;
+  if (setId === "c1c2-literature") return c1c2LiteratureFlashcards;
+  if (setId === "c1c2-global-affairs") return c1c2GlobalAffairsFlashcards;
+  if (setId === "c1c2-medical-scientific") return c1c2MedicalScientificFlashcards;
 
   // Default empty array if no match
   return [];

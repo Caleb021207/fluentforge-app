@@ -11,7 +11,7 @@ export const c1c2FlashcardSets: FlashcardSet[] = [
     "Discussing literature, art, and cultural topics",
     "C1-C2",
     "Arts",
-    0,
+    10,
     Palette
   ),
   createFlashcardSet(
@@ -20,7 +20,7 @@ export const c1c2FlashcardSets: FlashcardSet[] = [
     "Advanced business and negotiation terminology",
     "C1-C2",
     "Business",
-    0,
+    10,
     Briefcase
   ),
   createFlashcardSet(
@@ -29,7 +29,7 @@ export const c1c2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for academic research and publishing",
     "C1-C2",
     "Academic",
-    0,
+    10,
     GraduationCap
   ),
   createFlashcardSet(
@@ -38,7 +38,7 @@ export const c1c2FlashcardSets: FlashcardSet[] = [
     "Advanced idioms and expressions",
     "C1-C2",
     "Social",
-    0,
+    10,
     Users
   ),
   createFlashcardSet(
@@ -47,7 +47,7 @@ export const c1c2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for discussing and analyzing literature",
     "C1-C2",
     "Arts",
-    0,
+    10,
     BookOpen
   ),
   createFlashcardSet(
@@ -56,7 +56,7 @@ export const c1c2FlashcardSets: FlashcardSet[] = [
     "Advanced vocabulary for international topics and current events",
     "C1-C2",
     "Social",
-    0,
+    10,
     Globe
   ),
   createFlashcardSet(
@@ -65,7 +65,7 @@ export const c1c2FlashcardSets: FlashcardSet[] = [
     "Technical vocabulary for medical and scientific contexts",
     "C1-C2",
     "Academic",
-    0,
+    10,
     HeartPulse
   )
 ];
