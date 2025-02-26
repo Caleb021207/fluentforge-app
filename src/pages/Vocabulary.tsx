@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import LevelSelector from "@/components/vocabulary/LevelSelector";
 import FlashcardSetsList from "@/components/vocabulary/FlashcardSetsList";
 import FlashcardView from "@/components/vocabulary/FlashcardView";
+import GrammarRules from "@/components/vocabulary/GrammarRules";
 import { getFlashcardSetsByLevel, getFlashcardsBySetId, getAllFlashcardSets, updateFlashcardSetProgress } from "@/components/vocabulary/data/flashcardData";
 import {
   Dialog,
@@ -56,16 +57,14 @@ const Vocabulary = () => {
     setShowPracticeDialog(true);
   };
 
-  const handleC1Selected = () => {
-    setDialogTitle("Near-Native Conversation Skills");
-    setDialogDescription("Impressive! At C1, you're approaching advanced proficiency. Our AI Practice feature can help you refine your expression and discuss complex topics like a native speaker.");
+  const handleC1C2Selected = () => {
+    setDialogTitle("Advanced Proficiency");
+    setDialogDescription("Excellent work reaching the advanced C1-C2 levels! At this stage, you should focus on mastering nuanced expression, idioms, and native-like fluency through extensive conversation practice.");
     setShowPracticeDialog(true);
   };
 
-  const handleC2Selected = () => {
-    setDialogTitle("Mastery Level Achieved");
-    setDialogDescription("Congratulations on reaching C2! You now have mastery of the language. Challenge yourself with our AI Practice feature to maintain your proficiency through advanced discussions.");
-    setShowPracticeDialog(true);
+  const handleGrammarSelected = () => {
+    // No dialog needed for grammar, it just displays the grammar content
   };
 
   const handleGoToPractice = () => {
@@ -111,17 +110,20 @@ const Vocabulary = () => {
       "A2": "Elementary",
       "B1": "Intermediate",
       "B2": "Upper Intermediate",
-      "C1": "Advanced",
-      "C2": "Proficient"
+      "C1-C2": "Advanced",
+      "Grammar": "Rules & Tips"
     };
     return descriptions[level] || "Beginner";
   };
+
+  // Determine if we should show grammar content instead of flashcards
+  const showGrammar = level === "Grammar";
 
   return (
     <div className="container mx-auto px-4 pb-16">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-1">
-          Vocabulary <span className="text-green-600 font-normal">{level} - {getLevelDescription(level)}</span>
+          {showGrammar ? "Spanish Grammar" : "Vocabulary"} <span className="text-green-600 font-normal">{level} - {getLevelDescription(level)}</span>
         </h1>
         
         <div className="mb-6 mt-4 flex flex-col md:flex-row gap-6">
@@ -132,13 +134,15 @@ const Vocabulary = () => {
               onLevelChange={handleLevelChange} 
               onB1Selected={handleB1Selected}
               onB2Selected={handleB2Selected}
-              onC1Selected={handleC1Selected}
-              onC2Selected={handleC2Selected}
+              onC1C2Selected={handleC1C2Selected}
+              onGrammarSelected={handleGrammarSelected}
             />
           </div>
           
           <div className="w-full md:w-3/4">
-            {activeSetId && activeSet ? (
+            {showGrammar ? (
+              <GrammarRules />
+            ) : activeSetId && activeSet ? (
               <FlashcardView
                 flashcards={flashcardsForActiveSet}
                 onClose={() => setActiveSetId(null)}

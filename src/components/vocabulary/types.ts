@@ -28,6 +28,6 @@ export interface LevelSelectorProps {
   onLevelChange: (level: string) => void;
   onB1Selected?: () => void;
   onB2Selected?: () => void;
-  onC1Selected?: () => void;
-  onC2Selected?: () => void;
+  onC1C2Selected?: () => void;
+  onGrammarSelected?: () => void;
 }

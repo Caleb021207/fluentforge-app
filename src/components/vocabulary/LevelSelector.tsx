@@ -1,13 +1,14 @@
 
 import { Button } from "@/components/ui/button";
+import { Info, Book } from "lucide-react";
 
 interface LevelSelectorProps {
   currentLevel: string;
   onLevelChange: (level: string) => void;
   onB1Selected?: () => void;
   onB2Selected?: () => void;
-  onC1Selected?: () => void;
-  onC2Selected?: () => void;
+  onC1C2Selected?: () => void;
+  onGrammarSelected?: () => void;
 }
 
 const LevelSelector = ({ 
@@ -15,18 +16,22 @@ const LevelSelector = ({
   onLevelChange, 
   onB1Selected,
   onB2Selected,
-  onC1Selected,
-  onC2Selected
+  onC1C2Selected,
+  onGrammarSelected
 }: LevelSelectorProps) => {
-  const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
+  const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
   
   const levelDescriptions: Record<string, string> = {
     "A1": "Beginner",
     "A2": "Elementary",
     "B1": "Intermediate",
     "B2": "Upper Intermediate",
-    "C1": "Advanced",
-    "C2": "Proficient"
+    "C1-C2": "Advanced",
+    "Grammar": "Rules & Tips"
+  };
+  
+  const icons: Record<string, JSX.Element> = {
+    "Grammar": <Book className="h-4 w-4 mr-2" />
   };
   
   const handleLevelClick = (level: string) => {
@@ -37,10 +42,10 @@ const LevelSelector = ({
       onB1Selected();
     } else if (level === "B2" && onB2Selected) {
       onB2Selected();
-    } else if (level === "C1" && onC1Selected) {
-      onC1Selected();
-    } else if (level === "C2" && onC2Selected) {
-      onC2Selected();
+    } else if (level === "C1-C2" && onC1C2Selected) {
+      onC1C2Selected();
+    } else if (level === "Grammar" && onGrammarSelected) {
+      onGrammarSelected();
     }
   };
   
@@ -58,6 +63,7 @@ const LevelSelector = ({
             }`}
             onClick={() => handleLevelClick(level)}
           >
+            {icons[level]}
             <span className="font-bold mr-2">{level}</span>
             <span className="text-xs">{levelDescriptions[level]}</span>
           </Button>

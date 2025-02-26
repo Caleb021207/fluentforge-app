@@ -4,8 +4,7 @@ import { a1FlashcardSets } from "./levels/a1FlashcardSets";
 import { a2FlashcardSets } from "./levels/a2FlashcardSets";
 import { b1FlashcardSets } from "./levels/b1FlashcardSets";
 import { b2FlashcardSets } from "./levels/b2FlashcardSets";
-import { c1FlashcardSets } from "./levels/c1FlashcardSets";
-import { c2FlashcardSets } from "./levels/c2FlashcardSets";
+import { c1c2FlashcardSets } from "./levels/c1c2FlashcardSets";
 
 // Import flashcard data
 import { a1BasicsFlashcards } from "./flashcards/a1BasicsFlashcards";
@@ -84,8 +83,7 @@ let allFlashcardSets: FlashcardSet[] = [
   ...a2FlashcardSets,
   ...b1FlashcardSets,
   ...b2FlashcardSets,
-  ...c1FlashcardSets,
-  ...c2FlashcardSets
+  ...c1c2FlashcardSets
 ];
 
 // Try to load the progress data from localStorage
@@ -240,6 +238,15 @@ const flashcardMap: Record<string, Flashcard[]> = {
   "b2-advanced-connectors": b2AdvancedConnectorsFlashcards,
   "b2-idioms-expressions": b2IdiomsExpressionsFlashcards,
   "b2-cultural-insights": b2CulturalInsightsFlashcards,
+  
+  // C1-C2 flashcards will be added when they're implemented
+  "c1-arts": [],
+  "c1-business": [],
+  "c2-academic": [],
+  "c2-social": [],
+  "c1c2-literature": [],
+  "c1c2-global-affairs": [],
+  "c1c2-medical-scientific": []
 };
 
 // Get flashcards by set ID
