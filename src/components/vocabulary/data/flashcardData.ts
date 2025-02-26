@@ -13,7 +13,7 @@ import { a2SocialFlashcards } from './flashcards/a2SocialFlashcards';
 import { a2WeatherFlashcards } from './flashcards/a2WeatherFlashcards';
 import { a2WorkFlashcards } from './flashcards/a2WorkFlashcards';
 import { a2ShoppingMoneyFlashcards } from './flashcards/a2ShoppingMoneyFlashcards';
-import { basicPeopleFlashcards } from './flashcards/a2People/basicPeopleFlashcards';
+import { basicPeopleFlashcards } from './flashcards/a2People/basicPeople';
 import { relationshipsFlashcards } from './flashcards/a2People/relationships';
 import { occupationsFlashcards } from './flashcards/a2People/occupations';
 import { personalityDescriptionsFlashcards } from './flashcards/a2People/personalityDescriptions';
