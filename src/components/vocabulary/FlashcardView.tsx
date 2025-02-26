@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, Rotate3D, Volume, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Rotate3D, Volume, X, CheckCircle } from "lucide-react";
 import { Flashcard } from "./types";
 import { useToast } from "@/components/ui/use-toast";
+import FlashcardQuiz from "./FlashcardQuiz";
 
 interface FlashcardViewProps {
   flashcards: Flashcard[];
@@ -16,6 +17,7 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [completed, setCompleted] = useState<number[]>([]);
+  const [showQuiz, setShowQuiz] = useState(false);
   const { toast } = useToast();
 
   const currentCard = flashcards[currentIndex];
@@ -26,13 +28,17 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
       setCurrentIndex(currentIndex + 1);
       setFlipped(false);
     } else {
-      toast({
-        title: "Set completed!",
-        description: `You've reviewed all ${totalCards} cards in this set.`,
-      });
-      
       if (completed.length === totalCards) {
-        onClose();
+        toast({
+          title: "Set completed!",
+          description: `You've reviewed all ${totalCards} cards in this set. Ready for a quiz?`,
+        });
+        setShowQuiz(true);
+      } else {
+        toast({
+          title: "Set completed!",
+          description: `You've reviewed all ${totalCards} cards. Mark all as learned to take the quiz.`,
+        });
       }
     }
   };
@@ -51,11 +57,24 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
   const handleMarkLearned = () => {
     if (!completed.includes(currentIndex)) {
       setCompleted([...completed, currentIndex]);
+      
+      const newCompletedCount = completed.length + 1;
       toast({
         title: "Card marked as learned",
-        description: `${completed.length + 1} of ${totalCards} cards completed.`,
+        description: `${newCompletedCount} of ${totalCards} cards completed.`,
         variant: "default",
       });
+      
+      if (newCompletedCount === totalCards && currentIndex === totalCards - 1) {
+        setTimeout(() => {
+          toast({
+            title: "All cards learned!",
+            description: "Great job! You're ready for the quiz.",
+            variant: "default",
+          });
+          setShowQuiz(true);
+        }, 1000);
+      }
     }
     handleNext();
   };
@@ -73,6 +92,25 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
       });
     }
   };
+  
+  const handleQuizCompletion = (score: number) => {
+    toast({
+      title: "Quiz completed!",
+      description: `You scored ${score}% on this quiz. Great job!`,
+    });
+    onClose();
+  };
+  
+  if (showQuiz) {
+    return (
+      <FlashcardQuiz 
+        flashcards={flashcards}
+        onComplete={handleQuizCompletion}
+        onBack={() => setShowQuiz(false)}
+        setTitle={setTitle}
+      />
+    );
+  }
   
   if (!currentCard) return null;
   
@@ -166,6 +204,19 @@ const FlashcardView = ({ flashcards, onClose, setTitle }: FlashcardViewProps) =>
           <ArrowRight className="h-5 w-5" />
         </Button>
       </div>
+      
+      {completed.length === totalCards && currentIndex === totalCards - 1 && (
+        <div className="mt-4 text-center">
+          <Button 
+            variant="default" 
+            onClick={() => setShowQuiz(true)}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <CheckCircle className="h-4 w-4 mr-2" />
+            Take Quiz
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
