@@ -1,5 +1,5 @@
 
-import { Globe, Users } from "lucide-react";
+import { Globe, Users, Clock, Cloud, Users2, User } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
 
@@ -11,7 +11,7 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Vocabulary for basic travel situations",
     "A2",
     "Travel",
-    35,
+    30,
     Globe
   ),
   createFlashcardSet(
@@ -22,5 +22,41 @@ export const a2FlashcardSets: FlashcardSet[] = [
     "Social",
     25,
     Users
+  ),
+  createFlashcardSet(
+    "a2-dates-times",
+    "Dates & Times",
+    "Vocabulary for talking about dates and time",
+    "A2",
+    "Basics",
+    1,
+    Clock
+  ),
+  createFlashcardSet(
+    "a2-weather",
+    "Describing Weather",
+    "Terms for discussing weather conditions",
+    "A2",
+    "Basics",
+    1,
+    Cloud
+  ),
+  createFlashcardSet(
+    "a2-family",
+    "Describing Family",
+    "Words for family members and relationships",
+    "A2",
+    "Social",
+    1,
+    Users2
+  ),
+  createFlashcardSet(
+    "a2-people",
+    "Describing People",
+    "Vocabulary for describing appearance and personality",
+    "A2",
+    "Social",
+    1,
+    User
   ),
 ];

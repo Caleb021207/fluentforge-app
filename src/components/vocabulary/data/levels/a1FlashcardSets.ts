@@ -1,5 +1,5 @@
 
-import { BookOpen, MessageCircle, Utensils } from "lucide-react";
+import { BookOpen, MessageCircle, Utensils, Calculator } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
 
@@ -31,5 +31,14 @@ export const a1FlashcardSets: FlashcardSet[] = [
     "Food",
     30,
     Utensils
+  ),
+  createFlashcardSet(
+    "a1-numbers-colors",
+    "Numbers & Colors",
+    "Basic numbers and colors vocabulary",
+    "A1",
+    "Basics",
+    25,
+    Calculator
   ),
 ];
