@@ -218,12 +218,12 @@ const flashcardMap: Record<string, Flashcard[]> = {
   "b1-travel-tourism": b1TravelTourismFlashcards,
   "b1-work": b1WorkFlashcards,
   
-  // B2 flashcards
-  "b2-complex-phrases": b2ComplexPhrasesFlashcards,
+  // B2 flashcards - ensuring these are properly mapped
+  "b2-subjunctive": b2SubjunctiveFlashcards,
   "b2-conditional-hypothetical": b2ConditionalHypotheticalFlashcards,
   "b2-imperfect-conjugations": b2ImperfectConjugationsFlashcards,
   "b2-perfect-tenses": b2PerfectTensesFlashcards,
-  "b2-subjunctive": b2SubjunctiveFlashcards,
+  "b2-complex-phrases": b2ComplexPhrasesFlashcards,
 };
 
 // Get flashcards by set ID
