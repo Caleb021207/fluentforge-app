@@ -9,6 +9,8 @@ import { Loader2 } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface ProgressData {
   date: string;
@@ -24,6 +26,7 @@ const ProgressPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -124,19 +127,29 @@ const ProgressPage = () => {
     setRecommendations(newRecommendations);
   };
 
-  if (!user) {
-    return (
-      <div className="text-center py-8">
-        <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
-        <p>Please sign in to view your progress.</p>
-      </div>
-    );
-  }
+  const handleSignIn = () => {
+    navigate("/");
+  };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-lingua-primary" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="text-center py-8">
+        <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
+        <p className="mb-6">Please sign in to view your progress data and personalized recommendations.</p>
+        <Button 
+          onClick={handleSignIn} 
+          className="bg-lingua-primary hover:bg-lingua-primary/90"
+        >
+          Sign In
+        </Button>
       </div>
     );
   }
@@ -225,4 +238,3 @@ const ProgressPage = () => {
 };
 
 export default ProgressPage;
-
