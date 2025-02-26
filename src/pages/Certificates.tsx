@@ -10,7 +10,6 @@ import WritingCertification from "@/components/certifications/WritingCertificati
 import SpeakingListeningCertification from "@/components/certifications/SpeakingListeningCertification";
 import { determineLevel, getLevelDescription } from "@/components/certifications/utils/scoreUtils";
 import { useEffect, useState } from "react";
-import ManualScoreForm from "@/components/profile/ManualScoreForm";
 
 type CertificationAttempt = {
   id: string;
@@ -31,16 +30,11 @@ const rubricData = [
 
 const Certificates = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
-      
-      if (user) {
-        setUserEmail(user.email);
-      }
     };
     checkUser();
   }, []);
@@ -210,13 +204,6 @@ const Certificates = () => {
           </ScrollArea>
         </CardContent>
       </Card>
-      
-      {/* Only show ManualScoreForm to example@gmail.com account */}
-      {isLoggedIn && userEmail === 'example@gmail.com' && (
-        <div className="mt-12 mb-8">
-          <ManualScoreForm />
-        </div>
-      )}
     </div>
   );
 };
