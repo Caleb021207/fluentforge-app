@@ -70,9 +70,7 @@ import { b2HealthFlashcards } from "./flashcards/b2HealthFlashcards";
 import { b2AcademicFlashcards } from "./flashcards/b2AcademicFlashcards";
 import { b2BusinessProfessionalFlashcards } from "./flashcards/b2BusinessProfessionalFlashcards";
 import { b2DebateDiscussionFlashcards } from "./flashcards/b2DebateDiscussionFlashcards";
-import { b2PoliticsSocietyFlashcards } from "./flashcards/b2PoliticsSocietyFlashcards";
 import { b2LiteratureArtsFlashcards } from "./flashcards/b2LiteratureArtsFlashcards";
-import { b2WritingStylesFlashcards } from "./flashcards/b2WritingStylesFlashcards";
 import { b2AdvancedConnectorsFlashcards } from "./flashcards/b2AdvancedConnectorsFlashcards";
 import { b2IdiomsExpressionsFlashcards } from "./flashcards/b2IdiomsExpressionsFlashcards";
 import { b2CulturalInsightsFlashcards } from "./flashcards/b2CulturalInsightsFlashcards";
@@ -238,9 +236,7 @@ const flashcardMap: Record<string, Flashcard[]> = {
   "b2-academic": b2AcademicFlashcards,
   "b2-business-professional": b2BusinessProfessionalFlashcards,
   "b2-debate-discussion": b2DebateDiscussionFlashcards,
-  "b2-politics-society": b2PoliticsSocietyFlashcards,
   "b2-literature-arts": b2LiteratureArtsFlashcards,
-  "b2-writing-styles": b2WritingStylesFlashcards,
   "b2-advanced-connectors": b2AdvancedConnectorsFlashcards,
   "b2-idioms-expressions": b2IdiomsExpressionsFlashcards,
   "b2-cultural-insights": b2CulturalInsightsFlashcards,

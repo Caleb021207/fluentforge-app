@@ -1,5 +1,5 @@
 
-import { HeartPulse, GraduationCap, BookOpen, Brain, MessageSquare, Book, Globe, Briefcase, Building, FileText, PenTool, Focus, Lightbulb, Users, Clock } from "lucide-react";
+import { HeartPulse, GraduationCap, BookOpen, Brain, MessageSquare, Book, Globe, Briefcase, FileText, Focus, Lightbulb, Users, Clock } from "lucide-react";
 import { createFlashcardSet } from "../utils/flashcardUtils";
 import { FlashcardSet } from "../../types";
 
@@ -87,15 +87,6 @@ export const b2FlashcardSets: FlashcardSet[] = [
     Users
   ),
   createFlashcardSet(
-    "b2-politics-society",
-    "Politics & Society",
-    "Discuss social issues and political topics",
-    "B2",
-    "Academic",
-    0,  // Keeping as 0 since these flashcards haven't been implemented yet
-    Building
-  ),
-  createFlashcardSet(
     "b2-literature-arts",
     "Literature & Arts",
     "Discuss books, art, and cultural expressions",
@@ -103,15 +94,6 @@ export const b2FlashcardSets: FlashcardSet[] = [
     "Arts",
     25, // Updated from 0 to 25 to reflect actual count
     FileText
-  ),
-  createFlashcardSet(
-    "b2-writing-styles",
-    "Writing Styles",
-    "Improve written expression and composition",
-    "B2",
-    "Academic",
-    0,  // Keeping as 0 since these flashcards haven't been implemented yet
-    PenTool
   ),
   createFlashcardSet(
     "b2-advanced-connectors",
