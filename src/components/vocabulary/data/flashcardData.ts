@@ -39,6 +39,8 @@ import { a2EducationFlashcards } from "./flashcards/a2EducationFlashcards";
 import { b1WorkFlashcards } from "./flashcards/b1WorkFlashcards";
 import { b1TechnologyFlashcards } from "./flashcards/b1TechnologyFlashcards";
 import { b1PastTenseFlashcards } from "./flashcards/b1PastTenseFlashcards";
+import { b1IrregularVerbsFlashcards } from "./flashcards/b1IrregularVerbsFlashcards";
+import { b1IntermediatePhrasesFlashcards } from "./flashcards/b1IntermediatePhrasesFlashcards";
 
 // Combine all flashcard sets by CEFR level
 export const flashcardSets: Record<string, FlashcardSet[]> = {
@@ -85,6 +87,8 @@ export const sampleFlashcards: Record<string, Flashcard[]> = {
   "b1-work": b1WorkFlashcards,
   "b1-technology": b1TechnologyFlashcards,
   "b1-past-tense": b1PastTenseFlashcards,
+  "b1-irregular-verbs": b1IrregularVerbsFlashcards,
+  "b1-intermediate-phrases": b1IntermediatePhrasesFlashcards,
 };
 
 // Function to get all flashcard sets
