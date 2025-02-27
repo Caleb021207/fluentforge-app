@@ -1,44 +1,31 @@
 
 import { Button } from "@/components/ui/button";
-import { Book, Globe } from "lucide-react";
+import { Book } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface LevelSelectorProps {
   currentLevel: string;
-  currentLanguage: string;
   onLevelChange: (level: string) => void;
-  onLanguageChange: (language: string) => void;
   onB1Selected?: () => void;
   onB2Selected?: () => void;
   onC1C2Selected?: () => void;
   onGrammarSelected?: () => void;
   unlockedLevels?: Record<string, boolean>;
-  availableLanguages?: string[];
 }
 
 const LevelSelector = ({ 
   currentLevel, 
-  currentLanguage,
   onLevelChange, 
-  onLanguageChange,
   onB1Selected,
   onB2Selected,
   onC1C2Selected,
   onGrammarSelected,
-  unlockedLevels = { "A1": true, "Grammar": true },
-  availableLanguages = ["Spanish", "French", "German", "Italian"]
+  unlockedLevels = { "A1": true, "Grammar": true }
 }: LevelSelectorProps) => {
   const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
   
@@ -72,56 +59,32 @@ const LevelSelector = ({
   
   return (
     <div className="space-y-3">
-      <div className="mb-4">
-        <label htmlFor="language-select" className="text-sm font-medium mb-1 block">
-          Language
-        </label>
-        <Select value={currentLanguage} onValueChange={onLanguageChange}>
-          <SelectTrigger id="language-select" className="w-full">
-            <div className="flex items-center">
-              <Globe className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Select language" />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            {availableLanguages.map((language) => (
-              <SelectItem key={language} value={language}>
-                {language}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      
-      <div>
-        <h2 className="text-sm font-medium mb-1">CEFR Levels</h2>
-        <div className="flex flex-col space-y-2">
-          {levels.map((level) => {
-            return (
-              <TooltipProvider key={level}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div>
-                      <Button
-                        variant={currentLevel === level ? "default" : "outline"}
-                        className={`justify-start w-full ${
-                          currentLevel === level 
-                            ? "bg-lingua-primary hover:bg-lingua-primary/90" 
-                            : ""
-                        }`}
-                        onClick={() => handleLevelClick(level)}
-                      >
-                        {icons[level]}
-                        <span className="font-bold mr-2">{level}</span>
-                        <span className="text-xs">{levelDescriptions[level]}</span>
-                      </Button>
-                    </div>
-                  </TooltipTrigger>
-                </Tooltip>
-              </TooltipProvider>
-            );
-          })}
-        </div>
+      <div className="flex flex-col space-y-2">
+        {levels.map((level) => {
+          return (
+            <TooltipProvider key={level}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Button
+                      variant={currentLevel === level ? "default" : "outline"}
+                      className={`justify-start w-full ${
+                        currentLevel === level 
+                          ? "bg-lingua-primary hover:bg-lingua-primary/90" 
+                          : ""
+                      }`}
+                      onClick={() => handleLevelClick(level)}
+                    >
+                      {icons[level]}
+                      <span className="font-bold mr-2">{level}</span>
+                      <span className="text-xs">{levelDescriptions[level]}</span>
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        })}
       </div>
     </div>
   );

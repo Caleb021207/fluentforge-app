@@ -87,20 +87,6 @@ export const getFlashcardSetsByLevel = (level: string) => {
   return [];
 };
 
-// Function to get flashcard sets by level and language
-export const getFlashcardSetsByLevelAndLanguage = (level: string, language: string) => {
-  // For now, we only have Spanish flashcards, so we'll return empty arrays for other languages
-  // except for Spanish which returns the original sets
-  if (language === "Spanish") {
-    return getFlashcardSetsByLevel(level);
-  }
-  
-  // In a real implementation, you would have different sets for each language
-  // and would return the appropriate sets based on the language parameter
-  // For now, we'll return a simpler structure for demonstration purposes
-  return [];
-};
-
 // Get flashcards for a specific set ID
 export const getFlashcardsForSet = (setId: string) => {
   console.log(`Getting flashcards for set: ${setId}`);
