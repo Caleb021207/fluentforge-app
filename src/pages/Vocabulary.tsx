@@ -44,6 +44,7 @@ const Vocabulary = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [flashcardSets, setFlashcardSets] = useState<any[]>([]);
   
   // Get the current authenticated user
   useEffect(() => {
@@ -59,23 +60,39 @@ const Vocabulary = () => {
     fetchUser();
   }, []);
   
+  // Load flashcard sets for the current level
+  useEffect(() => {
+    // Always force A1 level to be unlocked, regardless of other settings
+    if (!unlockedLevels["A1"]) {
+      setUnlockedLevels(prev => ({...prev, "A1": true}));
+    }
+    
+    // Get flashcard sets for the current level
+    const sets = getFlashcardSetsByLevel(level);
+    console.log(`Loading ${sets.length} flashcard sets for level ${level}`);
+    setFlashcardSets(sets);
+  }, [level, unlockedLevels]);
+  
   // Check which levels are unlocked for the current user
   const checkUnlockedLevels = async (userId?: string) => {
     const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
     const unlocked: Record<string, boolean> = {};
     
     for (const lvl of levels) {
+      // A1 is always unlocked, skip the check
+      if (lvl === "A1") {
+        unlocked[lvl] = true;
+        continue;
+      }
       unlocked[lvl] = await isLevelUnlocked(lvl, userId);
     }
     
-    // Ensure A1 is always unlocked regardless of the response from isLevelUnlocked
+    // Double ensure A1 is always unlocked
     unlocked["A1"] = true;
+    unlocked["Grammar"] = true;
     
     setUnlockedLevels(unlocked);
   };
-  
-  // Fetch flashcard sets for the current level
-  const flashcardSets = getFlashcardSetsByLevel(level);
   
   // Get the full set data for the active set
   const activeSet = activeSetId 
@@ -143,6 +160,7 @@ const Vocabulary = () => {
   };
 
   const handleSelectSet = (setId: string) => {
+    console.log(`Selecting flashcard set: ${setId}`);
     setActiveSetId(setId);
     // In a real app, we would fetch the flashcards for this set from the API
     const cards = getFlashcardsForSet(setId);
@@ -236,7 +254,7 @@ const Vocabulary = () => {
               />
             ) : (
               <>
-                <h2 className="text-lg font-medium mb-2">Available Flashcard Sets</h2>
+                <h2 className="text-lg font-medium mb-2">Available Flashcard Sets for {level}</h2>
                 <FlashcardSetsList 
                   sets={flashcardSets} 
                   onSelectSet={handleSelectSet}
