@@ -14,10 +14,10 @@ import { useNavigate } from "react-router-dom";
 
 interface ProgressData {
   date: string;
-  reading: number;
-  writing: number;
-  speaking: number;
-  listening: number;
+  reading?: number;
+  writing?: number;
+  speaking?: number;
+  listening?: number;
 }
 
 const ProgressPage = () => {
@@ -81,12 +81,9 @@ const ProgressPage = () => {
       const date = new Date(attempt.completed_at).toISOString().split('T')[0];
       const existing = dataMap.get(date) || {
         date,
-        reading: 0,
-        writing: 0,
-        speaking: 0,
-        listening: 0,
       };
 
+      // Only set the value for the specific skill that was attempted
       existing[attempt.certification_type as keyof Omit<ProgressData, 'date'>] = attempt.score;
       dataMap.set(date, existing);
     });
@@ -131,6 +128,25 @@ const ProgressPage = () => {
     navigate("/");
   };
 
+  // Custom tooltip component to handle undefined values
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-3 border border-gray-200 shadow-md rounded-md">
+          <p className="font-medium">{`Date: ${label}`}</p>
+          {payload.map((entry: any) => (
+            entry.value !== undefined && (
+              <p key={entry.name} style={{ color: entry.color }}>
+                {`${entry.name}: ${entry.value}%`}
+              </p>
+            )
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
@@ -173,12 +189,36 @@ const ProgressPage = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis domain={[0, 100]} />
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Line type="monotone" dataKey="reading" stroke="#2563eb" name="Reading" />
-                    <Line type="monotone" dataKey="writing" stroke="#16a34a" name="Writing" />
-                    <Line type="monotone" dataKey="speaking" stroke="#dc2626" name="Speaking" />
-                    <Line type="monotone" dataKey="listening" stroke="#9333ea" name="Listening" />
+                    <Line 
+                      type="monotone" 
+                      dataKey="reading" 
+                      stroke="#2563eb" 
+                      name="Reading" 
+                      connectNulls={true} 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="writing" 
+                      stroke="#16a34a" 
+                      name="Writing" 
+                      connectNulls={true} 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="speaking" 
+                      stroke="#dc2626" 
+                      name="Speaking" 
+                      connectNulls={true} 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="listening" 
+                      stroke="#9333ea" 
+                      name="Listening" 
+                      connectNulls={true} 
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
