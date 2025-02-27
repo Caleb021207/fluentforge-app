@@ -37,8 +37,9 @@ const Vocabulary = () => {
   const [showPracticeDialog, setShowPracticeDialog] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("Ready for Conversation Practice?");
   const [dialogDescription, setDialogDescription] = useState("");
+  // Set A1 to always be unlocked by default
   const [unlockedLevels, setUnlockedLevels] = useState<Record<string, boolean>>({
-    "A1": true,
+    "A1": true,  // A1 is always unlocked
     "Grammar": true
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,9 @@ const Vocabulary = () => {
     for (const lvl of levels) {
       unlocked[lvl] = await isLevelUnlocked(lvl, userId);
     }
+    
+    // Ensure A1 is always unlocked regardless of the response from isLevelUnlocked
+    unlocked["A1"] = true;
     
     setUnlockedLevels(unlocked);
   };

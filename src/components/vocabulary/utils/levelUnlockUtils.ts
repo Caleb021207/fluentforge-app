@@ -20,13 +20,18 @@ export const isLevelUnlocked = async (
   level: string,
   userId: string | undefined
 ): Promise<boolean> => {
+  // A1 is ALWAYS unlocked for ALL users, regardless of login status
+  if (level === "A1") {
+    return true;
+  }
+  
   // If no userId, user is not logged in - only allow A1 and Grammar
   if (!userId) {
-    return level === "A1" || level === "Grammar";
+    return level === "Grammar";
   }
 
-  // A1 and Grammar are always unlocked for logged-in users
-  if (level === "A1" || level === "Grammar") {
+  // Grammar is always unlocked for logged-in users
+  if (level === "Grammar") {
     return true;
   }
 
