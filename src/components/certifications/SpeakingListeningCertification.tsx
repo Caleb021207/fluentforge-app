@@ -376,13 +376,25 @@ const SpeakingListeningCertification = () => {
       setIsStarted(false);
       setTimeLeft(180); // Reset timer
       
-      console.log("User transcripts for evaluation:", userTranscript);
-      console.log("AI responses for evaluation:", responses);
+      console.log("Full conversation for analysis:", {
+        userTranscripts: userTranscript,
+        aiResponses: responses
+      });
       
-      // Use the AI-based evaluation approach instead of the keyword approach
-      const { score, level } = evaluateTranscriptWithAI(responses, userTranscript);
-      
-      // Generate feedback based on the CEFR level
+      // Send conversation to GPT for analysis
+      const { data, error } = await supabase.functions.invoke('analyze-speaking', {
+        body: {
+          userTranscripts: userTranscript,
+          aiResponses: responses
+        }
+      });
+
+      if (error) throw error;
+
+      const { level, score, analysis } = data;
+      console.log("GPT Analysis:", analysis);
+
+      // Generate feedback based on GPT's analysis
       const levelFeedback = generateFeedbackForLevel(level);
       setFeedback(levelFeedback);
       setShowFeedback(true);
@@ -394,7 +406,7 @@ const SpeakingListeningCertification = () => {
 
       if (!user) return;
 
-      const { error } = await supabase
+      const { error: dbError } = await supabase
         .from('certification_attempts')
         .insert([
           {
@@ -406,19 +418,16 @@ const SpeakingListeningCertification = () => {
           }
         ]);
 
-      if (error) throw error;
+      if (dbError) throw dbError;
       
-      // Also save a listening score (can be the same or slightly different)
-      const listeningScore = Math.max(40, Math.min(100, score + (Math.random() * 10 - 5))); // Small random variation
-      const listeningLevel = level; // Same level for simplicity
-      
+      // Also save a listening score (can be the same since it's evaluated together)
       const { error: listeningError } = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'listening',
-            score: Math.round(listeningScore),
-            level: listeningLevel,
+            score: score,
+            level: level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
