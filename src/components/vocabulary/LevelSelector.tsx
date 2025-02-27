@@ -43,7 +43,7 @@ const LevelSelector = ({
   };
   
   const handleLevelClick = (level: string) => {
-    // A1 is always available, override any other settings
+    // A1 is always available to everyone, override any other settings
     if (level === "A1") {
       onLevelChange(level);
       return;
@@ -72,7 +72,7 @@ const LevelSelector = ({
     <div className="space-y-3">
       <div className="flex flex-col space-y-2">
         {levels.map((level) => {
-          // A1 is never locked - override the unlockedLevels setting
+          // A1 is never locked - force it to be always available
           const isLocked = level === "A1" ? false : !unlockedLevels[level];
           
           return (

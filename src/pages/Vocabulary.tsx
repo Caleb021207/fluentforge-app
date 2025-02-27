@@ -88,7 +88,14 @@ const Vocabulary = () => {
     : [];
   
   const handleLevelChange = (newLevel: string) => {
-    // Check if level is unlocked
+    // A1 is always available
+    if (newLevel === "A1") {
+      setSearchParams({ level: newLevel });
+      setActiveSetId(null);
+      return;
+    }
+    
+    // Check if other levels are unlocked
     if (!unlockedLevels[newLevel]) {
       toast({
         title: "Level Locked",
