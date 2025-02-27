@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FlashcardSet } from "./types";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface FlashcardSetCardProps {
   set: FlashcardSet;
@@ -12,6 +13,15 @@ interface FlashcardSetCardProps {
 
 const FlashcardSetCard = ({ set, onSelect }: FlashcardSetCardProps) => {
   const progress = set.masteredCount ? Math.round((set.masteredCount / set.cardCount) * 100) : 0;
+  const { toast } = useToast();
+  
+  const handleSelectSet = () => {
+    // Add logging to debug the set selection
+    console.log(`Selecting flashcard set: ${set.id}`, set);
+    
+    // Call the onSelect handler with the set ID
+    onSelect(set.id);
+  };
   
   return (
     <Card className="h-full flex flex-col hover:shadow-md transition-shadow">
@@ -60,7 +70,7 @@ const FlashcardSetCard = ({ set, onSelect }: FlashcardSetCardProps) => {
         <Button 
           variant="outline" 
           className="w-full"
-          onClick={() => onSelect(set.id)}
+          onClick={handleSelectSet}
         >
           {set.completed ? "Review Again" : "Study Now"}
         </Button>
