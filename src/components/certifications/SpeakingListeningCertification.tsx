@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -66,6 +67,7 @@ const SpeakingListeningCertification = () => {
     grammar: 0,
     vocabulary: 0,
     comprehension: 0,
+    listening: 0,  // Added the listening property
     overall: 0
   });
   const [realTimeAssessment, setRealTimeAssessment] = useState<string[]>([]);
@@ -79,6 +81,7 @@ const SpeakingListeningCertification = () => {
     grammar: 0,
     vocabulary: 0,
     comprehension: 0,
+    listening: 0,  // Added the listening property
     overall: 0
   });
 
@@ -260,6 +263,7 @@ const SpeakingListeningCertification = () => {
         grammar: 0,
         vocabulary: 0,
         comprehension: 0,
+        listening: 0,  // Added the listening property
         overall: 0
       };
       
@@ -356,6 +360,7 @@ const SpeakingListeningCertification = () => {
       if (metrics.grammar > 60) strengths.push("Your grammar usage is generally accurate.");
       if (metrics.vocabulary > 60) strengths.push("You use a good range of vocabulary.");
       if (metrics.comprehension > 60) strengths.push("You demonstrate good listening comprehension.");
+      if (metrics.listening > 60) strengths.push("Your listening and response skills are well-developed.");
     }
     
     if (weaknesses.length === 0) {
@@ -364,6 +369,7 @@ const SpeakingListeningCertification = () => {
       if (metrics.grammar < 60) weaknesses.push("Focus on improving your grammar accuracy.");
       if (metrics.vocabulary < 60) weaknesses.push("Expand your vocabulary in everyday topics.");
       if (metrics.comprehension < 60) weaknesses.push("Practice listening to understand more complex Spanish.");
+      if (metrics.listening < 60) weaknesses.push("Work on understanding and responding to spoken Spanish.");
     }
     
     // Generate personalized recommendations based on identified weaknesses
@@ -390,6 +396,11 @@ const SpeakingListeningCertification = () => {
     if (weaknesses.some(w => w.toLowerCase().includes("comprehension") || w.toLowerCase().includes("understanding"))) {
       recommendations.push("Practice listening to a variety of Spanish accents through podcasts and videos.");
       recommendations.push("Start with slower, clearer Spanish content and gradually move to more natural speech.");
+    }
+    
+    if (weaknesses.some(w => w.toLowerCase().includes("listening"))) {
+      recommendations.push("Do focused listening exercises where you need to respond to what you hear.");
+      recommendations.push("Practice with Spanish language podcasts or audio content designed for your level.");
     }
     
     // Add general recommendations based on CEFR level if we don't have enough specific ones
@@ -434,6 +445,7 @@ const SpeakingListeningCertification = () => {
 - Grammar: ${metrics.grammar}/100
 - Vocabulary: ${metrics.vocabulary}/100
 - Comprehension: ${metrics.comprehension}/100
+- Listening: ${metrics.listening}/100
 
 ### Your Strengths:
 ${strengths.map(s => `- ${s}`).join('\n')}
@@ -509,6 +521,7 @@ ${recommendations.map(r => `- ${r}`).join('\n')}
               grammar_score: assessmentMetricsRef.current.grammar,
               vocabulary_score: assessmentMetricsRef.current.vocabulary,
               comprehension_score: assessmentMetricsRef.current.comprehension,
+              listening_score: assessmentMetricsRef.current.listening,
               feedback: detailedFeedback,
               conversation_data: JSON.stringify(conversationMessages),
               created_at: new Date().toISOString(),
@@ -647,6 +660,14 @@ ${recommendations.map(r => `- ${r}`).join('\n')}
                       <span>{assessmentMetrics.comprehension}%</span>
                     </div>
                     <Progress value={assessmentMetrics.comprehension} className="h-2" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Listening</span>
+                      <span>{assessmentMetrics.listening}%</span>
+                    </div>
+                    <Progress value={assessmentMetrics.listening} className="h-2" />
                   </div>
                   
                   <div className="space-y-2">
