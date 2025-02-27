@@ -43,18 +43,9 @@ const LevelSelector = ({
   };
   
   const handleLevelClick = (level: string) => {
-    // Special handling for A1 - absolutely always available to everyone
+    // A1 is always available, override any other settings
     if (level === "A1") {
       onLevelChange(level);
-      return;
-    }
-    
-    // Grammar is also always available
-    if (level === "Grammar") {
-      onLevelChange(level);
-      if (onGrammarSelected) {
-        onGrammarSelected();
-      }
       return;
     }
     
@@ -72,6 +63,8 @@ const LevelSelector = ({
       onB2Selected();
     } else if (level === "C1-C2" && onC1C2Selected) {
       onC1C2Selected();
+    } else if (level === "Grammar" && onGrammarSelected) {
+      onGrammarSelected();
     }
   };
   
@@ -79,10 +72,8 @@ const LevelSelector = ({
     <div className="space-y-3">
       <div className="flex flex-col space-y-2">
         {levels.map((level) => {
-          // A1 and Grammar are never locked, always accessible
-          const isLocked = (level === "A1" || level === "Grammar") 
-            ? false 
-            : !unlockedLevels[level];
+          // A1 is never locked - override the unlockedLevels setting
+          const isLocked = level === "A1" ? false : !unlockedLevels[level];
           
           return (
             <TooltipProvider key={level}>

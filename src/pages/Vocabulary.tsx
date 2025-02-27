@@ -1,25 +1,35 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import LevelSelector from "@/components/vocabulary/LevelSelector";
+import FlashcardSetsList from "@/components/vocabulary/FlashcardSetsList";
+import FlashcardView from "@/components/vocabulary/FlashcardView";
+import GrammarRules from "@/components/vocabulary/GrammarRules";
 import { 
   getFlashcardSetsByLevel, 
   getFlashcardsForSet, 
+  getAllFlashcardSets, 
   updateFlashcardSetProgress 
 } from "@/components/vocabulary/data/flashcardData";
 import {
-  saveFlashcardSetProgress,
-  isLevelUnlocked
+  isLevelUnlocked,
+  saveFlashcardSetProgress
 } from "@/components/vocabulary/utils/levelUnlockUtils";
 import { supabase } from "@/integrations/supabase/client";
-import VocabularyContent from "@/components/vocabulary/VocabularyContent";
-import PracticeRecommendationDialog from "@/components/vocabulary/PracticeRecommendationDialog";
-import LevelUnlockManager from "@/components/vocabulary/LevelUnlockManager";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 
 const Vocabulary = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // Default to A1 level
   const level = searchParams.get("level") || "A1";
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -34,54 +44,51 @@ const Vocabulary = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [flashcardSets, setFlashcardSets] = useState<any[]>([]);
   
   // Get the current authenticated user
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser();
       setUser(data.user);
+      
+      // Check which levels are unlocked
+      await checkUnlockedLevels(data.user?.id);
+      setIsLoading(false);
     };
     
     fetchUser();
   }, []);
   
-  // Handler for when levels are loaded from LevelUnlockManager
-  const handleLevelsLoaded = useCallback((levels: Record<string, boolean>) => {
-    setUnlockedLevels(levels);
-    setIsLoading(false);
-  }, []);
+  // Check which levels are unlocked for the current user
+  const checkUnlockedLevels = async (userId?: string) => {
+    const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
+    const unlocked: Record<string, boolean> = {};
+    
+    for (const lvl of levels) {
+      unlocked[lvl] = await isLevelUnlocked(lvl, userId);
+    }
+    
+    // Ensure A1 is always unlocked regardless of the response from isLevelUnlocked
+    unlocked["A1"] = true;
+    
+    setUnlockedLevels(unlocked);
+  };
   
-  // Load flashcard sets for the current level
-  useEffect(() => {
-    // Force A1 level to be unlocked always, regardless of other settings
-    if (!unlockedLevels["A1"]) {
-      setUnlockedLevels(prev => ({...prev, "A1": true}));
-    }
-    
-    // For A1 level, directly get the sets without any checks
-    if (level === "A1") {
-      const sets = getFlashcardSetsByLevel("A1");
-      console.log(`Loading ${sets.length} A1 flashcard sets (always accessible)`);
-      setFlashcardSets(sets);
-      return;
-    }
-    
-    // For other levels, get sets as normal
-    const sets = getFlashcardSetsByLevel(level);
-    console.log(`Loading ${sets.length} flashcard sets for level ${level}`);
-    setFlashcardSets(sets);
-  }, [level, unlockedLevels]);
+  // Fetch flashcard sets for the current level
+  const flashcardSets = getFlashcardSetsByLevel(level);
+  
+  // Get the full set data for the active set
+  const activeSet = activeSetId 
+    ? getAllFlashcardSets().find(set => set.id === activeSetId) 
+    : null;
+  
+  // Get flashcards for the active set
+  const flashcardsForActiveSet = activeSetId 
+    ? getFlashcardsForSet(activeSetId)
+    : [];
   
   const handleLevelChange = (newLevel: string) => {
-    // A1 and Grammar are always available, no need to check
-    if (newLevel === "A1" || newLevel === "Grammar") {
-      setSearchParams({ level: newLevel });
-      setActiveSetId(null);
-      return;
-    }
-    
-    // Check if other levels are unlocked
+    // Check if level is unlocked
     if (!unlockedLevels[newLevel]) {
       toast({
         title: "Level Locked",
@@ -129,9 +136,7 @@ const Vocabulary = () => {
   };
 
   const handleSelectSet = (setId: string) => {
-    console.log(`Selecting flashcard set: ${setId}`);
     setActiveSetId(setId);
-    
     // In a real app, we would fetch the flashcards for this set from the API
     const cards = getFlashcardsForSet(setId);
     if (cards.length === 0) {
@@ -145,16 +150,6 @@ const Vocabulary = () => {
   };
 
   const handleCompleteStudy = (score?: number) => {
-    // Skip progress tracking for A1 level
-    if (level === "A1") {
-      toast({
-        title: "Study session completed",
-        description: "Great job! A1 level sets are always available and don't track progress.",
-      });
-      setActiveSetId(null);
-      return;
-    }
-    
     if (activeSetId && score !== undefined) {
       // Update the completion status and score for this set
       updateFlashcardSetProgress(activeSetId, true, score);
@@ -163,19 +158,8 @@ const Vocabulary = () => {
       if (user?.id) {
         saveFlashcardSetProgress(user.id, level, activeSetId, score);
         
-        // Check unlocked levels after progress update
-        const checkUnlockedLevels = async () => {
-          const updatedLevels = {...unlockedLevels};
-          const levels = ["A2", "B1", "B2", "C1-C2"];
-          
-          for (const lvl of levels) {
-            updatedLevels[lvl] = await isLevelUnlocked(lvl, user.id);
-          }
-          
-          setUnlockedLevels(updatedLevels);
-        };
-        
-        checkUnlockedLevels();
+        // Check if this completion unlocks a new level
+        checkUnlockedLevels(user.id);
       }
       
       toast({
@@ -214,11 +198,6 @@ const Vocabulary = () => {
 
   return (
     <div className="container mx-auto px-4 pb-16">
-      <LevelUnlockManager 
-        userId={user?.id}
-        onLevelsLoaded={handleLevelsLoaded}
-      />
-      
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-1">
           {showGrammar ? "Spanish Grammar" : "Vocabulary"} <span className="text-green-600 font-normal">{level} - {getLevelDescription(level)}</span>
@@ -239,25 +218,52 @@ const Vocabulary = () => {
           </div>
           
           <div className="w-full md:w-3/4">
-            <VocabularyContent
-              showGrammar={showGrammar}
-              level={level}
-              activeSetId={activeSetId}
-              flashcardSets={flashcardSets}
-              onSelectSet={handleSelectSet}
-              onCompleteStudy={handleCompleteStudy}
-            />
+            {showGrammar ? (
+              <GrammarRules />
+            ) : activeSetId && activeSet ? (
+              <FlashcardView
+                flashcards={flashcardsForActiveSet}
+                onClose={() => setActiveSetId(null)}
+                setTitle={activeSet.title}
+                onComplete={handleCompleteStudy}
+              />
+            ) : (
+              <>
+                <h2 className="text-lg font-medium mb-2">Available Flashcard Sets</h2>
+                <FlashcardSetsList 
+                  sets={flashcardSets} 
+                  onSelectSet={handleSelectSet}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      <PracticeRecommendationDialog
-        open={showPracticeDialog}
-        onOpenChange={setShowPracticeDialog}
-        title={dialogTitle}
-        description={dialogDescription}
-        onGoToPractice={handleGoToPractice}
-      />
+      {/* Practice Recommendation Dialog */}
+      <Dialog open={showPracticeDialog} onOpenChange={setShowPracticeDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{dialogTitle}</DialogTitle>
+            <DialogDescription>
+              {dialogDescription}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 bg-blue-50 rounded-md my-2">
+            <p className="text-sm">
+              Now that you've reached an advanced vocabulary level, try our AI Practice feature to engage in text conversations and practice everyday spoken Spanish.
+            </p>
+          </div>
+          <DialogFooter className="flex justify-end space-x-2 mt-4">
+            <Button variant="outline" onClick={() => setShowPracticeDialog(false)}>
+              Maybe Later
+            </Button>
+            <Button onClick={handleGoToPractice} className="bg-lingua-primary hover:bg-lingua-primary/90">
+              Go to Practice
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

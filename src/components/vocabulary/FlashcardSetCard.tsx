@@ -13,12 +13,6 @@ interface FlashcardSetCardProps {
 const FlashcardSetCard = ({ set, onSelect }: FlashcardSetCardProps) => {
   const progress = set.masteredCount ? Math.round((set.masteredCount / set.cardCount) * 100) : 0;
   
-  // Always make the card interactive, regardless of level
-  const handleSelectSet = () => {
-    console.log(`FlashcardSetCard: Selecting set ${set.id}`);
-    onSelect(set.id);
-  };
-  
   return (
     <Card className="h-full flex flex-col hover:shadow-md transition-shadow">
       <CardHeader>
@@ -66,7 +60,7 @@ const FlashcardSetCard = ({ set, onSelect }: FlashcardSetCardProps) => {
         <Button 
           variant="outline" 
           className="w-full"
-          onClick={handleSelectSet}
+          onClick={() => onSelect(set.id)}
         >
           {set.completed ? "Review Again" : "Study Now"}
         </Button>

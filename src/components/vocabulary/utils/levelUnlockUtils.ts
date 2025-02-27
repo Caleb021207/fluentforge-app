@@ -20,20 +20,19 @@ export const isLevelUnlocked = async (
   level: string,
   userId: string | undefined
 ): Promise<boolean> => {
-  // A1 is ALWAYS unlocked for ALL users, absolutely guaranteed
+  // A1 is ALWAYS unlocked for ALL users, regardless of login status
   if (level === "A1") {
-    console.log("A1 level check - should always return true");
-    return true;
-  }
-  
-  // Grammar is always unlocked for everyone
-  if (level === "Grammar") {
     return true;
   }
   
   // If no userId, user is not logged in - only allow A1 and Grammar
   if (!userId) {
-    return false;
+    return level === "Grammar";
+  }
+
+  // Grammar is always unlocked for logged-in users
+  if (level === "Grammar") {
+    return true;
   }
 
   try {
@@ -114,9 +113,6 @@ export const saveFlashcardSetProgress = (
   score: number
 ): void => {
   if (!userId) return;
-  
-  // Don't save progress for A1 level - it's always available
-  if (level === "A1") return;
 
   try {
     const progressKey = `flashcard_progress_${userId}`;
@@ -156,9 +152,6 @@ export const isLevelCompleted = (
   level: string,
   sets: FlashcardSet[]
 ): boolean => {
-  // A1 level is always considered "completed" for progression purposes
-  if (level === "A1") return true;
-  
   if (!userId) return false;
   
   try {
