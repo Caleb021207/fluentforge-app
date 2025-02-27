@@ -9,7 +9,8 @@ import {
   updateFlashcardSetProgress 
 } from "@/components/vocabulary/data/flashcardData";
 import {
-  saveFlashcardSetProgress
+  saveFlashcardSetProgress,
+  isLevelUnlocked
 } from "@/components/vocabulary/utils/levelUnlockUtils";
 import { supabase } from "@/integrations/supabase/client";
 import VocabularyContent from "@/components/vocabulary/VocabularyContent";
