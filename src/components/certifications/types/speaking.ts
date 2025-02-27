@@ -12,6 +12,9 @@ export interface AssessmentResultType {
   metrics: AssessmentMetricsType;
   level: string;
   feedback: string;
+  strengths: string[];
+  weaknesses: string[];
+  recommendations: string[];
 }
 
 export interface ConversationMessageType {

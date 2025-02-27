@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -295,6 +294,7 @@ const SpeakingListeningCertification = () => {
     }
   };
 
+  // Generate personalized feedback based on assessment metrics and real-time feedback
   const generateDetailedFeedback = (
     transcript: string[], 
     metrics: AssessmentMetricsType,
@@ -304,8 +304,126 @@ const SpeakingListeningCertification = () => {
     const overallScore = metrics.overall;
     const cefrLevel = determineLevel(overallScore);
     
-    // Create a comprehensive feedback
-    let detailedFeedback = `
+    // Extract strengths and weaknesses from real-time assessments
+    const strengths: string[] = [];
+    const weaknesses: string[] = [];
+    const recommendations: string[] = [];
+    
+    // Analyze the metrics to identify strong and weak areas
+    const metricEntries = Object.entries(metrics).filter(([key]) => key !== 'overall');
+    const avgScore = metricEntries.reduce((sum, [_, value]) => sum + value, 0) / metricEntries.length;
+    
+    metricEntries.forEach(([key, value]) => {
+      const metricName = key.charAt(0).toUpperCase() + key.slice(1);
+      
+      // If score is significantly above average, it's a strength
+      if (value >= avgScore + 10) {
+        strengths.push(`Strong ${metricName}: Your ${key} skills are well-developed.`);
+      } 
+      // If score is significantly below average, it's a weakness
+      else if (value <= avgScore - 10) {
+        weaknesses.push(`${metricName} needs improvement: Your ${key} skills could use more practice.`);
+      }
+    });
+    
+    // Add specific strengths and weaknesses based on real-time assessments
+    realTimeAssessments.forEach(assessment => {
+      const lowerAssessment = assessment.toLowerCase();
+      
+      if (
+        lowerAssessment.includes("excellent") || 
+        lowerAssessment.includes("good") || 
+        lowerAssessment.includes("strong") ||
+        lowerAssessment.includes("well done")
+      ) {
+        strengths.push(assessment);
+      } 
+      else if (
+        lowerAssessment.includes("difficulty") || 
+        lowerAssessment.includes("struggled") || 
+        lowerAssessment.includes("needs improvement") ||
+        lowerAssessment.includes("work on") ||
+        lowerAssessment.includes("improve")
+      ) {
+        weaknesses.push(assessment);
+      }
+    });
+    
+    // If we didn't extract enough strengths/weaknesses, add generic ones based on scores
+    if (strengths.length === 0) {
+      if (metrics.pronunciation > 60) strengths.push("Your pronunciation is generally clear and understandable.");
+      if (metrics.fluency > 60) strengths.push("You speak with good rhythm and natural flow.");
+      if (metrics.grammar > 60) strengths.push("Your grammar usage is generally accurate.");
+      if (metrics.vocabulary > 60) strengths.push("You use a good range of vocabulary.");
+      if (metrics.comprehension > 60) strengths.push("You demonstrate good listening comprehension.");
+    }
+    
+    if (weaknesses.length === 0) {
+      if (metrics.pronunciation < 60) weaknesses.push("Work on clearer pronunciation of Spanish sounds.");
+      if (metrics.fluency < 60) weaknesses.push("Practice speaking more smoothly with fewer pauses.");
+      if (metrics.grammar < 60) weaknesses.push("Focus on improving your grammar accuracy.");
+      if (metrics.vocabulary < 60) weaknesses.push("Expand your vocabulary in everyday topics.");
+      if (metrics.comprehension < 60) weaknesses.push("Practice listening to understand more complex Spanish.");
+    }
+    
+    // Generate personalized recommendations based on identified weaknesses
+    if (weaknesses.some(w => w.toLowerCase().includes("pronunciation"))) {
+      recommendations.push("Practice specific Spanish sounds you find difficult, especially vowels and trilled 'r'.");
+      recommendations.push("Listen and repeat exercises focusing on pronunciation are highly effective.");
+    }
+    
+    if (weaknesses.some(w => w.toLowerCase().includes("fluency") || w.toLowerCase().includes("pauses"))) {
+      recommendations.push("Record yourself speaking Spanish and focus on reducing pauses and hesitations.");
+      recommendations.push("Practice speaking on familiar topics without preparation to build fluency.");
+    }
+    
+    if (weaknesses.some(w => w.toLowerCase().includes("grammar"))) {
+      recommendations.push("Focus on the specific grammar points where you made mistakes during the conversation.");
+      recommendations.push("Regular practice with structured grammar exercises will help reinforce patterns.");
+    }
+    
+    if (weaknesses.some(w => w.toLowerCase().includes("vocabulary"))) {
+      recommendations.push("Create a personalized vocabulary list from words you struggled with during the conversation.");
+      recommendations.push("Use spaced repetition apps to review and practice new vocabulary regularly.");
+    }
+    
+    if (weaknesses.some(w => w.toLowerCase().includes("comprehension") || w.toLowerCase().includes("understanding"))) {
+      recommendations.push("Practice listening to a variety of Spanish accents through podcasts and videos.");
+      recommendations.push("Start with slower, clearer Spanish content and gradually move to more natural speech.");
+    }
+    
+    // Add general recommendations based on CEFR level if we don't have enough specific ones
+    if (recommendations.length < 3) {
+      switch(cefrLevel) {
+        case 'A1':
+          recommendations.push("Focus on learning basic vocabulary for everyday situations.");
+          recommendations.push("Practice basic greetings and simple conversations.");
+          break;
+        case 'A2':
+          recommendations.push("Start describing your daily activities and routine in Spanish.");
+          recommendations.push("Practice past tense to talk about completed actions.");
+          break;
+        case 'B1':
+          recommendations.push("Practice expressing opinions and explaining your reasoning.");
+          recommendations.push("Expand vocabulary by topic areas relevant to your interests.");
+          break;
+        case 'B2':
+          recommendations.push("Work on discussing hypothetical situations and conditional forms.");
+          recommendations.push("Practice more nuanced expressions of opinion and debate skills.");
+          break;
+        case 'C1':
+          recommendations.push("Focus on professional vocabulary in your field of interest.");
+          recommendations.push("Practice subtle differences in meaning and connotation.");
+          break;
+        case 'C2':
+          recommendations.push("Work on mastering regional expressions and colloquialisms.");
+          recommendations.push("Practice nuanced communication like humor, irony, and persuasion.");
+          break;
+      }
+    }
+    
+    // Create comprehensive feedback with all our gathered insights
+    const detailedFeedback = `
 ## Speaking Assessment Results
 
 ### Overall Proficiency: ${cefrLevel} (${overallScore}/100)
@@ -317,85 +435,15 @@ const SpeakingListeningCertification = () => {
 - Vocabulary: ${metrics.vocabulary}/100
 - Comprehension: ${metrics.comprehension}/100
 
-### Detailed Feedback:
+### Your Strengths:
+${strengths.map(s => `- ${s}`).join('\n')}
 
-`;
+### Areas for Improvement:
+${weaknesses.map(w => `- ${w}`).join('\n')}
 
-    // Add the real-time assessments if available
-    if (realTimeAssessments.length > 0) {
-      detailedFeedback += `#### Observations during the test:\n`;
-      realTimeAssessments.forEach((assessment, index) => {
-        detailedFeedback += `- ${assessment}\n`;
-      });
-    }
-    
-    // Add recommendations based on the CEFR level
-    detailedFeedback += `\n### Recommendations for ${cefrLevel} level:\n`;
-    
-    // Custom recommendations based on the CEFR level
-    switch(cefrLevel) {
-      case 'A1':
-        detailedFeedback += `
-- Focus on building basic vocabulary and simple sentence structures
-- Practice common greetings and everyday expressions
-- Work on pronunciation of Spanish vowels and consonants
-- Use language learning apps for daily practice
-- Consider joining a beginner Spanish conversation group
+### Personalized Recommendations:
+${recommendations.map(r => `- ${r}`).join('\n')}
 `;
-        break;
-      case 'A2':
-        detailedFeedback += `
-- Expand vocabulary to include more daily situations
-- Practice forming past and future tenses
-- Work on connecting ideas with conjunctions
-- Listen to slow, clear Spanish recordings or podcasts
-- Try to have simple conversations about familiar topics
-`;
-        break;
-      case 'B1':
-        detailedFeedback += `
-- Focus on more complex grammar structures like subjunctive
-- Expand vocabulary to include more abstract concepts
-- Work on expressing opinions and explaining your reasoning
-- Watch Spanish media with subtitles
-- Practice speaking about unfamiliar topics to challenge yourself
-`;
-        break;
-      case 'B2':
-        detailedFeedback += `
-- Work on more nuanced expression and idiomatic language
-- Practice hypothetical situations using conditional forms
-- Focus on reducing your accent and improving natural rhythm
-- Engage in debates and discussions in Spanish
-- Read Spanish literature and news to expand vocabulary
-`;
-        break;
-      case 'C1':
-        detailedFeedback += `
-- Focus on professional and academic language
-- Perfect your use of connectors and discourse markers
-- Work on expressing subtle differences in meaning
-- Immerse yourself in native Spanish content without subtitles
-- Practice explaining complex topics in Spanish
-`;
-        break;
-      case 'C2':
-        detailedFeedback += `
-- Continue refining your near-native fluency
-- Focus on cultural and regional expressions
-- Perfect your command of idioms and colloquialisms
-- Work on humor, irony, and other advanced language functions
-- Consider professional or academic contexts for using Spanish
-`;
-        break;
-      default:
-        detailedFeedback += `
-- Continue practicing regularly
-- Use a variety of resources to improve your Spanish
-- Seek conversation partners for real practice
-- Set specific goals for improvement
-`;
-    }
     
     return detailedFeedback;
   };
