@@ -170,6 +170,7 @@ const Vocabulary = () => {
   const handleSelectSet = (setId: string) => {
     console.log(`Selecting flashcard set: ${setId}`);
     setActiveSetId(setId);
+    
     // In a real app, we would fetch the flashcards for this set from the API
     const cards = getFlashcardsForSet(setId);
     if (cards.length === 0) {
