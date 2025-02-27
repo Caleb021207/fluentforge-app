@@ -72,8 +72,14 @@ const DashboardPage = () => {
       const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
       const currentLevelIndex = CEFR_LEVELS.indexOf(profileData.currentLevel);
       
-      // If current level is valid and not the highest level
-      if (currentLevelIndex !== -1 && currentLevelIndex < CEFR_LEVELS.length - 1) {
+      // Only update the target level if:
+      // 1. Current level is valid
+      // 2. Current level is not C2 (highest level)
+      // 3. There's no existing target level or the target level needs adjustment
+      if (currentLevelIndex !== -1 && 
+          currentLevelIndex < CEFR_LEVELS.length - 1 && 
+          (!profileData.targetLevel || CEFR_LEVELS.indexOf(profileData.targetLevel) <= currentLevelIndex)) {
+        
         const nextLevel = CEFR_LEVELS[currentLevelIndex + 1];
         setProfileData(prev => ({
           ...prev,
@@ -86,7 +92,7 @@ const DashboardPage = () => {
         }
       }
     }
-  }, [profileData.currentLevel, user]);
+  }, [profileData.currentLevel, profileData.targetLevel, user]);
 
   const updateTargetLevel = async (userId: string, targetLevel: string) => {
     try {
