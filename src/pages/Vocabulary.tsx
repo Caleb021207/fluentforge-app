@@ -30,6 +30,7 @@ import { Lock } from "lucide-react";
 
 const Vocabulary = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  // Default to A1 level
   const level = searchParams.get("level") || "A1";
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -62,12 +63,20 @@ const Vocabulary = () => {
   
   // Load flashcard sets for the current level
   useEffect(() => {
-    // Always force A1 level to be unlocked, regardless of other settings
+    // Force A1 level to be unlocked always, regardless of other settings
     if (!unlockedLevels["A1"]) {
       setUnlockedLevels(prev => ({...prev, "A1": true}));
     }
     
-    // Get flashcard sets for the current level
+    // For A1 level, directly get the sets without any checks
+    if (level === "A1") {
+      const sets = getFlashcardSetsByLevel("A1");
+      console.log(`Loading ${sets.length} A1 flashcard sets (always accessible)`);
+      setFlashcardSets(sets);
+      return;
+    }
+    
+    // For other levels, get sets as normal
     const sets = getFlashcardSetsByLevel(level);
     console.log(`Loading ${sets.length} flashcard sets for level ${level}`);
     setFlashcardSets(sets);
@@ -78,18 +87,17 @@ const Vocabulary = () => {
     const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
     const unlocked: Record<string, boolean> = {};
     
+    // A1 is ALWAYS unlocked, set it first
+    unlocked["A1"] = true;
+    unlocked["Grammar"] = true;
+    
     for (const lvl of levels) {
-      // A1 is always unlocked, skip the check
-      if (lvl === "A1") {
-        unlocked[lvl] = true;
+      // A1 and Grammar are always unlocked, skip the check
+      if (lvl === "A1" || lvl === "Grammar") {
         continue;
       }
       unlocked[lvl] = await isLevelUnlocked(lvl, userId);
     }
-    
-    // Double ensure A1 is always unlocked
-    unlocked["A1"] = true;
-    unlocked["Grammar"] = true;
     
     setUnlockedLevels(unlocked);
   };
@@ -105,8 +113,8 @@ const Vocabulary = () => {
     : [];
   
   const handleLevelChange = (newLevel: string) => {
-    // A1 is always available
-    if (newLevel === "A1") {
+    // A1 and Grammar are always available, no need to check
+    if (newLevel === "A1" || newLevel === "Grammar") {
       setSearchParams({ level: newLevel });
       setActiveSetId(null);
       return;
@@ -175,6 +183,16 @@ const Vocabulary = () => {
   };
 
   const handleCompleteStudy = (score?: number) => {
+    // Skip progress tracking for A1 level
+    if (level === "A1") {
+      toast({
+        title: "Study session completed",
+        description: "Great job! A1 level sets are always available and don't track progress.",
+      });
+      setActiveSetId(null);
+      return;
+    }
+    
     if (activeSetId && score !== undefined) {
       // Update the completion status and score for this set
       updateFlashcardSetProgress(activeSetId, true, score);

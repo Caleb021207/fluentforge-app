@@ -43,9 +43,8 @@ const LevelSelector = ({
   };
   
   const handleLevelClick = (level: string) => {
-    // A1 should always be available to everyone - absolutely ensure this
+    // Special handling for A1 - absolutely always available to everyone
     if (level === "A1") {
-      console.log("A1 level selected - this should always work");
       onLevelChange(level);
       return;
     }
@@ -80,7 +79,7 @@ const LevelSelector = ({
     <div className="space-y-3">
       <div className="flex flex-col space-y-2">
         {levels.map((level) => {
-          // Always make A1 and Grammar unlocked, never show as locked
+          // A1 and Grammar are never locked, always accessible
           const isLocked = (level === "A1" || level === "Grammar") 
             ? false 
             : !unlockedLevels[level];

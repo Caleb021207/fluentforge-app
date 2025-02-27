@@ -114,6 +114,9 @@ export const saveFlashcardSetProgress = (
   score: number
 ): void => {
   if (!userId) return;
+  
+  // Don't save progress for A1 level - it's always available
+  if (level === "A1") return;
 
   try {
     const progressKey = `flashcard_progress_${userId}`;
@@ -153,6 +156,9 @@ export const isLevelCompleted = (
   level: string,
   sets: FlashcardSet[]
 ): boolean => {
+  // A1 level is always considered "completed" for progression purposes
+  if (level === "A1") return true;
+  
   if (!userId) return false;
   
   try {
