@@ -5,6 +5,7 @@ export interface AssessmentMetricsType {
   grammar: number;
   vocabulary: number;
   comprehension: number;
+  listening: number;  // Added explicit listening score
   overall: number;
 }
 

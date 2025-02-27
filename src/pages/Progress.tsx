@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, MessageSquare, Edit } from "lucide-react";
+import { Loader2, MessageSquare, Edit, Volume2 } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
@@ -43,6 +43,7 @@ interface SpeakingFeedback {
   grammar_score: number;
   vocabulary_score: number;
   comprehension_score: number;
+  listening_score?: number; // May be undefined in older records
   feedback: string;
   conversation_data: ConversationMessageType[];
   created_at: string;
@@ -85,7 +86,48 @@ const ProgressPage = () => {
       if (error) throw error;
 
       if (attempts && attempts.length > 0) {
+        // Process regular attempts
         const processedData = processAttemptsData(attempts);
+        
+        // Now get speaking assessments to extract listening scores
+        const { data: speakingAssessments, error: speakingError } = await supabase
+          .from('speaking_assessments')
+          .select('*');
+          
+        if (speakingError) throw speakingError;
+        
+        // If we have speaking assessments, let's include the listening scores
+        if (speakingAssessments && speakingAssessments.length > 0) {
+          // Find attempts that are linked to the speaking assessments
+          const speakingAttemptIds = speakingAssessments.map(assessment => assessment.attempt_id);
+          
+          // Create a map of attempt_id to listening_score
+          const listeningScores = new Map<string, number>();
+          
+          speakingAssessments.forEach(assessment => {
+            // Derive listening score from comprehension or use explicit listening_score if available
+            const listeningScore = assessment.listening_score || assessment.comprehension_score;
+            if (listeningScore) {
+              listeningScores.set(assessment.attempt_id, listeningScore);
+            }
+          });
+          
+          // Add listening data points to our progress data
+          attempts.forEach(attempt => {
+            if (speakingAttemptIds.includes(attempt.id)) {
+              const listeningScore = listeningScores.get(attempt.id);
+              if (listeningScore) {
+                // Find the appropriate data point and add the listening score
+                const dateStr = new Date(attempt.completed_at).toISOString().split('T')[0];
+                const dataPoint = processedData.find(d => d.date === dateStr);
+                if (dataPoint) {
+                  dataPoint.listening = listeningScore;
+                }
+              }
+            }
+          });
+        }
+        
         setProgressData(processedData);
         generateRecommendations(attempts);
       } else {
@@ -203,6 +245,20 @@ const ProgressPage = () => {
         latestScores[skill] = latestAttempt.score;
       }
     });
+    
+    // For speaking attempts, also check if we need to derive listening score
+    if (speakingFeedback.length > 0 && !latestScores['listening']) {
+      // Find the most recent speaking feedback
+      const latestSpeakingFeedback = speakingFeedback[0];
+      
+      // Use the comprehension score as a proxy for listening if no explicit listening score
+      const listeningScore = latestSpeakingFeedback.listening_score || 
+                             latestSpeakingFeedback.comprehension_score;
+      
+      if (listeningScore) {
+        latestScores['listening'] = listeningScore;
+      }
+    }
 
     // Generate recommendations based on CEFR levels
     const newRecommendations = skills.map(skill => {
@@ -330,6 +386,10 @@ const ProgressPage = () => {
                 <MessageSquare className="h-4 w-4" />
                 <span>Speaking Feedback</span>
               </TabsTrigger>
+              <TabsTrigger value="listening" className="flex items-center gap-1">
+                <Volume2 className="h-4 w-4" />
+                <span>Listening Feedback</span>
+              </TabsTrigger>
               <TabsTrigger value="writing" className="flex items-center gap-1">
                 <Edit className="h-4 w-4" />
                 <span>Writing Feedback</span>
@@ -416,19 +476,23 @@ const ProgressPage = () => {
                               <p className="text-xs mt-1 text-right">{feedback.vocabulary_score}%</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Comprehension</p>
+                              <p className="text-xs text-gray-500">Expression</p>
                               <Progress value={feedback.comprehension_score} className="h-2 mt-1" />
                               <p className="text-xs mt-1 text-right">{feedback.comprehension_score}%</p>
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <h4 className="font-medium">Detailed Feedback:</h4>
-                            <p className="text-sm text-gray-700">{feedback.feedback}</p>
+                            <h4 className="font-medium">Detailed Speaking Feedback:</h4>
+                            <p className="text-sm text-gray-700">
+                              {feedback.feedback.split('## Speaking Assessment Results')[1]?.split('### Metrics Breakdown')[0] || 
+                               feedback.feedback.split('### Your Strengths')[0] || 
+                               feedback.feedback}
+                            </p>
                           </div>
                         </div>
                         {feedback.conversation_data && feedback.conversation_data.length > 0 && (
                           <div className="p-4">
-                            <h4 className="font-medium mb-2">Conversation:</h4>
+                            <h4 className="font-medium mb-2">Conversation Sample:</h4>
                             <ScrollArea className="h-[200px] rounded-md border p-4">
                               <div className="space-y-4">
                                 {feedback.conversation_data.map((message, idx) => (
@@ -460,6 +524,95 @@ const ProgressPage = () => {
                   <CardContent className="text-center py-8">
                     <p className="text-lg text-gray-600">
                       No speaking assessment feedback available. Complete a speaking test to see detailed feedback.
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="listening">
+              {speakingFeedback.length > 0 ? (
+                <div className="space-y-6">
+                  {speakingFeedback.map((feedback) => (
+                    <Card key={`listening-${feedback.id}`} className="overflow-hidden">
+                      <CardHeader className="bg-purple-50">
+                        <CardTitle className="text-lg flex justify-between items-center">
+                          <span>Listening Assessment Feedback</span>
+                          <span className="text-sm font-normal">
+                            {new Date(feedback.created_at).toLocaleDateString()}
+                          </span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <div className="p-4 border-b">
+                          <div className="grid grid-cols-2 gap-2 mb-4">
+                            <div>
+                              <p className="text-xs text-gray-500">Comprehension</p>
+                              <Progress value={feedback.comprehension_score} className="h-2 mt-1" />
+                              <p className="text-xs mt-1 text-right">{feedback.comprehension_score}%</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-500">Response Accuracy</p>
+                              <Progress 
+                                value={feedback.listening_score || 
+                                      ((feedback.grammar_score + feedback.vocabulary_score) / 2)} 
+                                className="h-2 mt-1" 
+                              />
+                              <p className="text-xs mt-1 text-right">
+                                {feedback.listening_score || 
+                                 Math.round((feedback.grammar_score + feedback.vocabulary_score) / 2)}%
+                              </p>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <h4 className="font-medium">Detailed Listening Feedback:</h4>
+                            <p className="text-sm text-gray-700">
+                              {/* Extract listening-specific feedback if it exists */}
+                              {feedback.feedback.includes("Listening") ? 
+                                feedback.feedback.split("Listening")[1]?.split("###")[0] : 
+                                `Your listening comprehension was ${
+                                  feedback.comprehension_score > 80 ? "excellent" : 
+                                  feedback.comprehension_score > 60 ? "good" : 
+                                  feedback.comprehension_score > 40 ? "fair" : "needs improvement"
+                                }. You ${
+                                  feedback.comprehension_score > 60 ? 
+                                  "demonstrated a good ability to understand the questions and respond appropriately." : 
+                                  "had some difficulty understanding some questions. Practice with more listening exercises to improve."
+                                }`
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        {feedback.conversation_data && feedback.conversation_data.length > 0 && (
+                          <div className="p-4">
+                            <h4 className="font-medium mb-2">Conversation Comprehension Sample:</h4>
+                            <ScrollArea className="h-[200px] rounded-md border p-4">
+                              <div className="space-y-4">
+                                {/* Show only the AI prompts to focus on listening comprehension */}
+                                {feedback.conversation_data
+                                  .filter(message => message.type === 'assistant')
+                                  .map((message, idx) => (
+                                    <div key={idx} className="flex justify-start">
+                                      <div className="max-w-[80%] rounded-lg px-4 py-2 bg-purple-100 text-gray-800">
+                                        <p className="text-sm font-medium mb-1">Question/Prompt:</p>
+                                        <p className="text-sm">{message.content}</p>
+                                      </div>
+                                    </div>
+                                  ))
+                                }
+                              </div>
+                            </ScrollArea>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="text-center py-8">
+                    <p className="text-lg text-gray-600">
+                      No listening assessment feedback available. Complete a speaking & listening test to see detailed feedback.
                     </p>
                   </CardContent>
                 </Card>
