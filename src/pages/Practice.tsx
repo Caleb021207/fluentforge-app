@@ -69,7 +69,8 @@ const Practice = () => {
   const startVoiceConversation = async () => {
     try {
       await conversation.startSession({
-        agentId: "2rNEBxdJ814y7dcdZSOb",
+        // Changed the agent ID to a different one for the practice page
+        agentId: "KfDnzUq3Ia6XkxdUFoRA",
       });
       toast({
         title: "Voice Chat Started",
