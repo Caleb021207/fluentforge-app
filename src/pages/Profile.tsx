@@ -227,7 +227,8 @@ const DashboardPage = () => {
       if (error) throw error;
 
       if (attempts && attempts.length > 0) {
-        const scores = {
+        // Get highest score for each certification type
+        const highestScores = {
           reading: 0,
           writing: 0,
           speaking: 0,
@@ -236,14 +237,20 @@ const DashboardPage = () => {
         };
 
         attempts.forEach(attempt => {
-          if (!scores[attempt.certification_type]) {
-            scores[attempt.certification_type] = attempt.score;
-            scores.count++;
+          const type = attempt.certification_type;
+          if (attempt.score > highestScores[type]) {
+            highestScores[type] = attempt.score;
+            
+            // Only count each certification type once
+            if (highestScores[type] === attempt.score && !highestScores[`${type}_counted`]) {
+              highestScores.count++;
+              highestScores[`${type}_counted`] = true;
+            }
           }
         });
 
-        if (scores.count > 0) {
-          const averageScore = (scores.reading + scores.writing + scores.speaking + scores.listening) / scores.count;
+        if (highestScores.count > 0) {
+          const averageScore = (highestScores.reading + highestScores.writing + highestScores.speaking + highestScores.listening) / highestScores.count;
           const level = determineLevel(averageScore);
           setProfileData(prev => ({ ...prev, currentLevel: level }));
         }
@@ -265,16 +272,17 @@ const DashboardPage = () => {
       if (error) throw error;
 
       if (attempts && attempts.length > 0) {
-        const latestScores: TestScores = {};
+        const highestScores: TestScores = {};
         
-        // Get the most recent score for each certification type
+        // Get the highest score for each certification type
         attempts.forEach(attempt => {
-          if (latestScores[attempt.certification_type] === undefined) {
-            latestScores[attempt.certification_type] = attempt.score;
+          const skill = attempt.certification_type;
+          if (highestScores[skill] === undefined || attempt.score > highestScores[skill]) {
+            highestScores[skill] = attempt.score;
           }
         });
         
-        setTestScores(latestScores);
+        setTestScores(highestScores);
       }
     } catch (error) {
       console.error('Error fetching test scores:', error);
