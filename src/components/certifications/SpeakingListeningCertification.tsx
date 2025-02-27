@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useConversation } from "@11labs/react";
@@ -114,7 +115,8 @@ const SpeakingListeningCertification = () => {
 
   // Initialize audio element when instructions modal is opened
   useEffect(() => {
-    if (showInstructions && !audioRef.current) {
+    if (showInstructions) {
+      // Create a new audio element each time the instructions are shown
       audioRef.current = new Audio(INSTRUCTIONS_AUDIO_URL);
       
       audioRef.current.addEventListener('ended', () => {
@@ -517,10 +519,14 @@ const SpeakingListeningCertification = () => {
           <DialogHeader>
             <DialogTitle>Speaking & Listening Test Instructions</DialogTitle>
           </DialogHeader>
-          <div className="py-4 space-y-4">
-            <div className="whitespace-pre-line text-gray-700">
-              {testInstructions}
-            </div>
+          
+          <div className="py-4">
+            <ScrollArea className="h-[300px] pr-4">
+              <div className="whitespace-pre-line text-gray-700">
+                {testInstructions}
+              </div>
+            </ScrollArea>
+            
             <div className="flex justify-center mt-4">
               <Button 
                 onClick={toggleAudioPlayback}
@@ -541,12 +547,13 @@ const SpeakingListeningCertification = () => {
               </Button>
             </div>
           </div>
-          <DialogFooter className="flex gap-2">
+          
+          <DialogFooter className="flex gap-2 sm:justify-between">
             <Button variant="outline" onClick={() => setShowInstructions(false)}>
-              No, cancel
+              Cancel
             </Button>
             <Button onClick={startTest}>
-              Yes, begin
+              Begin Test
             </Button>
           </DialogFooter>
         </DialogContent>
