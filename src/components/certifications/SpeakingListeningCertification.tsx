@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,9 +42,6 @@ Some conversation starters you can use:
 The test will last exactly 3 minutes. Are you ready to begin?
 `;
 
-// Updated URL to a sample MP3 that actually exists
-const INSTRUCTIONS_AUDIO_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
-
 const SpeakingListeningCertification = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
@@ -58,7 +54,8 @@ const SpeakingListeningCertification = () => {
   const [showInstructions, setShowInstructions] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const { toast } = useToast();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const speechSynthesis = window.speechSynthesis;
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -113,30 +110,26 @@ const SpeakingListeningCertification = () => {
     return () => clearInterval(timer);
   }, [isStarted, timeLeft]);
 
-  // Initialize audio element when instructions modal is opened
+  // Initialize speech synthesis when instructions modal is opened
   useEffect(() => {
     if (showInstructions) {
-      // Create a new audio element each time the instructions are shown
-      audioRef.current = new Audio(INSTRUCTIONS_AUDIO_URL);
+      utteranceRef.current = new SpeechSynthesisUtterance(testInstructions);
+      utteranceRef.current.lang = 'es-ES';
+      utteranceRef.current.rate = 0.9;
       
-      audioRef.current.addEventListener('ended', () => {
+      utteranceRef.current.onend = () => {
         setIsAudioPlaying(false);
-      });
+      };
       
-      audioRef.current.addEventListener('play', () => {
+      utteranceRef.current.onstart = () => {
         setIsAudioPlaying(true);
-      });
-      
-      audioRef.current.addEventListener('pause', () => {
-        setIsAudioPlaying(false);
-      });
+      };
     }
     
-    // Clean up audio when dialog is closed
+    // Clean up speech synthesis when dialog is closed
     return () => {
-      if (!showInstructions && audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      if (!showInstructions && speechSynthesis.speaking) {
+        speechSynthesis.cancel();
         setIsAudioPlaying(false);
       }
     };
@@ -147,18 +140,12 @@ const SpeakingListeningCertification = () => {
   };
 
   const toggleAudioPlayback = () => {
-    if (audioRef.current) {
+    if (utteranceRef.current) {
       if (isAudioPlaying) {
-        audioRef.current.pause();
+        speechSynthesis.cancel();
+        setIsAudioPlaying(false);
       } else {
-        audioRef.current.play().catch(error => {
-          console.error("Error playing audio:", error);
-          toast({
-            title: "Audio Error",
-            description: "Could not play the instructions audio. Please try again.",
-            variant: "destructive",
-          });
-        });
+        speechSynthesis.speak(utteranceRef.current);
       }
     }
   };
@@ -179,9 +166,8 @@ const SpeakingListeningCertification = () => {
       }
 
       // Stop the audio if it's still playing
-      if (audioRef.current && isAudioPlaying) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
         setIsAudioPlaying(false);
       }
 
