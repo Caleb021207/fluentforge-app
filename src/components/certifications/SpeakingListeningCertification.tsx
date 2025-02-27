@@ -43,8 +43,8 @@ Some conversation starters you can use:
 The test will last exactly 3 minutes. Are you ready to begin?
 `;
 
-// URL to a pre-recorded instructions audio file - this should be replaced with your actual audio file URL
-const INSTRUCTIONS_AUDIO_URL = "/test-instructions.mp3"; 
+// Updated URL to a sample MP3 that actually exists
+const INSTRUCTIONS_AUDIO_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
 
 const SpeakingListeningCertification = () => {
   const [isStarted, setIsStarted] = useState(false);
