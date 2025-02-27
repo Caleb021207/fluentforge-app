@@ -199,7 +199,7 @@ const SpeakingListeningCertification = () => {
   };
 
   // Generate feedback based on CEFR level
-  const generateFeedbackForLevel = (level: string): string => {
+  const generateFeedbackForLevel = (level: string, analysisText: string): string => {
     // Use the existing CEFR level descriptions from scoreUtils
     const levelDescription = getLevelDescription(level);
     
@@ -212,7 +212,7 @@ const SpeakingListeningCertification = () => {
       
       ### Feedback
       
-      ${getFeedbackForLevel(level)}
+      ${analysisText || getFeedbackForLevel(level)}
       
       ### Suggestions for Improvement
       
@@ -258,117 +258,6 @@ const SpeakingListeningCertification = () => {
     }
   };
 
-  // AI-based transcript evaluation approach
-  const evaluateTranscriptWithAI = (responses: string[], userTranscripts: string[]): { score: number, level: string } => {
-    console.log("Evaluating transcript with AI approach");
-    
-    // Default to a moderate score if we have no data
-    if (responses.length === 0 && userTranscripts.length === 0) {
-      console.log("No data available for evaluation, returning default score");
-      return { score: 65, level: "B1" };
-    }
-    
-    // Look for explicit level assessments in the AI's responses
-    const levelIndicators = {
-      "C2": ["mastery", "near-native", "excellent", "exceptional", "advanced fluency", "sophisticated"],
-      "C1": ["advanced", "proficient", "fluent", "very good", "strong command"],
-      "B2": ["upper intermediate", "good command", "effective", "confident", "good fluency"],
-      "B1": ["intermediate", "reasonable", "satisfactory", "adequate", "can communicate"],
-      "A2": ["elementary", "basic", "limited", "simple", "struggles", "difficulty"],
-      "A1": ["beginner", "very basic", "minimal", "rudimentary", "cannot understand", "severe difficulty"]
-    };
-    
-    // Count indicators for each level in AI responses
-    const levelCounts = { "C2": 0, "C1": 0, "B2": 0, "B1": 0, "A2": 0, "A1": 0 };
-    
-    // Analyze AI responses for language level indicators
-    const combinedResponses = responses.join(" ").toLowerCase();
-    for (const [level, indicators] of Object.entries(levelIndicators)) {
-      for (const indicator of indicators) {
-        const matches = (combinedResponses.match(new RegExp(`\\b${indicator}\\b`, "gi")) || []).length;
-        levelCounts[level as keyof typeof levelCounts] += matches;
-      }
-    }
-    
-    console.log("Level indicator counts:", levelCounts);
-    
-    // Analyze user transcript for complexity and fluency
-    if (userTranscripts.length > 0) {
-      const combinedTranscript = userTranscripts.join(" ");
-      const wordCount = combinedTranscript.split(/\s+/).filter(Boolean).length;
-      const uniqueWords = new Set(combinedTranscript.toLowerCase().split(/\s+/).filter(Boolean)).size;
-      const wordVariety = uniqueWords / Math.max(wordCount, 1);
-      
-      // Simple sentence complexity markers
-      const complexityMarkers = ["because", "although", "however", "therefore", "if", "unless", "while", "since", "moreover"];
-      const complexityScore = complexityMarkers.reduce(
-        (count, marker) => count + (combinedTranscript.toLowerCase().match(new RegExp(`\\b${marker}\\b`, "g")) || []).length, 
-        0
-      );
-      
-      console.log("Transcript analysis:", {
-        wordCount,
-        uniqueWords,
-        wordVariety,
-        complexityScore
-      });
-      
-      // Boost higher levels based on transcript complexity
-      if (wordCount > 200 && wordVariety > 0.6 && complexityScore > 5) {
-        levelCounts["C2"] += 3;
-        levelCounts["C1"] += 2;
-      } else if (wordCount > 150 && wordVariety > 0.5 && complexityScore > 3) {
-        levelCounts["C1"] += 2;
-        levelCounts["B2"] += 2;
-      } else if (wordCount > 100 && wordVariety > 0.4 && complexityScore > 2) {
-        levelCounts["B2"] += 2;
-        levelCounts["B1"] += 1;
-      } else if (wordCount < 50 || wordVariety < 0.3) {
-        levelCounts["A2"] += 2;
-        levelCounts["A1"] += 1;
-      }
-    }
-    
-    // Determine most likely level based on indicator counts
-    let highestCount = 0;
-    let determinedLevel = "B1"; // Default to B1 if no clear indicators
-    
-    for (const [level, count] of Object.entries(levelCounts)) {
-      if (count > highestCount) {
-        highestCount = count;
-        determinedLevel = level;
-      }
-    }
-    
-    // If we have very little data to evaluate, default to intermediate levels
-    if (highestCount < 2 && userTranscripts.length <= 1) {
-      determinedLevel = "B1";
-    }
-    
-    // Convert level to score
-    let score = 0;
-    switch (determinedLevel) {
-      case "C2": score = 90; break;
-      case "C1": score = 80; break;
-      case "B2": score = 70; break;
-      case "B1": score = 60; break;
-      case "A2": score = 50; break;
-      case "A1": score = 40; break;
-      default: score = 60; // Default to B1 equivalent
-    }
-    
-    // Add some natural variation to the score within the level range
-    const variation = Math.floor(Math.random() * 9) + 1; // 1-9 point variation
-    score += variation;
-    
-    // Ensure score stays within bounds
-    score = Math.min(Math.max(score, 40), 100);
-    
-    console.log("Final assessment:", { determinedLevel, score });
-    
-    return { score, level: determinedLevel };
-  };
-
   const endTest = async () => {
     try {
       setIsSubmitting(true);
@@ -376,12 +265,23 @@ const SpeakingListeningCertification = () => {
       setIsStarted(false);
       setTimeLeft(180); // Reset timer
       
-      console.log("Full conversation for analysis:", {
+      console.log("Sending conversation for analysis:", {
         userTranscripts: userTranscript,
         aiResponses: responses
       });
       
-      // Send conversation to GPT for analysis
+      // Ensure we have actual conversation data to analyze
+      if (userTranscript.length === 0) {
+        toast({
+          title: "Test Incomplete",
+          description: "We couldn't detect any speech. Please try again and make sure your microphone is working properly.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Send conversation to the analyze-speaking edge function
       const { data, error } = await supabase.functions.invoke('analyze-speaking', {
         body: {
           userTranscripts: userTranscript,
@@ -389,13 +289,21 @@ const SpeakingListeningCertification = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error calling analyze-speaking function:", error);
+        throw error;
+      }
 
-      const { level, score, analysis } = data;
-      console.log("GPT Analysis:", analysis);
+      console.log("Analysis result:", data);
 
+      if (!data || typeof data !== 'object') {
+        throw new Error("Invalid response from analyze-speaking function");
+      }
+
+      const { level = "B1", score = 70, analysis = "" } = data;
+      
       // Generate feedback based on GPT's analysis
-      const levelFeedback = generateFeedbackForLevel(level);
+      const levelFeedback = generateFeedbackForLevel(level, analysis);
       setFeedback(levelFeedback);
       setShowFeedback(true);
 
