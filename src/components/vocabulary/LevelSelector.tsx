@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Book } from "lucide-react";
+import { Book, Lock } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -43,17 +43,20 @@ const LevelSelector = ({
   };
   
   const handleLevelClick = (level: string) => {
-    onLevelChange(level);
-    
-    // Call appropriate handler based on the level selected
-    if (level === "B1" && onB1Selected) {
-      onB1Selected();
-    } else if (level === "B2" && onB2Selected) {
-      onB2Selected();
-    } else if (level === "C1-C2" && onC1C2Selected) {
-      onC1C2Selected();
-    } else if (level === "Grammar" && onGrammarSelected) {
-      onGrammarSelected();
+    // Only change level if it's unlocked
+    if (unlockedLevels[level]) {
+      onLevelChange(level);
+      
+      // Call appropriate handler based on the level selected
+      if (level === "B1" && onB1Selected) {
+        onB1Selected();
+      } else if (level === "B2" && onB2Selected) {
+        onB2Selected();
+      } else if (level === "C1-C2" && onC1C2Selected) {
+        onC1C2Selected();
+      } else if (level === "Grammar" && onGrammarSelected) {
+        onGrammarSelected();
+      }
     }
   };
   
@@ -61,6 +64,8 @@ const LevelSelector = ({
     <div className="space-y-3">
       <div className="flex flex-col space-y-2">
         {levels.map((level) => {
+          const isLocked = !unlockedLevels[level];
+          
           return (
             <TooltipProvider key={level}>
               <Tooltip>
@@ -72,15 +77,23 @@ const LevelSelector = ({
                         currentLevel === level 
                           ? "bg-lingua-primary hover:bg-lingua-primary/90" 
                           : ""
-                      }`}
+                      } ${isLocked ? "opacity-70" : ""}`}
                       onClick={() => handleLevelClick(level)}
+                      disabled={isLocked}
                     >
-                      {icons[level]}
-                      <span className="font-bold mr-2">{level}</span>
-                      <span className="text-xs">{levelDescriptions[level]}</span>
+                      {isLocked && <Lock className="h-4 w-4 mr-2 text-gray-400" />}
+                      {!isLocked && icons[level]}
+                      <span className={`font-bold mr-2 ${isLocked ? "text-gray-400" : ""}`}>{level}</span>
+                      <span className={`text-xs ${isLocked ? "text-gray-400" : ""}`}>{levelDescriptions[level]}</span>
                     </Button>
                   </div>
                 </TooltipTrigger>
+                <TooltipContent side="right">
+                  {isLocked 
+                    ? "Complete previous levels to unlock"
+                    : `${level} - ${levelDescriptions[level]}`
+                  }
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           );
