@@ -59,19 +59,19 @@ const Certificates = () => {
     },
   });
 
-  const recentScores = attempts?.reduce((acc, attempt) => {
+  const highestScores = attempts?.reduce((acc, attempt) => {
     if (!acc[attempt.certification_type] || 
-        new Date(attempt.completed_at) > new Date(acc[attempt.certification_type].completed_at)) {
+        attempt.score > acc[attempt.certification_type].score) {
       acc[attempt.certification_type] = attempt;
     }
     return acc;
   }, {} as Record<string, CertificationAttempt>);
 
   const calculateCompositeScore = () => {
-    if (!recentScores) return null;
+    if (!highestScores) return null;
 
     const scoreTypes = ['reading', 'writing', 'speaking', 'listening'];
-    const scores = scoreTypes.map(type => recentScores[type]?.score || 0);
+    const scores = scoreTypes.map(type => highestScores[type]?.score || 0);
     const totalScore = scores.reduce((sum, score) => sum + score, 0);
     const averageScore = Math.round(totalScore / scoreTypes.length);
 
@@ -106,7 +106,7 @@ const Certificates = () => {
               </p>
               <div className="p-4 border rounded-lg bg-white">
                 <p className="text-sm text-gray-600">
-                  This certificate represents your current language proficiency level based on your most recent test scores across all four skills: reading, writing, speaking, and listening.
+                  This certificate represents your current language proficiency level based on your highest test scores across all four skills: reading, writing, speaking, and listening.
                 </p>
               </div>
             </div>
@@ -154,12 +154,12 @@ const Certificates = () => {
               <CardTitle className="capitalize">{type}</CardTitle>
             </CardHeader>
             <CardContent>
-              {recentScores?.[type] ? (
+              {highestScores?.[type] ? (
                 <>
-                  <Progress value={recentScores[type].score} className="mb-2" />
+                  <Progress value={highestScores[type].score} className="mb-2" />
                   <div className="flex justify-between text-sm text-gray-600">
-                    <span>Score: {recentScores[type].score}%</span>
-                    <span>Level: {determineLevel(recentScores[type].score)}</span>
+                    <span>Score: {highestScores[type].score}%</span>
+                    <span>Level: {determineLevel(highestScores[type].score)}</span>
                   </div>
                 </>
               ) : (

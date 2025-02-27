@@ -83,8 +83,12 @@ const ProgressPage = () => {
         date,
       };
 
-      // Only set the value for the specific skill that was attempted
-      existing[attempt.certification_type as keyof Omit<ProgressData, 'date'>] = attempt.score;
+      // Only update the value if it's higher than the existing value or if it doesn't exist yet
+      const skillKey = attempt.certification_type as keyof Omit<ProgressData, 'date'>;
+      if (existing[skillKey] === undefined || attempt.score > existing[skillKey]) {
+        existing[skillKey] = attempt.score;
+      }
+      
       dataMap.set(date, existing);
     });
 
@@ -92,23 +96,21 @@ const ProgressPage = () => {
   };
 
   const generateRecommendations = (attempts: any[]) => {
-    const latestScores: Record<string, number> = {};
+    const highestScores: Record<string, number> = {};
     const skills = ['reading', 'writing', 'speaking', 'listening'];
     
-    // Get the latest score for each skill
+    // Get the highest score for each skill
     skills.forEach(skill => {
       const skillAttempts = attempts.filter(a => a.certification_type === skill);
       if (skillAttempts.length > 0) {
-        const latestAttempt = skillAttempts.reduce((latest: any, current: any) => {
-          return new Date(current.completed_at) > new Date(latest.completed_at) ? current : latest;
-        });
-        latestScores[skill] = latestAttempt.score;
+        const highestScore = Math.max(...skillAttempts.map(a => a.score));
+        highestScores[skill] = highestScore;
       }
     });
 
-    // Generate recommendations based on CEFR levels
+    // Generate recommendations based on highest scores and CEFR levels
     const newRecommendations = skills.map(skill => {
-      const score = latestScores[skill] || 0;
+      const score = highestScores[skill] || 0;
       const level = determineLevel(score);
       const recommendation = getRecommendationsForLevel(skill, level);
       
