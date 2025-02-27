@@ -1,12 +1,11 @@
 
-import { useState, useEffect, useRef } from "react";
-import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
-import { Progress } from "@/components/ui/progress";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -22,66 +21,22 @@ interface SkillAssessment {
   overallLevel: string;
 }
 
-interface RealTimeMetrics {
-  pronunciation: number;
-  fluency: number;
-  vocabulary: number;
-  grammar: number;
-}
-
 const Practice = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [skillAssessment, setSkillAssessment] = useState<SkillAssessment | null>(null);
-  const [showRealTimeMetrics, setShowRealTimeMetrics] = useState(false);
-  const [realTimeMetrics, setRealTimeMetrics] = useState<RealTimeMetrics>({
-    pronunciation: 0,
-    fluency: 0,
-    vocabulary: 0,
-    grammar: 0
-  });
-  const metricsRef = useRef<RealTimeMetrics>({
-    pronunciation: 0,
-    fluency: 0,
-    vocabulary: 0,
-    grammar: 0
-  });
   const { toast } = useToast();
 
   const conversation = useConversation({
-    clientTools: {
-      updateMetric: (parameters: { metricType: keyof RealTimeMetrics, score: number }) => {
-        const { metricType, score } = parameters;
-        
-        // Update the metrics ref first
-        const updatedMetrics = { ...metricsRef.current };
-        updatedMetrics[metricType] = score;
-        metricsRef.current = updatedMetrics;
-        
-        // Then update the state
-        setRealTimeMetrics(updatedMetrics);
-        
-        return `Metric updated: ${metricType}: ${score}/100`;
-      }
-    },
     onMessage: (message) => {
-      console.log("Voice message received:", message);
-      
       if (message.type === "llm_response") {
         const assistantMessage: ChatMessage = {
           role: "assistant",
           content: message.content,
         };
         setMessages((prev) => [...prev, assistantMessage]);
-      } else if (message.type === "transcript") {
-        // When user speaks, add their message to the chat
-        const userMessage: ChatMessage = {
-          role: "user",
-          content: message.content,
-        };
-        setMessages((prev) => [...prev, userMessage]);
       }
     },
     onError: (error) => {
@@ -109,25 +64,14 @@ const Practice = () => {
     };
 
     initMicrophone();
-    
-    // Clean up conversation on component unmount
-    return () => {
-      if (conversation.status === "connected") {
-        conversation.endSession().catch(console.error);
-      }
-    };
   }, [toast]);
 
   const startVoiceConversation = async () => {
     try {
       await conversation.startSession({
-        // Using the specialized language tutor agent
+        // Updated to use the specific agent ID provided by the user
         agentId: "Qc5G2DZi0jRmMf3CzC8f",
       });
-      
-      // Show real-time metrics when voice conversation starts
-      setShowRealTimeMetrics(true);
-      
       toast({
         title: "Voice Chat Started",
         description: "You can now speak with your AI language tutor!",
@@ -138,33 +82,6 @@ const Practice = () => {
         description: "Failed to start voice conversation. Please try again.",
         variant: "destructive",
       });
-    }
-  };
-
-  const stopVoiceConversation = async () => {
-    try {
-      await conversation.endSession();
-      
-      // Hide metrics when conversation ends
-      setShowRealTimeMetrics(false);
-      
-      // Reset metrics
-      const resetMetrics = {
-        pronunciation: 0,
-        fluency: 0,
-        vocabulary: 0,
-        grammar: 0
-      };
-      
-      setRealTimeMetrics(resetMetrics);
-      metricsRef.current = resetMetrics;
-      
-      toast({
-        title: "Voice Chat Ended",
-        description: "Your conversation with the AI tutor has ended.",
-      });
-    } catch (error) {
-      console.error("Error ending conversation:", error);
     }
   };
 
@@ -251,11 +168,10 @@ const Practice = () => {
           your grammar, vocabulary, and pronunciation. Feel free to ask questions
           about language or culture.
         </p>
-        <div className="flex flex-wrap gap-4 mb-4">
+        <div className="flex gap-4 mb-4">
           <Button
-            onClick={conversation.status === "connected" ? stopVoiceConversation : startVoiceConversation}
+            onClick={conversation.status === "connected" ? conversation.endSession : startVoiceConversation}
             variant={conversation.status === "connected" ? "destructive" : "default"}
-            disabled={!microphoneAccess}
           >
             {conversation.status === "connected" ? (
               <>
@@ -269,60 +185,11 @@ const Practice = () => {
               </>
             )}
           </Button>
-          <Button 
-            onClick={requestSkillAssessment} 
-            disabled={messages.length === 0 || isLoading || conversation.status === "connected"}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Getting Assessment...
-              </>
-            ) : (
-              <>Get Skills Assessment</>
-            )}
+          <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
+            Get Skills Assessment
           </Button>
         </div>
       </div>
-
-      {showRealTimeMetrics && (
-        <Card className="p-4 mb-6">
-          <h3 className="font-semibold mb-4">Real-time Language Analysis</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Pronunciation</span>
-                <span>{realTimeMetrics.pronunciation}%</span>
-              </div>
-              <Progress value={realTimeMetrics.pronunciation} className="h-2" />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Fluency</span>
-                <span>{realTimeMetrics.fluency}%</span>
-              </div>
-              <Progress value={realTimeMetrics.fluency} className="h-2" />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Vocabulary</span>
-                <span>{realTimeMetrics.vocabulary}%</span>
-              </div>
-              <Progress value={realTimeMetrics.vocabulary} className="h-2" />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Grammar</span>
-                <span>{realTimeMetrics.grammar}%</span>
-              </div>
-              <Progress value={realTimeMetrics.grammar} className="h-2" />
-            </div>
-          </div>
-        </Card>
-      )}
 
       <div className="grid gap-6 md:grid-cols-3 mb-8">
         {skillAssessment && (
