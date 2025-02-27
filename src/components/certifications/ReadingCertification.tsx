@@ -26,15 +26,18 @@ const ReadingCertification = () => {
     setLevelRecommendations(null);
   };
 
-  const handleAnswer = (answerIndex: number) => {
+  const handleAnswerSelect = (value: string) => {
+    const numericValue = parseInt(value);
     const newAnswers = [...selectedAnswers];
-    newAnswers[currentQuestion] = answerIndex;
+    newAnswers[currentQuestion] = numericValue;
     setSelectedAnswers(newAnswers);
+  };
 
+  const handleNext = () => {
     if (currentQuestion < READING_QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      handleCompletion(newAnswers);
+      handleCompletion(selectedAnswers);
     }
   };
 
@@ -177,8 +180,9 @@ const ReadingCertification = () => {
           question={READING_QUESTIONS[currentQuestion]}
           currentQuestionIndex={currentQuestion}
           totalQuestions={READING_QUESTIONS.length}
-          onAnswerSelect={(answer) => handleAnswer(parseInt(answer))}
-          onNext={() => {}}
+          selectedAnswer={selectedAnswers[currentQuestion]}
+          onAnswerSelect={handleAnswerSelect}
+          onNext={handleNext}
         />
       </CardContent>
     </Card>

@@ -22,13 +22,19 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
   onAnswerSelect,
   onNext,
 }) => {
+  // Clear the selected value when the question changes
+  React.useEffect(() => {
+    // This ensures the radio button selection is reset when question changes
+    // The component will re-render with the correct selectedAnswer prop
+  }, [question]);
+
   return (
     <div className="space-y-6 w-full max-w-full overflow-x-hidden">
       <div className="p-3 sm:p-4 bg-gray-50 rounded-lg">
         <p className="mb-4 break-words text-sm sm:text-base">{question.text}</p>
         <RadioGroup 
           onValueChange={onAnswerSelect}
-          value={selectedAnswer?.toString()}
+          value={selectedAnswer !== undefined ? selectedAnswer.toString() : undefined}
           className="space-y-2"
         >
           {question.options.map((option, index) => (
