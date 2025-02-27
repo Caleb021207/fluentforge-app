@@ -2,10 +2,45 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useConversation } from "@11labs/react";
 import { Mic, MicOff, Play, Volume2, Check } from "lucide-react";
+
+const testInstructions = `
+Welcome to the Speaking and Listening Certification Test. 
+This test will assess your Spanish language proficiency in the following areas:
+
+1. Speaking Fluency
+- Clear pronunciation
+- Natural rhythm and intonation
+- Appropriate speaking pace
+
+2. Comprehension
+- Understanding questions and instructions
+- Responding appropriately to prompts
+- Following complex conversations
+
+3. Grammar and Vocabulary
+- Correct use of verb tenses
+- Appropriate word choice
+- Complex sentence structures
+
+4. Communication Effectiveness
+- Clear expression of ideas
+- Engaging in natural dialogue
+- Handling unexpected topics
+
+Some conversation starters you can use:
+- Introduce yourself and your background
+- Describe your daily routine
+- Talk about your hobbies and interests
+- Discuss your future plans and goals
+- Share your opinion on current events
+
+The test will last exactly 3 minutes. Are you ready to begin?
+`;
 
 const SpeakingListeningCertification = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -16,6 +51,7 @@ const SpeakingListeningCertification = () => {
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
   const [feedback, setFeedback] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
   const { toast } = useToast();
 
   const conversation = useConversation({
@@ -24,7 +60,6 @@ const SpeakingListeningCertification = () => {
       if (message.type === "llm_response") {
         setResponses(prev => [...prev, message.content]);
       } else if (message.type === "transcript") {
-        // Store the user's speech transcript
         setUserTranscript(prev => [...prev, message.content]);
       }
     },
@@ -72,6 +107,28 @@ const SpeakingListeningCertification = () => {
     return () => clearInterval(timer);
   }, [isStarted, timeLeft]);
 
+  const handleStartTest = () => {
+    setShowInstructions(true);
+    // Start TTS for instructions
+    const instructionsConversation = useConversation({
+      overrides: {
+        tts: {
+          voiceId: "Charlie" // Using Charlie's voice for instructions
+        }
+      }
+    });
+    
+    instructionsConversation.startSession({
+      agentId: "2rNEBxdJ814y7dcdZSOb", // Using your actual agent ID
+    }).then(() => {
+      // Send the instructions text to be read
+      instructionsConversation.onMessage({
+        type: "llm_response",
+        content: testInstructions
+      });
+    });
+  };
+
   const startTest = async () => {
     try {
       const {
@@ -87,6 +144,7 @@ const SpeakingListeningCertification = () => {
         return;
       }
 
+      setShowInstructions(false);
       await conversation.startSession({
         agentId: "2rNEBxdJ814y7dcdZSOb", // Using your actual agent ID
       });
@@ -334,86 +392,110 @@ const SpeakingListeningCertification = () => {
   };
 
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <CardTitle>Speaking & Listening Certification Test</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {!isStarted && !showFeedback ? (
-          <div className="space-y-4">
-            <p className="text-gray-600">
-              This test will assess both your speaking and listening skills through
-              a conversation with an AI examiner. The AI will evaluate your
-              pronunciation, fluency, comprehension, and ability to respond
-              appropriately. The test will last exactly 3 minutes.
-            </p>
-            <div className="space-y-2">
-              <p className="text-sm text-gray-500">Requirements:</p>
-              <ul className="list-disc list-inside text-sm text-gray-500">
-                <li>Working microphone</li>
-                <li>Quiet environment</li>
-                <li>3 minutes of uninterrupted time</li>
-              </ul>
+    <>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Speaking & Listening Certification Test</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {!isStarted && !showFeedback ? (
+            <div className="space-y-4">
+              <p className="text-gray-600">
+                This test will assess both your speaking and listening skills through
+                a conversation with an AI examiner. The AI will evaluate your
+                pronunciation, fluency, comprehension, and ability to respond
+                appropriately. The test will last exactly 3 minutes.
+              </p>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Requirements:</p>
+                <ul className="list-disc list-inside text-sm text-gray-500">
+                  <li>Working microphone</li>
+                  <li>Quiet environment</li>
+                  <li>3 minutes of uninterrupted time</li>
+                </ul>
+              </div>
+              <Button
+                onClick={handleStartTest}
+                disabled={!microphoneAccess}
+                className="w-full md:w-auto"
+              >
+                Start Test
+              </Button>
             </div>
-            <Button
-              onClick={startTest}
-              disabled={!microphoneAccess}
-              className="w-full md:w-auto"
-            >
-              Start Test
-            </Button>
-          </div>
-        ) : showFeedback ? (
-          <div className="space-y-6">
-            <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-semibold mb-4">Speaking Assessment Feedback</h3>
-              <div className="prose prose-sm max-w-none whitespace-pre-line">
-                {feedback}
+          ) : showFeedback ? (
+            <div className="space-y-6">
+              <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-semibold mb-4">Speaking Assessment Feedback</h3>
+                <div className="prose prose-sm max-w-none whitespace-pre-line">
+                  {feedback}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                <Button 
+                  onClick={() => setShowFeedback(false)} 
+                  variant="outline"
+                >
+                  Back
+                </Button>
+                <Button 
+                  onClick={startTest} 
+                  variant="default"
+                >
+                  Take Test Again
+                </Button>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-              <Button 
-                onClick={() => setShowFeedback(false)} 
-                variant="outline"
+          ) : (
+            <div className="space-y-6">
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="text-gray-600 mb-2">
+                  The AI examiner is listening. Speak clearly and answer the questions
+                  to the best of your ability.
+                </p>
+                <p className="text-lg font-semibold text-center">
+                  Time Remaining: {formatTime(timeLeft)}
+                </p>
+              </div>
+              <Button
+                onClick={endTest}
+                variant="destructive"
+                className="w-full md:w-auto"
+                disabled={isSubmitting}
               >
-                Back
+                {isSubmitting ? (
+                  <>Analyzing your speech...</>
+                ) : (
+                  <>End Test</>
+                )}
               </Button>
-              <Button 
-                onClick={startTest} 
-                variant="default"
-              >
-                Take Test Again
-              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Speaking & Listening Test Instructions</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="whitespace-pre-line text-gray-700">
+              {testInstructions}
             </div>
           </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-gray-600 mb-2">
-                The AI examiner is listening. Speak clearly and answer the questions
-                to the best of your ability.
-              </p>
-              <p className="text-lg font-semibold text-center">
-                Time Remaining: {formatTime(timeLeft)}
-              </p>
-            </div>
-            <Button
-              onClick={endTest}
-              variant="destructive"
-              className="w-full md:w-auto"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>Analyzing your speech...</>
-              ) : (
-                <>End Test</>
-              )}
+          <DialogFooter className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowInstructions(false)}>
+              No, cancel
             </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            <Button onClick={startTest}>
+              Yes, begin
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
 export default SpeakingListeningCertification;
+
