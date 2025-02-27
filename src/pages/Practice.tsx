@@ -1,11 +1,12 @@
 
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones } from "lucide-react";
+import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -27,6 +28,8 @@ const Practice = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [skillAssessment, setSkillAssessment] = useState<SkillAssessment | null>(null);
+  const [language, setLanguage] = useState("Spanish");
+  const [availableLanguages] = useState(["Spanish", "French", "German", "Italian"]);
   const { toast } = useToast();
 
   const conversation = useConversation({
@@ -66,6 +69,16 @@ const Practice = () => {
     initMicrophone();
   }, [toast]);
 
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    setMessages([]);
+    setSkillAssessment(null);
+    toast({
+      title: `Language changed to ${newLanguage}`,
+      description: `You are now practicing ${newLanguage}. New conversations will be in ${newLanguage}.`,
+    });
+  };
+
   const startVoiceConversation = async () => {
     try {
       await conversation.startSession({
@@ -73,7 +86,7 @@ const Practice = () => {
       });
       toast({
         title: "Voice Chat Started",
-        description: "You can now speak with your AI language tutor!",
+        description: `You can now speak with your AI language tutor in ${language}!`,
       });
     } catch (error) {
       toast({
@@ -89,8 +102,9 @@ const Practice = () => {
     try {
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
-          message: "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.",
-          requestType: "assessment"
+          message: `Please assess my ${language} language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.`,
+          requestType: "assessment",
+          language: language
         }
       });
 
@@ -128,7 +142,10 @@ const Practice = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
-        body: { message: input }
+        body: { 
+          message: input,
+          language: language 
+        }
       });
 
       if (error) {
@@ -162,11 +179,30 @@ const Practice = () => {
         <h1 className="text-3xl font-bold text-lingua-text mb-4">
           Practice with AI Language Tutor
         </h1>
-        <p className="text-gray-600 mb-4">
-          Chat with our AI tutor to practice your Spanish! The AI will help correct
-          your grammar, vocabulary, and pronunciation. Feel free to ask questions
-          about language or culture.
-        </p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          <p className="text-gray-600">
+            Chat with our AI tutor to practice your language skills! The AI will help correct
+            your grammar, vocabulary, and pronunciation. Feel free to ask questions
+            about language or culture.
+          </p>
+          <div className="w-full md:w-48">
+            <Select value={language} onValueChange={handleLanguageChange}>
+              <SelectTrigger className="w-full">
+                <div className="flex items-center">
+                  <Globe className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Select language" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                {availableLanguages.map((lang) => (
+                  <SelectItem key={lang} value={lang}>
+                    {lang}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         <div className="flex gap-4 mb-4">
           <Button
             onClick={conversation.status === "connected" ? conversation.endSession : startVoiceConversation}
@@ -237,7 +273,7 @@ const Practice = () => {
           {messages.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <MessageCircle className="mx-auto h-12 w-12 mb-4 opacity-50" />
-              <p>Start chatting with your AI language tutor!</p>
+              <p>Start chatting with your AI language tutor in {language}!</p>
               <p className="text-sm mt-2">
                 {microphoneAccess 
                   ? "Click 'Start Voice Chat' to begin speaking with the tutor"
@@ -287,7 +323,7 @@ const Practice = () => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message in English or Spanish..."
+            placeholder={`Type your message in English or ${language}...`}
             className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary"
             disabled={conversation.status === "connected"}
           />
