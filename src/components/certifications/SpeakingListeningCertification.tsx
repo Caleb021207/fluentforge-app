@@ -314,27 +314,28 @@ const SpeakingListeningCertification = () => {
 
       if (!user) return;
 
-      const { error: dbError } = await supabase
+      // Save speaking score
+      const { error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'speaking',
-            score,
+            score: score,
             level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
         ]);
 
-      if (dbError) throw dbError;
+      if (speakingError) throw speakingError;
       
-      // Also save a listening score (can be the same since it's evaluated together)
+      // Save listening score (using the same score since it's evaluated together)
       const { error: listeningError } = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'listening',
-            score: score,
+            score: score, // Using the same score since it's a conversation test
             level: level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
@@ -496,3 +497,4 @@ const SpeakingListeningCertification = () => {
 };
 
 export default SpeakingListeningCertification;
+
