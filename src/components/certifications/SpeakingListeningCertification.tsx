@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -114,7 +115,7 @@ const SpeakingListeningCertification = () => {
   useEffect(() => {
     if (showInstructions) {
       utteranceRef.current = new SpeechSynthesisUtterance(testInstructions);
-      utteranceRef.current.lang = 'es-ES';
+      utteranceRef.current.lang = 'en-US';  // Changed from 'es-ES' to 'en-US'
       utteranceRef.current.rate = 0.9;
       
       utteranceRef.current.onend = () => {
