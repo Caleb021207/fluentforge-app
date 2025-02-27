@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useConversation } from "@11labs/react";
-import { Mic, MicOff, Play, Volume2, Check } from "lucide-react";
+import { Mic, MicOff, Play, Volume2, Check, Pause } from "lucide-react";
 
 const testInstructions = `
 Welcome to the Speaking and Listening Certification Test. 
@@ -42,6 +42,9 @@ Some conversation starters you can use:
 The test will last exactly 3 minutes. Are you ready to begin?
 `;
 
+// URL to a pre-recorded instructions audio file - this should be replaced with your actual audio file URL
+const INSTRUCTIONS_AUDIO_URL = "/test-instructions.mp3"; 
+
 const SpeakingListeningCertification = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
@@ -52,7 +55,9 @@ const SpeakingListeningCertification = () => {
   const [feedback, setFeedback] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const { toast } = useToast();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -107,26 +112,53 @@ const SpeakingListeningCertification = () => {
     return () => clearInterval(timer);
   }, [isStarted, timeLeft]);
 
+  // Initialize audio element when instructions modal is opened
+  useEffect(() => {
+    if (showInstructions && !audioRef.current) {
+      audioRef.current = new Audio(INSTRUCTIONS_AUDIO_URL);
+      
+      audioRef.current.addEventListener('ended', () => {
+        setIsAudioPlaying(false);
+      });
+      
+      audioRef.current.addEventListener('play', () => {
+        setIsAudioPlaying(true);
+      });
+      
+      audioRef.current.addEventListener('pause', () => {
+        setIsAudioPlaying(false);
+      });
+    }
+    
+    // Clean up audio when dialog is closed
+    return () => {
+      if (!showInstructions && audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setIsAudioPlaying(false);
+      }
+    };
+  }, [showInstructions]);
+
   const handleStartTest = () => {
     setShowInstructions(true);
-    // Start TTS for instructions
-    const instructionsConversation = useConversation({
-      overrides: {
-        tts: {
-          voiceId: "Charlie" // Using Charlie's voice for instructions
-        }
+  };
+
+  const toggleAudioPlayback = () => {
+    if (audioRef.current) {
+      if (isAudioPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(error => {
+          console.error("Error playing audio:", error);
+          toast({
+            title: "Audio Error",
+            description: "Could not play the instructions audio. Please try again.",
+            variant: "destructive",
+          });
+        });
       }
-    });
-    
-    instructionsConversation.startSession({
-      agentId: "2rNEBxdJ814y7dcdZSOb", // Using your actual agent ID
-    }).then(() => {
-      // Send the instructions text to be read
-      instructionsConversation.onMessage({
-        type: "llm_response",
-        content: testInstructions
-      });
-    });
+    }
   };
 
   const startTest = async () => {
@@ -142,6 +174,13 @@ const SpeakingListeningCertification = () => {
           variant: "destructive",
         });
         return;
+      }
+
+      // Stop the audio if it's still playing
+      if (audioRef.current && isAudioPlaying) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setIsAudioPlaying(false);
       }
 
       setShowInstructions(false);
@@ -482,6 +521,25 @@ const SpeakingListeningCertification = () => {
             <div className="whitespace-pre-line text-gray-700">
               {testInstructions}
             </div>
+            <div className="flex justify-center mt-4">
+              <Button 
+                onClick={toggleAudioPlayback}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                {isAudioPlaying ? (
+                  <>
+                    <Pause className="h-4 w-4" />
+                    Pause Instructions
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4" />
+                    Listen to Instructions
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
           <DialogFooter className="flex gap-2">
             <Button variant="outline" onClick={() => setShowInstructions(false)}>
@@ -498,4 +556,3 @@ const SpeakingListeningCertification = () => {
 };
 
 export default SpeakingListeningCertification;
-
