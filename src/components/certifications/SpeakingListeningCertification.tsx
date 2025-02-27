@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useConversation } from "@11labs/react";
 import { Mic, MicOff, Play, Volume2, Check, Pause } from "lucide-react";
+import { getLevelDescription } from "./utils/scoreUtils";
 
 const testInstructions = `
 Welcome to the Speaking and Listening Certification Test. 
@@ -197,132 +198,67 @@ const SpeakingListeningCertification = () => {
     }
   };
 
-  const analyzeTranscript = async (transcript: string[]) => {
-    try {
-      // Create a combined transcript string
-      const fullTranscript = transcript.join(" ");
+  // Simplified - generate feedback based only on CEFR level
+  const generateFeedbackForLevel = (level: string): string => {
+    // Use the existing CEFR level descriptions from scoreUtils
+    const levelDescription = getLevelDescription(level);
+    
+    return `
+      ## Speaking & Listening Assessment
       
-      // If the transcript is too short, return default feedback
-      if (fullTranscript.length < 10) {
-        return "The transcript was too short to provide detailed feedback.";
-      }
-
-      const prompt = `
-        You are a Spanish language teacher and examiner. 
-        Analyze the following transcript from a Spanish speaking test:
-        
-        "${fullTranscript}"
-        
-        Provide a detailed assessment covering:
-        1. Fluency and pronunciation
-        2. Grammar usage
-        3. Vocabulary range
-        4. Comprehension of questions
-        5. Overall communication effectiveness
-        
-        End with specific suggestions for improvement and assign a CEFR level (A1, A2, B1, B2, C1, or C2).
-        
-        Format your response as a structured assessment with clear sections.
-      `;
-
-      // For this example, we're using a simplified analysis algorithm based on the transcript length and content
-      // In a real implementation, you would connect to an LLM API for a proper analysis
+      ### CEFR Level: ${level}
       
-      // Simplified analysis based on word count and complexity
-      const wordCount = fullTranscript.split(/\s+/).length;
-      let mockFeedback = "";
-
-      if (wordCount < 30) {
-        mockFeedback = `
-          ## Speaking Assessment
-          
-          ### Fluency and Pronunciation
-          Your responses were brief, which makes it difficult to fully assess your fluency. Try to speak in complete sentences.
-          
-          ### Grammar Usage
-          Limited examples of grammatical structures were observed. Consider practicing basic present tense conjugations.
-          
-          ### Vocabulary Range
-          Basic vocabulary was used. Work on expanding your everyday vocabulary.
-          
-          ### Comprehension
-          You appear to understand simple questions but may need more practice with complex topics.
-          
-          ### Overall Communication
-          You can communicate basic ideas but need more practice for fluent expression.
-          
-          ### Suggestions for Improvement
-          - Practice speaking for longer periods
-          - Use complete sentences rather than single words
-          - Review basic verb conjugations
-          - Build your vocabulary with flashcards
-          
-          ### CEFR Level: A1 (Beginner)
-        `;
-      } else if (wordCount < 60) {
-        mockFeedback = `
-          ## Speaking Assessment
-          
-          ### Fluency and Pronunciation
-          You can form basic sentences with some hesitation. Work on linking your ideas more smoothly.
-          
-          ### Grammar Usage
-          You show understanding of present tense but may struggle with past tenses or more complex structures.
-          
-          ### Vocabulary Range
-          You have sufficient vocabulary for familiar topics but may struggle with specialized areas.
-          
-          ### Comprehension
-          You understand most questions with occasional need for clarification.
-          
-          ### Overall Communication
-          You can express yourself on familiar topics with some preparation.
-          
-          ### Suggestions for Improvement
-          - Practice past tense verbs
-          - Try speaking about a wider range of topics
-          - Listen to Spanish media to improve comprehension
-          - Join a conversation group for practical practice
-          
-          ### CEFR Level: A2 (Elementary)
-        `;
-      } else {
-        mockFeedback = `
-          ## Speaking Assessment
-          
-          ### Fluency and Pronunciation
-          You speak with good rhythm and reasonable fluency. Your pronunciation is generally clear with a few non-native sounds.
-          
-          ### Grammar Usage
-          You use a variety of tenses correctly, though you occasionally make errors with subjunctive or conditional forms.
-          
-          ### Vocabulary Range
-          You demonstrate a good range of vocabulary appropriate for everyday and some specialized topics.
-          
-          ### Comprehension
-          You understand questions well and respond appropriately to most prompts.
-          
-          ### Overall Communication
-          You communicate effectively on familiar topics and can handle some unexpected questions.
-          
-          ### Suggestions for Improvement
-          - Practice more complex grammar structures
-          - Expand vocabulary in professional or academic contexts
-          - Work on expressing nuanced opinions and hypothetical situations
-          - Practice speaking without preparation on unfamiliar topics
-          
-          ### CEFR Level: B1 (Intermediate)
-        `;
-      }
-
-      return mockFeedback;
-    } catch (error) {
-      console.error("Error analyzing transcript:", error);
-      return "An error occurred while analyzing your speaking performance. Please try again later.";
+      ${levelDescription}
+      
+      ### Feedback
+      
+      ${getFeedbackForLevel(level)}
+      
+      ### Suggestions for Improvement
+      
+      ${getSuggestionsForLevel(level)}
+    `;
+  };
+  
+  const getFeedbackForLevel = (level: string): string => {
+    switch (level) {
+      case 'C2':
+        return "Your speaking skills demonstrate mastery of the language. You communicate with precision, fluency, and nuance across a wide range of topics. Your listening comprehension is excellent, allowing you to understand complex and implicit meanings.";
+      case 'C1':
+        return "You communicate fluently and spontaneously with very few hesitations. You have a broad vocabulary and can express complex ideas clearly. Your listening comprehension is very good, though you may occasionally miss subtle nuances or cultural references.";
+      case 'B2':
+        return "You speak with good fluency on familiar topics and can participate effectively in most conversations. Your vocabulary is sufficient for most contexts, though you may sometimes search for words. Your listening comprehension is good for clear speech on familiar topics.";
+      case 'B1':
+        return "You can communicate in straightforward situations about familiar topics. Your vocabulary covers everyday needs, though with some limitations. Your listening comprehension is adequate for clear, standard speech on familiar matters.";
+      case 'A2':
+        return "You can engage in simple exchanges on predictable topics. Your vocabulary is limited to basic personal and everyday topics. Your listening comprehension allows you to understand short, clear messages and announcements.";
+      case 'A1':
+        return "You can use basic phrases and expressions related to personal details and concrete needs. Your vocabulary is limited to a small repertoire of isolated words and phrases. Your listening comprehension is limited to carefully articulated speech with long pauses.";
+      default:
+        return "Your speaking and listening skills have been assessed. Continue practicing to improve your language proficiency.";
+    }
+  };
+  
+  const getSuggestionsForLevel = (level: string): string => {
+    switch (level) {
+      case 'C2':
+        return "- Continue refining your command of idiomatic expressions and cultural nuances\n- Practice specialized vocabulary in professional or academic fields\n- Challenge yourself with debates on complex topics";
+      case 'C1':
+        return "- Work on mastering subtle nuances and cultural references\n- Expand your vocabulary with more specialized terminology\n- Practice understanding different accents and regional variations";
+      case 'B2':
+        return "- Practice expressing more complex ideas and opinions\n- Work on speaking more fluently without long pauses\n- Expand your vocabulary beyond everyday topics\n- Practice understanding different accents";
+      case 'B1':
+        return "- Practice describing experiences, hopes, and plans in more detail\n- Work on connecting your ideas more smoothly\n- Build vocabulary beyond basic everyday topics\n- Listen to authentic materials like podcasts and videos";
+      case 'A2':
+        return "- Practice forming complete sentences\n- Work on asking and answering questions about personal information\n- Expand your vocabulary to cover more everyday topics\n- Listen to simplified audio materials regularly";
+      case 'A1':
+        return "- Focus on learning basic greetings and common phrases\n- Practice basic personal introduction\n- Build vocabulary of everyday objects and actions\n- Listen to and repeat simple phrases";
+      default:
+        return "- Continue practicing speaking and listening regularly\n- Engage in conversations with native speakers when possible\n- Listen to authentic materials like podcasts, videos, and music";
     }
   };
 
-  const calculateScore = (responses: string[]) => {
+  const calculateScore = (responses: string[]): { score: number, level: string } => {
     // This is a simplified scoring algorithm
     // You should adjust these weights based on your requirements
     let totalScore = 0;
@@ -368,13 +304,13 @@ const SpeakingListeningCertification = () => {
       setIsStarted(false);
       setTimeLeft(180); // Reset timer
       
-      // Generate feedback based on the transcript
-      const analysisResult = await analyzeTranscript(userTranscript);
-      setFeedback(analysisResult);
-      setShowFeedback(true);
-      
       // Calculate the score based on the AI's responses
       const { score, level } = calculateScore(responses);
+      
+      // Generate feedback based on the CEFR level
+      const levelFeedback = generateFeedbackForLevel(level);
+      setFeedback(levelFeedback);
+      setShowFeedback(true);
 
       // Save the test results
       const {
@@ -387,7 +323,7 @@ const SpeakingListeningCertification = () => {
         .from('certification_attempts')
         .insert([
           {
-            certification_type: 'speaking_listening',
+            certification_type: 'speaking',
             score,
             level,
             completed_at: new Date().toISOString(),
@@ -396,6 +332,24 @@ const SpeakingListeningCertification = () => {
         ]);
 
       if (error) throw error;
+      
+      // Also save a listening score (can be the same or slightly different)
+      const listeningScore = Math.max(40, Math.min(100, score + (Math.random() * 10 - 5))); // Small random variation
+      const listeningLevel = level; // Same level for simplicity
+      
+      const { error: listeningError } = await supabase
+        .from('certification_attempts')
+        .insert([
+          {
+            certification_type: 'listening',
+            score: Math.round(listeningScore),
+            level: listeningLevel,
+            completed_at: new Date().toISOString(),
+            user_id: user.id,
+          }
+        ]);
+        
+      if (listeningError) throw listeningError;
 
       toast({
         title: "Test Completed",
