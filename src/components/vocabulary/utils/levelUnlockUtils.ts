@@ -5,10 +5,10 @@ import { FlashcardSet } from "../types";
 // Map of level dependencies - each level requires the previous level to be completed
 export const LEVEL_DEPENDENCIES: Record<string, string> = {
   "A1": "",  // A1 has no prerequisites
-  "A2": "A1",
-  "B1": "A2",
-  "B2": "B1",
-  "C1-C2": "B2",
+  "A2": "",  // Removed dependency
+  "B1": "",  // Removed dependency
+  "B2": "",  // Removed dependency
+  "C1-C2": "",  // Removed dependency
   "Grammar": ""  // Grammar has no prerequisites
 };
 
@@ -20,89 +20,8 @@ export const isLevelUnlocked = async (
   level: string,
   userId: string | undefined
 ): Promise<boolean> => {
-  // A1 is ALWAYS unlocked for ALL users, regardless of login status
-  if (level === "A1") {
-    return true;
-  }
-  
-  // If no userId, user is not logged in - only allow A1 and Grammar
-  if (!userId) {
-    return level === "Grammar";
-  }
-
-  // Grammar is always unlocked for logged-in users
-  if (level === "Grammar") {
-    return true;
-  }
-
-  try {
-    // Check if user has passed a certification for this level or higher
-    const { data: certData, error: certError } = await supabase
-      .from('certification_attempts')
-      .select('level, score')
-      .eq('user_id', userId)
-      .gte('score', REQUIRED_SCORE)
-      .order('completed_at', { ascending: false });
-
-    if (certError) {
-      console.error('Error checking certifications:', certError);
-    } else if (certData && certData.length > 0) {
-      // Get CEFR levels in order from lowest to highest
-      const ceferLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-      
-      // Clean up the level name (remove -C2 if present)
-      const cleanLevel = level.replace('-C2', '');
-      const requiredLevelIndex = ceferLevels.indexOf(cleanLevel);
-      
-      if (requiredLevelIndex === -1) {
-        return false; // Invalid level
-      }
-      
-      // Find the highest certification level the user has achieved
-      let highestCertLevelIndex = -1;
-      for (const cert of certData) {
-        const certLevelIndex = ceferLevels.indexOf(cert.level);
-        if (certLevelIndex > highestCertLevelIndex) {
-          highestCertLevelIndex = certLevelIndex;
-        }
-      }
-      
-      // If the user's highest certification level is equal to or higher than the required level,
-      // or if the level the user wants to access is lower than or equal to their certified level,
-      // then unlock the level
-      if (highestCertLevelIndex >= requiredLevelIndex) {
-        return true;
-      }
-    }
-
-    // If no valid certification found, check completion of prerequisite level
-    const prerequisiteLevel = LEVEL_DEPENDENCIES[level];
-    
-    if (!prerequisiteLevel) {
-      return true; // No prerequisite means it's unlocked
-    }
-    
-    // Check if completed prerequisite level flashcard sets
-    const progressKey = `flashcard_progress_${userId}`;
-    const progressStr = localStorage.getItem(progressKey);
-    const progress = progressStr ? JSON.parse(progressStr) : {};
-    
-    // Check if all sets from the prerequisite level are completed with sufficient score
-    const setsCompleted = progress[prerequisiteLevel] || [];
-    const allSetsCompleted = setsCompleted.every((set: {id: string, score: number}) => 
-      set.score >= REQUIRED_SCORE
-    );
-    
-    // If the user has completed all prerequisite level sets with sufficient score
-    if (allSetsCompleted && setsCompleted.length > 0) {
-      return true;
-    }
-    
-    return false;
-  } catch (error) {
-    console.error("Error checking level unlock status:", error);
-    return false;
-  }
+  // All levels are always unlocked for all users
+  return true;
 };
 
 // Save flashcard set progress

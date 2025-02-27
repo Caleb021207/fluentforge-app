@@ -13,7 +13,6 @@ import {
   updateFlashcardSetProgress 
 } from "@/components/vocabulary/data/flashcardData";
 import {
-  isLevelUnlocked,
   saveFlashcardSetProgress
 } from "@/components/vocabulary/utils/levelUnlockUtils";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,7 +25,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
 
 const Vocabulary = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,9 +35,13 @@ const Vocabulary = () => {
   const [showPracticeDialog, setShowPracticeDialog] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("Ready for Conversation Practice?");
   const [dialogDescription, setDialogDescription] = useState("");
-  // Set A1 to always be unlocked by default
+  // Set all levels to be unlocked by default
   const [unlockedLevels, setUnlockedLevels] = useState<Record<string, boolean>>({
-    "A1": true,  // A1 is always unlocked
+    "A1": true,
+    "A2": true,
+    "B1": true,
+    "B2": true,
+    "C1-C2": true,
     "Grammar": true
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -50,29 +52,11 @@ const Vocabulary = () => {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser();
       setUser(data.user);
-      
-      // Check which levels are unlocked
-      await checkUnlockedLevels(data.user?.id);
       setIsLoading(false);
     };
     
     fetchUser();
   }, []);
-  
-  // Check which levels are unlocked for the current user
-  const checkUnlockedLevels = async (userId?: string) => {
-    const levels = ["A1", "A2", "B1", "B2", "C1-C2", "Grammar"];
-    const unlocked: Record<string, boolean> = {};
-    
-    for (const lvl of levels) {
-      unlocked[lvl] = await isLevelUnlocked(lvl, userId);
-    }
-    
-    // Ensure A1 is always unlocked regardless of the response from isLevelUnlocked
-    unlocked["A1"] = true;
-    
-    setUnlockedLevels(unlocked);
-  };
   
   // Fetch flashcard sets for the current level
   const flashcardSets = getFlashcardSetsByLevel(level);
@@ -88,39 +72,23 @@ const Vocabulary = () => {
     : [];
   
   const handleLevelChange = (newLevel: string) => {
-    // Check if level is unlocked
-    if (!unlockedLevels[newLevel]) {
-      toast({
-        title: "Level Locked",
-        description: `You need to complete the previous level with at least 75% accuracy or pass a certification exam to unlock ${newLevel}.`,
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setSearchParams({ level: newLevel });
     setActiveSetId(null);
   };
 
   const handleB1Selected = () => {
-    if (!unlockedLevels["B1"]) return;
-    
     setDialogTitle("Ready for Conversation Practice?");
     setDialogDescription("Congratulations on reaching the B1 level! At this stage, it's highly recommended that you begin practicing real conversations to improve your fluency.");
     setShowPracticeDialog(true);
   };
 
   const handleB2Selected = () => {
-    if (!unlockedLevels["B2"]) return;
-    
     setDialogTitle("Advanced Conversation Practice");
     setDialogDescription("Great job reaching B2 level! At this upper intermediate stage, you should be able to discuss a wide range of topics with increased fluency and accuracy.");
     setShowPracticeDialog(true);
   };
 
   const handleC1C2Selected = () => {
-    if (!unlockedLevels["C1-C2"]) return;
-    
     setDialogTitle("Advanced Proficiency");
     setDialogDescription("Excellent work reaching the advanced C1-C2 levels! At this stage, you should focus on mastering nuanced expression, idioms, and native-like fluency through extensive conversation practice.");
     setShowPracticeDialog(true);
@@ -157,9 +125,6 @@ const Vocabulary = () => {
       // Save the progress for level unlocking
       if (user?.id) {
         saveFlashcardSetProgress(user.id, level, activeSetId, score);
-        
-        // Check if this completion unlocks a new level
-        checkUnlockedLevels(user.id);
       }
       
       toast({

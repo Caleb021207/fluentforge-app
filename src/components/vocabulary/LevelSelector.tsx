@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Info, Book, Lock } from "lucide-react";
+import { Book } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -43,17 +43,6 @@ const LevelSelector = ({
   };
   
   const handleLevelClick = (level: string) => {
-    // A1 is always available, override any other settings
-    if (level === "A1") {
-      onLevelChange(level);
-      return;
-    }
-    
-    // Check if the level is unlocked
-    if (!unlockedLevels[level]) {
-      return;
-    }
-    
     onLevelChange(level);
     
     // Call appropriate handler based on the level selected
@@ -72,9 +61,6 @@ const LevelSelector = ({
     <div className="space-y-3">
       <div className="flex flex-col space-y-2">
         {levels.map((level) => {
-          // A1 is never locked - override the unlockedLevels setting
-          const isLocked = level === "A1" ? false : !unlockedLevels[level];
-          
           return (
             <TooltipProvider key={level}>
               <Tooltip>
@@ -86,24 +72,15 @@ const LevelSelector = ({
                         currentLevel === level 
                           ? "bg-lingua-primary hover:bg-lingua-primary/90" 
                           : ""
-                      } ${
-                        isLocked ? "opacity-70" : ""
                       }`}
                       onClick={() => handleLevelClick(level)}
-                      disabled={isLocked}
                     >
                       {icons[level]}
                       <span className="font-bold mr-2">{level}</span>
                       <span className="text-xs">{levelDescriptions[level]}</span>
-                      {isLocked && <Lock className="h-4 w-4 ml-auto" />}
                     </Button>
                   </div>
                 </TooltipTrigger>
-                {isLocked && (
-                  <TooltipContent>
-                    <p>Complete the previous level with at least 75% accuracy<br/>or pass a certification exam to unlock</p>
-                  </TooltipContent>
-                )}
               </Tooltip>
             </TooltipProvider>
           );
