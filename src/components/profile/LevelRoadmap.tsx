@@ -20,6 +20,9 @@ const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: LevelRoadmapProps) => {
   const calculateProgressToNextLevel = () => {
+    // If no target level (C2 users) or current level not found, return 100%
+    if (!targetLevel || CEFR_LEVELS.indexOf(currentLevel) === -1) return 100;
+    
     const currentLevelIndex = CEFR_LEVELS.indexOf(currentLevel);
     const targetLevelIndex = CEFR_LEVELS.indexOf(targetLevel);
     
@@ -32,6 +35,7 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
 
   const getRemainingTime = () => {
     if (!targetDate) return "No target date set";
+    if (!targetLevel) return "Maximum level achieved";
     
     const target = new Date(targetDate);
     const now = new Date();
@@ -52,17 +56,26 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>{currentLevel || 'Not assessed'}</span>
-              <span>{targetLevel}</span>
+          {currentLevel === 'C2' ? (
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
+              <h3 className="font-medium text-green-800">Congratulations!</h3>
+              <p className="text-green-700">
+                You've reached C2, the highest proficiency level. Keep practicing to maintain your skills!
+              </p>
             </div>
-            <Progress value={calculateProgressToNextLevel()} />
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-sm font-medium">Progress to Goal</span>
-              <span className="text-sm text-gray-600">{calculateProgressToNextLevel()}%</span>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>{currentLevel || 'Not assessed'}</span>
+                <span>{targetLevel}</span>
+              </div>
+              <Progress value={calculateProgressToNextLevel()} />
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-sm font-medium">Progress to Goal</span>
+                <span className="text-sm text-gray-600">{calculateProgressToNextLevel()}%</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {testScores && (
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">

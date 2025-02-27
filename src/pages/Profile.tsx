@@ -77,6 +77,20 @@ const DashboardPage = () => {
       const currentLevelIndex = CEFR_LEVELS.indexOf(profileData.currentLevel);
       const targetLevelIndex = CEFR_LEVELS.indexOf(profileData.targetLevel);
       
+      // Don't set a target level for C2 users
+      if (profileData.currentLevel === 'C2') {
+        setProfileData(prev => ({
+          ...prev,
+          targetLevel: ''
+        }));
+        
+        // Update the target level in the database
+        if (user) {
+          updateTargetLevel(user.id, '');
+        }
+        return;
+      }
+      
       // Only update if:
       // 1. Current level is valid
       // 2. Current level is not C2 (highest level)
