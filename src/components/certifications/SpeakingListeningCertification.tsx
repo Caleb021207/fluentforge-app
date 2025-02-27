@@ -7,7 +7,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useConversation } from "@11labs/react";
-import { Mic, MicOff, Play, Volume2, Check, Pause } from "lucide-react";
+import { Mic, MicOff, Play, Volume2, Check, Pause, Loader2 } from "lucide-react";
+import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { Progress } from "@/components/ui/progress";
+import { 
+  AssessmentMetricsType, 
+  AssessmentResultType, 
+  ConversationMessageType 
+} from "@/components/certifications/types/speaking";
 
 const testInstructions = `
 Welcome to the Speaking and Listening Certification Test. 
@@ -54,17 +61,83 @@ const SpeakingListeningCertification = () => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [assessmentMetrics, setAssessmentMetrics] = useState<AssessmentMetricsType>({
+    pronunciation: 0,
+    fluency: 0,
+    grammar: 0,
+    vocabulary: 0,
+    comprehension: 0,
+    overall: 0
+  });
+  const [realTimeAssessment, setRealTimeAssessment] = useState<string[]>([]);
+  const [conversationMessages, setConversationMessages] = useState<ConversationMessageType[]>([]);
   const { toast } = useToast();
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const assessmentMetricsRef = useRef<AssessmentMetricsType>({
+    pronunciation: 0,
+    fluency: 0,
+    grammar: 0,
+    vocabulary: 0,
+    comprehension: 0,
+    overall: 0
+  });
 
+  // Create ElevenLabs conversation with client tools for assessment
   const conversation = useConversation({
+    clientTools: {
+      recordAssessment: (parameters: { 
+        metricType: keyof AssessmentMetricsType, 
+        score: number, 
+        feedback: string 
+      }) => {
+        const { metricType, score, feedback } = parameters;
+        
+        // Update the assessment metrics
+        const updatedMetrics = { ...assessmentMetricsRef.current };
+        updatedMetrics[metricType] = score;
+        
+        // Calculate the overall score as an average of all metrics
+        const metricsSum = Object.values(updatedMetrics).reduce((sum, value, index) => {
+          // Skip the overall value in the calculation
+          if (index < Object.values(updatedMetrics).length - 1) {
+            return sum + value;
+          }
+          return sum;
+        }, 0);
+        
+        const metricCount = Object.keys(updatedMetrics).length - 1; // Subtract 1 for 'overall'
+        updatedMetrics.overall = Math.round(metricsSum / metricCount);
+        
+        // Update the ref and state
+        assessmentMetricsRef.current = updatedMetrics;
+        setAssessmentMetrics(updatedMetrics);
+        
+        // Add the feedback to real-time assessment
+        setRealTimeAssessment(prev => [...prev, feedback]);
+        
+        return `Assessment recorded: ${metricType}: ${score}/100 - ${feedback}`;
+      }
+    },
     onMessage: (message) => {
       console.log("Message received:", message);
+      
       if (message.type === "llm_response") {
         setResponses(prev => [...prev, message.content]);
+        
+        // Add to conversation messages
+        setConversationMessages(prev => [
+          ...prev, 
+          { type: 'assistant', content: message.content }
+        ]);
       } else if (message.type === "transcript") {
         setUserTranscript(prev => [...prev, message.content]);
+        
+        // Add to conversation messages
+        setConversationMessages(prev => [
+          ...prev, 
+          { type: 'user', content: message.content }
+        ]);
       }
     },
     onError: (error) => {
@@ -92,6 +165,13 @@ const SpeakingListeningCertification = () => {
     };
 
     initMicrophone();
+    
+    // Cleanup function for the conversation
+    return () => {
+      if (isStarted) {
+        conversation.endSession().catch(console.error);
+      }
+    };
   }, [toast]);
 
   // Timer effect
@@ -115,7 +195,7 @@ const SpeakingListeningCertification = () => {
   useEffect(() => {
     if (showInstructions) {
       utteranceRef.current = new SpeechSynthesisUtterance(testInstructions);
-      utteranceRef.current.lang = 'en-US';  // Changed from 'es-ES' to 'en-US'
+      utteranceRef.current.lang = 'en-US';
       utteranceRef.current.rate = 0.9;
       
       utteranceRef.current.onend = () => {
@@ -173,12 +253,30 @@ const SpeakingListeningCertification = () => {
       }
 
       setShowInstructions(false);
+      
+      // Reset assessment metrics
+      const initialMetrics: AssessmentMetricsType = {
+        pronunciation: 0,
+        fluency: 0,
+        grammar: 0,
+        vocabulary: 0,
+        comprehension: 0,
+        overall: 0
+      };
+      
+      setAssessmentMetrics(initialMetrics);
+      assessmentMetricsRef.current = initialMetrics;
+      
+      // Start the conversation session with the specialized assessment agent
       await conversation.startSession({
-        agentId: "2rNEBxdJ814y7dcdZSOb", // Using your actual agent ID
+        agentId: "2rNEBxdJ814y7dcdZSOb", // Using the assessment agent ID
       });
+      
       setIsStarted(true);
       setResponses([]);
       setUserTranscript([]);
+      setRealTimeAssessment([]);
+      setConversationMessages([]);
       setFeedback("");
       setShowFeedback(false);
       setTimeLeft(180); // Reset timer to 3 minutes
@@ -197,185 +295,134 @@ const SpeakingListeningCertification = () => {
     }
   };
 
-  const analyzeTranscript = async (transcript: string[]) => {
-    try {
-      // Create a combined transcript string
-      const fullTranscript = transcript.join(" ");
-      
-      // If the transcript is too short, return default feedback
-      if (fullTranscript.length < 10) {
-        return "The transcript was too short to provide detailed feedback.";
-      }
-
-      const prompt = `
-        You are a Spanish language teacher and examiner. 
-        Analyze the following transcript from a Spanish speaking test:
-        
-        "${fullTranscript}"
-        
-        Provide a detailed assessment covering:
-        1. Fluency and pronunciation
-        2. Grammar usage
-        3. Vocabulary range
-        4. Comprehension of questions
-        5. Overall communication effectiveness
-        
-        End with specific suggestions for improvement and assign a CEFR level (A1, A2, B1, B2, C1, or C2).
-        
-        Format your response as a structured assessment with clear sections.
-      `;
-
-      // For this example, we're using a simplified analysis algorithm based on the transcript length and content
-      // In a real implementation, you would connect to an LLM API for a proper analysis
-      
-      // Simplified analysis based on word count and complexity
-      const wordCount = fullTranscript.split(/\s+/).length;
-      let mockFeedback = "";
-
-      if (wordCount < 30) {
-        mockFeedback = `
-          ## Speaking Assessment
-          
-          ### Fluency and Pronunciation
-          Your responses were brief, which makes it difficult to fully assess your fluency. Try to speak in complete sentences.
-          
-          ### Grammar Usage
-          Limited examples of grammatical structures were observed. Consider practicing basic present tense conjugations.
-          
-          ### Vocabulary Range
-          Basic vocabulary was used. Work on expanding your everyday vocabulary.
-          
-          ### Comprehension
-          You appear to understand simple questions but may need more practice with complex topics.
-          
-          ### Overall Communication
-          You can communicate basic ideas but need more practice for fluent expression.
-          
-          ### Suggestions for Improvement
-          - Practice speaking for longer periods
-          - Use complete sentences rather than single words
-          - Review basic verb conjugations
-          - Build your vocabulary with flashcards
-          
-          ### CEFR Level: A1 (Beginner)
-        `;
-      } else if (wordCount < 60) {
-        mockFeedback = `
-          ## Speaking Assessment
-          
-          ### Fluency and Pronunciation
-          You can form basic sentences with some hesitation. Work on linking your ideas more smoothly.
-          
-          ### Grammar Usage
-          You show understanding of present tense but may struggle with past tenses or more complex structures.
-          
-          ### Vocabulary Range
-          You have sufficient vocabulary for familiar topics but may struggle with specialized areas.
-          
-          ### Comprehension
-          You understand most questions with occasional need for clarification.
-          
-          ### Overall Communication
-          You can express yourself on familiar topics with some preparation.
-          
-          ### Suggestions for Improvement
-          - Practice past tense verbs
-          - Try speaking about a wider range of topics
-          - Listen to Spanish media to improve comprehension
-          - Join a conversation group for practical practice
-          
-          ### CEFR Level: A2 (Elementary)
-        `;
-      } else {
-        mockFeedback = `
-          ## Speaking Assessment
-          
-          ### Fluency and Pronunciation
-          You speak with good rhythm and reasonable fluency. Your pronunciation is generally clear with a few non-native sounds.
-          
-          ### Grammar Usage
-          You use a variety of tenses correctly, though you occasionally make errors with subjunctive or conditional forms.
-          
-          ### Vocabulary Range
-          You demonstrate a good range of vocabulary appropriate for everyday and some specialized topics.
-          
-          ### Comprehension
-          You understand questions well and respond appropriately to most prompts.
-          
-          ### Overall Communication
-          You communicate effectively on familiar topics and can handle some unexpected questions.
-          
-          ### Suggestions for Improvement
-          - Practice more complex grammar structures
-          - Expand vocabulary in professional or academic contexts
-          - Work on expressing nuanced opinions and hypothetical situations
-          - Practice speaking without preparation on unfamiliar topics
-          
-          ### CEFR Level: B1 (Intermediate)
-        `;
-      }
-
-      return mockFeedback;
-    } catch (error) {
-      console.error("Error analyzing transcript:", error);
-      return "An error occurred while analyzing your speaking performance. Please try again later.";
-    }
-  };
-
-  const calculateScore = (responses: string[]) => {
-    // This is a simplified scoring algorithm
-    // You should adjust these weights based on your requirements
-    let totalScore = 0;
-    let fluencyScore = 0;
-    let comprehensionScore = 0;
-    let grammarScore = 0;
-    let vocabularyScore = 0;
-
-    responses.forEach(response => {
-      // Look for specific keywords in the AI's responses
-      if (response.toLowerCase().includes("fluent") || response.toLowerCase().includes("natural")) {
-        fluencyScore += 20;
-      }
-      if (response.toLowerCase().includes("understood") || response.toLowerCase().includes("correct response")) {
-        comprehensionScore += 20;
-      }
-      if (response.toLowerCase().includes("grammar") || response.toLowerCase().includes("structure")) {
-        grammarScore += 20;
-      }
-      if (response.toLowerCase().includes("vocabulary") || response.toLowerCase().includes("word choice")) {
-        vocabularyScore += 20;
-      }
-    });
-
-    // Calculate the total score (max 100)
-    totalScore = Math.min(100, (fluencyScore + comprehensionScore + grammarScore + vocabularyScore) / 4);
+  const generateDetailedFeedback = (
+    transcript: string[], 
+    metrics: AssessmentMetricsType,
+    realTimeAssessments: string[]
+  ): string => {
+    // Generate the CEFR level based on the overall score
+    const overallScore = metrics.overall;
+    const cefrLevel = determineLevel(overallScore);
     
-    // Determine CEFR level based on score
-    let level = "A1";
-    if (totalScore >= 90) level = "C2";
-    else if (totalScore >= 80) level = "C1";
-    else if (totalScore >= 70) level = "B2";
-    else if (totalScore >= 60) level = "B1";
-    else if (totalScore >= 50) level = "A2";
+    // Create a comprehensive feedback
+    let detailedFeedback = `
+## Speaking Assessment Results
 
-    return { score: Math.round(totalScore), level };
+### Overall Proficiency: ${cefrLevel} (${overallScore}/100)
+
+### Metrics Breakdown:
+- Pronunciation: ${metrics.pronunciation}/100
+- Fluency: ${metrics.fluency}/100
+- Grammar: ${metrics.grammar}/100
+- Vocabulary: ${metrics.vocabulary}/100
+- Comprehension: ${metrics.comprehension}/100
+
+### Detailed Feedback:
+
+`;
+
+    // Add the real-time assessments if available
+    if (realTimeAssessments.length > 0) {
+      detailedFeedback += `#### Observations during the test:\n`;
+      realTimeAssessments.forEach((assessment, index) => {
+        detailedFeedback += `- ${assessment}\n`;
+      });
+    }
+    
+    // Add recommendations based on the CEFR level
+    detailedFeedback += `\n### Recommendations for ${cefrLevel} level:\n`;
+    
+    // Custom recommendations based on the CEFR level
+    switch(cefrLevel) {
+      case 'A1':
+        detailedFeedback += `
+- Focus on building basic vocabulary and simple sentence structures
+- Practice common greetings and everyday expressions
+- Work on pronunciation of Spanish vowels and consonants
+- Use language learning apps for daily practice
+- Consider joining a beginner Spanish conversation group
+`;
+        break;
+      case 'A2':
+        detailedFeedback += `
+- Expand vocabulary to include more daily situations
+- Practice forming past and future tenses
+- Work on connecting ideas with conjunctions
+- Listen to slow, clear Spanish recordings or podcasts
+- Try to have simple conversations about familiar topics
+`;
+        break;
+      case 'B1':
+        detailedFeedback += `
+- Focus on more complex grammar structures like subjunctive
+- Expand vocabulary to include more abstract concepts
+- Work on expressing opinions and explaining your reasoning
+- Watch Spanish media with subtitles
+- Practice speaking about unfamiliar topics to challenge yourself
+`;
+        break;
+      case 'B2':
+        detailedFeedback += `
+- Work on more nuanced expression and idiomatic language
+- Practice hypothetical situations using conditional forms
+- Focus on reducing your accent and improving natural rhythm
+- Engage in debates and discussions in Spanish
+- Read Spanish literature and news to expand vocabulary
+`;
+        break;
+      case 'C1':
+        detailedFeedback += `
+- Focus on professional and academic language
+- Perfect your use of connectors and discourse markers
+- Work on expressing subtle differences in meaning
+- Immerse yourself in native Spanish content without subtitles
+- Practice explaining complex topics in Spanish
+`;
+        break;
+      case 'C2':
+        detailedFeedback += `
+- Continue refining your near-native fluency
+- Focus on cultural and regional expressions
+- Perfect your command of idioms and colloquialisms
+- Work on humor, irony, and other advanced language functions
+- Consider professional or academic contexts for using Spanish
+`;
+        break;
+      default:
+        detailedFeedback += `
+- Continue practicing regularly
+- Use a variety of resources to improve your Spanish
+- Seek conversation partners for real practice
+- Set specific goals for improvement
+`;
+    }
+    
+    return detailedFeedback;
   };
 
   const endTest = async () => {
     try {
       setIsSubmitting(true);
+      
+      // End the conversation session
       await conversation.endSession();
       setIsStarted(false);
       setTimeLeft(180); // Reset timer
       
-      // Generate feedback based on the transcript
-      const analysisResult = await analyzeTranscript(userTranscript);
-      setFeedback(analysisResult);
+      // Generate detailed feedback based on the assessment metrics and conversation
+      const detailedFeedback = generateDetailedFeedback(
+        userTranscript, 
+        assessmentMetricsRef.current,
+        realTimeAssessment
+      );
+      
+      setFeedback(detailedFeedback);
       setShowFeedback(true);
       
-      // Calculate the score based on the AI's responses
-      const { score, level } = calculateScore(responses);
-
+      // Get the CEFR level and overall score
+      const overallScore = assessmentMetricsRef.current.overall;
+      const cefrLevel = determineLevel(overallScore);
+      
       // Save the test results
       const {
         data: { user },
@@ -383,23 +430,51 @@ const SpeakingListeningCertification = () => {
 
       if (!user) return;
 
-      const { error } = await supabase
+      // First save the basic certification attempt
+      const { data: attemptData, error: attemptError } = await supabase
         .from('certification_attempts')
         .insert([
           {
-            certification_type: 'speaking_listening',
-            score,
-            level,
+            certification_type: 'speaking',
+            score: overallScore,
+            level: cefrLevel,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
-        ]);
+        ])
+        .select();
 
-      if (error) throw error;
+      if (attemptError) throw attemptError;
+      
+      // If we have the attempt data, save the detailed speaking assessment
+      if (attemptData && attemptData.length > 0) {
+        const attemptId = attemptData[0].id;
+        
+        // Save detailed assessment metrics
+        const { error: detailsError } = await supabase
+          .from('speaking_assessments')
+          .insert([
+            {
+              attempt_id: attemptId,
+              pronunciation_score: assessmentMetricsRef.current.pronunciation,
+              fluency_score: assessmentMetricsRef.current.fluency,
+              grammar_score: assessmentMetricsRef.current.grammar,
+              vocabulary_score: assessmentMetricsRef.current.vocabulary,
+              comprehension_score: assessmentMetricsRef.current.comprehension,
+              feedback: detailedFeedback,
+              conversation_data: JSON.stringify(conversationMessages),
+              created_at: new Date().toISOString(),
+            }
+          ]);
+          
+        if (detailsError) {
+          console.error("Error saving detailed assessment:", detailsError);
+        }
+      }
 
       toast({
         title: "Test Completed",
-        description: `You've completed the speaking and listening test. Score: ${score}% (${level})`,
+        description: `You've completed the speaking and listening test. Score: ${overallScore}% (${cefrLevel})`,
       });
     } catch (error) {
       console.error("Error ending test:", error);
@@ -480,10 +555,62 @@ const SpeakingListeningCertification = () => {
                   The AI examiner is listening. Speak clearly and answer the questions
                   to the best of your ability.
                 </p>
-                <p className="text-lg font-semibold text-center">
+                <p className="text-lg font-semibold text-center mb-4">
                   Time Remaining: {formatTime(timeLeft)}
                 </p>
+                
+                {/* Real-time assessment metrics */}
+                <div className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Pronunciation</span>
+                      <span>{assessmentMetrics.pronunciation}%</span>
+                    </div>
+                    <Progress value={assessmentMetrics.pronunciation} className="h-2" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Fluency</span>
+                      <span>{assessmentMetrics.fluency}%</span>
+                    </div>
+                    <Progress value={assessmentMetrics.fluency} className="h-2" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Grammar</span>
+                      <span>{assessmentMetrics.grammar}%</span>
+                    </div>
+                    <Progress value={assessmentMetrics.grammar} className="h-2" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Vocabulary</span>
+                      <span>{assessmentMetrics.vocabulary}%</span>
+                    </div>
+                    <Progress value={assessmentMetrics.vocabulary} className="h-2" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Comprehension</span>
+                      <span>{assessmentMetrics.comprehension}%</span>
+                    </div>
+                    <Progress value={assessmentMetrics.comprehension} className="h-2" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm font-medium">
+                      <span>Overall</span>
+                      <span>{assessmentMetrics.overall}%</span>
+                    </div>
+                    <Progress value={assessmentMetrics.overall} className="h-3" />
+                  </div>
+                </div>
               </div>
+              
               <Button
                 onClick={endTest}
                 variant="destructive"
@@ -491,7 +618,10 @@ const SpeakingListeningCertification = () => {
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  <>Analyzing your speech...</>
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Analyzing your speech...
+                  </div>
                 ) : (
                   <>End Test</>
                 )}
