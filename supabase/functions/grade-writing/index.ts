@@ -9,6 +9,16 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// CEFR scoring rubric
+const scoreToLevel = (score: number) => {
+  if (score >= 84) return 'C2';
+  if (score >= 67) return 'C1';
+  if (score >= 50) return 'B2';
+  if (score >= 33) return 'B1';
+  if (score >= 17) return 'A2';
+  return 'A1';
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -38,18 +48,19 @@ serve(async (req) => {
             4. Task completion and content relevance
             5. Overall CEFR level demonstrated
 
-            Score ranges and corresponding CEFR levels:
-            - 90-100%: C2 (Near-native mastery)
-            - 80-89%: C1 (Advanced)
-            - 70-79%: B2 (Upper Intermediate)
-            - 60-69%: B1 (Intermediate)
-            - 50-59%: A2 (Elementary)
-            - Below 50%: A1 (Beginner)
+            Use strictly the following score ranges and corresponding CEFR levels:
+            - 84-100%: C2 (Near-native mastery)
+            - 67-83%: C1 (Advanced)
+            - 50-66%: B2 (Upper Intermediate)
+            - 33-49%: B1 (Intermediate)
+            - 17-32%: A2 (Elementary)
+            - 0-16%: A1 (Beginner)
+
+            It is crucial that you adhere to this scoring rubric exactly.
 
             Return your evaluation as a JSON object with:
             {
               "score": (numerical score 0-100),
-              "level": (CEFR level based on score ranges above),
               "feedback": (detailed feedback in English explaining the score and areas for improvement)
             }`
           },
@@ -67,7 +78,15 @@ serve(async (req) => {
     let result;
     try {
       // Try to parse the AI's response as JSON
-      result = JSON.parse(data.choices[0].message.content);
+      const parsedResult = JSON.parse(data.choices[0].message.content);
+      
+      // Apply our own scoring rubric to ensure consistency
+      result = {
+        score: parsedResult.score,
+        feedback: parsedResult.feedback,
+      };
+      
+      console.log('Parsed result:', result);
     } catch (e) {
       // If JSON parsing fails, extract information from the text response
       const content = data.choices[0].message.content;
@@ -76,7 +95,6 @@ serve(async (req) => {
       // Default to conservative scoring if parsing fails
       result = {
         score: 60,
-        level: 'B1',
         feedback: content
       };
     }

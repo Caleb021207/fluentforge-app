@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
+import { determineLevel } from "./utils/scoreUtils";
 
 const WRITING_PROMPTS = [
   {
@@ -76,8 +77,12 @@ const WritingCertification = () => {
 
       if (gradeError) throw gradeError;
 
-      const { score, level, feedback } = gradeResult;
-
+      // Extract score and make sure to use our rubric to determine level
+      let { score, feedback } = gradeResult;
+      
+      // Use our own determineLevel function to ensure consistency with the rubric
+      const level = determineLevel(score);
+      
       // Get CEFR recommendations for the achieved level
       const levelRecommendations = getRecommendationsForLevel('writing', level);
       
