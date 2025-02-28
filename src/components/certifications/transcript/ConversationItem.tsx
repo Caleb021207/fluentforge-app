@@ -27,11 +27,8 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
     }
   }, [message, expandedView]);
 
-  // Function to format message text - detects and formats URLs, line breaks, etc.
   const formatMessage = (text: string) => {
-    // Handle undefined or empty strings
     if (!text) {
-      console.warn('Received empty or undefined message in ConversationItem:', { isAi });
       return "No content";
     }
     
@@ -39,14 +36,13 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
     if (typeof text === 'string' && (text.startsWith('{') || text.startsWith('['))) {
       try {
         const parsed = JSON.parse(text);
-        console.log('Message appears to be JSON:', parsed);
-        // If it's valid JSON, display it prettified
-        return <pre className="whitespace-pre-wrap text-xs font-mono bg-gray-50 p-2 rounded">
-          {JSON.stringify(parsed, null, 2)}
-        </pre>;
-      } catch (e) {
+        return (
+          <pre className="whitespace-pre-wrap text-xs font-mono bg-gray-50 p-2 rounded">
+            {JSON.stringify(parsed, null, 2)}
+          </pre>
+        );
+      } catch {
         // Not valid JSON, continue with normal formatting
-        console.log('Message looks like JSON but fails to parse:', e);
       }
     }
     
@@ -60,13 +56,6 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
     
     return withLineBreaks;
   };
-
-  // Log messages for debugging
-  React.useEffect(() => {
-    console.log(`Rendering ${isAi ? 'AI' : 'User'} message:`, 
-      message?.length > 100 ? `${message.substring(0, 100)}... (${message.length} chars)` : message
-    );
-  }, [message, isAi]);
 
   return (
     <div className="flex gap-3 mb-4">

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,10 +7,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useConversation } from "@11labs/react";
-import { Mic, MicOff, Play, Volume2, Check, Pause } from "lucide-react";
-import { getLevelDescription } from "./utils/scoreUtils";
-import ConversationItem from "./transcript/ConversationItem";
+import { Mic, Play, Volume2, Pause, Check } from "lucide-react";
 import TranscriptConversation from "./transcript/TranscriptConversation";
+import { getLevelDescription } from "./utils/scoreUtils";
 
 const testInstructions = `
 Welcome to the Speaking and Listening Certification Test. 
@@ -46,46 +46,44 @@ The test will last exactly 3 minutes. Are you ready to begin?
 `;
 
 const SpeakingListeningCertification = () => {
-  const [isStarted, setIsStarted] = useState(false);
-  const [microphoneAccess, setMicrophoneAccess] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [responses, setResponses] = useState<string[]>([]);
-  const [userTranscript, setUserTranscript] = useState<string[]>([]);
+  // State management
+  const [testState, setTestState] = useState<'idle' | 'instructions' | 'testing' | 'results' | 'completed'>('idle');
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
-  const [feedback, setFeedback] = useState("");
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [speakingScore, setSpeakingScore] = useState<{level: string, score: number} | null>(null);
-  const [listeningScore, setListeningScore] = useState<{level: string, score: number} | null>(null);
-  const [showResults, setShowResults] = useState(false);
-  const [isReviewingResults, setIsReviewingResults] = useState(false);
-  const [attemptIds, setAttemptIds] = useState<{speaking: string | null, listening: string | null}>({
-    speaking: null, 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isReviewingDetails, setIsReviewingDetails] = useState(false);
+  
+  // Test data
+  const [userTranscripts, setUserTranscripts] = useState<string[]>([]);
+  const [aiResponses, setAiResponses] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState("");
+  const [scores, setScores] = useState<{
+    speaking: { level: string, score: number } | null,
+    listening: { level: string, score: number } | null
+  }>({
+    speaking: null,
     listening: null
   });
-  const [sessionStarted, setSessionStarted] = useState(false);
-  const [sessionError, setSessionError] = useState<string | null>(null);
+  
+  // Technical refs
   const { toast } = useToast();
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const endTestTimeout = useRef<NodeJS.Timeout | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
+  
+  // Conversation API setup
   const conversation = useConversation({
     onMessage: (message) => {
-      console.log("Message received:", message);
       if (message.type === "llm_response") {
-        console.log("AI response received:", message.content);
-        setResponses(prev => [...prev, message.content]);
+        setAiResponses(prev => [...prev, message.content]);
       } else if (message.type === "transcript") {
-        console.log("User transcript received:", message.content);
-        setUserTranscript(prev => [...prev, message.content]);
+        setUserTranscripts(prev => [...prev, message.content]);
       }
     },
     onError: (error) => {
       console.error("Conversation error:", error);
-      setSessionError(`Conversation error: ${error.message}`);
       toast({
         title: "Error",
         description: error.message,
@@ -94,12 +92,12 @@ const SpeakingListeningCertification = () => {
     },
   });
 
+  // Initialize microphone access
   useEffect(() => {
     const initMicrophone = async () => {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
         setMicrophoneAccess(true);
-        console.log("Microphone access granted");
       } catch (error) {
         console.error("Microphone access error:", error);
         toast({
@@ -113,23 +111,19 @@ const SpeakingListeningCertification = () => {
     initMicrophone();
   }, [toast]);
 
+  // Timer management
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isStarted && timeLeft > 0) {
+    
+    if (testState === 'testing' && timeLeft > 0) {
       timer = setInterval(() => {
-        setTimeLeft((prev) => {
+        setTimeLeft(prev => {
           if (prev <= 1) {
-            console.log("Timer reached zero, auto-ending test...");
             clearInterval(timer);
+            // Auto-end test when timer reaches zero
             if (endTestTimeout.current === null) {
               endTestTimeout.current = setTimeout(() => {
-                if (buttonRef.current) {
-                  console.log("Auto-clicking end test button");
-                  buttonRef.current.click();
-                } else {
-                  console.log("Button ref not available, manually calling endTest");
-                  endTest();
-                }
+                handleEndTest();
                 endTestTimeout.current = null;
               }, 100);
             }
@@ -139,6 +133,7 @@ const SpeakingListeningCertification = () => {
         });
       }, 1000);
     }
+    
     return () => {
       clearInterval(timer);
       if (endTestTimeout.current) {
@@ -146,10 +141,11 @@ const SpeakingListeningCertification = () => {
         endTestTimeout.current = null;
       }
     };
-  }, [isStarted, timeLeft]);
+  }, [testState, timeLeft]);
 
+  // Instructions audio setup
   useEffect(() => {
-    if (showInstructions) {
+    if (testState === 'instructions') {
       utteranceRef.current = new SpeechSynthesisUtterance(testInstructions);
       utteranceRef.current.lang = 'en-US';
       utteranceRef.current.rate = 0.9;
@@ -164,25 +160,66 @@ const SpeakingListeningCertification = () => {
     }
     
     return () => {
-      if (!showInstructions && speechSynthesis.speaking) {
+      if (testState !== 'instructions' && speechSynthesis.speaking) {
         speechSynthesis.cancel();
         setIsAudioPlaying(false);
       }
     };
-  }, [showInstructions]);
+  }, [testState]);
 
-  useEffect(() => {
-    if (isStarted) {
-      console.log("Current conversation data:", {
-        transcripts: userTranscript,
-        responses: responses,
-        sessionStarted: sessionStarted
-      });
-    }
-  }, [userTranscript, responses, isStarted, sessionStarted]);
+  // Mock analysis function (in a real app, this would be an API call)
+  const analyzeConversation = () => {
+    // This is a mock function that simulates analyzing the conversation
+    // In a real implementation, this would call an API or use a more sophisticated analysis
+    
+    // Generate random scores for demo purposes
+    const speakingLevel = ["A1", "A2", "B1", "B2", "C1", "C2"][Math.floor(Math.random() * 6)];
+    const listeningLevel = ["A1", "A2", "B1", "B2", "C1", "C2"][Math.floor(Math.random() * 6)];
+    
+    const speakingScore = Math.floor(Math.random() * 30) + 70; // 70-99
+    const listeningScore = Math.floor(Math.random() * 30) + 70; // 70-99
+    
+    const mockFeedback = `
+# Language Assessment Results
 
+## Speaking: ${speakingLevel} (${speakingScore}%)
+${getLevelDescription(speakingLevel)}
+
+### Strengths:
+- Good vocabulary usage in everyday topics
+- Clear pronunciation of most common words
+- Effective communication of basic ideas
+
+### Areas for Improvement:
+- Work on verb conjugation in past tenses
+- Practice more complex sentence structures
+- Expand vocabulary in specialized topics
+
+## Listening: ${listeningLevel} (${listeningScore}%)
+${getLevelDescription(listeningLevel)}
+
+### Strengths:
+- Good comprehension of direct questions
+- Ability to follow conversations at a moderate pace
+- Understanding of common idioms and expressions
+
+### Areas for Improvement:
+- Practice listening to different accents
+- Work on understanding fast speech
+- Improve comprehension of complex grammatical structures
+    `;
+    
+    setScores({
+      speaking: { level: speakingLevel, score: speakingScore },
+      listening: { level: listeningLevel, score: listeningScore }
+    });
+    
+    setFeedback(mockFeedback);
+  };
+
+  // Handler functions
   const handleStartTest = () => {
-    setShowInstructions(true);
+    setTestState('instructions');
   };
 
   const toggleAudioPlayback = () => {
@@ -196,11 +233,9 @@ const SpeakingListeningCertification = () => {
     }
   };
 
-  const startTest = async () => {
+  const handleBeginTest = async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
         toast({
@@ -210,36 +245,23 @@ const SpeakingListeningCertification = () => {
         });
         return;
       }
-
-      console.log("Starting test for user:", user.id);
-
-      setSessionError(null);
       
+      // Cancel any playing audio
       if (speechSynthesis.speaking) {
         speechSynthesis.cancel();
         setIsAudioPlaying(false);
       }
-
-      setShowInstructions(false);
       
-      console.log("Starting conversation session...");
-      
-      setIsStarted(true);
-      setResponses([]);
-      setUserTranscript([]);
-      setFeedback("");
-      setShowFeedback(false);
-      setSpeakingScore(null);
-      setListeningScore(null);
+      setTestState('testing');
+      setUserTranscripts([]);
+      setAiResponses([]);
       setTimeLeft(180);
-      setAttemptIds({ speaking: null, listening: null });
       
+      // Start conversation session
       try {
         await conversation.startSession({
-          agentId: "2rNEBxdJ814y7dcdZSOb",
+          agentId: "2rNEBxdJ814y7dcdZSOb", // ElevenLabs agent ID
         });
-        console.log("Conversation session started successfully");
-        setSessionStarted(true);
         
         toast({
           title: "Test Started",
@@ -247,12 +269,12 @@ const SpeakingListeningCertification = () => {
         });
       } catch (error) {
         console.error("Failed to start conversation session:", error);
-        setSessionError(`Failed to start conversation: ${error.message}`);
         toast({
           title: "Failed to start test",
           description: "There was an error starting the conversation. Please try again.",
           variant: "destructive",
         });
+        setTestState('idle');
       }
     } catch (error) {
       console.error("Error starting test:", error);
@@ -261,50 +283,35 @@ const SpeakingListeningCertification = () => {
         description: "Failed to start the test. Please try again.",
         variant: "destructive",
       });
+      setTestState('idle');
     }
   };
 
-  const endTest = async () => {
+  const handleEndTest = async () => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    setTestState('results');
+    
     try {
-      console.log("🔴 End Test button clicked");
-      if (isSubmitting) {
-        console.log("Test submission already in progress, ignoring duplicate call");
-        return;
-      }
+      // End conversation session
+      await conversation.endSession();
       
-      setIsSubmitting(true);
-      console.log("Ending test and session...");
-      
-      setIsStarted(false);
-      setTimeLeft(0);
-      
-      const conversationData = {
-        userTranscripts: userTranscript,
-        aiResponses: responses
-      };
-      
-      console.log("Ending test. Conversation data to analyze:", conversationData);
-      
-      try {
-        await conversation.endSession();
-        console.log("✅ Conversation session ended successfully");
-      } catch (endSessionError) {
-        console.error("⚠️ Error ending conversation session:", endSessionError);
-      }
-      
-      if (userTranscript.length === 0 && responses.length === 0) {
-        console.warn("No conversation data detected!");
+      // Check if we have conversation data
+      if (userTranscripts.length === 0 && aiResponses.length === 0) {
         toast({
           title: "Test Incomplete",
           description: "We couldn't detect any speech. Please try again and make sure your microphone is working properly.",
           variant: "destructive",
         });
+        setTestState('idle');
         setIsSubmitting(false);
         return;
       }
       
-      setShowFeedback(true);
-      setIsSubmitting(false);
+      // Analyze conversation and generate scores
+      analyzeConversation();
+      
     } catch (error) {
       console.error("Error ending test:", error);
       toast({
@@ -312,35 +319,33 @@ const SpeakingListeningCertification = () => {
         description: `An error occurred when ending the test: ${error instanceof Error ? error.message : String(error)}`,
         variant: "destructive",
       });
+    } finally {
       setIsSubmitting(false);
     }
   };
 
-  const submitResults = async () => {
+  const handleSubmitResults = async () => {
     try {
       setIsSubmitting(true);
       
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
         throw new Error("User not authenticated");
       }
-
-      console.log("Saving test results for user:", user.id);
       
-      if (!speakingScore || !listeningScore) {
+      if (!scores.speaking || !scores.listening) {
         throw new Error("Missing score data");
       }
       
+      // Save speaking certification
       const speakingResult = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'speaking',
-            score: speakingScore.score,
-            level: speakingScore.level,
+            score: scores.speaking.score,
+            level: scores.speaking.level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
@@ -348,21 +353,19 @@ const SpeakingListeningCertification = () => {
         .select();
       
       if (speakingResult.error) {
-        console.error("Error saving speaking score:", speakingResult.error);
         throw speakingResult.error;
       }
       
-      console.log("Speaking score saved successfully:", speakingResult.data);
       const speakingAttemptId = speakingResult.data[0]?.id;
-      setAttemptIds(prev => ({ ...prev, speaking: speakingAttemptId }));
       
+      // Save listening certification
       const listeningResult = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'listening',
-            score: listeningScore.score,
-            level: listeningScore.level,
+            score: scores.listening.score,
+            level: scores.listening.level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
@@ -370,30 +373,26 @@ const SpeakingListeningCertification = () => {
         .select();
       
       if (listeningResult.error) {
-        console.error("Error saving listening score:", listeningResult.error);
         throw listeningResult.error;
       }
       
-      console.log("Listening score saved successfully:", listeningResult.data);
-      const listeningAttemptId = listeningResult.data[0]?.id;
-      setAttemptIds(prev => ({ ...prev, listening: listeningAttemptId }));
-      
+      // Save transcript data
       if (speakingAttemptId) {
         const transcriptData = {
           attempt_id: speakingAttemptId,
           user_id: user.id,
-          user_transcripts: userTranscript,
-          ai_responses: responses,
+          user_transcripts: userTranscripts,
+          ai_responses: aiResponses,
           analysis_data: {
-            speakingLevel: speakingScore.level,
-            speakingScore: speakingScore.score,
-            listeningLevel: listeningScore.level,
-            listeningScore: listeningScore.score,
+            speakingLevel: scores.speaking.level,
+            speakingScore: scores.speaking.score,
+            listeningLevel: scores.listening.level,
+            listeningScore: scores.listening.score,
             analysis: feedback
           }
         };
         
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('certification_transcripts')
           .insert([transcriptData]);
           
@@ -404,18 +403,15 @@ const SpeakingListeningCertification = () => {
             description: "Your scores were saved, but we couldn't store your conversation transcript.",
             variant: "default",
           });
-        } else {
-          console.log("Transcript data saved successfully");
         }
       }
 
       toast({
         title: "Test Completed",
-        description: `Results saved successfully. Speaking: ${speakingScore.score}% (${speakingScore.level}), Listening: ${listeningScore.score}% (${listeningScore.level})`,
+        description: `Results saved successfully. Speaking: ${scores.speaking.score}% (${scores.speaking.level}), Listening: ${scores.listening.score}% (${scores.listening.level})`,
       });
       
-      setShowResults(false);
-      setShowFeedback(true);
+      setTestState('completed');
     } catch (error) {
       console.error("Error submitting results:", error);
       toast({
@@ -428,23 +424,134 @@ const SpeakingListeningCertification = () => {
     }
   };
 
-  const handleReviewDetails = () => {
-    setIsReviewingResults(true);
-  };
-
-  const handleBackToResults = () => {
-    setIsReviewingResults(false);
-  };
-
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  useEffect(() => {
-    console.log("showResults state changed:", showResults);
-  }, [showResults]);
+  // Render functions
+  const renderIdleState = () => (
+    <div className="space-y-4">
+      <p className="text-gray-600">
+        This test will assess both your speaking and listening skills through
+        a conversation with an AI examiner. The test will last exactly 3 minutes.
+      </p>
+      <div className="space-y-2">
+        <p className="text-sm text-gray-500">Requirements:</p>
+        <ul className="list-disc list-inside text-sm text-gray-500">
+          <li>Working microphone</li>
+          <li>Quiet environment</li>
+          <li>3 minutes of uninterrupted time</li>
+        </ul>
+      </div>
+      <Button
+        onClick={handleStartTest}
+        disabled={!microphoneAccess}
+        className="w-full sm:w-auto"
+      >
+        <Mic className="h-4 w-4 mr-2" />
+        Start Test
+      </Button>
+    </div>
+  );
+
+  const renderTestingState = () => (
+    <div className="space-y-6">
+      <div className="p-4 bg-gray-50 rounded-lg">
+        <p className="text-gray-600 mb-2">
+          The AI examiner is listening. Speak clearly and answer the questions
+          to the best of your ability.
+        </p>
+        <p className="text-lg font-semibold text-center">
+          Time Remaining: {formatTime(timeLeft)}
+        </p>
+      </div>
+      
+      <div className="p-4 bg-gray-50 rounded-lg mt-4">
+        <h4 className="font-medium mb-2">Current Conversation:</h4>
+        <ScrollArea className="h-[300px] pr-4">
+          <div className="space-y-4">
+            {aiResponses.map((response, index) => (
+              <React.Fragment key={`exchange-${index}`}>
+                <div className="flex gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border bg-primary text-primary-foreground shadow">
+                    <Volume2 className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <p className="text-sm">{response}</p>
+                  </div>
+                </div>
+                
+                {userTranscripts[index] && (
+                  <div className="flex gap-3 ml-6">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border bg-muted shadow-sm">
+                      <Mic className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <p className="text-sm">{userTranscripts[index]}</p>
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
+      
+      <Button
+        ref={buttonRef}
+        onClick={handleEndTest}
+        variant="destructive"
+        className="w-full sm:w-auto"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Processing..." : "End Test"}
+      </Button>
+    </div>
+  );
+
+  const renderCompletedState = () => (
+    <div className="space-y-6">
+      <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 className="text-lg font-semibold mb-4">Test Completed</h3>
+        <p className="mb-4">
+          Your speaking test is complete! Below is the transcript of your conversation.
+          You can copy this and paste it into ChatGPT for additional feedback if desired.
+        </p>
+      </div>
+      
+      <div className="border border-gray-200 rounded-lg">
+        <TranscriptConversation 
+          userTranscripts={userTranscripts}
+          aiResponses={aiResponses}
+          analysisData={{
+            speakingLevel: scores.speaking?.level,
+            speakingScore: scores.speaking?.score,
+            listeningLevel: scores.listening?.level,
+            listeningScore: scores.listening?.score,
+            analysis: feedback
+          }}
+          showCopyButton={true}
+        />
+      </div>
+      
+      <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+        <Button 
+          onClick={() => setTestState('idle')} 
+          variant="outline"
+        >
+          Back
+        </Button>
+        <Button 
+          onClick={handleBeginTest} 
+          variant="default"
+        >
+          Take Test Again
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -453,116 +560,14 @@ const SpeakingListeningCertification = () => {
           <CardTitle>Speaking & Listening Certification Test</CardTitle>
         </CardHeader>
         <CardContent>
-          {!isStarted && !showFeedback ? (
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                This test will assess both your speaking and listening skills through
-                a conversation with an AI examiner. The AI will generate the transcript 
-                that you can copy and paste into ChatGPT for assessment. The test will 
-                last exactly 3 minutes.
-              </p>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-500">Requirements:</p>
-                <ul className="list-disc list-inside text-sm text-gray-500">
-                  <li>Working microphone</li>
-                  <li>Quiet environment</li>
-                  <li>3 minutes of uninterrupted time</li>
-                  <li>Access to ChatGPT for assessment</li>
-                </ul>
-              </div>
-              <Button
-                onClick={handleStartTest}
-                disabled={!microphoneAccess}
-                className="w-full md:w-auto"
-              >
-                Start Test
-              </Button>
-            </div>
-          ) : showFeedback ? (
-            <div className="space-y-6">
-              <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 className="text-lg font-semibold mb-4">Test Completed</h3>
-                <p className="mb-4">
-                  Your speaking test is complete! Please copy your conversation transcript below 
-                  and paste it into ChatGPT to receive an assessment of your speaking and 
-                  listening skills.
-                </p>
-                <p className="text-sm text-gray-600">
-                  The transcript includes instructions for ChatGPT to evaluate your language skills 
-                  according to the CEFR scale (A1-C2).
-                </p>
-              </div>
-              
-              <div className="border border-gray-200 rounded-lg">
-                <TranscriptConversation 
-                  userTranscripts={userTranscript}
-                  aiResponses={responses}
-                  analysisData={null}
-                  showCopyButton={true}
-                />
-              </div>
-              
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                <Button 
-                  onClick={() => setShowFeedback(false)} 
-                  variant="outline"
-                >
-                  Back
-                </Button>
-                <Button 
-                  onClick={startTest} 
-                  variant="default"
-                >
-                  Take Test Again
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-gray-600 mb-2">
-                  The AI examiner is listening. Speak clearly and answer the questions
-                  to the best of your ability.
-                </p>
-                <p className="text-lg font-semibold text-center">
-                  Time Remaining: {formatTime(timeLeft)}
-                </p>
-                {sessionError && (
-                  <div className="mt-2 p-2 bg-red-50 text-red-600 rounded-md">
-                    <p className="text-sm font-medium">Error: {sessionError}</p>
-                    <p className="text-xs mt-1">You can try ending the test anyway or restart.</p>
-                  </div>
-                )}
-              </div>
-              
-              <div className="p-4 bg-gray-50 rounded-lg mt-4">
-                <h4 className="font-medium mb-2">Current Conversation:</h4>
-                <TranscriptConversation
-                  userTranscripts={userTranscript}
-                  aiResponses={responses}
-                  analysisData={null}
-                />
-              </div>
-              
-              <Button
-                ref={buttonRef}
-                onClick={endTest}
-                variant="destructive"
-                className="w-full md:w-auto"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>Processing...</>
-                ) : (
-                  <>End Test</>
-                )}
-              </Button>
-            </div>
-          )}
+          {testState === 'idle' && renderIdleState()}
+          {testState === 'testing' && renderTestingState()}
+          {testState === 'completed' && renderCompletedState()}
         </CardContent>
       </Card>
 
-      <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
+      {/* Instructions Dialog */}
+      <Dialog open={testState === 'instructions'} onOpenChange={(open) => !open && setTestState('idle')}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Speaking & Listening Test Instructions</DialogTitle>
@@ -597,26 +602,27 @@ const SpeakingListeningCertification = () => {
           </div>
           
           <DialogFooter className="flex gap-2 sm:justify-between">
-            <Button variant="outline" onClick={() => setShowInstructions(false)}>
+            <Button variant="outline" onClick={() => setTestState('idle')}>
               Cancel
             </Button>
-            <Button onClick={startTest}>
+            <Button onClick={handleBeginTest}>
               Begin Test
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
+      {/* Results Dialog */}
       <Dialog 
-        open={showResults} 
-        onOpenChange={(open) => !isSubmitting && setShowResults(open)}
+        open={testState === 'results'} 
+        onOpenChange={(open) => !open && !isSubmitting && setTestState('idle')}
       >
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Speaking & Listening Test Results</DialogTitle>
           </DialogHeader>
           
-          {isReviewingResults ? (
+          {isReviewingDetails ? (
             <div className="py-4">
               <ScrollArea className="h-[400px] pr-4">
                 <div className="whitespace-pre-line text-gray-700 prose prose-sm max-w-none">
@@ -626,7 +632,7 @@ const SpeakingListeningCertification = () => {
               
               <div className="flex justify-center mt-4">
                 <Button 
-                  onClick={handleBackToResults}
+                  onClick={() => setIsReviewingDetails(false)}
                   variant="outline"
                 >
                   Back to Results Summary
@@ -640,20 +646,20 @@ const SpeakingListeningCertification = () => {
                 <p className="text-gray-600">You've completed the Speaking & Listening certification test.</p>
               </div>
               
-              {speakingScore && listeningScore && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {scores.speaking && scores.listening && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                   <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
                     <h4 className="font-medium text-blue-800 mb-2">Speaking</h4>
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">{speakingScore.level}</span>
-                      <span className="text-lg">{speakingScore.score}%</span>
+                      <span className="text-lg font-bold">{scores.speaking.level}</span>
+                      <span className="text-lg">{scores.speaking.score}%</span>
                     </div>
                   </div>
                   <div className="p-4 bg-green-50 rounded-lg border border-green-100">
                     <h4 className="font-medium text-green-800 mb-2">Listening</h4>
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">{listeningScore.level}</span>
-                      <span className="text-lg">{listeningScore.score}%</span>
+                      <span className="text-lg font-bold">{scores.listening.level}</span>
+                      <span className="text-lg">{scores.listening.score}%</span>
                     </div>
                   </div>
                 </div>
@@ -662,27 +668,31 @@ const SpeakingListeningCertification = () => {
               <div className="bg-gray-50 p-4 rounded-lg mb-6">
                 <p className="text-sm text-gray-600 mb-2">Summary:</p>
                 <p className="text-gray-800">
-                  {speakingScore && listeningScore ? (
-                    `Your speaking skills are at ${speakingScore.level} level and your listening skills are at ${listeningScore.level} level. Click "Review Detailed Feedback" for suggestions on how to improve.`
-                  ) : (
-                    "Your results have been analyzed. Review the detailed feedback for insights on your performance."
-                  )}
+                  Your speaking skills are at {scores.speaking?.level} level and your listening skills are at {scores.listening?.level} level.
+                  Click "Review Detailed Feedback" for suggestions on how to improve.
                 </p>
               </div>
               
               <div className="flex justify-between">
                 <Button 
-                  onClick={handleReviewDetails}
+                  onClick={() => setIsReviewingDetails(true)}
                   variant="outline"
                 >
                   Review Detailed Feedback
                 </Button>
                 <Button 
-                  onClick={submitResults}
-                  variant="success"
+                  onClick={handleSubmitResults}
+                  className="bg-green-600 hover:bg-green-700"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Saving..." : "Submit Results"}
+                  {isSubmitting ? (
+                    "Saving..."
+                  ) : (
+                    <>
+                      <Check className="h-4 w-4 mr-2" />
+                      Submit Results
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

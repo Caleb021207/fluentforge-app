@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -23,23 +23,6 @@ const TranscriptConversation = ({
 }: TranscriptConversationProps) => {
   const { toast } = useToast();
   
-  useEffect(() => {
-    // Log transcript data for debugging
-    console.log("TranscriptConversation data:", {
-      userTranscripts: userTranscripts?.length || 0,
-      aiResponses: aiResponses?.length || 0,
-      hasAnalysisData: !!analysisData
-    });
-    
-    if (!userTranscripts?.length && !aiResponses?.length) {
-      console.warn("Empty transcript - both user transcripts and AI responses are empty arrays");
-    }
-    
-    if (!Array.isArray(userTranscripts) || !Array.isArray(aiResponses)) {
-      console.error("Invalid transcript format:", { userTranscripts, aiResponses });
-    }
-  }, [userTranscripts, aiResponses, analysisData]);
-
   // Function to prepare conversation for copying
   const prepareConversationForCopy = () => {
     let conversationText = "# Language Assessment Conversation\n\n";
