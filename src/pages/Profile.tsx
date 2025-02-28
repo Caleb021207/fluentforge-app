@@ -9,6 +9,8 @@ import LevelRoadmap from "@/components/profile/LevelRoadmap";
 import LearningGoals from "@/components/profile/LearningGoals";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { ensureUserProfile, getUserProfile, updateUserProfile } from "@/utils/profileUtils";
+import { UserProfile } from "@/types/supabase"; 
 
 interface ProfileData {
   currentLevel: string;
@@ -51,8 +53,7 @@ const DashboardPage = () => {
         
         if (user) {
           try {
-            await createProfileTablesIfNeeded();
-            await createUserProfile(user.id);
+            await ensureUserProfile(user.id);
             await fetchProfileData(user.id);
             await fetchLatestLevel(user.id);
             await fetchTestScores(user.id);
@@ -115,149 +116,17 @@ const DashboardPage = () => {
     }
   }, [profileData.currentLevel, profileData.targetLevel, user]);
 
-  const createProfileTablesIfNeeded = async () => {
-    try {
-      const { error } = await supabase.rpc('create_profile_tables');
-      if (error) {
-        console.error('Error creating tables:', error);
-        
-        // Manually create tables if RPC fails
-        await createTablesManually();
-      }
-    } catch (error) {
-      console.error('Error in createProfileTablesIfNeeded:', error);
-      await createTablesManually();
-    }
-  };
-
-  const createTablesManually = async () => {
-    try {
-      // Check if user_profiles table exists
-      const { error: checkError } = await supabase.from('user_profiles').select('id').limit(1);
-      
-      if (checkError && checkError.code === '42P01') {
-        // Table doesn't exist, create it
-        const { error: createError } = await supabase.rpc('create_tables', {
-          sql_statements: `
-            CREATE TABLE IF NOT EXISTS public.user_profiles (
-              id UUID PRIMARY KEY,
-              display_name TEXT,
-              learning_goal TEXT,
-              target_level TEXT DEFAULT 'B2',
-              target_date TEXT,
-              avatar_url TEXT,
-              created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-            );
-            
-            CREATE TABLE IF NOT EXISTS public.certification_attempts (
-              id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-              user_id UUID,
-              certification_type TEXT NOT NULL,
-              level TEXT NOT NULL,
-              score INTEGER NOT NULL,
-              completed_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-              created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-            );
-            
-            ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
-            ALTER TABLE public.certification_attempts ENABLE ROW LEVEL SECURITY;
-            
-            CREATE POLICY "Users can view own profile" ON public.user_profiles
-              FOR SELECT USING (auth.uid() = id);
-            
-            CREATE POLICY "Users can update own profile" ON public.user_profiles
-              FOR UPDATE USING (auth.uid() = id);
-            
-            CREATE POLICY "Users can insert own profile" ON public.user_profiles
-              FOR INSERT WITH CHECK (auth.uid() = id);
-            
-            CREATE POLICY "Users can view own attempts" ON public.certification_attempts
-              FOR SELECT USING (auth.uid() = user_id);
-            
-            CREATE POLICY "Users can insert own attempts" ON public.certification_attempts
-              FOR INSERT WITH CHECK (auth.uid() = user_id);
-          `
-        });
-        
-        if (createError) {
-          console.error('Error manually creating tables:', createError);
-        }
-      }
-    } catch (error) {
-      console.error('Error in createTablesManually:', error);
-    }
-  };
-
   const updateTargetLevel = async (userId: string, targetLevel: string) => {
     try {
-      const { error } = await supabase
-        .from('user_profiles')
-        .update({ target_level: targetLevel })
-        .eq('id', userId);
-
-      if (error) {
-        throw error;
-      }
+      await updateUserProfile(userId, { target_level: targetLevel });
     } catch (error) {
       console.error('Error updating target level:', error);
     }
   };
 
-  const createUserProfile = async (userId: string) => {
-    try {
-      // Check if user profile exists
-      const { data: profile, error: profileError } = await supabase
-        .from('user_profiles')
-        .select('id')
-        .eq('id', userId)
-        .single();
-      
-      // If profile doesn't exist, create it
-      if (profileError && profileError.code === 'PGRST116') {
-        const { error } = await supabase
-          .from('user_profiles')
-          .insert({
-            id: userId,
-            display_name: '',
-            learning_goal: '',
-            target_level: 'B2',
-            target_date: '',
-          });
-          
-        if (error) {
-          console.error('Error creating user profile:', error);
-        }
-      }
-    } catch (error) {
-      console.error('Error checking/creating profile:', error);
-    }
-  };
-
   const fetchProfileData = async (userId: string) => {
     try {
-      const { data: profile, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          // Profile doesn't exist, create it
-          await supabase
-            .from('user_profiles')
-            .insert({
-              id: userId,
-              display_name: '',
-              learning_goal: '',
-              target_level: 'B2',
-              target_date: '',
-            });
-          return;
-        }
-        console.error('Error fetching profile:', error);
-        return;
-      }
+      const profile = await getUserProfile(userId);
 
       if (profile) {
         setProfileData(prev => ({
@@ -281,16 +150,12 @@ const DashboardPage = () => {
         .order('completed_at', { ascending: false });
 
       if (error) {
-        if (error.code === '42P01') {
-          // Table doesn't exist yet
-          return;
-        }
         throw error;
       }
 
       if (attempts && attempts.length > 0) {
         // Get highest score for each certification type
-        const highestScores = {
+        const highestScores: Record<string, any> = {
           reading: 0,
           writing: 0,
           speaking: 0,
@@ -332,10 +197,6 @@ const DashboardPage = () => {
         .order('completed_at', { ascending: false });
 
       if (error) {
-        if (error.code === '42P01') {
-          // Table doesn't exist yet
-          return;
-        }
         throw error;
       }
 
