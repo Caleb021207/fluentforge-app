@@ -38,6 +38,11 @@ const TranscriptConversation = ({ transcript }: TranscriptConversationProps) => 
 
   return (
     <div className="space-y-4">
+      <div className="bg-blue-50 p-3 rounded-md text-sm text-blue-700 mb-4">
+        <p className="font-medium">Conversational Fluency Assessment</p>
+        <p>This transcript shows the conversation that was assessed for your speaking and listening abilities.</p>
+      </div>
+      
       {conversation.map((message, index) => (
         <ConversationItem 
           key={index}

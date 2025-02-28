@@ -173,7 +173,8 @@ const ConversationalFluencyCertification = () => {
       const { data, error } = await supabase.functions.invoke("analyze-transcript", {
         body: { 
           transcript: transcript,
-          prompt: currentPromptRef.current 
+          prompt: currentPromptRef.current,
+          assessmentType: "conversational" // Indicate this is a conversational assessment
         }
       });
       
@@ -184,6 +185,42 @@ const ConversationalFluencyCertification = () => {
       if (data) {
         setAssessment(data as TranscriptAssessment);
         setRecordingState(RecordingState.RESULTS);
+        
+        // Save the certification attempt with the same score for both speaking and listening
+        if (data.overallScore) {
+          try {
+            // Create speaking certification
+            const speakingAttempt = await supabase
+              .from('certification_attempts')
+              .insert({
+                certification_type: 'speaking',
+                score: data.overallScore,
+                level: data.cefrLevel,
+                completed_at: new Date().toISOString()
+              })
+              .select()
+              .single();
+            
+            // Create listening certification with the same score
+            const listeningAttempt = await supabase
+              .from('certification_attempts')
+              .insert({
+                certification_type: 'listening',
+                score: data.overallScore,
+                level: data.cefrLevel,
+                completed_at: new Date().toISOString()
+              })
+              .select()
+              .single();
+            
+            if (speakingAttempt.error || listeningAttempt.error) {
+              console.error("Error saving certification attempts:", 
+                speakingAttempt.error || listeningAttempt.error);
+            }
+          } catch (err) {
+            console.error("Error saving certification attempts:", err);
+          }
+        }
         
         toast({
           title: "Assessment complete",
@@ -227,8 +264,8 @@ const ConversationalFluencyCertification = () => {
           <Card className="p-4">
             <div className="space-y-4">
               <p className="text-sm text-gray-600">
-                Please respond to the following prompt in Spanish. This test will evaluate your ability to maintain a natural conversation in Spanish.
-                Click "Start Recording" when you're ready, and "Stop Recording" when you're finished.
+                This assessment evaluates your overall conversational fluency in Spanish, including both your speaking ability 
+                and listening comprehension. You'll receive a single grade that reflects your overall conversational competence.
               </p>
               
               <div className="bg-gray-50 p-4 rounded-md border">
@@ -305,6 +342,9 @@ const ConversationalFluencyCertification = () => {
                     </div>
                     <p className="mt-2 text-sm text-gray-600">
                       {getCEFRDescription(assessment.cefrLevel)}
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-blue-600">
+                      This score has been applied to both your speaking and listening certificates.
                     </p>
                   </div>
                   
