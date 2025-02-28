@@ -8,11 +8,11 @@ interface ScoreCardsProps {
 }
 
 const ScoreCards = ({ highestScores }: ScoreCardsProps) => {
-  // Include reading, writing, and speaking skill types
-  const skillTypes = ['reading', 'writing', 'speaking'];
+  // Include reading, writing, speaking, and listening skill types
+  const skillTypes = ['reading', 'writing', 'speaking', 'listening'];
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       {skillTypes.map((type) => (
         <CertificateScoreCard 
           key={type} 
