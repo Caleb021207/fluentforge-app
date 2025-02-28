@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,16 +59,14 @@ const Certificates = () => {
     refetchOnWindowFocus: false,
   });
 
-  // This is a more thorough normalization of the attempts
   const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefined) => {
     if (!rawAttempts) return [];
     
-    // Filter out attempts with invalid scores or fluency with score 0
     const validAttempts = rawAttempts.filter(attempt => {
-      // Remove attempts with score 0
-      if (attempt.score === 0) return false;
+      if (attempt.certification_type !== "fluency") {
+        return true;
+      }
       
-      // Filter out fluency attempts with a score of 0
       if (attempt.certification_type === "fluency") {
         return attempt.score > 0;
       }
@@ -82,25 +79,23 @@ const Certificates = () => {
 
   const normalizedAttempts = normalizeAttempts(attempts);
   
-  // Process highest scores after normalizing types
   const highestScores = normalizedAttempts.reduce((acc, attempt) => {
     const type = attempt.certification_type;
     
-    // Special handling for fluency tests that should be considered as speaking scores as well
     if (type === "fluency") {
-      // Don't process fluency directly, it will be handled by speaking/listening
       return acc;
     }
     
-    if (!acc[type] || attempt.score > acc[type].score) {
+    if ((attempt.score > 0) && (!acc[type] || attempt.score > acc[type].score)) {
       acc[type] = attempt;
     }
     return acc;
   }, {} as Record<string, CertificationAttempt>);
 
-  // Process speaking and listening scores from fluency tests
   if (normalizedAttempts) {
     normalizedAttempts.forEach(attempt => {
+      if (attempt.score <= 0) return;
+      
       if (attempt.certification_type === "speaking" && (!highestScores["speaking"] || attempt.score > highestScores["speaking"].score)) {
         highestScores["speaking"] = attempt;
       }
@@ -114,11 +109,9 @@ const Certificates = () => {
   const calculateCompositeScore = () => {
     if (!highestScores) return null;
 
-    // Include reading, writing, speaking and listening scores
     const scoreTypes = ['reading', 'writing', 'speaking', 'listening'];
     const scores = scoreTypes.map(type => {
       const score = highestScores[type]?.score;
-      // Make sure we're returning a number and not undefined or null
       return typeof score === 'number' ? score : 0;
     });
     const totalScore = scores.reduce((sum, score) => sum + score, 0);
@@ -132,7 +125,6 @@ const Certificates = () => {
 
   const compositeScore = calculateCompositeScore();
 
-  // Create a map of attempt IDs that have transcript data
   const [hasTranscript, setHasTranscript] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -153,7 +145,6 @@ const Certificates = () => {
               .maybeSingle();
               
             if (error) {
-              // Don't log errors about permission denied for table users
               if (!error.message.includes("permission denied for table users")) {
                 console.error("Error checking transcript for attempt", attempt.id, error);
               }
@@ -174,7 +165,6 @@ const Certificates = () => {
   }, [attempts]);
 
   const handleViewAttempt = async (attemptId: string) => {
-    // Navigate to transcript view or display detailed results
     console.log("View attempt:", attemptId);
     toast({
       title: "Viewing details",
@@ -182,20 +172,16 @@ const Certificates = () => {
     });
   };
 
-  // Auto-refresh attempts when component mounts or after a test
   useEffect(() => {
     const refreshAttempts = () => {
       console.log("Refreshing certification attempts...");
       refetch();
     };
     
-    // Set up a listener for the ConversationalFluencyTest completion
     window.addEventListener('fluency-test-completed', refreshAttempts);
     
-    // Initial fetch
     refreshAttempts();
     
-    // Force multiple refreshes at different intervals to ensure we have the latest data
     setTimeout(refreshAttempts, 500);
     setTimeout(refreshAttempts, 1500);
     setTimeout(refreshAttempts, 3000);
@@ -221,7 +207,6 @@ const Certificates = () => {
       
       <ConversationalFluencyTest onTestComplete={() => {
         console.log("Test completed, refreshing data...");
-        // Multiple refreshes to ensure data is loaded
         refetch();
         setTimeout(() => refetch(), 500);
         setTimeout(() => refetch(), 1500);
