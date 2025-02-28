@@ -61,9 +61,12 @@ const Certificates = () => {
   });
 
   const highestScores = attempts?.reduce((acc, attempt) => {
-    if (!acc[attempt.certification_type] || 
-        attempt.score > acc[attempt.certification_type].score) {
-      acc[attempt.certification_type] = attempt;
+    // Normalize "fluency" to "conversation" for consistency in display
+    const type = attempt.certification_type === "fluency" ? "conversation" : attempt.certification_type;
+    
+    if (!acc[type] || attempt.score > acc[type].score) {
+      // Store a modified copy with the normalized type
+      acc[type] = {...attempt, certification_type: type};
     }
     return acc;
   }, {} as Record<string, CertificationAttempt>);
@@ -150,6 +153,9 @@ const Certificates = () => {
     // Initial fetch
     refreshAttempts();
     
+    // Force an immediate refresh to ensure we have the latest data
+    setTimeout(refreshAttempts, 1000);
+    
     return () => {
       window.removeEventListener('fluency-test-completed', refreshAttempts);
     };
@@ -169,7 +175,12 @@ const Certificates = () => {
       
       <WritingCertification />
       
-      <ConversationalFluencyTest onTestComplete={() => refetch()} />
+      <ConversationalFluencyTest onTestComplete={() => {
+        console.log("Test completed, refreshing data...");
+        refetch();
+        // Force another refresh after a short delay to ensure data is loaded
+        setTimeout(() => refetch(), 1000);
+      }} />
       
       <ScoreCards highestScores={highestScores} />
 
