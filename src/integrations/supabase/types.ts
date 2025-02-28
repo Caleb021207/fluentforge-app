@@ -39,6 +39,44 @@ export type Database = {
         }
         Relationships: []
       }
+      certification_transcripts: {
+        Row: {
+          ai_responses: Json
+          analysis_data: Json | null
+          attempt_id: string
+          created_at: string
+          id: string
+          user_id: string
+          user_transcripts: Json
+        }
+        Insert: {
+          ai_responses?: Json
+          analysis_data?: Json | null
+          attempt_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+          user_transcripts?: Json
+        }
+        Update: {
+          ai_responses?: Json
+          analysis_data?: Json | null
+          attempt_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+          user_transcripts?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certification_transcripts_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "certification_attempts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_progress: {
         Row: {
           completed: boolean

@@ -59,6 +59,10 @@ const SpeakingListeningCertification = () => {
   const [listeningScore, setListeningScore] = useState<{level: string, score: number} | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [isReviewingResults, setIsReviewingResults] = useState(false);
+  const [attemptIds, setAttemptIds] = useState<{speaking: string | null, listening: string | null}>({
+    speaking: null, 
+    listening: null
+  });
   const { toast } = useToast();
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -210,6 +214,7 @@ const SpeakingListeningCertification = () => {
       setSpeakingScore(null);
       setListeningScore(null);
       setTimeLeft(180); // Reset timer to 3 minutes
+      setAttemptIds({ speaking: null, listening: null });
       
       toast({
         title: "Test Started",
@@ -440,14 +445,17 @@ ${suggestions}`;
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
-        ]);
+        ])
+        .select();
       
       if (speakingResult.error) {
         console.error("Error saving speaking score:", speakingResult.error);
         throw speakingResult.error;
       }
       
-      console.log("Speaking score saved successfully");
+      console.log("Speaking score saved successfully:", speakingResult.data);
+      const speakingAttemptId = speakingResult.data[0]?.id;
+      setAttemptIds(prev => ({ ...prev, speaking: speakingAttemptId }));
       
       // Save listening score
       const listeningResult = await supabase
@@ -460,14 +468,50 @@ ${suggestions}`;
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
-        ]);
+        ])
+        .select();
       
       if (listeningResult.error) {
         console.error("Error saving listening score:", listeningResult.error);
         throw listeningResult.error;
       }
       
-      console.log("Listening score saved successfully");
+      console.log("Listening score saved successfully:", listeningResult.data);
+      const listeningAttemptId = listeningResult.data[0]?.id;
+      setAttemptIds(prev => ({ ...prev, listening: listeningAttemptId }));
+      
+      // Now save the transcript data
+      if (speakingAttemptId) {
+        const transcriptData = {
+          attempt_id: speakingAttemptId,
+          user_id: user.id,
+          user_transcripts: userTranscript,
+          ai_responses: responses,
+          analysis_data: {
+            speakingLevel: speakingScore.level,
+            speakingScore: speakingScore.score,
+            listeningLevel: listeningScore.level,
+            listeningScore: listeningScore.score,
+            analysis: feedback
+          }
+        };
+        
+        const { data, error } = await supabase
+          .from('certification_transcripts')
+          .insert([transcriptData]);
+          
+        if (error) {
+          console.error("Error saving transcript data:", error);
+          // Don't throw here, as we've already saved the scores
+          toast({
+            title: "Partial Success",
+            description: "Your scores were saved, but we couldn't store your conversation transcript.",
+            variant: "default",
+          });
+        } else {
+          console.log("Transcript data saved successfully");
+        }
+      }
 
       toast({
         title: "Test Completed",

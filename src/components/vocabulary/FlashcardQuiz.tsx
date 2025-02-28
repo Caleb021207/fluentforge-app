@@ -37,6 +37,7 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [score, setScore] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Generate quiz questions from flashcards
@@ -127,10 +128,13 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
   const saveQuizResult = async (score: number) => {
     try {
       setIsSaving(true);
+      setSaveError(null);
+      
       const { data: userData, error: userError } = await supabase.auth.getUser();
       
       if (userError) {
         console.error("Error getting user:", userError);
+        setSaveError("Authentication error. You must be logged in to save quiz results.");
         toast({
           title: "Authentication Error",
           description: "You must be logged in to save quiz results.",
@@ -140,6 +144,7 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
       }
       
       if (!userData || !userData.user) {
+        setSaveError("Not logged in. Please log in to save your progress.");
         toast({
           title: "Not Logged In",
           description: "Please log in to save your progress.",
@@ -158,8 +163,10 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
       else if (setTitle.startsWith("B2")) level = "B2";
       else if (setTitle.startsWith("C1") || setTitle.startsWith("C2")) level = "C1-C2";
       
+      console.log(`Saving vocabulary quiz result for user ${userId}, level ${level}, score ${score}`);
+      
       // Save quiz attempt as a "vocabulary" certification
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('certification_attempts')
         .insert([
           {
@@ -169,16 +176,19 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
             score: score,
             completed_at: new Date().toISOString()
           }
-        ]);
+        ])
+        .select();
         
       if (error) {
         console.error("Error saving quiz result:", error);
+        setSaveError(`Error saving progress: ${error.message}`);
         toast({
           title: "Error Saving Progress",
           description: "There was a problem saving your quiz results.",
           variant: "destructive",
         });
       } else {
+        console.log("Quiz result saved successfully:", data);
         toast({
           title: "Progress Saved",
           description: `Your vocabulary quiz score of ${score}% has been saved.`,
@@ -186,6 +196,7 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
       }
     } catch (error) {
       console.error("Error in saveQuizResult:", error);
+      setSaveError(`Unexpected error: ${error instanceof Error ? error.message : 'Unknown error'}`);
       toast({
         title: "Error",
         description: "Failed to save your quiz results. Please try again.",
@@ -226,6 +237,12 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
               <p className="text-center">
                 You answered {answers.filter((answer, index) => answer === questions[index].correctAnswer).length} out of {questions.length} questions correctly.
               </p>
+              
+              {saveError && (
+                <div className="text-red-500 text-sm p-2 bg-red-50 border border-red-200 rounded-md">
+                  {saveError}
+                </div>
+              )}
               
               <Button 
                 variant="default" 

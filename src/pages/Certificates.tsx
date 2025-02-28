@@ -3,21 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import ReadingCertification from "@/components/certifications/ReadingCertification";
 import WritingCertification from "@/components/certifications/WritingCertification";
 import SpeakingListeningCertification from "@/components/certifications/SpeakingListeningCertification";
+import TranscriptDisplay from "@/components/certifications/TranscriptDisplay";
 import { determineLevel, getLevelDescription } from "@/components/certifications/utils/scoreUtils";
 import { useEffect, useState } from "react";
-
-type CertificationAttempt = {
-  id: string;
-  certification_type: 'reading' | 'writing' | 'speaking' | 'listening';
-  score: number;
-  level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
-  completed_at: string;
-};
+import { CertificationAttempt } from "@/types/supabase";
+import { FileText, Award, Eye } from "lucide-react";
 
 const rubricData = [
   { level: 'C2', range: '84-100%' },
@@ -30,6 +26,7 @@ const rubricData = [
 
 const Certificates = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [selectedAttemptId, setSelectedAttemptId] = useState<string | null>(null);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -83,8 +80,30 @@ const Certificates = () => {
 
   const compositeScore = calculateCompositeScore();
 
+  const handleViewAttempt = (attemptId: string) => {
+    setSelectedAttemptId(attemptId);
+  };
+
+  const handleBackFromTranscript = () => {
+    setSelectedAttemptId(null);
+  };
+
+  const formatCertificationType = (type: string) => {
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading certification data...</div>;
+  }
+
+  // If a transcript is selected, show the transcript display
+  if (selectedAttemptId) {
+    return (
+      <TranscriptDisplay 
+        attemptId={selectedAttemptId} 
+        onBack={handleBackFromTranscript} 
+      />
+    );
   }
 
   return (
@@ -172,32 +191,61 @@ const Certificates = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Attempts</CardTitle>
+          <CardTitle>Recent Certification Attempts</CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-[300px]">
+          <ScrollArea className="h-[400px]">
             <div className="space-y-4">
               {attempts && attempts.length > 0 ? (
                 attempts.map((attempt) => (
                   <div
                     key={attempt.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                    className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 rounded-lg"
                   >
-                    <div>
-                      <h3 className="font-medium capitalize">{attempt.certification_type}</h3>
+                    <div className="mb-2 md:mb-0">
+                      <div className="flex items-center gap-2">
+                        <Award className="h-4 w-4 text-blue-500" />
+                        <h3 className="font-medium capitalize">{formatCertificationType(attempt.certification_type)}</h3>
+                      </div>
                       <p className="text-sm text-gray-600">
-                        {format(new Date(attempt.completed_at), 'PPP')}
+                        {format(new Date(attempt.completed_at || ''), 'PPP')}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <div className="font-medium">{attempt.score}%</div>
-                      <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right mr-2">
+                        <div className="font-medium">{attempt.score}%</div>
+                        <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
+                      </div>
+                      {(attempt.certification_type === 'speaking' || attempt.certification_type === 'listening') && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="flex items-center gap-1"
+                          onClick={() => handleViewAttempt(attempt.id)}
+                        >
+                          <Eye className="h-3 w-3" />
+                          <span className="hidden md:inline">View</span>
+                        </Button>
+                      )}
+                      {(attempt.certification_type === 'reading' || attempt.certification_type === 'writing') && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="flex items-center gap-1 opacity-50 cursor-not-allowed"
+                          disabled
+                          title="Transcripts are only available for speaking and listening tests"
+                        >
+                          <FileText className="h-3 w-3" />
+                          <span className="hidden md:inline">View</span>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-center text-gray-500">
-                  No attempts recorded yet
+                <div className="text-center text-gray-500 p-10">
+                  <p>No certification attempts recorded yet</p>
+                  <p className="text-sm mt-2">Take a test to see your results here</p>
                 </div>
               )}
             </div>
