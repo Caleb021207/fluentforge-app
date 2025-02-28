@@ -209,7 +209,7 @@ const TranscriptDisplay = ({ attemptId, onBack, onRetake }: TranscriptDisplayPro
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="feedback">Feedback</TabsTrigger>
                 <TabsTrigger value="details">Detailed Scores</TabsTrigger>
-                <TabsTrigger value="transcript">Transcript</TabsTrigger>
+                <TabsTrigger value="transcript">Conversation</TabsTrigger>
               </TabsList>
               
               <TabsContent value="feedback" className="mt-4">
@@ -230,7 +230,7 @@ const TranscriptDisplay = ({ attemptId, onBack, onRetake }: TranscriptDisplayPro
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Assessment Not Available</AlertTitle>
                 <AlertDescription>
-                  The AI has not yet analyzed this transcript. You can still view the conversation below.
+                  The AI has not yet analyzed this conversation. You can still view the conversation below.
                 </AlertDescription>
               </Alert>
               

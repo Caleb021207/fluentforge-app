@@ -41,8 +41,8 @@ const TranscriptConversation = ({ transcript }: TranscriptConversationProps) => 
       {conversation.map((message, index) => (
         <ConversationItem 
           key={index}
-          role={message.role}
-          content={message.content}
+          text={message.content}
+          isUser={message.role === "user"}
         />
       ))}
     </div>
