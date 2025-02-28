@@ -2,24 +2,28 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, ChevronLeft } from "lucide-react";
+import { AlertCircle, ChevronLeft, RefreshCw } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
-import AnalysisSection from "./transcript/AnalysisSection";
 import TranscriptConversation from "./transcript/TranscriptConversation";
 import NoTranscriptFound from "./transcript/NoTranscriptFound";
 import TranscriptHeader from "./transcript/TranscriptHeader";
 import TranscriptSkeleton from "./transcript/TranscriptSkeleton";
 import TranscriptError from "./transcript/TranscriptError";
 import { TranscriptAssessment } from "./utils/assessmentUtils";
+import ScoreDisplay from "./transcript/ScoreDisplay";
+import FeedbackSection from "./transcript/FeedbackSection";
+import DetailedScores from "./transcript/DetailedScores";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TranscriptDisplayProps {
   attemptId: string;
   onBack: () => void;
+  onRetake?: () => void;
 }
 
-const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
+const TranscriptDisplay = ({ attemptId, onBack, onRetake }: TranscriptDisplayProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [transcript, setTranscript] = useState<string | null>(null);
@@ -87,23 +91,50 @@ const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center">
+      <div className="flex items-center justify-between">
         <Button onClick={onBack} variant="outline" className="flex items-center">
           <ChevronLeft className="mr-2 h-4 w-4" />
           Back to Certificates
         </Button>
+        
+        {onRetake && (
+          <Button onClick={onRetake} variant="outline" className="flex items-center">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Retake Test
+          </Button>
+        )}
       </div>
 
       <Card>
         <CardHeader>
           <TranscriptHeader prompt={prompt} />
+          {assessment && (
+            <div className="mt-4">
+              <ScoreDisplay assessment={assessment} />
+            </div>
+          )}
         </CardHeader>
         <CardContent className="space-y-6">
           {assessment ? (
-            <div className="space-y-6">
-              <AnalysisSection assessment={assessment} />
-              <TranscriptConversation transcript={transcript} />
-            </div>
+            <Tabs defaultValue="feedback" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="feedback">Feedback</TabsTrigger>
+                <TabsTrigger value="details">Detailed Scores</TabsTrigger>
+                <TabsTrigger value="transcript">Transcript</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="feedback" className="mt-4">
+                <FeedbackSection assessment={assessment} />
+              </TabsContent>
+              
+              <TabsContent value="details" className="mt-4">
+                <DetailedScores assessment={assessment} />
+              </TabsContent>
+              
+              <TabsContent value="transcript" className="mt-4">
+                <TranscriptConversation transcript={transcript} />
+              </TabsContent>
+            </Tabs>
           ) : (
             <Alert>
               <AlertCircle className="h-4 w-4" />
