@@ -8,8 +8,8 @@ interface ScoreCardsProps {
 }
 
 const ScoreCards = ({ highestScores }: ScoreCardsProps) => {
-  // Include reading, writing, speaking, listening, conversation skill types
-  const skillTypes = ['reading', 'writing', 'speaking', 'listening', 'conversation'];
+  // Modified to exclude 'conversation' from skill types
+  const skillTypes = ['reading', 'writing', 'speaking', 'listening'];
   
   // Debug log to verify the data is correctly passed
   useEffect(() => {
@@ -17,7 +17,7 @@ const ScoreCards = ({ highestScores }: ScoreCardsProps) => {
   }, [highestScores]);
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       {skillTypes.map((type) => (
         <CertificateScoreCard 
           key={type} 
