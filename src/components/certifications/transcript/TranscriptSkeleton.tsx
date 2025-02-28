@@ -1,49 +1,46 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface TranscriptSkeletonProps {
   onBack: () => void;
 }
 
-const TranscriptSkeleton = ({ onBack }: TranscriptSkeletonProps) => {
+const TranscriptSkeleton: React.FC<TranscriptSkeletonProps> = ({ onBack }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center">
-        <Button variant="outline" className="mr-4" onClick={onBack}>
+        <Button onClick={onBack} variant="outline" className="flex items-center">
           <ChevronLeft className="mr-2 h-4 w-4" />
-          Back
+          Back to Certificates
         </Button>
-        <Skeleton className="h-8 w-64" />
       </div>
+
       <Card>
         <CardHeader>
-          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-4 w-1/2 mt-2" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <div className="space-y-6">
-            {/* Skeleton for conversation items */}
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex gap-3">
-                <Skeleton className="h-8 w-8 rounded-md" />
-                <div className="flex-1">
-                  <Skeleton className="h-4 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3 mt-2" />
-                </div>
+            {/* Assessment skeleton */}
+            <div className="flex flex-col md:flex-row md:items-start gap-6">
+              <div className="w-full md:w-1/3">
+                <Skeleton className="h-40 w-full" />
               </div>
-            ))}
-            
-            {/* Skeleton for analysis section */}
-            <div className="mt-8 pt-4 border-t border-gray-200">
-              <Skeleton className="h-6 w-48 mb-4" />
-              <Skeleton className="h-4 w-full mb-2" />
-              <Skeleton className="h-4 w-full mb-2" />
-              <Skeleton className="h-4 w-3/4" />
+              <div className="w-full md:w-2/3">
+                <Skeleton className="h-40 w-full" />
+              </div>
             </div>
+            
+            {/* Feedback skeleton */}
+            <Skeleton className="h-32 w-full" />
+            
+            {/* Transcript skeleton */}
+            <Skeleton className="h-40 w-full" />
           </div>
         </CardContent>
       </Card>

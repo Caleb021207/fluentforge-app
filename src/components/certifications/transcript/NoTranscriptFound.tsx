@@ -1,31 +1,40 @@
 
 import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ChevronLeft, AlertCircle } from "lucide-react";
+import { AlertCircle, ChevronLeft } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 interface NoTranscriptFoundProps {
   onBack: () => void;
 }
 
-const NoTranscriptFound = ({ onBack }: NoTranscriptFoundProps) => {
+const NoTranscriptFound: React.FC<NoTranscriptFoundProps> = ({ onBack }) => {
   return (
     <div className="space-y-4">
-      <Button variant="outline" onClick={onBack}>
-        <ChevronLeft className="mr-2 h-4 w-4" />
-        Back
-      </Button>
+      <div className="flex items-center">
+        <Button onClick={onBack} variant="outline" className="flex items-center">
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Back to Certificates
+        </Button>
+      </div>
+
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col items-center justify-center text-center p-6">
-            <AlertCircle className="h-12 w-12 text-amber-500 mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Transcript Found</h3>
-            <p className="text-gray-600 mb-4">
-              We couldn't find a transcript for this attempt. This might be because the test was
-              taken before transcript saving was implemented.
-            </p>
-            <Button variant="outline" onClick={onBack}>
-              Go Back
+        <CardHeader>
+          <CardTitle>Test Transcript</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>No Transcript Found</AlertTitle>
+            <AlertDescription>
+              We couldn't find a transcript for this test attempt. It may have been deleted or may not exist.
+            </AlertDescription>
+          </Alert>
+          
+          <div className="mt-6 text-center">
+            <Button onClick={onBack} variant="default">
+              Return to Certificates
             </Button>
           </div>
         </CardContent>
