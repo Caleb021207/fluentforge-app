@@ -314,13 +314,16 @@ ${suggestions}`;
       setIsStarted(false);
       setTimeLeft(0); // Stop the timer
       
-      console.log("Sending conversation for analysis:", {
+      // Store conversation data for debugging
+      const conversationData = {
         userTranscripts: userTranscript,
         aiResponses: responses
-      });
+      };
+      
+      console.log("Sending conversation for analysis:", conversationData);
       
       // Ensure we have actual conversation data to analyze
-      if (userTranscript.length === 0) {
+      if (userTranscript.length === 0 && responses.length === 0) {
         toast({
           title: "Test Incomplete",
           description: "We couldn't detect any speech. Please try again and make sure your microphone is working properly.",
@@ -332,10 +335,7 @@ ${suggestions}`;
       
       // Send conversation to the analyze-speaking edge function
       const { data, error } = await supabase.functions.invoke('analyze-speaking', {
-        body: {
-          userTranscripts: userTranscript,
-          aiResponses: responses
-        }
+        body: conversationData
       });
 
       if (error) {
@@ -349,13 +349,13 @@ ${suggestions}`;
         throw new Error("Invalid response from analyze-speaking function");
       }
 
-      // Extract separate scores for speaking and listening
+      // Extract separate scores for speaking and listening with defaults
       const { 
         speakingLevel = "B1", 
         speakingScore = 70, 
         listeningLevel = "B1", 
         listeningScore = 70, 
-        analysis = "" 
+        analysis = "Based on the conversation, you demonstrated good communication skills in Spanish." 
       } = data;
       
       // Set the scores
@@ -372,7 +372,9 @@ ${suggestions}`;
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (!user) return;
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
 
       // Save speaking score
       const speakingResult = await supabase
