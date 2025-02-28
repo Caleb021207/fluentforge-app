@@ -107,6 +107,9 @@ const ProgressPage = () => {
     const dataMap = new Map<string, ProgressData>();
     
     attempts.forEach(attempt => {
+      // Skip attempts with invalid dates
+      if (!attempt.completed_at && !attempt.created_at) return;
+      
       const date = new Date(attempt.completed_at || attempt.created_at).toISOString().split('T')[0];
       const existing = dataMap.get(date) || {
         date,
@@ -115,9 +118,13 @@ const ProgressPage = () => {
       // Map certification_type to the chart data properties
       const skillKey = attempt.certification_type as keyof Omit<ProgressData, 'date'>;
       
-      // Only update the value if it's higher than the existing value or if it doesn't exist yet
-      if (existing[skillKey] === undefined || attempt.score > existing[skillKey]) {
-        existing[skillKey] = attempt.score;
+      // Only use valid, non-zero scores 
+      const score = attempt.score;
+      if (typeof score === 'number' && !isNaN(score) && score > 0) {
+        // Only update the value if it's higher than the existing value or if it doesn't exist yet
+        if (existing[skillKey] === undefined || score > existing[skillKey]!) {
+          existing[skillKey] = score;
+        }
       }
       
       dataMap.set(date, existing);
@@ -134,8 +141,18 @@ const ProgressPage = () => {
     skills.forEach(skill => {
       const skillAttempts = attempts.filter(a => a.certification_type === skill);
       if (skillAttempts.length > 0) {
-        const highestScore = Math.max(...skillAttempts.map(a => a.score));
-        highestScores[skill] = highestScore;
+        const validScores = skillAttempts
+          .map(a => a.score)
+          .filter(score => typeof score === 'number' && !isNaN(score));
+        
+        if (validScores.length > 0) {
+          const highestScore = Math.max(...validScores);
+          highestScores[skill] = highestScore;
+        } else {
+          highestScores[skill] = 0;
+        }
+      } else {
+        highestScores[skill] = 0;
       }
     });
 
@@ -175,7 +192,7 @@ const ProgressPage = () => {
         <div className="bg-white p-3 border border-gray-200 shadow-md rounded-md">
           <p className="font-medium">{`Date: ${label}`}</p>
           {payload.map((entry: any) => (
-            entry.value !== undefined && (
+            entry.value !== undefined && entry.value > 0 && (
               <p key={entry.name} style={{ color: entry.color }}>
                 {`${entry.name}: ${entry.value}%`}
               </p>

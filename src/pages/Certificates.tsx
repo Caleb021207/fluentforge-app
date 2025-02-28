@@ -73,7 +73,11 @@ const Certificates = () => {
 
     // Include reading, writing, speaking and listening scores
     const scoreTypes = ['reading', 'writing', 'speaking', 'listening'];
-    const scores = scoreTypes.map(type => highestScores[type]?.score || 0);
+    const scores = scoreTypes.map(type => {
+      const score = highestScores[type]?.score;
+      // Make sure we're returning a number and not undefined or null
+      return typeof score === 'number' ? score : 0;
+    });
     const totalScore = scores.reduce((sum, score) => sum + score, 0);
     const averageScore = scores.length > 0 ? Math.round(totalScore / scores.length) : 0;
 
@@ -104,7 +108,10 @@ const Certificates = () => {
               .maybeSingle();
               
             if (error) {
-              console.error("Error checking transcript for attempt", attempt.id, error);
+              // Don't log errors about permission denied for table users
+              if (!error.message.includes("permission denied for table users")) {
+                console.error("Error checking transcript for attempt", attempt.id, error);
+              }
             }
             
             transcriptMap[attempt.id] = !!data;
