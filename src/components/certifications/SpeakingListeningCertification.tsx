@@ -112,17 +112,14 @@ const SpeakingListeningCertification = () => {
     initMicrophone();
   }, [toast]);
 
-  // Timer effect with automatic test ending
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isStarted && timeLeft > 0) {
       timer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
-            // Auto-trigger end test when timer reaches zero
             console.log("Timer reached zero, auto-ending test...");
             clearInterval(timer);
-            // Use setTimeout to avoid state update conflicts
             if (endTestTimeout.current === null) {
               endTestTimeout.current = setTimeout(() => {
                 if (buttonRef.current) {
@@ -150,7 +147,6 @@ const SpeakingListeningCertification = () => {
     };
   }, [isStarted, timeLeft]);
 
-  // Initialize speech synthesis when instructions modal is opened
   useEffect(() => {
     if (showInstructions) {
       utteranceRef.current = new SpeechSynthesisUtterance(testInstructions);
@@ -166,7 +162,6 @@ const SpeakingListeningCertification = () => {
       };
     }
     
-    // Clean up speech synthesis when dialog is closed
     return () => {
       if (!showInstructions && speechSynthesis.speaking) {
         speechSynthesis.cancel();
@@ -175,7 +170,6 @@ const SpeakingListeningCertification = () => {
     };
   }, [showInstructions]);
 
-  // Log current conversation data whenever it changes
   useEffect(() => {
     if (isStarted) {
       console.log("Current conversation data:", {
@@ -218,10 +212,8 @@ const SpeakingListeningCertification = () => {
 
       console.log("Starting test for user:", user.id);
 
-      // Reset any previous session errors
       setSessionError(null);
       
-      // Stop the audio if it's still playing
       if (speechSynthesis.speaking) {
         speechSynthesis.cancel();
         setIsAudioPlaying(false);
@@ -231,7 +223,6 @@ const SpeakingListeningCertification = () => {
       
       console.log("Starting conversation session...");
       
-      // First set the isStarted state to true to trigger UI update
       setIsStarted(true);
       setResponses([]);
       setUserTranscript([]);
@@ -239,13 +230,12 @@ const SpeakingListeningCertification = () => {
       setShowFeedback(false);
       setSpeakingScore(null);
       setListeningScore(null);
-      setTimeLeft(180); // Reset timer to 3 minutes
+      setTimeLeft(180);
       setAttemptIds({ speaking: null, listening: null });
       
       try {
-        // Then start the actual session
         await conversation.startSession({
-          agentId: "2rNEBxdJ814y7dcdZSOb", // Spanish language tutor agent ID
+          agentId: "2rNEBxdJ814y7dcdZSOb",
         });
         console.log("Conversation session started successfully");
         setSessionStarted(true);
@@ -273,9 +263,7 @@ const SpeakingListeningCertification = () => {
     }
   };
 
-  // Generate feedback based on CEFR level
   const generateFeedbackForLevel = (speakingLevel: string, listeningLevel: string, analysisText: string): string => {
-    // Use the existing CEFR level descriptions from scoreUtils
     const speakingLevelDescription = getLevelDescription(speakingLevel);
     const listeningLevelDescription = getLevelDescription(listeningLevel);
     
@@ -301,7 +289,7 @@ const SpeakingListeningCertification = () => {
       ${getSuggestionsForSkill('listening', listeningLevel)}
     `;
   };
-  
+
   const getFeedbackForSkill = (speakingLevel: string, listeningLevel: string): string => {
     return `
       **Speaking Assessment:**
@@ -311,7 +299,7 @@ const SpeakingListeningCertification = () => {
       ${getFeedbackForLevel(listeningLevel)}
     `;
   };
-  
+
   const getFeedbackForLevel = (level: string): string => {
     switch (level) {
       case 'C2':
@@ -330,7 +318,7 @@ const SpeakingListeningCertification = () => {
         return "Your skills have been assessed. Continue practicing to improve your language proficiency.";
     }
   };
-  
+
   const getSuggestionsForSkill = (skill: 'speaking' | 'listening', level: string): string => {
     const skillTitle = skill === 'speaking' ? 'Speaking Improvement' : 'Listening Improvement';
     const suggestions = getSuggestionsForLevel(level, skill);
@@ -338,7 +326,7 @@ const SpeakingListeningCertification = () => {
     return `**${skillTitle}**
 ${suggestions}`;
   };
-  
+
   const getSuggestionsForLevel = (level: string, skill: 'speaking' | 'listening' = 'speaking'): string => {
     if (skill === 'speaking') {
       switch (level) {
@@ -388,11 +376,9 @@ ${suggestions}`;
       setIsSubmitting(true);
       console.log("Ending test and session...");
       
-      // Even if there's no session, we want to update the UI to show we're processing
       setIsStarted(false);
-      setTimeLeft(0); // Stop the timer
+      setTimeLeft(0);
       
-      // Store conversation data for debugging
       const conversationData = {
         userTranscripts: userTranscript,
         aiResponses: responses
@@ -405,10 +391,8 @@ ${suggestions}`;
         console.log("✅ Conversation session ended successfully");
       } catch (endSessionError) {
         console.error("⚠️ Error ending conversation session:", endSessionError);
-        // Continue with analysis even if session ending fails
       }
       
-      // FIX: Changed AND to OR condition - ensure we have at least SOME conversation data to analyze
       if (userTranscript.length === 0 && responses.length === 0) {
         console.warn("No conversation data detected!");
         toast({
@@ -420,8 +404,6 @@ ${suggestions}`;
         return;
       }
       
-      // Send conversation to the analyze-speaking edge function
-      console.log("Sending conversation data to analyze-speaking function...");
       const { data, error } = await supabase.functions.invoke('analyze-speaking', {
         body: conversationData
       });
@@ -450,7 +432,6 @@ ${suggestions}`;
         return;
       }
 
-      // Extract separate scores for speaking and listening with defaults
       const { 
         speakingLevel = "B1", 
         speakingScore = 70, 
@@ -464,16 +445,17 @@ ${suggestions}`;
         listening: { level: listeningLevel, score: listeningScore }
       });
       
-      // Set the scores
       setSpeakingScore({ level: speakingLevel, score: speakingScore });
       setListeningScore({ level: listeningLevel, score: listeningScore });
       
-      // Generate feedback based on GPT's analysis
       const levelFeedback = generateFeedbackForLevel(speakingLevel, listeningLevel, analysis);
       setFeedback(levelFeedback);
       
-      // Show the results dialog
-      setShowResults(true);
+      setTimeout(() => {
+        console.log("Opening results dialog");
+        setShowResults(true);
+        setIsSubmitting(false);
+      }, 500);
     } catch (error) {
       console.error("Error ending test:", error);
       toast({
@@ -489,7 +471,6 @@ ${suggestions}`;
     try {
       setIsSubmitting(true);
       
-      // Get user data
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -504,7 +485,6 @@ ${suggestions}`;
         throw new Error("Missing score data");
       }
       
-      // Save speaking score
       const speakingResult = await supabase
         .from('certification_attempts')
         .insert([
@@ -527,7 +507,6 @@ ${suggestions}`;
       const speakingAttemptId = speakingResult.data[0]?.id;
       setAttemptIds(prev => ({ ...prev, speaking: speakingAttemptId }));
       
-      // Save listening score
       const listeningResult = await supabase
         .from('certification_attempts')
         .insert([
@@ -550,7 +529,6 @@ ${suggestions}`;
       const listeningAttemptId = listeningResult.data[0]?.id;
       setAttemptIds(prev => ({ ...prev, listening: listeningAttemptId }));
       
-      // Now save the transcript data
       if (speakingAttemptId) {
         const transcriptData = {
           attempt_id: speakingAttemptId,
@@ -572,7 +550,6 @@ ${suggestions}`;
           
         if (error) {
           console.error("Error saving transcript data:", error);
-          // Don't throw here, as we've already saved the scores
           toast({
             title: "Partial Success",
             description: "Your scores were saved, but we couldn't store your conversation transcript.",
@@ -588,7 +565,6 @@ ${suggestions}`;
         description: `Results saved successfully. Speaking: ${speakingScore.score}% (${speakingScore.level}), Listening: ${listeningScore.score}% (${listeningScore.level})`,
       });
       
-      // Close the results dialog and show the final feedback
       setShowResults(false);
       setShowFeedback(true);
     } catch (error) {
@@ -616,6 +592,10 @@ ${suggestions}`;
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
+
+  useEffect(() => {
+    console.log("showResults state changed:", showResults);
+  }, [showResults]);
 
   return (
     <>
@@ -709,7 +689,6 @@ ${suggestions}`;
                 )}
               </div>
               
-              {/* Display current conversation if available */}
               {(userTranscript.length > 0 || responses.length > 0) && (
                 <div className="p-4 bg-gray-50 rounded-lg mt-4 max-h-60 overflow-y-auto">
                   <h4 className="font-medium mb-2">Current Conversation:</h4>
@@ -721,7 +700,6 @@ ${suggestions}`;
                       <ConversationItem message={response} isAi={true} />
                     </React.Fragment>
                   ))}
-                  {/* Add any remaining user transcripts */}
                   {userTranscript.length > responses.length && 
                     <ConversationItem 
                       message={userTranscript[userTranscript.length - 1]} 
@@ -749,7 +727,6 @@ ${suggestions}`;
         </CardContent>
       </Card>
 
-      {/* Instructions Dialog */}
       <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
@@ -795,8 +772,10 @@ ${suggestions}`;
         </DialogContent>
       </Dialog>
 
-      {/* Results Dialog */}
-      <Dialog open={showResults} onOpenChange={(open) => !isSubmitting && setShowResults(open)}>
+      <Dialog 
+        open={showResults} 
+        onOpenChange={(open) => !isSubmitting && setShowResults(open)}
+      >
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Speaking & Listening Test Results</DialogTitle>
