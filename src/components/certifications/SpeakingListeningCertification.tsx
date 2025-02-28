@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -167,54 +168,21 @@ const SpeakingListeningCertification = () => {
     };
   }, [testState]);
 
-  // Mock analysis function (in a real app, this would be an API call)
+  // Analysis function to handle the conversation after test completion
   const analyzeConversation = () => {
-    // This is a mock function that simulates analyzing the conversation
-    // In a real implementation, this would call an API or use a more sophisticated analysis
-    
-    // Generate random scores for demo purposes
-    const speakingLevel = ["A1", "A2", "B1", "B2", "C1", "C2"][Math.floor(Math.random() * 6)];
-    const listeningLevel = ["A1", "A2", "B1", "B2", "C1", "C2"][Math.floor(Math.random() * 6)];
-    
-    const speakingScore = Math.floor(Math.random() * 30) + 70; // 70-99
-    const listeningScore = Math.floor(Math.random() * 30) + 70; // 70-99
-    
+    // We're not generating mock data anymore, but setting up the structure for user-provided analysis
     const mockFeedback = `
-# Language Assessment Results
+# Language Assessment Feedback
 
-## Speaking: ${speakingLevel} (${speakingScore}%)
-${getLevelDescription(speakingLevel)}
-
-### Strengths:
-- Good vocabulary usage in everyday topics
-- Clear pronunciation of most common words
-- Effective communication of basic ideas
-
-### Areas for Improvement:
-- Work on verb conjugation in past tenses
-- Practice more complex sentence structures
-- Expand vocabulary in specialized topics
-
-## Listening: ${listeningLevel} (${listeningScore}%)
-${getLevelDescription(listeningLevel)}
-
-### Strengths:
-- Good comprehension of direct questions
-- Ability to follow conversations at a moderate pace
-- Understanding of common idioms and expressions
-
-### Areas for Improvement:
-- Practice listening to different accents
-- Work on understanding fast speech
-- Improve comprehension of complex grammatical structures
+Please come back to this screen after copying the transcript and receiving feedback from ChatGPT. 
+Then click on "Add Assessment Results" to add the feedback.
     `;
     
-    setScores({
-      speaking: { level: speakingLevel, score: speakingScore },
-      listening: { level: listeningLevel, score: listeningScore }
-    });
-    
     setFeedback(mockFeedback);
+    setScores({
+      speaking: null,
+      listening: null
+    });
   };
 
   // Handler functions
@@ -309,7 +277,7 @@ ${getLevelDescription(listeningLevel)}
         return;
       }
       
-      // Analyze conversation and generate scores
+      // Set up for user to get external analysis
       analyzeConversation();
       
     } catch (error) {
@@ -334,18 +302,14 @@ ${getLevelDescription(listeningLevel)}
         throw new Error("User not authenticated");
       }
       
-      if (!scores.speaking || !scores.listening) {
-        throw new Error("Missing score data");
-      }
-      
-      // Save speaking certification
+      // Save speaking certification attempt
       const speakingResult = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'speaking',
-            score: scores.speaking.score,
-            level: scores.speaking.level,
+            score: 0, // Will be updated later with ChatGPT analysis
+            level: "N/A", // Will be updated later with ChatGPT analysis
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
@@ -359,25 +323,7 @@ ${getLevelDescription(listeningLevel)}
       const speakingAttemptId = speakingResult.data[0]?.id;
       setCompletedAttemptId(speakingAttemptId); // Save the attempt ID
       
-      // Save listening certification
-      const listeningResult = await supabase
-        .from('certification_attempts')
-        .insert([
-          {
-            certification_type: 'listening',
-            score: scores.listening.score,
-            level: scores.listening.level,
-            completed_at: new Date().toISOString(),
-            user_id: user.id,
-          }
-        ])
-        .select();
-      
-      if (listeningResult.error) {
-        throw listeningResult.error;
-      }
-      
-      // Save transcript data
+      // Save transcript data (without analysis yet)
       if (speakingAttemptId) {
         const transcriptData = {
           attempt_id: speakingAttemptId,
@@ -385,11 +331,7 @@ ${getLevelDescription(listeningLevel)}
           user_transcripts: userTranscripts,
           ai_responses: aiResponses,
           analysis_data: {
-            speakingLevel: scores.speaking.level,
-            speakingScore: scores.speaking.score,
-            listeningLevel: scores.listening.level,
-            listeningScore: scores.listening.score,
-            analysis: feedback
+            message: "Please click 'Add Assessment Results' after getting feedback from ChatGPT."
           }
         };
         
@@ -399,17 +341,13 @@ ${getLevelDescription(listeningLevel)}
           
         if (error) {
           console.error("Error saving transcript data:", error);
-          toast({
-            title: "Partial Success",
-            description: "Your scores were saved, but we couldn't store your conversation transcript.",
-            variant: "default",
-          });
+          throw error;
         }
       }
 
       toast({
         title: "Test Completed",
-        description: `Results saved successfully. Speaking: ${scores.speaking.score}% (${scores.speaking.level}), Listening: ${scores.listening.score}% (${scores.listening.level})`,
+        description: "Your conversation has been saved. Now copy the transcript and paste it into ChatGPT to get an assessment.",
       });
       
       setTestState('completed');
@@ -518,7 +456,7 @@ ${getLevelDescription(listeningLevel)}
         <h3 className="text-lg font-semibold mb-4">Test Completed</h3>
         <p className="mb-4">
           Your speaking test is complete! Below is the transcript of your conversation.
-          You can copy this and paste it into ChatGPT for additional feedback if desired.
+          Copy this and paste it into ChatGPT for assessment, then return here to add the results.
         </p>
       </div>
       
@@ -527,13 +465,10 @@ ${getLevelDescription(listeningLevel)}
           userTranscripts={userTranscripts}
           aiResponses={aiResponses}
           analysisData={{
-            speakingLevel: scores.speaking?.level,
-            speakingScore: scores.speaking?.score,
-            listeningLevel: scores.listening?.level,
-            listeningScore: scores.listening?.score,
-            analysis: feedback
+            message: "After getting ChatGPT's assessment, click 'Add Assessment Results' above to save your score."
           }}
           showCopyButton={true}
+          attemptId={completedAttemptId}
         />
       </div>
       
@@ -623,81 +558,39 @@ ${getLevelDescription(listeningLevel)}
             <DialogTitle>Speaking & Listening Test Results</DialogTitle>
           </DialogHeader>
           
-          {isReviewingDetails ? (
-            <div className="py-4">
-              <ScrollArea className="h-[400px] pr-4">
-                <div className="whitespace-pre-line text-gray-700 prose prose-sm max-w-none">
-                  {feedback}
-                </div>
-              </ScrollArea>
-              
-              <div className="flex justify-center mt-4">
-                <Button 
-                  onClick={() => setIsReviewingDetails(false)}
-                  variant="outline"
-                >
-                  Back to Results Summary
-                </Button>
-              </div>
+          <div className="py-4">
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-semibold">Assessment Instructions</h3>
+              <p className="text-gray-600">
+                Your conversation has been recorded. Follow these steps to complete your assessment:
+              </p>
             </div>
-          ) : (
-            <div className="py-4">
-              <div className="text-center mb-4">
-                <h3 className="text-xl font-semibold">Congratulations!</h3>
-                <p className="text-gray-600">You've completed the Speaking & Listening certification test.</p>
-              </div>
-              
-              {scores.speaking && scores.listening && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
-                    <h4 className="font-medium text-blue-800 mb-2">Speaking</h4>
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">{scores.speaking.level}</span>
-                      <span className="text-lg">{scores.speaking.score}%</span>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-100">
-                    <h4 className="font-medium text-green-800 mb-2">Listening</h4>
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">{scores.listening.level}</span>
-                      <span className="text-lg">{scores.listening.score}%</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div className="bg-gray-50 p-4 rounded-lg mb-6">
-                <p className="text-sm text-gray-600 mb-2">Summary:</p>
-                <p className="text-gray-800">
-                  Your speaking skills are at {scores.speaking?.level} level and your listening skills are at {scores.listening?.level} level.
-                  Click "Review Detailed Feedback" for suggestions on how to improve.
-                </p>
-              </div>
-              
-              <div className="flex justify-between">
-                <Button 
-                  onClick={() => setIsReviewingDetails(true)}
-                  variant="outline"
-                >
-                  Review Detailed Feedback
-                </Button>
-                <Button 
-                  onClick={handleSubmitResults}
-                  className="bg-green-600 hover:bg-green-700"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    "Saving..."
-                  ) : (
-                    <>
-                      <Check className="h-4 w-4 mr-2" />
-                      Submit Results
-                    </>
-                  )}
-                </Button>
-              </div>
+            
+            <ol className="list-decimal list-inside space-y-3 text-gray-700 mb-6">
+              <li>Click "Save & View Transcript" to save your test</li>
+              <li>Use the "Copy for ChatGPT Assessment" button to copy your conversation</li>
+              <li>Paste it into ChatGPT and ask for a detailed assessment of your Spanish speaking and listening skills</li>
+              <li>Return to this page and use "Add Assessment Results" to enter ChatGPT's feedback</li>
+              <li>Click "Apply Score" to save the assessment to your profile</li>
+            </ol>
+            
+            <div className="flex justify-center">
+              <Button 
+                onClick={handleSubmitResults}
+                className="bg-green-600 hover:bg-green-700"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Save & View Transcript
+                  </>
+                )}
+              </Button>
             </div>
-          )}
+          </div>
         </DialogContent>
       </Dialog>
     </>
