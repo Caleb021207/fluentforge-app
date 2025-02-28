@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useConversation } from "@11labs/react";
 import { Mic, MicOff, Play, Volume2, Check, Pause } from "lucide-react";
 import { getLevelDescription } from "./utils/scoreUtils";
+import ConversationItem from "./transcript/ConversationItem";
 
 const testInstructions = `
 Welcome to the Speaking and Listening Certification Test. 
@@ -66,6 +67,7 @@ const SpeakingListeningCertification = () => {
   const { toast } = useToast();
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const endTestTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -107,21 +109,36 @@ const SpeakingListeningCertification = () => {
     initMicrophone();
   }, [toast]);
 
-  // Timer effect
+  // Timer effect with automatic test ending
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isStarted && timeLeft > 0) {
       timer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
-            endTest();
+            // Auto-trigger end test when timer reaches zero
+            console.log("Timer reached zero, auto-ending test...");
+            clearInterval(timer);
+            // Use setTimeout to avoid state update conflicts
+            if (endTestTimeout.current === null) {
+              endTestTimeout.current = setTimeout(() => {
+                endTest();
+                endTestTimeout.current = null;
+              }, 100);
+            }
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
     }
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      if (endTestTimeout.current) {
+        clearTimeout(endTestTimeout.current);
+        endTestTimeout.current = null;
+      }
+    };
   }, [isStarted, timeLeft]);
 
   // Initialize speech synthesis when instructions modal is opened
@@ -336,7 +353,13 @@ ${suggestions}`;
 
   const endTest = async () => {
     try {
+      if (isSubmitting) {
+        console.log("Test submission already in progress, ignoring duplicate call");
+        return;
+      }
+      
       setIsSubmitting(true);
+      console.log("Ending test and session...");
       await conversation.endSession();
       setIsStarted(false);
       setTimeLeft(0); // Stop the timer
