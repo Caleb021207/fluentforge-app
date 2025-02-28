@@ -55,6 +55,14 @@ const CertificationAttemptsList = ({
     }
     return <Award className="h-4 w-4 text-blue-500" />;
   };
+  
+  // Filter out fluency attempts with score 0 to clean up the list
+  const filteredAttempts = attempts?.filter(attempt => {
+    if (attempt.certification_type === "fluency") {
+      return attempt.score > 0;
+    }
+    return true;
+  });
 
   if (isLoading) {
     return <div>Loading certification data...</div>;
@@ -68,8 +76,8 @@ const CertificationAttemptsList = ({
       <CardContent>
         <ScrollArea className="h-[400px]">
           <div className="space-y-4">
-            {attempts && attempts.length > 0 ? (
-              attempts.map((attempt) => (
+            {filteredAttempts && filteredAttempts.length > 0 ? (
+              filteredAttempts.map((attempt) => (
                 <div
                   key={attempt.id}
                   className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 rounded-lg"

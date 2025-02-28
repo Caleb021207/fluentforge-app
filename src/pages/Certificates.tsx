@@ -60,16 +60,19 @@ const Certificates = () => {
     refetchOnWindowFocus: false,
   });
 
+  // This is a more thorough normalization of the fluency tests
   const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefined) => {
     if (!rawAttempts) return [];
     
-    // First normalize all fluency tests to conversation type
-    return rawAttempts.map(attempt => {
+    // First, remove any fluency attempts with a score of 0
+    const filteredAttempts = rawAttempts.filter(attempt => {
       if (attempt.certification_type === "fluency") {
-        return {...attempt, certification_type: "conversation"};
+        return attempt.score > 0;
       }
-      return attempt;
+      return true;
     });
+    
+    return filteredAttempts;
   };
 
   const normalizedAttempts = normalizeAttempts(attempts);
@@ -117,8 +120,7 @@ const Certificates = () => {
       for (const attempt of attempts) {
         if (attempt.certification_type === 'speaking' || 
             attempt.certification_type === 'listening' || 
-            attempt.certification_type === 'fluency' || 
-            attempt.certification_type === 'conversation') {
+            attempt.certification_type === 'fluency') {
           try {
             const { data, error } = await supabase
               .from('certification_transcripts')
@@ -169,8 +171,10 @@ const Certificates = () => {
     // Initial fetch
     refreshAttempts();
     
-    // Force an immediate refresh to ensure we have the latest data
-    setTimeout(refreshAttempts, 1000);
+    // Force multiple refreshes at different intervals to ensure we have the latest data
+    setTimeout(refreshAttempts, 500);
+    setTimeout(refreshAttempts, 1500);
+    setTimeout(refreshAttempts, 3000);
     
     return () => {
       window.removeEventListener('fluency-test-completed', refreshAttempts);

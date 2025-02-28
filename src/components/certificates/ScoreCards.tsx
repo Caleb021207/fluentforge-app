@@ -8,7 +8,7 @@ interface ScoreCardsProps {
 }
 
 const ScoreCards = ({ highestScores }: ScoreCardsProps) => {
-  // Modified to exclude 'conversation' from skill types
+  // Only include these four skill types - no conversation/fluency
   const skillTypes = ['reading', 'writing', 'speaking', 'listening'];
   
   // Debug log to verify the data is correctly passed

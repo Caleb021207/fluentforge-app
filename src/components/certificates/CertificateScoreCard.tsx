@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
@@ -12,22 +12,15 @@ interface CertificateScoreCardProps {
 }
 
 const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
-  // Debug log to verify the data is correctly passed
-  useEffect(() => {
-    if (type === 'conversation') {
-      console.log(`CertificateScoreCard for ${type} received attempt:`, attempt);
-    }
-  }, [type, attempt]);
-  
   const formatType = (type: string) => {
-    if (type === "conversation") {
+    if (type === "conversation" || type === "fluency") {
       return "Conversation Fluency";
     }
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
   const getIcon = () => {
-    if (type === "conversation") {
+    if (type === "conversation" || type === "fluency") {
       return <MessageSquare className="h-4 w-4 text-blue-500 mr-2" />;
     }
     return <Award className="h-4 w-4 text-blue-500 mr-2" />;
