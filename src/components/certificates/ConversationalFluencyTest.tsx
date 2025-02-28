@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Mic, MicOff, Info } from "lucide-react";
@@ -102,13 +103,13 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
   };
 
   const convertLevelToScore = (level: string): number => {
-    switch (level) {
+    switch (level.toUpperCase()) {
       case 'C2': return 92;
-      case 'C1': return 75;
-      case 'B2': return 58;
-      case 'B1': return 42;
-      case 'A2': return 25;
-      case 'A1': return 8;
+      case 'C1': return 78;
+      case 'B2': return 65;
+      case 'B1': return 48;
+      case 'A2': return 30;
+      case 'A1': return 15;
       default: return 0;
     }
   };
@@ -146,6 +147,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
       
       console.log("Starting test for user:", user.id);
       
+      // Create speaking attempt
       const { data: speakingAttempt, error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -169,6 +171,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         return;
       }
       
+      // Create listening attempt
       const { data: listeningAttempt, error: listeningError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -192,21 +195,26 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         return;
       }
       
+      // Store attempt IDs for later use
       setAttemptId(speakingAttempt.id);
       console.log("Speaking attempt ID:", speakingAttempt.id);
       console.log("Listening attempt ID:", listeningAttempt.id);
       
-      sessionStorage.setItem('listeningAttemptId', listeningAttempt.id);
+      // Store attempt IDs in session storage to persist through page reloads
       sessionStorage.setItem('speakingAttemptId', speakingAttempt.id);
+      sessionStorage.setItem('listeningAttemptId', listeningAttempt.id);
       
+      // Clear any previous transcript
       setConversationTranscript({
         userMessages: [],
         aiResponses: [],
       });
       
+      // Start the test
       setIsStarted(true);
       setTimeRemaining(TEST_DURATION);
       
+      // Connect to the ElevenLabs agent
       await conversation.startSession({
         agentId: ELEVEN_LABS_AGENT_ID,
       });
@@ -225,9 +233,9 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     }
   };
 
+  // Save transcript to database with better error handling
   const saveTranscriptToDatabase = async (
     speakingAttemptId: string, 
-    listeningAttemptId: string,
     userId: string, 
     userMessages: any[], 
     aiResponses: any[], 
@@ -236,8 +244,27 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     try {
       console.log("Saving transcript to database...");
       console.log("Speaking attempt ID:", speakingAttemptId);
-      console.log("Listening attempt ID:", listeningAttemptId);
+      console.log("User ID:", userId);
+      console.log("Analysis data:", analysisData);
       
+      // Verify data before saving
+      if (!speakingAttemptId) {
+        throw new Error("Missing speaking attempt ID");
+      }
+      
+      if (!userId) {
+        throw new Error("Missing user ID");
+      }
+      
+      if (!userMessages || !userMessages.length) {
+        console.warn("Warning: No user messages to save");
+      }
+      
+      if (!aiResponses || !aiResponses.length) {
+        console.warn("Warning: No AI responses to save");
+      }
+      
+      // Insert transcript into database
       const { data: transcript, error: transcriptError } = await supabase
         .from('certification_transcripts')
         .insert([
@@ -266,6 +293,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
   };
 
   const endTest = async () => {
+    // End ElevenLabs conversation session
     if (conversation.status === "connected") {
       try {
         await conversation.endSession();
@@ -274,10 +302,12 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
       }
     }
     
+    // Update UI state
     setIsStarted(false);
     setIsLoading(true);
     
     try {
+      // Get attempt IDs from session storage
       const speakingAttemptId = sessionStorage.getItem('speakingAttemptId');
       const listeningAttemptId = sessionStorage.getItem('listeningAttemptId');
       
@@ -288,11 +318,18 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
       console.log("Retrieved attempt IDs from session storage:", 
         { speakingAttemptId, listeningAttemptId });
       
+      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
         throw new Error("User not authenticated");
       }
+      
+      // Call Edge Function to analyze speaking/listening
+      console.log("Calling analyze-speaking function with transcript data:", {
+        userMessages: conversationTranscript.userMessages.length,
+        aiResponses: conversationTranscript.aiResponses.length
+      });
       
       const { data, error } = await supabase.functions.invoke('analyze-speaking', {
         body: { 
@@ -312,15 +349,16 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
       
       console.log("Analysis complete:", data);
       
+      // Save transcript to database
       await saveTranscriptToDatabase(
         speakingAttemptId,
-        listeningAttemptId,
         user.id,
         conversationTranscript.userMessages,
         conversationTranscript.aiResponses,
         data
       );
       
+      // Calculate scores based on analysis data
       const speakingScore = data.speaking.overallScore || 
         convertLevelToScore(data.speaking.level || 'A1');
         
@@ -335,6 +373,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         listening: { score: listeningScore, level: listeningLevel }
       });
       
+      // Update speaking attempt with final score
       const { error: speakingUpdateError } = await supabase
         .from('certification_attempts')
         .update({
@@ -349,6 +388,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         throw speakingUpdateError;
       }
       
+      // Update listening attempt with final score
       const { error: listeningUpdateError } = await supabase
         .from('certification_attempts')
         .update({
@@ -365,15 +405,19 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
       
       console.log("Successfully updated certification attempts with scores");
       
+      // Update UI with test results
       setTestResult(data);
       setIsComplete(true);
       
+      // Trigger callback to refresh parent component
       if (onTestComplete) {
         onTestComplete();
       }
       
+      // Dispatch event for other components to react to test completion
       window.dispatchEvent(new CustomEvent('fluency-test-completed'));
       
+      // Show success toast
       toast({
         title: "Test Complete",
         description: `Speaking: ${speakingLevel} (${speakingScore}%), Listening: ${listeningLevel} (${listeningScore}%)`,
@@ -421,74 +465,74 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
               <div className="p-4 bg-blue-50 rounded-lg">
                 <h3 className="font-medium text-lg mb-2">Speaking Results</h3>
                 <div className="mb-2">
-                  <span className="font-medium">Score:</span> {testResult.speaking.overallScore}%
+                  <span className="font-medium">Score:</span> {testResult?.speaking?.overallScore}%
                 </div>
                 <div className="mb-2">
-                  <span className="font-medium">CEFR Level:</span> {testResult.speaking.level || determineLevel(testResult.speaking.overallScore)}
+                  <span className="font-medium">CEFR Level:</span> {testResult?.speaking?.level || determineLevel(testResult?.speaking?.overallScore)}
                 </div>
                 
                 <div className="mt-3">
                   <h4 className="font-medium mb-2">Speaking Skills</h4>
                   <div className="flex justify-between mb-1">
                     <span>Pronunciation</span>
-                    <span>{testResult.speaking.pronunciation}/10</span>
+                    <span>{testResult?.speaking?.pronunciation}/10</span>
                   </div>
-                  <Progress value={testResult.speaking.pronunciation * 10} className="h-2 mb-3" />
+                  <Progress value={testResult?.speaking?.pronunciation * 10} className="h-2 mb-3" />
                   
                   <div className="flex justify-between mb-1">
                     <span>Fluency</span>
-                    <span>{testResult.speaking.fluency}/10</span>
+                    <span>{testResult?.speaking?.fluency}/10</span>
                   </div>
-                  <Progress value={testResult.speaking.fluency * 10} className="h-2 mb-3" />
+                  <Progress value={testResult?.speaking?.fluency * 10} className="h-2 mb-3" />
                   
                   <div className="flex justify-between mb-1">
                     <span>Grammar</span>
-                    <span>{testResult.speaking.grammar}/10</span>
+                    <span>{testResult?.speaking?.grammar}/10</span>
                   </div>
-                  <Progress value={testResult.speaking.grammar * 10} className="h-2" />
+                  <Progress value={testResult?.speaking?.grammar * 10} className="h-2" />
                 </div>
               </div>
               
               <div className="p-4 bg-blue-50 rounded-lg">
                 <h3 className="font-medium text-lg mb-2">Listening Results</h3>
                 <div className="mb-2">
-                  <span className="font-medium">Score:</span> {testResult.listening.overallScore}%
+                  <span className="font-medium">Score:</span> {testResult?.listening?.overallScore}%
                 </div>
                 <div className="mb-2">
-                  <span className="font-medium">CEFR Level:</span> {testResult.listening.level || determineLevel(testResult.listening.overallScore)}
+                  <span className="font-medium">CEFR Level:</span> {testResult?.listening?.level || determineLevel(testResult?.listening?.overallScore)}
                 </div>
                 
                 <div className="mt-3">
                   <h4 className="font-medium mb-2">Listening Skills</h4>
                   <div className="flex justify-between mb-1">
                     <span>Understanding</span>
-                    <span>{testResult.listening.understanding}/10</span>
+                    <span>{testResult?.listening?.understanding}/10</span>
                   </div>
-                  <Progress value={testResult.listening.understanding * 10} className="h-2 mb-3" />
+                  <Progress value={testResult?.listening?.understanding * 10} className="h-2 mb-3" />
                   
                   <div className="flex justify-between mb-1">
                     <span>Vocabulary</span>
-                    <span>{testResult.listening.vocabulary}/10</span>
+                    <span>{testResult?.listening?.vocabulary}/10</span>
                   </div>
-                  <Progress value={testResult.listening.vocabulary * 10} className="h-2 mb-3" />
+                  <Progress value={testResult?.listening?.vocabulary * 10} className="h-2 mb-3" />
                   
                   <div className="flex justify-between mb-1">
                     <span>Response Quality</span>
-                    <span>{testResult.listening.interaction}/10</span>
+                    <span>{testResult?.listening?.interaction}/10</span>
                   </div>
-                  <Progress value={testResult.listening.interaction * 10} className="h-2" />
+                  <Progress value={testResult?.listening?.interaction * 10} className="h-2" />
                 </div>
               </div>
             </div>
             
             <div className="p-4 bg-gray-50 rounded-lg">
               <h3 className="font-medium mb-2">Feedback</h3>
-              <p className="text-gray-700 mb-4">{testResult.feedback}</p>
+              <p className="text-gray-700 mb-4">{testResult?.feedback}</p>
               
               <div className="mb-4">
                 <h4 className="font-medium text-sm mb-2">Strengths:</h4>
                 <ul className="list-disc pl-5 space-y-1">
-                  {testResult.strengths.map((strength: string, i: number) => (
+                  {testResult?.strengths?.map((strength: string, i: number) => (
                     <li key={i} className="text-gray-700">{strength}</li>
                   ))}
                 </ul>
@@ -497,7 +541,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
               <div>
                 <h4 className="font-medium text-sm mb-2">Areas for Improvement:</h4>
                 <ul className="list-disc pl-5 space-y-1">
-                  {testResult.areasToImprove.map((area: string, i: number) => (
+                  {testResult?.areasToImprove?.map((area: string, i: number) => (
                     <li key={i} className="text-gray-700">{area}</li>
                   ))}
                 </ul>
