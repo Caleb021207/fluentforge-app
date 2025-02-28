@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,6 +52,7 @@ const SpeakingListeningCertification = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReviewingDetails, setIsReviewingDetails] = useState(false);
+  const [completedAttemptId, setCompletedAttemptId] = useState<string | undefined>(undefined);
   
   // Test data
   const [userTranscripts, setUserTranscripts] = useState<string[]>([]);
@@ -357,6 +357,7 @@ ${getLevelDescription(listeningLevel)}
       }
       
       const speakingAttemptId = speakingResult.data[0]?.id;
+      setCompletedAttemptId(speakingAttemptId); // Save the attempt ID
       
       // Save listening certification
       const listeningResult = await supabase

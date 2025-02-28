@@ -95,6 +95,7 @@ const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
             userTranscripts={userTranscripts}
             aiResponses={aiResponses}
             analysisData={analysisData}
+            attemptId={attemptId}
           />
         </CardContent>
       </Card>

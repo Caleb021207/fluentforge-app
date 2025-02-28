@@ -15,13 +15,15 @@ interface TranscriptConversationProps {
   aiResponses: string[];
   analysisData: any;
   showCopyButton?: boolean;
+  attemptId?: string; // Add attemptId prop
 }
 
 const TranscriptConversation = ({ 
   userTranscripts = [], 
   aiResponses = [], 
   analysisData,
-  showCopyButton = false
+  showCopyButton = false,
+  attemptId
 }: TranscriptConversationProps) => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
@@ -209,7 +211,7 @@ const TranscriptConversation = ({
           {analysisData && Object.keys(analysisData).length > 0 && (
             <>
               <Separator className="my-6" />
-              <AnalysisSection analysisData={analysisData} />
+              <AnalysisSection analysisData={analysisData} attemptId={attemptId} />
             </>
           )}
         </div>
