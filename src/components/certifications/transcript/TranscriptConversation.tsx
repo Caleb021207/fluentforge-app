@@ -7,6 +7,7 @@ import { Copy } from "lucide-react";
 import ConversationItem from "./ConversationItem";
 import AnalysisSection from "./AnalysisSection";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface TranscriptConversationProps {
   userTranscripts: string[];
@@ -16,8 +17,8 @@ interface TranscriptConversationProps {
 }
 
 const TranscriptConversation = ({ 
-  userTranscripts, 
-  aiResponses, 
+  userTranscripts = [], 
+  aiResponses = [], 
   analysisData,
   showCopyButton = false
 }: TranscriptConversationProps) => {
@@ -27,64 +28,89 @@ const TranscriptConversation = ({
   const prepareConversationForCopy = () => {
     let conversationText = "# Language Assessment Conversation\n\n";
     
-    // Combine exchanges in a readable format
-    aiResponses.forEach((response, index) => {
-      conversationText += `## Exchange ${index + 1}\n\n`;
-      conversationText += `**AI:** ${response}\n\n`;
+    try {
+      // Determine which array is longer to handle mismatched array lengths
+      const maxLength = Math.max(aiResponses.length, userTranscripts.length);
       
-      if (userTranscripts && userTranscripts[index]) {
-        conversationText += `**User:** ${userTranscripts[index]}\n\n`;
+      // Combine exchanges in a readable format
+      for (let i = 0; i < maxLength; i++) {
+        conversationText += `## Exchange ${i + 1}\n\n`;
+        
+        if (aiResponses[i]) {
+          conversationText += `**AI:** ${aiResponses[i]}\n\n`;
+        }
+        
+        if (userTranscripts[i]) {
+          conversationText += `**User:** ${userTranscripts[i]}\n\n`;
+        }
       }
-    });
-    
-    // Add any remaining user responses
-    if (userTranscripts && userTranscripts.length > aiResponses.length) {
-      const lastIndex = aiResponses.length;
-      conversationText += `**User (Final Response):** ${userTranscripts[lastIndex]}\n\n`;
+      
+      conversationText += "# Assessment Request\n\n";
+      conversationText += "Based on this conversation, please assess my Spanish speaking and listening skills on the CEFR scale (A1-C2).\n";
+      conversationText += "Please provide detailed feedback on my pronunciation, grammar, vocabulary, fluency, and comprehension.\n";
+      conversationText += "Include specific improvement suggestions for each area.\n";
+      
+      return conversationText;
+    } catch (error) {
+      console.error("Error preparing conversation for copy:", error);
+      return "Error preparing conversation data. Please try again.";
     }
-    
-    conversationText += "# Assessment Request\n\n";
-    conversationText += "Based on this conversation, please assess my Spanish speaking and listening skills on the CEFR scale (A1-C2).\n";
-    conversationText += "Please provide detailed feedback on my pronunciation, grammar, vocabulary, fluency, and comprehension.\n";
-    conversationText += "Include specific improvement suggestions for each area.\n";
-    
-    return conversationText;
   };
 
   // Handle copying transcript to clipboard
   const handleCopyTranscript = () => {
-    const textToCopy = prepareConversationForCopy();
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      toast({
-        title: "Copied to clipboard",
-        description: "Conversation transcript copied. Paste it into ChatGPT for assessment.",
+    try {
+      const textToCopy = prepareConversationForCopy();
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        toast({
+          title: "Copied to clipboard",
+          description: "Conversation transcript copied. Paste it into ChatGPT for assessment.",
+        });
+      }).catch(err => {
+        console.error("Failed to copy transcript:", err);
+        toast({
+          title: "Copy failed",
+          description: "Could not copy the transcript. Please try again.",
+          variant: "destructive",
+        });
       });
-    }).catch(err => {
-      console.error("Failed to copy transcript:", err);
+    } catch (error) {
+      console.error("Error in handleCopyTranscript:", error);
       toast({
         title: "Copy failed",
-        description: "Could not copy the transcript. Please try again.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
-    });
+    }
+  };
+
+  // Check if there's any conversation data to display
+  const hasConversationData = () => {
+    return (
+      Array.isArray(userTranscripts) && userTranscripts.length > 0 || 
+      Array.isArray(aiResponses) && aiResponses.length > 0
+    );
   };
 
   // Main render content
   const renderConversationContent = () => {
-    if ((!userTranscripts || userTranscripts.length === 0) && 
-        (!aiResponses || aiResponses.length === 0)) {
+    if (!hasConversationData()) {
       return (
-        <div className="text-center p-6 text-gray-500">
-          No conversation data available for this attempt.
-        </div>
+        <Alert>
+          <AlertDescription className="text-center p-6 text-gray-500">
+            No conversation data available for this attempt.
+          </AlertDescription>
+        </Alert>
       );
     }
 
+    // Make sure we're working with arrays
+    const userArray = Array.isArray(userTranscripts) ? userTranscripts : [];
+    const aiArray = Array.isArray(aiResponses) ? aiResponses : [];
+
     // Determine which array is longer to handle mismatched array lengths
-    const responseCount = Math.max(
-      aiResponses?.length || 0,
-      userTranscripts?.length || 0
-    );
+    const responseCount = Math.max(aiArray.length, userArray.length);
     
     // Create exchanges array
     const exchanges = [];
@@ -92,14 +118,14 @@ const TranscriptConversation = ({
       exchanges.push(
         <React.Fragment key={`conversation-${i}`}>
           {/* AI response */}
-          {aiResponses && aiResponses[i] && (
-            <ConversationItem message={aiResponses[i]} isAi={true} />
+          {aiArray[i] && (
+            <ConversationItem message={aiArray[i]} isAi={true} />
           )}
 
           {/* User response */}
-          {userTranscripts && userTranscripts[i] && (
+          {userArray[i] && (
             <div className="ml-6">
-              <ConversationItem message={userTranscripts[i]} isAi={false} />
+              <ConversationItem message={userArray[i]} isAi={false} />
             </div>
           )}
 
@@ -113,7 +139,7 @@ const TranscriptConversation = ({
 
   return (
     <div className="space-y-4">
-      {showCopyButton && (
+      {showCopyButton && hasConversationData() && (
         <div className="flex justify-end mb-2">
           <Button 
             onClick={handleCopyTranscript} 

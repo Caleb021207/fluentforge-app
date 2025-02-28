@@ -15,11 +15,18 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
   const maxCharsToShow = 300;
   
   useEffect(() => {
-    if (!message) return;
+    // Handle empty or invalid messages
+    if (!message || typeof message !== 'string') {
+      setTruncatedMessage(typeof message === 'string' ? message : "Invalid message format");
+      setIsLongMessage(false);
+      return;
+    }
     
+    // Check if message exceeds max length for truncation
     const isLong = message.length > maxCharsToShow;
     setIsLongMessage(isLong);
     
+    // Set the displayed text based on message length and view state
     if (isLong && !expandedView) {
       setTruncatedMessage(`${message.substring(0, maxCharsToShow)}...`);
     } else {
@@ -29,7 +36,7 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
 
   const formatMessage = (text: string) => {
     if (!text) {
-      return "No content";
+      return <span className="text-gray-400 italic">No content</span>;
     }
     
     // Check if message appears to be JSON, try to format it nicely
@@ -57,8 +64,18 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
     return withLineBreaks;
   };
 
+  // Handle potential errors in messages
+  const renderMessageContent = () => {
+    try {
+      return formatMessage(isLongMessage && !expandedView ? truncatedMessage : message);
+    } catch (error) {
+      console.error("Error rendering message:", error);
+      return <span className="text-red-500">Error displaying message content</span>;
+    }
+  };
+
   return (
-    <div className="flex gap-3 mb-4">
+    <div className="flex gap-3 mb-4" data-testid={`conversation-item-${isAi ? 'ai' : 'user'}`}>
       <div className={`flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border ${
         isAi ? "bg-primary text-primary-foreground" : "bg-muted"
       } shadow${isAi ? "" : "-sm"}`}>
@@ -66,7 +83,7 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
       </div>
       <div className="flex-1 space-y-2">
         <div className="prose-sm prose-gray max-w-none">
-          <p>{formatMessage(isLongMessage && !expandedView ? truncatedMessage : message)}</p>
+          <p>{renderMessageContent()}</p>
           
           {isLongMessage && (
             <Button 
