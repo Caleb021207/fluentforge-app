@@ -33,6 +33,7 @@ interface ChartData {
   writing: number;
   speaking: number;
   listening: number;
+  vocabulary?: number;
 }
 
 interface SkillScores {
@@ -137,33 +138,36 @@ const ProgressPage = () => {
       // Skip attempts with 0 score
       if (attempt.score === 0) return;
       
-      // Skip fluency attempts with 0 score
-      if (attempt.certification_type === "fluency" && attempt.score === 0) return;
-      
-      const date = new Date(attempt.completed_at || attempt.created_at).toISOString().split('T')[0];
+      const date = new Date(attempt.completed_at || attempt.created_at || '').toISOString().split('T')[0];
       const existing = dataMap.get(date) || {
         date,
         reading: 0,
         writing: 0,
         speaking: 0,
-        listening: 0
+        listening: 0,
+        vocabulary: 0
       };
       
       // Ensure we're using the new score if it's higher than the existing one
-      let skill = attempt.certification_type as keyof typeof existing;
+      const type = attempt.certification_type;
       
       // Map fluency to speaking/listening as appropriate
-      if (skill === 'fluency') {
+      if (type === 'fluency') {
         // For fluency attempts, update both speaking and listening if the scores are higher
-        if (attempt.score > existing.speaking) {
+        if (attempt.score > (existing.speaking || 0)) {
           existing.speaking = attempt.score;
         }
-        if (attempt.score > existing.listening) {
+        if (attempt.score > (existing.listening || 0)) {
           existing.listening = attempt.score;
         }
-      } else if (attempt.score > existing[skill]) {
-        // For regular attempts, just update the corresponding skill
-        existing[skill] = attempt.score;
+      } else if (type === 'reading' || type === 'writing' || type === 'speaking' || type === 'listening' || type === 'vocabulary') {
+        // For regular attempts, just update the corresponding skill if score is higher
+        const scoreVal = attempt.score;
+        const existingVal = existing[type] || 0;
+        
+        if (scoreVal > existingVal) {
+          existing[type] = scoreVal;
+        }
       }
       
       dataMap.set(date, existing);
@@ -221,7 +225,10 @@ const ProgressPage = () => {
     const overall = Math.round(totalScore / skills.length);
     
     return {
-      ...scores,
+      reading: scores.reading,
+      writing: scores.writing, 
+      speaking: scores.speaking,
+      listening: scores.listening,
       overall
     };
   };
@@ -289,7 +296,6 @@ const ProgressPage = () => {
     navigate("/");
   };
 
-  // Custom tooltip component to handle undefined values
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
