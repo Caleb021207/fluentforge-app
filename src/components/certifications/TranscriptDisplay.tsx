@@ -35,66 +35,105 @@ const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
         setLoading(true);
         setError(null);
 
-        console.log("Fetching transcript for attempt ID:", attemptId);
+        console.log("⭐ Starting transcript fetch for attempt:", attemptId);
 
         // Get the current user to verify that we're authenticated
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         
         if (authError) {
-          console.error("Auth error:", authError);
+          console.error("🔴 Auth error:", authError);
           throw new Error(`Authentication error: ${authError.message}`);
         }
         
         if (!user) {
-          console.error("No authenticated user found");
+          console.error("🔴 No authenticated user found");
           throw new Error('You must be logged in to view transcripts');
         }
         
-        console.log("Authenticated as user:", user.id);
+        console.log("✅ Authenticated as user:", user.id);
 
         // First, get the attempt details to know certification type
         const { data: attemptData, error: attemptError } = await supabase
           .from('certification_attempts')
-          .select('*')
+          .select('certification_type, score, level')
           .eq('id', attemptId)
           .single();
 
         if (attemptError) {
-          console.error("Error fetching attempt data:", attemptError);
+          console.error("🔴 Error fetching attempt data:", attemptError);
           throw new Error(`Error fetching attempt data: ${attemptError.message}`);
         }
 
         if (!attemptData) {
-          console.error("No attempt data found for ID:", attemptId);
+          console.error("🔴 No attempt data found for ID:", attemptId);
           throw new Error('Attempt not found');
         }
 
-        console.log("Found attempt data:", attemptData);
+        console.log("✅ Found attempt data:", attemptData);
 
-        // Then get the transcript data with more verbose logging
-        console.log("Fetching transcript for attempt ID:", attemptId, "and user ID:", user.id);
+        // Then get the transcript data with explicit column selection
+        console.log("⭐ Fetching transcript with params:", { 
+          attempt_id: attemptId,
+          user_id: user.id
+        });
         
+        // Try first without the user_id filter to see if any records exist
+        const { data: allTranscripts, error: allTranscriptsError } = await supabase
+          .from('certification_transcripts')
+          .select('id, user_id, attempt_id, user_transcripts, ai_responses, analysis_data, created_at');
+          
+        console.log("✅ All transcripts in system:", { 
+          count: allTranscripts?.length || 0,
+          data: allTranscripts,
+          error: allTranscriptsError
+        });
+        
+        // Now try with the filters
         const { data: transcriptData, error: transcriptError } = await supabase
           .from('certification_transcripts')
-          .select('*')
+          .select('id, user_id, attempt_id, user_transcripts, ai_responses, analysis_data, created_at')
           .eq('attempt_id', attemptId)
-          .eq('user_id', user.id); // Added explicit user ID check
+          .eq('user_id', user.id);
 
-        console.log("Transcript query result:", { data: transcriptData, error: transcriptError });
+        console.log("🔍 Transcript query result:", { 
+          count: transcriptData?.length || 0,
+          data: transcriptData, 
+          error: transcriptError,
+          filters: {
+            attempt_id: attemptId,
+            user_id: user.id
+          }
+        });
 
         if (transcriptError) {
-          console.error("Error fetching transcript:", transcriptError);
+          console.error("🔴 Error fetching transcript:", transcriptError);
           throw new Error(`Error fetching transcript: ${transcriptError.message}`);
         }
 
         if (!transcriptData || transcriptData.length === 0) {
-          console.error("No transcript found for attempt:", attemptId);
-          throw new Error('Transcript not found for this attempt');
+          // Check if transcript exists for the attempt but with a different user_id
+          const { data: attemptTranscripts } = await supabase
+            .from('certification_transcripts')
+            .select('id, user_id')
+            .eq('attempt_id', attemptId);
+            
+          console.log("🔍 Transcripts for this attempt with any user:", attemptTranscripts);
+          
+          if (attemptTranscripts && attemptTranscripts.length > 0) {
+            console.error("🔶 Found transcript but for a different user:", {
+              foundForUsers: attemptTranscripts.map(t => t.user_id),
+              requestingUser: user.id
+            });
+            throw new Error('You do not have permission to view this transcript');
+          } else {
+            console.error("🔴 No transcript found for attempt:", attemptId);
+            throw new Error('No transcript found for this attempt');
+          }
         }
 
         // Use the first transcript found
         const transcript = transcriptData[0];
-        console.log("Found transcript data:", transcript);
+        console.log("✅ Found transcript data:", transcript);
 
         setTranscript({
           userTranscripts: transcript.user_transcripts as string[],
@@ -106,7 +145,7 @@ const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
           level: attemptData.level
         });
       } catch (err: any) {
-        console.error('Error in fetchTranscript:', err);
+        console.error('🔴 Error in fetchTranscript:', err);
         setError(err.message || 'An error occurred while fetching the transcript');
         toast({
           title: "Error",
