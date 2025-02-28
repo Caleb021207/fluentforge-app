@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { getCEFRColor, getCEFRDescription, TranscriptAssessment } from "../utils/assessmentUtils";
 
 interface ScoreDisplayProps {
@@ -8,8 +9,11 @@ interface ScoreDisplayProps {
 }
 
 const ScoreDisplay = ({ assessment }: ScoreDisplayProps) => {
+  // Calculate percentage for the progress bar (assuming score is out of 10)
+  const scorePercentage = (assessment.overallScore / 10) * 100;
+  
   return (
-    <div className="flex flex-col space-y-3">
+    <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
         <div>
           <span className="text-sm font-medium text-gray-500">Overall Score:</span>{" "}
@@ -22,6 +26,17 @@ const ScoreDisplay = ({ assessment }: ScoreDisplayProps) => {
           </Badge>
         </div>
       </div>
+      
+      <Progress 
+        value={scorePercentage} 
+        className="h-2 w-full"
+        indicatorClassName={`bg-${assessment.cefrLevel === 'C2' ? 'purple' : 
+          assessment.cefrLevel === 'C1' ? 'indigo' : 
+          assessment.cefrLevel === 'B2' ? 'blue' : 
+          assessment.cefrLevel === 'B1' ? 'green' : 
+          assessment.cefrLevel === 'A2' ? 'yellow' : 
+          'orange'}-500`}
+      />
       
       <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md">
         <p className="font-medium">

@@ -27,6 +27,7 @@ const rubricData = [
 const Certificates = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectedAttemptId, setSelectedAttemptId] = useState<string | null>(null);
+  const [hasTranscript, setHasTranscript] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const checkUser = async () => {
@@ -55,6 +56,29 @@ const Certificates = () => {
       return data as CertificationAttempt[];
     },
   });
+
+  // Check which attempts have transcripts
+  useEffect(() => {
+    const checkTranscripts = async () => {
+      if (!attempts || attempts.length === 0) return;
+      
+      const transcriptStatus: Record<string, boolean> = {};
+      
+      for (const attempt of attempts) {
+        const { data, error } = await supabase
+          .from('certification_transcripts')
+          .select('id')
+          .eq('attempt_id', attempt.id)
+          .maybeSingle();
+          
+        transcriptStatus[attempt.id] = !!data;
+      }
+      
+      setHasTranscript(transcriptStatus);
+    };
+    
+    checkTranscripts();
+  }, [attempts]);
 
   const highestScores = attempts?.reduce((acc, attempt) => {
     if (!acc[attempt.certification_type] || 
@@ -102,6 +126,10 @@ const Certificates = () => {
       <TranscriptDisplay 
         attemptId={selectedAttemptId} 
         onBack={handleBackFromTranscript} 
+        onRetake={() => {
+          // Logic for retaking the test would go here
+          handleBackFromTranscript();
+        }}
       />
     );
   }
@@ -219,9 +247,10 @@ const Certificates = () => {
                       <Button 
                         variant="outline" 
                         size="sm"
-                        className="flex items-center gap-1 opacity-50 cursor-not-allowed"
-                        disabled
-                        title="Transcripts are currently unavailable"
+                        className="flex items-center gap-1"
+                        onClick={() => handleViewAttempt(attempt.id)}
+                        disabled={!hasTranscript[attempt.id]}
+                        title={hasTranscript[attempt.id] ? "View transcript" : "Transcript not available"}
                       >
                         <FileText className="h-3 w-3" />
                         <span className="hidden md:inline">View</span>

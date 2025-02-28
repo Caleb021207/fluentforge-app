@@ -39,22 +39,52 @@ const TranscriptDisplay = ({ attemptId, onBack, onRetake }: TranscriptDisplayPro
         // Fetch the transcript data from the database
         const { data, error } = await supabase
           .from('certification_transcripts')
-          .select('transcript, assessment, prompt')
+          .select('user_transcripts, ai_responses, analysis_data')
           .eq('id', attemptId)
           .single();
 
         if (error) throw error;
 
         if (data) {
-          setTranscript(data.transcript);
-          setPrompt(data.prompt || null);
+          // Convert user_transcripts and ai_responses to a transcript format
+          // This assumes that user_transcripts and ai_responses are arrays of messages
+          const userTranscripts = data.user_transcripts || [];
+          const aiResponses = data.ai_responses || [];
+          
+          // Combine user transcripts and AI responses into a conversation format
+          const conversationItems = [];
+          const maxLength = Math.max(userTranscripts.length, aiResponses.length);
+          
+          for (let i = 0; i < maxLength; i++) {
+            if (i < userTranscripts.length && userTranscripts[i]) {
+              conversationItems.push({
+                role: 'user',
+                content: userTranscripts[i].text || userTranscripts[i],
+                timestamp: userTranscripts[i].timestamp
+              });
+            }
+            
+            if (i < aiResponses.length && aiResponses[i]) {
+              conversationItems.push({
+                role: 'assistant',
+                content: aiResponses[i].text || aiResponses[i],
+                timestamp: aiResponses[i].timestamp
+              });
+            }
+          }
+          
+          setTranscript(JSON.stringify(conversationItems));
+          
+          // Extract prompt if available (might be in the first AI response or elsewhere)
+          const promptData = aiResponses.length > 0 ? aiResponses[0].prompt : null;
+          setPrompt(promptData);
           
           // Parse the assessment JSON if it exists
-          if (data.assessment) {
+          if (data.analysis_data) {
             try {
-              const parsedAssessment = typeof data.assessment === 'string' 
-                ? JSON.parse(data.assessment) 
-                : data.assessment;
+              const parsedAssessment = typeof data.analysis_data === 'string' 
+                ? JSON.parse(data.analysis_data) 
+                : data.analysis_data;
               setAssessment(parsedAssessment);
             } catch (parseError) {
               console.error("Error parsing assessment:", parseError);
