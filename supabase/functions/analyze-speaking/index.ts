@@ -1,8 +1,8 @@
 
+// analyze-speaking/index.ts
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,108 +10,147 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { userTranscripts, aiResponses } = await req.json();
+    const openAIKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openAIKey) {
+      throw new Error('OpenAI API key not found');
+    }
 
-    // Format the conversation to make it easier for GPT to analyze
-    let formattedConversation = '';
-    const maxEntries = Math.max(userTranscripts.length, aiResponses.length);
+    // Parse request body
+    const { userTranscripts, aiResponses } = await req.json();
     
-    for (let i = 0; i < maxEntries; i++) {
-      if (aiResponses[i]) {
-        formattedConversation += `AI: ${aiResponses[i]}\n\n`;
+    console.log('Received transcripts for analysis:', {
+      userTranscriptsCount: userTranscripts.length,
+      aiResponsesCount: aiResponses.length
+    });
+
+    // Ensure we have data to analyze
+    if (!userTranscripts || userTranscripts.length === 0) {
+      throw new Error('No user transcripts provided');
+    }
+
+    // Compile conversation for analysis
+    const conversation = [];
+    const maxItems = Math.max(userTranscripts.length, aiResponses.length);
+    
+    for (let i = 0; i < maxItems; i++) {
+      if (i < aiResponses.length) {
+        conversation.push(`AI: ${aiResponses[i]}`);
       }
-      if (userTranscripts[i]) {
-        formattedConversation += `User: ${userTranscripts[i]}\n\n`;
+      if (i < userTranscripts.length) {
+        conversation.push(`User: ${userTranscripts[i]}`);
       }
     }
 
-    console.log("Formatted conversation:", formattedConversation);
-
-    const systemPrompt = `You are an expert Spanish language proficiency evaluator following the CEFR (Common European Framework of Reference for Languages) standards. 
+    const conversationText = conversation.join('\n\n');
     
-Analyze the following conversation between a student and an AI tutor to determine the student's CEFR level (A1-C2) for speaking and listening skills. 
+    console.log('Analyzing conversation sample:', conversationText.substring(0, 200) + '...');
 
-Focus on these key aspects:
-1. Speaking fluency and coherence
-2. Vocabulary range and accuracy 
-3. Grammatical accuracy and complexity
-4. Pronunciation (based on transcribed text)
-5. Listening comprehension (based on response relevance)
+    // Prepare OpenAI request for analysis
+    const prompt = `
+You are a CEFR (Common European Framework of Reference for Languages) expert assessing Spanish language skills.
+Analyze the following conversation to evaluate the speaker's Spanish proficiency.
 
-CEFR Level Guidelines:
-- A1 (Beginner): Can use very basic phrases. Limited vocabulary to a small set of isolated words.
-- A2 (Elementary): Can communicate in simple and routine tasks. Limited to familiar topics and basic needs.
-- B1 (Intermediate): Can deal with most situations while traveling. Can describe experiences, events, dreams, hopes and ambitions.
-- B2 (Upper Intermediate): Can interact with a degree of fluency and spontaneity. Can produce clear, detailed text on a wide range of subjects.
-- C1 (Advanced): Can express themselves fluently and spontaneously. Can use language flexibly and effectively for social, academic and professional purposes.
-- C2 (Proficiency): Can understand with ease virtually everything heard or read. Can express themselves spontaneously, very fluently and precisely.
+Conversation:
+${conversationText}
 
-Important: Be objective and accurate in your assessment. Do not inflate or deflate the level. Base your evaluation only on the evidence in the conversation.
+Based on this conversation, assess the user's Spanish speaking and listening proficiency according to CEFR levels (A1, A2, B1, B2, C1, C2).
 
-Return your response in this format:
-{
-  "level": "[CEFR level: A1, A2, B1, B2, C1, or C2]",
-  "score": [numerical score between 40-100],
-  "analysis": "[your detailed analysis]"
-}`;
+Consider:
+1. Vocabulary range and accuracy
+2. Grammatical complexity and correctness
+3. Fluency and pronunciation (based on word choice and context)
+4. Comprehension (based on appropriate responses)
+5. Ability to express complex ideas
+6. Use of idioms and cultural references
+
+Respond with ONLY:
+1. A JSON object containing:
+   - level: The CEFR level (A1, A2, B1, B2, C1, C2)
+   - score: A numeric score from 0-100
+   - analysis: A brief expert assessment of strengths and areas for improvement
+
+The output should be VALID JSON that can be parsed. Example:
+{"level": "B1", "score": 65, "analysis": "The speaker demonstrates..."}
+    `;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${openAIKey}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: formattedConversation }
+          { role: 'system', content: 'You are a language assessment expert.' },
+          { role: 'user', content: prompt }
         ],
-        response_format: { type: "json_object" }
-      }),
+        temperature: 0.3,
+      })
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('OpenAI API error:', errorText);
+      throw new Error(`OpenAI API error: ${response.status} ${errorText}`);
+    }
+
     const data = await response.json();
-    console.log("GPT response:", data);
+    console.log('OpenAI response data:', data);
     
-    let analysis, level, score;
+    let result;
     
     try {
-      // Parse the GPT response as JSON
-      const parsedContent = JSON.parse(data.choices[0].message.content);
-      analysis = parsedContent.analysis;
-      level = parsedContent.level;
-      score = parsedContent.score;
+      // Extract content from OpenAI response
+      const content = data.choices[0].message.content.trim();
+      console.log('Raw content from OpenAI:', content);
+      
+      // Try to extract JSON from the response
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        result = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('Failed to extract JSON from OpenAI response');
+      }
+      
+      // Validate the result structure
+      if (!result.level || !result.score || !result.analysis) {
+        throw new Error('Response missing required fields');
+      }
+      
+      // Ensure score is a number between 0-100
+      result.score = Math.max(0, Math.min(100, parseInt(result.score)));
+      
+      console.log('Processed assessment result:', result);
     } catch (parseError) {
-      console.error("Error parsing GPT response:", parseError);
-      
-      // Fallback extraction if JSON parsing fails
-      const content = data.choices[0].message.content;
-      const levelMatch = content.match(/level"?\s*:\s*"?([A-C][12])"?/i);
-      const scoreMatch = content.match(/score"?\s*:\s*(\d+)/i);
-      
-      level = levelMatch ? levelMatch[1] : 'B1';
-      score = scoreMatch ? parseInt(scoreMatch[1]) : 70;
-      analysis = content;
+      console.error('Error parsing OpenAI response:', parseError);
+      // Fallback to a default value if parsing fails
+      result = { 
+        level: "B1", 
+        score: 50, 
+        analysis: "Unable to properly analyze the conversation. The assessment system encountered technical difficulties." 
+      };
     }
-    
-    return new Response(JSON.stringify({
-      analysis,
-      level,
-      score,
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+
+    return new Response(JSON.stringify(result), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   } catch (error) {
     console.error('Error in analyze-speaking function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({
+      error: error.message,
+      level: "B1",
+      score: 50,
+      analysis: "An error occurred while analyzing the conversation."
+    }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 });

@@ -175,8 +175,9 @@ const SpeakingListeningCertification = () => {
 
       setShowInstructions(false);
       await conversation.startSession({
-        agentId: "2rNEBxdJ814y7dcdZSOb", // Using your actual agent ID
+        agentId: "2rNEBxdJ814y7dcdZSOb", // Spanish language tutor agent ID
       });
+      
       setIsStarted(true);
       setResponses([]);
       setUserTranscript([]);
@@ -263,7 +264,7 @@ const SpeakingListeningCertification = () => {
       setIsSubmitting(true);
       await conversation.endSession();
       setIsStarted(false);
-      setTimeLeft(180); // Reset timer
+      setTimeLeft(0); // Stop the timer
       
       console.log("Sending conversation for analysis:", {
         userTranscripts: userTranscript,
@@ -315,7 +316,7 @@ const SpeakingListeningCertification = () => {
       if (!user) return;
 
       // Save speaking score
-      const { error: speakingError } = await supabase
+      const speakingResult = await supabase
         .from('certification_attempts')
         .insert([
           {
@@ -326,23 +327,29 @@ const SpeakingListeningCertification = () => {
             user_id: user.id,
           }
         ]);
-
-      if (speakingError) throw speakingError;
       
-      // Save listening score (using the same score since it's evaluated together)
-      const { error: listeningError } = await supabase
+      if (speakingResult.error) {
+        console.error("Error saving speaking score:", speakingResult.error);
+        throw speakingResult.error;
+      }
+      
+      // Save listening score (similar but separate score for listening)
+      const listeningResult = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'listening',
-            score: score, // Using the same score since it's a conversation test
+            score: score, // Using the same score since it's evaluated together
             level: level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
         ]);
-        
-      if (listeningError) throw listeningError;
+      
+      if (listeningResult.error) {
+        console.error("Error saving listening score:", listeningResult.error);
+        throw listeningResult.error;
+      }
 
       toast({
         title: "Test Completed",
@@ -497,4 +504,3 @@ const SpeakingListeningCertification = () => {
 };
 
 export default SpeakingListeningCertification;
-
