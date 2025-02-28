@@ -130,34 +130,56 @@ const ProgressPage = () => {
     if (!attempts || attempts.length === 0) return [];
 
     console.log("Processing attempts for chart:", attempts);
+    
+    // Create a map to accumulate scores by date
     const dataMap = new Map<string, ChartData>();
     
+    // First, initialize the map with all dates and zero values
     attempts.forEach(attempt => {
-      if ((!attempt.completed_at && !attempt.created_at) || attempt.score === 0) {
+      if ((!attempt.completed_at && !attempt.created_at) || typeof attempt.score !== 'number') {
+        return;
+      }
+      
+      const date = new Date(attempt.completed_at || attempt.created_at || '').toISOString().split('T')[0];
+      
+      if (!dataMap.has(date)) {
+        dataMap.set(date, {
+          date,
+          reading: 0,
+          writing: 0,
+          speaking: 0,
+          listening: 0,
+          vocabulary: 0
+        });
+      }
+    });
+    
+    // Sort dates chronologically to ensure proper data continuity
+    const sortedDates = Array.from(dataMap.keys()).sort();
+    
+    // Now process each attempt and update the highest scores
+    attempts.forEach(attempt => {
+      if ((!attempt.completed_at && !attempt.created_at) || typeof attempt.score !== 'number' || attempt.score === 0) {
         console.log(`Skipping attempt with invalid data:`, attempt);
         return;
       }
       
       const date = new Date(attempt.completed_at || attempt.created_at || '').toISOString().split('T')[0];
-      const existing = dataMap.get(date) || {
-        date,
-        reading: 0,
-        writing: 0,
-        speaking: 0,
-        listening: 0,
-        vocabulary: 0
-      };
+      const existing = dataMap.get(date)!;
       
       const type = attempt.certification_type;
       
       if (type === 'fluency') {
         console.log(`Processing fluency attempt #${attempt.id} with score ${attempt.score}`);
-        const speakingScore = existing.speaking as number;
-        if (attempt.score > speakingScore) {
+        
+        // Update both speaking and listening from fluency test
+        const currentSpeakingScore = existing.speaking;
+        if (attempt.score > currentSpeakingScore) {
           existing.speaking = attempt.score;
         }
-        const listeningScore = existing.listening as number;
-        if (attempt.score > listeningScore) {
+        
+        const currentListeningScore = existing.listening;
+        if (attempt.score > currentListeningScore) {
           existing.listening = attempt.score;
         }
       } 
@@ -165,7 +187,7 @@ const ProgressPage = () => {
               type === 'listening' || type === 'vocabulary') {
         console.log(`Processing ${type} attempt #${attempt.id} with score ${attempt.score}`);
         
-        // Fixed: Use type assertion and proper casting
+        // Use type assertion to access properties safely
         const propertyName = type as keyof Omit<ChartData, 'date'>;
         const currentScore = existing[propertyName] as number;
         
@@ -179,7 +201,28 @@ const ProgressPage = () => {
       dataMap.set(date, existing);
     });
     
-    const result = Array.from(dataMap.values()).sort((a, b) => a.date.localeCompare(b.date));
+    // Now create a continuous data series with carried forward values
+    const result: ChartData[] = [];
+    let previousData: ChartData | null = null;
+    
+    for (const date of sortedDates) {
+      const currentData = dataMap.get(date)!;
+      
+      // If we have previous data, carry forward any higher scores
+      if (previousData) {
+        currentData.reading = Math.max(currentData.reading, previousData.reading);
+        currentData.writing = Math.max(currentData.writing, previousData.writing);
+        currentData.speaking = Math.max(currentData.speaking, previousData.speaking);
+        currentData.listening = Math.max(currentData.listening, previousData.listening);
+        if (typeof currentData.vocabulary === 'number' && typeof previousData.vocabulary === 'number') {
+          currentData.vocabulary = Math.max(currentData.vocabulary, previousData.vocabulary);
+        }
+      }
+      
+      result.push(currentData);
+      previousData = {...currentData}; // Clone to avoid reference issues
+    }
+    
     console.log("Processed chart data:", result);
     return result;
   };
@@ -199,11 +242,11 @@ const ProgressPage = () => {
     
     skills.forEach(skill => {
       const directAttempts = attempts.filter(a => 
-        a.certification_type === skill && a.score > 0
+        a.certification_type === skill && typeof a.score === 'number' && a.score > 0
       );
       
       const fluencyAttempts = (skill === 'speaking' || skill === 'listening') 
-        ? attempts.filter(a => a.certification_type === 'fluency' && a.score > 0)
+        ? attempts.filter(a => a.certification_type === 'fluency' && typeof a.score === 'number' && a.score > 0)
         : [];
       
       const skillAttempts = [...directAttempts, ...fluencyAttempts];
@@ -234,11 +277,11 @@ const ProgressPage = () => {
     
     skills.forEach(skill => {
       const directAttempts = attempts.filter(a => 
-        a.certification_type === skill && a.score > 0
+        a.certification_type === skill && typeof a.score === 'number' && a.score > 0
       );
       
       const fluencyAttempts = (skill === 'speaking' || skill === 'listening') 
-        ? attempts.filter(a => a.certification_type === 'fluency' && a.score > 0)
+        ? attempts.filter(a => a.certification_type === 'fluency' && typeof a.score === 'number' && a.score > 0)
         : [];
       
       const skillAttempts = [...directAttempts, ...fluencyAttempts];
