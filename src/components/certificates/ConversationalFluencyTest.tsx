@@ -12,7 +12,11 @@ import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 const TEST_DURATION = 300; // 5 minutes in seconds
 const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc"; // Updated to use the specific agent ID
 
-const ConversationalFluencyTest = () => {
+interface ConversationalFluencyTestProps {
+  onTestComplete?: () => void;
+}
+
+const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTestProps) => {
   const [isStarted, setIsStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION);
@@ -222,6 +226,14 @@ const ConversationalFluencyTest = () => {
       setTestResult(data);
       setIsComplete(true);
       
+      // Call onTestComplete callback if provided
+      if (onTestComplete) {
+        onTestComplete();
+      }
+      
+      // Dispatch a custom event that can be listened for in other components
+      window.dispatchEvent(new CustomEvent('fluency-test-completed'));
+      
       toast({
         title: "Test Complete",
         description: "Your conversational fluency has been assessed!",
@@ -245,6 +257,11 @@ const ConversationalFluencyTest = () => {
     setTestResult(null);
     setAttemptId(null);
     sessionStorage.removeItem('listeningAttemptId');
+    
+    // Call onTestComplete callback if provided
+    if (onTestComplete) {
+      onTestComplete();
+    }
   };
 
   if (isComplete) {

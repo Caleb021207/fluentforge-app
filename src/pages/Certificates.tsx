@@ -162,7 +162,7 @@ const Certificates = () => {
       
       <WritingCertification />
       
-      <ConversationalFluencyTest onTestComplete={refetch} />
+      <ConversationalFluencyTest onTestComplete={() => refetch()} />
       
       <ScoreCards highestScores={highestScores} />
 
