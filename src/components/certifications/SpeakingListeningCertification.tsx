@@ -9,6 +9,7 @@ import { useConversation } from "@11labs/react";
 import { Mic, MicOff, Play, Volume2, Check, Pause } from "lucide-react";
 import { getLevelDescription } from "./utils/scoreUtils";
 import ConversationItem from "./transcript/ConversationItem";
+import TranscriptConversation from "./transcript/TranscriptConversation";
 
 const testInstructions = `
 Welcome to the Speaking and Listening Certification Test. 
@@ -246,7 +247,7 @@ const SpeakingListeningCertification = () => {
         });
       } catch (error) {
         console.error("Failed to start conversation session:", error);
-        setSessionError(`Failed to start conversation: ${error instanceof Error ? error.message : String(error)}`);
+        setSessionError(`Failed to start conversation: ${error.message}`);
         toast({
           title: "Failed to start test",
           description: "There was an error starting the conversation. Please try again.",
@@ -260,108 +261,6 @@ const SpeakingListeningCertification = () => {
         description: "Failed to start the test. Please try again.",
         variant: "destructive",
       });
-    }
-  };
-
-  const generateFeedbackForLevel = (speakingLevel: string, listeningLevel: string, analysisText: string): string => {
-    const speakingLevelDescription = getLevelDescription(speakingLevel);
-    const listeningLevelDescription = getLevelDescription(listeningLevel);
-    
-    return `
-      ## Speaking & Listening Assessment
-      
-      ### Speaking CEFR Level: ${speakingLevel}
-      
-      ${speakingLevelDescription}
-      
-      ### Listening CEFR Level: ${listeningLevel}
-      
-      ${listeningLevelDescription}
-      
-      ### Detailed Feedback
-      
-      ${analysisText || getFeedbackForSkill(speakingLevel, listeningLevel)}
-      
-      ### Suggestions for Improvement
-      
-      ${getSuggestionsForSkill('speaking', speakingLevel)}
-      
-      ${getSuggestionsForSkill('listening', listeningLevel)}
-    `;
-  };
-
-  const getFeedbackForSkill = (speakingLevel: string, listeningLevel: string): string => {
-    return `
-      **Speaking Assessment:**
-      ${getFeedbackForLevel(speakingLevel)}
-      
-      **Listening Assessment:**
-      ${getFeedbackForLevel(listeningLevel)}
-    `;
-  };
-
-  const getFeedbackForLevel = (level: string): string => {
-    switch (level) {
-      case 'C2':
-        return "Your skills demonstrate mastery of the language. You communicate with precision, fluency, and nuance across a wide range of topics. Your comprehension is excellent, allowing you to understand complex and implicit meanings.";
-      case 'C1':
-        return "You communicate fluently and spontaneously with very few hesitations. You have a broad vocabulary and can express complex ideas clearly. Your comprehension is very good, though you may occasionally miss subtle nuances or cultural references.";
-      case 'B2':
-        return "You speak with good fluency on familiar topics and can participate effectively in most conversations. Your vocabulary is sufficient for most contexts, though you may sometimes search for words. Your comprehension is good for clear speech on familiar topics.";
-      case 'B1':
-        return "You can communicate in straightforward situations about familiar topics. Your vocabulary covers everyday needs, though with some limitations. Your comprehension is adequate for clear, standard speech on familiar matters.";
-      case 'A2':
-        return "You can engage in simple exchanges on predictable topics. Your vocabulary is limited to basic personal and everyday topics. Your comprehension allows you to understand short, clear messages and announcements.";
-      case 'A1':
-        return "You can use basic phrases and expressions related to personal details and concrete needs. Your vocabulary is limited to a small repertoire of isolated words and phrases. Your comprehension is limited to carefully articulated speech with long pauses.";
-      default:
-        return "Your skills have been assessed. Continue practicing to improve your language proficiency.";
-    }
-  };
-
-  const getSuggestionsForSkill = (skill: 'speaking' | 'listening', level: string): string => {
-    const skillTitle = skill === 'speaking' ? 'Speaking Improvement' : 'Listening Improvement';
-    const suggestions = getSuggestionsForLevel(level, skill);
-    
-    return `**${skillTitle}**
-${suggestions}`;
-  };
-
-  const getSuggestionsForLevel = (level: string, skill: 'speaking' | 'listening' = 'speaking'): string => {
-    if (skill === 'speaking') {
-      switch (level) {
-        case 'C2':
-          return "- Continue refining your command of idiomatic expressions and cultural nuances\n- Practice specialized vocabulary in professional or academic fields\n- Challenge yourself with debates on complex topics";
-        case 'C1':
-          return "- Work on mastering subtle nuances and cultural references\n- Expand your vocabulary with more specialized terminology\n- Practice expressing complex ideas with greater precision";
-        case 'B2':
-          return "- Practice expressing more complex ideas and opinions\n- Work on speaking more fluently without long pauses\n- Expand your vocabulary beyond everyday topics\n- Practice using more varied grammatical structures";
-        case 'B1':
-          return "- Practice describing experiences, hopes, and plans in more detail\n- Work on connecting your ideas more smoothly\n- Build vocabulary beyond basic everyday topics\n- Practice speaking for longer periods without stopping";
-        case 'A2':
-          return "- Practice forming complete sentences\n- Work on asking and answering questions about personal information\n- Expand your vocabulary to cover more everyday topics\n- Practice basic conversations on familiar topics";
-        case 'A1':
-          return "- Focus on learning basic greetings and common phrases\n- Practice basic personal introduction\n- Build vocabulary of everyday objects and actions\n- Practice pronouncing common words and phrases";
-        default:
-          return "- Continue practicing speaking regularly\n- Engage in conversations with native speakers when possible\n- Record yourself speaking and review for improvement areas";
-      }
-    } else {
-      switch (level) {
-        case 'C2':
-          return "- Challenge yourself with complex audio materials like academic lectures\n- Practice understanding different regional accents and dialects\n- Focus on understanding implicit meanings and cultural references";
-        case 'C1':
-          return "- Practice with audio containing background noise or multiple speakers\n- Work on understanding fast-paced natural conversations\n- Improve comprehension of idioms and colloquial expressions";
-        case 'B2':
-          return "- Listen to podcasts and radio programs on various topics\n- Practice understanding different accents\n- Focus on catching key information in longer speeches\n- Work on understanding implied meanings";
-        case 'B1':
-          return "- Listen to authentic materials like news clips and short videos\n- Practice understanding main points in clear, standard speech\n- Work on understanding detailed instructions\n- Train your ear to recognize different speech patterns";
-        case 'A2':
-          return "- Listen to simplified audio materials regularly\n- Practice understanding basic questions and instructions\n- Focus on identifying main topics in short conversations\n- Train yourself to recognize familiar words in context";
-        case 'A1':
-          return "- Listen to and repeat simple phrases\n- Practice recognizing basic greetings and questions\n- Focus on identifying individual words in slow, clear speech\n- Use audio materials with visual support";
-        default:
-          return "- Listen to authentic materials like podcasts, videos, and music\n- Practice with materials at your level, gradually increasing difficulty\n- Use context clues to help understanding";
-      }
     }
   };
 
@@ -404,63 +303,13 @@ ${suggestions}`;
         return;
       }
       
-      const { data, error } = await supabase.functions.invoke('analyze-speaking', {
-        body: conversationData
-      });
-
-      if (error) {
-        console.error("Error calling analyze-speaking function:", error);
-        toast({
-          title: "Analysis Error",
-          description: `There was an error analyzing your test: ${error.message}`,
-          variant: "destructive",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      console.log("Analysis result received:", data);
-
-      if (!data || typeof data !== 'object') {
-        console.error("Invalid response from analyze-speaking function:", data);
-        toast({
-          title: "Analysis Error",
-          description: "Received an invalid response from the analysis function. Please try again.",
-          variant: "destructive",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      const { 
-        speakingLevel = "B1", 
-        speakingScore = 70, 
-        listeningLevel = "B1", 
-        listeningScore = 70, 
-        analysis = "Based on the conversation, you demonstrated good communication skills in Spanish." 
-      } = data;
-      
-      console.log("Extracted scores:", { 
-        speaking: { level: speakingLevel, score: speakingScore },
-        listening: { level: listeningLevel, score: listeningScore }
-      });
-      
-      setSpeakingScore({ level: speakingLevel, score: speakingScore });
-      setListeningScore({ level: listeningLevel, score: listeningScore });
-      
-      const levelFeedback = generateFeedbackForLevel(speakingLevel, listeningLevel, analysis);
-      setFeedback(levelFeedback);
-      
-      setTimeout(() => {
-        console.log("Opening results dialog");
-        setShowResults(true);
-        setIsSubmitting(false);
-      }, 500);
+      setShowFeedback(true);
+      setIsSubmitting(false);
     } catch (error) {
       console.error("Error ending test:", error);
       toast({
         title: "Error",
-        description: `Failed to analyze test results: ${error instanceof Error ? error.message : String(error)}`,
+        description: `An error occurred when ending the test: ${error instanceof Error ? error.message : String(error)}`,
         variant: "destructive",
       });
       setIsSubmitting(false);
@@ -608,9 +457,9 @@ ${suggestions}`;
             <div className="space-y-4">
               <p className="text-gray-600">
                 This test will assess both your speaking and listening skills through
-                a conversation with an AI examiner. The AI will evaluate your
-                pronunciation, fluency, comprehension, and ability to respond
-                appropriately. The test will last exactly 3 minutes.
+                a conversation with an AI examiner. The AI will generate the transcript 
+                that you can copy and paste into ChatGPT for assessment. The test will 
+                last exactly 3 minutes.
               </p>
               <div className="space-y-2">
                 <p className="text-sm text-gray-500">Requirements:</p>
@@ -618,6 +467,7 @@ ${suggestions}`;
                   <li>Working microphone</li>
                   <li>Quiet environment</li>
                   <li>3 minutes of uninterrupted time</li>
+                  <li>Access to ChatGPT for assessment</li>
                 </ul>
               </div>
               <Button
@@ -631,30 +481,26 @@ ${suggestions}`;
           ) : showFeedback ? (
             <div className="space-y-6">
               <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 className="text-lg font-semibold mb-4">Assessment Feedback</h3>
-                <div className="prose prose-sm max-w-none whitespace-pre-line">
-                  {feedback}
-                </div>
+                <h3 className="text-lg font-semibold mb-4">Test Completed</h3>
+                <p className="mb-4">
+                  Your speaking test is complete! Please copy your conversation transcript below 
+                  and paste it into ChatGPT to receive an assessment of your speaking and 
+                  listening skills.
+                </p>
+                <p className="text-sm text-gray-600">
+                  The transcript includes instructions for ChatGPT to evaluate your language skills 
+                  according to the CEFR scale (A1-C2).
+                </p>
               </div>
               
-              {speakingScore && listeningScore && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
-                    <h4 className="font-medium text-blue-800 mb-2">Speaking Assessment</h4>
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">{speakingScore.level}</span>
-                      <span className="text-lg">{speakingScore.score}%</span>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-100">
-                    <h4 className="font-medium text-green-800 mb-2">Listening Assessment</h4>
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">{listeningScore.level}</span>
-                      <span className="text-lg">{listeningScore.score}%</span>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div className="border border-gray-200 rounded-lg">
+                <TranscriptConversation 
+                  userTranscripts={userTranscript}
+                  aiResponses={responses}
+                  analysisData={null}
+                  showCopyButton={true}
+                />
+              </div>
               
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                 <Button 
@@ -689,25 +535,14 @@ ${suggestions}`;
                 )}
               </div>
               
-              {(userTranscript.length > 0 || responses.length > 0) && (
-                <div className="p-4 bg-gray-50 rounded-lg mt-4 max-h-60 overflow-y-auto">
-                  <h4 className="font-medium mb-2">Current Conversation:</h4>
-                  {responses.map((response, index) => (
-                    <React.Fragment key={`conversation-${index}`}>
-                      {userTranscript[index] && (
-                        <ConversationItem message={userTranscript[index]} isAi={false} />
-                      )}
-                      <ConversationItem message={response} isAi={true} />
-                    </React.Fragment>
-                  ))}
-                  {userTranscript.length > responses.length && 
-                    <ConversationItem 
-                      message={userTranscript[userTranscript.length - 1]} 
-                      isAi={false} 
-                    />
-                  }
-                </div>
-              )}
+              <div className="p-4 bg-gray-50 rounded-lg mt-4">
+                <h4 className="font-medium mb-2">Current Conversation:</h4>
+                <TranscriptConversation
+                  userTranscripts={userTranscript}
+                  aiResponses={responses}
+                  analysisData={null}
+                />
+              </div>
               
               <Button
                 ref={buttonRef}
@@ -717,7 +552,7 @@ ${suggestions}`;
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  <>Analyzing your speech...</>
+                  <>Processing...</>
                 ) : (
                   <>End Test</>
                 )}

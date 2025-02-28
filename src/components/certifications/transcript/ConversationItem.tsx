@@ -1,6 +1,7 @@
 
-import React from "react";
-import { Bot, User } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Bot, User, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ConversationItemProps {
   message: string;
@@ -8,6 +9,24 @@ interface ConversationItemProps {
 }
 
 const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
+  const [expandedView, setExpandedView] = useState(false);
+  const [truncatedMessage, setTruncatedMessage] = useState("");
+  const [isLongMessage, setIsLongMessage] = useState(false);
+  const maxCharsToShow = 300;
+  
+  useEffect(() => {
+    if (!message) return;
+    
+    const isLong = message.length > maxCharsToShow;
+    setIsLongMessage(isLong);
+    
+    if (isLong && !expandedView) {
+      setTruncatedMessage(`${message.substring(0, maxCharsToShow)}...`);
+    } else {
+      setTruncatedMessage(message);
+    }
+  }, [message, expandedView]);
+
   // Function to format message text - detects and formats URLs, line breaks, etc.
   const formatMessage = (text: string) => {
     // Handle undefined or empty strings
@@ -58,7 +77,28 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
       </div>
       <div className="flex-1 space-y-2">
         <div className="prose-sm prose-gray max-w-none">
-          <p>{formatMessage(message)}</p>
+          <p>{formatMessage(isLongMessage && !expandedView ? truncatedMessage : message)}</p>
+          
+          {isLongMessage && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setExpandedView(!expandedView)}
+              className="mt-1 text-xs flex items-center gap-1 h-6 px-2"
+            >
+              {expandedView ? (
+                <>
+                  <ChevronUp className="h-3 w-3" />
+                  Show less
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-3 w-3" />
+                  Show more
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>
