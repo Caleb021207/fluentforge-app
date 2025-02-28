@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -164,7 +165,8 @@ const ProgressPage = () => {
               type === 'listening' || type === 'vocabulary') {
         console.log(`Processing ${type} attempt #${attempt.id} with score ${attempt.score}`);
         
-        const propertyName = type as keyof typeof existing;
+        // Fixed: Use type assertion and proper casting
+        const propertyName = type as keyof Omit<ChartData, 'date'>;
         const currentScore = existing[propertyName] as number;
         
         if (attempt.score > currentScore) {
