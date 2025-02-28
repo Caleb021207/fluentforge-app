@@ -26,6 +26,9 @@ const TranscriptError = ({ error, onBack }: TranscriptErrorProps) => {
     return error || "There was an error loading the transcript. Please try again later.";
   };
 
+  // Log the error for debugging purposes
+  console.error("TranscriptError component received error:", error);
+
   return (
     <div className="space-y-4">
       <Button variant="outline" onClick={onBack}>

@@ -10,6 +10,12 @@ interface ConversationItemProps {
 const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
   // Function to format message text - detects and formats URLs, line breaks, etc.
   const formatMessage = (text: string) => {
+    // Handle undefined or empty strings
+    if (!text) {
+      console.warn('Received empty or undefined message in ConversationItem');
+      return "No content";
+    }
+    
     // Convert line breaks to <br /> tags
     const withLineBreaks = text.split('\n').map((line, i) => (
       <React.Fragment key={i}>
@@ -20,12 +26,6 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
     
     return withLineBreaks;
   };
-
-  // Handle undefined or null messages
-  if (!message) {
-    console.warn('Received undefined or null message in ConversationItem');
-    return null;
-  }
 
   return (
     <div className="flex gap-3 mb-4">

@@ -64,10 +64,13 @@ const SpeakingListeningCertification = () => {
     speaking: null, 
     listening: null
   });
+  const [sessionStarted, setSessionStarted] = useState(false);
+  const [sessionError, setSessionError] = useState<string | null>(null);
   const { toast } = useToast();
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const endTestTimeout = useRef<NodeJS.Timeout | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -82,6 +85,7 @@ const SpeakingListeningCertification = () => {
     },
     onError: (error) => {
       console.error("Conversation error:", error);
+      setSessionError(`Conversation error: ${error.message}`);
       toast({
         title: "Error",
         description: error.message,
@@ -122,7 +126,13 @@ const SpeakingListeningCertification = () => {
             // Use setTimeout to avoid state update conflicts
             if (endTestTimeout.current === null) {
               endTestTimeout.current = setTimeout(() => {
-                endTest();
+                if (buttonRef.current) {
+                  console.log("Auto-clicking end test button");
+                  buttonRef.current.click();
+                } else {
+                  console.log("Button ref not available, manually calling endTest");
+                  endTest();
+                }
                 endTestTimeout.current = null;
               }, 100);
             }
@@ -171,10 +181,11 @@ const SpeakingListeningCertification = () => {
     if (isStarted) {
       console.log("Current conversation data:", {
         transcripts: userTranscript,
-        responses: responses
+        responses: responses,
+        sessionStarted: sessionStarted
       });
     }
-  }, [userTranscript, responses, isStarted]);
+  }, [userTranscript, responses, isStarted, sessionStarted]);
 
   const handleStartTest = () => {
     setShowInstructions(true);
@@ -208,6 +219,9 @@ const SpeakingListeningCertification = () => {
 
       console.log("Starting test for user:", user.id);
 
+      // Reset any previous session errors
+      setSessionError(null);
+      
       // Stop the audio if it's still playing
       if (speechSynthesis.speaking) {
         speechSynthesis.cancel();
@@ -217,12 +231,8 @@ const SpeakingListeningCertification = () => {
       setShowInstructions(false);
       
       console.log("Starting conversation session...");
-      await conversation.startSession({
-        agentId: "2rNEBxdJ814y7dcdZSOb", // Spanish language tutor agent ID
-      });
       
-      console.log("Conversation session started successfully");
-      
+      // First set the isStarted state to true to trigger UI update
       setIsStarted(true);
       setResponses([]);
       setUserTranscript([]);
@@ -233,10 +243,27 @@ const SpeakingListeningCertification = () => {
       setTimeLeft(180); // Reset timer to 3 minutes
       setAttemptIds({ speaking: null, listening: null });
       
-      toast({
-        title: "Test Started",
-        description: "The AI examiner will now assess your speaking and listening skills. You have 3 minutes.",
-      });
+      try {
+        // Then start the actual session
+        await conversation.startSession({
+          agentId: "2rNEBxdJ814y7dcdZSOb", // Spanish language tutor agent ID
+        });
+        console.log("Conversation session started successfully");
+        setSessionStarted(true);
+        
+        toast({
+          title: "Test Started",
+          description: "The AI examiner will now assess your speaking and listening skills. You have 3 minutes.",
+        });
+      } catch (error) {
+        console.error("Failed to start conversation session:", error);
+        setSessionError(`Failed to start conversation: ${error instanceof Error ? error.message : String(error)}`);
+        toast({
+          title: "Failed to start test",
+          description: "There was an error starting the conversation. Please try again.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error starting test:", error);
       toast({
@@ -353,6 +380,7 @@ ${suggestions}`;
 
   const endTest = async () => {
     try {
+      console.log("🔴 End Test button clicked");
       if (isSubmitting) {
         console.log("Test submission already in progress, ignoring duplicate call");
         return;
@@ -360,7 +388,8 @@ ${suggestions}`;
       
       setIsSubmitting(true);
       console.log("Ending test and session...");
-      await conversation.endSession();
+      
+      // Even if there's no session, we want to update the UI to show we're processing
       setIsStarted(false);
       setTimeLeft(0); // Stop the timer
       
@@ -371,6 +400,14 @@ ${suggestions}`;
       };
       
       console.log("Ending test. Conversation data to analyze:", conversationData);
+      
+      try {
+        await conversation.endSession();
+        console.log("✅ Conversation session ended successfully");
+      } catch (endSessionError) {
+        console.error("⚠️ Error ending conversation session:", endSessionError);
+        // Continue with analysis even if session ending fails
+      }
       
       // Ensure we have actual conversation data to analyze
       if (userTranscript.length === 0 && responses.length === 0) {
@@ -392,14 +429,26 @@ ${suggestions}`;
 
       if (error) {
         console.error("Error calling analyze-speaking function:", error);
-        throw error;
+        toast({
+          title: "Analysis Error",
+          description: `There was an error analyzing your test: ${error.message}`,
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
       }
 
       console.log("Analysis result received:", data);
 
       if (!data || typeof data !== 'object') {
         console.error("Invalid response from analyze-speaking function:", data);
-        throw new Error("Invalid response from analyze-speaking function");
+        toast({
+          title: "Analysis Error",
+          description: "Received an invalid response from the analysis function. Please try again.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
       }
 
       // Extract separate scores for speaking and listening with defaults
@@ -430,10 +479,9 @@ ${suggestions}`;
       console.error("Error ending test:", error);
       toast({
         title: "Error",
-        description: "Failed to analyze test results. Please try again.",
+        description: `Failed to analyze test results: ${error instanceof Error ? error.message : String(error)}`,
         variant: "destructive",
       });
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -654,8 +702,38 @@ ${suggestions}`;
                 <p className="text-lg font-semibold text-center">
                   Time Remaining: {formatTime(timeLeft)}
                 </p>
+                {sessionError && (
+                  <div className="mt-2 p-2 bg-red-50 text-red-600 rounded-md">
+                    <p className="text-sm font-medium">Error: {sessionError}</p>
+                    <p className="text-xs mt-1">You can try ending the test anyway or restart.</p>
+                  </div>
+                )}
               </div>
+              
+              {/* Display current conversation if available */}
+              {(userTranscript.length > 0 || responses.length > 0) && (
+                <div className="p-4 bg-gray-50 rounded-lg mt-4 max-h-60 overflow-y-auto">
+                  <h4 className="font-medium mb-2">Current Conversation:</h4>
+                  {responses.map((response, index) => (
+                    <React.Fragment key={`conversation-${index}`}>
+                      {userTranscript[index] && (
+                        <ConversationItem message={userTranscript[index]} isAi={false} />
+                      )}
+                      <ConversationItem message={response} isAi={true} />
+                    </React.Fragment>
+                  ))}
+                  {/* Add any remaining user transcripts */}
+                  {userTranscript.length > responses.length && 
+                    <ConversationItem 
+                      message={userTranscript[userTranscript.length - 1]} 
+                      isAi={false} 
+                    />
+                  }
+                </div>
+              )}
+              
               <Button
+                ref={buttonRef}
                 onClick={endTest}
                 variant="destructive"
                 className="w-full md:w-auto"
