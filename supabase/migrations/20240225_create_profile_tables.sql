@@ -28,6 +28,20 @@ begin
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
   );
 
+  -- Create lesson_progress table if it doesn't exist
+  create table if not exists public.lesson_progress (
+    id uuid default gen_random_uuid() primary key,
+    user_id uuid not null,
+    level text not null,
+    lesson_id integer not null,
+    progress integer not null,
+    completed boolean not null default false,
+    last_accessed timestamp with time zone,
+    xp_earned integer default 0,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+    updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+  );
+
   -- Set up RLS policies for user_profiles
   alter table public.user_profiles enable row level security;
   
@@ -46,6 +60,13 @@ begin
     on public.user_profiles for insert
     with check ( auth.uid() = id );
 
+  -- Add admin policy for user_profiles (for demo purposes, add proper role check in production)
+  drop policy if exists "Admin users can view all profiles" on public.user_profiles;
+  create policy "Admin users can view all profiles"
+    on public.user_profiles for select
+    -- In production, use a proper role check instead of this email pattern
+    using ( auth.jwt() -> 'email' like '%admin%' );
+
   -- Set up RLS policies for certification_attempts
   alter table public.certification_attempts enable row level security;
   
@@ -58,6 +79,38 @@ begin
   create policy "Users can insert own attempts"
     on public.certification_attempts for insert
     with check ( auth.uid() = user_id );
+    
+  -- Add admin policy for certification_attempts
+  drop policy if exists "Admin users can view all certification attempts" on public.certification_attempts;
+  create policy "Admin users can view all certification attempts"
+    on public.certification_attempts for select
+    -- In production, use a proper role check instead of this email pattern
+    using ( auth.jwt() -> 'email' like '%admin%' );
+
+  -- Set up RLS policies for lesson_progress
+  alter table public.lesson_progress enable row level security;
+  
+  drop policy if exists "Users can view own lesson progress" on public.lesson_progress;
+  create policy "Users can view own lesson progress"
+    on public.lesson_progress for select
+    using ( auth.uid() = user_id );
+
+  drop policy if exists "Users can insert own lesson progress" on public.lesson_progress;
+  create policy "Users can insert own lesson progress"
+    on public.lesson_progress for insert
+    with check ( auth.uid() = user_id );
+    
+  drop policy if exists "Users can update own lesson progress" on public.lesson_progress;
+  create policy "Users can update own lesson progress"
+    on public.lesson_progress for update
+    using ( auth.uid() = user_id );
+
+  -- Add admin policy for lesson_progress
+  drop policy if exists "Admin users can view all lesson progress" on public.lesson_progress;
+  create policy "Admin users can view all lesson progress"
+    on public.lesson_progress for select
+    -- In production, use a proper role check instead of this email pattern
+    using ( auth.jwt() -> 'email' like '%admin%' );
 end;
 $$;
 

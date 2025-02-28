@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut } from "lucide-react";
+import { BookOpen, MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,22 +11,34 @@ const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
-      setIsLoggedIn(!!data.session);
+      const loggedIn = !!data.session;
+      setIsLoggedIn(loggedIn);
+      
+      if (loggedIn) {
+        // For demo purposes, check if email contains "admin"
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsAdmin(user?.email?.includes("admin") || false);
+      }
     };
     
     checkAuth();
     
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
         setIsLoggedIn(true);
+        // Check if admin
+        const user = session?.user;
+        setIsAdmin(user?.email?.includes("admin") || false);
       } else if (event === 'SIGNED_OUT') {
         setIsLoggedIn(false);
+        setIsAdmin(false);
       }
     });
     
@@ -42,6 +54,11 @@ const Navigation = () => {
     { icon: BarChart, label: "Progress", path: "/progress" },
     { icon: LayoutDashboard, label: "Dashboard", path: "/profile" },
   ];
+  
+  // Add admin link if user is an admin
+  if (isAdmin) {
+    navItems.push({ icon: Shield, label: "Admin", path: "/admin" });
+  }
 
   return (
     <>

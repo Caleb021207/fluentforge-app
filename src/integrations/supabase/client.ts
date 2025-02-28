@@ -15,6 +15,7 @@ export type Database = {
           target_level: string;
           target_date: string;
           avatar_url: string | null;
+          created_at?: string;
         };
         Insert: {
           id: string;
@@ -23,6 +24,7 @@ export type Database = {
           target_level?: string;
           target_date?: string;
           avatar_url?: string | null;
+          created_at?: string;
         };
         Update: {
           id?: string;
@@ -31,6 +33,7 @@ export type Database = {
           target_level?: string;
           target_date?: string;
           avatar_url?: string | null;
+          created_at?: string;
         };
       };
       certification_attempts: {
