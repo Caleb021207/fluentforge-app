@@ -338,10 +338,17 @@ const ConversationalFluencyCertification = () => {
               
             // Save the transcript
             if (speakingAttempt.data) {
+              const { data: { user: currentUser } } = await supabase.auth.getUser();
+              
+              if (!currentUser) {
+                throw new Error("User not authenticated");
+              }
+              
               const transcriptSave = await supabase
                 .from('certification_transcripts')
                 .insert({
                   attempt_id: speakingAttempt.data.id,
+                  user_id: currentUser.id, // Add this missing field
                   user_transcripts: conversationMessages.filter(msg => msg.role === "user").map(msg => msg.content),
                   ai_responses: conversationMessages.filter(msg => msg.role === "assistant").map(msg => msg.content),
                   analysis_data: data
