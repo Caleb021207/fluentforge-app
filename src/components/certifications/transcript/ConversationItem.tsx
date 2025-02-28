@@ -21,6 +21,12 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
     return withLineBreaks;
   };
 
+  // Handle undefined or null messages
+  if (!message) {
+    console.warn('Received undefined or null message in ConversationItem');
+    return null;
+  }
+
   return (
     <div className="flex gap-3 mb-4">
       <div className={`flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border ${

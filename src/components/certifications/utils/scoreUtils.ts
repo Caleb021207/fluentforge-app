@@ -15,6 +15,14 @@ export const determineLevel = (score: number) => {
   return 'A1';
 };
 
+// For speaking/listening we sometimes need to convert a raw score from 1-5 scale to 0-100
+export const convertRawScoreToPercentage = (rawScore: number, maxScore: number = 5) => {
+  // Ensure the score is between 0 and maxScore
+  const normalizedScore = Math.max(0, Math.min(rawScore, maxScore));
+  // Convert to percentage (0-100)
+  return Math.round((normalizedScore / maxScore) * 100);
+};
+
 export const getLevelDescription = (level: string) => {
   switch (level) {
     case 'C2':
@@ -34,6 +42,7 @@ export const getLevelDescription = (level: string) => {
   }
 };
 
+// Convert CEFR levels to ACTFL proficiency levels
 export const CEFR_TO_ACTFL = {
   'C2': 'Distinguished / Superior',
   'C1': 'Advanced High',
@@ -41,4 +50,28 @@ export const CEFR_TO_ACTFL = {
   'B1': 'Intermediate High / Intermediate Mid',
   'A2': 'Intermediate Low / Novice High',
   'A1': 'Novice Mid / Novice Low'
+};
+
+// Convert ACTFL levels to CEFR
+export const ACTFL_TO_CEFR = {
+  'Distinguished': 'C2',
+  'Superior': 'C2',
+  'Advanced High': 'C1',
+  'Advanced Mid': 'B2',
+  'Advanced Low': 'B2',
+  'Intermediate High': 'B1',
+  'Intermediate Mid': 'B1',
+  'Intermediate Low': 'A2',
+  'Novice High': 'A2',
+  'Novice Mid': 'A1',
+  'Novice Low': 'A1'
+};
+
+// Helper function to ensure valid score calculation even with partial data
+export const ensureValidScore = (score: number | null | undefined) => {
+  if (score === null || score === undefined) {
+    console.warn('Score was null or undefined, returning default 0');
+    return 0;
+  }
+  return Math.max(0, Math.min(100, Math.round(score)));
 };

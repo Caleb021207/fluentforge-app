@@ -31,7 +31,7 @@ export const fetchTranscriptData = async (attemptId: string) => {
   // First, get the attempt details to know certification type
   const { data: attemptData, error: attemptError } = await supabase
     .from('certification_attempts')
-    .select('certification_type, score, level')
+    .select('certification_type, score, level, completed_at')
     .eq('id', attemptId)
     .single();
 
@@ -46,6 +46,12 @@ export const fetchTranscriptData = async (attemptId: string) => {
   }
 
   console.log("✅ Found attempt data:", attemptData);
+  
+  // Check if the attempt was completed properly
+  if (!attemptData.completed_at || !attemptData.score) {
+    console.error("🔴 Attempt was not properly completed:", attemptData);
+    throw new Error('This test was not properly completed. The score or completion time is missing.');
+  }
 
   // Then get the transcript data with explicit column selection
   console.log("⭐ Fetching transcript with params:", { 
@@ -103,7 +109,7 @@ export const fetchTranscriptData = async (attemptId: string) => {
       throw new Error('You do not have permission to view this transcript');
     } else {
       console.error("🔴 No transcript found for attempt:", attemptId);
-      throw new Error('No transcript found for this attempt');
+      throw new Error('No transcript found for this attempt. Make sure you completed the test by clicking the "End Test" button.');
     }
   }
 
@@ -111,13 +117,33 @@ export const fetchTranscriptData = async (attemptId: string) => {
   const transcript = transcriptData[0];
   console.log("✅ Found transcript data:", transcript);
 
-  return {
-    userTranscripts: transcript.user_transcripts as string[],
-    aiResponses: transcript.ai_responses as string[],
-    analysisData: transcript.analysis_data,
-    createdAt: transcript.created_at,
-    certificationType: attemptData.certification_type,
-    score: attemptData.score,
-    level: attemptData.level
-  };
+  // Validate transcript data
+  if (!transcript.user_transcripts || !transcript.ai_responses) {
+    console.error("🔴 Transcript data is incomplete:", transcript);
+    throw new Error('The transcript data is incomplete or corrupted.');
+  }
+
+  try {
+    // Ensure arrays are properly parsed
+    const userTranscripts = Array.isArray(transcript.user_transcripts) 
+      ? transcript.user_transcripts 
+      : JSON.parse(transcript.user_transcripts as any);
+      
+    const aiResponses = Array.isArray(transcript.ai_responses)
+      ? transcript.ai_responses
+      : JSON.parse(transcript.ai_responses as any);
+
+    return {
+      userTranscripts: userTranscripts as string[],
+      aiResponses: aiResponses as string[],
+      analysisData: transcript.analysis_data,
+      createdAt: transcript.created_at,
+      certificationType: attemptData.certification_type,
+      score: attemptData.score,
+      level: attemptData.level
+    };
+  } catch (error) {
+    console.error("🔴 Error parsing transcript data:", error);
+    throw new Error('Error parsing transcript data. The format may be incorrect.');
+  }
 };
