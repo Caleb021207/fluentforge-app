@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -12,6 +11,7 @@ import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ProgressData {
   date: string;
