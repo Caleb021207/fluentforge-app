@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,10 +31,22 @@ const ConversationalFluencyCertification = () => {
   const [transcript, setTranscript] = useState<string>("");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [assessment, setAssessment] = useState<TranscriptAssessment | null>(null);
+  const [agentConversationId, setAgentConversationId] = useState<string | null>(null);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const currentPromptRef = useRef<string>("Hola, me gustaría conocerte mejor. Cuéntame sobre tus intereses y aficiones. ¿Qué te gusta hacer en tu tiempo libre?");
+  
+  // Clean up agent conversation if it exists when component unmounts
+  useEffect(() => {
+    return () => {
+      if (agentConversationId) {
+        // Here you would call the function to end the ElevenLabs agent conversation
+        console.log("Cleaning up agent conversation:", agentConversationId);
+        // Call appropriate cleanup function for Eleven Labs if needed
+      }
+    };
+  }, [agentConversationId]);
   
   const resetTest = () => {
     setError(null);
@@ -43,12 +55,44 @@ const ConversationalFluencyCertification = () => {
     setAudioBlob(null);
     setAssessment(null);
     audioChunksRef.current = [];
+    
+    // End the ElevenLabs agent conversation if active
+    if (agentConversationId) {
+      // Here you would call the function to end the ElevenLabs agent conversation
+      console.log("Ending agent conversation:", agentConversationId);
+      setAgentConversationId(null);
+      // Add code to end the ElevenLabs conversation here
+    }
+  };
+
+  // Call to initialize the Eleven Labs agent
+  const initializeElevenLabsAgent = async () => {
+    try {
+      // Here you would call the Eleven Labs API to initialize the agent
+      console.log("Initializing Eleven Labs agent...");
+      
+      // Mock response - replace with actual API call
+      const conversationId = "mock-conversation-" + Date.now();
+      setAgentConversationId(conversationId);
+      
+      return conversationId;
+    } catch (err) {
+      console.error("Error initializing Eleven Labs agent:", err);
+      return null;
+    }
   };
 
   const startRecording = async () => {
     try {
       setRecordingState(RecordingState.RECORDING);
       audioChunksRef.current = [];
+      
+      // Initialize Eleven Labs agent before starting recording
+      const conversationId = await initializeElevenLabsAgent();
+      
+      if (!conversationId) {
+        throw new Error("Failed to initialize conversation agent");
+      }
       
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
@@ -189,6 +233,13 @@ const ConversationalFluencyCertification = () => {
         // Save the certification attempt with the same score for both speaking and listening
         if (data.overallScore) {
           try {
+            // Get the current user
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) {
+              throw new Error("User not authenticated");
+            }
+            
             // Create speaking certification
             const speakingAttempt = await supabase
               .from('certification_attempts')
@@ -196,7 +247,8 @@ const ConversationalFluencyCertification = () => {
                 certification_type: 'speaking',
                 score: data.overallScore,
                 level: data.cefrLevel,
-                completed_at: new Date().toISOString()
+                completed_at: new Date().toISOString(),
+                user_id: user.id
               })
               .select()
               .single();
@@ -208,7 +260,8 @@ const ConversationalFluencyCertification = () => {
                 certification_type: 'listening',
                 score: data.overallScore,
                 level: data.cefrLevel,
-                completed_at: new Date().toISOString()
+                completed_at: new Date().toISOString(),
+                user_id: user.id
               })
               .select()
               .single();

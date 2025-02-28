@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import ConversationItem from "./ConversationItem";
+import ConversationItem from "@/components/certifications/transcript/ConversationItem";
 
 interface TranscriptConversationProps {
   transcript: string;
