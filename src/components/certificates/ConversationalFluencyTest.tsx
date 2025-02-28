@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Mic, MicOff, Info } from "lucide-react";
@@ -9,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
-const TEST_DURATION = 300; // 5 minutes in seconds
+const TEST_DURATION = 180; // 3 minutes in seconds (changed from 300)
 const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc"; // Updated to use the specific agent ID
 
 interface ConversationalFluencyTestProps {
@@ -233,7 +232,6 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     }
   };
 
-  // Mock data for testing - when the real data isn't available
   const generateMockTestResults = () => {
     return {
       speaking: {
@@ -264,7 +262,6 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     };
   };
 
-  // Save transcript to database with better error handling
   const saveTranscriptToDatabase = async (
     speakingAttemptId: string, 
     userId: string, 
