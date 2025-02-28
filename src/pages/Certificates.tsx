@@ -60,13 +60,26 @@ const Certificates = () => {
     refetchOnWindowFocus: false,
   });
 
-  const highestScores = attempts?.reduce((acc, attempt) => {
-    // Normalize "fluency" to "conversation" for consistency in display
-    const type = attempt.certification_type === "fluency" ? "conversation" : attempt.certification_type;
+  const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefined) => {
+    if (!rawAttempts) return [];
+    
+    // First normalize all fluency tests to conversation type
+    return rawAttempts.map(attempt => {
+      if (attempt.certification_type === "fluency") {
+        return {...attempt, certification_type: "conversation"};
+      }
+      return attempt;
+    });
+  };
+
+  const normalizedAttempts = normalizeAttempts(attempts);
+  
+  // Process highest scores after normalizing types
+  const highestScores = normalizedAttempts.reduce((acc, attempt) => {
+    const type = attempt.certification_type;
     
     if (!acc[type] || attempt.score > acc[type].score) {
-      // Store a modified copy with the normalized type
-      acc[type] = {...attempt, certification_type: type};
+      acc[type] = attempt;
     }
     return acc;
   }, {} as Record<string, CertificationAttempt>);
@@ -102,7 +115,10 @@ const Certificates = () => {
       const transcriptMap: Record<string, boolean> = {};
       
       for (const attempt of attempts) {
-        if (attempt.certification_type === 'speaking' || attempt.certification_type === 'listening') {
+        if (attempt.certification_type === 'speaking' || 
+            attempt.certification_type === 'listening' || 
+            attempt.certification_type === 'fluency' || 
+            attempt.certification_type === 'conversation') {
           try {
             const { data, error } = await supabase
               .from('certification_transcripts')
@@ -177,15 +193,17 @@ const Certificates = () => {
       
       <ConversationalFluencyTest onTestComplete={() => {
         console.log("Test completed, refreshing data...");
+        // Multiple refreshes to ensure data is loaded
         refetch();
-        // Force another refresh after a short delay to ensure data is loaded
-        setTimeout(() => refetch(), 1000);
+        setTimeout(() => refetch(), 500);
+        setTimeout(() => refetch(), 1500);
+        setTimeout(() => refetch(), 3000);
       }} />
       
       <ScoreCards highestScores={highestScores} />
 
       <CertificationAttemptsList 
-        attempts={attempts} 
+        attempts={normalizedAttempts} 
         hasTranscript={hasTranscript}
         onViewAttempt={handleViewAttempt}
         isLoading={isLoading}

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
@@ -12,6 +12,13 @@ interface CertificateScoreCardProps {
 }
 
 const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
+  // Debug log to verify the data is correctly passed
+  useEffect(() => {
+    if (type === 'conversation') {
+      console.log(`CertificateScoreCard for ${type} received attempt:`, attempt);
+    }
+  }, [type, attempt]);
+  
   const formatType = (type: string) => {
     if (type === "conversation") {
       return "Conversation Fluency";
@@ -26,6 +33,16 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
     return <Award className="h-4 w-4 text-blue-500 mr-2" />;
   };
 
+  // Make sure we have a valid score value
+  const getScore = () => {
+    if (!attempt || attempt.score === undefined || attempt.score === null) {
+      return 0;
+    }
+    return attempt.score;
+  };
+
+  const score = getScore();
+
   return (
     <Card>
       <CardHeader>
@@ -34,10 +51,10 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
       <CardContent>
         {attempt ? (
           <>
-            <Progress value={attempt.score} className="mb-2" />
+            <Progress value={score} className="mb-2" />
             <div className="flex justify-between text-sm text-gray-600">
-              <span>Score: {attempt.score}%</span>
-              <span>Level: {determineLevel(attempt.score)}</span>
+              <span>Score: {score}%</span>
+              <span>Level: {determineLevel(score)}</span>
             </div>
           </>
         ) : (
