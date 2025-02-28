@@ -216,29 +216,16 @@ const Certificates = () => {
                         <div className="font-medium">{attempt.score}%</div>
                         <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
                       </div>
-                      {(attempt.certification_type === 'speaking' || attempt.certification_type === 'listening') && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="flex items-center gap-1"
-                          onClick={() => handleViewAttempt(attempt.id)}
-                        >
-                          <Eye className="h-3 w-3" />
-                          <span className="hidden md:inline">View</span>
-                        </Button>
-                      )}
-                      {(attempt.certification_type === 'reading' || attempt.certification_type === 'writing') && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="flex items-center gap-1 opacity-50 cursor-not-allowed"
-                          disabled
-                          title="Transcripts are only available for speaking and listening tests"
-                        >
-                          <FileText className="h-3 w-3" />
-                          <span className="hidden md:inline">View</span>
-                        </Button>
-                      )}
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="flex items-center gap-1 opacity-50 cursor-not-allowed"
+                        disabled
+                        title="Transcripts are currently unavailable"
+                      >
+                        <FileText className="h-3 w-3" />
+                        <span className="hidden md:inline">View</span>
+                      </Button>
                     </div>
                   </div>
                 ))
