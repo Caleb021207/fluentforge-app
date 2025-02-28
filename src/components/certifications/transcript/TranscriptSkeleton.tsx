@@ -24,10 +24,26 @@ const TranscriptSkeleton = ({ onBack }: TranscriptSkeletonProps) => {
           <Skeleton className="h-8 w-48" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Skeleton for conversation items */}
             {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-20 w-full" />
+              <div key={i} className="flex gap-3">
+                <Skeleton className="h-8 w-8 rounded-md" />
+                <div className="flex-1">
+                  <Skeleton className="h-4 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3 mt-2" />
+                </div>
+              </div>
             ))}
+            
+            {/* Skeleton for analysis section */}
+            <div className="mt-8 pt-4 border-t border-gray-200">
+              <Skeleton className="h-6 w-48 mb-4" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
           </div>
         </CardContent>
       </Card>
