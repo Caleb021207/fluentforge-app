@@ -65,12 +65,15 @@ const SpeakingListeningCertification = () => {
     onMessage: (message) => {
       console.log("Message received:", message);
       if (message.type === "llm_response") {
+        console.log("AI response received:", message.content);
         setResponses(prev => [...prev, message.content]);
       } else if (message.type === "transcript") {
+        console.log("User transcript received:", message.content);
         setUserTranscript(prev => [...prev, message.content]);
       }
     },
     onError: (error) => {
+      console.error("Conversation error:", error);
       toast({
         title: "Error",
         description: error.message,
@@ -84,6 +87,7 @@ const SpeakingListeningCertification = () => {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
         setMicrophoneAccess(true);
+        console.log("Microphone access granted");
       } catch (error) {
         console.error("Microphone access error:", error);
         toast({
@@ -139,6 +143,16 @@ const SpeakingListeningCertification = () => {
     };
   }, [showInstructions]);
 
+  // Log current conversation data whenever it changes
+  useEffect(() => {
+    if (isStarted) {
+      console.log("Current conversation data:", {
+        transcripts: userTranscript,
+        responses: responses
+      });
+    }
+  }, [userTranscript, responses, isStarted]);
+
   const handleStartTest = () => {
     setShowInstructions(true);
   };
@@ -169,6 +183,8 @@ const SpeakingListeningCertification = () => {
         return;
       }
 
+      console.log("Starting test for user:", user.id);
+
       // Stop the audio if it's still playing
       if (speechSynthesis.speaking) {
         speechSynthesis.cancel();
@@ -176,9 +192,13 @@ const SpeakingListeningCertification = () => {
       }
 
       setShowInstructions(false);
+      
+      console.log("Starting conversation session...");
       await conversation.startSession({
         agentId: "2rNEBxdJ814y7dcdZSOb", // Spanish language tutor agent ID
       });
+      
+      console.log("Conversation session started successfully");
       
       setIsStarted(true);
       setResponses([]);
@@ -320,10 +340,11 @@ ${suggestions}`;
         aiResponses: responses
       };
       
-      console.log("Sending conversation for analysis:", conversationData);
+      console.log("Ending test. Conversation data to analyze:", conversationData);
       
       // Ensure we have actual conversation data to analyze
       if (userTranscript.length === 0 && responses.length === 0) {
+        console.warn("No conversation data detected!");
         toast({
           title: "Test Incomplete",
           description: "We couldn't detect any speech. Please try again and make sure your microphone is working properly.",
@@ -334,6 +355,7 @@ ${suggestions}`;
       }
       
       // Send conversation to the analyze-speaking edge function
+      console.log("Sending conversation data to analyze-speaking function...");
       const { data, error } = await supabase.functions.invoke('analyze-speaking', {
         body: conversationData
       });
@@ -343,9 +365,10 @@ ${suggestions}`;
         throw error;
       }
 
-      console.log("Analysis result:", data);
+      console.log("Analysis result received:", data);
 
       if (!data || typeof data !== 'object') {
+        console.error("Invalid response from analyze-speaking function:", data);
         throw new Error("Invalid response from analyze-speaking function");
       }
 
@@ -357,6 +380,11 @@ ${suggestions}`;
         listeningScore = 70, 
         analysis = "Based on the conversation, you demonstrated good communication skills in Spanish." 
       } = data;
+      
+      console.log("Extracted scores:", { 
+        speaking: { level: speakingLevel, score: speakingScore },
+        listening: { level: listeningLevel, score: listeningScore }
+      });
       
       // Set the scores
       setSpeakingScore({ level: speakingLevel, score: speakingScore });
@@ -376,6 +404,8 @@ ${suggestions}`;
         throw new Error("User not authenticated");
       }
 
+      console.log("Saving test results for user:", user.id);
+      
       // Save speaking score
       const speakingResult = await supabase
         .from('certification_attempts')
@@ -394,6 +424,8 @@ ${suggestions}`;
         throw speakingResult.error;
       }
       
+      console.log("Speaking score saved successfully");
+      
       // Save listening score
       const listeningResult = await supabase
         .from('certification_attempts')
@@ -411,6 +443,8 @@ ${suggestions}`;
         console.error("Error saving listening score:", listeningResult.error);
         throw listeningResult.error;
       }
+      
+      console.log("Listening score saved successfully");
 
       toast({
         title: "Test Completed",
