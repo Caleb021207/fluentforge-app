@@ -36,6 +36,12 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
     streakDays: 0
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [certificationsCompleted, setCertificationsCompleted] = useState<{[key: string]: boolean}>({
+    reading: false,
+    writing: false,
+    speaking: false,
+    listening: false
+  });
 
   useEffect(() => {
     if (user) {
@@ -57,13 +63,42 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
 
       if (error) throw error;
 
+      // Track which certifications have been completed
+      const completedCertifications = {
+        reading: false,
+        writing: false,
+        speaking: false,
+        listening: false
+      };
+
       // Calculate completion based on certification attempts
       let completedLessons = 0;
       if (attempts && attempts.length > 0) {
-        // Each certification counts as a lesson
+        // Process certification attempts
         const uniqueTypes = new Set();
-        attempts.forEach(attempt => uniqueTypes.add(attempt.certification_type));
-        completedLessons = uniqueTypes.size * 3; // Each type counts as 3 lessons
+        attempts.forEach(attempt => {
+          uniqueTypes.add(attempt.certification_type);
+          
+          // Mark certification as completed
+          if (attempt.certification_type in completedCertifications) {
+            completedCertifications[attempt.certification_type] = true;
+          }
+          
+          // Special handling for speaking_listening which counts as two certifications
+          if (attempt.certification_type === 'speaking_listening') {
+            completedCertifications['speaking'] = true;
+            completedCertifications['listening'] = true;
+          }
+        });
+        
+        // Each certification type counts as 3 lessons
+        completedLessons = uniqueTypes.size * 3;
+        
+        // Add bonus for speaking_listening which counts double
+        const hasSpeakingListening = attempts.some(a => a.certification_type === 'speaking_listening');
+        if (hasSpeakingListening) {
+          completedLessons += 3; // Add 3 more lessons for the combined test
+        }
 
         // Calculate streak based on attempt dates
         const streakDays = calculateStreak(attempts);
@@ -76,6 +111,9 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
         const estimatedWeeks = calculateEstimatedWeeks(progressRate, profileData.targetLevel);
         setEstimatedWeeks(estimatedWeeks);
       }
+
+      // Update certification completion status
+      setCertificationsCompleted(completedCertifications);
 
       // Update lesson progress state
       setLessonProgress({
@@ -224,6 +262,44 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
               <span>{lessonProgress.streakDays} day streak! Keep it up!</span>
             </div>
           )}
+        </div>
+
+        {/* Certification Progress */}
+        <div className="border rounded-lg p-4 bg-gray-50 space-y-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Award className="h-4 w-4 text-lingua-primary" />
+            <h4 className="font-medium">Certification Status</h4>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div className={`p-2 rounded ${certificationsCompleted.reading ? 'bg-green-100' : 'bg-gray-100'}`}>
+              <span className="text-sm">Reading: </span>
+              <span className={`text-sm font-medium ${certificationsCompleted.reading ? 'text-green-600' : 'text-gray-500'}`}>
+                {certificationsCompleted.reading ? 'Completed' : 'Not taken'}
+              </span>
+            </div>
+            
+            <div className={`p-2 rounded ${certificationsCompleted.writing ? 'bg-green-100' : 'bg-gray-100'}`}>
+              <span className="text-sm">Writing: </span>
+              <span className={`text-sm font-medium ${certificationsCompleted.writing ? 'text-green-600' : 'text-gray-500'}`}>
+                {certificationsCompleted.writing ? 'Completed' : 'Not taken'}
+              </span>
+            </div>
+            
+            <div className={`p-2 rounded ${certificationsCompleted.speaking ? 'bg-green-100' : 'bg-gray-100'}`}>
+              <span className="text-sm">Speaking: </span>
+              <span className={`text-sm font-medium ${certificationsCompleted.speaking ? 'text-green-600' : 'text-gray-500'}`}>
+                {certificationsCompleted.speaking ? 'Completed' : 'Not taken'}
+              </span>
+            </div>
+            
+            <div className={`p-2 rounded ${certificationsCompleted.listening ? 'bg-green-100' : 'bg-gray-100'}`}>
+              <span className="text-sm">Listening: </span>
+              <span className={`text-sm font-medium ${certificationsCompleted.listening ? 'text-green-600' : 'text-gray-500'}`}>
+                {certificationsCompleted.listening ? 'Completed' : 'Not taken'}
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="border rounded-lg p-4 bg-gray-50">

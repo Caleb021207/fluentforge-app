@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import { ChevronLeft, CheckCircle, X } from "lucide-react";
 import { Flashcard } from "./types";
 import { shuffle } from "@/lib/utils";
 import { calculateScore } from "@/components/certifications/utils/scoreUtils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface FlashcardQuizProps {
   flashcards: Flashcard[];
@@ -113,6 +115,43 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
       const finalScore = calculateScore(newAnswers, questions);
       setScore(finalScore);
       setQuizCompleted(true);
+      
+      // Save quiz result to user's progress
+      saveQuizResult(finalScore);
+    }
+  };
+  
+  const saveQuizResult = async (score: number) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData || !userData.user) return;
+      
+      const userId = userData.user.id;
+      
+      // Extract level from the setTitle (assuming format like "A1 - Basic Vocabulary")
+      let level = "A1"; // Default level
+      if (setTitle.startsWith("A1")) level = "A1";
+      else if (setTitle.startsWith("A2")) level = "A2";
+      else if (setTitle.startsWith("B1")) level = "B1";
+      else if (setTitle.startsWith("B2")) level = "B2";
+      else if (setTitle.startsWith("C1") || setTitle.startsWith("C2")) level = "C1-C2";
+      
+      // Save quiz attempt as a "vocabulary" certification
+      const { error } = await supabase
+        .from('certification_attempts')
+        .insert([
+          {
+            user_id: userId,
+            certification_type: 'vocabulary',
+            level: level,
+            score: score,
+            completed_at: new Date().toISOString()
+          }
+        ]);
+        
+      if (error) console.error("Error saving quiz result:", error);
+    } catch (error) {
+      console.error("Error in saveQuizResult:", error);
     }
   };
 
