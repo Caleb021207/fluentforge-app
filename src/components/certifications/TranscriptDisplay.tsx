@@ -16,6 +16,7 @@ import ScoreDisplay from "./transcript/ScoreDisplay";
 import FeedbackSection from "./transcript/FeedbackSection";
 import DetailedScores from "./transcript/DetailedScores";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Json } from "@/integrations/supabase/types";
 
 interface TranscriptDisplayProps {
   attemptId: string;
@@ -48,8 +49,10 @@ const TranscriptDisplay = ({ attemptId, onBack, onRetake }: TranscriptDisplayPro
         if (data) {
           // Convert user_transcripts and ai_responses to a transcript format
           // This assumes that user_transcripts and ai_responses are arrays of messages
-          const userTranscripts = data.user_transcripts ? Array.isArray(data.user_transcripts) ? data.user_transcripts : [] : [];
-          const aiResponses = data.ai_responses ? Array.isArray(data.ai_responses) ? data.ai_responses : [] : [];
+          const userTranscripts = data.user_transcripts ? 
+            Array.isArray(data.user_transcripts) ? data.user_transcripts : [] : [];
+          const aiResponses = data.ai_responses ? 
+            Array.isArray(data.ai_responses) ? data.ai_responses : [] : [];
           
           // Combine user transcripts and AI responses into a conversation format
           const conversationItems = [];
@@ -57,27 +60,37 @@ const TranscriptDisplay = ({ attemptId, onBack, onRetake }: TranscriptDisplayPro
           
           for (let i = 0; i < maxLength; i++) {
             if (i < userTranscripts.length && userTranscripts[i]) {
+              const userMsg = userTranscripts[i];
               conversationItems.push({
                 role: 'user',
-                content: userTranscripts[i].text || userTranscripts[i],
-                timestamp: userTranscripts[i].timestamp
+                content: typeof userMsg === 'string' ? userMsg : 
+                         typeof userMsg === 'object' && userMsg !== null && 'text' in userMsg ? 
+                         String(userMsg.text) : String(userMsg)
               });
             }
             
             if (i < aiResponses.length && aiResponses[i]) {
+              const aiMsg = aiResponses[i];
               conversationItems.push({
                 role: 'assistant',
-                content: aiResponses[i].text || aiResponses[i],
-                timestamp: aiResponses[i].timestamp
+                content: typeof aiMsg === 'string' ? aiMsg : 
+                         typeof aiMsg === 'object' && aiMsg !== null && 'text' in aiMsg ? 
+                         String(aiMsg.text) : String(aiMsg)
               });
             }
           }
           
           setTranscript(JSON.stringify(conversationItems));
           
-          // Extract prompt if available (might be in the first AI response or elsewhere)
-          const promptData = aiResponses.length > 0 ? aiResponses[0].prompt : null;
-          setPrompt(promptData);
+          // Extract prompt if available
+          let promptText = null;
+          if (aiResponses.length > 0) {
+            const firstAiResponse = aiResponses[0];
+            if (typeof firstAiResponse === 'object' && firstAiResponse !== null) {
+              promptText = 'prompt' in firstAiResponse ? String(firstAiResponse.prompt) : null;
+            }
+          }
+          setPrompt(promptText);
           
           // Parse the assessment JSON if it exists
           if (data.analysis_data) {
