@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import ConversationItem from "@/components/certifications/transcript/ConversationItem";
+import { Badge } from "@/components/ui/badge";
 
 interface TranscriptConversationProps {
   transcript: string;
@@ -41,6 +42,11 @@ const TranscriptConversation = ({ transcript }: TranscriptConversationProps) => 
       <div className="bg-blue-50 p-3 rounded-md text-sm text-blue-700 mb-4">
         <p className="font-medium">Conversational Fluency Assessment</p>
         <p>This transcript shows the conversation that was assessed for your speaking and listening abilities.</p>
+      </div>
+      
+      <div className="flex justify-between mb-4">
+        <Badge variant="outline" className="bg-blue-50 text-blue-700">You</Badge>
+        <Badge variant="outline" className="bg-gray-50 text-gray-700">AI Tutor</Badge>
       </div>
       
       {conversation.map((message, index) => (

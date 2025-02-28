@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { Mic, Award, AlertCircle, StopCircle, Send, RefreshCw, CheckCircle2, BarChart } from "lucide-react";
+import { Mic, Award, AlertCircle, StopCircle, Send, RefreshCw, CheckCircle2, BarChart, Timer } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { determineLevel } from "./utils/scoreUtils";
 import { toast } from "@/components/ui/use-toast";
@@ -32,10 +32,41 @@ const ConversationalFluencyCertification = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [assessment, setAssessment] = useState<TranscriptAssessment | null>(null);
   const [agentConversationId, setAgentConversationId] = useState<string | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<number>(180); // 3 minutes in seconds
+  const [conversationMessages, setConversationMessages] = useState<{role: string, content: string}[]>([]);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const currentPromptRef = useRef<string>("Hola, me gustaría conocerte mejor. Cuéntame sobre tus intereses y aficiones. ¿Qué te gusta hacer en tu tiempo libre?");
+  const timerRef = useRef<number | null>(null);
+  
+  // Timer for the conversation test
+  useEffect(() => {
+    if (recordingState === RecordingState.RECORDING && timeRemaining > 0) {
+      timerRef.current = window.setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            // Time's up - stop recording
+            clearInterval(timerRef.current as number);
+            stopRecording();
+            toast({
+              title: "Time's up!",
+              description: "Your 3-minute conversation test has ended.",
+              duration: 3000,
+            });
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [recordingState, timeRemaining]);
   
   // Clean up agent conversation if it exists when component unmounts
   useEffect(() => {
@@ -54,7 +85,14 @@ const ConversationalFluencyCertification = () => {
     setTranscript("");
     setAudioBlob(null);
     setAssessment(null);
+    setTimeRemaining(180); // Reset timer to 3 minutes
+    setConversationMessages([]);
     audioChunksRef.current = [];
+    
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
     
     // End the ElevenLabs agent conversation if active
     if (agentConversationId) {
@@ -75,17 +113,27 @@ const ConversationalFluencyCertification = () => {
       const conversationId = "mock-conversation-" + Date.now();
       setAgentConversationId(conversationId);
       
+      // Add first AI message to the conversation
+      addMessageToConversation("assistant", currentPromptRef.current);
+      
       return conversationId;
     } catch (err) {
       console.error("Error initializing Eleven Labs agent:", err);
       return null;
     }
   };
+  
+  // Helper function to add messages to the conversation
+  const addMessageToConversation = (role: string, content: string) => {
+    setConversationMessages(prev => [...prev, { role, content }]);
+  };
 
   const startRecording = async () => {
     try {
       setRecordingState(RecordingState.RECORDING);
       audioChunksRef.current = [];
+      setTimeRemaining(180); // Reset timer to 3 minutes
+      setConversationMessages([]); // Clear previous conversation
       
       // Initialize Eleven Labs agent before starting recording
       const conversationId = await initializeElevenLabsAgent();
@@ -128,7 +176,7 @@ const ConversationalFluencyCertification = () => {
       mediaRecorder.start();
       toast({
         title: "Recording started",
-        description: "Speak clearly in Spanish to respond to the prompt.",
+        description: "Speak clearly in Spanish to respond to the prompt. Test will end in 3 minutes.",
         duration: 3000,
       });
     } catch (err) {
@@ -145,9 +193,15 @@ const ConversationalFluencyCertification = () => {
       // Stop all audio tracks
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
       
+      // Clear the timer
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      
       toast({
         title: "Recording stopped",
-        description: "Processing your speech...",
+        description: "Processing your conversation...",
         duration: 3000,
       });
     }
@@ -174,11 +228,22 @@ const ConversationalFluencyCertification = () => {
       }
       
       if (data && data.text) {
-        setTranscript(data.text);
+        // Add user's message to conversation
+        addMessageToConversation("user", data.text);
+        
+        // Mock response from AI for now
+        // In a real implementation, this would be the response from Eleven Labs
+        const mockAIResponse = "Me alegra conocerte. ¿Puedes contarme más sobre tus hobbies favoritos?";
+        addMessageToConversation("assistant", mockAIResponse);
+        
+        // Convert conversation to JSON string for the transcript
+        const conversationJSON = JSON.stringify(conversationMessages);
+        setTranscript(conversationJSON);
+        
         setRecordingState(RecordingState.RECORDED);
         toast({
           title: "Transcription complete",
-          description: "Your speech has been transcribed successfully.",
+          description: "Your conversation has been transcribed successfully.",
           duration: 3000,
         });
       } else {
@@ -270,6 +335,22 @@ const ConversationalFluencyCertification = () => {
               console.error("Error saving certification attempts:", 
                 speakingAttempt.error || listeningAttempt.error);
             }
+              
+            // Save the transcript
+            if (speakingAttempt.data) {
+              const transcriptSave = await supabase
+                .from('certification_transcripts')
+                .insert({
+                  attempt_id: speakingAttempt.data.id,
+                  user_transcripts: conversationMessages.filter(msg => msg.role === "user").map(msg => msg.content),
+                  ai_responses: conversationMessages.filter(msg => msg.role === "assistant").map(msg => msg.content),
+                  analysis_data: data
+                });
+                
+              if (transcriptSave.error) {
+                console.error("Error saving transcript:", transcriptSave.error);
+              }
+            }
           } catch (err) {
             console.error("Error saving certification attempts:", err);
           }
@@ -295,6 +376,13 @@ const ConversationalFluencyCertification = () => {
         duration: 5000,
       });
     }
+  };
+  
+  // Format time remaining as MM:SS
+  const formatTimeRemaining = () => {
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
   
   return (
@@ -329,6 +417,14 @@ const ConversationalFluencyCertification = () => {
                 </p>
               </div>
               
+              {recordingState === RecordingState.RECORDING && (
+                <div className="flex items-center justify-center gap-2 bg-red-50 p-3 rounded-md text-red-700 border border-red-200">
+                  <Timer className="h-5 w-5" />
+                  <span className="font-medium">{formatTimeRemaining()}</span>
+                  <span className="text-sm ml-1">Time remaining</span>
+                </div>
+              )}
+              
               <div className="flex justify-center">
                 {recordingState === RecordingState.IDLE && (
                   <Button 
@@ -353,7 +449,7 @@ const ConversationalFluencyCertification = () => {
                 {recordingState === RecordingState.PROCESSING && (
                   <div className="flex items-center space-x-2">
                     <RefreshCw className="animate-spin h-5 w-5 text-gray-500" />
-                    <span>Transcribing your speech...</span>
+                    <span>Transcribing your conversation...</span>
                   </div>
                 )}
                 
@@ -368,11 +464,22 @@ const ConversationalFluencyCertification = () => {
                 )}
               </div>
               
-              {recordingState === RecordingState.RECORDED && (
+              {recordingState === RecordingState.RECORDED && conversationMessages.length > 0 && (
                 <div className="space-y-4">
                   <div className="bg-white p-4 rounded-md border">
-                    <p className="font-medium mb-2">Your Response:</p>
-                    <p className="text-gray-700">{transcript}</p>
+                    <p className="font-medium mb-2">Your Conversation:</p>
+                    <div className="space-y-2">
+                      {conversationMessages.map((message, index) => (
+                        <div key={index} className={`p-2 rounded-md ${
+                          message.role === "user" ? "bg-blue-50 ml-8" : "bg-gray-50 mr-8"
+                        }`}>
+                          <p className="text-xs font-medium mb-1">
+                            {message.role === "user" ? "You" : "AI Tutor"}
+                          </p>
+                          <p className="text-gray-700">{message.content}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   
                   <div className="flex justify-center space-x-4">
