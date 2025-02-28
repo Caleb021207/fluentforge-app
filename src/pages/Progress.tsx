@@ -1,11 +1,11 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2, RefreshCw } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
@@ -18,32 +18,22 @@ interface ProgressData {
   writing?: number;
   speaking?: number;
   listening?: number;
+  vocabulary?: number;
 }
 
 const ProgressPage = () => {
   const [progressData, setProgressData] = useState<ProgressData[]>([]);
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
-        fetchProgressData(user.id);
-      } else {
-        setIsLoading(false);
-      }
-    };
-
-    getCurrentUser();
-  }, []);
-
-  const fetchProgressData = async (userId: string) => {
+  const fetchProgressData = useCallback(async (userId: string) => {
     try {
+      setIsRefreshing(true);
+      
       const { data: attempts, error } = await supabase
         .from('certification_attempts')
         .select('*')
@@ -53,6 +43,7 @@ const ProgressPage = () => {
       if (error) throw error;
 
       if (attempts && attempts.length > 0) {
+        console.log("Retrieved certification attempts:", attempts);
         const processedData = processAttemptsData(attempts);
         setProgressData(processedData);
         generateRecommendations(attempts);
@@ -71,8 +62,46 @@ const ProgressPage = () => {
       });
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      if (user) {
+        fetchProgressData(user.id);
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    getCurrentUser();
+    
+    // Set up realtime subscription for certification_attempts
+    const channel = supabase
+      .channel('public:certification_attempts')
+      .on('postgres_changes', 
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'certification_attempts' 
+        }, 
+        (payload) => {
+          console.log('New certification attempt:', payload);
+          // Check if the new attempt is from the current user
+          if (user && payload.new && payload.new.user_id === user.id) {
+            fetchProgressData(user.id);
+          }
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchProgressData]);
 
   const processAttemptsData = (attempts: any[]): ProgressData[] => {
     const dataMap = new Map<string, ProgressData>();
@@ -83,8 +112,10 @@ const ProgressPage = () => {
         date,
       };
 
-      // Only update the value if it's higher than the existing value or if it doesn't exist yet
+      // Map certification_type to the chart data properties
       const skillKey = attempt.certification_type as keyof Omit<ProgressData, 'date'>;
+      
+      // Only update the value if it's higher than the existing value or if it doesn't exist yet
       if (existing[skillKey] === undefined || attempt.score > existing[skillKey]) {
         existing[skillKey] = attempt.score;
       }
@@ -97,7 +128,7 @@ const ProgressPage = () => {
 
   const generateRecommendations = (attempts: any[]) => {
     const highestScores: Record<string, number> = {};
-    const skills = ['reading', 'writing', 'speaking', 'listening'];
+    const skills = ['reading', 'writing', 'speaking', 'listening', 'vocabulary'];
     
     // Get the highest score for each skill
     skills.forEach(skill => {
@@ -117,13 +148,20 @@ const ProgressPage = () => {
       if (recommendation) {
         return {
           ...recommendation,
-          currentLevel: level
+          currentLevel: level,
+          lastScore: score
         };
       }
       return null;
     }).filter(Boolean);
 
     setRecommendations(newRecommendations);
+  };
+
+  const handleRefresh = () => {
+    if (user) {
+      fetchProgressData(user.id);
+    }
   };
 
   const handleSignIn = () => {
@@ -174,9 +212,30 @@ const ProgressPage = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-lingua-text mb-4">
-        Your Learning Progress
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-lingua-text mb-4">
+          Your Learning Progress
+        </h1>
+        
+        <Button 
+          variant="outline" 
+          onClick={handleRefresh} 
+          disabled={isRefreshing}
+          className="flex items-center gap-2"
+        >
+          {isRefreshing ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Refreshing...
+            </>
+          ) : (
+            <>
+              <RefreshCw className="h-4 w-4" />
+              Refresh Data
+            </>
+          )}
+        </Button>
+      </div>
 
       {progressData.length > 0 ? (
         <>
@@ -199,6 +258,7 @@ const ProgressPage = () => {
                       stroke="#2563eb" 
                       name="Reading" 
                       connectNulls={true} 
+                      activeDot={{ r: 8 }}
                     />
                     <Line 
                       type="monotone" 
@@ -206,6 +266,7 @@ const ProgressPage = () => {
                       stroke="#16a34a" 
                       name="Writing" 
                       connectNulls={true} 
+                      activeDot={{ r: 8 }}
                     />
                     <Line 
                       type="monotone" 
@@ -213,6 +274,7 @@ const ProgressPage = () => {
                       stroke="#dc2626" 
                       name="Speaking" 
                       connectNulls={true} 
+                      activeDot={{ r: 8 }}
                     />
                     <Line 
                       type="monotone" 
@@ -220,6 +282,15 @@ const ProgressPage = () => {
                       stroke="#9333ea" 
                       name="Listening" 
                       connectNulls={true} 
+                      activeDot={{ r: 8 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="vocabulary" 
+                      stroke="#ea580c" 
+                      name="Vocabulary" 
+                      connectNulls={true} 
+                      activeDot={{ r: 8 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -229,11 +300,14 @@ const ProgressPage = () => {
 
           <div className="grid md:grid-cols-2 gap-6">
             {recommendations.map((rec) => (
-              <Card key={rec.skill}>
+              <Card key={rec.skill} className="transition-all duration-300 hover:shadow-md">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    {rec.skill}
-                    <span className="text-sm font-normal">Current Level: {rec.currentLevel}</span>
+                    <span className="capitalize">{rec.skill}</span>
+                    <div className="flex flex-col items-end">
+                      <span className="text-sm font-normal">Current Level: {rec.currentLevel}</span>
+                      <span className="text-sm text-gray-500">Last Score: {rec.lastScore}%</span>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -269,9 +343,12 @@ const ProgressPage = () => {
           </div>
         </>
       ) : (
-        <Card>
-          <CardContent className="text-center py-8">
-            <p className="text-lg text-gray-600">Complete some certification attempts to see your progress!</p>
+        <Card className="border border-dashed border-gray-300 bg-gray-50">
+          <CardContent className="text-center py-12">
+            <p className="text-lg text-gray-600 mb-4">Complete certification tests to see your progress!</p>
+            <Button onClick={() => navigate('/certificates')} className="bg-lingua-primary">
+              Take a Certification Test
+            </Button>
           </CardContent>
         </Card>
       )}

@@ -8,6 +8,7 @@ import { Flashcard } from "./types";
 import { shuffle } from "@/lib/utils";
 import { calculateScore } from "@/components/certifications/utils/scoreUtils";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface FlashcardQuizProps {
   flashcards: Flashcard[];
@@ -35,6 +36,8 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
   const [answers, setAnswers] = useState<number[]>([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [score, setScore] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
+  const { toast } = useToast();
 
   // Generate quiz questions from flashcards
   useEffect(() => {
@@ -123,8 +126,27 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
   
   const saveQuizResult = async (score: number) => {
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData || !userData.user) return;
+      setIsSaving(true);
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        console.error("Error getting user:", userError);
+        toast({
+          title: "Authentication Error",
+          description: "You must be logged in to save quiz results.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (!userData || !userData.user) {
+        toast({
+          title: "Not Logged In",
+          description: "Please log in to save your progress.",
+          variant: "destructive",
+        });
+        return;
+      }
       
       const userId = userData.user.id;
       
@@ -149,9 +171,28 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
           }
         ]);
         
-      if (error) console.error("Error saving quiz result:", error);
+      if (error) {
+        console.error("Error saving quiz result:", error);
+        toast({
+          title: "Error Saving Progress",
+          description: "There was a problem saving your quiz results.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Progress Saved",
+          description: `Your vocabulary quiz score of ${score}% has been saved.`,
+        });
+      }
     } catch (error) {
       console.error("Error in saveQuizResult:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save your quiz results. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -190,9 +231,10 @@ const FlashcardQuiz = ({ flashcards, onComplete, onBack, setTitle }: FlashcardQu
                 variant="default" 
                 onClick={() => onComplete(score)}
                 className="mt-4"
+                disabled={isSaving}
               >
                 <CheckCircle className="h-4 w-4 mr-2" />
-                Complete Quiz
+                {isSaving ? "Saving..." : "Complete Quiz"}
               </Button>
             </div>
           </CardContent>

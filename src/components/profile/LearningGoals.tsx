@@ -1,10 +1,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "@supabase/supabase-js";
-import { Calendar, BookOpen, Award } from "lucide-react";
+import { Calendar, BookOpen, Award, RefreshCw } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface LearningGoalsProps {
   user: User | null;
@@ -36,12 +38,15 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
     streakDays: 0
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [certificationsCompleted, setCertificationsCompleted] = useState<{[key: string]: boolean}>({
     reading: false,
     writing: false,
     speaking: false,
-    listening: false
+    listening: false,
+    vocabulary: false
   });
+  const { toast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -68,12 +73,15 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
         reading: false,
         writing: false,
         speaking: false,
-        listening: false
+        listening: false,
+        vocabulary: false
       };
 
       // Calculate completion based on certification attempts
       let completedLessons = 0;
       if (attempts && attempts.length > 0) {
+        console.log("Retrieved certification attempts:", attempts);
+        
         // Process certification attempts
         const uniqueTypes = new Set();
         attempts.forEach(attempt => {
@@ -125,8 +133,20 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
       });
     } catch (error) {
       console.error('Error fetching user progress:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load your learning progress data.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    if (user) {
+      setIsRefreshing(true);
+      fetchUserProgress().finally(() => setIsRefreshing(false));
     }
   };
 
@@ -213,10 +233,23 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="h-5 w-5" />
-          Learning Progress
-        </CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Learning Progress
+          </CardTitle>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleRefresh}
+            disabled={isRefreshing || isLoading}
+            className="h-8 px-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span className="sr-only">Refresh</span>
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center space-y-2">
@@ -247,7 +280,10 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
             </span>
           </div>
           
-          <Progress value={lessonProgress.percentComplete} />
+          <Progress 
+            value={lessonProgress.percentComplete}
+            className="h-2" 
+          />
           
           <div className="flex justify-between text-sm text-gray-600">
             <span>{lessonProgress.percentComplete}% Complete</span>
@@ -297,6 +333,13 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
               <span className="text-sm">Listening: </span>
               <span className={`text-sm font-medium ${certificationsCompleted.listening ? 'text-green-600' : 'text-gray-500'}`}>
                 {certificationsCompleted.listening ? 'Completed' : 'Not taken'}
+              </span>
+            </div>
+            
+            <div className={`p-2 rounded ${certificationsCompleted.vocabulary ? 'bg-green-100' : 'bg-gray-100'}`}>
+              <span className="text-sm">Vocabulary: </span>
+              <span className={`text-sm font-medium ${certificationsCompleted.vocabulary ? 'text-green-600' : 'text-gray-500'}`}>
+                {certificationsCompleted.vocabulary ? 'Completed' : 'Not taken'}
               </span>
             </div>
           </div>
