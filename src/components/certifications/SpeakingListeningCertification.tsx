@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -409,7 +408,7 @@ ${suggestions}`;
         // Continue with analysis even if session ending fails
       }
       
-      // Ensure we have actual conversation data to analyze
+      // FIX: Changed AND to OR condition - ensure we have at least SOME conversation data to analyze
       if (userTranscript.length === 0 && responses.length === 0) {
         console.warn("No conversation data detected!");
         toast({
