@@ -1,6 +1,6 @@
 
-import { serve } from "http/server";
-import OpenAI from "openai";
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -33,11 +33,6 @@ serve(async (req) => {
         }
       );
     }
-
-    // Initialize OpenAI client
-    const openai = new OpenAI({
-      apiKey: apiKey,
-    });
 
     // Parse request body
     const requestData = await req.json();
@@ -106,25 +101,33 @@ serve(async (req) => {
 
     console.log("Sending analysis request to OpenAI...");
     // Call OpenAI API for analysis
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        { 
-          role: "system", 
-          content: "You are a Spanish language assessment expert. Analyze conversations to evaluate language proficiency using CEFR framework." 
-        },
-        { 
-          role: "user", 
-          content: analyzePrompt 
-        }
-      ],
-      temperature: 0.2,
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { 
+            role: "system", 
+            content: "You are a Spanish language assessment expert. Analyze conversations to evaluate language proficiency using CEFR framework." 
+          },
+          { 
+            role: "user", 
+            content: analyzePrompt 
+          }
+        ],
+        temperature: 0.2,
+      }),
     });
 
     console.log("OpenAI response received");
     
     // Parse OpenAI response
-    const analysisText = response.choices[0]?.message?.content?.trim() || "";
+    const data = await response.json();
+    const analysisText = data.choices[0]?.message?.content?.trim() || "";
     console.log("Raw analysis text:", analysisText);
     
     let assessmentData;
