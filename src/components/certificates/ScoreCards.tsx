@@ -1,0 +1,26 @@
+
+import React from "react";
+import CertificateScoreCard from "./CertificateScoreCard";
+import { CertificationAttempt } from "@/types/supabase";
+
+interface ScoreCardsProps {
+  highestScores: Record<string, CertificationAttempt> | undefined;
+}
+
+const ScoreCards = ({ highestScores }: ScoreCardsProps) => {
+  const skillTypes = ['reading', 'writing', 'speaking', 'listening'];
+  
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {skillTypes.map((type) => (
+        <CertificateScoreCard 
+          key={type} 
+          type={type} 
+          attempt={highestScores?.[type]} 
+        />
+      ))}
+    </div>
+  );
+};
+
+export default ScoreCards;

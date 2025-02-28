@@ -48,8 +48,8 @@ const TranscriptDisplay = ({ attemptId, onBack, onRetake }: TranscriptDisplayPro
         if (data) {
           // Convert user_transcripts and ai_responses to a transcript format
           // This assumes that user_transcripts and ai_responses are arrays of messages
-          const userTranscripts = data.user_transcripts || [];
-          const aiResponses = data.ai_responses || [];
+          const userTranscripts = data.user_transcripts ? Array.isArray(data.user_transcripts) ? data.user_transcripts : [] : [];
+          const aiResponses = data.ai_responses ? Array.isArray(data.ai_responses) ? data.ai_responses : [] : [];
           
           // Combine user transcripts and AI responses into a conversation format
           const conversationItems = [];
