@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -19,6 +18,29 @@ interface ProgressData {
   speaking?: number;
   listening?: number;
   vocabulary?: number;
+}
+
+interface CertificationAttempt {
+  completed_at?: string;
+  created_at?: string;
+  score: number;
+  certification_type: string;
+}
+
+interface ChartData {
+  date: string;
+  reading: number;
+  writing: number;
+  speaking: number;
+  listening: number;
+}
+
+interface SkillScores {
+  reading: number;
+  writing: number;
+  speaking: number;
+  listening: number;
+  overall: number;
 }
 
 const ProgressPage = () => {
@@ -44,7 +66,7 @@ const ProgressPage = () => {
 
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
-        const processedData = processAttemptsData(attempts);
+        const processedData = processAttemptsByDate(attempts);
         setProgressData(processedData);
         generateRecommendations(attempts);
       } else {
@@ -103,8 +125,10 @@ const ProgressPage = () => {
     };
   }, [fetchProgressData]);
 
-  const processAttemptsData = (attempts: any[]): ProgressData[] => {
-    const dataMap = new Map<string, ProgressData>();
+  const processAttemptsByDate = (attempts: CertificationAttempt[] | null): ChartData[] => {
+    if (!attempts || attempts.length === 0) return [];
+
+    const dataMap = new Map<string, ChartData>();
     
     attempts.forEach(attempt => {
       // Skip attempts with invalid dates
@@ -119,24 +143,87 @@ const ProgressPage = () => {
       const date = new Date(attempt.completed_at || attempt.created_at).toISOString().split('T')[0];
       const existing = dataMap.get(date) || {
         date,
+        reading: 0,
+        writing: 0,
+        speaking: 0,
+        listening: 0
       };
-
-      // Map certification_type to the chart data properties
-      const skillKey = attempt.certification_type as keyof Omit<ProgressData, 'date'>;
       
-      // Only use valid, non-zero scores 
-      const score = attempt.score;
-      if (typeof score === 'number' && !isNaN(score) && score > 0) {
-        // Only update the value if it's higher than the existing value or if it doesn't exist yet
-        if (existing[skillKey] === undefined || score > existing[skillKey]!) {
-          existing[skillKey] = score;
+      // Ensure we're using the new score if it's higher than the existing one
+      let skill = attempt.certification_type as keyof typeof existing;
+      
+      // Map fluency to speaking/listening as appropriate
+      if (skill === 'fluency') {
+        // For fluency attempts, update both speaking and listening if the scores are higher
+        if (attempt.score > existing.speaking) {
+          existing.speaking = attempt.score;
         }
+        if (attempt.score > existing.listening) {
+          existing.listening = attempt.score;
+        }
+      } else if (attempt.score > existing[skill]) {
+        // For regular attempts, just update the corresponding skill
+        existing[skill] = attempt.score;
       }
       
       dataMap.set(date, existing);
     });
+    
+    return Array.from(dataMap.values()).sort((a, b) => a.date.localeCompare(b.date));
+  };
 
-    return Array.from(dataMap.values());
+  const calculateSkillScores = (attempts: CertificationAttempt[] | null): SkillScores => {
+    if (!attempts || attempts.length === 0) {
+      return { reading: 0, writing: 0, speaking: 0, listening: 0, overall: 0 };
+    }
+    
+    const skills = ['reading', 'writing', 'speaking', 'listening'];
+    const scores: Record<string, number> = {
+      reading: 0,
+      writing: 0,
+      speaking: 0,
+      listening: 0
+    };
+    
+    // Get the highest score for each skill
+    skills.forEach(skill => {
+      const skillAttempts = attempts.filter(a => {
+        // Skip attempts with 0 score
+        if (a.score === 0) return false;
+        
+        // Handle both direct matches and convert fluency to speaking/listening
+        if (a.certification_type === skill) {
+          return true;
+        }
+        
+        // For fluency attempts, include them for both speaking and listening
+        if (a.certification_type === 'fluency' && (skill === 'speaking' || skill === 'listening')) {
+          return true;
+        }
+        
+        return false;
+      });
+      
+      if (skillAttempts.length > 0) {
+        const validScores = skillAttempts
+          .map(a => a.score)
+          .filter(score => typeof score === 'number' && !isNaN(score) && score > 0);
+        
+        if (validScores.length > 0) {
+          const highestScore = Math.max(...validScores);
+          scores[skill] = highestScore;
+        }
+      }
+    });
+    
+    // Calculate overall score as average of all skill scores
+    const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
+    const overall = Math.round(totalScore / skills.length);
+    
+    return {
+      ...scores,
+      overall
+    };
   };
 
   const generateRecommendations = (attempts: any[]) => {

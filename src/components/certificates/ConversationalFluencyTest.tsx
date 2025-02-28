@@ -146,7 +146,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
       
       console.log("Starting test for user:", user.id);
       
-      // Create speaking attempt
+      // Create speaking attempt - make sure to use 'speaking' type, not 'fluency'
       const { data: speakingAttempt, error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -170,7 +170,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         return;
       }
       
-      // Create listening attempt
+      // Create listening attempt - make sure to use 'listening' type, not 'fluency'
       const { data: listeningAttempt, error: listeningError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -400,7 +400,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         console.error("Failed to save transcript but continuing:", transcriptError);
       }
       
-      // Calculate scores based on analysis data
+      // Calculate scores based on analysis data - ensure these are properly assigned to the specific types
       const speakingScore = data.speaking?.overallScore || 
         convertLevelToScore(data.speaking?.level || 'A1');
         

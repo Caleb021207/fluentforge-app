@@ -86,11 +86,30 @@ const Certificates = () => {
   const highestScores = normalizedAttempts.reduce((acc, attempt) => {
     const type = attempt.certification_type;
     
+    // Special handling for fluency tests that should be considered as speaking scores as well
+    if (type === "fluency") {
+      // Don't process fluency directly, it will be handled by speaking/listening
+      return acc;
+    }
+    
     if (!acc[type] || attempt.score > acc[type].score) {
       acc[type] = attempt;
     }
     return acc;
   }, {} as Record<string, CertificationAttempt>);
+
+  // Process speaking and listening scores from fluency tests
+  if (normalizedAttempts) {
+    normalizedAttempts.forEach(attempt => {
+      if (attempt.certification_type === "speaking" && (!highestScores["speaking"] || attempt.score > highestScores["speaking"].score)) {
+        highestScores["speaking"] = attempt;
+      }
+      
+      if (attempt.certification_type === "listening" && (!highestScores["listening"] || attempt.score > highestScores["listening"].score)) {
+        highestScores["listening"] = attempt;
+      }
+    });
+  }
 
   const calculateCompositeScore = () => {
     if (!highestScores) return null;
