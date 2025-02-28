@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -104,7 +103,6 @@ const ProgressPage = () => {
 
     getCurrentUser();
     
-    // Set up realtime subscription for certification_attempts
     const channel = supabase
       .channel('public:certification_attempts')
       .on('postgres_changes', 
@@ -115,7 +113,6 @@ const ProgressPage = () => {
         }, 
         (payload) => {
           console.log('New certification attempt:', payload);
-          // Check if the new attempt is from the current user
           if (user && payload.new && payload.new.user_id === user.id) {
             fetchProgressData(user.id);
           }
@@ -135,7 +132,6 @@ const ProgressPage = () => {
     const dataMap = new Map<string, ChartData>();
     
     attempts.forEach(attempt => {
-      // Skip attempts with invalid dates or 0 score
       if ((!attempt.completed_at && !attempt.created_at) || attempt.score === 0) {
         console.log(`Skipping attempt with invalid data:`, attempt);
         return;
@@ -153,23 +149,22 @@ const ProgressPage = () => {
       
       const type = attempt.certification_type;
       
-      // Handle fluency tests as both speaking and listening
       if (type === 'fluency') {
         console.log(`Processing fluency attempt #${attempt.id} with score ${attempt.score}`);
-        if (attempt.score > (existing.speaking || 0)) {
+        if (attempt.score > existing.speaking) {
           existing.speaking = attempt.score;
         }
-        if (attempt.score > (existing.listening || 0)) {
+        if (attempt.score > existing.listening) {
           existing.listening = attempt.score;
         }
       } 
-      // Handle direct skill tests
       else if (type === 'reading' || type === 'writing' || type === 'speaking' || 
               type === 'listening' || type === 'vocabulary') {
         console.log(`Processing ${type} attempt #${attempt.id} with score ${attempt.score}`);
-        // Only update if the new score is higher
-        if (attempt.score > (existing[type as keyof ChartData] || 0)) {
-          existing[type as keyof ChartData] = attempt.score;
+        
+        const propertyName = type as keyof typeof existing;
+        if (attempt.score > (existing[propertyName] || 0)) {
+          existing[propertyName] = attempt.score;
         }
       } else {
         console.log(`Ignoring unknown certification type: ${type}`);
@@ -196,19 +191,15 @@ const ProgressPage = () => {
       listening: 0
     };
     
-    // Get the highest score for each skill
     skills.forEach(skill => {
-      // Get attempts for this skill directly
       const directAttempts = attempts.filter(a => 
         a.certification_type === skill && a.score > 0
       );
       
-      // For speaking and listening, also consider fluency tests
       const fluencyAttempts = (skill === 'speaking' || skill === 'listening') 
         ? attempts.filter(a => a.certification_type === 'fluency' && a.score > 0)
         : [];
       
-      // Combine all attempts for this skill
       const skillAttempts = [...directAttempts, ...fluencyAttempts];
       
       if (skillAttempts.length > 0) {
@@ -216,7 +207,6 @@ const ProgressPage = () => {
       }
     });
     
-    // Calculate overall score as average of all skill scores
     const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
     const overall = Math.round(totalScore / skills.length);
     
@@ -236,19 +226,15 @@ const ProgressPage = () => {
     const skills = ['reading', 'writing', 'speaking', 'listening', 'vocabulary'];
     const highestScores: Record<string, number> = {};
     
-    // Process each skill
     skills.forEach(skill => {
-      // Direct skill attempts
       const directAttempts = attempts.filter(a => 
         a.certification_type === skill && a.score > 0
       );
       
-      // For speaking and listening, also consider fluency tests
       const fluencyAttempts = (skill === 'speaking' || skill === 'listening') 
         ? attempts.filter(a => a.certification_type === 'fluency' && a.score > 0)
         : [];
       
-      // Combine all attempts for this skill
       const skillAttempts = [...directAttempts, ...fluencyAttempts];
       
       if (skillAttempts.length > 0) {
@@ -260,7 +246,6 @@ const ProgressPage = () => {
 
     console.log("Highest scores for recommendations:", highestScores);
     
-    // Generate recommendations based on highest scores and CEFR levels
     const newRecommendations = skills.map(skill => {
       const score = highestScores[skill] || 0;
       const level = determineLevel(score);
