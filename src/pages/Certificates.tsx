@@ -10,9 +10,11 @@ import ScoreCards from "@/components/certificates/ScoreCards";
 import CertificationAttemptsList from "@/components/certificates/CertificationAttemptsList";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import ConversationalFluencyTest from "@/components/certificates/ConversationalFluencyTest";
+import { useToast } from "@/hooks/use-toast";
 
 const Certificates = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -25,21 +27,37 @@ const Certificates = () => {
   const { data: attempts, isLoading, refetch } = useQuery({
     queryKey: ['certification-attempts'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          return [];
+        }
+
+        const { data, error } = await supabase
+          .from('certification_attempts')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('completed_at', { ascending: false });
+
+        if (error) {
+          console.error("Error fetching certification attempts:", error);
+          toast({
+            title: "Error fetching certification data",
+            description: error.message,
+            variant: "destructive"
+          });
+          throw error;
+        }
+        
+        console.log("Fetched certification attempts:", data);
+        return data as CertificationAttempt[];
+      } catch (error) {
+        console.error("Error in query function:", error);
         return [];
       }
-
-      const { data, error } = await supabase
-        .from('certification_attempts')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('completed_at', { ascending: false });
-
-      if (error) throw error;
-      return data as CertificationAttempt[];
     },
+    refetchOnWindowFocus: false,
   });
 
   const highestScores = attempts?.reduce((acc, attempt) => {
@@ -53,8 +71,8 @@ const Certificates = () => {
   const calculateCompositeScore = () => {
     if (!highestScores) return null;
 
-    // Include reading, writing, and speaking scores
-    const scoreTypes = ['reading', 'writing', 'speaking'];
+    // Include reading, writing, speaking and listening scores
+    const scoreTypes = ['reading', 'writing', 'speaking', 'listening'];
     const scores = scoreTypes.map(type => highestScores[type]?.score || 0);
     const totalScore = scores.reduce((sum, score) => sum + score, 0);
     const averageScore = scores.length > 0 ? Math.round(totalScore / scores.length) : 0;
@@ -77,17 +95,26 @@ const Certificates = () => {
       const transcriptMap: Record<string, boolean> = {};
       
       for (const attempt of attempts) {
-        if (attempt.certification_type === 'speaking') {
-          const { data } = await supabase
-            .from('certification_transcripts')
-            .select('id')
-            .eq('attempt_id', attempt.id)
-            .maybeSingle();
+        if (attempt.certification_type === 'speaking' || attempt.certification_type === 'listening') {
+          try {
+            const { data, error } = await supabase
+              .from('certification_transcripts')
+              .select('id')
+              .eq('attempt_id', attempt.id)
+              .maybeSingle();
+              
+            if (error) {
+              console.error("Error checking transcript for attempt", attempt.id, error);
+            }
             
-          transcriptMap[attempt.id] = !!data;
+            transcriptMap[attempt.id] = !!data;
+          } catch (err) {
+            console.error("Error in fetchTranscripts for attempt", attempt.id, err);
+          }
         }
       }
       
+      console.log("Transcript map:", transcriptMap);
       setHasTranscript(transcriptMap);
     };
     
@@ -96,9 +123,30 @@ const Certificates = () => {
 
   const handleViewAttempt = async (attemptId: string) => {
     // Navigate to transcript view or display detailed results
-    // This would be implemented in a future update
     console.log("View attempt:", attemptId);
+    toast({
+      title: "Viewing details",
+      description: "This feature will be implemented in a future update.",
+    });
   };
+
+  // Auto-refresh attempts when component mounts or after a test
+  useEffect(() => {
+    const refreshAttempts = () => {
+      console.log("Refreshing certification attempts...");
+      refetch();
+    };
+    
+    // Set up a listener for the ConversationalFluencyTest completion
+    window.addEventListener('fluency-test-completed', refreshAttempts);
+    
+    // Initial fetch
+    refreshAttempts();
+    
+    return () => {
+      window.removeEventListener('fluency-test-completed', refreshAttempts);
+    };
+  }, [refetch]);
 
   if (isLoading) {
     return <div>Loading certification data...</div>;
@@ -114,7 +162,7 @@ const Certificates = () => {
       
       <WritingCertification />
       
-      <ConversationalFluencyTest />
+      <ConversationalFluencyTest onTestComplete={refetch} />
       
       <ScoreCards highestScores={highestScores} />
 

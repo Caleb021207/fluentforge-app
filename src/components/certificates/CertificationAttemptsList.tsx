@@ -24,6 +24,14 @@ const CertificationAttemptsList = ({
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
+  // Add a helper function to ensure we display valid scores
+  const getValidScore = (score: number | null | undefined) => {
+    if (score === null || score === undefined || isNaN(Number(score))) {
+      return 0;
+    }
+    return score;
+  };
+
   if (isLoading) {
     return <div>Loading certification data...</div>;
   }
@@ -48,13 +56,13 @@ const CertificationAttemptsList = ({
                       <h3 className="font-medium capitalize">{formatCertificationType(attempt.certification_type)}</h3>
                     </div>
                     <p className="text-sm text-gray-600">
-                      {format(new Date(attempt.completed_at || ''), 'PPP')}
+                      {format(new Date(attempt.completed_at || attempt.created_at || ''), 'PPP')}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right mr-2">
-                      <div className="font-medium">{attempt.score}%</div>
-                      <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
+                      <div className="font-medium">{getValidScore(attempt.score)}%</div>
+                      <div className="text-sm text-gray-600">Level {determineLevel(getValidScore(attempt.score))}</div>
                     </div>
                     {hasTranscript[attempt.id] && (
                       <button
