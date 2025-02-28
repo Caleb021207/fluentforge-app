@@ -52,11 +52,11 @@ const Certificates = () => {
   const calculateCompositeScore = () => {
     if (!highestScores) return null;
 
-    // Only include reading and writing scores now
+    // Only include reading and writing scores
     const scoreTypes = ['reading', 'writing'];
     const scores = scoreTypes.map(type => highestScores[type]?.score || 0);
     const totalScore = scores.reduce((sum, score) => sum + score, 0);
-    const averageScore = Math.round(totalScore / scoreTypes.length);
+    const averageScore = scores.length > 0 ? Math.round(totalScore / scores.length) : 0;
 
     return {
       score: averageScore,

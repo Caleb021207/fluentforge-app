@@ -3,10 +3,9 @@ import React from "react";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import { CertificationAttempt } from "@/types/supabase";
-import { Award, FileText } from "lucide-react";
+import { Award } from "lucide-react";
 
 interface CertificationAttemptsListProps {
   attempts: CertificationAttempt[] | undefined;
@@ -57,7 +56,6 @@ const CertificationAttemptsList = ({
                       <div className="font-medium">{attempt.score}%</div>
                       <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
                     </div>
-                    {/* Removed View Transcript button functionality since we removed the transcript components */}
                   </div>
                 </div>
               ))
