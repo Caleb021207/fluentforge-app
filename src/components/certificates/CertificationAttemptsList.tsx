@@ -57,17 +57,7 @@ const CertificationAttemptsList = ({
                       <div className="font-medium">{attempt.score}%</div>
                       <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="flex items-center gap-1"
-                      onClick={() => onViewAttempt(attempt.id)}
-                      disabled={!hasTranscript[attempt.id]}
-                      title={hasTranscript[attempt.id] ? "View transcript" : "Transcript not available"}
-                    >
-                      <FileText className="h-3 w-3" />
-                      <span className="hidden md:inline">View</span>
-                    </Button>
+                    {/* Removed View Transcript button functionality since we removed the transcript components */}
                   </div>
                 </div>
               ))
