@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Mic, MicOff, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useConversation } from "@11labs/react";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
@@ -27,12 +26,32 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
   const [attemptId, setAttemptId] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const [conversationTranscript, setConversationTranscript] = useState<{
+    userMessages: any[];
+    aiResponses: any[];
+  }>({
+    userMessages: [],
+    aiResponses: [],
+  });
+
   const conversation = useConversation({
     onMessage: (message) => {
-      // Store messages for later assessment
       console.log("Message received:", message);
+      
+      if (message.role === "user") {
+        setConversationTranscript(prev => ({
+          ...prev,
+          userMessages: [...prev.userMessages, message]
+        }));
+      } else if (message.role === "assistant") {
+        setConversationTranscript(prev => ({
+          ...prev,
+          aiResponses: [...prev.aiResponses, message]
+        }));
+      }
     },
     onError: (error) => {
+      console.error("Conversation error:", error);
       toast({
         title: "Error",
         description: error.message,
@@ -42,14 +61,12 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
   });
 
   useEffect(() => {
-    // Check if user is logged in
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
     };
     checkUser();
 
-    // Check for microphone access
     const initMicrophone = async () => {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -66,7 +83,6 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     initMicrophone();
   }, [toast]);
 
-  // Timer for test duration
   useEffect(() => {
     if (isStarted && !isComplete && timeRemaining > 0) {
       const timer = setTimeout(() => {
@@ -83,6 +99,18 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  const convertLevelToScore = (level: string): number => {
+    switch (level) {
+      case 'C2': return 92;
+      case 'C1': return 75;
+      case 'B2': return 58;
+      case 'B1': return 42;
+      case 'A2': return 25;
+      case 'A1': return 8;
+      default: return 0;
+    }
   };
 
   const startTest = async () => {
@@ -105,144 +133,256 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     }
 
     try {
-      // Create a certification attempt entry
       const { data: { user } } = await supabase.auth.getUser();
       
-      if (!user) return;
+      if (!user) {
+        toast({
+          title: "Authentication Error",
+          description: "Could not identify current user. Please log in again.",
+          variant: "destructive",
+        });
+        return;
+      }
       
-      // Create two separate certification attempts - one for speaking and one for listening
+      console.log("Starting test for user:", user.id);
+      
       const { data: speakingAttempt, error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'speaking',
-            score: 0, // Will be updated after assessment
-            level: 'A1', // Will be updated after assessment
+            score: 0,
+            level: 'A1',
             user_id: user.id,
           }
         ])
         .select()
         .single();
 
-      if (speakingError) throw speakingError;
+      if (speakingError) {
+        console.error("Error creating speaking attempt:", speakingError);
+        toast({
+          title: "Database Error",
+          description: "Could not create speaking certification attempt: " + speakingError.message,
+          variant: "destructive",
+        });
+        return;
+      }
       
       const { data: listeningAttempt, error: listeningError } = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'listening',
-            score: 0, // Will be updated after assessment
-            level: 'A1', // Will be updated after assessment
+            score: 0,
+            level: 'A1',
             user_id: user.id,
           }
         ])
         .select()
         .single();
 
-      if (listeningError) throw listeningError;
+      if (listeningError) {
+        console.error("Error creating listening attempt:", listeningError);
+        toast({
+          title: "Database Error",
+          description: "Could not create listening certification attempt: " + listeningError.message,
+          variant: "destructive",
+        });
+        return;
+      }
       
-      // Store both attempt IDs
       setAttemptId(speakingAttempt.id);
       console.log("Speaking attempt ID:", speakingAttempt.id);
       console.log("Listening attempt ID:", listeningAttempt.id);
       
-      // Store listening attempt ID in session storage for later use
       sessionStorage.setItem('listeningAttemptId', listeningAttempt.id);
+      sessionStorage.setItem('speakingAttemptId', speakingAttempt.id);
+      
+      setConversationTranscript({
+        userMessages: [],
+        aiResponses: [],
+      });
       
       setIsStarted(true);
       setTimeRemaining(TEST_DURATION);
       
-      // Start the conversation with the specific ElevenLabs agent
       await conversation.startSession({
-        agentId: ELEVEN_LABS_AGENT_ID, // Using the specific agent ID
+        agentId: ELEVEN_LABS_AGENT_ID,
       });
       
       toast({
         title: "Test Started",
         description: "The conversational fluency test has begun. Speak clearly in Spanish.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error starting test:", error);
       toast({
         title: "Error",
-        description: "Failed to start the test. Please try again.",
+        description: "Failed to start the test: " + (error.message || "Unknown error"),
         variant: "destructive",
       });
     }
   };
 
+  const saveTranscriptToDatabase = async (
+    speakingAttemptId: string, 
+    listeningAttemptId: string,
+    userId: string, 
+    userMessages: any[], 
+    aiResponses: any[], 
+    analysisData: any
+  ) => {
+    try {
+      console.log("Saving transcript to database...");
+      console.log("Speaking attempt ID:", speakingAttemptId);
+      console.log("Listening attempt ID:", listeningAttemptId);
+      
+      const { data: transcript, error: transcriptError } = await supabase
+        .from('certification_transcripts')
+        .insert([
+          {
+            attempt_id: speakingAttemptId,
+            user_id: userId,
+            user_transcripts: userMessages,
+            ai_responses: aiResponses,
+            analysis_data: analysisData
+          }
+        ])
+        .select()
+        .single();
+
+      if (transcriptError) {
+        console.error("Error saving transcript:", transcriptError);
+        throw transcriptError;
+      }
+      
+      console.log("Transcript saved successfully:", transcript);
+      return transcript;
+    } catch (error) {
+      console.error("Error in saveTranscriptToDatabase:", error);
+      throw error;
+    }
+  };
+
   const endTest = async () => {
-    if (!attemptId) return;
+    if (conversation.status === "connected") {
+      try {
+        await conversation.endSession();
+      } catch (convError) {
+        console.error("Error ending conversation session:", convError);
+      }
+    }
+    
+    setIsStarted(false);
+    setIsLoading(true);
     
     try {
-      // End the conversation
-      if (conversation.status === "connected") {
-        await conversation.endSession();
-      }
-      
-      setIsStarted(false);
-      setIsLoading(true);
-      
-      // Get the listening attempt ID from session storage
+      const speakingAttemptId = sessionStorage.getItem('speakingAttemptId');
       const listeningAttemptId = sessionStorage.getItem('listeningAttemptId');
       
-      if (!listeningAttemptId) {
-        throw new Error("Listening attempt ID not found");
+      if (!speakingAttemptId || !listeningAttemptId) {
+        throw new Error("Could not find attempt IDs in session storage");
       }
       
-      // Request assessment of the conversation for both speaking and listening
+      console.log("Retrieved attempt IDs from session storage:", 
+        { speakingAttemptId, listeningAttemptId });
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+      
       const { data, error } = await supabase.functions.invoke('analyze-speaking', {
         body: { 
-          speakingAttemptId: attemptId,
-          listeningAttemptId: listeningAttemptId
+          speakingAttemptId: speakingAttemptId,
+          listeningAttemptId: listeningAttemptId,
+          transcript: {
+            userMessages: conversationTranscript.userMessages,
+            aiResponses: conversationTranscript.aiResponses
+          }
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error invoking analyze-speaking function:", error);
+        throw error;
+      }
       
-      // Update certification attempts with scores and levels
+      console.log("Analysis complete:", data);
+      
+      await saveTranscriptToDatabase(
+        speakingAttemptId,
+        listeningAttemptId,
+        user.id,
+        conversationTranscript.userMessages,
+        conversationTranscript.aiResponses,
+        data
+      );
+      
+      const speakingScore = data.speaking.overallScore || 
+        convertLevelToScore(data.speaking.level || 'A1');
+        
+      const listeningScore = data.listening.overallScore || 
+        convertLevelToScore(data.listening.level || 'A1');
+      
+      const speakingLevel = data.speaking.level || determineLevel(speakingScore);
+      const listeningLevel = data.listening.level || determineLevel(listeningScore);
+      
+      console.log("Final scores and levels:", {
+        speaking: { score: speakingScore, level: speakingLevel },
+        listening: { score: listeningScore, level: listeningLevel }
+      });
+      
       const { error: speakingUpdateError } = await supabase
         .from('certification_attempts')
         .update({
-          score: data.speaking.overallScore,
-          level: determineLevel(data.speaking.overallScore),
+          score: speakingScore,
+          level: speakingLevel,
           completed_at: new Date().toISOString()
         })
-        .eq('id', attemptId);
+        .eq('id', speakingAttemptId);
         
-      if (speakingUpdateError) throw speakingUpdateError;
+      if (speakingUpdateError) {
+        console.error("Error updating speaking attempt:", speakingUpdateError);
+        throw speakingUpdateError;
+      }
       
       const { error: listeningUpdateError } = await supabase
         .from('certification_attempts')
         .update({
-          score: data.listening.overallScore,
-          level: determineLevel(data.listening.overallScore),
+          score: listeningScore,
+          level: listeningLevel,
           completed_at: new Date().toISOString()
         })
         .eq('id', listeningAttemptId);
         
-      if (listeningUpdateError) throw listeningUpdateError;
+      if (listeningUpdateError) {
+        console.error("Error updating listening attempt:", listeningUpdateError);
+        throw listeningUpdateError;
+      }
+      
+      console.log("Successfully updated certification attempts with scores");
       
       setTestResult(data);
       setIsComplete(true);
       
-      // Call onTestComplete callback if provided
       if (onTestComplete) {
         onTestComplete();
       }
       
-      // Dispatch a custom event that can be listened for in other components
       window.dispatchEvent(new CustomEvent('fluency-test-completed'));
       
       toast({
         title: "Test Complete",
-        description: "Your conversational fluency has been assessed!",
+        description: `Speaking: ${speakingLevel} (${speakingScore}%), Listening: ${listeningLevel} (${listeningScore}%)`,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error ending test:", error);
       toast({
         title: "Error",
-        description: "Failed to complete the assessment. Please try again.",
+        description: "Failed to complete the assessment: " + (error.message || "Unknown error"),
         variant: "destructive",
       });
     } finally {
@@ -257,8 +397,12 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     setTestResult(null);
     setAttemptId(null);
     sessionStorage.removeItem('listeningAttemptId');
+    sessionStorage.removeItem('speakingAttemptId');
+    setConversationTranscript({
+      userMessages: [],
+      aiResponses: [],
+    });
     
-    // Call onTestComplete callback if provided
     if (onTestComplete) {
       onTestComplete();
     }
@@ -274,14 +418,13 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         <CardContent>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              {/* Speaking Results Section */}
               <div className="p-4 bg-blue-50 rounded-lg">
                 <h3 className="font-medium text-lg mb-2">Speaking Results</h3>
                 <div className="mb-2">
                   <span className="font-medium">Score:</span> {testResult.speaking.overallScore}%
                 </div>
                 <div className="mb-2">
-                  <span className="font-medium">CEFR Level:</span> {determineLevel(testResult.speaking.overallScore)}
+                  <span className="font-medium">CEFR Level:</span> {testResult.speaking.level || determineLevel(testResult.speaking.overallScore)}
                 </div>
                 
                 <div className="mt-3">
@@ -306,14 +449,13 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
                 </div>
               </div>
               
-              {/* Listening Results Section */}
               <div className="p-4 bg-blue-50 rounded-lg">
                 <h3 className="font-medium text-lg mb-2">Listening Results</h3>
                 <div className="mb-2">
                   <span className="font-medium">Score:</span> {testResult.listening.overallScore}%
                 </div>
                 <div className="mb-2">
-                  <span className="font-medium">CEFR Level:</span> {determineLevel(testResult.listening.overallScore)}
+                  <span className="font-medium">CEFR Level:</span> {testResult.listening.level || determineLevel(testResult.listening.overallScore)}
                 </div>
                 
                 <div className="mt-3">
