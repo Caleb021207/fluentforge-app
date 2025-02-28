@@ -151,10 +151,12 @@ const ProgressPage = () => {
       
       if (type === 'fluency') {
         console.log(`Processing fluency attempt #${attempt.id} with score ${attempt.score}`);
-        if (attempt.score > existing.speaking) {
+        const speakingScore = existing.speaking as number;
+        if (attempt.score > speakingScore) {
           existing.speaking = attempt.score;
         }
-        if (attempt.score > existing.listening) {
+        const listeningScore = existing.listening as number;
+        if (attempt.score > listeningScore) {
           existing.listening = attempt.score;
         }
       } 
@@ -163,7 +165,9 @@ const ProgressPage = () => {
         console.log(`Processing ${type} attempt #${attempt.id} with score ${attempt.score}`);
         
         const propertyName = type as keyof typeof existing;
-        if (attempt.score > (existing[propertyName] || 0)) {
+        const currentScore = existing[propertyName] as number;
+        
+        if (attempt.score > currentScore) {
           existing[propertyName] = attempt.score;
         }
       } else {
