@@ -91,22 +91,10 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           if (attempt.certification_type in completedCertifications) {
             completedCertifications[attempt.certification_type] = true;
           }
-          
-          // Special handling for speaking_listening which counts as two certifications
-          if (attempt.certification_type === 'speaking_listening') {
-            completedCertifications['speaking'] = true;
-            completedCertifications['listening'] = true;
-          }
         });
         
         // Each certification type counts as 3 lessons
         completedLessons = uniqueTypes.size * 3;
-        
-        // Add bonus for speaking_listening which counts double
-        const hasSpeakingListening = attempts.some(a => a.certification_type === 'speaking_listening');
-        if (hasSpeakingListening) {
-          completedLessons += 3; // Add 3 more lessons for the combined test
-        }
 
         // Calculate streak based on attempt dates
         const streakDays = calculateStreak(attempts);

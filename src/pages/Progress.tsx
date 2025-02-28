@@ -107,7 +107,7 @@ const ProgressPage = () => {
     const dataMap = new Map<string, ProgressData>();
     
     attempts.forEach(attempt => {
-      const date = new Date(attempt.completed_at).toISOString().split('T')[0];
+      const date = new Date(attempt.completed_at || attempt.created_at).toISOString().split('T')[0];
       const existing = dataMap.get(date) || {
         date,
       };

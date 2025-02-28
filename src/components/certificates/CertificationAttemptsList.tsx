@@ -56,6 +56,14 @@ const CertificationAttemptsList = ({
                       <div className="font-medium">{attempt.score}%</div>
                       <div className="text-sm text-gray-600">Level {determineLevel(attempt.score)}</div>
                     </div>
+                    {hasTranscript[attempt.id] && (
+                      <button
+                        onClick={() => onViewAttempt(attempt.id)}
+                        className="text-blue-500 text-sm underline"
+                      >
+                        View Details
+                      </button>
+                    )}
                   </div>
                 </div>
               ))
