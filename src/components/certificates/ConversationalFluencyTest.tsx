@@ -106,7 +106,8 @@ const ConversationalFluencyTest = () => {
       
       if (!user) return;
       
-      const { data: attempt, error } = await supabase
+      // Create two separate certification attempts - one for speaking and one for listening
+      const { data: speakingAttempt, error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
           {
@@ -119,15 +120,37 @@ const ConversationalFluencyTest = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (speakingError) throw speakingError;
       
-      setAttemptId(attempt.id);
+      const { data: listeningAttempt, error: listeningError } = await supabase
+        .from('certification_attempts')
+        .insert([
+          {
+            certification_type: 'listening',
+            score: 0, // Will be updated after assessment
+            level: 'A1', // Will be updated after assessment
+            user_id: user.id,
+          }
+        ])
+        .select()
+        .single();
+
+      if (listeningError) throw listeningError;
+      
+      // Store both attempt IDs
+      setAttemptId(speakingAttempt.id);
+      console.log("Speaking attempt ID:", speakingAttempt.id);
+      console.log("Listening attempt ID:", listeningAttempt.id);
+      
+      // Store listening attempt ID in session storage for later use
+      sessionStorage.setItem('listeningAttemptId', listeningAttempt.id);
+      
       setIsStarted(true);
       setTimeRemaining(TEST_DURATION);
       
       // Start the conversation with the specific ElevenLabs agent
       await conversation.startSession({
-        agentId: ELEVEN_LABS_AGENT_ID, // Using the new agent ID
+        agentId: ELEVEN_LABS_AGENT_ID, // Using the specific agent ID
       });
       
       toast({
@@ -156,26 +179,45 @@ const ConversationalFluencyTest = () => {
       setIsStarted(false);
       setIsLoading(true);
       
-      // Request assessment of the conversation
+      // Get the listening attempt ID from session storage
+      const listeningAttemptId = sessionStorage.getItem('listeningAttemptId');
+      
+      if (!listeningAttemptId) {
+        throw new Error("Listening attempt ID not found");
+      }
+      
+      // Request assessment of the conversation for both speaking and listening
       const { data, error } = await supabase.functions.invoke('analyze-speaking', {
         body: { 
-          attemptId: attemptId
+          speakingAttemptId: attemptId,
+          listeningAttemptId: listeningAttemptId
         }
       });
       
       if (error) throw error;
       
-      // Update certification attempt with score and level
-      const { error: updateError } = await supabase
+      // Update certification attempts with scores and levels
+      const { error: speakingUpdateError } = await supabase
         .from('certification_attempts')
         .update({
-          score: data.overallScore,
-          level: determineLevel(data.overallScore),
+          score: data.speaking.overallScore,
+          level: determineLevel(data.speaking.overallScore),
           completed_at: new Date().toISOString()
         })
         .eq('id', attemptId);
         
-      if (updateError) throw updateError;
+      if (speakingUpdateError) throw speakingUpdateError;
+      
+      const { error: listeningUpdateError } = await supabase
+        .from('certification_attempts')
+        .update({
+          score: data.listening.overallScore,
+          level: determineLevel(data.listening.overallScore),
+          completed_at: new Date().toISOString()
+        })
+        .eq('id', listeningAttemptId);
+        
+      if (listeningUpdateError) throw listeningUpdateError;
       
       setTestResult(data);
       setIsComplete(true);
@@ -202,6 +244,7 @@ const ConversationalFluencyTest = () => {
     setTimeRemaining(TEST_DURATION);
     setTestResult(null);
     setAttemptId(null);
+    sessionStorage.removeItem('listeningAttemptId');
   };
 
   if (isComplete) {
@@ -213,57 +256,69 @@ const ConversationalFluencyTest = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-medium text-lg mb-2">Your Results</h3>
-              <div className="mb-2">
-                <span className="font-medium">Score:</span> {testResult.overallScore}%
-              </div>
-              <div className="mb-2">
-                <span className="font-medium">CEFR Level:</span> {determineLevel(testResult.overallScore)}
-              </div>
-            </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-medium mb-3">Speaking</h3>
-                <div className="flex justify-between mb-1">
-                  <span>Pronunciation</span>
-                  <span>{testResult.pronunciation}/10</span>
+              {/* Speaking Results Section */}
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-medium text-lg mb-2">Speaking Results</h3>
+                <div className="mb-2">
+                  <span className="font-medium">Score:</span> {testResult.speaking.overallScore}%
                 </div>
-                <Progress value={testResult.pronunciation * 10} className="h-2 mb-3" />
+                <div className="mb-2">
+                  <span className="font-medium">CEFR Level:</span> {determineLevel(testResult.speaking.overallScore)}
+                </div>
                 
-                <div className="flex justify-between mb-1">
-                  <span>Fluency</span>
-                  <span>{testResult.fluency}/10</span>
+                <div className="mt-3">
+                  <h4 className="font-medium mb-2">Speaking Skills</h4>
+                  <div className="flex justify-between mb-1">
+                    <span>Pronunciation</span>
+                    <span>{testResult.speaking.pronunciation}/10</span>
+                  </div>
+                  <Progress value={testResult.speaking.pronunciation * 10} className="h-2 mb-3" />
+                  
+                  <div className="flex justify-between mb-1">
+                    <span>Fluency</span>
+                    <span>{testResult.speaking.fluency}/10</span>
+                  </div>
+                  <Progress value={testResult.speaking.fluency * 10} className="h-2 mb-3" />
+                  
+                  <div className="flex justify-between mb-1">
+                    <span>Grammar</span>
+                    <span>{testResult.speaking.grammar}/10</span>
+                  </div>
+                  <Progress value={testResult.speaking.grammar * 10} className="h-2" />
                 </div>
-                <Progress value={testResult.fluency * 10} className="h-2 mb-3" />
-                
-                <div className="flex justify-between mb-1">
-                  <span>Grammar</span>
-                  <span>{testResult.grammar}/10</span>
-                </div>
-                <Progress value={testResult.grammar * 10} className="h-2" />
               </div>
               
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-medium mb-3">Comprehension</h3>
-                <div className="flex justify-between mb-1">
-                  <span>Understanding</span>
-                  <span>{testResult.understanding}/10</span>
+              {/* Listening Results Section */}
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-medium text-lg mb-2">Listening Results</h3>
+                <div className="mb-2">
+                  <span className="font-medium">Score:</span> {testResult.listening.overallScore}%
                 </div>
-                <Progress value={testResult.understanding * 10} className="h-2 mb-3" />
+                <div className="mb-2">
+                  <span className="font-medium">CEFR Level:</span> {determineLevel(testResult.listening.overallScore)}
+                </div>
                 
-                <div className="flex justify-between mb-1">
-                  <span>Vocabulary</span>
-                  <span>{testResult.vocabulary}/10</span>
+                <div className="mt-3">
+                  <h4 className="font-medium mb-2">Listening Skills</h4>
+                  <div className="flex justify-between mb-1">
+                    <span>Understanding</span>
+                    <span>{testResult.listening.understanding}/10</span>
+                  </div>
+                  <Progress value={testResult.listening.understanding * 10} className="h-2 mb-3" />
+                  
+                  <div className="flex justify-between mb-1">
+                    <span>Vocabulary</span>
+                    <span>{testResult.listening.vocabulary}/10</span>
+                  </div>
+                  <Progress value={testResult.listening.vocabulary * 10} className="h-2 mb-3" />
+                  
+                  <div className="flex justify-between mb-1">
+                    <span>Response Quality</span>
+                    <span>{testResult.listening.interaction}/10</span>
+                  </div>
+                  <Progress value={testResult.listening.interaction * 10} className="h-2" />
                 </div>
-                <Progress value={testResult.vocabulary * 10} className="h-2 mb-3" />
-                
-                <div className="flex justify-between mb-1">
-                  <span>Interaction</span>
-                  <span>{testResult.interaction}/10</span>
-                </div>
-                <Progress value={testResult.interaction * 10} className="h-2" />
               </div>
             </div>
             
@@ -306,7 +361,7 @@ const ConversationalFluencyTest = () => {
       <CardContent>
         <div className="space-y-4">
           <p className="text-gray-600">
-            The Conversational Fluency Test evaluates your ability to understand and respond to spoken Spanish in real-time conversations. This test assesses your listening comprehension, speaking skills, and ability to maintain a natural conversation flow.
+            The Conversational Fluency Test evaluates your ability to understand and respond to spoken Spanish in real-time conversations. This test assesses both your speaking skills and your listening comprehension.
           </p>
           
           {isStarted ? (
@@ -339,6 +394,7 @@ const ConversationalFluencyTest = () => {
                   <li>Speak naturally in Spanish</li>
                   <li>Answer the tutor's questions</li>
                   <li>Try to keep the conversation flowing</li>
+                  <li>Listen carefully to understand questions</li>
                   <li>Don't worry about making mistakes</li>
                 </ul>
               </div>
