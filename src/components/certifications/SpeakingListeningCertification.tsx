@@ -57,6 +57,8 @@ const SpeakingListeningCertification = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [speakingScore, setSpeakingScore] = useState<{level: string, score: number} | null>(null);
   const [listeningScore, setListeningScore] = useState<{level: string, score: number} | null>(null);
+  const [showResults, setShowResults] = useState(false);
+  const [isReviewingResults, setIsReviewingResults] = useState(false);
   const { toast } = useToast();
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -393,9 +395,26 @@ ${suggestions}`;
       // Generate feedback based on GPT's analysis
       const levelFeedback = generateFeedbackForLevel(speakingLevel, listeningLevel, analysis);
       setFeedback(levelFeedback);
-      setShowFeedback(true);
+      
+      // Show the results dialog
+      setShowResults(true);
+    } catch (error) {
+      console.error("Error ending test:", error);
+      toast({
+        title: "Error",
+        description: "Failed to analyze test results. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-      // Save the test results
+  const submitResults = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      // Get user data
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -406,14 +425,18 @@ ${suggestions}`;
 
       console.log("Saving test results for user:", user.id);
       
+      if (!speakingScore || !listeningScore) {
+        throw new Error("Missing score data");
+      }
+      
       // Save speaking score
       const speakingResult = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'speaking',
-            score: speakingScore,
-            level: speakingLevel,
+            score: speakingScore.score,
+            level: speakingScore.level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
@@ -432,8 +455,8 @@ ${suggestions}`;
         .insert([
           {
             certification_type: 'listening',
-            score: listeningScore,
-            level: listeningLevel,
+            score: listeningScore.score,
+            level: listeningScore.level,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
@@ -448,10 +471,14 @@ ${suggestions}`;
 
       toast({
         title: "Test Completed",
-        description: `You've completed the speaking and listening test. Speaking: ${speakingScore}% (${speakingLevel}), Listening: ${listeningScore}% (${listeningLevel})`,
+        description: `Results saved successfully. Speaking: ${speakingScore.score}% (${speakingScore.level}), Listening: ${listeningScore.score}% (${listeningScore.level})`,
       });
+      
+      // Close the results dialog and show the final feedback
+      setShowResults(false);
+      setShowFeedback(true);
     } catch (error) {
-      console.error("Error ending test:", error);
+      console.error("Error submitting results:", error);
       toast({
         title: "Error",
         description: "Failed to save test results. Please try again.",
@@ -460,6 +487,14 @@ ${suggestions}`;
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleReviewDetails = () => {
+    setIsReviewingResults(true);
+  };
+
+  const handleBackToResults = () => {
+    setIsReviewingResults(false);
   };
 
   const formatTime = (seconds: number) => {
@@ -570,6 +605,7 @@ ${suggestions}`;
         </CardContent>
       </Card>
 
+      {/* Instructions Dialog */}
       <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
@@ -612,6 +648,87 @@ ${suggestions}`;
               Begin Test
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Results Dialog */}
+      <Dialog open={showResults} onOpenChange={(open) => !isSubmitting && setShowResults(open)}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Speaking & Listening Test Results</DialogTitle>
+          </DialogHeader>
+          
+          {isReviewingResults ? (
+            <div className="py-4">
+              <ScrollArea className="h-[400px] pr-4">
+                <div className="whitespace-pre-line text-gray-700 prose prose-sm max-w-none">
+                  {feedback}
+                </div>
+              </ScrollArea>
+              
+              <div className="flex justify-center mt-4">
+                <Button 
+                  onClick={handleBackToResults}
+                  variant="outline"
+                >
+                  Back to Results Summary
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="py-4">
+              <div className="text-center mb-4">
+                <h3 className="text-xl font-semibold">Congratulations!</h3>
+                <p className="text-gray-600">You've completed the Speaking & Listening certification test.</p>
+              </div>
+              
+              {speakingScore && listeningScore && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <h4 className="font-medium text-blue-800 mb-2">Speaking</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold">{speakingScore.level}</span>
+                      <span className="text-lg">{speakingScore.score}%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                    <h4 className="font-medium text-green-800 mb-2">Listening</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold">{listeningScore.level}</span>
+                      <span className="text-lg">{listeningScore.score}%</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                <p className="text-sm text-gray-600 mb-2">Summary:</p>
+                <p className="text-gray-800">
+                  {speakingScore && listeningScore ? (
+                    `Your speaking skills are at ${speakingScore.level} level and your listening skills are at ${listeningScore.level} level. Click "Review Detailed Feedback" for suggestions on how to improve.`
+                  ) : (
+                    "Your results have been analyzed. Review the detailed feedback for insights on your performance."
+                  )}
+                </p>
+              </div>
+              
+              <div className="flex justify-between">
+                <Button 
+                  onClick={handleReviewDetails}
+                  variant="outline"
+                >
+                  Review Detailed Feedback
+                </Button>
+                <Button 
+                  onClick={submitResults}
+                  variant="success"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Saving..." : "Submit Results"}
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>
