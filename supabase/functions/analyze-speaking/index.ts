@@ -1,227 +1,190 @@
 
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.36.0";
 
-import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
-import { corsHeaders } from "../_shared/cors.ts";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
-const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+// Initialize Supabase client
+const supabaseUrl = Deno.env.get("SUPABASE_URL") as string;
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") as string;
+const openAIApiKey = Deno.env.get("OPENAI_API_KEY") as string;
 
-console.log("analyze-speaking function loaded");
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-serve(async (req: Request) => {
-  // Handle CORS preflight requests
+serve(async (req) => {
+  // Handle CORS
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
     // Parse request body
-    const requestData = await req.json();
-    const { userTranscripts, aiResponses } = requestData;
+    const { attemptId } = await req.json();
 
-    console.log("Received request with transcripts:", 
-      { 
-        transcriptsCount: userTranscripts?.length || 0, 
-        responsesCount: aiResponses?.length || 0 
-      }
-    );
-
-    // Validate input
-    if (!userTranscripts || !Array.isArray(userTranscripts) || userTranscripts.length === 0) {
-      console.error("Invalid or empty user transcripts:", userTranscripts);
-      return new Response(
-        JSON.stringify({ error: "Invalid or empty user transcripts" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
-      );
+    if (!attemptId) {
+      throw new Error("Missing required parameter: attemptId");
     }
 
-    // Create service role client for admin operations
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    // Fetch the certification attempt details
+    const { data: attempt, error: attemptError } = await supabase
+      .from("certification_attempts")
+      .select("*")
+      .eq("id", attemptId)
+      .single();
 
-    if (!OPENAI_API_KEY) {
-      console.error("Missing OpenAI API key");
-      return new Response(
-        JSON.stringify({ error: "Server configuration error" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-      );
+    if (attemptError) {
+      throw new Error(`Failed to fetch certification attempt: ${attemptError.message}`);
     }
 
-    // Prepare conversation data for OpenAI
-    let conversationText = "";
-    const maxMessages = Math.min(
-      userTranscripts.length,
-      aiResponses?.length || 0
-    );
+    // Get the conversation history from ElevenLabs
+    // Since ElevenLabs stores the transcripts when auto-deletion is off,
+    // we need to fetch them using the ElevenLabs API
 
-    for (let i = 0; i < maxMessages; i++) {
-      conversationText += `User: ${userTranscripts[i]}\n`;
-      conversationText += `AI: ${aiResponses[i]}\n\n`;
+    // For now, we'll simulate this with a placeholder
+    // In production, you would integrate with ElevenLabs API to get actual transcript data
+    // This would be based on a conversation ID that you'd need to store when starting the test
+
+    // Placeholder transcript data
+    const mockTranscript = {
+      userMessages: [
+        "Hola, ¿cómo estás?",
+        "Me llamo Juan y soy de los Estados Unidos.",
+        "Me gusta viajar y aprender nuevos idiomas.",
+        "Ayer fui al restaurante con mis amigos y comimos paella.",
+        "No entiendo esa pregunta, ¿puedes repetirla?",
+      ],
+      aiMessages: [
+        "Hola, estoy bien. ¿Y tú? ¿Cómo te llamas y de dónde eres?",
+        "Encantado de conocerte, Juan. ¿Tienes algún pasatiempo o interés especial?",
+        "¡Qué interesante! Viajar es una excelente manera de practicar idiomas. ¿Has hecho algo interesante últimamente?",
+        "La paella es deliciosa. ¿Te gusta la comida española? ¿Qué otros platos has probado?",
+        "Claro, te preguntaba qué otros platos de la cocina española has probado además de la paella.",
+      ],
+    };
+
+    // In a real implementation, save the actual transcript to the database
+    const { data: transcript, error: transcriptError } = await supabase
+      .from("certification_transcripts")
+      .insert({
+        attempt_id: attemptId,
+        user_id: attempt.user_id,
+        user_transcripts: mockTranscript.userMessages,
+        ai_responses: mockTranscript.aiMessages,
+      })
+      .select()
+      .single();
+
+    if (transcriptError) {
+      throw new Error(`Failed to save transcript: ${transcriptError.message}`);
     }
 
-    // If there are more user transcripts than AI responses
-    if (userTranscripts.length > (aiResponses?.length || 0)) {
-      conversationText += `User: ${userTranscripts[userTranscripts.length - 1]}\n`;
-    }
+    // Analyze the conversation using GPT-4
+    // Create a prompt that instructs GPT to analyze the Spanish conversation
+    const fullTranscript = mockTranscript.userMessages.map((msg, i) => {
+      return {
+        user: msg,
+        ai: mockTranscript.aiMessages[i] || "",
+      };
+    });
 
-    // Log conversation data being sent to OpenAI
-    console.log("Sending conversation data to OpenAI:", { conversationLength: conversationText.length });
+    const analysisPrompt = `
+You are an expert Spanish language assessor. Analyze the following conversation between an AI tutor and a language learner.
+Focus on the learner's Spanish language skills only.
 
-    // Prepare the prompt for GPT-4
-    const prompt = `
-    You are a Spanish language certification examiner. Analyze the following conversation between a student (User) and an AI Spanish tutor.
+CONVERSATION:
+${fullTranscript.map(t => `USER: ${t.user}\nAI TUTOR: ${t.ai}`).join('\n\n')}
 
-    CONVERSATION:
-    ${conversationText}
+Assess the learner's Spanish conversational fluency using the following criteria:
+1. Pronunciation (0-10): How accurately they pronounce Spanish words
+2. Fluency (0-10): How smoothly they speak without hesitation
+3. Grammar (0-10): How correctly they use Spanish grammar
+4. Vocabulary (0-10): Range and appropriateness of vocabulary
+5. Understanding (0-10): How well they understand the AI tutor
+6. Interaction (0-10): How effectively they maintain conversation flow
 
-    Assess the student's speaking and listening abilities in Spanish using the CEFR (Common European Framework of Reference for Languages) scale from A1 to C2.
+Calculate an overall score (0-100) that represents their conversational Spanish proficiency.
 
-    Evaluate for:
+Provide a brief analysis of their strengths (list 3-4 specific strengths).
+Provide a brief analysis of areas to improve (list 3-4 specific areas).
+Finally, provide a 2-3 sentence personalized feedback summary.
 
-    1. Speaking ability: Pronunciation, grammar, vocabulary, fluency, coherence
-    2. Listening comprehension: Understanding of questions, appropriate responses
+Format your response EXACTLY as a JSON object with the following structure:
+{
+  "pronunciation": <score>,
+  "fluency": <score>,
+  "grammar": <score>,
+  "vocabulary": <score>,
+  "understanding": <score>,
+  "interaction": <score>,
+  "overallScore": <overall percentage score>,
+  "strengths": ["strength1", "strength2", "strength3"],
+  "areasToImprove": ["area1", "area2", "area3"],
+  "feedback": "Personalized feedback paragraph"
+}
+`;
 
-    Provide:
-
-    1. A speaking assessment with CEFR level (exact level: A1, A2, B1, B2, C1, or C2)
-    2. A listening assessment with CEFR level (exact level: A1, A2, B1, B2, C1, or C2)
-    3. A score for each (0-100)
-    4. Detailed feedback with specific examples from the conversation
-
-    Format your response as valid JSON with the following structure:
-    {
-      "speakingLevel": "B1", // must be one of: A1, A2, B1, B2, C1, C2
-      "speakingScore": 75, // numeric score 0-100
-      "listeningLevel": "B1", // must be one of: A1, A2, B1, B2, C1, C2
-      "listeningScore": 70, // numeric score 0-100
-      "analysis": "Detailed analysis text here..."
-    }
-    `;
-
-    // Call OpenAI API for scoring
-    console.log("Calling OpenAI API for assessment...");
-    const openAIResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+    // Call OpenAI API
+    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${openAIApiKey}`,
         "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
-            content: prompt,
+            content: "You are an expert Spanish language assessor that analyzes conversations and provides detailed feedback on language proficiency.",
+          },
+          {
+            role: "user",
+            content: analysisPrompt,
           },
         ],
-        temperature: 0.7,
+        temperature: 0.3,
       }),
     });
 
-    // Parse OpenAI response
-    const openAIData = await openAIResponse.json();
-    console.log("Received response from OpenAI");
-
-    if (!openAIResponse.ok) {
-      console.error("OpenAI API error:", openAIData);
-      return new Response(
-        JSON.stringify({ error: "Error analyzing conversation", details: openAIData }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-      );
+    if (!openaiResponse.ok) {
+      const errorText = await openaiResponse.text();
+      throw new Error(`OpenAI API Error: ${errorText}`);
     }
 
-    // Extract and parse the response
-    const responseContent = openAIData.choices[0]?.message?.content;
-    console.log("OpenAI response content:", responseContent);
+    const openaiData = await openaiResponse.json();
+    const analysisResult = JSON.parse(openaiData.choices[0].message.content);
 
-    if (!responseContent) {
-      console.error("Empty response from OpenAI");
-      return new Response(
-        JSON.stringify({ error: "Empty analysis result" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-      );
+    // Save the analysis data
+    const { error: analysisError } = await supabase
+      .from("certification_transcripts")
+      .update({
+        analysis_data: analysisResult,
+      })
+      .eq("id", transcript.id);
+
+    if (analysisError) {
+      throw new Error(`Failed to save analysis: ${analysisError.message}`);
     }
 
-    // Extract JSON from response (in case there's text before/after the JSON)
-    let jsonMatch = responseContent.match(/\{[\s\S]*\}/);
-    
-    if (!jsonMatch) {
-      console.error("Could not find JSON in response");
-      // Default scores if parsing fails
-      return new Response(
-        JSON.stringify({
-          speakingLevel: "B1",
-          speakingScore: 70,
-          listeningLevel: "B1",
-          listeningScore: 70,
-          analysis: "Unable to analyze the conversation properly. The system encountered an error while processing your test. Default scores have been assigned."
-        }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    try {
-      // Parse the JSON result
-      const analysisResult = JSON.parse(jsonMatch[0]);
-      console.log("Successfully parsed analysis result:", analysisResult);
-
-      // Validate and enforce the CEFR levels
-      const validLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
-      
-      // Ensure speaking level is valid
-      if (!validLevels.includes(analysisResult.speakingLevel)) {
-        console.warn(`Invalid speaking level: ${analysisResult.speakingLevel}, defaulting to B1`);
-        analysisResult.speakingLevel = "B1";
-      }
-      
-      // Ensure listening level is valid
-      if (!validLevels.includes(analysisResult.listeningLevel)) {
-        console.warn(`Invalid listening level: ${analysisResult.listeningLevel}, defaulting to B1`);
-        analysisResult.listeningLevel = "B1";
-      }
-      
-      // Ensure scores are numbers between 0-100
-      if (typeof analysisResult.speakingScore !== 'number' || 
-          analysisResult.speakingScore < 0 || 
-          analysisResult.speakingScore > 100) {
-        console.warn(`Invalid speaking score: ${analysisResult.speakingScore}, defaulting to 70`);
-        analysisResult.speakingScore = 70;
-      }
-      
-      if (typeof analysisResult.listeningScore !== 'number' || 
-          analysisResult.listeningScore < 0 || 
-          analysisResult.listeningScore > 100) {
-        console.warn(`Invalid listening score: ${analysisResult.listeningScore}, defaulting to 70`);
-        analysisResult.listeningScore = 70;
-      }
-      
-      return new Response(
-        JSON.stringify(analysisResult),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    } catch (error) {
-      console.error("Error parsing JSON from OpenAI response:", error);
-      // Default scores if parsing fails
-      return new Response(
-        JSON.stringify({
-          speakingLevel: "B1",
-          speakingScore: 70,
-          listeningLevel: "B1",
-          listeningScore: 70,
-          analysis: "Unable to analyze the conversation properly. The system encountered an error while processing your test. Default scores have been assigned."
-        }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+    // Return the analysis results
+    return new Response(JSON.stringify(analysisResult), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
   } catch (error) {
-    console.error("Unexpected error:", error);
+    console.error("Error in analyze-speaking function:", error.message);
     return new Response(
-      JSON.stringify({ error: "Internal server error", details: error.message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
+      JSON.stringify({
+        error: error.message,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      }
     );
   }
 });

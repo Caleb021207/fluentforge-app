@@ -53,8 +53,8 @@ const Certificates = () => {
   const calculateCompositeScore = () => {
     if (!highestScores) return null;
 
-    // Only include reading and writing scores
-    const scoreTypes = ['reading', 'writing'];
+    // Include reading, writing, and speaking scores
+    const scoreTypes = ['reading', 'writing', 'speaking'];
     const scores = scoreTypes.map(type => highestScores[type]?.score || 0);
     const totalScore = scores.reduce((sum, score) => sum + score, 0);
     const averageScore = scores.length > 0 ? Math.round(totalScore / scores.length) : 0;
@@ -66,6 +66,39 @@ const Certificates = () => {
   };
 
   const compositeScore = calculateCompositeScore();
+
+  // Create a map of attempt IDs that have transcript data
+  const [hasTranscript, setHasTranscript] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const fetchTranscripts = async () => {
+      if (!attempts || attempts.length === 0) return;
+      
+      const transcriptMap: Record<string, boolean> = {};
+      
+      for (const attempt of attempts) {
+        if (attempt.certification_type === 'speaking') {
+          const { data } = await supabase
+            .from('certification_transcripts')
+            .select('id')
+            .eq('attempt_id', attempt.id)
+            .maybeSingle();
+            
+          transcriptMap[attempt.id] = !!data;
+        }
+      }
+      
+      setHasTranscript(transcriptMap);
+    };
+    
+    fetchTranscripts();
+  }, [attempts]);
+
+  const handleViewAttempt = async (attemptId: string) => {
+    // Navigate to transcript view or display detailed results
+    // This would be implemented in a future update
+    console.log("View attempt:", attemptId);
+  };
 
   if (isLoading) {
     return <div>Loading certification data...</div>;
@@ -87,8 +120,8 @@ const Certificates = () => {
 
       <CertificationAttemptsList 
         attempts={attempts} 
-        hasTranscript={{}}
-        onViewAttempt={() => {}}
+        hasTranscript={hasTranscript}
+        onViewAttempt={handleViewAttempt}
         isLoading={isLoading}
       />
     </div>
