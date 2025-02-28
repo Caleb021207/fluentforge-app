@@ -110,6 +110,12 @@ const ProgressPage = () => {
       // Skip attempts with invalid dates
       if (!attempt.completed_at && !attempt.created_at) return;
       
+      // Skip attempts with 0 score
+      if (attempt.score === 0) return;
+      
+      // Skip fluency attempts with 0 score
+      if (attempt.certification_type === "fluency" && attempt.score === 0) return;
+      
       const date = new Date(attempt.completed_at || attempt.created_at).toISOString().split('T')[0];
       const existing = dataMap.get(date) || {
         date,
@@ -139,11 +145,22 @@ const ProgressPage = () => {
     
     // Get the highest score for each skill
     skills.forEach(skill => {
-      const skillAttempts = attempts.filter(a => a.certification_type === skill);
+      const skillAttempts = attempts.filter(a => {
+        // Skip attempts with 0 score
+        if (a.score === 0) return false;
+        
+        // Convert fluency to correct type if needed
+        if (skill === 'speaking' && a.certification_type === 'fluency') {
+          return true;
+        }
+        
+        return a.certification_type === skill;
+      });
+      
       if (skillAttempts.length > 0) {
         const validScores = skillAttempts
           .map(a => a.score)
-          .filter(score => typeof score === 'number' && !isNaN(score));
+          .filter(score => typeof score === 'number' && !isNaN(score) && score > 0);
         
         if (validScores.length > 0) {
           const highestScore = Math.max(...validScores);

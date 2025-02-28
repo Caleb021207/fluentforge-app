@@ -56,11 +56,18 @@ const CertificationAttemptsList = ({
     return <Award className="h-4 w-4 text-blue-500" />;
   };
   
-  // Filter out fluency attempts with score 0 to clean up the list
+  // Filter out attempts with score 0 or fluency attempts that should be excluded
   const filteredAttempts = attempts?.filter(attempt => {
+    // Filter out fluency attempts with 0 score
     if (attempt.certification_type === "fluency") {
       return attempt.score > 0;
     }
+    
+    // Filter out attempts with score 0
+    if (attempt.score === 0) {
+      return false;
+    }
+    
     return true;
   });
 

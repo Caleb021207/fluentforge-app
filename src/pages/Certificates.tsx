@@ -60,19 +60,24 @@ const Certificates = () => {
     refetchOnWindowFocus: false,
   });
 
-  // This is a more thorough normalization of the fluency tests
+  // This is a more thorough normalization of the attempts
   const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefined) => {
     if (!rawAttempts) return [];
     
-    // First, remove any fluency attempts with a score of 0
-    const filteredAttempts = rawAttempts.filter(attempt => {
+    // Filter out attempts with invalid scores or fluency with score 0
+    const validAttempts = rawAttempts.filter(attempt => {
+      // Remove attempts with score 0
+      if (attempt.score === 0) return false;
+      
+      // Filter out fluency attempts with a score of 0
       if (attempt.certification_type === "fluency") {
         return attempt.score > 0;
       }
+      
       return true;
     });
     
-    return filteredAttempts;
+    return validAttempts;
   };
 
   const normalizedAttempts = normalizeAttempts(attempts);
