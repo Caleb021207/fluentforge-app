@@ -1,49 +1,41 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { CertificationAttempt } from "@/types/supabase";
-import { Mic, Volume2, ArrowLeft } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { ChevronLeft, User, Bot, AlertCircle } from "lucide-react";
+import { format } from "date-fns";
 
 interface TranscriptDisplayProps {
   attemptId: string;
   onBack: () => void;
 }
 
-type Transcript = {
-  id: string;
-  attempt_id: string;
-  user_id: string;
-  user_transcripts: string[];
-  ai_responses: string[];
-  analysis_data: {
-    speakingLevel?: string;
-    speakingScore?: number;
-    listeningLevel?: string;
-    listeningScore?: number;
-    analysis?: string;
-  } | null;
-  created_at: string;
-};
-
 const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
-  const [transcript, setTranscript] = useState<Transcript | null>(null);
-  const [attempt, setAttempt] = useState<CertificationAttempt | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [transcript, setTranscript] = useState<{
+    userTranscripts: string[];
+    aiResponses: string[];
+    analysisData: any;
+    createdAt: string;
+    certificationType: string;
+    score: number;
+    level: string;
+  } | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchTranscript = async () => {
       try {
-        setIsLoading(true);
+        setLoading(true);
         setError(null);
 
-        // First, get the attempt details
+        // First, get the attempt details to know certification type
         const { data: attemptData, error: attemptError } = await supabase
           .from('certification_attempts')
           .select('*')
@@ -51,274 +43,220 @@ const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
           .single();
 
         if (attemptError) {
-          console.error('Error fetching attempt:', attemptError);
-          setError('Failed to fetch attempt details');
-          return;
+          throw new Error(`Error fetching attempt data: ${attemptError.message}`);
         }
 
-        setAttempt(attemptData as CertificationAttempt);
+        if (!attemptData) {
+          throw new Error('Attempt not found');
+        }
 
-        // Then, get the transcript data
+        // Then get the transcript data
         const { data: transcriptData, error: transcriptError } = await supabase
           .from('certification_transcripts')
           .select('*')
           .eq('attempt_id', attemptId)
           .single();
 
-        if (transcriptError && transcriptError.code !== 'PGRST116') { // Not found
-          console.error('Error fetching transcript:', transcriptError);
-          setError('Failed to fetch transcript data');
-          return;
+        if (transcriptError && transcriptError.code !== 'PGRST116') {
+          throw new Error(`Error fetching transcript: ${transcriptError.message}`);
         }
 
-        setTranscript(transcriptData as Transcript);
-      } catch (err) {
-        console.error('Unexpected error:', err);
-        setError('An unexpected error occurred');
+        if (!transcriptData) {
+          throw new Error('Transcript not found for this attempt');
+        }
+
+        setTranscript({
+          userTranscripts: transcriptData.user_transcripts as string[],
+          aiResponses: transcriptData.ai_responses as string[],
+          analysisData: transcriptData.analysis_data,
+          createdAt: transcriptData.created_at,
+          certificationType: attemptData.certification_type,
+          score: attemptData.score,
+          level: attemptData.level
+        });
+      } catch (err: any) {
+        console.error('Error fetching transcript:', err);
+        setError(err.message || 'An error occurred while fetching the transcript');
+        toast({
+          title: "Error",
+          description: err.message || 'Failed to load transcript',
+          variant: "destructive",
+        });
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     if (attemptId) {
       fetchTranscript();
     }
-  }, [attemptId]);
+  }, [attemptId, toast]);
 
-  const getCertificationType = () => {
-    if (!attempt) return '';
-    
-    return attempt.certification_type.charAt(0).toUpperCase() + 
-           attempt.certification_type.slice(1);
+  const formatCreatedAt = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'PPpp');
+    } catch (err) {
+      return dateString;
+    }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString();
-  };
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <Card className="mt-4">
-        <CardContent className="pt-6">
-          <div className="flex justify-center items-center h-40">
-            <p>Loading transcript data...</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <div className="flex items-center">
+          <Button variant="outline" className="mr-4" onClick={onBack}>
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <Skeleton className="h-8 w-64" />
+        </div>
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-8 w-48" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-20 w-full" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card className="mt-4">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            Error
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-red-50 text-red-800 p-4 rounded-md">
-            <p>{error}</p>
-            <Button 
-              variant="outline" 
-              className="mt-2" 
-              onClick={onBack}
-            >
-              Go Back
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <Button variant="outline" onClick={onBack}>
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center justify-center text-center p-6">
+              <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Error Loading Transcript</h3>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <Button variant="outline" onClick={onBack}>
+                Go Back
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
-  if (!attempt) {
-    return (
-      <Card className="mt-4">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            Not Found
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-yellow-50 text-yellow-800 p-4 rounded-md">
-            <p>The requested certification attempt could not be found.</p>
-            <Button 
-              variant="outline" 
-              className="mt-2" 
-              onClick={onBack}
-            >
-              Go Back
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // If there's no transcript data
   if (!transcript) {
     return (
-      <Card className="mt-4">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            {getCertificationType()} Test - {attempt.level}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
-              <h3 className="text-lg font-medium text-blue-900">Test Details</h3>
-              <div className="mt-2 space-y-1 text-sm">
-                <p><span className="font-medium">Type:</span> {getCertificationType()}</p>
-                <p><span className="font-medium">Level:</span> {attempt.level}</p>
-                <p><span className="font-medium">Score:</span> {attempt.score}%</p>
-                <p><span className="font-medium">Completed:</span> {formatDate(attempt.completed_at || '')}</p>
-              </div>
+      <div className="space-y-4">
+        <Button variant="outline" onClick={onBack}>
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center justify-center text-center p-6">
+              <AlertCircle className="h-12 w-12 text-amber-500 mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No Transcript Found</h3>
+              <p className="text-gray-600 mb-4">
+                We couldn't find a transcript for this attempt. This might be because the test was
+                taken before transcript saving was implemented.
+              </p>
+              <Button variant="outline" onClick={onBack}>
+                Go Back
+              </Button>
             </div>
-            
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-gray-500">No transcript data is available for this test attempt.</p>
-              <p className="text-sm text-gray-400 mt-2">Transcript data is only stored for speaking and listening tests completed after this feature was added.</p>
-            </div>
-            
-            <Button onClick={onBack} className="w-full">
-              Return to Certifications
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
+  const { userTranscripts, aiResponses, analysisData, createdAt, certificationType, score, level } = transcript;
+
   return (
-    <Card className="mt-4">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          {getCertificationType()} Test Transcript - {attempt.level}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
-              <h3 className="text-lg font-medium text-blue-900">Test Details</h3>
-              <div className="mt-2 space-y-1 text-sm">
-                <p><span className="font-medium">Type:</span> {getCertificationType()}</p>
-                <p><span className="font-medium">Level:</span> {attempt.level}</p>
-                <p><span className="font-medium">Score:</span> {attempt.score}%</p>
-                <p><span className="font-medium">Completed:</span> {formatDate(attempt.completed_at || '')}</p>
-              </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Button variant="outline" onClick={onBack}>
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Back to Certificates
+        </Button>
+        <div className="text-sm text-gray-500">
+          {formatCreatedAt(createdAt)}
+        </div>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span className="capitalize">{certificationType} Test Transcript</span>
+            <div className="text-base font-normal">
+              Score: <span className="font-medium">{score}%</span> (Level {level})
             </div>
-            
-            {transcript.analysis_data && (
-              <div className="p-4 bg-green-50 rounded-lg border border-green-100">
-                <h3 className="text-lg font-medium text-green-900">Assessment Results</h3>
-                <div className="mt-2 space-y-1 text-sm">
-                  {transcript.analysis_data.speakingLevel && (
-                    <p><span className="font-medium">Speaking Level:</span> {transcript.analysis_data.speakingLevel}</p>
-                  )}
-                  {transcript.analysis_data.speakingScore !== undefined && (
-                    <p><span className="font-medium">Speaking Score:</span> {transcript.analysis_data.speakingScore}%</p>
-                  )}
-                  {transcript.analysis_data.listeningLevel && (
-                    <p><span className="font-medium">Listening Level:</span> {transcript.analysis_data.listeningLevel}</p>
-                  )}
-                  {transcript.analysis_data.listeningScore !== undefined && (
-                    <p><span className="font-medium">Listening Score:</span> {transcript.analysis_data.listeningScore}%</p>
-                  )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[500px] pr-4">
+            <div className="space-y-4">
+              {userTranscripts.length === 0 && aiResponses.length === 0 ? (
+                <div className="text-center p-6 text-gray-500">
+                  No conversation data available for this attempt.
                 </div>
-              </div>
-            )}
-          </div>
-          
-          <Tabs defaultValue="conversation" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="conversation">Conversation</TabsTrigger>
-              <TabsTrigger value="analysis">Analysis</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="conversation" className="mt-4">
-              <Card>
-                <CardContent className="pt-6">
-                  <ScrollArea className="h-[400px] pr-4">
-                    <div className="space-y-4">
-                      {transcript.user_transcripts.map((userText, i) => (
-                        <React.Fragment key={i}>
-                          <div className="flex items-start gap-2 mb-2">
-                            <div className="bg-blue-100 p-2 rounded-full">
-                              <Mic className="h-4 w-4 text-blue-600" />
-                            </div>
-                            <div className="bg-blue-50 p-3 rounded-lg flex-1">
-                              <p>{userText}</p>
+              ) : (
+                <>
+                  {aiResponses.map((response, index) => (
+                    <React.Fragment key={`conversation-${index}`}>
+                      {/* AI response */}
+                      <div className="flex gap-3">
+                        <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-primary text-primary-foreground shadow">
+                          <Bot className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <div className="prose-sm prose-gray">
+                            <p>{response}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* User response (if available for this exchange) */}
+                      {userTranscripts[index] && (
+                        <div className="flex gap-3 ml-6">
+                          <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-muted shadow-sm">
+                            <User className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 space-y-2">
+                            <div className="prose-sm prose-gray">
+                              <p>{userTranscripts[index]}</p>
                             </div>
                           </div>
-                          
-                          {transcript.ai_responses[i] && (
-                            <div className="flex items-start gap-2 mb-2 pl-8">
-                              <div className="bg-green-100 p-2 rounded-full">
-                                <Volume2 className="h-4 w-4 text-green-600" />
-                              </div>
-                              <div className="bg-green-50 p-3 rounded-lg flex-1">
-                                <p>{transcript.ai_responses[i]}</p>
-                              </div>
-                            </div>
-                          )}
-                        </React.Fragment>
-                      ))}
-                      
-                      {transcript.user_transcripts.length === 0 && (
-                        <div className="text-center p-8 text-gray-500">
-                          No conversation data available
                         </div>
                       )}
+
+                      {index < aiResponses.length - 1 && <Separator className="my-4" />}
+                    </React.Fragment>
+                  ))}
+                </>
+              )}
+
+              {analysisData && (
+                <>
+                  <Separator className="my-6" />
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Analysis</h3>
+                    <div className="p-4 bg-muted rounded-lg">
+                      <pre className="whitespace-pre-wrap text-sm">{analysisData.analysis || "No detailed analysis available."}</pre>
                     </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="analysis" className="mt-4">
-              <Card>
-                <CardContent className="pt-6">
-                  <ScrollArea className="h-[400px] pr-4">
-                    {transcript.analysis_data?.analysis ? (
-                      <div className="prose prose-sm max-w-none">
-                        <div className="whitespace-pre-line">
-                          {transcript.analysis_data.analysis}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center p-8 text-gray-500">
-                        No analysis data available
-                      </div>
-                    )}
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button onClick={onBack}>
-          Return to Certifications
-        </Button>
-      </CardFooter>
-    </Card>
+                  </div>
+                </>
+              )}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
