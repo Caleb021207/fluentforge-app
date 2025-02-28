@@ -9,6 +9,7 @@ import OverallCertificate from "@/components/certificates/OverallCertificate";
 import ScoreCards from "@/components/certificates/ScoreCards";
 import CertificationAttemptsList from "@/components/certificates/CertificationAttemptsList";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import ConversationalFluencyTest from "@/components/certificates/ConversationalFluencyTest";
 
 const Certificates = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -79,6 +80,8 @@ const Certificates = () => {
       <ReadingCertification />
       
       <WritingCertification />
+      
+      <ConversationalFluencyTest />
       
       <ScoreCards highestScores={highestScores} />
 
