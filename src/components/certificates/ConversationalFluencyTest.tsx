@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
 const TEST_DURATION = 300; // 5 minutes in seconds
+const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc"; // Updated to use the specific agent ID
 
 const ConversationalFluencyTest = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -124,9 +125,9 @@ const ConversationalFluencyTest = () => {
       setIsStarted(true);
       setTimeRemaining(TEST_DURATION);
       
-      // Start the conversation
+      // Start the conversation with the specific ElevenLabs agent
       await conversation.startSession({
-        agentId: "Qc5G2DZi0jRmMf3CzC8f", // Spanish tutor agent
+        agentId: ELEVEN_LABS_AGENT_ID, // Using the new agent ID
       });
       
       toast({
