@@ -55,6 +55,8 @@ const SpeakingListeningCertification = () => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [speakingScore, setSpeakingScore] = useState<{level: string, score: number} | null>(null);
+  const [listeningScore, setListeningScore] = useState<{level: string, score: number} | null>(null);
   const { toast } = useToast();
   const speechSynthesis = window.speechSynthesis;
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -116,7 +118,7 @@ const SpeakingListeningCertification = () => {
   useEffect(() => {
     if (showInstructions) {
       utteranceRef.current = new SpeechSynthesisUtterance(testInstructions);
-      utteranceRef.current.lang = 'en-US';  // Changed from 'es-ES' to 'en-US'
+      utteranceRef.current.lang = 'en-US';
       utteranceRef.current.rate = 0.9;
       
       utteranceRef.current.onend = () => {
@@ -183,6 +185,8 @@ const SpeakingListeningCertification = () => {
       setUserTranscript([]);
       setFeedback("");
       setShowFeedback(false);
+      setSpeakingScore(null);
+      setListeningScore(null);
       setTimeLeft(180); // Reset timer to 3 minutes
       
       toast({
@@ -200,62 +204,106 @@ const SpeakingListeningCertification = () => {
   };
 
   // Generate feedback based on CEFR level
-  const generateFeedbackForLevel = (level: string, analysisText: string): string => {
+  const generateFeedbackForLevel = (speakingLevel: string, listeningLevel: string, analysisText: string): string => {
     // Use the existing CEFR level descriptions from scoreUtils
-    const levelDescription = getLevelDescription(level);
+    const speakingLevelDescription = getLevelDescription(speakingLevel);
+    const listeningLevelDescription = getLevelDescription(listeningLevel);
     
     return `
       ## Speaking & Listening Assessment
       
-      ### CEFR Level: ${level}
+      ### Speaking CEFR Level: ${speakingLevel}
       
-      ${levelDescription}
+      ${speakingLevelDescription}
       
-      ### Feedback
+      ### Listening CEFR Level: ${listeningLevel}
       
-      ${analysisText || getFeedbackForLevel(level)}
+      ${listeningLevelDescription}
+      
+      ### Detailed Feedback
+      
+      ${analysisText || getFeedbackForSkill(speakingLevel, listeningLevel)}
       
       ### Suggestions for Improvement
       
-      ${getSuggestionsForLevel(level)}
+      ${getSuggestionsForSkill('speaking', speakingLevel)}
+      
+      ${getSuggestionsForSkill('listening', listeningLevel)}
+    `;
+  };
+  
+  const getFeedbackForSkill = (speakingLevel: string, listeningLevel: string): string => {
+    return `
+      **Speaking Assessment:**
+      ${getFeedbackForLevel(speakingLevel)}
+      
+      **Listening Assessment:**
+      ${getFeedbackForLevel(listeningLevel)}
     `;
   };
   
   const getFeedbackForLevel = (level: string): string => {
     switch (level) {
       case 'C2':
-        return "Your speaking skills demonstrate mastery of the language. You communicate with precision, fluency, and nuance across a wide range of topics. Your listening comprehension is excellent, allowing you to understand complex and implicit meanings.";
+        return "Your skills demonstrate mastery of the language. You communicate with precision, fluency, and nuance across a wide range of topics. Your comprehension is excellent, allowing you to understand complex and implicit meanings.";
       case 'C1':
-        return "You communicate fluently and spontaneously with very few hesitations. You have a broad vocabulary and can express complex ideas clearly. Your listening comprehension is very good, though you may occasionally miss subtle nuances or cultural references.";
+        return "You communicate fluently and spontaneously with very few hesitations. You have a broad vocabulary and can express complex ideas clearly. Your comprehension is very good, though you may occasionally miss subtle nuances or cultural references.";
       case 'B2':
-        return "You speak with good fluency on familiar topics and can participate effectively in most conversations. Your vocabulary is sufficient for most contexts, though you may sometimes search for words. Your listening comprehension is good for clear speech on familiar topics.";
+        return "You speak with good fluency on familiar topics and can participate effectively in most conversations. Your vocabulary is sufficient for most contexts, though you may sometimes search for words. Your comprehension is good for clear speech on familiar topics.";
       case 'B1':
-        return "You can communicate in straightforward situations about familiar topics. Your vocabulary covers everyday needs, though with some limitations. Your listening comprehension is adequate for clear, standard speech on familiar matters.";
+        return "You can communicate in straightforward situations about familiar topics. Your vocabulary covers everyday needs, though with some limitations. Your comprehension is adequate for clear, standard speech on familiar matters.";
       case 'A2':
-        return "You can engage in simple exchanges on predictable topics. Your vocabulary is limited to basic personal and everyday topics. Your listening comprehension allows you to understand short, clear messages and announcements.";
+        return "You can engage in simple exchanges on predictable topics. Your vocabulary is limited to basic personal and everyday topics. Your comprehension allows you to understand short, clear messages and announcements.";
       case 'A1':
-        return "You can use basic phrases and expressions related to personal details and concrete needs. Your vocabulary is limited to a small repertoire of isolated words and phrases. Your listening comprehension is limited to carefully articulated speech with long pauses.";
+        return "You can use basic phrases and expressions related to personal details and concrete needs. Your vocabulary is limited to a small repertoire of isolated words and phrases. Your comprehension is limited to carefully articulated speech with long pauses.";
       default:
-        return "Your speaking and listening skills have been assessed. Continue practicing to improve your language proficiency.";
+        return "Your skills have been assessed. Continue practicing to improve your language proficiency.";
     }
   };
   
-  const getSuggestionsForLevel = (level: string): string => {
-    switch (level) {
-      case 'C2':
-        return "- Continue refining your command of idiomatic expressions and cultural nuances\n- Practice specialized vocabulary in professional or academic fields\n- Challenge yourself with debates on complex topics";
-      case 'C1':
-        return "- Work on mastering subtle nuances and cultural references\n- Expand your vocabulary with more specialized terminology\n- Practice understanding different accents and regional variations";
-      case 'B2':
-        return "- Practice expressing more complex ideas and opinions\n- Work on speaking more fluently without long pauses\n- Expand your vocabulary beyond everyday topics\n- Practice understanding different accents";
-      case 'B1':
-        return "- Practice describing experiences, hopes, and plans in more detail\n- Work on connecting your ideas more smoothly\n- Build vocabulary beyond basic everyday topics\n- Listen to authentic materials like podcasts and videos";
-      case 'A2':
-        return "- Practice forming complete sentences\n- Work on asking and answering questions about personal information\n- Expand your vocabulary to cover more everyday topics\n- Listen to simplified audio materials regularly";
-      case 'A1':
-        return "- Focus on learning basic greetings and common phrases\n- Practice basic personal introduction\n- Build vocabulary of everyday objects and actions\n- Listen to and repeat simple phrases";
-      default:
-        return "- Continue practicing speaking and listening regularly\n- Engage in conversations with native speakers when possible\n- Listen to authentic materials like podcasts, videos, and music";
+  const getSuggestionsForSkill = (skill: 'speaking' | 'listening', level: string): string => {
+    const skillTitle = skill === 'speaking' ? 'Speaking Improvement' : 'Listening Improvement';
+    const suggestions = getSuggestionsForLevel(level, skill);
+    
+    return `**${skillTitle}**
+${suggestions}`;
+  };
+  
+  const getSuggestionsForLevel = (level: string, skill: 'speaking' | 'listening' = 'speaking'): string => {
+    if (skill === 'speaking') {
+      switch (level) {
+        case 'C2':
+          return "- Continue refining your command of idiomatic expressions and cultural nuances\n- Practice specialized vocabulary in professional or academic fields\n- Challenge yourself with debates on complex topics";
+        case 'C1':
+          return "- Work on mastering subtle nuances and cultural references\n- Expand your vocabulary with more specialized terminology\n- Practice expressing complex ideas with greater precision";
+        case 'B2':
+          return "- Practice expressing more complex ideas and opinions\n- Work on speaking more fluently without long pauses\n- Expand your vocabulary beyond everyday topics\n- Practice using more varied grammatical structures";
+        case 'B1':
+          return "- Practice describing experiences, hopes, and plans in more detail\n- Work on connecting your ideas more smoothly\n- Build vocabulary beyond basic everyday topics\n- Practice speaking for longer periods without stopping";
+        case 'A2':
+          return "- Practice forming complete sentences\n- Work on asking and answering questions about personal information\n- Expand your vocabulary to cover more everyday topics\n- Practice basic conversations on familiar topics";
+        case 'A1':
+          return "- Focus on learning basic greetings and common phrases\n- Practice basic personal introduction\n- Build vocabulary of everyday objects and actions\n- Practice pronouncing common words and phrases";
+        default:
+          return "- Continue practicing speaking regularly\n- Engage in conversations with native speakers when possible\n- Record yourself speaking and review for improvement areas";
+      }
+    } else {
+      switch (level) {
+        case 'C2':
+          return "- Challenge yourself with complex audio materials like academic lectures\n- Practice understanding different regional accents and dialects\n- Focus on understanding implicit meanings and cultural references";
+        case 'C1':
+          return "- Practice with audio containing background noise or multiple speakers\n- Work on understanding fast-paced natural conversations\n- Improve comprehension of idioms and colloquial expressions";
+        case 'B2':
+          return "- Listen to podcasts and radio programs on various topics\n- Practice understanding different accents\n- Focus on catching key information in longer speeches\n- Work on understanding implied meanings";
+        case 'B1':
+          return "- Listen to authentic materials like news clips and short videos\n- Practice understanding main points in clear, standard speech\n- Work on understanding detailed instructions\n- Train your ear to recognize different speech patterns";
+        case 'A2':
+          return "- Listen to simplified audio materials regularly\n- Practice understanding basic questions and instructions\n- Focus on identifying main topics in short conversations\n- Train yourself to recognize familiar words in context";
+        case 'A1':
+          return "- Listen to and repeat simple phrases\n- Practice recognizing basic greetings and questions\n- Focus on identifying individual words in slow, clear speech\n- Use audio materials with visual support";
+        default:
+          return "- Listen to authentic materials like podcasts, videos, and music\n- Practice with materials at your level, gradually increasing difficulty\n- Use context clues to help understanding";
+      }
     }
   };
 
@@ -301,10 +349,21 @@ const SpeakingListeningCertification = () => {
         throw new Error("Invalid response from analyze-speaking function");
       }
 
-      const { level = "B1", score = 70, analysis = "" } = data;
+      // Extract separate scores for speaking and listening
+      const { 
+        speakingLevel = "B1", 
+        speakingScore = 70, 
+        listeningLevel = "B1", 
+        listeningScore = 70, 
+        analysis = "" 
+      } = data;
+      
+      // Set the scores
+      setSpeakingScore({ level: speakingLevel, score: speakingScore });
+      setListeningScore({ level: listeningLevel, score: listeningScore });
       
       // Generate feedback based on GPT's analysis
-      const levelFeedback = generateFeedbackForLevel(level, analysis);
+      const levelFeedback = generateFeedbackForLevel(speakingLevel, listeningLevel, analysis);
       setFeedback(levelFeedback);
       setShowFeedback(true);
 
@@ -321,8 +380,8 @@ const SpeakingListeningCertification = () => {
         .insert([
           {
             certification_type: 'speaking',
-            score: score,
-            level,
+            score: speakingScore,
+            level: speakingLevel,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
@@ -333,14 +392,14 @@ const SpeakingListeningCertification = () => {
         throw speakingResult.error;
       }
       
-      // Save listening score (similar but separate score for listening)
+      // Save listening score
       const listeningResult = await supabase
         .from('certification_attempts')
         .insert([
           {
             certification_type: 'listening',
-            score: score, // Using the same score since it's evaluated together
-            level: level,
+            score: listeningScore,
+            level: listeningLevel,
             completed_at: new Date().toISOString(),
             user_id: user.id,
           }
@@ -353,7 +412,7 @@ const SpeakingListeningCertification = () => {
 
       toast({
         title: "Test Completed",
-        description: `You've completed the speaking and listening test. Score: ${score}% (${level})`,
+        description: `You've completed the speaking and listening test. Speaking: ${speakingScore}% (${speakingLevel}), Listening: ${listeningScore}% (${listeningLevel})`,
       });
     } catch (error) {
       console.error("Error ending test:", error);
@@ -407,11 +466,31 @@ const SpeakingListeningCertification = () => {
           ) : showFeedback ? (
             <div className="space-y-6">
               <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 className="text-lg font-semibold mb-4">Speaking Assessment Feedback</h3>
+                <h3 className="text-lg font-semibold mb-4">Assessment Feedback</h3>
                 <div className="prose prose-sm max-w-none whitespace-pre-line">
                   {feedback}
                 </div>
               </div>
+              
+              {speakingScore && listeningScore && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <h4 className="font-medium text-blue-800 mb-2">Speaking Assessment</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold">{speakingScore.level}</span>
+                      <span className="text-lg">{speakingScore.score}%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                    <h4 className="font-medium text-green-800 mb-2">Listening Assessment</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold">{listeningScore.level}</span>
+                      <span className="text-lg">{listeningScore.score}%</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                 <Button 
                   onClick={() => setShowFeedback(false)} 
