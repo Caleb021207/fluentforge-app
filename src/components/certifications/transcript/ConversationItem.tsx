@@ -2,77 +2,100 @@
 import React, { useState, useEffect } from "react";
 import { Bot, User, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ConversationItemProps {
   message: string;
   isAi: boolean;
+  index?: number;
 }
 
-const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
+const ConversationItem = ({ message, isAi, index }: ConversationItemProps) => {
   const [expandedView, setExpandedView] = useState(false);
   const [truncatedMessage, setTruncatedMessage] = useState("");
   const [isLongMessage, setIsLongMessage] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  
   const maxCharsToShow = 300;
   
   useEffect(() => {
-    // Handle empty or invalid messages
-    if (!message || typeof message !== 'string') {
-      setTruncatedMessage(typeof message === 'string' ? message : "Invalid message format");
-      setIsLongMessage(false);
-      return;
+    try {
+      // Handle empty or invalid messages
+      if (!message || typeof message !== 'string') {
+        setTruncatedMessage(typeof message === 'string' ? message : "Invalid message format");
+        setIsLongMessage(false);
+        if (!message) {
+          setHasError(true);
+        }
+        return;
+      }
+      
+      setHasError(false);
+      
+      // Check if message exceeds max length for truncation
+      const isLong = message.length > maxCharsToShow;
+      setIsLongMessage(isLong);
+      
+      // Set the displayed text based on message length and view state
+      if (isLong && !expandedView) {
+        setTruncatedMessage(`${message.substring(0, maxCharsToShow)}...`);
+      } else {
+        setTruncatedMessage(message);
+      }
+    } catch (error) {
+      console.error(`Error processing message at index ${index}:`, error);
+      setHasError(true);
+      setTruncatedMessage("Error processing message content");
     }
-    
-    // Check if message exceeds max length for truncation
-    const isLong = message.length > maxCharsToShow;
-    setIsLongMessage(isLong);
-    
-    // Set the displayed text based on message length and view state
-    if (isLong && !expandedView) {
-      setTruncatedMessage(`${message.substring(0, maxCharsToShow)}...`);
-    } else {
-      setTruncatedMessage(message);
-    }
-  }, [message, expandedView]);
+  }, [message, expandedView, index]);
 
   const formatMessage = (text: string) => {
     if (!text) {
       return <span className="text-gray-400 italic">No content</span>;
     }
     
-    // Check if message appears to be JSON, try to format it nicely
-    if (typeof text === 'string' && (text.startsWith('{') || text.startsWith('['))) {
-      try {
-        const parsed = JSON.parse(text);
-        return (
-          <pre className="whitespace-pre-wrap text-xs font-mono bg-gray-50 p-2 rounded">
-            {JSON.stringify(parsed, null, 2)}
-          </pre>
-        );
-      } catch {
-        // Not valid JSON, continue with normal formatting
+    try {
+      // Check if message appears to be JSON, try to format it nicely
+      if (typeof text === 'string' && (text.startsWith('{') || text.startsWith('['))) {
+        try {
+          const parsed = JSON.parse(text);
+          return (
+            <pre className="whitespace-pre-wrap text-xs font-mono bg-gray-50 p-2 rounded">
+              {JSON.stringify(parsed, null, 2)}
+            </pre>
+          );
+        } catch {
+          // Not valid JSON, continue with normal formatting
+        }
       }
+      
+      // Convert line breaks to <br /> tags
+      const withLineBreaks = text.split('\n').map((line, i) => (
+        <React.Fragment key={i}>
+          {line}
+          {i < text.split('\n').length - 1 && <br />}
+        </React.Fragment>
+      ));
+      
+      return withLineBreaks;
+    } catch (error) {
+      console.error(`Error formatting message at index ${index}:`, error);
+      return <span className="text-red-500">Error formatting message content</span>;
     }
-    
-    // Convert line breaks to <br /> tags
-    const withLineBreaks = text.split('\n').map((line, i) => (
-      <React.Fragment key={i}>
-        {line}
-        {i < text.split('\n').length - 1 && <br />}
-      </React.Fragment>
-    ));
-    
-    return withLineBreaks;
   };
 
-  // Handle potential errors in messages
-  const renderMessageContent = () => {
-    try {
-      return formatMessage(isLongMessage && !expandedView ? truncatedMessage : message);
-    } catch (error) {
-      console.error("Error rendering message:", error);
-      return <span className="text-red-500">Error displaying message content</span>;
-    }
-  };
+  // Show error message if processing failed
+  if (hasError) {
+    return (
+      <div className="my-2">
+        <Alert variant="destructive">
+          <AlertDescription>
+            Error displaying message content. The message may be corrupted or in an invalid format.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-3 mb-4" data-testid={`conversation-item-${isAi ? 'ai' : 'user'}`}>
@@ -83,7 +106,7 @@ const ConversationItem = ({ message, isAi }: ConversationItemProps) => {
       </div>
       <div className="flex-1 space-y-2">
         <div className="prose-sm prose-gray max-w-none">
-          <p>{renderMessageContent()}</p>
+          <p>{formatMessage(isLongMessage && !expandedView ? truncatedMessage : message)}</p>
           
           {isLongMessage && (
             <Button 
