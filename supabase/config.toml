@@ -39,3 +39,6 @@ enabled = true
 
 [functions.transcribe-audio]
 verify_jwt = false
+
+[functions.analyze-transcript]
+verify_jwt = false
