@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import { CertificationAttempt } from "@/types/supabase";
+import { Award, MessageSquare } from "lucide-react";
 
 interface CertificateScoreCardProps {
   type: string;
@@ -11,10 +12,24 @@ interface CertificateScoreCardProps {
 }
 
 const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
+  const formatType = (type: string) => {
+    if (type === "conversation") {
+      return "Conversation Fluency";
+    }
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
+
+  const getIcon = () => {
+    if (type === "conversation") {
+      return <MessageSquare className="h-4 w-4 text-blue-500 mr-2" />;
+    }
+    return <Award className="h-4 w-4 text-blue-500 mr-2" />;
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="capitalize">{type}</CardTitle>
+        <CardTitle className="flex items-center">{getIcon()} {formatType(type)}</CardTitle>
       </CardHeader>
       <CardContent>
         {attempt ? (

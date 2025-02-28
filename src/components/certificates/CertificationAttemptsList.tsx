@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 import { CertificationAttempt } from "@/types/supabase";
-import { Award } from "lucide-react";
+import { Award, MessageSquare } from "lucide-react";
 
 interface CertificationAttemptsListProps {
   attempts: CertificationAttempt[] | undefined;
@@ -21,6 +21,10 @@ const CertificationAttemptsList = ({
   isLoading 
 }: CertificationAttemptsListProps) => {
   const formatCertificationType = (type: string) => {
+    // Special handling for conversation/fluency test
+    if (type === "conversation" || type === "fluency") {
+      return "Conversation Fluency";
+    }
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
@@ -44,6 +48,14 @@ const CertificationAttemptsList = ({
     }
   };
 
+  // Helper to get the proper icon for the certification type
+  const getCertificationIcon = (type: string) => {
+    if (type === "conversation" || type === "fluency") {
+      return <MessageSquare className="h-4 w-4 text-blue-500" />;
+    }
+    return <Award className="h-4 w-4 text-blue-500" />;
+  };
+
   if (isLoading) {
     return <div>Loading certification data...</div>;
   }
@@ -64,7 +76,7 @@ const CertificationAttemptsList = ({
                 >
                   <div className="mb-2 md:mb-0">
                     <div className="flex items-center gap-2">
-                      <Award className="h-4 w-4 text-blue-500" />
+                      {getCertificationIcon(attempt.certification_type)}
                       <h3 className="font-medium capitalize">{formatCertificationType(attempt.certification_type)}</h3>
                     </div>
                     <p className="text-sm text-gray-600">
