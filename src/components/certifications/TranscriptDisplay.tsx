@@ -35,6 +35,23 @@ const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
         setLoading(true);
         setError(null);
 
+        console.log("Fetching transcript for attempt ID:", attemptId);
+
+        // Get the current user to verify that we're authenticated
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (authError) {
+          console.error("Auth error:", authError);
+          throw new Error(`Authentication error: ${authError.message}`);
+        }
+        
+        if (!user) {
+          console.error("No authenticated user found");
+          throw new Error('You must be logged in to view transcripts');
+        }
+        
+        console.log("Authenticated as user:", user.id);
+
         // First, get the attempt details to know certification type
         const { data: attemptData, error: attemptError } = await supabase
           .from('certification_attempts')
@@ -43,39 +60,53 @@ const TranscriptDisplay = ({ attemptId, onBack }: TranscriptDisplayProps) => {
           .single();
 
         if (attemptError) {
+          console.error("Error fetching attempt data:", attemptError);
           throw new Error(`Error fetching attempt data: ${attemptError.message}`);
         }
 
         if (!attemptData) {
+          console.error("No attempt data found for ID:", attemptId);
           throw new Error('Attempt not found');
         }
 
-        // Then get the transcript data
+        console.log("Found attempt data:", attemptData);
+
+        // Then get the transcript data with more verbose logging
+        console.log("Fetching transcript for attempt ID:", attemptId, "and user ID:", user.id);
+        
         const { data: transcriptData, error: transcriptError } = await supabase
           .from('certification_transcripts')
           .select('*')
           .eq('attempt_id', attemptId)
-          .single();
+          .eq('user_id', user.id); // Added explicit user ID check
 
-        if (transcriptError && transcriptError.code !== 'PGRST116') {
+        console.log("Transcript query result:", { data: transcriptData, error: transcriptError });
+
+        if (transcriptError) {
+          console.error("Error fetching transcript:", transcriptError);
           throw new Error(`Error fetching transcript: ${transcriptError.message}`);
         }
 
-        if (!transcriptData) {
+        if (!transcriptData || transcriptData.length === 0) {
+          console.error("No transcript found for attempt:", attemptId);
           throw new Error('Transcript not found for this attempt');
         }
 
+        // Use the first transcript found
+        const transcript = transcriptData[0];
+        console.log("Found transcript data:", transcript);
+
         setTranscript({
-          userTranscripts: transcriptData.user_transcripts as string[],
-          aiResponses: transcriptData.ai_responses as string[],
-          analysisData: transcriptData.analysis_data,
-          createdAt: transcriptData.created_at,
+          userTranscripts: transcript.user_transcripts as string[],
+          aiResponses: transcript.ai_responses as string[],
+          analysisData: transcript.analysis_data,
+          createdAt: transcript.created_at,
           certificationType: attemptData.certification_type,
           score: attemptData.score,
           level: attemptData.level
         });
       } catch (err: any) {
-        console.error('Error fetching transcript:', err);
+        console.error('Error in fetchTranscript:', err);
         setError(err.message || 'An error occurred while fetching the transcript');
         toast({
           title: "Error",
