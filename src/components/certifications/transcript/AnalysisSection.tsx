@@ -17,7 +17,7 @@ const AnalysisSection = ({ analysisData }: AnalysisSectionProps) => {
   
   if (!isValidAnalysis) {
     return (
-      <Alert variant="warning" className="mt-4">
+      <Alert variant="destructive" className="mt-4">
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>
           Analysis data is not available or in an unexpected format.
