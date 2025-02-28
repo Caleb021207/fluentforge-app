@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Upload, Save, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { updateUserProfile } from "@/utils/profileUtils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface UserInfoProps {
   user: User | null;
@@ -43,63 +44,24 @@ const UserInfo = ({
     try {
       setIsSaving(true);
       
-      // Check if user_profiles table exists
-      const { error: checkError } = await supabase
-        .from('user_profiles')
-        .select('id')
-        .limit(1);
-
-      // If table doesn't exist, create it via RPC
-      if (checkError && checkError.code === '42P01') {
-        await supabase.rpc('create_profile_tables');
-        
-        // Insert the user profile after creating tables
-        await supabase
-          .from('user_profiles')
-          .insert({
-            id: user.id,
-            display_name: newDisplayName,
-            target_level: 'B2',
-          });
-      } else {
-        // Update existing profile
-        const { error } = await supabase
-          .from('user_profiles')
-          .update({ 
-            display_name: newDisplayName 
-          })
-          .eq('id', user.id);
-
-        if (error) {
-          console.error('Update error:', error);
-          // If we get "not found" error, try inserting instead
-          if (error.code === 'PGRST116') {
-            const { error: insertError } = await supabase
-              .from('user_profiles')
-              .insert({
-                id: user.id,
-                display_name: newDisplayName,
-                target_level: 'B2',
-              });
-              
-            if (insertError) throw insertError;
-          } else {
-            throw error;
-          }
-        }
-      }
-
-      setProfileData((prev: any) => ({
-        ...prev,
-        displayName: newDisplayName,
-      }));
-
-      setIsEditing(false);
-      
-      toast({
-        title: "Success",
-        description: "Profile information updated successfully",
+      // Now using the profileUtils helper that works with the correct types
+      const updatedProfile = await updateUserProfile(user.id, { 
+        display_name: newDisplayName 
       });
+
+      if (updatedProfile) {
+        setProfileData((prev: any) => ({
+          ...prev,
+          displayName: newDisplayName,
+        }));
+
+        setIsEditing(false);
+        
+        toast({
+          title: "Success",
+          description: "Profile information updated successfully",
+        });
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
@@ -134,17 +96,17 @@ const UserInfo = ({
 
         setAvatarUrl(publicUrl);
 
-        const { error: updateError } = await supabase
-          .from('user_profiles')
-          .update({ avatar_url: publicUrl })
-          .eq('id', user.id);
-
-        if (updateError) throw updateError;
-
-        toast({
-          title: "Success",
-          description: "Profile picture updated successfully",
+        // Now using the profileUtils helper
+        const updatedProfile = await updateUserProfile(user.id, { 
+          avatar_url: publicUrl 
         });
+
+        if (updatedProfile) {
+          toast({
+            title: "Success",
+            description: "Profile picture updated successfully",
+          });
+        }
       } catch (error) {
         console.error('Error uploading to avatars bucket:', error);
         toast({
