@@ -10,8 +10,8 @@ export const determineLevel = (score: number) => {
   if (score >= 84) return 'C2';
   if (score >= 67) return 'C1';
   if (score >= 50) return 'B2';
-  if (score >= 33) return 'B1';
-  if (score >= 17) return 'A2';
+  if (score >= 40) return 'B1'; // Increased from 33 to 40
+  if (score >= 20) return 'A2'; // Increased from 17 to 20
   return 'A1';
 };
 
