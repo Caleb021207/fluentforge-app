@@ -6,7 +6,7 @@ import { useConversation } from "@11labs/react";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { determineLevel, convertSkillScoreToPercentage } from "@/components/certifications/utils/scoreUtils";
 
 const TEST_DURATION = 180; // 3 minutes in seconds (changed from 300)
 const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc"; // Updated to use the specific agent ID
@@ -400,22 +400,44 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         console.error("Failed to save transcript but continuing:", transcriptError);
       }
       
-      // Calculate scores based on analysis data - ensure these are properly assigned to the specific types
-      const speakingScore = data.speaking?.overallScore || 
-        convertLevelToScore(data.speaking?.level || 'A1');
+      // Calculate scores based on analysis data using our new conversion function
+      // This is the key improvement - using the new, more generous skill-to-percentage conversion
+      const convertSkillsToScore = (skillData: any) => {
+        if (!skillData) return 50; // Default to middle score if no data
         
-      const listeningScore = data.listening?.overallScore || 
-        convertLevelToScore(data.listening?.level || 'A1');
+        // If we already have an overallScore, use it
+        if (typeof skillData.overallScore === 'number') {
+          return skillData.overallScore;
+        }
+        
+        // Otherwise calculate from individual skill scores using the new formula
+        const skills = ['pronunciation', 'fluency', 'grammar', 'understanding', 'vocabulary', 'interaction'];
+        let totalScore = 0;
+        let countedSkills = 0;
+        
+        for (const skill of skills) {
+          if (typeof skillData[skill] === 'number') {
+            // Use the improved conversion function
+            totalScore += convertSkillScoreToPercentage(skillData[skill]);
+            countedSkills++;
+          }
+        }
+        
+        return countedSkills > 0 ? Math.round(totalScore / countedSkills) : 50;
+      };
+      
+      const speakingScore = convertSkillsToScore(data.speaking);
+      const listeningScore = convertSkillsToScore(data.listening);
       
       const speakingLevel = data.speaking?.level || determineLevel(speakingScore);
       const listeningLevel = data.listening?.level || determineLevel(listeningScore);
       
-      console.log("Final scores and levels:", {
+      console.log("Final scores and levels with improved calculation:", {
         speaking: { score: speakingScore, level: speakingLevel },
         listening: { score: listeningScore, level: listeningLevel }
       });
       
-      // Update speaking attempt with final score
+      // Update speaking attempt with final score - ensure completed_at is set!
       const { error: speakingUpdateError } = await supabase
         .from('certification_attempts')
         .update({
@@ -430,7 +452,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
         throw speakingUpdateError;
       }
       
-      // Update listening attempt with final score
+      // Update listening attempt with final score - ensure completed_at is set!
       const { error: listeningUpdateError } = await supabase
         .from('certification_attempts')
         .update({

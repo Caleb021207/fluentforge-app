@@ -23,6 +23,23 @@ export const convertRawScoreToPercentage = (rawScore: number, maxScore: number =
   return Math.round((normalizedScore / maxScore) * 100);
 };
 
+// Updated function to convert 1-10 scale scores to percentages with a more generous curve
+export const convertSkillScoreToPercentage = (score: number, maxScore: number = 10) => {
+  // Normalize the score (ensure it's between 0 and maxScore)
+  const normalizedScore = Math.max(0, Math.min(score, maxScore));
+  
+  // Apply a more generous curve:
+  // 5/10 should be around 60% (passing) instead of 50%
+  // This creates a more realistic assessment aligned with academic grading
+  if (normalizedScore >= 7) {
+    return 80 + (normalizedScore - 7) * 5; // 7=80%, 8=85%, 9=90%, 10=95%+
+  } else if (normalizedScore >= 5) {
+    return 60 + (normalizedScore - 5) * 10; // 5=60%, 6=70%
+  } else {
+    return Math.round((normalizedScore / 5) * 60); // Below 5 scales up to 60%
+  }
+};
+
 export const getLevelDescription = (level: string) => {
   switch (level) {
     case 'C2':
