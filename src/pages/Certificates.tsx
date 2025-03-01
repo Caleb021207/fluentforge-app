@@ -7,8 +7,8 @@ import WritingCertification from "@/components/certifications/WritingCertificati
 import OverallCertificate from "@/components/certificates/OverallCertificate";
 import ScoreCards from "@/components/certificates/ScoreCards";
 import CertificationAttemptsList from "@/components/certificates/CertificationAttemptsList";
-import { determineLevel } from "@/components/certifications/utils/scoreUtils";
-import ConversationalFluencyTest from "@/components/certificates/ConversationalFluencyTest";
+import { determineLevel, ensureValidScore } from "@/components/certifications/utils/scoreUtils";
+import ConversationalFluency from "@/components/certificates/ConversationalFluencyTest";
 import { useToast } from "@/hooks/use-toast";
 
 const Certificates = () => {
@@ -63,15 +63,7 @@ const Certificates = () => {
     if (!rawAttempts) return [];
     
     const validAttempts = rawAttempts.filter(attempt => {
-      if (attempt.certification_type !== "fluency") {
-        return true;
-      }
-      
-      if (attempt.certification_type === "fluency") {
-        return attempt.score > 0;
-      }
-      
-      return true;
+      return attempt.completed_at != null && attempt.score >= 0;
     });
     
     return validAttempts;
@@ -81,12 +73,9 @@ const Certificates = () => {
   
   const highestScores = normalizedAttempts.reduce((acc, attempt) => {
     const type = attempt.certification_type;
+    const currentScore = ensureValidScore(attempt.score);
     
-    if (type === "fluency") {
-      return acc;
-    }
-    
-    if ((attempt.score > 0) && (!acc[type] || attempt.score > acc[type].score)) {
+    if (attempt.completed_at && (!acc[type] || currentScore > ensureValidScore(acc[type].score))) {
       acc[type] = attempt;
     }
     return acc;
@@ -205,7 +194,7 @@ const Certificates = () => {
       
       <WritingCertification />
       
-      <ConversationalFluencyTest onTestComplete={() => {
+      <ConversationalFluency onTestComplete={() => {
         console.log("Test completed, refreshing data...");
         refetch();
         setTimeout(() => refetch(), 500);

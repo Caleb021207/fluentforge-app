@@ -3,7 +3,7 @@ import React from "react";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { determineLevel, ensureValidScore } from "@/components/certifications/utils/scoreUtils";
 import { CertificationAttempt } from "@/types/supabase";
 import { Award, MessageSquare, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -31,12 +31,7 @@ const CertificationAttemptsList = ({
 
   // Add a helper function to ensure we display valid scores
   const getValidScore = (attempt: CertificationAttempt) => {
-    if (attempt.score === null || 
-        attempt.score === undefined || 
-        isNaN(Number(attempt.score))) {
-      return 0;
-    }
-    return attempt.score;
+    return ensureValidScore(attempt.score);
   };
 
   // Helper to get a valid date string
@@ -55,6 +50,11 @@ const CertificationAttemptsList = ({
       return <MessageSquare className="h-4 w-4 text-blue-500" />;
     }
     return <Award className="h-4 w-4 text-blue-500" />;
+  };
+
+  // Helper to check if attempt is complete
+  const isAttemptComplete = (attempt: CertificationAttempt) => {
+    return attempt.completed_at != null && attempt.score > 0;
   };
   
   if (isLoading) {
@@ -79,7 +79,7 @@ const CertificationAttemptsList = ({
                     <div className="flex items-center gap-2">
                       {getCertificationIcon(attempt.certification_type)}
                       <h3 className="font-medium capitalize">{formatCertificationType(attempt.certification_type)}</h3>
-                      {attempt.score === 0 && (
+                      {!isAttemptComplete(attempt) && (
                         <Badge variant="outline" className="ml-2 text-yellow-600 border-yellow-300 bg-yellow-50">
                           <AlertCircle className="h-3 w-3 mr-1" />
                           Incomplete
@@ -93,10 +93,10 @@ const CertificationAttemptsList = ({
                   <div className="flex items-center gap-4">
                     <div className="text-right mr-2">
                       <div className="font-medium">
-                        {attempt.score === 0 ? "—" : `${getValidScore(attempt)}%`}
+                        {isAttemptComplete(attempt) ? `${getValidScore(attempt)}%` : "—"}
                       </div>
                       <div className="text-sm text-gray-600">
-                        {attempt.score === 0 ? "Not scored" : `Level ${determineLevel(getValidScore(attempt))}`}
+                        {isAttemptComplete(attempt) ? `Level ${determineLevel(getValidScore(attempt))}` : "Not scored"}
                       </div>
                     </div>
                     {hasTranscript[attempt.id] && (

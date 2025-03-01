@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { determineLevel, ensureValidScore } from "@/components/certifications/utils/scoreUtils";
 import { CertificationAttempt } from "@/types/supabase";
 import { Award, MessageSquare } from "lucide-react";
 
@@ -31,10 +31,11 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
     if (!attempt || attempt.score === undefined || attempt.score === null) {
       return 0;
     }
-    return attempt.score;
+    return ensureValidScore(attempt.score);
   };
 
   const score = getScore();
+  const isComplete = attempt?.completed_at != null;
 
   return (
     <Card>
@@ -42,7 +43,7 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
         <CardTitle className="flex items-center">{getIcon()} {formatType(type)}</CardTitle>
       </CardHeader>
       <CardContent>
-        {attempt ? (
+        {attempt && isComplete ? (
           <>
             <Progress value={score} className="mb-2" />
             <div className="flex justify-between text-sm text-gray-600">
@@ -51,7 +52,7 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
             </div>
           </>
         ) : (
-          <div className="text-sm text-gray-500">No attempts yet</div>
+          <div className="text-sm text-gray-500">No completed attempts yet</div>
         )}
       </CardContent>
     </Card>
