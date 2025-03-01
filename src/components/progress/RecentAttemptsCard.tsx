@@ -21,6 +21,17 @@ interface RecentAttemptsProps {
 }
 
 const RecentAttemptsCard = ({ attempts, hasTranscript, onViewAttempt }: RecentAttemptsProps) => {
+  // Helper to check if attempt is complete - updated to consider fluency tests
+  const isAttemptComplete = (attempt: CertificationAttempt) => {
+    // For fluency tests, consider them complete if they have any score at all
+    if (attempt.certification_type === "fluency" || 
+        attempt.certification_type === "conversation") {
+      return attempt.score > 0;
+    }
+    // For other tests, they need both a completed_at timestamp and a positive score
+    return attempt.completed_at != null && attempt.score > 0;
+  };
+  
   return (
     <Card>
       <CardHeader>
@@ -38,7 +49,7 @@ const RecentAttemptsCard = ({ attempts, hasTranscript, onViewAttempt }: RecentAt
                   <div className="mb-2 md:mb-0">
                     <div className="flex items-center gap-2">
                       <h3 className="font-medium capitalize">{attempt.certification_type}</h3>
-                      {attempt.score === 0 && (
+                      {!isAttemptComplete(attempt) && (
                         <Badge variant="outline" className="ml-2 text-yellow-600 border-yellow-300 bg-yellow-50">
                           <AlertCircle className="h-3 w-3 mr-1" />
                           Incomplete
@@ -51,10 +62,10 @@ const RecentAttemptsCard = ({ attempts, hasTranscript, onViewAttempt }: RecentAt
                   </div>
                   <div className="text-right">
                     <div className="font-medium">
-                      {attempt.score === 0 ? "—" : `${attempt.score}%`}
+                      {isAttemptComplete(attempt) ? `${attempt.score}%` : "—"}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {attempt.score === 0 ? "Not scored" : `Level ${determineLevel(attempt.score)}`}
+                      {isAttemptComplete(attempt) ? `Level ${determineLevel(attempt.score)}` : "Not scored"}
                     </div>
                   </div>
                 </div>

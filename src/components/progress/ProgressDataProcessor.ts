@@ -50,9 +50,13 @@ export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): 
       return;
     }
     
-    // Skip attempts with score 0 for the chart (they're incomplete)
-    if (typeof attempt.score !== 'number' || attempt.score === 0) {
-      console.log(`Skipping attempt with score 0:`, attempt);
+    // Skip incomplete attempts - updated to handle fluency tests
+    const isComplete = attempt.certification_type === "fluency" || attempt.certification_type === "conversation" 
+      ? attempt.score > 0  // For fluency, just check score > 0
+      : attempt.completed_at !== null && attempt.score > 0; // For others, need completed_at and score
+      
+    if (!isComplete) {
+      console.log(`Skipping incomplete attempt:`, attempt);
       return;
     }
     
@@ -127,12 +131,19 @@ export const generateRecommendations = (attempts: CertificationAttempt[]) => {
   const highestScores: Record<string, number> = {};
   
   skills.forEach(skill => {
-    const directAttempts = attempts.filter(a => 
-      a.certification_type === skill && typeof a.score === 'number' && a.score > 0
-    );
+    // For each skill, find the highest score from direct attempts
+    const directAttempts = attempts.filter(a => {
+      // For fluency tests, we need to check if they're complete (score > 0)
+      if (a.certification_type === skill) {
+        return a.score > 0; // Just check if the score is valid
+      }
+      // For other tests, ensure they have a completed_at and valid score
+      return a.certification_type === skill && a.completed_at !== null && a.score > 0;
+    });
     
+    // For speaking and listening, also check fluency tests which count for both skills
     const fluencyAttempts = (skill === 'speaking' || skill === 'listening') 
-      ? attempts.filter(a => a.certification_type === 'fluency' && typeof a.score === 'number' && a.score > 0)
+      ? attempts.filter(a => a.certification_type === 'fluency' && a.score > 0)
       : [];
     
     const skillAttempts = [...directAttempts, ...fluencyAttempts];
@@ -168,7 +179,12 @@ export const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefine
   if (!rawAttempts) return [];
   
   const validAttempts = rawAttempts.filter(attempt => {
-    return attempt.completed_at != null && attempt.score >= 0;
+    // For fluency tests, consider them complete if they have a score > 0
+    if (attempt.certification_type === 'fluency' || attempt.certification_type === 'conversation') {
+      return attempt.score > 0;
+    }
+    // For other tests, require completed_at and score > 0
+    return attempt.completed_at != null && attempt.score > 0;
   });
   
   return validAttempts;

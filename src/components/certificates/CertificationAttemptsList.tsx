@@ -52,8 +52,14 @@ const CertificationAttemptsList = ({
     return <Award className="h-4 w-4 text-blue-500" />;
   };
 
-  // Helper to check if attempt is complete
+  // Helper to check if attempt is complete - updated to consider fluency tests
   const isAttemptComplete = (attempt: CertificationAttempt) => {
+    // For fluency tests, consider them complete if they have any score at all
+    if (attempt.certification_type === "fluency" || 
+        attempt.certification_type === "conversation") {
+      return attempt.score > 0;
+    }
+    // For other tests, they need both a completed_at timestamp and a positive score
     return attempt.completed_at != null && attempt.score > 0;
   };
   
