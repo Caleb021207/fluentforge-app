@@ -1,8 +1,10 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
 interface TestResultsProps {
   testResult: any;
@@ -31,10 +33,12 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       // Create speaking attempt
       const speakingScore = testResult?.speaking?.overallScore || 0;
       if (speakingScore > 0) {
+        const speakingLevel = determineLevel(speakingScore);
         await supabase.from('certification_attempts').insert({
           user_id: user.id,
           certification_type: 'speaking',
           score: speakingScore,
+          level: speakingLevel,
           created_at: new Date().toISOString()
         });
       }
@@ -42,10 +46,12 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       // Create listening attempt
       const listeningScore = testResult?.listening?.overallScore || 0;
       if (listeningScore > 0) {
+        const listeningLevel = determineLevel(listeningScore);
         await supabase.from('certification_attempts').insert({
           user_id: user.id,
           certification_type: 'listening',
           score: listeningScore,
+          level: listeningLevel,
           created_at: new Date().toISOString()
         });
       }
@@ -53,10 +59,12 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       // Create fluency attempt (average of speaking and listening)
       const fluencyScore = Math.round((speakingScore + listeningScore) / 2);
       if (fluencyScore > 0) {
+        const fluencyLevel = determineLevel(fluencyScore);
         await supabase.from('certification_attempts').insert({
           user_id: user.id,
           certification_type: 'fluency',
           score: fluencyScore,
+          level: fluencyLevel,
           created_at: new Date().toISOString()
         });
       }
@@ -64,7 +72,7 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       toast({
         title: "Scores submitted successfully",
         description: "Your certificate scores have been updated",
-        variant: "success"
+        variant: "default" // Changed from "success" to "default" as the type doesn't include "success"
       });
       
       // Trigger a refresh event to update UI
