@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { convertSkillScoreToPercentage, determineLevel } from "@/components/certifications/utils/scoreUtils";
 
 const TEST_DURATION = 180; // 3 minutes in seconds
 const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc";
@@ -25,7 +26,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     aiResponses: [],
   });
 
-  // Initialize ElevenLabs conversation
   const conversation = useConversation({
     onMessage: (message) => {
       console.log("Message received:", message);
@@ -52,7 +52,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     },
   });
 
-  // Initialize component
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -76,7 +75,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     initMicrophone();
   }, [toast]);
 
-  // Countdown timer
   useEffect(() => {
     if (isStarted && !isComplete && timeRemaining > 0) {
       const timer = setTimeout(() => {
@@ -89,7 +87,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     }
   }, [isStarted, isComplete, timeRemaining]);
 
-  // Start the test
   const startTest = async () => {
     if (!isLoggedIn) {
       toast({
@@ -123,7 +120,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       
       console.log("Starting test for user:", user.id);
       
-      // Create speaking attempt
       const { data: speakingAttempt, error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -147,7 +143,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         return;
       }
       
-      // Create listening attempt
       const { data: listeningAttempt, error: listeningError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -171,26 +166,18 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         return;
       }
       
-      // Store attempt IDs for later use
       setAttemptId(speakingAttempt.id);
       console.log("Speaking attempt ID:", speakingAttempt.id);
       console.log("Listening attempt ID:", listeningAttempt.id);
       
-      // Store attempt IDs in session storage to persist through page reloads
-      sessionStorage.setItem('speakingAttemptId', speakingAttempt.id);
-      sessionStorage.setItem('listeningAttemptId', listeningAttempt.id);
-      
-      // Clear any previous transcript
       setConversationTranscript({
         userMessages: [],
         aiResponses: [],
       });
       
-      // Start the test
       setIsStarted(true);
       setTimeRemaining(TEST_DURATION);
       
-      // Connect to the ElevenLabs agent
       await conversation.startSession({
         agentId: ELEVEN_LABS_AGENT_ID,
       });
@@ -209,9 +196,7 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     }
   };
 
-  // End the test
   const endTest = async () => {
-    // End ElevenLabs conversation session
     if (conversation.status === "connected") {
       try {
         await conversation.endSession();
@@ -220,12 +205,10 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       }
     }
     
-    // Update UI state
     setIsStarted(false);
     setIsLoading(true);
     
     try {
-      // Get attempt IDs from session storage
       const speakingAttemptId = sessionStorage.getItem('speakingAttemptId');
       const listeningAttemptId = sessionStorage.getItem('listeningAttemptId');
       
@@ -236,7 +219,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       console.log("Retrieved attempt IDs from session storage:", 
         { speakingAttemptId, listeningAttemptId });
       
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -245,9 +227,7 @@ export const useConversationTest = (onTestComplete?: () => void) => {
 
       let data;
       
-      // For testing, if there's an issue with the Edge Function, use mock data
       try {
-        // Call Edge Function to analyze speaking/listening
         console.log("Calling analyze-speaking function with transcript data:", {
           userMessages: conversationTranscript.userMessages.length,
           aiResponses: conversationTranscript.aiResponses.length
@@ -273,7 +253,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         console.log("Analysis complete:", data);
       } catch (analyzeError) {
         console.error("Error in analysis, using mock data instead:", analyzeError);
-        // Fall back to mock data if the edge function fails
         data = generateMockTestResults();
         toast({
           title: "Analysis Service Unavailable",
@@ -281,7 +260,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         });
       }
       
-      // Always try to save transcript
       try {
         await saveTranscriptToDatabase(
           speakingAttemptId,
@@ -294,10 +272,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         console.error("Failed to save transcript but continuing:", transcriptError);
       }
       
-      // Import the correct functions from scoreUtils
-      import { convertSkillScoreToPercentage, determineLevel } from '../utils/scoreUtils';
-      
-      // Calculate scores based on analysis data using our improved conversion function
       const convertSkillsToScore = (skillData: any) => {
         if (!skillData) return 50;
         
@@ -305,21 +279,18 @@ export const useConversationTest = (onTestComplete?: () => void) => {
           return skillData.overallScore;
         }
         
-        // Map of skills by importance
         const skillWeights = {
-          pronunciation: 0.30,  // Higher weight for speaking
-          fluency: 0.40,       // Highest weight for speaking
-          grammar: 0.30,       // Medium weight for speaking
-          understanding: 0.40,  // Highest weight for listening
-          vocabulary: 0.30,     // Medium weight for listening
-          interaction: 0.30     // Medium weight for listening
+          pronunciation: 0.30,
+          fluency: 0.40,
+          grammar: 0.30,
+          understanding: 0.40,
+          vocabulary: 0.30,
+          interaction: 0.30
         };
         
-        // Different skill sets for speaking and listening
         const speakingSkills = ['pronunciation', 'fluency', 'grammar'];
         const listeningSkills = ['understanding', 'vocabulary', 'interaction'];
         
-        // Check if this is speaking or listening data
         const isSkillTypePresent = (skills: string[]) => {
           return skills.some(skill => typeof skillData[skill] === 'number');
         };
@@ -333,13 +304,12 @@ export const useConversationTest = (onTestComplete?: () => void) => {
           return 50;
         }
         
-        // Calculate weighted score
         let totalWeight = 0;
         let weightedScore = 0;
         
         for (const skill of relevantSkills) {
           if (typeof skillData[skill] === 'number') {
-            const weight = skillWeights[skill] || 0.33; // Default to equal weighting if not specified
+            const weight = skillWeights[skill] || 0.33;
             const percentageScore = convertSkillScoreToPercentage(skillData[skill]);
             
             weightedScore += percentageScore * weight;
@@ -347,7 +317,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
           }
         }
         
-        // Ensure we don't divide by zero
         return totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 50;
       };
       
@@ -362,7 +331,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         listening: { score: listeningScore, level: listeningLevel }
       });
       
-      // Update speaking attempt with final score
       const { error: speakingUpdateError } = await supabase
         .from('certification_attempts')
         .update({
@@ -377,7 +345,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         throw speakingUpdateError;
       }
       
-      // Update listening attempt with final score
       const { error: listeningUpdateError } = await supabase
         .from('certification_attempts')
         .update({
@@ -394,19 +361,15 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       
       console.log("Successfully updated certification attempts with scores");
       
-      // Update UI with test results
       setTestResult(data);
       setIsComplete(true);
       
-      // Trigger callback to refresh parent component
       if (onTestComplete) {
         onTestComplete();
       }
       
-      // Dispatch event for other components to react to test completion
       window.dispatchEvent(new CustomEvent('fluency-test-completed'));
       
-      // Show success toast
       toast({
         title: "Test Complete",
         description: `Speaking: ${speakingLevel} (${speakingScore}%), Listening: ${listeningLevel} (${listeningScore}%)`,
@@ -414,7 +377,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     } catch (error: any) {
       console.error("Error ending test:", error);
       
-      // If there's an error, try to show mock results anyway
       const mockData = generateMockTestResults();
       setTestResult(mockData);
       setIsComplete(true);
@@ -429,7 +391,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     }
   };
 
-  // Reset the test
   const resetTest = () => {
     setIsStarted(false);
     setIsComplete(false);
@@ -464,7 +425,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
   };
 };
 
-// Utility functions
 export const saveTranscriptToDatabase = async (
   speakingAttemptId: string, 
   userId: string, 
@@ -475,7 +435,6 @@ export const saveTranscriptToDatabase = async (
   try {
     console.log("Saving transcript to database...");
     
-    // Verify data before saving
     if (!speakingAttemptId) {
       throw new Error("Missing speaking attempt ID");
     }
@@ -484,11 +443,9 @@ export const saveTranscriptToDatabase = async (
       throw new Error("Missing user ID");
     }
     
-    // Use empty arrays instead of warning about missing data
     const messages = userMessages && userMessages.length ? userMessages : [];
     const responses = aiResponses && aiResponses.length ? aiResponses : [];
     
-    // Insert transcript into database
     const { data: transcript, error: transcriptError } = await supabase
       .from('certification_transcripts')
       .insert([
