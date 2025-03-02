@@ -15,6 +15,17 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   
+  // Enhanced function to get a more accurate color based on skill level
+  const getColorForScore = (score: number): string => {
+    if (score >= 9) return "bg-green-500"; 
+    if (score >= 8) return "bg-green-400";
+    if (score >= 7) return "bg-blue-500";  
+    if (score >= 6) return "bg-blue-400";  
+    if (score >= 5) return "bg-yellow-400";
+    if (score >= 4) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+  
   const handleSubmitScores = async () => {
     try {
       setIsSubmitting(true);
@@ -30,7 +41,7 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
         return;
       }
       
-      // Create speaking attempt
+      // Create speaking attempt with weighted scoring
       const speakingScore = testResult?.speaking?.overallScore || 0;
       if (speakingScore > 0) {
         const speakingLevel = determineLevel(speakingScore);
@@ -43,7 +54,7 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
         });
       }
       
-      // Create listening attempt
+      // Create listening attempt with weighted scoring
       const listeningScore = testResult?.listening?.overallScore || 0;
       if (listeningScore > 0) {
         const listeningLevel = determineLevel(listeningScore);
@@ -57,7 +68,8 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       }
       
       // Create fluency attempt (average of speaking and listening)
-      const fluencyScore = Math.round((speakingScore + listeningScore) / 2);
+      // Adding weight to prioritize speaking slightly more than listening for fluency
+      const fluencyScore = Math.round((speakingScore * 0.6 + listeningScore * 0.4));
       if (fluencyScore > 0) {
         const fluencyLevel = determineLevel(fluencyScore);
         await supabase.from('certification_attempts').insert({
@@ -72,7 +84,7 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       toast({
         title: "Scores submitted successfully",
         description: "Your certificate scores have been updated",
-        variant: "default" // Changed from "success" to "default" as the type doesn't include "success"
+        variant: "default"
       });
       
       // Trigger a refresh event to update UI
@@ -108,19 +120,31 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
               <span>Pronunciation</span>
               <span>{testResult?.speaking?.pronunciation}/10</span>
             </div>
-            <Progress value={testResult?.speaking?.pronunciation * 10} className="h-2 mb-3" />
+            <Progress 
+              value={testResult?.speaking?.pronunciation * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.speaking?.pronunciation || 0)}
+            />
             
             <div className="flex justify-between mb-1">
               <span>Fluency</span>
               <span>{testResult?.speaking?.fluency}/10</span>
             </div>
-            <Progress value={testResult?.speaking?.fluency * 10} className="h-2 mb-3" />
+            <Progress 
+              value={testResult?.speaking?.fluency * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.speaking?.fluency || 0)}
+            />
             
             <div className="flex justify-between mb-1">
               <span>Grammar</span>
               <span>{testResult?.speaking?.grammar}/10</span>
             </div>
-            <Progress value={testResult?.speaking?.grammar * 10} className="h-2" />
+            <Progress 
+              value={testResult?.speaking?.grammar * 10} 
+              className="h-2" 
+              indicatorClassName={getColorForScore(testResult?.speaking?.grammar || 0)}
+            />
           </div>
         </div>
         
@@ -139,19 +163,31 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
               <span>Understanding</span>
               <span>{testResult?.listening?.understanding}/10</span>
             </div>
-            <Progress value={testResult?.listening?.understanding * 10} className="h-2 mb-3" />
+            <Progress 
+              value={testResult?.listening?.understanding * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.listening?.understanding || 0)}
+            />
             
             <div className="flex justify-between mb-1">
               <span>Vocabulary</span>
               <span>{testResult?.listening?.vocabulary}/10</span>
             </div>
-            <Progress value={testResult?.listening?.vocabulary * 10} className="h-2 mb-3" />
+            <Progress 
+              value={testResult?.listening?.vocabulary * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.listening?.vocabulary || 0)}
+            />
             
             <div className="flex justify-between mb-1">
               <span>Response Quality</span>
               <span>{testResult?.listening?.interaction}/10</span>
             </div>
-            <Progress value={testResult?.listening?.interaction * 10} className="h-2" />
+            <Progress 
+              value={testResult?.listening?.interaction * 10} 
+              className="h-2" 
+              indicatorClassName={getColorForScore(testResult?.listening?.interaction || 0)}
+            />
           </div>
         </div>
       </div>

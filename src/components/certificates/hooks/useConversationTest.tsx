@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -295,7 +294,10 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         console.error("Failed to save transcript but continuing:", transcriptError);
       }
       
-      // Calculate scores based on analysis data using our new conversion function
+      // Import the correct functions from scoreUtils
+      import { convertSkillScoreToPercentage, determineLevel } from '../utils/scoreUtils';
+      
+      // Calculate scores based on analysis data using our improved conversion function
       const convertSkillsToScore = (skillData: any) => {
         if (!skillData) return 50;
         
@@ -303,41 +305,50 @@ export const useConversationTest = (onTestComplete?: () => void) => {
           return skillData.overallScore;
         }
         
-        const skills = ['pronunciation', 'fluency', 'grammar', 'understanding', 'vocabulary', 'interaction'];
-        let totalScore = 0;
-        let countedSkills = 0;
+        // Map of skills by importance
+        const skillWeights = {
+          pronunciation: 0.30,  // Higher weight for speaking
+          fluency: 0.40,       // Highest weight for speaking
+          grammar: 0.30,       // Medium weight for speaking
+          understanding: 0.40,  // Highest weight for listening
+          vocabulary: 0.30,     // Medium weight for listening
+          interaction: 0.30     // Medium weight for listening
+        };
         
-        for (const skill of skills) {
+        // Different skill sets for speaking and listening
+        const speakingSkills = ['pronunciation', 'fluency', 'grammar'];
+        const listeningSkills = ['understanding', 'vocabulary', 'interaction'];
+        
+        // Check if this is speaking or listening data
+        const isSkillTypePresent = (skills: string[]) => {
+          return skills.some(skill => typeof skillData[skill] === 'number');
+        };
+        
+        const relevantSkills = isSkillTypePresent(speakingSkills) ? speakingSkills : 
+                             isSkillTypePresent(listeningSkills) ? listeningSkills : 
+                             [];
+                             
+        if (relevantSkills.length === 0) {
+          console.warn("Could not determine skill type. Using default score.");
+          return 50;
+        }
+        
+        // Calculate weighted score
+        let totalWeight = 0;
+        let weightedScore = 0;
+        
+        for (const skill of relevantSkills) {
           if (typeof skillData[skill] === 'number') {
-            totalScore += convertSkillScoreToPercentage(skillData[skill]);
-            countedSkills++;
+            const weight = skillWeights[skill] || 0.33; // Default to equal weighting if not specified
+            const percentageScore = convertSkillScoreToPercentage(skillData[skill]);
+            
+            weightedScore += percentageScore * weight;
+            totalWeight += weight;
           }
         }
         
-        return countedSkills > 0 ? Math.round(totalScore / countedSkills) : 50;
-      };
-
-      // Import from scoreUtils
-      const determineLevel = (score: number) => {
-        if (score >= 84) return 'C2';
-        if (score >= 67) return 'C1';
-        if (score >= 50) return 'B2';
-        if (score >= 40) return 'B1'; 
-        if (score >= 20) return 'A2';
-        return 'A1';
-      };
-
-      // Import from scoreUtils
-      const convertSkillScoreToPercentage = (score: number, maxScore: number = 10) => {
-        const normalizedScore = Math.max(0, Math.min(score, maxScore));
-        
-        if (normalizedScore >= 7) {
-          return 80 + (normalizedScore - 7) * 5;
-        } else if (normalizedScore >= 5) {
-          return 60 + (normalizedScore - 5) * 10;
-        } else {
-          return Math.round((normalizedScore / 5) * 60);
-        }
+        // Ensure we don't divide by zero
+        return totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 50;
       };
       
       const speakingScore = convertSkillsToScore(data.speaking);

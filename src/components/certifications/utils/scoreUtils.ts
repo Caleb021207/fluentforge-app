@@ -1,4 +1,3 @@
-
 export const calculateScore = (selectedAnswers: number[], questions: any[]) => {
   const correctAnswers = selectedAnswers.filter(
     (answer, index) => answer === questions[index].correctAnswer
@@ -23,17 +22,23 @@ export const convertRawScoreToPercentage = (rawScore: number, maxScore: number =
 export const convertSkillScoreToPercentage = (score: number, maxScore: number = 10) => {
   const normalizedScore = Math.max(0, Math.min(score, maxScore));
   
-  // More stringent curve to better differentiate proficiency levels
-  if (normalizedScore >= 9) {
-    return 90 + (normalizedScore - 9) * 10; // 9=90%, 10=100%
-  } else if (normalizedScore >= 8) {
-    return 80 + (normalizedScore - 8) * 10; // 8=80%, <9=<90%
-  } else if (normalizedScore >= 6.5) {
-    return 65 + (normalizedScore - 6.5) * 10; // 6.5=65%, <8=<80%
-  } else if (normalizedScore >= 5) {
-    return 50 + (normalizedScore - 5) * 10; // 5=50%, <6.5=<65%
-  } else {
-    return Math.round((normalizedScore / 5) * 50); // <5 scales proportionally up to 50%
+  if (normalizedScore >= 9.5) {
+    return 95 + (normalizedScore - 9.5) * 10; // 9.5=95% (C2), 10=100%
+  } 
+  else if (normalizedScore >= 8.8) {
+    return 88 + (normalizedScore - 8.8) * 8.75; // 8.8=88% (C1), <9.5=<95%
+  } 
+  else if (normalizedScore >= 7.8) {
+    return 78 + (normalizedScore - 7.8) * 10; // 7.8=78% (B2), <8.8=<88%
+  } 
+  else if (normalizedScore >= 6.5) {
+    return 65 + (normalizedScore - 6.5) * 10; // 6.5=65% (B1), <7.8=<78%
+  } 
+  else if (normalizedScore >= 5.0) {
+    return 50 + (normalizedScore - 5.0) * 10; // 5.0=50% (A2), <6.5=<65%
+  } 
+  else {
+    return Math.round((normalizedScore / 5.0) * 50); // Scale from 0-50%
   }
 };
 

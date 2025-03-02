@@ -36,6 +36,14 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
 
   const score = getScore();
   
+  const getProgressColor = (score: number): string => {
+    if (score >= 88) return "bg-green-500"; // C1-C2
+    if (score >= 78) return "bg-blue-500";  // B2
+    if (score >= 65) return "bg-blue-400";  // B1
+    if (score >= 50) return "bg-yellow-500"; // A2
+    return "bg-gray-400"; // A1 or lower
+  };
+  
   // Updated to properly detect complete fluency tests
   const isComplete = (attempt?: CertificationAttempt) => {
     if (!attempt) return false;
@@ -55,7 +63,11 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
       <CardContent>
         {attempt && isComplete(attempt) ? (
           <>
-            <Progress value={score} className="mb-2" />
+            <Progress 
+              value={score} 
+              className="mb-2" 
+              indicatorClassName={getProgressColor(score)}
+            />
             <div className="flex justify-between text-sm text-gray-600">
               <span>Score: {score}%</span>
               <span>Level: {determineLevel(score)}</span>
