@@ -1,4 +1,3 @@
-
 export const calculateScore = (selectedAnswers: number[], questions: any[]) => {
   const correctAnswers = selectedAnswers.filter(
     (answer, index) => answer === questions[index].correctAnswer
@@ -7,36 +6,30 @@ export const calculateScore = (selectedAnswers: number[], questions: any[]) => {
 };
 
 export const determineLevel = (score: number) => {
-  if (score >= 84) return 'C2';
-  if (score >= 67) return 'C1';
-  if (score >= 50) return 'B2';
-  if (score >= 40) return 'B1'; // Increased from 33 to 40
-  if (score >= 20) return 'A2'; // Increased from 17 to 20
+  if (score >= 92) return 'C2';
+  if (score >= 84) return 'C1';
+  if (score >= 76) return 'B2';
+  if (score >= 65) return 'B1';
+  if (score >= 50) return 'A2';
   return 'A1';
 };
 
-// For speaking/listening we sometimes need to convert a raw score from 1-5 scale to 0-100
 export const convertRawScoreToPercentage = (rawScore: number, maxScore: number = 5) => {
-  // Ensure the score is between 0 and maxScore
   const normalizedScore = Math.max(0, Math.min(rawScore, maxScore));
-  // Convert to percentage (0-100)
   return Math.round((normalizedScore / maxScore) * 100);
 };
 
-// Updated function to convert 1-10 scale scores to percentages with a more generous curve
 export const convertSkillScoreToPercentage = (score: number, maxScore: number = 10) => {
-  // Normalize the score (ensure it's between 0 and maxScore)
   const normalizedScore = Math.max(0, Math.min(score, maxScore));
   
-  // Apply a more generous curve:
-  // 5/10 should be around 60% (passing) instead of 50%
-  // This creates a more realistic assessment aligned with academic grading
-  if (normalizedScore >= 7) {
-    return 80 + (normalizedScore - 7) * 5; // 7=80%, 8=85%, 9=90%, 10=95%+
+  if (normalizedScore >= 8.5) {
+    return 90 + (normalizedScore - 8.5) * 10;
+  } else if (normalizedScore >= 7) {
+    return 75 + (normalizedScore - 7) * 10;
   } else if (normalizedScore >= 5) {
-    return 60 + (normalizedScore - 5) * 10; // 5=60%, 6=70%
+    return 60 + (normalizedScore - 5) * 7.5;
   } else {
-    return Math.round((normalizedScore / 5) * 60); // Below 5 scales up to 60%
+    return Math.round((normalizedScore / 5) * 50);
   }
 };
 
@@ -51,7 +44,7 @@ export const getLevelDescription = (level: string) => {
     case 'B1':
       return 'Intermediate: Reading - Can understand texts on familiar matters. Writing - Can write simple connected text on familiar topics. Speaking - Can deal with most situations likely to arise while traveling. Listening - Can understand the main points of clear standard speech on familiar matters.';
     case 'A2':
-      return 'Elementary: Reading - Can understand short, simple texts. Writing - Can write short, simple notes and messages. Speaking - Can communicate in simple and routine tasks requiring direct exchange of information. Listening - Can understand phrases and common vocabulary on basic personal and family information.';
+      return 'Elementary: Reading - Can understand short, simple texts. Writing - Can write short, simple notes and messages. Speaking - Can communicate in simple and routine tasks requiring direct exchange of information. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
     case 'A1':
       return 'Beginner: Reading - Can understand familiar names, words, and simple sentences. Writing - Can write short, simple phrases and fill out forms. Speaking - Can interact in a simple way with basic phrases and expressions. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
     default:
@@ -59,7 +52,6 @@ export const getLevelDescription = (level: string) => {
   }
 };
 
-// Convert CEFR levels to ACTFL proficiency levels
 export const CEFR_TO_ACTFL = {
   'C2': 'Distinguished / Superior',
   'C1': 'Advanced High',
@@ -69,7 +61,6 @@ export const CEFR_TO_ACTFL = {
   'A1': 'Novice Mid / Novice Low'
 };
 
-// Convert ACTFL levels to CEFR
 export const ACTFL_TO_CEFR = {
   'Distinguished': 'C2',
   'Superior': 'C2',
@@ -84,7 +75,6 @@ export const ACTFL_TO_CEFR = {
   'Novice Low': 'A1'
 };
 
-// Helper function to ensure valid score calculation even with partial data
 export const ensureValidScore = (score: number | null | undefined) => {
   if (score === null || score === undefined) {
     console.warn('Score was null or undefined, returning default 0');
