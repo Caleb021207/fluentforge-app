@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -170,6 +171,10 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       console.log("Speaking attempt ID:", speakingAttempt.id);
       console.log("Listening attempt ID:", listeningAttempt.id);
       
+      // Store attempt IDs in session storage for endTest to access
+      sessionStorage.setItem('speakingAttemptId', speakingAttempt.id);
+      sessionStorage.setItem('listeningAttemptId', listeningAttempt.id);
+      
       setConversationTranscript({
         userMessages: [],
         aiResponses: [],
@@ -233,6 +238,11 @@ export const useConversationTest = (onTestComplete?: () => void) => {
           aiResponses: conversationTranscript.aiResponses.length
         });
         
+        // Validate transcript length
+        if (conversationTranscript.userMessages.length < 2) {
+          throw new Error("The conversation was too short to evaluate properly. Please try again and provide at least 2 responses.");
+        }
+        
         const { data: responseData, error } = await supabase.functions.invoke('analyze-speaking', {
           body: { 
             speakingAttemptId: speakingAttemptId,
@@ -272,61 +282,14 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         console.error("Failed to save transcript but continuing:", transcriptError);
       }
       
-      const convertSkillsToScore = (skillData: any) => {
-        if (!skillData) return 50;
-        
-        if (typeof skillData.overallScore === 'number') {
-          return skillData.overallScore;
-        }
-        
-        const skillWeights = {
-          pronunciation: 0.30,
-          fluency: 0.40,
-          grammar: 0.30,
-          understanding: 0.40,
-          vocabulary: 0.30,
-          interaction: 0.30
-        };
-        
-        const speakingSkills = ['pronunciation', 'fluency', 'grammar'];
-        const listeningSkills = ['understanding', 'vocabulary', 'interaction'];
-        
-        const isSkillTypePresent = (skills: string[]) => {
-          return skills.some(skill => typeof skillData[skill] === 'number');
-        };
-        
-        const relevantSkills = isSkillTypePresent(speakingSkills) ? speakingSkills : 
-                             isSkillTypePresent(listeningSkills) ? listeningSkills : 
-                             [];
-                             
-        if (relevantSkills.length === 0) {
-          console.warn("Could not determine skill type. Using default score.");
-          return 50;
-        }
-        
-        let totalWeight = 0;
-        let weightedScore = 0;
-        
-        for (const skill of relevantSkills) {
-          if (typeof skillData[skill] === 'number') {
-            const weight = skillWeights[skill] || 0.33;
-            const percentageScore = convertSkillScoreToPercentage(skillData[skill]);
-            
-            weightedScore += percentageScore * weight;
-            totalWeight += weight;
-          }
-        }
-        
-        return totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 50;
-      };
-      
-      const speakingScore = convertSkillsToScore(data.speaking);
-      const listeningScore = convertSkillsToScore(data.listening);
+      // Get the scores directly from the analysis
+      const speakingScore = data.speaking?.overallScore || 0;
+      const listeningScore = data.listening?.overallScore || 0;
       
       const speakingLevel = data.speaking?.level || determineLevel(speakingScore);
       const listeningLevel = data.listening?.level || determineLevel(listeningScore);
       
-      console.log("Final scores and levels with improved calculation:", {
+      console.log("Final scores and levels:", {
         speaking: { score: speakingScore, level: speakingLevel },
         listening: { score: listeningScore, level: listeningLevel }
       });
@@ -476,29 +439,29 @@ export const saveTranscriptToDatabase = async (
 export const generateMockTestResults = () => {
   return {
     speaking: {
-      overallScore: 72,
-      level: 'B2',
-      pronunciation: 7.5,
-      fluency: 7.2,
-      grammar: 6.8
+      overallScore: 55,
+      level: 'B1',
+      pronunciation: 5.5,
+      fluency: 5.5,
+      grammar: 5.5
     },
     listening: {
-      overallScore: 68,
-      level: 'B2',
-      understanding: 7.0,
-      vocabulary: 6.5,
-      interaction: 6.9
+      overallScore: 55,
+      level: 'B1',
+      understanding: 5.5,
+      vocabulary: 5.5,
+      interaction: 5.5
     },
-    feedback: "You demonstrated a good command of Spanish conversation. Your pronunciation is generally clear, though there are occasional errors with certain sounds. Your vocabulary range is suitable for most everyday discussions, but could be expanded for more specific topics.",
+    feedback: "You demonstrated an intermediate level of Spanish conversation. Your pronunciation is generally clear for common words, and you can express basic ideas effectively. To improve, focus on expanding your vocabulary and practicing more complex grammatical structures.",
     strengths: [
-      "Clear pronunciation of most Spanish sounds",
-      "Good conversational flow and turn-taking",
-      "Effective communication of basic ideas and opinions"
+      "Communication of basic ideas and opinions",
+      "Understanding of common phrases and questions",
+      "Ability to maintain simple conversation"
     ],
     areasToImprove: [
-      "Work on pronunciation of rolled 'r' sounds",
       "Expand vocabulary for more specific topics",
-      "Pay more attention to verb conjugations in past tenses"
+      "Practice more complex sentence structures",
+      "Work on fluency and reducing hesitation"
     ]
   };
 };
