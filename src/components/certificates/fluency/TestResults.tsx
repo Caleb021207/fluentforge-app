@@ -1,7 +1,8 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface TestResultsProps {
   testResult: any;
@@ -9,6 +10,78 @@ interface TestResultsProps {
 }
 
 const TestResults = ({ testResult, onReset }: TestResultsProps) => {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  
+  const handleSubmitScores = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication error",
+          description: "You must be logged in to submit scores",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Create speaking attempt
+      const speakingScore = testResult?.speaking?.overallScore || 0;
+      if (speakingScore > 0) {
+        await supabase.from('certification_attempts').insert({
+          user_id: user.id,
+          certification_type: 'speaking',
+          score: speakingScore,
+          created_at: new Date().toISOString()
+        });
+      }
+      
+      // Create listening attempt
+      const listeningScore = testResult?.listening?.overallScore || 0;
+      if (listeningScore > 0) {
+        await supabase.from('certification_attempts').insert({
+          user_id: user.id,
+          certification_type: 'listening',
+          score: listeningScore,
+          created_at: new Date().toISOString()
+        });
+      }
+      
+      // Create fluency attempt (average of speaking and listening)
+      const fluencyScore = Math.round((speakingScore + listeningScore) / 2);
+      if (fluencyScore > 0) {
+        await supabase.from('certification_attempts').insert({
+          user_id: user.id,
+          certification_type: 'fluency',
+          score: fluencyScore,
+          created_at: new Date().toISOString()
+        });
+      }
+      
+      toast({
+        title: "Scores submitted successfully",
+        description: "Your certificate scores have been updated",
+        variant: "success"
+      });
+      
+      // Trigger a refresh event to update UI
+      window.dispatchEvent(new CustomEvent('fluency-test-completed'));
+      
+    } catch (error) {
+      console.error("Error submitting scores:", error);
+      toast({
+        title: "Error submitting scores",
+        description: "There was an issue saving your scores. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -98,7 +171,23 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
         </div>
       </div>
       
-      <Button onClick={onReset}>Take Test Again</Button>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button 
+          onClick={handleSubmitScores} 
+          disabled={isSubmitting}
+          className="flex-1"
+          variant="success"
+        >
+          {isSubmitting ? "Submitting..." : "Submit Scores"}
+        </Button>
+        <Button 
+          onClick={onReset} 
+          variant="outline"
+          className="flex-1"
+        >
+          Take Test Again
+        </Button>
+      </div>
     </div>
   );
 };
