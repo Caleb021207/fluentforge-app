@@ -35,7 +35,17 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
   };
 
   const score = getScore();
-  const isComplete = attempt?.completed_at != null;
+  
+  // Updated to properly detect complete fluency tests
+  const isComplete = (attempt?: CertificationAttempt) => {
+    if (!attempt) return false;
+    
+    if (attempt.certification_type === 'fluency' || attempt.certification_type === 'conversation') {
+      return attempt.score > 0;
+    }
+    
+    return attempt.completed_at != null && attempt.score > 0;
+  };
 
   return (
     <Card>
@@ -43,7 +53,7 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
         <CardTitle className="flex items-center">{getIcon()} {formatType(type)}</CardTitle>
       </CardHeader>
       <CardContent>
-        {attempt && isComplete ? (
+        {attempt && isComplete(attempt) ? (
           <>
             <Progress value={score} className="mb-2" />
             <div className="flex justify-between text-sm text-gray-600">

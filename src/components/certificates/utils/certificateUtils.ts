@@ -1,3 +1,4 @@
+
 import { CertificationAttempt } from "@/types/supabase";
 import { ensureValidScore, determineLevel } from "@/components/certifications/utils/scoreUtils";
 
@@ -8,7 +9,12 @@ export const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefine
   if (!rawAttempts) return [];
   
   const validAttempts = rawAttempts.filter(attempt => {
-    return attempt.completed_at != null && attempt.score >= 0;
+    // For fluency tests, consider them complete if they have a score > 0
+    if (attempt.certification_type === 'fluency' || attempt.certification_type === 'conversation') {
+      return attempt.score > 0;
+    }
+    // For other tests, require completed_at and score > 0
+    return attempt.completed_at != null && attempt.score > 0;
   });
   
   return validAttempts;
@@ -22,7 +28,7 @@ export const calculateHighestScores = (normalizedAttempts: CertificationAttempt[
     const type = attempt.certification_type;
     const currentScore = ensureValidScore(attempt.score);
     
-    if (attempt.completed_at && (!acc[type] || currentScore > ensureValidScore(acc[type].score))) {
+    if (!acc[type] || currentScore > ensureValidScore(acc[type].score)) {
       acc[type] = attempt;
     }
     return acc;
