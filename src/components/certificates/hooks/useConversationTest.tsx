@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -171,7 +170,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       console.log("Speaking attempt ID:", speakingAttempt.id);
       console.log("Listening attempt ID:", listeningAttempt.id);
       
-      // Store attempt IDs in session storage for endTest to access
       sessionStorage.setItem('speakingAttemptId', speakingAttempt.id);
       sessionStorage.setItem('listeningAttemptId', listeningAttempt.id);
       
@@ -238,7 +236,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
           aiResponses: conversationTranscript.aiResponses.length
         });
         
-        // Validate transcript length
         if (conversationTranscript.userMessages.length < 2) {
           throw new Error("The conversation was too short to evaluate properly. Please try again and provide at least 2 responses.");
         }
@@ -262,11 +259,50 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         data = responseData;
         console.log("Analysis complete:", data);
       } catch (analyzeError) {
-        console.error("Error in analysis, using mock data instead:", analyzeError);
-        data = generateMockTestResults();
+        console.error("Error in analysis, using enhanced mock data instead:", analyzeError);
+        
+        const userMessages = conversationTranscript.userMessages;
+        const messageCount = userMessages.length;
+        const totalWords = userMessages.reduce((count, msg) => 
+          count + (msg.content?.split(/\s+/).length || 0), 0);
+        
+        const avgWordsPerResponse = messageCount > 0 ? Math.round(totalWords / messageCount) : 0;
+        
+        let baseScore = Math.min(85, 55 + (messageCount * 2) + (avgWordsPerResponse > 10 ? 10 : 0));
+        
+        baseScore = Math.max(65, Math.min(95, baseScore));
+        
+        data = {
+          speaking: {
+            overallScore: baseScore,
+            level: determineLevel(baseScore),
+            pronunciation: baseScore / 10,
+            fluency: baseScore / 10,
+            grammar: baseScore / 10
+          },
+          listening: {
+            overallScore: baseScore,
+            level: determineLevel(baseScore),
+            understanding: baseScore / 10,
+            vocabulary: baseScore / 10,
+            interaction: baseScore / 10
+          },
+          feedback: "You demonstrated a strong command of Spanish conversation. Your pronunciation is clear, and you express complex ideas effectively. Your responses showed good comprehension and appropriate use of vocabulary.",
+          strengths: [
+            "Ability to express opinions and ideas clearly",
+            "Good understanding of complex questions",
+            "Appropriate use of vocabulary and expressions"
+          ],
+          areasToImprove: [
+            "Continue practicing with more specific vocabulary",
+            "Focus on more complex grammatical structures",
+            "Practice faster response time in conversation"
+          ]
+        };
+        
         toast({
           title: "Analysis Service Unavailable",
-          description: "Using estimated scores. For accurate results, please try again later.",
+          description: "Using estimated scores based on your conversation length and complexity. For more accurate results, please try again later.",
         });
       }
       
@@ -282,7 +318,6 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         console.error("Failed to save transcript but continuing:", transcriptError);
       }
       
-      // Get the scores directly from the analysis
       const speakingScore = data.speaking?.overallScore || 0;
       const listeningScore = data.listening?.overallScore || 0;
       
@@ -340,7 +375,7 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     } catch (error: any) {
       console.error("Error ending test:", error);
       
-      const mockData = generateMockTestResults();
+      const mockData = generateEnhancedMockTestResults(conversationTranscript.userMessages);
       setTestResult(mockData);
       setIsComplete(true);
       
@@ -436,32 +471,55 @@ export const saveTranscriptToDatabase = async (
   }
 };
 
-export const generateMockTestResults = () => {
+export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
+  const messageCount = userMessages.length;
+  const totalWords = userMessages.reduce((count, msg) => 
+    count + (msg.content?.split(/\s+/).length || 0), 0);
+  const avgWordsPerResponse = messageCount > 0 ? Math.round(totalWords / messageCount) : 0;
+  
+  let baseScore = 75;
+  
+  baseScore += Math.min(15, messageCount * 1.5);
+  
+  if (avgWordsPerResponse > 15) baseScore += 10;
+  else if (avgWordsPerResponse > 10) baseScore += 7;
+  else if (avgWordsPerResponse > 5) baseScore += 3;
+  
+  baseScore = Math.min(95, baseScore);
+  
+  if (messageCount < 3 || totalWords < 20) {
+    baseScore = 65;
+  } else {
+    baseScore = Math.max(75, baseScore);
+  }
+  
+  const skillScore = Math.round(baseScore / 10);
+  
   return {
     speaking: {
-      overallScore: 55,
-      level: 'B1',
-      pronunciation: 5.5,
-      fluency: 5.5,
-      grammar: 5.5
+      overallScore: baseScore,
+      level: determineLevel(baseScore),
+      pronunciation: skillScore,
+      fluency: skillScore,
+      grammar: skillScore
     },
     listening: {
-      overallScore: 55,
-      level: 'B1',
-      understanding: 5.5,
-      vocabulary: 5.5,
-      interaction: 5.5
+      overallScore: baseScore,
+      level: determineLevel(baseScore),
+      understanding: skillScore,
+      vocabulary: skillScore,
+      interaction: skillScore
     },
-    feedback: "You demonstrated an intermediate level of Spanish conversation. Your pronunciation is generally clear for common words, and you can express basic ideas effectively. To improve, focus on expanding your vocabulary and practicing more complex grammatical structures.",
+    feedback: "You demonstrated a strong command of Spanish conversation. Your responses showed good comprehension and appropriate use of vocabulary. You were able to express complex ideas and opinions clearly.",
     strengths: [
-      "Communication of basic ideas and opinions",
-      "Understanding of common phrases and questions",
-      "Ability to maintain simple conversation"
+      "Ability to express opinions and ideas clearly",
+      "Good understanding of complex questions",
+      "Appropriate use of vocabulary and expressions"
     ],
     areasToImprove: [
-      "Expand vocabulary for more specific topics",
-      "Practice more complex sentence structures",
-      "Work on fluency and reducing hesitation"
+      "Continue practicing with more specific vocabulary",
+      "Focus on more complex grammatical structures",
+      "Practice faster response time in conversation"
     ]
   };
 };
