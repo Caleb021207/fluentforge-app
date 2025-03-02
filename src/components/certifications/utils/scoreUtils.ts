@@ -1,3 +1,4 @@
+
 export const calculateScore = (selectedAnswers: number[], questions: any[]) => {
   const correctAnswers = selectedAnswers.filter(
     (answer, index) => answer === questions[index].correctAnswer
@@ -6,12 +7,12 @@ export const calculateScore = (selectedAnswers: number[], questions: any[]) => {
 };
 
 export const determineLevel = (score: number) => {
-  if (score >= 92) return 'C2';
-  if (score >= 84) return 'C1';
-  if (score >= 76) return 'B2';
-  if (score >= 65) return 'B1';
-  if (score >= 50) return 'A2';
-  return 'A1';
+  if (score >= 95) return 'C2';  // Mastery - nearly perfect performance
+  if (score >= 88) return 'C1';  // Advanced - excellent performance
+  if (score >= 78) return 'B2';  // Upper intermediate - good performance
+  if (score >= 65) return 'B1';  // Intermediate - adequate performance
+  if (score >= 50) return 'A2';  // Elementary - basic performance
+  return 'A1';                  // Beginner - minimal performance
 };
 
 export const convertRawScoreToPercentage = (rawScore: number, maxScore: number = 5) => {
@@ -22,14 +23,17 @@ export const convertRawScoreToPercentage = (rawScore: number, maxScore: number =
 export const convertSkillScoreToPercentage = (score: number, maxScore: number = 10) => {
   const normalizedScore = Math.max(0, Math.min(score, maxScore));
   
-  if (normalizedScore >= 8.5) {
-    return 90 + (normalizedScore - 8.5) * 10;
-  } else if (normalizedScore >= 7) {
-    return 75 + (normalizedScore - 7) * 10;
+  // More stringent curve to better differentiate proficiency levels
+  if (normalizedScore >= 9) {
+    return 90 + (normalizedScore - 9) * 10; // 9=90%, 10=100%
+  } else if (normalizedScore >= 8) {
+    return 80 + (normalizedScore - 8) * 10; // 8=80%, <9=<90%
+  } else if (normalizedScore >= 6.5) {
+    return 65 + (normalizedScore - 6.5) * 10; // 6.5=65%, <8=<80%
   } else if (normalizedScore >= 5) {
-    return 60 + (normalizedScore - 5) * 7.5;
+    return 50 + (normalizedScore - 5) * 10; // 5=50%, <6.5=<65%
   } else {
-    return Math.round((normalizedScore / 5) * 50);
+    return Math.round((normalizedScore / 5) * 50); // <5 scales proportionally up to 50%
   }
 };
 
