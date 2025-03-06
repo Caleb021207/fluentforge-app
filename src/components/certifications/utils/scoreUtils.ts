@@ -1,4 +1,3 @@
-
 export const calculateScore = (selectedAnswers: number[], questions: any[]) => {
   const correctAnswers = selectedAnswers.filter(
     (answer, index) => answer === questions[index].correctAnswer
@@ -93,8 +92,6 @@ export const ensureValidScore = (score: number | null | undefined) => {
   return Math.max(0, Math.min(100, Math.round(score)));
 };
 
-// NEW FUNCTIONS FOR IMPROVED SCORING
-
 export const analyzeSpeakingComplexity = (messages: any[]): number => {
   if (!messages || messages.length === 0) return 0;
   
@@ -114,68 +111,115 @@ export const analyzeSpeakingComplexity = (messages: any[]): number => {
   const sentences = messageTexts.join('. ').split(/[.!?]+/).filter(Boolean);
   const avgSentenceLength = allWords.length / Math.max(1, sentences.length);
   
-  // Look for complex topic indicators in the text
-  const complexTopicIndicators = [
-    'artificial intelligence', 'ai', 'machine learning', 'technology', 'development', 
-    'application', 'programming', 'algorithm', 'software', 'data', 'analysis',
-    'design', 'implementation', 'function', 'system', 'process', 'architecture',
-    'education', 'learning', 'language', 'linguistics', 'cognitive', 'psychology',
-    'business', 'economics', 'finance', 'management', 'strategy', 'innovation',
-    'global', 'international', 'cultural', 'society', 'political', 'environmental',
-    'research', 'development', 'science', 'philosophy', 'ethics', 'theory'
+  // Look for advanced topic indicators in the text
+  const advancedTopicIndicators = [
+    // Technology and AI
+    'artificial intelligence', 'ai', 'machine learning', 'technology', 'algorithm', 'programming',
+    'software', 'data', 'analysis', 'automation', 'digital', 'computer', 'internet', 'app', 
+    'application', 'system', 'development', 'design',
+    
+    // Academic and abstract concepts
+    'philosophy', 'theory', 'concept', 'analysis', 'research', 'study', 'education',
+    'psychology', 'sociology', 'economics', 'politics', 'science', 'ethics', 'morality',
+    'literature', 'history', 'culture', 'society', 'environment',
+    
+    // Business and professional
+    'business', 'management', 'strategy', 'finance', 'investment', 'marketing',
+    'organization', 'leadership', 'innovation', 'industry', 'market', 'economy',
+    
+    // Advanced verbs and abstract nouns
+    'analyze', 'synthesize', 'evaluate', 'implement', 'integrate', 'facilitate',
+    'perspective', 'framework', 'methodology', 'paradigm', 'infrastructure',
+    'sustainability', 'efficiency', 'effectiveness', 'optimization',
+    
+    // Complex expressions
+    'in terms of', 'with respect to', 'as a consequence of', 'in the context of',
+    'to the extent that', 'taking into account', 'on the basis of', 'in light of'
   ];
   
-  // Count complex topic mentions
-  const complexTopicCount = complexTopicIndicators.reduce((count, topic) => {
+  // Count advanced topic mentions - ENHANCED PATTERN MATCHING
+  const advancedTopicCount = advancedTopicIndicators.reduce((count, topic) => {
     const regex = new RegExp(`\\b${topic}\\b`, 'gi');
     const matches = messageTexts.join(' ').match(regex) || [];
     return count + matches.length;
   }, 0);
   
-  // Scale factors based on CEFR expectations
+  // Look for complex grammatical structures (approximation)
+  const complexGrammarIndicators = [
+    'although', 'however', 'nevertheless', 'therefore', 'consequently',
+    'despite', 'whereas', 'furthermore', 'moreover', 'meanwhile',
+    'regardless', 'accordingly', 'conversely', 'subsequently',
+    'would have', 'could have', 'might have', 'should have',
+    'having been', 'to have been', 'were to', 'had been'
+  ];
+  
+  // Count complex grammar uses
+  const complexGrammarCount = complexGrammarIndicators.reduce((count, grammar) => {
+    const regex = new RegExp(`\\b${grammar}\\b`, 'gi');
+    const matches = messageTexts.join(' ').match(regex) || [];
+    return count + matches.length;
+  }, 0);
+  
+  // Scale factors based on CEFR expectations - SIGNIFICANTLY ENHANCED
   let complexityScore = 0;
   
   // Message count factor (encourages dialogue)
-  const messageCountFactor = Math.min(1.5, messages.length / 4) * 2; // Up to 3 points
+  const messageCountFactor = Math.min(2.0, messages.length / 3) * 2; // Up to 4 points for having enough messages
   
-  // Length factor - INCREASED
+  // Length factor - INCREASED SCALING
   let lengthFactor = 0;
-  if (avgWordsPerMessage >= 25) lengthFactor = 3.5;
-  else if (avgWordsPerMessage >= 15) lengthFactor = 3;
-  else if (avgWordsPerMessage >= 10) lengthFactor = 2;
-  else if (avgWordsPerMessage >= 5) lengthFactor = 1;
-  else lengthFactor = 0.5;
+  if (avgWordsPerMessage >= 20) lengthFactor = 4.0;      // C1-C2 territory
+  else if (avgWordsPerMessage >= 15) lengthFactor = 3.5; // B2-C1
+  else if (avgWordsPerMessage >= 10) lengthFactor = 3.0; // B2
+  else if (avgWordsPerMessage >= 7) lengthFactor = 2.5;  // B1
+  else if (avgWordsPerMessage >= 5) lengthFactor = 2.0;  // A2-B1
+  else lengthFactor = 1.0;                               // A1-A2
   
-  // Sentence complexity factor - INCREASED
+  // Sentence complexity factor - INCREASED SCALING
   let sentenceComplexityFactor = 0;
-  if (avgSentenceLength >= 15) sentenceComplexityFactor = 3.5;
-  else if (avgSentenceLength >= 10) sentenceComplexityFactor = 3;
-  else if (avgSentenceLength >= 7) sentenceComplexityFactor = 2;
-  else if (avgSentenceLength >= 5) sentenceComplexityFactor = 1;
-  else sentenceComplexityFactor = 0.5;
+  if (avgSentenceLength >= 15) sentenceComplexityFactor = 4.0;      // C1-C2
+  else if (avgSentenceLength >= 12) sentenceComplexityFactor = 3.5; // B2-C1
+  else if (avgSentenceLength >= 9) sentenceComplexityFactor = 3.0;  // B2
+  else if (avgSentenceLength >= 7) sentenceComplexityFactor = 2.5;  // B1
+  else if (avgSentenceLength >= 5) sentenceComplexityFactor = 2.0;  // A2-B1
+  else sentenceComplexityFactor = 1.0;                              // A1-A2
   
-  // Vocabulary diversity factor - INCREASED
-  let vocabDiversityFactor = vocabularyDiversity * 12; // Scale up to 0-2.4 range
+  // Vocabulary diversity factor - INCREASED SIGNIFICANCE
+  let vocabDiversityFactor = vocabularyDiversity * 15; // Scale up to 0-3.75 range typically
   
-  // Complex topic bonus - NEW
-  const complexTopicBonus = Math.min(2, complexTopicCount * 0.2);
+  // Advanced topic bonus - INCREASED SIGNIFICANTLY
+  const advancedTopicBonus = Math.min(3.5, advancedTopicCount * 0.35);
   
-  // Combine all factors for total complexity score (0-12 scale)
-  complexityScore = messageCountFactor + lengthFactor + sentenceComplexityFactor + vocabDiversityFactor + complexTopicBonus;
-  complexityScore = Math.min(12, complexityScore); // Cap at 12
+  // Complex grammar bonus - NEW
+  const complexGrammarBonus = Math.min(2.5, complexGrammarCount * 0.4);
   
-  console.log("Speaking analysis:", {
+  // Content length bonus - NEW
+  // If they're writing a lot in total, they deserve a bonus regardless of per-message length
+  const totalWordCount = wordCounts.reduce((sum, count) => sum + count, 0);
+  const contentLengthBonus = Math.min(2.0, totalWordCount / 100);
+  
+  // Combine all factors for total complexity score (0-20 scale)
+  complexityScore = messageCountFactor + lengthFactor + sentenceComplexityFactor + 
+                   vocabDiversityFactor + advancedTopicBonus + complexGrammarBonus + contentLengthBonus;
+  
+  // No artificial cap - we'll scale in the calculateEnhancedScore function
+  
+  console.log("Enhanced Speaking analysis:", {
     messages: messages.length,
-    avgWordsPerMessage,
+    avgWordsPerMessage: Math.round(avgWordsPerMessage * 10) / 10,
+    totalWords: totalWordCount,
     vocabularyDiversity: Math.round(vocabularyDiversity * 100) / 100,
-    avgSentenceLength: Math.round(avgSentenceLength * 100) / 100,
-    complexTopicCount,
+    avgSentenceLength: Math.round(avgSentenceLength * 10) / 10,
+    advancedTopicCount,
+    complexGrammarCount,
     scores: {
       messageCountFactor,
       lengthFactor,
       sentenceComplexityFactor,
       vocabDiversityFactor,
-      complexTopicBonus
+      advancedTopicBonus,
+      complexGrammarBonus,
+      contentLengthBonus
     },
     complexityScore
   });
@@ -184,40 +228,77 @@ export const analyzeSpeakingComplexity = (messages: any[]): number => {
 };
 
 export const calculateEnhancedScore = (speechComplexity: number, messageCount: number): number => {
-  // Improved base score calculation - start at 60 instead of 50
-  let baseScore = 60; 
+  // COMPLETELY OVERHAULED SCORING ALGORITHM
   
-  // Minimum requirements for higher levels
-  if (messageCount < 3) {
-    return Math.min(65, baseScore + (speechComplexity * 3)); // Cap at B1 for very short conversations
+  // Base score increased substantially - start at 70 instead of 60
+  // This means even minimal participation gets a B1 level by default
+  let baseScore = 70; 
+  
+  // Minimum messages requirement relaxed
+  if (messageCount < 2) {
+    // Even with 1 message, if it's complex, cap at B1 (75) instead of A2
+    return Math.min(75, baseScore + (speechComplexity * 2.5)); 
   }
   
-  // Apply complexity score exponentially with HIGHER multiplier
-  // This ensures that higher complexity has a more pronounced effect
-  const complexityFactor = Math.pow(speechComplexity, 1.2) * 9;
+  // Scale the complexity score to a 0-100 scale more effectively
+  // Typical complexity scores now range from 0-20
+  // Map speechComplexity to appropriate CEFR levels:
+  // - 0-5: A1-A2 range (50-70%)
+  // - 5-10: B1 range (70-80%)
+  // - 10-15: B2 range (80-90%)
+  // - 15-20: C1 range (90-95%)
+  // - 20+: C2 range (95-100%)
+  
+  let scaledScore;
+  
+  if (speechComplexity >= 20) {
+    // C2 territory
+    scaledScore = 95 + Math.min(5, (speechComplexity - 20) * 0.5); // Cap at 100
+  } 
+  else if (speechComplexity >= 15) {
+    // C1 territory
+    scaledScore = 90 + ((speechComplexity - 15) * 1.0); // 90-95
+  }
+  else if (speechComplexity >= 10) {
+    // B2 territory
+    scaledScore = 80 + ((speechComplexity - 10) * 2.0); // 80-90
+  }
+  else if (speechComplexity >= 5) {
+    // B1 territory
+    scaledScore = 70 + ((speechComplexity - 5) * 2.0); // 70-80
+  }
+  else {
+    // A1-A2 territory
+    scaledScore = Math.max(50, 50 + (speechComplexity * 4.0)); // 50-70
+  }
   
   // Message count bonus (encourage more interaction)
-  const messageCountBonus = Math.min(15, messageCount * 1.5);
+  // Reduced significance but still provides a boost
+  const messageCountBonus = Math.min(10, messageCount * 1.0);
   
   // Calculate final score
-  let finalScore = baseScore + complexityFactor + messageCountBonus;
+  let finalScore = Math.max(baseScore, scaledScore) + messageCountBonus;
   
-  // Ensure appropriate scaling - IMPROVED thresholds
-  if (speechComplexity >= 7.5) {
-    finalScore = Math.max(finalScore, 90); // Ensure C1+ for high complexity
-  } else if (speechComplexity >= 6) {
-    finalScore = Math.max(finalScore, 78); // Ensure B2 minimum for good complexity
+  // Ensure the score doesn't exceed 100
+  finalScore = Math.min(100, finalScore);
+  
+  // Apply minimum thresholds based on complexity
+  // This ensures that someone using complex language gets at least
+  // the appropriate minimum level regardless of other factors
+  if (speechComplexity >= 18) {
+    finalScore = Math.max(finalScore, 95); // Ensure C2 minimum for very high complexity
+  } else if (speechComplexity >= 13) {
+    finalScore = Math.max(finalScore, 90); // Ensure C1 minimum for high complexity
+  } else if (speechComplexity >= 8) {
+    finalScore = Math.max(finalScore, 80); // Ensure B2 minimum for good complexity
   } else if (speechComplexity >= 4) {
-    finalScore = Math.max(finalScore, 65); // Ensure B1 minimum for moderate complexity
+    finalScore = Math.max(finalScore, 70); // Ensure B1 minimum for moderate complexity
   }
-  
-  // Cap at 98% to leave room for human review
-  finalScore = Math.min(98, finalScore);
   
   console.log("Enhanced score calculation:", {
     baseScore,
     speechComplexity,
-    complexityFactor,
+    scaledScore,
     messageCountBonus,
     finalScore
   });
