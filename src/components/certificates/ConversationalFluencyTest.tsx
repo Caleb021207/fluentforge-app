@@ -23,7 +23,8 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     conversation,
     startTest,
     endTest,
-    resetTest
+    resetTest,
+    conversationTranscript
   } = useConversationTest(onTestComplete);
 
   return (

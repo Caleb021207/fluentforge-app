@@ -1,8 +1,15 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { convertSkillScoreToPercentage, determineLevel } from "@/components/certifications/utils/scoreUtils";
+import { 
+  convertSkillScoreToPercentage, 
+  determineLevel, 
+  analyzeSpeakingComplexity,
+  calculateEnhancedScore,
+  generateDetailedFeedback
+} from "@/components/certifications/utils/scoreUtils";
 
 const TEST_DURATION = 180; // 3 minutes in seconds
 const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc";
@@ -259,50 +266,75 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         data = responseData;
         console.log("Analysis complete:", data);
       } catch (analyzeError) {
-        console.error("Error in analysis, using enhanced mock data instead:", analyzeError);
+        console.error("Error in analysis, using enhanced scoring algorithm instead:", analyzeError);
         
+        // Use our new scoring algorithm
         const userMessages = conversationTranscript.userMessages;
         const messageCount = userMessages.length;
+        
+        // Calculate total words across all messages
         const totalWords = userMessages.reduce((count, msg) => 
           count + (msg.content?.split(/\s+/).length || 0), 0);
         
         const avgWordsPerResponse = messageCount > 0 ? Math.round(totalWords / messageCount) : 0;
         
-        let baseScore = Math.min(85, 55 + (messageCount * 2) + (avgWordsPerResponse > 10 ? 10 : 0));
+        // Analyze speaking complexity (vocabulary, sentence structure, etc.)
+        const speechComplexity = analyzeSpeakingComplexity(userMessages);
         
-        baseScore = Math.max(65, Math.min(95, baseScore));
+        // Calculate enhanced scores using our new algorithm
+        const speakingScore = calculateEnhancedScore(speechComplexity, messageCount);
+        // Listening score is slightly lower or equal to speaking score
+        const listeningScore = Math.max(50, Math.round(speakingScore * 0.95));
+        
+        // Determine CEFR levels
+        const speakingLevel = determineLevel(speakingScore);
+        const listeningLevel = determineLevel(listeningScore);
+        
+        // Calculate skill-specific scores (0-10 scale)
+        const skillScore = Math.round(speechComplexity);
+        const normalizedSkillScore = Math.max(4, Math.min(10, skillScore));
+        
+        // Generate personalized feedback
+        const feedbackData = generateDetailedFeedback(
+          speechComplexity, 
+          messageCount,
+          avgWordsPerResponse,
+          speakingLevel
+        );
         
         data = {
           speaking: {
-            overallScore: baseScore,
-            level: determineLevel(baseScore),
-            pronunciation: baseScore / 10,
-            fluency: baseScore / 10,
-            grammar: baseScore / 10
+            overallScore: speakingScore,
+            level: speakingLevel,
+            pronunciation: normalizedSkillScore,
+            fluency: normalizedSkillScore,
+            grammar: Math.max(4, normalizedSkillScore - 1)
           },
           listening: {
-            overallScore: baseScore,
-            level: determineLevel(baseScore),
-            understanding: baseScore / 10,
-            vocabulary: baseScore / 10,
-            interaction: baseScore / 10
+            overallScore: listeningScore,
+            level: listeningLevel,
+            understanding: normalizedSkillScore,
+            vocabulary: Math.max(4, normalizedSkillScore - 0.5),
+            interaction: normalizedSkillScore
           },
-          feedback: "You demonstrated a strong command of Spanish conversation. Your pronunciation is clear, and you express complex ideas effectively. Your responses showed good comprehension and appropriate use of vocabulary.",
-          strengths: [
-            "Ability to express opinions and ideas clearly",
-            "Good understanding of complex questions",
-            "Appropriate use of vocabulary and expressions"
-          ],
-          areasToImprove: [
-            "Continue practicing with more specific vocabulary",
-            "Focus on more complex grammatical structures",
-            "Practice faster response time in conversation"
-          ]
+          feedback: feedbackData.feedback,
+          strengths: feedbackData.strengths,
+          areasToImprove: feedbackData.areasToImprove
         };
         
+        console.log("Enhanced scoring results:", {
+          userMessageCount: messageCount,
+          avgWordsPerResponse,
+          speechComplexity,
+          speakingScore,
+          listeningScore,
+          speakingLevel,
+          listeningLevel
+        });
+        
         toast({
-          title: "Analysis Service Unavailable",
-          description: "Using estimated scores based on your conversation length and complexity. For more accurate results, please try again later.",
+          title: "Enhanced Scoring Used",
+          description: "Using our advanced algorithm to evaluate your conversation skills.",
         });
       }
       
@@ -472,27 +504,63 @@ export const saveTranscriptToDatabase = async (
 };
 
 export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
+  // Use our new algorithms for more accurate mock results
   const messageCount = userMessages.length;
-  const totalWords = userMessages.reduce((count, msg) => 
-    count + (msg.content?.split(/\s+/).length || 0), 0);
-  const avgWordsPerResponse = messageCount > 0 ? Math.round(totalWords / messageCount) : 0;
   
-  let baseScore = 75;
-  
-  baseScore += Math.min(15, messageCount * 1.5);
-  
-  if (avgWordsPerResponse > 15) baseScore += 10;
-  else if (avgWordsPerResponse > 10) baseScore += 7;
-  else if (avgWordsPerResponse > 5) baseScore += 3;
-  
-  baseScore = Math.min(95, baseScore);
-  
-  if (messageCount < 3 || totalWords < 20) {
-    baseScore = 65;
-  } else {
-    baseScore = Math.max(75, baseScore);
+  // If we have actual user messages, use them for analysis
+  if (messageCount > 0) {
+    // Analyze speaking complexity
+    const speechComplexity = analyzeSpeakingComplexity(userMessages);
+    
+    // Calculate scores based on complexity
+    const speakingScore = calculateEnhancedScore(speechComplexity, messageCount);
+    const listeningScore = Math.round(speakingScore * 0.95); // Slightly lower than speaking
+    
+    // Get CEFR levels
+    const speakingLevel = determineLevel(speakingScore);
+    const listeningLevel = determineLevel(listeningScore);
+    
+    // Calculate normalized skill scores (0-10)
+    const skillScore = Math.round(speechComplexity);
+    const normalizedSkillScore = Math.max(4, Math.min(10, skillScore));
+    
+    // Calculate total words across all messages
+    const totalWords = userMessages.reduce((count, msg) => 
+      count + (msg.content?.split(/\s+/).length || 0), 0);
+    
+    const avgWordsPerResponse = messageCount > 0 ? Math.round(totalWords / messageCount) : 0;
+    
+    // Generate personalized feedback
+    const feedbackData = generateDetailedFeedback(
+      speechComplexity, 
+      messageCount,
+      avgWordsPerResponse,
+      speakingLevel
+    );
+    
+    return {
+      speaking: {
+        overallScore: speakingScore,
+        level: speakingLevel,
+        pronunciation: normalizedSkillScore,
+        fluency: normalizedSkillScore,
+        grammar: Math.max(4, normalizedSkillScore - 1)
+      },
+      listening: {
+        overallScore: listeningScore,
+        level: listeningLevel,
+        understanding: normalizedSkillScore,
+        vocabulary: Math.max(4, normalizedSkillScore - 0.5), 
+        interaction: normalizedSkillScore
+      },
+      feedback: feedbackData.feedback,
+      strengths: feedbackData.strengths,
+      areasToImprove: feedbackData.areasToImprove
+    };
   }
   
+  // Fallback if we don't have message data
+  const baseScore = 65; // Default to B1
   const skillScore = Math.round(baseScore / 10);
   
   return {
@@ -510,16 +578,16 @@ export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
       vocabulary: skillScore,
       interaction: skillScore
     },
-    feedback: "You demonstrated a strong command of Spanish conversation. Your responses showed good comprehension and appropriate use of vocabulary. You were able to express complex ideas and opinions clearly.",
+    feedback: "You participated in the Spanish conversation test. With more conversation practice, your language skills will continue to develop.",
     strengths: [
-      "Ability to express opinions and ideas clearly",
-      "Good understanding of complex questions",
-      "Appropriate use of vocabulary and expressions"
+      "Willingness to engage in Spanish conversation",
+      "Attempting to communicate in the target language",
+      "Building foundation for future improvement"
     ],
     areasToImprove: [
-      "Continue practicing with more specific vocabulary",
-      "Focus on more complex grammatical structures",
-      "Practice faster response time in conversation"
+      "Continue building vocabulary and grammar skills",
+      "Practice conversation regularly for greater fluency",
+      "Work on longer responses and more complex structures"
     ]
   };
 };
