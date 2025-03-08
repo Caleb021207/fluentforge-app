@@ -7,12 +7,12 @@ interface RubricItemProps {
 }
 
 const rubricData = [
-  { level: 'C2', range: '84-100%' },
-  { level: 'C1', range: '67-83%' },
-  { level: 'B2', range: '50-66%' },
-  { level: 'B1', range: '33-49%' },
-  { level: 'A2', range: '17-32%' },
-  { level: 'A1', range: '0-16%' },
+  { level: 'C2', range: '96-100%' },
+  { level: 'C1', range: '81-95%' },
+  { level: 'B2', range: '66-80%' },
+  { level: 'B1', range: '46-65%' },
+  { level: 'A2', range: '31-45%' },
+  { level: 'A1', range: '0-30%' },
 ];
 
 const CEFRLevelRubric = () => {
