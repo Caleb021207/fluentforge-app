@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
@@ -113,9 +114,9 @@ async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
     Assess both the user's speaking and listening abilities based on the transcript.
     
     For speaking evaluation, focus on:
-    1. Pronunciation (accuracy, comprehensibility)
-    2. Fluency (flow, hesitation, naturalness)
-    3. Grammar (accuracy, complexity)
+    1. Pronunciation (accuracy, comprehensibility) - inferred from transcribed text
+    2. Fluency (flow, hesitation, naturalness) - inferred from response length and complexity
+    3. Grammar (accuracy, complexity) - allow for minor errors if meaning is clear
     
     For listening evaluation, focus on:
     1. Understanding (comprehension of AI tutor's questions/statements)
@@ -124,8 +125,8 @@ async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
     
     VERY IMPORTANT CEFR level guidelines:
     - A1 (0-30%): Very basic phrases, simple responses only
-    - A2 (31-45%): Simple sentences about basic needs
-    - B1 (46-65%): Connected speech on familiar topics
+    - A2 (31-49%): Simple sentences about basic needs
+    - B1 (50-65%): Connected speech on familiar topics
     - B2 (66-80%): Clear detailed speech on various topics
     - C1 (81-95%): Fluent complex arguments, abstract topics
     - C2 (96-100%): Near-native fluency, nuanced expression
@@ -141,6 +142,8 @@ async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
     - C2: Can express with precision fine shades of meaning even in complex situations
     
     IMPORTANT: Any discussion of complex, abstract, or technical topics (science, technology, philosophy, etc.) should be scored at MINIMUM at B2 level regardless of grammar errors.
+    
+    PRIORITIZE CONTENT OVER FORM. A person who can discuss complex subjects with some grammatical errors should be scored higher than someone with perfect grammar discussing only basic topics.
   `;
   
   const userPrompt = `
@@ -224,17 +227,17 @@ async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
       return {
         speaking: {
           level: "B1",
-          overallScore: 50,
-          pronunciation: 5,
-          fluency: 5,
-          grammar: 5
+          overallScore: 60,
+          pronunciation: 6,
+          fluency: 6,
+          grammar: 6
         },
         listening: {
           level: "B1",
-          overallScore: 50,
-          understanding: 5,
-          vocabulary: 5,
-          interaction: 5
+          overallScore: 60,
+          understanding: 6,
+          vocabulary: 6,
+          interaction: 6
         },
         feedback: "The system could not properly analyze your conversation. Please try again later.",
         strengths: ["Effort to communicate in Spanish"],

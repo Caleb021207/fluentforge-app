@@ -10,8 +10,8 @@ const rubricData = [
   { level: 'C2', range: '96-100%' },
   { level: 'C1', range: '81-95%' },
   { level: 'B2', range: '66-80%' },
-  { level: 'B1', range: '46-65%' },
-  { level: 'A2', range: '31-45%' },
+  { level: 'B1', range: '50-65%' },
+  { level: 'A2', range: '31-49%' },
   { level: 'A1', range: '0-30%' },
 ];
 
