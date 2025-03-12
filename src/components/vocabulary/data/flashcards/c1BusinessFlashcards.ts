@@ -4,81 +4,81 @@ import { Flashcard } from "../../types";
 export const c1BusinessFlashcards: Flashcard[] = [
   {
     id: "c1-business-1",
-    term: "la negociación multilateral",
-    definition: "Multilateral negotiation; negotiations involving multiple parties or stakeholders",
-    example: "La negociación multilateral requiere considerar los intereses de todas las partes involucradas.",
+    term: "multilateral negotiation",
+    definition: "negotiations involving multiple parties or stakeholders",
+    example: "Multilateral negotiation requires considering the interests of all parties involved.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-2",
-    term: "el rendimiento sobre la inversión",
-    definition: "Return on investment (ROI); a measure of the profitability of an investment",
-    example: "El proyecto mostró un excelente rendimiento sobre la inversión en el primer año.",
+    term: "return on investment",
+    definition: "a measure of the profitability of an investment",
+    example: "The project showed an excellent return on investment in its first year.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-3",
-    term: "la viabilidad económica",
-    definition: "Economic viability; the ability of a project or business to be financially sustainable",
-    example: "El estudio de viabilidad económica indicó que el proyecto sería rentable a largo plazo.",
+    term: "economic viability",
+    definition: "the ability of a project or business to be financially sustainable",
+    example: "The economic viability study indicated that the project would be profitable in the long term.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-4",
-    term: "la reestructuración corporativa",
-    definition: "Corporate restructuring; significant changes to a company's structure or operations",
-    example: "La reestructuración corporativa incluyó la venta de varias divisiones no rentables.",
+    term: "corporate restructuring",
+    definition: "significant changes to a company's structure or operations",
+    example: "The corporate restructuring included the sale of several unprofitable divisions.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-5",
-    term: "la estrategia de diversificación",
-    definition: "Diversification strategy; a strategy to enter new markets or develop new products",
-    example: "La empresa implementó una estrategia de diversificación para reducir su dependencia del mercado local.",
+    term: "diversification strategy",
+    definition: "a strategy to enter new markets or develop new products",
+    example: "The company implemented a diversification strategy to reduce its dependence on the local market.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-6",
-    term: "la fusión y adquisición",
-    definition: "Merger and acquisition (M&A); combining or purchasing companies",
-    example: "La fusión y adquisición de las dos empresas creó un nuevo líder en el sector.",
+    term: "merger and acquisition",
+    definition: "combining or purchasing companies",
+    example: "The merger and acquisition of the two companies created a new industry leader.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-7",
-    term: "el plan de contingencia",
-    definition: "Contingency plan; a plan designed to respond to unexpected events",
-    example: "El plan de contingencia especifica cómo la empresa respondería a una crisis financiera.",
+    term: "contingency plan",
+    definition: "a plan designed to respond to unexpected events",
+    example: "The contingency plan specifies how the company would respond to a financial crisis.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-8",
-    term: "la ventaja competitiva",
-    definition: "Competitive advantage; an attribute that allows a company to outperform competitors",
-    example: "La innovación tecnológica es nuestra principal ventaja competitiva en el mercado.",
+    term: "competitive advantage",
+    definition: "an attribute that allows a company to outperform competitors",
+    example: "Technological innovation is our main competitive advantage in the market.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-9",
-    term: "la cuota de mercado",
-    definition: "Market share; the portion of a market controlled by a particular company or product",
-    example: "Nuestra cuota de mercado aumentó significativamente tras la campaña publicitaria.",
+    term: "market share",
+    definition: "the portion of a market controlled by a particular company or product",
+    example: "Our market share increased significantly after the advertising campaign.",
     level: "C1-C2",
     category: "Business"
   },
   {
     id: "c1-business-10",
-    term: "la responsabilidad corporativa",
-    definition: "Corporate responsibility; a company's obligation to act ethically and sustainably",
-    example: "La responsabilidad corporativa incluye considerar el impacto ambiental y social de las operaciones empresariales.",
+    term: "corporate responsibility",
+    definition: "a company's obligation to act ethically and sustainably",
+    example: "Corporate responsibility includes considering the environmental and social impact of business operations.",
     level: "C1-C2",
     category: "Business"
   }

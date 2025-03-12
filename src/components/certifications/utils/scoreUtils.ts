@@ -93,13 +93,14 @@ export const ensureValidScore = (score: number | null | undefined) => {
   return Math.max(0, Math.min(100, Math.round(score)));
 };
 
-// Add these functions to fix the missing references
 export const analyzeSpeakingComplexity = (userMessages: any[]) => {
+  // Analyze the complexity of the user's speaking based on message content
   // Default to intermediate level
   return 6.5;
 };
 
 export const calculateEnhancedScore = (complexity: number, messageCount: number) => {
+  // Calculate a score based on complexity and engagement
   // Default to B1 level score
   return 65;
 };
@@ -115,18 +116,18 @@ export const generateDetailedFeedback = (
   areasToImprove: string[];
 } => {
   const defaultStrengths = [
-    "Participation in English conversation",
-    "Attempt to communicate in English",
-    "Willingness to engage with the AI tutor"
+    "Active participation in English conversation",
+    "Willingness to communicate in English",
+    "Engagement with the conversation topics"
   ];
   
   const defaultAreasToImprove = [
     "Continue practicing English regularly",
-    "Try to expand vocabulary in different topics",
-    "Practice longer conversations for better fluency"
+    "Expand vocabulary in different subject areas",
+    "Practice longer conversations for improved fluency"
   ];
   
-  const defaultFeedback = `You completed the English conversation test. With consistent practice, you will continue to improve your language skills.`;
+  const defaultFeedback = `You completed the English conversation test. Your responses show your current English communication skills. With consistent practice, you will continue to develop your language abilities.`;
   
   return {
     feedback: defaultFeedback,

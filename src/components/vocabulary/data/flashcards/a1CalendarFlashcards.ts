@@ -4,163 +4,162 @@ import { Flashcard } from "../../types";
 export const a1CalendarFlashcards: Flashcard[] = [
   {
     id: "1",
-    term: "enero",
-    definition: "January",
-    example: "Mi cumpleaños es en enero.",
+    term: "January",
+    definition: "the first month of the year",
+    example: "My birthday is in January.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "2",
-    term: "febrero",
-    definition: "February",
-    example: "En febrero hace frío.",
+    term: "February",
+    definition: "the second month of the year",
+    example: "It's cold in February.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "3",
-    term: "marzo",
-    definition: "March",
-    example: "En marzo empieza la primavera.",
+    term: "March",
+    definition: "the third month of the year",
+    example: "Spring begins in March.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "4",
-    term: "abril",
-    definition: "April",
-    example: "En abril llueve mucho.",
+    term: "April",
+    definition: "the fourth month of the year",
+    example: "It rains a lot in April.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "5",
-    term: "mayo",
-    definition: "May",
-    example: "Mayo es un mes bonito.",
+    term: "May",
+    definition: "the fifth month of the year",
+    example: "May is a beautiful month.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "6",
-    term: "junio",
-    definition: "June",
-    example: "Las vacaciones empiezan en junio.",
+    term: "June",
+    definition: "the sixth month of the year",
+    example: "Vacations start in June.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "7",
-    term: "julio",
-    definition: "July",
-    example: "En julio hace mucho calor.",
+    term: "July",
+    definition: "the seventh month of the year",
+    example: "It's very hot in July.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "8",
-    term: "agosto",
-    definition: "August",
-    example: "En agosto voy a la playa.",
+    term: "August",
+    definition: "the eighth month of the year",
+    example: "I go to the beach in August.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "9",
-    term: "septiembre",
-    definition: "September",
-    example: "Las clases empiezan en septiembre.",
+    term: "September",
+    definition: "the ninth month of the year",
+    example: "School starts in September.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "10",
-    term: "octubre",
-    definition: "October",
-    example: "Octubre es un mes de otoño.",
+    term: "October",
+    definition: "the tenth month of the year",
+    example: "October is a fall month.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "11",
-    term: "noviembre",
-    definition: "November",
-    example: "En noviembre hace frío.",
+    term: "November",
+    definition: "the eleventh month of the year",
+    example: "It's cold in November.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "12",
-    term: "diciembre",
-    definition: "December",
-    example: "La Navidad es en diciembre.",
+    term: "December",
+    definition: "the twelfth month of the year",
+    example: "Christmas is in December.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "13",
-    term: "el calendario",
-    definition: "calendar",
-    example: "Miro el calendario todos los días.",
+    term: "calendar",
+    definition: "a chart showing the days, weeks, and months of a year",
+    example: "I look at the calendar every day.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "14",
-    term: "la fecha",
-    definition: "date",
-    example: "¿Cuál es la fecha de hoy?",
+    term: "date",
+    definition: "a specific day of a month or year",
+    example: "What's the date today?",
     level: "A1",
     category: "Basics"
   },
   {
     id: "15",
-    term: "la estación",
-    definition: "season",
-    example: "El verano es mi estación favorita.",
+    term: "season",
+    definition: "one of the four parts of the year",
+    example: "Summer is my favorite season.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "16",
-    term: "la primavera",
-    definition: "spring",
-    example: "La primavera empieza en marzo.",
+    term: "spring",
+    definition: "the season after winter and before summer",
+    example: "Spring starts in March.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "17",
-    term: "el verano",
-    definition: "summer",
-    example: "En verano hace calor.",
+    term: "summer",
+    definition: "the warmest season of the year",
+    example: "It's hot in summer.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "18",
-    term: "el otoño",
-    definition: "autumn/fall",
-    example: "Las hojas caen en otoño.",
+    term: "autumn",
+    definition: "the season after summer and before winter",
+    example: "Leaves fall in autumn.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "19",
-    term: "el invierno",
-    definition: "winter",
-    example: "En invierno nieva.",
+    term: "winter",
+    definition: "the coldest season of the year",
+    example: "It snows in winter.",
     level: "A1",
     category: "Basics"
   },
   {
     id: "20",
-    term: "el cumpleaños",
-    definition: "birthday",
-    example: "Mi cumpleaños es en julio.",
+    term: "birthday",
+    definition: "the anniversary of the day on which a person was born",
+    example: "My birthday is in July.",
     level: "A1",
     category: "Basics"
   }
 ];
-
