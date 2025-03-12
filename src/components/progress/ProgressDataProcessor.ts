@@ -9,7 +9,6 @@ export interface ChartData {
   writing: number;
   speaking: number;
   listening: number;
-  vocabulary?: number;
 }
 
 export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): ChartData[] => {
@@ -34,8 +33,7 @@ export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): 
         reading: 0,
         writing: 0,
         speaking: 0,
-        listening: 0,
-        vocabulary: 0
+        listening: 0
       });
     }
   });
@@ -80,7 +78,7 @@ export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): 
       }
     } 
     else if (type === 'reading' || type === 'writing' || type === 'speaking' || 
-            type === 'listening' || type === 'vocabulary') {
+            type === 'listening') {
       console.log(`Processing ${type} attempt #${attempt.id} with score ${attempt.score}`);
       
       // Use type assertion to access properties safely
@@ -110,9 +108,6 @@ export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): 
       currentData.writing = Math.max(currentData.writing, previousData.writing);
       currentData.speaking = Math.max(currentData.speaking, previousData.speaking);
       currentData.listening = Math.max(currentData.listening, previousData.listening);
-      if (typeof currentData.vocabulary === 'number' && typeof previousData.vocabulary === 'number') {
-        currentData.vocabulary = Math.max(currentData.vocabulary, previousData.vocabulary);
-      }
     }
     
     result.push(currentData);
@@ -127,7 +122,7 @@ export const generateRecommendations = (attempts: CertificationAttempt[]) => {
   if (!attempts || attempts.length === 0) return [];
   
   console.log("Generating recommendations from attempts:", attempts);
-  const skills = ['reading', 'writing', 'speaking', 'listening', 'vocabulary'];
+  const skills = ['reading', 'writing', 'speaking', 'listening'];
   const highestScores: Record<string, number> = {};
   
   skills.forEach(skill => {
