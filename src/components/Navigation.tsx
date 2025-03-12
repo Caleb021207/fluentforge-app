@@ -94,7 +94,7 @@ const Navigation = () => {
             className="hidden md:flex items-center space-x-2 mb-8"
             onClick={() => setIsOpen(false)}
           >
-            <span className="font-bold text-2xl text-lingua-primary">Lingua.AI</span>
+            <span className="font-bold text-2xl text-lingua-primary">Palavox</span>
           </Link>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">

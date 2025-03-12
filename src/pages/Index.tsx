@@ -98,7 +98,7 @@ const Index = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold text-lingua-text mb-4">
-            Welcome to <span className="text-lingua-primary">Lingua.AI</span>
+            Welcome to <span className="text-lingua-primary">Palavox</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8">
             Your personal AI-powered language learning companion. Start your journey
