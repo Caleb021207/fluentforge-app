@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut, Shield } from "lucide-react";
+import { MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -48,7 +48,6 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
-    { icon: BookOpen, label: "Vocabulary", path: "/vocabulary" },
     { icon: MessageSquare, label: "Practice", path: "/practice" },
     { icon: Award, label: "Certificates", path: "/certificates" },
     { icon: BarChart, label: "Progress", path: "/progress" },

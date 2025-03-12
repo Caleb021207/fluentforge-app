@@ -5,7 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import Index from "../pages/Index";
 import NotFound from "../pages/NotFound";
 import PlacementQuiz from "../pages/PlacementQuiz";
-import Vocabulary from "../pages/Vocabulary";
 import Practice from "../pages/Practice";
 import Certificates from "../pages/Certificates";
 import ProgressPage from "../pages/Progress";
@@ -58,7 +57,6 @@ const Layout = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/placement-quiz" element={<PlacementQuiz />} />
-              <Route path="/vocabulary" element={<Vocabulary />} />
               <Route path="/practice" element={<Practice />} />
               <Route path="/certificates" element={<Certificates />} />
               <Route path="/progress" element={<ProgressPage />} />

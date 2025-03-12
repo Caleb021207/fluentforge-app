@@ -9,7 +9,6 @@ import Practice from "@/pages/Practice";
 import Profile from "@/pages/Profile";
 import Progress from "@/pages/Progress";
 import NotFound from "@/pages/NotFound";
-import Vocabulary from "@/pages/Vocabulary";
 import ExampleData from "@/pages/ExampleData";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { BrowserRouter } from "react-router-dom";
@@ -30,7 +29,6 @@ function App() {
             <Route path="/practice" element={<Practice />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/progress" element={<Progress />} />
-            <Route path="/vocabulary" element={<Vocabulary />} />
             <Route path="/example-data" element={<ExampleData />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
