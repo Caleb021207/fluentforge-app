@@ -46,17 +46,17 @@ export const convertSkillScoreToPercentage = (score: number, maxScore: number = 
 export const getLevelDescription = (level: string) => {
   switch (level) {
     case 'C2':
-      return 'Mastery level: Reading - Can understand virtually any text, including abstract or complex documents. Writing - Can produce clear, flowing, complex texts in an appropriate style. Speaking - Can express themselves spontaneously and very fluently with precision in complex situations. Listening - Can understand any native speaker, even on abstract and complex topics.';
+      return 'Mastery level: Reading - Can understand virtually any English text, including abstract or complex documents. Writing - Can produce clear, flowing, complex texts in an appropriate style. Speaking - Can express themselves spontaneously and very fluently with precision in complex situations. Listening - Can understand any native English speaker, even on abstract and complex topics.';
     case 'C1':
-      return 'Advanced level: Reading - Can understand long, complex texts and recognize implicit meaning. Writing - Can produce clear, well-structured texts on complex subjects. Speaking - Can express ideas fluently and spontaneously without obvious searching for expressions. Listening - Can understand extended speech even when not clearly structured.';
+      return 'Advanced level: Reading - Can understand long, complex English texts and recognize implicit meaning. Writing - Can produce clear, well-structured texts on complex subjects. Speaking - Can express ideas fluently and spontaneously without obvious searching for expressions. Listening - Can understand extended English speech even when not clearly structured.';
     case 'B2':
-      return 'Upper Intermediate: Reading - Can understand complex texts and technical articles. Writing - Can write clear, detailed text on a wide range of subjects. Speaking - Can interact with fluency and spontaneity with native speakers. Listening - Can understand extended speech and lectures, following complex lines of argument.';
+      return 'Upper Intermediate: Reading - Can understand complex English texts and technical articles. Writing - Can write clear, detailed text on a wide range of subjects. Speaking - Can interact with fluency and spontaneity with native English speakers. Listening - Can understand extended speech and lectures, following complex lines of argument.';
     case 'B1':
-      return 'Intermediate: Reading - Can understand texts on familiar matters. Writing - Can write simple connected text on familiar topics. Speaking - Can deal with most situations likely to arise while traveling. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
+      return 'Intermediate: Reading - Can understand English texts on familiar matters. Writing - Can write simple connected text on familiar topics. Speaking - Can deal with most situations likely to arise while in an English-speaking environment. Listening - Can understand the main points of clear standard English on familiar matters.';
     case 'A2':
-      return 'Elementary: Reading - Can understand short, simple texts. Writing - Can write short, simple notes and messages. Speaking - Can communicate in simple and routine tasks requiring direct exchange of information. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
+      return 'Elementary: Reading - Can understand short, simple English texts. Writing - Can write short, simple notes and messages. Speaking - Can communicate in simple and routine tasks requiring direct exchange of information. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
     case 'A1':
-      return 'Beginner: Reading - Can understand familiar names, words, and simple sentences. Writing - Can write short, simple phrases and fill out forms. Speaking - Can interact in a simple way with basic phrases and expressions. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
+      return 'Beginner: Reading - Can understand familiar names, words, and simple English sentences. Writing - Can write short, simple phrases and fill out forms. Speaking - Can interact in a simple way with basic phrases and expressions. Listening - Can recognize familiar words and basic phrases when people speak slowly.';
     default:
       return '';
   }
@@ -115,18 +115,18 @@ export const generateDetailedFeedback = (
   areasToImprove: string[];
 } => {
   const defaultStrengths = [
-    "Participation in Spanish conversation",
-    "Attempt to communicate in the target language",
+    "Participation in English conversation",
+    "Attempt to communicate in English",
     "Willingness to engage with the AI tutor"
   ];
   
   const defaultAreasToImprove = [
-    "Continue practicing Spanish regularly",
+    "Continue practicing English regularly",
     "Try to expand vocabulary in different topics",
     "Practice longer conversations for better fluency"
   ];
   
-  const defaultFeedback = `You completed the Spanish conversation test. With consistent practice, you will continue to improve your language skills.`;
+  const defaultFeedback = `You completed the English conversation test. With consistent practice, you will continue to improve your language skills.`;
   
   return {
     feedback: defaultFeedback,

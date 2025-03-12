@@ -110,7 +110,7 @@ function formatTranscriptForAnalysis(transcript: any): string {
 async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
   // Create prompt for GPT
   const systemPrompt = `
-    You are an expert language examiner for Spanish. You need to evaluate a Spanish conversation between a user (language student) and an AI tutor.
+    You are an expert language examiner for English as a Second Language (ESL). You need to evaluate an English conversation between a language learner and an AI tutor.
     Assess both the user's speaking and listening abilities based on the transcript.
     
     For speaking evaluation, focus on:
@@ -147,7 +147,7 @@ async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
   `;
   
   const userPrompt = `
-    Please analyze this Spanish conversation transcript and provide a detailed assessment.
+    Please analyze this English conversation transcript and provide a detailed assessment.
     
     ${formattedTranscript}
     
@@ -240,7 +240,7 @@ async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
           interaction: 6
         },
         feedback: "The system could not properly analyze your conversation. Please try again later.",
-        strengths: ["Effort to communicate in Spanish"],
+        strengths: ["Effort to communicate in English"],
         areasToImprove: ["Try again for a more detailed assessment"]
       };
     }
