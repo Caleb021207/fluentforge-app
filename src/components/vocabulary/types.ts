@@ -13,5 +13,9 @@ export interface FlashcardSet {
   title: string;
   description: string;
   level: string;
-  cards: Flashcard[];
+  category: string;
+  cardCount: number;
+  icon?: React.ReactNode;
+  masteredCount: number;
+  cards?: Flashcard[];
 }
