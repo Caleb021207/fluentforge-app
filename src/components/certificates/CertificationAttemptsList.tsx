@@ -62,6 +62,11 @@ const CertificationAttemptsList = ({
     // For other tests, they need both a completed_at timestamp and a positive score
     return attempt.completed_at != null && attempt.score > 0;
   };
+
+  // Filter out any attempts that aren't one of the four core skills or fluency/conversation
+  const filteredAttempts = attempts?.filter(attempt => 
+    ['reading', 'writing', 'speaking', 'listening', 'fluency', 'conversation'].includes(attempt.certification_type)
+  );
   
   if (isLoading) {
     return <div>Loading certification data...</div>;
@@ -75,8 +80,8 @@ const CertificationAttemptsList = ({
       <CardContent>
         <ScrollArea className="h-[400px]">
           <div className="space-y-4">
-            {attempts && attempts.length > 0 ? (
-              attempts.map((attempt) => (
+            {filteredAttempts && filteredAttempts.length > 0 ? (
+              filteredAttempts.map((attempt) => (
                 <div
                   key={attempt.id}
                   className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 rounded-lg"

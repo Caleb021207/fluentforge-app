@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "@supabase/supabase-js";
 import { Calendar, BookOpen, Award, RefreshCw } from "lucide-react";
@@ -43,8 +42,7 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
     reading: false,
     writing: false,
     speaking: false,
-    listening: false,
-    vocabulary: false
+    listening: false
   });
   const { toast } = useToast();
 
@@ -59,7 +57,6 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
     
     setIsLoading(true);
     try {
-      // Fetch certification attempts to calculate progress
       const { data: attempts, error } = await supabase
         .from('certification_attempts')
         .select('*')
@@ -68,52 +65,45 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
 
       if (error) throw error;
 
-      // Track which certifications have been completed
       const completedCertifications = {
         reading: false,
         writing: false,
         speaking: false,
-        listening: false,
-        vocabulary: false
+        listening: false
       };
 
-      // Calculate completion based on certification attempts
       let completedLessons = 0;
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
         
-        // Process certification attempts
         const uniqueTypes = new Set();
         attempts.forEach(attempt => {
+          if (!['reading', 'writing', 'speaking', 'listening'].includes(attempt.certification_type)) {
+            return;
+          }
+          
           uniqueTypes.add(attempt.certification_type);
           
-          // Mark certification as completed
           if (attempt.certification_type in completedCertifications) {
             completedCertifications[attempt.certification_type] = true;
           }
         });
         
-        // Each certification type counts as 3 lessons
         completedLessons = uniqueTypes.size * 3;
 
-        // Calculate streak based on attempt dates
         const streakDays = calculateStreak(attempts);
         
-        // Calculate progress rate based on attempts frequency
         const progressRate = calculateProgressRate(attempts);
         setProgressRate(progressRate);
 
-        // Set estimated weeks based on progress and target level
         const estimatedWeeks = calculateEstimatedWeeks(progressRate, profileData.targetLevel);
         setEstimatedWeeks(estimatedWeeks);
       }
 
-      // Update certification completion status
       setCertificationsCompleted(completedCertifications);
 
-      // Update lesson progress state
       setLessonProgress({
-        totalLessons: 60, // Default total lessons
+        totalLessons: 60,
         completedLessons: completedLessons,
         percentComplete: Math.min(100, Math.round((completedLessons / 60) * 100)),
         lastActivity: attempts && attempts.length > 0 ? attempts[0].completed_at : new Date().toISOString(),
@@ -141,24 +131,20 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
   const calculateStreak = (attempts: any[] | null): number => {
     if (!attempts || attempts.length === 0) return 0;
     
-    // Sort attempts by date
     const sortedDates = attempts.map(a => new Date(a.completed_at))
       .sort((a, b) => b.getTime() - a.getTime());
     
-    // Check for activity in the last day
     const now = new Date();
     const oneDayAgo = new Date(now);
     oneDayAgo.setDate(now.getDate() - 1);
     
     if (sortedDates[0] < oneDayAgo) return 0;
     
-    // Count consecutive days with activity
     let streak = 1;
     let currentDate = new Date(sortedDates[0]);
     currentDate.setDate(currentDate.getDate() - 1);
     
     for (let i = 1; i < sortedDates.length; i++) {
-      // Convert to date strings for comparison (ignoring time)
       const dateStr = currentDate.toISOString().split('T')[0];
       const attemptDateStr = sortedDates[i].toISOString().split('T')[0];
       
@@ -166,11 +152,9 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
         currentDate.setDate(currentDate.getDate() - 1);
         streak++;
       } else if (sortedDates[i] < currentDate) {
-        // If we found an attempt before the expected day, continue checking
         currentDate = new Date(sortedDates[i]);
         currentDate.setDate(currentDate.getDate() - 1);
       } else {
-        // Streak is broken
         break;
       }
     }
@@ -179,19 +163,16 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
   };
 
   const calculateProgressRate = (attempts: any[] | null): number => {
-    if (!attempts || attempts.length <= 1) return 0.8; // Default rate
+    if (!attempts || attempts.length <= 1) return 0.8;
     
-    // Calculate average points gained per week
     const firstAttempt = new Date(attempts[attempts.length - 1].completed_at);
     const lastAttempt = new Date(attempts[0].completed_at);
     const weeksDiff = Math.max(1, (lastAttempt.getTime() - firstAttempt.getTime()) / (7 * 24 * 60 * 60 * 1000));
     
-    // Assuming each attempt gives approximately 5 points
     return Math.min(3, Math.max(0.5, (attempts.length * 5) / weeksDiff));
   };
 
   const calculateEstimatedWeeks = (rate: number, targetLevel: string): number => {
-    // Map CEFR levels to estimated points needed
     const pointsNeeded: Record<string, number> = {
       'A1': 50,
       'A2': 100,
@@ -201,11 +182,9 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
       'C2': 800
     };
     
-    // Get points needed for target level
-    const points = pointsNeeded[targetLevel] || 350; // Default to B2
+    const points = pointsNeeded[targetLevel] || 350;
     
-    // Calculate weeks based on progress rate
-    return Math.ceil(points / (rate * 7)); // rate * 7 = weekly points
+    return Math.ceil(points / (rate * 7));
   };
 
   const getEstimatedDate = () => {
@@ -288,7 +267,6 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           )}
         </div>
 
-        {/* Certification Progress */}
         <div className="border rounded-lg p-4 bg-gray-50 space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <Award className="h-4 w-4 text-lingua-primary" />
@@ -321,13 +299,6 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
               <span className="text-sm">Listening: </span>
               <span className={`text-sm font-medium ${certificationsCompleted.listening ? 'text-green-600' : 'text-gray-500'}`}>
                 {certificationsCompleted.listening ? 'Completed' : 'Not taken'}
-              </span>
-            </div>
-            
-            <div className={`p-2 rounded ${certificationsCompleted.vocabulary ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <span className="text-sm">Vocabulary: </span>
-              <span className={`text-sm font-medium ${certificationsCompleted.vocabulary ? 'text-green-600' : 'text-gray-500'}`}>
-                {certificationsCompleted.vocabulary ? 'Completed' : 'Not taken'}
               </span>
             </div>
           </div>
