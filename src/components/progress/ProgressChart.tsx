@@ -8,7 +8,6 @@ interface ProgressData {
   writing?: number;
   speaking?: number;
   listening?: number;
-  vocabulary?: number;
 }
 
 interface ProgressChartProps {
@@ -72,14 +71,6 @@ const ProgressChart = ({ progressData }: ProgressChartProps) => {
             dataKey="listening" 
             stroke="#9333ea" 
             name="Listening" 
-            connectNulls={true} 
-            activeDot={{ r: 8 }}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="vocabulary" 
-            stroke="#ea580c" 
-            name="Vocabulary" 
             connectNulls={true} 
             activeDot={{ r: 8 }}
           />

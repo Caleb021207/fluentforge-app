@@ -165,6 +165,11 @@ const DashboardPage = () => {
 
         attempts.forEach(attempt => {
           const type = attempt.certification_type;
+          // Skip if not one of our main skill types
+          if (!['reading', 'writing', 'speaking', 'listening'].includes(type)) {
+            return;
+          }
+          
           if (attempt.score > highestScores[type]) {
             highestScores[type] = attempt.score;
             
@@ -206,6 +211,11 @@ const DashboardPage = () => {
         // Get the highest score for each certification type
         attempts.forEach(attempt => {
           const skill = attempt.certification_type;
+          // Only process the main skill types
+          if (!['reading', 'writing', 'speaking', 'listening'].includes(skill)) {
+            return;
+          }
+          
           if (highestScores[skill] === undefined || attempt.score > highestScores[skill]) {
             highestScores[skill] = attempt.score;
           }
