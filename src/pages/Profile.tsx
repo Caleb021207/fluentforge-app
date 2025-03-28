@@ -29,6 +29,7 @@ interface TestScores {
 const DashboardPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authError, setAuthError] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     currentLevel: "",
     learningGoal: "",
@@ -43,7 +44,15 @@ const DashboardPage = () => {
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user }, error } = await supabase.auth.getUser();
+        
+        if (error) {
+          console.error('Auth error:', error);
+          setAuthError(true);
+          setIsLoading(false);
+          return;
+        }
+        
         setUser(user);
         
         // Check if this is the example profile
@@ -59,10 +68,16 @@ const DashboardPage = () => {
             await fetchTestScores(user.id);
           } catch (error) {
             console.error('Error in profile setup:', error);
+            toast({
+              title: "Error loading profile",
+              description: "There was a problem loading your profile data.",
+              variant: "destructive"
+            });
           }
         }
       } catch (error) {
         console.error('Error getting user:', error);
+        setAuthError(true);
       } finally {
         setIsLoading(false);
       }
@@ -240,7 +255,7 @@ const DashboardPage = () => {
     );
   }
 
-  if (!user) {
+  if (!user || authError) {
     return (
       <div className="text-center py-8">
         <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>

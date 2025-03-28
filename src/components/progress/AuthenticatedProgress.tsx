@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +10,8 @@ import RecommendationCard from "./RecommendationCard";
 import RecentAttemptsCard from "./RecentAttemptsCard";
 import NoProgressCard from "./NoProgressCard";
 import { processAttemptsByDate, generateRecommendations, normalizeAttempts } from "./ProgressDataProcessor";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface AuthenticatedProgressProps {
   user: User;
@@ -23,11 +24,13 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
   const [rawAttempts, setRawAttempts] = useState<CertificationAttempt[]>([]);
   const [normalizedAttempts, setNormalizedAttempts] = useState<CertificationAttempt[]>([]);
   const [hasTranscript, setHasTranscript] = useState<Record<string, boolean>>({});
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const fetchProgressData = useCallback(async (userId: string) => {
     try {
       setIsRefreshing(true);
+      setFetchError(null);
       
       const { data: attempts, error } = await supabase
         .from('certification_attempts')
@@ -35,7 +38,11 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         .eq('user_id', userId)
         .order('completed_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        setFetchError("There was a problem loading your progress data. Please try again later.");
+        throw error;
+      }
 
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
@@ -50,6 +57,11 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         const normalized = normalizeAttempts(attempts);
         setNormalizedAttempts(normalized);
       } else {
+        setRawAttempts([]);
+        setProgressData([]);
+        setRecommendations([]);
+        setNormalizedAttempts([]);
+        
         toast({
           title: "No Progress Data",
           description: "Complete some certification attempts to see your progress!",
@@ -148,6 +160,15 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
   return (
     <div className="space-y-6">
       <ProgressPageHeader isRefreshing={isRefreshing} onRefresh={handleRefresh} />
+      
+      {fetchError && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {fetchError}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {progressData.length > 0 ? (
         <>
