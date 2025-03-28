@@ -28,8 +28,8 @@ const LanguageAvailabilityBanner = () => {
   }
 
   return (
-    <Alert variant="warning" className="mb-6 bg-yellow-50 border-yellow-200">
-      <AlertCircle className="h-5 w-5 text-yellow-500" />
+    <Alert variant="warning" className="mb-6">
+      <AlertCircle className="h-5 w-5" />
       <AlertDescription className="text-sm md:text-base">
         Study materials for learning <span className="capitalize">{targetLanguage}</span> from <span className="capitalize">{nativeLanguage}</span> are coming soon! 
         Some features might be limited or unavailable.

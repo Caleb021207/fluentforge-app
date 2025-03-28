@@ -251,8 +251,8 @@ const Index = () => {
               </Button>
               
               {nativeLanguage && targetLanguage && !hasStudyMaterials && (
-                <Alert variant="warning" className="mt-4 bg-yellow-50 border-yellow-200">
-                  <AlertCircle className="h-4 w-4 text-yellow-500" />
+                <Alert variant="warning" className="mt-4">
+                  <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
                     Study materials for learning {targetLanguage} from {nativeLanguage} are coming soon!
                   </AlertDescription>

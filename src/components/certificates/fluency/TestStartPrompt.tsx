@@ -29,8 +29,8 @@ const TestStartPrompt = ({
       <p className="text-gray-500 mb-4">Ready to test your conversational Spanish skills?</p>
       
       {!hasStudyMaterials && (
-        <Alert variant="warning" className="mb-4 bg-yellow-50 border-yellow-200">
-          <AlertCircle className="h-4 w-4 text-yellow-500" />
+        <Alert variant="warning" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription className="text-sm">
             This test is not yet available for your selected language combination.
           </AlertDescription>
