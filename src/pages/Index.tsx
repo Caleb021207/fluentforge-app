@@ -13,6 +13,36 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+
+// Define language options
+const nativeLanguages = [
+  { value: "english", label: "English" },
+  { value: "spanish", label: "Spanish" },
+  { value: "french", label: "French" },
+  { value: "german", label: "German" },
+  { value: "italian", label: "Italian" },
+  { value: "portuguese", label: "Portuguese" },
+  { value: "russian", label: "Russian" },
+  { value: "chinese", label: "Chinese" },
+  { value: "japanese", label: "Japanese" },
+  { value: "korean", label: "Korean" },
+];
+
+const targetLanguages = [
+  { value: "spanish", label: "Spanish" },
+  { value: "french", label: "French" },
+  { value: "german", label: "German" },
+  { value: "italian", label: "Italian" },
+  { value: "portuguese", label: "Portuguese" },
+  { value: "english", label: "English" },
+  { value: "russian", label: "Russian" },
+  { value: "chinese", label: "Chinese" },
+  { value: "japanese", label: "Japanese" },
+  { value: "korean", label: "Korean" },
+];
 
 const Index = () => {
   const { toast } = useToast();
@@ -21,11 +51,14 @@ const Index = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [nativeLanguage, setNativeLanguage] = useState("");
+  const [targetLanguage, setTargetLanguage] = useState("");
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setIsSignedIn(!!user);
+      const { data } = await supabase.auth.getUser();
+      setIsSignedIn(!!data.user);
     };
     checkUser();
 
@@ -34,6 +67,13 @@ const Index = () => {
       checkUser();
     });
 
+    // Load language preferences from localStorage if available
+    const savedNativeLanguage = localStorage.getItem("nativeLanguage");
+    const savedTargetLanguage = localStorage.getItem("targetLanguage");
+    
+    if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
+    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
+
     return () => {
       subscription.unsubscribe();
     };
@@ -41,8 +81,11 @@ const Index = () => {
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
       let result;
+      
       if (isLogin) {
         result = await supabase.auth.signInWithPassword({
           email,
@@ -52,6 +95,12 @@ const Index = () => {
         result = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              native_language: nativeLanguage || undefined,
+              target_language: targetLanguage || undefined,
+            }
+          }
         });
       }
 
@@ -65,25 +114,59 @@ const Index = () => {
         title: isLogin ? "Successfully signed in" : "Account created",
         description: isLogin ? "Welcome back!" : "Please check your email to verify your account",
       });
-    } catch (error) {
+      
+      // Save language preferences if they're set
+      if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
+      if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
+      
+    } catch (error: any) {
+      console.error("Authentication error:", error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Authentication failed. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
+      setIsLoading(true);
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+        }
       });
+      
       if (error) throw error;
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Google sign in error:", error);
       toast({
         title: "Error signing in",
-        description: "Please try again later",
+        description: error.message || "Please try again later",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLanguageSelection = () => {
+    if (nativeLanguage && targetLanguage) {
+      localStorage.setItem("nativeLanguage", nativeLanguage);
+      localStorage.setItem("targetLanguage", targetLanguage);
+      
+      toast({
+        title: "Language preferences saved",
+        description: `You're now learning ${targetLanguage} from ${nativeLanguage}`,
+      });
+    } else {
+      toast({
+        title: "Please select both languages",
+        description: "You need to select both your native language and the language you want to learn",
         variant: "destructive",
       });
     }
@@ -91,7 +174,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-6 max-w-2xl mx-auto p-6">
+      <div className="text-center space-y-8 max-w-2xl mx-auto p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -104,6 +187,54 @@ const Index = () => {
             Your personal AI-powered language learning companion. Start your journey
             to fluency today.
           </p>
+          
+          <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
+            <CardContent className="pt-6">
+              <h2 className="text-xl font-semibold mb-4">Select Your Language Preferences</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="space-y-2">
+                  <Label htmlFor="nativeLanguage">I speak:</Label>
+                  <Select value={nativeLanguage} onValueChange={setNativeLanguage}>
+                    <SelectTrigger id="nativeLanguage" className="w-full">
+                      <SelectValue placeholder="Select your native language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {nativeLanguages.map((lang) => (
+                        <SelectItem key={lang.value} value={lang.value}>
+                          {lang.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="targetLanguage">I want to learn:</Label>
+                  <Select value={targetLanguage} onValueChange={setTargetLanguage}>
+                    <SelectTrigger id="targetLanguage" className="w-full">
+                      <SelectValue placeholder="Select language to learn" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {targetLanguages.map((lang) => (
+                        <SelectItem key={lang.value} value={lang.value}>
+                          {lang.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <Button 
+                onClick={handleLanguageSelection} 
+                className="w-full"
+                disabled={!nativeLanguage || !targetLanguage}
+              >
+                Save Language Preferences
+              </Button>
+            </CardContent>
+          </Card>
+          
           <div className="space-x-4">
             {!isSignedIn ? (
               <Button 
@@ -167,11 +298,19 @@ const Index = () => {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Button type="submit" className="text-sm">
-                {isLogin ? "Sign In" : "Create Account"}
+              <Button type="submit" className="text-sm" disabled={isLoading}>
+                {isLoading 
+                  ? "Processing..." 
+                  : isLogin ? "Sign In" : "Create Account"}
               </Button>
-              <Button type="button" variant="outline" onClick={handleGoogleLogin} className="text-sm">
-                Continue with Google
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={handleGoogleLogin} 
+                className="text-sm"
+                disabled={isLoading}
+              >
+                {isLoading ? "Please wait..." : "Continue with Google"}
               </Button>
             </div>
             <Button
@@ -179,6 +318,7 @@ const Index = () => {
               variant="link"
               onClick={() => setIsLogin(!isLogin)}
               className="w-full text-sm"
+              disabled={isLoading}
             >
               {isLogin
                 ? "Don't have an account? Sign up"
@@ -192,3 +332,4 @@ const Index = () => {
 };
 
 export default Index;
+
