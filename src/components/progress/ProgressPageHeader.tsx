@@ -1,44 +1,15 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Loader2, RefreshCw, WifiOff } from "lucide-react";
+import { useLocalization } from "@/context/LocalizationContext";
 
-interface ProgressPageHeaderProps {
-  isRefreshing: boolean;
-  onRefresh: () => void;
-  isOffline?: boolean;
-}
-
-const ProgressPageHeader = ({ isRefreshing, onRefresh, isOffline = false }: ProgressPageHeaderProps) => {
+const ProgressPageHeader = () => {
+  const { t } = useLocalization();
+  
   return (
     <div className="flex justify-between items-center">
       <h1 className="text-3xl font-bold text-lingua-text mb-4">
-        Your Learning Progress
+        {t("yourLearningProgress")}
       </h1>
-      
-      <Button 
-        variant="outline" 
-        onClick={onRefresh} 
-        disabled={isRefreshing || isOffline}
-        className="flex items-center gap-2"
-      >
-        {isRefreshing ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Refreshing...
-          </>
-        ) : isOffline ? (
-          <>
-            <WifiOff className="h-4 w-4" />
-            Offline
-          </>
-        ) : (
-          <>
-            <RefreshCw className="h-4 w-4" />
-            Refresh Data
-          </>
-        )}
-      </Button>
     </div>
   );
 };

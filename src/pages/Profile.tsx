@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Loader2, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,7 +9,8 @@ import LearningGoals from "@/components/profile/LearningGoals";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ensureUserProfile, getUserProfile, updateUserProfile } from "@/utils/profileUtils";
-import { UserProfile } from "@/types/supabase"; 
+import { UserProfile } from "@/types/supabase";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface ProfileData {
   currentLevel: string;
@@ -40,6 +40,7 @@ const DashboardPage = () => {
   const [isExampleProfile, setIsExampleProfile] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t, currentLanguage } = useLocalization();
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -55,7 +56,6 @@ const DashboardPage = () => {
         
         setUser(user);
         
-        // Check if this is the example profile
         if (user?.email === "Example@gmail.com") {
           setIsExampleProfile(true);
         }
@@ -86,31 +86,24 @@ const DashboardPage = () => {
     getCurrentUser();
   }, [toast]);
 
-  // Effect to update target level when current level changes
   useEffect(() => {
     if (profileData.currentLevel) {
       const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
       const currentLevelIndex = CEFR_LEVELS.indexOf(profileData.currentLevel);
       const targetLevelIndex = CEFR_LEVELS.indexOf(profileData.targetLevel);
       
-      // Don't set a target level for C2 users
       if (profileData.currentLevel === 'C2') {
         setProfileData(prev => ({
           ...prev,
           targetLevel: ''
         }));
         
-        // Update the target level in the database
         if (user) {
           updateTargetLevel(user.id, '');
         }
         return;
       }
       
-      // Only update if:
-      // 1. Current level is valid
-      // 2. Current level is not C2 (highest level)
-      // 3. Target level is lower than or equal to current level
       if (currentLevelIndex !== -1 && 
           currentLevelIndex < CEFR_LEVELS.length - 1 && 
           (targetLevelIndex === -1 || targetLevelIndex <= currentLevelIndex)) {
@@ -123,7 +116,6 @@ const DashboardPage = () => {
           targetLevel: nextLevel
         }));
         
-        // Update the target level in the database
         if (user) {
           updateTargetLevel(user.id, nextLevel);
         }
@@ -169,7 +161,6 @@ const DashboardPage = () => {
       }
 
       if (attempts && attempts.length > 0) {
-        // Get highest score for each certification type
         const highestScores: Record<string, any> = {
           reading: 0,
           writing: 0,
@@ -180,7 +171,6 @@ const DashboardPage = () => {
 
         attempts.forEach(attempt => {
           const type = attempt.certification_type;
-          // Skip if not one of our main skill types
           if (!['reading', 'writing', 'speaking', 'listening'].includes(type)) {
             return;
           }
@@ -188,7 +178,6 @@ const DashboardPage = () => {
           if (attempt.score > highestScores[type]) {
             highestScores[type] = attempt.score;
             
-            // Only count each certification type once
             if (highestScores[type] === attempt.score && !highestScores[`${type}_counted`]) {
               highestScores.count++;
               highestScores[`${type}_counted`] = true;
@@ -223,10 +212,8 @@ const DashboardPage = () => {
       if (attempts && attempts.length > 0) {
         const highestScores: TestScores = {};
         
-        // Get the highest score for each certification type
         attempts.forEach(attempt => {
           const skill = attempt.certification_type;
-          // Only process the main skill types
           if (!['reading', 'writing', 'speaking', 'listening'].includes(skill)) {
             return;
           }
@@ -258,13 +245,19 @@ const DashboardPage = () => {
   if (!user || authError) {
     return (
       <div className="text-center py-8">
-        <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
-        <p className="mb-6">Please sign in to view your dashboard and track your language learning progress.</p>
+        <h1 className="text-2xl font-bold mb-4">
+          {currentLanguage === "spanish" ? "Autenticación Requerida" : "Authentication Required"}
+        </h1>
+        <p className="mb-6">
+          {currentLanguage === "spanish" 
+            ? "Por favor inicia sesión para ver tu tablero y seguir tu progreso de aprendizaje de idiomas." 
+            : "Please sign in to view your dashboard and track your language learning progress."}
+        </p>
         <Button 
           onClick={handleSignIn} 
           className="bg-lingua-primary hover:bg-lingua-primary/90"
         >
-          Sign In
+          {t("signIn")}
         </Button>
       </div>
     );
@@ -274,7 +267,7 @@ const DashboardPage = () => {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-lingua-text mb-4 flex items-center gap-2">
         <LayoutDashboard className="h-7 w-7" />
-        Language Learning Dashboard
+        {currentLanguage === "spanish" ? "Tablero de Aprendizaje de Idiomas" : "Language Learning Dashboard"}
       </h1>
 
       <div className="grid gap-6">

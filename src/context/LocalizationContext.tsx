@@ -88,7 +88,20 @@ const translations: Translations = {
     xpPoints: "XP Points",
     dailyStreak: "Daily Streak",
     days: "days",
-    nextLevel: "Next Level"
+    nextLevel: "Next Level",
+    // Progress page - additional translations
+    yourLearningProgress: "Your Learning Progress",
+    scoreTrends: "Score Trends",
+    noProgressData: "No Progress Data",
+    completeTestsToSeeProgress: "Complete some certification attempts to see your progress!",
+    offlineDataMayNotBeUpToDate: "You're currently offline. Data shown may not be up to date.",
+    networkConnectionIssue: "Network connection issue. Unable to load your progress data.",
+    problemLoadingProgressData: "There was a problem loading your progress data. Please try again later.",
+    failedToLoadProgressData: "Failed to load progress data. Please try again later.",
+    error: "Error",
+    viewingDetails: "Viewing details",
+    featureComingSoon: "This feature will be implemented in a future update.",
+    recentCertificationAttempts: "Recent Certification Attempts"
   },
   spanish: {
     welcomeToLanguageLearning: "Bienvenido a Palavox",
@@ -155,7 +168,20 @@ const translations: Translations = {
     xpPoints: "Puntos XP",
     dailyStreak: "Racha Diaria",
     days: "días",
-    nextLevel: "Siguiente Nivel"
+    nextLevel: "Siguiente Nivel",
+    // Progress page - additional translations
+    yourLearningProgress: "Tu Progreso de Aprendizaje",
+    scoreTrends: "Tendencias de Puntuación",
+    noProgressData: "No Hay Datos de Progreso",
+    completeTestsToSeeProgress: "¡Completa algunos intentos de certificación para ver tu progreso!",
+    offlineDataMayNotBeUpToDate: "Estás desconectado. Los datos mostrados pueden no estar actualizados.",
+    networkConnectionIssue: "Problema de conexión de red. No se pueden cargar tus datos de progreso.",
+    problemLoadingProgressData: "Hubo un problema al cargar tus datos de progreso. Por favor intenta más tarde.",
+    failedToLoadProgressData: "Error al cargar los datos de progreso. Por favor intenta más tarde.",
+    error: "Error",
+    viewingDetails: "Viendo detalles",
+    featureComingSoon: "Esta función se implementará en una actualización futura.",
+    recentCertificationAttempts: "Intentos de Certificación Recientes"
   },
   // Add other languages as needed
 };

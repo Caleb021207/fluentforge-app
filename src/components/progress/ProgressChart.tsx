@@ -1,6 +1,6 @@
-
 import React from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface ProgressData {
   date: string;
@@ -33,6 +33,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const ProgressChart = ({ progressData }: ProgressChartProps) => {
+  const { t, currentLanguage } = useLocalization();
+  
   return (
     <div className="h-[400px]">
       <ResponsiveContainer width="100%" height="100%">

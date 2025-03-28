@@ -14,6 +14,7 @@ import { processAttemptsByDate, generateRecommendations, normalizeAttempts } fro
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, WifiOff } from "lucide-react";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface AuthenticatedProgressProps {
   user: User;
@@ -30,10 +31,11 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
   const { toast } = useToast();
   const { isOffline, isOnline } = useConnectionStatus();
   const [retryCount, setRetryCount] = useState(0);
+  const { t } = useLocalization();
 
   const fetchProgressData = useCallback(async (userId: string) => {
     if (isOffline) {
-      setFetchError("You're currently offline. Data shown may not be up to date.");
+      setFetchError(t("offlineDataMayNotBeUpToDate"));
       return;
     }
     
@@ -50,9 +52,9 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         console.error('Database error:', error);
         
         if (error.message.includes("Failed to fetch")) {
-          setFetchError("Network connection issue. Unable to load your progress data.");
+          setFetchError(t("networkConnectionIssue"));
         } else {
-          setFetchError("There was a problem loading your progress data. Please try again later.");
+          setFetchError(t("problemLoadingProgressData"));
         }
         return; // Exit early
       }
@@ -79,28 +81,28 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         setNormalizedAttempts([]);
         
         toast({
-          title: "No Progress Data",
-          description: "Complete some certification attempts to see your progress!",
+          title: t("noProgressData"),
+          description: t("completeTestsToSeeProgress"),
         });
       }
     } catch (error) {
       console.error('Error fetching progress data:', error);
       
       if (error instanceof Error && error.message.includes("Failed to fetch")) {
-        setFetchError("Network connection issue. Unable to load your progress data.");
+        setFetchError(t("networkConnectionIssue"));
       } else {
-        setFetchError("Failed to load progress data. Please try again later.");
+        setFetchError(t("failedToLoadProgressData"));
         
         toast({
-          title: "Error",
-          description: "Failed to load progress data. Please try again later.",
+          title: t("error"),
+          description: t("failedToLoadProgressData"),
           variant: "destructive",
         });
       }
     } finally {
       setIsRefreshing(false);
     }
-  }, [toast, isOffline]);
+  }, [toast, isOffline, t]);
 
   useEffect(() => {
     if (user && isOnline) {
@@ -186,34 +188,17 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
     }
   }, [rawAttempts, isOffline, isOnline]);
 
-  const handleRefresh = () => {
-    if (user && !isOffline) {
-      setRetryCount(0); // Reset retry count
-      fetchProgressData(user.id);
-    } else if (isOffline) {
-      toast({
-        title: "Offline",
-        description: "You are currently offline. Please check your internet connection.",
-        variant: "destructive"
-      });
-    }
-  };
-
   const handleViewAttempt = async (attemptId: string) => {
     console.log("View attempt:", attemptId);
     toast({
-      title: "Viewing details",
-      description: "This feature will be implemented in a future update.",
+      title: t("viewingDetails"),
+      description: t("featureComingSoon"),
     });
   };
 
   return (
     <div className="space-y-6">
-      <ProgressPageHeader 
-        isRefreshing={isRefreshing} 
-        onRefresh={handleRefresh} 
-        isOffline={isOffline}
-      />
+      <ProgressPageHeader />
       
       {fetchError && (
         <Alert variant={isOffline ? "warning" : "destructive"}>
@@ -232,7 +217,7 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Score Trends</CardTitle>
+              <CardTitle>{t("scoreTrends")}</CardTitle>
             </CardHeader>
             <CardContent>
               <ProgressChart progressData={progressData} />
