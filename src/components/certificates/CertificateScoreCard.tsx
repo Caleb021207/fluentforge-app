@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { determineLevel, ensureValidScore } from "@/components/certifications/utils/scoreUtils";
 import { CertificationAttempt } from "@/types/supabase";
 import { Award, MessageSquare } from "lucide-react";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface CertificateScoreCardProps {
   type: string;
@@ -12,11 +13,20 @@ interface CertificateScoreCardProps {
 }
 
 const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
+  const { t, currentLanguage } = useLocalization();
+
   const formatType = (type: string) => {
     if (type === "conversation" || type === "fluency") {
-      return "Conversation Fluency";
+      return t("conversationalFluency");
     }
-    return type.charAt(0).toUpperCase() + type.slice(1);
+    
+    switch(type) {
+      case "reading": return t("reading");
+      case "writing": return t("writing");
+      case "speaking": return t("speaking");
+      case "listening": return t("listening");
+      default: return type.charAt(0).toUpperCase() + type.slice(1);
+    }
   };
 
   const getIcon = () => {
@@ -69,12 +79,16 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
               indicatorClassName={getProgressColor(score)}
             />
             <div className="flex justify-between text-sm text-gray-600">
-              <span>Score: {score}%</span>
-              <span>Level: {determineLevel(score)}</span>
+              <span>{t("score")}: {score}%</span>
+              <span>{t("level")}: {determineLevel(score)}</span>
             </div>
           </>
         ) : (
-          <div className="text-sm text-gray-500">No completed attempts yet</div>
+          <div className="text-sm text-gray-500">
+            {currentLanguage === "spanish" 
+              ? "Aún no hay intentos completados" 
+              : "No completed attempts yet"}
+          </div>
         )}
       </CardContent>
     </Card>

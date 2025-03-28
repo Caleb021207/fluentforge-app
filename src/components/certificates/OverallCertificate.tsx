@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { CertificationAttempt } from "@/types/supabase";
 import CEFRLevelRubric from "./CEFRLevelRubric";
 import CEFRLevelDescriptions from "./CEFRLevelDescriptions";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface OverallCertificateProps {
   compositeScore: {
@@ -14,24 +15,28 @@ interface OverallCertificateProps {
 }
 
 const OverallCertificate = ({ compositeScore }: OverallCertificateProps) => {
+  const { t, currentLanguage } = useLocalization();
+  
   if (!compositeScore) return null;
 
   return (
     <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
       <CardHeader>
-        <CardTitle>Overall Language Proficiency Certificate</CardTitle>
+        <CardTitle>{t("overallCertificate")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-semibold text-blue-900">
-            CEFR Level {compositeScore.level}
+            {t("level")} {compositeScore.level}
           </h2>
           <p className="text-gray-600">
-            Overall Score: {compositeScore.score}%
+            {t("overallLevel")}: {compositeScore.score}%
           </p>
           <div className="p-4 border rounded-lg bg-white">
             <p className="text-sm text-gray-600">
-              This certificate represents your current language proficiency level based on your highest test scores across all four skills: reading, writing, speaking, and listening.
+              {currentLanguage === "spanish" 
+                ? "Este certificado representa tu nivel de competencia lingüística actual basado en tus puntuaciones más altas en las cuatro habilidades: lectura, escritura, expresión oral y comprensión auditiva." 
+                : "This certificate represents your current language proficiency level based on your highest test scores across all four skills: reading, writing, speaking, and listening."}
             </p>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { determineLevel, ensureValidScore } from "@/components/certifications/ut
 import { CertificationAttempt } from "@/types/supabase";
 import { Award, MessageSquare, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface CertificationAttemptsListProps {
   attempts: CertificationAttempt[] | undefined;
@@ -21,12 +22,21 @@ const CertificationAttemptsList = ({
   onViewAttempt, 
   isLoading 
 }: CertificationAttemptsListProps) => {
+  const { t, currentLanguage } = useLocalization();
+
   const formatCertificationType = (type: string) => {
     // Special handling for conversation/fluency test
     if (type === "conversation" || type === "fluency") {
-      return "Conversation Fluency";
+      return t("conversationalFluency");
     }
-    return type.charAt(0).toUpperCase() + type.slice(1);
+    
+    switch(type) {
+      case "reading": return t("reading");
+      case "writing": return t("writing");
+      case "speaking": return t("speaking");
+      case "listening": return t("listening");
+      default: return type.charAt(0).toUpperCase() + type.slice(1);
+    }
   };
 
   // Add a helper function to ensure we display valid scores
@@ -40,7 +50,7 @@ const CertificationAttemptsList = ({
     try {
       return format(new Date(dateString), 'PPP');
     } catch (error) {
-      return 'Unknown date';
+      return currentLanguage === "spanish" ? 'Fecha desconocida' : 'Unknown date';
     }
   };
 
@@ -69,13 +79,13 @@ const CertificationAttemptsList = ({
   );
   
   if (isLoading) {
-    return <div>Loading certification data...</div>;
+    return <div>{currentLanguage === "spanish" ? "Cargando datos de certificación..." : "Loading certification data..."}</div>;
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Certification Attempts</CardTitle>
+        <CardTitle>{t("certificationHistory")}</CardTitle>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[400px]">
@@ -93,7 +103,7 @@ const CertificationAttemptsList = ({
                       {!isAttemptComplete(attempt) && (
                         <Badge variant="outline" className="ml-2 text-yellow-600 border-yellow-300 bg-yellow-50">
                           <AlertCircle className="h-3 w-3 mr-1" />
-                          Incomplete
+                          {currentLanguage === "spanish" ? "Incompleto" : "Incomplete"}
                         </Badge>
                       )}
                     </div>
@@ -107,7 +117,9 @@ const CertificationAttemptsList = ({
                         {isAttemptComplete(attempt) ? `${getValidScore(attempt)}%` : "—"}
                       </div>
                       <div className="text-sm text-gray-600">
-                        {isAttemptComplete(attempt) ? `Level ${determineLevel(getValidScore(attempt))}` : "Not scored"}
+                        {isAttemptComplete(attempt) 
+                          ? `${t("level")} ${determineLevel(getValidScore(attempt))}`
+                          : currentLanguage === "spanish" ? "No puntuado" : "Not scored"}
                       </div>
                     </div>
                     {hasTranscript[attempt.id] && (
@@ -115,7 +127,7 @@ const CertificationAttemptsList = ({
                         onClick={() => onViewAttempt(attempt.id)}
                         className="text-blue-500 text-sm underline"
                       >
-                        View Details
+                        {t("viewDetails")}
                       </button>
                     )}
                   </div>
@@ -123,8 +135,8 @@ const CertificationAttemptsList = ({
               ))
             ) : (
               <div className="text-center text-gray-500 p-10">
-                <p>No certification attempts recorded yet</p>
-                <p className="text-sm mt-2">Take a test to see your results here</p>
+                <p>{t("noAttempts")}</p>
+                <p className="text-sm mt-2">{t("takeATest")}</p>
               </div>
             )}
           </div>

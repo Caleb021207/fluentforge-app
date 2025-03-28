@@ -1,5 +1,6 @@
 
 import React from "react";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface RubricItemProps {
   level: string;
@@ -16,13 +17,17 @@ const rubricData = [
 ];
 
 const CEFRLevelRubric = () => {
+  const { t, currentLanguage } = useLocalization();
+  
   return (
     <div className="mt-6 space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900">CEFR Level Rubric</h3>
+      <h3 className="text-lg font-semibold text-gray-900">
+        {currentLanguage === "spanish" ? "Rúbrica de Niveles CEFR" : "CEFR Level Rubric"}
+      </h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {rubricData.map((item) => (
           <div key={item.level} className="p-2 bg-white rounded border text-center">
-            <div className="font-medium">Level {item.level}</div>
+            <div className="font-medium">{t("level")} {item.level}</div>
             <div className="text-sm text-gray-600">{item.range}</div>
           </div>
         ))}
