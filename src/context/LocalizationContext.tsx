@@ -48,7 +48,23 @@ const translations: Translations = {
     startTest: "Start Test",
     processing: "Processing...",
     pleaseLoginToTakeTest: "Please login to take the test",
-    microphoneAccessRequired: "Microphone access required"
+    microphoneAccessRequired: "Microphone access required",
+    // Practice page translations
+    practiceWithAITutor: "Practice with AI Language Tutor",
+    chatWithAITutor: "Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.",
+    startVoiceChat: "Start Voice Chat",
+    stopVoiceChat: "Stop Voice Chat",
+    getSkillsAssessment: "Get Skills Assessment",
+    reading: "Reading",
+    writing: "Writing",
+    speaking: "Speaking",
+    listening: "Listening",
+    overallLevel: "Overall Level",
+    startChatting: "Start chatting with your AI language tutor!",
+    clickToStartVoice: "Click 'Start Voice Chat' to begin speaking with the tutor",
+    allowMicAccess: "Please allow microphone access to use voice features",
+    send: "Send",
+    typeMessage: "Type your message in English or Spanish..."
   },
   spanish: {
     welcomeToLanguageLearning: "Bienvenido a Palavox",
@@ -75,7 +91,23 @@ const translations: Translations = {
     startTest: "Comenzar Prueba",
     processing: "Procesando...",
     pleaseLoginToTakeTest: "Por favor inicia sesión para realizar la prueba",
-    microphoneAccessRequired: "Se requiere acceso al micrófono"
+    microphoneAccessRequired: "Se requiere acceso al micrófono",
+    // Practice page translations
+    practiceWithAITutor: "Practica con el Tutor de Idiomas IA",
+    chatWithAITutor: "Chatea con nuestro tutor de IA para practicar tu inglés. El tutor te ayudará a corregir tu gramática, vocabulario y pronunciación. Puedes hacer preguntas sobre el idioma o la cultura.",
+    startVoiceChat: "Iniciar Chat de Voz",
+    stopVoiceChat: "Detener Chat de Voz",
+    getSkillsAssessment: "Obtener Evaluación de Habilidades",
+    reading: "Lectura",
+    writing: "Escritura",
+    speaking: "Habla",
+    listening: "Comprensión Auditiva",
+    overallLevel: "Nivel General",
+    startChatting: "¡Comienza a chatear con tu tutor de idiomas con IA!",
+    clickToStartVoice: "Haz clic en 'Iniciar Chat de Voz' para comenzar a hablar con el tutor",
+    allowMicAccess: "Por favor permite el acceso al micrófono para utilizar las funciones de voz",
+    send: "Enviar",
+    typeMessage: "Escribe tu mensaje en español o inglés..."
   },
   // Add other languages as needed
 };
