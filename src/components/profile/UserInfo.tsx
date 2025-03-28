@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
 import { updateUserProfile } from "@/utils/profileUtils";
 import { supabase } from "@/integrations/supabase/client";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface UserInfoProps {
   user: User | null;
@@ -29,10 +29,10 @@ const UserInfo = ({
   const [isEditing, setIsEditing] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState(displayName);
   const [isSaving, setIsSaving] = useState(false);
+  const { currentLanguage } = useLocalization();
 
   const handleEditToggle = () => {
     if (isEditing) {
-      // If we're exiting edit mode without saving, reset to original value
       setNewDisplayName(displayName);
     }
     setIsEditing(!isEditing);
@@ -44,7 +44,6 @@ const UserInfo = ({
     try {
       setIsSaving(true);
       
-      // Now using the profileUtils helper that works with the correct types
       const updatedProfile = await updateUserProfile(user.id, { 
         display_name: newDisplayName 
       });
@@ -82,7 +81,6 @@ const UserInfo = ({
       const fileExt = file.name.split('.').pop();
       const filePath = `${user.id}/avatar.${fileExt}`;
 
-      // Check if avatars storage bucket exists
       try {
         const { error: uploadError } = await supabase.storage
           .from('avatars')
@@ -96,7 +94,6 @@ const UserInfo = ({
 
         setAvatarUrl(publicUrl);
 
-        // Now using the profileUtils helper
         const updatedProfile = await updateUserProfile(user.id, { 
           avatar_url: publicUrl 
         });
@@ -128,13 +125,17 @@ const UserInfo = ({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Personal Information</CardTitle>
+        <CardTitle>
+          {currentLanguage === "spanish" ? "Información Personal" : "Personal Information"}
+        </CardTitle>
         <Button
           variant="outline" 
           size="sm"
           onClick={handleEditToggle}
         >
-          {isEditing ? "Cancel" : "Edit"}
+          {isEditing 
+            ? (currentLanguage === "spanish" ? "Cancelar" : "Cancel") 
+            : (currentLanguage === "spanish" ? "Editar" : "Edit")}
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -158,7 +159,9 @@ const UserInfo = ({
             <Label htmlFor="avatar" className="cursor-pointer">
               <div className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800">
                 <Upload className="w-4 h-4" />
-                <span>Upload Photo</span>
+                <span>
+                  {currentLanguage === "spanish" ? "Subir Foto" : "Upload Photo"}
+                </span>
               </div>
               <Input
                 id="avatar"
@@ -172,13 +175,17 @@ const UserInfo = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="displayName">Display Name</Label>
+          <Label htmlFor="displayName">
+            {currentLanguage === "spanish" ? "Nombre de Usuario" : "Display Name"}
+          </Label>
           {isEditing ? (
             <Input
               id="displayName"
               value={newDisplayName}
               onChange={(e) => setNewDisplayName(e.target.value)}
-              placeholder="Enter your display name"
+              placeholder={currentLanguage === "spanish" 
+                ? "Ingresa tu nombre de usuario" 
+                : "Enter your display name"}
             />
           ) : (
             <Input
@@ -199,12 +206,12 @@ const UserInfo = ({
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                {currentLanguage === "spanish" ? "Guardando..." : "Saving..."}
               </>
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Save Changes
+                {currentLanguage === "spanish" ? "Guardar Cambios" : "Save Changes"}
               </>
             )}
           </Button>

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, TrendingUp, BarChart } from "lucide-react";
 import { getLevelDescription, CEFR_TO_ACTFL } from "@/components/certifications/utils/scoreUtils";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface LevelRoadmapProps {
   currentLevel: string;
@@ -19,6 +20,8 @@ interface LevelRoadmapProps {
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: LevelRoadmapProps) => {
+  const { t, currentLanguage } = useLocalization();
+  
   const calculateProgressToNextLevel = () => {
     // If no target level (C2 users) or current level not found, return 100%
     if (!targetLevel || CEFR_LEVELS.indexOf(currentLevel) === -1) return 100;
@@ -34,16 +37,16 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
   };
 
   const getRemainingTime = () => {
-    if (!targetDate) return "No target date set";
-    if (!targetLevel) return "Maximum level achieved";
+    if (!targetDate) return currentLanguage === "spanish" ? "No hay fecha objetivo establecida" : "No target date set";
+    if (!targetLevel) return currentLanguage === "spanish" ? "Nivel máximo alcanzado" : "Maximum level achieved";
     
     const target = new Date(targetDate);
     const now = new Date();
     const days = Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (days < 0) return "Target date has passed";
-    if (days === 0) return "Today is the target date";
-    return `${days} days remaining`;
+    if (days < 0) return currentLanguage === "spanish" ? "La fecha objetivo ha pasado" : "Target date has passed";
+    if (days === 0) return currentLanguage === "spanish" ? "Hoy es la fecha objetivo" : "Today is the target date";
+    return currentLanguage === "spanish" ? `${days} días restantes` : `${days} days remaining`;
   };
 
   return (
@@ -51,27 +54,33 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5" />
-          CEFR Level Roadmap
+          {currentLanguage === "spanish" ? "Mapa de Ruta de Niveles CEFR" : "CEFR Level Roadmap"}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
           {currentLevel === 'C2' ? (
             <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
-              <h3 className="font-medium text-green-800">Congratulations!</h3>
+              <h3 className="font-medium text-green-800">
+                {currentLanguage === "spanish" ? "¡Felicitaciones!" : "Congratulations!"}
+              </h3>
               <p className="text-green-700">
-                You've reached C2, the highest proficiency level. Keep practicing to maintain your skills!
+                {currentLanguage === "spanish" 
+                  ? "Has alcanzado C2, el nivel más alto de competencia. ¡Sigue practicando para mantener tus habilidades!" 
+                  : "You've reached C2, the highest proficiency level. Keep practicing to maintain your skills!"}
               </p>
             </div>
           ) : (
             <div className="space-y-2">
               <div className="flex justify-between text-sm text-gray-600">
-                <span>{currentLevel || 'Not assessed'}</span>
+                <span>{currentLevel || (currentLanguage === "spanish" ? "No evaluado" : "Not assessed")}</span>
                 <span>{targetLevel}</span>
               </div>
               <Progress value={calculateProgressToNextLevel()} />
               <div className="flex justify-between items-center mt-2">
-                <span className="text-sm font-medium">Progress to Goal</span>
+                <span className="text-sm font-medium">
+                  {currentLanguage === "spanish" ? "Progreso hacia la Meta" : "Progress to Goal"}
+                </span>
                 <span className="text-sm text-gray-600">{calculateProgressToNextLevel()}%</span>
               </div>
             </div>
@@ -81,12 +90,14 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
               <div className="flex items-center gap-2 mb-3">
                 <BarChart className="h-4 w-4 text-lingua-primary" />
-                <h3 className="font-medium">Your Test Scores</h3>
+                <h3 className="font-medium">
+                  {currentLanguage === "spanish" ? "Tus Puntajes de Prueba" : "Your Test Scores"}
+                </h3>
               </div>
               <div className="grid gap-2">
                 {testScores.reading !== undefined && (
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Reading:</span>
+                    <span className="text-sm">{currentLanguage === "spanish" ? "Lectura:" : "Reading:"}</span>
                     <div className="flex items-center gap-2">
                       <Progress value={testScores.reading} className="w-24 h-2" />
                       <span className="text-sm font-medium">{testScores.reading}%</span>
@@ -95,7 +106,7 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
                 )}
                 {testScores.writing !== undefined && (
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Writing:</span>
+                    <span className="text-sm">{currentLanguage === "spanish" ? "Escritura:" : "Writing:"}</span>
                     <div className="flex items-center gap-2">
                       <Progress value={testScores.writing} className="w-24 h-2" />
                       <span className="text-sm font-medium">{testScores.writing}%</span>
@@ -104,7 +115,7 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
                 )}
                 {testScores.speaking !== undefined && (
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Speaking:</span>
+                    <span className="text-sm">{currentLanguage === "spanish" ? "Habla:" : "Speaking:"}</span>
                     <div className="flex items-center gap-2">
                       <Progress value={testScores.speaking} className="w-24 h-2" />
                       <span className="text-sm font-medium">{testScores.speaking}%</span>
@@ -113,7 +124,7 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
                 )}
                 {testScores.listening !== undefined && (
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Listening:</span>
+                    <span className="text-sm">{currentLanguage === "spanish" ? "Comprensión Auditiva:" : "Listening:"}</span>
                     <div className="flex items-center gap-2">
                       <Progress value={testScores.listening} className="w-24 h-2" />
                       <span className="text-sm font-medium">{testScores.listening}%</span>
@@ -130,7 +141,9 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
           </div>
 
           <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-4">
-            <h4 className="text-sm font-medium mb-2">CEFR to ACTFL Conversion</h4>
+            <h4 className="text-sm font-medium mb-2">
+              {currentLanguage === "spanish" ? "Conversión de CEFR a ACTFL" : "CEFR to ACTFL Conversion"}
+            </h4>
             <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
               {Object.entries(CEFR_TO_ACTFL).map(([cefr, actfl]) => (
                 <div key={cefr} className="flex justify-between">
@@ -165,12 +178,14 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{level}</span>
                     <span className="text-sm">
-                      {isCurrent && '(Current)'}
-                      {isTarget && '(Target)'}
+                      {isCurrent && (currentLanguage === "spanish" ? '(Actual)' : '(Current)')}
+                      {isTarget && (currentLanguage === "spanish" ? '(Objetivo)' : '(Target)')}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-1">
-                    {getLevelDescription(level)}
+                    {currentLanguage === "spanish" 
+                      ? getSpanishLevelDescription(level) 
+                      : getLevelDescription(level)}
                   </p>
                 </div>
               );
@@ -180,6 +195,26 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
       </CardContent>
     </Card>
   );
+};
+
+// Helper function to get Spanish descriptions for CEFR levels
+const getSpanishLevelDescription = (level: string) => {
+  switch (level) {
+    case 'C2':
+      return 'Dominio: Puede entender prácticamente todo texto, producir textos con fluidez y precisión en situaciones complejas, y comprender a hablantes nativos en temas abstractos.';
+    case 'C1':
+      return 'Avanzado: Puede entender textos largos y complejos, expresarse con fluidez y espontaneidad, y usar el lenguaje con eficacia en contextos sociales y profesionales.';
+    case 'B2':
+      return 'Intermedio alto: Puede entender ideas principales de textos complejos, interactuar con fluidez con hablantes nativos, y producir textos detallados sobre diversos temas.';
+    case 'B1':
+      return 'Intermedio: Puede comprender puntos principales sobre temas familiares, desenvolverse en situaciones de viaje, y producir textos sencillos sobre temas de interés personal.';
+    case 'A2':
+      return 'Elemental: Puede entender frases y expresiones de uso frecuente, comunicarse en tareas sencillas y habituales, y describir aspectos de su pasado y entorno.';
+    case 'A1':
+      return 'Principiante: Puede entender y usar expresiones cotidianas básicas, presentarse a sí mismo y a otros, y responder a preguntas sobre detalles personales básicos.';
+    default:
+      return '';
+  }
 };
 
 export default LevelRoadmap;

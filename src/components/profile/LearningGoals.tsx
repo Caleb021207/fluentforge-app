@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface LearningGoalsProps {
   user: User | null;
@@ -45,6 +46,7 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
     listening: false
   });
   const { toast } = useToast();
+  const { currentLanguage } = useLocalization();
 
   useEffect(() => {
     if (user) {
@@ -203,7 +205,7 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
         <div className="flex justify-between items-center">
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Learning Progress
+            {currentLanguage === "spanish" ? "Progreso de Aprendizaje" : "Learning Progress"}
           </CardTitle>
           
           <Button 
@@ -214,25 +216,32 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
             className="h-8 px-2"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span className="sr-only">Refresh</span>
+            <span className="sr-only">
+              {currentLanguage === "spanish" ? "Actualizar" : "Refresh"}
+            </span>
           </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center space-y-2">
           <p className="text-lg font-medium">
-            Targeting CEFR Level: {profileData.targetLevel}
+            {currentLanguage === "spanish" ? "Objetivo Nivel CEFR: " : "Targeting CEFR Level: "}
+            {profileData.targetLevel}
           </p>
           <p className="text-sm text-gray-600">
-            Estimated achievement in{' '}
+            {currentLanguage === "spanish" ? "Logro estimado en " : "Estimated achievement in "}
             <span className="font-semibold text-lingua-primary">
-              {estimatedWeeks} weeks
+              {estimatedWeeks} {currentLanguage === "spanish" ? "semanas" : "weeks"}
             </span>
             <br />
-            (around {getEstimatedDate()})
+            ({currentLanguage === "spanish" ? "alrededor del " : "around "}{getEstimatedDate()})
           </p>
           <p className="text-xs text-green-600">
-            Your current learning pace: +{progressRate.toFixed(1)} points per week
+            {currentLanguage === "spanish" 
+              ? "Tu ritmo de aprendizaje actual: +" 
+              : "Your current learning pace: +"}
+            {progressRate.toFixed(1)} 
+            {currentLanguage === "spanish" ? " puntos por semana" : " points per week"}
           </p>
         </div>
         
@@ -240,7 +249,9 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-lingua-primary" />
-              <h4 className="font-medium">Lesson Progress</h4>
+              <h4 className="font-medium">
+                {currentLanguage === "spanish" ? "Progreso de Lecciones" : "Lesson Progress"}
+              </h4>
             </div>
             <span className="text-sm font-semibold">
               {lessonProgress.completedLessons}/{lessonProgress.totalLessons}
@@ -253,16 +264,27 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           />
           
           <div className="flex justify-between text-sm text-gray-600">
-            <span>{lessonProgress.percentComplete}% Complete</span>
+            <span>
+              {lessonProgress.percentComplete}% 
+              {currentLanguage === "spanish" ? " Completado" : " Complete"}
+            </span>
             {lessonProgress.lastActivity && (
-              <span>Last activity: {new Date(lessonProgress.lastActivity).toLocaleDateString()}</span>
+              <span>
+                {currentLanguage === "spanish" ? "Última actividad: " : "Last activity: "}
+                {new Date(lessonProgress.lastActivity).toLocaleDateString()}
+              </span>
             )}
           </div>
           
           {lessonProgress.streakDays && lessonProgress.streakDays > 0 && (
             <div className="flex items-center gap-2 text-amber-600 font-medium text-sm">
               <Award className="h-4 w-4" />
-              <span>{lessonProgress.streakDays} day streak! Keep it up!</span>
+              <span>
+                {lessonProgress.streakDays} 
+                {currentLanguage === "spanish" 
+                  ? " días consecutivos! ¡Sigue así!" 
+                  : " day streak! Keep it up!"}
+              </span>
             </div>
           )}
         </div>
@@ -270,47 +292,85 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
         <div className="border rounded-lg p-4 bg-gray-50 space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <Award className="h-4 w-4 text-lingua-primary" />
-            <h4 className="font-medium">Certification Status</h4>
+            <h4 className="font-medium">
+              {currentLanguage === "spanish" ? "Estado de Certificación" : "Certification Status"}
+            </h4>
           </div>
           
           <div className="grid grid-cols-2 gap-2">
             <div className={`p-2 rounded ${certificationsCompleted.reading ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <span className="text-sm">Reading: </span>
+              <span className="text-sm">
+                {currentLanguage === "spanish" ? "Lectura: " : "Reading: "}
+              </span>
               <span className={`text-sm font-medium ${certificationsCompleted.reading ? 'text-green-600' : 'text-gray-500'}`}>
-                {certificationsCompleted.reading ? 'Completed' : 'Not taken'}
+                {certificationsCompleted.reading 
+                  ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
+                  : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
               </span>
             </div>
             
             <div className={`p-2 rounded ${certificationsCompleted.writing ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <span className="text-sm">Writing: </span>
+              <span className="text-sm">
+                {currentLanguage === "spanish" ? "Escritura: " : "Writing: "}
+              </span>
               <span className={`text-sm font-medium ${certificationsCompleted.writing ? 'text-green-600' : 'text-gray-500'}`}>
-                {certificationsCompleted.writing ? 'Completed' : 'Not taken'}
+                {certificationsCompleted.writing 
+                  ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
+                  : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
               </span>
             </div>
             
             <div className={`p-2 rounded ${certificationsCompleted.speaking ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <span className="text-sm">Speaking: </span>
+              <span className="text-sm">
+                {currentLanguage === "spanish" ? "Habla: " : "Speaking: "}
+              </span>
               <span className={`text-sm font-medium ${certificationsCompleted.speaking ? 'text-green-600' : 'text-gray-500'}`}>
-                {certificationsCompleted.speaking ? 'Completed' : 'Not taken'}
+                {certificationsCompleted.speaking 
+                  ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
+                  : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
               </span>
             </div>
             
             <div className={`p-2 rounded ${certificationsCompleted.listening ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <span className="text-sm">Listening: </span>
+              <span className="text-sm">
+                {currentLanguage === "spanish" ? "Comprensión Auditiva: " : "Listening: "}
+              </span>
               <span className={`text-sm font-medium ${certificationsCompleted.listening ? 'text-green-600' : 'text-gray-500'}`}>
-                {certificationsCompleted.listening ? 'Completed' : 'Not taken'}
+                {certificationsCompleted.listening 
+                  ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
+                  : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
               </span>
             </div>
           </div>
         </div>
 
         <div className="border rounded-lg p-4 bg-gray-50">
-          <h4 className="font-medium mb-2">Tips to reach your goal faster:</h4>
+          <h4 className="font-medium mb-2">
+            {currentLanguage === "spanish" 
+              ? "Consejos para alcanzar tu meta más rápido:" 
+              : "Tips to reach your goal faster:"}
+          </h4>
           <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-            <li>Practice consistently every day</li>
-            <li>Complete all certification attempts</li>
-            <li>Focus on areas where you score lowest</li>
-            <li>Use AI conversation practice regularly</li>
+            <li>
+              {currentLanguage === "spanish" 
+                ? "Practica constantemente todos los días" 
+                : "Practice consistently every day"}
+            </li>
+            <li>
+              {currentLanguage === "spanish" 
+                ? "Completa todos los intentos de certificación" 
+                : "Complete all certification attempts"}
+            </li>
+            <li>
+              {currentLanguage === "spanish" 
+                ? "Enfócate en áreas donde obtengas las puntuaciones más bajas" 
+                : "Focus on areas where you score lowest"}
+            </li>
+            <li>
+              {currentLanguage === "spanish" 
+                ? "Usa la práctica de conversación con IA regularmente" 
+                : "Use AI conversation practice regularly"}
+            </li>
           </ul>
         </div>
       </CardContent>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Loader2, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +10,6 @@ import LearningGoals from "@/components/profile/LearningGoals";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ensureUserProfile, getUserProfile, updateUserProfile } from "@/utils/profileUtils";
-import { UserProfile } from "@/types/supabase";
 import { useLocalization } from "@/context/LocalizationContext";
 
 interface ProfileData {
