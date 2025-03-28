@@ -12,6 +12,10 @@ import { useLocalization } from "@/context/LocalizationContext";
 const availableLanguagePairs = [
   "english-spanish",
   "spanish-english",
+  "english-portuguese",
+  "portuguese-english",
+  "spanish-portuguese",
+  "portuguese-spanish"
 ];
 
 const Index = () => {
