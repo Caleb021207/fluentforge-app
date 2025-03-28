@@ -1,3 +1,4 @@
+
 import React from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useLocalization } from "@/context/LocalizationContext";
@@ -15,6 +16,8 @@ interface ProgressChartProps {
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
+  const { t } = useLocalization();
+  
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-3 border border-gray-200 shadow-md rounded-md">
@@ -22,7 +25,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         {payload.map((entry: any) => (
           entry.value !== undefined && entry.value > 0 && (
             <p key={entry.name} style={{ color: entry.color }}>
-              {`${entry.name}: ${entry.value}%`}
+              {`${entry.dataKey === "reading" ? t("reading") : 
+                 entry.dataKey === "writing" ? t("writing") : 
+                 entry.dataKey === "speaking" ? t("speaking") : 
+                 entry.dataKey === "listening" ? t("listening") : entry.name}: ${entry.value}%`}
             </p>
           )
         ))}
@@ -43,12 +49,22 @@ const ProgressChart = ({ progressData }: ProgressChartProps) => {
           <XAxis dataKey="date" />
           <YAxis domain={[0, 100]} />
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
+          <Legend 
+            formatter={(value) => {
+              switch(value) {
+                case "reading": return t("reading");
+                case "writing": return t("writing");
+                case "speaking": return t("speaking");
+                case "listening": return t("listening");
+                default: return value;
+              }
+            }}
+          />
           <Line 
             type="monotone" 
             dataKey="reading" 
             stroke="#2563eb" 
-            name="Reading" 
+            name={t("reading")}
             connectNulls={true} 
             activeDot={{ r: 8 }}
           />
@@ -56,7 +72,7 @@ const ProgressChart = ({ progressData }: ProgressChartProps) => {
             type="monotone" 
             dataKey="writing" 
             stroke="#16a34a" 
-            name="Writing" 
+            name={t("writing")}
             connectNulls={true} 
             activeDot={{ r: 8 }}
           />
@@ -64,7 +80,7 @@ const ProgressChart = ({ progressData }: ProgressChartProps) => {
             type="monotone" 
             dataKey="speaking" 
             stroke="#dc2626" 
-            name="Speaking" 
+            name={t("speaking")}
             connectNulls={true} 
             activeDot={{ r: 8 }}
           />
@@ -72,7 +88,7 @@ const ProgressChart = ({ progressData }: ProgressChartProps) => {
             type="monotone" 
             dataKey="listening" 
             stroke="#9333ea" 
-            name="Listening" 
+            name={t("listening")}
             connectNulls={true} 
             activeDot={{ r: 8 }}
           />
