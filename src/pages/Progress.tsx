@@ -10,6 +10,7 @@ import { AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { ConnectionStatusIndicator } from "@/components/ui/ConnectionStatusIndicator";
+import { useLocalization } from "@/context/LocalizationContext";
 
 const ProgressPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,13 +19,14 @@ const ProgressPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { toast } = useToast();
   const { isOffline, isReconnecting, setReconnecting } = useConnectionStatus();
+  const { t } = useLocalization();
 
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
         // If we're offline, don't try to fetch the user
         if (isOffline) {
-          setErrorMessage("You are currently offline. Please check your internet connection.");
+          setErrorMessage(t("offlineDataMayNotBeUpToDate"));
           setIsLoading(false);
           return;
         }
@@ -37,13 +39,13 @@ const ProgressPage = () => {
           // Check if this is a network error
           if (error.message.includes("Failed to fetch")) {
             setReconnecting(); // Set status to reconnecting
-            setErrorMessage("Unable to connect to the server. Checking connection...");
+            setErrorMessage(t("networkConnectionIssue"));
           } else {
             setAuthError(true);
-            setErrorMessage("Authentication error. Please try signing in again.");
+            setErrorMessage(t("authRequired"));
             toast({
-              title: "Authentication error",
-              description: "Please try signing in again.",
+              title: t("error"),
+              description: t("authRequired"),
               variant: "destructive"
             });
           }
@@ -57,10 +59,10 @@ const ProgressPage = () => {
         // Check if this is a network error
         if (error instanceof Error && error.message.includes("Failed to fetch")) {
           setReconnecting(); // Set status to reconnecting
-          setErrorMessage("Network connection issue. Please check your internet connection.");
+          setErrorMessage(t("networkConnectionIssue"));
         } else {
           setAuthError(true);
-          setErrorMessage("An unexpected error occurred. Please try again later.");
+          setErrorMessage(t("failedToLoadProgressData"));
         }
       } finally {
         setIsLoading(false);
@@ -77,7 +79,7 @@ const ProgressPage = () => {
     }, 5000); // Try every 5 seconds
 
     return () => clearInterval(interval);
-  }, [toast, isOffline, isReconnecting, setReconnecting, user, authError]);
+  }, [toast, isOffline, isReconnecting, setReconnecting, user, authError, t]);
 
   // Show loading state
   if (isLoading) {
