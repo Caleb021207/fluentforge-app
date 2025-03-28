@@ -50,6 +50,9 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Can understand complex texts": "Puede entender textos complejos",
         "Good understanding of implicit meaning": "Buena comprensión de significados implícitos",
         "Strong vocabulary knowledge": "Fuerte conocimiento de vocabulario",
+        "Can recognize familiar words": "Puede reconocer palabras familiares",
+        "Can read very simple texts": "Puede leer textos muy simples",
+        "Understands basic signs": "Entiende señales básicas",
         
         // Reading weaknesses
         "May still encounter specialized technical vocabulary in specific fields": "Puede encontrar vocabulario técnico especializado en campos específicos",
@@ -61,6 +64,8 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "May struggle with longer texts": "Puede tener dificultades con textos más largos",
         "Could improve vocabulary": "Podría mejorar el vocabulario",
         "May struggle with highly technical texts": "Puede tener dificultades con textos altamente técnicos",
+        "Limited vocabulary range": "Rango de vocabulario limitado",
+        "Struggles with longer words": "Dificultades con palabras más largas",
         
         // Reading recommendations
         "Read academic journals and research papers": "Lee revistas académicas y trabajos de investigación",
@@ -78,6 +83,9 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Read professional publications": "Lee publicaciones profesionales",
         "Practice skimming and scanning": "Practica la lectura rápida y el escaneo",
         "Focus on academic vocabulary": "Enfócate en vocabulario académico",
+        "Start with picture books": "Comienza con libros ilustrados",
+        "Learn basic vocabulary": "Aprende vocabulario básico",
+        "Practice with flashcards": "Practica con tarjetas de memoria",
         
         // Writing strengths
         "Can produce clear, well-structured complex texts": "Puede producir textos complejos claros y bien estructurados",
@@ -95,6 +103,9 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Can write short messages": "Puede escribir mensajes cortos",
         "Good basic sentences": "Buenas oraciones básicas",
         "Can fill out forms": "Puede llenar formularios",
+        "Can write simple words": "Puede escribir palabras simples",
+        "Can fill in basic forms": "Puede completar formularios básicos",
+        "Can copy text": "Puede copiar texto",
         
         // Writing weaknesses
         "May need to refine specific genre writing": "Puede necesitar refinar la escritura de géneros específicos",
@@ -107,6 +118,8 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Could improve grammar accuracy": "Podría mejorar la precisión gramatical",
         "May need work on sentence structure": "Puede necesitar trabajar en estructura de oraciones",
         "Could improve grammar basics": "Podría mejorar los fundamentos gramaticales",
+        "Limited sentence formation": "Formación de oraciones limitada",
+        "Basic grammar needs work": "La gramática básica necesita trabajo",
         
         // Writing recommendations
         "Practice writing in different genres": "Practica la escritura en diferentes géneros",
@@ -124,6 +137,9 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Practice writing notes": "Practica escribiendo notas",
         "Work on simple sentences": "Trabaja en oraciones simples",
         "Study basic grammar": "Estudia gramática básica",
+        "Practice writing simple words": "Practica escribiendo palabras simples",
+        "Copy short texts": "Copia textos cortos",
+        "Learn basic sentence patterns": "Aprende patrones básicos de oraciones",
         
         // Speaking strengths
         "Natural and fluent expression": "Expresión natural y fluida",
