@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut, Shield } from "lucide-react";
@@ -23,8 +22,14 @@ const navItemTranslations = {
     "Progress": "Progreso",
     "Dashboard": "Panel",
     "Admin": "Admin"
+  },
+  portuguese: {
+    "Practice": "Prática",
+    "Certificates": "Certificados",
+    "Progress": "Progresso",
+    "Dashboard": "Painel",
+    "Admin": "Admin"
   }
-  // Add other languages as needed
 };
 
 const Navigation = () => {

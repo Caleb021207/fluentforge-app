@@ -30,7 +30,6 @@ const Practice = () => {
   const [skillAssessment, setSkillAssessment] = useState<SkillAssessment | null>(null);
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  const isSpanishSpeaker = currentLanguage === "spanish";
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -44,7 +43,7 @@ const Practice = () => {
     },
     onError: (error) => {
       toast({
-        title: isSpanishSpeaker ? "Error" : "Error",
+        title: t("error"),
         description: error.message,
         variant: "destructive",
       });
@@ -59,30 +58,30 @@ const Practice = () => {
       } catch (error) {
         console.error("Microphone access error:", error);
         toast({
-          title: isSpanishSpeaker ? "Acceso al Micrófono Requerido" : "Microphone Access Required",
-          description: isSpanishSpeaker ? "Por favor permite el acceso al micrófono para utilizar las funciones de chat de voz." : "Please allow microphone access to use voice chat features.",
+          title: t("microphoneAccessRequired"),
+          description: t("allowMicAccess"),
           variant: "destructive",
         });
       }
     };
 
     initMicrophone();
-  }, [toast, isSpanishSpeaker]);
+  }, [toast, t]);
 
   const startVoiceConversation = async () => {
     try {
       await conversation.startSession({
-        // Updated to use the specific agent ID provided by the user
+        // Use the specific agent ID provided by the user
         agentId: "Qc5G2DZi0jRmMf3CzC8f",
       });
       toast({
-        title: isSpanishSpeaker ? "Chat de Voz Iniciado" : "Voice Chat Started",
-        description: isSpanishSpeaker ? "¡Ahora puedes hablar con tu tutor de idiomas con IA!" : "You can now speak with your AI language tutor!",
+        title: conversation.status === "connected" ? t("stopVoiceChat") : t("startVoiceChat"),
+        description: t("startChatting"),
       });
     } catch (error) {
       toast({
-        title: isSpanishSpeaker ? "Error" : "Error",
-        description: isSpanishSpeaker ? "No se pudo iniciar la conversación de voz. Por favor, inténtalo de nuevo." : "Failed to start voice conversation. Please try again.",
+        title: t("error"),
+        description: t("networkConnectionIssue"),
         variant: "destructive",
       });
     }
@@ -93,9 +92,11 @@ const Practice = () => {
     try {
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
-          message: isSpanishSpeaker 
-            ? "Por favor evalúa mis habilidades en inglés basándote en nuestra conversación. Proporciona retroalimentación sobre mi lectura, escritura, habla y comprensión auditiva, y estima mi nivel general de competencia."
-            : "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.",
+          message: currentLanguage === "portuguese" 
+            ? "Por favor, avalie minhas habilidades em inglês com base em nossa conversa. Forneça feedback sobre minha leitura, escrita, fala e compreensão auditiva, e estime meu nível geral de proficiência."
+            : currentLanguage === "spanish"
+              ? "Por favor evalúa mis habilidades en inglés basándote en nuestra conversación. Proporciona retroalimentación sobre mi lectura, escritura, habla y comprensión auditiva, y estima mi nivel general de competencia."
+              : "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.",
           requestType: "assessment"
         }
       });
@@ -104,14 +105,18 @@ const Practice = () => {
 
       setSkillAssessment(data.assessment);
       toast({
-        title: isSpanishSpeaker ? "Evaluación Completa" : "Assessment Complete",
-        description: isSpanishSpeaker ? "¡Tus habilidades lingüísticas han sido evaluadas!" : "Your language skills have been evaluated!",
+        title: t("getSkillsAssessment"),
+        description: currentLanguage === "portuguese" 
+          ? "Suas habilidades linguísticas foram avaliadas!" 
+          : currentLanguage === "spanish" 
+            ? "¡Tus habilidades lingüísticas han sido evaluadas!" 
+            : "Your language skills have been evaluated!",
       });
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: isSpanishSpeaker ? "Error" : "Error",
-        description: isSpanishSpeaker ? "No se pudo obtener la evaluación de habilidades. Por favor, inténtalo de nuevo." : "Failed to get skill assessment. Please try again.",
+        title: t("error"),
+        description: t("failedToLoadProgressData"),
         variant: "destructive",
       });
     } finally {
@@ -153,8 +158,8 @@ const Practice = () => {
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: isSpanishSpeaker ? "Error" : "Error",
-        description: isSpanishSpeaker ? "Error al obtener respuesta del tutor de IA. Por favor, inténtalo de nuevo." : "Failed to get response from AI tutor. Please try again.",
+        title: t("error"),
+        description: t("networkConnectionIssue"),
         variant: "destructive",
       });
     } finally {
@@ -166,12 +171,10 @@ const Practice = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-lingua-text mb-4">
-          {isSpanishSpeaker ? "Practica con el Tutor de Idiomas IA" : "Practice with AI Language Tutor"}
+          {t("practiceWithAITutor")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {isSpanishSpeaker 
-            ? "Chatea con nuestro tutor de IA para practicar tu inglés. El tutor te ayudará a corregir tu gramática, vocabulario y pronunciación. Puedes hacer preguntas sobre el idioma o la cultura."
-            : "Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture."}
+          {t("chatWithAITutor")}
         </p>
         <div className="flex gap-4 mb-4">
           <Button
@@ -181,17 +184,17 @@ const Practice = () => {
             {conversation.status === "connected" ? (
               <>
                 <MicOff className="h-4 w-4 mr-2" />
-                {isSpanishSpeaker ? "Detener Chat de Voz" : "Stop Voice Chat"}
+                {t("stopVoiceChat")}
               </>
             ) : (
               <>
                 <Mic className="h-4 w-4 mr-2" />
-                {isSpanishSpeaker ? "Iniciar Chat de Voz" : "Start Voice Chat"}
+                {t("startVoiceChat")}
               </>
             )}
           </Button>
           <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
-            {isSpanishSpeaker ? "Obtener Evaluación de Habilidades" : "Get Skills Assessment"}
+            {t("getSkillsAssessment")}
           </Button>
         </div>
       </div>
@@ -202,35 +205,35 @@ const Practice = () => {
             <Card className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <BookOpen className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{isSpanishSpeaker ? "Lectura" : "Reading"}</h3>
+                <h3 className="font-semibold">{t("reading")}</h3>
               </div>
               <p className="text-sm text-gray-600">{skillAssessment.reading}</p>
             </Card>
             <Card className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <FileText className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{isSpanishSpeaker ? "Escritura" : "Writing"}</h3>
+                <h3 className="font-semibold">{t("writing")}</h3>
               </div>
               <p className="text-sm text-gray-600">{skillAssessment.writing}</p>
             </Card>
             <Card className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Volume2 className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{isSpanishSpeaker ? "Habla" : "Speaking"}</h3>
+                <h3 className="font-semibold">{t("speaking")}</h3>
               </div>
               <p className="text-sm text-gray-600">{skillAssessment.speaking}</p>
             </Card>
             <Card className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Headphones className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{isSpanishSpeaker ? "Comprensión Auditiva" : "Listening"}</h3>
+                <h3 className="font-semibold">{t("listening")}</h3>
               </div>
               <p className="text-sm text-gray-600">{skillAssessment.listening}</p>
             </Card>
             <Card className="p-4 md:col-span-2">
               <div className="flex items-center gap-2 mb-2">
                 <MessageCircle className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{isSpanishSpeaker ? "Nivel General" : "Overall Level"}</h3>
+                <h3 className="font-semibold">{t("overallLevel")}</h3>
               </div>
               <p className="text-sm text-gray-600">{skillAssessment.overallLevel}</p>
             </Card>
@@ -243,15 +246,11 @@ const Practice = () => {
           {messages.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <MessageCircle className="mx-auto h-12 w-12 mb-4 opacity-50" />
-              <p>{isSpanishSpeaker ? "¡Comienza a chatear con tu tutor de idiomas con IA!" : "Start chatting with your AI language tutor!"}</p>
+              <p>{t("startChatting")}</p>
               <p className="text-sm mt-2">
                 {microphoneAccess 
-                  ? isSpanishSpeaker 
-                    ? "Haz clic en 'Iniciar Chat de Voz' para comenzar a hablar con el tutor" 
-                    : "Click 'Start Voice Chat' to begin speaking with the tutor"
-                  : isSpanishSpeaker 
-                    ? "Por favor permite el acceso al micrófono para utilizar las funciones de voz" 
-                    : "Please allow microphone access to use voice features"}
+                  ? t("clickToStartVoice")
+                  : t("allowMicAccess")}
               </p>
             </div>
           ) : (
@@ -297,13 +296,13 @@ const Practice = () => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isSpanishSpeaker ? "Escribe tu mensaje en español o inglés..." : "Type your message in English or Spanish..."}
+            placeholder={t("typeMessage")}
             className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary"
             disabled={conversation.status === "connected"}
           />
           <Button type="submit" disabled={isLoading || conversation.status === "connected"}>
             <Send className="h-4 w-4 mr-2" />
-            {isSpanishSpeaker ? "Enviar" : "Send"}
+            {t("send")}
           </Button>
         </form>
       </Card>
