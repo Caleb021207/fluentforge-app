@@ -13,6 +13,7 @@ import ExampleData from "@/pages/ExampleData";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { LocalizationProvider } from "@/context/LocalizationContext";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -20,21 +21,23 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/placement-quiz" element={<PlacementQuiz />} />
-            <Route path="/certifications" element={<Certificates />} />
-            <Route path="/practice" element={<Practice />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/example-data" element={<ExampleData />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <LocalizationProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/placement-quiz" element={<PlacementQuiz />} />
+              <Route path="/certifications" element={<Certificates />} />
+              <Route path="/practice" element={<Practice />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/progress" element={<Progress />} />
+              <Route path="/example-data" element={<ExampleData />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </LocalizationProvider>
     </QueryClientProvider>
   );
 }

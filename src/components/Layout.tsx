@@ -17,11 +17,13 @@ import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import LogoutButton from "./auth/LogoutButton";
 import LanguageAvailabilityBanner from "./LanguageAvailabilityBanner";
+import { useLocalization } from "@/context/LocalizationContext";
 
 const Layout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
+  const { currentLanguage } = useLocalization();
 
   useEffect(() => {
     // Get initial session

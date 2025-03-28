@@ -1,48 +1,13 @@
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-
-const nativeLanguages = [
-  { value: "english", label: "English" },
-  { value: "spanish", label: "Spanish" },
-  { value: "french", label: "French" },
-  { value: "german", label: "German" },
-  { value: "italian", label: "Italian" },
-  { value: "portuguese", label: "Portuguese" },
-  { value: "russian", label: "Russian" },
-  { value: "chinese", label: "Chinese" },
-  { value: "japanese", label: "Japanese" },
-  { value: "korean", label: "Korean" },
-];
-
-const targetLanguages = [
-  { value: "english", label: "English" },
-  { value: "spanish", label: "Spanish" },
-  { value: "french", label: "French" },
-  { value: "german", label: "German" },
-  { value: "italian", label: "Italian" },
-  { value: "portuguese", label: "Portuguese" },
-  { value: "russian", label: "Russian" },
-  { value: "chinese", label: "Chinese" },
-  { value: "japanese", label: "Japanese" },
-  { value: "korean", label: "Korean" },
-];
+import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
+import AuthDialog from "@/components/home/AuthDialog";
+import { useLocalization } from "@/context/LocalizationContext";
 
 const availableLanguagePairs = [
   "english-spanish",
@@ -51,6 +16,7 @@ const availableLanguagePairs = [
 
 const Index = () => {
   const { toast } = useToast();
+  const { t, setCurrentLanguage } = useLocalization();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -176,14 +142,17 @@ const Index = () => {
       sessionStorage.setItem("languagePair", languagePair);
       sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
       
+      // Update the UI language to match the native language
+      setCurrentLanguage(nativeLanguage);
+      
       toast({
-        title: "Language preferences saved",
-        description: `You're now learning ${targetLanguage} from ${nativeLanguage}`,
+        title: t("languagePreferencesSaved"),
+        description: `${t("youreNowLearning")} ${targetLanguage} ${t("from")} ${nativeLanguage}`,
       });
     } else {
       toast({
-        title: "Please select both languages",
-        description: "You need to select both your native language and the language you want to learn",
+        title: t("pleaseSelectBothLanguages"),
+        description: t("youNeedToSelectBoth"),
         variant: "destructive",
       });
     }
@@ -198,68 +167,20 @@ const Index = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold text-lingua-text mb-4">
-            Welcome to <span className="text-lingua-primary">Palavox</span>
+            {t("welcomeToLanguageLearning")}
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8">
-            Your personal AI-powered language learning companion. Start your journey
-            to fluency today.
+            {t("yourPersonalAICompanion")}
           </p>
           
-          <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
-            <CardContent className="pt-6">
-              <h2 className="text-xl font-semibold mb-4">Select Your Language Preferences</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nativeLanguage">I speak:</Label>
-                  <Select value={nativeLanguage} onValueChange={setNativeLanguage}>
-                    <SelectTrigger id="nativeLanguage" className="w-full">
-                      <SelectValue placeholder="Select your native language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {nativeLanguages.map((lang) => (
-                        <SelectItem key={lang.value} value={lang.value}>
-                          {lang.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="targetLanguage">I want to learn:</Label>
-                  <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-                    <SelectTrigger id="targetLanguage" className="w-full">
-                      <SelectValue placeholder="Select language to learn" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {targetLanguages.map((lang) => (
-                        <SelectItem key={lang.value} value={lang.value}>
-                          {lang.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <Button 
-                onClick={handleLanguageSelection} 
-                className="w-full"
-                disabled={!nativeLanguage || !targetLanguage}
-              >
-                Save Language Preferences
-              </Button>
-              
-              {nativeLanguage && targetLanguage && !hasStudyMaterials && (
-                <Alert variant="warning" className="mt-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    Study materials for learning {targetLanguage} from {nativeLanguage} are coming soon!
-                  </AlertDescription>
-                </Alert>
-              )}
-            </CardContent>
-          </Card>
+          <LanguageSelectionCard
+            nativeLanguage={nativeLanguage}
+            targetLanguage={targetLanguage}
+            setNativeLanguage={setNativeLanguage}
+            setTargetLanguage={setTargetLanguage}
+            hasStudyMaterials={hasStudyMaterials}
+            handleLanguageSelection={handleLanguageSelection}
+          />
           
           <div className="space-x-4">
             {!isSignedIn ? (
@@ -271,7 +192,7 @@ const Index = () => {
                   setIsAuthDialogOpen(true);
                 }}
               >
-                Sign In
+                {t("signIn")}
               </Button>
             ) : (
               <Link to="/profile">
@@ -279,80 +200,32 @@ const Index = () => {
                   size="lg" 
                   className="bg-lingua-primary hover:bg-lingua-primary/90"
                 >
-                  Go to Dashboard
+                  {t("goToDashboard")}
                 </Button>
               </Link>
             )}
             <Link to="/practice">
               <Button size="lg" variant="outline">
-                Practice with AI
+                {t("practiceWithAI")}
               </Button>
             </Link>
           </div>
         </motion.div>
       </div>
 
-      <Dialog open={isAuthDialogOpen} onOpenChange={setIsAuthDialogOpen}>
-        <DialogContent className="sm:max-w-md max-w-[90vw] rounded-lg">
-          <DialogHeader>
-            <DialogTitle>{isLogin ? "Sign In" : "Create Account"}</DialogTitle>
-            <DialogDescription>
-              {isLogin
-                ? "Sign in to your account to continue"
-                : "Create a new account to get started"}
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleEmailAuth} className="space-y-4">
-            <div>
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="text-sm"
-              />
-            </div>
-            <div>
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="text-sm"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Button type="submit" className="text-sm" disabled={isLoading}>
-                {isLoading 
-                  ? "Processing..." 
-                  : isLogin ? "Sign In" : "Create Account"}
-              </Button>
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={handleGoogleLogin} 
-                className="text-sm"
-                disabled={isLoading}
-              >
-                {isLoading ? "Please wait..." : "Continue with Google"}
-              </Button>
-            </div>
-            <Button
-              type="button"
-              variant="link"
-              onClick={() => setIsLogin(!isLogin)}
-              className="w-full text-sm"
-              disabled={isLoading}
-            >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Sign in"}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <AuthDialog
+        isOpen={isAuthDialogOpen}
+        onOpenChange={setIsAuthDialogOpen}
+        isLogin={isLogin}
+        setIsLogin={setIsLogin}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        handleEmailAuth={handleEmailAuth}
+        handleGoogleLogin={handleGoogleLogin}
+        isLoading={isLoading}
+      />
     </div>
   );
 };

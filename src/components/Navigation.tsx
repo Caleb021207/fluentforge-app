@@ -6,12 +6,33 @@ import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
+import { useLocalization } from "@/context/LocalizationContext";
+
+// Translation map for navigation items
+const navItemTranslations = {
+  english: {
+    "Practice": "Practice",
+    "Certificates": "Certificates",
+    "Progress": "Progress", 
+    "Dashboard": "Dashboard",
+    "Admin": "Admin"
+  },
+  spanish: {
+    "Practice": "Práctica",
+    "Certificates": "Certificados",
+    "Progress": "Progreso",
+    "Dashboard": "Panel",
+    "Admin": "Admin"
+  }
+  // Add other languages as needed
+};
 
 const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const { currentLanguage } = useLocalization();
 
   useEffect(() => {
     // Check if user is logged in
@@ -46,6 +67,12 @@ const Navigation = () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  // Get translations for the current language
+  const getTranslatedLabel = (label: string) => {
+    const translations = navItemTranslations[currentLanguage as keyof typeof navItemTranslations] || navItemTranslations.english;
+    return translations[label as keyof typeof translations] || label;
+  };
 
   const navItems = [
     { icon: MessageSquare, label: "Practice", path: "/practice" },
@@ -100,6 +127,7 @@ const Navigation = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
+              const translatedLabel = getTranslatedLabel(item.label);
               
               return (
                 <Link 
@@ -114,7 +142,7 @@ const Navigation = () => {
                     }`}
                   >
                     <Icon className="h-5 w-5 md:mr-2" />
-                    <span className="hidden md:inline">{item.label}</span>
+                    <span className="hidden md:inline">{translatedLabel}</span>
                   </Button>
                 </Link>
               );
