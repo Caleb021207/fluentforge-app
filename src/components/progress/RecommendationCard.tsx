@@ -43,7 +43,7 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         <div className="space-y-4">
           <div>
             <h4 className="font-medium mb-2 text-green-600">
-              {t("currentLanguage") === "spanish" ? "Fortalezas" : "Strengths"}
+              {t("strengths")}
             </h4>
             <ul className="list-disc list-inside space-y-1">
               {rec.strengths.map((strength: string, idx: number) => (
@@ -53,7 +53,7 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
           </div>
           <div>
             <h4 className="font-medium mb-2 text-yellow-600">
-              {t("currentLanguage") === "spanish" ? "Áreas de Mejora" : "Areas for Improvement"}
+              {t("areasForImprovement")}
             </h4>
             <ul className="list-disc list-inside space-y-1">
               {rec.weaknesses.map((weakness: string, idx: number) => (
@@ -63,7 +63,7 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
           </div>
           <div>
             <h4 className="font-medium mb-2 text-blue-600">
-              {t("currentLanguage") === "spanish" ? "Recomendaciones" : "Recommendations"}
+              {t("recommendations")}
             </h4>
             <ul className="list-disc list-inside space-y-1">
               {rec.recommendations.map((recommendation: string, idx: number) => (

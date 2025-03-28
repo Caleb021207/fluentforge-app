@@ -151,7 +151,10 @@ const translations: Translations = {
     selectLevel: "Select level",
     addingScore: "Adding Score...",
     addScore: "Add Score",
-    cancel: "Cancel"
+    cancel: "Cancel",
+    strengths: "Strengths",
+    areasForImprovement: "Areas for Improvement",
+    recommendations: "Recommendations"
   },
   spanish: {
     welcomeToLanguageLearning: "Bienvenido a Palavox",
@@ -282,7 +285,10 @@ const translations: Translations = {
     selectLevel: "Selecciona nivel",
     addingScore: "Agregando Puntuación...",
     addScore: "Agregar Puntuación",
-    cancel: "Cancelar"
+    cancel: "Cancelar",
+    strengths: "Fortalezas",
+    areasForImprovement: "Áreas de Mejora",
+    recommendations: "Recomendaciones"
   },
   // Add other languages as needed
 };
