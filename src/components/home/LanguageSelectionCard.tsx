@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { AVAILABLE_LANGUAGES } from "@/context/LocalizationContext";
 
 interface LanguageSelectionCardProps {
   nativeLanguage: string;
@@ -28,6 +27,13 @@ const LanguageSelectionCard = ({
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
 
+  // Limited language options
+  const LIMITED_LANGUAGES = {
+    english: "English",
+    spanish: "Spanish",
+    portuguese: "Portuguese",
+  };
+
   return (
     <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
       <CardContent className="pt-6">
@@ -40,7 +46,7 @@ const LanguageSelectionCard = ({
                 <SelectValue placeholder={t("selectYourNativeLanguage")} />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(AVAILABLE_LANGUAGES).map(([value, label]) => (
+                {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
                   </SelectItem>
@@ -56,7 +62,7 @@ const LanguageSelectionCard = ({
                 <SelectValue placeholder={t("selectLanguageToLearn")} />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(AVAILABLE_LANGUAGES).map(([value, label]) => (
+                {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
                   </SelectItem>
