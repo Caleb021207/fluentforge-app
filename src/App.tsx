@@ -23,19 +23,19 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <LocalizationProvider>
         <BrowserRouter>
-          <Routes>
-            <Route element={<Layout />}>
+          <Layout>
+            <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/placement-quiz" element={<PlacementQuiz />} />
-              <Route path="/certifications" element={<Certificates />} />
+              <Route path="/certificates" element={<Certificates />} />
               <Route path="/practice" element={<Practice />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/example-data" element={<ExampleData />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
+            </Routes>
+          </Layout>
         </BrowserRouter>
       </LocalizationProvider>
     </QueryClientProvider>

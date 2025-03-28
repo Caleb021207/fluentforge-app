@@ -64,7 +64,31 @@ const translations: Translations = {
     clickToStartVoice: "Click 'Start Voice Chat' to begin speaking with the tutor",
     allowMicAccess: "Please allow microphone access to use voice features",
     send: "Send",
-    typeMessage: "Type your message in English or Spanish..."
+    typeMessage: "Type your message in English or Spanish...",
+    // Certificates page
+    certificationProgress: "Certification Progress",
+    readingTest: "Reading Test",
+    writingTest: "Writing Test",
+    conversationalFluency: "Conversational Fluency",
+    overallCertificate: "Overall Certificate",
+    skillAssessments: "Skill Assessments",
+    certificationHistory: "Certification History",
+    viewDetails: "View Details",
+    attemptDate: "Attempt Date",
+    testType: "Test Type",
+    score: "Score",
+    level: "Level",
+    noAttempts: "No certification attempts yet",
+    takeATest: "Take a test to see your results here",
+    // Progress page
+    yourProgress: "Your Progress",
+    lessonsCompleted: "Lessons Completed",
+    throughCurriculum: "through curriculum",
+    experienceAchievements: "Experience & Achievements",
+    xpPoints: "XP Points",
+    dailyStreak: "Daily Streak",
+    days: "days",
+    nextLevel: "Next Level"
   },
   spanish: {
     welcomeToLanguageLearning: "Bienvenido a Palavox",
@@ -107,7 +131,31 @@ const translations: Translations = {
     clickToStartVoice: "Haz clic en 'Iniciar Chat de Voz' para comenzar a hablar con el tutor",
     allowMicAccess: "Por favor permite el acceso al micrófono para utilizar las funciones de voz",
     send: "Enviar",
-    typeMessage: "Escribe tu mensaje en español o inglés..."
+    typeMessage: "Escribe tu mensaje en español o inglés...",
+    // Certificates page
+    certificationProgress: "Progreso de Certificación",
+    readingTest: "Prueba de Lectura",
+    writingTest: "Prueba de Escritura",
+    conversationalFluency: "Fluidez Conversacional",
+    overallCertificate: "Certificado General",
+    skillAssessments: "Evaluaciones de Habilidades",
+    certificationHistory: "Historial de Certificación",
+    viewDetails: "Ver Detalles",
+    attemptDate: "Fecha de Intento",
+    testType: "Tipo de Prueba",
+    score: "Puntuación",
+    level: "Nivel",
+    noAttempts: "Aún no hay intentos de certificación",
+    takeATest: "Realiza una prueba para ver tus resultados aquí",
+    // Progress page
+    yourProgress: "Tu Progreso",
+    lessonsCompleted: "Lecciones Completadas",
+    throughCurriculum: "del plan de estudios",
+    experienceAchievements: "Experiencia y Logros",
+    xpPoints: "Puntos XP",
+    dailyStreak: "Racha Diaria",
+    days: "días",
+    nextLevel: "Siguiente Nivel"
   },
   // Add other languages as needed
 };

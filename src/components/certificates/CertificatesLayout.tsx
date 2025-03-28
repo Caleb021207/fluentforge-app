@@ -6,6 +6,7 @@ import CertificationAttemptsList from "@/components/certificates/CertificationAt
 import ReadingCertification from "@/components/certifications/ReadingCertification";
 import WritingCertification from "@/components/certifications/WritingCertification";
 import ConversationalFluency from "@/components/certificates/ConversationalFluencyTest";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface CertificatesLayoutProps {
   normalizedAttempts: CertificationAttempt[];
@@ -26,9 +27,11 @@ const CertificatesLayout = ({
   onViewAttempt,
   onTestComplete
 }: CertificatesLayoutProps) => {
+  const { t } = useLocalization();
+
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Certification Progress</h1>
+      <h1 className="text-3xl font-bold text-gray-900">{t("certificationProgress")}</h1>
       
       <OverallCertificate compositeScore={compositeScore} />
       

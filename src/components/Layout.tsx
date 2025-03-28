@@ -1,7 +1,7 @@
 
 import { ReactNode } from "react";
 import Navigation from "./Navigation";
-import { Routes, Route } from "react-router-dom";
+import { useNavigate, Routes, Route } from "react-router-dom";
 import Index from "../pages/Index";
 import NotFound from "../pages/NotFound";
 import PlacementQuiz from "../pages/PlacementQuiz";
@@ -9,7 +9,6 @@ import Practice from "../pages/Practice";
 import Certificates from "../pages/Certificates";
 import ProgressPage from "../pages/Progress";
 import ProfilePage from "../pages/Profile";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -19,7 +18,11 @@ import LogoutButton from "./auth/LogoutButton";
 import LanguageAvailabilityBanner from "./LanguageAvailabilityBanner";
 import { useLocalization } from "@/context/LocalizationContext";
 
-const Layout = () => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
@@ -46,7 +49,9 @@ const Layout = () => {
       {user && (
         <div className="w-full bg-white border-b py-2 px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <div className="flex items-center">
-            <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">Signed in as:</span>
+            <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">
+              {currentLanguage === "spanish" ? "Conectado como:" : "Signed in as:"}
+            </span>
             <span className="font-medium text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">{user.email}</span>
           </div>
           <LogoutButton />
@@ -59,15 +64,7 @@ const Layout = () => {
           <div className="max-w-full">
             {/* Add Language Availability Banner that will show on all pages except the home page */}
             {window.location.pathname !== "/" && <LanguageAvailabilityBanner />}
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/placement-quiz" element={<PlacementQuiz />} />
-              <Route path="/practice" element={<Practice />} />
-              <Route path="/certificates" element={<Certificates />} />
-              <Route path="/progress" element={<ProgressPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            {children}
           </div>
         </main>
       </div>
