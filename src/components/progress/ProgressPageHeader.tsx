@@ -1,14 +1,15 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, RefreshCw } from "lucide-react";
+import { Loader2, RefreshCw, WifiOff } from "lucide-react";
 
 interface ProgressPageHeaderProps {
   isRefreshing: boolean;
   onRefresh: () => void;
+  isOffline?: boolean;
 }
 
-const ProgressPageHeader = ({ isRefreshing, onRefresh }: ProgressPageHeaderProps) => {
+const ProgressPageHeader = ({ isRefreshing, onRefresh, isOffline = false }: ProgressPageHeaderProps) => {
   return (
     <div className="flex justify-between items-center">
       <h1 className="text-3xl font-bold text-lingua-text mb-4">
@@ -18,13 +19,18 @@ const ProgressPageHeader = ({ isRefreshing, onRefresh }: ProgressPageHeaderProps
       <Button 
         variant="outline" 
         onClick={onRefresh} 
-        disabled={isRefreshing}
+        disabled={isRefreshing || isOffline}
         className="flex items-center gap-2"
       >
         {isRefreshing ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
             Refreshing...
+          </>
+        ) : isOffline ? (
+          <>
+            <WifiOff className="h-4 w-4" />
+            Offline
           </>
         ) : (
           <>

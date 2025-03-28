@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +12,8 @@ import RecentAttemptsCard from "./RecentAttemptsCard";
 import NoProgressCard from "./NoProgressCard";
 import { processAttemptsByDate, generateRecommendations, normalizeAttempts } from "./ProgressDataProcessor";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, WifiOff } from "lucide-react";
+import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 
 interface AuthenticatedProgressProps {
   user: User;
@@ -26,11 +28,17 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
   const [hasTranscript, setHasTranscript] = useState<Record<string, boolean>>({});
   const [fetchError, setFetchError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { isOffline, isOnline } = useConnectionStatus();
+  const [retryCount, setRetryCount] = useState(0);
 
   const fetchProgressData = useCallback(async (userId: string) => {
+    if (isOffline) {
+      setFetchError("You're currently offline. Data shown may not be up to date.");
+      return;
+    }
+    
     try {
       setIsRefreshing(true);
-      setFetchError(null);
       
       const { data: attempts, error } = await supabase
         .from('certification_attempts')
@@ -40,9 +48,17 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
 
       if (error) {
         console.error('Database error:', error);
-        setFetchError("There was a problem loading your progress data. Please try again later.");
-        throw error;
+        
+        if (error.message.includes("Failed to fetch")) {
+          setFetchError("Network connection issue. Unable to load your progress data.");
+        } else {
+          setFetchError("There was a problem loading your progress data. Please try again later.");
+        }
+        return; // Exit early
       }
+
+      // Clear any previous errors since we succeeded
+      setFetchError(null);
 
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
@@ -69,46 +85,71 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
       }
     } catch (error) {
       console.error('Error fetching progress data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load progress data. Please try again later.",
-        variant: "destructive",
-      });
+      
+      if (error instanceof Error && error.message.includes("Failed to fetch")) {
+        setFetchError("Network connection issue. Unable to load your progress data.");
+      } else {
+        setFetchError("Failed to load progress data. Please try again later.");
+        
+        toast({
+          title: "Error",
+          description: "Failed to load progress data. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsRefreshing(false);
     }
-  }, [toast]);
+  }, [toast, isOffline]);
 
   useEffect(() => {
-    if (user) {
+    if (user && isOnline) {
       fetchProgressData(user.id);
     }
     
-    const channel = supabase
-      .channel('public:certification_attempts')
-      .on('postgres_changes', 
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
-          table: 'certification_attempts' 
-        }, 
-        (payload) => {
-          console.log('New certification attempt:', payload);
-          if (user && payload.new && payload.new.user_id === user.id) {
-            fetchProgressData(user.id);
+    // Only set up the subscription if we're online
+    if (isOnline) {
+      const channel = supabase
+        .channel('public:certification_attempts')
+        .on('postgres_changes', 
+          { 
+            event: 'INSERT', 
+            schema: 'public', 
+            table: 'certification_attempts' 
+          }, 
+          (payload) => {
+            console.log('New certification attempt:', payload);
+            if (user && payload.new && payload.new.user_id === user.id) {
+              fetchProgressData(user.id);
+            }
           }
-        }
-      )
-      .subscribe();
+        )
+        .subscribe();
+        
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+    
+    return () => {}; // Empty cleanup when offline
+  }, [fetchProgressData, user, isOnline]);
+
+  // Retry fetching data when coming back online
+  useEffect(() => {
+    if (isOnline && user && retryCount < 3) {
+      const timer = setTimeout(() => {
+        console.log("Retrying data fetch after coming online");
+        fetchProgressData(user.id);
+        setRetryCount(prev => prev + 1);
+      }, 2000); // Wait 2 seconds after coming online
       
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [fetchProgressData, user]);
+      return () => clearTimeout(timer);
+    }
+  }, [isOnline, user, fetchProgressData, retryCount]);
 
   useEffect(() => {
     const fetchTranscripts = async () => {
-      if (!rawAttempts || rawAttempts.length === 0) return;
+      if (!rawAttempts || rawAttempts.length === 0 || isOffline) return;
       
       const transcriptMap: Record<string, boolean> = {};
       
@@ -140,12 +181,21 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
       setHasTranscript(transcriptMap);
     };
     
-    fetchTranscripts();
-  }, [rawAttempts]);
+    if (isOnline) {
+      fetchTranscripts();
+    }
+  }, [rawAttempts, isOffline, isOnline]);
 
   const handleRefresh = () => {
-    if (user) {
+    if (user && !isOffline) {
+      setRetryCount(0); // Reset retry count
       fetchProgressData(user.id);
+    } else if (isOffline) {
+      toast({
+        title: "Offline",
+        description: "You are currently offline. Please check your internet connection.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -159,11 +209,19 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
 
   return (
     <div className="space-y-6">
-      <ProgressPageHeader isRefreshing={isRefreshing} onRefresh={handleRefresh} />
+      <ProgressPageHeader 
+        isRefreshing={isRefreshing} 
+        onRefresh={handleRefresh} 
+        isOffline={isOffline}
+      />
       
       {fetchError && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+        <Alert variant={isOffline ? "warning" : "destructive"}>
+          {isOffline ? (
+            <WifiOff className="h-4 w-4" />
+          ) : (
+            <AlertCircle className="h-4 w-4" />
+          )}
           <AlertDescription>
             {fetchError}
           </AlertDescription>
