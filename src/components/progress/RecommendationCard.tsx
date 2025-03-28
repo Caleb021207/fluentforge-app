@@ -201,7 +201,7 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Can understand main ideas": "Puede entender ideas principales",
         "Good comprehension of standard speech": "Buena comprensión del habla estándar",
         "Can follow detailed instructions": "Puede seguir instrucciones detalladas",
-        "Can understand main points": "Puede entender puntos principales",
+        "Can understand main points in listening": "Puede entender puntos principales al escuchar", // Updated to make unique
         "Good comprehension of clear speech": "Buena comprensión del habla clara",
         "Can follow simple instructions": "Puede seguir instrucciones simples",
         "Can understand basic phrases": "Puede entender frases básicas",
@@ -222,8 +222,8 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Could improve comprehension speed": "Podría mejorar la velocidad de comprensión",
         "May struggle with natural speech": "Puede tener dificultades con el habla natural",
         "Could improve listening speed": "Podría mejorar la velocidad de escucha",
-        "Struggles with natural speech": "Tiene dificultades con el habla natural",
-        "Limited vocabulary recognition": "Reconocimiento de vocabulario limitado",
+        "Struggles with natural speech in listening": "Tiene dificultades con el habla natural al escuchar", // Updated to make unique
+        "Limited vocabulary recognition in listening": "Reconocimiento de vocabulario limitado al escuchar", // Updated to make unique
         
         // Listening recommendations
         "Listen to various regional accents": "Escucha varios acentos regionales",
@@ -236,7 +236,7 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Practice with different accents": "Practica con diferentes acentos",
         "Watch videos with subtitles": "Mira videos con subtítulos",
         "Listen to slow news": "Escucha noticias lentas",
-        "Practice with simple conversations": "Practica con conversaciones simples",
+        "Practice with simple conversations for listening": "Practica con conversaciones simples para escuchar", // Updated to make unique
         "Listen to slow dialogues": "Escucha diálogos lentos",
         "Practice with simple audio": "Practica con audio simple",
         "Work with basic listening exercises": "Trabaja con ejercicios básicos de escucha",
