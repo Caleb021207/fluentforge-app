@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -16,8 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
-// Define language options
 const nativeLanguages = [
   { value: "english", label: "English" },
   { value: "spanish", label: "Spanish" },
@@ -32,16 +32,21 @@ const nativeLanguages = [
 ];
 
 const targetLanguages = [
+  { value: "english", label: "English" },
   { value: "spanish", label: "Spanish" },
   { value: "french", label: "French" },
   { value: "german", label: "German" },
   { value: "italian", label: "Italian" },
   { value: "portuguese", label: "Portuguese" },
-  { value: "english", label: "English" },
   { value: "russian", label: "Russian" },
   { value: "chinese", label: "Chinese" },
   { value: "japanese", label: "Japanese" },
   { value: "korean", label: "Korean" },
+];
+
+const availableLanguagePairs = [
+  "english-spanish",
+  "spanish-english",
 ];
 
 const Index = () => {
@@ -54,6 +59,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("");
+  const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -62,12 +68,10 @@ const Index = () => {
     };
     checkUser();
 
-    // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       checkUser();
     });
 
-    // Load language preferences from localStorage if available
     const savedNativeLanguage = localStorage.getItem("nativeLanguage");
     const savedTargetLanguage = localStorage.getItem("targetLanguage");
     
@@ -78,6 +82,16 @@ const Index = () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (nativeLanguage && targetLanguage) {
+      const languagePair = `${nativeLanguage}-${targetLanguage}`;
+      setHasStudyMaterials(availableLanguagePairs.includes(languagePair));
+      
+      sessionStorage.setItem("languagePair", languagePair);
+      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
+    }
+  }, [nativeLanguage, targetLanguage]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,7 +129,6 @@ const Index = () => {
         description: isLogin ? "Welcome back!" : "Please check your email to verify your account",
       });
       
-      // Save language preferences if they're set
       if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
       if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
       
@@ -158,6 +171,10 @@ const Index = () => {
     if (nativeLanguage && targetLanguage) {
       localStorage.setItem("nativeLanguage", nativeLanguage);
       localStorage.setItem("targetLanguage", targetLanguage);
+      
+      const languagePair = `${nativeLanguage}-${targetLanguage}`;
+      sessionStorage.setItem("languagePair", languagePair);
+      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
       
       toast({
         title: "Language preferences saved",
@@ -232,6 +249,15 @@ const Index = () => {
               >
                 Save Language Preferences
               </Button>
+              
+              {nativeLanguage && targetLanguage && !hasStudyMaterials && (
+                <Alert variant="warning" className="mt-4 bg-yellow-50 border-yellow-200">
+                  <AlertCircle className="h-4 w-4 text-yellow-500" />
+                  <AlertDescription>
+                    Study materials for learning {targetLanguage} from {nativeLanguage} are coming soon!
+                  </AlertDescription>
+                </Alert>
+              )}
             </CardContent>
           </Card>
           
@@ -332,4 +358,3 @@ const Index = () => {
 };
 
 export default Index;
-

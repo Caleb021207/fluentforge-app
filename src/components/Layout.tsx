@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import LogoutButton from "./auth/LogoutButton";
+import LanguageAvailabilityBanner from "./LanguageAvailabilityBanner";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -54,6 +55,8 @@ const Layout = () => {
         <Navigation />
         <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 mb-16 md:mb-0 md:ml-64 overflow-x-hidden w-full">
           <div className="max-w-full">
+            {/* Add Language Availability Banner that will show on all pages except the home page */}
+            {window.location.pathname !== "/" && <LanguageAvailabilityBanner />}
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/placement-quiz" element={<PlacementQuiz />} />
