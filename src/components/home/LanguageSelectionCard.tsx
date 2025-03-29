@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LanguageSelectionCardProps {
   nativeLanguage: string;
@@ -26,6 +27,7 @@ const LanguageSelectionCard = ({
   handleLanguageSelection
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
+  const isMobile = useIsMobile();
 
   // Limited language options
   const LIMITED_LANGUAGES = {
@@ -35,7 +37,7 @@ const LanguageSelectionCard = ({
   };
 
   return (
-    <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
+    <Card className="bg-white/90 backdrop-blur shadow-lg mb-8 w-full max-w-[100%]">
       <CardContent className="pt-6">
         <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguagePreferences")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -45,7 +47,7 @@ const LanguageSelectionCard = ({
               <SelectTrigger id="nativeLanguage" className="w-full">
                 <SelectValue placeholder={t("selectYourNativeLanguage")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position={isMobile ? "popper" : "item-aligned"} className="w-full min-w-[200px]">
                 {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
@@ -61,7 +63,7 @@ const LanguageSelectionCard = ({
               <SelectTrigger id="targetLanguage" className="w-full">
                 <SelectValue placeholder={t("selectLanguageToLearn")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position={isMobile ? "popper" : "item-aligned"} className="w-full min-w-[200px]">
                 {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
