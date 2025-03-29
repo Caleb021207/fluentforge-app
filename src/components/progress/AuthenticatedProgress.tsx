@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 interface AuthenticatedProgressProps {
   user: User;
@@ -63,6 +64,8 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [languagePairs, setLanguagePairs] = useState<LanguagePair[]>([]);
   const [selectedPairKey, setSelectedPairKey] = useState<string | null>(null);
+  const [isFixingData, setIsFixingData] = useState(false);
+  const [showFixButton, setShowFixButton] = useState(false);
   const { toast } = useToast();
   const { isOffline, isOnline } = useConnectionStatus();
   const [retryCount, setRetryCount] = useState(0);
@@ -73,6 +76,76 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
     const [sourceLanguage, targetLanguage] = selectedPairKey.split('-');
     return { sourceLanguage, targetLanguage };
   }, [selectedPairKey]);
+
+  const checkForIncompleteLanguagePairs = useCallback((attempts: CertificationAttempt[]) => {
+    if (!attempts || attempts.length === 0) return false;
+    
+    const incomplete = attempts.some(attempt => 
+      !attempt.source_language || !attempt.target_language
+    );
+    
+    setShowFixButton(incomplete);
+    return incomplete;
+  }, []);
+
+  const fixCertificationLanguages = async () => {
+    if (!user) return;
+    
+    try {
+      setIsFixingData(true);
+      
+      const { data: incompleteAttempts, error } = await supabase
+        .from('certification_attempts')
+        .select('*')
+        .eq('user_id', user.id)
+        .or('source_language.is.null,target_language.is.null');
+        
+      if (error) {
+        throw error;
+      }
+      
+      if (!incompleteAttempts || incompleteAttempts.length === 0) {
+        toast({
+          title: t("noDataToFix"),
+          description: t("allCertificationsHaveLanguagePairs"),
+        });
+        setShowFixButton(false);
+        return;
+      }
+      
+      for (const attempt of incompleteAttempts) {
+        const { error: updateError } = await supabase
+          .from('certification_attempts')
+          .update({
+            source_language: 'english',
+            target_language: 'spanish'
+          })
+          .eq('id', attempt.id);
+          
+        if (updateError) {
+          console.error(`Error updating attempt ${attempt.id}:`, updateError);
+        }
+      }
+      
+      toast({
+        title: t("dataFixed"),
+        description: t("refreshingData"),
+      });
+      
+      await fetchProgressData(user.id);
+      
+      setShowFixButton(false);
+    } catch (error) {
+      console.error('Error fixing certification languages:', error);
+      toast({
+        title: t("error"),
+        description: t("errorFixingData"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsFixingData(false);
+    }
+  };
 
   const fetchProgressData = useCallback(async (userId: string) => {
     if (isOffline) {
@@ -100,18 +173,17 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         return; // Exit early
       }
 
-      // Clear any previous errors since we succeeded
       setFetchError(null);
 
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
         setRawAttempts(attempts as CertificationAttempt[]);
         
-        // Find all unique language pairs
+        checkForIncompleteLanguagePairs(attempts as CertificationAttempt[]);
+        
         const pairs = getAvailableLanguagePairs(attempts as CertificationAttempt[]);
         setLanguagePairs(pairs);
         
-        // If we have pairs but no selection, default to the first pair
         if (pairs.length > 0 && !selectedPairKey) {
           const firstPair = pairs[0];
           setSelectedPairKey(`${firstPair.sourceLanguage}-${firstPair.targetLanguage}`);
@@ -155,14 +227,13 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
     } finally {
       setIsRefreshing(false);
     }
-  }, [toast, isOffline, t, selectedPairKey, getSelectedLanguagePair]);
+  }, [toast, isOffline, t, selectedPairKey, getSelectedLanguagePair, checkForIncompleteLanguagePairs]);
 
   useEffect(() => {
     if (user && isOnline) {
       fetchProgressData(user.id);
     }
     
-    // Only set up the subscription if we're online
     if (isOnline) {
       const channel = supabase
         .channel('public:certification_attempts')
@@ -186,7 +257,7 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
       };
     }
     
-    return () => {}; // Empty cleanup when offline
+    return () => {};
   }, [fetchProgressData, user, isOnline]);
 
   useEffect(() => {
@@ -210,7 +281,7 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         console.log("Retrying data fetch after coming online");
         fetchProgressData(user.id);
         setRetryCount(prev => prev + 1);
-      }, 2000); // Wait 2 seconds after coming online
+      }, 2000);
       
       return () => clearTimeout(timer);
     }
@@ -280,6 +351,24 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
           )}
           <AlertDescription>
             {fetchError}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {showFixButton && (
+        <Alert variant="warning">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex flex-row items-center justify-between">
+            <span>{t("incompleteLanguageData")}</span>
+            <Button 
+              onClick={fixCertificationLanguages} 
+              disabled={isFixingData}
+              variant="outline" 
+              size="sm"
+              className="ml-4"
+            >
+              {isFixingData ? t("fixing") : t("fixData")}
+            </Button>
           </AlertDescription>
         </Alert>
       )}
