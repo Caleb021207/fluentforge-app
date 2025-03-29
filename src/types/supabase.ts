@@ -1,3 +1,4 @@
+
 // This file contains additional type definitions for Supabase tables
 // that complement the auto-generated types in src/integrations/supabase/types.ts
 
@@ -33,8 +34,8 @@ export interface CertificationAttempt {
   created_at: string | null;
   level: string;
   certification_type: string;
-  source_language?: string;
-  target_language?: string;
+  source_language: string;
+  target_language: string;
 }
 
 // Use these types in your components like this:

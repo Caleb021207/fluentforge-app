@@ -6,13 +6,6 @@ import { CertificationAttempt } from "@/types/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { fetchTranscripts, normalizeAttempts, calculateHighestScores, calculateCompositeScore } from "./utils/certificateUtils";
 import { useLocalization } from "@/context/LocalizationContext";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface LanguagePair {
   sourceLanguage: string;

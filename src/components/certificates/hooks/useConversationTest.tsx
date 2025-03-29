@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +13,7 @@ import {
 const TEST_DURATION = 180; // 3 minutes in seconds
 const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc";
 
-export const useConversationTest = (onTestComplete?: () => void) => {
+export const useConversationTest = (onTestComplete?: () => void, languagePair?: { sourceLanguage: string, targetLanguage: string }) => {
   const [isStarted, setIsStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION);
@@ -94,6 +93,22 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     }
   }, [isStarted, isComplete, timeRemaining]);
 
+  const getAgentId = () => {
+    if (!languagePair) return ELEVEN_LABS_AGENT_ID;
+    
+    const key = `${languagePair.sourceLanguage}-${languagePair.targetLanguage}`;
+    const agentIds = {
+      'english-spanish': ELEVEN_LABS_AGENT_ID,
+      'spanish-english': 'es-en-agent-id', // Replace with actual IDs later
+      'english-portuguese': 'en-pt-agent-id',
+      'portuguese-english': 'pt-en-agent-id',
+      'spanish-portuguese': 'es-pt-agent-id',
+      'portuguese-spanish': 'pt-es-agent-id'
+    };
+    
+    return agentIds[key as keyof typeof agentIds] || ELEVEN_LABS_AGENT_ID;
+  };
+
   const startTest = async () => {
     if (!isLoggedIn) {
       toast({
@@ -127,6 +142,9 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       
       console.log("Starting test for user:", user.id);
       
+      const sourceLanguage = languagePair?.sourceLanguage || 'english';
+      const targetLanguage = languagePair?.targetLanguage || 'spanish';
+      
       const { data: speakingAttempt, error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -135,6 +153,8 @@ export const useConversationTest = (onTestComplete?: () => void) => {
             score: 0,
             level: 'A1',
             user_id: user.id,
+            source_language: sourceLanguage,
+            target_language: targetLanguage
           }
         ])
         .select()
@@ -158,6 +178,8 @@ export const useConversationTest = (onTestComplete?: () => void) => {
             score: 0,
             level: 'A1',
             user_id: user.id,
+            source_language: sourceLanguage,
+            target_language: targetLanguage
           }
         ])
         .select()
@@ -188,13 +210,16 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       setIsStarted(true);
       setTimeRemaining(TEST_DURATION);
       
+      const agentId = getAgentId();
+      console.log(`Using agent ID for ${sourceLanguage} to ${targetLanguage}: ${agentId}`);
+      
       await conversation.startSession({
-        agentId: ELEVEN_LABS_AGENT_ID,
+        agentId: agentId,
       });
       
       toast({
         title: "Test Started",
-        description: "The conversational fluency test has begun. Speak clearly in Spanish.",
+        description: `The conversational fluency test has begun. Speak clearly in ${getLanguageName(targetLanguage)}.`,
       });
     } catch (error: any) {
       console.error("Error starting test:", error);
@@ -203,6 +228,15 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         description: "Failed to start the test: " + (error.message || "Unknown error"),
         variant: "destructive",
       });
+    }
+  };
+
+  const getLanguageName = (code: string): string => {
+    switch(code) {
+      case 'english': return 'English';
+      case 'spanish': return 'Spanish';
+      case 'portuguese': return 'Portuguese';
+      default: return code.charAt(0).toUpperCase() + code.slice(1);
     }
   };
 
