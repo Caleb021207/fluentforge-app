@@ -27,11 +27,11 @@ const LanguageSelectionCard = ({
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
 
-  // Limited language options
-  const LIMITED_LANGUAGES = {
+  // Languages in their native names
+  const NATIVE_LANGUAGE_NAMES = {
     english: "English",
-    spanish: "Spanish",
-    portuguese: "Portuguese",
+    spanish: "Español",
+    portuguese: "Português",
   };
 
   return (
@@ -46,7 +46,7 @@ const LanguageSelectionCard = ({
                 <SelectValue placeholder={t("selectYourNativeLanguage")} />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
+                {Object.entries(NATIVE_LANGUAGE_NAMES).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
                   </SelectItem>

@@ -13,11 +13,11 @@ const translations: LanguageTranslations = {
 
 export default translations;
 
-// Define available languages
+// Define available languages with their native names
 export const AVAILABLE_LANGUAGES = {
   english: "English",
-  spanish: "Spanish",
-  portuguese: "Portuguese",
+  spanish: "Español",
+  portuguese: "Português",
 };
 
 // Default language
