@@ -538,33 +538,25 @@ export const saveTranscriptToDatabase = async (
 };
 
 export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
-  // Use our new algorithms for more accurate mock results
   const messageCount = userMessages.length;
   
-  // If we have actual user messages, use them for analysis
   if (messageCount > 0) {
-    // Analyze speaking complexity
     const speechComplexity = analyzeSpeakingComplexity(userMessages);
     
-    // Calculate scores based on complexity
     const speakingScore = calculateEnhancedScore(speechComplexity, messageCount);
-    const listeningScore = Math.round(speakingScore * 0.95); // Slightly lower than speaking
+    const listeningScore = Math.round(speakingScore * 0.95);
     
-    // Get CEFR levels
     const speakingLevel = determineLevel(speakingScore);
     const listeningLevel = determineLevel(listeningScore);
     
-    // Calculate normalized skill scores (0-10)
     const skillScore = Math.round(speechComplexity);
     const normalizedSkillScore = Math.max(4, Math.min(10, skillScore));
     
-    // Calculate total words across all messages
     const totalWords = userMessages.reduce((count, msg) => 
       count + (msg.content?.split(/\s+/).length || 0), 0);
     
     const avgWordsPerResponse = messageCount > 0 ? Math.round(totalWords / messageCount) : 0;
     
-    // Generate personalized feedback
     const feedbackData = generateDetailedFeedback(
       speechComplexity, 
       messageCount,
@@ -584,7 +576,7 @@ export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
         overallScore: listeningScore,
         level: listeningLevel,
         understanding: normalizedSkillScore,
-        vocabulary: Math.max(4, normalizedSkillScore - 0.5), 
+        vocabulary: Math.max(4, normalizedSkillScore - 0.5),
         interaction: normalizedSkillScore
       },
       feedback: feedbackData.feedback,
@@ -593,8 +585,7 @@ export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
     };
   }
   
-  // Fallback if we don't have message data
-  const baseScore = 65; // Default to B1
+  const baseScore = 65;
   const skillScore = Math.round(baseScore / 10);
   
   return {
@@ -626,7 +617,7 @@ export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
   };
 };
 
-export const formatTime = (seconds: number) => {
+export const formatTime = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
