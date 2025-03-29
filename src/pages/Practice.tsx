@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones } from "lucide-react";
+import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -128,6 +128,65 @@ const Practice = () => {
     }
   };
 
+  const sendLanguageLearningPrompt = () => {
+    let prompt = "";
+    
+    // Generate prompt based on user's native language
+    if (currentLanguage === "english") {
+      prompt = "Hola, soy estudiante de español. Por favor, ayúdame a practicar mi español. Corrige mis errores gramaticales y de vocabulario cuando hable. ¿Podemos comenzar con una conversación simple?";
+    } else if (currentLanguage === "spanish") {
+      prompt = "Hello, I am a Spanish speaker learning English. Please help me practice my English. Correct my grammar and vocabulary mistakes when I speak. Can we start with a simple conversation?";
+    } else if (currentLanguage === "portuguese") {
+      prompt = "Hello, I am a Portuguese speaker learning English. Please help me practice my English. Correct my grammar and vocabulary mistakes when I speak. Can we start with a simple conversation?";
+    }
+
+    if (prompt) {
+      // Create user message
+      const userMessage: ChatMessage = {
+        role: "user",
+        content: prompt,
+      };
+
+      // Add to messages and send
+      setMessages((prev) => [...prev, userMessage]);
+      handleSendPrompt(prompt);
+    }
+  };
+
+  const handleSendPrompt = async (promptText: string) => {
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+        body: { 
+          message: promptText,
+          userLanguage: currentLanguage 
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+      
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: data.content,
+        translation: data.translation,
+      };
+
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: t("error"),
+        description: t("networkConnectionIssue"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -143,7 +202,10 @@ const Practice = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
-        body: { message: input }
+        body: { 
+          message: input,
+          userLanguage: currentLanguage
+        }
       });
 
       if (error) {
@@ -193,7 +255,7 @@ const Practice = () => {
             ? `Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`
             : `Chat with our AI tutor to practice your English! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`}
         </p>
-        <div className="flex gap-4 mb-4">
+        <div className="flex flex-wrap gap-4 mb-4">
           <Button
             onClick={conversation.status === "connected" ? conversation.endSession : startVoiceConversation}
             variant={conversation.status === "connected" ? "destructive" : "default"}
@@ -212,6 +274,12 @@ const Practice = () => {
           </Button>
           <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
             {t("getSkillsAssessment")}
+          </Button>
+          <Button onClick={sendLanguageLearningPrompt} disabled={isLoading} className="bg-lingua-primary">
+            <Book className="h-4 w-4 mr-2" />
+            {currentLanguage === "english" 
+              ? "Send Spanish Practice Prompt" 
+              : "Send English Practice Prompt"}
           </Button>
         </div>
       </div>
