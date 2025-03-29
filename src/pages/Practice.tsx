@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useEffect } from "react";
 
 interface ChatMessage {
   role: "user" | "assistant";
