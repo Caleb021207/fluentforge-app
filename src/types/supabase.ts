@@ -29,13 +29,11 @@ export interface LessonProgress {
 export interface CertificationAttempt {
   id: string;
   user_id: string;
+  certification_type: string;
+  level: string;
   score: number;
   completed_at: string | null;
   created_at: string | null;
-  level: string;
-  certification_type: string;
-  source_language: string | null;
-  target_language: string | null;
 }
 
 // Use these types in your components like this:

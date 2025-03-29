@@ -1,32 +1,18 @@
 
 import { useConversation } from '@11labs/react';
 
-// Agent IDs for each language pair
-export const ELEVEN_LABS_AGENT_IDS = {
-  'english-spanish': 'en-es-agent-id', // Replace with actual agent IDs
-  'spanish-english': 'es-en-agent-id',
-  'english-portuguese': 'en-pt-agent-id',
-  'portuguese-english': 'pt-en-agent-id',
-  'spanish-portuguese': 'es-pt-agent-id',
-  'portuguese-spanish': 'pt-es-agent-id'
-};
+// Configuration for the ElevenLabs agent
+export const ELEVEN_LABS_AGENT_ID = 'your-eleven-labs-agent-id'; // Replace with your agent ID
 
 /**
- * Initializes an ElevenLabs conversation agent for a specific language pair
- * @param sourceLanguage The source language code
- * @param targetLanguage The target language code
+ * Initializes an ElevenLabs conversation agent
  * @returns A promise that resolves to the conversation ID
  */
-export const initializeElevenLabsAgent = async (sourceLanguage: string, targetLanguage: string) => {
+export const initializeElevenLabsAgent = async () => {
   try {
-    const agentKey = `${sourceLanguage}-${targetLanguage}`;
-    const agentId = ELEVEN_LABS_AGENT_IDS[agentKey as keyof typeof ELEVEN_LABS_AGENT_IDS] || ELEVEN_LABS_AGENT_IDS['english-spanish'];
-    
-    console.log(`Initializing ElevenLabs agent for ${sourceLanguage} to ${targetLanguage} with ID: ${agentId}`);
-    
     // This is where you would integrate with the ElevenLabs API
     // For now, we'll return a mock conversation ID
-    return `mock-conversation-${sourceLanguage}-${targetLanguage}-${Date.now()}`;
+    return `mock-conversation-${Date.now()}`;
   } catch (error) {
     console.error("Error initializing ElevenLabs agent:", error);
     return null;
@@ -50,26 +36,19 @@ export const endElevenLabsConversation = async (conversationId: string) => {
 
 /**
  * Hook for using ElevenLabs conversation in React components
- * @param sourceLanguage The source language code
- * @param targetLanguage The target language code
  */
-export const useElevenLabsAgent = (sourceLanguage: string, targetLanguage: string) => {
+export const useElevenLabsAgent = () => {
   // Here you would use the @11labs/react useConversation hook
   // This is a simplified mock implementation
   const conversation = useConversation();
   
   const startAgent = async () => {
     try {
-      const agentKey = `${sourceLanguage}-${targetLanguage}`;
-      const agentId = ELEVEN_LABS_AGENT_IDS[agentKey as keyof typeof ELEVEN_LABS_AGENT_IDS] || ELEVEN_LABS_AGENT_IDS['english-spanish'];
-      
       // This would be replaced with actual conversation.startSession call
-      console.log(`Starting ElevenLabs agent for ${sourceLanguage} to ${targetLanguage} with ID: ${agentId}`);
-      
+      console.log("Starting ElevenLabs agent...");
       const conversationId = await conversation.startSession({ 
-        agentId: agentId
+        agentId: ELEVEN_LABS_AGENT_ID 
       });
-      
       return conversationId;
     } catch (error) {
       console.error("Error starting ElevenLabs agent:", error);

@@ -1,121 +1,236 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import { useLocalization } from "@/context/LocalizationContext";
-import CEFRLevelDescriptions from "@/components/certificates/CEFRLevelDescriptions";
-
-interface LanguagePair {
-  sourceLanguage: string;
-  targetLanguage: string;
-}
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
 interface TestResultsProps {
   testResult: any;
-  onRetry: () => void;
-  onBackToOverview: () => void;
-  isLoading: boolean;
-  languagePair?: LanguagePair;
+  onReset: () => void;
 }
 
-const TestResults = ({ testResult, onRetry, onBackToOverview, isLoading, languagePair }: TestResultsProps) => {
-  const { t, currentLanguage } = useLocalization();
+const TestResults = ({ testResult, onReset }: TestResultsProps) => {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   
-  const getProgressColor = (score: number) => {
-    if (score >= 85) return "bg-green-500";
-    if (score >= 70) return "bg-blue-500";
-    if (score >= 55) return "bg-yellow-500";
-    return "bg-gray-400";
+  // Enhanced function to get a more accurate color based on skill level
+  const getColorForScore = (score: number): string => {
+    if (score >= 9) return "bg-green-500"; 
+    if (score >= 8) return "bg-green-400";
+    if (score >= 7) return "bg-blue-500";  
+    if (score >= 6) return "bg-blue-400";  
+    if (score >= 5) return "bg-yellow-400";
+    if (score >= 4) return "bg-yellow-500";
+    return "bg-red-500";
   };
   
-  const getLanguageName = (code: string): string => {
-    switch(code) {
-      case 'english': 
-        return currentLanguage === "spanish" ? "Inglés" : 
-               currentLanguage === "portuguese" ? "Inglês" : "English";
-      case 'spanish': 
-        return currentLanguage === "spanish" ? "Español" : 
-               currentLanguage === "portuguese" ? "Espanhol" : "Spanish";
-      case 'portuguese': 
-        return currentLanguage === "spanish" ? "Portugués" : 
-               currentLanguage === "portuguese" ? "Português" : "Portuguese";
-      default: 
-        return code.charAt(0).toUpperCase() + code.slice(1);
+  const handleSubmitScores = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication error",
+          description: "You must be logged in to submit scores",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Create speaking attempt with weighted scoring
+      const speakingScore = testResult?.speaking?.overallScore || 0;
+      if (speakingScore > 0) {
+        const speakingLevel = determineLevel(speakingScore);
+        await supabase.from('certification_attempts').insert({
+          user_id: user.id,
+          certification_type: 'speaking',
+          score: speakingScore,
+          level: speakingLevel,
+          created_at: new Date().toISOString()
+        });
+      }
+      
+      // Create listening attempt with weighted scoring
+      const listeningScore = testResult?.listening?.overallScore || 0;
+      if (listeningScore > 0) {
+        const listeningLevel = determineLevel(listeningScore);
+        await supabase.from('certification_attempts').insert({
+          user_id: user.id,
+          certification_type: 'listening',
+          score: listeningScore,
+          level: listeningLevel,
+          created_at: new Date().toISOString()
+        });
+      }
+      
+      // Create fluency attempt (average of speaking and listening)
+      // Adding weight to prioritize speaking slightly more than listening for fluency
+      const fluencyScore = Math.round((speakingScore * 0.6 + listeningScore * 0.4));
+      if (fluencyScore > 0) {
+        const fluencyLevel = determineLevel(fluencyScore);
+        await supabase.from('certification_attempts').insert({
+          user_id: user.id,
+          certification_type: 'fluency',
+          score: fluencyScore,
+          level: fluencyLevel,
+          created_at: new Date().toISOString()
+        });
+      }
+      
+      toast({
+        title: "Scores submitted successfully",
+        description: "Your certificate scores have been updated",
+        variant: "default"
+      });
+      
+      // Trigger a refresh event to update UI
+      window.dispatchEvent(new CustomEvent('fluency-test-completed'));
+      
+    } catch (error) {
+      console.error("Error submitting scores:", error);
+      toast({
+        title: "Error submitting scores",
+        description: "There was an issue saving your scores. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
-  const getLanguagePairText = () => {
-    if (!languagePair) return "";
-    const sourceLanguage = getLanguageName(languagePair.sourceLanguage);
-    const targetLanguage = getLanguageName(languagePair.targetLanguage);
-    
-    if (currentLanguage === "spanish") {
-      return `(${sourceLanguage} → ${targetLanguage})`;
-    } else if (currentLanguage === "portuguese") {
-      return `(${sourceLanguage} → ${targetLanguage})`;
-    } else {
-      return `(${sourceLanguage} → ${targetLanguage})`;
-    }
-  };
-
-  
-  // This is just a simplified return for the component
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">
-        {t("testResults")} {getLanguagePairText()}
-      </h2>
-      
-      {testResult.speaking && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t("speaking")}</h3>
-          <Progress 
-            value={testResult.speaking.overallScore} 
-            className="mb-2" 
-            indicatorClassName={getProgressColor(testResult.speaking.overallScore)}
-          />
-          <div className="flex justify-between text-sm">
-            <span>{t("score")}: {testResult.speaking.overallScore}%</span>
-            <span>{t("level")}: {testResult.speaking.level}</span>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="p-4 bg-blue-50 rounded-lg">
+          <h3 className="font-medium text-lg mb-2">Speaking Results</h3>
+          <div className="mb-2">
+            <span className="font-medium">Score:</span> {testResult?.speaking?.overallScore}%
+          </div>
+          <div className="mb-2">
+            <span className="font-medium">CEFR Level:</span> {testResult?.speaking?.level}
+          </div>
+          
+          <div className="mt-3">
+            <h4 className="font-medium mb-2">Speaking Skills</h4>
+            <div className="flex justify-between mb-1">
+              <span>Pronunciation</span>
+              <span>{testResult?.speaking?.pronunciation}/10</span>
+            </div>
+            <Progress 
+              value={testResult?.speaking?.pronunciation * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.speaking?.pronunciation || 0)}
+            />
+            
+            <div className="flex justify-between mb-1">
+              <span>Fluency</span>
+              <span>{testResult?.speaking?.fluency}/10</span>
+            </div>
+            <Progress 
+              value={testResult?.speaking?.fluency * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.speaking?.fluency || 0)}
+            />
+            
+            <div className="flex justify-between mb-1">
+              <span>Grammar</span>
+              <span>{testResult?.speaking?.grammar}/10</span>
+            </div>
+            <Progress 
+              value={testResult?.speaking?.grammar * 10} 
+              className="h-2" 
+              indicatorClassName={getColorForScore(testResult?.speaking?.grammar || 0)}
+            />
           </div>
         </div>
-      )}
-      
-      {testResult.listening && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t("listening")}</h3>
-          <Progress 
-            value={testResult.listening.overallScore} 
-            className="mb-2" 
-            indicatorClassName={getProgressColor(testResult.listening.overallScore)}
-          />
-          <div className="flex justify-between text-sm">
-            <span>{t("score")}: {testResult.listening.overallScore}%</span>
-            <span>{t("level")}: {testResult.listening.level}</span>
+        
+        <div className="p-4 bg-blue-50 rounded-lg">
+          <h3 className="font-medium text-lg mb-2">Listening Results</h3>
+          <div className="mb-2">
+            <span className="font-medium">Score:</span> {testResult?.listening?.overallScore}%
+          </div>
+          <div className="mb-2">
+            <span className="font-medium">CEFR Level:</span> {testResult?.listening?.level}
+          </div>
+          
+          <div className="mt-3">
+            <h4 className="font-medium mb-2">Listening Skills</h4>
+            <div className="flex justify-between mb-1">
+              <span>Understanding</span>
+              <span>{testResult?.listening?.understanding}/10</span>
+            </div>
+            <Progress 
+              value={testResult?.listening?.understanding * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.listening?.understanding || 0)}
+            />
+            
+            <div className="flex justify-between mb-1">
+              <span>Vocabulary</span>
+              <span>{testResult?.listening?.vocabulary}/10</span>
+            </div>
+            <Progress 
+              value={testResult?.listening?.vocabulary * 10} 
+              className="h-2 mb-3" 
+              indicatorClassName={getColorForScore(testResult?.listening?.vocabulary || 0)}
+            />
+            
+            <div className="flex justify-between mb-1">
+              <span>Response Quality</span>
+              <span>{testResult?.listening?.interaction}/10</span>
+            </div>
+            <Progress 
+              value={testResult?.listening?.interaction * 10} 
+              className="h-2" 
+              indicatorClassName={getColorForScore(testResult?.listening?.interaction || 0)}
+            />
           </div>
         </div>
-      )}
-      
-      <Separator className="my-4" />
-      
-      {testResult.feedback && (
-        <div className="my-4">
-          <h3 className="text-lg font-semibold mb-2">{t("feedback")}</h3>
-          <p className="text-gray-700">{testResult.feedback}</p>
-        </div>
-      )}
-      
-      <div className="flex flex-col sm:flex-row gap-2 mt-6">
-        <Button onClick={onRetry} variant="outline" disabled={isLoading}>
-          {t("takeTestAgain")}
-        </Button>
-        <Button onClick={onBackToOverview}>
-          {t("backToCertificates")}
-        </Button>
       </div>
       
-      <div className="mt-8">
-        <CEFRLevelDescriptions />
+      <div className="p-4 bg-gray-50 rounded-lg">
+        <h3 className="font-medium mb-2">Feedback</h3>
+        <p className="text-gray-700 mb-4">{testResult?.feedback}</p>
+        
+        <div className="mb-4">
+          <h4 className="font-medium text-sm mb-2">Strengths:</h4>
+          <ul className="list-disc pl-5 space-y-1">
+            {testResult?.strengths?.map((strength: string, i: number) => (
+              <li key={i} className="text-gray-700">{strength}</li>
+            ))}
+          </ul>
+        </div>
+        
+        <div>
+          <h4 className="font-medium text-sm mb-2">Areas for Improvement:</h4>
+          <ul className="list-disc pl-5 space-y-1">
+            {testResult?.areasToImprove?.map((area: string, i: number) => (
+              <li key={i} className="text-gray-700">{area}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button 
+          onClick={handleSubmitScores} 
+          disabled={isSubmitting}
+          className="flex-1"
+          variant="success"
+        >
+          {isSubmitting ? "Submitting..." : "Submit Scores"}
+        </Button>
+        <Button 
+          onClick={onReset} 
+          variant="outline"
+          className="flex-1"
+        >
+          Take Test Again
+        </Button>
       </div>
     </div>
   );

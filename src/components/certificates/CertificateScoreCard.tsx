@@ -65,16 +65,6 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
     return attempt.completed_at != null && attempt.score > 0;
   };
 
-  const getNoAttemptsText = () => {
-    if (currentLanguage === "spanish") {
-      return "Aún no hay intentos completados";
-    } else if (currentLanguage === "portuguese") {
-      return "Ainda não há tentativas concluídas";
-    } else {
-      return "No completed attempts yet";
-    }
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -95,7 +85,9 @@ const CertificateScoreCard = ({ type, attempt }: CertificateScoreCardProps) => {
           </>
         ) : (
           <div className="text-sm text-gray-500">
-            {getNoAttemptsText()}
+            {currentLanguage === "spanish" 
+              ? "Aún no hay intentos completados" 
+              : "No completed attempts yet"}
           </div>
         )}
       </CardContent>

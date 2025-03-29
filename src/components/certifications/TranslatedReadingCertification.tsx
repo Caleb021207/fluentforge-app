@@ -10,23 +10,16 @@ const TranslatedReadingCertification = () => {
   const navigate = useNavigate();
   const { t, currentLanguage } = useLocalization();
 
-  // Function to get localized description and adjust for target language
+  // Function to get localized description
   const getLocalizedDescription = () => {
-    // Base descriptions translated to the user's interface language
-    let baseDescription = '';
-    
     switch(currentLanguage) {
       case "spanish":
-        baseDescription = "La Prueba de Lectura evalúa tu comprensión lectora a través de pasajes de texto y preguntas de comprensión. Esta prueba evalúa tu capacidad para entender textos escritos, identificar ideas principales y hacer inferencias.";
-        break;
+        return "La Prueba de Lectura evalúa tu comprensión lectora a través de pasajes de texto y preguntas de comprensión. Esta prueba evalúa tu capacidad para entender textos escritos, identificar ideas principales y hacer inferencias.";
       case "portuguese":
-        baseDescription = "O Teste de Leitura avalia sua compreensão de leitura através de passagens de texto e perguntas de compreensão. Este teste avalia sua capacidade de entender textos escritos, identificar ideias principais e fazer inferências.";
-        break;
+        return "O Teste de Leitura avalia sua compreensão de leitura através de passagens de texto e perguntas de compreensão. Este teste avalia sua capacidade de entender textos escritos, identificar ideias principais e fazer inferências.";
       default:
-        baseDescription = "The Reading Test evaluates your reading comprehension through text passages and comprehension questions. This test assesses your ability to understand written texts, identify main ideas, and make inferences.";
+        return "The Reading Test evaluates your reading comprehension through text passages and comprehension questions. This test assesses your ability to understand written texts, identify main ideas, and make inferences.";
     }
-    
-    return baseDescription;
   };
 
   return (

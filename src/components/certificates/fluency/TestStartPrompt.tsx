@@ -5,25 +5,18 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocalization } from "@/context/LocalizationContext";
 
-export interface LanguagePair {
-  sourceLanguage: string;
-  targetLanguage: string;
-}
-
-export interface TestStartPromptProps {
-  isLoading?: boolean;
-  isLoggedIn?: boolean;
-  microphoneAccess?: boolean;
+interface TestStartPromptProps {
+  isLoading: boolean;
+  isLoggedIn: boolean;
+  microphoneAccess: boolean;
   onStart: () => void;
-  languagePair?: LanguagePair;
 }
 
 const TestStartPrompt = ({
-  isLoading = false,
-  isLoggedIn = false,
-  microphoneAccess = false,
-  onStart,
-  languagePair
+  isLoading,
+  isLoggedIn,
+  microphoneAccess,
+  onStart
 }: TestStartPromptProps) => {
   const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
   const { t } = useLocalization();

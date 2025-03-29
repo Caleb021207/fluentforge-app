@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +14,7 @@ import {
 const TEST_DURATION = 180; // 3 minutes in seconds
 const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc";
 
-export const useConversationTest = (onTestComplete?: () => void, languagePair?: { sourceLanguage: string, targetLanguage: string }) => {
+export const useConversationTest = (onTestComplete?: () => void) => {
   const [isStarted, setIsStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION);
@@ -93,22 +94,6 @@ export const useConversationTest = (onTestComplete?: () => void, languagePair?: 
     }
   }, [isStarted, isComplete, timeRemaining]);
 
-  const getAgentId = () => {
-    if (!languagePair) return ELEVEN_LABS_AGENT_ID;
-    
-    const key = `${languagePair.sourceLanguage}-${languagePair.targetLanguage}`;
-    const agentIds = {
-      'english-spanish': ELEVEN_LABS_AGENT_ID,
-      'spanish-english': 'es-en-agent-id', // Replace with actual IDs later
-      'english-portuguese': 'en-pt-agent-id',
-      'portuguese-english': 'pt-en-agent-id',
-      'spanish-portuguese': 'es-pt-agent-id',
-      'portuguese-spanish': 'pt-es-agent-id'
-    };
-    
-    return agentIds[key as keyof typeof agentIds] || ELEVEN_LABS_AGENT_ID;
-  };
-
   const startTest = async () => {
     if (!isLoggedIn) {
       toast({
@@ -142,9 +127,6 @@ export const useConversationTest = (onTestComplete?: () => void, languagePair?: 
       
       console.log("Starting test for user:", user.id);
       
-      const sourceLanguage = languagePair?.sourceLanguage || 'english';
-      const targetLanguage = languagePair?.targetLanguage || 'spanish';
-      
       const { data: speakingAttempt, error: speakingError } = await supabase
         .from('certification_attempts')
         .insert([
@@ -153,8 +135,6 @@ export const useConversationTest = (onTestComplete?: () => void, languagePair?: 
             score: 0,
             level: 'A1',
             user_id: user.id,
-            source_language: sourceLanguage,
-            target_language: targetLanguage
           }
         ])
         .select()
@@ -178,8 +158,6 @@ export const useConversationTest = (onTestComplete?: () => void, languagePair?: 
             score: 0,
             level: 'A1',
             user_id: user.id,
-            source_language: sourceLanguage,
-            target_language: targetLanguage
           }
         ])
         .select()
@@ -210,16 +188,13 @@ export const useConversationTest = (onTestComplete?: () => void, languagePair?: 
       setIsStarted(true);
       setTimeRemaining(TEST_DURATION);
       
-      const agentId = getAgentId();
-      console.log(`Using agent ID for ${sourceLanguage} to ${targetLanguage}: ${agentId}`);
-      
       await conversation.startSession({
-        agentId: agentId,
+        agentId: ELEVEN_LABS_AGENT_ID,
       });
       
       toast({
         title: "Test Started",
-        description: `The conversational fluency test has begun. Speak clearly in ${getLanguageName(targetLanguage)}.`,
+        description: "The conversational fluency test has begun. Speak clearly in Spanish.",
       });
     } catch (error: any) {
       console.error("Error starting test:", error);
@@ -228,15 +203,6 @@ export const useConversationTest = (onTestComplete?: () => void, languagePair?: 
         description: "Failed to start the test: " + (error.message || "Unknown error"),
         variant: "destructive",
       });
-    }
-  };
-
-  const getLanguageName = (code: string): string => {
-    switch(code) {
-      case 'english': return 'English';
-      case 'spanish': return 'Spanish';
-      case 'portuguese': return 'Portuguese';
-      default: return code.charAt(0).toUpperCase() + code.slice(1);
     }
   };
 
@@ -538,25 +504,33 @@ export const saveTranscriptToDatabase = async (
 };
 
 export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
+  // Use our new algorithms for more accurate mock results
   const messageCount = userMessages.length;
   
+  // If we have actual user messages, use them for analysis
   if (messageCount > 0) {
+    // Analyze speaking complexity
     const speechComplexity = analyzeSpeakingComplexity(userMessages);
     
+    // Calculate scores based on complexity
     const speakingScore = calculateEnhancedScore(speechComplexity, messageCount);
-    const listeningScore = Math.round(speakingScore * 0.95);
+    const listeningScore = Math.round(speakingScore * 0.95); // Slightly lower than speaking
     
+    // Get CEFR levels
     const speakingLevel = determineLevel(speakingScore);
     const listeningLevel = determineLevel(listeningScore);
     
+    // Calculate normalized skill scores (0-10)
     const skillScore = Math.round(speechComplexity);
     const normalizedSkillScore = Math.max(4, Math.min(10, skillScore));
     
+    // Calculate total words across all messages
     const totalWords = userMessages.reduce((count, msg) => 
       count + (msg.content?.split(/\s+/).length || 0), 0);
     
     const avgWordsPerResponse = messageCount > 0 ? Math.round(totalWords / messageCount) : 0;
     
+    // Generate personalized feedback
     const feedbackData = generateDetailedFeedback(
       speechComplexity, 
       messageCount,
@@ -576,7 +550,7 @@ export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
         overallScore: listeningScore,
         level: listeningLevel,
         understanding: normalizedSkillScore,
-        vocabulary: Math.max(4, normalizedSkillScore - 0.5),
+        vocabulary: Math.max(4, normalizedSkillScore - 0.5), 
         interaction: normalizedSkillScore
       },
       feedback: feedbackData.feedback,
@@ -585,7 +559,8 @@ export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
     };
   }
   
-  const baseScore = 65;
+  // Fallback if we don't have message data
+  const baseScore = 65; // Default to B1
   const skillScore = Math.round(baseScore / 10);
   
   return {
@@ -617,7 +592,7 @@ export const generateEnhancedMockTestResults = (userMessages: any[] = []) => {
   };
 };
 
-export const formatTime = (seconds: number): string => {
+export const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`;

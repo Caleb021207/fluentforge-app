@@ -10,23 +10,16 @@ const TranslatedWritingCertification = () => {
   const navigate = useNavigate();
   const { t, currentLanguage } = useLocalization();
 
-  // Function to get localized description and adjust for target language
+  // Function to get localized description
   const getLocalizedDescription = () => {
-    // Base descriptions translated to the user's interface language
-    let baseDescription = '';
-    
     switch(currentLanguage) {
       case "spanish":
-        baseDescription = "La Prueba de Escritura evalúa tu capacidad para expresarte por escrito con claridad, precisión y fluidez. Esta prueba evalúa tu dominio de la gramática, vocabulario y estructura de oraciones.";
-        break;
+        return "La Prueba de Escritura evalúa tu capacidad para expresarte por escrito con claridad, precisión y fluidez. Esta prueba evalúa tu dominio de la gramática, vocabulario y estructura de oraciones.";
       case "portuguese":
-        baseDescription = "O Teste de Escrita avalia sua capacidade de se expressar por escrito com clareza, precisão e fluência. Este teste avalia seu domínio de gramática, vocabulário e estrutura de frases.";
-        break;
+        return "O Teste de Escrita avalia sua capacidade de se expressar por escrito com clareza, precisão e fluência. Este teste avalia seu domínio de gramática, vocabulário e estrutura de frases.";
       default:
-        baseDescription = "The Writing Test evaluates your ability to express yourself in writing with clarity, accuracy, and fluency. This test assesses your grasp of grammar, vocabulary, and sentence structure.";
+        return "The Writing Test evaluates your ability to express yourself in writing with clarity, accuracy, and fluency. This test assesses your grasp of grammar, vocabulary, and sentence structure.";
     }
-    
-    return baseDescription;
   };
 
   return (

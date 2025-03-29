@@ -1,52 +1,59 @@
+
 import React from "react";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mic, MicOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import TestInstructions from "./TestInstructions";
+import { formatTime } from "../hooks/useConversationTest";
 
 interface ActiveTestProps {
-  timeRemaining: string; // Ensure this is typed as string
-  onEnd: () => void;
-  conversation: any;
-  conversationTranscript: {
-    userMessages: any[];
-    aiResponses: any[];
-  };
-  languagePair?: {
-    sourceLanguage: string;
-    targetLanguage: string;
-  };
+  timeRemaining: number;
+  conversationStatus: string;
+  onEndEarly: () => void;
 }
 
 const ActiveTest = ({
   timeRemaining,
-  onEnd,
-  conversation,
-  conversationTranscript,
-  languagePair
+  conversationStatus,
+  onEndEarly
 }: ActiveTestProps) => {
   return (
-    <div>ActiveTest Component
-      <CardHeader>
-        <CardTitle>Time Remaining: {timeRemaining}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p>Speak now in {languagePair?.targetLanguage || 'the target language'}.</p>
-        <button onClick={onEnd}>End Test</button>
-        <div>
-          <h3>Your Messages:</h3>
-          <ul>
-            {conversationTranscript.userMessages.map((message, index) => (
-              <li key={index}>{message.content}</li>
-            ))}
-          </ul>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
+        <div className="flex items-center">
+          {conversationStatus === "connected" ? (
+            <Mic className="h-5 w-5 text-green-500 mr-2 animate-pulse" />
+          ) : (
+            <MicOff className="h-5 w-5 text-red-500 mr-2" />
+          )}
+          <span className="font-medium">
+            {conversationStatus === "connected" 
+              ? "Speak in Spanish to the AI tutor" 
+              : "Connecting to AI tutor..."}
+          </span>
         </div>
-        <div>
-          <h3>AI Responses:</h3>
-          <ul>
-            {conversationTranscript.aiResponses.map((message, index) => (
-              <li key={index}>{message.content}</li>
-            ))}
-          </ul>
+        <div className="text-right">
+          <div className="text-lg font-bold">{formatTime(timeRemaining)}</div>
+          <div className="text-xs text-gray-500">remaining</div>
         </div>
-      </CardContent>
+      </div>
+      
+      <TestInstructions />
+      
+      <div className="flex justify-between">
+        <Button 
+          variant="outline" 
+          onClick={() => {
+            if (window.confirm("Are you sure you want to end the test early?")) {
+              onEndEarly();
+            }
+          }}
+        >
+          End Test Early
+        </Button>
+        <div className="text-sm text-gray-500 pt-2">
+          Test will automatically end in {formatTime(timeRemaining)}
+        </div>
+      </div>
     </div>
   );
 };

@@ -50,13 +50,7 @@ const CertificationAttemptsList = ({
     try {
       return format(new Date(dateString), 'PPP');
     } catch (error) {
-      if (currentLanguage === "portuguese") {
-        return 'Data desconhecida';
-      } else if (currentLanguage === "spanish") {
-        return 'Fecha desconocida';
-      } else {
-        return 'Unknown date';
-      }
+      return currentLanguage === "spanish" ? 'Fecha desconocida' : 'Unknown date';
     }
   };
 
@@ -84,38 +78,8 @@ const CertificationAttemptsList = ({
     ['reading', 'writing', 'speaking', 'listening', 'fluency', 'conversation'].includes(attempt.certification_type)
   );
   
-  const getIncompleteText = () => {
-    if (currentLanguage === "portuguese") {
-      return "Incompleto";
-    } else if (currentLanguage === "spanish") {
-      return "Incompleto";
-    } else {
-      return "Incomplete";
-    }
-  };
-  
-  const getNotScoredText = () => {
-    if (currentLanguage === "portuguese") {
-      return "Não pontuado";
-    } else if (currentLanguage === "spanish") {
-      return "No puntuado";
-    } else {
-      return "Not scored";
-    }
-  };
-  
-  const getLoadingText = () => {
-    if (currentLanguage === "portuguese") {
-      return "Carregando dados de certificação...";
-    } else if (currentLanguage === "spanish") {
-      return "Cargando datos de certificación...";
-    } else {
-      return "Loading certification data...";
-    }
-  };
-  
   if (isLoading) {
-    return <div>{getLoadingText()}</div>;
+    return <div>{currentLanguage === "spanish" ? "Cargando datos de certificación..." : "Loading certification data..."}</div>;
   }
 
   return (
@@ -139,7 +103,7 @@ const CertificationAttemptsList = ({
                       {!isAttemptComplete(attempt) && (
                         <Badge variant="outline" className="ml-2 text-yellow-600 border-yellow-300 bg-yellow-50">
                           <AlertCircle className="h-3 w-3 mr-1" />
-                          {getIncompleteText()}
+                          {currentLanguage === "spanish" ? "Incompleto" : "Incomplete"}
                         </Badge>
                       )}
                     </div>
@@ -155,7 +119,7 @@ const CertificationAttemptsList = ({
                       <div className="text-sm text-gray-600">
                         {isAttemptComplete(attempt) 
                           ? `${t("level")} ${determineLevel(getValidScore(attempt))}`
-                          : getNotScoredText()}
+                          : currentLanguage === "spanish" ? "No puntuado" : "Not scored"}
                       </div>
                     </div>
                     {hasTranscript[attempt.id] && (
