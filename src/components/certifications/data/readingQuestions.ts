@@ -1,8 +1,114 @@
-
 import { Question } from "../types/reading";
 
 export const READING_QUESTIONS: Question[] = [
-  // A1 Level
+  // A1 Level English Questions
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "John is at the store. He buys bread and milk. Where is John?",
+    options: ["At home", "At the store", "At the park", "At school"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "Lisa has a dog. The dog is black and small. What color is the dog?",
+    options: ["White", "Brown", "Black", "Gray"],
+    correctAnswer: 2
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "Sarah eats a red apple. What does Sarah eat?",
+    options: ["A pear", "An orange", "A banana", "An apple"],
+    correctAnswer: 3
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "The book is on the table. Where is the book?",
+    options: ["On the floor", "On the table", "On the chair", "On the bed"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "Tom goes to school by bus. How does Tom go to school?",
+    options: ["By car", "By bicycle", "By bus", "By walking"],
+    correctAnswer: 2
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "Mary is a teacher. She works at a school. What is Mary's job?",
+    options: ["Doctor", "Teacher", "Nurse", "Cook"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "It is raining today. What is the weather like?",
+    options: ["Sunny", "Rainy", "Windy", "Snowy"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "The coffee is hot. The ice cream is cold. How is the ice cream?",
+    options: ["Hot", "Cold", "Warm", "Sweet"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "I have two brothers and one sister. How many brothers do I have?",
+    options: ["One", "Two", "Three", "Four"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "The cat is under the chair. Where is the cat?",
+    options: ["On the chair", "Next to the chair", "Under the chair", "Behind the chair"],
+    correctAnswer: 2
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "She likes to swim in the summer. What does she like to do?",
+    options: ["Run", "Swim", "Read", "Cook"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "I drink coffee in the morning. When do I drink coffee?",
+    options: ["In the morning", "At night", "In the afternoon", "At lunch"],
+    correctAnswer: 0
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "Monday, Tuesday, Wednesday are days of the week. How many days are mentioned?",
+    options: ["Two", "Three", "Four", "Five"],
+    correctAnswer: 1
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "The shirt is blue. What color is the shirt?",
+    options: ["Red", "Green", "Blue", "Yellow"],
+    correctAnswer: 2
+  },
+  {
+    level: 'A1',
+    type: 'multiple-choice',
+    text: "He has ten apples. How many apples does he have?",
+    options: ["Five", "Eight", "Ten", "Twelve"],
+    correctAnswer: 2
+  },
+  
+  // A1 Level Spanish Questions
   {
     level: 'A1',
     type: 'multiple-choice',
@@ -38,6 +144,7 @@ export const READING_QUESTIONS: Question[] = [
     options: ["En coche", "En bicicleta", "En autobús", "Caminando"],
     correctAnswer: 2
   },
+  
   // A2 Level
   {
     level: 'A2',
@@ -74,6 +181,7 @@ export const READING_QUESTIONS: Question[] = [
     options: ["Sola", "Con su familia", "Con sus amigos", "Con sus vecinos"],
     correctAnswer: 2
   },
+  
   // B1 Level
   {
     level: 'B1',
@@ -110,6 +218,7 @@ export const READING_QUESTIONS: Question[] = [
     options: ["Por el precio", "Por el diseño", "Por contaminar menos", "Por la velocidad"],
     correctAnswer: 2
   },
+  
   // B2 Level
   {
     level: 'B2',
@@ -146,6 +255,7 @@ export const READING_QUESTIONS: Question[] = [
     options: ["Es perfecto", "No funciona", "Ha cambiado las empresas", "Es temporal"],
     correctAnswer: 2
   },
+  
   // C1 Level
   {
     level: 'C1',
@@ -182,6 +292,7 @@ export const READING_QUESTIONS: Question[] = [
     options: ["Un retroceso", "Un avance significativo", "Un experimento", "Una teoría"],
     correctAnswer: 1
   },
+  
   // C2 Level
   {
     level: 'C2',

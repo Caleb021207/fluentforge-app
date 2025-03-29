@@ -14,8 +14,10 @@ const ReadingCertificationPage = () => {
   // For English speakers, we show Spanish test
   const useTranslatedVersion = currentLanguage === "english";
 
-  // Format the title based on level
+  // Format the title based on level and language
   const getTitle = () => {
+    // For Spanish/Portuguese speakers, show "English Reading Test"
+    // For English speakers, show "Spanish Reading Test"
     const baseTitle = currentLanguage === "english" ? "Spanish Reading Test" : "English Reading Test";
     if (level) {
       return `${level.toUpperCase()} Level ${baseTitle}`;
@@ -30,9 +32,9 @@ const ReadingCertificationPage = () => {
       </h1>
       
       {useTranslatedVersion ? (
-        <ReadingCertification />
-      ) : (
         <TranslatedReadingCertification />
+      ) : (
+        <ReadingCertification />
       )}
     </div>
   );
