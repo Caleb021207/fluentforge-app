@@ -32,7 +32,9 @@ const CertificatesLayout = ({
   const { t, currentLanguage } = useLocalization();
   
   // Determine which version of components to use based on language
-  const isEnglish = currentLanguage === "english";
+  // For Spanish/Portuguese speakers, we show English certifications
+  // For English speakers, we show Spanish certifications
+  const useTranslatedVersion = currentLanguage === "english";
 
   return (
     <div className="space-y-6">
@@ -40,13 +42,13 @@ const CertificatesLayout = ({
       
       <OverallCertificate compositeScore={compositeScore} />
       
-      {isEnglish ? (
+      {useTranslatedVersion ? (
         <ReadingCertification />
       ) : (
         <TranslatedReadingCertification />
       )}
       
-      {isEnglish ? (
+      {useTranslatedVersion ? (
         <WritingCertification />
       ) : (
         <TranslatedWritingCertification />

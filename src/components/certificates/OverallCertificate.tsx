@@ -22,11 +22,11 @@ const OverallCertificate = ({ compositeScore }: OverallCertificateProps) => {
   // Function to get description based on language
   const getLocalizedDescription = () => {
     if (currentLanguage === "spanish") {
-      return "Este certificado representa tu nivel de competencia lingüística actual basado en tus puntuaciones más altas en las cuatro habilidades: lectura, escritura, expresión oral y comprensión auditiva.";
+      return "Este certificado representa tu nivel actual de competencia en inglés basado en tus puntuaciones más altas en las cuatro habilidades: lectura, escritura, expresión oral y comprensión auditiva.";
     } else if (currentLanguage === "portuguese") {
-      return "Este certificado representa seu nível atual de proficiência linguística com base em suas pontuações mais altas nas quatro habilidades: leitura, escrita, fala e compreensão auditiva.";
+      return "Este certificado representa seu nível atual de proficiência em inglês com base em suas pontuações mais altas nas quatro habilidades: leitura, escrita, fala e compreensão auditiva.";
     } else {
-      return "This certificate represents your current language proficiency level based on your highest test scores across all four skills: reading, writing, speaking, and listening.";
+      return "This certificate represents your current Spanish language proficiency level based on your highest test scores across all four skills: reading, writing, speaking, and listening.";
     }
   };
 

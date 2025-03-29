@@ -15,26 +15,35 @@ serve(async (req) => {
   }
 
   try {
-    const { message, requestType } = await req.json();
-    console.log('Received message:', message, 'Request type:', requestType);
+    const { message, requestType, userLanguage } = await req.json();
+    console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage);
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
     }
 
+    // Determine if user is learning English or Spanish based on their native language
+    const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese';
+    
     const systemMessage = requestType === 'assessment' 
-      ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their Spanish language skills in the following areas:
+      ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
          - Reading proficiency
          - Writing ability
          - Speaking competency
          - Listening comprehension
          Also provide an overall estimated proficiency level (A1-C2).
          Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`
-      : `You are a knowledgeable and patient Spanish language tutor. 
-         If user writes in English, respond in Spanish and provide the English translation below prefixed with "Translation:".
-         If user writes in Spanish, help correct any grammar or vocabulary mistakes, explain the corrections in English, and provide encouragement.
-         Keep responses friendly but concise, focused on language learning.
-         Maintain a consistent format with corrections and explanations clearly separated.`;
+      : isLearningEnglish 
+        ? `You are a knowledgeable and patient English language tutor. 
+           If the user writes in Spanish or Portuguese, respond in English and provide the translation in their native language below prefixed with "Translation:".
+           If the user writes in English, help correct any grammar or vocabulary mistakes, explain the corrections in Spanish/Portuguese, and provide encouragement.
+           Keep responses friendly but concise, focused on language learning.
+           Maintain a consistent format with corrections and explanations clearly separated.`
+        : `You are a knowledgeable and patient Spanish language tutor. 
+           If user writes in English, respond in Spanish and provide the English translation below prefixed with "Translation:".
+           If user writes in Spanish, help correct any grammar or vocabulary mistakes, explain the corrections in English, and provide encouragement.
+           Keep responses friendly but concise, focused on language learning.
+           Maintain a consistent format with corrections and explanations clearly separated.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
