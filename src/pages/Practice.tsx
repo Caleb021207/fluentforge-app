@@ -1,13 +1,12 @@
 
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book, Clock } from "lucide-react";
+import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useElevenLabsAgent, getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -26,10 +25,6 @@ interface SkillAssessment {
 // ElevenLabs Agent IDs
 const SPANISH_TUTOR_AGENT_ID = "Qc5G2DZi0jRmMf3CzC8f"; // Current Spanish tutor
 const ENGLISH_TUTOR_AGENT_ID = "gruprmRz1lZ5awx10Ejc"; // English tutor from your profile page
-const ELEVENLABS_CONVAI_WIDGET_ID = "LGA4iRGgLlVbWPluqq23"; // Convai widget agent ID
-
-// Voice session time limit in seconds (10 minutes)
-const VOICE_SESSION_TIME_LIMIT = 10 * 60;
 
 const Practice = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -37,9 +32,6 @@ const Practice = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [skillAssessment, setSkillAssessment] = useState<SkillAssessment | null>(null);
-  const [timeRemaining, setTimeRemaining] = useState(VOICE_SESSION_TIME_LIMIT);
-  const [sessionActive, setSessionActive] = useState(false);
-  const [timerIntervalId, setTimerIntervalId] = useState<number | null>(null);
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
 
@@ -92,51 +84,6 @@ const Practice = () => {
     initMicrophone();
   }, [toast, t]);
 
-  // Timer logic
-  useEffect(() => {
-    // Clean up the timer on component unmount
-    return () => {
-      if (timerIntervalId) {
-        window.clearInterval(timerIntervalId);
-      }
-    };
-  }, [timerIntervalId]);
-
-  // Start the timer for the voice session
-  const startSessionTimer = () => {
-    setTimeRemaining(VOICE_SESSION_TIME_LIMIT);
-    setSessionActive(true);
-    
-    const intervalId = window.setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev <= 1) {
-          // Time's up, end the session
-          endVoiceSession();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    
-    setTimerIntervalId(intervalId);
-  };
-
-  // Stop the timer
-  const stopSessionTimer = () => {
-    if (timerIntervalId) {
-      window.clearInterval(timerIntervalId);
-      setTimerIntervalId(null);
-    }
-    setSessionActive(false);
-  };
-
-  // Format the remaining time as MM:SS
-  const formatTimeRemaining = () => {
-    const minutes = Math.floor(timeRemaining / 60);
-    const seconds = timeRemaining % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-
   const startVoiceConversation = async () => {
     try {
       const selectedAgentId = getAgentId();
@@ -146,11 +93,8 @@ const Practice = () => {
         agentId: selectedAgentId,
       });
       
-      // Start the timer when the session begins
-      startSessionTimer();
-      
       toast({
-        title: t("startVoiceChat"),
+        title: conversation.status === "connected" ? t("stopVoiceChat") : t("startVoiceChat"),
         description: t("startChatting"),
       });
     } catch (error) {
@@ -160,33 +104,6 @@ const Practice = () => {
         variant: "destructive",
       });
     }
-  };
-
-  const endVoiceSession = async () => {
-    try {
-      await conversation.endSession();
-      stopSessionTimer();
-      
-      toast({
-        title: t("voiceSessionEnded"),
-        description: timeRemaining <= 0 
-          ? t("timeLimit") 
-          : t("sessionManuallyEnded"),
-      });
-    } catch (error) {
-      console.error('Error ending voice session:', error);
-    }
-  };
-
-  const openElevenLabsChat = () => {
-    window.open(`https://elevenlabs.io/app/talk-to?agent_id=${ELEVENLABS_CONVAI_WIDGET_ID}`, '_blank');
-    
-    toast({
-      title: t("openingExternalChat"),
-      description: currentLanguage === "portuguese" 
-        ? "Abrindo chat do ElevenLabs em uma nova aba" 
-        : "Abriendo chat de ElevenLabs en una nueva pestaña",
-    });
   };
 
   const requestSkillAssessment = async () => {
@@ -349,48 +266,23 @@ const Practice = () => {
             ? `Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`
             : `Chat with our AI tutor to practice your English! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`}
         </p>
-        
         <div className="flex flex-wrap gap-4 mb-4">
-          {currentLanguage === "english" ? (
-            <>
-              <Button
-                onClick={conversation.status === "connected" ? endVoiceSession : startVoiceConversation}
-                variant={conversation.status === "connected" ? "destructive" : "default"}
-                disabled={conversation.status === "connected" && timeRemaining <= 0}
-              >
-                {conversation.status === "connected" ? (
-                  <>
-                    <MicOff className="h-4 w-4 mr-2" />
-                    {t("stopVoiceChat")}
-                  </>
-                ) : (
-                  <>
-                    <Mic className="h-4 w-4 mr-2" />
-                    {t("startVoiceChat")}
-                  </>
-                )}
-              </Button>
-              
-              {sessionActive && (
-                <div className="flex items-center px-3 py-2 bg-gray-100 rounded-md">
-                  <Clock className="h-4 w-4 mr-2 text-gray-500" />
-                  <span className={`font-mono ${timeRemaining < 60 ? 'text-red-500' : 'text-gray-700'}`}>
-                    {formatTimeRemaining()}
-                  </span>
-                </div>
-              )}
-            </>
-          ) : (
-            <Button
-              onClick={openElevenLabsChat}
-              variant="default"
-              className="bg-lingua-primary hover:bg-lingua-primary/90"
-            >
-              <MessageCircle className="h-4 w-4 mr-2" />
-              {currentLanguage === "spanish" ? "Habla con ElevenLabs" : "Fale com ElevenLabs"}
-            </Button>
-          )}
-          
+          <Button
+            onClick={conversation.status === "connected" ? conversation.endSession : startVoiceConversation}
+            variant={conversation.status === "connected" ? "destructive" : "default"}
+          >
+            {conversation.status === "connected" ? (
+              <>
+                <MicOff className="h-4 w-4 mr-2" />
+                {t("stopVoiceChat")}
+              </>
+            ) : (
+              <>
+                <Mic className="h-4 w-4 mr-2" />
+                {t("startVoiceChat")}
+              </>
+            )}
+          </Button>
           <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
             {t("getSkillsAssessment")}
           </Button>
@@ -403,21 +295,6 @@ const Practice = () => {
                 : "Enviar mensagem de prática em inglês"}
           </Button>
         </div>
-        
-        {timeRemaining === 0 && conversation.status === "connected" && (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <Clock className="h-5 w-5 text-yellow-400" />
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  {t("timeLimitReached")}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-3 mb-8">
@@ -473,21 +350,6 @@ const Practice = () => {
                   ? t("clickToStartVoice")
                   : t("allowMicAccess")}
               </p>
-              {currentLanguage !== "english" && (
-                <div className="mt-4 p-3 bg-gray-100 rounded-lg text-sm">
-                  <p className="font-semibold mb-2">
-                    {currentLanguage === "spanish" ? "¡Nuevo!" : "Novo!"} 
-                    {currentLanguage === "spanish" 
-                      ? " Prueba nuestro chat de ElevenLabs:" 
-                      : " Experimente nosso chat ElevenLabs:"}
-                  </p>
-                  <p>
-                    {currentLanguage === "spanish"
-                      ? "Haz clic en el botón 'Habla con ElevenLabs' arriba para comenzar."
-                      : "Clique no botão 'Fale com ElevenLabs' acima para começar."}
-                  </p>
-                </div>
-              )}
             </div>
           ) : (
             messages.map((message, index) => (

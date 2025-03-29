@@ -1,14 +1,14 @@
 
-import { english } from "./english";
-import { spanish } from "./spanish";
-import { portuguese } from "./portuguese";
 import { LanguageTranslations } from "./types";
+import englishTranslations from "./english";
+import spanishTranslations from "./spanish";
+import portugueseTranslations from "./portuguese";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
-  english: english,
-  spanish: spanish,
-  portuguese: portuguese
+  english: englishTranslations,
+  spanish: spanishTranslations,
+  portuguese: portugueseTranslations
 };
 
 export default translations;
