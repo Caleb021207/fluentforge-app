@@ -2,7 +2,7 @@
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
-export const SPANISH_TUTOR_AGENT_ID = 'Qc5G2DZi0jRmMf3CzC8f'; // Spanish tutor for English speakers
+export const SPANISH_TUTOR_AGENT_ID = 'AOv9JDhkEdMmiU61vHg9'; // Spanish tutor for English speakers
 export const ENGLISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor for Spanish speakers
 export const PORTUGUESE_TUTOR_AGENT_ID = 'WuaaV0Pu1tinWfjSk9CY'; // Portuguese tutor
 
