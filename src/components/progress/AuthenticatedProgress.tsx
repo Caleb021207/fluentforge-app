@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -179,7 +178,6 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
         
-        // Convert the attempts from database to our CertificationAttempt type
         const formattedAttempts = attempts.map(attempt => {
           return {
             ...attempt,
