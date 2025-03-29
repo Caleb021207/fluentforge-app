@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -22,10 +22,6 @@ interface SkillAssessment {
   overallLevel: string;
 }
 
-// ElevenLabs Agent IDs
-const SPANISH_TUTOR_AGENT_ID = "Qc5G2DZi0jRmMf3CzC8f"; // Current Spanish tutor
-const ENGLISH_TUTOR_AGENT_ID = "gruprmRz1lZ5awx10Ejc"; // English tutor from your profile page
-
 const Practice = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -37,14 +33,8 @@ const Practice = () => {
 
   const targetLanguage = currentLanguage === "english" ? "Spanish" : "English";
   
-  // Select the appropriate agent ID based on the user's language
   const getAgentId = () => {
-    // For Spanish or Portuguese speakers, use the English tutor
-    if (currentLanguage === "spanish" || currentLanguage === "portuguese") {
-      return ENGLISH_TUTOR_AGENT_ID;
-    }
-    // For English speakers, use the Spanish tutor
-    return SPANISH_TUTOR_AGENT_ID;
+    return getAgentIdForLanguage(currentLanguage);
   };
 
   const conversation = useConversation({
