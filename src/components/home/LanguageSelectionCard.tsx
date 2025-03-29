@@ -38,7 +38,7 @@ const LanguageSelectionCard = ({
     <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
       <CardContent className="pt-6">
         <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguagePreferences")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 gap-4 mb-4">
           <div className="space-y-2">
             <Label htmlFor="nativeLanguage">{t("iSpeak")}</Label>
             <Select value={nativeLanguage} onValueChange={setNativeLanguage}>
@@ -54,28 +54,12 @@ const LanguageSelectionCard = ({
               </SelectContent>
             </Select>
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="targetLanguage">{t("iWantToLearn")}</Label>
-            <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-              <SelectTrigger id="targetLanguage" className="w-full">
-                <SelectValue placeholder={t("selectLanguageToLearn")} />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
         
         <Button 
           onClick={handleLanguageSelection} 
           className="w-full"
-          disabled={!nativeLanguage || !targetLanguage}
+          disabled={!nativeLanguage}
         >
           {t("saveLanguagePreferences")}
         </Button>
