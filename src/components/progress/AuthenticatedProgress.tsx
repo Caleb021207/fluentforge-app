@@ -1,342 +1,35 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+
+import React from "react";
 import { User } from "@supabase/supabase-js";
-import { CertificationAttempt } from "@/types/supabase";
-import ProgressPageHeader from "./ProgressPageHeader";
-import ProgressChart from "./ProgressChart";
-import RecommendationCard from "./RecommendationCard";
-import RecentAttemptsCard from "./RecentAttemptsCard";
-import NoProgressCard from "./NoProgressCard";
-import { processAttemptsByDate, generateRecommendations, normalizeAttempts, LanguagePair } from "./ProgressDataProcessor";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, WifiOff } from "lucide-react";
-import { useConnectionStatus } from "@/hooks/useConnectionStatus";
+import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import ProgressPageHeader from "./ProgressPageHeader";
+import ErrorDisplay from "./ErrorDisplay";
+import DataFixPrompt from "./DataFixPrompt";
+import LanguagePairSelector from "./LanguagePairSelector";
+import ProgressContent from "./ProgressContent";
+import { useProgressData } from "./hooks/useProgressData";
 
 interface AuthenticatedProgressProps {
   user: User;
 }
 
-const getAvailableLanguagePairs = (attempts: CertificationAttempt[]): LanguagePair[] => {
-  const pairs = new Map<string, LanguagePair>();
-  
-  attempts.forEach(attempt => {
-    if (attempt.source_language && attempt.target_language) {
-      const key = `${attempt.source_language}-${attempt.target_language}`;
-      if (!pairs.has(key)) {
-        pairs.set(key, {
-          sourceLanguage: attempt.source_language,
-          targetLanguage: attempt.target_language
-        });
-      }
-    }
-  });
-  
-  return Array.from(pairs.values());
-};
-
-const getLanguageName = (code: string): string => {
-  switch(code) {
-    case 'english': return 'English';
-    case 'spanish': return 'Spanish';
-    case 'portuguese': return 'Portuguese';
-    default: return code.charAt(0).toUpperCase() + code.slice(1);
-  }
-};
-
 const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
-  const [progressData, setProgressData] = useState<any[]>([]);
-  const [recommendations, setRecommendations] = useState<any[]>([]);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [rawAttempts, setRawAttempts] = useState<CertificationAttempt[]>([]);
-  const [normalizedAttempts, setNormalizedAttempts] = useState<CertificationAttempt[]>([]);
-  const [hasTranscript, setHasTranscript] = useState<Record<string, boolean>>({});
-  const [fetchError, setFetchError] = useState<string | null>(null);
-  const [languagePairs, setLanguagePairs] = useState<LanguagePair[]>([]);
-  const [selectedPairKey, setSelectedPairKey] = useState<string | null>(null);
-  const [isFixingData, setIsFixingData] = useState(false);
-  const [showFixButton, setShowFixButton] = useState(false);
   const { toast } = useToast();
-  const { isOffline, isOnline } = useConnectionStatus();
-  const [retryCount, setRetryCount] = useState(0);
-  const { t, currentLanguage } = useLocalization();
-
-  const getSelectedLanguagePair = useCallback((): LanguagePair | undefined => {
-    if (!selectedPairKey) return undefined;
-    const [sourceLanguage, targetLanguage] = selectedPairKey.split('-');
-    return { sourceLanguage, targetLanguage };
-  }, [selectedPairKey]);
-
-  const checkForIncompleteLanguagePairs = useCallback((attempts: CertificationAttempt[]) => {
-    if (!attempts || attempts.length === 0) return false;
-    
-    const incomplete = attempts.some(attempt => 
-      !attempt.source_language || !attempt.target_language
-    );
-    
-    setShowFixButton(incomplete);
-    return incomplete;
-  }, []);
-
-  const fixCertificationLanguages = async () => {
-    if (!user) return;
-    
-    try {
-      setIsFixingData(true);
-      
-      const { data: incompleteAttempts, error } = await supabase
-        .from('certification_attempts')
-        .select('*')
-        .eq('user_id', user.id)
-        .or('source_language.is.null,target_language.is.null');
-        
-      if (error) {
-        throw error;
-      }
-      
-      if (!incompleteAttempts || incompleteAttempts.length === 0) {
-        toast({
-          title: t("noDataToFix"),
-          description: t("allCertificationsHaveLanguagePairs"),
-        });
-        setShowFixButton(false);
-        return;
-      }
-      
-      for (const attempt of incompleteAttempts) {
-        const { error: updateError } = await supabase
-          .from('certification_attempts')
-          .update({
-            source_language: 'english',
-            target_language: 'spanish'
-          })
-          .eq('id', attempt.id);
-          
-        if (updateError) {
-          console.error(`Error updating attempt ${attempt.id}:`, updateError);
-        }
-      }
-      
-      toast({
-        title: t("dataFixed"),
-        description: t("refreshingData"),
-      });
-      
-      await fetchProgressData(user.id);
-      
-      setShowFixButton(false);
-    } catch (error) {
-      console.error('Error fixing certification languages:', error);
-      toast({
-        title: t("error"),
-        description: t("errorFixingData"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsFixingData(false);
-    }
-  };
-
-  const fetchProgressData = useCallback(async (userId: string) => {
-    if (isOffline) {
-      setFetchError(t("offlineDataMayNotBeUpToDate"));
-      return;
-    }
-    
-    try {
-      setIsRefreshing(true);
-      
-      const { data: attempts, error } = await supabase
-        .from('certification_attempts')
-        .select('*')
-        .eq('user_id', userId)
-        .order('completed_at', { ascending: true });
-
-      if (error) {
-        console.error('Database error:', error);
-        
-        if (error.message.includes("Failed to fetch")) {
-          setFetchError(t("networkConnectionIssue"));
-        } else {
-          setFetchError(t("problemLoadingProgressData"));
-        }
-        return; // Exit early
-      }
-
-      setFetchError(null);
-
-      if (attempts && attempts.length > 0) {
-        console.log("Retrieved certification attempts:", attempts);
-        
-        // Cast the attempt data to include our expected properties
-        const formattedAttempts = attempts.map(attempt => {
-          // Handle the case where source_language or target_language might be missing
-          // in the database by providing default values
-          return {
-            ...attempt,
-            source_language: attempt.source_language || 'english',
-            target_language: attempt.target_language || 'spanish'
-          } as CertificationAttempt;
-        });
-        
-        setRawAttempts(formattedAttempts);
-        
-        checkForIncompleteLanguagePairs(formattedAttempts);
-        
-        const pairs = getAvailableLanguagePairs(formattedAttempts);
-        setLanguagePairs(pairs);
-        
-        if (pairs.length > 0 && !selectedPairKey) {
-          const firstPair = pairs[0];
-          setSelectedPairKey(`${firstPair.sourceLanguage}-${firstPair.targetLanguage}`);
-        }
-        
-        const selectedPair = getSelectedLanguagePair();
-        
-        const processedData = processAttemptsByDate(formattedAttempts, selectedPair);
-        setProgressData(processedData);
-        
-        const recommendations = generateRecommendations(formattedAttempts, selectedPair);
-        setRecommendations(recommendations);
-        
-        const normalized = normalizeAttempts(formattedAttempts, selectedPair);
-        setNormalizedAttempts(normalized);
-      } else {
-        setRawAttempts([]);
-        setProgressData([]);
-        setRecommendations([]);
-        setNormalizedAttempts([]);
-        
-        toast({
-          title: t("noProgressData"),
-          description: t("completeTestsToSeeProgress"),
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching progress data:', error);
-      
-      if (error instanceof Error && error.message.includes("Failed to fetch")) {
-        setFetchError(t("networkConnectionIssue"));
-      } else {
-        setFetchError(t("failedToLoadProgressData"));
-        
-        toast({
-          title: t("error"),
-          description: t("failedToLoadProgressData"),
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsRefreshing(false);
-    }
-  }, [toast, isOffline, t, selectedPairKey, getSelectedLanguagePair, checkForIncompleteLanguagePairs]);
-
-  useEffect(() => {
-    if (user && isOnline) {
-      fetchProgressData(user.id);
-    }
-    
-    if (isOnline) {
-      const channel = supabase
-        .channel('public:certification_attempts')
-        .on('postgres_changes', 
-          { 
-            event: 'INSERT', 
-            schema: 'public', 
-            table: 'certification_attempts' 
-          }, 
-          (payload) => {
-            console.log('New certification attempt:', payload);
-            if (user && payload.new && payload.new.user_id === user.id) {
-              fetchProgressData(user.id);
-            }
-          }
-        )
-        .subscribe();
-        
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-    
-    return () => {};
-  }, [fetchProgressData, user, isOnline]);
-
-  useEffect(() => {
-    if (rawAttempts.length > 0) {
-      const selectedPair = getSelectedLanguagePair();
-      
-      const processedData = processAttemptsByDate(rawAttempts, selectedPair);
-      setProgressData(processedData);
-      
-      const recommendations = generateRecommendations(rawAttempts, selectedPair);
-      setRecommendations(recommendations);
-      
-      const normalized = normalizeAttempts(rawAttempts, selectedPair);
-      setNormalizedAttempts(normalized);
-    }
-  }, [selectedPairKey, rawAttempts, getSelectedLanguagePair]);
-
-  useEffect(() => {
-    if (isOnline && user && retryCount < 3) {
-      const timer = setTimeout(() => {
-        console.log("Retrying data fetch after coming online");
-        fetchProgressData(user.id);
-        setRetryCount(prev => prev + 1);
-      }, 2000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isOnline, user, fetchProgressData, retryCount]);
-
-  useEffect(() => {
-    const fetchTranscripts = async () => {
-      if (!rawAttempts || rawAttempts.length === 0 || isOffline) return;
-      
-      const transcriptMap: Record<string, boolean> = {};
-      
-      for (const attempt of rawAttempts) {
-        if (attempt.certification_type === 'speaking' || 
-            attempt.certification_type === 'listening' || 
-            attempt.certification_type === 'fluency') {
-          try {
-            const { data, error } = await supabase
-              .from('certification_transcripts')
-              .select('id')
-              .eq('attempt_id', attempt.id)
-              .maybeSingle();
-              
-            if (error) {
-              if (!error.message.includes("permission denied for table users")) {
-                console.error("Error checking transcript for attempt", attempt.id, error);
-              }
-            }
-            
-            transcriptMap[attempt.id] = !!data;
-          } catch (err) {
-            console.error("Error in fetchTranscripts for attempt", attempt.id, err);
-          }
-        }
-      }
-      
-      console.log("Transcript map:", transcriptMap);
-      setHasTranscript(transcriptMap);
-    };
-    
-    if (isOnline) {
-      fetchTranscripts();
-    }
-  }, [rawAttempts, isOffline, isOnline]);
+  const { t } = useLocalization();
+  const {
+    progressData,
+    recommendations,
+    isRefreshing,
+    normalizedAttempts,
+    hasTranscript,
+    fetchError,
+    languagePairs,
+    selectedPairKey,
+    showFixButton,
+    handleLanguagePairChange,
+    fixCertificationLanguages,
+  } = useProgressData(user);
 
   const handleViewAttempt = async (attemptId: string) => {
     console.log("View attempt:", attemptId);
@@ -346,99 +39,31 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
     });
   };
 
-  const handleLanguagePairChange = (pairKey: string) => {
-    setSelectedPairKey(pairKey);
-  };
-
   return (
     <div className="space-y-6">
       <ProgressPageHeader />
       
-      {fetchError && (
-        <Alert variant={isOffline ? "warning" : "destructive"}>
-          {isOffline ? (
-            <WifiOff className="h-4 w-4" />
-          ) : (
-            <AlertCircle className="h-4 w-4" />
-          )}
-          <AlertDescription>
-            {fetchError}
-          </AlertDescription>
-        </Alert>
-      )}
+      <ErrorDisplay error={fetchError} />
 
-      {showFixButton && (
-        <Alert variant="warning">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="flex flex-row items-center justify-between">
-            <span>{t("incompleteLanguageData")}</span>
-            <Button 
-              onClick={fixCertificationLanguages} 
-              disabled={isFixingData}
-              variant="outline" 
-              size="sm"
-              className="ml-4"
-            >
-              {isFixingData ? t("fixing") : t("fixData")}
-            </Button>
-          </AlertDescription>
-        </Alert>
-      )}
+      <DataFixPrompt 
+        show={showFixButton} 
+        isFixing={isRefreshing} 
+        onFix={fixCertificationLanguages} 
+      />
 
-      {languagePairs.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("selectLanguagePair")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select
-              value={selectedPairKey || ''}
-              onValueChange={handleLanguagePairChange}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={t("selectLanguagePair")} />
-              </SelectTrigger>
-              <SelectContent>
-                {languagePairs.map((pair, index) => (
-                  <SelectItem 
-                    key={index} 
-                    value={`${pair.sourceLanguage}-${pair.targetLanguage}`}
-                  >
-                    {getLanguageName(pair.sourceLanguage)} → {getLanguageName(pair.targetLanguage)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-      )}
+      <LanguagePairSelector 
+        languagePairs={languagePairs} 
+        selectedPairKey={selectedPairKey} 
+        onPairChange={handleLanguagePairChange} 
+      />
 
-      {progressData.length > 0 ? (
-        <>
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("scoreTrends")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ProgressChart progressData={progressData} />
-            </CardContent>
-          </Card>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {recommendations.map((rec, index) => (
-              <RecommendationCard key={index} rec={rec} />
-            ))}
-          </div>
-
-          <RecentAttemptsCard 
-            attempts={normalizedAttempts} 
-            hasTranscript={hasTranscript} 
-            onViewAttempt={handleViewAttempt} 
-          />
-        </>
-      ) : (
-        <NoProgressCard />
-      )}
+      <ProgressContent 
+        progressData={progressData}
+        recommendations={recommendations}
+        normalizedAttempts={normalizedAttempts}
+        hasTranscript={hasTranscript}
+        onViewAttempt={handleViewAttempt}
+      />
     </div>
   );
 };
