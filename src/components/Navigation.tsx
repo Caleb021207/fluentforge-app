@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield, Mic } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,16 +12,19 @@ import { useLocalization } from "@/context/LocalizationContext";
 const navItemTranslations = {
   english: {
     "Practice": "Practice",
+    "Voice Chat": "Voice Chat",
     "Language Frameworks": "Language Frameworks",
     "Admin": "Admin"
   },
   spanish: {
     "Practice": "Práctica",
+    "Voice Chat": "Chat de Voz",
     "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin"
   },
   portuguese: {
     "Practice": "Prática",
+    "Voice Chat": "Chat de Voz",
     "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin"
   }
@@ -76,6 +79,7 @@ const Navigation = () => {
 
   const navItems = [
     { icon: MessageSquare, label: "Practice", path: "/practice" },
+    { icon: Mic, label: "Voice Chat", path: "/voice-chat" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
   

@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -133,7 +132,27 @@ const englishTranslations: TranslationRecord = {
   cancel: "Cancel",
   strengths: "Strengths",
   areasForImprovement: "Areas for Improvement",
-  recommendations: "Recommendations"
+  recommendations: "Recommendations",
+  // Voice Chat Page
+  "freePracticeWithVoice": "Free Voice Practice",
+  "startSpeaking": "Start Speaking",
+  "stopListening": "Stop Listening",
+  "listeningNow": "Listening now",
+  "youSaid": "You said",
+  "aiResponse": "AI Response",
+  "playAgain": "Play Again",
+  "practiceWithVoiceChat": "Practice with Voice Chat",
+  "practiceLanguageTips": "Use this tool to improve your speaking and listening skills. Here are some tips:",
+  "askQuestionsAboutTopics": "Ask questions about everyday topics",
+  "practiceEverydayPhrases": "Practice common phrases and expressions",
+  "describeImagesOrScenes": "Describe what you see around you",
+  "practiceVocabularyForSpecificTopics": "Practice vocabulary for specific topics like travel or food",
+  "speechRecognitionError": "Speech recognition error",
+  "speechRecognitionNotSupported": "Speech recognition is not supported in your browser",
+  "microphoneAccessRequired": "Microphone access is required for this feature",
+  "failedToGetResponse": "Failed to get response from AI. Please try again.",
+  "failedToGenerateSpeech": "Failed to generate speech. Please try again.",
+  "audioPlaybackError": "Error playing audio. Please try again.",
 };
 
 export default englishTranslations;

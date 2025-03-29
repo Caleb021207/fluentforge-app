@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -133,7 +132,27 @@ const portugueseTranslations: TranslationRecord = {
   cancel: "Cancelar",
   strengths: "Pontos Fortes",
   areasForImprovement: "Áreas para Melhoria",
-  recommendations: "Recomendações"
+  recommendations: "Recomendações",
+  // Voice Chat Page
+  "freePracticeWithVoice": "Prática de Voz Gratuita",
+  "startSpeaking": "Começar a Falar",
+  "stopListening": "Parar de Escutar",
+  "listeningNow": "Escutando agora",
+  "youSaid": "Você disse",
+  "aiResponse": "Resposta da IA",
+  "playAgain": "Reproduzir novamente",
+  "practiceWithVoiceChat": "Pratique com o Chat de Voz",
+  "practiceLanguageTips": "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:",
+  "askQuestionsAboutTopics": "Faça perguntas sobre tópicos do dia a dia",
+  "practiceEverydayPhrases": "Pratique frases e expressões comuns",
+  "describeImagesOrScenes": "Descreva o que você vê ao seu redor",
+  "practiceVocabularyForSpecificTopics": "Pratique vocabulário para tópicos específicos como viagens ou comida",
+  "speechRecognitionError": "Erro de reconhecimento de voz",
+  "speechRecognitionNotSupported": "O reconhecimento de voz não é suportado no seu navegador",
+  "microphoneAccessRequired": "É necessário acesso ao microfone para este recurso",
+  "failedToGetResponse": "Falha ao obter resposta da IA. Por favor, tente novamente.",
+  "failedToGenerateSpeech": "Falha ao gerar fala. Por favor, tente novamente.",
+  "audioPlaybackError": "Erro ao reproduzir áudio. Por favor, tente novamente.",
 };
 
 export default portugueseTranslations;
