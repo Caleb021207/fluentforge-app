@@ -141,6 +141,8 @@ const Index = () => {
         title: t("languagePreferencesSaved"),
         description: `${t("youreNowLearning")} ${targetLanguage} ${t("from")} ${nativeLanguage}`,
       });
+      
+      window.location.reload();
     } else {
       toast({
         title: t("pleaseSelectBothLanguages"),
