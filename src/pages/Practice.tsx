@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useEffect } from "react";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -25,6 +26,7 @@ interface SkillAssessment {
 // ElevenLabs Agent IDs
 const SPANISH_TUTOR_AGENT_ID = "Qc5G2DZi0jRmMf3CzC8f"; // Current Spanish tutor
 const ENGLISH_TUTOR_AGENT_ID = "gruprmRz1lZ5awx10Ejc"; // English tutor from your profile page
+const ELEVENLABS_CONVAI_WIDGET_ID = "LGA4iRGgLlVbWPluqq23"; // Convai widget agent ID
 
 const Practice = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -46,6 +48,25 @@ const Practice = () => {
     // For English speakers, use the Spanish tutor
     return SPANISH_TUTOR_AGENT_ID;
   };
+
+  // Load the ElevenLabs Convai widget script
+  useEffect(() => {
+    // Check if the script is already loaded
+    if (!document.querySelector('script[src="https://elevenlabs.io/convai-widget/index.js"]')) {
+      const script = document.createElement('script');
+      script.src = "https://elevenlabs.io/convai-widget/index.js";
+      script.async = true;
+      script.type = "text/javascript";
+      document.body.appendChild(script);
+    }
+    
+    // Add the convai widget element if it doesn't exist
+    if (!document.querySelector('elevenlabs-convai')) {
+      const convaiElement = document.createElement('elevenlabs-convai');
+      convaiElement.setAttribute('agent-id', ELEVENLABS_CONVAI_WIDGET_ID);
+      document.body.appendChild(convaiElement);
+    }
+  }, []);
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -350,6 +371,10 @@ const Practice = () => {
                   ? t("clickToStartVoice")
                   : t("allowMicAccess")}
               </p>
+              <div className="mt-4 p-3 bg-gray-100 rounded-lg text-sm">
+                <p className="font-semibold mb-2">New! Try our ElevenLabs AI chat widget:</p>
+                <p>Look for the chat button in the bottom-right corner of the screen.</p>
+              </div>
             </div>
           ) : (
             messages.map((message, index) => (
