@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -8,15 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import { useLocalization } from "@/context/LocalizationContext";
-
-const availableLanguagePairs = [
-  "english-spanish",
-  "spanish-english",
-  "english-portuguese",
-  "portuguese-english",
-  "spanish-portuguese",
-  "portuguese-spanish"
-];
 
 const Index = () => {
   const { toast } = useToast();
@@ -55,11 +45,10 @@ const Index = () => {
 
   useEffect(() => {
     if (nativeLanguage && targetLanguage) {
-      const languagePair = `${nativeLanguage}-${targetLanguage}`;
-      setHasStudyMaterials(availableLanguagePairs.includes(languagePair));
+      setHasStudyMaterials(true);
       
-      sessionStorage.setItem("languagePair", languagePair);
-      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
+      sessionStorage.setItem("languagePair", `${nativeLanguage}-${targetLanguage}`);
+      sessionStorage.setItem("hasStudyMaterials", "true");
     }
   }, [nativeLanguage, targetLanguage]);
 
@@ -144,9 +133,8 @@ const Index = () => {
       
       const languagePair = `${nativeLanguage}-${targetLanguage}`;
       sessionStorage.setItem("languagePair", languagePair);
-      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
+      sessionStorage.setItem("hasStudyMaterials", "true");
       
-      // Update the UI language to match the native language
       setCurrentLanguage(nativeLanguage);
       
       toast({

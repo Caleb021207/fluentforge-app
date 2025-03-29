@@ -4,8 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 
 interface LanguageSelectionCardProps {
@@ -63,18 +61,6 @@ const LanguageSelectionCard = ({
         >
           {t("saveLanguagePreferences")}
         </Button>
-        
-        {nativeLanguage && targetLanguage && !hasStudyMaterials && (
-          <Alert variant="warning" className="mt-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              {t("studyMaterialsComingSoon", { 
-                nativeLanguage: nativeLanguage, 
-                targetLanguage: targetLanguage 
-              })}
-            </AlertDescription>
-          </Alert>
-        )}
       </CardContent>
     </Card>
   );
