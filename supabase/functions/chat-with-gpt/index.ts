@@ -24,13 +24,19 @@ serve(async (req) => {
 
     // Determine which language the system should respond in
     const responseLanguage = userLanguage === 'english' ? 'Spanish' : 'English';
+    const nativeLanguage = userLanguage === 'english' ? 'English' : userLanguage === 'spanish' ? 'Spanish' : 'Portuguese';
 
     const systemPrompt = `You are a friendly and supportive language tutor for ${responseLanguage}. 
-    The user is a ${userLanguage} speaker learning ${responseLanguage}.
+    The user is a ${nativeLanguage} speaker learning ${responseLanguage}.
     Respond conversationally in ${responseLanguage} to help them practice.
     Keep your responses short and focused.
     If they make mistakes, gently correct them only if it impacts understanding.
-    Encourage them to continue practicing.`;
+    Encourage them to continue practicing.
+    
+    After your response in ${responseLanguage}, add a translation in ${nativeLanguage} prefixed with "Translation: ".
+    For example:
+    [Response in ${responseLanguage}]
+    Translation: [Same content translated to ${nativeLanguage}]`;
 
     // Build the messages array with system message and conversation history
     const messages = [
@@ -51,7 +57,7 @@ serve(async (req) => {
         model: 'gpt-4o-mini',
         messages: messages,
         temperature: 0.7,
-        max_tokens: 300,
+        max_tokens: 400, // Increased to accommodate translations
       }),
     });
 
@@ -62,17 +68,28 @@ serve(async (req) => {
       throw new Error(data.error?.message || 'Failed to get response from OpenAI');
     }
 
-    const reply = data.choices[0].message.content;
-    console.log('OpenAI response:', reply);
+    let fullReply = data.choices[0].message.content;
+    console.log('OpenAI response:', fullReply);
+    
+    // Split the response and translation if present
+    let reply = fullReply;
+    let translation = '';
+    
+    if (fullReply.includes('Translation:')) {
+      const parts = fullReply.split('Translation:');
+      reply = parts[0].trim();
+      translation = parts[1].trim();
+    }
 
     return new Response(
       JSON.stringify({ 
         reply,
+        translation,
         // Return the updated conversation history
         updatedHistory: [
           ...conversationHistory,
           { role: 'user', content: message },
-          { role: 'assistant', content: reply }
+          { role: 'assistant', content: fullReply }
         ]
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

@@ -33,7 +33,7 @@ const englishTranslations: TranslationRecord = {
   getSkillsAssessment: "Get Skills Assessment",
   reading: "Reading",
   writing: "Writing",
-  speaking: "Speaking",
+  speaking: "Speaking...",
   listening: "Listening",
   overallLevel: "Overall Level",
   startChatting: "Start chatting with your AI language tutor!",
@@ -169,6 +169,7 @@ const englishTranslations: TranslationRecord = {
   phrase6: "What did you do last weekend?",
   phrase7: "What are your plans for tomorrow?",
   phrase8: "How do you say... in Spanish/English?",
+  translation: "Translation",
 };
 
 export default englishTranslations;

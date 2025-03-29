@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -34,7 +33,7 @@ const portugueseTranslations: TranslationRecord = {
   getSkillsAssessment: "Obter Avaliação de Habilidades",
   reading: "Leitura",
   writing: "Escrita",
-  speaking: "Fala",
+  speaking: "Falando...",
   listening: "Compreensão Auditiva",
   overallLevel: "Nível Geral",
   startChatting: "Comece a conversar com seu tutor de idiomas com IA!",
@@ -154,6 +153,7 @@ const portugueseTranslations: TranslationRecord = {
   failedToGetResponse: "Falha ao obter resposta da IA. Por favor, tente novamente.",
   failedToGenerateSpeech: "Falha ao gerar fala. Por favor, tente novamente.",
   audioPlaybackError: "Erro ao reproduzir áudio. Por favor, tente novamente.",
+  translation: "Tradução",
 };
 
 export default portugueseTranslations;

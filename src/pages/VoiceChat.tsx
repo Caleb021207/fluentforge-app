@@ -14,6 +14,7 @@ import spanishTranslations from "@/translations/spanish";
 type ConversationMessage = {
   role: 'user' | 'assistant';
   content: string;
+  translation?: string;
   timestamp: Date;
 };
 
@@ -21,6 +22,7 @@ const VoiceChat = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [gptResponse, setGptResponse] = useState("");
+  const [translation, setTranslation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
@@ -108,6 +110,7 @@ const VoiceChat = () => {
           setIsListening(true);
           setTranscript("");
           setGptResponse("");
+          setTranslation("");
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({
@@ -147,17 +150,19 @@ const VoiceChat = () => {
       const aiMessage: ConversationMessage = {
         role: 'assistant',
         content: data.reply,
+        translation: data.translation,
         timestamp: new Date()
       };
       
       setGptResponse(data.reply);
+      setTranslation(data.translation || "");
       setConversationHistory(prev => [...prev, aiMessage]);
       
       // Update the API conversation history format for next request
       setApiConversationHistory(data.updatedHistory || [
         ...apiConversationHistory,
         { role: 'user', content: text },
-        { role: 'assistant', content: data.reply }
+        { role: 'assistant', content: data.reply + (data.translation ? "\nTranslation: " + data.translation : "") }
       ]);
       
       // Speak the response using browser's SpeechSynthesis
@@ -271,6 +276,7 @@ const VoiceChat = () => {
     setApiConversationHistory([]);
     setTranscript("");
     setGptResponse("");
+    setTranslation("");
     toast({
       title: t("Success"),
       description: "Conversation history has been cleared",
@@ -360,6 +366,15 @@ const VoiceChat = () => {
                 </div>
                 <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                   {gptResponse}
+                  
+                  {translation && (
+                    <>
+                      <div className="border-t border-gray-300 my-3"></div>
+                      <div className="text-sm text-gray-600">
+                        <strong>{t("translation")}:</strong> {translation}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -394,6 +409,11 @@ const VoiceChat = () => {
                         }`}
                       >
                         <p className="text-sm">{message.content}</p>
+                        {message.translation && (
+                          <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
+                            <span className="font-medium">Translation:</span> {message.translation}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500 mt-1">
                           {new Date(message.timestamp).toLocaleTimeString()}
                         </p>

@@ -33,7 +33,7 @@ const spanishTranslations: TranslationRecord = {
   getSkillsAssessment: "Obtener Evaluación de Habilidades",
   reading: "Lectura",
   writing: "Escritura",
-  speaking: "Habla",
+  speaking: "Hablando...",
   listening: "Comprensión Auditiva",
   overallLevel: "Nivel General",
   startChatting: "¡Comienza a chatear con tu tutor de idiomas con IA!",
@@ -169,6 +169,7 @@ const spanishTranslations: TranslationRecord = {
   phrase6: "¿Qué hiciste el fin de semana pasado?",
   phrase7: "¿Cuáles son tus planes para mañana?",
   phrase8: "¿Cómo se dice... en inglés/español?",
+  translation: "Traducción",
 };
 
 export default spanishTranslations;
