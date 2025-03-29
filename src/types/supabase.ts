@@ -34,8 +34,8 @@ export interface CertificationAttempt {
   created_at: string | null;
   level: string;
   certification_type: string;
-  source_language: string;
-  target_language: string;
+  source_language: string | null;
+  target_language: string | null;
 }
 
 // Use these types in your components like this:
