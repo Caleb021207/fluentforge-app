@@ -19,6 +19,17 @@ const OverallCertificate = ({ compositeScore }: OverallCertificateProps) => {
   
   if (!compositeScore) return null;
 
+  // Function to get description based on language
+  const getLocalizedDescription = () => {
+    if (currentLanguage === "spanish") {
+      return "Este certificado representa tu nivel de competencia lingüística actual basado en tus puntuaciones más altas en las cuatro habilidades: lectura, escritura, expresión oral y comprensión auditiva.";
+    } else if (currentLanguage === "portuguese") {
+      return "Este certificado representa seu nível atual de proficiência linguística com base em suas pontuações mais altas nas quatro habilidades: leitura, escrita, fala e compreensão auditiva.";
+    } else {
+      return "This certificate represents your current language proficiency level based on your highest test scores across all four skills: reading, writing, speaking, and listening.";
+    }
+  };
+
   return (
     <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
       <CardHeader>
@@ -34,9 +45,7 @@ const OverallCertificate = ({ compositeScore }: OverallCertificateProps) => {
           </p>
           <div className="p-4 border rounded-lg bg-white">
             <p className="text-sm text-gray-600">
-              {currentLanguage === "spanish" 
-                ? "Este certificado representa tu nivel de competencia lingüística actual basado en tus puntuaciones más altas en las cuatro habilidades: lectura, escritura, expresión oral y comprensión auditiva." 
-                : "This certificate represents your current language proficiency level based on your highest test scores across all four skills: reading, writing, speaking, and listening."}
+              {getLocalizedDescription()}
             </p>
           </div>
         </div>

@@ -5,6 +5,8 @@ import ScoreCards from "@/components/certificates/ScoreCards";
 import CertificationAttemptsList from "@/components/certificates/CertificationAttemptsList";
 import ReadingCertification from "@/components/certifications/ReadingCertification";
 import WritingCertification from "@/components/certifications/WritingCertification";
+import TranslatedReadingCertification from "@/components/certifications/TranslatedReadingCertification";
+import TranslatedWritingCertification from "@/components/certifications/TranslatedWritingCertification";
 import ConversationalFluency from "@/components/certificates/ConversationalFluencyTest";
 import { useLocalization } from "@/context/LocalizationContext";
 
@@ -27,7 +29,10 @@ const CertificatesLayout = ({
   onViewAttempt,
   onTestComplete
 }: CertificatesLayoutProps) => {
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
+  
+  // Determine which version of components to use based on language
+  const isEnglish = currentLanguage === "english";
 
   return (
     <div className="space-y-6">
@@ -35,9 +40,17 @@ const CertificatesLayout = ({
       
       <OverallCertificate compositeScore={compositeScore} />
       
-      <ReadingCertification />
+      {isEnglish ? (
+        <ReadingCertification />
+      ) : (
+        <TranslatedReadingCertification />
+      )}
       
-      <WritingCertification />
+      {isEnglish ? (
+        <WritingCertification />
+      ) : (
+        <TranslatedWritingCertification />
+      )}
       
       <ConversationalFluency onTestComplete={onTestComplete} />
       

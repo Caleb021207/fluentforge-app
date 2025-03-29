@@ -19,10 +19,21 @@ const rubricData = [
 const CEFRLevelRubric = () => {
   const { t, currentLanguage } = useLocalization();
   
+  const getLocalizedTitle = () => {
+    switch(currentLanguage) {
+      case "spanish":
+        return "Rúbrica de Niveles CEFR";
+      case "portuguese":
+        return "Rubrica de Níveis CEFR";
+      default:
+        return "CEFR Level Rubric";
+    }
+  };
+  
   return (
     <div className="mt-6 space-y-4">
       <h3 className="text-lg font-semibold text-gray-900">
-        {currentLanguage === "spanish" ? "Rúbrica de Niveles CEFR" : "CEFR Level Rubric"}
+        {getLocalizedTitle()}
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {rubricData.map((item) => (

@@ -30,6 +30,18 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     conversationTranscript
   } = useConversationTest(onTestComplete);
 
+  // Function to get localized description
+  const getLocalizedDescription = () => {
+    switch(currentLanguage) {
+      case "spanish":
+        return "La Prueba de Fluidez Conversacional evalúa tu capacidad para entender y responder al idioma hablado en conversaciones en tiempo real. Esta prueba evalúa tanto tus habilidades de expresión oral como tu comprensión auditiva.";
+      case "portuguese":
+        return "O Teste de Fluência Conversacional avalia sua capacidade de entender e responder ao idioma falado em conversas em tempo real. Este teste avalia tanto suas habilidades de fala quanto sua compreensão auditiva.";
+      default:
+        return "The Conversational Fluency Test evaluates your ability to understand and respond to spoken Spanish in real-time conversations. This test assesses both your speaking skills and your listening comprehension.";
+    }
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -39,9 +51,7 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
       <CardContent>
         <div className="space-y-4">
           <p className="text-gray-600">
-            {currentLanguage === "spanish"
-              ? "La Prueba de Fluidez Conversacional evalúa tu capacidad para entender y responder al idioma hablado en conversaciones en tiempo real. Esta prueba evalúa tanto tus habilidades de expresión oral como tu comprensión auditiva."
-              : "The Conversational Fluency Test evaluates your ability to understand and respond to spoken Spanish in real-time conversations. This test assesses both your speaking skills and your listening comprehension."}
+            {getLocalizedDescription()}
           </p>
           
           {isComplete ? (
