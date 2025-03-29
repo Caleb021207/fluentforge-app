@@ -98,7 +98,7 @@ const Practice = () => {
 
     try {
       const selectedAgentId = getAgentId();
-      console.log(`Starting voice conversation with agent ID: ${selectedAgentId}`);
+      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
       if (isConversationActive()) {
         await conversation.endSession();
