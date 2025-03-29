@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -175,7 +174,11 @@ const englishTranslations: TranslationRecord = {
   // New UI strings for VoiceChat
   conversationHistory: "Conversation History",
   clearConversation: "Clear Conversation",
-  aiModelInfo: "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses."
+  aiModelInfo: "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.",
+  
+  // New translations for timer functionality
+  voiceChatEnded: "Voice chat ended",
+  timeLimit5MinReached: "The 5-minute time limit has been reached"
 };
 
 export default englishTranslations;

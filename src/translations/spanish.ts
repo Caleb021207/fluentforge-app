@@ -170,6 +170,10 @@ const spanishTranslations: TranslationRecord = {
   phrase7: "¿Cuáles son tus planes para mañana?",
   phrase8: "¿Cómo se dice... en inglés/español?",
   translation: "Traducción",
+  
+  // New translations for timer functionality
+  voiceChatEnded: "Chat de voz finalizado",
+  timeLimit5MinReached: "Se ha alcanzado el límite de tiempo de 5 minutos",
 };
 
 export default spanishTranslations;
