@@ -59,6 +59,14 @@ export const useElevenLabsAgent = (language: string = 'english') => {
   
   const startAgent = async () => {
     try {
+      // Request microphone access if needed
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (error) {
+        console.error("Microphone access error:", error);
+        throw new Error("Microphone access is required for voice chat");
+      }
+      
       // Use the appropriate agent ID based on language
       const agentId = getAgentIdForLanguage(language);
       console.log(`Starting ElevenLabs agent for ${language} with ID: ${agentId}`);

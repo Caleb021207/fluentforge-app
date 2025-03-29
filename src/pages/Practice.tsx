@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,7 @@ const Practice = () => {
       }
     },
     onError: (error) => {
+      console.error("ElevenLabs conversation error:", error);
       toast({
         title: t("error"),
         description: error.message,
@@ -63,6 +65,7 @@ const Practice = () => {
         setMicrophoneAccess(true);
       } catch (error) {
         console.error("Microphone access error:", error);
+        setMicrophoneAccess(false);
         toast({
           title: t("microphoneAccessRequired"),
           description: t("allowMicAccess"),
@@ -75,9 +78,33 @@ const Practice = () => {
   }, [toast, t]);
 
   const startVoiceConversation = async () => {
+    if (!microphoneAccess) {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        setMicrophoneAccess(true);
+      } catch (error) {
+        console.error("Microphone access error on start:", error);
+        toast({
+          title: t("microphoneAccessRequired"),
+          description: t("allowMicAccess"),
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     try {
       const selectedAgentId = getAgentId();
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId}`);
+      
+      if (conversation.status === "connected") {
+        await conversation.endSession();
+        toast({
+          title: t("startVoiceChat"),
+          description: t("startChatting"),
+        });
+        return;
+      }
       
       await conversation.startSession({
         agentId: selectedAgentId,
@@ -88,6 +115,7 @@ const Practice = () => {
         description: t("startChatting"),
       });
     } catch (error) {
+      console.error("Voice conversation error:", error);
       toast({
         title: t("error"),
         description: t("networkConnectionIssue"),
@@ -258,7 +286,7 @@ const Practice = () => {
         </p>
         <div className="flex flex-wrap gap-4 mb-4">
           <Button
-            onClick={conversation.status === "connected" ? conversation.endSession : startVoiceConversation}
+            onClick={startVoiceConversation}
             variant={conversation.status === "connected" ? "destructive" : "default"}
           >
             {conversation.status === "connected" ? (
