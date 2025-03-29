@@ -38,7 +38,7 @@ const Certificates = () => {
               .update({
                 source_language: 'english',
                 target_language: 'spanish'
-              })
+              } as any) // Using type assertion to allow these properties
               .eq('id', attempt.id);
               
             if (updateError) {
