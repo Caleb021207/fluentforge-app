@@ -153,8 +153,6 @@ const portugueseTranslations: TranslationRecord = {
   failedToGetResponse: "Falha ao obter resposta da IA. Por favor, tente novamente.",
   failedToGenerateSpeech: "Falha ao gerar fala. Por favor, tente novamente.",
   audioPlaybackError: "Erro ao reproduzir áudio. Por favor, tente novamente.",
-  voiceChatEnded: "Chat de voz encerrado",
-  timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
   
   // Conversation starter phrases
   phrase1: "Olá, como você está hoje?",
