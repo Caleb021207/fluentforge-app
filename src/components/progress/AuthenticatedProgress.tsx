@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -179,6 +180,8 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         console.log("Retrieved certification attempts:", attempts);
         
         const formattedAttempts = attempts.map(attempt => {
+          // Handle the case where source_language or target_language might be missing
+          // in the database by providing default values
           return {
             ...attempt,
             source_language: attempt.source_language || 'english',
