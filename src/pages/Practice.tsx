@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useElevenLabsAgent, getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -46,25 +48,6 @@ const Practice = () => {
     // For English speakers, use the Spanish tutor
     return SPANISH_TUTOR_AGENT_ID;
   };
-
-  // Load the ElevenLabs Convai widget script
-  useEffect(() => {
-    // Check if the script is already loaded
-    if (!document.querySelector('script[src="https://elevenlabs.io/convai-widget/index.js"]')) {
-      const script = document.createElement('script');
-      script.src = "https://elevenlabs.io/convai-widget/index.js";
-      script.async = true;
-      script.type = "text/javascript";
-      document.body.appendChild(script);
-    }
-    
-    // Add the convai widget element if it doesn't exist
-    if (!document.querySelector('elevenlabs-convai')) {
-      const convaiElement = document.createElement('elevenlabs-convai');
-      convaiElement.setAttribute('agent-id', ELEVENLABS_CONVAI_WIDGET_ID);
-      document.body.appendChild(convaiElement);
-    }
-  }, []);
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -123,6 +106,17 @@ const Practice = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const openElevenLabsChat = () => {
+    window.open(`https://elevenlabs.io/app/talk-to?agent_id=${ELEVENLABS_CONVAI_WIDGET_ID}`, '_blank');
+    
+    toast({
+      title: t("openingExternalChat"),
+      description: currentLanguage === "portuguese" 
+        ? "Abrindo chat do ElevenLabs em uma nova aba" 
+        : "Abriendo chat de ElevenLabs en una nueva pestaña",
+    });
   };
 
   const requestSkillAssessment = async () => {
@@ -286,22 +280,33 @@ const Practice = () => {
             : `Chat with our AI tutor to practice your English! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`}
         </p>
         <div className="flex flex-wrap gap-4 mb-4">
-          <Button
-            onClick={conversation.status === "connected" ? conversation.endSession : startVoiceConversation}
-            variant={conversation.status === "connected" ? "destructive" : "default"}
-          >
-            {conversation.status === "connected" ? (
-              <>
-                <MicOff className="h-4 w-4 mr-2" />
-                {t("stopVoiceChat")}
-              </>
-            ) : (
-              <>
-                <Mic className="h-4 w-4 mr-2" />
-                {t("startVoiceChat")}
-              </>
-            )}
-          </Button>
+          {currentLanguage === "english" ? (
+            <Button
+              onClick={conversation.status === "connected" ? conversation.endSession : startVoiceConversation}
+              variant={conversation.status === "connected" ? "destructive" : "default"}
+            >
+              {conversation.status === "connected" ? (
+                <>
+                  <MicOff className="h-4 w-4 mr-2" />
+                  {t("stopVoiceChat")}
+                </>
+              ) : (
+                <>
+                  <Mic className="h-4 w-4 mr-2" />
+                  {t("startVoiceChat")}
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button
+              onClick={openElevenLabsChat}
+              variant="default"
+              className="bg-lingua-primary hover:bg-lingua-primary/90"
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              {currentLanguage === "spanish" ? "Habla con ElevenLabs" : "Fale com ElevenLabs"}
+            </Button>
+          )}
           <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
             {t("getSkillsAssessment")}
           </Button>
@@ -369,10 +374,21 @@ const Practice = () => {
                   ? t("clickToStartVoice")
                   : t("allowMicAccess")}
               </p>
-              <div className="mt-4 p-3 bg-gray-100 rounded-lg text-sm">
-                <p className="font-semibold mb-2">New! Try our ElevenLabs AI chat widget:</p>
-                <p>Look for the chat button in the bottom-right corner of the screen.</p>
-              </div>
+              {currentLanguage !== "english" && (
+                <div className="mt-4 p-3 bg-gray-100 rounded-lg text-sm">
+                  <p className="font-semibold mb-2">
+                    {currentLanguage === "spanish" ? "¡Nuevo!" : "Novo!"} 
+                    {currentLanguage === "spanish" 
+                      ? " Prueba nuestro chat de ElevenLabs:" 
+                      : " Experimente nosso chat ElevenLabs:"}
+                  </p>
+                  <p>
+                    {currentLanguage === "spanish"
+                      ? "Haz clic en el botón 'Habla con ElevenLabs' arriba para comenzar."
+                      : "Clique no botão 'Fale com ElevenLabs' acima para começar."}
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             messages.map((message, index) => (
