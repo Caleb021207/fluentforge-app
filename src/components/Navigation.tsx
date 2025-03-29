@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, LayoutDashboard, Award, BarChart, Menu, X, LogOut, Shield } from "lucide-react";
+import { MessageSquare, LayoutDashboard, Menu, X, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,22 +12,16 @@ import { useLocalization } from "@/context/LocalizationContext";
 const navItemTranslations = {
   english: {
     "Practice": "Practice",
-    "Certificates": "Certificates",
-    "Progress": "Progress", 
     "Dashboard": "Dashboard",
     "Admin": "Admin"
   },
   spanish: {
     "Practice": "Práctica",
-    "Certificates": "Certificados",
-    "Progress": "Progreso",
     "Dashboard": "Panel",
     "Admin": "Admin"
   },
   portuguese: {
     "Practice": "Prática",
-    "Certificates": "Certificados",
-    "Progress": "Progresso",
     "Dashboard": "Painel",
     "Admin": "Admin"
   }
@@ -81,9 +76,7 @@ const Navigation = () => {
 
   const navItems = [
     { icon: MessageSquare, label: "Practice", path: "/practice" },
-    { icon: Award, label: "Certificates", path: "/certificates" },
-    { icon: BarChart, label: "Progress", path: "/progress" },
-    { icon: LayoutDashboard, label: "Dashboard", path: "/profile" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/placement-quiz" },
   ];
   
   // Add admin link if user is an admin
