@@ -31,6 +31,9 @@ const Practice = () => {
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
 
+  // Define learning target based on native language
+  const targetLanguage = currentLanguage === "english" ? "Spanish" : "English";
+
   const conversation = useConversation({
     onMessage: (message) => {
       if (message.type === "llm_response") {
@@ -90,13 +93,14 @@ const Practice = () => {
   const requestSkillAssessment = async () => {
     setIsLoading(true);
     try {
+      // Determine assessment request based on user's native language
+      const assessmentPrompt = currentLanguage === "english"
+        ? "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level."
+        : "Please assess my English language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.";
+
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
-          message: currentLanguage === "portuguese" 
-            ? "Por favor, avalie minhas habilidades em inglês com base em nossa conversa. Forneça feedback sobre minha leitura, escrita, fala e compreensão auditiva, e estime meu nível geral de proficiência."
-            : currentLanguage === "spanish"
-              ? "Por favor evalúa mis habilidades en inglés basándote en nuestra conversación. Proporciona retroalimentación sobre mi lectura, escritura, habla y comprensión auditiva, y estima mi nivel general de competencia."
-              : "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.",
+          message: assessmentPrompt,
           requestType: "assessment"
         }
       });
@@ -167,6 +171,17 @@ const Practice = () => {
     }
   };
 
+  // Dynamically update the placeholder text based on native language
+  const getPlaceholderText = () => {
+    if (currentLanguage === "spanish") {
+      return "Escribe tu mensaje en español o inglés...";
+    } else if (currentLanguage === "portuguese") {
+      return "Digite sua mensagem em português ou inglês...";
+    } else {
+      return "Type your message in English or Spanish...";
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
@@ -174,7 +189,9 @@ const Practice = () => {
           {t("practiceWithAITutor")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {t("chatWithAITutor")}
+          {currentLanguage === "english" 
+            ? `Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`
+            : `Chat with our AI tutor to practice your English! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`}
         </p>
         <div className="flex gap-4 mb-4">
           <Button
@@ -296,7 +313,7 @@ const Practice = () => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t("typeMessage")}
+            placeholder={getPlaceholderText()}
             className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary"
             disabled={conversation.status === "connected"}
           />
