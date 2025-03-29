@@ -11,16 +11,30 @@ export interface ChartData {
   listening: number;
 }
 
-export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): ChartData[] => {
+export interface LanguagePair {
+  sourceLanguage: string;
+  targetLanguage: string;
+}
+
+export const processAttemptsByDate = (attempts: CertificationAttempt[] | null, languagePair?: LanguagePair): ChartData[] => {
   if (!attempts || attempts.length === 0) return [];
 
-  console.log("Processing attempts for chart:", attempts);
+  // Filter attempts by language pair if provided
+  const filteredAttempts = languagePair 
+    ? attempts.filter(attempt => 
+        attempt.source_language === languagePair.sourceLanguage && 
+        attempt.target_language === languagePair.targetLanguage)
+    : attempts;
+  
+  if (filteredAttempts.length === 0) return [];
+  
+  console.log("Processing attempts for chart:", filteredAttempts);
   
   // Create a map to accumulate scores by date
   const dataMap = new Map<string, ChartData>();
   
   // First, initialize the map with all dates and zero values
-  attempts.forEach(attempt => {
+  filteredAttempts.forEach(attempt => {
     if ((!attempt.completed_at && !attempt.created_at)) {
       return;
     }
@@ -42,7 +56,7 @@ export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): 
   const sortedDates = Array.from(dataMap.keys()).sort();
   
   // Now process each attempt and update the highest scores
-  attempts.forEach(attempt => {
+  filteredAttempts.forEach(attempt => {
     if ((!attempt.completed_at && !attempt.created_at)) {
       console.log(`Skipping attempt with invalid date:`, attempt);
       return;
@@ -118,16 +132,25 @@ export const processAttemptsByDate = (attempts: CertificationAttempt[] | null): 
   return result;
 };
 
-export const generateRecommendations = (attempts: CertificationAttempt[]) => {
+export const generateRecommendations = (attempts: CertificationAttempt[], languagePair?: LanguagePair) => {
   if (!attempts || attempts.length === 0) return [];
   
-  console.log("Generating recommendations from attempts:", attempts);
+  // Filter attempts by language pair if provided
+  const filteredAttempts = languagePair 
+    ? attempts.filter(attempt => 
+        attempt.source_language === languagePair.sourceLanguage && 
+        attempt.target_language === languagePair.targetLanguage)
+    : attempts;
+  
+  if (filteredAttempts.length === 0) return [];
+  
+  console.log("Generating recommendations from attempts:", filteredAttempts);
   const skills = ['reading', 'writing', 'speaking', 'listening'];
   const highestScores: Record<string, number> = {};
   
   skills.forEach(skill => {
     // For each skill, find the highest score from direct attempts
-    const directAttempts = attempts.filter(a => {
+    const directAttempts = filteredAttempts.filter(a => {
       // For fluency tests, we need to check if they're complete (score > 0)
       if (a.certification_type === skill) {
         return a.score > 0; // Just check if the score is valid
@@ -138,7 +161,7 @@ export const generateRecommendations = (attempts: CertificationAttempt[]) => {
     
     // For speaking and listening, also check fluency tests which count for both skills
     const fluencyAttempts = (skill === 'speaking' || skill === 'listening') 
-      ? attempts.filter(a => a.certification_type === 'fluency' && a.score > 0)
+      ? filteredAttempts.filter(a => a.certification_type === 'fluency' && a.score > 0)
       : [];
     
     const skillAttempts = [...directAttempts, ...fluencyAttempts];
@@ -170,10 +193,17 @@ export const generateRecommendations = (attempts: CertificationAttempt[]) => {
   return recommendations;
 };
 
-export const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefined) => {
+export const normalizeAttempts = (rawAttempts: CertificationAttempt[] | undefined, languagePair?: LanguagePair) => {
   if (!rawAttempts) return [];
   
-  const validAttempts = rawAttempts.filter(attempt => {
+  // Filter attempts by language pair if provided
+  const filteredAttempts = languagePair 
+    ? rawAttempts.filter(attempt => 
+        attempt.source_language === languagePair.sourceLanguage && 
+        attempt.target_language === languagePair.targetLanguage)
+    : rawAttempts;
+  
+  const validAttempts = filteredAttempts.filter(attempt => {
     // For fluency tests, consider them complete if they have a score > 0
     if (attempt.certification_type === 'fluency' || attempt.certification_type === 'conversation') {
       return attempt.score > 0;

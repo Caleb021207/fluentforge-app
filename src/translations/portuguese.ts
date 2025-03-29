@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -133,7 +132,15 @@ const portugueseTranslations: TranslationRecord = {
   cancel: "Cancelar",
   strengths: "Pontos Fortes",
   areasForImprovement: "Áreas para Melhoria",
-  recommendations: "Recomendações"
+  recommendations: "Recomendações",
+  selectLanguagePair: "Selecionar Par de Idiomas",
+  languagePairMissing: "Por favor selecione um par de idiomas",
+  sourceLanguage: "Idioma de Origem",
+  targetLanguage: "Idioma de Destino",
+  agentLoading: "Carregando agente de idioma...",
+  agentReady: "Agente de idioma pronto",
+  speakingIn: "Falando em",
+  listeningIn: "Ouvindo em"
 };
 
 export default portugueseTranslations;

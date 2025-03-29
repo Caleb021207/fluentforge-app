@@ -1,4 +1,3 @@
-
 // This file contains additional type definitions for Supabase tables
 // that complement the auto-generated types in src/integrations/supabase/types.ts
 
@@ -29,11 +28,13 @@ export interface LessonProgress {
 export interface CertificationAttempt {
   id: string;
   user_id: string;
-  certification_type: string;
-  level: string;
   score: number;
   completed_at: string | null;
   created_at: string | null;
+  level: string;
+  certification_type: string;
+  source_language?: string;
+  target_language?: string;
 }
 
 // Use these types in your components like this:

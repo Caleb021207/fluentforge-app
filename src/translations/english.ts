@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -133,7 +132,15 @@ const englishTranslations: TranslationRecord = {
   cancel: "Cancel",
   strengths: "Strengths",
   areasForImprovement: "Areas for Improvement",
-  recommendations: "Recommendations"
+  recommendations: "Recommendations",
+  selectLanguagePair: "Select Language Pair",
+  languagePairMissing: "Please select a language pair",
+  sourceLanguage: "Source Language",
+  targetLanguage: "Target Language",
+  agentLoading: "Loading language agent...",
+  agentReady: "Language agent ready",
+  speakingIn: "Speaking in",
+  listeningIn: "Listening in"
 };
 
 export default englishTranslations;

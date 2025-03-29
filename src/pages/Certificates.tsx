@@ -11,6 +11,9 @@ const Certificates = () => {
         compositeScore, 
         hasTranscript, 
         isLoading, 
+        languagePairs,
+        selectedPair,
+        onSelectLanguagePair,
         refetch, 
         handleViewAttempt 
       }) => (
@@ -20,6 +23,9 @@ const Certificates = () => {
           compositeScore={compositeScore}
           hasTranscript={hasTranscript}
           isLoading={isLoading}
+          languagePairs={languagePairs}
+          selectedPair={selectedPair}
+          onSelectLanguagePair={onSelectLanguagePair}
           onViewAttempt={handleViewAttempt}
           onTestComplete={() => {
             console.log("Test completed, refreshing data...");
