@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,6 @@ const Practice = () => {
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
 
-  // Define learning target based on native language
   const targetLanguage = currentLanguage === "english" ? "Spanish" : "English";
 
   const conversation = useConversation({
@@ -74,7 +72,6 @@ const Practice = () => {
   const startVoiceConversation = async () => {
     try {
       await conversation.startSession({
-        // Use the specific agent ID provided by the user
         agentId: "Qc5G2DZi0jRmMf3CzC8f",
       });
       toast({
@@ -93,7 +90,6 @@ const Practice = () => {
   const requestSkillAssessment = async () => {
     setIsLoading(true);
     try {
-      // Determine assessment request based on user's native language
       const assessmentPrompt = currentLanguage === "english"
         ? "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level."
         : "Please assess my English language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.";
@@ -131,23 +127,20 @@ const Practice = () => {
   const sendLanguageLearningPrompt = () => {
     let prompt = "";
     
-    // Generate prompt based on user's native language
     if (currentLanguage === "english") {
-      prompt = "Hola, soy estudiante de español. Por favor, ayúdame a practicar mi español. Corrige mis errores gramaticales y de vocabulario cuando hable. ¿Podemos comenzar con una conversación simple?";
+      prompt = "¡Hola! Quiero practicar español contigo.";
     } else if (currentLanguage === "spanish") {
-      prompt = "Hello, I am a Spanish speaker learning English. Please help me practice my English. Correct my grammar and vocabulary mistakes when I speak. Can we start with a simple conversation?";
+      prompt = "Hey! I want to practice English with you!";
     } else if (currentLanguage === "portuguese") {
-      prompt = "Hello, I am a Portuguese speaker learning English. Please help me practice my English. Correct my grammar and vocabulary mistakes when I speak. Can we start with a simple conversation?";
+      prompt = "Olá! Eu quero praticar inglês com você!";
     }
 
     if (prompt) {
-      // Create user message
       const userMessage: ChatMessage = {
         role: "user",
         content: prompt,
       };
 
-      // Add to messages and send
       setMessages((prev) => [...prev, userMessage]);
       handleSendPrompt(prompt);
     }
@@ -233,7 +226,6 @@ const Practice = () => {
     }
   };
 
-  // Dynamically update the placeholder text based on native language
   const getPlaceholderText = () => {
     if (currentLanguage === "spanish") {
       return "Escribe tu mensaje en español o inglés...";
@@ -279,7 +271,9 @@ const Practice = () => {
             <Book className="h-4 w-4 mr-2" />
             {currentLanguage === "english" 
               ? "Send Spanish Practice Prompt" 
-              : "Send English Practice Prompt"}
+              : currentLanguage === "spanish"
+                ? "Enviar mensaje de práctica en inglés"
+                : "Enviar mensagem de prática em inglês"}
           </Button>
         </div>
       </div>
