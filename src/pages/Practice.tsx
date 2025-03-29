@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -58,6 +57,8 @@ const Practice = () => {
     },
   });
 
+  const isConversationActive = () => conversation.status !== "disconnected";
+
   useEffect(() => {
     const initMicrophone = async () => {
       try {
@@ -97,7 +98,7 @@ const Practice = () => {
       const selectedAgentId = getAgentId();
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId}`);
       
-      if (conversation.status === "connected") {
+      if (isConversationActive()) {
         await conversation.endSession();
         toast({
           title: t("startVoiceChat"),
@@ -111,7 +112,7 @@ const Practice = () => {
       });
       
       toast({
-        title: conversation.status === "connected" ? t("stopVoiceChat") : t("startVoiceChat"),
+        title: isConversationActive() ? t("stopVoiceChat") : t("startVoiceChat"),
         description: t("startChatting"),
       });
     } catch (error) {
@@ -287,9 +288,9 @@ const Practice = () => {
         <div className="flex flex-wrap gap-4 mb-4">
           <Button
             onClick={startVoiceConversation}
-            variant={conversation.status === "connected" ? "destructive" : "default"}
+            variant={isConversationActive() ? "destructive" : "default"}
           >
-            {conversation.status === "connected" ? (
+            {isConversationActive() ? (
               <>
                 <MicOff className="h-4 w-4 mr-2" />
                 {t("stopVoiceChat")}
@@ -414,9 +415,9 @@ const Practice = () => {
             onChange={(e) => setInput(e.target.value)}
             placeholder={getPlaceholderText()}
             className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary"
-            disabled={conversation.status === "connected"}
+            disabled={isConversationActive()}
           />
-          <Button type="submit" disabled={isLoading || conversation.status === "connected"}>
+          <Button type="submit" disabled={isLoading || isConversationActive()}>
             <Send className="h-4 w-4 mr-2" />
             {t("send")}
           </Button>

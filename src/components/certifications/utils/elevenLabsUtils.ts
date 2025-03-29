@@ -57,6 +57,9 @@ export const useElevenLabsAgent = (language: string = 'english') => {
   // This is a simplified mock implementation
   const conversation = useConversation();
   
+  // Helper to check if conversation is active
+  const isConversationActive = () => conversation.status !== "disconnected";
+  
   const startAgent = async () => {
     try {
       // Request microphone access if needed
@@ -94,7 +97,7 @@ export const useElevenLabsAgent = (language: string = 'english') => {
   return {
     startAgent,
     stopAgent,
-    isConnected: conversation.status === "connected",
+    isConnected: isConversationActive(),
     isSpeaking: conversation.isSpeaking
   };
 };
