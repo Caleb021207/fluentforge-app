@@ -1,3 +1,4 @@
+
 import { TranslationDictionary } from "./types";
 
 export const english: TranslationDictionary = {
@@ -90,7 +91,7 @@ export const english: TranslationDictionary = {
   "lessThanAMinute": "Less than a minute",
   "over": "Over",
   "almost": "Almost",
-  "about": "About",
+  "aboutInfo": "About",
   "justNow": "Just now",
   "january": "January",
   "february": "February",
@@ -413,7 +414,7 @@ export const english: TranslationDictionary = {
   "christmasDay": "Christmas Day",
   "viewMore": "View More",
   "viewLess": "View Less",
-   "certificationProgress": "Certification Progress",
+  "certificationProgress": "Certification Progress",
   "overallScore": "Overall Score",
   "reading": "Reading",
   "writing": "Writing",

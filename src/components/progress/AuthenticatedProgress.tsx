@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -177,11 +178,21 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
 
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
-        setRawAttempts(attempts as CertificationAttempt[]);
         
-        checkForIncompleteLanguagePairs(attempts as CertificationAttempt[]);
+        // Convert the attempts from database to our CertificationAttempt type
+        const formattedAttempts = attempts.map(attempt => {
+          return {
+            ...attempt,
+            source_language: attempt.source_language || 'english',
+            target_language: attempt.target_language || 'spanish'
+          } as CertificationAttempt;
+        });
         
-        const pairs = getAvailableLanguagePairs(attempts as CertificationAttempt[]);
+        setRawAttempts(formattedAttempts);
+        
+        checkForIncompleteLanguagePairs(formattedAttempts);
+        
+        const pairs = getAvailableLanguagePairs(formattedAttempts);
         setLanguagePairs(pairs);
         
         if (pairs.length > 0 && !selectedPairKey) {
@@ -191,13 +202,13 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         
         const selectedPair = getSelectedLanguagePair();
         
-        const processedData = processAttemptsByDate(attempts as CertificationAttempt[], selectedPair);
+        const processedData = processAttemptsByDate(formattedAttempts, selectedPair);
         setProgressData(processedData);
         
-        const recommendations = generateRecommendations(attempts as CertificationAttempt[], selectedPair);
+        const recommendations = generateRecommendations(formattedAttempts, selectedPair);
         setRecommendations(recommendations);
         
-        const normalized = normalizeAttempts(attempts as CertificationAttempt[], selectedPair);
+        const normalized = normalizeAttempts(formattedAttempts, selectedPair);
         setNormalizedAttempts(normalized);
       } else {
         setRawAttempts([]);

@@ -1,3 +1,4 @@
+
 import { TranslationDictionary } from "./types";
 
 export const spanish: TranslationDictionary = {
@@ -28,7 +29,6 @@ export const spanish: TranslationDictionary = {
   "Full Name.": "Nombre Completo.",
   "Enter your full name": "Ingresa tu nombre completo",
   "Email.": "Correo Electrónico.",
-  "Password.": "Contraseña.",
   "Confirm Password": "Confirmar Contraseña",
   "Confirm your password": "Confirma tu contraseña",
   "Sign Up.": "Registrarse.",

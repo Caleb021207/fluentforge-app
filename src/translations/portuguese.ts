@@ -1,4 +1,5 @@
-import { TranslationDictionary } from "@/types/localization";
+
+import { TranslationDictionary } from "./types";
 
 export const portuguese: TranslationDictionary = {
   "home": "Início",
