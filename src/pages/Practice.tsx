@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ const Practice = () => {
 
   const targetLanguage = currentLanguage === "english" ? "Spanish" : "English";
   
+  // Get the appropriate agent ID based on the user's language
   const getAgentId = () => {
     return getAgentIdForLanguage(currentLanguage);
   };
@@ -100,6 +102,7 @@ const Practice = () => {
       
       if (isConversationActive()) {
         await conversation.endSession();
+        console.log("Ended previous conversation session");
         toast({
           title: t("startVoiceChat"),
           description: t("startChatting"),
@@ -107,9 +110,11 @@ const Practice = () => {
         return;
       }
       
-      await conversation.startSession({
+      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
+      const sessionId = await conversation.startSession({
         agentId: selectedAgentId,
       });
+      console.log(`Successfully started conversation session: ${sessionId}`);
       
       toast({
         title: isConversationActive() ? t("stopVoiceChat") : t("startVoiceChat"),

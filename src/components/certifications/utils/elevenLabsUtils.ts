@@ -3,7 +3,7 @@ import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
 export const SPANISH_TUTOR_AGENT_ID = 'Qc5G2DZi0jRmMf3CzC8f'; // Spanish tutor
-export const ENGLISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor (updated ID)
+export const ENGLISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor
 
 /**
  * Gets the appropriate agent ID based on the user's language
@@ -53,8 +53,7 @@ export const endElevenLabsConversation = async (conversationId: string) => {
  * Hook for using ElevenLabs conversation in React components
  */
 export const useElevenLabsAgent = (language: string = 'english') => {
-  // Here you would use the @11labs/react useConversation hook
-  // This is a simplified mock implementation
+  // Use the @11labs/react useConversation hook
   const conversation = useConversation();
   
   // Helper to check if conversation is active
@@ -74,9 +73,18 @@ export const useElevenLabsAgent = (language: string = 'english') => {
       const agentId = getAgentIdForLanguage(language);
       console.log(`Starting ElevenLabs agent for ${language} with ID: ${agentId}`);
       
+      // If already connected, disconnect first
+      if (isConversationActive()) {
+        await conversation.endSession();
+        console.log("Ended previous ElevenLabs session");
+      }
+      
+      // Start a new session with the appropriate agent
+      console.log(`Attempting to start new session with agent ID: ${agentId}`);
       const conversationId = await conversation.startSession({ 
         agentId: agentId 
       });
+      console.log(`Successfully started ElevenLabs session: ${conversationId}`);
       return conversationId;
     } catch (error) {
       console.error("Error starting ElevenLabs agent:", error);
@@ -86,8 +94,12 @@ export const useElevenLabsAgent = (language: string = 'english') => {
   
   const stopAgent = async () => {
     try {
-      await conversation.endSession();
-      return true;
+      if (isConversationActive()) {
+        await conversation.endSession();
+        console.log("Successfully ended ElevenLabs session");
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error("Error stopping ElevenLabs agent:", error);
       return false;
