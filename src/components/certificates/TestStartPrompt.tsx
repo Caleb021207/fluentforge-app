@@ -3,12 +3,12 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 
-interface LanguagePair {
+export interface LanguagePair {
   sourceLanguage: string;
   targetLanguage: string;
 }
 
-interface TestStartPromptProps {
+export interface TestStartPromptProps {
   isLoading?: boolean;
   isLoggedIn?: boolean;
   microphoneAccess?: boolean;

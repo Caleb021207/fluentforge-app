@@ -5,12 +5,12 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocalization } from "@/context/LocalizationContext";
 
-interface LanguagePair {
+export interface LanguagePair {
   sourceLanguage: string;
   targetLanguage: string;
 }
 
-interface TestStartPromptProps {
+export interface TestStartPromptProps {
   isLoading?: boolean;
   isLoggedIn?: boolean;
   microphoneAccess?: boolean;
