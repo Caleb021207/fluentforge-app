@@ -13,15 +13,12 @@ const translations: LanguageTranslations = {
 
 export default translations;
 
-// Define available languages for user interface (native languages)
+// Define available languages
 export const AVAILABLE_LANGUAGES = {
   english: "English",
   spanish: "Spanish",
   portuguese: "Portuguese",
 };
 
-// Default UI language
+// Default language
 export const DEFAULT_LANGUAGE = "english";
-
-// Target language is always English (ESL focus)
-export const TARGET_LANGUAGE = "english";

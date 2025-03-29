@@ -17,8 +17,6 @@ export type Database = {
           id: string
           level: string
           score: number
-          source_language: string | null
-          target_language: string | null
           user_id: string
         }
         Insert: {
@@ -28,8 +26,6 @@ export type Database = {
           id?: string
           level: string
           score: number
-          source_language?: string | null
-          target_language?: string | null
           user_id: string
         }
         Update: {
@@ -39,8 +35,6 @@ export type Database = {
           id?: string
           level?: string
           score?: number
-          source_language?: string | null
-          target_language?: string | null
           user_id?: string
         }
         Relationships: []
