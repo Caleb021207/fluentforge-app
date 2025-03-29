@@ -34,6 +34,8 @@ const ConversationTest = () => {
     timeRemaining,
     testResult,
     isLoading,
+    isLoggedIn,
+    microphoneAccess,
     conversation,
     startTest,
     endTest,
@@ -53,7 +55,13 @@ const ConversationTest = () => {
       
       <Card>
         {!isStarted && !isComplete && (
-          <TestStartPrompt onStart={startTest} languagePair={languagePair} />
+          <TestStartPrompt 
+            onStart={startTest} 
+            isLoading={isLoading}
+            isLoggedIn={isLoggedIn}
+            microphoneAccess={microphoneAccess}
+            languagePair={languagePair} 
+          />
         )}
         
         {isStarted && !isComplete && (
@@ -68,7 +76,7 @@ const ConversationTest = () => {
         
         {isComplete && testResult && (
           <TestResults 
-            result={testResult}
+            testResult={testResult}
             onRetry={resetTest}
             onBackToOverview={handleBackToOverview}
             isLoading={isLoading}

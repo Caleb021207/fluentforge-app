@@ -3,18 +3,25 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 
+interface LanguagePair {
+  sourceLanguage: string;
+  targetLanguage: string;
+}
+
 interface TestStartPromptProps {
-  isLoading: boolean;
-  isLoggedIn: boolean;
-  microphoneAccess: boolean;
+  isLoading?: boolean;
+  isLoggedIn?: boolean;
+  microphoneAccess?: boolean;
   onStart: () => void;
+  languagePair?: LanguagePair;
 }
 
 const TestStartPrompt = ({
-  isLoading,
-  isLoggedIn,
-  microphoneAccess,
-  onStart
+  isLoading = false,
+  isLoggedIn = true,
+  microphoneAccess = true,
+  onStart,
+  languagePair
 }: TestStartPromptProps) => {
   const { t } = useLocalization();
   
