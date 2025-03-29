@@ -11,6 +11,8 @@ import Progress from "@/pages/Progress";
 import NotFound from "@/pages/NotFound";
 import ExampleData from "@/pages/ExampleData";
 import AdminDashboard from "@/pages/AdminDashboard";
+import ReadingCertificationPage from "@/pages/ReadingCertification";
+import WritingCertificationPage from "@/pages/WritingCertification";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LocalizationProvider } from "@/context/LocalizationContext";
@@ -28,6 +30,8 @@ function App() {
               <Route path="/" element={<Index />} />
               <Route path="/placement-quiz" element={<PlacementQuiz />} />
               <Route path="/certificates" element={<Certificates />} />
+              <Route path="/certificates/reading" element={<ReadingCertificationPage />} />
+              <Route path="/certificates/writing" element={<WritingCertificationPage />} />
               <Route path="/practice" element={<Practice />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/progress" element={<Progress />} />
