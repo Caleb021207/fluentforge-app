@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Play, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,15 +19,11 @@ const VoiceChat = () => {
   const { currentLanguage, t } = useLocalization();
 
   useEffect(() => {
-    // Initialize Web Speech API
     if (typeof window !== "undefined" && 
         ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      // Use the appropriate constructor based on browser support
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set language based on user's current language selection
-      // For English speakers learning Spanish, and Spanish speakers learning English
       recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
       recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
@@ -100,7 +95,6 @@ const VoiceChat = () => {
   const handleSendTranscript = async (text: string) => {
     setIsLoading(true);
     try {
-      // Call our Supabase Function to get GPT response
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
@@ -129,7 +123,7 @@ const VoiceChat = () => {
       const { data, error } = await supabase.functions.invoke('text-to-speech', {
         body: { 
           text: text,
-          voice: currentLanguage === "english" ? "nova" : "alloy" // Different voices for different languages
+          voice: currentLanguage === "english" ? "nova" : "alloy"
         }
       });
 
@@ -139,7 +133,6 @@ const VoiceChat = () => {
         URL.revokeObjectURL(audioUrl);
       }
       
-      // Convert base64 to blob and create URL
       const byteCharacters = atob(data.audioContent);
       const byteNumbers = new Array(byteCharacters.length);
       for (let i = 0; i < byteCharacters.length; i++) {
@@ -151,7 +144,6 @@ const VoiceChat = () => {
       
       setAudioUrl(url);
       
-      // Auto-play audio when generated
       if (audioRef.current) {
         audioRef.current.src = url;
         audioRef.current.play()
@@ -198,7 +190,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "portuguese") {
       return { practice: "English", native: "Portuguese" };
     }
-    return { practice: "Spanish", native: "English" }; // Default
+    return { practice: "Spanish", native: "English" };
   };
 
   const { practice, native } = getLanguagePair();
@@ -207,7 +199,7 @@ const VoiceChat = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-lingua-text mb-4">
-          {t("freePracticeWithVoice")}
+          {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
           {currentLanguage === "english" 
@@ -300,7 +292,6 @@ const VoiceChat = () => {
         </ul>
       </div>
       
-      {/* Hidden audio element for TTS playback */}
       <audio ref={audioRef} className="hidden" />
     </div>
   );

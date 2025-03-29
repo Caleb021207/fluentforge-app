@@ -290,6 +290,15 @@ const Practice = () => {
             ? `Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`
             : `Chat with our AI tutor to practice your English! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`}
         </p>
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+          <p className="text-amber-800 text-sm">
+            {currentLanguage === "english" 
+              ? "Note: There is a 5-minute conversational AI usage limit per user per day. For unlimited voice practice, try our Voice Chat feature."
+              : currentLanguage === "spanish"
+                ? "Nota: Hay un límite de uso de IA conversacional de 5 minutos por usuario por día. Para práctica de voz ilimitada, prueba nuestra función de Chat de Voz."
+                : "Nota: Há um limite de uso de IA conversacional de 5 minutos por usuário por dia. Para prática de voz ilimitada, experimente nosso recurso de Chat de Voz."}
+          </p>
+        </div>
         <div className="flex flex-wrap gap-4 mb-4">
           <Button
             onClick={startVoiceConversation}

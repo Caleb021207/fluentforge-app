@@ -135,6 +135,7 @@ const englishTranslations: TranslationRecord = {
   recommendations: "Recommendations",
   // Voice Chat Page
   freePracticeWithVoice: "Free Voice Practice",
+  unlimitedVoicePractice: "Unlimited Voice Practice",
   startSpeaking: "Start Speaking",
   stopListening: "Stop Listening",
   listeningNow: "Listening now",

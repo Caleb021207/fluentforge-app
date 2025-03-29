@@ -135,6 +135,7 @@ const portugueseTranslations: TranslationRecord = {
   recommendations: "Recomendações",
   // Voice Chat Page
   freePracticeWithVoice: "Prática de Voz Gratuita",
+  unlimitedVoicePractice: "Prática de Voz Ilimitada",
   startSpeaking: "Começar a Falar",
   stopListening: "Parar de Escutar",
   listeningNow: "Escutando agora",

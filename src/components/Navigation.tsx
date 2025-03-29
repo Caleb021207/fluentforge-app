@@ -12,19 +12,19 @@ import { useLocalization } from "@/context/LocalizationContext";
 const navItemTranslations = {
   english: {
     "Practice": "Practice",
-    "Voice Chat": "Voice Chat",
+    "Unlimited Voice Practice": "Unlimited Voice Practice",
     "Language Frameworks": "Language Frameworks",
     "Admin": "Admin"
   },
   spanish: {
     "Practice": "Práctica",
-    "Voice Chat": "Chat de Voz",
+    "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
     "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin"
   },
   portuguese: {
     "Practice": "Prática",
-    "Voice Chat": "Chat de Voz",
+    "Unlimited Voice Practice": "Prática de Voz Ilimitada",
     "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin"
   }
@@ -79,7 +79,7 @@ const Navigation = () => {
 
   const navItems = [
     { icon: MessageSquare, label: "Practice", path: "/practice" },
-    { icon: Mic, label: "Voice Chat", path: "/voice-chat" },
+    { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
   
