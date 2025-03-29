@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -109,71 +108,203 @@ const LanguageFrameworks = () => {
     ]
   };
 
-  // ACTFL level descriptions
+  // ACTFL level descriptions with detailed breakdowns
   const actflLevels = {
     english: [
       {
         level: "Novice",
+        sublevels: [
+          {
+            name: "Novice Low",
+            description: "Can communicate minimally with formulaic and rote utterances, lists, and phrases. May show emerging signs of spontaneity and flexibility, but has significant difficulty even with sympathetic interlocutors."
+          },
+          {
+            name: "Novice Mid",
+            description: "Can communicate minimally by using a number of isolated words and memorized phrases. Can respond to simple, direct questions or requests for information. Speech may be restricted to two or three-word phrases."
+          },
+          {
+            name: "Novice High",
+            description: "Can communicate with formulaic and rote utterances within the context of their experience. Can respond to simple, direct questions or requests for information but can only ask a very few formulaic questions. Speech is primarily reactive."
+          }
+        ],
         description: "At the Novice level, speakers can communicate short messages on highly predictable, everyday topics that affect them directly. They do so primarily through the use of isolated words and phrases that have been encountered, memorized, and recalled."
       },
       {
         level: "Intermediate",
+        sublevels: [
+          {
+            name: "Intermediate Low",
+            description: "Can handle successfully a limited number of uncomplicated communicative tasks by creating with the language in straightforward social situations. Can ask and answer questions appropriately."
+          },
+          {
+            name: "Intermediate Mid",
+            description: "Can handle successfully a variety of uncomplicated communicative tasks in straightforward social situations. Can participate in conversations on topics beyond the most immediate needs."
+          },
+          {
+            name: "Intermediate High",
+            description: "Can handle successfully uncomplicated tasks and social situations requiring an exchange of basic information related to work, school, recreation, and particular interests, though hesitation may occur."
+          }
+        ],
         description: "At the Intermediate level, speakers can create with the language when talking about familiar topics related to their daily life. They are able to recombine learned material in order to express personal meaning. Intermediate-level speakers can ask simple questions and can handle a straightforward survival situation."
       },
       {
         level: "Advanced",
+        sublevels: [
+          {
+            name: "Advanced Low",
+            description: "Can perform various Advanced-level tasks, but not consistently. Speech is typically marked by a certain grammatical roughness, inadequate vocabulary for discussing topics at length, and notable patterns of error."
+          },
+          {
+            name: "Advanced Mid",
+            description: "Can perform all Advanced-level tasks with linguistic ease, confidence, and competence. Can discuss topics concretely and abstractly, handle a situation with a complication, and narrate in all time frames consistently."
+          },
+          {
+            name: "Advanced High",
+            description: "Can perform all Advanced-level tasks with ease and confidence. Can discuss topics abstractly and with good accuracy. Speaking ability does not fully meet the criteria for Superior level tasks, with weaknesses in one or more areas."
+          }
+        ],
         description: "At the Advanced level, speakers can narrate and describe in all major time frames when talking about topics of general interest. They can handle a situation with a complication. The language of Advanced-level speakers is characterized by substantial, connected discourse."
       },
       {
         level: "Superior",
+        sublevels: [],
         description: "At the Superior level, speakers can communicate with accuracy and fluency in order to participate fully and effectively in conversations on a variety of topics in formal and informal settings. They can discuss their interests and special fields of competence, explain complex matters, and provide lengthy and coherent narrations."
       },
       {
         level: "Distinguished",
-        description: "At the Distinguished level, speakers can use language skillfully, and with accuracy, efficiency, and effectiveness. They are educated and articulate users of the language. They can reflect on a wide range of global issues and highly abstract concepts in a culturally appropriate manner."
+        sublevels: [],
+        description: "At the Distinguished level, speakers use language skillfully, and with accuracy, efficiency, and effectiveness. They are educated and articulate users of the language. They can reflect on a wide range of global issues and highly abstract concepts in a culturally appropriate manner."
       }
     ],
     spanish: [
       {
         level: "Novato",
+        sublevels: [
+          {
+            name: "Novato Bajo",
+            description: "Puede comunicarse mínimamente con expresiones formulaicas y de memoria, listas y frases. Puede mostrar signos emergentes de espontaneidad y flexibilidad, pero tiene dificultades significativas incluso con interlocutores comprensivos."
+          },
+          {
+            name: "Novato Medio",
+            description: "Puede comunicarse mínimamente usando una serie de palabras aisladas y frases memorizadas. Puede responder a preguntas simples y directas o solicitudes de información. El habla puede restringirse a frases de dos o tres palabras."
+          },
+          {
+            name: "Novato Alto",
+            description: "Puede comunicarse con expresiones formulaicas y de memoria dentro del contexto de su experiencia. Puede responder a preguntas simples y directas o solicitudes de información, pero solo puede hacer muy pocas preguntas formulaicas. El habla es principalmente reactiva."
+          }
+        ],
         description: "En el nivel Novato, los hablantes pueden comunicar mensajes cortos sobre temas cotidianos altamente predecibles que les afectan directamente. Lo hacen principalmente a través del uso de palabras y frases aisladas que han encontrado, memorizado y recordado."
       },
       {
         level: "Intermedio",
+        sublevels: [
+          {
+            name: "Intermedio Bajo",
+            description: "Puede manejar con éxito un número limitado de tareas comunicativas no complicadas creando con el lenguaje en situaciones sociales sencillas. Puede hacer y responder preguntas adecuadamente."
+          },
+          {
+            name: "Intermedio Medio",
+            description: "Puede manejar con éxito una variedad de tareas comunicativas no complicadas en situaciones sociales sencillas. Puede participar en conversaciones sobre temas más allá de las necesidades más inmediatas."
+          },
+          {
+            name: "Intermedio Alto",
+            description: "Puede manejar con éxito tareas no complicadas y situaciones sociales que requieren un intercambio de información básica relacionada con el trabajo, la escuela, la recreación y los intereses particulares, aunque puede ocurrir cierta vacilación."
+          }
+        ],
         description: "En el nivel Intermedio, los hablantes pueden crear con el idioma cuando hablan de temas familiares relacionados con su vida diaria. Son capaces de recombinar material aprendido para expresar un significado personal. Los hablantes de nivel Intermedio pueden hacer preguntas simples y pueden manejar una situación de supervivencia sencilla."
       },
       {
         level: "Avanzado",
+        sublevels: [
+          {
+            name: "Avanzado Bajo",
+            description: "Puede realizar varias tareas de nivel Avanzado, pero no de manera consistente. El habla típicamente está marcada por cierta rusticidad gramatical, vocabulario inadecuado para discutir temas en profundidad y patrones notables de error."
+          },
+          {
+            name: "Avanzado Medio",
+            description: "Puede realizar todas las tareas de nivel Avanzado con facilidad lingüística, confianza y competencia. Puede discutir temas de manera concreta y abstracta, manejar una situación con una complicación y narrar en todos los marcos temporales de manera consistente."
+          },
+          {
+            name: "Avanzado Alto",
+            description: "Puede realizar todas las tareas de nivel Avanzado con facilidad y confianza. Puede discutir temas de manera abstracta y con buena precisión. La capacidad de hablar no cumple completamente con los criterios para las tareas de nivel Superior, con debilidades en una o más áreas."
+          }
+        ],
         description: "En el nivel Avanzado, los hablantes pueden narrar y describir en todos los marcos temporales principales cuando hablan de temas de interés general. Pueden manejar una situación con una complicación. El lenguaje de los hablantes de nivel Avanzado se caracteriza por un discurso sustancial y conectado."
       },
       {
         level: "Superior",
+        sublevels: [],
         description: "En el nivel Superior, los hablantes pueden comunicarse con precisión y fluidez para participar plena y efectivamente en conversaciones sobre una variedad de temas en entornos formales e informales. Pueden discutir sus intereses y campos especiales de competencia, explicar asuntos complejos y proporcionar narraciones largas y coherentes."
       },
       {
         level: "Distinguido",
-        description: "En el nivel Distinguido, los hablantes pueden usar el idioma con habilidad y con precisión, eficiencia y efectividad. Son usuarios educados y articulados del idioma. Pueden reflexionar sobre una amplia gama de temas globales y conceptos altamente abstractos de una manera culturalmente apropiada."
+        sublevels: [],
+        description: "En el nivel Distinguido, los hablantes pueden usar el idioma con habilidad y con precisión, eficiencia y efectividad. Son usuarios educados y articulados del idioma. Pueden reflexionar sobre una ampla gama de temas globales y conceptos altamente abstractos de una manera culturalmente apropiada."
       }
     ],
     portuguese: [
       {
         level: "Novato",
+        sublevels: [
+          {
+            name: "Novato Baixo",
+            description: "Pode se comunicar minimamente com expressões formulaicas e memorizadas, listas e frases. Pode mostrar sinais emergentes de espontaneidade e flexibilidade, mas tem dificuldades significativas mesmo com interlocutores compreensivos."
+          },
+          {
+            name: "Novato Médio",
+            description: "Pode se comunicar minimamente usando uma série de palavras isoladas e frases memorizadas. Pode responder a perguntas simples e diretas ou pedidos de informação. A fala pode se restringir a frases de duas ou três palavras."
+          },
+          {
+            name: "Novato Alto",
+            description: "Pode se comunicar com expressões formulaicas e memorizadas dentro do contexto de sua experiência. Pode responder a perguntas simples e diretas ou pedidos de informação, mas só pode fazer algumas poucas perguntas formulaicas. A fala é principalmente reativa."
+          }
+        ],
         description: "No nível Novato, os falantes podem comunicar mensagens curtas sobre tópicos cotidianos altamente previsíveis que os afetam diretamente. Fazem isso principalmente através do uso de palavras e frases isoladas que foram encontradas, memorizadas e relembradas."
       },
       {
         level: "Intermediário",
+        sublevels: [
+          {
+            name: "Intermediário Baixo",
+            description: "Pode lidar com sucesso com um número limitado de tarefas comunicativas não complicadas criando com a linguagem em situações sociais simples. Pode fazer e responder perguntas adequadamente."
+          },
+          {
+            name: "Intermediário Médio",
+            description: "Pode lidar com sucesso com uma variedade de tarefas comunicativas não complicadas em situações sociais simples. Pode participar de conversas sobre tópicos além das necessidades mais imediatas."
+          },
+          {
+            name: "Intermediário Alto",
+            description: "Pode lidar com sucesso com tarefas não complicadas e situações sociais que exigem uma troca de informações básicas relacionadas ao trabalho, escola, recreação e interesses particulares, embora possa ocorrer alguma hesitação."
+          }
+        ],
         description: "No nível Intermediário, os falantes podem criar com a língua quando falam sobre tópicos familiares relacionados à sua vida diária. São capazes de recombinar material aprendido para expressar significado pessoal. Falantes de nível Intermediário podem fazer perguntas simples e podem lidar com uma situação de sobrevivência direta."
       },
       {
         level: "Avançado",
+        sublevels: [
+          {
+            name: "Avançado Baixo",
+            description: "Pode realizar várias tarefas de nível Avançado, mas não de forma consistente. A fala é tipicamente marcada por certa rusticidade gramatical, vocabulário inadequado para discutir tópicos com profundidade e padrões notáveis de erro."
+          },
+          {
+            name: "Avançado Médio",
+            description: "Pode realizar todas as tarefas de nível Avançado com facilidade linguística, confiança e competência. Pode discutir tópicos de forma concreta e abstrata, lidar com uma situação com uma complicação e narrar em todos os quadros temporais de maneira consistente."
+          },
+          {
+            name: "Avançado Alto",
+            description: "Pode realizar todas as tarefas de nível Avançado com facilidade e confiança. Pode discutir tópicos de forma abstrata e com boa precisão. A capacidade de falar não atende completamente aos critérios para tarefas de nível Superior, com fraquezas em uma ou mais áreas."
+          }
+        ],
         description: "No nível Avançado, os falantes podem narrar e descrever em todos os principais quadros temporais quando falam sobre tópicos de interesse geral. Podem lidar com uma situação com uma complicação. A linguagem dos falantes de nível Avançado é caracterizada por um discurso substancial e conectado."
       },
       {
         level: "Superior",
+        sublevels: [],
         description: "No nível Superior, os falantes podem se comunicar com precisão e fluência para participar de forma plena e eficaz em conversas sobre uma variedade de tópicos em ambientes formais e informais. Podem discutir seus interesses e campos especiais de competência, explicar assuntos complexos e fornecer narrações longas e coerentes."
       },
       {
         level: "Distinto",
+        sublevels: [],
         description: "No nível Distinto, os falantes podem usar a língua com habilidade e com precisão, eficiência e eficácia. São usuários educados e articulados da língua. Podem refletir sobre uma ampla gama de questões globais e conceitos altamente abstratos de uma maneira culturalmente apropriada."
       }
     ]
@@ -323,14 +454,34 @@ const LanguageFrameworks = () => {
                     : "The ACTFL Proficiency Guidelines describe what individuals can do with language in terms of speaking, writing, listening, and reading in real-world situations in a spontaneous and non-rehearsed context."}
               </p>
               
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {actfl.map((level) => (
-                  <Card key={level.level}>
+                  <Card key={level.level} className="overflow-hidden">
                     <CardHeader className="bg-lingua-secondary text-white">
                       <CardTitle>{level.level}</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-4">
-                      <p>{level.description}</p>
+                      <p className="mb-4">{level.description}</p>
+                      
+                      {level.sublevels && level.sublevels.length > 0 && (
+                        <div className="mt-4">
+                          <h4 className="text-lg font-medium mb-2">
+                            {currentLanguage === "spanish" 
+                              ? "Subniveles" 
+                              : currentLanguage === "portuguese" 
+                                ? "Subníveis" 
+                                : "Sublevels"}
+                          </h4>
+                          <div className="space-y-3">
+                            {level.sublevels.map((sublevel) => (
+                              <div key={sublevel.name} className="border-l-4 border-lingua-secondary/70 pl-3 py-2">
+                                <h5 className="font-medium">{sublevel.name}</h5>
+                                <p className="text-sm text-gray-700 mt-1">{sublevel.description}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
