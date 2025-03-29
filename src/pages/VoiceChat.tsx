@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,8 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
+import portugueseTranslations from "@/translations/portuguese";
 
-// Define a type for our conversation messages
 type ConversationMessage = {
   role: 'user' | 'assistant';
   content: string;
@@ -37,14 +36,12 @@ const VoiceChat = () => {
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
 
-  // Auto-scroll to bottom of conversation when it updates
   useEffect(() => {
     if (conversationEndRef.current) {
       conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [conversationHistory]);
 
-  // Initialize speech recognition
   useEffect(() => {
     if (typeof window !== "undefined" && 
         ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -82,7 +79,6 @@ const VoiceChat = () => {
       });
     }
 
-    // Initialize speech synthesis
     if (typeof window !== "undefined" && 'speechSynthesis' in window) {
       synthRef.current = window.speechSynthesis;
     }
@@ -126,7 +122,6 @@ const VoiceChat = () => {
   const handleSendTranscript = async (text: string) => {
     setIsLoading(true);
     
-    // Add user message to conversation history right away
     const userMessage: ConversationMessage = {
       role: 'user',
       content: text,
@@ -146,7 +141,6 @@ const VoiceChat = () => {
 
       if (error) throw error;
       
-      // Update the conversation history with the AI's response
       const aiMessage: ConversationMessage = {
         role: 'assistant',
         content: data.reply,
@@ -158,14 +152,12 @@ const VoiceChat = () => {
       setTranslation(data.translation || "");
       setConversationHistory(prev => [...prev, aiMessage]);
       
-      // Update the API conversation history format for next request
       setApiConversationHistory(data.updatedHistory || [
         ...apiConversationHistory,
         { role: 'user', content: text },
         { role: 'assistant', content: data.reply + (data.translation ? "\nTranslation: " + data.translation : "") }
       ]);
       
-      // Speak the response using browser's SpeechSynthesis
       speakWithBrowserSynthesis(data.reply);
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -190,16 +182,12 @@ const VoiceChat = () => {
       return;
     }
     
-    // Cancel any ongoing speech
     synthRef.current.cancel();
     
-    // Create a new utterance
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    // Set the language based on the current language setting
     utteranceRef.current.lang = currentLanguage === "english" ? "es" : "en-US";
     
-    // Find an appropriate voice
     const voices = synthRef.current.getVoices();
     const targetLang = currentLanguage === "english" ? "es" : "en";
     
@@ -208,7 +196,6 @@ const VoiceChat = () => {
       utteranceRef.current.voice = voice;
     }
     
-    // Set speaking state for UI updates
     utteranceRef.current.onstart = () => setIsSpeaking(true);
     utteranceRef.current.onend = () => setIsSpeaking(false);
     utteranceRef.current.onerror = (event) => {
@@ -221,7 +208,6 @@ const VoiceChat = () => {
       });
     };
     
-    // Start speaking
     synthRef.current.speak(utteranceRef.current);
   };
 
@@ -283,6 +269,39 @@ const VoiceChat = () => {
     });
   };
 
+  const getPracticeDescription = () => {
+    if (currentLanguage === "english") {
+      return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}. The AI will respond to you in ${practice} and help you practice.`;
+    } else if (currentLanguage === "spanish") {
+      return `Practica tus habilidades de habla en ${practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${practice}. La IA te responderá y te ayudará a practicar.`;
+    } else if (currentLanguage === "portuguese") {
+      return `Pratique suas habilidades de fala em ${practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${practice}. A IA responderá a você e o ajudará a praticar.`;
+    }
+    return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}.`;
+  };
+
+  const getAIModelInfoText = () => {
+    if (currentLanguage === "english") {
+      return "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
+    } else if (currentLanguage === "spanish") {
+      return "Modelo de IA: Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
+    } else if (currentLanguage === "portuguese") {
+      return "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
+    }
+    return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
+  };
+
+  const getPracticeTipsText = () => {
+    if (currentLanguage === "english") {
+      return "Use this tool to improve your speaking and listening skills. Here are some tips:";
+    } else if (currentLanguage === "spanish") {
+      return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
+    } else if (currentLanguage === "portuguese") {
+      return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
+    }
+    return t("practiceLanguageTips");
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
@@ -290,12 +309,10 @@ const VoiceChat = () => {
           {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {currentLanguage === "english" 
-            ? `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}. The AI will respond to you in ${practice} and help you practice.`
-            : `Practice your ${practice} speaking skills. Click the microphone button and start speaking in ${practice}. The AI will respond to you and help you practice.`}
+          {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>AI Model:</strong> We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : "Modelo de IA:"}</strong> {getAIModelInfoText()}
         </p>
       </div>
 
@@ -380,17 +397,22 @@ const VoiceChat = () => {
             )}
           </Card>
           
-          {/* Conversation Log Section */}
           {conversationHistory.length > 0 && (
             <Card className="mb-6 p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-medium">Conversation History</h3>
+                <h3 className="font-medium">
+                  {currentLanguage === "english" ? "Conversation History" : 
+                   currentLanguage === "spanish" ? "Historial de Conversación" : 
+                   "Histórico de Conversa"}
+                </h3>
                 <Button 
                   onClick={clearConversation}
                   variant="outline" 
                   size="sm"
                 >
-                  Clear Conversation
+                  {currentLanguage === "english" ? "Clear Conversation" : 
+                   currentLanguage === "spanish" ? "Borrar Conversación" : 
+                   "Limpar Conversa"}
                 </Button>
               </div>
               
@@ -411,7 +433,11 @@ const VoiceChat = () => {
                         <p className="text-sm">{message.content}</p>
                         {message.translation && (
                           <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
-                            <span className="font-medium">Translation:</span> {message.translation}
+                            <span className="font-medium">
+                              {currentLanguage === "english" ? "Translation:" : 
+                               currentLanguage === "spanish" ? "Traducción:" : 
+                               "Tradução:"}
+                            </span> {message.translation}
                           </p>
                         )}
                         <p className="text-xs text-gray-500 mt-1">
@@ -474,7 +500,7 @@ const VoiceChat = () => {
           <div className="bg-gray-100 rounded-lg p-4">
             <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
             <p className="text-sm text-gray-600 mb-3">
-              {t("practiceLanguageTips")}
+              {getPracticeTipsText()}
             </p>
             <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
               <li>{t("askQuestionsAboutTopics")}</li>

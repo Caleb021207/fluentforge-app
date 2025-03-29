@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -154,6 +155,11 @@ const portugueseTranslations: TranslationRecord = {
   failedToGenerateSpeech: "Falha ao gerar fala. Por favor, tente novamente.",
   audioPlaybackError: "Erro ao reproduzir áudio. Por favor, tente novamente.",
   translation: "Tradução",
+  
+  // New UI strings for VoiceChat
+  conversationHistory: "Histórico de Conversa",
+  clearConversation: "Limpar Conversa",
+  aiModelInfo: "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz."
 };
 
 export default portugueseTranslations;

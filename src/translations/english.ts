@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -170,6 +171,11 @@ const englishTranslations: TranslationRecord = {
   phrase7: "What are your plans for tomorrow?",
   phrase8: "How do you say... in Spanish/English?",
   translation: "Translation",
+  
+  // New UI strings for VoiceChat
+  conversationHistory: "Conversation History",
+  clearConversation: "Clear Conversation",
+  aiModelInfo: "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses."
 };
 
 export default englishTranslations;
