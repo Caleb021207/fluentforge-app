@@ -40,4 +40,3 @@ export interface CertificationAttempt {
 
 // Use these types in your components like this:
 // import { UserProfile, LessonProgress, CertificationAttempt } from "@/types/supabase";
-
