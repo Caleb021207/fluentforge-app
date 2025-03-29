@@ -7,38 +7,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { AVAILABLE_LANGUAGES } from "@/translations";
 
 interface LanguageSelectionCardProps {
   nativeLanguage: string;
-  targetLanguage: string;
   setNativeLanguage: (lang: string) => void;
-  setTargetLanguage: (lang: string) => void;
-  hasStudyMaterials: boolean;
   handleLanguageSelection: () => void;
 }
 
 const LanguageSelectionCard = ({
   nativeLanguage,
-  targetLanguage,
   setNativeLanguage,
-  setTargetLanguage,
-  hasStudyMaterials,
   handleLanguageSelection
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
 
-  // Limited language options
-  const LIMITED_LANGUAGES = {
-    english: "English",
-    spanish: "Spanish",
-    portuguese: "Portuguese",
-  };
-
   return (
-    <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
+    <Card className="bg-white/90 backdrop-blur shadow-lg mb-8 max-w-md mx-auto">
       <CardContent className="pt-6">
-        <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguagePreferences")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguage")}</h2>
+        <div className="space-y-4 mb-4">
           <div className="space-y-2">
             <Label htmlFor="nativeLanguage">{t("iSpeak")}</Label>
             <Select value={nativeLanguage} onValueChange={setNativeLanguage}>
@@ -46,7 +34,7 @@ const LanguageSelectionCard = ({
                 <SelectValue placeholder={t("selectYourNativeLanguage")} />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
+                {Object.entries(AVAILABLE_LANGUAGES).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
                   </SelectItem>
@@ -55,42 +43,18 @@ const LanguageSelectionCard = ({
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="targetLanguage">{t("iWantToLearn")}</Label>
-            <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-              <SelectTrigger id="targetLanguage" className="w-full">
-                <SelectValue placeholder={t("selectLanguageToLearn")} />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(LIMITED_LANGUAGES).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="bg-blue-50 p-3 rounded-md">
+            <p className="text-sm text-blue-700">{t("learningEnglishOnly")}</p>
           </div>
         </div>
         
         <Button 
           onClick={handleLanguageSelection} 
           className="w-full"
-          disabled={!nativeLanguage || !targetLanguage}
+          disabled={!nativeLanguage}
         >
-          {t("saveLanguagePreferences")}
+          {t("startLearningEnglish")}
         </Button>
-        
-        {nativeLanguage && targetLanguage && !hasStudyMaterials && (
-          <Alert variant="warning" className="mt-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              {t("studyMaterialsComingSoon", { 
-                nativeLanguage: nativeLanguage, 
-                targetLanguage: targetLanguage 
-              })}
-            </AlertDescription>
-          </Alert>
-        )}
       </CardContent>
     </Card>
   );

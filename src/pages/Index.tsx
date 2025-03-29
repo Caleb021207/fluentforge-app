@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -8,15 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import { useLocalization } from "@/context/LocalizationContext";
-
-const availableLanguagePairs = [
-  "english-spanish",
-  "spanish-english",
-  "english-portuguese",
-  "portuguese-english",
-  "spanish-portuguese",
-  "portuguese-spanish"
-];
+import { TARGET_LANGUAGE } from "@/translations";
 
 const Index = () => {
   const { toast } = useToast();
@@ -28,8 +19,7 @@ const Index = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
-  const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
+  const targetLanguage = TARGET_LANGUAGE; // Always English for ESL
 
   useEffect(() => {
     const checkUser = async () => {
@@ -43,25 +33,13 @@ const Index = () => {
     });
 
     const savedNativeLanguage = localStorage.getItem("nativeLanguage");
-    const savedTargetLanguage = localStorage.getItem("targetLanguage");
     
     if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
-    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
 
     return () => {
       subscription.unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    if (nativeLanguage && targetLanguage) {
-      const languagePair = `${nativeLanguage}-${targetLanguage}`;
-      setHasStudyMaterials(availableLanguagePairs.includes(languagePair));
-      
-      sessionStorage.setItem("languagePair", languagePair);
-      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
-    }
-  }, [nativeLanguage, targetLanguage]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +60,7 @@ const Index = () => {
           options: {
             data: {
               native_language: nativeLanguage || undefined,
-              target_language: targetLanguage || undefined,
+              target_language: targetLanguage,
             }
           }
         });
@@ -100,7 +78,12 @@ const Index = () => {
       });
       
       if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
-      if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
+      localStorage.setItem("targetLanguage", targetLanguage);
+      
+      // Store the language pair in session storage
+      const languagePair = `${nativeLanguage}-${targetLanguage}`;
+      sessionStorage.setItem("languagePair", languagePair);
+      sessionStorage.setItem("hasStudyMaterials", "true"); // We're assuming all ESL materials are available
       
     } catch (error: any) {
       console.error("Authentication error:", error);
@@ -138,13 +121,13 @@ const Index = () => {
   };
 
   const handleLanguageSelection = () => {
-    if (nativeLanguage && targetLanguage) {
+    if (nativeLanguage) {
       localStorage.setItem("nativeLanguage", nativeLanguage);
       localStorage.setItem("targetLanguage", targetLanguage);
       
       const languagePair = `${nativeLanguage}-${targetLanguage}`;
       sessionStorage.setItem("languagePair", languagePair);
-      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
+      sessionStorage.setItem("hasStudyMaterials", "true"); // We're assuming all ESL materials are available
       
       // Update the UI language to match the native language
       setCurrentLanguage(nativeLanguage);
@@ -155,8 +138,8 @@ const Index = () => {
       });
     } else {
       toast({
-        title: t("pleaseSelectBothLanguages"),
-        description: t("youNeedToSelectBoth"),
+        title: t("pleaseSelectLanguage"),
+        description: t("youNeedToSelectNativeLanguage"),
         variant: "destructive",
       });
     }
@@ -171,18 +154,15 @@ const Index = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold text-lingua-text mb-4">
-            {t("welcomeToLanguageLearning")}
+            {t("welcomeToESLLearning")}
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8">
-            {t("yourPersonalAICompanion")}
+            {t("yourPersonalEnglishTutor")}
           </p>
           
           <LanguageSelectionCard
             nativeLanguage={nativeLanguage}
-            targetLanguage={targetLanguage}
             setNativeLanguage={setNativeLanguage}
-            setTargetLanguage={setTargetLanguage}
-            hasStudyMaterials={hasStudyMaterials}
             handleLanguageSelection={handleLanguageSelection}
           />
           
