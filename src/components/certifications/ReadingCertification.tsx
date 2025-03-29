@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +9,8 @@ import { READING_QUESTIONS } from "./data/readingQuestions";
 import { QuestionDisplay } from "./components/QuestionDisplay";
 import { calculateScore, determineLevel, getLevelDescription } from "./utils/scoreUtils";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
+import { BookOpen } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
 
 const ReadingCertification = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -16,7 +18,24 @@ const ReadingCertification = () => {
   const [isComplete, setIsComplete] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [levelRecommendations, setLevelRecommendations] = useState<any | null>(null);
+  const [testQuestions, setTestQuestions] = useState<Question[]>([]);
   const { toast } = useToast();
+  const { level } = useParams<{ level?: string }>();
+  const navigate = useNavigate();
+
+  // Filter questions based on the selected level or default to showing all questions
+  useEffect(() => {
+    if (level) {
+      // If a specific level is selected, filter questions by that level
+      const levelQuestions = READING_QUESTIONS.filter(q => q.level.toLowerCase() === level.toLowerCase());
+      // Limit to 15 questions max
+      setTestQuestions(levelQuestions.slice(0, 15));
+    } else {
+      // Default behavior - show questions from all levels
+      // This ensures backward compatibility
+      setTestQuestions(READING_QUESTIONS);
+    }
+  }, [level]);
 
   const handleStart = () => {
     setIsStarted(true);
@@ -34,7 +53,7 @@ const ReadingCertification = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestion < READING_QUESTIONS.length - 1) {
+    if (currentQuestion < testQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       handleCompletion(selectedAnswers);
@@ -42,7 +61,7 @@ const ReadingCertification = () => {
   };
 
   const handleCompletion = async (answers: number[]) => {
-    const score = calculateScore(answers, READING_QUESTIONS);
+    const score = calculateScore(answers, testQuestions);
     const level = determineLevel(score);
     const recommendations = getRecommendationsForLevel('reading', level);
     
@@ -88,19 +107,68 @@ const ReadingCertification = () => {
     }
   };
 
+  const getLevelTitle = () => {
+    if (!level) return "Reading Certification Test";
+    
+    return `${level.toUpperCase()} Level Reading Test`;
+  };
+
+  const getTestDescription = () => {
+    if (!level) {
+      return "Test your English reading comprehension skills. You'll be presented with a series of passages and questions to assess your level.";
+    }
+    
+    switch(level.toUpperCase()) {
+      case 'A1':
+        return "This test measures your basic English reading comprehension. You'll read simple sentences and answer questions about them.";
+      case 'A2':
+        return "This test measures your elementary English reading skills. You'll read short texts about everyday topics and answer questions.";
+      case 'B1':
+        return "This test measures your intermediate English reading skills. You'll read texts about familiar matters and answer questions.";
+      case 'B2':
+        return "This test measures your upper-intermediate English reading skills. You'll read complex texts and answer more challenging questions.";
+      case 'C1':
+        return "This test measures your advanced English reading skills. You'll read demanding texts and answer detailed questions.";
+      case 'C2':
+        return "This test measures your proficient English reading skills. You'll read highly complex texts and answer sophisticated questions.";
+      default:
+        return "Test your English reading comprehension skills. You'll be presented with a series of passages and questions to assess your level.";
+    }
+  };
+
   if (!isStarted) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Reading Certification Test</CardTitle>
+          <CardTitle className="flex items-center">
+            <BookOpen className="mr-2 h-5 w-5" />
+            {getLevelTitle()}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <p className="text-gray-600">
-              Test your Spanish reading comprehension skills. You'll be presented with a series of
-              passages and questions to assess your level.
+              {getTestDescription()}
             </p>
-            <Button onClick={handleStart}>Start Test</Button>
+            {!level && (
+              <div className="space-y-2 mb-4">
+                <p className="font-medium">Choose a specific level test:</p>
+                <div className="flex flex-wrap gap-2">
+                  {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((levelOption) => (
+                    <Button 
+                      key={levelOption}
+                      variant="outline" 
+                      onClick={() => navigate(`/certificates/reading/${levelOption.toLowerCase()}`)}
+                    >
+                      {levelOption} Test
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+            <Button onClick={handleStart}>
+              Start {level ? `${level.toUpperCase()} Test` : "Test"}
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -108,9 +176,9 @@ const ReadingCertification = () => {
   }
 
   if (isComplete) {
-    const score = calculateScore(selectedAnswers, READING_QUESTIONS);
-    const level = determineLevel(score);
-    const levelDescription = getLevelDescription(level);
+    const score = calculateScore(selectedAnswers, testQuestions);
+    const achievedLevel = determineLevel(score);
+    const levelDescription = getLevelDescription(achievedLevel);
 
     return (
       <Card>
@@ -125,7 +193,7 @@ const ReadingCertification = () => {
                 <span className="font-medium">Score:</span> {score}%
               </div>
               <div className="mb-2">
-                <span className="font-medium">CEFR Level:</span> {level}
+                <span className="font-medium">CEFR Level:</span> {achievedLevel}
               </div>
               <p className="text-sm text-gray-700 mt-2">{levelDescription}</p>
             </div>
@@ -163,7 +231,10 @@ const ReadingCertification = () => {
               </div>
             )}
             
-            <Button onClick={handleStart}>Take Test Again</Button>
+            <div className="flex gap-3">
+              <Button onClick={handleStart}>Take Test Again</Button>
+              <Button variant="outline" onClick={() => navigate('/certificates')}>Back to Certificates</Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -173,17 +244,26 @@ const ReadingCertification = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Question {currentQuestion + 1} of {READING_QUESTIONS.length}</CardTitle>
+        <CardTitle>Question {currentQuestion + 1} of {testQuestions.length}</CardTitle>
       </CardHeader>
       <CardContent>
-        <QuestionDisplay
-          question={READING_QUESTIONS[currentQuestion]}
-          currentQuestionIndex={currentQuestion}
-          totalQuestions={READING_QUESTIONS.length}
-          selectedAnswer={selectedAnswers[currentQuestion]}
-          onAnswerSelect={handleAnswerSelect}
-          onNext={handleNext}
-        />
+        {testQuestions.length > 0 ? (
+          <QuestionDisplay
+            question={testQuestions[currentQuestion]}
+            currentQuestionIndex={currentQuestion}
+            totalQuestions={testQuestions.length}
+            selectedAnswer={selectedAnswers[currentQuestion]}
+            onAnswerSelect={handleAnswerSelect}
+            onNext={handleNext}
+          />
+        ) : (
+          <div className="text-center py-4">
+            <p>No questions available for this level.</p>
+            <Button className="mt-4" onClick={() => navigate('/certificates/reading')}>
+              Back to Reading Tests
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

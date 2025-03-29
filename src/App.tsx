@@ -31,7 +31,9 @@ function App() {
               <Route path="/placement-quiz" element={<PlacementQuiz />} />
               <Route path="/certificates" element={<Certificates />} />
               <Route path="/certificates/reading" element={<ReadingCertificationPage />} />
+              <Route path="/certificates/reading/:level" element={<ReadingCertificationPage />} />
               <Route path="/certificates/writing" element={<WritingCertificationPage />} />
+              <Route path="/certificates/writing/:level" element={<WritingCertificationPage />} />
               <Route path="/practice" element={<Practice />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/progress" element={<Progress />} />
