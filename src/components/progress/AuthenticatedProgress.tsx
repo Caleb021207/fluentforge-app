@@ -179,6 +179,7 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
         
+        // Cast the attempt data to include our expected properties
         const formattedAttempts = attempts.map(attempt => {
           // Handle the case where source_language or target_language might be missing
           // in the database by providing default values
