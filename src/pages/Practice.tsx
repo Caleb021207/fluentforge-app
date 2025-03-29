@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,6 @@ const Practice = () => {
 
   const targetLanguage = currentLanguage === "english" ? "Spanish" : "English";
   
-  // Get the appropriate agent ID based on the user's language
   const getAgentId = () => {
     return getAgentIdForLanguage(currentLanguage);
   };
@@ -319,14 +317,6 @@ const Practice = () => {
           <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
             {t("getSkillsAssessment")}
           </Button>
-          <Button onClick={sendLanguageLearningPrompt} disabled={isLoading} className="bg-lingua-primary">
-            <Book className="h-4 w-4 mr-2" />
-            {currentLanguage === "english" 
-              ? "Send Spanish Practice Prompt" 
-              : currentLanguage === "spanish"
-                ? "Enviar mensaje de práctica en inglés"
-                : "Enviar mensagem de prática em inglês"}
-          </Button>
         </div>
       </div>
 
@@ -437,6 +427,17 @@ const Practice = () => {
           </Button>
         </form>
       </Card>
+      
+      <div className="flex justify-center mb-8">
+        <Button onClick={sendLanguageLearningPrompt} disabled={isLoading} className="bg-lingua-primary w-full sm:w-auto">
+          <Book className="h-4 w-4 mr-2" />
+          {currentLanguage === "english" 
+            ? "Send Spanish Practice Prompt" 
+            : currentLanguage === "spanish"
+              ? "Enviar mensaje de práctica en inglés"
+              : "Enviar mensagem de prática em inglês"}
+        </Button>
+      </div>
     </div>
   );
 };

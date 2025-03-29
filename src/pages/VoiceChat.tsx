@@ -316,199 +316,187 @@ const VoiceChat = () => {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-5 gap-6">
-        <div className="md:col-span-3">
-          <Card className="mb-6 p-6">
-            <div className="flex flex-col items-center mb-6">
-              <Button
-                onClick={toggleListening}
-                variant={isListening ? "destructive" : "default"}
-                size="lg"
-                className="mb-4"
-                disabled={isLoading || isSpeaking}
-              >
-                {isListening ? (
-                  <>
-                    <MicOff className="h-5 w-5 mr-2" />
-                    {t("stopListening")}
-                  </>
-                ) : (
-                  <>
-                    <Mic className="h-5 w-5 mr-2" />
-                    {t("startSpeaking")}
-                  </>
-                )}
-              </Button>
-              
-              {isListening && (
-                <div className="text-sm text-gray-500 animate-pulse">
-                  {t("listeningNow")}...
-                </div>
+      <div className="flex flex-col gap-6">
+        <Card className="p-6">
+          <div className="flex flex-col items-center mb-6">
+            <Button
+              onClick={toggleListening}
+              variant={isListening ? "destructive" : "default"}
+              size="lg"
+              className="mb-4"
+              disabled={isLoading || isSpeaking}
+            >
+              {isListening ? (
+                <>
+                  <MicOff className="h-5 w-5 mr-2" />
+                  {t("stopListening")}
+                </>
+              ) : (
+                <>
+                  <Mic className="h-5 w-5 mr-2" />
+                  {t("startSpeaking")}
+                </>
               )}
+            </Button>
+            
+            {isListening && (
+              <div className="text-sm text-gray-500 animate-pulse">
+                {t("listeningNow")}...
+              </div>
+            )}
+          </div>
+
+          {transcript && (
+            <div className="mb-6">
+              <h3 className="font-medium mb-2">{t("youSaid")}:</h3>
+              <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
+                {transcript}
+              </div>
             </div>
+          )}
 
-            {transcript && (
-              <div className="mb-6">
-                <h3 className="font-medium mb-2">{t("youSaid")}:</h3>
-                <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
-                  {transcript}
-                </div>
+          {isLoading && (
+            <div className="flex justify-center my-6">
+              <div className="flex space-x-2">
+                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce" />
+                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]" />
               </div>
-            )}
+            </div>
+          )}
 
-            {isLoading && (
-              <div className="flex justify-center my-6">
-                <div className="flex space-x-2">
-                  <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce" />
-                  <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]" />
-                </div>
-              </div>
-            )}
-
-            {gptResponse && (
-              <div className="mb-6">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-medium">{t("aiResponse")}:</h3>
-                  <Button 
-                    onClick={playAgain} 
-                    variant="outline" 
-                    size="sm"
-                    className="flex items-center gap-2"
-                    disabled={isSpeaking}
-                  >
-                    <Volume2 className="h-4 w-4" />
-                    {isSpeaking ? t("speaking") : t("playAgain")}
-                  </Button>
-                </div>
-                <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
-                  {gptResponse}
-                  
-                  {translation && (
-                    <>
-                      <div className="border-t border-gray-300 my-3"></div>
-                      <div className="text-sm text-gray-600">
-                        <strong>{t("translation")}:</strong> {translation}
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
-          </Card>
-          
-          {conversationHistory.length > 0 && (
-            <Card className="mb-6 p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-medium">
-                  {currentLanguage === "english" ? "Conversation History" : 
-                   currentLanguage === "spanish" ? "Historial de Conversación" : 
-                   "Histórico de Conversa"}
-                </h3>
+          {gptResponse && (
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-medium">{t("aiResponse")}:</h3>
                 <Button 
-                  onClick={clearConversation}
+                  onClick={playAgain} 
                   variant="outline" 
                   size="sm"
+                  className="flex items-center gap-2"
+                  disabled={isSpeaking}
                 >
-                  {currentLanguage === "english" ? "Clear Conversation" : 
-                   currentLanguage === "spanish" ? "Borrar Conversación" : 
-                   "Limpar Conversa"}
+                  <Volume2 className="h-4 w-4" />
+                  {isSpeaking ? t("speaking") : t("playAgain")}
                 </Button>
               </div>
-              
-              <ScrollArea className="h-[300px] rounded-md border p-4">
-                <div className="space-y-4">
-                  {conversationHistory.map((message, index) => (
-                    <div 
-                      key={index} 
-                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div 
-                        className={`max-w-[80%] rounded-lg p-3 ${
-                          message.role === 'user' 
-                            ? 'bg-blue-100 text-gray-800' 
-                            : 'bg-green-100 text-gray-800'
-                        }`}
-                      >
-                        <p className="text-sm">{message.content}</p>
-                        {message.translation && (
-                          <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
-                            <span className="font-medium">
-                              {currentLanguage === "english" ? "Translation:" : 
-                               currentLanguage === "spanish" ? "Traducción:" : 
-                               "Tradução:"}
-                            </span> {message.translation}
-                          </p>
-                        )}
-                        <p className="text-xs text-gray-500 mt-1">
-                          {new Date(message.timestamp).toLocaleTimeString()}
-                        </p>
-                      </div>
+              <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
+                {gptResponse}
+                
+                {translation && (
+                  <>
+                    <div className="border-t border-gray-300 my-3"></div>
+                    <div className="text-sm text-gray-600">
+                      <strong>{t("translation")}:</strong> {translation}
                     </div>
-                  ))}
-                  <div ref={conversationEndRef} />
-                </div>
-              </ScrollArea>
-            </Card>
-          )}
-        </div>
-
-        <div className="md:col-span-2">
-          <Card className="mb-6 p-6 sticky top-4">
-            <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              {t("tryThesePhrases")}
-            </p>
-            
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                  {t("inYourTargetLanguage")} ({practice})
-                </h4>
-                <ul className="space-y-2">
-                  {targetLanguagePhrases.map((phrase, index) => (
-                    <li 
-                      key={`target-${index}`} 
-                      className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handlePhraseClick(phrase)}
-                    >
-                      {phrase}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                  {t("inYourNativeLanguage")} ({native})
-                </h4>
-                <ul className="space-y-2">
-                  {nativeLanguagePhrases.map((phrase, index) => (
-                    <li 
-                      key={`native-${index}`} 
-                      className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handlePhraseClick(phrase)}
-                    >
-                      {phrase}
-                    </li>
-                  ))}
-                </ul>
+                  </>
+                )}
               </div>
             </div>
+          )}
+        </Card>
+        
+        {conversationHistory.length > 0 && (
+          <Card className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-medium">
+                {t("conversationHistory")}
+              </h3>
+              <Button 
+                onClick={clearConversation}
+                variant="outline" 
+                size="sm"
+              >
+                {t("clearConversation")}
+              </Button>
+            </div>
+            
+            <ScrollArea className="h-[300px] rounded-md border p-4">
+              <div className="space-y-4">
+                {conversationHistory.map((message, index) => (
+                  <div 
+                    key={index} 
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div 
+                      className={`max-w-[80%] rounded-lg p-3 ${
+                        message.role === 'user' 
+                          ? 'bg-blue-100 text-gray-800' 
+                          : 'bg-green-100 text-gray-800'
+                      }`}
+                    >
+                      <p className="text-sm">{message.content}</p>
+                      {message.translation && (
+                        <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
+                          <span className="font-medium">{t("translation")}:</span> {message.translation}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                <div ref={conversationEndRef} />
+              </div>
+            </ScrollArea>
           </Card>
+        )}
+
+        <Card className="p-6">
+          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            {t("tryThesePhrases")}
+          </p>
           
-          <div className="bg-gray-100 rounded-lg p-4">
-            <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
-            <p className="text-sm text-gray-600 mb-3">
-              {getPracticeTipsText()}
-            </p>
-            <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-              <li>{t("askQuestionsAboutTopics")}</li>
-              <li>{t("practiceEverydayPhrases")}</li>
-              <li>{t("describeImagesOrScenes")}</li>
-              <li>{t("practiceVocabularyForSpecificTopics")}</li>
-            </ul>
+          <div className="space-y-6">
+            <div>
+              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+                {t("inYourTargetLanguage")} ({practice})
+              </h4>
+              <ul className="space-y-2">
+                {targetLanguagePhrases.map((phrase, index) => (
+                  <li 
+                    key={`target-${index}`} 
+                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+                {t("inYourNativeLanguage")} ({native})
+              </h4>
+              <ul className="space-y-2">
+                {nativeLanguagePhrases.map((phrase, index) => (
+                  <li 
+                    key={`native-${index}`} 
+                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
+        </Card>
+        
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
+          <p className="text-sm text-gray-600 mb-3">
+            {getPracticeTipsText()}
+          </p>
+          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+            <li>{t("askQuestionsAboutTopics")}</li>
+            <li>{t("practiceEverydayPhrases")}</li>
+            <li>{t("describeImagesOrScenes")}</li>
+            <li>{t("practiceVocabularyForSpecificTopics")}</li>
+          </ul>
         </div>
       </div>
       
