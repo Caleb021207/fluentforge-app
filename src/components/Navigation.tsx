@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, LayoutDashboard, Menu, X, Shield } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,17 +12,17 @@ import { useLocalization } from "@/context/LocalizationContext";
 const navItemTranslations = {
   english: {
     "Practice": "Practice",
-    "Dashboard": "Dashboard",
+    "Language Frameworks": "Language Frameworks",
     "Admin": "Admin"
   },
   spanish: {
     "Practice": "Práctica",
-    "Dashboard": "Panel",
+    "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin"
   },
   portuguese: {
     "Practice": "Prática",
-    "Dashboard": "Painel",
+    "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin"
   }
 };
@@ -76,7 +76,7 @@ const Navigation = () => {
 
   const navItems = [
     { icon: MessageSquare, label: "Practice", path: "/practice" },
-    { icon: LayoutDashboard, label: "Dashboard", path: "/placement-quiz" },
+    { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
   
   // Add admin link if user is an admin
