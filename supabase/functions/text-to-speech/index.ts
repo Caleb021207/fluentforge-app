@@ -42,8 +42,8 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`OpenAI API error: ${errorText}`);
+      const errorData = await response.json().catch(() => null);
+      throw new Error(`OpenAI API error: ${JSON.stringify(errorData) || response.statusText}`);
     }
 
     // Convert audio buffer to base64 safely

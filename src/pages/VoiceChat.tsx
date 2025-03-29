@@ -22,13 +22,14 @@ const VoiceChat = () => {
   const [transcript, setTranscript] = useState("");
   const [gptResponse, setGptResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [audioUrl, setAudioUrl] = useState("");
-  const [hasPlayedAudio, setHasPlayedAudio] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   
   const { toast } = useToast();
@@ -41,6 +42,7 @@ const VoiceChat = () => {
     }
   }, [conversationHistory]);
 
+  // Initialize speech recognition
   useEffect(() => {
     if (typeof window !== "undefined" && 
         ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -77,13 +79,18 @@ const VoiceChat = () => {
         variant: "destructive",
       });
     }
+
+    // Initialize speech synthesis
+    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+    }
     
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
+      if (synthRef.current && utteranceRef.current) {
+        synthRef.current.cancel();
       }
     };
   }, [currentLanguage, toast, t]);
@@ -101,8 +108,6 @@ const VoiceChat = () => {
           setIsListening(true);
           setTranscript("");
           setGptResponse("");
-          setAudioUrl("");
-          setHasPlayedAudio(false);
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({
@@ -155,7 +160,8 @@ const VoiceChat = () => {
         { role: 'assistant', content: data.reply }
       ]);
       
-      generateSpeech(data.reply);
+      // Speak the response using browser's SpeechSynthesis
+      speakWithBrowserSynthesis(data.reply);
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -168,67 +174,55 @@ const VoiceChat = () => {
     }
   };
 
-  const generateSpeech = async (text: string) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('text-to-speech', {
-        body: { 
-          text: text,
-          voice: currentLanguage === "english" ? "nova" : "alloy"
-        }
-      });
-
-      if (error) throw error;
-      
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
-      }
-      
-      const byteCharacters = atob(data.audioContent);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'audio/mp3' });
-      const url = URL.createObjectURL(blob);
-      
-      setAudioUrl(url);
-      
-      if (audioRef.current) {
-        audioRef.current.src = url;
-        audioRef.current.play()
-          .then(() => setHasPlayedAudio(true))
-          .catch(error => {
-            console.error("Audio playback error:", error);
-            toast({
-              title: t("error"),
-              description: t("audioPlaybackError"),
-              variant: "destructive",
-            });
-          });
-      }
-    } catch (error) {
-      console.error('Error generating speech:', error);
+  const speakWithBrowserSynthesis = (text: string) => {
+    if (!synthRef.current) {
+      console.error('Speech synthesis not available');
       toast({
         title: t("error"),
-        description: t("failedToGenerateSpeech"),
+        description: t("speechSynthesisNotSupported"),
         variant: "destructive",
       });
+      return;
     }
+    
+    // Cancel any ongoing speech
+    synthRef.current.cancel();
+    
+    // Create a new utterance
+    utteranceRef.current = new SpeechSynthesisUtterance(text);
+    
+    // Set the language based on the current language setting
+    utteranceRef.current.lang = currentLanguage === "english" ? "es" : "en-US";
+    
+    // Find an appropriate voice
+    const voices = synthRef.current.getVoices();
+    const targetLang = currentLanguage === "english" ? "es" : "en";
+    
+    const voice = voices.find(v => v.lang.startsWith(targetLang) && v.localService);
+    if (voice) {
+      utteranceRef.current.voice = voice;
+    }
+    
+    // Set speaking state for UI updates
+    utteranceRef.current.onstart = () => setIsSpeaking(true);
+    utteranceRef.current.onend = () => setIsSpeaking(false);
+    utteranceRef.current.onerror = (event) => {
+      console.error('Speech synthesis error:', event);
+      setIsSpeaking(false);
+      toast({
+        title: t("error"),
+        description: t("speechSynthesisError"),
+        variant: "destructive",
+      });
+    };
+    
+    // Start speaking
+    synthRef.current.speak(utteranceRef.current);
   };
 
-  const playAudio = () => {
-    if (audioRef.current && audioUrl) {
-      audioRef.current.play()
-        .then(() => setHasPlayedAudio(true))
-        .catch(error => {
-          console.error("Audio playback error:", error);
-          toast({
-            title: t("error"),
-            description: t("audioPlaybackError"),
-            variant: "destructive",
-          });
-        });
+  const playAgain = () => {
+    if (gptResponse) {
+      speakWithBrowserSynthesis(gptResponse);
     }
   };
 
@@ -277,8 +271,6 @@ const VoiceChat = () => {
     setApiConversationHistory([]);
     setTranscript("");
     setGptResponse("");
-    setAudioUrl("");
-    setHasPlayedAudio(false);
     toast({
       title: t("Success"),
       description: "Conversation history has been cleared",
@@ -297,7 +289,7 @@ const VoiceChat = () => {
             : `Practice your ${practice} speaking skills. Click the microphone button and start speaking in ${practice}. The AI will respond to you and help you practice.`}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>AI Model:</strong> We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with OpenAI's TTS (Text-to-Speech) for voice responses.
+          <strong>AI Model:</strong> We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.
         </p>
       </div>
 
@@ -310,7 +302,7 @@ const VoiceChat = () => {
                 variant={isListening ? "destructive" : "default"}
                 size="lg"
                 className="mb-4"
-                disabled={isLoading}
+                disabled={isLoading || isSpeaking}
               >
                 {isListening ? (
                   <>
@@ -355,17 +347,16 @@ const VoiceChat = () => {
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-medium">{t("aiResponse")}:</h3>
-                  {audioUrl && (
-                    <Button 
-                      onClick={playAudio} 
-                      variant="outline" 
-                      size="sm"
-                      className="flex items-center gap-2"
-                    >
-                      <Volume2 className="h-4 w-4" />
-                      {t("playAgain")}
-                    </Button>
-                  )}
+                  <Button 
+                    onClick={playAgain} 
+                    variant="outline" 
+                    size="sm"
+                    className="flex items-center gap-2"
+                    disabled={isSpeaking}
+                  >
+                    <Volume2 className="h-4 w-4" />
+                    {isSpeaking ? t("speaking") : t("playAgain")}
+                  </Button>
                 </div>
                 <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                   {gptResponse}
