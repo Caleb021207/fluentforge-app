@@ -9,15 +9,6 @@ import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import { useLocalization } from "@/context/LocalizationContext";
 
-const availableLanguagePairs = [
-  "english-spanish",
-  "spanish-english",
-  "english-portuguese",
-  "portuguese-english",
-  "spanish-portuguese",
-  "portuguese-spanish"
-];
-
 const Index = () => {
   const { toast } = useToast();
   const { t, setCurrentLanguage } = useLocalization();
@@ -28,8 +19,6 @@ const Index = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
-  const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -43,25 +32,13 @@ const Index = () => {
     });
 
     const savedNativeLanguage = localStorage.getItem("nativeLanguage");
-    const savedTargetLanguage = localStorage.getItem("targetLanguage");
     
     if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
-    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
 
     return () => {
       subscription.unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    if (nativeLanguage && targetLanguage) {
-      const languagePair = `${nativeLanguage}-${targetLanguage}`;
-      setHasStudyMaterials(availableLanguagePairs.includes(languagePair));
-      
-      sessionStorage.setItem("languagePair", languagePair);
-      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
-    }
-  }, [nativeLanguage, targetLanguage]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +59,7 @@ const Index = () => {
           options: {
             data: {
               native_language: nativeLanguage || undefined,
-              target_language: targetLanguage || undefined,
+              target_language: "english", // Fixed to English
             }
           }
         });
@@ -100,7 +77,7 @@ const Index = () => {
       });
       
       if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
-      if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
+      localStorage.setItem("targetLanguage", "english"); // Always set target to English
       
     } catch (error: any) {
       console.error("Authentication error:", error);
@@ -138,25 +115,25 @@ const Index = () => {
   };
 
   const handleLanguageSelection = () => {
-    if (nativeLanguage && targetLanguage) {
+    if (nativeLanguage) {
       localStorage.setItem("nativeLanguage", nativeLanguage);
-      localStorage.setItem("targetLanguage", targetLanguage);
+      localStorage.setItem("targetLanguage", "english"); // Always set target to English
       
-      const languagePair = `${nativeLanguage}-${targetLanguage}`;
+      const languagePair = `${nativeLanguage}-english`;
       sessionStorage.setItem("languagePair", languagePair);
-      sessionStorage.setItem("hasStudyMaterials", availableLanguagePairs.includes(languagePair).toString());
+      sessionStorage.setItem("hasStudyMaterials", "true");
       
       // Update the UI language to match the native language
       setCurrentLanguage(nativeLanguage);
       
       toast({
         title: t("languagePreferencesSaved"),
-        description: `${t("youreNowLearning")} ${targetLanguage} ${t("from")} ${nativeLanguage}`,
+        description: `${t("youreNowLearning")} English ${t("from")} ${nativeLanguage}`,
       });
     } else {
       toast({
-        title: t("pleaseSelectBothLanguages"),
-        description: t("youNeedToSelectBoth"),
+        title: t("pleaseSelectYourLanguage"),
+        description: t("youNeedToSelectLanguage"),
         variant: "destructive",
       });
     }
@@ -171,18 +148,15 @@ const Index = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold text-lingua-text mb-4">
-            {t("welcomeToLanguageLearning")}
+            {t("welcomeToEnglishLearning")}
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8">
-            {t("yourPersonalAICompanion")}
+            {t("yourPersonalEnglishTutor")}
           </p>
           
           <LanguageSelectionCard
             nativeLanguage={nativeLanguage}
-            targetLanguage={targetLanguage}
             setNativeLanguage={setNativeLanguage}
-            setTargetLanguage={setTargetLanguage}
-            hasStudyMaterials={hasStudyMaterials}
             handleLanguageSelection={handleLanguageSelection}
           />
           

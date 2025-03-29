@@ -10,7 +10,7 @@ const TestInstructions = () => {
         <h3 className="text-sm font-medium">Test Instructions</h3>
       </div>
       <ul className="text-sm text-gray-600 space-y-1 pl-6 list-disc">
-        <li>Speak naturally in Spanish</li>
+        <li>Speak naturally in English</li>
         <li>Answer the tutor's questions</li>
         <li>Try to keep the conversation flowing</li>
         <li>Listen carefully to understand questions</li>
