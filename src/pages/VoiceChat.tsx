@@ -1,11 +1,12 @@
-
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Play, Volume2 } from "lucide-react";
+import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import englishTranslations from "@/translations/english";
+import spanishTranslations from "@/translations/spanish";
 
 const VoiceChat = () => {
   const [isListening, setIsListening] = useState(false);
@@ -194,29 +195,22 @@ const VoiceChat = () => {
     return { practice: "Spanish", native: "English" };
   };
 
-  // Get conversation starter phrases in both languages
   const getConversationStarters = () => {
-    // Array of phrase keys to use
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
-    // Get translations in the user's native language
     const nativeLanguagePhrases = phraseKeys.map(key => t(key));
     
-    // Get translations in the target language
-    // We need to temporarily switch the language context to get the other language translations
     let targetLanguagePhrases;
     
     if (currentLanguage === "english") {
-      // If user speaks English, get Spanish phrases
       targetLanguagePhrases = phraseKeys.map(key => {
         const spanishPhrase = spanishTranslations[key];
-        return spanishPhrase || key; // Fallback to key if translation not found
+        return spanishPhrase || key;
       });
     } else {
-      // If user speaks Spanish/Portuguese, get English phrases
       targetLanguagePhrases = phraseKeys.map(key => {
         const englishPhrase = englishTranslations[key];
-        return englishPhrase || key; // Fallback to key if translation not found
+        return englishPhrase || key;
       });
     }
     
@@ -225,10 +219,6 @@ const VoiceChat = () => {
 
   const { practice, native } = getLanguagePair();
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
-  
-  // Import translation objects directly for phrase lookups
-  import englishTranslations from "@/translations/english";
-  import spanishTranslations from "@/translations/spanish";
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -314,7 +304,6 @@ const VoiceChat = () => {
         )}
       </Card>
 
-      {/* Conversation Starters Section */}
       <Card className="mb-6 p-6">
         <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
         <p className="text-sm text-gray-600 mb-4">
@@ -322,7 +311,6 @@ const VoiceChat = () => {
         </p>
         
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Target Language Phrases */}
           <div>
             <h4 className="text-sm font-medium mb-2 text-lingua-primary">
               {t("inYourTargetLanguage")} ({practice})
@@ -336,7 +324,6 @@ const VoiceChat = () => {
             </ul>
           </div>
           
-          {/* Native Language Phrases */}
           <div>
             <h4 className="text-sm font-medium mb-2 text-lingua-primary">
               {t("inYourNativeLanguage")} ({native})
