@@ -231,16 +231,20 @@ const VoiceChat = () => {
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
-    const nativeLanguagePhrases = phraseKeys.map(key => t(key));
-    
+    let nativeLanguagePhrases;
     let targetLanguagePhrases;
     
     if (currentLanguage === "english") {
-      targetLanguagePhrases = phraseKeys.map(key => {
-        const spanishPhrase = spanishTranslations[key];
-        return spanishPhrase || key;
-      });
+      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+    } else if (currentLanguage === "spanish") {
+      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "portuguese") {
+      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
+      nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
         const englishPhrase = englishTranslations[key];
         return englishPhrase || key;

@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -154,6 +153,16 @@ const portugueseTranslations: TranslationRecord = {
   failedToGetResponse: "Falha ao obter resposta da IA. Por favor, tente novamente.",
   failedToGenerateSpeech: "Falha ao gerar fala. Por favor, tente novamente.",
   audioPlaybackError: "Erro ao reproduzir áudio. Por favor, tente novamente.",
+  
+  // Conversation starter phrases
+  phrase1: "Olá, como você está hoje?",
+  phrase2: "Como está o tempo onde você está?",
+  phrase3: "Pode recomendar um bom restaurante?",
+  phrase4: "Quais são seus hobbies e interesses?",
+  phrase5: "Fale-me sobre seu livro ou filme favorito.",
+  phrase6: "O que você fez no fim de semana passado?",
+  phrase7: "Quais são seus planos para amanhã?",
+  phrase8: "Como se diz... em inglês?",
   translation: "Tradução",
   
   // New UI strings for VoiceChat
