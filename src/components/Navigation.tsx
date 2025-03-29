@@ -1,12 +1,12 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield, Mic } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Translation map for navigation items
 const navItemTranslations = {
@@ -14,19 +14,22 @@ const navItemTranslations = {
     "Practice": "Practice",
     "Unlimited Voice Practice": "Unlimited Voice Practice",
     "Language Frameworks": "Language Frameworks",
-    "Admin": "Admin"
+    "Admin": "Admin",
+    "Home": "Home"
   },
   spanish: {
     "Practice": "Práctica",
     "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
     "Language Frameworks": "Marcos de Idiomas",
-    "Admin": "Admin"
+    "Admin": "Admin",
+    "Home": "Inicio"
   },
   portuguese: {
     "Practice": "Prática",
     "Unlimited Voice Practice": "Prática de Voz Ilimitada",
     "Language Frameworks": "Estruturas de Idiomas",
-    "Admin": "Admin"
+    "Admin": "Admin",
+    "Home": "Início"
   }
 };
 
@@ -36,16 +39,15 @@ const Navigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { currentLanguage } = useLocalization();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Check if user is logged in
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
       const loggedIn = !!data.session;
       setIsLoggedIn(loggedIn);
       
       if (loggedIn) {
-        // For demo purposes, check if email contains "admin"
         const { data: { user } } = await supabase.auth.getUser();
         setIsAdmin(user?.email?.includes("admin") || false);
       }
@@ -53,11 +55,9 @@ const Navigation = () => {
     
     checkAuth();
     
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
         setIsLoggedIn(true);
-        // Check if admin
         const user = session?.user;
         setIsAdmin(user?.email?.includes("admin") || false);
       } else if (event === 'SIGNED_OUT') {
@@ -71,7 +71,6 @@ const Navigation = () => {
     };
   }, []);
 
-  // Get translations for the current language
   const getTranslatedLabel = (label: string) => {
     const translations = navItemTranslations[currentLanguage as keyof typeof navItemTranslations] || navItemTranslations.english;
     return translations[label as keyof typeof translations] || label;
@@ -83,14 +82,16 @@ const Navigation = () => {
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
   
-  // Add admin link if user is an admin
   if (isAdmin) {
     navItems.push({ icon: Shield, label: "Admin", path: "/admin" });
   }
 
+  if (isMobile) {
+    navItems.unshift({ icon: Home, label: "Home", path: "/" });
+  }
+
   return (
     <>
-      {/* Mobile menu toggle button */}
       <div className="fixed top-0 right-0 z-50 md:hidden p-2">
         <Button 
           variant="ghost" 
@@ -102,7 +103,6 @@ const Navigation = () => {
         </Button>
       </div>
 
-      {/* Mobile overlay */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
@@ -150,7 +150,6 @@ const Navigation = () => {
               );
             })}
             
-            {/* Logout button for mobile - only shown when menu is expanded */}
             {isLoggedIn && isOpen && (
               <div className="md:hidden mt-4 pt-4 border-t">
                 <LogoutButton iconOnly={true} onClose={() => setIsOpen(false)} />
@@ -158,7 +157,6 @@ const Navigation = () => {
             )}
           </div>
           
-          {/* Logout button for desktop */}
           {isLoggedIn && (
             <div className="hidden md:block mt-auto pt-4 border-t mt-8">
               <LogoutButton />

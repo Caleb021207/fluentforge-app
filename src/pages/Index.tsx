@@ -188,16 +188,7 @@ const Index = () => {
               >
                 {t("signIn")}
               </Button>
-            ) : (
-              <Link to="/profile">
-                <Button 
-                  size="lg" 
-                  className="bg-lingua-primary hover:bg-lingua-primary/90"
-                >
-                  {t("goToDashboard")}
-                </Button>
-              </Link>
-            )}
+            ) : null}
             <Link to="/practice">
               <Button size="lg" variant="outline">
                 {t("practiceWithAI")}
