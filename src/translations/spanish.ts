@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const spanishTranslations: TranslationRecord = {
@@ -154,6 +153,22 @@ const spanishTranslations: TranslationRecord = {
   failedToGetResponse: "No se pudo obtener respuesta de la IA. Por favor, inténtalo de nuevo.",
   failedToGenerateSpeech: "No se pudo generar el habla. Por favor, inténtalo de nuevo.",
   audioPlaybackError: "Error al reproducir el audio. Por favor, inténtalo de nuevo.",
+  
+  // Conversation starters section
+  conversationStarters: "Iniciadores de Conversación",
+  tryThesePhrases: "Prueba estas frases para iniciar una conversación:",
+  inYourTargetLanguage: "En tu idioma objetivo:",
+  inYourNativeLanguage: "En tu idioma nativo:",
+  
+  // Conversation starter phrases
+  phrase1: "Hola, ¿cómo estás hoy?",
+  phrase2: "¿Qué tiempo hace donde estás?",
+  phrase3: "¿Puedes recomendarme un buen restaurante?",
+  phrase4: "¿Cuáles son tus pasatiempos e intereses?",
+  phrase5: "Háblame de tu libro o película favorita.",
+  phrase6: "¿Qué hiciste el fin de semana pasado?",
+  phrase7: "¿Cuáles son tus planes para mañana?",
+  phrase8: "¿Cómo se dice... en inglés/español?",
 };
 
 export default spanishTranslations;

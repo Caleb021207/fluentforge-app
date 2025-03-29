@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -154,6 +153,22 @@ const englishTranslations: TranslationRecord = {
   failedToGetResponse: "Failed to get response from AI. Please try again.",
   failedToGenerateSpeech: "Failed to generate speech. Please try again.",
   audioPlaybackError: "Error playing audio. Please try again.",
+  
+  // Conversation starters section
+  conversationStarters: "Conversation Starters",
+  tryThesePhrases: "Try these phrases to start a conversation:",
+  inYourTargetLanguage: "In your target language:",
+  inYourNativeLanguage: "In your native language:",
+  
+  // Conversation starter phrases
+  phrase1: "Hello, how are you today?",
+  phrase2: "What's the weather like where you are?",
+  phrase3: "Can you recommend a good restaurant?",
+  phrase4: "What are your hobbies and interests?",
+  phrase5: "Tell me about your favorite book or movie.",
+  phrase6: "What did you do last weekend?",
+  phrase7: "What are your plans for tomorrow?",
+  phrase8: "How do you say... in Spanish/English?",
 };
 
 export default englishTranslations;

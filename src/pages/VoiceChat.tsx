@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Play, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -193,7 +194,41 @@ const VoiceChat = () => {
     return { practice: "Spanish", native: "English" };
   };
 
+  // Get conversation starter phrases in both languages
+  const getConversationStarters = () => {
+    // Array of phrase keys to use
+    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
+    
+    // Get translations in the user's native language
+    const nativeLanguagePhrases = phraseKeys.map(key => t(key));
+    
+    // Get translations in the target language
+    // We need to temporarily switch the language context to get the other language translations
+    let targetLanguagePhrases;
+    
+    if (currentLanguage === "english") {
+      // If user speaks English, get Spanish phrases
+      targetLanguagePhrases = phraseKeys.map(key => {
+        const spanishPhrase = spanishTranslations[key];
+        return spanishPhrase || key; // Fallback to key if translation not found
+      });
+    } else {
+      // If user speaks Spanish/Portuguese, get English phrases
+      targetLanguagePhrases = phraseKeys.map(key => {
+        const englishPhrase = englishTranslations[key];
+        return englishPhrase || key; // Fallback to key if translation not found
+      });
+    }
+    
+    return { nativeLanguagePhrases, targetLanguagePhrases };
+  };
+
   const { practice, native } = getLanguagePair();
+  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
+  
+  // Import translation objects directly for phrase lookups
+  import englishTranslations from "@/translations/english";
+  import spanishTranslations from "@/translations/spanish";
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -277,6 +312,44 @@ const VoiceChat = () => {
             </div>
           </div>
         )}
+      </Card>
+
+      {/* Conversation Starters Section */}
+      <Card className="mb-6 p-6">
+        <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          {t("tryThesePhrases")}
+        </p>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Target Language Phrases */}
+          <div>
+            <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+              {t("inYourTargetLanguage")} ({practice})
+            </h4>
+            <ul className="space-y-2">
+              {targetLanguagePhrases.map((phrase, index) => (
+                <li key={`target-${index}`} className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer">
+                  {phrase}
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          {/* Native Language Phrases */}
+          <div>
+            <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+              {t("inYourNativeLanguage")} ({native})
+            </h4>
+            <ul className="space-y-2">
+              {nativeLanguagePhrases.map((phrase, index) => (
+                <li key={`native-${index}`} className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer">
+                  {phrase}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </Card>
 
       <div className="bg-gray-100 rounded-lg p-4">
