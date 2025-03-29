@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const spanishTranslations: TranslationRecord = {
@@ -25,7 +26,6 @@ const spanishTranslations: TranslationRecord = {
   startTest: "Comenzar Prueba",
   processing: "Procesando...",
   pleaseLoginToTakeTest: "Por favor inicia sesión para realizar la prueba",
-  microphoneAccessRequired: "Se requiere acceso al micrófono",
   // Practice page translations
   practiceWithAITutor: "Practica con el Tutor de Idiomas IA",
   chatWithAITutor: "Chatea con nuestro tutor de IA para practicar tu inglés. El tutor te ayudará a corregir tu gramática, vocabulario y pronunciación. Puedes hacer preguntas sobre el idioma o la cultura.",
@@ -134,25 +134,25 @@ const spanishTranslations: TranslationRecord = {
   areasForImprovement: "Áreas de Mejora",
   recommendations: "Recomendaciones",
   // Voice Chat Page
-  "freePracticeWithVoice": "Práctica de Voz Gratuita",
-  "startSpeaking": "Comenzar a Hablar",
-  "stopListening": "Dejar de Escuchar",
-  "listeningNow": "Escuchando ahora",
-  "youSaid": "Dijiste",
-  "aiResponse": "Respuesta de la IA",
-  "playAgain": "Reproducir de nuevo",
-  "practiceWithVoiceChat": "Practica con el Chat de Voz",
-  "practiceLanguageTips": "Usa esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:",
-  "askQuestionsAboutTopics": "Haz preguntas sobre temas cotidianos",
-  "practiceEverydayPhrases": "Practica frases y expresiones comunes",
-  "describeImagesOrScenes": "Describe lo que ves a tu alrededor",
-  "practiceVocabularyForSpecificTopics": "Practica vocabulario para temas específicos como viajes o comida",
-  "speechRecognitionError": "Error de reconocimiento de voz",
-  "speechRecognitionNotSupported": "El reconocimiento de voz no es compatible con tu navegador",
-  "microphoneAccessRequired": "Se requiere acceso al micrófono para esta función",
-  "failedToGetResponse": "No se pudo obtener respuesta de la IA. Por favor, inténtalo de nuevo.",
-  "failedToGenerateSpeech": "No se pudo generar el habla. Por favor, inténtalo de nuevo.",
-  "audioPlaybackError": "Error al reproducir el audio. Por favor, inténtalo de nuevo.",
+  freePracticeWithVoice: "Práctica de Voz Gratuita",
+  startSpeaking: "Comenzar a Hablar",
+  stopListening: "Dejar de Escuchar",
+  listeningNow: "Escuchando ahora",
+  youSaid: "Dijiste",
+  aiResponse: "Respuesta de la IA",
+  playAgain: "Reproducir de nuevo",
+  practiceWithVoiceChat: "Practica con el Chat de Voz",
+  practiceLanguageTips: "Usa esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:",
+  askQuestionsAboutTopics: "Haz preguntas sobre temas cotidianos",
+  practiceEverydayPhrases: "Practica frases y expresiones comunes",
+  describeImagesOrScenes: "Describe lo que ves a tu alrededor",
+  practiceVocabularyForSpecificTopics: "Practica vocabulario para temas específicos como viajes o comida",
+  speechRecognitionError: "Error de reconocimiento de voz",
+  speechRecognitionNotSupported: "El reconocimiento de voz no es compatible con tu navegador",
+  microphoneAccessRequired: "Se requiere acceso al micrófono para esta función",
+  failedToGetResponse: "No se pudo obtener respuesta de la IA. Por favor, inténtalo de nuevo.",
+  failedToGenerateSpeech: "No se pudo generar el habla. Por favor, inténtalo de nuevo.",
+  audioPlaybackError: "Error al reproducir el audio. Por favor, inténtalo de nuevo.",
 };
 
 export default spanishTranslations;

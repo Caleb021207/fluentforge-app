@@ -22,9 +22,10 @@ const VoiceChat = () => {
   useEffect(() => {
     // Initialize Web Speech API
     if (typeof window !== "undefined" && 
-        (window.SpeechRecognition || (window as any).webkitSpeechRecognition)) {
-      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
+        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      // Use the appropriate constructor based on browser support
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognitionAPI();
       
       // Set language based on user's current language selection
       // For English speakers learning Spanish, and Spanish speakers learning English
