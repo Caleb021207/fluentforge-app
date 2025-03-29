@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -106,10 +105,10 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
 
       if (attempts && attempts.length > 0) {
         console.log("Retrieved certification attempts:", attempts);
-        setRawAttempts(attempts);
+        setRawAttempts(attempts as CertificationAttempt[]);
         
         // Find all unique language pairs
-        const pairs = getAvailableLanguagePairs(attempts);
+        const pairs = getAvailableLanguagePairs(attempts as CertificationAttempt[]);
         setLanguagePairs(pairs);
         
         // If we have pairs but no selection, default to the first pair
@@ -120,13 +119,13 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
         
         const selectedPair = getSelectedLanguagePair();
         
-        const processedData = processAttemptsByDate(attempts, selectedPair);
+        const processedData = processAttemptsByDate(attempts as CertificationAttempt[], selectedPair);
         setProgressData(processedData);
         
-        const recommendations = generateRecommendations(attempts, selectedPair);
+        const recommendations = generateRecommendations(attempts as CertificationAttempt[], selectedPair);
         setRecommendations(recommendations);
         
-        const normalized = normalizeAttempts(attempts, selectedPair);
+        const normalized = normalizeAttempts(attempts as CertificationAttempt[], selectedPair);
         setNormalizedAttempts(normalized);
       } else {
         setRawAttempts([]);
@@ -190,7 +189,6 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
     return () => {}; // Empty cleanup when offline
   }, [fetchProgressData, user, isOnline]);
 
-  // When language pair selection changes, update the data
   useEffect(() => {
     if (rawAttempts.length > 0) {
       const selectedPair = getSelectedLanguagePair();
@@ -206,7 +204,6 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
     }
   }, [selectedPairKey, rawAttempts, getSelectedLanguagePair]);
 
-  // Retry fetching data when coming back online
   useEffect(() => {
     if (isOnline && user && retryCount < 3) {
       const timer = setTimeout(() => {

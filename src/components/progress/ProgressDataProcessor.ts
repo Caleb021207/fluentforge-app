@@ -1,4 +1,3 @@
-
 import { CertificationAttempt } from "@/types/supabase";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";

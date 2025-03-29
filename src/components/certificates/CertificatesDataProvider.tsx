@@ -92,7 +92,7 @@ const CertificatesDataProvider = ({ children }: CertificatesDataProviderProps) =
         
         // Update language pairs
         if (data && data.length > 0) {
-          const pairs = getAvailableLanguagePairs(data);
+          const pairs = getAvailableLanguagePairs(data as CertificationAttempt[]);
           setLanguagePairs(pairs);
           
           // Set default pair if none selected yet
