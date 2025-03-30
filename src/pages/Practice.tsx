@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Mic, MicOff, Volume2, Headphones, Book, Timer } from "lucide-react";
+import { MessageCircle, Send, Mic, MicOff, Volume2, Headphones, Book, Timer, FileText, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -80,7 +79,6 @@ const Practice = () => {
     initMicrophone();
   }, [toast, t]);
 
-  // Handle voice chat timer
   useEffect(() => {
     let timerId: number | null = null;
     
@@ -145,7 +143,6 @@ const Practice = () => {
       });
       console.log(`Successfully started conversation session: ${sessionId}`);
       
-      // Set 5-minute timer (300 seconds)
       setVoiceChatTimeRemaining(300);
       
       toast({
