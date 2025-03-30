@@ -1,15 +1,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, Headphones, Moon, Sun, LogOut } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useAuth } from "@/context/AuthContext";
-import { useTheme } from "@/context/ThemeContext";
 
 // Translation map for navigation items
 const navItemTranslations = {
@@ -42,23 +40,40 @@ const navItemTranslations = {
 const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { currentLanguage } = useLocalization();
   const isMobile = useIsMobile();
-  const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      if (user) {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      const loggedIn = !!data.session;
+      setIsLoggedIn(loggedIn);
+      
+      if (loggedIn) {
+        const { data: { user } } = await supabase.auth.getUser();
         setIsAdmin(user?.email?.includes("admin") || false);
-      } else {
-        setIsAdmin(false);
       }
     };
     
-    checkAdmin();
-  }, [user]);
+    checkAuth();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        setIsLoggedIn(true);
+        const user = session?.user;
+        setIsAdmin(user?.email?.includes("admin") || false);
+      } else if (event === 'SIGNED_OUT') {
+        setIsLoggedIn(false);
+        setIsAdmin(false);
+      }
+    });
+    
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const getTranslatedLabel = (label: string) => {
     const translations = navItemTranslations[currentLanguage as keyof typeof navItemTranslations] || navItemTranslations.english;
@@ -140,29 +155,18 @@ const Navigation = () => {
               );
             })}
             
-            {user && isOpen && (
+            {isLoggedIn && isOpen && (
               <div className="md:hidden mt-4 pt-4 border-t">
                 <LogoutButton iconOnly={true} onClose={() => setIsOpen(false)} />
               </div>
             )}
           </div>
           
-          {user && (
+          {isLoggedIn && (
             <div className="hidden md:block mt-auto pt-4 border-t mt-8">
               <LogoutButton />
             </div>
           )}
-
-          <div className="flex justify-center mt-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="rounded-full"
-            >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-          </div>
         </div>
       </nav>
     </>
