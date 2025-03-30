@@ -187,8 +187,8 @@ const portugueseTranslations: TranslationRecord = {
   usingFallbackMode: "Usando modo de voz alternativo",
   
   // New translations for mid-tier voice
-  midTierVoice: "Voz Intermediária",
-  usingMidTierVoice: "Usando a voz HD TTS da OpenAI",
+  midTierVoice: "Voz AI Dinâmica",
+  usingMidTierVoice: "Usando a tecnologia HD TTS da OpenAI para respostas conversacionais dinâmicas",
   basicVoice: "Voz Básica",
 };
 

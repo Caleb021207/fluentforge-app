@@ -190,8 +190,8 @@ const englishTranslations: TranslationRecord = {
   typeMessageBelow: "Type a message below to begin",
   
   // New translations for mid-tier voice
-  midTierVoice: "Mid-Tier Voice",
-  usingMidTierVoice: "Using OpenAI's HD TTS voice",
+  midTierVoice: "Dynamic AI Voice",
+  usingMidTierVoice: "Using OpenAI's HD TTS technology for dynamic conversational responses",
   basicVoice: "Basic Voice",
 };
 

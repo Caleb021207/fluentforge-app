@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Headphones, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -131,7 +130,7 @@ const PremiumVoiceChat = () => {
       }
       
       if (usingFallback) {
-        // Start fallback recording with browser APIs
+        // This branch is maintained for fallback functionality but is no longer directly accessible
         setIsRecording(true);
         startFallbackRecording();
         return;
@@ -484,7 +483,7 @@ const PremiumVoiceChat = () => {
     setUsingFallback(false);
     setUsingMidTier(true);
     toast({
-      title: "Mid-Tier Voice Enabled",
+      title: t("midTierVoice"),
       description: currentLanguage === "english" 
         ? "Using OpenAI's HD TTS voice model. Record one message at a time." 
         : currentLanguage === "spanish"
@@ -503,22 +502,6 @@ const PremiumVoiceChat = () => {
         : currentLanguage === "spanish"
           ? "Usando la tecnología de voz realista de ElevenLabs."
           : "Usando a tecnologia de voz realista da ElevenLabs.",
-    });
-  };
-
-  const switchToFallback = () => {
-    if (isConversationActive()) {
-      endConversation();
-    }
-    setUsingFallback(true);
-    setUsingMidTier(false);
-    toast({
-      title: "Basic Voice Enabled",
-      description: currentLanguage === "english" 
-        ? "Using basic TTS voice model. Record one message at a time." 
-        : currentLanguage === "spanish"
-          ? "Usando el modelo de voz TTS básico. Graba un mensaje a la vez."
-          : "Usando o modelo de voz TTS básico. Grave uma mensagem de cada vez.",
     });
   };
 
@@ -541,8 +524,8 @@ const PremiumVoiceChat = () => {
         <div className="flex flex-wrap gap-3 mb-4">
           <Button 
             onClick={switchToPremium} 
-            variant={!usingFallback && !usingMidTier ? "default" : "outline"}
-            className={!usingFallback && !usingMidTier ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""}
+            variant={!usingMidTier ? "default" : "outline"}
+            className={!usingMidTier ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""}
           >
             <Sparkles className="h-4 w-4 mr-2" />
             {currentLanguage === "english" 
@@ -560,40 +543,25 @@ const PremiumVoiceChat = () => {
             <Volume2 className="h-4 w-4 mr-2" />
             {t("midTierVoice")}
           </Button>
-          
-          <Button 
-            onClick={switchToFallback} 
-            variant={usingFallback ? "default" : "outline"}
-            className={usingFallback ? "bg-amber-600 hover:bg-amber-700" : ""}
-          >
-            <Headphones className="h-4 w-4 mr-2" />
-            {t("basicVoice")}
-          </Button>
         </div>
         
         <div className={`border rounded-md p-3 mb-4 ${
           usingMidTier 
             ? "bg-indigo-50 border-indigo-200" 
-            : usingFallback 
-              ? "bg-amber-50 border-amber-200" 
-              : "bg-blue-50 border-blue-200"
+            : "bg-blue-50 border-blue-200"
         }`}>
           <p className={`text-sm ${
             usingMidTier 
               ? "text-indigo-800" 
-              : usingFallback 
-                ? "text-amber-800" 
-                : "text-blue-800"
+              : "text-blue-800"
           }`}>
             {usingMidTier 
               ? t("usingMidTierVoice")
-              : usingFallback 
-                ? t("usingFallbackMode")
-                : (currentLanguage === "english" 
-                    ? "Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session."
-                    : currentLanguage === "spanish"
-                      ? "Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión."
-                      : "As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão.")}
+              : (currentLanguage === "english" 
+                  ? "Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session."
+                  : currentLanguage === "spanish"
+                    ? "Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión."
+                    : "As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão.")}
           </p>
         </div>
       </div>
@@ -614,12 +582,12 @@ const PremiumVoiceChat = () => {
             ) : (
               <>
                 <Mic className="h-4 w-4 mr-2" />
-                {usingMidTier || usingFallback ? t("startSpeaking") : t("startVoiceChat")}
+                {usingMidTier ? t("startSpeaking") : t("startVoiceChat")}
               </>
             )}
           </Button>
           
-          {voiceChatTimeRemaining !== null && !usingFallback && !usingMidTier && (
+          {voiceChatTimeRemaining !== null && !usingMidTier && (
             <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
               <Headphones className="h-4 w-4" />
               <span>{formatTime(voiceChatTimeRemaining)}</span>
@@ -677,7 +645,7 @@ const PremiumVoiceChat = () => {
                 <p>{t("startChatting")}</p>
                 <p className="text-sm mt-2">
                   {microphoneAccess 
-                    ? usingMidTier || usingFallback
+                    ? usingMidTier
                       ? t("clickToStartVoice") 
                       : t("clickToStartVoice")
                     : t("allowMicAccess")}
