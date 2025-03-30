@@ -80,61 +80,182 @@ export interface StudentProfile {
   voice_minutes_used: number;
 }
 
-// Define Database interface to include all our tables
-export interface Database extends GeneratedDatabase {
+// Define Database interface to properly include all our tables
+export type Database = {
   public: {
     Tables: {
       certification_attempts: {
         Row: CertificationAttempt;
         Insert: Partial<CertificationAttempt>;
         Update: Partial<CertificationAttempt>;
-        Relationships: [];
+        Relationships: {
+          user_id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+        };
       };
-      certification_transcripts: GeneratedDatabase['public']['Tables']['certification_transcripts'];
+      certification_transcripts: {
+        Row: {
+          id: string;
+          attempt_id: string;
+          user_id: string;
+          created_at: string;
+          user_transcripts: Json;
+          ai_responses: Json;
+          analysis_data: Json | null;
+        };
+        Insert: {
+          id?: string;
+          attempt_id: string;
+          user_id: string;
+          created_at?: string;
+          user_transcripts?: Json;
+          ai_responses?: Json;
+          analysis_data?: Json | null;
+        };
+        Update: {
+          id?: string;
+          attempt_id?: string;
+          user_id?: string;
+          created_at?: string;
+          user_transcripts?: Json;
+          ai_responses?: Json;
+          analysis_data?: Json | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "certification_transcripts_attempt_id_fkey";
+            columns: ["attempt_id"];
+            isOneToOne: false;
+            referencedRelation: "certification_attempts";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       lesson_progress: {
         Row: LessonProgress;
         Insert: Partial<LessonProgress>;
         Update: Partial<LessonProgress>;
-        Relationships: [];
+        Relationships: {
+          user_id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+        };
       };
-      profiles: GeneratedDatabase['public']['Tables']['profiles'];
+      profiles: {
+        Row: {
+          id: string;
+          display_name: string | null;
+          learning_goal: string | null;
+          target_level: string | null;
+          target_date: string | null;
+          avatar_url: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id: string;
+          display_name?: string | null;
+          learning_goal?: string | null;
+          target_level?: string | null;
+          target_date?: string | null;
+          avatar_url?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          display_name?: string | null;
+          learning_goal?: string | null;
+          target_level?: string | null;
+          target_date?: string | null;
+          avatar_url?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: {
+          id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+        };
+      };
       user_profiles: {
         Row: UserProfile;
         Insert: Partial<UserProfile>;
         Update: Partial<UserProfile>;
-        Relationships: [];
+        Relationships: {
+          id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+        };
       };
       user_settings: {
         Row: UserSettings;
         Insert: Partial<UserSettings>;
         Update: Partial<UserSettings>;
-        Relationships: [];
+        Relationships: {
+          id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+        };
       };
       classrooms: {
         Row: Classroom;
         Insert: Partial<Classroom>;
         Update: Partial<Classroom>;
-        Relationships: [];
+        Relationships: {
+          teacher_id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+        };
       };
       student_classrooms: {
         Row: StudentClassroom;
         Insert: Partial<StudentClassroom>;
         Update: Partial<StudentClassroom>;
-        Relationships: [];
+        Relationships: {
+          student_id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+          classroom_id: {
+            Table: 'classrooms';
+            Columns: ['id'];
+          };
+        };
       };
       usage_stats: {
         Row: UsageStats;
         Insert: Partial<UsageStats>;
         Update: Partial<UsageStats>;
-        Relationships: [];
+        Relationships: {
+          user_id: {
+            Table: 'auth.users';
+            Columns: ['id'];
+          };
+        };
       };
     };
-    Views: GeneratedDatabase['public']['Views'];
-    Functions: GeneratedDatabase['public']['Functions'];
-    Enums: GeneratedDatabase['public']['Enums'];
-    CompositeTypes: GeneratedDatabase['public']['CompositeTypes'];
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
-}
+};
 
 // Add type to explicitly define what tables Supabase can access
 export type TableNames = keyof Database['public']['Tables'];
