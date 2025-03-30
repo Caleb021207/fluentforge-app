@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useLocalization } from '../context/LocalizationContext';
-import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '@/context/AuthContext';
+import { useLocalization } from '@/context/LocalizationContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Moon, Sun } from 'lucide-react';
 
 const Navigation = () => {
@@ -112,7 +112,7 @@ const Navigation = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden ${isMenuOpen ? 'block' : 'none'}`}>
+        <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               to="/lessons"
