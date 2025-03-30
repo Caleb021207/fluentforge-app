@@ -1,5 +1,7 @@
+
 import { TranslationRecord } from "./types";
 
+// Spanish translation file containing all the translation strings
 const spanishTranslations: TranslationRecord = {
   welcomeToLanguageLearning: "Bienvenido a Palavox",
   yourPersonalAICompanion: "Tu compañero personal de aprendizaje de idiomas con IA. Comienza tu viaje hacia la fluidez hoy.",
@@ -179,8 +181,8 @@ const spanishTranslations: TranslationRecord = {
   premiumVoiceChat: "Chat de Voz Premium",
   premiumVoiceChatBenefits: "Beneficios de Voz Premium",
   textConversationPractice: "Práctica de Conversación de Texto",
-  startTextChatting: "Comienza a chatear con el tutor de IA",
+  startTextChatting: "Inicia un chat de texto con el tutor de IA",
   typeMessageBelow: "Escribe un mensaje abajo para comenzar"
 };
 
-export default spanishTranslations as TranslationKeys;
+export default spanishTranslations;
