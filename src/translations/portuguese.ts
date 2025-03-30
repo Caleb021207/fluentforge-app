@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 // Portuguese translation file containing all the translation strings
@@ -25,7 +24,7 @@ const portugueseTranslations: TranslationRecord = {
   thisTestNotAvailable: "Este teste ainda não está disponível para sua combinação de idiomas selecionada.",
   readyToTest: "Pronto para testar suas habilidades de conversação?",
   startTest: "Iniciar Teste",
-  processing: "Processando...",
+  processing: "Processando sua mensagem...",
   pleaseLoginToTakeTest: "Por favor, faça login para realizar o teste",
   // Practice page translations
   practiceWithAITutor: "Pratique com o Tutor de Idiomas IA",
@@ -179,7 +178,11 @@ const portugueseTranslations: TranslationRecord = {
   premiumVoiceChatBenefits: "Benefícios de Voz Premium",
   textConversationPractice: "Prática de Conversação de Texto",
   startTextChatting: "Comece a conversar por texto com o tutor de IA",
-  typeMessageBelow: "Digite uma mensagem abaixo para começar"
+  typeMessageBelow: "Digite uma mensagem abaixo para começar",
+  
+  // New translations for fallback mode
+  processing: "Processando sua mensagem...",
+  usingFallbackMode: "Usando modo de voz alternativo",
 };
 
 export default portugueseTranslations;

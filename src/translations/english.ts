@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -24,7 +23,8 @@ const englishTranslations: TranslationRecord = {
   thisTestNotAvailable: "This test is not yet available for your selected language combination.",
   readyToTest: "Ready to test your conversational skills?",
   startTest: "Start Test",
-  processing: "Processing...",
+  processing: "Processing your message...",
+  usingFallbackMode: "Using fallback voice mode",
   pleaseLoginToTakeTest: "Please login to take the test",
   // Practice page translations
   practiceWithAITutor: "Practice with AI Language Tutor",
@@ -186,7 +186,7 @@ const englishTranslations: TranslationRecord = {
   premiumVoiceChatBenefits: "Premium Voice Benefits",
   textConversationPractice: "Text Conversation Practice",
   startTextChatting: "Start text chatting with the AI tutor",
-  typeMessageBelow: "Type a message below to begin"
+  typeMessageBelow: "Type a message below to begin",
 };
 
 export default englishTranslations;

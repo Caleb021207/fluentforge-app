@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 // Spanish translation file containing all the translation strings
@@ -25,13 +24,13 @@ const spanishTranslations: TranslationRecord = {
   thisTestNotAvailable: "Esta prueba aún no está disponible para tu combinación de idiomas seleccionada.",
   readyToTest: "¿Listo para probar tus habilidades de conversación?",
   startTest: "Comenzar Prueba",
-  processing: "Procesando...",
+  processing: "Procesando tu mensaje...",
   pleaseLoginToTakeTest: "Por favor inicia sesión para realizar la prueba",
   // Practice page translations
   practiceWithAITutor: "Practica con el Tutor de Idiomas IA",
   chatWithAITutor: "Chatea con nuestro tutor de IA para practicar tu inglés. El tutor te ayudará a corregir tu gramática, vocabulario y pronunciación. Puedes hacer preguntas sobre el idioma o la cultura.",
   startVoiceChat: "Iniciar Chat de Voz",
-  stopVoiceChat: "Detener Chat de Voz",
+  stopVoiceChat: "Dejar de Escuchar",
   getSkillsAssessment: "Obtener Evaluación de Habilidades",
   reading: "Lectura",
   writing: "Escritura",
@@ -182,7 +181,10 @@ const spanishTranslations: TranslationRecord = {
   premiumVoiceChatBenefits: "Beneficios de Voz Premium",
   textConversationPractice: "Práctica de Conversación de Texto",
   startTextChatting: "Inicia un chat de texto con el tutor de IA",
-  typeMessageBelow: "Escribe un mensaje abajo para comenzar"
+  typeMessageBelow: "Escribe un mensaje abajo para comenzar",
+  
+  // New translations for fallback mode
+  usingFallbackMode: "Usando modo de voz alternativo",
 };
 
 export default spanishTranslations;

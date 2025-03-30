@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
 import { getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils";
 import { useLocalization } from "@/context/LocalizationContext";
+import { supabase } from "@/integrations/supabase/client";
 
 type VoiceMessage = {
   role: 'user' | 'assistant';
@@ -15,15 +16,19 @@ type VoiceMessage = {
 };
 
 const PremiumVoiceChat = () => {
-  const [messages, setMessages] = useState<VoiceMessage[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
+  const [usingFallback, setUsingFallback] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [currentUserInput, setCurrentUserInput] = useState<string>("");
+  const [currentAiResponse, setCurrentAiResponse] = useState<string>("");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   
-  const conversationEndRef = useRef<HTMLDivElement | null>(null);
-
   const getAgentId = () => {
     return getAgentIdForLanguage(currentLanguage);
   };
@@ -31,12 +36,7 @@ const PremiumVoiceChat = () => {
   const conversation = useConversation({
     onMessage: (message) => {
       if (message.type === "llm_response") {
-        const assistantMessage: VoiceMessage = {
-          role: "assistant",
-          content: message.content,
-          timestamp: new Date()
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
+        setCurrentAiResponse(message.content);
       }
     },
     onError: (error) => {
@@ -46,16 +46,11 @@ const PremiumVoiceChat = () => {
         description: error.message,
         variant: "destructive",
       });
+      setUsingFallback(true);
     },
   });
 
   const isConversationActive = () => conversation.status !== "disconnected";
-
-  useEffect(() => {
-    if (conversationEndRef.current) {
-      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
 
   useEffect(() => {
     const initMicrophone = async () => {
@@ -90,6 +85,7 @@ const PremiumVoiceChat = () => {
                 title: t("voiceChatEnded"),
                 description: t("timeLimit5MinReached"),
               });
+              setUsingFallback(true);
             }
             return null;
           }
@@ -126,6 +122,13 @@ const PremiumVoiceChat = () => {
     }
 
     try {
+      if (usingFallback) {
+        // Start fallback recording with browser APIs
+        setIsRecording(true);
+        startFallbackRecording();
+        return;
+      }
+      
       const selectedAgentId = getAgentId();
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
@@ -143,17 +146,6 @@ const PremiumVoiceChat = () => {
       setIsRecording(true);
       setVoiceChatTimeRemaining(300); // 5 minutes
       
-      // Add initial user message to the conversation
-      const initialUserMessage: VoiceMessage = {
-        role: "user",
-        content: currentLanguage === "english" 
-          ? "Hello, I'd like to practice Spanish with you."
-          : "Hello, I'd like to practice English with you.",
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, initialUserMessage]);
-      
       toast({
         title: t("startVoiceChat"),
         description: t("startChatting"),
@@ -165,10 +157,17 @@ const PremiumVoiceChat = () => {
         description: t("networkConnectionIssue"),
         variant: "destructive",
       });
+      setUsingFallback(true);
     }
   };
 
   const endConversation = async () => {
+    if (usingFallback) {
+      stopFallbackRecording();
+      setIsRecording(false);
+      return;
+    }
+    
     if (isConversationActive()) {
       await conversation.endSession();
       console.log("Ended conversation session");
@@ -181,6 +180,125 @@ const PremiumVoiceChat = () => {
     }
   };
 
+  // MediaRecorder for fallback voice recording
+  const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const audioChunks = useRef<Blob[]>([]);
+
+  const startFallbackRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder.current = new MediaRecorder(stream);
+      audioChunks.current = [];
+      
+      mediaRecorder.current.ondataavailable = (event) => {
+        audioChunks.current.push(event.data);
+      };
+      
+      mediaRecorder.current.onstop = async () => {
+        setIsProcessing(true);
+        const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm' });
+        
+        // Convert to base64
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = async () => {
+          const base64data = reader.result as string;
+          const base64Audio = base64data.split(',')[1];
+          
+          try {
+            // First, transcribe the audio
+            const { data: transcription, error: transcriptionError } = await supabase.functions.invoke(
+              'transcribe-audio',
+              { body: { audio: base64Audio } }
+            );
+            
+            if (transcriptionError) {
+              throw new Error(transcriptionError.message);
+            }
+            
+            if (!transcription || !transcription.text) {
+              throw new Error('Failed to transcribe audio');
+            }
+            
+            const userText = transcription.text.trim();
+            setCurrentUserInput(userText);
+            
+            // Now, send the transcription to the chatbot
+            const { data: chatResponse, error: chatError } = await supabase.functions.invoke(
+              'chat-with-tutor',
+              { 
+                body: { 
+                  message: userText,
+                  userLanguage: currentLanguage 
+                } 
+              }
+            );
+            
+            if (chatError) {
+              throw new Error(chatError.message);
+            }
+            
+            const aiResponseText = chatResponse.content;
+            setCurrentAiResponse(aiResponseText);
+            
+            // Now, generate speech from the AI response
+            const { data: speechData, error: speechError } = await supabase.functions.invoke(
+              'text-to-speech',
+              { 
+                body: { 
+                  text: aiResponseText,
+                  voice: 'alloy' 
+                } 
+              }
+            );
+            
+            if (speechError) {
+              throw new Error(speechError.message);
+            }
+            
+            // Play the audio
+            if (speechData && speechData.audioContent) {
+              const audio = new Audio(`data:audio/mp3;base64,${speechData.audioContent}`);
+              setAudioUrl(`data:audio/mp3;base64,${speechData.audioContent}`);
+              audio.play();
+            }
+          } catch (error) {
+            console.error('Error in fallback processing:', error);
+            toast({
+              title: t("error"),
+              description: error instanceof Error ? error.message : 'An error occurred',
+              variant: "destructive",
+            });
+          } finally {
+            setIsProcessing(false);
+          }
+        };
+      };
+      
+      mediaRecorder.current.start();
+      setIsRecording(true);
+      
+      toast({
+        title: t("listeningNow"),
+        description: t("startSpeaking"),
+      });
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast({
+        title: t("error"),
+        description: error instanceof Error ? error.message : 'Failed to start recording',
+        variant: "destructive",
+      });
+    }
+  };
+
+  const stopFallbackRecording = () => {
+    if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
+      mediaRecorder.current.stop();
+      setIsRecording(false);
+    }
+  };
+
   const getLanguagePair = () => {
     if (currentLanguage === "english") {
       return { practice: "Spanish", native: "English" };
@@ -190,14 +308,6 @@ const PremiumVoiceChat = () => {
       return { practice: "English", native: "Portuguese" };
     }
     return { practice: "Spanish", native: "English" };
-  };
-
-  const clearConversation = () => {
-    setMessages([]);
-    toast({
-      title: t("Success"),
-      description: "Conversation history has been cleared",
-    });
   };
 
   const { practice, native } = getLanguagePair();
@@ -215,13 +325,19 @@ const PremiumVoiceChat = () => {
               ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
               : `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`}
         </p>
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-          <p className="text-amber-800 text-sm">
-            {currentLanguage === "english" 
-              ? "Note: Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session."
-              : currentLanguage === "spanish"
-                ? "Nota: Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión."
-                : "Nota: As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão."}
+        <div className={`border rounded-md p-3 mb-4 ${usingFallback ? "bg-amber-50 border-amber-200" : "bg-blue-50 border-blue-200"}`}>
+          <p className={`text-sm ${usingFallback ? "text-amber-800" : "text-blue-800"}`}>
+            {usingFallback 
+              ? (currentLanguage === "english" 
+                  ? "Using fallback voice mode with Whisper and GPT-4o-mini. You can record one message at a time."
+                  : currentLanguage === "spanish"
+                    ? "Usando el modo de voz alternativo con Whisper y GPT-4o-mini. Puedes grabar un mensaje a la vez."
+                    : "Usando o modo de voz alternativo com Whisper e GPT-4o-mini. Você pode gravar uma mensagem por vez.")
+              : (currentLanguage === "english" 
+                  ? "Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session."
+                  : currentLanguage === "spanish"
+                    ? "Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión."
+                    : "As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão.")}
           </p>
         </div>
       </div>
@@ -230,10 +346,11 @@ const PremiumVoiceChat = () => {
         <div className="flex items-center gap-2">
           <Button
             onClick={startConversation}
-            variant={isConversationActive() ? "destructive" : "default"}
-            className="bg-lingua-primary hover:bg-lingua-primary/90"
+            variant={isRecording ? "destructive" : "default"}
+            className={isRecording ? "" : "bg-lingua-primary hover:bg-lingua-primary/90"}
+            disabled={isProcessing}
           >
-            {isConversationActive() ? (
+            {isRecording ? (
               <>
                 <MicOff className="h-4 w-4 mr-2" />
                 {t("stopVoiceChat")}
@@ -241,12 +358,12 @@ const PremiumVoiceChat = () => {
             ) : (
               <>
                 <Mic className="h-4 w-4 mr-2" />
-                {t("startVoiceChat")}
+                {usingFallback ? t("startSpeaking") : t("startVoiceChat")}
               </>
             )}
           </Button>
           
-          {voiceChatTimeRemaining !== null && (
+          {voiceChatTimeRemaining !== null && !usingFallback && (
             <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
               <Headphones className="h-4 w-4" />
               <span>{formatTime(voiceChatTimeRemaining)}</span>
@@ -256,58 +373,67 @@ const PremiumVoiceChat = () => {
       </div>
 
       <Card className="mb-6 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-medium">
-            {t("conversationHistory")}
-          </h3>
-          {messages.length > 0 && (
-            <Button 
-              onClick={clearConversation}
-              variant="outline" 
-              size="sm"
-            >
-              {t("clearConversation")}
-            </Button>
-          )}
-        </div>
-        
-        <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
-          {messages.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <Volume2 className="mx-auto h-12 w-12 mb-4 opacity-50" />
-              <p>{t("startChatting")}</p>
-              <p className="text-sm mt-2">
-                {microphoneAccess 
-                  ? t("clickToStartVoice")
-                  : t("allowMicAccess")}
-              </p>
-            </div>
-          ) : (
-            messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-lg p-4 ${
-                    message.role === "user"
-                      ? "bg-lingua-primary text-white"
-                      : "bg-gray-100"
-                  }`}
-                >
-                  <p>{message.content}</p>
-                  <p className="text-xs mt-2 opacity-70">
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </p>
+        {isProcessing ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-lingua-primary mb-4"></div>
+            <p className="text-gray-600">{t("processing")}</p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {currentUserInput && (
+              <div className="space-y-2">
+                <h3 className="font-medium text-gray-700">{t("youSaid")}</h3>
+                <div className="bg-gray-100 p-4 rounded-lg">
+                  <p>{currentUserInput}</p>
                 </div>
               </div>
-            ))
-          )}
-          <div ref={conversationEndRef} />
-        </div>
+            )}
+            
+            {currentAiResponse && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-medium text-gray-700">{t("aiResponse")}</h3>
+                  {audioUrl && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex items-center gap-1 text-lingua-primary"
+                      onClick={() => {
+                        if (audioRef.current) {
+                          audioRef.current.play();
+                        }
+                      }}
+                    >
+                      <Volume2 className="h-4 w-4" />
+                      {t("playAgain")}
+                    </Button>
+                  )}
+                </div>
+                <div className="bg-lingua-primary/10 p-4 rounded-lg">
+                  <p>{currentAiResponse}</p>
+                </div>
+              </div>
+            )}
+            
+            {!currentUserInput && !currentAiResponse && (
+              <div className="text-center py-8 text-gray-500">
+                <Volume2 className="mx-auto h-12 w-12 mb-4 opacity-50" />
+                <p>{t("startChatting")}</p>
+                <p className="text-sm mt-2">
+                  {microphoneAccess 
+                    ? usingFallback
+                      ? t("clickToStartVoice")
+                      : t("clickToStartVoice")
+                    : t("allowMicAccess")}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </Card>
+      
+      {/* Hidden audio element for playing generated speech */}
+      {audioUrl && <audio ref={audioRef} src={audioUrl} hidden />}
       
       <div className="mt-8 bg-gray-100 rounded-lg p-6">
         <h3 className="font-semibold mb-3">
@@ -318,10 +444,10 @@ const PremiumVoiceChat = () => {
             <Volume2 className="h-5 w-5 text-lingua-primary mt-0.5" />
             <span>
               {currentLanguage === "english"
-                ? "Natural, human-like voice interactions using ElevenLabs technology"
+                ? "Natural, human-like voice interactions using advanced AI technology"
                 : currentLanguage === "spanish"
-                  ? "Interacciones de voz naturales y humanas utilizando la tecnología de ElevenLabs"
-                  : "Interações de voz naturais e humanas usando a tecnologia ElevenLabs"}
+                  ? "Interacciones de voz naturales y humanas utilizando tecnología avanzada de IA"
+                  : "Interações de voz naturais e humanas usando tecnologia avançada de IA"}
             </span>
           </li>
           <li className="flex items-start gap-2">
