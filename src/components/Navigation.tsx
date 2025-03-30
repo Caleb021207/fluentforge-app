@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLocalization } from '../context/LocalizationContext';
 import { useTheme } from '../context/ThemeContext';
-import { MoonIcon, SunIcon } from '@heroicons/react/solid';
+import { Moon, Sun } from 'lucide-react';
 
 const Navigation = () => {
   const { user, logout } = useAuth();
@@ -53,7 +54,7 @@ const Navigation = () => {
                 location.pathname === '/dynamic-chat' ? 'text-lingua-primary' : ''
               }`}
             >
-              Dynamic AI Chat
+              {t('dynamicAIChat')}
             </Link>
 
             {user ? (
@@ -91,9 +92,9 @@ const Navigation = () => {
             )}
             <button onClick={toggleTheme} className="px-3 py-2 rounded-md">
               {theme === 'dark' ? (
-                <SunIcon className="h-5 w-5 text-lingua-text" />
+                <Sun className="h-5 w-5 text-lingua-text" />
               ) : (
-                <MoonIcon className="h-5 w-5 text-lingua-text" />
+                <Moon className="h-5 w-5 text-lingua-text" />
               )}
             </button>
           </div>
@@ -135,7 +136,7 @@ const Navigation = () => {
               to="/dynamic-chat"
               className="text-lingua-text hover:text-lingua-primary block px-3 py-2 rounded-md text-base font-medium"
             >
-              Dynamic AI Chat
+              {t('dynamicAIChat')}
             </Link>
             {user ? (
               <>
@@ -170,9 +171,9 @@ const Navigation = () => {
             )}
             <button onClick={toggleTheme} className="block px-3 py-2 rounded-md">
               {theme === 'dark' ? (
-                <SunIcon className="h-5 w-5 text-lingua-text" />
+                <Sun className="h-5 w-5 text-lingua-text" />
               ) : (
-                <MoonIcon className="h-5 w-5 text-lingua-text" />
+                <Moon className="h-5 w-5 text-lingua-text" />
               )}
             </button>
           </div>
