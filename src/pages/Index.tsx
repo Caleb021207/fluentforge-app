@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -8,27 +7,40 @@ import { useToast } from "@/hooks/use-toast";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useAuth } from "@/context/AuthContext";
 
 const Index = () => {
   const { toast } = useToast();
   const { t, setCurrentLanguage } = useLocalization();
-  const { user } = useAuth();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("");
   const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
 
   useEffect(() => {
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setIsSignedIn(!!data.user);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+
     const savedNativeLanguage = localStorage.getItem("nativeLanguage");
     const savedTargetLanguage = localStorage.getItem("targetLanguage");
     
     if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
     if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -165,7 +177,7 @@ const Index = () => {
           />
           
           <div className="space-x-4">
-            {!user ? (
+            {!isSignedIn ? (
               <Button 
                 size="lg" 
                 className="bg-lingua-primary hover:bg-lingua-primary/90"
@@ -176,16 +188,7 @@ const Index = () => {
               >
                 {t("signIn")}
               </Button>
-            ) : (
-              <Link to="/dashboard">
-                <Button 
-                  size="lg" 
-                  className="bg-lingua-primary hover:bg-lingua-primary/90"
-                >
-                  Classroom Dashboard
-                </Button>
-              </Link>
-            )}
+            ) : null}
             <Link to="/practice">
               <Button size="lg" variant="outline">
                 {t("practiceWithAI")}

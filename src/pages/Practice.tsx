@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Mic, MicOff, BookOpen, FileText, Volume2, Headphones, Book } from "lucide-react";
+import { MessageCircle, Send, Mic, MicOff, Volume2, Headphones, Book, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -28,6 +29,7 @@ const Practice = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [skillAssessment, setSkillAssessment] = useState<SkillAssessment | null>(null);
+  const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
 
@@ -78,6 +80,40 @@ const Practice = () => {
     initMicrophone();
   }, [toast, t]);
 
+  // Handle voice chat timer
+  useEffect(() => {
+    let timerId: number | null = null;
+    
+    if (isConversationActive() && voiceChatTimeRemaining !== null) {
+      timerId = window.setInterval(() => {
+        setVoiceChatTimeRemaining(prev => {
+          if (prev === null || prev <= 0) {
+            if (timerId) clearInterval(timerId);
+            if (isConversationActive()) {
+              endVoiceConversation();
+              toast({
+                title: t("voiceChatEnded"),
+                description: t("timeLimit5MinReached"),
+              });
+            }
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (timerId) clearInterval(timerId);
+    };
+  }, [isConversationActive(), voiceChatTimeRemaining]);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
   const startVoiceConversation = async () => {
     if (!microphoneAccess) {
       try {
@@ -99,12 +135,7 @@ const Practice = () => {
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
       if (isConversationActive()) {
-        await conversation.endSession();
-        console.log("Ended previous conversation session");
-        toast({
-          title: t("startVoiceChat"),
-          description: t("startChatting"),
-        });
+        endVoiceConversation();
         return;
       }
       
@@ -114,8 +145,11 @@ const Practice = () => {
       });
       console.log(`Successfully started conversation session: ${sessionId}`);
       
+      // Set 5-minute timer (300 seconds)
+      setVoiceChatTimeRemaining(300);
+      
       toast({
-        title: isConversationActive() ? t("stopVoiceChat") : t("startVoiceChat"),
+        title: t("startVoiceChat"),
         description: t("startChatting"),
       });
     } catch (error) {
@@ -124,6 +158,18 @@ const Practice = () => {
         title: t("error"),
         description: t("networkConnectionIssue"),
         variant: "destructive",
+      });
+    }
+  };
+
+  const endVoiceConversation = async () => {
+    if (isConversationActive()) {
+      await conversation.endSession();
+      console.log("Ended conversation session");
+      setVoiceChatTimeRemaining(null);
+      toast({
+        title: t("stopVoiceChat"),
+        description: t("voiceChatEnded"),
       });
     }
   };
@@ -298,22 +344,32 @@ const Practice = () => {
           </p>
         </div>
         <div className="flex flex-wrap gap-4 mb-4">
-          <Button
-            onClick={startVoiceConversation}
-            variant={isConversationActive() ? "destructive" : "default"}
-          >
-            {isConversationActive() ? (
-              <>
-                <MicOff className="h-4 w-4 mr-2" />
-                {t("stopVoiceChat")}
-              </>
-            ) : (
-              <>
-                <Mic className="h-4 w-4 mr-2" />
-                {t("startVoiceChat")}
-              </>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={startVoiceConversation}
+              variant={isConversationActive() ? "destructive" : "default"}
+            >
+              {isConversationActive() ? (
+                <>
+                  <MicOff className="h-4 w-4 mr-2" />
+                  {t("stopVoiceChat")}
+                </>
+              ) : (
+                <>
+                  <Mic className="h-4 w-4 mr-2" />
+                  {t("startVoiceChat")}
+                </>
+              )}
+            </Button>
+            
+            {voiceChatTimeRemaining !== null && (
+              <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
+                <Timer className="h-4 w-4" />
+                <span>{formatTime(voiceChatTimeRemaining)}</span>
+              </div>
             )}
-          </Button>
+          </div>
+          
           <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
             {t("getSkillsAssessment")}
           </Button>

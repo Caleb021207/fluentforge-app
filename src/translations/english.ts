@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -135,6 +134,7 @@ const englishTranslations: TranslationRecord = {
   recommendations: "Recommendations",
   // Voice Chat Page
   freePracticeWithVoice: "Free Voice Practice",
+  unlimitedVoicePractice: "Unlimited Voice Practice",
   startSpeaking: "Start Speaking",
   stopListening: "Stop Listening",
   listeningNow: "Listening now",
@@ -176,26 +176,9 @@ const englishTranslations: TranslationRecord = {
   clearConversation: "Clear Conversation",
   aiModelInfo: "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.",
   
-  // New practice page translations
-  practiceWithText: "Practice with Text Chat",
-  advancedConversation: "Advanced Conversation AI",
-  unlimitedVoicePractice: "Unlimited Voice Practice",
-  listeningToYou: "Listening to you...",
-  clickStartToBegin: "Click Start Voice Chat to begin",
-  beginner: "Beginner",
-  intermediate: "Intermediate",
-  advanced: "Advanced",
-  exercises: "Exercises",
-  listenToPrompt: "Listen to Prompt",
-  yourResponse: "Your Response",
-  expectedResponse: "Expected Response",
-  play: "Play",
-  startRecording: "Start Recording",
-  stopRecording: "Stop Recording",
-  transcription: "Transcription",
-  selectExercise: "Select an exercise to begin",
-  failedToProcessAudio: "Failed to process audio",
-  failedToPlayAudio: "Failed to play audio",
+  // New translations for timer functionality
+  voiceChatEnded: "Voice chat ended",
+  timeLimit5MinReached: "The 5-minute time limit has been reached"
 };
 
 export default englishTranslations;

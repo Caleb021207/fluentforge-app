@@ -1,26 +1,44 @@
 
 interface SpeechRecognitionEvent extends Event {
   results: SpeechRecognitionResultList;
+  resultIndex: number;
+  interpretation: any;
 }
 
-interface SpeechRecognitionConstructor {
-  new(): SpeechRecognition;
+interface SpeechRecognitionResultList {
+  [index: number]: SpeechRecognitionResult;
+  length: number;
+}
+
+interface SpeechRecognitionResult {
+  [index: number]: SpeechRecognitionAlternative;
+  length: number;
+  isFinal: boolean;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
 }
 
 interface SpeechRecognition extends EventTarget {
+  lang: string;
   continuous: boolean;
   interimResults: boolean;
-  lang: string;
+  maxAlternatives: number;
   start(): void;
   stop(): void;
   abort(): void;
-  onerror: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
-  onend: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onstart?: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: Event) => void;
+  onend: () => void;
+}
+
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognition;
 }
 
 interface Window {
-  SpeechRecognition: SpeechRecognitionConstructor;
-  webkitSpeechRecognition: SpeechRecognitionConstructor;
+  SpeechRecognition?: SpeechRecognitionConstructor;
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
 }

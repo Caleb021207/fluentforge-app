@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, LayoutDashboard, MessageCircle, HeadphonesIcon } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,31 +11,25 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // Translation map for navigation items
 const navItemTranslations = {
   english: {
-    "Text Practice": "Text Practice",
-    "Advanced Conversation": "Advanced Conversation",
+    "Practice": "Practice",
     "Unlimited Voice Practice": "Unlimited Voice Practice",
     "Language Frameworks": "Language Frameworks",
     "Admin": "Admin",
-    "Home": "Home",
-    "Dashboard": "Dashboard"
+    "Home": "Home"
   },
   spanish: {
-    "Text Practice": "Práctica de Texto",
-    "Advanced Conversation": "Conversación Avanzada",
+    "Practice": "Práctica",
     "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
     "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin",
-    "Home": "Inicio",
-    "Dashboard": "Panel"
+    "Home": "Inicio"
   },
   portuguese: {
-    "Text Practice": "Prática de Texto",
-    "Advanced Conversation": "Conversação Avançada",
+    "Practice": "Prática",
     "Unlimited Voice Practice": "Prática de Voz Ilimitada",
     "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin",
-    "Home": "Início",
-    "Dashboard": "Painel"
+    "Home": "Início"
   }
 };
 
@@ -83,16 +76,11 @@ const Navigation = () => {
     return translations[label as keyof typeof translations] || label;
   };
 
-  let navItems = [
-    { icon: MessageSquare, label: "Text Practice", path: "/text-practice" },
-    { icon: MessageCircle, label: "Advanced Conversation", path: "/advanced-conversation" },
-    { icon: HeadphonesIcon, label: "Unlimited Voice Practice", path: "/unlimited-voice-practice" },
+  const navItems = [
+    { icon: MessageSquare, label: "Practice", path: "/practice" },
+    { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
-  
-  if (isLoggedIn) {
-    navItems.unshift({ icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" });
-  }
   
   if (isAdmin) {
     navItems.push({ icon: Shield, label: "Admin", path: "/admin" });

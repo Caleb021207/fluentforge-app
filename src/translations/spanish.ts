@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const spanishTranslations: TranslationRecord = {
@@ -135,6 +134,7 @@ const spanishTranslations: TranslationRecord = {
   recommendations: "Recomendaciones",
   // Voice Chat Page
   freePracticeWithVoice: "Práctica de Voz Gratuita",
+  unlimitedVoicePractice: "Práctica de Voz Ilimitada",
   startSpeaking: "Comenzar a Hablar",
   stopListening: "Dejar de Escuchar",
   listeningNow: "Escuchando ahora",
@@ -171,26 +171,9 @@ const spanishTranslations: TranslationRecord = {
   phrase8: "¿Cómo se dice... en inglés/español?",
   translation: "Traducción",
   
-  // New practice page translations
-  practiceWithText: "Practica con Chat de Texto",
-  advancedConversation: "IA de Conversación Avanzada",
-  unlimitedVoicePractice: "Práctica de Voz Ilimitada",
-  listeningToYou: "Escuchándote...",
-  clickStartToBegin: "Haz clic en Iniciar Chat de Voz para comenzar",
-  beginner: "Principiante",
-  intermediate: "Intermedio",
-  advanced: "Avanzado",
-  exercises: "Ejercicios",
-  listenToPrompt: "Escuchar Indicación",
-  yourResponse: "Tu Respuesta",
-  expectedResponse: "Respuesta Esperada",
-  play: "Reproducir",
-  startRecording: "Iniciar Grabación",
-  stopRecording: "Detener Grabación",
-  transcription: "Transcripción",
-  selectExercise: "Selecciona un ejercicio para comenzar",
-  failedToProcessAudio: "Error al procesar el audio",
-  failedToPlayAudio: "Error al reproducir el audio",
+  // New translations for timer functionality
+  voiceChatEnded: "Chat de voz finalizado",
+  timeLimit5MinReached: "Se ha alcanzado el límite de tiempo de 5 minutos",
 };
 
 export default spanishTranslations;
