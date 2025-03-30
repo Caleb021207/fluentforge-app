@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 // Spanish translation file containing all the translation strings

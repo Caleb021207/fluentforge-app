@@ -252,10 +252,20 @@ const PremiumVoiceChat = () => {
             // Now, generate advanced speech from the AI response using GPT-4o-mini TTS
             // This will use the more advanced GPT-4o-mini TTS capability which is better than basic TTS
             try {
+              const { data: apiKeyData } = await supabase.functions.invoke('get-api-key', {
+                body: { service: 'openai' }
+              });
+              
+              const openaiApiKey = apiKeyData?.key;
+              
+              if (!openaiApiKey) {
+                throw new Error('Failed to retrieve OpenAI API key');
+              }
+
               const response = await fetch('https://api.openai.com/v1/audio/speech', {
                 method: 'POST',
                 headers: {
-                  'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+                  'Authorization': `Bearer ${openaiApiKey}`,
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -548,11 +558,7 @@ const PremiumVoiceChat = () => {
             className={usingMidTier ? "bg-indigo-600 hover:bg-indigo-700" : ""}
           >
             <Volume2 className="h-4 w-4 mr-2" />
-            {currentLanguage === "english" 
-              ? "Mid-Tier Voice" 
-              : currentLanguage === "spanish"
-                ? "Voz Intermedia"
-                : "Voz Intermediária"}
+            {t("midTierVoice")}
           </Button>
           
           <Button 
@@ -561,11 +567,7 @@ const PremiumVoiceChat = () => {
             className={usingFallback ? "bg-amber-600 hover:bg-amber-700" : ""}
           >
             <Headphones className="h-4 w-4 mr-2" />
-            {currentLanguage === "english" 
-              ? "Basic Voice" 
-              : currentLanguage === "spanish"
-                ? "Voz Básica"
-                : "Voz Básica"}
+            {t("basicVoice")}
           </Button>
         </div>
         
@@ -584,17 +586,9 @@ const PremiumVoiceChat = () => {
                 : "text-blue-800"
           }`}>
             {usingMidTier 
-              ? (currentLanguage === "english" 
-                  ? "Using OpenAI's HD TTS voice model. You can record one message at a time."
-                  : currentLanguage === "spanish"
-                    ? "Usando el modelo de voz HD TTS de OpenAI. Puedes grabar un mensaje a la vez."
-                    : "Usando o modelo de voz HD TTS da OpenAI. Você pode gravar uma mensagem por vez.")
+              ? t("usingMidTierVoice")
               : usingFallback 
-                ? (currentLanguage === "english" 
-                    ? "Using basic voice mode with Whisper and standard TTS. You can record one message at a time."
-                    : currentLanguage === "spanish"
-                      ? "Usando el modo de voz básico con Whisper y TTS estándar. Puedes grabar un mensaje a la vez."
-                      : "Usando o modo de voz básico com Whisper e TTS padrão. Você pode gravar uma mensagem por vez.")
+                ? t("usingFallbackMode")
                 : (currentLanguage === "english" 
                     ? "Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session."
                     : currentLanguage === "spanish"

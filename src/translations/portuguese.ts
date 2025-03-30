@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 // Portuguese translation file containing all the translation strings
@@ -154,8 +155,6 @@ const portugueseTranslations: TranslationRecord = {
   failedToGetResponse: "Falha ao obter resposta da IA. Por favor, tente novamente.",
   failedToGenerateSpeech: "Falha ao gerar fala. Por favor, tente novamente.",
   audioPlaybackError: "Erro ao reproduzir áudio. Por favor, tente novamente.",
-  voiceChatEnded: "Chat de voz encerrado",
-  timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
   
   // Conversation starter phrases
   phrase1: "Olá, como você está hoje?",
@@ -191,7 +190,6 @@ const portugueseTranslations: TranslationRecord = {
   midTierVoice: "Voz Intermediária",
   usingMidTierVoice: "Usando a voz HD TTS da OpenAI",
   basicVoice: "Voz Básica",
-  processing: "Processando sua mensagem...",
 };
 
 export default portugueseTranslations;
