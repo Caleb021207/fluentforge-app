@@ -70,5 +70,62 @@ export interface UsageStats {
   updated_at: string;
 }
 
-// Use these types in your components like this:
-// import { UserProfile, LessonProgress, CertificationAttempt } from "@/types/supabase";
+// Note: The tables in Database schema must match these interfaces
+// Add this comment to make it clear that these types must be updated
+// if the database schema changes.
+
+// Define custom Database typings to explicitly include all our tables
+export interface Database {
+  public: {
+    Tables: {
+      certification_attempts: {
+        Row: CertificationAttempt;
+        Insert: Partial<CertificationAttempt>;
+        Update: Partial<CertificationAttempt>;
+      };
+      certification_transcripts: {
+        Row: any; // Define as needed
+        Insert: any;
+        Update: any;
+      };
+      lesson_progress: {
+        Row: LessonProgress;
+        Insert: Partial<LessonProgress>;
+        Update: Partial<LessonProgress>;
+      };
+      profiles: {
+        Row: UserProfile;
+        Insert: Partial<UserProfile>;
+        Update: Partial<UserProfile>;
+      };
+      user_profiles: {
+        Row: UserProfile;
+        Insert: Partial<UserProfile>;
+        Update: Partial<UserProfile>;
+      };
+      user_settings: {
+        Row: UserSettings;
+        Insert: Partial<UserSettings>;
+        Update: Partial<UserSettings>;
+      };
+      classrooms: {
+        Row: Classroom;
+        Insert: Partial<Classroom>;
+        Update: Partial<Classroom>;
+      };
+      student_classrooms: {
+        Row: StudentClassroom;
+        Insert: Partial<StudentClassroom>;
+        Update: Partial<StudentClassroom>;
+      };
+      usage_stats: {
+        Row: UsageStats;
+        Insert: Partial<UsageStats>;
+        Update: Partial<UsageStats>;
+      };
+    };
+  };
+}
+
+// Add type to explicitly define what tables Supabase can access
+export type TableNames = keyof Database['public']['Tables'];

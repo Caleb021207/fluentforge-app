@@ -68,7 +68,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
     try {
       setIsLoading(true);
       
-      // Use typed query for user_settings table
+      // Use typed query for user_settings table with explicit casting
       const { data, error } = await supabase
         .from('user_settings')
         .select('*')
@@ -80,7 +80,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
         return;
       }
 
-      setUserRoleState(data.role as UserRole);
+      setUserRoleState((data as UserSettings).role);
     } catch (error) {
       console.error('Error in fetchUserRole:', error);
     } finally {
@@ -92,7 +92,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
     try {
       setIsLoading(true);
       
-      // Fetch classrooms where user is a teacher
+      // Fetch classrooms where user is a teacher with explicit casting
       const { data: teacherClassrooms, error: teacherError } = await supabase
         .from('classrooms')
         .select('*')
@@ -105,7 +105,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
 
       setUserClassrooms(teacherClassrooms as Classroom[]);
 
-      // Fetch classrooms where user is a student
+      // Fetch classrooms where user is a student with explicit casting
       const { data: enrollments, error: enrollmentError } = await supabase
         .from('student_classrooms')
         .select('*, classroom:classrooms(*)')
@@ -116,15 +116,21 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
         return;
       }
 
-      const formattedEnrollments = enrollments.map(item => ({
-        classroom: item.classroom as Classroom,
-        enrollment: {
+      // Type assertion to help TypeScript understand the structure
+      const formattedEnrollments = enrollments.map(item => {
+        // Add explicit type assertion
+        const enrollment = {
           id: item.id,
           student_id: item.student_id,
           classroom_id: item.classroom_id,
           joined_at: item.joined_at
-        } as StudentClassroom
-      }));
+        } as StudentClassroom;
+        
+        return {
+          classroom: item.classroom as Classroom,
+          enrollment
+        };
+      });
 
       setEnrolledClassrooms(formattedEnrollments);
     } catch (error) {
@@ -138,7 +144,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
     try {
       const today = new Date().toISOString().split('T')[0];
       
-      // Use typed query for usage_stats table
+      // Use typed query for usage_stats table with explicit casting
       const { data, error } = await supabase
         .from('usage_stats')
         .select('*')
@@ -146,7 +152,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
         .eq('date', today)
         .maybeSingle();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         console.error('Error fetching usage stats:', error);
         return;
       }
@@ -226,7 +232,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
 
       const classCode = codeData;
 
-      // Use typed query for classrooms table
+      // Use typed query for classrooms table with explicit casting
       const { data, error } = await supabase
         .from('classrooms')
         .insert({
@@ -540,7 +546,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
         .eq('date', today)
         .maybeSingle();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         console.error('Error fetching student stats:', error);
         return null;
       }
