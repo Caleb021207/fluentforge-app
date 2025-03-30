@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -84,8 +83,23 @@ const VoiceChat = () => {
       });
     }
 
+    // Initialize speech synthesis
     if (typeof window !== "undefined" && 'speechSynthesis' in window) {
       synthRef.current = window.speechSynthesis;
+      
+      // Initialize available voices when the window loads
+      const handleVoicesChanged = () => {
+        console.log("Voices available:", synthRef.current?.getVoices().length);
+      };
+      
+      synthRef.current.onvoiceschanged = handleVoicesChanged;
+      
+      // Trigger initial check for voices
+      if (synthRef.current.getVoices().length > 0) {
+        handleVoicesChanged();
+      }
+    } else {
+      console.warn("Speech synthesis not supported in this browser");
     }
     
     return () => {
@@ -147,24 +161,29 @@ const VoiceChat = () => {
 
       if (error) throw error;
       
+      // Extract content and translation from the response
+      const content = data.content || data.reply || "";
+      const translationText = data.translation || "";
+      
       const aiMessage: ConversationMessage = {
         role: 'assistant',
-        content: data.reply,
-        translation: data.translation,
+        content: content,
+        translation: translationText,
         timestamp: new Date()
       };
       
-      setGptResponse(data.reply);
-      setTranslation(data.translation || "");
+      setGptResponse(content);
+      setTranslation(translationText);
       setConversationHistory(prev => [...prev, aiMessage]);
       
       setApiConversationHistory(data.updatedHistory || [
         ...apiConversationHistory,
         { role: 'user', content: text },
-        { role: 'assistant', content: data.reply + (data.translation ? "\nTranslation: " + data.translation : "") }
+        { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      speakWithBrowserSynthesis(data.reply);
+      // Automatically speak the response using browser's speech synthesis
+      speakWithBrowserSynthesis(content);
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -188,22 +207,42 @@ const VoiceChat = () => {
       return;
     }
     
+    // Cancel any ongoing speech
     synthRef.current.cancel();
     
+    // Create a new utterance with the response text
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    utteranceRef.current.lang = currentLanguage === "english" ? "es" : "en-US";
+    // Set the language based on what the AI should be speaking
+    // If user is English, AI speaks Spanish; if user is Spanish/Portuguese, AI speaks English
+    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
     
+    // Try to find a suitable voice
     const voices = synthRef.current.getVoices();
+    console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
+    
     const targetLang = currentLanguage === "english" ? "es" : "en";
     
-    const voice = voices.find(v => v.lang.startsWith(targetLang) && v.localService);
+    // Find a voice that matches the target language
+    const voice = voices.find(v => v.lang.startsWith(targetLang));
     if (voice) {
+      console.log(`Using voice: ${voice.name} (${voice.lang})`);
       utteranceRef.current.voice = voice;
+    } else {
+      console.warn(`No matching voice found for language: ${targetLang}`);
     }
     
-    utteranceRef.current.onstart = () => setIsSpeaking(true);
-    utteranceRef.current.onend = () => setIsSpeaking(false);
+    // Set event handlers
+    utteranceRef.current.onstart = () => {
+      console.log("Speech synthesis started");
+      setIsSpeaking(true);
+    };
+    
+    utteranceRef.current.onend = () => {
+      console.log("Speech synthesis ended");
+      setIsSpeaking(false);
+    };
+    
     utteranceRef.current.onerror = (event) => {
       console.error('Speech synthesis error:', event);
       setIsSpeaking(false);
@@ -214,6 +253,8 @@ const VoiceChat = () => {
       });
     };
     
+    // Start speaking
+    console.log("Starting speech synthesis...");
     synthRef.current.speak(utteranceRef.current);
   };
 
@@ -260,9 +301,6 @@ const VoiceChat = () => {
     return { nativeLanguagePhrases, targetLanguagePhrases };
   };
 
-  const { practice, native } = getLanguagePair();
-  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
-
   const handlePhraseClick = (phrase: string) => {
     handleSendTranscript(phrase);
   };
@@ -300,13 +338,13 @@ const VoiceChat = () => {
 
   const getPracticeDescription = () => {
     if (currentLanguage === "english") {
-      return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}. The AI will respond to you in ${practice} and help you practice.`;
+      return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}. The AI will respond to you in ${getLanguagePair().practice} and help you practice.`;
     } else if (currentLanguage === "spanish") {
-      return `Practica tus habilidades de habla en ${practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${practice}. La IA te responderá y te ayudará a practicar.`;
+      return `Practica tus habilidades de habla en ${getLanguagePair().practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${getLanguagePair().practice}. La IA te responderá y te ayudará a practicar.`;
     } else if (currentLanguage === "portuguese") {
-      return `Pratique suas habilidades de fala em ${practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${practice}. A IA responderá a você e o ajudará a praticar.`;
+      return `Pratique suas habilidades de fala em ${getLanguagePair().practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
     }
-    return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}.`;
+    return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
 
   const getAIModelInfoText = () => {
@@ -330,6 +368,9 @@ const VoiceChat = () => {
     }
     return t("practiceLanguageTips");
   };
+
+  const { practice, native } = getLanguagePair();
+  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
     <div className="max-w-4xl mx-auto p-4">
