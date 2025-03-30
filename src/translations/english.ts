@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -175,7 +174,29 @@ const englishTranslations: TranslationRecord = {
   // New UI strings for VoiceChat
   conversationHistory: "Conversation History",
   clearConversation: "Clear Conversation",
-  aiModelInfo: "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses."
+  aiModelInfo: "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.",
+  
+  // New practice page translations
+  "practiceWithText": "Practice with Text Chat",
+  "advancedConversation": "Advanced Conversation AI",
+  "unlimitedVoicePractice": "Unlimited Voice Practice",
+  "listeningToYou": "Listening to you...",
+  "clickStartToBegin": "Click Start Voice Chat to begin",
+  "beginner": "Beginner",
+  "intermediate": "Intermediate",
+  "advanced": "Advanced",
+  "exercises": "Exercises",
+  "listenToPrompt": "Listen to Prompt",
+  "yourResponse": "Your Response",
+  "expectedResponse": "Expected Response",
+  "play": "Play",
+  "startRecording": "Start Recording",
+  "stopRecording": "Stop Recording",
+  "processing": "Processing...",
+  "transcription": "Transcription",
+  "selectExercise": "Select an exercise to begin",
+  "failedToProcessAudio": "Failed to process audio",
+  "failedToPlayAudio": "Failed to play audio",
 };
 
 export default englishTranslations;

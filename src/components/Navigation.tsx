@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, LayoutDashboard } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, LayoutDashboard, MessageCircle, HeadphonesIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,7 +12,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // Translation map for navigation items
 const navItemTranslations = {
   english: {
-    "Practice": "Practice",
+    "Text Practice": "Text Practice",
+    "Advanced Conversation": "Advanced Conversation",
     "Unlimited Voice Practice": "Unlimited Voice Practice",
     "Language Frameworks": "Language Frameworks",
     "Admin": "Admin",
@@ -20,7 +21,8 @@ const navItemTranslations = {
     "Dashboard": "Dashboard"
   },
   spanish: {
-    "Practice": "Práctica",
+    "Text Practice": "Práctica de Texto",
+    "Advanced Conversation": "Conversación Avanzada",
     "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
     "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin",
@@ -28,7 +30,8 @@ const navItemTranslations = {
     "Dashboard": "Panel"
   },
   portuguese: {
-    "Practice": "Prática",
+    "Text Practice": "Prática de Texto",
+    "Advanced Conversation": "Conversação Avançada",
     "Unlimited Voice Practice": "Prática de Voz Ilimitada",
     "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin",
@@ -81,8 +84,9 @@ const Navigation = () => {
   };
 
   let navItems = [
-    { icon: MessageSquare, label: "Practice", path: "/practice" },
-    { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
+    { icon: MessageSquare, label: "Text Practice", path: "/text-practice" },
+    { icon: MessageCircle, label: "Advanced Conversation", path: "/advanced-conversation" },
+    { icon: HeadphonesIcon, label: "Unlimited Voice Practice", path: "/unlimited-voice-practice" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
   

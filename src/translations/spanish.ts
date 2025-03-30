@@ -170,6 +170,28 @@ const spanishTranslations: TranslationRecord = {
   phrase7: "¿Cuáles son tus planes para mañana?",
   phrase8: "¿Cómo se dice... en inglés/español?",
   translation: "Traducción",
+  
+  // New practice page translations
+  "practiceWithText": "Practica con Chat de Texto",
+  "advancedConversation": "IA de Conversación Avanzada",
+  "unlimitedVoicePractice": "Práctica de Voz Ilimitada",
+  "listeningToYou": "Escuchándote...",
+  "clickStartToBegin": "Haz clic en Iniciar Chat de Voz para comenzar",
+  "beginner": "Principiante",
+  "intermediate": "Intermedio",
+  "advanced": "Avanzado",
+  "exercises": "Ejercicios",
+  "listenToPrompt": "Escuchar Indicación",
+  "yourResponse": "Tu Respuesta",
+  "expectedResponse": "Respuesta Esperada",
+  "play": "Reproducir",
+  "startRecording": "Iniciar Grabación",
+  "stopRecording": "Detener Grabación",
+  "processing": "Procesando...",
+  "transcription": "Transcripción",
+  "selectExercise": "Selecciona un ejercicio para comenzar",
+  "failedToProcessAudio": "Error al procesar el audio",
+  "failedToPlayAudio": "Error al reproducir el audio",
 };
 
 export default spanishTranslations;
