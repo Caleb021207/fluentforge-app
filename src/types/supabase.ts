@@ -74,8 +74,17 @@ export interface UsageStats {
   updated_at: string;
 }
 
-// Define custom Database typings to explicitly include all our tables
-export interface Database extends GeneratedDatabase {
+export interface StudentProfile {
+  id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  joined_at: string;
+  text_chat_count: number;
+  voice_minutes_used: number;
+}
+
+// Define custom Database typings to include all our tables
+export interface Database {
   public: {
     Tables: {
       certification_attempts: {
@@ -170,7 +179,7 @@ export interface Database extends GeneratedDatabase {
     Enums: GeneratedDatabase["public"]["Enums"];
     CompositeTypes: GeneratedDatabase["public"]["CompositeTypes"];
   };
-};
+}
 
 // Add type to explicitly define what tables Supabase can access
 export type TableNames = keyof Database['public']['Tables'];

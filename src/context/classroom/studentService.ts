@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Classroom, StudentClassroom, StudentProfile } from '@/types/supabase';
+import { Classroom, StudentClassroom } from '@/types/supabase';
 import { StudentProfile as StudentProfileType } from './types';
 
 export async function fetchEnrolledClassrooms(
