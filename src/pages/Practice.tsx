@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Book, Timer, FileText, BookOpen } from "lucide-react";
+import { MessageCircle, Send, Book, Timer, FileText, BookOpen, Volume2, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useConversation } from "@11labs/react";
+import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 
 interface ChatMessage {
   role: "user" | "assistant";

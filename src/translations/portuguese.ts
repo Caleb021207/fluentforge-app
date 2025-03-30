@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -180,4 +181,4 @@ const portugueseTranslations: TranslationRecord = {
   typeMessageBelow: "Digite uma mensagem abaixo para começar"
 };
 
-export default portugueseTranslations as TranslationKeys;
+export default portugueseTranslations as TranslationRecord;

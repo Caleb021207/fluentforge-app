@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const spanishTranslations: TranslationRecord = {
@@ -183,4 +184,4 @@ const spanishTranslations: TranslationRecord = {
   typeMessageBelow: "Escribe un mensaje abajo para comenzar"
 };
 
-export default spanishTranslations as TranslationKeys;
+export default spanishTranslations as TranslationRecord;

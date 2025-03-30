@@ -1,9 +1,4 @@
 
-// Define the translation type structure
-export type TranslationRecord = {
-  [key: string]: string;
-};
+export type TranslationRecord = Record<string, string>;
 
-export type LanguageTranslations = {
-  [key: string]: TranslationRecord;
-};
+export type TranslationKeys = Record<keyof typeof import('./english').default, string>;
