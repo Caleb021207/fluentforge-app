@@ -1,7 +1,4 @@
 
-// This file contains additional type definitions for Supabase tables
-// that complement the auto-generated types in src/integrations/supabase/types.ts
-
 import { Database as GeneratedDatabase, Json } from '@/integrations/supabase/types';
 
 export interface UserProfile {
