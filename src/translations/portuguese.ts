@@ -170,7 +170,14 @@ const portugueseTranslations: TranslationRecord = {
   // New UI strings for VoiceChat
   conversationHistory: "Histórico de Conversa",
   clearConversation: "Limpar Conversa",
-  aiModelInfo: "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz."
+  aiModelInfo: "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.",
+  
+  // New translations for premium voice chat
+  premiumVoiceChat: "Chat de Voz Premium",
+  premiumVoiceChatBenefits: "Benefícios de Voz Premium",
+  textConversationPractice: "Prática de Conversação de Texto",
+  startTextChatting: "Comece a conversar com o tutor de IA",
+  typeMessageBelow: "Digite uma mensagem abaixo para começar"
 };
 
-export default portugueseTranslations;
+export default portugueseTranslations as TranslationKeys;

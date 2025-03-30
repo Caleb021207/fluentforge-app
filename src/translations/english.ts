@@ -178,7 +178,14 @@ const englishTranslations: TranslationRecord = {
   
   // New translations for timer functionality
   voiceChatEnded: "Voice chat ended",
-  timeLimit5MinReached: "The 5-minute time limit has been reached"
+  timeLimit5MinReached: "The 5-minute time limit has been reached",
+  
+  // New translations for premium voice chat
+  premiumVoiceChat: "Premium Voice Chat",
+  premiumVoiceChatBenefits: "Premium Voice Benefits",
+  textConversationPractice: "Text Conversation Practice",
+  startTextChatting: "Start text chatting with the AI tutor",
+  typeMessageBelow: "Type a message below to begin"
 };
 
-export default englishTranslations;
+export default englishTranslations as TranslationKeys;

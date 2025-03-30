@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,22 +12,25 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // Translation map for navigation items
 const navItemTranslations = {
   english: {
-    "Practice": "Practice",
+    "Text Conversation Practice": "Text Conversation Practice",
     "Unlimited Voice Practice": "Unlimited Voice Practice",
+    "Premium Voice Chat": "Premium Voice Chat",
     "Language Frameworks": "Language Frameworks",
     "Admin": "Admin",
     "Home": "Home"
   },
   spanish: {
-    "Practice": "Práctica",
+    "Text Conversation Practice": "Práctica de Conversación de Texto",
     "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
+    "Premium Voice Chat": "Chat de Voz Premium",
     "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin",
     "Home": "Inicio"
   },
   portuguese: {
-    "Practice": "Prática",
+    "Text Conversation Practice": "Prática de Conversação de Texto",
     "Unlimited Voice Practice": "Prática de Voz Ilimitada",
+    "Premium Voice Chat": "Chat de Voz Premium",
     "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin",
     "Home": "Início"
@@ -77,8 +81,9 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { icon: MessageSquare, label: "Practice", path: "/practice" },
+    { icon: MessageSquare, label: "Text Conversation Practice", path: "/practice" },
     { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
+    { icon: Headphones, label: "Premium Voice Chat", path: "/premium-voice-chat" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
   

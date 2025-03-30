@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Mic, MicOff, Volume2, Headphones, Book, Timer, FileText, BookOpen } from "lucide-react";
+import { MessageCircle, Send, Book, Timer, FileText, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -324,49 +322,25 @@ const Practice = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-lingua-text mb-4">
-          {t("practiceWithAITutor")}
+          {t("textConversationPractice")}
         </h1>
         <p className="text-gray-600 mb-4">
           {currentLanguage === "english" 
-            ? `Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`
-            : `Chat with our AI tutor to practice your English! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.`}
+            ? `Chat with our AI tutor to practice your Spanish through text conversations! The AI will help correct your grammar, vocabulary, and usage. Feel free to ask questions about language or culture.`
+            : currentLanguage === "spanish"
+              ? `¡Chatea con nuestro tutor de IA para practicar tu inglés a través de conversaciones de texto! La IA te ayudará a corregir tu gramática, vocabulario y uso. No dudes en hacer preguntas sobre el idioma o la cultura.`
+              : `Converse com nosso tutor de IA para praticar seu inglês através de conversas de texto! A IA ajudará a corrigir sua gramática, vocabulário e uso. Sinta-se à vontade para fazer perguntas sobre idioma ou cultura.`}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
             {currentLanguage === "english" 
-              ? "Note: There is a 5-minute conversational AI usage limit per user per day. For unlimited voice practice, try our Voice Chat feature."
+              ? "Note: This is the text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features."
               : currentLanguage === "spanish"
-                ? "Nota: Hay un límite de uso de IA conversacional de 5 minutos por usuario por día. Para práctica de voz ilimitada, prueba nuestra función de Chat de Voz."
-                : "Nota: Há um limite de uso de IA conversacional de 5 minutos por usuário por dia. Para prática de voz ilimitada, experimente nosso recurso de Chat de Voz."}
+                ? "Nota: Esta es la función de práctica basada en texto. Para la práctica de voz, prueba nuestras funciones de Chat de Voz Ilimitado o Chat de Voz Premium."
+                : "Nota: Este é o recurso de prática baseada em texto. Para prática de voz, experimente nossos recursos de Chat de Voz Ilimitado ou Chat de Voz Premium."}
           </p>
         </div>
         <div className="flex flex-wrap gap-4 mb-4">
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={startVoiceConversation}
-              variant={isConversationActive() ? "destructive" : "default"}
-            >
-              {isConversationActive() ? (
-                <>
-                  <MicOff className="h-4 w-4 mr-2" />
-                  {t("stopVoiceChat")}
-                </>
-              ) : (
-                <>
-                  <Mic className="h-4 w-4 mr-2" />
-                  {t("startVoiceChat")}
-                </>
-              )}
-            </Button>
-            
-            {voiceChatTimeRemaining !== null && (
-              <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
-                <Timer className="h-4 w-4" />
-                <span>{formatTime(voiceChatTimeRemaining)}</span>
-              </div>
-            )}
-          </div>
-          
           <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
             {t("getSkillsAssessment")}
           </Button>
@@ -420,11 +394,9 @@ const Practice = () => {
           {messages.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <MessageCircle className="mx-auto h-12 w-12 mb-4 opacity-50" />
-              <p>{t("startChatting")}</p>
+              <p>{t("startTextChatting")}</p>
               <p className="text-sm mt-2">
-                {microphoneAccess 
-                  ? t("clickToStartVoice")
-                  : t("allowMicAccess")}
+                {t("typeMessageBelow")}
               </p>
             </div>
           ) : (
@@ -472,9 +444,8 @@ const Practice = () => {
             onChange={(e) => setInput(e.target.value)}
             placeholder={getPlaceholderText()}
             className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary"
-            disabled={isConversationActive()}
           />
-          <Button type="submit" disabled={isLoading || isConversationActive()}>
+          <Button type="submit" disabled={isLoading}>
             <Send className="h-4 w-4 mr-2" />
             {t("send")}
           </Button>

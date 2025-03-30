@@ -174,6 +174,13 @@ const spanishTranslations: TranslationRecord = {
   // New translations for timer functionality
   voiceChatEnded: "Chat de voz finalizado",
   timeLimit5MinReached: "Se ha alcanzado el límite de tiempo de 5 minutos",
+  
+  // New translations for premium voice chat
+  premiumVoiceChat: "Chat de Voz Premium",
+  premiumVoiceChatBenefits: "Beneficios de Voz Premium",
+  textConversationPractice: "Práctica de Conversación de Texto",
+  startTextChatting: "Comienza a chatear con el tutor de IA",
+  typeMessageBelow: "Escribe un mensaje abajo para comenzar"
 };
 
-export default spanishTranslations;
+export default spanishTranslations as TranslationKeys;

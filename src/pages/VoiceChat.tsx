@@ -384,6 +384,15 @@ const VoiceChat = () => {
         <p className="text-sm text-gray-500 mb-2">
           <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : "Modelo de IA:"}</strong> {getAIModelInfoText()}
         </p>
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+          <p className="text-amber-800 text-sm">
+            {currentLanguage === "english" 
+              ? "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat."
+              : currentLanguage === "spanish"
+                ? "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium."
+                : "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium."}
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6">
