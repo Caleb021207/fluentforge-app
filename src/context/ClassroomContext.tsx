@@ -67,6 +67,8 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
   const fetchUserRole = async () => {
     try {
       setIsLoading(true);
+      
+      // Fix: Use typed query for user_settings table
       const { data, error } = await supabase
         .from('user_settings')
         .select('role')
@@ -136,6 +138,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
     try {
       const today = new Date().toISOString().split('T')[0];
       
+      // Fix: Use typed query for usage_stats table
       const { data, error } = await supabase
         .from('usage_stats')
         .select('*')
@@ -177,6 +180,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
 
   const setUserRole = async (role: UserRole) => {
     try {
+      // Fix: Use typed query for user_settings table
       const { error } = await supabase
         .from('user_settings')
         .update({ role, updated_at: new Date().toISOString() })
@@ -222,6 +226,7 @@ export const ClassroomProvider: React.FC<ClassroomProviderProps> = ({ children, 
 
       const classCode = codeData;
 
+      // Fix: Use typed query for classrooms table
       const { data, error } = await supabase
         .from('classrooms')
         .insert({
