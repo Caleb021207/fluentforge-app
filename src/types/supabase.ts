@@ -83,7 +83,7 @@ export interface StudentProfile {
   voice_minutes_used: number;
 }
 
-// Define custom Database typings to include all our tables
+// Define Database interface to include all our tables
 export interface Database {
   public: {
     Tables: {
