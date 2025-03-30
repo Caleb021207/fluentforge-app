@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home } from "lucide-react";
+import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, LayoutDashboard } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,21 +16,24 @@ const navItemTranslations = {
     "Unlimited Voice Practice": "Unlimited Voice Practice",
     "Language Frameworks": "Language Frameworks",
     "Admin": "Admin",
-    "Home": "Home"
+    "Home": "Home",
+    "Dashboard": "Dashboard"
   },
   spanish: {
     "Practice": "Práctica",
     "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
     "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin",
-    "Home": "Inicio"
+    "Home": "Inicio",
+    "Dashboard": "Panel"
   },
   portuguese: {
     "Practice": "Prática",
     "Unlimited Voice Practice": "Prática de Voz Ilimitada",
     "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin",
-    "Home": "Início"
+    "Home": "Início",
+    "Dashboard": "Painel"
   }
 };
 
@@ -76,11 +80,15 @@ const Navigation = () => {
     return translations[label as keyof typeof translations] || label;
   };
 
-  const navItems = [
+  let navItems = [
     { icon: MessageSquare, label: "Practice", path: "/practice" },
     { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
+  
+  if (isLoggedIn) {
+    navItems.unshift({ icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" });
+  }
   
   if (isAdmin) {
     navItems.push({ icon: Shield, label: "Admin", path: "/admin" });

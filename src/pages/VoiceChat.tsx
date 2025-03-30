@@ -1,510 +1,435 @@
-import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Volume2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
-import englishTranslations from "@/translations/english";
-import spanishTranslations from "@/translations/spanish";
-import portugueseTranslations from "@/translations/portuguese";
 
-type ConversationMessage = {
-  role: 'user' | 'assistant';
-  content: string;
-  translation?: string;
-  timestamp: Date;
-};
+import React, { useState, useEffect, useRef } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { useClassroom } from '@/context/ClassroomContext';
+import { useAuth } from '@/context/AuthContext';
+import { updateVoiceMinutesUsed, getRemainingVoiceMinutes, checkHasVoiceAccess } from '@/utils/usageTracker';
+import { AlertCircle, Clock, Mic, MicOff, Play, Square } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useLocalization } from '@/context/LocalizationContext';
+
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
 
 const VoiceChat = () => {
-  const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
-  const [gptResponse, setGptResponse] = useState("");
-  const [translation, setTranslation] = useState("");
+  const [listening, setListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [response, setResponse] = useState('');
+  const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
-  const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
-  
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [remainingMinutes, setRemainingMinutes] = useState(0);
+  const [hasVoiceAccess, setHasVoiceAccess] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(300); // 5 minutes in seconds
+  const [timerActive, setTimerActive] = useState(false);
   const recognitionRef = useRef<any>(null);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const conversationEndRef = useRef<HTMLDivElement | null>(null);
-  
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<Date | null>(null);
   const { toast } = useToast();
-  const { currentLanguage, t } = useLocalization();
+  const { user } = useAuth();
+  const { isStudent, hasClassroom } = useClassroom();
+  const { t } = useLocalization();
 
   useEffect(() => {
-    if (conversationEndRef.current) {
-      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (user) {
+      checkAccess();
     }
-  }, [conversationHistory]);
+  }, [user, hasClassroom]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && 
-        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-      
-      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.maxAlternatives = 1;
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setTranscript(transcript);
-        handleSendTranscript(transcript);
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        setIsListening(false);
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
+    if (timerActive) {
+      timerRef.current = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            stopListening();
+            toast({
+              title: "Time's up!",
+              description: "Your 5-minute voice chat session has ended.",
+              variant: "default",
+            });
+            return 0;
+          }
+          return prev - 1;
         });
-      };
-      
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-      };
-    } else {
-      toast({
-        title: t("error"),
-        description: t("speechRecognitionNotSupported"),
-        variant: "destructive",
-      });
+      }, 1000);
+    } else if (timerRef.current) {
+      clearInterval(timerRef.current);
     }
 
-    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
-      synthRef.current = window.speechSynthesis;
-    }
-    
     return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      if (synthRef.current && utteranceRef.current) {
-        synthRef.current.cancel();
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
       }
     };
-  }, [currentLanguage, toast, t]);
+  }, [timerActive]);
 
-  const toggleListening = () => {
-    if (isListening) {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      setIsListening(false);
-    } else {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.start();
-          setIsListening(true);
-          setTranscript("");
-          setGptResponse("");
-          setTranslation("");
-        } catch (error) {
-          console.error("Error starting speech recognition:", error);
-          toast({
-            title: t("error"),
-            description: t("microphoneAccessRequired"),
-            variant: "destructive",
-          });
-        }
-      }
-    }
+  const checkAccess = async () => {
+    if (!user) return;
+    
+    const minutes = await getRemainingVoiceMinutes(user.id);
+    setRemainingMinutes(minutes);
+    
+    const access = await checkHasVoiceAccess(user.id);
+    setHasVoiceAccess(access);
   };
 
-  const handleSendTranscript = async (text: string) => {
-    setIsLoading(true);
-    
-    const userMessage: ConversationMessage = {
-      role: 'user',
-      content: text,
-      timestamp: new Date()
-    };
-    
-    setConversationHistory(prev => [...prev, userMessage]);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
-        body: { 
-          message: text,
-          userLanguage: currentLanguage,
-          conversationHistory: apiConversationHistory
-        }
-      });
-
-      if (error) throw error;
-      
-      const aiMessage: ConversationMessage = {
-        role: 'assistant',
-        content: data.reply,
-        translation: data.translation,
-        timestamp: new Date()
-      };
-      
-      setGptResponse(data.reply);
-      setTranslation(data.translation || "");
-      setConversationHistory(prev => [...prev, aiMessage]);
-      
-      setApiConversationHistory(data.updatedHistory || [
-        ...apiConversationHistory,
-        { role: 'user', content: text },
-        { role: 'assistant', content: data.reply + (data.translation ? "\nTranslation: " + data.translation : "") }
-      ]);
-      
-      speakWithBrowserSynthesis(data.reply);
-    } catch (error) {
-      console.error('Error getting GPT response:', error);
-      toast({
-        title: t("error"),
-        description: t("failedToGetResponse"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const speakWithBrowserSynthesis = (text: string) => {
-    if (!synthRef.current) {
-      console.error('Speech synthesis not available');
+  const startListening = async () => {
+    if (!user) {
       toast({
-        title: t("error"),
-        description: t("speechSynthesisNotSupported"),
+        title: "Authentication Required",
+        description: "Please sign in to use voice features",
         variant: "destructive",
       });
       return;
     }
-    
-    synthRef.current.cancel();
-    
-    utteranceRef.current = new SpeechSynthesisUtterance(text);
-    
-    utteranceRef.current.lang = currentLanguage === "english" ? "es" : "en-US";
-    
-    const voices = synthRef.current.getVoices();
-    const targetLang = currentLanguage === "english" ? "es" : "en";
-    
-    const voice = voices.find(v => v.lang.startsWith(targetLang) && v.localService);
-    if (voice) {
-      utteranceRef.current.voice = voice;
-    }
-    
-    utteranceRef.current.onstart = () => setIsSpeaking(true);
-    utteranceRef.current.onend = () => setIsSpeaking(false);
-    utteranceRef.current.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      setIsSpeaking(false);
+
+    // Initialize speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
       toast({
-        title: t("error"),
-        description: t("speechSynthesisError"),
+        title: t("speechRecognitionNotSupported"),
+        description: "Please try a different browser like Chrome",
         variant: "destructive",
       });
-    };
-    
-    synthRef.current.speak(utteranceRef.current);
-  };
-
-  const playAgain = () => {
-    if (gptResponse) {
-      speakWithBrowserSynthesis(gptResponse);
+      return;
     }
-  };
 
-  const getLanguagePair = () => {
-    if (currentLanguage === "english") {
-      return { practice: "Spanish", native: "English" };
-    } else if (currentLanguage === "spanish") {
-      return { practice: "English", native: "Spanish" };
-    } else if (currentLanguage === "portuguese") {
-      return { practice: "English", native: "Portuguese" };
-    }
-    return { practice: "Spanish", native: "English" };
-  };
-
-  const getConversationStarters = () => {
-    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
-    
-    let nativeLanguagePhrases;
-    let targetLanguagePhrases;
-    
-    if (currentLanguage === "english") {
-      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-    } else if (currentLanguage === "spanish") {
-      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "portuguese") {
-      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else {
-      nativeLanguagePhrases = phraseKeys.map(key => t(key));
-      targetLanguagePhrases = phraseKeys.map(key => {
-        const englishPhrase = englishTranslations[key];
-        return englishPhrase || key;
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      toast({
+        title: t("microphoneAccessRequired"),
+        description: "Please allow microphone access in your browser settings",
+        variant: "destructive",
       });
+      return;
     }
-    
-    return { nativeLanguagePhrases, targetLanguagePhrases };
+
+    // For students with classroom access, check remaining minutes
+    if (isStudent && hasClassroom) {
+      if (remainingMinutes <= 0) {
+        toast({
+          title: "Daily Limit Reached",
+          description: "You've used your 5 minutes of voice chat for today",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Reset timer to 5 minutes or remaining time if less
+      const timeInSeconds = Math.min(300, remainingMinutes * 60);
+      setTimeRemaining(timeInSeconds);
+      setTimerActive(true);
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'es-ES'; // Assuming Spanish is the target language
+
+    recognition.onstart = () => {
+      setListening(true);
+      startTimeRef.current = new Date();
+    };
+
+    recognition.onresult = (event: any) => {
+      let interimTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          setTranscript(prev => prev + ' ' + transcript);
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      // Update display with interim results
+      document.getElementById('interim')!.innerHTML = interimTranscript;
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error', event.error);
+      if (event.error === 'not-allowed') {
+        toast({
+          title: t("microphoneAccessRequired"),
+          description: "Please allow microphone access in your browser settings",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t("speechRecognitionError"),
+          description: event.error,
+          variant: "destructive",
+        });
+      }
+      stopListening();
+    };
+
+    recognition.onend = () => {
+      if (listening) {
+        recognition.start();
+      }
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
   };
 
-  const { practice, native } = getLanguagePair();
-  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
+  const stopListening = async () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setListening(false);
+      setTimerActive(false);
+      
+      // Calculate minutes used
+      if (startTimeRef.current && isStudent && hasClassroom) {
+        const endTime = new Date();
+        const minutesUsed = (endTime.getTime() - startTimeRef.current.getTime()) / 60000;
+        
+        if (user && minutesUsed > 0) {
+          const updatedStats = await updateVoiceMinutesUsed(user.id, minutesUsed);
+          if (updatedStats) {
+            setRemainingMinutes(Math.max(0, 5 - updatedStats.voice_minutes_used));
+          }
+        }
+      }
+      
+      // Reset timer ref
+      startTimeRef.current = null;
+      
+      // Wait for final results to be processed
+      setTimeout(() => {
+        document.getElementById('interim')!.innerHTML = '';
+        if (transcript.trim()) {
+          generateResponse();
+        }
+      }, 1000);
+    }
+  };
 
-  const handlePhraseClick = (phrase: string) => {
-    handleSendTranscript(phrase);
+  const generateResponse = async () => {
+    setIsLoading(true);
+    try {
+      // Simple mock response generation for now
+      setTimeout(() => {
+        const responses = [
+          "¡Muy bien! ¿Cómo estás hoy?",
+          "Interesante. ¿Puedes decirme más sobre eso?",
+          "Gracias por compartir. ¿Tienes alguna pregunta para mí?",
+          "Estoy de acuerdo. ¿Qué piensas hacer al respecto?",
+          "Entiendo. ¿Quieres practicar algún tema específico?",
+        ];
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        setResponse(randomResponse);
+        
+        // Generate speech
+        const utterance = new SpeechSynthesisUtterance(randomResponse);
+        utterance.lang = 'es-ES';
+        speechSynthesis.speak(utterance);
+        
+        setIsLoading(false);
+      }, 1500);
+    } catch (error) {
+      console.error('Error generating response:', error);
+      toast({
+        title: t("failedToGetResponse"),
+        description: "Please try again",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
   };
 
   const clearConversation = () => {
-    setConversationHistory([]);
-    setApiConversationHistory([]);
-    setTranscript("");
-    setGptResponse("");
-    setTranslation("");
-    toast({
-      title: t("Success"),
-      description: "Conversation history has been cleared",
-    });
+    setTranscript('');
+    setResponse('');
+    setAudioSrc(null);
   };
 
-  const getPracticeDescription = () => {
-    if (currentLanguage === "english") {
-      return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}. The AI will respond to you in ${practice} and help you practice.`;
-    } else if (currentLanguage === "spanish") {
-      return `Practica tus habilidades de habla en ${practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${practice}. La IA te responderá y te ayudará a practicar.`;
-    } else if (currentLanguage === "portuguese") {
-      return `Pratique suas habilidades de fala em ${practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${practice}. A IA responderá a você e o ajudará a praticar.`;
+  const playAudio = () => {
+    if (response) {
+      const utterance = new SpeechSynthesisUtterance(response);
+      utterance.lang = 'es-ES';
+      speechSynthesis.speak(utterance);
     }
-    return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}.`;
   };
 
-  const getAIModelInfoText = () => {
-    if (currentLanguage === "english") {
-      return "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
-    } else if (currentLanguage === "spanish") {
-      return "Modelo de IA: Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
-    } else if (currentLanguage === "portuguese") {
-      return "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
-    }
-    return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
-  };
-
-  const getPracticeTipsText = () => {
-    if (currentLanguage === "english") {
-      return "Use this tool to improve your speaking and listening skills. Here are some tips:";
-    } else if (currentLanguage === "spanish") {
-      return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
-    } else if (currentLanguage === "portuguese") {
-      return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
-    }
-    return t("practiceLanguageTips");
-  };
+  // Calculate the progress bar value
+  const progressValue = ((300 - timeRemaining) / 300) * 100;
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-lingua-text mb-4">
-          {t("unlimitedVoicePractice")}
-        </h1>
-        <p className="text-gray-600 mb-4">
-          {getPracticeDescription()}
-        </p>
-        <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : "Modelo de IA:"}</strong> {getAIModelInfoText()}
+    <div className="container mx-auto py-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">{t("freePracticeWithVoice")}</h1>
+        <p className="text-muted-foreground">
+          {isStudent && hasClassroom && hasVoiceAccess 
+            ? t("unlimitedVoicePractice") 
+            : "Practice your speaking skills with browser-based voice recognition"}
         </p>
       </div>
 
-      <div className="flex flex-col gap-6">
-        <Card className="p-6">
-          <div className="flex flex-col items-center mb-6">
-            <Button
-              onClick={toggleListening}
-              variant={isListening ? "destructive" : "default"}
-              size="lg"
-              className="mb-4"
-              disabled={isLoading || isSpeaking}
-            >
-              {isListening ? (
-                <>
-                  <MicOff className="h-5 w-5 mr-2" />
-                  {t("stopListening")}
-                </>
-              ) : (
-                <>
-                  <Mic className="h-5 w-5 mr-2" />
-                  {t("startSpeaking")}
-                </>
-              )}
-            </Button>
-            
-            {isListening && (
-              <div className="text-sm text-gray-500 animate-pulse">
-                {t("listeningNow")}...
+      {isStudent && hasClassroom && hasVoiceAccess && (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">Time Remaining:</span>
+                  <span className="font-mono">{formatTime(timeRemaining)}</span>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Daily limit: {remainingMinutes.toFixed(1)} minutes remaining
+                </div>
               </div>
-            )}
-          </div>
-
-          {transcript && (
-            <div className="mb-6">
-              <h3 className="font-medium mb-2">{t("youSaid")}:</h3>
-              <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
-                {transcript}
-              </div>
+              <Progress value={progressValue} className="h-2" />
             </div>
-          )}
-
-          {isLoading && (
-            <div className="flex justify-center my-6">
-              <div className="flex space-x-2">
-                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]" />
-              </div>
-            </div>
-          )}
-
-          {gptResponse && (
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-medium">{t("aiResponse")}:</h3>
-                <Button 
-                  onClick={playAgain} 
-                  variant="outline" 
-                  size="sm"
-                  className="flex items-center gap-2"
-                  disabled={isSpeaking}
-                >
-                  <Volume2 className="h-4 w-4" />
-                  {isSpeaking ? t("speaking") : t("playAgain")}
-                </Button>
-              </div>
-              <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
-                {gptResponse}
-                
-                {translation && (
-                  <>
-                    <div className="border-t border-gray-300 my-3"></div>
-                    <div className="text-sm text-gray-600">
-                      <strong>{t("translation")}:</strong> {translation}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
+          </CardContent>
         </Card>
-        
-        {conversationHistory.length > 0 && (
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium">
-                {t("conversationHistory")}
-              </h3>
-              <Button 
-                onClick={clearConversation}
-                variant="outline" 
-                size="sm"
-              >
-                {t("clearConversation")}
-              </Button>
-            </div>
-            
-            <ScrollArea className="h-[300px] rounded-md border p-4">
-              <div className="space-y-4">
-                {conversationHistory.map((message, index) => (
-                  <div 
-                    key={index} 
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div 
-                      className={`max-w-[80%] rounded-lg p-3 ${
-                        message.role === 'user' 
-                          ? 'bg-blue-100 text-gray-800' 
-                          : 'bg-green-100 text-gray-800'
-                      }`}
-                    >
-                      <p className="text-sm">{message.content}</p>
-                      {message.translation && (
-                        <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
-                          <span className="font-medium">{t("translation")}:</span> {message.translation}
-                        </p>
-                      )}
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(message.timestamp).toLocaleTimeString()}
-                      </p>
-                    </div>
+      )}
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <Card className="md:row-span-2">
+          <CardHeader>
+            <CardTitle>{t("practiceWithVoiceChat")}</CardTitle>
+            <CardDescription>
+              {t("practiceLanguageTips")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start">
+                <span className="flex-shrink-0 mr-2">•</span>
+                {t("askQuestionsAboutTopics")}
+              </li>
+              <li className="flex items-start">
+                <span className="flex-shrink-0 mr-2">•</span>
+                {t("practiceEverydayPhrases")}
+              </li>
+              <li className="flex items-start">
+                <span className="flex-shrink-0 mr-2">•</span>
+                {t("describeImagesOrScenes")}
+              </li>
+              <li className="flex items-start">
+                <span className="flex-shrink-0 mr-2">•</span>
+                {t("practiceVocabularyForSpecificTopics")}
+              </li>
+            </ul>
+
+            <div className="space-y-2">
+              <h3 className="font-medium">{t("conversationStarters")}</h3>
+              <div className="rounded-md border p-4 space-y-4">
+                <div>
+                  <p className="text-sm font-medium">{t("inYourTargetLanguage")}</p>
+                  <div className="space-y-2 mt-2">
+                    <p className="text-sm">¿Hola, cómo estás hoy?</p>
+                    <p className="text-sm">¿Cuáles son tus pasatiempos favoritos?</p>
+                    <p className="text-sm">¿Puedes recomendarme un libro interesante?</p>
                   </div>
-                ))}
-                <div ref={conversationEndRef} />
+                </div>
+                
+                <div>
+                  <p className="text-sm font-medium">{t("inYourNativeLanguage")}</p>
+                  <div className="space-y-2 mt-2">
+                    <p className="text-sm">Hello, how are you today?</p>
+                    <p className="text-sm">What are your favorite hobbies?</p>
+                    <p className="text-sm">Can you recommend an interesting book?</p>
+                  </div>
+                </div>
               </div>
-            </ScrollArea>
-          </Card>
-        )}
-
-        <Card className="p-6">
-          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            {t("tryThesePhrases")}
-          </p>
-          
-          <div className="space-y-6">
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourTargetLanguage")} ({practice})
-              </h4>
-              <ul className="space-y-2">
-                {targetLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`target-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
             </div>
-            
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourNativeLanguage")} ({native})
-              </h4>
-              <ul className="space-y-2">
-                {nativeLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`native-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          </CardContent>
         </Card>
-        
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
-          <p className="text-sm text-gray-600 mb-3">
-            {getPracticeTipsText()}
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-            <li>{t("askQuestionsAboutTopics")}</li>
-            <li>{t("practiceEverydayPhrases")}</li>
-            <li>{t("describeImagesOrScenes")}</li>
-            <li>{t("practiceVocabularyForSpecificTopics")}</li>
-          </ul>
-        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("youSaid")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border p-4 min-h-[150px] relative">
+              {transcript ? (
+                <p>{transcript}</p>
+              ) : (
+                <p className="text-muted-foreground italic">
+                  {listening ? t("speaking") : t("clickToStartVoice")}
+                </p>
+              )}
+              <div id="interim" className="text-muted-foreground italic"></div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            {!listening ? (
+              <Button onClick={startListening} disabled={isLoading}>
+                <Mic className="mr-2 h-4 w-4" />
+                {t("startSpeaking")}
+              </Button>
+            ) : (
+              <Button onClick={stopListening} variant="destructive">
+                <MicOff className="mr-2 h-4 w-4" />
+                {t("stopListening")}
+              </Button>
+            )}
+            <Button variant="outline" onClick={clearConversation}>
+              Clear
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("aiResponse")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border p-4 min-h-[150px] relative">
+              {isLoading ? (
+                <div className="flex justify-center items-center h-[150px]">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-lingua-primary"></div>
+                </div>
+              ) : response ? (
+                <p>{response}</p>
+              ) : (
+                <p className="text-muted-foreground italic">
+                  AI response will appear here
+                </p>
+              )}
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button 
+              variant="outline" 
+              onClick={playAudio} 
+              disabled={!response || isLoading}
+              className="flex-1"
+            >
+              <Play className="mr-2 h-4 w-4" />
+              {t("playAgain")}
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
-      
-      <audio ref={audioRef} className="hidden" />
+
+      {isStudent && !hasVoiceAccess && (
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Upgrade your experience</AlertTitle>
+          <AlertDescription>
+            Join a classroom to access premium features like 5 minutes of daily voice chat with our 
+            high-quality AI voice. Ask your teacher for a classroom code and add it in your dashboard.
+          </AlertDescription>
+        </Alert>
+      )}
     </div>
   );
 };
