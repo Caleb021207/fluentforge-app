@@ -192,7 +192,17 @@ const englishTranslations: TranslationRecord = {
   // New translations for mid-tier voice
   midTierVoice: "Dynamic AI Voice",
   usingMidTierVoice: "Using OpenAI's HD TTS technology for dynamic conversational responses",
-  basicVoice: "Basic Voice",
+  
+  // Dynamic AI Chat translations
+  dynamicAIChat: "Dynamic AI Chat",
+  dynamicAIChatDescription: "Engage in a text-based conversation with our AI language tutor. Practice your language skills through natural dialogue.",
+  languageLevel: "Language Level",
+  resetChat: "Reset Chat",
+  dynamicAITutorCapabilities: "Dynamic AI Tutor Capabilities",
+  adjustsToLanguageLevel: "Adjusts to your selected language level",
+  providesTranslations: "Provides translations for easy understanding",
+  remembersContext: "Remembers conversation context for natural dialogue",
+  offersCorrections: "Offers gentle corrections to improve your language skills"
 };
 
 export default englishTranslations;

@@ -190,6 +190,17 @@ const spanishTranslations: TranslationRecord = {
   // New translations for mid-tier voice
   midTierVoice: "Voz AI Dinámica",
   usingMidTierVoice: "Usando la tecnología HD TTS de OpenAI para respuestas conversacionales dinámicas",
+  
+  // Dynamic AI Chat translations
+  dynamicAIChat: "Chat con IA Dinámica",
+  dynamicAIChatDescription: "Participa en una conversación con nuestro tutor de idiomas IA. Practica tus habilidades lingüísticas a través de un diálogo natural.",
+  languageLevel: "Nivel de Idioma",
+  resetChat: "Reiniciar Chat",
+  dynamicAITutorCapabilities: "Capacidades del Tutor de IA Dinámico",
+  adjustsToLanguageLevel: "Se ajusta a tu nivel de idioma seleccionado",
+  providesTranslations: "Proporciona traducciones para una fácil comprensión",
+  remembersContext: "Recuerda el contexto de la conversación para un diálogo natural",
+  offersCorrections: "Ofrece correcciones suaves para mejorar tus habilidades lingüísticas"
 };
 
 export default spanishTranslations;
