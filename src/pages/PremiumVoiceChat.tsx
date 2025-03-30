@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -21,8 +21,6 @@ const PremiumVoiceChat = () => {
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  
-  const conversationEndRef = useRef<HTMLDivElement | null>(null);
 
   const getAgentId = () => {
     return getAgentIdForLanguage(currentLanguage);
@@ -50,12 +48,6 @@ const PremiumVoiceChat = () => {
   });
 
   const isConversationActive = () => conversation.status !== "disconnected";
-
-  useEffect(() => {
-    if (conversationEndRef.current) {
-      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
 
   useEffect(() => {
     const initMicrophone = async () => {
@@ -255,60 +247,6 @@ const PremiumVoiceChat = () => {
         </div>
       </div>
 
-      <Card className="mb-6 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-medium">
-            {t("conversationHistory")}
-          </h3>
-          {messages.length > 0 && (
-            <Button 
-              onClick={clearConversation}
-              variant="outline" 
-              size="sm"
-            >
-              {t("clearConversation")}
-            </Button>
-          )}
-        </div>
-        
-        <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
-          {messages.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <Volume2 className="mx-auto h-12 w-12 mb-4 opacity-50" />
-              <p>{t("startChatting")}</p>
-              <p className="text-sm mt-2">
-                {microphoneAccess 
-                  ? t("clickToStartVoice")
-                  : t("allowMicAccess")}
-              </p>
-            </div>
-          ) : (
-            messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-lg p-4 ${
-                    message.role === "user"
-                      ? "bg-lingua-primary text-white"
-                      : "bg-gray-100"
-                  }`}
-                >
-                  <p>{message.content}</p>
-                  <p className="text-xs mt-2 opacity-70">
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </p>
-                </div>
-              </div>
-            ))
-          )}
-          <div ref={conversationEndRef} />
-        </div>
-      </Card>
-      
       <div className="mt-8 bg-gray-100 rounded-lg p-6">
         <h3 className="font-semibold mb-3">
           {t("premiumVoiceChatBenefits")}
