@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 // Portuguese translation file containing all the translation strings
@@ -181,7 +182,6 @@ const portugueseTranslations: TranslationRecord = {
   typeMessageBelow: "Digite uma mensagem abaixo para começar",
   
   // New translations for fallback mode
-  processing: "Processando sua mensagem...",
   usingFallbackMode: "Usando modo de voz alternativo",
 };
 
