@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 // Portuguese translation file containing all the translation strings
@@ -181,8 +180,18 @@ const portugueseTranslations: TranslationRecord = {
   startTextChatting: "Comece a conversar por texto com o tutor de IA",
   typeMessageBelow: "Digite uma mensagem abaixo para começar",
   
+  // New translations for timer functionality
+  voiceChatEnded: "Chat de voz encerrado",
+  timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
+  
   // New translations for fallback mode
   usingFallbackMode: "Usando modo de voz alternativo",
+  
+  // New translations for mid-tier voice
+  midTierVoice: "Voz Intermediária",
+  usingMidTierVoice: "Usando a voz HD TTS da OpenAI",
+  basicVoice: "Voz Básica",
+  processing: "Processando sua mensagem...",
 };
 
 export default portugueseTranslations;

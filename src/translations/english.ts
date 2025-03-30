@@ -187,6 +187,19 @@ const englishTranslations: TranslationRecord = {
   textConversationPractice: "Text Conversation Practice",
   startTextChatting: "Start text chatting with the AI tutor",
   typeMessageBelow: "Type a message below to begin",
+  
+  // New translations for timer functionality
+  voiceChatEnded: "Voice chat ended",
+  timeLimit5MinReached: "The 5-minute time limit has been reached",
+  
+  // New translations for fallback mode
+  usingFallbackMode: "Using fallback voice mode",
+  
+  // New translations for mid-tier voice
+  midTierVoice: "Mid-Tier Voice",
+  usingMidTierVoice: "Using OpenAI's HD TTS voice",
+  basicVoice: "Basic Voice",
+  processing: "Processing your message...",
 };
 
 export default englishTranslations;

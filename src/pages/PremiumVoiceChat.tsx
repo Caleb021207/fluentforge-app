@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Volume2, Headphones } from "lucide-react";
+import { Mic, MicOff, Volume2, Headphones, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -20,6 +20,7 @@ const PremiumVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [usingMidTier, setUsingMidTier] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [currentUserInput, setCurrentUserInput] = useState<string>("");
@@ -122,6 +123,13 @@ const PremiumVoiceChat = () => {
     }
 
     try {
+      if (usingMidTier) {
+        // Start mid-tier recording with browser APIs
+        setIsRecording(true);
+        startMidTierRecording();
+        return;
+      }
+      
       if (usingFallback) {
         // Start fallback recording with browser APIs
         setIsRecording(true);
@@ -162,8 +170,8 @@ const PremiumVoiceChat = () => {
   };
 
   const endConversation = async () => {
-    if (usingFallback) {
-      stopFallbackRecording();
+    if (usingMidTier || usingFallback) {
+      stopRecording();
       setIsRecording(false);
       return;
     }
@@ -180,9 +188,158 @@ const PremiumVoiceChat = () => {
     }
   };
 
-  // MediaRecorder for fallback voice recording
+  // MediaRecorder for voice recording
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
+
+  const startMidTierRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder.current = new MediaRecorder(stream);
+      audioChunks.current = [];
+      
+      mediaRecorder.current.ondataavailable = (event) => {
+        audioChunks.current.push(event.data);
+      };
+      
+      mediaRecorder.current.onstop = async () => {
+        setIsProcessing(true);
+        const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm' });
+        
+        // Convert to base64
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = async () => {
+          const base64data = reader.result as string;
+          const base64Audio = base64data.split(',')[1];
+          
+          try {
+            // First, transcribe the audio
+            const { data: transcription, error: transcriptionError } = await supabase.functions.invoke(
+              'transcribe-audio',
+              { body: { audio: base64Audio } }
+            );
+            
+            if (transcriptionError) {
+              throw new Error(transcriptionError.message);
+            }
+            
+            if (!transcription || !transcription.text) {
+              throw new Error('Failed to transcribe audio');
+            }
+            
+            const userText = transcription.text.trim();
+            setCurrentUserInput(userText);
+            
+            // Now, send the transcription to the chatbot
+            const { data: chatResponse, error: chatError } = await supabase.functions.invoke(
+              'chat-with-tutor',
+              { 
+                body: { 
+                  message: userText,
+                  userLanguage: currentLanguage 
+                } 
+              }
+            );
+            
+            if (chatError) {
+              throw new Error(chatError.message);
+            }
+            
+            const aiResponseText = chatResponse.content;
+            setCurrentAiResponse(aiResponseText);
+            
+            // Now, generate advanced speech from the AI response using GPT-4o-mini TTS
+            // This will use the more advanced GPT-4o-mini TTS capability which is better than basic TTS
+            try {
+              const response = await fetch('https://api.openai.com/v1/audio/speech', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  model: 'tts-1-hd', // Using the high-definition TTS model
+                  input: aiResponseText,
+                  voice: 'nova', // Using a more natural-sounding voice
+                  response_format: 'mp3',
+                }),
+              });
+              
+              if (!response.ok) {
+                throw new Error(`OpenAI API error: ${await response.text()}`);
+              }
+              
+              // Convert audio buffer to base64 for playback
+              const arrayBuffer = await response.arrayBuffer();
+              const uint8Array = new Uint8Array(arrayBuffer);
+              let binary = '';
+              uint8Array.forEach((byte) => {
+                binary += String.fromCharCode(byte);
+              });
+              const base64 = btoa(binary);
+              
+              setAudioUrl(`data:audio/mp3;base64,${base64}`);
+              
+              // Play the audio
+              if (audioRef.current) {
+                audioRef.current.src = `data:audio/mp3;base64,${base64}`;
+                audioRef.current.play();
+              }
+            } catch (ttsError) {
+              console.error('Error with GPT-4o TTS:', ttsError);
+              // Fallback to standard TTS if advanced TTS fails
+              const { data: speechData, error: speechError } = await supabase.functions.invoke(
+                'text-to-speech',
+                { 
+                  body: { 
+                    text: aiResponseText,
+                    voice: 'alloy' 
+                  } 
+                }
+              );
+              
+              if (speechError) {
+                throw new Error(speechError.message);
+              }
+              
+              // Play the audio
+              if (speechData && speechData.audioContent) {
+                const audio = new Audio(`data:audio/mp3;base64,${speechData.audioContent}`);
+                setAudioUrl(`data:audio/mp3;base64,${speechData.audioContent}`);
+                audio.play();
+              }
+            }
+            
+          } catch (error) {
+            console.error('Error in mid-tier processing:', error);
+            toast({
+              title: t("error"),
+              description: error instanceof Error ? error.message : 'An error occurred',
+              variant: "destructive",
+            });
+          } finally {
+            setIsProcessing(false);
+          }
+        };
+      };
+      
+      mediaRecorder.current.start();
+      setIsRecording(true);
+      
+      toast({
+        title: t("listeningNow"),
+        description: t("startSpeaking"),
+      });
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast({
+        title: t("error"),
+        description: error instanceof Error ? error.message : 'Failed to start recording',
+        variant: "destructive",
+      });
+    }
+  };
 
   const startFallbackRecording = async () => {
     try {
@@ -292,7 +449,7 @@ const PremiumVoiceChat = () => {
     }
   };
 
-  const stopFallbackRecording = () => {
+  const stopRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
       mediaRecorder.current.stop();
       setIsRecording(false);
@@ -310,6 +467,51 @@ const PremiumVoiceChat = () => {
     return { practice: "Spanish", native: "English" };
   };
 
+  const switchToMidTier = () => {
+    if (isConversationActive()) {
+      endConversation();
+    }
+    setUsingFallback(false);
+    setUsingMidTier(true);
+    toast({
+      title: "Mid-Tier Voice Enabled",
+      description: currentLanguage === "english" 
+        ? "Using OpenAI's HD TTS voice model. Record one message at a time." 
+        : currentLanguage === "spanish"
+          ? "Usando el modelo de voz HD TTS de OpenAI. Graba un mensaje a la vez."
+          : "Usando o modelo de voz HD TTS da OpenAI. Grave uma mensagem de cada vez.",
+    });
+  };
+
+  const switchToPremium = () => {
+    setUsingFallback(false);
+    setUsingMidTier(false);
+    toast({
+      title: "Premium Voice Enabled",
+      description: currentLanguage === "english" 
+        ? "Using ElevenLabs realistic voice technology." 
+        : currentLanguage === "spanish"
+          ? "Usando la tecnología de voz realista de ElevenLabs."
+          : "Usando a tecnologia de voz realista da ElevenLabs.",
+    });
+  };
+
+  const switchToFallback = () => {
+    if (isConversationActive()) {
+      endConversation();
+    }
+    setUsingFallback(true);
+    setUsingMidTier(false);
+    toast({
+      title: "Basic Voice Enabled",
+      description: currentLanguage === "english" 
+        ? "Using basic TTS voice model. Record one message at a time." 
+        : currentLanguage === "spanish"
+          ? "Usando el modelo de voz TTS básico. Graba un mensaje a la vez."
+          : "Usando o modelo de voz TTS básico. Grave uma mensagem de cada vez.",
+    });
+  };
+
   const { practice, native } = getLanguagePair();
 
   return (
@@ -320,24 +522,84 @@ const PremiumVoiceChat = () => {
         </h1>
         <p className="text-gray-600 mb-4">
           {currentLanguage === "english" 
-            ? `Have natural voice conversations with our premium AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
+            ? `Have natural voice conversations with our AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
             : currentLanguage === "spanish"
               ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
               : `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`}
         </p>
-        <div className={`border rounded-md p-3 mb-4 ${usingFallback ? "bg-amber-50 border-amber-200" : "bg-blue-50 border-blue-200"}`}>
-          <p className={`text-sm ${usingFallback ? "text-amber-800" : "text-blue-800"}`}>
-            {usingFallback 
+        
+        <div className="flex flex-wrap gap-3 mb-4">
+          <Button 
+            onClick={switchToPremium} 
+            variant={!usingFallback && !usingMidTier ? "default" : "outline"}
+            className={!usingFallback && !usingMidTier ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""}
+          >
+            <Sparkles className="h-4 w-4 mr-2" />
+            {currentLanguage === "english" 
+              ? "Premium Voice" 
+              : currentLanguage === "spanish"
+                ? "Voz Premium"
+                : "Voz Premium"}
+          </Button>
+          
+          <Button 
+            onClick={switchToMidTier} 
+            variant={usingMidTier ? "default" : "outline"}
+            className={usingMidTier ? "bg-indigo-600 hover:bg-indigo-700" : ""}
+          >
+            <Volume2 className="h-4 w-4 mr-2" />
+            {currentLanguage === "english" 
+              ? "Mid-Tier Voice" 
+              : currentLanguage === "spanish"
+                ? "Voz Intermedia"
+                : "Voz Intermediária"}
+          </Button>
+          
+          <Button 
+            onClick={switchToFallback} 
+            variant={usingFallback ? "default" : "outline"}
+            className={usingFallback ? "bg-amber-600 hover:bg-amber-700" : ""}
+          >
+            <Headphones className="h-4 w-4 mr-2" />
+            {currentLanguage === "english" 
+              ? "Basic Voice" 
+              : currentLanguage === "spanish"
+                ? "Voz Básica"
+                : "Voz Básica"}
+          </Button>
+        </div>
+        
+        <div className={`border rounded-md p-3 mb-4 ${
+          usingMidTier 
+            ? "bg-indigo-50 border-indigo-200" 
+            : usingFallback 
+              ? "bg-amber-50 border-amber-200" 
+              : "bg-blue-50 border-blue-200"
+        }`}>
+          <p className={`text-sm ${
+            usingMidTier 
+              ? "text-indigo-800" 
+              : usingFallback 
+                ? "text-amber-800" 
+                : "text-blue-800"
+          }`}>
+            {usingMidTier 
               ? (currentLanguage === "english" 
-                  ? "Using fallback voice mode with Whisper and GPT-4o-mini. You can record one message at a time."
+                  ? "Using OpenAI's HD TTS voice model. You can record one message at a time."
                   : currentLanguage === "spanish"
-                    ? "Usando el modo de voz alternativo con Whisper y GPT-4o-mini. Puedes grabar un mensaje a la vez."
-                    : "Usando o modo de voz alternativo com Whisper e GPT-4o-mini. Você pode gravar uma mensagem por vez.")
-              : (currentLanguage === "english" 
-                  ? "Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session."
-                  : currentLanguage === "spanish"
-                    ? "Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión."
-                    : "As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão.")}
+                    ? "Usando el modelo de voz HD TTS de OpenAI. Puedes grabar un mensaje a la vez."
+                    : "Usando o modelo de voz HD TTS da OpenAI. Você pode gravar uma mensagem por vez.")
+              : usingFallback 
+                ? (currentLanguage === "english" 
+                    ? "Using basic voice mode with Whisper and standard TTS. You can record one message at a time."
+                    : currentLanguage === "spanish"
+                      ? "Usando el modo de voz básico con Whisper y TTS estándar. Puedes grabar un mensaje a la vez."
+                      : "Usando o modo de voz básico com Whisper e TTS padrão. Você pode gravar uma mensagem por vez.")
+                : (currentLanguage === "english" 
+                    ? "Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session."
+                    : currentLanguage === "spanish"
+                      ? "Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión."
+                      : "As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão.")}
           </p>
         </div>
       </div>
@@ -358,12 +620,12 @@ const PremiumVoiceChat = () => {
             ) : (
               <>
                 <Mic className="h-4 w-4 mr-2" />
-                {usingFallback ? t("startSpeaking") : t("startVoiceChat")}
+                {usingMidTier || usingFallback ? t("startSpeaking") : t("startVoiceChat")}
               </>
             )}
           </Button>
           
-          {voiceChatTimeRemaining !== null && !usingFallback && (
+          {voiceChatTimeRemaining !== null && !usingFallback && !usingMidTier && (
             <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
               <Headphones className="h-4 w-4" />
               <span>{formatTime(voiceChatTimeRemaining)}</span>
@@ -421,8 +683,8 @@ const PremiumVoiceChat = () => {
                 <p>{t("startChatting")}</p>
                 <p className="text-sm mt-2">
                   {microphoneAccess 
-                    ? usingFallback
-                      ? t("clickToStartVoice")
+                    ? usingMidTier || usingFallback
+                      ? t("clickToStartVoice") 
                       : t("clickToStartVoice")
                     : t("allowMicAccess")}
                 </p>
