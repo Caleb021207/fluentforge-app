@@ -1,7 +1,5 @@
-
 import { TranslationRecord } from "./types";
 
-// Portuguese translation file containing all the translation strings
 const portugueseTranslations: TranslationRecord = {
   welcomeToLanguageLearning: "Bem-vindo ao Palavox",
   yourPersonalAICompanion: "Seu companheiro pessoal de aprendizado de idiomas com IA. Comece sua jornada para a fluência hoje.",
@@ -25,7 +23,7 @@ const portugueseTranslations: TranslationRecord = {
   thisTestNotAvailable: "Este teste ainda não está disponível para sua combinação de idiomas selecionada.",
   readyToTest: "Pronto para testar suas habilidades de conversação?",
   startTest: "Iniciar Teste",
-  processing: "Processando sua mensagem...",
+  processing: "Processando...",
   pleaseLoginToTakeTest: "Por favor, faça login para realizar o teste",
   // Practice page translations
   practiceWithAITutor: "Pratique com o Tutor de Idiomas IA",
@@ -155,6 +153,8 @@ const portugueseTranslations: TranslationRecord = {
   failedToGetResponse: "Falha ao obter resposta da IA. Por favor, tente novamente.",
   failedToGenerateSpeech: "Falha ao gerar fala. Por favor, tente novamente.",
   audioPlaybackError: "Erro ao reproduzir áudio. Por favor, tente novamente.",
+  voiceChatEnded: "Chat de voz encerrado",
+  timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
   
   // Conversation starter phrases
   phrase1: "Olá, como você está hoje?",
@@ -176,30 +176,8 @@ const portugueseTranslations: TranslationRecord = {
   premiumVoiceChat: "Chat de Voz Premium",
   premiumVoiceChatBenefits: "Benefícios de Voz Premium",
   textConversationPractice: "Prática de Conversação de Texto",
-  startTextChatting: "Comece a conversar por texto com o tutor de IA",
-  typeMessageBelow: "Digite uma mensagem abaixo para começar",
-  
-  // New translations for timer functionality
-  voiceChatEnded: "Chat de voz encerrado",
-  timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
-  
-  // New translations for fallback mode
-  usingFallbackMode: "Usando modo de voz alternativo",
-  
-  // New translations for mid-tier voice
-  midTierVoice: "Voz AI Dinâmica",
-  usingMidTierVoice: "Usando a tecnologia HD TTS da OpenAI para respostas conversacionais dinâmicas",
-  
-  // Dynamic AI Chat translations
-  dynamicAIChat: "Chat com IA Dinâmica",
-  dynamicAIChatDescription: "Participe de uma conversa com nosso tutor de idiomas IA. Pratique suas habilidades linguísticas através de um diálogo natural.",
-  languageLevel: "Nível de Idioma",
-  resetChat: "Reiniciar Chat",
-  dynamicAITutorCapabilities: "Capacidades do Tutor de IA Dinâmico",
-  adjustsToLanguageLevel: "Ajusta-se ao seu nível de idioma selecionado",
-  providesTranslations: "Fornece traduções para facilitar a compreensão",
-  remembersContext: "Lembra o contexto da conversa para um diálogo natural",
-  offersCorrections: "Oferece correções suaves para melhorar suas habilidades linguísticas"
+  startTextChatting: "Comece a conversar com o tutor de IA",
+  typeMessageBelow: "Digite uma mensagem abaixo para começar"
 };
 
-export default portugueseTranslations;
+export default portugueseTranslations as TranslationKeys;

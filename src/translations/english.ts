@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -24,8 +23,7 @@ const englishTranslations: TranslationRecord = {
   thisTestNotAvailable: "This test is not yet available for your selected language combination.",
   readyToTest: "Ready to test your conversational skills?",
   startTest: "Start Test",
-  processing: "Processing your message...",
-  usingFallbackMode: "Using fallback voice mode",
+  processing: "Processing...",
   pleaseLoginToTakeTest: "Please login to take the test",
   // Practice page translations
   practiceWithAITutor: "Practice with AI Language Tutor",
@@ -187,22 +185,7 @@ const englishTranslations: TranslationRecord = {
   premiumVoiceChatBenefits: "Premium Voice Benefits",
   textConversationPractice: "Text Conversation Practice",
   startTextChatting: "Start text chatting with the AI tutor",
-  typeMessageBelow: "Type a message below to begin",
-  
-  // New translations for mid-tier voice
-  midTierVoice: "Dynamic AI Voice",
-  usingMidTierVoice: "Using OpenAI's HD TTS technology for dynamic conversational responses",
-  
-  // Dynamic AI Chat translations
-  dynamicAIChat: "Dynamic AI Chat",
-  dynamicAIChatDescription: "Engage in a text-based conversation with our AI language tutor. Practice your language skills through natural dialogue.",
-  languageLevel: "Language Level",
-  resetChat: "Reset Chat",
-  dynamicAITutorCapabilities: "Dynamic AI Tutor Capabilities",
-  adjustsToLanguageLevel: "Adjusts to your selected language level",
-  providesTranslations: "Provides translations for easy understanding",
-  remembersContext: "Remembers conversation context for natural dialogue",
-  offersCorrections: "Offers gentle corrections to improve your language skills"
+  typeMessageBelow: "Type a message below to begin"
 };
 
-export default englishTranslations;
+export default englishTranslations as TranslationKeys;

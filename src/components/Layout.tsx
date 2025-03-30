@@ -9,13 +9,14 @@ import Practice from "../pages/Practice";
 import Certificates from "../pages/Certificates";
 import ProgressPage from "../pages/Progress";
 import ProfilePage from "../pages/Profile";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
+import { User } from "@supabase/supabase-js";
 import LogoutButton from "./auth/LogoutButton";
 import LanguageAvailabilityBanner from "./LanguageAvailabilityBanner";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useAuth } from "@/context/AuthContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -24,8 +25,24 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
   const { currentLanguage } = useLocalization();
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-lingua-secondary to-white overflow-x-hidden w-full">

@@ -1,12 +1,10 @@
-
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Book, Timer, FileText, BookOpen, Headphones, Volume2 } from "lucide-react";
+import { MessageCircle, Send, Book, Timer, FileText, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useElevenLabsAgent, getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils"; 
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -34,10 +32,31 @@ const Practice = () => {
 
   const targetLanguage = currentLanguage === "english" ? "Spanish" : "English";
   
-  // Remove references to useConversation and replace with useElevenLabsAgent
-  const { startAgent, stopAgent, isConnected } = useElevenLabsAgent(currentLanguage);
+  const getAgentId = () => {
+    return getAgentIdForLanguage(currentLanguage);
+  };
 
-  const isConversationActive = () => isConnected;
+  const conversation = useConversation({
+    onMessage: (message) => {
+      if (message.type === "llm_response") {
+        const assistantMessage: ChatMessage = {
+          role: "assistant",
+          content: message.content,
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+      }
+    },
+    onError: (error) => {
+      console.error("ElevenLabs conversation error:", error);
+      toast({
+        title: t("error"),
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const isConversationActive = () => conversation.status !== "disconnected";
 
   useEffect(() => {
     const initMicrophone = async () => {
@@ -108,15 +127,18 @@ const Practice = () => {
     }
 
     try {
-      console.log(`Starting voice conversation for ${currentLanguage} speaker`);
+      const selectedAgentId = getAgentId();
+      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
       if (isConversationActive()) {
         endVoiceConversation();
         return;
       }
       
-      console.log(`Attempting to start session with ElevenLabs`);
-      const sessionId = await startAgent();
+      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
+      const sessionId = await conversation.startSession({
+        agentId: selectedAgentId,
+      });
       console.log(`Successfully started conversation session: ${sessionId}`);
       
       setVoiceChatTimeRemaining(300);
@@ -137,7 +159,7 @@ const Practice = () => {
 
   const endVoiceConversation = async () => {
     if (isConversationActive()) {
-      await stopAgent();
+      await conversation.endSession();
       console.log("Ended conversation session");
       setVoiceChatTimeRemaining(null);
       toast({
