@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -10,36 +9,7 @@ import { Mic, MicOff, Volume2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-// Define SpeechRecognition for TypeScript
-interface SpeechRecognitionEvent extends Event {
-  results: SpeechRecognitionResultList;
-}
-
-interface SpeechRecognitionConstructor {
-  new(): SpeechRecognition;
-}
-
-interface SpeechRecognition extends EventTarget {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  start(): void;
-  stop(): void;
-  abort(): void;
-  onerror: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
-  onend: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onstart?: ((this: SpeechRecognition, ev: Event) => any) | null;
-}
-
-// Define Window for TypeScript
-declare global {
-  interface Window {
-    SpeechRecognition: SpeechRecognitionConstructor;
-    webkitSpeechRecognition: SpeechRecognitionConstructor;
-  }
-}
-
+// We're now using the types defined in speech-recognition.d.ts
 interface Transcript {
   text: string;
   isUser: boolean;

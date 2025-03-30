@@ -2,188 +2,183 @@
 import { supabase } from '@/integrations/supabase/client';
 import { UsageStats } from '@/types/supabase';
 
-export const updateTextChatCount = async (userId: string, increment: number = 1): Promise<UsageStats | null> => {
+export async function checkHasVoiceAccess(userId: string): Promise<boolean> {
   try {
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Check if today's stats exist
-    const { data: existingStats, error: fetchError } = await supabase
-      .from('usage_stats')
+    // First check if the user is part of any classroom
+    const { data, error } = await supabase
+      .from('student_classrooms')
       .select('*')
-      .eq('user_id', userId)
-      .eq('date', today)
+      .eq('student_id', userId)
       .maybeSingle();
-    
-    if (fetchError && fetchError.code !== 'PGRST116') {
-      console.error('Error fetching usage stats:', fetchError);
-      return null;
-    }
-    
-    if (existingStats) {
-      // Update existing stats
-      const { data: updatedStats, error: updateError } = await supabase
-        .from('usage_stats')
-        .update({
-          text_chat_count: existingStats.text_chat_count + increment,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', existingStats.id)
-        .select()
-        .single();
-      
-      if (updateError) {
-        console.error('Error updating usage stats:', updateError);
-        return null;
-      }
-      
-      return updatedStats as UsageStats;
-    } else {
-      // Create new stats
-      const { data: newStats, error: createError } = await supabase
-        .from('usage_stats')
-        .insert({
-          user_id: userId,
-          date: today,
-          text_chat_count: increment,
-          voice_minutes_used: 0
-        })
-        .select()
-        .single();
-      
-      if (createError) {
-        console.error('Error creating usage stats:', createError);
-        return null;
-      }
-      
-      return newStats as UsageStats;
-    }
-  } catch (error) {
-    console.error('Error in updateTextChatCount:', error);
-    return null;
-  }
-};
 
-export const updateVoiceMinutesUsed = async (userId: string, minutes: number): Promise<UsageStats | null> => {
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error checking enrollment:', error);
+      return false;
+    }
+
+    // If the user is enrolled in any classroom, they have access
+    return !!data;
+  } catch (error) {
+    console.error('Error in checkHasVoiceAccess:', error);
+    return false;
+  }
+}
+
+export async function updateVoiceMinutesUsed(userId: string, minutes: number): Promise<boolean> {
   try {
     const today = new Date().toISOString().split('T')[0];
     
-    // Check if today's stats exist
-    const { data: existingStats, error: fetchError } = await supabase
+    // Check if there's an existing entry for today
+    const { data: existing, error: fetchError } = await supabase
       .from('usage_stats')
       .select('*')
       .eq('user_id', userId)
       .eq('date', today)
       .maybeSingle();
-    
+
     if (fetchError && fetchError.code !== 'PGRST116') {
       console.error('Error fetching usage stats:', fetchError);
-      return null;
+      return false;
     }
-    
-    if (existingStats) {
-      // Update existing stats
-      const { data: updatedStats, error: updateError } = await supabase
+
+    if (existing) {
+      // Update existing record
+      const { error: updateError } = await supabase
         .from('usage_stats')
         .update({
-          voice_minutes_used: existingStats.voice_minutes_used + minutes,
-          updated_at: new Date().toISOString()
+          voice_minutes_used: (existing as UsageStats).voice_minutes_used + minutes
         })
-        .eq('id', existingStats.id)
-        .select()
-        .single();
-      
+        .eq('id', (existing as UsageStats).id);
+
       if (updateError) {
-        console.error('Error updating usage stats:', updateError);
-        return null;
+        console.error('Error updating voice minutes:', updateError);
+        return false;
       }
-      
-      return updatedStats as UsageStats;
     } else {
-      // Create new stats
-      const { data: newStats, error: createError } = await supabase
+      // Create new record for today
+      const { error: insertError } = await supabase
         .from('usage_stats')
         .insert({
           user_id: userId,
           date: today,
-          text_chat_count: 0,
-          voice_minutes_used: minutes
-        })
-        .select()
-        .single();
-      
-      if (createError) {
-        console.error('Error creating usage stats:', createError);
-        return null;
+          voice_minutes_used: minutes,
+          text_chat_count: 0
+        });
+
+      if (insertError) {
+        console.error('Error creating voice usage record:', insertError);
+        return false;
       }
-      
-      return newStats as UsageStats;
     }
+
+    return true;
   } catch (error) {
     console.error('Error in updateVoiceMinutesUsed:', error);
-    return null;
+    return false;
   }
-};
+}
 
-export const getRemainingVoiceMinutes = async (userId: string): Promise<number> => {
+export async function incrementTextChatCount(userId: string): Promise<boolean> {
   try {
     const today = new Date().toISOString().split('T')[0];
     
-    // First check if the user is enrolled in any classroom
-    const { data: enrollments, error: enrollmentError } = await supabase
-      .from('student_classrooms')
-      .select('classroom_id')
-      .eq('student_id', userId);
-    
-    if (enrollmentError) {
-      console.error('Error checking classroom enrollment:', enrollmentError);
-      return 0;
+    // Check if there's an existing entry for today
+    const { data: existing, error: fetchError } = await supabase
+      .from('usage_stats')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('date', today)
+      .maybeSingle();
+
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      console.error('Error fetching usage stats:', fetchError);
+      return false;
     }
-    
-    const isEnrolled = enrollments && enrollments.length > 0;
-    
-    // If not enrolled, they only get browser TTS (no minutes limit to track)
-    if (!isEnrolled) {
-      return 0;
+
+    if (existing) {
+      // Update existing record
+      const { error: updateError } = await supabase
+        .from('usage_stats')
+        .update({
+          text_chat_count: (existing as UsageStats).text_chat_count + 1
+        })
+        .eq('id', (existing as UsageStats).id);
+
+      if (updateError) {
+        console.error('Error updating text chat count:', updateError);
+        return false;
+      }
+    } else {
+      // Create new record for today
+      const { error: insertError } = await supabase
+        .from('usage_stats')
+        .insert({
+          user_id: userId,
+          date: today,
+          text_chat_count: 1,
+          voice_minutes_used: 0
+        });
+
+      if (insertError) {
+        console.error('Error creating text chat usage record:', insertError);
+        return false;
+      }
     }
+
+    return true;
+  } catch (error) {
+    console.error('Error in incrementTextChatCount:', error);
+    return false;
+  }
+}
+
+export async function getRemainingVoiceMinutes(userId: string): Promise<number> {
+  try {
+    // Daily limit is 30 minutes
+    const DAILY_LIMIT = 30;
+    const today = new Date().toISOString().split('T')[0];
     
-    // If enrolled, check usage and return remaining minutes (out of 5)
-    const { data: usage, error: usageError } = await supabase
+    // Get today's usage
+    const { data, error } = await supabase
       .from('usage_stats')
       .select('voice_minutes_used')
       .eq('user_id', userId)
       .eq('date', today)
       .maybeSingle();
-    
-    if (usageError && usageError.code !== 'PGRST116') {
-      console.error('Error fetching voice usage:', usageError);
-      return 0;
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error fetching voice minutes used:', error);
+      return DAILY_LIMIT; // Assume no usage if there's an error
     }
-    
-    const usedMinutes = usage?.voice_minutes_used || 0;
-    return Math.max(0, 5 - usedMinutes);
+
+    if (!data) {
+      return DAILY_LIMIT; // No usage record for today
+    }
+
+    const minutesUsed = (data as UsageStats).voice_minutes_used || 0;
+    return Math.max(0, DAILY_LIMIT - minutesUsed);
   } catch (error) {
     console.error('Error in getRemainingVoiceMinutes:', error);
-    return 0;
+    return 0; // Return 0 on error (no remaining minutes)
   }
-};
+}
 
-export const checkHasVoiceAccess = async (userId: string): Promise<boolean> => {
+export async function getHasClassroomAccess(userId: string): Promise<boolean> {
   try {
-    // Check if the user is enrolled in any classroom
     const { data, error } = await supabase
       .from('student_classrooms')
       .select('id')
       .eq('student_id', userId)
-      .limit(1);
-    
-    if (error) {
-      console.error('Error checking classroom enrollment:', error);
+      .maybeSingle();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error checking classroom access:', error);
       return false;
     }
-    
-    return data && data.length > 0;
+
+    return !!data;
   } catch (error) {
-    console.error('Error in checkHasVoiceAccess:', error);
+    console.error('Error in getHasClassroomAccess:', error);
     return false;
   }
-};
+}
