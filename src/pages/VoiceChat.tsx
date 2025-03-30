@@ -31,7 +31,7 @@ interface SpeechRecognition extends EventTarget {
   onend: ((this: SpeechRecognition, ev: Event) => any) | null;
 }
 
-// Add to window
+// Extend Window interface but don't redeclare SpeechRecognition
 declare global {
   interface Window {
     SpeechRecognition: SpeechRecognitionConstructor;
