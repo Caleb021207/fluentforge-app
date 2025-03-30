@@ -189,9 +189,6 @@ const englishTranslations: TranslationRecord = {
   startTextChatting: "Start text chatting with the AI tutor",
   typeMessageBelow: "Type a message below to begin",
   
-  // New translations for fallback mode
-  usingFallbackMode: "Using fallback voice mode",
-  
   // New translations for mid-tier voice
   midTierVoice: "Mid-Tier Voice",
   usingMidTierVoice: "Using OpenAI's HD TTS voice",

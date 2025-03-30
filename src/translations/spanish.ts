@@ -191,7 +191,6 @@ const spanishTranslations: TranslationRecord = {
   midTierVoice: "Voz Intermedia",
   usingMidTierVoice: "Usando la voz HD TTS de OpenAI",
   basicVoice: "Voz Básica",
-  processing: "Procesando tu mensaje...",
 };
 
 export default spanishTranslations;
