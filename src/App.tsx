@@ -9,6 +9,7 @@ import ExampleData from "@/pages/ExampleData";
 import AdminDashboard from "@/pages/AdminDashboard";
 import LanguageFrameworks from "@/pages/LanguageFrameworks";
 import VoiceChat from "@/pages/VoiceChat";
+import ConversationalAI from "@/pages/ConversationalAI";
 import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -27,6 +28,7 @@ function App() {
               <Route path="/" element={<Index />} />
               <Route path="/language-frameworks" element={<LanguageFrameworks />} />
               <Route path="/practice" element={<Practice />} />
+              <Route path="/conversational-ai" element={<ConversationalAI />} />
               <Route path="/voice-chat" element={<VoiceChat />} />
               <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />
               <Route path="/example-data" element={<ExampleData />} />
