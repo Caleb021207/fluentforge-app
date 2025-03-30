@@ -1,7 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Classroom, StudentClassroom } from '@/types/supabase';
-import { StudentProfile } from './types';
+import { Classroom, StudentClassroom, StudentProfile } from '@/types/supabase';
+import { StudentProfile as StudentProfileType } from './types';
 
 export async function fetchEnrolledClassrooms(
   userId: string
@@ -18,7 +18,7 @@ export async function fetchEnrolledClassrooms(
     }
 
     // Format enrollments
-    const formattedEnrollments = enrollments.map(item => ({
+    const formattedEnrollments = enrollments.map((item: any) => ({
       classroom: item.classroom as Classroom,
       enrollment: {
         id: item.id,
@@ -101,7 +101,7 @@ export async function leaveClassroom(classroomId: string, enrollmentId: string):
   }
 }
 
-export async function fetchStudentsInClassroom(classroomId: string): Promise<StudentProfile[]> {
+export async function fetchStudentsInClassroom(classroomId: string): Promise<StudentProfileType[]> {
   try {
     const { data: enrollments, error: enrollmentsError } = await supabase
       .from('student_classrooms')
@@ -114,7 +114,7 @@ export async function fetchStudentsInClassroom(classroomId: string): Promise<Stu
     }
 
     // Now fetch user profiles for these students
-    const studentIds = enrollments.map(e => e.student_id);
+    const studentIds = enrollments.map((e: any) => e.student_id);
     
     if (studentIds.length === 0) return [];
     
@@ -141,14 +141,14 @@ export async function fetchStudentsInClassroom(classroomId: string): Promise<Stu
     }
 
     // Merge the data
-    const students = enrollments.map(enrollment => {
-      const profile = profiles?.find(p => p.id === enrollment.student_id) || {
+    const students = enrollments.map((enrollment: any) => {
+      const profile = profiles?.find((p: any) => p.id === enrollment.student_id) || {
         id: enrollment.student_id,
         display_name: 'Unknown User',
         avatar_url: null
       };
       
-      const usage = stats?.find(s => s.user_id === enrollment.student_id) || {
+      const usage = stats?.find((s: any) => s.user_id === enrollment.student_id) || {
         text_chat_count: 0,
         voice_minutes_used: 0
       };

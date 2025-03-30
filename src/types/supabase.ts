@@ -2,7 +2,7 @@
 // This file contains additional type definitions for Supabase tables
 // that complement the auto-generated types in src/integrations/supabase/types.ts
 
-import { Json } from '@/integrations/supabase/types';
+import { Database as GeneratedDatabase, Json } from '@/integrations/supabase/types';
 
 export interface UserProfile {
   id: string;
@@ -74,12 +74,8 @@ export interface UsageStats {
   updated_at: string;
 }
 
-// Note: The tables in Database schema must match these interfaces
-// Add this comment to make it clear that these types must be updated
-// if the database schema changes.
-
 // Define custom Database typings to explicitly include all our tables
-export interface Database {
+export interface Database extends GeneratedDatabase {
   public: {
     Tables: {
       certification_attempts: {
@@ -169,12 +165,12 @@ export interface Database {
         Relationships: [];
       };
     };
-    Views: {};
-    Functions: {};
-    Enums: {};
-    CompositeTypes: {};
+    Views: GeneratedDatabase["public"]["Views"];
+    Functions: GeneratedDatabase["public"]["Functions"];
+    Enums: GeneratedDatabase["public"]["Enums"];
+    CompositeTypes: GeneratedDatabase["public"]["CompositeTypes"];
   };
-}
+};
 
 // Add type to explicitly define what tables Supabase can access
 export type TableNames = keyof Database['public']['Tables'];

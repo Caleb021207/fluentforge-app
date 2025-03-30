@@ -1,7 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { Classroom } from '@/types/supabase';
-import { Database } from '@/types/supabase';
 
 export async function fetchUserClassrooms(userId: string): Promise<Classroom[]> {
   try {
