@@ -81,7 +81,7 @@ export interface StudentProfile {
 }
 
 // Define Database interface to include all our tables
-export interface Database {
+export interface Database extends GeneratedDatabase {
   public: {
     Tables: {
       certification_attempts: {
@@ -90,56 +90,14 @@ export interface Database {
         Update: Partial<CertificationAttempt>;
         Relationships: [];
       };
-      certification_transcripts: {
-        Row: {
-          id: string;
-          attempt_id: string;
-          user_id: string;
-          created_at: string;
-          user_transcripts: Json;
-          ai_responses: Json;
-          analysis_data: Json | null;
-        };
-        Insert: {
-          id?: string;
-          attempt_id: string;
-          user_id: string;
-          created_at?: string;
-          user_transcripts?: Json;
-          ai_responses?: Json;
-          analysis_data?: Json | null;
-        };
-        Update: {
-          id?: string;
-          attempt_id?: string;
-          user_id?: string;
-          created_at?: string;
-          user_transcripts?: Json;
-          ai_responses?: Json;
-          analysis_data?: Json | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "certification_transcripts_attempt_id_fkey";
-            columns: ["attempt_id"];
-            isOneToOne: false;
-            referencedRelation: "certification_attempts";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
+      certification_transcripts: GeneratedDatabase['public']['Tables']['certification_transcripts'];
       lesson_progress: {
         Row: LessonProgress;
         Insert: Partial<LessonProgress>;
         Update: Partial<LessonProgress>;
         Relationships: [];
       };
-      profiles: {
-        Row: UserProfile;
-        Insert: Partial<UserProfile>;
-        Update: Partial<UserProfile>;
-        Relationships: [];
-      };
+      profiles: GeneratedDatabase['public']['Tables']['profiles'];
       user_profiles: {
         Row: UserProfile;
         Insert: Partial<UserProfile>;
@@ -171,10 +129,10 @@ export interface Database {
         Relationships: [];
       };
     };
-    Views: GeneratedDatabase["public"]["Views"];
-    Functions: GeneratedDatabase["public"]["Functions"];
-    Enums: GeneratedDatabase["public"]["Enums"];
-    CompositeTypes: GeneratedDatabase["public"]["CompositeTypes"];
+    Views: GeneratedDatabase['public']['Views'];
+    Functions: GeneratedDatabase['public']['Functions'];
+    Enums: GeneratedDatabase['public']['Enums'];
+    CompositeTypes: GeneratedDatabase['public']['CompositeTypes'];
   };
 }
 
