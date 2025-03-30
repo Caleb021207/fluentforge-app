@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -26,7 +25,9 @@ const englishTranslations: TranslationRecord = {
   startTest: "Start Test",
   processing: "Processing...",
   pleaseLoginToTakeTest: "Please login to take the test",
+  
   // Practice page translations
+  textPractice: "Text Practice",
   practiceWithAITutor: "Practice with AI Language Tutor",
   chatWithAITutor: "Chat with our AI tutor to practice your Spanish! The AI will help correct your grammar, vocabulary, and pronunciation. Feel free to ask questions about language or culture.",
   startVoiceChat: "Start Voice Chat",
@@ -186,7 +187,18 @@ const englishTranslations: TranslationRecord = {
   premiumVoiceChatBenefits: "Premium Voice Benefits",
   textConversationPractice: "Text Conversation Practice",
   startTextChatting: "Start text chatting with the AI tutor",
-  typeMessageBelow: "Type a message below to begin"
+  typeMessageBelow: "Type a message below to begin",
+  cefrA1Description: "Beginner - Basic phrases and expressions",
+  cefrA2Description: "Elementary - Simple everyday communication",
+  cefrB1Description: "Intermediate - Can discuss familiar topics",
+  cefrB2Description: "Upper Intermediate - Can interact with fluency",
+  beginner: "Beginner",
+  elementary: "Elementary",
+  intermediate: "Intermediate",
+  upperIntermediate: "Upper Intermediate",
+  selectCEFRLevel: "Select CEFR Level",
+  selectedLevel: "Selected Level",
+  success: "Success"
 };
 
 export default englishTranslations as TranslationRecord;

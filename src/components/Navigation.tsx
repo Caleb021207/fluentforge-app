@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
@@ -12,7 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // Translation map for navigation items
 const navItemTranslations = {
   english: {
-    "Text Conversation Practice": "Text Conversation Practice",
+    "Text Practice": "Text Practice",
     "Unlimited Voice Practice": "Unlimited Voice Practice",
     "Premium Voice Chat": "Premium Voice Chat",
     "Language Frameworks": "Language Frameworks",
@@ -20,7 +19,7 @@ const navItemTranslations = {
     "Home": "Home"
   },
   spanish: {
-    "Text Conversation Practice": "Práctica de Conversación de Texto",
+    "Text Practice": "Práctica de Texto",
     "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
     "Premium Voice Chat": "Chat de Voz Premium",
     "Language Frameworks": "Marcos de Idiomas",
@@ -28,7 +27,7 @@ const navItemTranslations = {
     "Home": "Inicio"
   },
   portuguese: {
-    "Text Conversation Practice": "Prática de Conversação de Texto",
+    "Text Practice": "Prática de Texto",
     "Unlimited Voice Practice": "Prática de Voz Ilimitada",
     "Premium Voice Chat": "Chat de Voz Premium",
     "Language Frameworks": "Estruturas de Idiomas",
@@ -81,7 +80,7 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { icon: MessageSquare, label: "Text Conversation Practice", path: "/practice" },
+    { icon: MessageSquare, label: "Text Practice", path: "/practice" },
     { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
     { icon: Headphones, label: "Premium Voice Chat", path: "/premium-voice-chat" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },

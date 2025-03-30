@@ -324,7 +324,7 @@ const Practice = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-lingua-text mb-4">
-          {t("textConversationPractice")}
+          {t("textPractice")}
         </h1>
         <p className="text-gray-600 mb-4">
           {currentLanguage === "english" 

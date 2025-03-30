@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const spanishTranslations: TranslationRecord = {
@@ -27,6 +26,7 @@ const spanishTranslations: TranslationRecord = {
   processing: "Procesando...",
   pleaseLoginToTakeTest: "Por favor inicia sesión para realizar la prueba",
   // Practice page translations
+  textPractice: "Práctica de Texto",
   practiceWithAITutor: "Practica con el Tutor de Idiomas IA",
   chatWithAITutor: "Chatea con nuestro tutor de IA para practicar tu inglés. El tutor te ayudará a corregir tu gramática, vocabulario y pronunciación. Puedes hacer preguntas sobre el idioma o la cultura.",
   startVoiceChat: "Iniciar Chat de Voz",
