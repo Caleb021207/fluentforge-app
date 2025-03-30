@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { MessageCircle, Send, Book } from "lucide-react";
+import { MessageCircle, Send, Book, BookOpen, FileText, Volume2, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
