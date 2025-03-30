@@ -80,7 +80,6 @@ export default {
   stopVoiceChat: "Chat de Voz Encerrado",
   voiceChatEnded: "Chat de Voz Finalizado",
   timeLimit5MinReached: "O limite de tempo de 5 minutos para esta sessão foi atingido.",
-  voiceChat: "Chat de Voz",
   timeRemaining: "Tempo Restante",
   startSpeaking: "Começar a Falar",
   stopSpeaking: "Parar de Falar",

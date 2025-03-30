@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { MessageCircle, Send, Bot, User, Mic, MicOff, Headphones, Clock3, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -141,7 +140,9 @@ const ConversationalAI = () => {
       } else {
         const intervalId = await startRecording();
         // Register a handler to stop recording when a button is clicked
-        const handler = () => stopRecording(intervalId);
+        const handler = () => {
+          if (intervalId) stopRecording(intervalId);
+        };
         document.addEventListener('click', handler, { once: true });
       }
     }

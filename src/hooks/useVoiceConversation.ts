@@ -136,7 +136,7 @@ export const useVoiceConversation = (currentLanguage: string) => {
     return interval;
   };
 
-  const stopRecording = async (intervalId?: number) => {
+  const stopRecording = async (intervalId?: NodeJS.Timeout) => {
     if (intervalId) {
       clearInterval(intervalId);
     }
@@ -268,15 +268,16 @@ export const useVoiceConversation = (currentLanguage: string) => {
     recognition.continuous = false;
     recognition.interimResults = false;
     
-    recognition.onstart = () => {
+    // Using event handlers instead of properties
+    recognition.addEventListener('start', () => {
       setIsRecording(true);
       toast({
         title: "Fallback Mode",
         description: "Using browser speech recognition. Quality may be limited.",
       });
-    };
+    });
     
-    recognition.onresult = (event) => {
+    recognition.addEventListener('result', (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
       
       // Add user message
@@ -311,16 +312,16 @@ export const useVoiceConversation = (currentLanguage: string) => {
       speech.lang = currentLanguage === 'spanish' ? 'es-ES' : 
                    currentLanguage === 'portuguese' ? 'pt-BR' : 'en-US';
       window.speechSynthesis.speak(speech);
-    };
+    });
     
-    recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
+    recognition.addEventListener('error', (event: Event) => {
+      console.error('Speech recognition error:', event);
       setIsRecording(false);
-    };
+    });
     
-    recognition.onend = () => {
+    recognition.addEventListener('end', () => {
       setIsRecording(false);
-    };
+    });
     
     recognition.start();
   };

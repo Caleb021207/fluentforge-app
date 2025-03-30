@@ -42,7 +42,6 @@ export default {
   type: "Type",
   unlimitedVoicePractice: "Unlimited Voice Practice",
   premiumVoiceChat: "Premium Voice Chat",
-  voiceChat: "Voice Chat",
   voicePractice: "Voice Practice",
   welcomeBack: "Welcome back",
   welcomeToYourAccount: "Welcome to your account",
