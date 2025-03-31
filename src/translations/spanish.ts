@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const spanishTranslations: TranslationRecord = {
@@ -190,7 +189,7 @@ const spanishTranslations: TranslationRecord = {
   beginner: "Principiante",
   elementary: "Elemental",
   intermediate: "Intermedio",
-  upperIntermediate: "Intermedio Superior",
+  upperIntermediate: "Intermedio Alto",
   selectCEFRLevel: "Seleccionar Nivel CEFR",
   selectedLevel: "Nivel Seleccionado",
   success: "Éxito",
@@ -202,7 +201,7 @@ const spanishTranslations: TranslationRecord = {
   stopRecording: "Detener Grabación",
   recordingActive: "Grabación activa. Habla claramente en tu micrófono...",
   startVoiceChatting: "¡Inicia un chat de voz con el tutor de IA!",
-  tapMicToStart: "Toca el botón del micrófono para comenzar a hablar",
+  tapMicToStart: "Toca el botón del micrófono para empezar a hablar",
   standardVoiceInfo: "Acerca del Chat de Voz Estándar",
   openAIVoiceModel: "Utiliza el modelo de voz de OpenAI para conversaciones de voz naturales",
   tenMinutesDaily: "10 minutos de chat de voz disponibles diariamente",
@@ -210,9 +209,9 @@ const spanishTranslations: TranslationRecord = {
   dailyRemaining: "restantes hoy",
   dailyLimitReached: "Has alcanzado tu límite diario de 10 minutos",
   timeLimit: "Límite de Tiempo Alcanzado",
-  noAudioRecorded: "No se grabó ningún audio. Por favor, inténtalo de nuevo.",
+  noAudioRecorded: "No se grabó audio. Por favor, inténtalo de nuevo.",
   voiceMessage: "Mensaje de voz...",
-  errorProcessingVoice: "Error al procesar mensaje de voz. Por favor, inténtalo de nuevo.",
+  errorProcessingVoice: "Error al procesar el mensaje de voz. Por favor, inténtalo de nuevo.",
   voiceChatStarted: "Chat de voz iniciado",
   speakingNow: "Puedes empezar a hablar ahora",
   conversation: "Conversación"

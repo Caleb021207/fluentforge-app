@@ -1,11 +1,18 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Bot, User, Mic, MicOff, Headphones } from "lucide-react";
+import { Bot, User, Mic, MicOff, Headphones, BarChart4 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -13,13 +20,15 @@ interface ChatMessage {
   translation?: string;
 }
 
+type CEFRLevel = "A1" | "A2" | "B1" | "B2";
+
 const ConversationalAI = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isRecording, setIsRecording] = useState(false);
-  const [transcript, setTranscript] = useState("");
   const [isProcessingVoice, setIsProcessingVoice] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [conversationHistory, setConversationHistory] = useState<Array<{role: string, content: string}>>([]);
+  const [cefrLevel, setCefrLevel] = useState<CEFRLevel>("B1");
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
@@ -49,6 +58,14 @@ const ConversationalAI = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (conversationEndRef.current) {
+      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  const conversationEndRef = useRef<HTMLDivElement | null>(null);
 
   const handleVoiceRecording = async () => {
     if (isRecording) {
@@ -164,7 +181,8 @@ const ConversationalAI = () => {
           body: { 
             audio: base64Data,
             userLanguage: currentLanguage,
-            conversationHistory
+            conversationHistory,
+            cefrLevel
           }
         });
         
@@ -173,8 +191,6 @@ const ConversationalAI = () => {
         }
         
         if (data.transcript) {
-          setTranscript(data.transcript);
-          
           // Update user message with transcript
           setMessages(prev => {
             const newMessages = [...prev];
@@ -184,24 +200,45 @@ const ConversationalAI = () => {
             return newMessages;
           });
           
+          // Process the transcript with our conversation-ai function
+          const { data: aiData, error: aiError } = await supabase.functions.invoke('conversation-ai', {
+            body: {
+              message: data.transcript,
+              userLanguage: currentLanguage,
+              cefrLevel: cefrLevel,
+              conversationHistory: conversationHistory
+            }
+          });
+          
+          if (aiError) throw aiError;
+          
           // Add AI response
-          if (data.response) {
+          if (aiData.content) {
             const assistantMessage: ChatMessage = {
               role: "assistant",
-              content: data.response,
-              translation: data.translation,
+              content: aiData.content,
+              translation: aiData.translation,
             };
             
             setMessages(prev => [...prev, assistantMessage]);
             
             // Update conversation history
-            if (data.updatedHistory) {
-              setConversationHistory(data.updatedHistory);
+            if (aiData.updatedHistory) {
+              setConversationHistory(aiData.updatedHistory);
             }
             
-            // Play audio response if available
-            if (data.audioContent && audioRef.current) {
-              const audioSrc = `data:audio/mp3;base64,${data.audioContent}`;
+            // Generate and play audio response
+            const { data: ttsData, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
+              body: { 
+                text: aiData.content,
+                userLanguage: currentLanguage
+              }
+            });
+            
+            if (ttsError) {
+              console.error('Error generating speech:', ttsError);
+            } else if (ttsData.audioContent && audioRef.current) {
+              const audioSrc = `data:audio/mp3;base64,${ttsData.audioContent}`;
               audioRef.current.src = audioSrc;
               await audioRef.current.play().catch(playError => {
                 console.error('Error playing audio:', playError);
@@ -258,10 +295,10 @@ const ConversationalAI = () => {
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
             {currentLanguage === "english" 
-              ? "Note: This conversational AI remembers your conversation context and adapts to your language level."
+              ? "Note: This conversational AI focuses on natural conversation instead of grammar correction, adapting to your language level."
               : currentLanguage === "spanish"
-                ? "Nota: Esta IA conversacional recuerda el contexto de tu conversación y se adapta a tu nivel de idioma."
-                : "Nota: Esta IA conversacional lembra o contexto da sua conversa e se adapta ao seu nível de idioma."}
+                ? "Nota: Esta IA conversacional se centra en la conversación natural en lugar de la corrección gramatical, adaptándose a tu nivel de idioma."
+                : "Nota: Esta IA conversacional se concentra na conversa natural em vez da correção gramatical, adaptando-se ao seu nível de idioma."}
           </p>
         </div>
       </div>
@@ -271,45 +308,71 @@ const ConversationalAI = () => {
           <h3 className="font-medium">
             {t("standardVoiceChat")}
           </h3>
-          {messages.length > 0 && (
-            <Button 
-              onClick={clearConversation}
-              variant="outline" 
-              size="sm"
-            >
-              {t("clearConversation")}
-            </Button>
-          )}
+          <div className="flex space-x-2">
+            {messages.length > 0 && (
+              <Button 
+                onClick={clearConversation}
+                variant="outline" 
+                size="sm"
+              >
+                {t("clearConversation")}
+              </Button>
+            )}
+          </div>
         </div>
         
         <div className="mb-6">
-          <div className="flex justify-between items-center">
-            <Button 
-              onClick={handleVoiceRecording}
-              variant={isRecording ? "destructive" : "default"}
-              className={isRecording ? "bg-red-500" : "bg-lingua-primary"}
-              disabled={isProcessingVoice}
-            >
-              {isRecording ? (
-                <>
-                  <MicOff className="h-4 w-4 mr-2" />
-                  {t("stopRecording")}
-                </>
-              ) : (
-                <>
-                  <Mic className="h-4 w-4 mr-2" />
-                  {t("startVoiceChat")}
-                </>
-              )}
-            </Button>
-            
-            {timeRemaining !== null && (
-              <div className="text-sm bg-amber-50 px-4 py-2 rounded-full text-amber-800 flex items-center">
-                <Headphones className="h-4 w-4 mr-2" />
-                <span>{formatTime(timeRemaining)}</span>
-                <span className="ml-2">{t("dailyRemaining")}</span>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+            <div className="flex-grow space-y-4">
+              <div className="flex items-center space-x-2">
+                <BarChart4 className="h-4 w-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">{t("selectCEFRLevel")}</span>
               </div>
-            )}
+              
+              <Select
+                value={cefrLevel}
+                onValueChange={(value: string) => setCefrLevel(value as CEFRLevel)}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder={t("selectCEFRLevel")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="A1">{t("beginner")} (A1)</SelectItem>
+                  <SelectItem value="A2">{t("elementary")} (A2)</SelectItem>
+                  <SelectItem value="B1">{t("intermediate")} (B1)</SelectItem>
+                  <SelectItem value="B2">{t("upperIntermediate")} (B2)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex space-x-3 items-center">
+              <Button 
+                onClick={handleVoiceRecording}
+                variant={isRecording ? "destructive" : "default"}
+                className={isRecording ? "bg-red-500" : "bg-lingua-primary"}
+                disabled={isProcessingVoice}
+              >
+                {isRecording ? (
+                  <>
+                    <MicOff className="h-4 w-4 mr-2" />
+                    {t("stopRecording")}
+                  </>
+                ) : (
+                  <>
+                    <Mic className="h-4 w-4 mr-2" />
+                    {t("startVoiceChat")}
+                  </>
+                )}
+              </Button>
+              
+              {timeRemaining !== null && (
+                <div className="text-sm bg-amber-50 px-4 py-2 rounded-full text-amber-800 flex items-center">
+                  <Headphones className="h-4 w-4 mr-2" />
+                  <span>{formatTime(timeRemaining)}</span>
+                  <span className="ml-2">{t("dailyRemaining")}</span>
+                </div>
+              )}
+            </div>
           </div>
           
           {isRecording && (
@@ -320,7 +383,7 @@ const ConversationalAI = () => {
           )}
         </div>
         
-        <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
+        <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto p-2">
           {messages.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <Headphones className="mx-auto h-12 w-12 mb-4 opacity-50" />
@@ -377,6 +440,7 @@ const ConversationalAI = () => {
               </div>
             </div>
           )}
+          <div ref={conversationEndRef} />
         </div>
         
         <div className="bg-gray-50 p-4 rounded-lg">

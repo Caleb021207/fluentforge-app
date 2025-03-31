@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -200,13 +199,13 @@ const portugueseTranslations: TranslationRecord = {
   standardVoice: "Voz Padrão",
   standardVoiceChat: "Chat de Voz Padrão",
   stopRecording: "Parar Gravação",
-  recordingActive: "Gravação ativa. Fale claramente no seu microfone...",
+  recordingActive: "Gravação ativa. Fale claramente em seu microfone...",
   startVoiceChatting: "Inicie um chat de voz com o tutor de IA!",
   tapMicToStart: "Toque no botão do microfone para começar a falar",
   standardVoiceInfo: "Sobre o Chat de Voz Padrão",
   openAIVoiceModel: "Usa o modelo de voz da OpenAI para conversas de voz naturais",
   tenMinutesDaily: "10 minutos de chat de voz disponíveis diariamente",
-  upgradePremium: "Para vozes de maior qualidade ilimitadas, experimente o Chat de Voz Premium",
+  upgradePremium: "Para vozes ilimitadas de maior qualidade, experimente o Chat de Voz Premium",
   dailyRemaining: "restantes hoje",
   dailyLimitReached: "Você atingiu seu limite diário de 10 minutos",
   timeLimit: "Limite de Tempo Atingido",
