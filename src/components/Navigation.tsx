@@ -85,8 +85,8 @@ const Navigation = () => {
 
   const navItems = [
     { icon: MessageSquare, label: "Text Practice", path: "/practice" },
-    { icon: Bot, label: "Conversational AI", path: "/conversational-ai" },
     { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
+    { icon: Bot, label: "Conversational AI", path: "/conversational-ai" },
     { icon: Headphones, label: "Premium Voice Chat", path: "/premium-voice-chat" },
     { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];

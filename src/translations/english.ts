@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
