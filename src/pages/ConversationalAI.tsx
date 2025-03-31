@@ -181,8 +181,7 @@ const ConversationalAI = () => {
           </TabsTrigger>
           <TabsTrigger value="voice" className="flex items-center gap-2">
             <Mic className="h-4 w-4" />
-            {currentLanguage === "english" ? "Voice Chat" : 
-             currentLanguage === "spanish" ? "Chat de Voz" : "Chat de Voz"}
+            {t("voiceChat")}
           </TabsTrigger>
         </TabsList>
 
@@ -456,10 +455,20 @@ const ConversationalAI = () => {
                 <Bot className="h-4 w-4 mr-2 mt-1 text-lingua-primary shrink-0" />
                 <span>
                   {currentLanguage === "english" 
-                    ? "Powered by OpenAI's audio models for high-quality interactions"
+                    ? "Powered by OpenAI's audio models for natural voice interaction"
                     : currentLanguage === "spanish"
-                      ? "Impulsado por los modelos de audio de OpenAI para interacciones de alta calidad"
-                      : "Alimentado pelos modelos de áudio da OpenAI para interações de alta qualidade"}
+                      ? "Impulsado por los modelos de audio de OpenAI para una interacción de voz natural"
+                      : "Alimentado pelos modelos de áudio da OpenAI para interação de voz natural"}
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Volume2 className="h-4 w-4 mr-2 mt-1 text-lingua-primary shrink-0" />
+                <span>
+                  {currentLanguage === "english" 
+                    ? "Different voices for different languages (Echo for English, Nova for Spanish)"
+                    : currentLanguage === "spanish"
+                      ? "Diferentes voces para diferentes idiomas (Echo para inglés, Nova para español)"
+                      : "Vozes diferentes para idiomas diferentes (Echo para inglês, Nova para espanhol)"}
                 </span>
               </li>
             </ul>

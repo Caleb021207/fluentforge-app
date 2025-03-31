@@ -39,6 +39,18 @@ function processBase64Chunks(base64String: string, chunkSize = 32768) {
   return result;
 }
 
+// Function to get appropriate voice based on language
+function getVoiceForLanguage(language: string): string {
+  // OpenAI voices available: alloy, echo, fable, onyx, nova, shimmer
+  const languageVoiceMap: Record<string, string> = {
+    english: 'echo',    // Male voice for English
+    spanish: 'nova',    // Female voice for Spanish
+    portuguese: 'alloy' // Neutral voice for Portuguese
+  };
+  
+  return languageVoiceMap[language] || 'echo'; // Default to echo
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -142,7 +154,10 @@ serve(async (req) => {
     const aiResponseText = chatResult.choices[0].message.content;
     console.log("AI Response generated:", aiResponseText);
 
-    // Step 3: Convert AI text response to speech
+    // Step 3: Convert AI text response to speech using OpenAI TTS
+    const voice = getVoiceForLanguage(userLanguage);
+    console.log(`Using voice ${voice} for language ${userLanguage}`);
+    
     const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
       method: 'POST',
       headers: {
@@ -152,8 +167,9 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'tts-1',
         input: aiResponseText,
-        voice: 'alloy', // Using a default voice
+        voice: voice,
         response_format: 'mp3',
+        speed: 1.0, // Normal speed - can be adjusted between 0.25 and 4.0
       }),
     });
 

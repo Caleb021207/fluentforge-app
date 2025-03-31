@@ -42,7 +42,6 @@ export default {
   type: "Escribir",
   unlimitedVoicePractice: "Práctica de Voz Ilimitada",
   premiumVoiceChat: "Chat de Voz Premium",
-  voiceChat: "Chat de Voz",
   voicePractice: "Práctica de Voz",
   welcomeBack: "Bienvenido de nuevo",
   welcomeToYourAccount: "Bienvenido a tu cuenta",
@@ -90,4 +89,5 @@ export default {
   limitReached: "Límite Alcanzado",
   upgradeForMore: "Actualiza para Más",
   tryAgainTomorrow: "Inténtalo Mañana",
+  voiceChat: "Chat de Voz"
 };

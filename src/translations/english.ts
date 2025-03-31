@@ -79,7 +79,6 @@ export default {
   stopVoiceChat: "Voice Chat Stopped",
   voiceChatEnded: "Voice Chat Ended",
   timeLimit5MinReached: "The 5-minute time limit for this session has been reached.",
-  voiceChat: "Voice Chat",
   timeRemaining: "Time Remaining",
   startSpeaking: "Start Speaking",
   stopSpeaking: "Stop Speaking",
@@ -90,4 +89,5 @@ export default {
   limitReached: "Limit Reached",
   upgradeForMore: "Upgrade for More",
   tryAgainTomorrow: "Try Again Tomorrow",
+  voiceChat: "Voice Chat"
 };

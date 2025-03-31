@@ -42,7 +42,6 @@ export default {
   type: "Digitar",
   unlimitedVoicePractice: "Prática de Voz Ilimitada",
   premiumVoiceChat: "Chat de Voz Premium",
-  voiceChat: "Chat de Voz",
   voicePractice: "Prática de Voz",
   welcomeBack: "Bem-vindo de volta",
   welcomeToYourAccount: "Bem-vindo à sua conta",
@@ -90,4 +89,5 @@ export default {
   limitReached: "Limite Atingido",
   upgradeForMore: "Atualize para Mais",
   tryAgainTomorrow: "Tente Novamente Amanhã",
+  voiceChat: "Chat de Voz"
 };
