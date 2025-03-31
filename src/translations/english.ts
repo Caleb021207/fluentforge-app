@@ -220,7 +220,8 @@ const englishTranslations: TranslationRecord = {
   voiceMessage: "Voice message...",
   errorProcessingVoice: "Error processing voice message. Please try again.",
   voiceChatStarted: "Voice chat started",
-  speakingNow: "You can start speaking now"
+  speakingNow: "You can start speaking now",
+  conversation: "Conversation"
 };
 
 export default englishTranslations as TranslationRecord;

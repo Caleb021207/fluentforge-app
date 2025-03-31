@@ -214,7 +214,8 @@ const portugueseTranslations: TranslationRecord = {
   voiceMessage: "Mensagem de voz...",
   errorProcessingVoice: "Erro ao processar mensagem de voz. Por favor, tente novamente.",
   voiceChatStarted: "Chat de voz iniciado",
-  speakingNow: "Você pode começar a falar agora"
+  speakingNow: "Você pode começar a falar agora",
+  conversation: "Conversa"
 };
 
 export default portugueseTranslations as TranslationRecord;

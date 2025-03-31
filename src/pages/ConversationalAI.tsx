@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { MessageCircle, Send, Bot, User, Mic, MicOff, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,6 +32,29 @@ const ConversationalAI = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Initialize audio element
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+    
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
+      
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +82,8 @@ const ConversationalAI = () => {
           message: input,
           userLanguage: currentLanguage,
           conversationHistory: updatedHistory,
-          cefrLevel: "B1" // Default level, could be made configurable
+          cefrLevel: "B1", // Default level, could be made configurable
+          audioResponse: activeTab === "voice" // Request audio response if in voice tab
         }
       });
 
@@ -82,6 +106,13 @@ const ConversationalAI = () => {
         ...updatedHistory,
         { role: "assistant", content: data.content }
       ]);
+      
+      // Play audio if available
+      if (data.audioContent && audioRef.current) {
+        const audioSrc = `data:audio/mp3;base64,${data.audioContent}`;
+        audioRef.current.src = audioSrc;
+        await audioRef.current.play();
+      }
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -204,12 +235,11 @@ const ConversationalAI = () => {
         setMessages(prev => [...prev, userMessage]);
         
         // Call Supabase function to process audio
-        const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        const { data, error } = await supabase.functions.invoke('voice-to-text', {
           body: { 
             audio: base64Data,
             userLanguage: currentLanguage,
-            conversationHistory: conversationHistory,
-            requestType: "standardVoice" 
+            conversationHistory
           }
         });
         
@@ -239,11 +269,23 @@ const ConversationalAI = () => {
             
             setMessages(prev => [...prev, assistantMessage]);
             
+            // Update conversation history
+            if (data.updatedHistory) {
+              setConversationHistory(data.updatedHistory);
+            }
+            
             // Play audio response if available
-            if (data.audioContent) {
+            if (data.audioContent && audioRef.current) {
               const audioSrc = `data:audio/mp3;base64,${data.audioContent}`;
-              const audio = new Audio(audioSrc);
-              audio.play();
+              audioRef.current.src = audioSrc;
+              await audioRef.current.play().catch(playError => {
+                console.error('Error playing audio:', playError);
+                toast({
+                  title: t("error"),
+                  description: t("audioPlaybackError"),
+                  variant: "destructive",
+                });
+              });
             }
           }
         }
@@ -280,7 +322,7 @@ const ConversationalAI = () => {
     setMessages([]);
     setConversationHistory([]);
     toast({
-      title: t("Success"),
+      title: t("success"),
       description: "Conversation history has been cleared",
     });
   };
@@ -547,6 +589,8 @@ const ConversationalAI = () => {
           </Card>
         </TabsContent>
       </Tabs>
+      
+      <audio ref={audioRef} className="hidden" />
     </div>
   );
 };
