@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Bot, User, Mic, MicOff, Headphones, BarChart4 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,7 +26,7 @@ const ConversationalAI = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessingVoice, setIsProcessingVoice] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
-  const [conversationHistory, setConversationHistory] = useState<Array<{role: string, content: string}>>([]);
+  const [conversationHistory, setConversationHistory] = useState<Array<{role: string; content: string}>>([]);
   const [cefrLevel, setCefrLevel] = useState<CEFRLevel>("B1");
   
   const { toast } = useToast();
@@ -36,9 +35,11 @@ const ConversationalAI = () => {
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const silenceStartRef = useRef<number | null>(null);
+  const silenceThresholdRef = useRef<number>(2000); // 2 seconds of silence
 
   useEffect(() => {
-    // Initialize audio element
     if (!audioRef.current) {
       audioRef.current = new Audio();
     }
@@ -55,6 +56,10 @@ const ConversationalAI = () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
+      }
+
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
       }
     };
   }, []);
@@ -83,13 +88,73 @@ const ConversationalAI = () => {
 
       mediaRecorderRef.current.addEventListener('dataavailable', (event) => {
         audioChunksRef.current.push(event.data);
+        
+        // Reset silence detection on audio data
+        silenceStartRef.current = null;
+        
+        // Start silence detection
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+        }
+        
+        silenceStartRef.current = Date.now();
+        silenceTimerRef.current = setTimeout(() => {
+          if (isRecording) {
+            console.log("Silence detected, stopping recording automatically");
+            stopRecording();
+          }
+        }, silenceThresholdRef.current);
       });
 
       mediaRecorderRef.current.addEventListener('stop', async () => {
         processVoiceRecording();
       });
 
-      mediaRecorderRef.current.start();
+      // Setup audio analyzer to detect silence
+      const audioContext = new AudioContext();
+      const audioSource = audioContext.createMediaStreamSource(stream);
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      audioSource.connect(analyser);
+      
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      
+      // Check audio level periodically to detect silence
+      const checkSilence = () => {
+        if (!isRecording) return;
+        
+        analyser.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          sum += dataArray[i];
+        }
+        
+        const average = sum / bufferLength;
+        
+        // If very low audio level and we weren't already counting silence
+        if (average < 5) {
+          if (silenceStartRef.current === null) {
+            silenceStartRef.current = Date.now();
+          } else if (Date.now() - silenceStartRef.current > silenceThresholdRef.current) {
+            console.log("Extended silence detected, stopping recording");
+            stopRecording();
+            return;
+          }
+        } else {
+          // Reset silence counter on louder audio
+          silenceStartRef.current = null;
+        }
+        
+        // Continue checking while recording
+        if (isRecording) {
+          requestAnimationFrame(checkSilence);
+        }
+      };
+      
+      requestAnimationFrame(checkSilence);
+
+      mediaRecorderRef.current.start(100); // Collect data every 100ms
       setIsRecording(true);
       setTimeRemaining(600); // 10 minutes in seconds
       startTimer();
@@ -116,6 +181,18 @@ const ConversationalAI = () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
+      }
+      
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+      
+      silenceStartRef.current = null;
+
+      // Stop all tracks on the stream
+      if (mediaRecorderRef.current.stream) {
+        mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
       }
     }
   };
@@ -228,25 +305,35 @@ const ConversationalAI = () => {
             }
             
             // Generate and play audio response
-            const { data: ttsData, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
-              body: { 
-                text: aiData.content,
-                userLanguage: currentLanguage
-              }
-            });
-            
-            if (ttsError) {
-              console.error('Error generating speech:', ttsError);
-            } else if (ttsData.audioContent && audioRef.current) {
-              const audioSrc = `data:audio/mp3;base64,${ttsData.audioContent}`;
-              audioRef.current.src = audioSrc;
-              await audioRef.current.play().catch(playError => {
-                console.error('Error playing audio:', playError);
-                toast({
-                  title: t("error"),
-                  description: t("audioPlaybackError"),
-                  variant: "destructive",
+            try {
+              const { data: ttsData, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
+                body: { 
+                  text: aiData.content,
+                  userLanguage: currentLanguage
+                }
+              });
+              
+              if (ttsError) {
+                console.error('Error generating speech:', ttsError);
+                throw ttsError;
+              } else if (ttsData.audioContent && audioRef.current) {
+                const audioSrc = `data:audio/mp3;base64,${ttsData.audioContent}`;
+                audioRef.current.src = audioSrc;
+                await audioRef.current.play().catch(playError => {
+                  console.error('Error playing audio:', playError);
+                  toast({
+                    title: t("error"),
+                    description: t("audioPlaybackError"),
+                    variant: "destructive",
+                  });
                 });
+              }
+            } catch (ttsError) {
+              console.error('Error with text-to-speech:', ttsError);
+              toast({
+                title: t("warning"),
+                description: t("audioGenerationFailed"),
+                variant: "warning",
               });
             }
           }
