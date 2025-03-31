@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const englishTranslations: TranslationRecord = {
@@ -204,7 +205,6 @@ const englishTranslations: TranslationRecord = {
   textChat: "Text Chat",
   standardVoice: "Standard Voice",
   standardVoiceChat: "Standard Voice Chat",
-  startVoiceChat: "Start Voice Chat",
   stopRecording: "Stop Recording",
   recordingActive: "Recording active. Speak clearly into your microphone...",
   startVoiceChatting: "Start a voice chat with the AI tutor!",

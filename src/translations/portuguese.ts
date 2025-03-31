@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const portugueseTranslations: TranslationRecord = {
@@ -182,12 +183,22 @@ const portugueseTranslations: TranslationRecord = {
   textConversationPractice: "Prática de Conversação de Texto",
   startTextChatting: "Comece a chatear com o tutor de IA",
   typeMessageBelow: "Escreva uma mensagem abaixo para começar",
+  cefrA1Description: "Iniciante - Frases e expressões básicas",
+  cefrA2Description: "Elementar - Comunicação cotidiana simples",
+  cefrB1Description: "Intermediário - Pode discutir tópicos familiares",
+  cefrB2Description: "Intermediário Superior - Pode interagir com fluência",
+  beginner: "Iniciante",
+  elementary: "Elementar",
+  intermediate: "Intermediário",
+  upperIntermediate: "Intermediário Superior",
+  selectCEFRLevel: "Selecionar Nível CEFR",
+  selectedLevel: "Nível Selecionado",
+  success: "Sucesso",
   
   // New translations for Standard Voice Chat
   textChat: "Chat de Texto",
   standardVoice: "Voz Padrão",
   standardVoiceChat: "Chat de Voz Padrão",
-  startVoiceChat: "Iniciar Chat de Voz",
   stopRecording: "Parar Gravação",
   recordingActive: "Gravação ativa. Fale claramente no seu microfone...",
   startVoiceChatting: "Inicie um chat de voz com o tutor de IA!",
