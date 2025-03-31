@@ -9,22 +9,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Function to select the most appropriate voice based on language
-function getVoiceForLanguage(language?: string): string {
-  if (!language) return 'alloy'; // Default neutral voice
-  
-  const languageVoiceMap: Record<string, string> = {
-    en: 'echo',    // Male voice for English
-    es: 'nova',    // Female voice for Spanish
-    pt: 'alloy',   // Neutral voice for Portuguese
-    english: 'echo',
-    spanish: 'nova',
-    portuguese: 'alloy'
-  };
-  
-  return languageVoiceMap[language] || 'alloy';
-}
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -32,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice, language } = await req.json();
+    const { text, voice } = await req.json();
     
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
@@ -41,10 +25,6 @@ serve(async (req) => {
     if (!text) {
       throw new Error('Text is required');
     }
-
-    // Determine the voice to use
-    const selectedVoice = voice || getVoiceForLanguage(language);
-    console.log(`Using voice: ${selectedVoice} for text-to-speech`);
 
     // Generate speech from text
     const response = await fetch('https://api.openai.com/v1/audio/speech', {
@@ -56,9 +36,8 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'tts-1',
         input: text,
-        voice: selectedVoice,
+        voice: voice || 'alloy', // Default to alloy if no voice specified
         response_format: 'mp3',
-        speed: 1.0, // Normal speed
       }),
     });
 
@@ -76,7 +55,7 @@ serve(async (req) => {
     // Process in chunks to avoid stack overflow
     for (let i = 0; i < uint8Array.length; i += chunkSize) {
       const chunk = uint8Array.slice(i, Math.min(i + chunkSize, uint8Array.length));
-      binaryString += String.fromCharCode.apply(null, Array.from(chunk));
+      binaryString += String.fromCharCode.apply(null, chunk);
     }
     
     const base64Audio = btoa(binaryString);
