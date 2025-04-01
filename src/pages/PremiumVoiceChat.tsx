@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon } from "lucide-react";
+import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -9,6 +8,7 @@ import { getAgentIdForLanguage } from "@/components/certifications/utils/elevenL
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PremiumVoiceChatSession } from "@/types/supabase";
+import { useNavigate } from "react-router-dom";
 
 type VoiceMessage = {
   role: 'user' | 'assistant';
@@ -26,8 +26,39 @@ const PremiumVoiceChat = () => {
   const [sessionStatus, setSessionStatus] = useState<SessionStatus>('available');
   const [cooldownTimeRemaining, setCooldownTimeRemaining] = useState<number | null>(null);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      setIsLoading(true);
+      const { data } = await supabase.auth.getSession();
+      setIsLoggedIn(!!data.session);
+      setIsLoading(false);
+      
+      if (data.session) {
+        checkSessionStatus();
+      }
+    };
+    
+    checkAuth();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      const isAuthenticated = !!session;
+      setIsLoggedIn(isAuthenticated);
+      
+      if (isAuthenticated) {
+        checkSessionStatus();
+      }
+    });
+    
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const getAgentId = () => {
     return getAgentIdForLanguage(currentLanguage);
@@ -56,16 +87,6 @@ const PremiumVoiceChat = () => {
 
   const isConversationActive = () => conversation.status !== "disconnected";
 
-  // Check user's session status when component mounts
-  useEffect(() => {
-    checkSessionStatus();
-    
-    // Check session status every minute
-    const intervalId = setInterval(checkSessionStatus, 60000);
-    
-    return () => clearInterval(intervalId);
-  }, []);
-
   const checkSessionStatus = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -75,7 +96,6 @@ const PremiumVoiceChat = () => {
         return;
       }
       
-      // Check for active sessions using a raw query to work around type issues
       const { data: activeSessions, error: activeError } = await supabase
         .from('premium_voice_chat_sessions')
         .select('*')
@@ -88,18 +108,15 @@ const PremiumVoiceChat = () => {
       }
       
       if (activeSessions) {
-        // There's an active session
         setCurrentSessionId(activeSessions.id);
         setSessionStatus('active');
         
-        // Calculate time remaining in current session
         const sessionStartTime = new Date(activeSessions.session_start).getTime();
         const timeElapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
-        const timeRemaining = Math.max(0, 300 - timeElapsed); // 5 minutes = 300 seconds
+        const timeRemaining = Math.max(0, 300 - timeElapsed);
         
         setVoiceChatTimeRemaining(timeRemaining);
         
-        // If time is up but session wasn't properly closed, close it now
         if (timeRemaining <= 0) {
           await endSession(activeSessions.id);
         }
@@ -107,7 +124,6 @@ const PremiumVoiceChat = () => {
         return;
       }
       
-      // Check for recent completed sessions
       const oneDayAgo = new Date();
       oneDayAgo.setHours(oneDayAgo.getHours() - 24);
       
@@ -126,17 +142,14 @@ const PremiumVoiceChat = () => {
       }
       
       if (recentSessions) {
-        // There's a recent session, user is in cooldown
         setSessionStatus('cooldown');
         
-        // Calculate cooldown time remaining
         const sessionEndTime = new Date(recentSessions.session_end).getTime();
-        const cooldownEndTime = sessionEndTime + (24 * 60 * 60 * 1000); // 24 hours after session end
+        const cooldownEndTime = sessionEndTime + (24 * 60 * 60 * 1000);
         const cooldownRemaining = Math.max(0, Math.floor((cooldownEndTime - Date.now()) / 1000));
         
         setCooldownTimeRemaining(cooldownRemaining);
         
-        // If cooldown is over, set status to available
         if (cooldownRemaining <= 0) {
           setSessionStatus('available');
           setCooldownTimeRemaining(null);
@@ -145,13 +158,11 @@ const PremiumVoiceChat = () => {
         return;
       }
       
-      // No active or recent sessions
       setSessionStatus('available');
       setCooldownTimeRemaining(null);
       
     } catch (error) {
       console.error("Error checking session status:", error);
-      // Default to available in case of error
       setSessionStatus('available');
     }
   };
@@ -202,7 +213,6 @@ const PremiumVoiceChat = () => {
     };
   }, [isConversationActive(), voiceChatTimeRemaining]);
 
-  // Cooldown timer effect
   useEffect(() => {
     let cooldownTimerId: number | null = null;
     
@@ -236,7 +246,6 @@ const PremiumVoiceChat = () => {
     return `${hours}h ${mins}m`;
   };
 
-  // Create a new session record in the database
   const createSession = async (): Promise<string | null> => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -275,7 +284,6 @@ const PremiumVoiceChat = () => {
     }
   };
 
-  // End the session by updating the session_end timestamp
   const endSession = async (sessionId: string) => {
     try {
       const { error } = await supabase
@@ -289,12 +297,10 @@ const PremiumVoiceChat = () => {
         console.error("Error ending session:", error);
       }
       
-      // Clear the current session ID
       setCurrentSessionId(null);
       
-      // Update session status
       setSessionStatus('cooldown');
-      setCooldownTimeRemaining(24 * 60 * 60); // 24 hours in seconds
+      setCooldownTimeRemaining(24 * 60 * 60);
       
     } catch (error) {
       console.error("Error in endSession:", error);
@@ -302,7 +308,15 @@ const PremiumVoiceChat = () => {
   };
 
   const startConversation = async () => {
-    // If in cooldown, don't allow starting
+    if (!isLoggedIn) {
+      toast({
+        title: t("loginRequired"),
+        description: t("pleaseLoginToAccessPremiumFeature"),
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (sessionStatus === 'cooldown') {
       toast({
         title: t("cooldownActive"),
@@ -328,7 +342,6 @@ const PremiumVoiceChat = () => {
     }
 
     try {
-      // Create a new session in the database
       const sessionId = await createSession();
       
       if (!sessionId) {
@@ -357,10 +370,9 @@ const PremiumVoiceChat = () => {
       
       console.log(`Successfully started conversation session: ${conversationId}`);
       setIsRecording(true);
-      setVoiceChatTimeRemaining(300); // 5 minutes
+      setVoiceChatTimeRemaining(300);
       setSessionStatus('active');
       
-      // Add initial user message to the conversation
       const initialUserMessage: VoiceMessage = {
         role: "user",
         content: currentLanguage === "english" 
@@ -392,7 +404,6 @@ const PremiumVoiceChat = () => {
       setIsRecording(false);
       setVoiceChatTimeRemaining(null);
       
-      // End the database session if we have an active session ID
       if (currentSessionId) {
         await endSession(currentSessionId);
       }
@@ -424,6 +435,65 @@ const PremiumVoiceChat = () => {
   };
 
   const { practice, native } = getLanguagePair();
+
+  const redirectToLogin = () => {
+    navigate("/");
+    toast({
+      title: t("loginRequired"),
+      description: t("redirectingToLogin"),
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto p-4">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lingua-primary"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="max-w-4xl mx-auto p-4">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-lingua-text mb-4">
+            {t("premiumVoiceChat")}
+          </h1>
+          <p className="text-gray-600 mb-4">
+            {currentLanguage === "english" 
+              ? `Have natural voice conversations with our premium AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
+              : currentLanguage === "spanish"
+                ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
+                : `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`}
+          </p>
+        </div>
+        
+        <Card className="p-6 bg-amber-50 border-amber-200">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <LogIn className="h-12 w-12 text-amber-600" />
+            <h2 className="text-xl font-semibold text-amber-800">
+              {t("loginRequired") || "Login Required"}
+            </h2>
+            <p className="text-amber-700">
+              {currentLanguage === "english"
+                ? "To access the Premium Voice Chat feature, please log in to your account."
+                : currentLanguage === "spanish"
+                  ? "Para acceder a la función de Chat de Voz Premium, inicia sesión en tu cuenta."
+                  : "Para acessar o recurso de Chat de Voz Premium, faça login na sua conta."}
+            </p>
+            <Button 
+              onClick={redirectToLogin} 
+              className="bg-lingua-primary hover:bg-lingua-primary/90"
+            >
+              {t("login") || "Login"}
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-4">
