@@ -169,9 +169,9 @@ const Practice = () => {
     if (currentLanguage === "english") {
       prompt = "¡Hola! Quiero practicar español contigo.";
     } else if (currentLanguage === "spanish") {
-      prompt = "¡Hola! Quiero practicar inglés contigo!";
+      prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "portuguese") {
-      prompt = "Olá! Eu quero praticar inglês com você!";
+      prompt = "Hello! I want to practice English with you!";
     }
 
     if (prompt) {
