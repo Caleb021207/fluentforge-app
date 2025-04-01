@@ -36,5 +36,14 @@ export interface CertificationAttempt {
   created_at: string | null;
 }
 
+// New type for premium voice chat sessions
+export interface PremiumVoiceChatSession {
+  id: string;
+  user_id: string;
+  session_start: string;
+  session_end: string | null;
+  created_at: string;
+}
+
 // Use these types in your components like this:
-// import { UserProfile, LessonProgress, CertificationAttempt } from "@/types/supabase";
+// import { UserProfile, LessonProgress, CertificationAttempt, PremiumVoiceChatSession } from "@/types/supabase";

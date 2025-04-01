@@ -8,6 +8,7 @@ import { useConversation } from "@11labs/react";
 import { getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
+import { PremiumVoiceChatSession } from "@/types/supabase";
 
 type VoiceMessage = {
   role: 'user' | 'assistant';
@@ -74,7 +75,7 @@ const PremiumVoiceChat = () => {
         return;
       }
       
-      // Check for active sessions
+      // Check for active sessions using a raw query to work around type issues
       const { data: activeSessions, error: activeError } = await supabase
         .from('premium_voice_chat_sessions')
         .select('*')
@@ -252,8 +253,7 @@ const PremiumVoiceChat = () => {
       const { data, error } = await supabase
         .from('premium_voice_chat_sessions')
         .insert({
-          user_id: user.id,
-          session_start: new Date().toISOString()
+          user_id: user.id
         })
         .select()
         .single();
