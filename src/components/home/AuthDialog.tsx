@@ -11,6 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useLocalization } from "@/context/LocalizationContext";
 import { AlertCircle } from "lucide-react";
+import { executeRecaptcha, verifyRecaptchaToken } from "@/utils/recaptcha";
+import { useToast } from "@/hooks/use-toast";
 
 interface AuthDialogProps {
   isOpen: boolean;
@@ -40,10 +42,12 @@ const AuthDialog = ({
   isLoading
 }: AuthDialogProps) => {
   const { t } = useLocalization();
+  const { toast } = useToast();
   const [passcode, setPasscode] = useState("");
   const [passcodeError, setPasscodeError] = useState(false);
+  const [verifyingRecaptcha, setVerifyingRecaptcha] = useState(false);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Only check passcode for signup, not login
@@ -53,6 +57,47 @@ const AuthDialog = ({
     }
     
     setPasscodeError(false);
+
+    // If it's signup, verify with reCAPTCHA first
+    if (!isLogin) {
+      try {
+        setVerifyingRecaptcha(true);
+        
+        // Get reCAPTCHA token
+        const token = await executeRecaptcha('signup');
+        
+        // Verify token with our edge function
+        const verification = await verifyRecaptchaToken(token);
+        
+        if (!verification.success) {
+          toast({
+            title: "Verification Failed",
+            description: verification.message || "Could not verify you are human. Please try again.",
+            variant: "destructive"
+          });
+          setVerifyingRecaptcha(false);
+          return;
+        }
+        
+        // If score is low but not failing, we can show a warning
+        if (verification.score && verification.score < 0.7) {
+          console.warn(`Low reCAPTCHA score: ${verification.score}`);
+        }
+        
+        setVerifyingRecaptcha(false);
+      } catch (error) {
+        console.error("reCAPTCHA verification error:", error);
+        toast({
+          title: "Verification Error",
+          description: "Could not complete verification. Please try again.",
+          variant: "destructive"
+        });
+        setVerifyingRecaptcha(false);
+        return;
+      }
+    }
+    
+    // Proceed with authentication
     handleEmailAuth(e);
   };
   
@@ -112,9 +157,9 @@ const AuthDialog = ({
           )}
           
           <div className="flex flex-col gap-2">
-            <Button type="submit" className="text-sm" disabled={isLoading}>
-              {isLoading 
-                ? t("processing")
+            <Button type="submit" className="text-sm" disabled={isLoading || verifyingRecaptcha}>
+              {isLoading || verifyingRecaptcha
+                ? (verifyingRecaptcha ? "Verifying..." : t("processing"))
                 : isLogin ? t("signIn") : t("createAccount")}
             </Button>
             <Button 
@@ -122,9 +167,9 @@ const AuthDialog = ({
               variant="outline" 
               onClick={handleGoogleLogin} 
               className="text-sm"
-              disabled={isLoading}
+              disabled={isLoading || verifyingRecaptcha}
             >
-              {isLoading ? "Please wait..." : "Continue with Google"}
+              {isLoading || verifyingRecaptcha ? "Please wait..." : "Continue with Google"}
             </Button>
           </div>
           <Button
@@ -136,7 +181,7 @@ const AuthDialog = ({
               setIsLogin(!isLogin);
             }}
             className="w-full text-sm"
-            disabled={isLoading}
+            disabled={isLoading || verifyingRecaptcha}
           >
             {isLogin
               ? "Don't have an account? Sign up"
