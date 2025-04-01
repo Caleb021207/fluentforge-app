@@ -2,8 +2,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// Use the Perplexity API key
-const perplexityApiKey = "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";
+// Use the updated Perplexity API key format
+const perplexityApiKey = Deno.env.get('PERPLEXITY_API_KEY') || "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";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -47,8 +47,10 @@ serve(async (req) => {
 
     // Build system prompt based on user language and CEFR level
     const systemPrompt = isLearningEnglish 
-      ? `You are a language tutor helping a ${nativeLanguage} speaker practice ${targetLanguage}. ${levelInstruction} Always respond in English with clear, helpful explanations. Include a translation of your response in ${nativeLanguage}.` 
-      : `Eres un tutor de idiomas ayudando a un hablante de ${nativeLanguage} a practicar ${targetLanguage}. ${levelInstruction} Siempre responde en español con explicaciones claras y útiles. Incluye una traducción de tu respuesta en ${nativeLanguage}.`;
+      ? `You are a language tutor helping a ${nativeLanguage} speaker practice ${targetLanguage}. ${levelInstruction} Always respond in English with clear, helpful explanations. Include a translation of your response in ${nativeLanguage}. Engage with their message specifically, don't just provide generic responses.` 
+      : `Eres un tutor de idiomas ayudando a un hablante de ${nativeLanguage} a practicar ${targetLanguage}. ${levelInstruction} Siempre responde en español con explicaciones claras y útiles. Incluye una traducción de tu respuesta en ${nativeLanguage}. Responde específicamente a su mensaje, no solo proporciones respuestas genéricas.`;
+    
+    console.log('Using system prompt:', systemPrompt);
     
     // Return a fallback response while diagnosing API issues
     const fallbackResponse = {
@@ -81,6 +83,7 @@ serve(async (req) => {
       });
       
       console.log('Sending request to Perplexity API');
+      console.log(`Making API request to Perplexity with key: ${perplexityApiKey.substring(0, 10)}...`);
       
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
@@ -97,6 +100,7 @@ serve(async (req) => {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Perplexity API error response:', errorText);
+        console.error(`Response status: ${response.status}`);
         throw new Error(`Perplexity API error: ${response.status} ${response.statusText}`);
       }
 
@@ -132,7 +136,7 @@ serve(async (req) => {
         updatedHistory.splice(0, updatedHistory.length - 10);
       }
 
-      console.log('Returning chat response');
+      console.log('Returning chat response with content:', content.substring(0, 50) + '...');
       return new Response(
         JSON.stringify({ 
           content, 

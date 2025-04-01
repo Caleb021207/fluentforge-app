@@ -2,8 +2,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// Use the Perplexity API key
-const perplexityApiKey = "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";
+// Use the updated Perplexity API key format
+const perplexityApiKey = Deno.env.get('PERPLEXITY_API_KEY') || "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";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -22,7 +22,7 @@ serve(async (req) => {
     // Determine if user is learning English or Spanish based on their native language
     const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese';
     
-    // Return a fallback response while diagnosing API issues
+    // Return a fallback response in case API call fails
     const fallbackResponse = {
       content: isLearningEnglish 
         ? "I'm here to help you practice English. What would you like to talk about today?" 
@@ -34,10 +34,14 @@ serve(async (req) => {
 
     // Prepare Perplexity API call
     const systemPrompt = isLearningEnglish 
-      ? "You are a tutor helping a Spanish or Portuguese speaker learn English. Respond in English with clear, helpful corrections and explanations. Include a translation of your response in their native language." 
-      : "Eres un tutor ayudando a un hablante de inglés a aprender español. Responde en español con correcciones y explicaciones claras y útiles. Incluye una traducción de tu respuesta en inglés.";
+      ? "You are a tutor helping a Spanish or Portuguese speaker learn English. Respond in English with clear, helpful corrections and explanations. Include a translation of your response in their native language. Be conversational and engage with the topic they mention." 
+      : "Eres un tutor ayudando a un hablante de inglés a aprender español. Responde en español con correcciones y explicaciones claras y útiles. Incluye una traducción de tu respuesta en inglés. Sé conversacional y responde al tema que mencionan.";
+    
+    console.log('Using system prompt:', systemPrompt);
     
     try {
+      console.log(`Making API request to Perplexity with key: ${perplexityApiKey.substring(0, 10)}...`);
+      
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
         headers: {
@@ -62,6 +66,7 @@ serve(async (req) => {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Perplexity API error response:', errorText);
+        console.error(`Response status: ${response.status}`);
         throw new Error(`Perplexity API error: ${response.status} ${response.statusText}`);
       }
 
@@ -84,7 +89,7 @@ serve(async (req) => {
         translation = parts[1].trim();
       }
 
-      console.log('Returning tutoring response');
+      console.log('Returning tutoring response with content:', content.substring(0, 50) + '...');
       return new Response(
         JSON.stringify({ content, translation }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
