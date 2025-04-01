@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,6 @@ import { useLocalization } from "@/context/LocalizationContext";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -17,8 +17,6 @@ type ConversationMessage = {
   translation?: string;
   timestamp: Date;
 };
-
-type CEFRLevel = 'A1' | 'A2' | 'B1' | 'B2';
 
 const VoiceChat = () => {
   const [isListening, setIsListening] = useState(false);
@@ -29,7 +27,8 @@ const VoiceChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
-  const [cefrLevel, setCefrLevel] = useState<CEFRLevel>('B1');
+  // Default to B1 level without user selection
+  const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
@@ -317,23 +316,8 @@ const VoiceChat = () => {
     });
   };
 
-  const handleCEFRLevelChange = (level: CEFRLevel) => {
-    setCefrLevel(level);
-  };
-
-  const getCEFRLevelDescription = (level: CEFRLevel) => {
-    switch(level) {
-      case 'A1':
-        return t("cefrA1Description") || "Beginner - Basic phrases and expressions";
-      case 'A2':
-        return t("cefrA2Description") || "Elementary - Simple everyday communication";
-      case 'B1':
-        return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
-      case 'B2':
-        return t("cefrB2Description") || "Upper Intermediate - Can interact with fluency";
-      default:
-        return "";
-    }
+  const getCEFRLevelDescription = () => {
+    return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
 
   const getPracticeDescription = () => {
@@ -399,22 +383,8 @@ const VoiceChat = () => {
         <Card className="p-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
-              <label htmlFor="cefr-level" className="block text-sm font-medium mb-1">
-                {t("selectCEFRLevel") || "Select CEFR Level"}:
-              </label>
-              <Select value={cefrLevel} onValueChange={(value) => handleCEFRLevelChange(value as CEFRLevel)}>
-                <SelectTrigger className="w-[180px]" id="cefr-level">
-                  <SelectValue placeholder="Select level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="A1">A1 - {t("beginner") || "Beginner"}</SelectItem>
-                  <SelectItem value="A2">A2 - {t("elementary") || "Elementary"}</SelectItem>
-                  <SelectItem value="B1">B1 - {t("intermediate") || "Intermediate"}</SelectItem>
-                  <SelectItem value="B2">B2 - {t("upperIntermediate") || "Upper Intermediate"}</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-gray-500 mt-2">
-                <span className="font-medium">{t("selectedLevel") || "Selected Level"}: {cefrLevel}</span> - {getCEFRLevelDescription(cefrLevel)}
+              <p className="text-sm text-gray-500">
+                <span className="font-medium">{t("practiceLevel") || "Practice Level"}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
