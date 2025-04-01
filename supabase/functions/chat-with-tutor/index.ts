@@ -16,8 +16,8 @@ serve(async (req) => {
   }
 
   try {
-    const { message, requestType, userLanguage } = await req.json();
-    console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage);
+    const { message, userLanguage } = await req.json();
+    console.log('Received message:', message, 'User language:', userLanguage);
 
     // Determine if user is learning English or Spanish based on their native language
     const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese';
@@ -69,22 +69,6 @@ serve(async (req) => {
       const parts = fullContent.split("Traducción:");
       content = parts[0].trim();
       translation = parts[1].trim();
-    }
-
-    if (requestType === 'assessment') {
-      // For assessment requests, analyze the content and provide scores
-      return new Response(
-        JSON.stringify({
-          assessment: {
-            reading: "B1",
-            writing: "B1",
-            speaking: "B1",
-            listening: "B1",
-            overallLevel: "B1"
-          }
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
     }
 
     console.log('Returning tutoring response');
