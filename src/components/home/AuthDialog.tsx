@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useLocalization } from "@/context/LocalizationContext";
+import { AlertCircle } from "lucide-react";
 
 interface AuthDialogProps {
   isOpen: boolean;
@@ -39,6 +40,21 @@ const AuthDialog = ({
   isLoading
 }: AuthDialogProps) => {
   const { t } = useLocalization();
+  const [passcode, setPasscode] = useState("");
+  const [passcodeError, setPasscodeError] = useState(false);
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Only check passcode for signup, not login
+    if (!isLogin && passcode !== "08132010") {
+      setPasscodeError(true);
+      return;
+    }
+    
+    setPasscodeError(false);
+    handleEmailAuth(e);
+  };
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -51,7 +67,7 @@ const AuthDialog = ({
               : "Create a new account to get started"}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleEmailAuth} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Input
               type="email"
@@ -72,6 +88,29 @@ const AuthDialog = ({
               className="text-sm"
             />
           </div>
+          
+          {!isLogin && (
+            <div>
+              <Input
+                type="password"
+                placeholder="Access Passcode"
+                value={passcode}
+                onChange={(e) => {
+                  setPasscode(e.target.value);
+                  if (passcodeError) setPasscodeError(false);
+                }}
+                required
+                className={`text-sm ${passcodeError ? 'border-red-500' : ''}`}
+              />
+              {passcodeError && (
+                <div className="flex items-center mt-2 text-red-500 text-sm">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  <span>Incorrect passcode. Please try again.</span>
+                </div>
+              )}
+            </div>
+          )}
+          
           <div className="flex flex-col gap-2">
             <Button type="submit" className="text-sm" disabled={isLoading}>
               {isLoading 
@@ -91,7 +130,11 @@ const AuthDialog = ({
           <Button
             type="button"
             variant="link"
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setPasscode("");
+              setPasscodeError(false);
+              setIsLogin(!isLogin);
+            }}
             className="w-full text-sm"
             disabled={isLoading}
           >

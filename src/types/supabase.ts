@@ -36,7 +36,7 @@ export interface CertificationAttempt {
   created_at: string | null;
 }
 
-// New type for premium voice chat sessions
+// Type for premium voice chat sessions
 export interface PremiumVoiceChatSession {
   id: string;
   user_id: string;
