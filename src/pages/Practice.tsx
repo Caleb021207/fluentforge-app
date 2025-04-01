@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { MessageCircle, Send, Book, Timer, FileText, BookOpen, Volume2, Headphones } from "lucide-react";
+import { MessageCircle, Send, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -14,20 +15,11 @@ interface ChatMessage {
   translation?: string;
 }
 
-interface SkillAssessment {
-  reading: string;
-  writing: string;
-  speaking: string;
-  listening: string;
-  overallLevel: string;
-}
-
 const Practice = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
-  const [skillAssessment, setSkillAssessment] = useState<SkillAssessment | null>(null);
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
@@ -171,43 +163,6 @@ const Practice = () => {
     }
   };
 
-  const requestSkillAssessment = async () => {
-    setIsLoading(true);
-    try {
-      const assessmentPrompt = currentLanguage === "english"
-        ? "Please assess my Spanish language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level."
-        : "Please assess my English language skills based on our conversation. Provide feedback on my reading, writing, speaking, and listening abilities, and estimate my overall proficiency level.";
-
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
-        body: { 
-          message: assessmentPrompt,
-          requestType: "assessment"
-        }
-      });
-
-      if (error) throw error;
-
-      setSkillAssessment(data.assessment);
-      toast({
-        title: t("getSkillsAssessment"),
-        description: currentLanguage === "portuguese" 
-          ? "Suas habilidades linguísticas foram avaliadas!" 
-          : currentLanguage === "spanish" 
-            ? "¡Tus habilidades lingüísticas han sido evaluadas!" 
-            : "Your language skills have been evaluated!",
-      });
-    } catch (error) {
-      console.error('Error:', error);
-      toast({
-        title: t("error"),
-        description: t("failedToLoadProgressData"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const sendLanguageLearningPrompt = () => {
     let prompt = "";
     
@@ -342,53 +297,6 @@ const Practice = () => {
                 : "Nota: Este é o recurso de prática baseada em texto. Para prática de voz, experimente nossos recursos de Chat de Voz Ilimitado ou Chat de Voz Premium."}
           </p>
         </div>
-        <div className="flex flex-wrap gap-4 mb-4">
-          <Button onClick={requestSkillAssessment} disabled={messages.length === 0 || isLoading}>
-            {t("getSkillsAssessment")}
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-3 mb-8">
-        {skillAssessment && (
-          <>
-            <Card className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <BookOpen className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{t("reading")}</h3>
-              </div>
-              <p className="text-sm text-gray-600">{skillAssessment.reading}</p>
-            </Card>
-            <Card className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{t("writing")}</h3>
-              </div>
-              <p className="text-sm text-gray-600">{skillAssessment.writing}</p>
-            </Card>
-            <Card className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Volume2 className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{t("speaking")}</h3>
-              </div>
-              <p className="text-sm text-gray-600">{skillAssessment.speaking}</p>
-            </Card>
-            <Card className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Headphones className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{t("listening")}</h3>
-              </div>
-              <p className="text-sm text-gray-600">{skillAssessment.listening}</p>
-            </Card>
-            <Card className="p-4 md:col-span-2">
-              <div className="flex items-center gap-2 mb-2">
-                <MessageCircle className="h-5 w-5 text-lingua-primary" />
-                <h3 className="font-semibold">{t("overallLevel")}</h3>
-              </div>
-              <p className="text-sm text-gray-600">{skillAssessment.overallLevel}</p>
-            </Card>
-          </>
-        )}
       </div>
 
       <Card className="mb-4 p-6">
