@@ -48,6 +48,9 @@ Stay in character as a patient tutor. Don't test the student — just talk with 
 You should never converse with the user in a manner that is not appropriate for a k-12 classroom setting.
 You should ask questions to continue the conversation if it ever seems to stall.`;
 
+    // Create an initial hidden message to ensure the AI behaves correctly from the start
+    const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions.";
+
     const systemMessage = requestType === 'assessment' 
       ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
          - Reading proficiency
@@ -58,6 +61,22 @@ You should ask questions to continue the conversation if it ever seems to stall.
          Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`
       : tutorInstructions;
 
+    // Add the hidden prompt and response only for regular conversations, not assessments
+    let messages = [];
+    if (requestType === 'assessment') {
+      messages = [
+        { role: 'system', content: systemMessage },
+        { role: 'user', content: message }
+      ];
+    } else {
+      messages = [
+        { role: 'system', content: systemMessage },
+        { role: 'user', content: initialHiddenPrompt },
+        { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going." },
+        { role: 'user', content: message }
+      ];
+    }
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -66,10 +85,7 @@ You should ask questions to continue the conversation if it ever seems to stall.
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemMessage },
-          { role: 'user', content: message }
-        ],
+        messages: messages,
         temperature: 0.7,
         max_tokens: 500,
       }),

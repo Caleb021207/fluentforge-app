@@ -68,9 +68,14 @@ You should ask questions to continue the conversation if it ever seems to stall.
 
 After your response in ${responseLanguage}, add a translation in ${nativeLanguage} prefixed with "Translation: ".`;
 
-    // Build the messages array with system message and conversation history
+    // Create an initial hidden message to ensure the AI behaves correctly from the start
+    const initialHiddenPrompt = `This conversation is just starting. Remember to behave according to the user's CEFR level ${cefrLevel}. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions.`;
+
+    // Build the messages array with system message, hidden prompt, and conversation history
     const messages = [
       { role: 'system', content: tutorInstructions },
+      { role: 'user', content: initialHiddenPrompt },
+      { role: 'assistant', content: `I understand. I'll engage naturally at CEFR level ${cefrLevel}, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going.` },
       ...conversationHistory,
       { role: 'user', content: message }
     ];
@@ -111,16 +116,18 @@ After your response in ${responseLanguage}, add a translation in ${nativeLanguag
       translation = parts[1].trim();
     }
 
+    // Update conversation history but exclude the hidden prompt/response
+    const updatedHistory = [
+      ...conversationHistory,
+      { role: 'user', content: message },
+      { role: 'assistant', content: fullReply }
+    ];
+
     return new Response(
       JSON.stringify({ 
         content: reply,
         translation,
-        // Return the updated conversation history
-        updatedHistory: [
-          ...conversationHistory,
-          { role: 'user', content: message },
-          { role: 'assistant', content: fullReply }
-        ]
+        updatedHistory
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
