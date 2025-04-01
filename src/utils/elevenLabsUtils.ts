@@ -26,3 +26,48 @@ export const getAgentIdForLanguage = (language: string): string => {
   console.log("Using Spanish tutor for English speaker:", SPANISH_TUTOR_AGENT_ID);
   return SPANISH_TUTOR_AGENT_ID;
 };
+
+/**
+ * Speaks text using the browser's speech synthesis API
+ * @param text The text to speak
+ * @param language The language to use (en-US, es-ES, pt-BR)
+ */
+export const speakWithBrowserTTS = (text: string, language: string) => {
+  if (!text) return;
+  
+  // Cancel any existing speech
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  
+  // Set language based on the language parameter
+  switch (language) {
+    case 'english':
+      utterance.lang = 'en-US';
+      break;
+    case 'spanish':
+      utterance.lang = 'es-ES';
+      break;
+    case 'portuguese':
+      utterance.lang = 'pt-BR';
+      break;
+    default:
+      utterance.lang = 'en-US';
+  }
+  
+  // Adjust rate and pitch for better clarity
+  utterance.rate = 0.9;
+  utterance.pitch = 1;
+  
+  window.speechSynthesis.speak(utterance);
+  
+  return {
+    stop: () => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+    }
+  };
+};

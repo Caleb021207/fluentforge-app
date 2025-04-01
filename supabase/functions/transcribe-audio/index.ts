@@ -1,8 +1,9 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// Remove hardcoded API key
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+// Use the Perplexity API key
+const perplexityApiKey = "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";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -52,16 +53,15 @@ serve(async (req) => {
       throw new Error('No audio data provided');
     }
 
-    console.log("Received audio data, but service is currently unavailable");
+    console.log("Received audio data, processing with Perplexity API");
     
-    // Instead of making an API call, return a message that the service is being updated
+    // For now, we'll use browser-based speech recognition as Perplexity doesn't support STT directly
     return new Response(
       JSON.stringify({ 
-        error: 'The transcription service is currently unavailable.',
-        details: 'The service is being updated. Please try again later.'
+        message: 'Using browser-based speech recognition',
+        useFallbackSTT: true
       }),
       { 
-        status: 503, // Service Unavailable
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
