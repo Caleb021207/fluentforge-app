@@ -198,29 +198,7 @@ const englishTranslations: TranslationRecord = {
   upperIntermediate: "Upper Intermediate",
   selectCEFRLevel: "Select CEFR Level",
   selectedLevel: "Selected Level",
-  success: "Success",
-  
-  // New translations for Standard Voice Chat
-  textChat: "Text Chat",
-  standardVoice: "Standard Voice",
-  standardVoiceChat: "Standard Voice Chat",
-  stopRecording: "Stop Recording",
-  recordingActive: "Recording active. Speak clearly into your microphone...",
-  startVoiceChatting: "Start a voice chat with the AI tutor!",
-  tapMicToStart: "Tap the microphone button to start speaking",
-  standardVoiceInfo: "About Standard Voice Chat",
-  openAIVoiceModel: "Uses OpenAI's voice model for natural voice conversations",
-  tenMinutesDaily: "10 minutes of voice chat available daily",
-  upgradePremium: "For unlimited higher-quality voices, try Premium Voice Chat",
-  dailyRemaining: "remaining today",
-  dailyLimitReached: "You've reached your daily limit of 10 minutes",
-  timeLimit: "Time Limit Reached",
-  noAudioRecorded: "No audio was recorded. Please try again.",
-  voiceMessage: "Voice message...",
-  errorProcessingVoice: "Error processing voice message. Please try again.",
-  voiceChatStarted: "Voice chat started",
-  speakingNow: "You can start speaking now",
-  conversation: "Conversation"
+  success: "Success"
 };
 
 export default englishTranslations as TranslationRecord;
