@@ -2,7 +2,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY') || "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";
+// Remove hardcoded API key
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -18,89 +19,34 @@ serve(async (req) => {
     const { message, requestType, userLanguage } = await req.json();
     console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage);
 
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
-    }
-
     // Determine if user is learning English or Spanish based on their native language
     const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese';
     
-    const systemMessage = requestType === 'assessment' 
-      ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
-         - Reading proficiency
-         - Writing ability
-         - Speaking competency
-         - Listening comprehension
-         Also provide an overall estimated proficiency level (A1-C2).
-         Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`
-      : isLearningEnglish 
-        ? `You are a knowledgeable and patient English language tutor. 
-           If the user writes in Spanish or Portuguese, respond in English and provide the translation in their native language below prefixed with "Translation:".
-           If the user writes in English, help correct any grammar or vocabulary mistakes, explain the corrections in Spanish/Portuguese, and provide encouragement.
-           Keep responses friendly but concise, focused on language learning.
-           Maintain a consistent format with corrections and explanations clearly separated.`
-        : `You are a knowledgeable and patient Spanish language tutor. 
-           If user writes in English, respond in Spanish and provide the English translation below prefixed with "Translation:".
-           If user writes in Spanish, help correct any grammar or vocabulary mistakes, explain the corrections in English, and provide encouragement.
-           Keep responses friendly but concise, focused on language learning.
-           Maintain a consistent format with corrections and explanations clearly separated.`;
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemMessage },
-          { role: 'user', content: message }
-        ],
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
-
-    const data = await response.json();
-    console.log('OpenAI API Response:', data);
-
-    if (!response.ok) {
-      if (data.error?.code === 'insufficient_quota') {
-        throw new Error('OpenAI API quota exceeded. Please check your billing details.');
-      }
-      throw new Error(data.error?.message || 'Failed to get response from OpenAI');
-    }
-
-    if (!data.choices?.[0]?.message?.content) {
-      throw new Error('Invalid response structure from OpenAI');
-    }
+    // Instead of making an API call, return a message that the service is being updated
+    let content = isLearningEnglish 
+      ? "We are currently updating our tutoring service. Please check back later." 
+      : "Estamos actualizando nuestro servicio de tutoría en este momento. Por favor, vuelve más tarde.";
+    
+    let translation = isLearningEnglish 
+      ? "Estamos actualizando nuestro servicio de tutoría en este momento. Por favor, vuelve más tarde." 
+      : "We are currently updating our tutoring service. Please check back later.";
 
     if (requestType === 'assessment') {
-      try {
-        const assessment = JSON.parse(data.choices[0].message.content);
-        console.log('Formatted assessment:', assessment);
-        return new Response(
-          JSON.stringify({ assessment }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      } catch (error) {
-        console.error('Error parsing assessment JSON:', error);
-        throw new Error('Failed to parse assessment response');
-      }
+      return new Response(
+        JSON.stringify({
+          assessment: {
+            reading: "Service temporarily unavailable",
+            writing: "Service temporarily unavailable",
+            speaking: "Service temporarily unavailable",
+            listening: "Service temporarily unavailable",
+            overallLevel: "N/A"
+          }
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    let content = data.choices[0].message.content;
-    let translation = '';
-
-    if (content.includes('\nTranslation:')) {
-      [content, translation] = content.split('\nTranslation:');
-      content = content.trim();
-      translation = translation.trim();
-    }
-
-    console.log('Formatted response:', { content, translation });
-
+    console.log('Returning service update message instead of OpenAI response');
     return new Response(
       JSON.stringify({ content, translation }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -109,16 +55,9 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in chat-with-tutor function:', error);
     
-    let errorMessage = 'Failed to get response from AI tutor. Please try again.';
-    if (error.message.includes('quota exceeded')) {
-      errorMessage = 'The AI service is currently unavailable due to quota limits. Please try again later.';
-    } else if (error.message.includes('API key not configured')) {
-      errorMessage = 'The AI service is not properly configured. Please contact support.';
-    }
-
     return new Response(
       JSON.stringify({ 
-        error: errorMessage,
+        error: 'The tutoring service is currently unavailable.',
         details: error.message 
       }),
       { 
