@@ -2,43 +2,12 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// Use the Perplexity API key
-const perplexityApiKey = "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";
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-// Process base64 in chunks to prevent memory issues
-function processBase64Chunks(base64String: string, chunkSize = 32768) {
-  const chunks: Uint8Array[] = [];
-  let position = 0;
-  
-  while (position < base64String.length) {
-    const chunk = base64String.slice(position, position + chunkSize);
-    const binaryChunk = atob(chunk);
-    const bytes = new Uint8Array(binaryChunk.length);
-    
-    for (let i = 0; i < binaryChunk.length; i++) {
-      bytes[i] = binaryChunk.charCodeAt(i);
-    }
-    
-    chunks.push(bytes);
-    position += chunkSize;
-  }
-
-  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-  const result = new Uint8Array(totalLength);
-  let offset = 0;
-
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
-  }
-
-  return result;
-}
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -49,55 +18,64 @@ serve(async (req) => {
   try {
     const { text, voice } = await req.json();
     
-    console.log('Text to convert to speech:', text, 'Voice:', voice);
-    
-    // Call the Perplexity API for text-to-speech functionality
-    const response = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${perplexityApiKey}`
-      },
-      body: JSON.stringify({
-        model: "sonar-medium-online",
-        messages: [
-          {
-            role: "system",
-            content: "You are a text-to-speech service. Convert the following text to speech. Return audio data in a compatible format."
-          },
-          {
-            role: "user",
-            content: text
-          }
-        ]
-      })
-    });
-
-    const responseData = await response.json();
-    console.log('Perplexity API response:', responseData);
-    
-    if (!response.ok) {
-      throw new Error(`Perplexity API error: ${responseData.error?.message || 'Unknown error'}`);
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key not configured');
     }
 
-    // Since Perplexity doesn't natively support TTS, we'll return the text content for now
-    // We'll need to implement a client-side TTS solution
-    return new Response(
-      JSON.stringify({ 
-        content: responseData.choices[0].message.content,
-        useFallbackTTS: true  // Signal to the client to use browser's TTS
+    if (!text) {
+      throw new Error('Text is required');
+    }
+
+    // Generate speech from text
+    const response = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'tts-1',
+        input: text,
+        voice: voice || 'alloy', // Default to alloy if no voice specified
+        response_format: 'mp3',
       }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(`OpenAI API error: ${JSON.stringify(errorData) || response.statusText}`);
+    }
+
+    // Convert audio buffer to base64 safely
+    const arrayBuffer = await response.arrayBuffer();
+    const uint8Array = new Uint8Array(arrayBuffer);
+    let binaryString = '';
+    const chunkSize = 1024;
+    
+    // Process in chunks to avoid stack overflow
+    for (let i = 0; i < uint8Array.length; i += chunkSize) {
+      const chunk = uint8Array.slice(i, Math.min(i + chunkSize, uint8Array.length));
+      binaryString += String.fromCharCode.apply(null, chunk);
+    }
+    
+    const base64Audio = btoa(binaryString);
+
+    return new Response(
+      JSON.stringify({ audioContent: base64Audio }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
     console.error('Error in text-to-speech function:', error);
     
+    let errorMessage = 'Failed to generate speech. Please try again.';
+    if (error.message.includes('API key not configured')) {
+      errorMessage = 'The speech service is not properly configured. Please contact support.';
+    }
+
     return new Response(
       JSON.stringify({ 
-        error: 'Failed to generate speech. Please try again later.',
+        error: errorMessage,
         details: error.message 
       }),
       { 

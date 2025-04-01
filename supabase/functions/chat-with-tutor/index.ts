@@ -2,8 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// Use the updated Perplexity API key format
-const perplexityApiKey = Deno.env.get('PERPLEXITY_API_KEY') || "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";
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY') || "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";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -16,98 +15,110 @@ serve(async (req) => {
   }
 
   try {
-    const { message, userLanguage } = await req.json();
-    console.log('Received message:', message, 'User language:', userLanguage);
+    const { message, requestType, userLanguage } = await req.json();
+    console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage);
+
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key not configured');
+    }
 
     // Determine if user is learning English or Spanish based on their native language
     const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese';
     
-    // Return a fallback response in case API call fails
-    const fallbackResponse = {
-      content: isLearningEnglish 
-        ? "I'm here to help you practice English. What would you like to talk about today?" 
-        : "Estoy aquí para ayudarte a practicar español. ¿De qué te gustaría hablar hoy?",
-      translation: isLearningEnglish 
-        ? "Estoy aquí para ayudarte a practicar inglés. ¿De qué te gustaría hablar hoy?" 
-        : "I'm here to help you practice Spanish. What would you like to talk about today?"
-    };
+    const systemMessage = requestType === 'assessment' 
+      ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
+         - Reading proficiency
+         - Writing ability
+         - Speaking competency
+         - Listening comprehension
+         Also provide an overall estimated proficiency level (A1-C2).
+         Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`
+      : isLearningEnglish 
+        ? `You are a knowledgeable and patient English language tutor. 
+           If the user writes in Spanish or Portuguese, respond in English and provide the translation in their native language below prefixed with "Translation:".
+           If the user writes in English, help correct any grammar or vocabulary mistakes, explain the corrections in Spanish/Portuguese, and provide encouragement.
+           Keep responses friendly but concise, focused on language learning.
+           Maintain a consistent format with corrections and explanations clearly separated.`
+        : `You are a knowledgeable and patient Spanish language tutor. 
+           If user writes in English, respond in Spanish and provide the English translation below prefixed with "Translation:".
+           If user writes in Spanish, help correct any grammar or vocabulary mistakes, explain the corrections in English, and provide encouragement.
+           Keep responses friendly but concise, focused on language learning.
+           Maintain a consistent format with corrections and explanations clearly separated.`;
 
-    // Prepare Perplexity API call
-    const systemPrompt = isLearningEnglish 
-      ? "You are a tutor helping a Spanish or Portuguese speaker learn English. Respond in English with clear, helpful corrections and explanations. Include a translation of your response in their native language. Be conversational and engage with the topic they mention." 
-      : "Eres un tutor ayudando a un hablante de inglés a aprender español. Responde en español con correcciones y explicaciones claras y útiles. Incluye una traducción de tu respuesta en inglés. Sé conversacional y responde al tema que mencionan.";
-    
-    console.log('Using system prompt:', systemPrompt);
-    
-    try {
-      console.log(`Making API request to Perplexity with key: ${perplexityApiKey.substring(0, 10)}...`);
-      
-      const response = await fetch("https://api.perplexity.ai/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${perplexityApiKey}`
-        },
-        body: JSON.stringify({
-          model: "sonar-medium-online",
-          messages: [
-            {
-              role: "system",
-              content: systemPrompt
-            },
-            {
-              role: "user",
-              content: message
-            }
-          ]
-        })
-      });
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemMessage },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+    });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Perplexity API error response:', errorText);
-        console.error(`Response status: ${response.status}`);
-        throw new Error(`Perplexity API error: ${response.status} ${response.statusText}`);
+    const data = await response.json();
+    console.log('OpenAI API Response:', data);
+
+    if (!response.ok) {
+      if (data.error?.code === 'insufficient_quota') {
+        throw new Error('OpenAI API quota exceeded. Please check your billing details.');
       }
-
-      const responseData = await response.json();
-      console.log('Perplexity API response:', responseData);
-      
-      // Extract content and try to parse out translation
-      const fullContent = responseData.choices[0].message.content;
-      let content = fullContent;
-      let translation = "";
-      
-      // Check if the response contains a translation section
-      if (fullContent.includes("Translation:")) {
-        const parts = fullContent.split("Translation:");
-        content = parts[0].trim();
-        translation = parts[1].trim();
-      } else if (fullContent.includes("Traducción:")) {
-        const parts = fullContent.split("Traducción:");
-        content = parts[0].trim();
-        translation = parts[1].trim();
-      }
-
-      console.log('Returning tutoring response with content:', content.substring(0, 50) + '...');
-      return new Response(
-        JSON.stringify({ content, translation }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    } catch (apiError) {
-      console.error('Perplexity API call failed:', apiError);
-      // Return fallback response if API call fails
-      return new Response(
-        JSON.stringify(fallbackResponse),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      throw new Error(data.error?.message || 'Failed to get response from OpenAI');
     }
+
+    if (!data.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response structure from OpenAI');
+    }
+
+    if (requestType === 'assessment') {
+      try {
+        const assessment = JSON.parse(data.choices[0].message.content);
+        console.log('Formatted assessment:', assessment);
+        return new Response(
+          JSON.stringify({ assessment }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        console.error('Error parsing assessment JSON:', error);
+        throw new Error('Failed to parse assessment response');
+      }
+    }
+
+    let content = data.choices[0].message.content;
+    let translation = '';
+
+    if (content.includes('\nTranslation:')) {
+      [content, translation] = content.split('\nTranslation:');
+      content = content.trim();
+      translation = translation.trim();
+    }
+
+    console.log('Formatted response:', { content, translation });
+
+    return new Response(
+      JSON.stringify({ content, translation }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
   } catch (error) {
     console.error('Error in chat-with-tutor function:', error);
     
+    let errorMessage = 'Failed to get response from AI tutor. Please try again.';
+    if (error.message.includes('quota exceeded')) {
+      errorMessage = 'The AI service is currently unavailable due to quota limits. Please try again later.';
+    } else if (error.message.includes('API key not configured')) {
+      errorMessage = 'The AI service is not properly configured. Please contact support.';
+    }
+
     return new Response(
       JSON.stringify({ 
-        error: 'The tutoring service encountered an error.',
+        error: errorMessage,
         details: error.message 
       }),
       { 

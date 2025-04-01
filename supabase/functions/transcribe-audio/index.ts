@@ -2,8 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// Use the Perplexity API key
-const perplexityApiKey = "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";
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -47,23 +46,51 @@ serve(async (req) => {
   }
 
   try {
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key is not configured');
+    }
+
     const { audio } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
     }
 
-    console.log("Received audio data, processing with Perplexity API");
+    console.log("Received audio data, processing...");
     
-    // For now, we'll use browser-based speech recognition as Perplexity doesn't support STT directly
+    // Process audio in chunks
+    const binaryAudio = processBase64Chunks(audio);
+    
+    // Prepare form data
+    const formData = new FormData();
+    const blob = new Blob([binaryAudio], { type: 'audio/webm' });
+    formData.append('file', blob, 'audio.webm');
+    formData.append('model', 'whisper-1');
+    formData.append('language', 'es');
+
+    console.log("Sending to OpenAI Whisper API...");
+
+    // Send to OpenAI
+    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("OpenAI API error:", errorText);
+      throw new Error(`OpenAI API error: ${errorText}`);
+    }
+
+    const result = await response.json();
+    console.log("Transcription successful:", result.text);
+
     return new Response(
-      JSON.stringify({ 
-        message: 'Using browser-based speech recognition',
-        useFallbackSTT: true
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+      JSON.stringify({ text: result.text }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {

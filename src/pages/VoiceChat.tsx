@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,6 @@ import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { speakWithBrowserTTS } from "@/utils/elevenLabsUtils";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -351,13 +349,13 @@ const VoiceChat = () => {
 
   const getAIModelInfoText = () => {
     if (currentLanguage === "english") {
-      return "AI Model: We're using Perplexity AI for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
+      return "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
     } else if (currentLanguage === "spanish") {
-      return "Modelo de IA: Estamos utilizando Perplexity AI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
+      return "Modelo de IA: Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
     } else if (currentLanguage === "portuguese") {
-      return "Modelo de IA: Estamos usando o Perplexity AI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
+      return "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
     }
-    return "AI Model: Using Perplexity AI with browser's built-in Speech Synthesis.";
+    return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
 
   const getPracticeTipsText = () => {
