@@ -50,14 +50,6 @@ const navItemTranslations = {
     "Language Frameworks": "أطر اللغة",
     "Admin": "المشرف",
     "Home": "الرئيسية"
-  },
-  mandarin: {
-    "Text Practice": "文本练习",
-    "Unlimited Voice Practice": "无限语音练习",
-    "Premium Voice Chat": "高级语音聊天",
-    "Language Frameworks": "语言框架",
-    "Admin": "管理员",
-    "Home": "首页"
   }
 };
 

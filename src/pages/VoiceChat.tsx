@@ -272,8 +272,6 @@ const VoiceChat = () => {
       return { practice: "English", native: "Portuguese" };
     } else if (currentLanguage === "korean") {
       return { practice: "English", native: "Korean" };
-    } else if (currentLanguage === "arabic") {
-      return { practice: "English", native: "Arabic" };
     }
     return { practice: "Spanish", native: "English" };
   };
@@ -333,8 +331,6 @@ const VoiceChat = () => {
       return `Pratique suas habilidades de fala em ${getLanguagePair().practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
     } else if (currentLanguage === "korean") {
       return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI가 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
-    } else if (currentLanguage === "arabic") {
-      return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -348,8 +344,6 @@ const VoiceChat = () => {
       return "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
     } else if (currentLanguage === "korean") {
       return "AI 모델: 자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
-    } else if (currentLanguage === "arabic") {
-      return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -361,25 +355,8 @@ const VoiceChat = () => {
       return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
     } else if (currentLanguage === "portuguese") {
       return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
-    } else if (currentLanguage === "arabic") {
-      return "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:";
     }
     return t("practiceLanguageTips");
-  };
-
-  const getBrowserTTSNote = () => {
-    if (currentLanguage === "arabic") {
-      return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
-    } else if (currentLanguage === "korean") {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "english") {
-      return "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat.";
-    } else if (currentLanguage === "spanish") {
-      return "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.";
-    } else if (currentLanguage === "portuguese") {
-      return "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.";
-    }
-    return t("browserBasedTTS");
   };
 
   const { practice, native } = getLanguagePair();
@@ -395,11 +372,17 @@ const VoiceChat = () => {
           {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : "نموذج الذكاء الاصطناعي:"}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : "AI 모델:"}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {getBrowserTTSNote()}
+            {currentLanguage === "korean" 
+              ? t("browserBasedTTS")
+              : currentLanguage === "english" 
+                ? "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat."
+                : currentLanguage === "spanish"
+                  ? "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium."
+                  : "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium."}
           </p>
         </div>
       </div>
@@ -409,7 +392,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{t("practiceLevel") || "مستوى التدريب"}: B1</span> - {getCEFRLevelDescription()}
+                <span className="font-medium">{t("practiceLevel") || "Practice Level"}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
@@ -545,7 +528,7 @@ const VoiceChat = () => {
           <div className="space-y-6">
             <div>
               <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourTargetLanguage")}: ({practice})
+                {t("inYourTargetLanguage")} ({practice})
               </h4>
               <ul className="space-y-2">
                 {targetLanguagePhrases.map((phrase, index) => (
@@ -562,7 +545,7 @@ const VoiceChat = () => {
             
             <div>
               <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourNativeLanguage")}: ({native})
+                {t("inYourNativeLanguage")} ({native})
               </h4>
               <ul className="space-y-2">
                 {nativeLanguagePhrases.map((phrase, index) => (
@@ -599,4 +582,3 @@ const VoiceChat = () => {
 };
 
 export default VoiceChat;
-
