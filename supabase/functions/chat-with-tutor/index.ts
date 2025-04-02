@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -46,6 +47,8 @@ You MUST strictly follow these rules:
 
 If the user writes in ${nativeLanguage}, respond in ${targetLanguage} and provide the translation in their native language below prefixed with "Translation:".
 If the user writes in ${targetLanguage}, help correct any grammar or vocabulary mistakes ONLY if they ask, explain the corrections in ${nativeLanguage}, and provide encouragement.
+
+IMPORTANT: For Mandarin Chinese speakers, ALWAYS include the Mandarin translation of your response prefixed with "Translation:" even if they write in English.
 
 Keep responses friendly but concise, focused on language learning.
 Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
@@ -126,10 +129,45 @@ You should ask questions to continue the conversation if it ever seems to stall.
     let content = data.choices[0].message.content;
     let translation = '';
 
+    // Always extract translation if available
     if (content.includes('\nTranslation:')) {
       [content, translation] = content.split('\nTranslation:');
       content = content.trim();
       translation = translation.trim();
+    }
+
+    // For Mandarin speakers specifically, if no translation was provided,
+    // make a second API call to translate the response
+    if (userLanguage === 'mandarin' && !translation) {
+      try {
+        const translationResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openAIApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { 
+                role: 'system', 
+                content: 'You are a professional translator. Translate the following English text to Mandarin Chinese. Just return the translation, no explanations.' 
+              },
+              { role: 'user', content: content }
+            ],
+            temperature: 0.3,
+            max_tokens: 500,
+          }),
+        });
+        
+        const translationData = await translationResponse.json();
+        if (translationResponse.ok && translationData.choices?.[0]?.message?.content) {
+          translation = translationData.choices[0].message.content.trim();
+        }
+      } catch (error) {
+        console.error('Error getting translation:', error);
+        // Continue even if translation fails
+      }
     }
 
     console.log('Formatted response:', { content, translation });
