@@ -138,6 +138,38 @@ const LanguageFrameworks = () => {
         name: "능숙함",
         description: "듣거나 읽은 거의 모든 것을 쉽게 이해할 수 있습니다. 다양한 구두 및 서면 출처의 정보를 요약하고, 일관된 프레젠테이션에서 논쟁과 설명을 재구성할 수 있습니다. 자발적으로, 매우 유창하게, 정확하게 자신을 표현할 수 있으며, 복잡한 상황에서도 의미의 미세한 차이를 구별할 수 있습니다."
       }
+    ],
+    arabic: [
+      {
+        level: "A1",
+        name: "مبتدئ",
+        description: "يمكن فهم واستخدام التعبيرات اليومية المألوفة والعبارات الأساسية جدًا الموجهة لتلبية احتياجات من نوع ملموس. يمكنه تقديم نفسه والآخرين ويمكنه طرح والإجابة على أسئلة حول التفاصيل الشخصية مثل مكان سكنه والأشخاص الذين يعرفهم والأشياء التي يمتلكها."
+      },
+      {
+        level: "A2",
+        name: "أساسي",
+        description: "يمكن فهم الجمل والتعبيرات المستخدمة بشكل متكرر والمتعلقة بالمجالات ذات الأهمية المباشرة (مثل المعلومات الشخصية والعائلية الأساسية جدًا، والتسوق، والجغرافيا المحلية، والتوظيف). يمكنه التواصل في المهام البسيطة والروتينية التي تتطلب تبادلًا بسيطًا ومباشرًا للمعلومات حول الأمور المألوفة والروتينية."
+      },
+      {
+        level: "B1",
+        name: "متوسط",
+        description: "يمكن فهم النقاط الرئيسية للإدخال القياسي الواضح حول الأمور المألوفة التي يتم مواجهتها بانتظام في العمل والمدرسة والترفيه وما إلى ذلك. يمكنه التعامل مع معظم المواقف المحتمل أن تنشأ أثناء السفر في منطقة يتم فيها التحدث باللغة. يمكنه إنتاج نص متصل بسيط حول مواضيع مألوفة أو ذات اهتمام شخصي."
+      },
+      {
+        level: "B2",
+        name: "متوسط متقدم",
+        description: "يمكن فهم الأفكار الرئيسية للنص المعقد حول كل من الموضوعات الملموسة والمجردة، بما في ذلك المناقشات التقنية في مجال تخصصهم. يمكنه التفاعل بدرجة من الطلاقة والعفوية التي تجعل التفاعل المنتظم مع المتحدثين الأصليين ممكنًا تمامًا دون إجهاد لأي من الطرفين."
+      },
+      {
+        level: "C1",
+        name: "متقدم",
+        description: "يمكن فهم مجموعة واسعة من النصوص الطويلة والمتطلبة، والتعرف على المعنى الضمني. يمكنه التعبير عن نفسه بطلاقة وعفوية دون البحث الواضح عن التعبيرات. يمكنه استخدام اللغة بمرونة وفعالية للأغراض الاجتماعية والأكاديمية والمهنية."
+      },
+      {
+        level: "C2",
+        name: "إتقان",
+        description: "يمكن فهم كل ما يسمعه أو يقرأه تقريبًا بسهولة. يمكنه تلخيص المعلومات من مصادر مختلفة مكتوبة وشفهية، وإعادة بناء الحجج والروايات في عرض متماسك. يمكنه التعبير عن نفسه بشكل عفوي وبطلاقة ودقة كبيرة، مميزًا الفروق الدقيقة في المعنى حتى في المواقف الأكثر تعقيدًا."
+      }
     ]
   };
 
@@ -406,6 +438,72 @@ const LanguageFrameworks = () => {
         sublevels: [],
         description: "탁월 수준에서 화자는 정확성, 효율성 및 효과적으로 언어를 숙련되게 사용합니다. 교육을 받고 명료한 언어 사용자입니다. 문화적으로 적절한 방식으로 광범위한 글로벌 이슈와 매우 추상적인 개념에 대해 생각할 수 있습니다."
       }
+    ],
+    arabic: [
+      {
+        level: "مبتدئ",
+        sublevels: [
+          {
+            name: "مبتدئ - منخفض",
+            description: "يمكن التواصل بشكل ضئيل مع عبارات جاهزة وتعبيرات محفوظة وقوائم وجمل. قد يظهر علامات ناشئة من التلقائية والمرونة، ولكنه يواجه صعوبات كبيرة حتى مع محاورين متعاطفين."
+          },
+          {
+            name: "مبتدئ - متوسط",
+            description: "يمكن التواصل بشكل ضئيل باستخدام عدد من الكلمات المعزولة والعبارات المحفوظة. يمكن الرد على أسئلة بسيطة ومباشرة أو طلبات للحصول على معلومات. قد يقتصر الكلام على عبارات من كلمتين أو ثلاث."
+          },
+          {
+            name: "مبتدئ - متقدم",
+            description: "يمكن التواصل بعبارات جاهزة ومحفوظة ضمن سياق تجربتهم. يمكن الرد على أسئلة بسيطة ومباشرة أو طلبات للحصول على معلومات ولكن يمكنه فقط طرح عدد قليل جدًا من الأسئلة الجاهزة. الكلام في الغالب تفاعلي."
+          }
+        ],
+        description: "في المستوى المبتدئ، يمكن للمتحدثين التواصل برسائل قصيرة حول مواضيع يومية متوقعة للغاية تؤثر عليهم بشكل مباشر. يفعلون ذلك بشكل أساسي من خلال استخدام كلمات وعبارات معزولة تم مصادفتها وحفظها واستدعاؤها."
+      },
+      {
+        level: "متوسط",
+        sublevels: [
+          {
+            name: "متوسط - منخفض",
+            description: "يمكن التعامل بنجاح مع عدد محدود من المهام التواصلية غير المعقدة من خلال الإبداع باللغة في المواقف الاجتماعية المباشرة. يمكن طرح الأسئلة والإجابة عليها بشكل مناسب."
+          },
+          {
+            name: "متوسط - متوسط",
+            description: "يمكن التعامل بنجاح مع مجموعة متنوعة من المهام التواصلية غير المعقدة في المواقف الاجتماعية المباشرة. يمكن المشاركة في محادثات حول مواضيع تتجاوز الاحتياجات الأكثر إلحاحًا."
+          },
+          {
+            name: "متوسط - متقدم",
+            description: "يمكن التعامل بنجاح مع المهام غير المعقدة والمواقف الاجتماعية التي تتطلب تبادل المعلومات الأساسية المتعلقة بالعمل والمدرسة والترفيه والاهتمامات الخاصة، على الرغم من أنه قد يحدث بعض التردد."
+          }
+        ],
+        description: "في المستوى المتوسط، يمكن للمتحدثين الإبداع باللغة عند التحدث عن موضوعات مألوفة متعلقة بحياتهم اليومية. يمكنهم إعادة تجميع المواد المتعلمة للتعبير عن المعنى الشخصي. يمكن للمتحدثين من المستوى المتوسط طرح أسئلة بسيطة ويمكنهم التعامل مع موقف بقاء مباشر."
+      },
+      {
+        level: "متقدم",
+        sublevels: [
+          {
+            name: "متقدم - منخفض",
+            description: "يمكن أداء مهام مختلفة من المستوى المتقدم، ولكن ليس باستمرار. يتسم الكلام عادة بنوع من الخشونة النحوية، مفردات غير كافية لمناقشة الموضوعات بعمق، وأنماط ملحوظة من الأخطاء."
+          },
+          {
+            name: "متقدم - متوسط",
+            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة لغوية وثقة وكفاءة. يمكن مناقشة الموضوعات بشكل ملموس ومجرد، والتعامل مع موقف فيه تعقيد، والسرد في جميع الأطر الزمنية باستمرار."
+          },
+          {
+            name: "متقدم - متقدم",
+            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة وثقة. يمكن مناقشة الموضوعات بشكل مجرد وبدقة جيدة. لا تلبي القدرة على التحدث بالكامل معايير مهام المستوى الممتاز، مع نقاط ضعف في مجال واحد أو أكثر."
+          }
+        ],
+        description: "في المستوى المتقدم، يمكن للمتحدثين السرد والوصف في جميع الأطر الزمنية الرئيسية عند التحدث عن موضوعات ذات اهتمام عام. يمكنهم التعامل مع موقف فيه تعقيد. تتميز لغة المتحدثين من المستوى المتقدم بخطاب جوهري ومترابط."
+      },
+      {
+        level: "ممتاز",
+        sublevels: [],
+        description: "في المستوى الممتاز، يمكن للمتحدثين التواصل بدقة وطلاقة للمشاركة بشكل كامل وفعال في المحادثات حول مجموعة متنوعة من الموضوعات في الإعدادات الرسمية وغير الرسمية. يمكنهم مناقشة اهتماماتهم ومجالات خبراتهم الخاصة، وشرح الأمور المعقدة، وتقديم سرد طويل ومترابط."
+      },
+      {
+        level: "متميز",
+        sublevels: [],
+        description: "في المستوى المتميز، يستخدم المتحدثون اللغة بمهارة، ومع الدقة والكفاءة والفعالية. هم مستخدمون متعلمون وفصحاء للغة. يمكنهم التفكير في مجموعة واسعة من القضايا العالمية والمفاهيم المجردة للغاية بطريقة مناسبة ثقافيًا."
+      }
     ]
   };
 
@@ -414,7 +512,8 @@ const LanguageFrameworks = () => {
     english: "The CEFR (Common European Framework of Reference) and ACTFL (American Council on the Teaching of Foreign Languages) are two widely recognized frameworks for describing language proficiency. While they use different scales and terminology, there are approximate correlations between the two systems:\n\nCEFR A1 ≈ ACTFL Novice Low to Mid\nCEFR A2 ≈ ACTFL Novice High to Intermediate Low\nCEFR B1 ≈ ACTFL Intermediate Mid to High\nCEFR B2 ≈ ACTFL Advanced Low to Mid\nCEFR C1 ≈ ACTFL Advanced High to Superior\nCEFR C2 ≈ ACTFL Distinguished",
     spanish: "El MCER (Marco Común Europeo de Referencia) y ACTFL (Consejo Americano para la Enseñanza de Lenguas Extranjeras) son dos marcos ampliamente reconocidos para describir la competencia lingüística. Aunque utilizan escalas y terminología diferentes, existen correlaciones aproximadas entre los dos sistemas:\n\nMCER A1 ≈ ACTFL Novato Bajo a Medio\nMCER A2 ≈ ACTFL Novato Alto a Intermedio Bajo\nMCER B1 ≈ ACTFL Intermedio Medio a Alto\nMCER B2 ≈ ACTFL Avanzado Bajo a Medio\nMCER C1 ≈ ACTFL Avanzado Alto a Superior\nMCER C2 ≈ ACTFL Distinguido",
     portuguese: "O QECR (Quadro Europeu Comum de Referência) e o ACTFL (Conselho Americano para o Ensino de Línguas Estrangeiras) são dois quadros amplamente reconhecidos para descrever a proficiência linguística. Embora utilizem escalas e terminologia diferentes, existem correlações aproximadas entre os dois sistemas:\n\nQECR A1 ≈ ACTFL Novato Baixo a Médio\nQECR A2 ≈ ACTFL Novato Alto a Intermediário Baixo\nQECR B1 ≈ ACTFL Intermediário Médio a Alto\nQECR B2 ≈ ACTFL Avançado Baixo a Médio\nQECR C1 ≈ ACTFL Avançado Alto a Superior\nQECR C2 ≈ ACTFL Distinto",
-    korean: "CEFR(유럽 공통 참조 기준)와 ACTFL(미국 외국어 교육 협의회)은 언어 능력을 설명하기 위한 두 가지 널리 인정된 프레임워크입니다. 서로 다른 척도와 용어를 사용하지만, 두 시스템 간에는 대략적인 상관관계가 있습니다:\n\nCEFR A1 ≈ ACTFL 초보자 하에서 중까지\nCEFR A2 ≈ ACTFL 초보자 상에서 중급 하까지\nCEFR B1 ≈ ACTFL 중급 중에서 상까지\nCEFR B2 ≈ ACTFL 고급 하에서 중까지\nCEFR C1 ≈ ACTFL 고급 상에서 우수까지\nCEFR C2 ≈ ACTFL 탁월"
+    korean: "CEFR(유럽 공통 참조 기준)와 ACTFL(미국 외국어 교육 협의회)은 언어 능력을 설명하기 위한 두 가지 널리 인정된 프레임워크입니다. 서로 다른 척도와 용어를 사용하지만, 두 시스템 간에는 대략적인 상관관계가 있습니다:\n\nCEFR A1 ≈ ACTFL 초보자 하에서 중까지\nCEFR A2 ≈ ACTFL 초보자 상에서 중급 하까지\nCEFR B1 ≈ ACTFL 중급 중에서 상까지\nCEFR B2 ≈ ACTFL 고급 하에서 중까지\nCEFR C1 ≈ ACTFL 고급 상에서 우수까지\nCEFR C2 ≈ ACTFL 탁월",
+    arabic: "إطار CEFR (الإطار الأوروبي المشترك للمراجع) و ACTFL (المجلس الأمريكي لتعليم اللغات الأجنبية) هما إطاران معترف بهما على نطاق واسع لوصف إتقان اللغة. في حين أنهما يستخدمان مقاييس ومصطلحات مختلفة، هناك ارتباطات تقريبية بين النظامين:\n\nCEFR A1 ≈ ACTFL مبتدئ منخفض إلى متوسط\nCEFR A2 ≈ ACTFL مبتدئ متقدم إلى متوسط منخفض\nCEFR B1 ≈ ACTFL متوسط متوسط إلى متقدم\nCEFR B2 ≈ ACTFL متقدم منخفض إلى متوسط\nCEFR C1 ≈ ACTFL متقدم متقدم إلى ممتاز\nCEFR C2 ≈ ACTFL متميز"
   };
 
   // Get the appropriate levels based on the user's language
@@ -428,58 +527,22 @@ const LanguageFrameworks = () => {
 
   // Get page title based on language
   const getPageTitle = () => {
-    switch (currentLanguage) {
-      case "spanish":
-        return "Marcos de Referencia de Idiomas";
-      case "portuguese":
-        return "Estruturas de Referência de Idiomas";
-      case "korean":
-        return "언어 참조 프레임워크";
-      default:
-        return "Language Reference Frameworks";
-    }
+    return t("languageReferenceFrameworks");
   };
 
   // Get CEFR title based on language
   const getCefrTitle = () => {
-    switch (currentLanguage) {
-      case "spanish":
-        return "Marco Común Europeo de Referencia (MCER)";
-      case "portuguese":
-        return "Quadro Europeu Comum de Referência (QECR)";
-      case "korean":
-        return "유럽 공통 참조 기준(CEFR)";
-      default:
-        return "Common European Framework of Reference (CEFR)";
-    }
+    return t("commonEuropeanFramework");
   };
 
   // Get ACTFL title based on language
   const getActflTitle = () => {
-    switch (currentLanguage) {
-      case "spanish":
-        return "Consejo Americano para la Enseñanza de Lenguas Extranjeras (ACTFL)";
-      case "portuguese":
-        return "Conselho Americano para o Ensino de Línguas Estrangeiras (ACTFL)";
-      case "korean":
-        return "미국 외국어 교육 협의회(ACTFL)";
-      default:
-        return "American Council on the Teaching of Foreign Languages (ACTFL)";
-    }
+    return t("americanCouncil");
   };
 
   // Get Comparison title based on language
   const getComparisonTitle = () => {
-    switch (currentLanguage) {
-      case "spanish":
-        return "Comparación MCER y ACTFL";
-      case "portuguese":
-        return "Comparação QECR e ACTFL";
-      case "korean":
-        return "CEFR와 ACTFL 비교";
-      default:
-        return "CEFR and ACTFL Comparison";
-    }
+    return t("cefrActflComparison");
   };
 
   return (
@@ -487,13 +550,7 @@ const LanguageFrameworks = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-lingua-text mb-2">{getPageTitle()}</h1>
         <p className="text-gray-600">
-          {currentLanguage === "spanish" 
-            ? "Comprenda los diferentes niveles y marcos para la evaluación del dominio del idioma"
-            : currentLanguage === "portuguese"
-              ? "Entenda os diferentes níveis e estruturas para avaliação de proficiência em idiomas"
-              : currentLanguage === "korean"
-                ? "언어 능력 평가를 위한 다양한 레벨과 프레임워크 이해하기"
-                : "Understand the different levels and frameworks for language proficiency assessment"}
+          {t("understandLevelsFrameworks")}
         </p>
       </div>
 
@@ -502,7 +559,7 @@ const LanguageFrameworks = () => {
           <TabsTrigger value="cefr" className="flex-1">
             <BookOpen className="h-4 w-4 mr-2" />
             <span>
-              {currentLanguage === "spanish" ? "MCER" : currentLanguage === "portuguese" ? "QECR" : currentLanguage === "korean" ? "CEFR" : "CEFR"}
+              {currentLanguage === "spanish" ? "MCER" : currentLanguage === "portuguese" ? "QECR" : "CEFR"}
             </span>
           </TabsTrigger>
           <TabsTrigger value="actfl" className="flex-1">
@@ -511,15 +568,7 @@ const LanguageFrameworks = () => {
           </TabsTrigger>
           <TabsTrigger value="comparison" className="flex-1">
             <Award className="h-4 w-4 mr-2" />
-            <span>
-              {currentLanguage === "spanish" 
-                ? "Comparación" 
-                : currentLanguage === "portuguese" 
-                  ? "Comparação" 
-                  : currentLanguage === "korean"
-                    ? "비교"
-                    : "Comparison"}
-            </span>
+            <span>{t("comparison")}</span>
           </TabsTrigger>
         </TabsList>
 
@@ -528,13 +577,7 @@ const LanguageFrameworks = () => {
             <div className="bg-white rounded-lg p-6 shadow-md">
               <h2 className="text-2xl font-bold mb-4">{getCefrTitle()}</h2>
               <p className="mb-6">
-                {currentLanguage === "spanish" 
-                  ? "El Marco Común Europeo de Referencia (MCER) es un estándar internacional para describir la competencia lingüística. Define niveles de competencia desde A1 (principiante) hasta C2 (dominio)."
-                  : currentLanguage === "portuguese"
-                    ? "O Quadro Europeu Comum de Referência (QECR) é um padrão internacional para descrever a proficiência linguística. Define níveis de competência de A1 (iniciante) a C2 (proficiência)."
-                    : currentLanguage === "korean"
-                      ? "유럽 공통 참조 기준(CEFR)은 언어 능력을 설명하기 위한 국제 표준입니다. A1(초급자)부터 C2(능숙함)까지의 능력 수준을 정의합니다."
-                      : "The Common European Framework of Reference (CEFR) is an international standard for describing language ability. It defines competency levels from A1 (beginner) to C2 (proficiency)."}
+                {t("cefrDescription")}
               </p>
               <div className="space-y-4">
                 {levels.map((level) => (
@@ -559,13 +602,7 @@ const LanguageFrameworks = () => {
             <div className="bg-white rounded-lg p-6 shadow-md">
               <h2 className="text-2xl font-bold mb-4">{getActflTitle()}</h2>
               <p className="mb-6">
-                {currentLanguage === "spanish" 
-                  ? "Las directrices de competencia de ACTFL describen lo que las personas pueden hacer con el lenguaje en términos de hablar, escribir, escuchar y leer en situaciones espontáneas y no ensayadas."
-                  : currentLanguage === "portuguese"
-                    ? "As diretrizes de proficiência da ACTFL descrevem o que os indivíduos podem fazer com a linguagem em termos de falar, escrever, ouvir e ler em situações espontâneas e não ensaiadas."
-                    : currentLanguage === "korean"
-                      ? "ACTFL 능력 지침은 자발적이고 예행되지 않은 상황에서 말하기, 쓰기, 듣기 및 읽기 능력 측면에서 개인이 언어로 할 수 있는 것을 설명합니다."
-                      : "The ACTFL Proficiency Guidelines describe what individuals can do with language in terms of speaking, writing, listening, and reading in spontaneous and non-rehearsed situations."}
+                {t("actflDescription")}
               </p>
               <div className="space-y-8">
                 {actfl.map((level) => (
