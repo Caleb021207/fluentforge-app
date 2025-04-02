@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -60,6 +59,67 @@ serve(async (req) => {
     return handleError(error);
   }
 });
+
+// Handle assessment requests
+async function handleAssessmentRequest(message, userLanguage) {
+  const isLearningEnglish = userLanguage !== 'english';
+  
+  const systemMessage = `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
+    - Reading proficiency
+    - Writing ability
+    - Speaking competency
+    - Listening comprehension
+    Also provide an overall estimated proficiency level (A1-C2).
+    Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`;
+
+  const messages = [
+    { role: 'system', content: systemMessage },
+    { role: 'user', content: message }
+  ];
+
+  const response = await callOpenAI(messages);
+  
+  if (!response.ok) {
+    handleOpenAIError(response);
+  }
+
+  const data = await response.json();
+
+  try {
+    const assessment = JSON.parse(data.choices[0].message.content);
+    console.log('Formatted assessment:', assessment);
+    return new Response(
+      JSON.stringify({ assessment }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error parsing assessment JSON:', error);
+    throw new Error('Failed to parse assessment response');
+  }
+}
+
+// Handle general errors
+function handleError(error) {
+  console.error('Error in chat-with-tutor function:', error);
+  
+  let errorMessage = 'Failed to get response from AI tutor. Please try again.';
+  if (error.message.includes('quota exceeded')) {
+    errorMessage = 'The AI service is currently unavailable due to quota limits. Please try again later.';
+  } else if (error.message.includes('API key not configured')) {
+    errorMessage = 'The AI service is not properly configured. Please contact support.';
+  }
+
+  return new Response(
+    JSON.stringify({ 
+      error: errorMessage,
+      details: error.message 
+    }),
+    { 
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    }
+  );
+}
 
 // Handle regular conversation requests
 async function handleConversationRequest(message, userLanguage, requestTranslation) {
@@ -128,44 +188,6 @@ async function handleConversationRequest(message, userLanguage, requestTranslati
     JSON.stringify({ content, translation }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
   );
-}
-
-// Handle assessment requests
-async function handleAssessmentRequest(message, userLanguage) {
-  const isLearningEnglish = userLanguage !== 'english';
-  
-  const systemMessage = `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
-    - Reading proficiency
-    - Writing ability
-    - Speaking competency
-    - Listening comprehension
-    Also provide an overall estimated proficiency level (A1-C2).
-    Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`;
-
-  const messages = [
-    { role: 'system', content: systemMessage },
-    { role: 'user', content: message }
-  ];
-
-  const response = await callOpenAI(messages);
-  
-  if (!response.ok) {
-    handleOpenAIError(response);
-  }
-
-  const data = await response.json();
-
-  try {
-    const assessment = JSON.parse(data.choices[0].message.content);
-    console.log('Formatted assessment:', assessment);
-    return new Response(
-      JSON.stringify({ assessment }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-  } catch (error) {
-    console.error('Error parsing assessment JSON:', error);
-    throw new Error('Failed to parse assessment response');
-  }
 }
 
 // Handle translation-only requests
@@ -255,27 +277,4 @@ function handleOpenAIError(response) {
   } else {
     throw new Error(`OpenAI API error: ${response.statusText}`);
   }
-}
-
-// Handle general errors
-function handleError(error) {
-  console.error('Error in chat-with-tutor function:', error);
-  
-  let errorMessage = 'Failed to get response from AI tutor. Please try again.';
-  if (error.message.includes('quota exceeded')) {
-    errorMessage = 'The AI service is currently unavailable due to quota limits. Please try again later.';
-  } else if (error.message.includes('API key not configured')) {
-    errorMessage = 'The AI service is not properly configured. Please contact support.';
-  }
-
-  return new Response(
-    JSON.stringify({ 
-      error: errorMessage,
-      details: error.message 
-    }),
-    { 
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    }
-  );
 }
