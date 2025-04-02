@@ -4,7 +4,7 @@ import { TranslationRecord } from "../types";
 const practiceTranslations: TranslationRecord = {
   textPractice: "文本练习",
   practiceWithAITutor: "与AI导师一起练习",
-  chatWithAITutor: "与我们的AI导师聊天，练习英语！AI将帮助您纠正语法、词汇和发音。请随时询问有关语言或文化的问题。",
+  chatWithAITutor: "与我们的AI导师聊天，通过文本对话练习英语！AI将帮助您纠正语法、词汇和用法。请随时询问有关语言或文化的问题。",
   startVoiceChat: "开始语音聊天",
   stopVoiceChat: "停止语音聊天",
   getSkillsAssessment: "获取技能评估",
@@ -21,6 +21,15 @@ const practiceTranslations: TranslationRecord = {
   typeMessageBelow: "在下方输入消息开始",
   practiceWithTextChat: "使用文本聊天练习",
   textConversationPractice: "文本对话练习",
+  
+  // Adding missing translations
+  send: "发送",
+  sendEnglishPracticePrompt: "发送英语练习提示",
+  noticeTextBasedPractice: "注意：这是基于文本的练习功能。如需语音练习，请尝试我们的无限语音聊天或高级语音聊天功能。",
+  askAboutGrammarRules: "询问语法规则",
+  practiceConversationsDifferentSituations: "在不同情境中练习对话",
+  learnNewVocabulary: "学习新词汇",
+  discussCulturalTopics: "讨论文化话题",
 };
 
 export default practiceTranslations;

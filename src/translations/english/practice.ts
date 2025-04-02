@@ -10,7 +10,7 @@ const practiceTranslations: TranslationRecord = {
   getSkillsAssessment: "Get Skills Assessment",
   reading: "Reading",
   writing: "Writing",
-  speaking: "Speaking...",
+  speaking: "Speaking",
   listening: "Listening",
   overallLevel: "Overall Level",
   startChatting: "Start chatting with your AI language tutor!",
@@ -23,6 +23,15 @@ const practiceTranslations: TranslationRecord = {
   textConversationPractice: "Text Conversation Practice",
   startTextChatting: "Start text chatting with the AI tutor",
   typeMessageBelow: "Type a message below to begin",
+  
+  // Additional translations
+  send: "Send",
+  sendEnglishPracticePrompt: "Send Spanish Practice Prompt",
+  noticeTextBasedPractice: "Note: This is the text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features.",
+  askAboutGrammarRules: "Ask about grammar rules",
+  practiceConversationsDifferentSituations: "Practice conversations in different situations",
+  learnNewVocabulary: "Learn new vocabulary",
+  discussCulturalTopics: "Discuss cultural topics",
 };
 
 export default practiceTranslations;

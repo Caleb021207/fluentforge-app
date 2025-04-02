@@ -21,6 +21,15 @@ const practiceTranslations: TranslationRecord = {
   typeMessageBelow: "اكتب رسالة أدناه للبدء",
   practiceWithTextChat: "تدرب باستخدام الدردشة النصية",
   textConversationPractice: "تدريب المحادثة النصية",
+  
+  // Additional translations
+  send: "إرسال",
+  sendEnglishPracticePrompt: "إرسال موجه تدريب اللغة الإنجليزية",
+  noticeTextBasedPractice: "ملاحظة: هذه ميزة الممارسة النصية. للتدريب الصوتي، جرب ميزات الدردشة الصوتية غير المحدودة أو الدردشة الصوتية المتميزة.",
+  askAboutGrammarRules: "اسأل عن قواعد النحو",
+  practiceConversationsDifferentSituations: "ممارسة المحادثات في مواقف مختلفة",
+  learnNewVocabulary: "تعلم مفردات جديدة",
+  discussCulturalTopics: "مناقشة المواضيع الثقافية",
 };
 
 export default practiceTranslations;
