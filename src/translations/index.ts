@@ -3,9 +3,9 @@ import { LanguageTranslations } from "./types";
 import englishTranslations from "./english/index";
 import spanishTranslations from "./spanish/index";
 import portugueseTranslations from "./portuguese/index";
-import koreanTranslations from "./korean";
-import arabicTranslations from "./arabic";
-import mandarinTranslations from "./mandarin";
+import koreanTranslations from "./korean/index";
+import arabicTranslations from "./arabic/index";
+import mandarinTranslations from "./mandarin/index";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
