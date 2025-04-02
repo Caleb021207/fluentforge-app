@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -527,4 +528,124 @@ const LanguageFrameworks = () => {
             <div className="bg-white rounded-lg p-6 shadow-md">
               <h2 className="text-2xl font-bold mb-4">{getCefrTitle()}</h2>
               <p className="mb-6">
-                {currentLanguage
+                {currentLanguage === "spanish" 
+                  ? "El Marco Común Europeo de Referencia (MCER) es un estándar internacional para describir la competencia lingüística. Define niveles de competencia desde A1 (principiante) hasta C2 (dominio)."
+                  : currentLanguage === "portuguese"
+                    ? "O Quadro Europeu Comum de Referência (QECR) é um padrão internacional para descrever a proficiência linguística. Define níveis de competência de A1 (iniciante) a C2 (proficiência)."
+                    : currentLanguage === "korean"
+                      ? "유럽 공통 참조 기준(CEFR)은 언어 능력을 설명하기 위한 국제 표준입니다. A1(초급자)부터 C2(능숙함)까지의 능력 수준을 정의합니다."
+                      : "The Common European Framework of Reference (CEFR) is an international standard for describing language ability. It defines competency levels from A1 (beginner) to C2 (proficiency)."}
+              </p>
+              <div className="space-y-4">
+                {levels.map((level) => (
+                  <Card key={level.level} className="overflow-hidden">
+                    <CardHeader className="bg-gray-50">
+                      <CardTitle>
+                        {level.level} - {level.name}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-4">
+                      <p>{level.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="actfl">
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <h2 className="text-2xl font-bold mb-4">{getActflTitle()}</h2>
+              <p className="mb-6">
+                {currentLanguage === "spanish" 
+                  ? "Las directrices de competencia de ACTFL describen lo que las personas pueden hacer con el lenguaje en términos de hablar, escribir, escuchar y leer en situaciones espontáneas y no ensayadas."
+                  : currentLanguage === "portuguese"
+                    ? "As diretrizes de proficiência da ACTFL descrevem o que os indivíduos podem fazer com a linguagem em termos de falar, escrever, ouvir e ler em situações espontâneas e não ensaiadas."
+                    : currentLanguage === "korean"
+                      ? "ACTFL 능력 지침은 자발적이고 예행되지 않은 상황에서 말하기, 쓰기, 듣기 및 읽기 능력 측면에서 개인이 언어로 할 수 있는 것을 설명합니다."
+                      : "The ACTFL Proficiency Guidelines describe what individuals can do with language in terms of speaking, writing, listening, and reading in spontaneous and non-rehearsed situations."}
+              </p>
+              <div className="space-y-8">
+                {actfl.map((level) => (
+                  <Card key={level.level} className="overflow-hidden">
+                    <CardHeader className="bg-gray-50">
+                      <CardTitle>{level.level}</CardTitle>
+                      <CardDescription>{level.description}</CardDescription>
+                    </CardHeader>
+                    {level.sublevels.length > 0 && (
+                      <CardContent className="pt-4">
+                        <h4 className="font-medium mb-2">{t("sublevels")}:</h4>
+                        <div className="space-y-3">
+                          {level.sublevels.map((sublevel) => (
+                            <div key={sublevel.name} className="border-l-4 border-lingua-primary pl-4">
+                              <h5 className="font-medium">{sublevel.name}</h5>
+                              <p className="text-sm text-gray-600">{sublevel.description}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="comparison">
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <h2 className="text-2xl font-bold mb-4">{getComparisonTitle()}</h2>
+              <div className="prose max-w-none">
+                <p className="whitespace-pre-line">{conversion}</p>
+              </div>
+              <div className="mt-8">
+                <h3 className="text-xl font-bold mb-4">{t("comparisonTable")}</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border px-4 py-2">CEFR</th>
+                        <th className="border px-4 py-2">ACTFL</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border px-4 py-2">A1 ({t("beginner")})</td>
+                        <td className="border px-4 py-2">{t("noviceLow")} - {t("noviceMid")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">A2 ({t("elementary")})</td>
+                        <td className="border px-4 py-2">{t("noviceHigh")} - {t("intermediateLow")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">B1 ({t("intermediate")})</td>
+                        <td className="border px-4 py-2">{t("intermediateMid")} - {t("intermediateHigh")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">B2 ({t("upperIntermediate")})</td>
+                        <td className="border px-4 py-2">{t("advancedLow")} - {t("advancedMid")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">C1 ({t("advanced")})</td>
+                        <td className="border px-4 py-2">{t("advancedHigh")} - {t("superior")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">C2 ({t("proficiency")})</td>
+                        <td className="border px-4 py-2">{t("distinguished")}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default LanguageFrameworks;

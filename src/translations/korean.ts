@@ -198,6 +198,8 @@ const koreanTranslations: TranslationRecord = {
   elementary: "초등",
   intermediate: "중급",
   upperIntermediate: "중상급",
+  advanced: "고급",
+  proficiency: "능숙함",
   selectCEFRLevel: "CEFR 레벨 선택",
   selectedLevel: "선택된 레벨",
   success: "성공",
@@ -249,14 +251,6 @@ const koreanTranslations: TranslationRecord = {
   comparison: "비교",
   comparisonTable: "비교 표",
   sublevels: "세부 수준",
-  
-  // CEFR Level Names in Korean
-  beginner: "초급자",
-  elementary: "초등",
-  intermediate: "중급",
-  upperIntermediate: "중상급",
-  advanced: "고급",
-  proficiency: "능숙함",
   
   // ACTFL Level Names in Korean
   novice: "초보자",
