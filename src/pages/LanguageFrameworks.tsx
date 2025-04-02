@@ -434,7 +434,7 @@ const LanguageFrameworks = () => {
           },
           {
             name: "Intermediário Médio",
-            description: "Pode lidar com sucesso com uma variedade de tarefas comunicativas não complicadas em situações sociais simples. Pode participar de conversas sobre tópicos além das necessidades mais imediatas."
+            description: "Pode lidar com sucesso com uma variedade de tarefas comunicativas não complicadas em situações sociais simples. Pode participar em conversas sobre tópicos além das necessidades mais imediatas."
           },
           {
             name: "Intermediário Alto",
@@ -522,4 +522,3 @@ const LanguageFrameworks = () => {
           },
           {
             name: "고급 상",
-            description: "
