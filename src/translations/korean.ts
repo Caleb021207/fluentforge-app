@@ -37,7 +37,7 @@ const koreanTranslations: TranslationRecord = {
   getSkillsAssessment: "능력 평가 받기",
   reading: "읽기",
   writing: "쓰기",
-  speaking: "말하기...",
+  speaking: "말하기",
   listening: "듣기",
   overallLevel: "전체 수준",
   startChatting: "AI 언어 튜터와 채팅을 시작하세요!",

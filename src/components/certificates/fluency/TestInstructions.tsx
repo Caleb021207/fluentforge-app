@@ -4,7 +4,7 @@ import { Info } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 
 const TestInstructions = () => {
-  const { currentLanguage } = useLocalization();
+  const { currentLanguage, t } = useLocalization();
   
   // Determine the target language based on user's native language
   const getInstructions = () => {
@@ -12,22 +12,22 @@ const TestInstructions = () => {
       // For Spanish/Portuguese/Korean speakers learning English
       return (
         <ul className="text-sm text-gray-600 space-y-1 pl-6 list-disc">
-          <li>Speak naturally in English</li>
-          <li>Answer the tutor's questions</li>
-          <li>Try to keep the conversation flowing</li>
-          <li>Listen carefully to understand questions</li>
-          <li>Don't worry about making mistakes</li>
+          <li>{t("speakNaturallyInEnglish")}</li>
+          <li>{t("answerTutorQuestions")}</li>
+          <li>{t("keepConversationFlowing")}</li>
+          <li>{t("listenCarefully")}</li>
+          <li>{t("dontWorryAboutMistakes")}</li>
         </ul>
       );
     } else {
       // For English speakers learning Spanish/Portuguese/Korean
       return (
         <ul className="text-sm text-gray-600 space-y-1 pl-6 list-disc">
-          <li>Speak naturally in the language you're learning</li>
-          <li>Answer the tutor's questions</li>
-          <li>Try to keep the conversation flowing</li>
-          <li>Listen carefully to understand questions</li>
-          <li>Don't worry about making mistakes</li>
+          <li>{t("speakNaturallyInTargetLanguage")}</li>
+          <li>{t("answerTutorQuestions")}</li>
+          <li>{t("keepConversationFlowing")}</li>
+          <li>{t("listenCarefully")}</li>
+          <li>{t("dontWorryAboutMistakes")}</li>
         </ul>
       );
     }
@@ -37,7 +37,7 @@ const TestInstructions = () => {
     <div className="bg-gray-50 rounded-lg p-4">
       <div className="flex items-center mb-2">
         <Info className="h-4 w-4 text-blue-500 mr-2" />
-        <h3 className="text-sm font-medium">Test Instructions</h3>
+        <h3 className="text-sm font-medium">{t("testInstructions")}</h3>
       </div>
       {getInstructions()}
     </div>
