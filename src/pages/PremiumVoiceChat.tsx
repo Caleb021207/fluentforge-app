@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -465,11 +464,13 @@ const PremiumVoiceChat = () => {
             {t("premiumVoiceChat")}
           </h1>
           <p className="text-gray-600 mb-4">
-            {currentLanguage === "english" 
-              ? `Have natural voice conversations with our premium AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
-              : currentLanguage === "spanish"
-                ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
-                : `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`}
+            {currentLanguage === "korean" 
+              ? `저희 프리미엄 AI 튜터와 자연스러운 음성 대화를 통해 ${practice}를 연습하세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다.`
+              : currentLanguage === "english" 
+                ? `Have natural voice conversations with our premium AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
+                : currentLanguage === "spanish"
+                  ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
+                  : `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`}
           </p>
         </div>
         
@@ -480,11 +481,13 @@ const PremiumVoiceChat = () => {
               {t("loginRequired") || "Login Required"}
             </h2>
             <p className="text-amber-700">
-              {currentLanguage === "english"
-                ? "To access the Premium Voice Chat feature, please log in to your account."
-                : currentLanguage === "spanish"
-                  ? "Para acceder a la función de Chat de Voz Premium, inicia sesión en tu cuenta."
-                  : "Para acessar o recurso de Chat de Voz Premium, faça login na sua conta."}
+              {currentLanguage === "korean"
+                ? "프리미엄 음성 채팅 기능에 액세스하려면 계정에 로그인하세요."
+                : currentLanguage === "english"
+                  ? "To access the Premium Voice Chat feature, please log in to your account."
+                  : currentLanguage === "spanish"
+                    ? "Para acceder a la función de Chat de Voz Premium, inicia sesión en tu cuenta."
+                    : "Para acessar o recurso de Chat de Voz Premium, faça login na sua conta."}
             </p>
             <Button 
               onClick={redirectToLogin} 
@@ -505,23 +508,17 @@ const PremiumVoiceChat = () => {
           {t("premiumVoiceChat")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {currentLanguage === "english" 
-            ? `Have natural voice conversations with our premium AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
-            : currentLanguage === "spanish"
-              ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
-              : currentLanguage === "portuguese"
-                ? `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`
-                : `저희 프리미엄 AI 튜터와 자연스러운 음성 대화를 통해 ${practice}를 연습하세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다.`}
+          {currentLanguage === "korean" 
+            ? `저희 프리미엄 AI 튜터와 자연스러운 음성 대화를 통해 ${practice}를 연습하세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다.`
+            : currentLanguage === "english" 
+              ? `Have natural voice conversations with our premium AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
+              : currentLanguage === "spanish"
+                ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
+                : `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {currentLanguage === "korean" 
-              ? t("premiumVoiceNote")
-              : currentLanguage === "english" 
-                ? "Note: Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session and a 24-hour cooldown period after each session."
-                : currentLanguage === "spanish"
-                  ? "Nota: Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión y un período de enfriamiento de 24 horas después de cada sesión."
-                  : "Nota: As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão e um período de espera de 24 horas após cada sessão."}
+            {t("premiumVoiceNote")}
           </p>
         </div>
       </div>
@@ -584,31 +581,37 @@ const PremiumVoiceChat = () => {
           <li className="flex items-start gap-2">
             <Volume2 className="h-5 w-5 text-lingua-primary mt-0.5" />
             <span>
-              {currentLanguage === "english"
-                ? "Natural, human-like voice interactions using ElevenLabs technology"
-                : currentLanguage === "spanish"
-                  ? "Interacciones de voz naturales y humanas utilizando la tecnología de ElevenLabs"
-                  : "Interações de voz naturais e humanas usando a tecnologia ElevenLabs"}
+              {currentLanguage === "korean"
+                ? "ElevenLabs 기술을 사용한 자연스럽고 인간과 같은 음성 상호작용"
+                : currentLanguage === "english"
+                  ? "Natural, human-like voice interactions using ElevenLabs technology"
+                  : currentLanguage === "spanish"
+                    ? "Interacciones de voz naturales y humanas utilizando la tecnología de ElevenLabs"
+                    : "Interações de voz naturais e humanas usando a tecnologia ElevenLabs"}
             </span>
           </li>
           <li className="flex items-start gap-2">
             <Headphones className="h-5 w-5 text-lingua-primary mt-0.5" />
             <span>
-              {currentLanguage === "english"
-                ? "Accurate accent and pronunciation for immersive learning"
-                : currentLanguage === "spanish"
-                  ? "Acento y pronunciación precisos para un aprendizaje inmersivo"
-                  : "Sotaque e pronúncia precisos para aprendizado imersivo"}
+              {currentLanguage === "korean"
+                ? "몰입형 학습을 위한 정확한 억양과 발음"
+                : currentLanguage === "english"
+                  ? "Accurate accent and pronunciation for immersive learning"
+                  : currentLanguage === "spanish"
+                    ? "Acento y pronunciación precisos para un aprendizaje inmersivo"
+                    : "Sotaque e pronúncia precisos para aprendizado imersivo"}
             </span>
           </li>
           <li className="flex items-start gap-2">
             <Clock className="h-5 w-5 text-lingua-primary mt-0.5" />
             <span>
-              {currentLanguage === "english"
-                ? "5-minute sessions with a 24-hour cooldown to encourage regular, focused practice"
-                : currentLanguage === "spanish"
-                  ? "Sesiones de 5 minutos con un tiempo de espera de 24 horas para fomentar una práctica regular y concentrada"
-                  : "Sessões de 5 minutos com um período de espera de 24 horas para incentivar prática regular e focada"}
+              {currentLanguage === "korean"
+                ? "정기적이고 집중적인 연습을 장려하기 위한 24시간 대기 시간이 있는 5분 세션"
+                : currentLanguage === "english"
+                  ? "5-minute sessions with a 24-hour cooldown to encourage regular, focused practice"
+                  : currentLanguage === "spanish"
+                    ? "Sesiones de 5 minutos con un tiempo de espera de 24 horas para fomentar una práctica regular y concentrada"
+                    : "Sessões de 5 minutos com um período de espera de 24 horas para incentivar prática regular e focada"}
             </span>
           </li>
         </ul>
