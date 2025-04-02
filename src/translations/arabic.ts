@@ -110,7 +110,37 @@ const arabicTranslations: TranslationRecord = {
   "advancedMid": "متقدم - متوسط",
   "advancedHigh": "متقدم - متقدم",
   "superior": "ممتاز",
-  "distinguished": "متميز"
+  "distinguished": "متميز",
+
+  // Text Practice Page specific translations
+  "practiceWithAITutor": "تدرب مع مدرس اللغة بالذكاء الاصطناعي",
+  "chatWithAITutor": "تحدث مع مدرسنا بالذكاء الاصطناعي لممارسة اللغة العربية! سيساعدك الذكاء الاصطناعي في تصحيح قواعدك اللغوية ومفرداتك ونطقك. لا تتردد في طرح أسئلة حول اللغة أو الثقافة.",
+  "send": "إرسال",
+  "typeMessage": "اكتب رسالتك بالعربية أو الإنجليزية...",
+  "startTextChatting": "ابدأ الدردشة النصية مع مدرس الذكاء الاصطناعي",
+  "typeMessageBelow": "اكتب رسالة أدناه للبدء",
+  "practiceWithTextChat": "تدرب باستخدام الدردشة النصية",
+  "textConversationPractice": "تدريب المحادثة النصية",
+
+  // Practice tips and instructions
+  "askAboutGrammarRules": "اسأل عن قواعد النحو",
+  "practiceConversationsDifferentSituations": "تدرب على المحادثات لمواقف مختلفة",
+  "learnNewVocabulary": "تعلم مفردات جديدة",
+  "discussCulturalTopics": "ناقش مواضيع ثقافية",
+  "sendPracticePrompt": "إرسال رسالة تدريب",
+  "sendSpanishPracticePrompt": "إرسال رسالة تدريب باللغة الإسبانية",
+  "sendEnglishPracticePrompt": "إرسال رسالة تدريب باللغة الإنجليزية",
+  "sendPortuguesePracticePrompt": "إرسال رسالة تدريب باللغة البرتغالية",
+  "sendKoreanPracticePrompt": "إرسال رسالة تدريب باللغة الكورية",
+  "sendArabicPracticePrompt": "إرسال رسالة تدريب باللغة العربية",
+  "noticeTextBasedPractice": "ملاحظة: هذه هي ميزة التدريب القائمة على النص. لممارسة الصوت، جرب ميزات الدردشة الصوتية غير المحدودة أو الدردشة الصوتية المتميزة.",
+
+  // Logout button translations
+  "loggedOutSuccessfully": "تم تسجيل الخروج بنجاح",
+  "youHaveBeenSignedOut": "لقد تم تسجيل خروجك من حسابك",
+  "errorSigningOut": "خطأ في تسجيل الخروج",
+  "errorOccurredWhileSigningOut": "حدث خطأ أثناء تسجيل الخروج",
+  "signOut": "تسجيل الخروج"
 };
 
 export default arabicTranslations;

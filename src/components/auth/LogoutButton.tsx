@@ -16,7 +16,7 @@ const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { currentLanguage, t } = useLocalization();
+  const { t } = useLocalization();
 
   const handleLogout = async () => {
     try {
@@ -26,8 +26,8 @@ const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
       if (error) throw error;
       
       toast({
-        title: currentLanguage === "korean" ? "성공적으로 로그아웃되었습니다" : "Logged out successfully",
-        description: currentLanguage === "korean" ? "계정에서 로그아웃되었습니다" : "You have been signed out of your account",
+        title: t("loggedOutSuccessfully"),
+        description: t("youHaveBeenSignedOut"),
       });
       
       if (onClose) {
@@ -38,8 +38,8 @@ const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
     } catch (error) {
       console.error("Error signing out:", error);
       toast({
-        title: currentLanguage === "korean" ? "로그아웃 오류" : "Error signing out",
-        description: currentLanguage === "korean" ? "로그아웃 중 오류가 발생했습니다" : "An error occurred while signing out",
+        title: t("errorSigningOut"),
+        description: t("errorOccurredWhileSigningOut"),
         variant: "destructive",
       });
     } finally {
@@ -56,7 +56,7 @@ const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
         disabled={isLoading}
       >
         <LogOut className="h-5 w-5 mr-2" />
-        <span>{currentLanguage === "korean" ? "로그아웃" : "Sign Out"}</span>
+        <span>{t("signOut")}</span>
       </Button>
     );
   }
@@ -70,7 +70,7 @@ const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
       className="flex items-center gap-2"
     >
       <LogOut className="h-4 w-4" />
-      <span>{currentLanguage === "korean" ? "로그아웃" : "Logout"}</span>
+      <span>{t("logout")}</span>
     </Button>
   );
 };
