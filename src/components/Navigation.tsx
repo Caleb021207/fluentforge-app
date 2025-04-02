@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
+import { MessageSquare, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,7 +15,6 @@ const navItemTranslations = {
     "Text Practice": "Text Practice",
     "Unlimited Voice Practice": "Unlimited Voice Practice",
     "Premium Voice Chat": "Premium Voice Chat",
-    "Language Frameworks": "Language Frameworks",
     "Admin": "Admin",
     "Home": "Home"
   },
@@ -23,7 +22,6 @@ const navItemTranslations = {
     "Text Practice": "Práctica de Texto",
     "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
     "Premium Voice Chat": "Chat de Voz Premium",
-    "Language Frameworks": "Marcos de Idiomas",
     "Admin": "Admin",
     "Home": "Inicio"
   },
@@ -31,7 +29,6 @@ const navItemTranslations = {
     "Text Practice": "Prática de Texto",
     "Unlimited Voice Practice": "Prática de Voz Ilimitada",
     "Premium Voice Chat": "Chat de Voz Premium",
-    "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin",
     "Home": "Início"
   },
@@ -39,7 +36,6 @@ const navItemTranslations = {
     "Text Practice": "텍스트 연습",
     "Unlimited Voice Practice": "무제한 음성 연습",
     "Premium Voice Chat": "프리미엄 음성 채팅",
-    "Language Frameworks": "언어 참조 프레임워크",
     "Admin": "관리자",
     "Home": "홈"
   },
@@ -47,7 +43,6 @@ const navItemTranslations = {
     "Text Practice": "تدريب نصي",
     "Unlimited Voice Practice": "تدريب صوتي غير محدود",
     "Premium Voice Chat": "دردشة صوتية متميزة",
-    "Language Frameworks": "أطر اللغة",
     "Admin": "المشرف",
     "Home": "الرئيسية"
   },
@@ -55,7 +50,6 @@ const navItemTranslations = {
     "Text Practice": "文本练习",
     "Unlimited Voice Practice": "无限语音练习",
     "Premium Voice Chat": "高级语音聊天",
-    "Language Frameworks": "语言框架",
     "Admin": "管理员",
     "Home": "首页"
   }
@@ -108,7 +102,6 @@ const Navigation = () => {
     { icon: MessageSquare, label: "Text Practice", path: "/practice" },
     { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
     { icon: Headphones, label: "Premium Voice Chat", path: "/premium-voice-chat" },
-    { icon: BookOpen, label: "Language Frameworks", path: "/language-frameworks" },
   ];
   
   if (isAdmin) {
