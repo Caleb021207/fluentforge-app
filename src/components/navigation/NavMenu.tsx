@@ -34,8 +34,8 @@ const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
                 isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
               }`}
             >
-              {/* Fix: Rendering the Icon as a component without passing className */}
-              <Icon className="h-5 w-5 md:mr-2" />
+              {/* Fixed: Properly render the Icon component */}
+              {Icon && <Icon className="h-5 w-5 md:mr-2" />}
               <span className="hidden md:inline">{translatedLabel}</span>
             </Button>
           </Link>
