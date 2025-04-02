@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { MessageCircle, Send, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -169,15 +168,15 @@ const Practice = () => {
     if (currentLanguage === "english") {
       prompt = "¡Hola! Quiero practicar español contigo.";
     } else if (currentLanguage === "spanish") {
-      prompt = "¡Hola! Quiero practicar inglés contigo!";
+      prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "portuguese") {
-      prompt = "Olá! Eu quero praticar inglês com você!";
+      prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "korean") {
-      prompt = "안녕하세요! 저는 당신과 영어를 연습하고 싶습니다.";
+      prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "arabic") {
-      prompt = "مرحباً! أريد أن أمارس اللغة الإنجليزية معك.";
+      prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "mandarin") {
-      prompt = "你好！我想和你练习英语。";
+      prompt = "Hello! I want to practice English with you!";
     }
 
     if (prompt) {
@@ -396,7 +395,7 @@ const Practice = () => {
           {currentLanguage === "arabic"
             ? t("sendEnglishPracticePrompt")
             : currentLanguage === "mandarin"
-              ? t("sendEnglishPracticePrompt")
+              ? "发送英语练习提示"
               : currentLanguage === "english" 
                 ? "Send Spanish Practice Prompt" 
                 : currentLanguage === "spanish"

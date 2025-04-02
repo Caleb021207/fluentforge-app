@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -23,11 +22,14 @@ serve(async (req) => {
     }
 
     // Determine if user is learning English or Spanish based on their native language
-    const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese' || userLanguage === 'korean';
+    const isLearningEnglish = userLanguage !== 'english';
     const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
     const nativeLanguage = userLanguage === 'english' ? 'English' : 
                           userLanguage === 'spanish' ? 'Spanish' : 
-                          userLanguage === 'portuguese' ? 'Portuguese' : 'Korean';
+                          userLanguage === 'portuguese' ? 'Portuguese' : 
+                          userLanguage === 'korean' ? 'Korean' :
+                          userLanguage === 'arabic' ? 'Arabic' :
+                          userLanguage === 'mandarin' ? 'Mandarin Chinese' : 'Unknown';
     
     // Universal tutor instructions for all language combinations
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
