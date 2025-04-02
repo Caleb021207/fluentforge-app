@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,7 +109,7 @@ const LanguageFrameworks = () => {
     ],
     korean: [
       {
-        level: "초급자",
+        level: "A1",
         name: "초급자",
         description: "구체적인 유형의 요구를 만족시키기 위한 친숙한 일상적 표현과 매우 기본적인 문구를 이해하고 사용할 수 있습니다. 자신과 다른 사람을 소개하고, A씨가 사는 곳, 아는 사람 및 소유물에 관한 개인 정보에 대해 질문하고 답할 수 있습니다."
       },
@@ -140,134 +141,34 @@ const LanguageFrameworks = () => {
     ],
     arabic: [
       {
-        level: "مبتدئ",
-        sublevels: [
-          {
-            name: "مبتدئ - منخفض",
-            description: "يمكن التواصل بشكل ضئيل مع عبارات جاهزة وتعبيرات محفوظة وقوائم وجمل. قد يظهر علامات ناشئة من التلقائية والمرونة، ولكنه يواجه صعوبات كبيرة حتى مع محاورين متعاطفين."
-          },
-          {
-            name: "مبتدئ - متوسط",
-            description: "يمكن التواصل بشكل ضئيل باستخدام عدد من الكلمات المعزولة والعبارات المحفوظة. يمكن الرد على أسئلة بسيطة ومباشرة أو طلبات للحصول على معلومات. قد يقتصر الكلام على عبارات من كلمتين أو ثلاث."
-          },
-          {
-            name: "مبتدئ - متقدم",
-            description: "يمكن التواصل بعبارات جاهزة ومحفوظة ضمن سياق تجربتهم. يمكن الرد على أسئلة بسيطة ومباشرة أو طلبات للحصول على معلومات ولكن يمكنه فقط طرح عدد قليل جدًا من الأسئلة الجاهزة. الكلام في الغالب تفاعلي."
-          }
-        ],
-        description: "في المستوى المبتدئ، يمكن للمتحدثين التواصل برسائل قصيرة حول مواضيع يومية متوقعة للغاية تؤثر عليهم بشكل مباشر. يفعلون ذلك بشكل أساسي من خلال استخدام كلمات وعبارات معزولة تم مصادفتها وحفظها واستدعاؤها."
+        level: "A1",
+        name: "مبتدئ",
+        description: "يمكن فهم واستخدام التعبيرات اليومية المألوفة والعبارات الأساسية جدًا الموجهة لتلبية احتياجات من نوع ملموس. يمكنه تقديم نفسه والآخرين ويمكنه طرح والإجابة على أسئلة حول التفاصيل الشخصية مثل مكان سكنه والأشخاص الذين يعرفهم والأشياء التي يمتلكها."
       },
       {
-        level: "متوسط",
-        sublevels: [
-          {
-            name: "متوسط - منخفض",
-            description: "يمكن التعامل بنجاح مع عدد محدود من المهام التواصلية غير المعقدة من خلال الإبداع باللغة في المواقف الاجتماعية المباشرة. يمكن طرح الأسئلة والإجابة عليها بشكل مناسب."
-          },
-          {
-            name: "متوسط - متوسط",
-            description: "يمكن التعامل بنجاح مع مجموعة متنوعة من المهام التواصلية غير المعقدة في المواقف الاجتماعية المباشرة. يمكن المشاركة في محادثات حول مواضيع تتجاوز الاحتياجات الأكثر إلحاحًا."
-          },
-          {
-            name: "متوسط - متقدم",
-            description: "يمكن التعامل بنجاح مع المهام غير المعقدة والمواقف الاجتماعية التي تتطلب تبادل المعلومات الأساسية المتعلقة بالعمل والمدرسة والترفيه والاهتمامات الخاصة، على الرغم من أنه قد يحدث بعض التردد."
-          }
-        ],
-        description: "في المستوى المتوسط، يمكن للمتحدثين الإبداع باللغة عند التحدث عن موضوعات مألوفة متعلقة بحياتهم اليومية. يمكنهم إعادة تجميع المواد المتعلمة للتعبير عن المعنى الشخصي. يمكن للمتحدثين من المستوى المتوسط طرح أسئلة بسيطة والتعامل مع موقف بقاء مباشر."
+        level: "A2",
+        name: "أساسي",
+        description: "يمكن فهم الجمل والتعبيرات المستخدمة بشكل متكرر والمتعلقة بالمجالات ذات الأهمية المباشرة (مثل المعلومات الشخصية والعائلية الأساسية جدًا، والتسوق، والجغرافيا المحلية، والتوظيف). يمكنه التواصل في المهام البسيطة والروتينية التي تتطلب تبادلًا بسيطًا ومباشرًا للمعلومات حول الأمور المألوفة والروتينية."
       },
       {
-        level: "متقدم",
-        sublevels: [
-          {
-            name: "متقدم - منخفض",
-            description: "يمكن أداء مهام مستوى متقدم متنوعة، ولكن ليس بشكل متسق. يتسم الكلام عادة بخشونة نحوية معينة، ومفردات غير كافية لمناقشة المواضيع بعمق، وأنماط ملحوظة من الأخطاء."
-          },
-          {
-            name: "متقدم - متوسط",
-            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة لغوية وثقة وكفاءة. يمكن مناقشة المواضيع بشكل ملموس ومجرد، والتعامل مع موقف مع تعقيد، والسرد في جميع الأطر الزمنية بشكل متسق."
-          },
-          {
-            name: "متقدم - عالي",
-            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة وثقة. يمكن مناقشة المواضيع بشكل مجرد وبدقة جيدة. القدرة على التحدث لا تلبي تمامًا معايير مهام المستوى المتفوق، مع نقاط ضعف في منطقة واحدة أو أكثر."
-          }
-        ],
-        description: "في المستوى المتقدم، يمكن للمتحدثين السرد والوصف في جميع الأطر الزمنية الرئيسية عند التحدث عن مواضيع ذات اهتمام عام. يمكنهم التعامل مع موقف مع تعقيد. تتميز لغة المتحدثين من المستوى المتقدم بخطاب جوهري ومترابط."
+        level: "B1",
+        name: "متوسط",
+        description: "يمكن فهم النقاط الرئيسية للإدخال القياسي الواضح حول الأمور المألوفة التي يتم مواجهتها بانتظام في العمل والمدرسة والترفيه وما إلى ذلك. يمكنه التعامل مع معظم المواقف المحتمل أن تنشأ أثناء السفر في منطقة يتم فيها التحدث باللغة. يمكنه إنتاج نص متصل بسيط حول مواضيع مألوفة أو ذات اهتمام شخصي."
       },
       {
-        level: "متفوق",
-        sublevels: [],
-        description: "في المستوى المتفوق، يمكن للمتحدثين التواصل بدقة وطلاقة للمشاركة بشكل كامل وفعال في المحادثات حول مجموعة متنوعة من المواضيع في البيئات الرسمية وغير الرسمية. يمكنهم مناقشة اهتماماتهم ومجالات اختصاصهم الخاصة، وشرح المسائل المعقدة، وتقديم روايات طويلة ومتماسكة."
+        level: "B2",
+        name: "متوسط متقدم",
+        description: "يمكن فهم الأفكار الرئيسية للنص المعقد حول كل من الموضوعات الملموسة والمجردة، بما في ذلك المناقشات التقنية في مجال تخصصهم. يمكنه التفاعل بدرجة من الطلاقة والعفوية التي تجعل التفاعل المنتظم مع المتحدثين الأصليين ممكنًا تمامًا دون إجهاد لأي من الطرفين."
       },
       {
-        level: "متميز",
-        sublevels: [],
-        description: "في المستوى المتميز، يستخدم المتحدثون اللغة بمهارة، وبدقة وكفاءة وفعالية. هم مستخدمون متعلمون وفصيحون للغة. يمكنهم التفكير في مجموعة واسعة من القضايا العالمية والمفاهيم المجردة للغاية بطريقة مناسبة ثقافيًا."
-      }
-    ],
-    mandarin: [
-      {
-        level: "初学者",
-        sublevels: [
-          {
-            name: "初学者-低级",
-            description: "能够使用固定格式和死记硬背的表达、列表和短语进行最低限度的交流。可能会显示自发性和灵活性的初步迹象，但即使是与理解的交谈者也有很大困难。"
-          },
-          {
-            name: "初学者-中级",
-            description: "能够使用一些孤立的词汇和记忆的短语进行最低限度的交流。能够回答简单、直接的问题或信息请求。言语可能限于两到三个词的短语。"
-          },
-          {
-            name: "初学者-高级",
-            description: "能够在其经验范围内使用固定格式和死记硬背的表达进行交流。能够回答简单、直接的问题或信息请求，但只能提出很少的固定格式问题。言语主要是反应性的。"
-          }
-        ],
-        description: "在初学者水平，说话者能够就直接影响他们的高度可预测的日常话题传达简短信息。他们主要通过使用遇到、记忆和回忆的孤立词汇和短语来做到这一点。"
+        level: "C1",
+        name: "متقدم",
+        description: "يمكن فهم مجموعة واسعة من النصوص الطويلة والمتطلبة، والتعرف على المعنى الضمني. يمكنه التعبير عن نفسه بطلاقة وعفوية دون البحث الواضح عن التعبيرات. يمكنه استخدام اللغة بمرونة وفعالية للأغراض الاجتماعية والأكاديمية والمهنية."
       },
       {
-        level: "中级",
-        sublevels: [
-          {
-            name: "中级-低级",
-            description: "能够在简单的社交场合中通过创造性地使用语言成功处理有限数量的非复杂交流任务。能够适当地提问和回答问题。"
-          },
-          {
-            name: "中级-中级",
-            description: "能够在简单的社交场合中成功处理各种非复杂的交流任务。能够参与超出最直接需求的话题的对话。"
-          },
-          {
-            name: "中级-高级",
-            description: "能够成功处理与工作、学校、娱乐和特定兴趣相关的基本信息交换的非复杂任务和社交场合，尽管可能会出现犹豫。"
-          }
-        ],
-        description: "在中级水平，说话者在谈论与日常生活相关的熟悉话题时能够创造性地使用语言。他们能够重新组合学习的材料以表达个人意义。中级水平的说话者能够提出简单的问题，并能应对简单的生存情况。"
-      },
-      {
-        level: "高级",
-        sublevels: [
-          {
-            name: "高级-低级",
-            description: "能够执行各种高级水平任务，但不一致。言语通常带有一定的语法粗糙性，词汇不足以长时间讨论话题，以及明显的错误模式。"
-          },
-          {
-            name: "高级-中级",
-            description: "能够以语言上的轻松、自信和能力执行所有高级水平任务。能够具体和抽象地讨论话题，处理有复杂情况的场景，并在所有时间框架内一致地叙述。"
-          },
-          {
-            name: "高级-高级",
-            description: "能够轻松自信地执行所有高级水平任务。能够以良好的准确性抽象地讨论话题。说话能力在一个或多个领域有缺陷，不完全符合优秀水平任务的标准。"
-          }
-        ],
-        description: "在高级水平，说话者在谈论一般兴趣话题时能够在所有主要时间框架内叙述和描述。他们能够处理有复杂情况的场景。高级水平说话者的语言特点是实质性、连贯的话语。"
-      },
-      {
-        level: "优秀",
-        sublevels: [],
-        description: "在优秀水平，说话者能够准确流利地交流，以便在正式和非正式环境中充分有效地参与各种话题的对话。他们能够讨论自己的兴趣和专业领域，解释复杂问题，并提供长篇且连贯的叙述。"
-      },
-      {
-        level: "杰出",
-        sublevels: [],
-        description: "在杰出水平，说话者能够熟练、准确、高效和有效地使用语言。他们是受过教育且清晰的语言使用者。他们能够以文化上适当的方式反思广泛的全球问题和高度抽象的概念。"
+        level: "C2",
+        name: "إتقان",
+        description: "يمكن فهم كل ما يسمعه أو يقرأه تقريبًا بسهولة. يمكنه تلخيص المعلومات من مصادر مختلفة مكتوبة وشفهية، وإعادة بناء الحجج والروايات في عرض متماسك. يمكنه التعبير عن نفسه بشكل عفوي وبطلاقة ودقة كبيرة، مميزًا الفروق الدقيقة في المعنى حتى في المواقف الأكثر تعقيدًا."
       }
     ]
   };
@@ -434,7 +335,7 @@ const LanguageFrameworks = () => {
           },
           {
             name: "Intermediário Médio",
-            description: "Pode lidar com sucesso com uma variedade de tarefas comunicativas não complicadas em situações sociais simples. Pode participar em conversas sobre tópicos além das necessidades mais imediatas."
+            description: "Pode lidar com sucesso com uma variedade de tarefas comunicativas não complicadas em situações sociais simples. Pode participar de conversas sobre tópicos além das necessidades mais imediatas."
           },
           {
             name: "Intermediário Alto",
@@ -522,3 +423,266 @@ const LanguageFrameworks = () => {
           },
           {
             name: "고급 상",
+            description: "모든 고급 수준 작업을 쉽게 자신감 있게 수행할 수 있습니다. 추상적인 주제에 대해 좋은 정확도로 논의할 수 있습니다. 말하기 능력은 하나 이상의 영역에서 약점을 가진 상급 수준 작업의 기준을 완전히 충족하지 못합니다."
+          }
+        ],
+        description: "고급 수준에서 화자는 일반적인 관심사에 대해 이야기할 때 모든 주요 시간 프레임에서 이야기하고 설명할 수 있습니다. 복잡한 상황을 처리할 수 있습니다. 고급 수준 화자의 언어는 실질적이고 연결된 담화로 특징지어집니다."
+      },
+      {
+        level: "우수",
+        sublevels: [],
+        description: "우수 수준에서 화자는 공식 및 비공식 환경에서 다양한 주제에 대한 대화에 완전하고 효과적으로 참여하기 위해 정확성과 유창성으로 의사소통할 수 있습니다. 자신의 관심사와 특수 분야에 대해 논의하고, 복잡한 문제를 설명하며, 길고 일관된 이야기를 제공할 수 있습니다."
+      },
+      {
+        level: "탁월",
+        sublevels: [],
+        description: "탁월 수준에서 화자는 정확성, 효율성 및 효과적으로 언어를 숙련되게 사용합니다. 교육을 받고 명료한 언어 사용자입니다. 문화적으로 적절한 방식으로 광범위한 글로벌 이슈와 매우 추상적인 개념에 대해 생각할 수 있습니다."
+      }
+    ],
+    arabic: [
+      {
+        level: "مبتدئ",
+        sublevels: [
+          {
+            name: "مبتدئ - منخفض",
+            description: "يمكن التواصل بشكل ضئيل مع عبارات جاهزة وتعبيرات محفوظة وقوائم وجمل. قد يظهر علامات ناشئة من التلقائية والمرونة، ولكنه يواجه صعوبات كبيرة حتى مع محاورين متعاطفين."
+          },
+          {
+            name: "مبتدئ - متوسط",
+            description: "يمكن التواصل بشكل ضئيل باستخدام عدد من الكلمات المعزولة والعبارات المحفوظة. يمكن الرد على أسئلة بسيطة ومباشرة أو طلبات للحصول على معلومات. قد يقتصر الكلام على عبارات من كلمتين أو ثلاث."
+          },
+          {
+            name: "مبتدئ - متقدم",
+            description: "يمكن التواصل بعبارات جاهزة ومحفوظة ضمن سياق تجربتهم. يمكن الرد على أسئلة بسيطة ومباشرة أو طلبات للحصول على معلومات ولكن يمكنه فقط طرح عدد قليل جدًا من الأسئلة الجاهزة. الكلام في الغالب تفاعلي."
+          }
+        ],
+        description: "في المستوى المبتدئ، يمكن للمتحدثين التواصل برسائل قصيرة حول مواضيع يومية متوقعة للغاية تؤثر عليهم بشكل مباشر. يفعلون ذلك بشكل أساسي من خلال استخدام كلمات وعبارات معزولة تم مصادفتها وحفظها واستدعاؤها."
+      },
+      {
+        level: "متوسط",
+        sublevels: [
+          {
+            name: "متوسط - منخفض",
+            description: "يمكن التعامل بنجاح مع عدد محدود من المهام التواصلية غير المعقدة من خلال الإبداع باللغة في المواقف الاجتماعية المباشرة. يمكن طرح الأسئلة والإجابة عليها بشكل مناسب."
+          },
+          {
+            name: "متوسط - متوسط",
+            description: "يمكن التعامل بنجاح مع مجموعة متنوعة من المهام التواصلية غير المعقدة في المواقف الاجتماعية المباشرة. يمكن المشاركة في محادثات حول مواضيع تتجاوز الاحتياجات الأكثر إلحاحًا."
+          },
+          {
+            name: "متوسط - متقدم",
+            description: "يمكن التعامل بنجاح مع المهام غير المعقدة والمواقف الاجتماعية التي تتطلب تبادل المعلومات الأساسية المتعلقة بالعمل والمدرسة والترفيه والاهتمامات الخاصة، على الرغم من أنه قد يحدث بعض التردد."
+          }
+        ],
+        description: "في المستوى المتوسط، يمكن للمتحدثين الإبداع باللغة عند التحدث عن موضوعات مألوفة متعلقة بحياتهم اليومية. يمكنهم إعادة تجميع المواد المتعلمة للتعبير عن المعنى الشخصي. يمكن للمتحدثين من المستوى المتوسط طرح أسئلة بسيطة ويمكنهم التعامل مع موقف بقاء مباشر."
+      },
+      {
+        level: "متقدم",
+        sublevels: [
+          {
+            name: "متقدم - منخفض",
+            description: "يمكن أداء مهام مختلفة من المستوى المتقدم، ولكن ليس باستمرار. يتسم الكلام عادة بنوع من الخشونة النحوية، مفردات غير كافية لمناقشة الموضوعات بعمق، وأنماط ملحوظة من الأخطاء."
+          },
+          {
+            name: "متقدم - متوسط",
+            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة لغوية وثقة وكفاءة. يمكن مناقشة الموضوعات بشكل ملموس ومجرد، والتعامل مع موقف فيه تعقيد، والسرد في جميع الأطر الزمنية باستمرار."
+          },
+          {
+            name: "متقدم - متقدم",
+            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة وثقة. يمكن مناقشة الموضوعات بشكل مجرد وبدقة جيدة. لا تلبي القدرة على التحدث بالكامل معايير مهام المستوى الممتاز، مع نقاط ضعف في مجال واحد أو أكثر."
+          }
+        ],
+        description: "في المستوى المتقدم، يمكن للمتحدثين السرد والوصف في جميع الأطر الزمنية الرئيسية عند التحدث عن موضوعات ذات اهتمام عام. يمكنهم التعامل مع موقف فيه تعقيد. تتميز لغة المتحدثين من المستوى المتقدم بخطاب جوهري ومترابط."
+      },
+      {
+        level: "ممتاز",
+        sublevels: [],
+        description: "في المستوى الممتاز، يمكن للمتحدثين التواصل بدقة وطلاقة للمشاركة بشكل كامل وفعال في المحادثات حول مجموعة متنوعة من الموضوعات في الإعدادات الرسمية وغير الرسمية. يمكنهم مناقشة اهتماماتهم ومجالات خبراتهم الخاصة، وشرح الأمور المعقدة، وتقديم سرد طويل ومترابط."
+      },
+      {
+        level: "متميز",
+        sublevels: [],
+        description: "في المستوى المتميز، يستخدم المتحدثون اللغة بمهارة، ومع الدقة والكفاءة والفعالية. هم مستخدمون متعلمون وفصحاء للغة. يمكنهم التفكير في مجموعة واسعة من القضايا العالمية والمفاهيم المجردة للغاية بطريقة مناسبة ثقافيًا."
+      }
+    ]
+  };
+
+  // CEFR to ACTFL conversion explanation
+  const conversionExplanation = {
+    english: "The CEFR (Common European Framework of Reference) and ACTFL (American Council on the Teaching of Foreign Languages) are two widely recognized frameworks for describing language proficiency. While they use different scales and terminology, there are approximate correlations between the two systems:\n\nCEFR A1 ≈ ACTFL Novice Low to Mid\nCEFR A2 ≈ ACTFL Novice High to Intermediate Low\nCEFR B1 ≈ ACTFL Intermediate Mid to High\nCEFR B2 ≈ ACTFL Advanced Low to Mid\nCEFR C1 ≈ ACTFL Advanced High to Superior\nCEFR C2 ≈ ACTFL Distinguished",
+    spanish: "El MCER (Marco Común Europeo de Referencia) y ACTFL (Consejo Americano para la Enseñanza de Lenguas Extranjeras) son dos marcos ampliamente reconocidos para describir la competencia lingüística. Aunque utilizan escalas y terminología diferentes, existen correlaciones aproximadas entre los dos sistemas:\n\nMCER A1 ≈ ACTFL Novato Bajo a Medio\nMCER A2 ≈ ACTFL Novato Alto a Intermedio Bajo\nMCER B1 ≈ ACTFL Intermedio Medio a Alto\nMCER B2 ≈ ACTFL Avanzado Bajo a Medio\nMCER C1 ≈ ACTFL Avanzado Alto a Superior\nMCER C2 ≈ ACTFL Distinguido",
+    portuguese: "O QECR (Quadro Europeu Comum de Referência) e o ACTFL (Conselho Americano para o Ensino de Línguas Estrangeiras) são dois quadros amplamente reconhecidos para descrever a proficiência linguística. Embora utilizem escalas e terminologia diferentes, existem correlações aproximadas entre os dois sistemas:\n\nQECR A1 ≈ ACTFL Novato Baixo a Médio\nQECR A2 ≈ ACTFL Novato Alto a Intermediário Baixo\nQECR B1 ≈ ACTFL Intermediário Médio a Alto\nQECR B2 ≈ ACTFL Avançado Baixo a Médio\nQECR C1 ≈ ACTFL Avançado Alto a Superior\nQECR C2 ≈ ACTFL Distinto",
+    korean: "CEFR(유럽 공통 참조 기준)와 ACTFL(미국 외국어 교육 협의회)은 언어 능력을 설명하기 위한 두 가지 널리 인정된 프레임워크입니다. 서로 다른 척도와 용어를 사용하지만, 두 시스템 간에는 대략적인 상관관계가 있습니다:\n\nCEFR A1 ≈ ACTFL 초보자 하에서 중까지\nCEFR A2 ≈ ACTFL 초보자 상에서 중급 하까지\nCEFR B1 ≈ ACTFL 중급 중에서 상까지\nCEFR B2 ≈ ACTFL 고급 하에서 중까지\nCEFR C1 ≈ ACTFL 고급 상에서 우수까지\nCEFR C2 ≈ ACTFL 탁월",
+    arabic: "إطار CEFR (الإطار الأوروبي المشترك للمراجع) و ACTFL (المجلس الأمريكي لتعليم اللغات الأجنبية) هما إطاران معترف بهما على نطاق واسع لوصف إتقان اللغة. في حين أنهما يستخدمان مقاييس ومصطلحات مختلفة، هناك ارتباطات تقريبية بين النظامين:\n\nCEFR A1 ≈ ACTFL مبتدئ منخفض إلى متوسط\nCEFR A2 ≈ ACTFL مبتدئ متقدم إلى متوسط منخفض\nCEFR B1 ≈ ACTFL متوسط متوسط إلى متقدم\nCEFR B2 ≈ ACTFL متقدم منخفض إلى متوسط\nCEFR C1 ≈ ACTFL متقدم متقدم إلى ممتاز\nCEFR C2 ≈ ACTFL متميز"
+  };
+
+  // Get the appropriate levels based on the user's language
+  const getLocalizedContent = (content: any) => {
+    return content[currentLanguage as keyof typeof content] || content.english;
+  };
+
+  const levels = getLocalizedContent(cefrLevels);
+  const actfl = getLocalizedContent(actflLevels);
+  const conversion = getLocalizedContent(conversionExplanation);
+
+  // Get page title based on language
+  const getPageTitle = () => {
+    return t("languageReferenceFrameworks");
+  };
+
+  // Get CEFR title based on language
+  const getCefrTitle = () => {
+    return t("commonEuropeanFramework");
+  };
+
+  // Get ACTFL title based on language
+  const getActflTitle = () => {
+    return t("americanCouncil");
+  };
+
+  // Get Comparison title based on language
+  const getComparisonTitle = () => {
+    return t("cefrActflComparison");
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-lingua-text mb-2">{getPageTitle()}</h1>
+        <p className="text-gray-600">
+          {t("understandLevelsFrameworks")}
+        </p>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+        <TabsList className="w-full mb-8">
+          <TabsTrigger value="cefr" className="flex-1">
+            <BookOpen className="h-4 w-4 mr-2" />
+            <span>
+              {currentLanguage === "spanish" ? "MCER" : currentLanguage === "portuguese" ? "QECR" : "CEFR"}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="actfl" className="flex-1">
+            <GraduationCap className="h-4 w-4 mr-2" />
+            <span>ACTFL</span>
+          </TabsTrigger>
+          <TabsTrigger value="comparison" className="flex-1">
+            <Award className="h-4 w-4 mr-2" />
+            <span>{t("comparison")}</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="cefr">
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <h2 className="text-2xl font-bold mb-4">{getCefrTitle()}</h2>
+              <p className="mb-6">
+                {t("cefrDescription")}
+              </p>
+              <div className="space-y-4">
+                {levels.map((level) => (
+                  <Card key={level.level} className="overflow-hidden">
+                    <CardHeader className="bg-gray-50">
+                      <CardTitle>
+                        {level.level} - {level.name}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-4">
+                      <p>{level.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="actfl">
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <h2 className="text-2xl font-bold mb-4">{getActflTitle()}</h2>
+              <p className="mb-6">
+                {t("actflDescription")}
+              </p>
+              <div className="space-y-8">
+                {actfl.map((level) => (
+                  <Card key={level.level} className="overflow-hidden">
+                    <CardHeader className="bg-gray-50">
+                      <CardTitle>{level.level}</CardTitle>
+                      <CardDescription>{level.description}</CardDescription>
+                    </CardHeader>
+                    {level.sublevels.length > 0 && (
+                      <CardContent className="pt-4">
+                        <h4 className="font-medium mb-2">{t("sublevels")}:</h4>
+                        <div className="space-y-3">
+                          {level.sublevels.map((sublevel) => (
+                            <div key={sublevel.name} className="border-l-4 border-lingua-primary pl-4">
+                              <h5 className="font-medium">{sublevel.name}</h5>
+                              <p className="text-sm text-gray-600">{sublevel.description}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="comparison">
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <h2 className="text-2xl font-bold mb-4">{getComparisonTitle()}</h2>
+              <div className="prose max-w-none">
+                <p className="whitespace-pre-line">{conversion}</p>
+              </div>
+              <div className="mt-8">
+                <h3 className="text-xl font-bold mb-4">{t("comparisonTable")}</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border px-4 py-2">CEFR</th>
+                        <th className="border px-4 py-2">ACTFL</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border px-4 py-2">A1 ({t("beginner")})</td>
+                        <td className="border px-4 py-2">{t("noviceLow")} - {t("noviceMid")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">A2 ({t("elementary")})</td>
+                        <td className="border px-4 py-2">{t("noviceHigh")} - {t("intermediateLow")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">B1 ({t("intermediate")})</td>
+                        <td className="border px-4 py-2">{t("intermediateMid")} - {t("intermediateHigh")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">B2 ({t("upperIntermediate")})</td>
+                        <td className="border px-4 py-2">{t("advancedLow")} - {t("advancedMid")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">C1 ({t("advanced")})</td>
+                        <td className="border px-4 py-2">{t("advancedHigh")} - {t("superior")}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-4 py-2">C2 ({t("proficiency")})</td>
+                        <td className="border px-4 py-2">{t("distinguished")}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default LanguageFrameworks;

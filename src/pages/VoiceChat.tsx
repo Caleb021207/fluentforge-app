@@ -149,7 +149,7 @@ const VoiceChat = () => {
     setConversationHistory(prev => [...prev, userMessage]);
     
     try {
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
           userLanguage: currentLanguage,
@@ -274,8 +274,6 @@ const VoiceChat = () => {
       return { practice: "English", native: "Korean" };
     } else if (currentLanguage === "arabic") {
       return { practice: "English", native: "Arabic" };
-    } else if (currentLanguage === "mandarin") {
-      return { practice: "English", native: "Mandarin" };
     }
     return { practice: "Spanish", native: "English" };
   };
@@ -318,7 +316,7 @@ const VoiceChat = () => {
     setTranslation("");
     toast({
       title: t("Success"),
-      description: t("conversationHistoryCleared"),
+      description: "Conversation history has been cleared",
     });
   };
 
@@ -337,8 +335,6 @@ const VoiceChat = () => {
       return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI가 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
     } else if (currentLanguage === "arabic") {
       return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
-    } else if (currentLanguage === "mandarin") {
-      return `使用我们的语音聊天练习您的${getLanguagePair().practice}口语技能。点击麦克风按钮并开始用${getLanguagePair().practice}说话。AI将用${getLanguagePair().practice}回复您并帮助您练习。`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -354,8 +350,6 @@ const VoiceChat = () => {
       return "AI 모델: 자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
     } else if (currentLanguage === "arabic") {
       return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
-    } else if (currentLanguage === "mandarin") {
-      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，使用浏览器内置的语音合成功能进行语音回复。";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -369,8 +363,6 @@ const VoiceChat = () => {
       return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
     } else if (currentLanguage === "arabic") {
       return "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:";
-    } else if (currentLanguage === "mandarin") {
-      return "使用此工具提高您的口语和听力技能。以下是一些提示：";
     }
     return t("practiceLanguageTips");
   };
@@ -386,8 +378,6 @@ const VoiceChat = () => {
       return "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.";
     } else if (currentLanguage === "portuguese") {
       return "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.";
-    } else if (currentLanguage === "mandarin") {
-      return "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。";
     }
     return t("browserBasedTTS");
   };
@@ -405,7 +395,7 @@ const VoiceChat = () => {
           {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "mandarin" ? "AI模型：" : "نموذج الذكاء الاصطناعي:"}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : "نموذج الذكاء الاصطناعي:"}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
@@ -419,7 +409,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{t("practiceLevel") || "练习级别"}: B1</span> - {getCEFRLevelDescription()}
+                <span className="font-medium">{t("practiceLevel") || "مستوى التدريب"}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
@@ -609,3 +599,4 @@ const VoiceChat = () => {
 };
 
 export default VoiceChat;
+
