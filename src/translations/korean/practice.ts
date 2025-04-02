@@ -21,6 +21,15 @@ const practiceTranslations: TranslationRecord = {
   typeMessageBelow: "시작하려면 아래에 메시지를 입력하세요",
   practiceWithTextChat: "텍스트 채팅으로 연습하기",
   textConversationPractice: "텍스트 대화 연습",
+  
+  // Adding missing translations
+  send: "보내기",
+  sendEnglishPracticePrompt: "영어 연습 메시지 보내기",
+  noticeTextBasedPractice: "참고: 이것은 텍스트 기반 연습 기능입니다. 음성 연습은 무제한 음성 채팅 또는 프리미엄 음성 채팅 기능을 사용해보세요.",
+  askAboutGrammarRules: "문법 규칙에 대해 질문하기",
+  practiceConversationsDifferentSituations: "다양한 상황에서 대화 연습하기",
+  learnNewVocabulary: "새로운 어휘 배우기",
+  discussCulturalTopics: "문화적 주제 토론하기",
 };
 
 export default practiceTranslations;

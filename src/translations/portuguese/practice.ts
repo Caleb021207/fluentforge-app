@@ -21,6 +21,15 @@ const practiceTranslations: TranslationRecord = {
   typeMessageBelow: "Escreva uma mensagem abaixo para começar",
   practiceWithTextChat: "Pratique com Chat de Texto",
   textConversationPractice: "Prática de Conversação de Texto",
+  
+  // Adding missing translations
+  send: "Enviar",
+  sendEnglishPracticePrompt: "Enviar Mensagem de Prática em Inglês",
+  noticeTextBasedPractice: "Nota: Esta é a funcionalidade de prática baseada em texto. Para prática com voz, experimente nossas funcionalidades de Chat de Voz Ilimitado ou Chat de Voz Premium.",
+  askAboutGrammarRules: "Pergunte sobre regras gramaticais",
+  practiceConversationsDifferentSituations: "Pratique conversas em diferentes situações",
+  learnNewVocabulary: "Aprenda novo vocabulário",
+  discussCulturalTopics: "Discuta tópicos culturais",
 };
 
 export default practiceTranslations;
