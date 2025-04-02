@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const koreanTranslations: TranslationRecord = {
@@ -267,7 +268,11 @@ const koreanTranslations: TranslationRecord = {
   
   // New translations for note boxes
   browserBasedTTS: "참고: 이것은 브라우저 기반 텍스트 음성 변환을 사용합니다. ElevenLabs를 통한 프리미엄 음성 품질을 원하시면 프리미엄 음성 채팅을 이용해보세요.",
-  premiumVoiceNote: "참고: 프리미엄 음성 대화는 ElevenLabs의 사실적인 음성 기술을 사용합니다. 세션당 5분 대화 제한과 각 세션 후 24시간 대기 시간이 있습니다."
+  premiumVoiceNote: "참고: 프리미엄 음성 대화는 ElevenLabs의 사실적인 음성 기술을 사용합니다. 세션당 5분 대화 제한과 각 세션 후 24시간 대기 시간이 있습니다.",
+  
+  // Pagination translations
+  previous: "이전",
+  next: "다음",
 };
 
 export default koreanTranslations;

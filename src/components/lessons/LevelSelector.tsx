@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface LevelSelectorProps {
   currentLevel: string;
@@ -7,6 +8,8 @@ interface LevelSelectorProps {
 }
 
 const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProps) => {
+  const { t } = useLocalization();
+  
   return (
     <div className="flex flex-col space-y-2 my-4">
       <Button
@@ -14,25 +17,24 @@ const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProps) => {
         onClick={() => onLevelChange("beginner")}
         className="w-full"
       >
-        Beginner (A1-A2)
+        {t("beginner")} (A1-A2)
       </Button>
       <Button
         variant={currentLevel === "intermediate" ? "default" : "outline"}
         onClick={() => onLevelChange("intermediate")}
         className="w-full"
       >
-        Intermediate (B1-B2)
+        {t("intermediate")} (B1-B2)
       </Button>
       <Button
         variant={currentLevel === "advanced" ? "default" : "outline"}
         onClick={() => onLevelChange("advanced")}
         className="w-full"
       >
-        Advanced (C1-C2)
+        {t("advanced")} (C1-C2)
       </Button>
     </div>
   );
 };
 
 export default LevelSelector;
-
