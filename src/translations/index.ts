@@ -1,8 +1,8 @@
 
 import { LanguageTranslations } from "./types";
 import englishTranslations from "./english/index";
-import spanishTranslations from "./spanish";
-import portugueseTranslations from "./portuguese";
+import spanishTranslations from "./spanish/index";
+import portugueseTranslations from "./portuguese/index";
 import koreanTranslations from "./korean";
 import arabicTranslations from "./arabic";
 import mandarinTranslations from "./mandarin";
