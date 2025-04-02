@@ -141,7 +141,7 @@ const koreanTranslations: TranslationRecord = {
   areasForImprovement: "개선이 필요한 영역",
   recommendations: "추천사항",
   
-  // Voice Chat Page
+  // Voice Chat Page - 무제한 음성 채팅
   freePracticeWithVoice: "무료 음성 연습",
   unlimitedVoicePractice: "무제한 음성 연습",
   startSpeaking: "말하기 시작",
@@ -184,7 +184,7 @@ const koreanTranslations: TranslationRecord = {
   voiceChatEnded: "음성 채팅이 종료되었습니다",
   timeLimit5MinReached: "5분 시간 제한에 도달했습니다",
   
-  // New translations for premium voice chat
+  // Premium Voice Chat - 프리미엄 음성 채팅
   premiumVoiceChat: "프리미엄 음성 채팅",
   premiumVoiceChatBenefits: "프리미엄 음성 혜택",
   textConversationPractice: "텍스트 대화 연습",
@@ -204,7 +204,6 @@ const koreanTranslations: TranslationRecord = {
   
   // Additional translations for Practice page
   practiceLevel: "연습 레벨",
-  speaking: "말하기",
   notePracticeFeature: "참고: 이것은 텍스트 기반 연습 기능입니다. 음성 연습은 무제한 음성 채팅 또는 프리미엄 음성 채팅 기능을 사용해보세요.",
   sendPracticePrompt: "연습 메시지 보내기",
   conversationHistory: "대화 기록",
@@ -217,6 +216,17 @@ const koreanTranslations: TranslationRecord = {
   learnNewVocabulary: "새로운 어휘 배우기",
   discussCulturalTopics: "문화적 주제에 대해 토론하기",
   
+  // Additional Premium Voice Chat translations
+  loginRequired: "로그인 필요",
+  pleaseLoginToAccessPremiumFeature: "프리미엄 기능에 액세스하려면 로그인하세요",
+  login: "로그인",
+  redirectingToLogin: "로그인 페이지로 이동합니다",
+  cooldownActive: "대기 시간 활성화",
+  waitBeforeNextSession: "다음 세션을 시작하기 전에 대기해야 합니다",
+  cooldownPeriodActive: "대기 시간 활성화됨",
+  failedToCreateSession: "세션 생성에 실패했습니다",
+  failedToStartSession: "세션 시작에 실패했습니다",
+  
   // Test instructions component
   testInstructions: "테스트 지침",
   speakNaturallyInEnglish: "영어로 자연스럽게 말하기",
@@ -224,12 +234,43 @@ const koreanTranslations: TranslationRecord = {
   keepConversationFlowing: "대화가 자연스럽게 이어지도록 하기",
   listenCarefully: "질문을 이해하기 위해 주의 깊게 듣기",
   dontWorryAboutMistakes: "실수를 걱정하지 마세요",
-  
-  // For English speakers learning other languages
   speakNaturallyInTargetLanguage: "배우는 언어로 자연스럽게 말하기",
   
   // For NoProgressCard
-  takeTestToSeeProgress: "테스트를 완료하여 진행 상황을 확인하세요"
+  takeTestToSeeProgress: "테스트를 완료하여 진행 상황을 확인하세요",
+  
+  // Language Frameworks Page translations
+  languageReferenceFrameworks: "언어 참조 프레임워크",
+  understandLevelsFrameworks: "언어 능력 평가를 위한 다양한 레벨과 프레임워크 이해하기",
+  commonEuropeanFramework: "유럽 공통 참조 기준(CEFR)",
+  cefrIsInternationalStandard: "유럽 공통 참조 기준(CEFR)은 언어 능력을 설명하기 위한 국제 표준입니다. A1(초급자)부터 C2(숙달)까지의 능력 수준을 정의합니다.",
+  americanCouncilFramework: "미국 외국어 교육 협의회(ACTFL)",
+  actflDescribesAbility: "ACTFL 능력 지침은 자발적이고 예행되지 않은 상황에서 말하기, 쓰기, 듣기 및 읽기 능력 측면에서 개인이 언어로 할 수 있는 것을 설명합니다.",
+  comparison: "비교",
+  comparisonTable: "비교 표",
+  sublevels: "세부 수준",
+  
+  // CEFR Level Names in Korean
+  beginner: "초급자",
+  elementary: "초등",
+  intermediate: "중급",
+  upperIntermediate: "중상급",
+  advanced: "고급",
+  proficiency: "능숙함",
+  
+  // ACTFL Level Names in Korean
+  novice: "초보자",
+  noviceLow: "초보자 하",
+  noviceMid: "초보자 중",
+  noviceHigh: "초보자 상",
+  intermediateLow: "중급 하",
+  intermediateMid: "중급 중",
+  intermediateHigh: "중급 상",
+  advancedLow: "고급 하",
+  advancedMid: "고급 중",
+  advancedHigh: "고급 상",
+  superior: "우수",
+  distinguished: "탁월"
 };
 
 export default koreanTranslations;

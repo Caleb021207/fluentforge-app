@@ -105,6 +105,38 @@ const LanguageFrameworks = () => {
         name: "Proficiência",
         description: "Pode compreender, sem esforço, praticamente tudo que ouve ou lê. Pode resumir informações de diferentes fontes, orais e escritas, reconstruindo argumentos e fatos em uma apresentação coerente. Pode expressar-se espontaneamente, com grande fluência e precisão, diferenciando finas nuances de significado mesmo em situações mais complexas."
       }
+    ],
+    korean: [
+      {
+        level: "A1",
+        name: "초급자",
+        description: "구체적인 유형의 요구를 만족시키기 위한 친숙한 일상적 표현과 매우 기본적인 문구를 이해하고 사용할 수 있습니다. 자신과 다른 사람을 소개하고, A씨가 사는 곳, 아는 사람 및 소유물에 관한 개인 정보에 대해 질문하고 답할 수 있습니다."
+      },
+      {
+        level: "A2",
+        name: "초등",
+        description: "지극히 개인적인 정보(예: 매우 기본적인 개인 및 가족 정보, 쇼핑, 지역 지리, 고용)와 관련된 영역에 대해 가장 관련성이 높은 문장과 자주 사용되는 표현을 이해할 수 있습니다. 친숙하고 일상적인 사항에 대한 단순하고 직접적인 정보 교환을 요구하는 간단하고 일상적인 작업에서 의사소통할 수 있습니다."
+      },
+      {
+        level: "B1",
+        name: "중급",
+        description: "직장, 학교, 여가 등에서 정기적으로 접하는 친숙한 문제에 대한 명확한 표준 입력의 요점을 이해할 수 있습니다. 해당 언어가 사용되는 지역을 여행하는 동안 발생할 가능성이 있는 대부분의 상황을 처리할 수 있습니다. 친숙하거나 개인적 관심사가 있는 주제에 대해 간단한 연결 텍스트를 작성할 수 있습니다."
+      },
+      {
+        level: "B2",
+        name: "중상급",
+        description: "자신의 전문 분야의 기술적 토론을 포함하여 구체적이고 추상적인 주제에 대한 복잡한 텍스트의 주요 아이디어를 이해할 수 있습니다. 원어민과 정기적인 상호 작용이 가능한 정도의 유창성과 자발성을 가지고 상호 작용할 수 있으며, 어느 쪽도 긴장하지 않습니다."
+      },
+      {
+        level: "C1",
+        name: "고급",
+        description: "요구가 많은 더 긴 텍스트를 이해하고 암시적 의미를 인식할 수 있습니다. 표현을 찾기 위해 많이 고민하지 않고 유창하고 자발적으로 자신을 표현할 수 있습니다. 사회적, 학문적, 직업적 목적을 위해 언어를 유연하고 효과적으로 사용할 수 있습니다."
+      },
+      {
+        level: "C2",
+        name: "능숙함",
+        description: "듣거나 읽은 거의 모든 것을 쉽게 이해할 수 있습니다. 다양한 구두 및 서면 출처의 정보를 요약하고, 일관된 프레젠테이션에서 논쟁과 설명을 재구성할 수 있습니다. 자발적으로, 매우 유창하게, 정확하게 자신을 표현할 수 있으며, 복잡한 상황에서도 의미의 미세한 차이를 구별할 수 있습니다."
+      }
     ]
   };
 
@@ -307,6 +339,72 @@ const LanguageFrameworks = () => {
         sublevels: [],
         description: "No nível Distinto, os falantes podem usar a língua com habilidade e com precisão, eficiência e eficácia. São usuários educados e articulados da língua. Podem refletir sobre uma ampla gama de questões globais e conceitos altamente abstratos de uma maneira culturalmente apropriada."
       }
+    ],
+    korean: [
+      {
+        level: "초보자",
+        sublevels: [
+          {
+            name: "초보자 하",
+            description: "공식적이고 암기된 발화, 목록 및 구문으로 최소한으로 의사소통할 수 있습니다. 자발성과 유연성의 초기 징후를 보일 수 있지만, 공감적인 대화 상대자들과도 상당한 어려움을 겪습니다."
+          },
+          {
+            name: "초보자 중",
+            description: "몇 가지 고립된 단어와 암기된 구문을 사용하여 최소한으로 의사소통할 수 있습니다. 간단하고 직접적인 질문이나 정보 요청에 응답할 수 있습니다. 말은 두세 단어 구문으로 제한될 수 있습니다."
+          },
+          {
+            name: "초보자 상",
+            description: "경험의 맥락 내에서 공식적이고 암기된 발화로 의사소통할 수 있습니다. 간단하고 직접적인 질문이나 정보 요청에 응답할 수 있지만, 매우 적은 공식적인 질문만 할 수 있습니다. 말은 주로 반응적입니다."
+          }
+        ],
+        description: "초보자 수준에서 화자는 자신에게 직접적으로 영향을 미치는 매우 예측 가능한 일상적인 주제에 대한 짧은 메시지를 전달할 수 있습니다. 주로 마주치고, 암기하고, 회상한 고립된 단어와 구문을 사용합니다."
+      },
+      {
+        level: "중급",
+        sublevels: [
+          {
+            name: "중급 하",
+            description: "간단한 사회적 상황에서 언어를 창의적으로 사용하여 제한된 수의 복잡하지 않은 의사소통 작업을 성공적으로 처리할 수 있습니다. 적절하게 질문하고 답할 수 있습니다."
+          },
+          {
+            name: "중급 중",
+            description: "간단한 사회적 상황에서 다양한 복잡하지 않은 의사소통 작업을 성공적으로 처리할 수 있습니다. 가장 직접적인 필요를 넘어선 주제에 대한 대화에 참여할 수 있습니다."
+          },
+          {
+            name: "중급 상",
+            description: "작업, 학교, 레크리에이션 및 특정 관심사와 관련된 기본 정보 교환을 요구하는 복잡하지 않은 작업과 사회적 상황을 성공적으로 처리할 수 있지만, 망설임이 발생할 수 있습니다."
+          }
+        ],
+        description: "중급 수준에서 화자는 일상 생활과 관련된 친숙한 주제에 대해 이야기할 때 언어를 창의적으로 사용할 수 있습니다. 개인적 의미를 표현하기 위해 학습한 자료를 재조합할 수 있습니다. 중급 수준의 화자는 간단한 질문을 할 수 있으며 간단한 생존 상황을 처리할 수 있습니다."
+      },
+      {
+        level: "고급",
+        sublevels: [
+          {
+            name: "고급 하",
+            description: "다양한 고급 수준 작업을 수행할 수 있지만 일관되지 않습니다. 말은 일반적으로 특정 문법적 거칠기, 주제를 길게 논의하기 위한 부적절한 어휘, 그리고 주목할만한 오류 패턴으로 특징지어집니다."
+          },
+          {
+            name: "고급 중",
+            description: "언어적 용이함, 자신감 및 역량으로 모든 고급 수준 작업을 수행할 수 있습니다. 주제에 대해 구체적이고 추상적으로 논의하고, 복잡한 상황을 처리하며, 모든 시제에서 일관되게 이야기할 수 있습니다."
+          },
+          {
+            name: "고급 상",
+            description: "모든 고급 수준 작업을 쉽게 자신감 있게 수행할 수 있습니다. 추상적인 주제에 대해 좋은 정확도로 논의할 수 있습니다. 말하기 능력은 하나 이상의 영역에서 약점을 가진 상급 수준 작업의 기준을 완전히 충족하지 못합니다."
+          }
+        ],
+        description: "고급 수준에서 화자는 일반적인 관심사에 대해 이야기할 때 모든 주요 시간 프레임에서 이야기하고 설명할 수 있습니다. 복잡한 상황을 처리할 수 있습니다. 고급 수준 화자의 언어는 실질적이고 연결된 담화로 특징지어집니다."
+      },
+      {
+        level: "우수",
+        sublevels: [],
+        description: "우수 수준에서 화자는 공식 및 비공식 환경에서 다양한 주제에 대한 대화에 완전하고 효과적으로 참여하기 위해 정확성과 유창성으로 의사소통할 수 있습니다. 자신의 관심사와 특수 분야에 대해 논의하고, 복잡한 문제를 설명하며, 길고 일관된 이야기를 제공할 수 있습니다."
+      },
+      {
+        level: "탁월",
+        sublevels: [],
+        description: "탁월 수준에서 화자는 정확성, 효율성 및 효과적으로 언어를 숙련되게 사용합니다. 교육을 받고 명료한 언어 사용자입니다. 문화적으로 적절한 방식으로 광범위한 글로벌 이슈와 매우 추상적인 개념에 대해 생각할 수 있습니다."
+      }
     ]
   };
 
@@ -314,7 +412,8 @@ const LanguageFrameworks = () => {
   const conversionExplanation = {
     english: "The CEFR (Common European Framework of Reference) and ACTFL (American Council on the Teaching of Foreign Languages) are two widely recognized frameworks for describing language proficiency. While they use different scales and terminology, there are approximate correlations between the two systems:\n\nCEFR A1 ≈ ACTFL Novice Low to Mid\nCEFR A2 ≈ ACTFL Novice High to Intermediate Low\nCEFR B1 ≈ ACTFL Intermediate Mid to High\nCEFR B2 ≈ ACTFL Advanced Low to Mid\nCEFR C1 ≈ ACTFL Advanced High to Superior\nCEFR C2 ≈ ACTFL Distinguished",
     spanish: "El MCER (Marco Común Europeo de Referencia) y ACTFL (Consejo Americano para la Enseñanza de Lenguas Extranjeras) son dos marcos ampliamente reconocidos para describir la competencia lingüística. Aunque utilizan escalas y terminología diferentes, existen correlaciones aproximadas entre los dos sistemas:\n\nMCER A1 ≈ ACTFL Novato Bajo a Medio\nMCER A2 ≈ ACTFL Novato Alto a Intermedio Bajo\nMCER B1 ≈ ACTFL Intermedio Medio a Alto\nMCER B2 ≈ ACTFL Avanzado Bajo a Medio\nMCER C1 ≈ ACTFL Avanzado Alto a Superior\nMCER C2 ≈ ACTFL Distinguido",
-    portuguese: "O QECR (Quadro Europeu Comum de Referência) e o ACTFL (Conselho Americano para o Ensino de Línguas Estrangeiras) são dois quadros amplamente reconhecidos para descrever a proficiência linguística. Embora utilizem escalas e terminologia diferentes, existem correlações aproximadas entre os dois sistemas:\n\nQECR A1 ≈ ACTFL Novato Baixo a Médio\nQECR A2 ≈ ACTFL Novato Alto a Intermediário Baixo\nQECR B1 ≈ ACTFL Intermediário Médio a Alto\nQECR B2 ≈ ACTFL Avançado Baixo a Médio\nQECR C1 ≈ ACTFL Avançado Alto a Superior\nQECR C2 ≈ ACTFL Distinto"
+    portuguese: "O QECR (Quadro Europeu Comum de Referência) e o ACTFL (Conselho Americano para o Ensino de Línguas Estrangeiras) são dois quadros amplamente reconhecidos para descrever a proficiência linguística. Embora utilizem escalas e terminologia diferentes, existem correlações aproximadas entre os dois sistemas:\n\nQECR A1 ≈ ACTFL Novato Baixo a Médio\nQECR A2 ≈ ACTFL Novato Alto a Intermediário Baixo\nQECR B1 ≈ ACTFL Intermediário Médio a Alto\nQECR B2 ≈ ACTFL Avançado Baixo a Médio\nQECR C1 ≈ ACTFL Avançado Alto a Superior\nQECR C2 ≈ ACTFL Distinto",
+    korean: "CEFR(유럽 공통 참조 기준)와 ACTFL(미국 외국어 교육 협의회)은 언어 능력을 설명하기 위한 두 가지 널리 인정된 프레임워크입니다. 서로 다른 척도와 용어를 사용하지만, 두 시스템 간에는 대략적인 상관관계가 있습니다:\n\nCEFR A1 ≈ ACTFL 초보자 하에서 중까지\nCEFR A2 ≈ ACTFL 초보자 상에서 중급 하까지\nCEFR B1 ≈ ACTFL 중급 중에서 상까지\nCEFR B2 ≈ ACTFL 고급 하에서 중까지\nCEFR C1 ≈ ACTFL 고급 상에서 우수까지\nCEFR C2 ≈ ACTFL 탁월"
   };
 
   // Get the appropriate levels based on the user's language
@@ -333,6 +432,8 @@ const LanguageFrameworks = () => {
         return "Marcos de Referencia de Idiomas";
       case "portuguese":
         return "Estruturas de Referência de Idiomas";
+      case "korean":
+        return "언어 참조 프레임워크";
       default:
         return "Language Reference Frameworks";
     }
@@ -345,6 +446,8 @@ const LanguageFrameworks = () => {
         return "Marco Común Europeo de Referencia (MCER)";
       case "portuguese":
         return "Quadro Europeu Comum de Referência (QECR)";
+      case "korean":
+        return "유럽 공통 참조 기준(CEFR)";
       default:
         return "Common European Framework of Reference (CEFR)";
     }
@@ -357,6 +460,8 @@ const LanguageFrameworks = () => {
         return "Consejo Americano para la Enseñanza de Lenguas Extranjeras (ACTFL)";
       case "portuguese":
         return "Conselho Americano para o Ensino de Línguas Estrangeiras (ACTFL)";
+      case "korean":
+        return "미국 외국어 교육 협의회(ACTFL)";
       default:
         return "American Council on the Teaching of Foreign Languages (ACTFL)";
     }
@@ -369,6 +474,8 @@ const LanguageFrameworks = () => {
         return "Comparación MCER y ACTFL";
       case "portuguese":
         return "Comparação QECR e ACTFL";
+      case "korean":
+        return "CEFR와 ACTFL 비교";
       default:
         return "CEFR and ACTFL Comparison";
     }
@@ -383,7 +490,9 @@ const LanguageFrameworks = () => {
             ? "Comprenda los diferentes niveles y marcos para la evaluación del dominio del idioma"
             : currentLanguage === "portuguese"
               ? "Entenda os diferentes níveis e estruturas para avaliação de proficiência em idiomas"
-              : "Understand the different levels and frameworks for language proficiency assessment"}
+              : currentLanguage === "korean"
+                ? "언어 능력 평가를 위한 다양한 레벨과 프레임워크 이해하기"
+                : "Understand the different levels and frameworks for language proficiency assessment"}
         </p>
       </div>
 
@@ -392,7 +501,7 @@ const LanguageFrameworks = () => {
           <TabsTrigger value="cefr" className="flex-1">
             <BookOpen className="h-4 w-4 mr-2" />
             <span>
-              {currentLanguage === "spanish" ? "MCER" : currentLanguage === "portuguese" ? "QECR" : "CEFR"}
+              {currentLanguage === "spanish" ? "MCER" : currentLanguage === "portuguese" ? "QECR" : currentLanguage === "korean" ? "CEFR" : "CEFR"}
             </span>
           </TabsTrigger>
           <TabsTrigger value="actfl" className="flex-1">
@@ -406,7 +515,9 @@ const LanguageFrameworks = () => {
                 ? "Comparación" 
                 : currentLanguage === "portuguese" 
                   ? "Comparação" 
-                  : "Comparison"}
+                  : currentLanguage === "korean"
+                    ? "비교"
+                    : "Comparison"}
             </span>
           </TabsTrigger>
         </TabsList>
@@ -416,143 +527,4 @@ const LanguageFrameworks = () => {
             <div className="bg-white rounded-lg p-6 shadow-md">
               <h2 className="text-2xl font-bold mb-4">{getCefrTitle()}</h2>
               <p className="mb-6">
-                {currentLanguage === "spanish" 
-                  ? "El Marco Común Europeo de Referencia para las lenguas (MCER) es un estándar internacional para describir la capacidad lingüística. Define los niveles de dominio desde A1 (principiante) hasta C2 (dominio)."
-                  : currentLanguage === "portuguese"
-                    ? "O Quadro Europeu Comum de Referência para Línguas (QECR) é um padrão internacional para descrever a capacidade linguística. Define os níveis de proficiência desde A1 (iniciante) até C2 (proficiência)."
-                    : "The Common European Framework of Reference for Languages (CEFR) is an international standard for describing language ability. It defines proficiency levels from A1 (beginner) to C2 (mastery)."}
-              </p>
-              
-              <div className="grid gap-6 md:grid-cols-2">
-                {levels.map((level) => (
-                  <Card key={level.level} className="overflow-hidden">
-                    <CardHeader className={`bg-lingua-primary text-white`}>
-                      <CardTitle className="flex items-center">
-                        <span className="text-xl font-bold mr-2">{level.level}</span>
-                        <span className="text-sm opacity-90">({level.name})</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <p>{level.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="actfl">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-md">
-              <h2 className="text-2xl font-bold mb-4">{getActflTitle()}</h2>
-              <p className="mb-6">
-                {currentLanguage === "spanish" 
-                  ? "Las Pautas de Competencia de ACTFL describen lo que las personas pueden hacer con el lenguaje en términos de habilidades para hablar, escribir, escuchar y leer en situaciones de la vida real de forma espontánea y no ensayada."
-                  : currentLanguage === "portuguese"
-                    ? "As Diretrizes de Proficiência do ACTFL descrevem o que as pessoas podem fazer com a linguagem em termos de habilidades de falar, escrever, ouvir e ler em situações da vida real de forma espontânea e não ensaiada."
-                    : "The ACTFL Proficiency Guidelines describe what individuals can do with language in terms of speaking, writing, listening, and reading in real-world situations in a spontaneous and non-rehearsed context."}
-              </p>
-              
-              <div className="space-y-6">
-                {actfl.map((level) => (
-                  <Card key={level.level} className="overflow-hidden">
-                    <CardHeader className="bg-lingua-secondary text-white">
-                      <CardTitle>{level.level}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <p className="mb-4">{level.description}</p>
-                      
-                      {level.sublevels && level.sublevels.length > 0 && (
-                        <div className="mt-4">
-                          <h4 className="text-lg font-medium mb-2">
-                            {currentLanguage === "spanish" 
-                              ? "Subniveles" 
-                              : currentLanguage === "portuguese" 
-                                ? "Subníveis" 
-                                : "Sublevels"}
-                          </h4>
-                          <div className="space-y-3">
-                            {level.sublevels.map((sublevel) => (
-                              <div key={sublevel.name} className="border-l-4 border-lingua-secondary/70 pl-3 py-2">
-                                <h5 className="font-medium">{sublevel.name}</h5>
-                                <p className="text-sm text-gray-700 mt-1">{sublevel.description}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="comparison">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-md">
-              <h2 className="text-2xl font-bold mb-4">{getComparisonTitle()}</h2>
-              <p className="mb-4 whitespace-pre-line">{conversion}</p>
-              
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-4">
-                  {currentLanguage === "spanish" 
-                    ? "Tabla de Comparación" 
-                    : currentLanguage === "portuguese" 
-                      ? "Tabela de Comparação" 
-                      : "Comparison Table"}
-                </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-lingua-primary text-white">
-                        <th className="px-4 py-2 text-left">
-                          {currentLanguage === "spanish" 
-                            ? "MCER" 
-                            : currentLanguage === "portuguese" 
-                              ? "QECR" 
-                              : "CEFR"}
-                        </th>
-                        <th className="px-4 py-2 text-left">ACTFL</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b">
-                        <td className="px-4 py-2 font-medium">A1</td>
-                        <td className="px-4 py-2">Novice Low to Mid</td>
-                      </tr>
-                      <tr className="border-b bg-gray-50">
-                        <td className="px-4 py-2 font-medium">A2</td>
-                        <td className="px-4 py-2">Novice High to Intermediate Low</td>
-                      </tr>
-                      <tr className="border-b">
-                        <td className="px-4 py-2 font-medium">B1</td>
-                        <td className="px-4 py-2">Intermediate Mid to High</td>
-                      </tr>
-                      <tr className="border-b bg-gray-50">
-                        <td className="px-4 py-2 font-medium">B2</td>
-                        <td className="px-4 py-2">Advanced Low to Mid</td>
-                      </tr>
-                      <tr className="border-b">
-                        <td className="px-4 py-2 font-medium">C1</td>
-                        <td className="px-4 py-2">Advanced High to Superior</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="px-4 py-2 font-medium">C2</td>
-                        <td className="px-4 py-2">Distinguished</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default LanguageFrameworks;
+                {currentLanguage
