@@ -11,7 +11,7 @@ import { PremiumVoiceChatSession } from "@/types/supabase";
 import { useNavigate } from "react-router-dom";
 
 type VoiceMessage = {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: Date;
 };
@@ -344,7 +344,7 @@ const PremiumVoiceChat = () => {
       setVoiceChatTimeRemaining(300);
       setSessionStatus('active');
       
-      const initialUserMessage = {
+      const initialUserMessage: VoiceMessage = {
         role: "user",
         content: currentLanguage === "english" 
           ? "Hello, I'd like to practice Spanish with you." 
