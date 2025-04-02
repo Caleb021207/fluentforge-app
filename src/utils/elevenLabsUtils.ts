@@ -6,7 +6,7 @@ export const SPANISH_TUTOR_AGENT_ID = 'AOv9JDhkEdMmiU61vHg9'; // Spanish tutor f
 export const ENGLISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor for Spanish speakers
 export const PORTUGUESE_TUTOR_AGENT_ID = 'WuaaV0Pu1tinWfjSk9CY'; // Portuguese tutor
 export const KOREAN_TUTOR_AGENT_ID = 'gLUyjMusYz1pumoMfoQv'; // Korean tutor for English learners
-// Note: We would need to add an Arabic tutor agent ID when available
+export const ARABIC_TUTOR_AGENT_ID = 'RFO6KG9COLQqxnxRzI0L'; // Arabic tutor for English learners
 
 /**
  * Gets the appropriate agent ID based on the user's language
@@ -24,17 +24,18 @@ export const getAgentIdForLanguage = (language: string): string => {
     console.log("Using Portuguese tutor:", PORTUGUESE_TUTOR_AGENT_ID);
     return PORTUGUESE_TUTOR_AGENT_ID;
   }
+  // If the user is Arabic, use their specific tutor
+  if (language === "arabic") {
+    console.log("Using Arabic tutor:", ARABIC_TUTOR_AGENT_ID);
+    return ARABIC_TUTOR_AGENT_ID;
+  }
   // For Spanish speakers, use the English tutor
   if (language === "spanish") {
     console.log("Using English tutor for Spanish speaker:", ENGLISH_TUTOR_AGENT_ID);
-    return ENGLISH_TUTOR_AGENT_ID;
-  }
-  // For Arabic speakers, temporarily use the English tutor
-  if (language === "arabic") {
-    console.log("Using English tutor for Arabic speaker (temporary):", ENGLISH_TUTOR_AGENT_ID);
     return ENGLISH_TUTOR_AGENT_ID;
   }
   // For English speakers, use the Spanish tutor
   console.log("Using Spanish tutor for English speaker:", SPANISH_TUTOR_AGENT_ID);
   return SPANISH_TUTOR_AGENT_ID;
 };
+
