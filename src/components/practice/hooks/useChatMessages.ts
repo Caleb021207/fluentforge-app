@@ -1,41 +1,23 @@
 
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
-
-export interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  translation?: string;
-}
+import { useToast } from "@/components/ui/use-toast";
+import { ChatMessage } from "../types/chat";
+import { getPlaceholderTextForLanguage, getLanguageLearningPrompt } from "../utils/languageUtils";
+import { useMessageSubmission } from "./useMessageSubmission";
 
 export const useChatMessages = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
+  const { toast } = useToast();
+  
+  const { handleSendPrompt } = useMessageSubmission(currentLanguage, setMessages, setIsLoading);
 
   const sendLanguageLearningPrompt = () => {
-    let prompt = "";
+    const prompt = getLanguageLearningPrompt(currentLanguage);
     
-    if (currentLanguage === "english") {
-      prompt = "¡Hola! Quiero practicar español contigo.";
-    } else if (currentLanguage === "spanish") {
-      prompt = "Hello! I want to practice English with you!";
-    } else if (currentLanguage === "portuguese") {
-      prompt = "Hello! I want to practice English with you!";
-    } else if (currentLanguage === "korean") {
-      prompt = "Hello! I want to practice English with you!";
-    } else if (currentLanguage === "arabic") {
-      prompt = "Hello! I want to practice English with you!";
-    } else if (currentLanguage === "mandarin") {
-      prompt = "Hello! I want to practice English with you!";
-    } else if (currentLanguage === "vietnamese") {
-      prompt = "Hello! I want to practice English with you!";
-    }
-
     if (prompt) {
       const userMessage: ChatMessage = {
         role: "user",
@@ -44,73 +26,6 @@ export const useChatMessages = () => {
 
       setMessages((prev) => [...prev, userMessage]);
       handleSendPrompt(prompt);
-    }
-  };
-
-  const handleSendPrompt = async (promptText: string) => {
-    setIsLoading(true);
-
-    try {
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
-        body: { 
-          message: promptText,
-          userLanguage: currentLanguage,
-          requestTranslation: true // Explicitly request translation
-        }
-      });
-
-      if (error) {
-        throw error;
-      }
-      
-      console.log('Response with translation check:', data);
-      
-      // Ensure we always have a translation for all languages
-      let translation = data.translation || "";
-      
-      // If no translation was provided but one is expected, make note of it and try to get one
-      if (!translation) {
-        console.log("No translation provided for response in language:", currentLanguage);
-        
-        // For English users, we want Spanish translations
-        // For non-English users, we want translations in their native language
-        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
-        
-        try {
-          // Try to get a translation manually if none was provided
-          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
-            body: {
-              message: data.content,
-              userLanguage: targetLanguage,
-              requestType: 'translation'
-            }
-          });
-          
-          if (!translationError && translationData && translationData.translation) {
-            translation = translationData.translation;
-            console.log("Got translation manually:", translation);
-          }
-        } catch (translationError) {
-          console.error("Failed to get translation:", translationError);
-        }
-      }
-      
-      const assistantMessage: ChatMessage = {
-        role: "assistant",
-        content: data.content,
-        translation: translation,
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Error:', error);
-      toast({
-        title: t("error"),
-        description: t("networkConnectionIssue"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -125,88 +40,13 @@ export const useChatMessages = () => {
 
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setIsLoading(true);
-
-    try {
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
-        body: { 
-          message: input,
-          userLanguage: currentLanguage,
-          requestTranslation: true // Explicitly request translation
-        }
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      console.log('Response from AI tutor:', data);
-      
-      // Ensure we always have a translation
-      let translation = data.translation || "";
-      
-      // If no translation was provided, try to get one
-      if (!translation) {
-        console.warn("Missing translation for", currentLanguage, "user");
-        
-        // For English users, we want Spanish translations
-        // For non-English users, we want translations in their native language
-        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
-        
-        try {
-          // Try to get a translation manually if none was provided
-          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
-            body: {
-              message: data.content,
-              userLanguage: targetLanguage,
-              requestType: 'translation'
-            }
-          });
-          
-          if (!translationError && translationData && translationData.translation) {
-            translation = translationData.translation;
-            console.log("Got translation manually:", translation);
-          }
-        } catch (translationError) {
-          console.error("Failed to get translation:", translationError);
-        }
-      }
-      
-      const assistantMessage: ChatMessage = {
-        role: "assistant",
-        content: data.content,
-        translation: translation,
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Error:', error);
-      toast({
-        title: t("error"),
-        description: t("networkConnectionIssue"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    
+    // Use the shared handler to send the message
+    handleSendPrompt(input);
   };
 
   const getPlaceholderText = () => {
-    if (currentLanguage === "spanish") {
-      return "Escribe tu mensaje en español o inglés...";
-    } else if (currentLanguage === "portuguese") {
-      return "Digite sua mensagem em português ou inglês...";
-    } else if (currentLanguage === "korean") {
-      return "한국어 또는 영어로 메시지를 입력하세요...";
-    } else if (currentLanguage === "arabic") {
-      return "اكتب رسالتك بالعربية أو الإنجليزية...";
-    } else if (currentLanguage === "mandarin") {
-      return "用中文或英语输入您的消息...";
-    } else if (currentLanguage === "vietnamese") {
-      return "Nhập tin nhắn của bạn bằng tiếng Việt hoặc tiếng Anh...";
-    } else {
-      return "Type your message in English or Spanish...";
-    }
+    return getPlaceholderTextForLanguage(currentLanguage);
   };
 
   return {
