@@ -60,10 +60,18 @@ export const useChatMessages = () => {
         throw error;
       }
       
+      // Ensure we always have a translation for non-English languages
+      let translation = data.translation || "";
+      
+      // If no translation was provided but one is expected, make note of it
+      if (!translation && currentLanguage !== "english") {
+        console.log("No translation provided for response in language:", currentLanguage);
+      }
+      
       const assistantMessage: ChatMessage = {
         role: "assistant",
         content: data.content,
-        translation: data.translation,
+        translation: translation,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -106,10 +114,15 @@ export const useChatMessages = () => {
 
       console.log('Response from AI tutor:', data);
       
+      // If we explicitly need translations for certain languages, log that information
+      if (currentLanguage === "mandarin" && !data.translation) {
+        console.warn("Missing translation for Mandarin user");
+      }
+      
       const assistantMessage: ChatMessage = {
         role: "assistant",
         content: data.content,
-        translation: data.translation,
+        translation: data.translation || "",
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
