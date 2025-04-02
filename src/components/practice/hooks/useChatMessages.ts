@@ -32,6 +32,8 @@ export const useChatMessages = () => {
       prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "mandarin") {
       prompt = "Hello! I want to practice English with you!";
+    } else if (currentLanguage === "vietnamese") {
+      prompt = "Hello! I want to practice English with you!";
     }
 
     if (prompt) {
@@ -200,6 +202,8 @@ export const useChatMessages = () => {
       return "اكتب رسالتك بالعربية أو الإنجليزية...";
     } else if (currentLanguage === "mandarin") {
       return "用中文或英语输入您的消息...";
+    } else if (currentLanguage === "vietnamese") {
+      return "Nhập tin nhắn của bạn bằng tiếng Việt hoặc tiếng Anh...";
     } else {
       return "Type your message in English or Spanish...";
     }

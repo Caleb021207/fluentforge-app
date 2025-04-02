@@ -8,10 +8,11 @@ export const PORTUGUESE_TUTOR_AGENT_ID = 'WuaaV0Pu1tinWfjSk9CY'; // Portuguese t
 export const KOREAN_TUTOR_AGENT_ID = 'gLUyjMusYz1pumoMfoQv'; // Korean tutor for English learners
 export const ARABIC_TUTOR_AGENT_ID = 'RFO6KG9COLQqxnxRzI0L'; // Arabic tutor for English learners
 export const MANDARIN_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor for Mandarin speakers
+export const VIETNAMESE_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor for Vietnamese speakers (using English tutor temporarily)
 
 /**
  * Gets the appropriate agent ID based on the user's language
- * @param language The user's current language (english, spanish, portuguese, korean, arabic, mandarin)
+ * @param language The user's current language (english, spanish, portuguese, korean, arabic, mandarin, vietnamese)
  * @returns The appropriate agent ID for the user's language
  */
 export const getAgentIdForLanguage = (language: string): string => {
@@ -34,6 +35,11 @@ export const getAgentIdForLanguage = (language: string): string => {
   if (language === "mandarin") {
     console.log("Using English tutor for Mandarin speaker:", MANDARIN_TUTOR_AGENT_ID);
     return MANDARIN_TUTOR_AGENT_ID;
+  }
+  // If the user is Vietnamese speaker, use the English tutor
+  if (language === "vietnamese") {
+    console.log("Using English tutor for Vietnamese speaker:", VIETNAMESE_TUTOR_AGENT_ID);
+    return VIETNAMESE_TUTOR_AGENT_ID;
   }
   // For Spanish speakers, use the English tutor
   if (language === "spanish") {

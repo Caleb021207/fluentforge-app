@@ -27,7 +27,7 @@ serve(async (req) => {
       return await handleTranslationRequest(message, userLanguage);
     }
 
-    // Determine if user is learning English or Spanish based on their native language
+    // Determine if user is learning English or another language based on their native language
     const isLearningEnglish = userLanguage !== 'english';
     const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
     const nativeLanguage = userLanguage === 'english' ? 'English' : 
@@ -35,7 +35,8 @@ serve(async (req) => {
                           userLanguage === 'portuguese' ? 'Portuguese' : 
                           userLanguage === 'korean' ? 'Korean' :
                           userLanguage === 'arabic' ? 'Arabic' :
-                          userLanguage === 'mandarin' ? 'Mandarin Chinese' : 'Unknown';
+                          userLanguage === 'mandarin' ? 'Mandarin Chinese' :
+                          userLanguage === 'vietnamese' ? 'Vietnamese' : 'Unknown';
     
     // Universal tutor instructions for all language combinations
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
@@ -193,7 +194,8 @@ async function getTranslation(message: string, userLanguage: string) {
                        userLanguage === 'portuguese' ? 'Portuguese' : 
                        userLanguage === 'korean' ? 'Korean' :
                        userLanguage === 'arabic' ? 'Arabic' :
-                       userLanguage === 'mandarin' ? 'Mandarin Chinese' : 'English';
+                       userLanguage === 'mandarin' ? 'Mandarin Chinese' :
+                       userLanguage === 'vietnamese' ? 'Vietnamese' : 'English';
 
   return await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
