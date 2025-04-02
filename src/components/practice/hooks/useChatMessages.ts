@@ -52,7 +52,8 @@ export const useChatMessages = () => {
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: promptText,
-          userLanguage: currentLanguage 
+          userLanguage: currentLanguage,
+          requestTranslation: true // Explicitly request translation
         }
       });
 
@@ -60,12 +61,36 @@ export const useChatMessages = () => {
         throw error;
       }
       
-      // Ensure we always have a translation for non-English languages
+      console.log('Response with translation check:', data);
+      
+      // Ensure we always have a translation for all languages
       let translation = data.translation || "";
       
-      // If no translation was provided but one is expected, make note of it
-      if (!translation && currentLanguage !== "english") {
+      // If no translation was provided but one is expected, make note of it and try to get one
+      if (!translation) {
         console.log("No translation provided for response in language:", currentLanguage);
+        
+        // For English users, we want Spanish translations
+        // For non-English users, we want translations in their native language
+        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
+        
+        try {
+          // Try to get a translation manually if none was provided
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
+            body: {
+              message: data.content,
+              userLanguage: targetLanguage,
+              requestType: 'translation'
+            }
+          });
+          
+          if (!translationError && translationData && translationData.translation) {
+            translation = translationData.translation;
+            console.log("Got translation manually:", translation);
+          }
+        } catch (translationError) {
+          console.error("Failed to get translation:", translationError);
+        }
       }
       
       const assistantMessage: ChatMessage = {
@@ -104,7 +129,8 @@ export const useChatMessages = () => {
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: input,
-          userLanguage: currentLanguage
+          userLanguage: currentLanguage,
+          requestTranslation: true // Explicitly request translation
         }
       });
 
@@ -114,15 +140,40 @@ export const useChatMessages = () => {
 
       console.log('Response from AI tutor:', data);
       
-      // If we explicitly need translations for certain languages, log that information
-      if (currentLanguage === "mandarin" && !data.translation) {
-        console.warn("Missing translation for Mandarin user");
+      // Ensure we always have a translation
+      let translation = data.translation || "";
+      
+      // If no translation was provided, try to get one
+      if (!translation) {
+        console.warn("Missing translation for", currentLanguage, "user");
+        
+        // For English users, we want Spanish translations
+        // For non-English users, we want translations in their native language
+        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
+        
+        try {
+          // Try to get a translation manually if none was provided
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
+            body: {
+              message: data.content,
+              userLanguage: targetLanguage,
+              requestType: 'translation'
+            }
+          });
+          
+          if (!translationError && translationData && translationData.translation) {
+            translation = translationData.translation;
+            console.log("Got translation manually:", translation);
+          }
+        } catch (translationError) {
+          console.error("Failed to get translation:", translationError);
+        }
       }
       
       const assistantMessage: ChatMessage = {
         role: "assistant",
         content: data.content,
-        translation: data.translation || "",
+        translation: translation,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);

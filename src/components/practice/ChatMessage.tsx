@@ -11,7 +11,7 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation }) => {
   const { currentLanguage } = useLocalization();
   
-  // Determine if translation should be shown based on language configuration
+  // Always show translation if it exists - this is the key change
   const showTranslation = translation && translation.trim() !== "";
   
   return (

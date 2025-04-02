@@ -15,11 +15,16 @@ serve(async (req) => {
   }
 
   try {
-    const { message, requestType, userLanguage } = await req.json();
-    console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage);
+    const { message, requestType, userLanguage, requestTranslation } = await req.json();
+    console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage, 'Request translation:', requestTranslation);
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
+    }
+
+    // Handle translation-only requests
+    if (requestType === 'translation') {
+      return await handleTranslationRequest(message, userLanguage);
     }
 
     // Determine if user is learning English or Spanish based on their native language
@@ -45,10 +50,8 @@ You MUST strictly follow these rules:
 4. **Stay in the target language (${targetLanguage}) unless the user asks for clarification in their native language (${nativeLanguage}).**
 5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
 
-If the user writes in ${nativeLanguage}, respond in ${targetLanguage} and provide the translation in their native language below prefixed with "Translation:".
-If the user writes in ${targetLanguage}, help correct any grammar or vocabulary mistakes ONLY if they ask, explain the corrections in ${nativeLanguage}, and provide encouragement.
-
-IMPORTANT: For Mandarin Chinese speakers, ALWAYS include the Mandarin translation of your response prefixed with "Translation:" even if they write in English.
+IMPORTANT: ALWAYS provide a translation of your response in the user's native language (${nativeLanguage}).
+Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
 
 Keep responses friendly but concise, focused on language learning.
 Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
@@ -56,7 +59,7 @@ You should never converse with the user in a manner that is not appropriate for 
 You should ask questions to continue the conversation if it ever seems to stall.`;
 
     // Create an initial hidden message to ensure the AI behaves correctly from the start
-    const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions.";
+    const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions. ALWAYS provide a translation of your response in the user's native language.";
 
     const systemMessage = requestType === 'assessment' 
       ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
@@ -79,7 +82,7 @@ You should ask questions to continue the conversation if it ever seems to stall.
       messages = [
         { role: 'system', content: systemMessage },
         { role: 'user', content: initialHiddenPrompt },
-        { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going." },
+        { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going. I'll always provide translations." },
         { role: 'user', content: message }
       ];
     }
@@ -129,40 +132,23 @@ You should ask questions to continue the conversation if it ever seems to stall.
     let content = data.choices[0].message.content;
     let translation = '';
 
-    // Always extract translation if available
+    // Extract translation if available
     if (content.includes('\nTranslation:')) {
       [content, translation] = content.split('\nTranslation:');
       content = content.trim();
       translation = translation.trim();
     }
 
-    // For Mandarin speakers specifically, if no translation was provided,
-    // make a second API call to translate the response
-    if (userLanguage === 'mandarin' && !translation) {
+    // If no translation was provided, make a second API call to translate the response
+    if (!translation || translation === '') {
+      console.log('No translation provided, getting one now...');
       try {
-        const translationResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${openAIApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [
-              { 
-                role: 'system', 
-                content: 'You are a professional translator. Translate the following English text to Mandarin Chinese. Just return the translation, no explanations.' 
-              },
-              { role: 'user', content: content }
-            ],
-            temperature: 0.3,
-            max_tokens: 500,
-          }),
-        });
-        
-        const translationData = await translationResponse.json();
-        if (translationResponse.ok && translationData.choices?.[0]?.message?.content) {
-          translation = translationData.choices[0].message.content.trim();
+        const translationResponse = await getTranslation(content, userLanguage);
+        if (translationResponse.ok) {
+          const translationData = await translationResponse.json();
+          if (translationData.choices?.[0]?.message?.content) {
+            translation = translationData.choices[0].message.content.trim();
+          }
         }
       } catch (error) {
         console.error('Error getting translation:', error);
@@ -199,3 +185,58 @@ You should ask questions to continue the conversation if it ever seems to stall.
     );
   }
 });
+
+// Helper function to get translation for a message
+async function getTranslation(message: string, userLanguage: string) {
+  const targetLanguage = userLanguage === 'english' ? 'Spanish' : 
+                       userLanguage === 'spanish' ? 'English' : 
+                       userLanguage === 'portuguese' ? 'Portuguese' : 
+                       userLanguage === 'korean' ? 'Korean' :
+                       userLanguage === 'arabic' ? 'Arabic' :
+                       userLanguage === 'mandarin' ? 'Mandarin Chinese' : 'English';
+
+  return await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${openAIApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        { 
+          role: 'system', 
+          content: `You are a professional translator. Translate the following text from ${targetLanguage === 'Spanish' ? 'English' : targetLanguage} to ${targetLanguage}. Just return the translation, no explanations.` 
+        },
+        { role: 'user', content: message }
+      ],
+      temperature: 0.3,
+      max_tokens: 500,
+    }),
+  });
+}
+
+// Handler for translation-only requests
+async function handleTranslationRequest(message: string, userLanguage: string) {
+  try {
+    const translationResponse = await getTranslation(message, userLanguage);
+    
+    if (!translationResponse.ok) {
+      throw new Error('Failed to get translation from OpenAI');
+    }
+    
+    const translationData = await translationResponse.json();
+    const translation = translationData.choices?.[0]?.message?.content || '';
+    
+    return new Response(
+      JSON.stringify({ translation }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error in translation request:', error);
+    return new Response(
+      JSON.stringify({ error: 'Failed to translate text', details: error.message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+}
