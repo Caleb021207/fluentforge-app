@@ -72,7 +72,7 @@ const LanguageFrameworks = () => {
         level: "C2",
         name: "Dominio",
         description: "Puede comprender con facilidad prácticamente todo lo que oye o lee. Puede reconstruir la información y los argumentos procedentes de diversas fuentes, ya sean en lengua hablada o escrita, y presentarlos de manera coherente y resumida. Puede expresarse espontáneamente, con gran fluidez y con un grado de precisión que le permite diferenciar pequeños matices de significado incluso en situaciones de mayor complejidad."
-      }
+      },
     ],
     portuguese: [
       {
@@ -347,7 +347,7 @@ const LanguageFrameworks = () => {
             description: "Pode lidar com sucesso com uma variedade de tarefas comunicativas, embora de forma um tanto hesitante, e situações sociais. Pode narrar e descrever em todos os principais períodos de tempo (passado, presente e futuro) com bom controle do aspecto."
           }
         ],
-        description: "No nível Avançado, os falantes podem narrar e descrever nos principais períodos de tempo de passado, presente e futuro. Esses falantes podem lidar com tarefas comunicativas e situações sociais com uma facilidade e fluidez gerais. Os falantes de nível avançado geralmente conseguem compensar as lacunas em seu vocabulário e controle da gramática com o uso confiante de estratégias comunicativas."
+        description: "No nível Avançado, os falantes podem narrar e descrever nos principais períodos de tempo de passado, presente e futuro. Esses falantes podem lidar com tarefas comunicativas e situações sociais com uma facilidade e fluidez gerais. Os falantes de nível avanzado geralmente conseguem compensar as lacunas em seu vocabulário e controle da gramática com o uso confiante de estratégias comunicativas."
       },
       {
         level: "Superior",
@@ -502,4 +502,4 @@ const LanguageFrameworks = () => {
           },
           {
             name: "Intermediate Mid",
-            description: "간단한 사회적 상황에서 다양한 복잡하지 않은 의사 소통 작업을 성공적으로 처리할 수 있습니다. 가장 즉각적인 요구 사항을 넘어서
+            description: "간단한 사회적 상황에서 다양한 복잡하지 않은 의사 소통 작업을 성공적으로 처리할 수 있습니다. 가장 즉각적인 요구 사항을 넘어서는 주제에 대해 질문
