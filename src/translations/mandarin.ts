@@ -88,7 +88,7 @@ const mandarinTranslations: TranslationRecord = {
   
   // Language Frameworks Page
   "languageReferenceFrameworks": "语言参考框架",
-  "understandLevelsFrameworks": "理解评估语言熟练程度的不同级别和框架",
+  "understandLevelsFrameworks": "了解评估语言熟练程度的不同级别和框架",
   "commonEuropeanFramework": "欧洲共同语言参考框架（CEFR）",
   "americanCouncil": "美国外语教学委员会（ACTFL）",
   "cefrActflComparison": "CEFR和ACTFL比较",
