@@ -110,57 +110,7 @@ const arabicTranslations: TranslationRecord = {
   "advancedMid": "متقدم - متوسط",
   "advancedHigh": "متقدم - متقدم",
   "superior": "ممتاز",
-  "distinguished": "متميز",
-  
-  // Text Practice page translations
-  "practiceWithAITutor": "تمرن مع مدرس اللغة بالذكاء الاصطناعي",
-  "chatWithAITutor": "دردش مع مدرس الذكاء الاصطناعي لممارسة مهاراتك اللغوية! سيساعدك الذكاء الاصطناعي في تصحيح قواعدك اللغوية ومفرداتك واستخدامك للغة. لا تتردد في طرح أسئلة حول اللغة أو الثقافة.",
-  "send": "إرسال",
-  "startTextChatting": "ابدأ الدردشة النصية مع مدرس الذكاء الاصطناعي",
-  "typeMessageBelow": "اكتب رسالة أدناه للبدء",
-  "practiceWithTextChat": "تمرن باستخدام الدردشة النصية",
-  
-  // VoiceChat Page translations
-  "freePracticeWithVoice": "تدريب صوتي مجاني",
-  "startSpeaking": "ابدأ التحدث",
-  "stopListening": "توقف عن الاستماع",
-  "listeningNow": "جاري الاستماع الآن",
-  "youSaid": "لقد قلت",
-  "aiResponse": "رد الذكاء الاصطناعي",
-  "playAgain": "تشغيل مرة أخرى",
-  "practiceWithVoiceChat": "تدرب باستخدام الدردشة الصوتية",
-  "practiceLanguageTips": "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع لديك. إليك بعض النصائح:",
-  "askQuestionsAboutTopics": "اطرح أسئلة حول مواضيع الحياة اليومية",
-  "practiceEverydayPhrases": "تدرب على العبارات والتعبيرات الشائعة",
-  "describeImagesOrScenes": "صف ما تراه من حولك",
-  "practiceVocabularyForSpecificTopics": "تدرب على المفردات لمواضيع محددة مثل السفر أو الطعام",
-  "speechRecognitionError": "خطأ في التعرف على الكلام",
-  "speechRecognitionNotSupported": "التعرف على الكلام غير مدعوم في متصفحك",
-  "failedToGetResponse": "فشل في الحصول على رد من الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.",
-  "failedToGenerateSpeech": "فشل في إنشاء الكلام. يرجى المحاولة مرة أخرى.",
-  "audioPlaybackError": "خطأ في تشغيل الصوت. يرجى المحاولة مرة أخرى.",
-  
-  // Conversation starters section
-  "conversationStarters": "بدايات المحادثة",
-  "tryThesePhrases": "جرب هذه العبارات لبدء محادثة:",
-  "inYourTargetLanguage": "باللغة المستهدفة:",
-  "inYourNativeLanguage": "بلغتك الأم:",
-  
-  // Conversation starter phrases
-  "phrase1": "مرحبا، كيف حالك اليوم؟",
-  "phrase2": "كيف الطقس في مكانك؟",
-  "phrase3": "هل يمكنك أن توصي بمطعم جيد؟",
-  "phrase4": "ما هي هواياتك واهتماماتك؟",
-  "phrase5": "أخبرني عن كتابك أو فيلمك المفضل.",
-  "phrase6": "ماذا فعلت في عطلة نهاية الأسبوع الماضية؟",
-  "phrase7": "ما هي خططك ليوم غد؟",
-  "phrase8": "كيف تقول... بالإسبانية/الإنجليزية؟",
-  "translation": "الترجمة",
-  
-  // New UI strings for VoiceChat
-  "conversationHistory": "سجل المحادثة",
-  "clearConversation": "مسح المحادثة",
-  "aiModelInfo": "نموذج الذكاء الاصطناعي: نستخدم نموذج GPT-4o-mini من OpenAI لفهم اللغة الطبيعية وإنشائها، مع استخدام تقنية توليف الكلام المدمجة في المتصفح للاستجابات الصوتية."
+  "distinguished": "متميز"
 };
 
 export default arabicTranslations;
