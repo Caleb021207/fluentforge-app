@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useConversation } from "@11labs/react";
-import { getAgentIdForLanguage } from "@/components/certifications/utils/elevenLabsUtils";
+import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PremiumVoiceChatSession } from "@/types/supabase";
@@ -446,17 +446,7 @@ const PremiumVoiceChat = () => {
     });
   };
 
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lingua-primary"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isLoggedIn) {
+  const renderLoginRequired = () => {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-8">
@@ -478,7 +468,7 @@ const PremiumVoiceChat = () => {
           <div className="flex flex-col items-center text-center space-y-4">
             <LogIn className="h-12 w-12 text-amber-600" />
             <h2 className="text-xl font-semibold text-amber-800">
-              {t("loginRequired") || "Login Required"}
+              {t("loginRequired")}
             </h2>
             <p className="text-amber-700">
               {currentLanguage === "korean"
@@ -493,12 +483,53 @@ const PremiumVoiceChat = () => {
               onClick={redirectToLogin} 
               className="bg-lingua-primary hover:bg-lingua-primary/90"
             >
-              {t("login") || "Login"}
+              {t("login")}
             </Button>
           </div>
         </Card>
       </div>
     );
+  };
+
+  const renderCooldownMessage = () => {
+    if (sessionStatus === 'cooldown' && cooldownTimeRemaining) {
+      return (
+        <Card className="p-4 mb-6 bg-red-50 border-red-200">
+          <div className="flex items-center space-x-3">
+            <LockIcon className="h-6 w-6 text-red-500" />
+            <div>
+              <h3 className="font-medium text-red-800">
+                {t("cooldownPeriodActive")}
+              </h3>
+              <p className="text-sm text-red-600">
+                {currentLanguage === "korean"
+                  ? `다음 프리미엄 음성 채팅 세션을 시작하기 전에 ${formatCooldownTime(cooldownTimeRemaining)}을 기다려야 합니다.`
+                  : currentLanguage === "english"
+                    ? `You need to wait ${formatCooldownTime(cooldownTimeRemaining)} before starting another premium voice chat session.`
+                    : currentLanguage === "spanish"
+                      ? `Debes esperar ${formatCooldownTime(cooldownTimeRemaining)} antes de iniciar otra sesión premium de chat de voz.`
+                      : `Você precisa aguardar ${formatCooldownTime(cooldownTimeRemaining)} antes de iniciar outra sessão premium de chat de voz.`}
+              </p>
+            </div>
+          </div>
+        </Card>
+      );
+    }
+    return null;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto p-4">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lingua-primary"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return renderLoginRequired();
   }
 
   return (
@@ -523,25 +554,7 @@ const PremiumVoiceChat = () => {
         </div>
       </div>
 
-      {sessionStatus === 'cooldown' && cooldownTimeRemaining && (
-        <Card className="p-4 mb-6 bg-red-50 border-red-200">
-          <div className="flex items-center space-x-3">
-            <LockIcon className="h-6 w-6 text-red-500" />
-            <div>
-              <h3 className="font-medium text-red-800">
-                {t("cooldownPeriodActive") || "Cooldown Period Active"}
-              </h3>
-              <p className="text-sm text-red-600">
-                {currentLanguage === "english"
-                  ? `You need to wait ${formatCooldownTime(cooldownTimeRemaining)} before starting another premium voice chat session.`
-                  : currentLanguage === "spanish"
-                    ? `Debes esperar ${formatCooldownTime(cooldownTimeRemaining)} antes de iniciar otra sesión premium de chat de voz.`
-                    : `Você precisa aguardar ${formatCooldownTime(cooldownTimeRemaining)} antes de iniciar outra sessão premium de chat de voz.`}
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
+      {renderCooldownMessage()}
 
       <div className="flex flex-wrap gap-4 mb-6">
         <div className="flex items-center gap-2">

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, BookOpen, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
@@ -33,6 +34,14 @@ const navItemTranslations = {
     "Language Frameworks": "Estruturas de Idiomas",
     "Admin": "Admin",
     "Home": "Início"
+  },
+  korean: {
+    "Text Practice": "텍스트 연습",
+    "Unlimited Voice Practice": "무제한 음성 연습",
+    "Premium Voice Chat": "프리미엄 음성 채팅",
+    "Language Frameworks": "언어 참조 프레임워크",
+    "Admin": "관리자",
+    "Home": "홈"
   }
 };
 
@@ -41,7 +50,7 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const { currentLanguage } = useLocalization();
+  const { currentLanguage, t } = useLocalization();
   const isMobile = useIsMobile();
 
   useEffect(() => {
