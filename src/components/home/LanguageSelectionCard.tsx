@@ -31,6 +31,7 @@ const LanguageSelectionCard = ({
     spanish: "Español",
     portuguese: "Português",
     korean: "한국어",
+    arabic: "العربية",
   };
 
   return (

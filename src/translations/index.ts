@@ -4,13 +4,15 @@ import englishTranslations from "./english";
 import spanishTranslations from "./spanish";
 import portugueseTranslations from "./portuguese";
 import koreanTranslations from "./korean";
+import arabicTranslations from "./arabic";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
   english: englishTranslations,
   spanish: spanishTranslations,
   portuguese: portugueseTranslations,
-  korean: koreanTranslations
+  korean: koreanTranslations,
+  arabic: arabicTranslations
 };
 
 export default translations;
@@ -21,6 +23,7 @@ export const AVAILABLE_LANGUAGES = {
   spanish: "Español",
   portuguese: "Português",
   korean: "한국어",
+  arabic: "العربية",
 };
 
 // Default language

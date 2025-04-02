@@ -42,6 +42,14 @@ const navItemTranslations = {
     "Language Frameworks": "언어 참조 프레임워크",
     "Admin": "관리자",
     "Home": "홈"
+  },
+  arabic: {
+    "Text Practice": "تدريب نصي",
+    "Unlimited Voice Practice": "تدريب صوتي غير محدود",
+    "Premium Voice Chat": "دردشة صوتية متميزة",
+    "Language Frameworks": "أطر اللغة",
+    "Admin": "المشرف",
+    "Home": "الرئيسية"
   }
 };
 
