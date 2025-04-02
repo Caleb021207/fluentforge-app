@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
+import mandarinTranslations from "@/translations/mandarin";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -27,7 +27,6 @@ const VoiceChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
-  // Default to B1 level without user selection
   const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -82,18 +81,15 @@ const VoiceChat = () => {
       });
     }
 
-    // Initialize speech synthesis
     if (typeof window !== "undefined" && 'speechSynthesis' in window) {
       synthRef.current = window.speechSynthesis;
       
-      // Initialize available voices when the window loads
       const handleVoicesChanged = () => {
         console.log("Voices available:", synthRef.current?.getVoices().length);
       };
       
       synthRef.current.onvoiceschanged = handleVoicesChanged;
       
-      // Trigger initial check for voices
       if (synthRef.current.getVoices().length > 0) {
         handleVoicesChanged();
       }
@@ -160,7 +156,6 @@ const VoiceChat = () => {
 
       if (error) throw error;
       
-      // Extract content and translation from the response
       const content = data.content || data.reply || "";
       const translationText = data.translation || "";
       
@@ -181,7 +176,6 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      // Automatically speak the response using browser's speech synthesis
       speakWithBrowserSynthesis(content);
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -206,23 +200,17 @@ const VoiceChat = () => {
       return;
     }
     
-    // Cancel any ongoing speech
     synthRef.current.cancel();
     
-    // Create a new utterance with the response text
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    // Set the language based on what the AI should be speaking
-    // If user is English, AI speaks Spanish; if user is Spanish/Portuguese, AI speaks English
     utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
     
-    // Try to find a suitable voice
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
     const targetLang = currentLanguage === "english" ? "es" : "en";
     
-    // Find a voice that matches the target language
     const voice = voices.find(v => v.lang.startsWith(targetLang));
     if (voice) {
       console.log(`Using voice: ${voice.name} (${voice.lang})`);
@@ -231,7 +219,6 @@ const VoiceChat = () => {
       console.warn(`No matching voice found for language: ${targetLang}`);
     }
     
-    // Set event handlers
     utteranceRef.current.onstart = () => {
       console.log("Speech synthesis started");
       setIsSpeaking(true);
@@ -252,8 +239,6 @@ const VoiceChat = () => {
       });
     };
     
-    // Start speaking
-    console.log("Starting speech synthesis...");
     synthRef.current.speak(utteranceRef.current);
   };
 
@@ -274,6 +259,8 @@ const VoiceChat = () => {
       return { practice: "English", native: "Korean" };
     } else if (currentLanguage === "arabic") {
       return { practice: "English", native: "Arabic" };
+    } else if (currentLanguage === "mandarin") {
+      return { practice: "English", native: "Mandarin" };
     }
     return { practice: "Spanish", native: "English" };
   };
@@ -292,6 +279,9 @@ const VoiceChat = () => {
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "portuguese") {
       nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "mandarin") {
+      nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
@@ -321,6 +311,9 @@ const VoiceChat = () => {
   };
 
   const getCEFRLevelDescription = () => {
+    if (currentLanguage === "mandarin") {
+      return "中级 - 能够讨论熟悉的话题";
+    }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
 
@@ -335,6 +328,8 @@ const VoiceChat = () => {
       return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI가 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
     } else if (currentLanguage === "arabic") {
       return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
+    } else if (currentLanguage === "mandarin") {
+      return `使用我们的语音聊天练习您的${getLanguagePair().practice}口语技能。点击麦克风按钮，开始用${getLanguagePair().practice}说话。AI将用${getLanguagePair().practice}回应您并帮助您练习。`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -350,6 +345,8 @@ const VoiceChat = () => {
       return "AI 모델: 자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
     } else if (currentLanguage === "arabic") {
       return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
+    } else if (currentLanguage === "mandarin") {
+      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -363,6 +360,8 @@ const VoiceChat = () => {
       return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
     } else if (currentLanguage === "arabic") {
       return "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:";
+    } else if (currentLanguage === "mandarin") {
+      return "使用此工具提高口语和听力技能。以下是一些提示：";
     }
     return t("practiceLanguageTips");
   };
@@ -378,8 +377,17 @@ const VoiceChat = () => {
       return "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.";
     } else if (currentLanguage === "portuguese") {
       return "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.";
+    } else if (currentLanguage === "mandarin") {
+      return "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。";
     }
     return t("browserBasedTTS");
+  };
+
+  const getPracticeLevelText = () => {
+    if (currentLanguage === "mandarin") {
+      return "练习水平";
+    }
+    return t("practiceLevel") || "Practice Level";
   };
 
   const { practice, native } = getLanguagePair();
@@ -395,7 +403,7 @@ const VoiceChat = () => {
           {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : "نموذج الذكاء الاصطناعي:"}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : "AI模型："}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
@@ -409,7 +417,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{t("practiceLevel") || "مستوى التدريب"}: B1</span> - {getCEFRLevelDescription()}
+                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
@@ -599,4 +607,3 @@ const VoiceChat = () => {
 };
 
 export default VoiceChat;
-
