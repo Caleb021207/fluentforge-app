@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "./types";
 
 const koreanTranslations: TranslationRecord = {
@@ -76,7 +77,7 @@ const koreanTranslations: TranslationRecord = {
   scoreTrends: "점수 추이",
   noProgressData: "진행 데이터 없음",
   completeTestsToSeeProgress: "인증 시도를 완료하여 진행 상황을 확인하세요!",
-  offlineDataMayNotBeUpToDate: "현재 오프라인 상태입니다. 표시된 데이터가 최신 상태가 아�� 수 있습니다.",
+  offlineDataMayNotBeUpToDate: "현재 오프라인 상태입니다. 표시된 데이터가 최신 상태가 아닐 수 있습니다.",
   networkConnectionIssue: "네트워크 연결 문제가 있습니다. 진행 데이터를 로드할 수 없습니다.",
   problemLoadingProgressData: "진행 데이터를 로드하는 중 문제가 발생했습니다. 나중에 다시 시도해주세요.",
   failedToLoadProgressData: "진행 데이터 로드에 실패했습니다. 나중에 다시 시도해주세요.",
@@ -153,7 +154,7 @@ const koreanTranslations: TranslationRecord = {
   practiceLanguageTips: "이 도구를 사용하여 말하기와 듣기 능력을 향상시키세요. 몇 가지 팁을 소개합니다:",
   askQuestionsAboutTopics: "일상적인 주제에 대해 질문하세요",
   practiceEverydayPhrases: "일상적인 문구와 표현을 연습하세요",
-  describeImagesOrScenes: "주변에 보이는 것을 설명해보세���",
+  describeImagesOrScenes: "주변에 보이는 것을 설명해보세요",
   practiceVocabularyForSpecificTopics: "여행이나 음식과 같은 특정 주제의 어휘를 연습하세요",
   speechRecognitionError: "음성 인식 오류",
   speechRecognitionNotSupported: "브라우저에서 음성 인식이 지원되지 않습니다",
@@ -214,7 +215,21 @@ const koreanTranslations: TranslationRecord = {
   askAboutGrammar: "문법에 대해 질문하기",
   practiceSituations: "상황별 대화 연습하기",
   learnNewVocabulary: "새로운 어휘 배우기",
-  discussCulturalTopics: "문화적 주제에 대해 토론하기"
+  discussCulturalTopics: "문화적 주제에 대해 토론하기",
+  
+  // Test instructions component
+  testInstructions: "테스트 지침",
+  speakNaturallyInEnglish: "영어로 자연스럽게 말하기",
+  answerTutorQuestions: "튜터의 질문에 답하기",
+  keepConversationFlowing: "대화가 자연스럽게 이어지도록 하기",
+  listenCarefully: "질문을 이해하기 위해 주의 깊게 듣기",
+  dontWorryAboutMistakes: "실수를 걱정하지 마세요",
+  
+  // For English speakers learning other languages
+  speakNaturallyInTargetLanguage: "배우는 언어로 자연스럽게 말하기",
+  
+  // For NoProgressCard
+  takeTestToSeeProgress: "테스트를 완료하여 진행 상황을 확인하세요"
 };
 
 export default koreanTranslations;
