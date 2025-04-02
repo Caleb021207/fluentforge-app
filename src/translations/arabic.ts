@@ -140,7 +140,37 @@ const arabicTranslations: TranslationRecord = {
   "youHaveBeenSignedOut": "لقد تم تسجيل خروجك من حسابك",
   "errorSigningOut": "خطأ في تسجيل الخروج",
   "errorOccurredWhileSigningOut": "حدث خطأ أثناء تسجيل الخروج",
-  "signOut": "تسجيل الخروج"
+  "signOut": "تسجيل الخروج",
+  
+  // Voice Chat Page additional translations
+  "startSpeaking": "ابدأ التحدث",
+  "stopListening": "إيقاف الاستماع",
+  "listeningNow": "جاري الاستماع الآن",
+  "youSaid": "لقد قلت",
+  "aiResponse": "رد الذكاء الاصطناعي",
+  "playAgain": "تشغيل مرة أخرى",
+  "speaking": "جاري التحدث",
+  "practiceWithVoiceChat": "تدرب باستخدام الدردشة الصوتية",
+  "practiceLanguageTips": "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:",
+  "askQuestionsAboutTopics": "اطرح أسئلة حول المواضيع اليومية",
+  "practiceEverydayPhrases": "تدرب على العبارات والتعبيرات الشائعة",
+  "describeImagesOrScenes": "صف ما تراه من حولك",
+  "practiceVocabularyForSpecificTopics": "تدرب على المفردات لمواضيع محددة مثل السفر أو الطعام",
+  "speechRecognitionError": "خطأ في التعرف على الكلام",
+  "speechRecognitionNotSupported": "التعرف على الكلام غير مدعوم في متصفحك",
+  "failedToGetResponse": "فشل في الحصول على رد من الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.",
+  "failedToGenerateSpeech": "فشل في إنشاء الكلام. يرجى المحاولة مرة أخرى.",
+  "audioPlaybackError": "خطأ في تشغيل الصوت. يرجى المحاولة مرة أخرى.",
+  "conversationStarters": "بدايات المحادثة",
+  "tryThesePhrases": "جرب هذه العبارات لبدء محادثة:",
+  "inYourTargetLanguage": "باللغة التي تريد تعلمها:",
+  "inYourNativeLanguage": "بلغتك الأم:",
+  "translation": "الترجمة",
+  "conversationHistory": "سجل المحادثة",
+  "clearConversation": "مسح المحادثة",
+  "browserBasedTTS": "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.",
+  "practiceLevel": "مستوى التدريب",
+  "cefrB1Description": "متوسط - يمكن مناقشة المواضيع المألوفة"
 };
 
 export default arabicTranslations;
