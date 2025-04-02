@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -422,6 +423,8 @@ const PremiumVoiceChat = () => {
       return { practice: "English", native: "Spanish" };
     } else if (currentLanguage === "portuguese") {
       return { practice: "English", native: "Portuguese" };
+    } else if (currentLanguage === "korean") {
+      return { practice: "English", native: "Korean" };
     }
     return { practice: "Spanish", native: "English" };
   };
@@ -506,15 +509,19 @@ const PremiumVoiceChat = () => {
             ? `Have natural voice conversations with our premium AI tutor to practice your ${practice}! The AI will help correct your grammar, vocabulary, and pronunciation.`
             : currentLanguage === "spanish"
               ? `¡Mantén conversaciones de voz naturales con nuestro tutor de IA premium para practicar tu ${practice}! La IA te ayudará a corregir tu gramática, vocabulario y pronunciación.`
-              : `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`}
+              : currentLanguage === "portuguese"
+                ? `Tenha conversas de voz naturais com nosso tutor de IA premium para praticar seu ${practice}! A IA irá ajudá-lo a corrigir sua gramática, vocabulário e pronúncia.`
+                : `저희 프리미엄 AI 튜터와 자연스러운 음성 대화를 통해 ${practice}를 연습하세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다.`}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {currentLanguage === "english" 
-              ? "Note: Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session and a 24-hour cooldown period after each session."
-              : currentLanguage === "spanish"
-                ? "Nota: Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión y un período de enfriamiento de 24 horas después de cada sesión."
-                : "Nota: As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão e um período de espera de 24 horas após cada sessão."}
+            {currentLanguage === "korean" 
+              ? t("premiumVoiceNote")
+              : currentLanguage === "english" 
+                ? "Note: Premium voice conversations use ElevenLabs realistic voice technology. There is a 5-minute conversational limit per session and a 24-hour cooldown period after each session."
+                : currentLanguage === "spanish"
+                  ? "Nota: Las conversaciones de voz premium utilizan la tecnología de voz realista de ElevenLabs. Hay un límite de conversación de 5 minutos por sesión y un período de enfriamiento de 24 horas después de cada sesión."
+                  : "Nota: As conversas de voz premium usam a tecnologia de voz realista da ElevenLabs. Há um limite de conversação de 5 minutos por sessão e um período de espera de 24 horas após cada sessão."}
           </p>
         </div>
       </div>
