@@ -522,4 +522,3 @@ const LanguageFrameworks = () => {
           },
           {
             name: "고급 상",
-            description:
