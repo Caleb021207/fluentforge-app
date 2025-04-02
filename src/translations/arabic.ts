@@ -74,6 +74,15 @@ const arabicTranslations: TranslationRecord = {
   "listenCarefully": "استمع بعناية",
   "dontWorryAboutMistakes": "لا تقلق بشأن الأخطاء",
   
+  // Premium Voice Chat Page specific translations
+  "premiumVoiceChatDescription": "قم بإجراء محادثات صوتية طبيعية مع مدرس الذكاء الاصطناعي المتميز لممارسة اللغة {{practice}}! سيساعدك الذكاء الاصطناعي في تصحيح قواعدك اللغوية ومفرداتك ونطقك.",
+  "loginRequiredDescription": "للوصول إلى ميزة الدردشة الصوتية المتميزة، يرجى تسجيل الدخول إلى حسابك.",
+  "cooldownPeriodDescription": "تحتاج إلى الانتظار {{time}} قبل بدء جلسة دردشة صوتية متميزة أخرى.",
+  "conversationHistoryCleared": "تم مسح سجل المحادثة",
+  "benefitNaturalVoice": "تفاعلات صوتية طبيعية وإنسانية باستخدام تقنية ElevenLabs",
+  "benefitAccentPronunciation": "لهجة ونطق دقيقين للتعلم الغامر",
+  "benefitRegularPractice": "جلسات مدتها 5 دقائق مع فترة انتظار 24 ساعة لتشجيع الممارسة المنتظمة والمركزة",
+  
   // Success messages
   "Success": "نجاح"
 };
