@@ -17,6 +17,8 @@ const TranslatedReadingCertification = () => {
         return "La Prueba de Lectura evalúa tu comprensión lectora a través de pasajes de texto y preguntas de comprensión. Esta prueba evalúa tu capacidad para entender textos escritos, identificar ideas principales y hacer inferencias.";
       case "portuguese":
         return "O Teste de Leitura avalia sua compreensão de leitura através de passagens de texto e perguntas de compreensão. Este teste avalia sua capacidade de entender textos escritos, identificar ideias principais e fazer inferências.";
+      case "korean":
+        return "읽기 테스트는 텍스트 구절과 이해력 질문을 통해 독해력을 평가합니다. 이 테스트는 글로 된 텍스트를 이해하고, 주요 아이디어를 파악하며, 추론하는 능력을 평가합니다.";
       default:
         return "The Reading Test evaluates your reading comprehension through text passages and comprehension questions. This test assesses your ability to understand written texts, identify main ideas, and make inferences.";
     }

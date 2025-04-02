@@ -23,9 +23,11 @@ serve(async (req) => {
     }
 
     // Determine if user is learning English or Spanish based on their native language
-    const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese';
+    const isLearningEnglish = userLanguage === 'spanish' || userLanguage === 'portuguese' || userLanguage === 'korean';
     const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
-    const nativeLanguage = userLanguage === 'english' ? 'English' : userLanguage === 'spanish' ? 'Spanish' : 'Portuguese';
+    const nativeLanguage = userLanguage === 'english' ? 'English' : 
+                          userLanguage === 'spanish' ? 'Spanish' : 
+                          userLanguage === 'portuguese' ? 'Portuguese' : 'Korean';
     
     // Universal tutor instructions for all language combinations
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 

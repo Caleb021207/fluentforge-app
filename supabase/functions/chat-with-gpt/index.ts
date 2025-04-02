@@ -25,7 +25,9 @@ serve(async (req) => {
 
     // Determine which language the system should respond in
     const responseLanguage = userLanguage === 'english' ? 'Spanish' : 'English';
-    const nativeLanguage = userLanguage === 'english' ? 'English' : userLanguage === 'spanish' ? 'Spanish' : 'Portuguese';
+    const nativeLanguage = userLanguage === 'english' ? 'English' : 
+                          userLanguage === 'spanish' ? 'Spanish' : 
+                          userLanguage === 'portuguese' ? 'Portuguese' : 'Korean';
 
     // The comprehensive tutor instructions
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${responseLanguage} through natural, realistic conversation. The user has selected CEFR level ${cefrLevel}.
