@@ -163,14 +163,25 @@ const arabicTranslations: TranslationRecord = {
   "audioPlaybackError": "خطأ في تشغيل الصوت. يرجى المحاولة مرة أخرى.",
   "conversationStarters": "بدايات المحادثة",
   "tryThesePhrases": "جرب هذه العبارات لبدء محادثة:",
-  "inYourTargetLanguage": "باللغة التي تريد تعلمها:",
-  "inYourNativeLanguage": "بلغتك الأم:",
+  "inYourTargetLanguage": "باللغة التي تريد تعلمها",
+  "inYourNativeLanguage": "بلغتك الأم",
   "translation": "الترجمة",
   "conversationHistory": "سجل المحادثة",
   "clearConversation": "مسح المحادثة",
   "browserBasedTTS": "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.",
   "practiceLevel": "مستوى التدريب",
-  "cefrB1Description": "متوسط - يمكن مناقشة المواضيع المألوفة"
+  "cefrB1Description": "متوسط - يمكن مناقشة المواضيع المألوفة",
+  "phrase1": "مرحباً، كيف حالك اليوم؟",
+  "phrase2": "كيف الطقس في منطقتك؟",
+  "phrase3": "هل يمكنك اقتراح مطعم جيد؟",
+  "phrase4": "ما هي هواياتك واهتماماتك؟",
+  "phrase5": "أخبرني عن كتابك أو فيلمك المفضل.",
+  "phrase6": "ماذا فعلت في عطلة نهاية الأسبوع الماضية؟",
+  "phrase7": "ما هي خططك لغداً؟",
+  "phrase8": "كيف تقول... باللغة الإسبانية/الإنجليزية؟",
+  "speechSynthesisError": "خطأ في تركيب الكلام",
+  "speechSynthesisNotSupported": "تركيب الكلام غير مدعوم في هذا المتصفح"
 };
 
 export default arabicTranslations;
+
