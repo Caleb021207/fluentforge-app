@@ -226,7 +226,17 @@ const englishTranslations: TranslationRecord = {
   premiumVoiceNote: "Premium voice chat usage is limited to one 5-minute session every 24 hours",
   benefitNaturalVoice: "Natural, human-like voice interactions using ElevenLabs technology",
   benefitAccentPronunciation: "Accurate accent and pronunciation for immersive learning",
-  benefitRegularPractice: "5-minute sessions with 24-hour cooldown to encourage regular, focused practice"
+  benefitRegularPractice: "5-minute sessions with 24-hour cooldown to encourage regular, focused practice",
+  
+  // Language Frameworks Page - Fixed spacing issues
+  languageReferenceFrameworks: "Language Reference Frameworks",
+  understandLevelsFrameworks: "Understand the different levels and frameworks for assessing language proficiency",
+  commonEuropeanFramework: "Common European Framework of Reference (CEFR)",
+  americanCouncil: "American Council on the Teaching of Foreign Languages (ACTFL)",
+  cefrActflComparison: "CEFR and ACTFL Comparison",
+  comparison: "Comparison",
+  cefrDescription: "The Common European Framework of Reference (CEFR) is an international standard for describing language ability. It defines proficiency levels from A1 (beginner) to C2 (mastery).",
+  actflDescription: "The ACTFL Proficiency Guidelines describe what individuals can do with language in terms of speaking, writing, listening, and reading in real-world situations in a spontaneous and non-rehearsed context."
 };
 
 export default englishTranslations as TranslationRecord;
