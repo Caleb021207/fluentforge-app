@@ -184,4 +184,3 @@ const arabicTranslations: TranslationRecord = {
 };
 
 export default arabicTranslations;
-
