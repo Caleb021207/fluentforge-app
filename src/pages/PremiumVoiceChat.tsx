@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -350,7 +351,9 @@ const PremiumVoiceChat = () => {
           ? "Hello, I'd like to practice Spanish with you." 
           : currentLanguage === "mandarin"
             ? "你好，我想和你练习英语。" // "Hello, I'd like to practice English with you" in Mandarin
-            : "Hello, I'd like to practice English with you.",
+            : currentLanguage === "vietnamese"
+              ? "Xin chào, tôi muốn thực hành tiếng Anh với bạn." // "Hello, I'd like to practice English with you" in Vietnamese
+              : "Hello, I'd like to practice English with you.",
         timestamp: new Date()
       };
       

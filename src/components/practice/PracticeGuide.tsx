@@ -13,15 +13,17 @@ const PracticeGuide: React.FC = () => {
           ? "استخدم هذه الأداة لممارسة محادثات اللغة الإنجليزية النصية. يمكنك السؤال عن:"
           : currentLanguage === "mandarin"
             ? "使用此工具练习英语文本对话。您可以询问："
-            : currentLanguage === "english" 
-              ? "Use this tool to practice your Spanish text conversations. You can ask about:" 
-              : currentLanguage === "spanish"
-                ? "Utiliza esta herramienta para practicar tus conversaciones en inglés. Puedes preguntar sobre:"
-                : currentLanguage === "portuguese"
-                  ? "Use esta ferramenta para praticar suas conversas em inglês. Você pode perguntar sobre:"
-                  : currentLanguage === "korean"
-                    ? "이 도구를 사용하여 영어 텍스트 대화를 연습하세요. 다음과 같은 주제로 질문할 수 있습니다:"
-                    : "Use this tool to practice your conversations."}
+            : currentLanguage === "vietnamese"
+              ? "Sử dụng công cụ này để luyện tập các cuộc hội thoại bằng văn bản tiếng Anh. Bạn có thể hỏi về:"
+              : currentLanguage === "english" 
+                ? "Use this tool to practice your Spanish text conversations. You can ask about:" 
+                : currentLanguage === "spanish"
+                  ? "Utiliza esta herramienta para practicar tus conversaciones en inglés. Puedes preguntar sobre:"
+                  : currentLanguage === "portuguese"
+                    ? "Use esta ferramenta para praticar suas conversas em inglês. Você pode perguntar sobre:"
+                    : currentLanguage === "korean"
+                      ? "이 도구를 사용하여 영어 텍스트 대화를 연습하세요. 다음과 같은 주제로 질문할 수 있습니다:"
+                      : "Use this tool to practice your conversations."}
       </p>
       <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
         <li>{t("askAboutGrammarRules")}</li>
