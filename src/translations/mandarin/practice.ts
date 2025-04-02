@@ -14,7 +14,7 @@ const practiceTranslations: TranslationRecord = {
   listening: "听力",
   overallLevel: "总体水平",
   startChatting: "开始与您的AI语言导师聊天",
-  clickToStartVoice: "点击"开始语音聊天"开始与导师对话",
+  clickToStartVoice: "点击\"开始语音聊天\"开始与导师对话",
   allowMicAccess: "请允许访问麦克风以使用语音功能",
   typeMessage: "用中文或英语输入您的消息...",
   startTextChatting: "开始与AI导师进行文本聊天",
