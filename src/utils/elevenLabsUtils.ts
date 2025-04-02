@@ -5,13 +5,19 @@ import { useConversation } from '@11labs/react';
 export const SPANISH_TUTOR_AGENT_ID = 'AOv9JDhkEdMmiU61vHg9'; // Spanish tutor for English speakers
 export const ENGLISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor for Spanish speakers
 export const PORTUGUESE_TUTOR_AGENT_ID = 'WuaaV0Pu1tinWfjSk9CY'; // Portuguese tutor
+export const KOREAN_TUTOR_AGENT_ID = 'gLUyjMusYz1pumoMfoQv'; // Korean tutor for English learners
 
 /**
  * Gets the appropriate agent ID based on the user's language
- * @param language The user's current language (english, spanish, portuguese)
+ * @param language The user's current language (english, spanish, portuguese, korean)
  * @returns The appropriate agent ID for the user's language
  */
 export const getAgentIdForLanguage = (language: string): string => {
+  // If the user is Korean, use their specific tutor
+  if (language === "korean") {
+    console.log("Using Korean tutor:", KOREAN_TUTOR_AGENT_ID);
+    return KOREAN_TUTOR_AGENT_ID;
+  }
   // If the user is Portuguese, use their specific tutor
   if (language === "portuguese") {
     console.log("Using Portuguese tutor:", PORTUGUESE_TUTOR_AGENT_ID);

@@ -5,7 +5,7 @@ import { useConversation } from '@11labs/react';
 export const SPANISH_TUTOR_AGENT_ID = 'AOv9JDhkEdMmiU61vHg9'; // Spanish tutor for English speakers
 export const ENGLISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; // English tutor for Spanish speakers
 export const PORTUGUESE_TUTOR_AGENT_ID = 'WuaaV0Pu1tinWfjSk9CY'; // Portuguese tutor
-export const KOREAN_TUTOR_AGENT_ID = 'UQb3xMiYrTrDUdHHBVrp'; // Korean tutor for English learners
+export const KOREAN_TUTOR_AGENT_ID = 'gLUyjMusYz1pumoMfoQv'; // Korean tutor for English learners
 
 /**
  * Gets the appropriate agent ID based on the user's language
