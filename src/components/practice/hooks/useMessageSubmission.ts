@@ -43,8 +43,8 @@ export const useMessageSubmission = (
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Error",
-        description: "Network connection issue. Please try again later.",
+        title: "Lỗi",
+        description: "Sự cố kết nối mạng. Vui lòng thử lại sau.",
         variant: "destructive",
       });
     } finally {
