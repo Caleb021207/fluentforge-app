@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 
 const koreanTranslations: TranslationRecord = {
@@ -77,7 +76,7 @@ const koreanTranslations: TranslationRecord = {
   scoreTrends: "점수 추이",
   noProgressData: "진행 데이터 없음",
   completeTestsToSeeProgress: "인증 시도를 완료하여 진행 상황을 확인하세요!",
-  offlineDataMayNotBeUpToDate: "현재 오프라인 상태입니다. 표시된 데이터가 최신 상태가 아닐 수 있습니다.",
+  offlineDataMayNotBeUpToDate: "현재 오프라인 상태입니다. 표시된 데이터가 최신 상태가 아�� 수 있습니다.",
   networkConnectionIssue: "네트워크 연결 문제가 있습니다. 진행 데이터를 로드할 수 없습니다.",
   problemLoadingProgressData: "진행 데이터를 로드하는 중 문제가 발생했습니다. 나중에 다시 시도해주세요.",
   failedToLoadProgressData: "진행 데이터 로드에 실패했습니다. 나중에 다시 시도해주세요.",
@@ -154,7 +153,7 @@ const koreanTranslations: TranslationRecord = {
   practiceLanguageTips: "이 도구를 사용하여 말하기와 듣기 능력을 향상시키세요. 몇 가지 팁을 소개합니다:",
   askQuestionsAboutTopics: "일상적인 주제에 대해 질문하세요",
   practiceEverydayPhrases: "일상적인 문구와 표현을 연습하세요",
-  describeImagesOrScenes: "주변에 보이는 것을 설명해보세요",
+  describeImagesOrScenes: "주변에 보이는 것을 설명해보세���",
   practiceVocabularyForSpecificTopics: "여행이나 음식과 같은 특정 주제의 어휘를 연습하세요",
   speechRecognitionError: "음성 인식 오류",
   speechRecognitionNotSupported: "브라우저에서 음성 인식이 지원되지 않습니다",
@@ -200,7 +199,22 @@ const koreanTranslations: TranslationRecord = {
   upperIntermediate: "중상급",
   selectCEFRLevel: "CEFR 레벨 선택",
   selectedLevel: "선택된 레벨",
-  success: "성공"
+  success: "성공",
+  
+  // Additional translations for Practice page
+  practiceLevel: "연습 레벨",
+  speaking: "말하기",
+  notePracticeFeature: "참고: 이것은 텍스트 기반 연습 기능입니다. 음성 연습은 무제한 음성 채팅 또는 프리미엄 음성 채팅 기능을 사용해보세요.",
+  sendPracticePrompt: "연습 메시지 보내기",
+  conversationHistory: "대화 기록",
+  clearConversation: "대화 내용 지우기",
+  aiModelInfo: "AI 모델: 자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.",
+  practiceWithTextChat: "텍스트 채팅으로 연습하기",
+  useThisToolTo: "이 도구를 사용하여 영어 텍스트 대화를 연습하세요. 다음과 같은 주제로 질문할 수 있습니다:",
+  askAboutGrammar: "문법에 대해 질문하기",
+  practiceSituations: "상황별 대화 연습하기",
+  learnNewVocabulary: "새로운 어휘 배우기",
+  discussCulturalTopics: "문화적 주제에 대해 토론하기"
 };
 
 export default koreanTranslations;
