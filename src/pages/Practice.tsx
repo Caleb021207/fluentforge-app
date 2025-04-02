@@ -174,6 +174,8 @@ const Practice = () => {
       prompt = "Olá! Eu quero praticar inglês com você!";
     } else if (currentLanguage === "korean") {
       prompt = "안녕하세요! 저는 당신과 영어를 연습하고 싶습니다.";
+    } else if (currentLanguage === "arabic") {
+      prompt = "مرحبا! أود أن أتدرب على اللغة الإنجليزية معك.";
     }
 
     if (prompt) {
@@ -274,8 +276,58 @@ const Practice = () => {
       return "Digite sua mensagem em português ou inglês...";
     } else if (currentLanguage === "korean") {
       return "한국어 또는 영어로 메시지를 입력하세요...";
+    } else if (currentLanguage === "arabic") {
+      return "اكتب رسالتك بالعربية أو الإنجليزية...";
     } else {
       return "Type your message in English or Spanish...";
+    }
+  };
+
+  const getPageDescription = () => {
+    if (currentLanguage === "english") {
+      return "Chat with our AI tutor to practice your Spanish through text conversations! The AI will help correct your grammar, vocabulary, and usage. Feel free to ask questions about language or culture.";
+    } else if (currentLanguage === "spanish") {
+      return "¡Chatea con nuestro tutor de IA para practicar tu inglés a través de conversaciones de texto! La IA te ayudará a corregir tu gramática, vocabulario y uso. No dudes en hacer preguntas sobre el idioma o la cultura.";
+    } else if (currentLanguage === "portuguese") {
+      return "Converse com nosso tutor de IA para praticar seu inglês através de conversas de texto! A IA ajudará a corrigir sua gramática, vocabulário e uso. Sinta-se à vontade para fazer perguntas sobre idioma ou cultura.";
+    } else if (currentLanguage === "korean") {
+      return "AI 튜터와 채팅하여 영어를 연습해보세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다. 언어나 문화에 대한 질문을 자유롭게 해보세요.";
+    } else if (currentLanguage === "arabic") {
+      return "دردش مع مدرس الذكاء الاصطناعي لممارسة اللغة الإنجليزية من خلال المحادثات النصية! سيساعدك الذكاء الاصطناعي في تصحيح قواعدك اللغوية ومفرداتك واستخدامك للغة. لا تتردد في طرح أسئلة حول اللغة أو الثقافة.";
+    } else {
+      return t("chatWithAITutor");
+    }
+  };
+
+  const getTextPracticeNote = () => {
+    if (currentLanguage === "english") {
+      return "Note: This is the text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features.";
+    } else if (currentLanguage === "spanish") {
+      return "Nota: Esta es la función de práctica basada en texto. Para la práctica de voz, prueba nuestras funciones de Chat de Voz Ilimitado o Chat de Voz Premium.";
+    } else if (currentLanguage === "portuguese") {
+      return "Nota: Este é o recurso de prática baseada em texto. Para prática de voz, experimente nossos recursos de Chat de Voz Ilimitado ou Chat de Voz Premium.";
+    } else if (currentLanguage === "korean") {
+      return "참고: 이것은 텍스트 기반 연습 기능입니다. 음성 연습은 무제한 음성 채팅 또는 프리미엄 음성 채팅 기능을 사용해보세요.";
+    } else if (currentLanguage === "arabic") {
+      return "ملاحظة: هذه هي ميزة الممارسة القائمة على النص. للتدريب الصوتي، جرب ميزات الدردشة الصوتية غير المحدودة أو الدردشة الصوتية المتميزة.";
+    } else {
+      return "Note: This is the text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features.";
+    }
+  };
+
+  const getPracticePromptButtonText = () => {
+    if (currentLanguage === "english") {
+      return "Send Spanish Practice Prompt";
+    } else if (currentLanguage === "spanish") {
+      return "Enviar mensaje de práctica en inglés";
+    } else if (currentLanguage === "portuguese") {
+      return "Enviar mensagem de prática em inglês";
+    } else if (currentLanguage === "korean") {
+      return "영어 연습 메시지 보내기";
+    } else if (currentLanguage === "arabic") {
+      return "إرسال رسالة تدريب باللغة الإنجليزية";
+    } else {
+      return "Send Practice Prompt";
     }
   };
 
@@ -286,27 +338,11 @@ const Practice = () => {
           {t("textPractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {currentLanguage === "english" 
-            ? `Chat with our AI tutor to practice your Spanish through text conversations! The AI will help correct your grammar, vocabulary, and usage. Feel free to ask questions about language or culture.`
-            : currentLanguage === "spanish"
-              ? `¡Chatea con nuestro tutor de IA para practicar tu inglés a través de conversaciones de texto! La IA te ayudará a corregir tu gramática, vocabulario y uso. No dudes en hacer preguntas sobre el idioma o la cultura.`
-              : currentLanguage === "portuguese"
-                ? `Converse com nosso tutor de IA para praticar seu inglês através de conversas de texto! A IA ajudará a corrigir sua gramática, vocabulário e uso. Sinta-se à vontade para fazer perguntas sobre idioma ou cultura.`
-                : currentLanguage === "korean"
-                  ? `AI 튜터와 채팅하여 영어를 연습해보세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다. 언어나 문화에 대한 질문을 자유롭게 해보세요.`
-                : `Chat with our AI tutor to practice your language skills through text conversations!`}
+          {getPageDescription()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {currentLanguage === "english" 
-              ? "Note: This is the text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features."
-              : currentLanguage === "spanish"
-                ? "Nota: Esta es la función de práctica basada en texto. Para la práctica de voz, prueba nuestras funciones de Chat de Voz Ilimitado o Chat de Voz Premium."
-                : currentLanguage === "portuguese"
-                  ? "Nota: Este é o recurso de prática baseada em texto. Para prática de voz, experimente nossos recursos de Chat de Voz Ilimitado ou Chat de Voz Premium."
-                : currentLanguage === "korean"
-                  ? "참고: 이것은 텍스트 기반 연습 기능입니다. 음성 연습은 무제한 음성 채팅 또는 프리미엄 음성 채팅 기능을 사용해보세요."
-                : `Note: This is the text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features.`}
+            {getTextPracticeNote()}
           </p>
         </div>
       </div>
@@ -377,15 +413,7 @@ const Practice = () => {
       <div className="flex justify-center mb-8">
         <Button onClick={sendLanguageLearningPrompt} disabled={isLoading} className="bg-lingua-primary w-full sm:w-auto">
           <Book className="h-4 w-4 mr-2" />
-          {currentLanguage === "english" 
-            ? "Send Spanish Practice Prompt" 
-            : currentLanguage === "spanish"
-              ? "Enviar mensaje de práctica en inglés"
-              : currentLanguage === "portuguese"
-                ? "Enviar mensagem de prática em inglês"
-                : currentLanguage === "korean"
-                  ? "영어 연습 메시지 보내기"
-                  : "Send Practice Prompt"}
+          {getPracticePromptButtonText()}
         </Button>
       </div>
 
@@ -400,7 +428,9 @@ const Practice = () => {
                 ? "Use esta ferramenta para praticar suas conversas em inglês. Você pode perguntar sobre:"
                 : currentLanguage === "korean"
                   ? "이 도구를 사용하여 영어 텍스트 대화를 연습하세요. 다음과 같은 주제로 질문할 수 있습니다:"
-                  : "Use this tool to practice your conversations."}
+                  : currentLanguage === "arabic"
+                    ? "استخدم هذه الأداة لممارسة محادثاتك النصية باللغة الإنجليزية. يمكنك السؤال عن:"
+                    : "Use this tool to practice your conversations."}
         </p>
         <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
           <li>
@@ -412,7 +442,9 @@ const Practice = () => {
                   ? "Perguntar sobre regras gramaticais"
                   : currentLanguage === "korean"
                     ? "문법에 대해 질문하기"
-                    : "Ask about grammar rules"}
+                    : currentLanguage === "arabic"
+                      ? "اسأل عن قواعد النحو"
+                      : "Ask about grammar rules"}
           </li>
           <li>
             {currentLanguage === "english" 
@@ -423,7 +455,9 @@ const Practice = () => {
                   ? "Praticar conversas para diferentes situações"
                   : currentLanguage === "korean"
                     ? "상황별 대화 연습하기"
-                    : "Practice conversations for different situations"}
+                    : currentLanguage === "arabic"
+                      ? "ممارسة المحادثات لمواقف مختلفة"
+                      : "Practice conversations for different situations"}
           </li>
           <li>
             {currentLanguage === "english" 
@@ -434,7 +468,9 @@ const Practice = () => {
                   ? "Aprender novo vocabulário"
                   : currentLanguage === "korean"
                     ? "새로운 어휘 배우기"
-                    : "Learn new vocabulary"}
+                    : currentLanguage === "arabic"
+                      ? "تعلم مفردات جديدة"
+                      : "Learn new vocabulary"}
           </li>
           <li>
             {currentLanguage === "english" 
@@ -445,7 +481,9 @@ const Practice = () => {
                   ? "Discutir tópicos culturais"
                   : currentLanguage === "korean"
                     ? "문화적 주제에 대해 토론하기"
-                    : "Discuss cultural topics"}
+                    : currentLanguage === "arabic"
+                      ? "مناقشة المواضيع الثقافية"
+                      : "Discuss cultural topics"}
           </li>
         </ul>
       </div>

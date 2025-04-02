@@ -1,190 +1,177 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Volume2 } from "lucide-react";
+import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Mic, MicOff, Volume2, Trash } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
-import englishTranslations from "@/translations/english";
-import spanishTranslations from "@/translations/spanish";
-import portugueseTranslations from "@/translations/portuguese";
 
-type ConversationMessage = {
-  role: 'user' | 'assistant';
+type Message = {
+  role: "user" | "assistant";
   content: string;
-  translation?: string;
-  timestamp: Date;
 };
 
 const VoiceChat = () => {
-  const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
-  const [gptResponse, setGptResponse] = useState("");
-  const [translation, setTranslation] = useState("");
+  const { currentLanguage, t } = useLocalization();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
-  const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
-  // Default to B1 level without user selection
-  const cefrLevel = 'B1';
-  
+  const [currentTranscript, setCurrentTranscript] = useState("");
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const conversationEndRef = useRef<HTMLDivElement | null>(null);
-  
   const { toast } = useToast();
-  const { currentLanguage, t } = useLocalization();
 
-  useEffect(() => {
-    if (conversationEndRef.current) {
-      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  const resetTranscriptAndAudio = () => {
+    setCurrentTranscript("");
+    setAudioUrl(null);
+  };
+
+  const stopRecognition = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
     }
-  }, [conversationHistory]);
+    setIsRecording(false);
+  };
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && 
-        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-      
-      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.maxAlternatives = 1;
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setTranscript(transcript);
-        handleSendTranscript(transcript);
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        setIsListening(false);
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
-        });
-      };
-      
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-      };
+  const clearConversation = () => {
+    setMessages([]);
+    resetTranscriptAndAudio();
+    toast({
+      title: t("Success"),
+      description: t("conversationHistoryCleared"),
+    });
+  };
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      stopRecognition();
     } else {
+      startRecording();
+    }
+  };
+
+  const startRecording = () => {
+    resetTranscriptAndAudio();
+
+    // Check if the browser supports speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
       toast({
         title: t("error"),
         description: t("speechRecognitionNotSupported"),
         variant: "destructive",
       });
+      return;
     }
 
-    // Initialize speech synthesis
-    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
-      synthRef.current = window.speechSynthesis;
-      
-      // Initialize available voices when the window loads
-      const handleVoicesChanged = () => {
-        console.log("Voices available:", synthRef.current?.getVoices().length);
+    try {
+      const recognition = new SpeechRecognition();
+      recognitionRef.current = recognition;
+
+      // Set recognition language based on current UI language
+      if (currentLanguage === "spanish") {
+        recognition.lang = "es-ES";
+      } else if (currentLanguage === "portuguese") {
+        recognition.lang = "pt-BR";
+      } else if (currentLanguage === "korean") {
+        recognition.lang = "ko-KR";
+      } else if (currentLanguage === "arabic") {
+        recognition.lang = "ar-SA";
+      } else {
+        recognition.lang = "en-US";
+      }
+
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        setIsRecording(true);
+        toast({
+          title: t("listeningNow"),
+          description: "",
+        });
       };
-      
-      synthRef.current.onvoiceschanged = handleVoicesChanged;
-      
-      // Trigger initial check for voices
-      if (synthRef.current.getVoices().length > 0) {
-        handleVoicesChanged();
-      }
-    } else {
-      console.warn("Speech synthesis not supported in this browser");
-    }
-    
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      if (synthRef.current && utteranceRef.current) {
-        synthRef.current.cancel();
-      }
-    };
-  }, [currentLanguage, toast, t]);
 
-  const toggleListening = () => {
-    if (isListening) {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      setIsListening(false);
-    } else {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.start();
-          setIsListening(true);
-          setTranscript("");
-          setGptResponse("");
-          setTranslation("");
-        } catch (error) {
-          console.error("Error starting speech recognition:", error);
-          toast({
-            title: t("error"),
-            description: t("microphoneAccessRequired"),
-            variant: "destructive",
-          });
+      recognition.onresult = (event: any) => {
+        let interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            setCurrentTranscript(transcript);
+          } else {
+            interimTranscript += transcript;
+          }
         }
-      }
+        
+        // Only update for interim results if they exist
+        if (interimTranscript !== "") {
+          setCurrentTranscript(interimTranscript);
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error("Speech recognition error", event);
+        toast({
+          title: t("speechRecognitionError"),
+          description: event.error,
+          variant: "destructive",
+        });
+        setIsRecording(false);
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+        if (currentTranscript) {
+          const userMessage: Message = {
+            role: "user",
+            content: currentTranscript,
+          };
+          setMessages((prev) => [...prev, userMessage]);
+          
+          // Send for AI response
+          getAIResponse(currentTranscript);
+        }
+      };
+
+      recognition.start();
+    } catch (error) {
+      console.error("Error starting speech recognition:", error);
+      toast({
+        title: t("error"),
+        description: t("speechRecognitionError"),
+        variant: "destructive",
+      });
     }
   };
 
-  const handleSendTranscript = async (text: string) => {
+  const getAIResponse = async (transcript: string) => {
     setIsLoading(true);
-    
-    const userMessage: ConversationMessage = {
-      role: 'user',
-      content: text,
-      timestamp: new Date()
-    };
-    
-    setConversationHistory(prev => [...prev, userMessage]);
-    
     try {
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
+      // Call Supabase Edge Function for AI response
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
-          message: text,
+          message: transcript,
           userLanguage: currentLanguage,
-          conversationHistory: apiConversationHistory,
-          cefrLevel: cefrLevel
+          responseFormat: "concise" // Request a more concise response suitable for TTS
         }
       });
 
       if (error) throw error;
-      
-      // Extract content and translation from the response
-      const content = data.content || data.reply || "";
-      const translationText = data.translation || "";
-      
-      const aiMessage: ConversationMessage = {
-        role: 'assistant',
-        content: content,
-        translation: translationText,
-        timestamp: new Date()
+
+      // Add AI response to messages
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: data.content,
       };
-      
-      setGptResponse(content);
-      setTranslation(translationText);
-      setConversationHistory(prev => [...prev, aiMessage]);
-      
-      setApiConversationHistory(data.updatedHistory || [
-        ...apiConversationHistory,
-        { role: 'user', content: text },
-        { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
-      ]);
-      
-      // Automatically speak the response using browser's speech synthesis
-      speakWithBrowserSynthesis(content);
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      // Generate speech from AI response
+      generateSpeech(data.content);
     } catch (error) {
-      console.error('Error getting GPT response:', error);
+      console.error("Failed to get AI response:", error);
       toast({
         title: t("error"),
         description: t("failedToGetResponse"),
@@ -195,172 +182,87 @@ const VoiceChat = () => {
     }
   };
 
-  const speakWithBrowserSynthesis = (text: string) => {
-    if (!synthRef.current) {
-      console.error('Speech synthesis not available');
+  const generateSpeech = async (text: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        body: { text, voice: "alloy" }
+      });
+
+      if (error) throw error;
+
+      // Create audio URL from the base64-encoded audio data
+      const audioData = atob(data.audioContent);
+      const arrayBuffer = new ArrayBuffer(audioData.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < audioData.length; i++) {
+        uint8Array[i] = audioData.charCodeAt(i);
+      }
+      const blob = new Blob([uint8Array], { type: 'audio/mp3' });
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+
+      // Play the audio
+      if (audioRef.current) {
+        audioRef.current.src = url;
+        audioRef.current.play().catch(error => {
+          console.error("Error playing audio:", error);
+          toast({
+            title: t("error"),
+            description: t("audioPlaybackError"),
+            variant: "destructive",
+          });
+        });
+      }
+    } catch (error) {
+      console.error("Failed to generate speech:", error);
       toast({
         title: t("error"),
-        description: t("speechSynthesisNotSupported"),
+        description: t("failedToGenerateSpeech"),
         variant: "destructive",
       });
-      return;
-    }
-    
-    // Cancel any ongoing speech
-    synthRef.current.cancel();
-    
-    // Create a new utterance with the response text
-    utteranceRef.current = new SpeechSynthesisUtterance(text);
-    
-    // Set the language based on what the AI should be speaking
-    // If user is English, AI speaks Spanish; if user is Spanish/Portuguese, AI speaks English
-    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
-    
-    // Try to find a suitable voice
-    const voices = synthRef.current.getVoices();
-    console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
-    
-    const targetLang = currentLanguage === "english" ? "es" : "en";
-    
-    // Find a voice that matches the target language
-    const voice = voices.find(v => v.lang.startsWith(targetLang));
-    if (voice) {
-      console.log(`Using voice: ${voice.name} (${voice.lang})`);
-      utteranceRef.current.voice = voice;
-    } else {
-      console.warn(`No matching voice found for language: ${targetLang}`);
-    }
-    
-    // Set event handlers
-    utteranceRef.current.onstart = () => {
-      console.log("Speech synthesis started");
-      setIsSpeaking(true);
-    };
-    
-    utteranceRef.current.onend = () => {
-      console.log("Speech synthesis ended");
-      setIsSpeaking(false);
-    };
-    
-    utteranceRef.current.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      setIsSpeaking(false);
-      toast({
-        title: t("error"),
-        description: t("speechSynthesisError"),
-        variant: "destructive",
-      });
-    };
-    
-    // Start speaking
-    console.log("Starting speech synthesis...");
-    synthRef.current.speak(utteranceRef.current);
-  };
-
-  const playAgain = () => {
-    if (gptResponse) {
-      speakWithBrowserSynthesis(gptResponse);
     }
   };
 
-  const getLanguagePair = () => {
-    if (currentLanguage === "english") {
-      return { practice: "Spanish", native: "English" };
-    } else if (currentLanguage === "spanish") {
-      return { practice: "English", native: "Spanish" };
-    } else if (currentLanguage === "portuguese") {
-      return { practice: "English", native: "Portuguese" };
-    } else if (currentLanguage === "korean") {
-      return { practice: "English", native: "Korean" };
-    }
-    return { practice: "Spanish", native: "English" };
-  };
-
-  const getConversationStarters = () => {
-    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
-    
-    let nativeLanguagePhrases;
-    let targetLanguagePhrases;
-    
-    if (currentLanguage === "english") {
-      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-    } else if (currentLanguage === "spanish") {
-      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "portuguese") {
-      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else {
-      nativeLanguagePhrases = phraseKeys.map(key => t(key));
-      targetLanguagePhrases = phraseKeys.map(key => {
-        const englishPhrase = englishTranslations[key];
-        return englishPhrase || key;
+  const playAudio = () => {
+    if (audioRef.current && audioUrl) {
+      audioRef.current.play().catch(error => {
+        console.error("Error playing audio:", error);
+        toast({
+          title: t("error"),
+          description: t("audioPlaybackError"),
+          variant: "destructive",
+        });
       });
     }
-    
-    return { nativeLanguagePhrases, targetLanguagePhrases };
   };
 
-  const handlePhraseClick = (phrase: string) => {
-    handleSendTranscript(phrase);
-  };
+  useEffect(() => {
+    // Cleanup audio URLs when component unmounts
+    return () => {
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [audioUrl]);
 
-  const clearConversation = () => {
-    setConversationHistory([]);
-    setApiConversationHistory([]);
-    setTranscript("");
-    setGptResponse("");
-    setTranslation("");
-    toast({
-      title: t("Success"),
-      description: "Conversation history has been cleared",
-    });
-  };
-
-  const getCEFRLevelDescription = () => {
-    return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
-  };
-
-  const getPracticeDescription = () => {
+  const getPageDescription = () => {
     if (currentLanguage === "english") {
-      return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}. The AI will respond to you in ${getLanguagePair().practice} and help you practice.`;
+      return "Practice speaking and listening skills with our voice chat feature. The AI will listen to your Spanish pronunciation and respond in a natural way, helping you improve your conversational skills.";
     } else if (currentLanguage === "spanish") {
-      return `Practica tus habilidades de habla en ${getLanguagePair().practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${getLanguagePair().practice}. La IA te responderá y te ayudará a practicar.`;
+      return "Practica tus habilidades de hablar y escuchar con nuestra función de chat de voz. La IA escuchará tu pronunciación en inglés y responderá de manera natural, ayudándote a mejorar tus habilidades de conversación.";
     } else if (currentLanguage === "portuguese") {
-      return `Pratique suas habilidades de fala em ${getLanguagePair().practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
+      return "Pratique suas habilidades de fala e audição com nosso recurso de chat de voz. A IA ouvirá sua pronúncia em inglês e responderá de forma natural, ajudando você a melhorar suas habilidades de conversação.";
     } else if (currentLanguage === "korean") {
-      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI가 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
+      return "음성 채팅 기능으로 말하기와 듣기 능력을 연습하세요. AI는 귀하의 영어 발음을 듣고 자연스럽게 응답하여 대화 능력을 향상시키는 데 도움을 줍니다.";
+    } else if (currentLanguage === "arabic") {
+      return "مارس مهارات التحدث والاستماع باستخدام ميزة الدردشة الصوتية. سيستمع الذكاء الاصطناعي إلى نطقك للغة الإنجليزية ويستجيب بطريقة طبيعية، مما يساعدك على تحسين مهارات المحادثة لديك.";
+    } else {
+      return "Practice speaking and listening skills with our voice chat feature.";
     }
-    return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
-
-  const getAIModelInfoText = () => {
-    if (currentLanguage === "english") {
-      return "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
-    } else if (currentLanguage === "spanish") {
-      return "Modelo de IA: Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
-    } else if (currentLanguage === "portuguese") {
-      return "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
-    } else if (currentLanguage === "korean") {
-      return "AI 모델: 자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
-    }
-    return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
-  };
-
-  const getPracticeTipsText = () => {
-    if (currentLanguage === "english") {
-      return "Use this tool to improve your speaking and listening skills. Here are some tips:";
-    } else if (currentLanguage === "spanish") {
-      return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
-    } else if (currentLanguage === "portuguese") {
-      return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
-    }
-    return t("practiceLanguageTips");
-  };
-
-  const { practice, native } = getLanguagePair();
-  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -369,40 +271,51 @@ const VoiceChat = () => {
           {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {getPracticeDescription()}
-        </p>
-        <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : "AI 모델:"}</strong> {getAIModelInfoText()}
+          {getPageDescription()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {currentLanguage === "korean" 
-              ? t("browserBasedTTS")
-              : currentLanguage === "english" 
-                ? "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat."
-                : currentLanguage === "spanish"
-                  ? "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium."
-                  : "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium."}
+            {currentLanguage === "english" 
+              ? "Note: This is the standard voice practice feature. For premium voice features with natural voice quality, try our Premium Voice Chat." 
+              : currentLanguage === "spanish"
+                ? "Nota: Esta es la función de práctica de voz estándar. Para funciones de voz premium con calidad de voz natural, prueba nuestro Chat de Voz Premium."
+                : currentLanguage === "portuguese"
+                  ? "Nota: Este é o recurso padrão de prática de voz. Para recursos de voz premium com qualidade de voz natural, experimente nosso Chat de Voz Premium."
+                  : currentLanguage === "korean"
+                    ? "참고: 이것은 표준 음성 연습 기능입니다. 자연스러운 음성 품질의 프리미엄 음성 기능을 원하시면 프리미엄 음성 채팅을 사용해 보세요."
+                    : currentLanguage === "arabic"
+                      ? "ملاحظة: هذه هي ميزة ممارسة الصوت القياسية. للحصول على ميزات صوتية متميزة ذات جودة صوت طبيعية، جرب الدردشة الصوتية المتميزة."
+                      : "Note: This is the standard voice practice feature. For premium voice features with natural voice quality, try our Premium Voice Chat."}
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
         <Card className="p-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-            <div className="mb-4 md:mb-0">
-              <p className="text-sm text-gray-500">
-                <span className="font-medium">{t("practiceLevel") || "Practice Level"}: B1</span> - {getCEFRLevelDescription()}
+          <h2 className="text-xl font-semibold mb-4">{t("youSaid")}</h2>
+          <div className="min-h-[100px] mb-4 bg-gray-50 rounded-lg p-4">
+            {isRecording ? (
+              <div className="flex items-center text-amber-600">
+                <div className="w-3 h-3 bg-amber-600 rounded-full animate-pulse mr-2"></div>
+                <p>{currentTranscript || t("listeningNow")}</p>
+              </div>
+            ) : (
+              <p className="text-gray-500">
+                {currentTranscript || 
+                  (currentLanguage === "arabic" 
+                    ? "اضغط على زر الميكروفون لبدء التحدث..."
+                    : "Press the microphone button to start speaking...")}
               </p>
-            </div>
-
+            )}
+          </div>
+          <div className="flex justify-center">
             <Button
-              onClick={toggleListening}
-              variant={isListening ? "destructive" : "default"}
+              onClick={toggleRecording}
+              variant={isRecording ? "destructive" : "default"}
+              className={isRecording ? "bg-red-500" : "bg-lingua-primary"}
               size="lg"
-              disabled={isLoading || isSpeaking}
             >
-              {isListening ? (
+              {isRecording ? (
                 <>
                   <MicOff className="h-5 w-5 mr-2" />
                   {t("stopListening")}
@@ -415,168 +328,102 @@ const VoiceChat = () => {
               )}
             </Button>
           </div>
-          
-          {isListening && (
-            <div className="text-sm text-gray-500 animate-pulse">
-              {t("listeningNow")}...
-            </div>
-          )}
-
-          {transcript && (
-            <div className="mb-6">
-              <h3 className="font-medium mb-2">{t("youSaid")}:</h3>
-              <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
-                {transcript}
-              </div>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="flex justify-center my-6">
-              <div className="flex space-x-2">
-                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]" />
-              </div>
-            </div>
-          )}
-
-          {gptResponse && (
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-medium">{t("aiResponse")}:</h3>
-                <Button 
-                  onClick={playAgain} 
-                  variant="outline" 
-                  size="sm"
-                  className="flex items-center gap-2"
-                  disabled={isSpeaking}
-                >
-                  <Volume2 className="h-4 w-4" />
-                  {isSpeaking ? t("speaking") : t("playAgain")}
-                </Button>
-              </div>
-              <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
-                {gptResponse}
-                
-                {translation && (
-                  <>
-                    <div className="border-t border-gray-300 my-3"></div>
-                    <div className="text-sm text-gray-600">
-                      <strong>{t("translation")}:</strong> {translation}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
         </Card>
-        
-        {conversationHistory.length > 0 && (
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium">
-                {t("conversationHistory")}
-              </h3>
-              <Button 
-                onClick={clearConversation}
-                variant="outline" 
-                size="sm"
-              >
-                {t("clearConversation")}
-              </Button>
-            </div>
-            
-            <ScrollArea className="h-[300px] rounded-md border p-4">
-              <div className="space-y-4">
-                {conversationHistory.map((message, index) => (
-                  <div 
-                    key={index} 
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div 
-                      className={`max-w-[80%] rounded-lg p-3 ${
-                        message.role === 'user' 
-                          ? 'bg-blue-100 text-gray-800' 
-                          : 'bg-green-100 text-gray-800'
-                      }`}
-                    >
-                      <p className="text-sm">{message.content}</p>
-                      {message.translation && (
-                        <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
-                          <span className="font-medium">{t("translation")}:</span> {message.translation}
-                        </p>
-                      )}
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(message.timestamp).toLocaleTimeString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                <div ref={conversationEndRef} />
-              </div>
-            </ScrollArea>
-          </Card>
-        )}
 
         <Card className="p-6">
-          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            {t("tryThesePhrases")}
-          </p>
-          
-          <div className="space-y-6">
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourTargetLanguage")} ({practice})
-              </h4>
-              <ul className="space-y-2">
-                {targetLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`target-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourNativeLanguage")} ({native})
-              </h4>
-              <ul className="space-y-2">
-                {nativeLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`native-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <h2 className="text-xl font-semibold mb-4">{t("aiResponse")}</h2>
+          <div className="min-h-[100px] mb-4 bg-gray-50 rounded-lg p-4">
+            {isLoading ? (
+              <div className="flex space-x-2 justify-center items-center h-full">
+                <div className="w-2 h-2 bg-lingua-primary rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-lingua-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                <div className="w-2 h-2 bg-lingua-primary rounded-full animate-bounce [animation-delay:0.4s]"></div>
+              </div>
+            ) : (
+              messages.length > 0 && messages[messages.length - 1].role === "assistant" ? (
+                <p>{messages[messages.length - 1].content}</p>
+              ) : (
+                <p className="text-gray-500">
+                  {currentLanguage === "arabic" 
+                    ? "ستظهر ردود الذكاء الاصطناعي هنا..."
+                    : "AI responses will appear here..."}
+                </p>
+              )
+            )}
           </div>
+          {audioUrl && (
+            <div className="flex justify-center">
+              <Button onClick={playAudio} className="bg-lingua-primary">
+                <Volume2 className="h-5 w-5 mr-2" />
+                {t("playAgain")}
+              </Button>
+              <audio ref={audioRef} src={audioUrl} />
+            </div>
+          )}
         </Card>
-        
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
-          <p className="text-sm text-gray-600 mb-3">
-            {getPracticeTipsText()}
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-            <li>{t("askQuestionsAboutTopics")}</li>
-            <li>{t("practiceEverydayPhrases")}</li>
-            <li>{t("describeImagesOrScenes")}</li>
-            <li>{t("practiceVocabularyForSpecificTopics")}</li>
-          </ul>
+      </div>
+
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-4">{t("conversationHistory")}</h3>
+        <div className="bg-gray-50 rounded-lg p-4 mb-4 max-h-[300px] overflow-y-auto">
+          {messages.length === 0 ? (
+            <p className="text-center text-gray-500">
+              {currentLanguage === "arabic" 
+                ? "ستظهر محادثتك هنا..."
+                : "Your conversation will appear here..."}
+            </p>
+          ) : (
+            messages.map((message, index) => (
+              <div
+                key={index}
+                className={`mb-4 p-3 rounded-lg ${
+                  message.role === "user"
+                    ? "bg-lingua-primary/10 ml-12"
+                    : "bg-gray-100 mr-12"
+                }`}
+              >
+                <p className="text-sm font-semibold mb-1">
+                  {message.role === "user" 
+                    ? (currentLanguage === "arabic" ? "أنت:" : "You:") 
+                    : (currentLanguage === "arabic" ? "المعلم:" : "Tutor:")}
+                </p>
+                <p>{message.content}</p>
+              </div>
+            ))
+          )}
+        </div>
+        <div className="flex justify-end">
+          <Button
+            variant="outline"
+            onClick={clearConversation}
+            className="text-red-500 border-red-300 hover:bg-red-50"
+            disabled={messages.length === 0}
+          >
+            <Trash className="h-4 w-4 mr-2" />
+            {t("clearConversation")}
+          </Button>
         </div>
       </div>
-      
-      <audio ref={audioRef} className="hidden" />
+
+      <div className="bg-gray-100 rounded-lg p-6 mb-8">
+        <h3 className="font-semibold mb-3">{t("practiceWithVoiceChat")}</h3>
+        <p className="text-sm text-gray-600 mb-3">
+          {t("practiceLanguageTips")}
+        </p>
+        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+          <li>{t("askQuestionsAboutTopics")}</li>
+          <li>{t("practiceEverydayPhrases")}</li>
+          <li>{t("describeImagesOrScenes")}</li>
+          <li>{t("practiceVocabularyForSpecificTopics")}</li>
+        </ul>
+      </div>
+
+      <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-700">
+        <p className="flex items-center">
+          <Volume2 className="h-4 w-4 mr-2" />
+          {t("aiModelInfo")}
+        </p>
+      </div>
     </div>
   );
 };
