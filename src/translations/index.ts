@@ -1,6 +1,6 @@
 
 import { LanguageTranslations } from "./types";
-import englishTranslations from "./english";
+import englishTranslations from "./english/index";
 import spanishTranslations from "./spanish";
 import portugueseTranslations from "./portuguese";
 import koreanTranslations from "./korean";
