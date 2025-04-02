@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -169,6 +168,38 @@ const LanguageFrameworks = () => {
         level: "C2",
         name: "إتقان",
         description: "يمكن فهم كل ما يسمعه أو يقرأه تقريبًا بسهولة. يمكنه تلخيص المعلومات من مصادر مختلفة مكتوبة وشفهية، وإعادة بناء الحجج والروايات في عرض متماسك. يمكنه التعبير عن نفسه بشكل عفوي وبطلاقة ودقة كبيرة، مميزًا الفروق الدقيقة في المعنى حتى في المواقف الأكثر تعقيدًا."
+      }
+    ],
+    mandarin: [
+      {
+        level: "A1",
+        name: "初级",
+        description: "能够理解和使用日常的表达方式和非常基本的短语，旨在满足具体类型的需求。能够介绍自己和他人，并能够询问和回答关于个人详细信息的问题，如他们住在哪里，认识的人和拥有的东西。"
+      },
+      {
+        level: "A2",
+        name: "基础",
+        description: "能够理解与最直接相关领域相关的句子和常用表达（例如，非常基本的个人和家庭信息，购物，当地地理，就业）。能够在简单和日常任务中进行交流，这些任务需要就熟悉和常规事项进行简单直接的信息交换。"
+      },
+      {
+        level: "B1",
+        name: "中级",
+        description: "能够理解在工作、学校、休闲等场合定期遇到的熟悉事务的清晰标准输入的要点。能够处理在使用该语言的地区旅行时可能出现的大多数情况。能够就熟悉或感兴趣的话题产生简单连贯的文本。"
+      },
+      {
+        level: "B2",
+        name: "中高级",
+        description: "能够理解具体和抽象主题的复杂文本的主要思想，包括在其专业领域的技术讨论。能够以一定程度的流利和自然程度进行互动，使与母语使用者的定期互动在双方都不费力的情况下成为可能。"
+      },
+      {
+        level: "C1",
+        name: "高级",
+        description: "能够理解各种要求高、篇幅较长的文本，并能识别隐含意义。能够流利和自然地表达自己，而不会明显地寻找表达方式。能够灵活有效地使用语言于社交、学术和专业目的。"
+      },
+      {
+        level: "C2",
+        name: "精通",
+        description: "能够轻松理解几乎所有听到或读到的内容。能够从不同的口头和书面来源汇总信息，在连贯的演示中重构论点和叙述。能够自然、非常流利和精确地表达自己，即使在更复杂的情况下也能区分细微的意义差别。"
       }
     ]
   };
@@ -474,215 +505,4 @@ const LanguageFrameworks = () => {
             description: "يمكن التعامل بنجاح مع المهام غير المعقدة والمواقف الاجتماعية التي تتطلب تبادل المعلومات الأساسية المتعلقة بالعمل والمدرسة والترفيه والاهتمامات الخاصة، على الرغم من أنه قد يحدث بعض التردد."
           }
         ],
-        description: "في المستوى المتوسط، يمكن للمتحدثين الإبداع باللغة عند التحدث عن موضوعات مألوفة متعلقة بحياتهم اليومية. يمكنهم إعادة تجميع المواد المتعلمة للتعبير عن المعنى الشخصي. يمكن للمتحدثين من المستوى المتوسط طرح أسئلة بسيطة ويمكنهم التعامل مع موقف بقاء مباشر."
-      },
-      {
-        level: "متقدم",
-        sublevels: [
-          {
-            name: "متقدم - منخفض",
-            description: "يمكن أداء مهام مختلفة من المستوى المتقدم، ولكن ليس باستمرار. يتسم الكلام عادة بنوع من الخشونة النحوية، مفردات غير كافية لمناقشة الموضوعات بعمق، وأنماط ملحوظة من الأخطاء."
-          },
-          {
-            name: "متقدم - متوسط",
-            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة لغوية وثقة وكفاءة. يمكن مناقشة الموضوعات بشكل ملموس ومجرد، والتعامل مع موقف فيه تعقيد، والسرد في جميع الأطر الزمنية باستمرار."
-          },
-          {
-            name: "متقدم - متقدم",
-            description: "يمكن أداء جميع مهام المستوى المتقدم بسهولة وثقة. يمكن مناقشة الموضوعات بشكل مجرد وبدقة جيدة. لا تلبي القدرة على التحدث بالكامل معايير مهام المستوى الممتاز، مع نقاط ضعف في مجال واحد أو أكثر."
-          }
-        ],
-        description: "في المستوى المتقدم، يمكن للمتحدثين السرد والوصف في جميع الأطر الزمنية الرئيسية عند التحدث عن موضوعات ذات اهتمام عام. يمكنهم التعامل مع موقف فيه تعقيد. تتميز لغة المتحدثين من المستوى المتقدم بخطاب جوهري ومترابط."
-      },
-      {
-        level: "ممتاز",
-        sublevels: [],
-        description: "في المستوى الممتاز، يمكن للمتحدثين التواصل بدقة وطلاقة للمشاركة بشكل كامل وفعال في المحادثات حول مجموعة متنوعة من الموضوعات في الإعدادات الرسمية وغير الرسمية. يمكنهم مناقشة اهتماماتهم ومجالات خبراتهم الخاصة، وشرح الأمور المعقدة، وتقديم سرد طويل ومترابط."
-      },
-      {
-        level: "متميز",
-        sublevels: [],
-        description: "في المستوى المتميز، يستخدم المتحدثون اللغة بمهارة، ومع الدقة والكفاءة والفعالية. هم مستخدمون متعلمون وفصحاء للغة. يمكنهم التفكير في مجموعة واسعة من القضايا العالمية والمفاهيم المجردة للغاية بطريقة مناسبة ثقافيًا."
-      }
-    ]
-  };
-
-  // CEFR to ACTFL conversion explanation
-  const conversionExplanation = {
-    english: "The CEFR (Common European Framework of Reference) and ACTFL (American Council on the Teaching of Foreign Languages) are two widely recognized frameworks for describing language proficiency. While they use different scales and terminology, there are approximate correlations between the two systems:\n\nCEFR A1 ≈ ACTFL Novice Low to Mid\nCEFR A2 ≈ ACTFL Novice High to Intermediate Low\nCEFR B1 ≈ ACTFL Intermediate Mid to High\nCEFR B2 ≈ ACTFL Advanced Low to Mid\nCEFR C1 ≈ ACTFL Advanced High to Superior\nCEFR C2 ≈ ACTFL Distinguished",
-    spanish: "El MCER (Marco Común Europeo de Referencia) y ACTFL (Consejo Americano para la Enseñanza de Lenguas Extranjeras) son dos marcos ampliamente reconocidos para describir la competencia lingüística. Aunque utilizan escalas y terminología diferentes, existen correlaciones aproximadas entre los dos sistemas:\n\nMCER A1 ≈ ACTFL Novato Bajo a Medio\nMCER A2 ≈ ACTFL Novato Alto a Intermedio Bajo\nMCER B1 ≈ ACTFL Intermedio Medio a Alto\nMCER B2 ≈ ACTFL Avanzado Bajo a Medio\nMCER C1 ≈ ACTFL Avanzado Alto a Superior\nMCER C2 ≈ ACTFL Distinguido",
-    portuguese: "O QECR (Quadro Europeu Comum de Referência) e o ACTFL (Conselho Americano para o Ensino de Línguas Estrangeiras) são dois quadros amplamente reconhecidos para descrever a proficiência linguística. Embora utilizem escalas e terminologia diferentes, existem correlações aproximadas entre os dois sistemas:\n\nQECR A1 ≈ ACTFL Novato Baixo a Médio\nQECR A2 ≈ ACTFL Novato Alto a Intermediário Baixo\nQECR B1 ≈ ACTFL Intermediário Médio a Alto\nQECR B2 ≈ ACTFL Avançado Baixo a Médio\nQECR C1 ≈ ACTFL Avançado Alto a Superior\nQECR C2 ≈ ACTFL Distinto",
-    korean: "CEFR(유럽 공통 참조 기준)와 ACTFL(미국 외국어 교육 협의회)은 언어 능력을 설명하기 위한 두 가지 널리 인정된 프레임워크입니다. 서로 다른 척도와 용어를 사용하지만, 두 시스템 간에는 대략적인 상관관계가 있습니다:\n\nCEFR A1 ≈ ACTFL 초보자 하에서 중까지\nCEFR A2 ≈ ACTFL 초보자 상에서 중급 하까지\nCEFR B1 ≈ ACTFL 중급 중에서 상까지\nCEFR B2 ≈ ACTFL 고급 하에서 중까지\nCEFR C1 ≈ ACTFL 고급 상에서 우수까지\nCEFR C2 ≈ ACTFL 탁월",
-    arabic: "إطار CEFR (الإطار الأوروبي المشترك للمراجع) و ACTFL (المجلس الأمريكي لتعليم اللغات الأجنبية) هما إطاران معترف بهما على نطاق واسع لوصف إتقان اللغة. في حين أنهما يستخدمان مقاييس ومصطلحات مختلفة، هناك ارتباطات تقريبية بين النظامين:\n\nCEFR A1 ≈ ACTFL مبتدئ منخفض إلى متوسط\nCEFR A2 ≈ ACTFL مبتدئ متقدم إلى متوسط منخفض\nCEFR B1 ≈ ACTFL متوسط متوسط إلى متقدم\nCEFR B2 ≈ ACTFL متقدم منخفض إلى متوسط\nCEFR C1 ≈ ACTFL متقدم متقدم إلى ممتاز\nCEFR C2 ≈ ACTFL متميز"
-  };
-
-  // Get the appropriate levels based on the user's language
-  const getLocalizedContent = (content: any) => {
-    return content[currentLanguage as keyof typeof content] || content.english;
-  };
-
-  const levels = getLocalizedContent(cefrLevels);
-  const actfl = getLocalizedContent(actflLevels);
-  const conversion = getLocalizedContent(conversionExplanation);
-
-  // Get page title based on language
-  const getPageTitle = () => {
-    return t("languageReferenceFrameworks");
-  };
-
-  // Get CEFR title based on language
-  const getCefrTitle = () => {
-    return t("commonEuropeanFramework");
-  };
-
-  // Get ACTFL title based on language
-  const getActflTitle = () => {
-    return t("americanCouncil");
-  };
-
-  // Get Comparison title based on language
-  const getComparisonTitle = () => {
-    return t("cefrActflComparison");
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-lingua-text mb-2">{getPageTitle()}</h1>
-        <p className="text-gray-600">
-          {t("understandLevelsFrameworks")}
-        </p>
-      </div>
-
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-        <TabsList className="w-full mb-8">
-          <TabsTrigger value="cefr" className="flex-1">
-            <BookOpen className="h-4 w-4 mr-2" />
-            <span>
-              {currentLanguage === "spanish" ? "MCER" : currentLanguage === "portuguese" ? "QECR" : "CEFR"}
-            </span>
-          </TabsTrigger>
-          <TabsTrigger value="actfl" className="flex-1">
-            <GraduationCap className="h-4 w-4 mr-2" />
-            <span>ACTFL</span>
-          </TabsTrigger>
-          <TabsTrigger value="comparison" className="flex-1">
-            <Award className="h-4 w-4 mr-2" />
-            <span>{t("comparison")}</span>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="cefr">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-md">
-              <h2 className="text-2xl font-bold mb-4">{getCefrTitle()}</h2>
-              <p className="mb-6">
-                {t("cefrDescription")}
-              </p>
-              <div className="space-y-4">
-                {levels.map((level) => (
-                  <Card key={level.level} className="overflow-hidden">
-                    <CardHeader className="bg-gray-50">
-                      <CardTitle>
-                        {level.level} - {level.name}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <p>{level.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="actfl">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-md">
-              <h2 className="text-2xl font-bold mb-4">{getActflTitle()}</h2>
-              <p className="mb-6">
-                {t("actflDescription")}
-              </p>
-              <div className="space-y-8">
-                {actfl.map((level) => (
-                  <Card key={level.level} className="overflow-hidden">
-                    <CardHeader className="bg-gray-50">
-                      <CardTitle>{level.level}</CardTitle>
-                      <CardDescription>{level.description}</CardDescription>
-                    </CardHeader>
-                    {level.sublevels.length > 0 && (
-                      <CardContent className="pt-4">
-                        <h4 className="font-medium mb-2">{t("sublevels")}:</h4>
-                        <div className="space-y-3">
-                          {level.sublevels.map((sublevel) => (
-                            <div key={sublevel.name} className="border-l-4 border-lingua-primary pl-4">
-                              <h5 className="font-medium">{sublevel.name}</h5>
-                              <p className="text-sm text-gray-600">{sublevel.description}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    )}
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="comparison">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-md">
-              <h2 className="text-2xl font-bold mb-4">{getComparisonTitle()}</h2>
-              <div className="prose max-w-none">
-                <p className="whitespace-pre-line">{conversion}</p>
-              </div>
-              <div className="mt-8">
-                <h3 className="text-xl font-bold mb-4">{t("comparisonTable")}</h3>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">CEFR</th>
-                        <th className="border px-4 py-2">ACTFL</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border px-4 py-2">A1 ({t("beginner")})</td>
-                        <td className="border px-4 py-2">{t("noviceLow")} - {t("noviceMid")}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2">A2 ({t("elementary")})</td>
-                        <td className="border px-4 py-2">{t("noviceHigh")} - {t("intermediateLow")}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2">B1 ({t("intermediate")})</td>
-                        <td className="border px-4 py-2">{t("intermediateMid")} - {t("intermediateHigh")}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2">B2 ({t("upperIntermediate")})</td>
-                        <td className="border px-4 py-2">{t("advancedLow")} - {t("advancedMid")}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2">C1 ({t("advanced")})</td>
-                        <td className="border px-4 py-2">{t("advancedHigh")} - {t("superior")}</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2">C2 ({t("proficiency")})</td>
-                        <td className="border px-4 py-2">{t("distinguished")}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default LanguageFrameworks;
+        description: "في المستوى المتوسط، يمكن للمتحدثين الإبداع باللغة عند التحدث عن موضوعات مألوفة متعلقة بحياتهم اليومية. يمكنهم إعادة تجميع المواد المتعلمة للتعبير عن المعنى الشخصي. يمكن للمتحدثين من
