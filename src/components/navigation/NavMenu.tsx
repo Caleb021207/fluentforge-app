@@ -26,6 +26,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
             key={item.path} 
             to={item.path}
             onClick={onItemClick}
+            className="flex-1 md:flex-auto"
           >
             <Button
               variant={isActive ? "default" : "ghost"}
