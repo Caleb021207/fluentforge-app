@@ -38,7 +38,19 @@ const generalTranslations: TranslationRecord = {
   featureComingSoon: "Tính năng này sẽ sớm ra mắt!",
   bookmarked: "Đã lưu",
   loadMore: "Tải thêm",
-  notification: "Thông báo"
+  notification: "Thông báo",
+  
+  // Added welcome text translations
+  welcomeToLanguageLearning: "Chào mừng bạn đến với Palavox",
+  yourPersonalAICompanion: "Trợ lý học ngôn ngữ cá nhân được hỗ trợ bởi AI. Bắt đầu hành trình đến sự thông thạo của bạn ngay hôm nay.",
+  signIn: "Đăng nhập",
+  createAccount: "Tạo tài khoản",
+  goToDashboard: "Đi đến Bảng điều khiển",
+  practiceWithAI: "Luyện tập với AI",
+  processing: "Đang xử lý...",
+  send: "Gửi",
+  cancel: "Hủy",
+  success: "Thành công",
 };
 
 export default generalTranslations;
