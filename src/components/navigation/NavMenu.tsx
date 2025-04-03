@@ -29,9 +29,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
             >
               <Button
                 variant={isActive ? "default" : "ghost"}
-                className={`w-full justify-start ${
-                  isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
-                }`}
+                className={isActive ? "w-full justify-start bg-lingua-primary hover:bg-lingua-primary/90" : "w-full justify-start"}
               >
                 {Icon && <Icon className="h-5 w-5 md:mr-2" />}
                 <span className="hidden md:inline">{translatedLabel}</span>
