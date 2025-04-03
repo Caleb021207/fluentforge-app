@@ -10,6 +10,7 @@ const voiceChatTranslations: TranslationRecord = {
   youSaid: "Você disse",
   aiResponse: "Resposta da IA",
   playAgain: "Reproduzir Novamente",
+  speaking: "Falando",
   practiceWithVoiceChat: "Pratique com o Chat de Voz",
   practiceLanguageTips: "Use esta ferramenta para melhorar suas habilidades de fala e audição. Aqui estão algumas dicas:",
   askQuestionsAboutTopics: "Faça perguntas sobre tópicos cotidianos",
@@ -24,8 +25,8 @@ const voiceChatTranslations: TranslationRecord = {
   audioPlaybackError: "Erro ao reproduzir o áudio. Por favor, tente novamente.",
   conversationStarters: "Iniciadores de Conversa",
   tryThesePhrases: "Experimente estas frases para iniciar uma conversa:",
-  inYourTargetLanguage: "No seu idioma alvo:",
-  inYourNativeLanguage: "No seu idioma nativo:",
+  inYourTargetLanguage: "No seu idioma alvo",
+  inYourNativeLanguage: "No seu idioma nativo",
   phrase1: "Olá, como você está hoje?",
   phrase2: "Como está o tempo onde você está?",
   phrase3: "Você pode me recomendar um bom restaurante?",
@@ -39,6 +40,11 @@ const voiceChatTranslations: TranslationRecord = {
   clearConversation: "Limpar Conversa",
   voiceChatEnded: "Chat de voz encerrado",
   timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
+  practiceSpeakingSkills: "Pratique suas habilidades de fala em {{language}} com nosso chat de voz. Clique no botão do microfone e comece a falar em {{nativeLanguage}}. A IA responderá a você em {{language}} e ajudará você a praticar.",
+  browserBasedTTS: "Nota: Isso usa a síntese de voz baseada no navegador. Para uma qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.",
+  practiceLevel: "Nível de prática",
+  cefrB1Description: "Intermediário - Pode discutir tópicos familiares",
+  aiModelInfo: "Modelo de IA: Estamos usando GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com síntese de fala integrada ao navegador para respostas de voz."
 };
 
 export default voiceChatTranslations;
