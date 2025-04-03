@@ -4,17 +4,17 @@ import { NavItem } from "./types";
 
 export const getNavItems = (isAdmin: boolean, isMobile: boolean): NavItem[] => {
   const navItems: NavItem[] = [
-    { icon: MessageSquare, label: "Text Practice", path: "/practice" },
-    { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
-    { icon: Headphones, label: "Premium Voice Chat", path: "/premium-voice-chat" },
+    { icon: MessageSquare, label: "Text Practice", path: "/practice", to: "/practice" },
+    { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat", to: "/voice-chat" },
+    { icon: Headphones, label: "Premium Voice Chat", path: "/premium-voice-chat", to: "/premium-voice-chat" },
   ];
   
   if (isAdmin) {
-    navItems.push({ icon: Shield, label: "Admin", path: "/admin" });
+    navItems.push({ icon: Shield, label: "Admin", path: "/admin", to: "/admin" });
   }
 
   if (isMobile) {
-    navItems.unshift({ icon: Home, label: "Home", path: "/" });
+    navItems.unshift({ icon: Home, label: "Home", path: "/", to: "/" });
   }
 
   return navItems;
