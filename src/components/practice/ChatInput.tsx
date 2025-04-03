@@ -19,7 +19,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   isLoading,
   placeholder,
 }) => {
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">

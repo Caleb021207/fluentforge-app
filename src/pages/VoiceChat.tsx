@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import englishTranslations from "@/translations/english";
-import vietnameseTranslations from "@/translations/vietnamese";
+import spanishTranslations from "@/translations/spanish";
+import portugueseTranslations from "@/translations/portuguese";
+import mandarinTranslations from "@/translations/mandarin";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -49,8 +50,7 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set to Vietnamese for input language when user is Vietnamese
-      recognitionRef.current.lang = currentLanguage === "vietnamese" ? "vi-VN" : "en-US";
+      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
       recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
       
@@ -145,11 +145,12 @@ const VoiceChat = () => {
     setConversationHistory(prev => [...prev, userMessage]);
     
     try {
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
           userLanguage: currentLanguage,
-          conversationHistory: apiConversationHistory
+          conversationHistory: apiConversationHistory,
+          cefrLevel: cefrLevel
         }
       });
 
@@ -203,18 +204,19 @@ const VoiceChat = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    // Always speak in English for Vietnamese users
-    utteranceRef.current.lang = "en-US";
+    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
-    const voice = voices.find(v => v.lang.startsWith("en"));
+    const targetLang = currentLanguage === "english" ? "es" : "en";
+    
+    const voice = voices.find(v => v.lang.startsWith(targetLang));
     if (voice) {
       console.log(`Using voice: ${voice.name} (${voice.lang})`);
       utteranceRef.current.voice = voice;
     } else {
-      console.warn(`No matching voice found for language: en`);
+      console.warn(`No matching voice found for language: ${targetLang}`);
     }
     
     utteranceRef.current.onstart = () => {
@@ -247,30 +249,49 @@ const VoiceChat = () => {
   };
 
   const getLanguagePair = () => {
-    // For Vietnamese users, they are learning English
-    if (currentLanguage === "vietnamese") {
-      return { practice: "English", native: "Vietnamese" };
+    if (currentLanguage === "english") {
+      return { practice: "Spanish", native: "English" };
+    } else if (currentLanguage === "spanish") {
+      return { practice: "English", native: "Spanish" };
+    } else if (currentLanguage === "portuguese") {
+      return { practice: "English", native: "Portuguese" };
+    } else if (currentLanguage === "korean") {
+      return { practice: "English", native: "Korean" };
+    } else if (currentLanguage === "arabic") {
+      return { practice: "English", native: "Arabic" };
+    } else if (currentLanguage === "mandarin") {
+      return { practice: "English", native: "Mandarin" };
     }
-    // Default fallback
-    return { practice: "English", native: currentLanguage === "english" ? "Spanish" : "English" };
+    return { practice: "Spanish", native: "English" };
   };
 
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
-    if (currentLanguage === "vietnamese") {
-      // For Vietnamese users learning English
-      const nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
-      const targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      return { nativeLanguagePhrases, targetLanguagePhrases };
+    let nativeLanguagePhrases;
+    let targetLanguagePhrases;
+    
+    if (currentLanguage === "english") {
+      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+    } else if (currentLanguage === "spanish") {
+      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "portuguese") {
+      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "mandarin") {
+      nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
-      // For other users
-      const nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      const targetLanguagePhrases = phraseKeys.map(key => 
-        currentLanguage === "english" ? vietnameseTranslations[key] : englishTranslations[key]
-      );
-      return { nativeLanguagePhrases, targetLanguagePhrases };
+      nativeLanguagePhrases = phraseKeys.map(key => t(key));
+      targetLanguagePhrases = phraseKeys.map(key => {
+        const englishPhrase = englishTranslations[key];
+        return englishPhrase || key;
+      });
     }
+    
+    return { nativeLanguagePhrases, targetLanguagePhrases };
   };
 
   const handlePhraseClick = (phrase: string) => {
@@ -284,13 +305,89 @@ const VoiceChat = () => {
     setGptResponse("");
     setTranslation("");
     toast({
-      title: t("success"),
-      description: t("conversationHistory") + " " + t("clearConversation"),
+      title: t("Success"),
+      description: "Conversation history has been cleared",
     });
   };
 
   const getCEFRLevelDescription = () => {
+    if (currentLanguage === "mandarin") {
+      return "中级 - 能够讨论熟悉的话题";
+    }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
+  };
+
+  const getPracticeDescription = () => {
+    if (currentLanguage === "english") {
+      return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}. The AI will respond to you in ${getLanguagePair().practice} and help you practice.`;
+    } else if (currentLanguage === "spanish") {
+      return `Practica tus habilidades de habla en ${getLanguagePair().practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${getLanguagePair().practice}. La IA te responderá y te ayudará a practicar.`;
+    } else if (currentLanguage === "portuguese") {
+      return `Pratique suas habilidades de fala em ${getLanguagePair().practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
+    } else if (currentLanguage === "korean") {
+      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI가 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
+    } else if (currentLanguage === "arabic") {
+      return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
+    } else if (currentLanguage === "mandarin") {
+      return `使用我们的语音聊天练习您的${getLanguagePair().practice}口语技能。点击麦克风按钮，开始用${getLanguagePair().practice}说话。AI将用${getLanguagePair().practice}回应您并帮助您练习。`;
+    }
+    return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
+  };
+
+  const getAIModelInfoText = () => {
+    if (currentLanguage === "english") {
+      return "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
+    } else if (currentLanguage === "spanish") {
+      return "Modelo de IA: Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
+    } else if (currentLanguage === "portuguese") {
+      return "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
+    } else if (currentLanguage === "korean") {
+      return "AI 모델: 자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
+    } else if (currentLanguage === "arabic") {
+      return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
+    } else if (currentLanguage === "mandarin") {
+      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
+    }
+    return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
+  };
+
+  const getPracticeTipsText = () => {
+    if (currentLanguage === "english") {
+      return "Use this tool to improve your speaking and listening skills. Here are some tips:";
+    } else if (currentLanguage === "spanish") {
+      return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
+    } else if (currentLanguage === "portuguese") {
+      return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
+    } else if (currentLanguage === "arabic") {
+      return "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:";
+    } else if (currentLanguage === "mandarin") {
+      return "使用此工具提高口语和听力技能。以下是一些提示：";
+    }
+    return t("practiceLanguageTips");
+  };
+
+  const getBrowserTTSNote = () => {
+    if (currentLanguage === "arabic") {
+      return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
+    } else if (currentLanguage === "korean") {
+      return t("browserBasedTTS");
+    } else if (currentLanguage === "english") {
+      return "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat.";
+    } else if (currentLanguage === "spanish") {
+      return "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.";
+    } else if (currentLanguage === "portuguese") {
+      return "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.";
+    } else if (currentLanguage === "mandarin") {
+      return "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。";
+    }
+    return t("browserBasedTTS");
+  };
+
+  const getPracticeLevelText = () => {
+    if (currentLanguage === "mandarin") {
+      return "练习水平";
+    }
+    return t("practiceLevel") || "Practice Level";
   };
 
   const { practice, native } = getLanguagePair();
@@ -303,17 +400,14 @@ const VoiceChat = () => {
           {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {t("practiceSpeakingSkills", {
-            language: practice,
-            nativeLanguage: native
-          })}
+          {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{t("aiModelInfo").split(":")[0]}:</strong> {t("aiModelInfo").split(":")[1]}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : "AI模型："}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {t("browserBasedTTS")}
+            {getBrowserTTSNote()}
           </p>
         </div>
       </div>
@@ -323,7 +417,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{t("practiceLevel")}: B1</span> - {getCEFRLevelDescription()}
+                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
@@ -496,7 +590,7 @@ const VoiceChat = () => {
         <div className="bg-gray-100 rounded-lg p-4">
           <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
           <p className="text-sm text-gray-600 mb-3">
-            {t("practiceTips", { language: practice })}
+            {getPracticeTipsText()}
           </p>
           <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
             <li>{t("askQuestionsAboutTopics")}</li>
