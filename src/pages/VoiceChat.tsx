@@ -252,17 +252,25 @@ const VoiceChat = () => {
       return { practice: "English", native: "Vietnamese" };
     }
     // Default fallback
-    return { practice: "English", native: "Vietnamese" };
+    return { practice: "English", native: currentLanguage === "english" ? "Spanish" : "English" };
   };
 
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
-    // For Vietnamese users learning English
-    const nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
-    const targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    
-    return { nativeLanguagePhrases, targetLanguagePhrases };
+    if (currentLanguage === "vietnamese") {
+      // For Vietnamese users learning English
+      const nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
+      const targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+      return { nativeLanguagePhrases, targetLanguagePhrases };
+    } else {
+      // For other users
+      const nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+      const targetLanguagePhrases = phraseKeys.map(key => 
+        currentLanguage === "english" ? vietnameseTranslations[key] : englishTranslations[key]
+      );
+      return { nativeLanguagePhrases, targetLanguagePhrases };
+    }
   };
 
   const handlePhraseClick = (phrase: string) => {
@@ -276,33 +284,13 @@ const VoiceChat = () => {
     setGptResponse("");
     setTranslation("");
     toast({
-      title: t("Success"),
-      description: "Conversation history has been cleared",
+      title: t("success"),
+      description: t("conversationHistory") + " " + t("clearConversation"),
     });
   };
 
   const getCEFRLevelDescription = () => {
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
-  };
-
-  const getPracticeDescription = () => {
-    return `Luyện tập kỹ năng nói ${getLanguagePair().practice} của bạn với trò chuyện bằng giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng Việt. AI sẽ trả lời bạn bằng tiếng Anh và giúp bạn luyện tập.`;
-  };
-
-  const getAIModelInfoText = () => {
-    return "Mô hình AI: Chúng tôi đang sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp của trình duyệt cho các phản hồi bằng giọng nói.";
-  };
-
-  const getPracticeTipsText = () => {
-    return "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe tiếng Anh của bạn. Dưới đây là một số lời khuyên:";
-  };
-
-  const getBrowserTTSNote = () => {
-    return t("browserBasedTTS");
-  };
-
-  const getPracticeLevelText = () => {
-    return t("practiceLevel") || "Cấp độ luyện tập";
   };
 
   const { practice, native } = getLanguagePair();
@@ -315,14 +303,17 @@ const VoiceChat = () => {
           {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {getPracticeDescription()}
+          {t("practiceSpeakingSkills", {
+            language: practice,
+            nativeLanguage: native
+          })}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>Mô hình AI:</strong> {getAIModelInfoText()}
+          <strong>{t("aiModelInfo").split(":")[0]}:</strong> {t("aiModelInfo").split(":")[1]}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {getBrowserTTSNote()}
+            {t("browserBasedTTS")}
           </p>
         </div>
       </div>
@@ -332,7 +323,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {getCEFRLevelDescription()}
+                <span className="font-medium">{t("practiceLevel")}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
@@ -505,7 +496,7 @@ const VoiceChat = () => {
         <div className="bg-gray-100 rounded-lg p-4">
           <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
           <p className="text-sm text-gray-600 mb-3">
-            {getPracticeTipsText()}
+            {t("practiceTips", { language: practice })}
           </p>
           <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
             <li>{t("askQuestionsAboutTopics")}</li>

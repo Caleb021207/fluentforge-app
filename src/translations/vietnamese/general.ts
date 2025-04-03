@@ -49,8 +49,17 @@ const generalTranslations: TranslationRecord = {
   practiceWithAI: "Luyện tập với AI",
   processing: "Đang xử lý...",
   send: "Gửi",
-  cancel: "Hủy",
-  success: "Thành công",
+  
+  // Practice page translations
+  practiceSpeakingSkills: "Luyện tập kỹ năng nói {{language}} của bạn với trò chuyện bằng giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng {{nativeLanguage}}. AI sẽ trả lời bạn bằng {{language}} và giúp bạn luyện tập.",
+  aiModelInfo: "Chúng tôi đang sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp của trình duyệt cho các phản hồi bằng giọng nói.",
+  practiceTips: "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe {{language}} của bạn. Dưới đây là một số lời khuyên:",
+  askQuestionsAboutTopics: "Đặt câu hỏi về các chủ đề bạn quan tâm",
+  practiceEverydayPhrases: "Luyện tập các cụm từ hàng ngày",
+  describeImagesOrScenes: "Mô tả hình ảnh hoặc cảnh vật",
+  practiceVocabularyForSpecificTopics: "Luyện tập từ vựng cho các chủ đề cụ thể",
+  startVoiceChat: "Bắt đầu trò chuyện bằng giọng nói",
+  stopVoiceChat: "Dừng trò chuyện bằng giọng nói"
 };
 
 export default generalTranslations;
