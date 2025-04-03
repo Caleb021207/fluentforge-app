@@ -25,7 +25,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   failedToCreateSession: "无法创建会话",
   loginRequiredDescription: "要访问高级语音聊天功能，请登录您的账户。",
   conversationHistoryCleared: "对话历史已清除",
-  premiumVoiceChatDescription: "与高级AI导师进行自然语音对话，练习{{practice}}语言！AI将帮助您纠正语法、词汇和发音。",
+  premiumVoiceChatDescription: "与高级AI导师进行自然语音对话，练习英语！AI将帮助您纠正语法、词汇和发音。",
   premiumVoiceNote: "高级语音聊天限制为每24小时一次5分钟的会话",
   benefitNaturalVoice: "使用ElevenLabs技术进行自然、人性化的语音互动",
   benefitAccentPronunciation: "准确的口音和发音，沉浸式学习",

@@ -25,8 +25,8 @@ const voiceChatTranslations: TranslationRecord = {
   audioPlaybackError: "音频播放错误。请重试。",
   conversationStarters: "对话开场白",
   tryThesePhrases: "尝试这些短语开始对话：",
-  inYourTargetLanguage: "用您想学习的语言",
-  inYourNativeLanguage: "用您的母语",
+  inYourTargetLanguage: "用英语（您想学习的语言）:",
+  inYourNativeLanguage: "用中文（您的母语）:",
   translation: "翻译",
   conversationHistory: "对话历史",
   clearConversation: "清除对话",
@@ -39,7 +39,7 @@ const voiceChatTranslations: TranslationRecord = {
   phrase5: "告诉我你最喜欢的书或电影。",
   phrase6: "上周末你做了什么？",
   phrase7: "你明天有什么计划？",
-  phrase8: "用西班牙语/英语怎么说...？",
+  phrase8: "用英语怎么说...？",
   browserBasedTTS: "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。",
 };
 

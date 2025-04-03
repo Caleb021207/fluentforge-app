@@ -9,12 +9,14 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PremiumVoiceChatSession } from "@/types/supabase";
 import { useNavigate } from "react-router-dom";
+
 type VoiceMessage = {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
 };
 type SessionStatus = 'available' | 'active' | 'cooldown';
+
 const PremiumVoiceChat = () => {
   const [messages, setMessages] = useState<VoiceMessage[]>([]);
   const [isRecording, setIsRecording] = useState(false);
@@ -33,6 +35,7 @@ const PremiumVoiceChat = () => {
     t
   } = useLocalization();
   const navigate = useNavigate();
+
   useEffect(() => {
     const checkAuth = async () => {
       setIsLoading(true);
@@ -61,9 +64,11 @@ const PremiumVoiceChat = () => {
       subscription.unsubscribe();
     };
   }, []);
+
   const getAgentId = () => {
     return getAgentIdForLanguage(currentLanguage);
   };
+
   const conversation = useConversation({
     onMessage: message => {
       if (message.type === "llm_response") {
@@ -84,7 +89,9 @@ const PremiumVoiceChat = () => {
       });
     }
   });
+
   const isConversationActive = () => conversation.status !== "disconnected";
+
   const checkSessionStatus = async () => {
     try {
       const {
@@ -145,6 +152,7 @@ const PremiumVoiceChat = () => {
       setSessionStatus('available');
     }
   };
+
   useEffect(() => {
     const initMicrophone = async () => {
       try {
@@ -164,6 +172,7 @@ const PremiumVoiceChat = () => {
     };
     initMicrophone();
   }, [toast, t]);
+
   useEffect(() => {
     let timerId: number | null = null;
     if (isConversationActive() && voiceChatTimeRemaining !== null) {
@@ -188,6 +197,7 @@ const PremiumVoiceChat = () => {
       if (timerId) clearInterval(timerId);
     };
   }, [isConversationActive(), voiceChatTimeRemaining]);
+
   useEffect(() => {
     let cooldownTimerId: number | null = null;
     if (sessionStatus === 'cooldown' && cooldownTimeRemaining !== null && cooldownTimeRemaining > 0) {
@@ -206,16 +216,19 @@ const PremiumVoiceChat = () => {
       if (cooldownTimerId) clearInterval(cooldownTimerId);
     };
   }, [sessionStatus, cooldownTimeRemaining]);
+
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
+
   const formatCooldownTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor(seconds % 3600 / 60);
     return `${hours}h ${mins}m`;
   };
+
   const createSession = async (): Promise<string | null> => {
     try {
       const {
@@ -252,6 +265,7 @@ const PremiumVoiceChat = () => {
       return null;
     }
   };
+
   const endSession = async (sessionId: string) => {
     try {
       const {
@@ -269,6 +283,7 @@ const PremiumVoiceChat = () => {
       console.error("Error in endSession:", error);
     }
   };
+
   const startConversation = async () => {
     if (!isLoggedIn) {
       toast({
@@ -329,7 +344,11 @@ const PremiumVoiceChat = () => {
       setSessionStatus('active');
       const initialUserMessage: VoiceMessage = {
         role: "user",
-        content: currentLanguage === "english" ? "Hello, I'd like to practice Spanish with you." : "Hello, I'd like to practice English with you.",
+        content: currentLanguage === "english" 
+          ? "Hello, I'd like to practice Spanish with you." 
+          : currentLanguage === "mandarin"
+            ? "你好，我想和你练习英语。"
+            : "Hello, I'd like to practice English with you.",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, initialUserMessage]);
@@ -346,6 +365,7 @@ const PremiumVoiceChat = () => {
       });
     }
   };
+
   const endConversation = async () => {
     if (isConversationActive()) {
       await conversation.endSession();
@@ -361,6 +381,7 @@ const PremiumVoiceChat = () => {
       });
     }
   };
+
   const getLanguagePair = () => {
     if (currentLanguage === "english") {
       return {
@@ -387,12 +408,18 @@ const PremiumVoiceChat = () => {
         practice: "English",
         native: "Arabic"
       };
+    } else if (currentLanguage === "mandarin") {
+      return {
+        practice: "English",
+        native: "Mandarin"
+      };
     }
     return {
       practice: "Spanish",
       native: "English"
     };
   };
+
   const clearConversation = () => {
     setMessages([]);
     toast({
@@ -400,10 +427,12 @@ const PremiumVoiceChat = () => {
       description: t("conversationHistoryCleared")
     });
   };
+
   const {
     practice,
     native
   } = getLanguagePair();
+
   const redirectToLogin = () => {
     navigate("/");
     toast({
@@ -411,6 +440,7 @@ const PremiumVoiceChat = () => {
       description: t("redirectingToLogin")
     });
   };
+
   const renderLoginRequired = () => {
     return <div className="max-w-4xl mx-auto p-4">
         <div className="mb-8">
@@ -440,6 +470,7 @@ const PremiumVoiceChat = () => {
         </Card>
       </div>;
   };
+
   const renderCooldownMessage = () => {
     if (sessionStatus === 'cooldown' && cooldownTimeRemaining) {
       return <Card className="p-4 mb-6 bg-red-50 border-red-200">
@@ -460,6 +491,7 @@ const PremiumVoiceChat = () => {
     }
     return null;
   };
+
   if (isLoading) {
     return <div className="max-w-4xl mx-auto p-4">
         <div className="flex justify-center items-center h-64">
@@ -467,9 +499,11 @@ const PremiumVoiceChat = () => {
         </div>
       </div>;
   }
+
   if (!isLoggedIn) {
     return renderLoginRequired();
   }
+
   return <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-lingua-text mb-4">
@@ -529,4 +563,5 @@ const PremiumVoiceChat = () => {
       </div>
     </div>;
 };
+
 export default PremiumVoiceChat;
