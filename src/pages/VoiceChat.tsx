@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -47,7 +46,6 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set recognition language based on user's native language
       const langMap: Record<string, string> = {
         english: "en-US",
         spanish: "es-ES",
@@ -211,7 +209,6 @@ const VoiceChat = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    // Set the target language for speech synthesis
     const targetLanguage = getLanguagePair().practice.toLowerCase();
     const langMap: Record<string, string> = {
       english: "en-US",
@@ -271,10 +268,8 @@ const VoiceChat = () => {
     const targetLangFromStorage = localStorage.getItem("targetLanguage");
     const nativeLangFromStorage = localStorage.getItem("nativeLanguage");
     
-    // Default to English for practice if not set
     const practiceLanguage = targetLangFromStorage || "English";
     
-    // Use the current UI language as native language if not explicitly set
     const nativeLanguage = nativeLangFromStorage || currentLanguage;
     
     return { 
@@ -287,10 +282,8 @@ const VoiceChat = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     const { practice, native } = getLanguagePair();
     
-    // Get phrases in target language (what user is practicing)
     const targetLanguagePhrases = phraseKeys.map(key => t(key));
     
-    // Get phrases in native language (user's selected native language)
     const nativeLanguagePhrases = phraseKeys.map(key => t(key));
     
     return { nativeLanguagePhrases, targetLanguagePhrases };
@@ -329,14 +322,14 @@ const VoiceChat = () => {
           {t("practiceSpeakingSkills", {
             language: practice,
             nativeLanguage: native
-          }) || `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${native}. The AI will respond to you in ${practice} and help you practice.`}
+          })}
         </p>
         <p className="text-sm text-gray-500 mb-2">
           <strong>{t("aiModelInfo")?.split(":")[0] || "AI Model"}:</strong> {t("aiModelInfo")?.split(":")[1] || `We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.`}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {t("browserBasedTTS") || "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat."}
+            {t("browserBasedTTS")}
           </p>
         </div>
       </div>
