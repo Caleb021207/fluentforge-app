@@ -10,7 +10,6 @@ const voiceChatTranslations: TranslationRecord = {
   youSaid: "You said",
   aiResponse: "AI Response",
   playAgain: "Play Again",
-  speaking: "Speaking",
   practiceWithVoiceChat: "Practice with Voice Chat",
   practiceLanguageTips: "Use this tool to improve your speaking and listening skills. Here are some tips:",
   askQuestionsAboutTopics: "Ask questions about everyday topics",
@@ -27,8 +26,8 @@ const voiceChatTranslations: TranslationRecord = {
   // Conversation starters section
   conversationStarters: "Conversation Starters",
   tryThesePhrases: "Try these phrases to start a conversation:",
-  inYourTargetLanguage: "In your target language",
-  inYourNativeLanguage: "In your native language",
+  inYourTargetLanguage: "In your target language:",
+  inYourNativeLanguage: "In your native language:",
   
   // Conversation starter phrases
   phrase1: "Hello, how are you today?",
@@ -49,12 +48,6 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
   timeLimit5MinReached: "The 5-minute time limit has been reached",
-  
-  // New or improved translations
-  practiceSpeakingSkills: "Practice your {{language}} speaking skills with our voice chat. Click the microphone button and start speaking in {{nativeLanguage}}. The AI will respond to you in {{language}} and help you practice.",
-  browserBasedTTS: "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat.",
-  practiceLevel: "Practice Level",
-  cefrB1Description: "Intermediate - Can discuss familiar topics"
 };
 
 export default voiceChatTranslations;

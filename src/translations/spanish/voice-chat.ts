@@ -10,7 +10,6 @@ const voiceChatTranslations: TranslationRecord = {
   youSaid: "Dijiste",
   aiResponse: "Respuesta de la IA",
   playAgain: "Reproducir de nuevo",
-  speaking: "Hablando",
   practiceWithVoiceChat: "Practica con el Chat de Voz",
   practiceLanguageTips: "Usa esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:",
   askQuestionsAboutTopics: "Haz preguntas sobre temas cotidianos",
@@ -25,8 +24,8 @@ const voiceChatTranslations: TranslationRecord = {
   audioPlaybackError: "Error al reproducir el audio. Por favor, inténtalo de nuevo.",
   conversationStarters: "Iniciadores de Conversación",
   tryThesePhrases: "Prueba estas frases para iniciar una conversación:",
-  inYourTargetLanguage: "En tu idioma objetivo",
-  inYourNativeLanguage: "En tu idioma nativo",
+  inYourTargetLanguage: "En tu idioma objetivo:",
+  inYourNativeLanguage: "En tu idioma nativo:",
   phrase1: "Hola, ¿cómo estás hoy?",
   phrase2: "¿Qué tiempo hace donde estás?",
   phrase3: "¿Puedes recomendarme un buen restaurante?",
@@ -40,11 +39,6 @@ const voiceChatTranslations: TranslationRecord = {
   clearConversation: "Limpiar Conversación",
   voiceChatEnded: "Chat de voz finalizado",
   timeLimit5MinReached: "Se ha alcanzado el límite de tiempo de 5 minutos",
-  practiceSpeakingSkills: "Practica tus habilidades de habla en {{language}} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en {{nativeLanguage}}. La IA te responderá en {{language}} y te ayudará a practicar.",
-  browserBasedTTS: "Nota: Esto usa la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.",
-  practiceLevel: "Nivel de práctica",
-  cefrB1Description: "Intermedio - Puede discutir temas familiares",
-  aiModelInfo: "Modelo de IA: Estamos usando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la síntesis de voz integrada del navegador para las respuestas de voz."
 };
 
 export default voiceChatTranslations;
