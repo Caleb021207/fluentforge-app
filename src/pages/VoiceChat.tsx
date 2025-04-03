@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -325,7 +326,7 @@ const VoiceChat = () => {
           })}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{t("aiModelInfo")?.split(":")[0] || "AI Model"}:</strong> {t("aiModelInfo")?.split(":")[1] || `We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.`}
+          {t("aiModelInfo")}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
