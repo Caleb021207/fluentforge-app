@@ -7,8 +7,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import englishTranslations from "@/translations/english";
-import vietnameseTranslations from "@/translations/vietnamese";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -49,8 +47,8 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set to Vietnamese for input language when user is Vietnamese
-      recognitionRef.current.lang = currentLanguage === "vietnamese" ? "vi-VN" : "en-US";
+      // Set recognition language based on user's native language
+      recognitionRef.current.lang = getLanguagePair().nativeBcp47;
       recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
       
@@ -203,18 +201,18 @@ const VoiceChat = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    // Always speak in English for Vietnamese users
-    utteranceRef.current.lang = "en-US";
+    // Speak in the target language
+    utteranceRef.current.lang = getLanguagePair().practiceBcp47;
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
-    const voice = voices.find(v => v.lang.startsWith("en"));
+    const voice = voices.find(v => v.lang.startsWith(getLanguagePair().practiceBcp47.split('-')[0]));
     if (voice) {
       console.log(`Using voice: ${voice.name} (${voice.lang})`);
       utteranceRef.current.voice = voice;
     } else {
-      console.warn(`No matching voice found for language: en`);
+      console.warn(`No matching voice found for language: ${getLanguagePair().practiceBcp47}`);
     }
     
     utteranceRef.current.onstart = () => {
@@ -247,30 +245,24 @@ const VoiceChat = () => {
   };
 
   const getLanguagePair = () => {
-    // For Vietnamese users, they are learning English
-    if (currentLanguage === "vietnamese") {
-      return { practice: "English", native: "Vietnamese" };
-    }
-    // Default fallback
-    return { practice: "English", native: currentLanguage === "english" ? "Spanish" : "English" };
+    // Define language pairings with BCP-47 language codes for speech APIs
+    const languagePairs = {
+      english: { practice: "Spanish", native: "English", practiceBcp47: "es-ES", nativeBcp47: "en-US" },
+      spanish: { practice: "English", native: "Spanish", practiceBcp47: "en-US", nativeBcp47: "es-ES" },
+      portuguese: { practice: "English", native: "Portuguese", practiceBcp47: "en-US", nativeBcp47: "pt-BR" },
+      korean: { practice: "English", native: "Korean", practiceBcp47: "en-US", nativeBcp47: "ko-KR" },
+      arabic: { practice: "English", native: "Arabic", practiceBcp47: "en-US", nativeBcp47: "ar-SA" },
+      mandarin: { practice: "English", native: "Mandarin", practiceBcp47: "en-US", nativeBcp47: "zh-CN" },
+      vietnamese: { practice: "English", native: "Vietnamese", practiceBcp47: "en-US", nativeBcp47: "vi-VN" }
+    };
+    
+    return languagePairs[currentLanguage as keyof typeof languagePairs] || languagePairs.english;
   };
 
   const getConversationStarters = () => {
+    // Get conversation starter phrases from translations
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
-    
-    if (currentLanguage === "vietnamese") {
-      // For Vietnamese users learning English
-      const nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
-      const targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      return { nativeLanguagePhrases, targetLanguagePhrases };
-    } else {
-      // For other users
-      const nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      const targetLanguagePhrases = phraseKeys.map(key => 
-        currentLanguage === "english" ? vietnameseTranslations[key] : englishTranslations[key]
-      );
-      return { nativeLanguagePhrases, targetLanguagePhrases };
-    }
+    return phraseKeys.map(key => t(key));
   };
 
   const handlePhraseClick = (phrase: string) => {
@@ -294,7 +286,7 @@ const VoiceChat = () => {
   };
 
   const { practice, native } = getLanguagePair();
-  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
+  const conversationStarters = getConversationStarters();
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -309,7 +301,7 @@ const VoiceChat = () => {
           })}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{t("aiModelInfo").split(":")[0]}:</strong> {t("aiModelInfo").split(":")[1]}
+          <strong>{t("aiModelInfo")}</strong>
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
@@ -462,7 +454,7 @@ const VoiceChat = () => {
                 {t("inYourTargetLanguage")}: ({practice})
               </h4>
               <ul className="space-y-2">
-                {targetLanguagePhrases.map((phrase, index) => (
+                {conversationStarters.slice(0, 4).map((phrase, index) => (
                   <li 
                     key={`target-${index}`} 
                     className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
@@ -479,7 +471,7 @@ const VoiceChat = () => {
                 {t("inYourNativeLanguage")}: ({native})
               </h4>
               <ul className="space-y-2">
-                {nativeLanguagePhrases.map((phrase, index) => (
+                {conversationStarters.slice(4, 8).map((phrase, index) => (
                   <li 
                     key={`native-${index}`} 
                     className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"

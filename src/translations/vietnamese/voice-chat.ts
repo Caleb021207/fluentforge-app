@@ -25,6 +25,7 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecificTopics: "Luyện tập từ vựng cho các chủ đề cụ thể",
   browserBasedTTS: "Lưu ý: Tính năng này sử dụng chuyển văn bản thành giọng nói dựa trên trình duyệt. Để có chất lượng giọng nói cao cấp với ElevenLabs, hãy thử tính năng Trò chuyện bằng giọng nói cao cấp của chúng tôi.",
   practiceLevel: "Cấp độ luyện tập",
+  cefrB1Description: "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc",
   phrase1: "Xin chào, tôi tên là...",
   phrase2: "Làm thế nào để nói... bằng tiếng Anh?",
   phrase3: "Tôi đang học tiếng Anh được...",
@@ -42,7 +43,9 @@ const voiceChatTranslations: TranslationRecord = {
   speechSynthesisError: "Lỗi tổng hợp giọng nói",
   voiceChatEnded: "Trò chuyện bằng giọng nói đã kết thúc",
   timeLimit5MinReached: "Đã đạt đến giới hạn thời gian 5 phút",
-  startChatting: "Bắt đầu trò chuyện ngay bây giờ"
+  startChatting: "Bắt đầu trò chuyện ngay bây giờ",
+  aiModelInfo: "Chúng tôi đang sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp của trình duyệt cho các phản hồi bằng giọng nói",
+  practiceTips: "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe {{language}} của bạn. Dưới đây là một số lời khuyên:"
 };
 
 export default voiceChatTranslations;

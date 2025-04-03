@@ -1,46 +1,65 @@
 
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { NavItem } from "./types";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { navItems } from "./getNavItems";
 import { useNavTranslation } from "./useNavTranslation";
+import MobileMenuToggle from "./MobileMenuToggle";
 
 interface NavMenuProps {
-  items: NavItem[];
-  onItemClick?: () => void;
+  isLoggedIn: boolean;
+  isAdmin?: boolean;
 }
 
-const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
-  const location = useLocation();
+const NavMenu = ({ isLoggedIn, isAdmin = false }: NavMenuProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { getTranslatedLabel } = useNavTranslation();
+  
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const filteredNavItems = navItems
+    .filter(item => {
+      if (item.requiresAuth && !isLoggedIn) return false;
+      if (item.adminOnly && !isAdmin) return false;
+      return true;
+    });
 
   return (
-    <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
-      {items.map((item) => {
-        const Icon = item.icon;
-        const isActive = location.pathname === item.path;
-        const translatedLabel = getTranslatedLabel(item.label);
-        
-        return (
-          <Link 
-            key={item.path} 
+    <nav className="flex">
+      <div className="hidden md:flex space-x-6">
+        {filteredNavItems.map((item) => (
+          <Link
+            key={item.path}
             to={item.path}
-            onClick={onItemClick}
-            className="flex-1 md:flex-auto"
+            className="text-gray-700 hover:text-lingua-primary transition-colors"
           >
-            <Button
-              variant={isActive ? "default" : "ghost"}
-              className={`w-full justify-start ${
-                isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
-              }`}
-            >
-              {Icon && <Icon className="h-5 w-5 md:mr-2" />}
-              <span className="hidden md:inline">{translatedLabel}</span>
-            </Button>
+            {getTranslatedLabel(item.label)}
           </Link>
-        );
-      })}
-    </div>
+        ))}
+      </div>
+      
+      <div className="md:hidden">
+        <MobileMenuToggle isOpen={isOpen} toggleMenu={toggleMenu} />
+        
+        {isOpen && (
+          <div className="absolute top-16 right-0 w-64 bg-white shadow-lg rounded-md py-2 z-50">
+            {filteredNavItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="flex items-center justify-between px-4 py-2 hover:bg-gray-100"
+                onClick={() => setIsOpen(false)}
+              >
+                <span>{getTranslatedLabel(item.label)}</span>
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </nav>
   );
 };
 
