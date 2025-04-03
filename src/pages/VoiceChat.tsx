@@ -7,8 +7,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import englishTranslations from "@/translations/english";
-import vietnameseTranslations from "@/translations/vietnamese";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -49,8 +47,18 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set to Vietnamese for input language when user is Vietnamese
-      recognitionRef.current.lang = currentLanguage === "vietnamese" ? "vi-VN" : "en-US";
+      // Set recognition language based on user's native language
+      const langMap: Record<string, string> = {
+        english: "en-US",
+        spanish: "es-ES",
+        portuguese: "pt-BR",
+        vietnamese: "vi-VN",
+        mandarin: "zh-CN",
+        korean: "ko-KR",
+        arabic: "ar-SA"
+      };
+      
+      recognitionRef.current.lang = langMap[currentLanguage] || "en-US";
       recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
       
@@ -203,18 +211,31 @@ const VoiceChat = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    // Always speak in English for Vietnamese users
-    utteranceRef.current.lang = "en-US";
+    // Set the target language for speech synthesis
+    const targetLanguage = getLanguagePair().practice.toLowerCase();
+    const langMap: Record<string, string> = {
+      english: "en-US",
+      spanish: "es-ES",
+      portuguese: "pt-BR",
+      vietnamese: "vi-VN",
+      mandarin: "zh-CN",
+      korean: "ko-KR",
+      arabic: "ar-SA"
+    };
+    
+    utteranceRef.current.lang = langMap[targetLanguage] || "en-US";
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
-    const voice = voices.find(v => v.lang.startsWith("en"));
+    const voiceLang = targetLanguage === "english" ? "en" : langMap[targetLanguage]?.split('-')[0] || "en";
+    const voice = voices.find(v => v.lang.startsWith(voiceLang));
+    
     if (voice) {
       console.log(`Using voice: ${voice.name} (${voice.lang})`);
       utteranceRef.current.voice = voice;
     } else {
-      console.warn(`No matching voice found for language: en`);
+      console.warn(`No matching voice found for language: ${voiceLang}`);
     }
     
     utteranceRef.current.onstart = () => {
@@ -247,30 +268,32 @@ const VoiceChat = () => {
   };
 
   const getLanguagePair = () => {
-    // For Vietnamese users, they are learning English
-    if (currentLanguage === "vietnamese") {
-      return { practice: "English", native: "Vietnamese" };
-    }
-    // Default fallback
-    return { practice: "English", native: currentLanguage === "english" ? "Spanish" : "English" };
+    const targetLangFromStorage = localStorage.getItem("targetLanguage");
+    const nativeLangFromStorage = localStorage.getItem("nativeLanguage");
+    
+    // Default to English for practice if not set
+    const practiceLanguage = targetLangFromStorage || "English";
+    
+    // Use the current UI language as native language if not explicitly set
+    const nativeLanguage = nativeLangFromStorage || currentLanguage;
+    
+    return { 
+      practice: practiceLanguage.charAt(0).toUpperCase() + practiceLanguage.slice(1), 
+      native: nativeLanguage.charAt(0).toUpperCase() + nativeLanguage.slice(1) 
+    };
   };
 
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
+    const { practice, native } = getLanguagePair();
     
-    if (currentLanguage === "vietnamese") {
-      // For Vietnamese users learning English
-      const nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
-      const targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      return { nativeLanguagePhrases, targetLanguagePhrases };
-    } else {
-      // For other users
-      const nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      const targetLanguagePhrases = phraseKeys.map(key => 
-        currentLanguage === "english" ? vietnameseTranslations[key] : englishTranslations[key]
-      );
-      return { nativeLanguagePhrases, targetLanguagePhrases };
-    }
+    // Get phrases in target language (what user is practicing)
+    const targetLanguagePhrases = phraseKeys.map(key => t(key));
+    
+    // Get phrases in native language (user's selected native language)
+    const nativeLanguagePhrases = phraseKeys.map(key => t(key));
+    
+    return { nativeLanguagePhrases, targetLanguagePhrases };
   };
 
   const handlePhraseClick = (phrase: string) => {
@@ -306,14 +329,14 @@ const VoiceChat = () => {
           {t("practiceSpeakingSkills", {
             language: practice,
             nativeLanguage: native
-          })}
+          }) || `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${native}. The AI will respond to you in ${practice} and help you practice.`}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{t("aiModelInfo").split(":")[0]}:</strong> {t("aiModelInfo").split(":")[1]}
+          <strong>{t("aiModelInfo")?.split(":")[0] || "AI Model"}:</strong> {t("aiModelInfo")?.split(":")[1] || `We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.`}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {t("browserBasedTTS")}
+            {t("browserBasedTTS") || "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat."}
           </p>
         </div>
       </div>
@@ -496,7 +519,7 @@ const VoiceChat = () => {
         <div className="bg-gray-100 rounded-lg p-4">
           <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
           <p className="text-sm text-gray-600 mb-3">
-            {t("practiceTips", { language: practice })}
+            {t("practiceLanguageTips")}
           </p>
           <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
             <li>{t("askQuestionsAboutTopics")}</li>
