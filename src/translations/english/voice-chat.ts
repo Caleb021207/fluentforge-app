@@ -27,8 +27,8 @@ const voiceChatTranslations: TranslationRecord = {
   // Conversation starters section
   conversationStarters: "Conversation Starters",
   tryThesePhrases: "Try these phrases to start a conversation:",
-  inYourTargetLanguage: "In your target language:",
-  inYourNativeLanguage: "In your native language:",
+  inYourTargetLanguage: "In your target language",
+  inYourNativeLanguage: "In your native language",
   
   // Conversation starter phrases
   phrase1: "Hello, how are you today?",
