@@ -8,15 +8,14 @@ import { useNavTranslation } from "./useNavTranslation";
 interface NavMenuProps {
   items: NavItem[];
   onItemClick?: () => void;
-  className?: string;
 }
 
-const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick, className }) => {
+const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
   const location = useLocation();
   const { getTranslatedLabel } = useNavTranslation();
 
   return (
-    <div className={`flex md:flex-col justify-around md:justify-start md:space-y-2 ${className || ''}`}>
+    <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
       {items.map((item) => {
         const Icon = item.icon;
         const isActive = location.pathname === item.path;
