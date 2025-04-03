@@ -44,12 +44,7 @@ const Navigation = () => {
             <span className="font-bold text-2xl text-lingua-primary">Palavox</span>
           </Link>
           
-          <NavMenu 
-            isLoggedIn={isLoggedIn} 
-            isAdmin={isAdmin} 
-            items={navItems} 
-            onItemClick={closeMenu} 
-          />
+          <NavMenu items={navItems} onItemClick={closeMenu} />
           
           {isLoggedIn && isOpen && (
             <div className="md:hidden mt-4 pt-4 border-t">
