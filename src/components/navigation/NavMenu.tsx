@@ -23,10 +23,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
         
         return (
           <div key={item.path} className="flex-1 md:flex-auto">
-            <Link 
-              to={item.path}
-              onClick={onItemClick}
-            >
+            <Link to={item.path} onClick={onItemClick}>
               <Button
                 variant={isActive ? "default" : "ghost"}
                 className={isActive ? "w-full justify-start bg-lingua-primary hover:bg-lingua-primary/90" : "w-full justify-start"}
