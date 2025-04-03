@@ -8,7 +8,7 @@ import { useNavTranslation } from "./useNavTranslation";
 interface NavMenuProps {
   items: NavItem[];
   onItemClick?: () => void;
-  className?: string; // Add className prop to interface
+  className?: string; // This prop is defined correctly here
 }
 
 const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick, className }) => {
