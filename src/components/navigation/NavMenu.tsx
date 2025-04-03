@@ -23,6 +23,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
         
         return (
           <div key={item.path} className="flex-1 md:flex-auto">
+            {/* Wrapping the button with Link without passing className to Link */}
             <Link to={item.path} onClick={onItemClick}>
               <Button
                 variant={isActive ? "default" : "ghost"}
