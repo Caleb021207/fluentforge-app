@@ -1,48 +1,46 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { NavItem } from "./types";
 import { useNavTranslation } from "./useNavTranslation";
-import { useLocalization } from "@/context/LocalizationContext";
 
 interface NavMenuProps {
   items: NavItem[];
-  className?: string;
+  onItemClick?: () => void;
 }
 
-const NavMenu: React.FC<NavMenuProps> = ({ items, className }) => {
+const NavMenu: React.FC<NavMenuProps> = ({ items, onItemClick }) => {
   const location = useLocation();
-  const { translateNavItem } = useNavTranslation();
-  const { currentLanguage } = useLocalization();
-
-  // Replace this with your actual login check
-  const isLoggedIn = true;
-
-  const isActive = (to: string) => location.pathname === to;
-
-  const filteredItems = items.filter(
-    (item) => !item.requiresAuth || (item.requiresAuth && isLoggedIn)
-  );
+  const { getTranslatedLabel } = useNavTranslation();
 
   return (
-    <nav className={className}>
-      <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6">
-        {filteredItems.map((item) => (
-          <li key={item.to}>
-            <Link
-              to={item.to}
-              className={`text-sm font-medium transition-colors hover:text-foreground/80 ${
-                isActive(item.to)
-                  ? "text-foreground font-semibold"
-                  : "text-foreground/60"
+    <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
+      {items.map((item) => {
+        const Icon = item.icon;
+        const isActive = location.pathname === item.path;
+        const translatedLabel = getTranslatedLabel(item.label);
+        
+        return (
+          <Link 
+            key={item.path} 
+            to={item.path}
+            onClick={onItemClick}
+            className="flex-1 md:flex-auto"
+          >
+            <Button
+              variant={isActive ? "default" : "ghost"}
+              className={`w-full justify-start ${
+                isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
               }`}
             >
-              {translateNavItem(item, currentLanguage)}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+              {Icon && <Icon className="h-5 w-5 md:mr-2" />}
+              <span className="hidden md:inline">{translatedLabel}</span>
+            </Button>
+          </Link>
+        );
+      })}
+    </div>
   );
 };
 
