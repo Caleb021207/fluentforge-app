@@ -1,10 +1,9 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import englishTranslations from "@/translations/english";
@@ -12,6 +11,7 @@ import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
 import mandarinTranslations from "@/translations/mandarin";
 import vietnameseTranslations from "@/translations/vietnamese";
+import frenchTranslations from "@/translations/french";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -292,6 +292,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "vietnamese") {
       nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "french") {
+      nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -436,7 +439,7 @@ const VoiceChat = () => {
           {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : "AI模型："}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : currentLanguage === "french" ? "Modèle d'IA :" : "AI模型："}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">

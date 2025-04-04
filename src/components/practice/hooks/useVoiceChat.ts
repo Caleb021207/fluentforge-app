@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { supabase } from "@/integrations/supabase/client";
