@@ -25,6 +25,8 @@ const PracticeHeader: React.FC = () => {
                     ? `AI 튜터와 채팅하여 영어를 연습해보세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다. 언어나 문화에 대한 질문을 자유롭게 해보세요.`
                   : currentLanguage === "vietnamese"
                     ? `Trò chuyện với gia sư AI của chúng tôi để thực hành tiếng Anh thông qua hội thoại văn bản! AI sẽ giúp sửa ngữ pháp, từ vựng và cách sử dụng của bạn. Hãy thoải mái đặt câu hỏi về ngôn ngữ hoặc văn hóa.`
+                  : currentLanguage === "french"
+                    ? `Chattez avec notre tuteur IA pour pratiquer votre anglais à travers des conversations textuelles ! L'IA vous aidera à corriger votre grammaire, votre vocabulaire et votre utilisation. N'hésitez pas à poser des questions sur la langue ou la culture.`
                   : `Chat with our AI tutor to practice your language skills through text conversations!`}
       </p>
       <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">

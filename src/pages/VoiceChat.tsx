@@ -265,6 +265,8 @@ const VoiceChat = () => {
       return { practice: "English", native: "Mandarin" };
     } else if (currentLanguage === "vietnamese") {
       return { practice: "English", native: "Vietnamese" };
+    } else if (currentLanguage === "french") {
+      return { practice: "English", native: "French" };
     }
     return { practice: "English", native: "Vietnamese" };
   };
@@ -322,6 +324,8 @@ const VoiceChat = () => {
       return "中级 - 能够讨论熟悉的话题";
     } else if (currentLanguage === "vietnamese") {
       return "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc";
+    } else if (currentLanguage === "french") {
+      return "Intermédiaire - Peut discuter de sujets familiers";
     }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
@@ -341,6 +345,8 @@ const VoiceChat = () => {
       return `使用我们的语音聊天练习您的${getLanguagePair().practice}口语技能。点击麦克风按钮，开始用${getLanguagePair().practice}说话。AI将用${getLanguagePair().practice}回应您并帮助您练习。`;
     } else if (currentLanguage === "vietnamese") {
       return `Luyện tập kỹ năng nói tiếng ${getLanguagePair().practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${getLanguagePair().practice}. AI sẽ phản hồi bạn bằng tiếng ${getLanguagePair().practice} và giúp bạn luyện tập.`;
+    } else if (currentLanguage === "french") {
+      return `Pratiquez vos compétences orales en ${getLanguagePair().practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${getLanguagePair().practice}. L'IA vous répondra en ${getLanguagePair().practice} et vous aidera à vous entraîner.`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -360,6 +366,8 @@ const VoiceChat = () => {
       return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
     } else if (currentLanguage === "vietnamese") {
       return "Mô hình AI: Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
+    } else if (currentLanguage === "french") {
+      return "Modèle d'IA : Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la génération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -377,6 +385,8 @@ const VoiceChat = () => {
       return "使用此工具提高口语和听力技能。以下是一些提示：";
     } else if (currentLanguage === "vietnamese") {
       return "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:";
+    } else if (currentLanguage === "french") {
+      return "Utilisez cet outil pour améliorer vos compétences en expression orale et en compréhension. Voici quelques conseils :";
     }
     return t("practiceLanguageTips");
   };
@@ -396,6 +406,8 @@ const VoiceChat = () => {
       return "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。";
     } else if (currentLanguage === "vietnamese") {
       return "Lưu ý: Tính năng này sử dụng chuyển văn bản thành giọng nói dựa trên trình duyệt. Để có chất lượng giọng nói cao cấp với ElevenLabs, hãy thử Trò chuyện bằng giọng nói cao cấp của chúng tôi.";
+    } else if (currentLanguage === "french") {
+      return "Remarque : Ce système utilise la synthèse vocale basée sur le navigateur. Pour une qualité vocale premium avec ElevenLabs, essayez notre Chat Vocal Premium.";
     }
     return t("browserBasedTTS");
   };
@@ -405,6 +417,8 @@ const VoiceChat = () => {
       return "练习水平";
     } else if (currentLanguage === "vietnamese") {
       return "Cấp độ thực hành";
+    } else if (currentLanguage === "french") {
+      return "Niveau de pratique";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -626,4 +640,3 @@ const VoiceChat = () => {
 };
 
 export default VoiceChat;
-

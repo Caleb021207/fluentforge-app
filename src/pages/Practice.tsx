@@ -26,7 +26,8 @@ const Practice = () => {
     endVoiceConversation
   } = useVoiceChat();
 
-  const targetLanguage = currentLanguage === "english" ? "Spanish" : "English";
+  const targetLanguage = currentLanguage === "english" ? "Spanish" : 
+                        currentLanguage === "french" ? "English" : "English";
 
   return (
     <div className="max-w-4xl mx-auto p-4">
