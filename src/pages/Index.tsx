@@ -1,237 +1,217 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import { useLocalization } from "@/context/LocalizationContext";
 
 const Index = () => {
   const { toast } = useToast();
-  const { currentLanguage, setCurrentLanguage, t } = useLocalization();
-  const [nativeLanguage, setNativeLanguage] = useState<string>("");
-  const [targetLanguage, setTargetLanguage] = useState<string>("");
-  const [hasSelectedLanguages, setHasSelectedLanguages] = useState(false);
-  const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
+  const { t, setCurrentLanguage } = useLocalization();
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [authDialogOpen, setAuthDialogOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [nativeLanguage, setNativeLanguage] = useState("");
+  const [targetLanguage, setTargetLanguage] = useState("");
+  const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
 
   useEffect(() => {
-    // Load language preferences from localStorage
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setIsSignedIn(!!data.user);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+
     const savedNativeLanguage = localStorage.getItem("nativeLanguage");
     const savedTargetLanguage = localStorage.getItem("targetLanguage");
     
-    if (savedNativeLanguage) {
-      setNativeLanguage(savedNativeLanguage);
-      setCurrentLanguage(savedNativeLanguage);
-    }
-    
-    if (savedTargetLanguage) {
-      setTargetLanguage(savedTargetLanguage);
-    }
-    
-    if (savedNativeLanguage && savedTargetLanguage) {
-      setHasSelectedLanguages(true);
-    }
-    
-    // Check if there are study materials for the selected language pair
-    // This is a placeholder logic - in a real app, you'd check against available study materials
-    if (savedNativeLanguage && savedTargetLanguage) {
-      const hasMaterials = !(
-        (savedNativeLanguage === "korean" && savedTargetLanguage === "spanish") ||
-        (savedNativeLanguage === "vietnamese" && savedTargetLanguage === "spanish")
-      );
-      setHasStudyMaterials(hasMaterials);
-    }
-    
-    // Check for authenticated user
-    const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      setUser(data.session?.user || null);
-    };
-    
-    checkAuth();
-    
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-    });
-    
+    if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
+    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
+
     return () => {
       subscription.unsubscribe();
     };
-  }, [setCurrentLanguage]);
+  }, []);
+
+  useEffect(() => {
+    if (nativeLanguage && targetLanguage) {
+      setHasStudyMaterials(true);
+      
+      sessionStorage.setItem("languagePair", `${nativeLanguage}-${targetLanguage}`);
+      sessionStorage.setItem("hasStudyMaterials", "true");
+    }
+  }, [nativeLanguage, targetLanguage]);
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      let result;
+      
+      if (isLogin) {
+        result = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+      } else {
+        result = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              native_language: nativeLanguage || undefined,
+              target_language: targetLanguage || undefined,
+            }
+          }
+        });
+      }
+
+      if (result.error) throw result.error;
+
+      setIsAuthDialogOpen(false);
+      setEmail("");
+      setPassword("");
+      
+      toast({
+        title: isLogin ? "Successfully signed in" : "Account created",
+        description: isLogin ? "Welcome back!" : "Please check your email to verify your account",
+      });
+      
+      if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
+      if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
+      
+    } catch (error: any) {
+      console.error("Authentication error:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Authentication failed. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      console.error("Google sign in error:", error);
+      toast({
+        title: "Error signing in",
+        description: error.message || "Please try again later",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLanguageSelection = () => {
-    if (!nativeLanguage) {
+    if (nativeLanguage && targetLanguage) {
+      localStorage.setItem("nativeLanguage", nativeLanguage);
+      localStorage.setItem("targetLanguage", targetLanguage);
+      
+      const languagePair = `${nativeLanguage}-${targetLanguage}`;
+      sessionStorage.setItem("languagePair", languagePair);
+      sessionStorage.setItem("hasStudyMaterials", "true");
+      
+      setCurrentLanguage(nativeLanguage);
+      
+      toast({
+        title: t("languagePreferencesSaved"),
+        description: `${t("youreNowLearning")} ${targetLanguage} ${t("from")} ${nativeLanguage}`,
+      });
+      
+      window.location.reload();
+    } else {
       toast({
         title: t("pleaseSelectBothLanguages"),
         description: t("youNeedToSelectBoth"),
         variant: "destructive",
       });
-      return;
     }
-    
-    // Save to localStorage
-    localStorage.setItem("nativeLanguage", nativeLanguage);
-    
-    // Update the UI language based on native language selection
-    setCurrentLanguage(nativeLanguage);
-    
-    setHasSelectedLanguages(true);
-    
-    toast({
-      title: t("languagePreferencesSaved"),
-      description: `${t("youreNowLearning")} ${nativeLanguage}`,
-    });
   };
 
-  const openAuthDialog = () => {
-    setAuthDialogOpen(true);
-  };
-
-  const closeAuthDialog = () => {
-    setAuthDialogOpen(false);
-  };
-
-  const isPersianSelected = nativeLanguage === 'persian';
-  
   return (
-    <main className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-4xl mx-auto"
-      >
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-lingua-text mb-3">
-            {t("welcomeToLingua")}
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-8 max-w-2xl mx-auto p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-4xl md:text-6xl font-bold text-lingua-text mb-4">
+            {t("welcomeToLanguageLearning")}
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            {t("linguaDescription")}
+          <p className="text-lg md:text-xl text-gray-600 mb-8">
+            {t("yourPersonalAICompanion")}
           </p>
-        </div>
-
-        <LanguageSelectionCard
-          nativeLanguage={nativeLanguage}
-          targetLanguage={targetLanguage}
-          setNativeLanguage={setNativeLanguage}
-          setTargetLanguage={setTargetLanguage}
-          hasStudyMaterials={hasStudyMaterials}
-          handleLanguageSelection={handleLanguageSelection}
-        />
-
-        {hasSelectedLanguages && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div className="col-span-full md:col-span-1">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-              >
-                <div className="bg-white/90 backdrop-blur shadow-lg rounded-lg p-6 h-full">
-                  <h3 className="text-xl font-semibold mb-4">{t("practiceYourLanguage")}</h3>
-                  <p className="text-gray-600 mb-6">
-                    {t("practiceDescription")}
-                  </p>
-                  <Link to="/practice">
-                    <Button className="w-full bg-lingua-primary hover:bg-lingua-primary/90">
-                      {t("startPracticing")}
-                    </Button>
-                  </Link>
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="col-span-full md:col-span-1">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-              >
-                <div className="bg-white/90 backdrop-blur shadow-lg rounded-lg p-6 h-full">
-                  <h3 className="text-xl font-semibold mb-4">{t("voiceChat")}</h3>
-                  <p className="text-gray-600 mb-6">
-                    {t("voiceChatDescription")}
-                  </p>
-                  {isPersianSelected ? (
-                    <Link to="/persian-voice-chat">
-                      <Button className="w-full bg-amber-500 hover:bg-amber-600">
-                        {t("persianVoiceAssistant")}
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Link to="/voice-chat">
-                      <Button className="w-full bg-lingua-primary hover:bg-lingua-primary/90">
-                        {t("tryVoiceChat")}
-                      </Button>
-                    </Link>
-                  )}
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="col-span-full md:col-span-1">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-              >
-                <div className="bg-white/90 backdrop-blur shadow-lg rounded-lg p-6 h-full">
-                  <h3 className="text-xl font-semibold mb-4">{t("premiumVoiceChat")}</h3>
-                  <p className="text-gray-600 mb-6">
-                    {t("premiumVoiceChatShortDescription")}
-                  </p>
-                  {isPersianSelected ? (
-                    <div>
-                      <p className="text-amber-700 mb-4 text-sm">
-                        {t("notSupportedByEleven")}
-                      </p>
-                      <Link to="/persian-voice-chat">
-                        <Button className="w-full bg-amber-500 hover:bg-amber-600">
-                          {t("persianVoiceAssistant")}
-                        </Button>
-                      </Link>
-                    </div>
-                  ) : (
-                    <Link to="/premium-voice-chat">
-                      <Button className="w-full bg-lingua-primary hover:bg-lingua-primary/90">
-                        {t("tryPremiumVoice")}
-                      </Button>
-                    </Link>
-                  )}
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        )}
-
-        {!user && (
-          <div className="mt-10">
-            <div className="bg-white/90 backdrop-blur shadow-lg rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">{t("createAccount")}</h3>
-              <p className="text-gray-600 mb-6">
-                {t("createAccountDescription")}
-              </p>
+          
+          <LanguageSelectionCard
+            nativeLanguage={nativeLanguage}
+            targetLanguage={targetLanguage}
+            setNativeLanguage={setNativeLanguage}
+            setTargetLanguage={setTargetLanguage}
+            hasStudyMaterials={hasStudyMaterials}
+            handleLanguageSelection={handleLanguageSelection}
+          />
+          
+          <div className="space-x-4">
+            {!isSignedIn ? (
               <Button 
-                onClick={openAuthDialog}
-                className="w-full md:w-auto bg-lingua-primary hover:bg-lingua-primary/90"
+                size="lg" 
+                className="bg-lingua-primary hover:bg-lingua-primary/90"
+                onClick={() => {
+                  setIsLogin(true);
+                  setIsAuthDialogOpen(true);
+                }}
               >
-                {t("signUpOrLogIn")}
+                {t("signIn")}
               </Button>
-            </div>
+            ) : null}
+            <Link to="/practice">
+              <Button size="lg" variant="outline">
+                {t("practiceWithAI")}
+              </Button>
+            </Link>
           </div>
-        )}
+        </motion.div>
+      </div>
 
-      </motion.div>
-
-      <AuthDialog open={authDialogOpen} onClose={closeAuthDialog} />
-    </main>
+      <AuthDialog
+        isOpen={isAuthDialogOpen}
+        onOpenChange={setIsAuthDialogOpen}
+        isLogin={isLogin}
+        setIsLogin={setIsLogin}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        handleEmailAuth={handleEmailAuth}
+        handleGoogleLogin={handleGoogleLogin}
+        isLoading={isLoading}
+      />
+    </div>
   );
 };
 
