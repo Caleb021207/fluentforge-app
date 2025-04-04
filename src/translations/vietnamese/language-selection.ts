@@ -2,19 +2,19 @@
 import { TranslationRecord } from "../types";
 
 const languageSelectionTranslations: TranslationRecord = {
-  iSpeak: "I speak:",
-  iWantToLearn: "I want to learn:",
-  selectYourNativeLanguage: "Select your native language",
-  selectLanguageToLearn: "Select language to learn",
-  saveLanguagePreferences: "Save Language Preferences",
-  languagePreferencesSaved: "Language preferences saved",
-  youreNowLearning: "You're now learning",
-  from: "from",
-  pleaseSelectBothLanguages: "Please select both languages",
-  youNeedToSelectBoth: "You need to select both your native language and the language you want to learn",
-  studyMaterialsComingSoon: "Study materials for learning {{targetLanguage}} from {{nativeLanguage}} are coming soon!",
-  someFeaturesLimited: "Some features might be limited or unavailable.",
-  selectYourLanguagePreferences: "Select Your Language Preferences",
+  iSpeak: "Tôi nói:",
+  iWantToLearn: "Tôi muốn học:",
+  selectYourNativeLanguage: "Chọn ngôn ngữ mẹ đẻ của bạn",
+  selectLanguageToLearn: "Chọn ngôn ngữ để học",
+  saveLanguagePreferences: "Lưu cài đặt ngôn ngữ",
+  languagePreferencesSaved: "Đã lưu cài đặt ngôn ngữ",
+  youreNowLearning: "Bạn đang học",
+  from: "từ",
+  pleaseSelectBothLanguages: "Vui lòng chọn cả hai ngôn ngữ",
+  youNeedToSelectBoth: "Bạn cần chọn cả ngôn ngữ mẹ đẻ và ngôn ngữ bạn muốn học",
+  studyMaterialsComingSoon: "Tài liệu học {{targetLanguage}} từ {{nativeLanguage}} sẽ sớm ra mắt!",
+  someFeaturesLimited: "Một số tính năng có thể bị hạn chế hoặc không khả dụng.",
+  selectYourLanguagePreferences: "Chọn cài đặt ngôn ngữ của bạn",
 };
 
 export default languageSelectionTranslations;

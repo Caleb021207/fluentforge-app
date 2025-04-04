@@ -52,6 +52,13 @@ const navItemTranslations = {
     "Premium Voice Chat": "高级语音聊天",
     "Admin": "管理员",
     "Home": "首页"
+  },
+  vietnamese: {
+    "Text Practice": "Luyện tập văn bản",
+    "Unlimited Voice Practice": "Luyện tập giọng nói không giới hạn",
+    "Premium Voice Chat": "Trò chuyện bằng giọng nói cao cấp",
+    "Admin": "Quản trị viên",
+    "Home": "Trang chủ"
   }
 };
 

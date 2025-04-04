@@ -26,7 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
-  const { currentLanguage } = useLocalization();
+  const { currentLanguage, t } = useLocalization();
 
   useEffect(() => {
     // Get initial session
@@ -50,7 +50,8 @@ const Layout = ({ children }: LayoutProps) => {
         <div className="w-full bg-white border-b py-2 px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <div className="flex items-center">
             <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">
-              {currentLanguage === "spanish" ? "Conectado como:" : "Signed in as:"}
+              {currentLanguage === "spanish" ? "Conectado como:" : 
+               currentLanguage === "vietnamese" ? "Đã đăng nhập với:" : "Signed in as:"}
             </span>
             <span className="font-medium text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">{user.email}</span>
           </div>

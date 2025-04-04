@@ -63,8 +63,8 @@ const AuthDialog = ({
           <DialogTitle>{isLogin ? t("signIn") : t("createAccount")}</DialogTitle>
           <DialogDescription>
             {isLogin
-              ? "Sign in to your account to continue"
-              : "Create a new account to get started"}
+              ? t("signInToContinue") 
+              : t("createAccountToGetStarted")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -93,7 +93,7 @@ const AuthDialog = ({
             <div>
               <Input
                 type="password"
-                placeholder="Access Passcode"
+                placeholder={t("accessPasscode")}
                 value={passcode}
                 onChange={(e) => {
                   setPasscode(e.target.value);
@@ -105,7 +105,7 @@ const AuthDialog = ({
               {passcodeError && (
                 <div className="flex items-center mt-2 text-red-500 text-sm">
                   <AlertCircle className="h-4 w-4 mr-1" />
-                  <span>Incorrect passcode. Please try again.</span>
+                  <span>{t("incorrectPasscode")}</span>
                 </div>
               )}
             </div>
@@ -124,7 +124,7 @@ const AuthDialog = ({
               className="text-sm"
               disabled={isLoading}
             >
-              {isLoading ? "Please wait..." : "Continue with Google"}
+              {isLoading ? t("pleaseWait") : t("continueWithGoogle")}
             </Button>
           </div>
           <Button
@@ -139,8 +139,8 @@ const AuthDialog = ({
             disabled={isLoading}
           >
             {isLogin
-              ? "Don't have an account? Sign up"
-              : "Already have an account? Sign in"}
+              ? t("dontHaveAccount") 
+              : t("alreadyHaveAccount")}
           </Button>
         </form>
       </DialogContent>

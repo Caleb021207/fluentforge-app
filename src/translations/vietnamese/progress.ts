@@ -2,25 +2,8 @@
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
-  yourProgress: "Your Progress",
-  lessonsCompleted: "Lessons Completed",
-  throughCurriculum: "through curriculum",
-  experienceAchievements: "Experience & Achievements",
-  xpPoints: "XP Points",
-  dailyStreak: "Daily Streak",
-  days: "days",
-  nextLevel: "Próximo Nível",
-  yourLearningProgress: "Your Learning Progress",
-  scoreTrends: "Score Trends",
-  noProgressData: "No Progress Data",
-  completeTestsToSeeProgress: "Complete some certification attempts to see your progress!",
-  offlineDataMayNotBeUpToDate: "You're currently offline. Data shown may not be up to date.",
-  networkConnectionIssue: "Network connection issue. Unable to load your progress data.",
-  problemLoadingProgressData: "There was a problem loading your progress data. Please try again later.",
-  failedToLoadProgressData: "Failed to load progress data. Please try again later.",
-  viewingDetails: "Viewing details",
-  featureComingSoon: "This feature will be implemented in a future update.",
-  recentCertificationAttempts: "Recent Certification Attempts",
+  authRequired: "Yêu cầu xác thực",
+  pleaseSignInDashboard: "Vui lòng đăng nhập để xem bảng điều khiển tiến độ của bạn.",
 };
 
 export default progressTranslations;
