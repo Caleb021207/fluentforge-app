@@ -1,0 +1,46 @@
+
+import { TranslationRecord } from "../types";
+
+const generalTranslations: TranslationRecord = {
+  appName: "LinguaBot AI",
+  welcome: "Bienvenue sur LinguaBot AI",
+  home: "Accueil",
+  profile: "Profil",
+  practice: "Pratique",
+  lessons: "Leçons",
+  progress: "Progrès",
+  certificates: "Certificats",
+  settings: "Paramètres",
+  logout: "Déconnexion",
+  login: "Connexion",
+  loading: "Chargement...",
+  error: "Erreur",
+  success: "Succès",
+  cancel: "Annuler",
+  save: "Enregistrer",
+  delete: "Supprimer",
+  edit: "Modifier",
+  create: "Créer",
+  submit: "Soumettre",
+  next: "Suivant",
+  previous: "Précédent",
+  back: "Retour",
+  done: "Terminé",
+  yes: "Oui",
+  no: "Non",
+  confirm: "Confirmer",
+  networkConnectionIssue: "Problème de connexion réseau",
+  pageNotFound: "Page non trouvée",
+  pageNotFoundDescription: "La page que vous cherchez n'existe pas ou a été déplacée.",
+  returnHome: "Retourner à l'accueil",
+  unexpectedError: "Une erreur inattendue s'est produite",
+  tryAgain: "Réessayer",
+  poweredBy: "Propulsé par",
+  developedBy: "Développé par",
+  contactUs: "Contactez-nous",
+  aboutUs: "À propos de nous",
+  termsOfService: "Conditions d'utilisation",
+  privacyPolicy: "Politique de confidentialité"
+};
+
+export default generalTranslations;
