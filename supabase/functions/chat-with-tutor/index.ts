@@ -194,7 +194,8 @@ async function getTranslation(message: string, userLanguage: string) {
                        userLanguage === 'portuguese' ? 'Portuguese' : 
                        userLanguage === 'korean' ? 'Korean' :
                        userLanguage === 'arabic' ? 'Arabic' :
-                       userLanguage === 'mandarin' ? 'Mandarin Chinese' : 'English';
+                       userLanguage === 'mandarin' ? 'Mandarin Chinese' :
+                       userLanguage === 'vietnamese' ? 'Vietnamese' : 'English';
 
   return await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',

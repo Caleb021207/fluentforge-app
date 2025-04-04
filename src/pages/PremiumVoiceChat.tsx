@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -412,6 +413,11 @@ const PremiumVoiceChat = () => {
       return {
         practice: "English",
         native: "Mandarin"
+      };
+    } else if (currentLanguage === "vietnamese") {
+      return {
+        practice: "English",
+        native: "Vietnamese"
       };
     }
     return {

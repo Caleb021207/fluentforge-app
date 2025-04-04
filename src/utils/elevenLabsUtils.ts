@@ -50,3 +50,98 @@ export const getAgentIdForLanguage = (language: string): string => {
   console.log("Using Spanish tutor for English speaker:", SPANISH_TUTOR_AGENT_ID);
   return SPANISH_TUTOR_AGENT_ID;
 };
+
+/**
+ * Initializes an ElevenLabs conversation agent
+ * @returns A promise that resolves to the conversation ID
+ */
+export const initializeElevenLabsAgent = async (language: string = 'english') => {
+  try {
+    // This is where you would integrate with the ElevenLabs API
+    // For now, we'll return a mock conversation ID
+    return `mock-conversation-${Date.now()}-${language}`;
+  } catch (error) {
+    console.error("Error initializing ElevenLabs agent:", error);
+    return null;
+  }
+};
+
+/**
+ * Ends an active ElevenLabs conversation
+ * @param conversationId The ID of the conversation to end
+ */
+export const endElevenLabsConversation = async (conversationId: string) => {
+  try {
+    console.log(`Ending ElevenLabs conversation: ${conversationId}`);
+    // This is where you would call the ElevenLabs API to end the conversation
+    return true;
+  } catch (error) {
+    console.error("Error ending ElevenLabs conversation:", error);
+    return false;
+  }
+};
+
+/**
+ * Hook for using ElevenLabs conversation in React components
+ */
+export const useElevenLabsAgent = (language: string = 'english') => {
+  // Use the @11labs/react useConversation hook
+  const conversation = useConversation();
+  
+  // Helper to check if conversation is active
+  const isConversationActive = () => conversation.status !== "disconnected";
+  
+  const startAgent = async () => {
+    try {
+      // Request microphone access if needed
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (error) {
+        console.error("Microphone access error:", error);
+        throw new Error("Microphone access is required for voice chat");
+      }
+      
+      // Use the appropriate agent ID based on language
+      const agentId = getAgentIdForLanguage(language);
+      console.log(`Starting ElevenLabs agent for ${language} with ID: ${agentId}`);
+      
+      // If already connected, disconnect first
+      if (isConversationActive()) {
+        await conversation.endSession();
+        console.log("Ended previous ElevenLabs session");
+      }
+      
+      // Start a new session with the appropriate agent
+      console.log(`Attempting to start new session with agent ID: ${agentId}`);
+      const conversationId = await conversation.startSession({ 
+        agentId: agentId 
+      });
+      console.log(`Successfully started ElevenLabs session: ${conversationId}`);
+      return conversationId;
+    } catch (error) {
+      console.error("Error starting ElevenLabs agent:", error);
+      return null;
+    }
+  };
+  
+  const stopAgent = async () => {
+    try {
+      if (isConversationActive()) {
+        await conversation.endSession();
+        console.log("Successfully ended ElevenLabs session");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error stopping ElevenLabs agent:", error);
+      return false;
+    }
+  };
+  
+  return {
+    startAgent,
+    stopAgent,
+    isConnected: isConversationActive(),
+    isSpeaking: conversation.isSpeaking
+  };
+};
