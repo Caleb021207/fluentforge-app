@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
 import mandarinTranslations from "@/translations/mandarin";
+import vietnameseTranslations from "@/translations/vietnamese";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -261,8 +263,10 @@ const VoiceChat = () => {
       return { practice: "English", native: "Arabic" };
     } else if (currentLanguage === "mandarin") {
       return { practice: "English", native: "Mandarin" };
+    } else if (currentLanguage === "vietnamese") {
+      return { practice: "English", native: "Vietnamese" };
     }
-    return { practice: "Spanish", native: "English" };
+    return { practice: "English", native: "Vietnamese" };
   };
 
   const getConversationStarters = () => {
@@ -282,6 +286,9 @@ const VoiceChat = () => {
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "mandarin") {
       nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "vietnamese") {
+      nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
@@ -313,6 +320,8 @@ const VoiceChat = () => {
   const getCEFRLevelDescription = () => {
     if (currentLanguage === "mandarin") {
       return "中级 - 能够讨论熟悉的话题";
+    } else if (currentLanguage === "vietnamese") {
+      return "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc";
     }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
@@ -330,6 +339,8 @@ const VoiceChat = () => {
       return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
     } else if (currentLanguage === "mandarin") {
       return `使用我们的语音聊天练习您的${getLanguagePair().practice}口语技能。点击麦克风按钮，开始用${getLanguagePair().practice}说话。AI将用${getLanguagePair().practice}回应您并帮助您练习。`;
+    } else if (currentLanguage === "vietnamese") {
+      return `Luyện tập kỹ năng nói tiếng ${getLanguagePair().practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${getLanguagePair().practice}. AI sẽ phản hồi bạn bằng tiếng ${getLanguagePair().practice} và giúp bạn luyện tập.`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -347,6 +358,8 @@ const VoiceChat = () => {
       return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
     } else if (currentLanguage === "mandarin") {
       return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
+    } else if (currentLanguage === "vietnamese") {
+      return "Mô hình AI: Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -362,6 +375,8 @@ const VoiceChat = () => {
       return "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:";
     } else if (currentLanguage === "mandarin") {
       return "使用此工具提高口语和听力技能。以下是一些提示：";
+    } else if (currentLanguage === "vietnamese") {
+      return "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:";
     }
     return t("practiceLanguageTips");
   };
@@ -379,6 +394,8 @@ const VoiceChat = () => {
       return "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.";
     } else if (currentLanguage === "mandarin") {
       return "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。";
+    } else if (currentLanguage === "vietnamese") {
+      return "Lưu ý: Tính năng này sử dụng chuyển văn bản thành giọng nói dựa trên trình duyệt. Để có chất lượng giọng nói cao cấp với ElevenLabs, hãy thử Trò chuyện bằng giọng nói cao cấp của chúng tôi.";
     }
     return t("browserBasedTTS");
   };
@@ -386,6 +403,8 @@ const VoiceChat = () => {
   const getPracticeLevelText = () => {
     if (currentLanguage === "mandarin") {
       return "练习水平";
+    } else if (currentLanguage === "vietnamese") {
+      return "Cấp độ thực hành";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -403,7 +422,7 @@ const VoiceChat = () => {
           {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : "AI模型："}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : "AI模型："}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
@@ -607,3 +626,4 @@ const VoiceChat = () => {
 };
 
 export default VoiceChat;
+
