@@ -28,6 +28,8 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ onClick, is
                   ? "Enviar mensagem de prática em inglês"
                   : currentLanguage === "korean"
                     ? "영어 연습 메시지 보내기"
+                    : currentLanguage === "vietnamese"
+                      ? "Gửi gợi ý thực hành tiếng Anh"
                     : "Send Practice Prompt"}
       </Button>
     </div>
