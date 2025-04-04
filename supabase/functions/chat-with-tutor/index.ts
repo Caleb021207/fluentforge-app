@@ -35,7 +35,8 @@ serve(async (req) => {
                           userLanguage === 'portuguese' ? 'Portuguese' : 
                           userLanguage === 'korean' ? 'Korean' :
                           userLanguage === 'arabic' ? 'Arabic' :
-                          userLanguage === 'mandarin' ? 'Mandarin Chinese' : 'Unknown';
+                          userLanguage === 'mandarin' ? 'Mandarin Chinese' : 
+                          userLanguage === 'vietnamese' ? 'Vietnamese' : 'Unknown';
     
     // Universal tutor instructions for all language combinations
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
