@@ -40,7 +40,17 @@ const generalTranslations: TranslationRecord = {
   contactUs: "Contactez-nous",
   aboutUs: "À propos de nous",
   termsOfService: "Conditions d'utilisation",
-  privacyPolicy: "Politique de confidentialité"
+  privacyPolicy: "Politique de confidentialité",
+
+  // Home page specific translations
+  welcomeToLanguageLearning: "Bienvenue sur Palavox",
+  yourPersonalAICompanion: "Votre compagnon personnel d'apprentissage des langues propulsé par l'IA. Commencez votre voyage vers la fluidité aujourd'hui.",
+  signIn: "Se Connecter",
+  createAccount: "Créer un Compte",
+  goToDashboard: "Aller au Tableau de Bord",
+  practiceWithAI: "Pratiquer avec l'IA",
+  processing: "Traitement en cours...",
+  send: "Envoyer",
 };
 
 export default generalTranslations;

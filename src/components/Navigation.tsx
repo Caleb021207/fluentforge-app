@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
@@ -59,6 +58,13 @@ const navItemTranslations = {
     "Premium Voice Chat": "Trò chuyện bằng giọng nói cao cấp",
     "Admin": "Quản trị viên",
     "Home": "Trang chủ"
+  },
+  french: {
+    "Text Practice": "Pratique de Texte",
+    "Unlimited Voice Practice": "Pratique de Voix Illimitée",
+    "Premium Voice Chat": "Chat Vocal Premium",
+    "Admin": "Administrateur",
+    "Home": "Accueil"
   }
 };
 

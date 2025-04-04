@@ -36,7 +36,22 @@ const authTranslations: TranslationRecord = {
   passwordChanged: "Mot de passe changé",
   sessionExpired: "Session expirée, veuillez vous reconnecter",
   userNotFound: "Utilisateur non trouvé",
-  unauthorizedAccess: "Accès non autorisé"
+  unauthorizedAccess: "Accès non autorisé",
+  
+  // Login dialog specific translations
+  signInToContinue: "Connectez-vous pour continuer",
+  createAccountToGetStarted: "Créez un compte pour commencer",
+  accessPasscode: "Code d'accès",
+  incorrectPasscode: "Code d'accès incorrect",
+  pleaseWait: "Veuillez patienter",
+  continueWithGoogle: "Continuer avec Google",
+  
+  // Logout button translations
+  loggedOutSuccessfully: "Déconnexion réussie",
+  youHaveBeenSignedOut: "Vous avez été déconnecté de votre compte",
+  errorSigningOut: "Erreur lors de la déconnexion",
+  errorOccurredWhileSigningOut: "Une erreur s'est produite lors de la déconnexion",
+  signOut: "Déconnexion"
 };
 
 export default authTranslations;

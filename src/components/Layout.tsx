@@ -51,7 +51,8 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="flex items-center">
             <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">
               {currentLanguage === "spanish" ? "Conectado como:" : 
-               currentLanguage === "vietnamese" ? "Đã đăng nhập với:" : "Signed in as:"}
+               currentLanguage === "vietnamese" ? "Đã đăng nhập với:" : 
+               currentLanguage === "french" ? "Connecté en tant que :" : "Signed in as:"}
             </span>
             <span className="font-medium text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">{user.email}</span>
           </div>
