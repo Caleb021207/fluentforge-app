@@ -1,15 +1,17 @@
 
 import { useState, useEffect } from "react";
-import { useConversation } from "@11labs/react";
+import { useConversation } from '@11labs/react';
 import { useToast } from "@/components/ui/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
+import { useNavigate } from "react-router-dom";
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
+  const navigate = useNavigate();
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -83,6 +85,16 @@ export const useVoiceChat = () => {
   };
 
   const startVoiceConversation = async () => {
+    // Special case for Persian
+    if (currentLanguage === "persian") {
+      navigate("/persian-voice-chat");
+      toast({
+        title: t("persianVoiceAssistant"),
+        description: t("notSupportedByEleven"),
+      });
+      return;
+    }
+    
     if (!microphoneAccess) {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });

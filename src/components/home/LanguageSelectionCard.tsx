@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocalization } from "@/context/LocalizationContext";
+import { Link } from "react-router-dom";
 
 interface LanguageSelectionCardProps {
   nativeLanguage: string;
@@ -33,8 +34,11 @@ const LanguageSelectionCard = ({
     korean: "한국어",
     arabic: "العربية",
     mandarin: "中文",
-    vietnamese: "Tiếng Việt"
+    vietnamese: "Tiếng Việt",
+    persian: "فارسی"
   };
+
+  const isPersianSelected = nativeLanguage === 'persian';
 
   return (
     <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
@@ -65,6 +69,19 @@ const LanguageSelectionCard = ({
         >
           {t("saveLanguagePreferences")}
         </Button>
+        
+        {isPersianSelected && (
+          <div className="mt-4 p-3 bg-amber-50 rounded-md border border-amber-200">
+            <p className="text-sm text-amber-800 mb-2">
+              Persian speakers can use our specialized voice chat that uses OpenAI for advanced language processing.
+            </p>
+            <Link to="/persian-voice-chat">
+              <Button variant="outline" className="w-full mt-2">
+                Go to Persian Voice Chat
+              </Button>
+            </Link>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
