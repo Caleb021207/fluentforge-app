@@ -4,6 +4,7 @@ import { useConversation } from "@11labs/react";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -95,59 +94,75 @@ const PremiumVoiceChat = () => {
 
   const checkSessionStatus = async () => {
     try {
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         setSessionStatus('available');
         return;
       }
-      const {
-        data: activeSessions,
-        error: activeError
-      } = await supabase.from('premium_voice_chat_sessions').select('*').eq('user_id', user.id).is('session_end', null).single();
+      
+      const { data: activeSessions, error: activeError } = await supabase
+        .from('premium_voice_chat_sessions')
+        .select('*')
+        .eq('user_id', user.id)
+        .is('session_end', null)
+        .single();
+      
       if (activeError && activeError.code !== 'PGRST116') {
         console.error("Error checking active sessions:", activeError);
       }
+      
       if (activeSessions) {
         setCurrentSessionId(activeSessions.id);
         setSessionStatus('active');
+        
         const sessionStartTime = new Date(activeSessions.session_start).getTime();
         const timeElapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
         const timeRemaining = Math.max(0, 300 - timeElapsed);
+        
         setVoiceChatTimeRemaining(timeRemaining);
+        
         if (timeRemaining <= 0) {
           await endSession(activeSessions.id);
         }
         return;
       }
+      
       const oneDayAgo = new Date();
       oneDayAgo.setHours(oneDayAgo.getHours() - 24);
-      const {
-        data: recentSessions,
-        error: recentError
-      } = await supabase.from('premium_voice_chat_sessions').select('*').eq('user_id', user.id).not('session_end', 'is', null).gte('session_end', oneDayAgo.toISOString()).order('session_end', {
-        ascending: false
-      }).limit(1).single();
+      
+      const { data: recentSessions, error: recentError } = await supabase
+        .from('premium_voice_chat_sessions')
+        .select('*')
+        .eq('user_id', user.id)
+        .not('session_end', 'is', null)
+        .gte('session_end', oneDayAgo.toISOString())
+        .order('session_end', { ascending: false })
+        .limit(1)
+        .single();
+      
       if (recentError && recentError.code !== 'PGRST116') {
         console.error("Error checking recent sessions:", recentError);
       }
+      
       if (recentSessions) {
         setSessionStatus('cooldown');
+        
         const sessionEndTime = new Date(recentSessions.session_end).getTime();
         const cooldownEndTime = sessionEndTime + 24 * 60 * 60 * 1000;
         const cooldownRemaining = Math.max(0, Math.floor((cooldownEndTime - Date.now()) / 1000));
+        
         setCooldownTimeRemaining(cooldownRemaining);
+        
         if (cooldownRemaining <= 0) {
           setSessionStatus('available');
           setCooldownTimeRemaining(null);
         }
         return;
       }
+      
       setSessionStatus('available');
       setCooldownTimeRemaining(null);
+      
     } catch (error) {
       console.error("Error checking session status:", error);
       setSessionStatus('available');
