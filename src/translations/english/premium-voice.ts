@@ -17,10 +17,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   selectedLevel: "Selected Level",
   
   // Fixed premium voice chat cooldown messages
-  cooldownPeriodActive: "Cooldown Period Active",
-  cooldownActive: "Cooldown Active",
+  cooldownPeriodActive: "Daily Limit Reached",
+  cooldownActive: "Daily Limit Reached",
   waitBeforeNextSession: "You need to wait before starting another session",
   cooldownPeriodDescription: "You need to wait {{time}} before starting another premium voice chat session.",
+  resetsAt6AM: "Your 5-minute allowance will reset in {{time}} (at 6:00 AM)",
+  dailyLimitReached: "You've used your 5-minute daily allowance. Time will reset at 6:00 AM tomorrow.",
   
   // Login related messages
   loginRequired: "Login Required",
@@ -32,13 +34,15 @@ const premiumVoiceTranslations: TranslationRecord = {
   
   // Success messages
   conversationHistoryCleared: "Conversation history cleared",
+  remaining: "remaining today",
   
   // Premium voice benefits
   premiumVoiceChatDescription: "Have natural voice conversations with our premium AI tutor to practice {{practice}}! The AI will help correct your grammar, vocabulary, and pronunciation.",
   premiumVoiceNote: "Premium voice chat usage is limited to one 5-minute session every 24 hours",
+  premiumVoiceNoteWithReset: "Premium voice chat allows for 5 minutes of practice time daily. Your time resets at 6:00 AM each day.",
   benefitNaturalVoice: "Natural, human-like voice interactions using ElevenLabs technology",
   benefitAccentPronunciation: "Accurate accent and pronunciation for immersive learning",
-  benefitRegularPractice: "5-minute sessions with 24-hour cooldown to encourage regular, focused practice",
+  benefitRegularPractice: "5 minutes of practice time daily, resetting each day at 6:00 AM",
 };
 
 export default premiumVoiceTranslations;

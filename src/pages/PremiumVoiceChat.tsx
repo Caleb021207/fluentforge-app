@@ -3,12 +3,10 @@ import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { useConversation } from "@11labs/react";
-import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
-import { PremiumVoiceChatSession } from "@/types/supabase";
 import { useNavigate } from "react-router-dom";
+import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 
 type VoiceMessage = {
   role: 'user' | 'assistant';
@@ -20,13 +18,12 @@ type SessionStatus = 'available' | 'active' | 'cooldown';
 const PremiumVoiceChat = () => {
   const [messages, setMessages] = useState<VoiceMessage[]>([]);
   const [isRecording, setIsRecording] = useState(false);
-  const [microphoneAccess, setMicrophoneAccess] = useState(false);
-  const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const [sessionStatus, setSessionStatus] = useState<SessionStatus>('available');
   const [cooldownTimeRemaining, setCooldownTimeRemaining] = useState<number | null>(null);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [dailyTimeRemaining, setDailyTimeRemaining] = useState<number | null>(null);
   const {
     toast
   } = useToast();
@@ -35,13 +32,22 @@ const PremiumVoiceChat = () => {
     t
   } = useLocalization();
   const navigate = useNavigate();
+  
+  const {
+    microphoneAccess,
+    voiceChatTimeRemaining,
+    isConversationActive,
+    formatTime,
+    startVoiceConversation,
+    endVoiceConversation,
+    conversation,
+    calculateRemainingDailyTime
+  } = useVoiceChat();
 
   useEffect(() => {
     const checkAuth = async () => {
       setIsLoading(true);
-      const {
-        data
-      } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
       setIsLoggedIn(!!data.session);
       setIsLoading(false);
       if (data.session) {
@@ -49,11 +55,7 @@ const PremiumVoiceChat = () => {
       }
     };
     checkAuth();
-    const {
-      data: {
-        subscription
-      }
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       const isAuthenticated = !!session;
       setIsLoggedIn(isAuthenticated);
       if (isAuthenticated) {
@@ -65,33 +67,7 @@ const PremiumVoiceChat = () => {
     };
   }, []);
 
-  const getAgentId = () => {
-    return getAgentIdForLanguage(currentLanguage);
-  };
-
-  const conversation = useConversation({
-    onMessage: message => {
-      if (message.type === "llm_response") {
-        const assistantMessage: VoiceMessage = {
-          role: "assistant",
-          content: message.content,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, assistantMessage]);
-      }
-    },
-    onError: error => {
-      console.error("ElevenLabs conversation error:", error);
-      toast({
-        title: t("error"),
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  });
-
-  const isConversationActive = () => conversation.status !== "disconnected";
-
+  // Check if a session is currently active or if the user has time remaining
   const checkSessionStatus = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -100,6 +76,7 @@ const PremiumVoiceChat = () => {
         return;
       }
       
+      // Check for active sessions
       const { data: activeSessions, error: activeError } = await supabase
         .from('premium_voice_chat_sessions')
         .select('*')
@@ -117,51 +94,36 @@ const PremiumVoiceChat = () => {
         
         const sessionStartTime = new Date(activeSessions.session_start).getTime();
         const timeElapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
-        const timeRemaining = Math.max(0, 300 - timeElapsed);
+        const remaining = await calculateRemainingDailyTime(user.id);
+        setDailyTimeRemaining(remaining);
         
-        setVoiceChatTimeRemaining(timeRemaining);
-        
-        if (timeRemaining <= 0) {
+        // If time remaining is 0, end the session
+        if (remaining <= 0) {
           await endSession(activeSessions.id);
         }
         return;
       }
       
-      const oneDayAgo = new Date();
-      oneDayAgo.setHours(oneDayAgo.getHours() - 24);
+      // Calculate remaining time for today
+      const remaining = await calculateRemainingDailyTime(user.id);
+      setDailyTimeRemaining(remaining);
       
-      const { data: recentSessions, error: recentError } = await supabase
-        .from('premium_voice_chat_sessions')
-        .select('*')
-        .eq('user_id', user.id)
-        .not('session_end', 'is', null)
-        .gte('session_end', oneDayAgo.toISOString())
-        .order('session_end', { ascending: false })
-        .limit(1)
-        .single();
-      
-      if (recentError && recentError.code !== 'PGRST116') {
-        console.error("Error checking recent sessions:", recentError);
-      }
-      
-      if (recentSessions) {
+      if (remaining <= 0) {
+        // All time used up for today
         setSessionStatus('cooldown');
         
-        const sessionEndTime = new Date(recentSessions.session_end).getTime();
-        const cooldownEndTime = sessionEndTime + 24 * 60 * 60 * 1000;
-        const cooldownRemaining = Math.max(0, Math.floor((cooldownEndTime - Date.now()) / 1000));
+        // Calculate time until 6 AM tomorrow
+        const now = new Date();
+        const tomorrow6AM = new Date(now);
+        tomorrow6AM.setDate(now.getDate() + (now.getHours() >= 6 ? 1 : 0));
+        tomorrow6AM.setHours(6, 0, 0, 0);
         
+        const cooldownRemaining = Math.floor((tomorrow6AM.getTime() - now.getTime()) / 1000);
         setCooldownTimeRemaining(cooldownRemaining);
-        
-        if (cooldownRemaining <= 0) {
-          setSessionStatus('available');
-          setCooldownTimeRemaining(null);
-        }
-        return;
+      } else {
+        setSessionStatus('available');
+        setCooldownTimeRemaining(null);
       }
-      
-      setSessionStatus('available');
-      setCooldownTimeRemaining(null);
       
     } catch (error) {
       console.error("Error checking session status:", error);
@@ -170,30 +132,10 @@ const PremiumVoiceChat = () => {
   };
 
   useEffect(() => {
-    const initMicrophone = async () => {
-      try {
-        await navigator.mediaDevices.getUserMedia({
-          audio: true
-        });
-        setMicrophoneAccess(true);
-      } catch (error) {
-        console.error("Microphone access error:", error);
-        setMicrophoneAccess(false);
-        toast({
-          title: t("microphoneAccessRequired"),
-          description: t("allowMicAccess"),
-          variant: "destructive"
-        });
-      }
-    };
-    initMicrophone();
-  }, [toast, t]);
-
-  useEffect(() => {
     let timerId: number | null = null;
     if (isConversationActive() && voiceChatTimeRemaining !== null) {
       timerId = window.setInterval(() => {
-        setVoiceChatTimeRemaining(prev => {
+        setDailyTimeRemaining(prev => {
           if (prev === null || prev <= 0) {
             if (timerId) clearInterval(timerId);
             if (isConversationActive()) {
@@ -221,7 +163,7 @@ const PremiumVoiceChat = () => {
         setCooldownTimeRemaining(prev => {
           if (prev === null || prev <= 0) {
             if (cooldownTimerId) clearInterval(cooldownTimerId);
-            setSessionStatus('available');
+            checkSessionStatus(); // Re-check status when cooldown expires
             return null;
           }
           return prev - 1;
@@ -233,68 +175,48 @@ const PremiumVoiceChat = () => {
     };
   }, [sessionStatus, cooldownTimeRemaining]);
 
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  };
-
   const formatCooldownTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor(seconds % 3600 / 60);
     return `${hours}h ${mins}m`;
   };
 
-  const createSession = async (): Promise<string | null> => {
-    try {
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: t("error"),
-          description: t("loginRequired"),
-          variant: "destructive"
-        });
-        return null;
-      }
-      const {
-        data,
-        error
-      } = await supabase.from('premium_voice_chat_sessions').insert({
-        user_id: user.id
-      }).select().single();
-      if (error) {
-        console.error("Error creating session:", error);
-        toast({
-          title: t("error"),
-          description: t("failedToStartSession"),
-          variant: "destructive"
-        });
-        return null;
-      }
-      return data.id;
-    } catch (error) {
-      console.error("Error in createSession:", error);
-      return null;
-    }
-  };
-
   const endSession = async (sessionId: string) => {
     try {
-      const {
-        error
-      } = await supabase.from('premium_voice_chat_sessions').update({
-        session_end: new Date().toISOString()
-      }).eq('id', sessionId);
+      const { error } = await supabase
+        .from('premium_voice_chat_sessions')
+        .update({
+          session_end: new Date().toISOString()
+        })
+        .eq('id', sessionId);
+        
       if (error) {
         console.error("Error ending session:", error);
       }
+      
       setCurrentSessionId(null);
-      setSessionStatus('cooldown');
-      setCooldownTimeRemaining(24 * 60 * 60);
+      
+      // Check if daily limit is reached
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const remaining = await calculateRemainingDailyTime(user.id);
+        
+        if (remaining <= 0) {
+          setSessionStatus('cooldown');
+          
+          // Calculate time until 6 AM tomorrow
+          const now = new Date();
+          const tomorrow6AM = new Date(now);
+          tomorrow6AM.setDate(now.getDate() + (now.getHours() >= 6 ? 1 : 0));
+          tomorrow6AM.setHours(6, 0, 0, 0);
+          
+          const cooldownRemaining = Math.floor((tomorrow6AM.getTime() - now.getTime()) / 1000);
+          setCooldownTimeRemaining(cooldownRemaining);
+        } else {
+          setSessionStatus('available');
+          setDailyTimeRemaining(remaining);
+        }
+      }
     } catch (error) {
       console.error("Error in endSession:", error);
     }
@@ -309,54 +231,34 @@ const PremiumVoiceChat = () => {
       });
       return;
     }
+    
     if (sessionStatus === 'cooldown') {
       toast({
         title: t("cooldownActive"),
-        description: t("waitBeforeNextSession"),
+        description: t("dailyLimitReached"),
         variant: "destructive"
       });
       return;
     }
-    if (!microphoneAccess) {
-      try {
-        await navigator.mediaDevices.getUserMedia({
-          audio: true
-        });
-        setMicrophoneAccess(true);
-      } catch (error) {
-        console.error("Microphone access error on start:", error);
-        toast({
-          title: t("microphoneAccessRequired"),
-          description: t("allowMicAccess"),
-          variant: "destructive"
-        });
-        return;
-      }
+
+    // If already recording, stop it
+    if (isConversationActive()) {
+      await endConversation();
+      return;
     }
+
+    // Otherwise start a new conversation
     try {
-      const sessionId = await createSession();
-      if (!sessionId) {
-        toast({
-          title: t("error"),
-          description: t("failedToCreateSession"),
-          variant: "destructive"
-        });
-        return;
-      }
-      setCurrentSessionId(sessionId);
-      const selectedAgentId = getAgentId();
-      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
-      if (isConversationActive()) {
-        endConversation();
-        return;
-      }
-      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
-      const conversationId = await conversation.startSession({
-        agentId: selectedAgentId
-      });
-      console.log(`Successfully started conversation session: ${conversationId}`);
+      await startVoiceConversation();
       setIsRecording(true);
-      setVoiceChatTimeRemaining(300);
+      
+      // Get updated remaining time
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const remaining = await calculateRemainingDailyTime(user.id);
+        setDailyTimeRemaining(remaining);
+      }
+      
       setSessionStatus('active');
       const initialUserMessage: VoiceMessage = {
         role: "user",
@@ -368,12 +270,8 @@ const PremiumVoiceChat = () => {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, initialUserMessage]);
-      toast({
-        title: t("startVoiceChat"),
-        description: t("startChatting")
-      });
     } catch (error) {
-      console.error("Voice conversation error:", error);
+      console.error("Error starting conversation:", error);
       toast({
         title: t("error"),
         description: t("networkConnectionIssue"),
@@ -384,17 +282,30 @@ const PremiumVoiceChat = () => {
 
   const endConversation = async () => {
     if (isConversationActive()) {
-      await conversation.endSession();
-      console.log("Ended conversation session");
+      await endVoiceConversation();
       setIsRecording(false);
-      setVoiceChatTimeRemaining(null);
-      if (currentSessionId) {
-        await endSession(currentSessionId);
+      
+      // Check if daily limit is reached
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const remaining = await calculateRemainingDailyTime(user.id);
+        setDailyTimeRemaining(remaining);
+        
+        if (remaining <= 0) {
+          setSessionStatus('cooldown');
+          
+          // Calculate time until 6 AM tomorrow
+          const now = new Date();
+          const tomorrow6AM = new Date(now);
+          tomorrow6AM.setDate(now.getDate() + (now.getHours() >= 6 ? 1 : 0));
+          tomorrow6AM.setHours(6, 0, 0, 0);
+          
+          const cooldownRemaining = Math.floor((tomorrow6AM.getTime() - now.getTime()) / 1000);
+          setCooldownTimeRemaining(cooldownRemaining);
+        } else {
+          setSessionStatus('available');
+        }
       }
-      toast({
-        title: t("stopVoiceChat"),
-        description: t("voiceChatEnded")
-      });
     }
   };
 
@@ -502,7 +413,7 @@ const PremiumVoiceChat = () => {
                 {t("cooldownPeriodActive")}
               </h3>
               <p className="text-sm text-red-600">
-                {t("cooldownPeriodDescription", {
+                {t("resetsAt6AM", {
                 time: formatCooldownTime(cooldownTimeRemaining)
               })}
               </p>
@@ -537,7 +448,7 @@ const PremiumVoiceChat = () => {
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm font-normal">
-            {t("premiumVoiceNote")}
+            {t("premiumVoiceNoteWithReset")}
           </p>
         </div>
       </div>
@@ -556,10 +467,12 @@ const PremiumVoiceChat = () => {
               </>}
           </Button>
           
-          {voiceChatTimeRemaining !== null && voiceChatTimeRemaining > 0 && <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
+          {dailyTimeRemaining !== null && dailyTimeRemaining > 0 && (
+            <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
               <Clock className="h-4 w-4" />
-              <span>{formatTime(voiceChatTimeRemaining)}</span>
-            </div>}
+              <span>{formatTime(dailyTimeRemaining)} {t("remaining")}</span>
+            </div>
+          )}
         </div>
       </div>
 
