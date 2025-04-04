@@ -50,29 +50,25 @@ serve(async (req) => {
       throw new Error('OpenAI API key is not configured');
     }
 
-    const { audio, language } = await req.json();
+    const { audio } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
     }
 
-    console.log("Received audio data, processing with language:", language);
+    console.log("Received audio data, processing...");
     
     // Process audio in chunks
     const binaryAudio = processBase64Chunks(audio);
-    
-    // Determine language for transcription
-    // Default to Spanish if not specified
-    const transcriptionLanguage = language === 'persian' ? 'fa' : language === 'es' ? 'es' : 'es';
     
     // Prepare form data
     const formData = new FormData();
     const blob = new Blob([binaryAudio], { type: 'audio/webm' });
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
-    formData.append('language', transcriptionLanguage);
+    formData.append('language', 'es');
 
-    console.log(`Sending to OpenAI Whisper API with language: ${transcriptionLanguage}`);
+    console.log("Sending to OpenAI Whisper API...");
 
     // Send to OpenAI
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {

@@ -1,3 +1,4 @@
+
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
@@ -8,7 +9,6 @@ export const KOREAN_TUTOR_AGENT_ID = 'gLUyjMusYz1pumoMfoQv'; // Korean tutor for
 export const ARABIC_TUTOR_AGENT_ID = 'RFO6KG9COLQqxnxRzI0L'; // Arabic tutor for English learners
 export const MANDARIN_TUTOR_AGENT_ID = 'MRQcwp0aUbQnbcLE0fjf'; // English tutor for Mandarin speakers
 export const VIETNAMESE_TUTOR_AGENT_ID = 'pc9rZRG8F2WnPEdV77yG'; // English tutor for Vietnamese speakers
-// Note: Persian is not supported by ElevenLabs, so we'll use a special OpenAI-based solution
 
 /**
  * Gets the appropriate agent ID based on the user's language
@@ -40,12 +40,6 @@ export const getAgentIdForLanguage = (language: string): string => {
   if (language === "vietnamese") {
     console.log("Using English tutor for Vietnamese speaker:", VIETNAMESE_TUTOR_AGENT_ID);
     return VIETNAMESE_TUTOR_AGENT_ID;
-  }
-  // If the user is Persian speaker, return a special ID or handle elsewhere
-  if (language === "persian") {
-    console.log("Persian is not supported by ElevenLabs, redirecting to specialized OpenAI solution");
-    // Return a placeholder - the app should intercept and handle Persian separately
-    return "PERSIAN_UNSUPPORTED";
   }
   // For Spanish speakers, use the English tutor
   if (language === "spanish") {
@@ -99,12 +93,6 @@ export const useElevenLabsAgent = (language: string = 'english') => {
   
   const startAgent = async () => {
     try {
-      // Special case for Persian - redirect to the OpenAI version
-      if (language === "persian") {
-        console.log("Persian language detected, cannot use ElevenLabs");
-        throw new Error("Persian is not supported by ElevenLabs. Please use the dedicated Persian voice chat.");
-      }
-      
       // Request microphone access if needed
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -152,19 +140,7 @@ export const useElevenLabsAgent = (language: string = 'english') => {
   
   return {
     startAgent,
-    stopAgent: async () => {
-      try {
-        if (isConversationActive()) {
-          await conversation.endSession();
-          console.log("Successfully ended ElevenLabs session");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("Error stopping ElevenLabs agent:", error);
-        return false;
-      }
-    },
+    stopAgent,
     isConnected: isConversationActive(),
     isSpeaking: conversation.isSpeaking
   };
