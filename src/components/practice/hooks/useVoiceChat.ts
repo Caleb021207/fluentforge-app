@@ -83,34 +83,55 @@ export const useVoiceChat = () => {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  const calculateRemainingDailyTime = async (userId: string): Promise<number> => {
-    // Get the start of today at 6 AM
-    const today = new Date();
-    const todayAt6AM = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 6, 0, 0);
+  // Get the start of the current week (Monday at 6 AM Central Time)
+  const getCurrentWeekStart = (): Date => {
+    const now = new Date();
     
-    // If current time is before 6 AM, use previous day's 6 AM
-    if (today < todayAt6AM) {
-      todayAt6AM.setDate(todayAt6AM.getDate() - 1);
+    // Convert to Central Time (UTC-6 or UTC-5 depending on daylight saving)
+    // This is a simplification - in production, use a proper time library like date-fns-tz
+    const centralTimeOffset = -6; // Central Standard Time (adjust for daylight saving if needed)
+    const utcHours = now.getUTCHours();
+    const centralHours = (utcHours + centralTimeOffset + 24) % 24;
+    
+    // Calculate days since last Monday
+    const dayOfWeek = now.getUTCDay();
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    
+    // Create a date for the most recent Monday at 6 AM Central Time
+    const monday = new Date(now);
+    monday.setUTCDate(monday.getUTCDate() - daysSinceMonday);
+    monday.setUTCHours(6 - centralTimeOffset, 0, 0, 0); // 6 AM Central Time in UTC
+    
+    // If current time is before Monday 6 AM, use previous week's Monday
+    if (now < monday) {
+      monday.setUTCDate(monday.getUTCDate() - 7);
     }
     
+    return monday;
+  };
+
+  const calculateRemainingWeeklyTime = async (userId: string): Promise<number> => {
+    // Get the start of the current week at Monday 6 AM Central Time
+    const weekStart = getCurrentWeekStart();
+    
     try {
-      // Get all sessions since today at 6 AM
+      // Get all sessions since the start of the week
       const { data, error } = await supabase
         .from('premium_voice_chat_sessions')
         .select('session_start, session_end')
         .eq('user_id', userId)
-        .gte('session_start', todayAt6AM.toISOString());
+        .gte('session_start', weekStart.toISOString());
       
       if (error) {
         console.error("Error fetching session data:", error);
-        return 300; // Default to full time if error
+        return 900; // Default to full time (15 minutes) if error
       }
       
       if (!data || data.length === 0) {
-        return 300; // No sessions today, full time available
+        return 900; // No sessions this week, full time available (15 minutes)
       }
       
-      // Calculate total time used today
+      // Calculate total time used this week
       let totalTimeUsedSeconds = 0;
       
       data.forEach(session => {
@@ -121,12 +142,12 @@ export const useVoiceChat = () => {
       });
       
       // Calculate remaining time (cap at 0 if all used)
-      const remainingTime = Math.max(0, 300 - totalTimeUsedSeconds);
+      const remainingTime = Math.max(0, 900 - totalTimeUsedSeconds); // 15 minutes = 900 seconds
       return remainingTime;
       
     } catch (error) {
-      console.error("Error in calculateRemainingDailyTime:", error);
-      return 300; // Default to full time if error
+      console.error("Error in calculateRemainingWeeklyTime:", error);
+      return 900; // Default to full time if error
     }
   };
 
@@ -163,11 +184,11 @@ export const useVoiceChat = () => {
         return;
       }
       
-      // Calculate remaining time for today
-      const remainingTime = await calculateRemainingDailyTime(user.id);
+      // Calculate remaining time for the week
+      const remainingTime = await calculateRemainingWeeklyTime(user.id);
       
       if (remainingTime <= 0) {
-        // All time used up for today
+        // All time used up for the week
         toast({
           title: t("cooldownActive"),
           description: t("dailyLimitReached"),
@@ -267,6 +288,7 @@ export const useVoiceChat = () => {
     startVoiceConversation,
     endVoiceConversation,
     conversation,
-    calculateRemainingDailyTime
+    calculateRemainingWeeklyTime,
+    getCurrentWeekStart
   };
 };

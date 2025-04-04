@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ const PremiumVoiceChat = () => {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [dailyTimeRemaining, setDailyTimeRemaining] = useState<number | null>(null);
+  const [weeklyTimeRemaining, setWeeklyTimeRemaining] = useState<number | null>(null);
   const {
     toast
   } = useToast();
@@ -41,7 +42,8 @@ const PremiumVoiceChat = () => {
     startVoiceConversation,
     endVoiceConversation,
     conversation,
-    calculateRemainingDailyTime
+    calculateRemainingWeeklyTime,
+    getCurrentWeekStart
   } = useVoiceChat();
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const PremiumVoiceChat = () => {
     };
   }, []);
 
-  // Check if a session is currently active or if the user has time remaining
+  // Check if a session is currently active or if the user has time remaining for the week
   const checkSessionStatus = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -94,8 +96,8 @@ const PremiumVoiceChat = () => {
         
         const sessionStartTime = new Date(activeSessions.session_start).getTime();
         const timeElapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
-        const remaining = await calculateRemainingDailyTime(user.id);
-        setDailyTimeRemaining(remaining);
+        const remaining = await calculateRemainingWeeklyTime(user.id);
+        setWeeklyTimeRemaining(remaining);
         
         // If time remaining is 0, end the session
         if (remaining <= 0) {
@@ -104,21 +106,20 @@ const PremiumVoiceChat = () => {
         return;
       }
       
-      // Calculate remaining time for today
-      const remaining = await calculateRemainingDailyTime(user.id);
-      setDailyTimeRemaining(remaining);
+      // Calculate remaining time for this week
+      const remaining = await calculateRemainingWeeklyTime(user.id);
+      setWeeklyTimeRemaining(remaining);
       
       if (remaining <= 0) {
-        // All time used up for today
+        // All time used up for this week
         setSessionStatus('cooldown');
         
-        // Calculate time until 6 AM tomorrow
+        // Calculate time until next Monday at 6 AM Central
         const now = new Date();
-        const tomorrow6AM = new Date(now);
-        tomorrow6AM.setDate(now.getDate() + (now.getHours() >= 6 ? 1 : 0));
-        tomorrow6AM.setHours(6, 0, 0, 0);
+        const nextMonday6AM = new Date(getCurrentWeekStart());
+        nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7); // Next Monday
         
-        const cooldownRemaining = Math.floor((tomorrow6AM.getTime() - now.getTime()) / 1000);
+        const cooldownRemaining = Math.floor((nextMonday6AM.getTime() - now.getTime()) / 1000);
         setCooldownTimeRemaining(cooldownRemaining);
       } else {
         setSessionStatus('available');
@@ -135,7 +136,7 @@ const PremiumVoiceChat = () => {
     let timerId: number | null = null;
     if (isConversationActive() && voiceChatTimeRemaining !== null) {
       timerId = window.setInterval(() => {
-        setDailyTimeRemaining(prev => {
+        setWeeklyTimeRemaining(prev => {
           if (prev === null || prev <= 0) {
             if (timerId) clearInterval(timerId);
             if (isConversationActive()) {
@@ -176,8 +177,13 @@ const PremiumVoiceChat = () => {
   }, [sessionStatus, cooldownTimeRemaining]);
 
   const formatCooldownTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor(seconds % 3600 / 60);
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    
+    if (days > 0) {
+      return `${days}d ${hours}h`;
+    }
     return `${hours}h ${mins}m`;
   };
 
@@ -196,25 +202,24 @@ const PremiumVoiceChat = () => {
       
       setCurrentSessionId(null);
       
-      // Check if daily limit is reached
+      // Check if weekly limit is reached
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const remaining = await calculateRemainingDailyTime(user.id);
+        const remaining = await calculateRemainingWeeklyTime(user.id);
         
         if (remaining <= 0) {
           setSessionStatus('cooldown');
           
-          // Calculate time until 6 AM tomorrow
+          // Calculate time until next Monday at 6 AM Central
           const now = new Date();
-          const tomorrow6AM = new Date(now);
-          tomorrow6AM.setDate(now.getDate() + (now.getHours() >= 6 ? 1 : 0));
-          tomorrow6AM.setHours(6, 0, 0, 0);
+          const nextMonday6AM = new Date(getCurrentWeekStart());
+          nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7); // Next Monday
           
-          const cooldownRemaining = Math.floor((tomorrow6AM.getTime() - now.getTime()) / 1000);
+          const cooldownRemaining = Math.floor((nextMonday6AM.getTime() - now.getTime()) / 1000);
           setCooldownTimeRemaining(cooldownRemaining);
         } else {
           setSessionStatus('available');
-          setDailyTimeRemaining(remaining);
+          setWeeklyTimeRemaining(remaining);
         }
       }
     } catch (error) {
@@ -255,8 +260,8 @@ const PremiumVoiceChat = () => {
       // Get updated remaining time
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const remaining = await calculateRemainingDailyTime(user.id);
-        setDailyTimeRemaining(remaining);
+        const remaining = await calculateRemainingWeeklyTime(user.id);
+        setWeeklyTimeRemaining(remaining);
       }
       
       setSessionStatus('active');
@@ -285,22 +290,21 @@ const PremiumVoiceChat = () => {
       await endVoiceConversation();
       setIsRecording(false);
       
-      // Check if daily limit is reached
+      // Check if weekly limit is reached
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const remaining = await calculateRemainingDailyTime(user.id);
-        setDailyTimeRemaining(remaining);
+        const remaining = await calculateRemainingWeeklyTime(user.id);
+        setWeeklyTimeRemaining(remaining);
         
         if (remaining <= 0) {
           setSessionStatus('cooldown');
           
-          // Calculate time until 6 AM tomorrow
+          // Calculate time until next Monday at 6 AM Central
           const now = new Date();
-          const tomorrow6AM = new Date(now);
-          tomorrow6AM.setDate(now.getDate() + (now.getHours() >= 6 ? 1 : 0));
-          tomorrow6AM.setHours(6, 0, 0, 0);
+          const nextMonday6AM = new Date(getCurrentWeekStart());
+          nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7); // Next Monday
           
-          const cooldownRemaining = Math.floor((tomorrow6AM.getTime() - now.getTime()) / 1000);
+          const cooldownRemaining = Math.floor((nextMonday6AM.getTime() - now.getTime()) / 1000);
           setCooldownTimeRemaining(cooldownRemaining);
         } else {
           setSessionStatus('available');
@@ -467,10 +471,10 @@ const PremiumVoiceChat = () => {
               </>}
           </Button>
           
-          {dailyTimeRemaining !== null && dailyTimeRemaining > 0 && (
+          {weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
             <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
               <Clock className="h-4 w-4" />
-              <span>{formatTime(dailyTimeRemaining)} {t("remaining")}</span>
+              <span>{formatTime(weeklyTimeRemaining)} {t("remaining")}</span>
             </div>
           )}
         </div>

@@ -17,12 +17,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   selectedLevel: "Selected Level",
   
   // Fixed premium voice chat cooldown messages
-  cooldownPeriodActive: "Daily Limit Reached",
-  cooldownActive: "Daily Limit Reached",
+  cooldownPeriodActive: "Weekly Limit Reached",
+  cooldownActive: "Weekly Limit Reached",
   waitBeforeNextSession: "You need to wait before starting another session",
   cooldownPeriodDescription: "You need to wait {{time}} before starting another premium voice chat session.",
-  resetsAt6AM: "Your 5-minute allowance will reset in {{time}} (at 6:00 AM)",
-  dailyLimitReached: "You've used your 5-minute daily allowance. Time will reset at 6:00 AM tomorrow.",
+  resetsAt6AM: "Your 15-minute weekly allowance will reset in {{time}} (Monday at 6:00 AM)",
+  dailyLimitReached: "You've used your 15-minute weekly allowance. Time will reset on Monday at 6:00 AM.",
   
   // Login related messages
   loginRequired: "Login Required",
@@ -34,15 +34,15 @@ const premiumVoiceTranslations: TranslationRecord = {
   
   // Success messages
   conversationHistoryCleared: "Conversation history cleared",
-  remaining: "remaining today",
+  remaining: "remaining this week",
   
   // Premium voice benefits
   premiumVoiceChatDescription: "Have natural voice conversations with our premium AI tutor to practice {{practice}}! The AI will help correct your grammar, vocabulary, and pronunciation.",
-  premiumVoiceNote: "Premium voice chat usage is limited to one 5-minute session every 24 hours",
-  premiumVoiceNoteWithReset: "Premium voice chat allows for 5 minutes of practice time daily. Your time resets at 6:00 AM each day.",
+  premiumVoiceNote: "Premium voice chat usage is limited to one 15-minute session every week",
+  premiumVoiceNoteWithReset: "Premium voice chat allows for 15 minutes of practice time weekly. Your time resets every Monday at 6:00 AM Central Time.",
   benefitNaturalVoice: "Natural, human-like voice interactions using ElevenLabs technology",
   benefitAccentPronunciation: "Accurate accent and pronunciation for immersive learning",
-  benefitRegularPractice: "5 minutes of practice time daily, resetting each day at 6:00 AM",
+  benefitRegularPractice: "15 minutes of practice time weekly, resetting each Monday at 6:00 AM Central Time",
 };
 
 export default premiumVoiceTranslations;
