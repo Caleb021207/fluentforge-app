@@ -10,7 +10,7 @@ interface PracticePromptButtonProps {
 }
 
 const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ onClick, isLoading }) => {
-  const { t, currentLanguage } = useLocalization();
+  const { t } = useLocalization();
 
   return (
     <div className="flex justify-center mb-8">
