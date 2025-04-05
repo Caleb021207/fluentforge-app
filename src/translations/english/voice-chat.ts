@@ -6,9 +6,7 @@ const voiceChatTranslations: TranslationRecord = {
   unlimitedVoicePractice: "Unlimited Voice Practice",
   startSpeaking: "Start Speaking",
   stopListening: "Stop Listening",
-  sendMessage: "Send Message",
   listeningNow: "Listening now",
-  silenceDetectionHint: "Will automatically send after 10 seconds of silence",
   youSaid: "You said",
   aiResponse: "AI Response",
   playAgain: "Play Again",
@@ -41,7 +39,6 @@ const voiceChatTranslations: TranslationRecord = {
   phrase7: "What are your plans for tomorrow?",
   phrase8: "How do you say... in Spanish/English?",
   translation: "Translation",
-  speaking: "Speaking",
   
   // Voice chat UI
   conversationHistory: "Conversation History",
@@ -51,14 +48,6 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
   timeLimit5MinReached: "The 5-minute time limit has been reached",
-  
-  // Browser TTS note
-  browserBasedTTS: "Note: This feature uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat.",
-  
-  // Practice level
-  practiceLevel: "Practice Level",
-  cefrB1Description: "Intermediate - Can discuss familiar topics",
-  conversationHistoryCleared: "Conversation history has been cleared"
 };
 
 export default voiceChatTranslations;
