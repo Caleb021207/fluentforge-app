@@ -39,6 +39,7 @@ serve(async (req) => {
                           userLanguage === 'vietnamese' ? 'Vietnamese' :
                           userLanguage === 'french' ? 'French' :
                           userLanguage === 'japanese' ? 'Japanese' :
+                          userLanguage === 'ukrainian' ? 'Ukrainian' :
                           userLanguage === 'russian' ? 'Russian' : 'Unknown';
     
     // Universal tutor instructions for all language combinations
@@ -201,6 +202,7 @@ async function getTranslation(message: string, userLanguage: string) {
                        userLanguage === 'vietnamese' ? 'Vietnamese' :
                        userLanguage === 'french' ? 'French' :
                        userLanguage === 'japanese' ? 'Japanese' :
+                       userLanguage === 'ukrainian' ? 'Ukrainian' :
                        userLanguage === 'russian' ? 'Russian' : 'English';
 
   return await fetch('https://api.openai.com/v1/chat/completions', {
