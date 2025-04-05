@@ -1,4 +1,3 @@
-
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
@@ -11,7 +10,7 @@ export const MANDARIN_TUTOR_AGENT_ID = 'MRQcwp0aUbQnbcLE0fjf'; // English tutor 
 export const VIETNAMESE_TUTOR_AGENT_ID = 'pc9rZRG8F2WnPEdV77yG'; // English tutor for Vietnamese speakers
 export const FRENCH_TUTOR_AGENT_ID = 'femZJQOmwbvFjGG46OO0'; // English tutor for French speakers
 export const JAPANESE_TUTOR_AGENT_ID = 'M2MhVrSMkj3Y6j5uaQE9'; // English tutor for Japanese speakers
-export const RUSSIAN_TUTOR_AGENT_ID = 'pViLJpVDvXIBEL7BXbam'; // English tutor for Russian speakers
+export const RUSSIAN_TUTOR_AGENT_ID = 'rlHSjx9Y19IqjWTspVRq'; // English tutor for Russian speakers
 
 /**
  * Gets the appropriate agent ID based on the user's language

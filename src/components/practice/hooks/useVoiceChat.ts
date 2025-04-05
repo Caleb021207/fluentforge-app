@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -204,6 +205,8 @@ export const useVoiceChat = () => {
       
       if (currentLanguage === "japanese") {
         selectedAgentId = "pViLJpVDvXIBEL7BXbam";
+      } else if (currentLanguage === "russian") {
+        selectedAgentId = "rlHSjx9Y19IqjWTspVRq";
       }
       
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);

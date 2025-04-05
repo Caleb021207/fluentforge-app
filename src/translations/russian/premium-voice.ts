@@ -3,14 +3,63 @@ import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
   premiumVoiceChat: "Премиум голосовой чат",
-  elevenlabsLikeHumanVoice: "Голосовые ответы AI высокого качества от ElevenLabs",
-  startPremiumChat: "Начать премиум чат",
-  endPremiumChat: "Завершить премиум чат",
-  premiumFeatures: "Функции премиум-версии",
+  premiumVoiceChatBenefits: "Преимущества премиум-голоса",
+  textConversationPractice: "Практика текстовых разговоров",
+  cefrA1Description: "Начальный - Базовые фразы и выражения",
+  cefrA2Description: "Элементарный - Простое повседневное общение",
+  cefrB1Description: "Средний - Может обсуждать знакомые темы",
+  cefrB2Description: "Выше среднего - Может общаться свободно",
+  beginner: "Начальный",
+  elementary: "Элементарный",
+  intermediate: "Средний",
+  upperIntermediate: "Выше среднего",
+  selectCEFRLevel: "Выберите уровень CEFR",
+  selectedLevel: "Выбранный уровень",
+  
+  // Fixed premium voice chat cooldown messages
+  cooldownPeriodActive: "Достигнут недельный лимит",
+  cooldownActive: "Достигнут недельный лимит",
+  waitBeforeNextSession: "Вам нужно подождать перед началом следующего сеанса",
+  cooldownPeriodDescription: "Вам нужно подождать {{time}} перед началом следующего премиум голосового чата.",
+  resetsAt6AM: "Ваш еженедельный лимит в 15 минут будет сброшен через {{time}} (понедельник в 6:00 утра)",
+  dailyLimitReached: "Вы использовали свой еженедельный лимит в 15 минут. Время будет сброшено в понедельник в 6:00 утра.",
+  
+  // Login related messages
+  loginRequired: "Требуется авторизация",
+  pleaseLoginToAccessPremiumFeature: "Пожалуйста, войдите в аккаунт для доступа к премиум голосовому чату",
+  redirectingToLogin: "Перенаправление на страницу входа",
+  failedToStartSession: "Не удалось начать сеанс",
+  failedToCreateSession: "Не удалось создать сеанс",
+  loginRequiredDescription: "Для доступа к функции премиум голосового чата, пожалуйста, войдите в свою учетную запись.",
+  
+  // Success messages
+  conversationHistoryCleared: "История разговора очищена",
+  remaining: "осталось на этой неделе",
+  
+  // Premium voice benefits
+  premiumVoiceChatDescription: "Проведите естественные голосовые беседы с нашим премиум AI-репетитором для практики английского языка! AI поможет исправить вашу грамматику, словарный запас и произношение.",
+  premiumVoiceNote: "Использование премиум голосового чата ограничено одним 15-минутным сеансом в неделю",
+  premiumVoiceNoteWithReset: "Премиум голосовой чат предоставляет 15 минут времени практики еженедельно. Ваше время сбрасывается каждый понедельник в 6:00 утра по центральному времени.",
+  benefitNaturalVoice: "Естественное, человеческое голосовое взаимодействие с использованием технологии ElevenLabs",
+  benefitAccentPronunciation: "Точный акцент и произношение для погружения в обучение",
+  benefitRegularPractice: "15 минут времени практики еженедельно, сброс каждый понедельник в 6:00 утра по центральному времени",
+
+  // Added voice chat controls
+  startVoiceChat: "Начать голосовой чат",
+  stopVoiceChat: "Остановить голосовой чат",
+  voiceChatEnded: "Голосовой чат завершен",
+  timeLimit5MinReached: "Достигнут лимит времени в 15 минут",
+  speaking: "Говорит...",
+  startChatting: "Начать разговор",
+  
+  // Additional translations
+  elevenlabsLikeHumanVoice: "Высококачественные голосовые ответы AI от ElevenLabs",
+  startPremiumChat: "Начать премиум-чат",
+  endPremiumChat: "Завершить премиум-чат",
+  premiumFeatures: "Премиум-функции",
   naturalSounding: "Естественно звучащий голос",
   noTimeLimits: "Без временных ограничений",
   improvedAccuracy: "Улучшенное распознавание речи",
-  premiumBenefits: "Преимущества премиум-версии",
   upgradeExperience: "Улучшите свой опыт обучения",
   unlimitedPractice: "Неограниченная практика с пользователем",
   improvedSpeakingSkills: "Улучшенные навыки разговорной речи",
@@ -18,7 +67,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   goingPlaces: "Продвигайтесь дальше с премиум-функциями",
   microphone: "Микрофон",
   activeMicrophone: "Активный микрофон",
-  aiProcessing: "AI-обработка вашего ввода...",
+  aiProcessing: "AI обрабатывает ваш ввод...",
   aiThinking: "AI думает...",
   generateResponse: "Генерация ответа...",
   openMouth: "Откройте рот...",
@@ -80,6 +129,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   resumingPremiumChat: "Возобновление премиум-чата...",
   connecting: "Подключение...",
   speechRecognitionNotSupported: "Распознавание речи не поддерживается в этом браузере",
+  error: "Ошибка",
+  microphoneAccessRequired: "Требуется доступ к микрофону",
+  allowMicAccess: "Разрешите доступ к микрофону для использования голосового чата",
+  networkConnectionIssue: "Проблема с сетевым подключением",
+  login: "Войти",
+  success: "Успех"
 };
 
 export default premiumVoiceTranslations;

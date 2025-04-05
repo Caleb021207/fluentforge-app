@@ -9,6 +9,7 @@ import profileTranslations from "./profile";
 import certificatesTranslations from "./certificates";
 import progressTranslations from "./progress";
 import premiumVoiceTranslations from "./premium-voice";
+import languageFrameworksTranslations from "./language-frameworks";
 
 const translations: TranslationRecord = {
   ...authTranslations,
@@ -20,6 +21,7 @@ const translations: TranslationRecord = {
   ...certificatesTranslations,
   ...progressTranslations,
   ...premiumVoiceTranslations,
+  ...languageFrameworksTranslations,
 };
 
 export default translations;
