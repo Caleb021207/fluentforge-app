@@ -39,6 +39,9 @@ const voiceChatTranslations: TranslationRecord = {
   clearConversation: "Limpiar Conversación",
   voiceChatEnded: "Chat de voz finalizado",
   timeLimit5MinReached: "Se ha alcanzado el límite de tiempo de 5 minutos",
+  aiModelInfo: "Modelo de IA: Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.",
+  browserBasedTTS: "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.",
+  practiceLevel: "Nivel de Práctica"
 };
 
 export default voiceChatTranslations;

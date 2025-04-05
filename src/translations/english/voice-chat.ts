@@ -48,6 +48,8 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
   timeLimit5MinReached: "The 5-minute time limit has been reached",
+  browserBasedTTS: "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat.",
+  practiceLevel: "Practice Level"
 };
 
 export default voiceChatTranslations;
