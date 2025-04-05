@@ -173,9 +173,9 @@ const PremiumVoiceChat = () => {
     const mins = Math.floor((seconds % 3600) / 60);
     
     if (days > 0) {
-      return `${days}d ${hours}h`;
+      return `${days}${t("d")} ${hours}${t("h")}`;
     }
-    return `${hours}h ${mins}m`;
+    return `${hours}${t("h")} ${mins}${t("m")}`;
   };
 
   const endSession = async (sessionId: string) => {
@@ -332,6 +332,11 @@ const PremiumVoiceChat = () => {
       return {
         practice: "English",
         native: "Vietnamese"
+      };
+    } else if (currentLanguage === "ukrainian") {
+      return {
+        practice: "English",
+        native: "Ukrainian"
       };
     }
     return {

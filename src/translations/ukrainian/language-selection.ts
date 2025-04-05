@@ -2,19 +2,17 @@
 import { TranslationRecord } from "../types";
 
 const languageSelectionTranslations: TranslationRecord = {
+  selectYourLanguagePreferences: "Виберіть ваші мовні вподобання",
   iSpeak: "Я розмовляю",
   iWantToLearn: "Я хочу вивчити",
-  selectYourNativeLanguage: "Виберіть свою рідну мову",
-  selectLanguageToLearn: "Виберіть мову для вивчення",
-  saveLanguagePreferences: "Зберегти мовні налаштування",
-  languagePreferencesSaved: "Мовні налаштування збережено",
-  youreNowLearning: "Зараз ви вивчаєте",
-  from: "з",
-  pleaseSelectBothLanguages: "Будь ласка, виберіть обидві мови",
-  youNeedToSelectBoth: "Вам потрібно вибрати як рідну мову, так і мову, яку ви хочете вивчити",
-  studyMaterialsComingSoon: "Навчальні матеріали для вивчення {{targetLanguage}} з {{nativeLanguage}} скоро з'являться!",
-  someFeaturesLimited: "Деякі функції можуть бути обмежені або недоступні.",
-  selectYourLanguagePreferences: "Виберіть ваші мовні налаштування",
+  selectYourNativeLanguage: "Виберіть вашу рідну мову",
+  selectYourTargetLanguage: "Виберіть мову, яку хочете вивчити",
+  saveLanguagePreferences: "Зберегти мовні вподобання",
+  languagePreferencesSaved: "Мовні вподобання збережено",
+  whenSelectingLanguage: "Коли ви виберете мову, навчальні матеріали адаптуються під ваші потреби.",
+  languageSelectionGuide: "Виберіть вашу рідну мову та мову, яку ви хочете вивчити.",
+  currentLanguage: "Поточна мова",
+  switchLanguage: "Змінити мову",
 };
 
 export default languageSelectionTranslations;
