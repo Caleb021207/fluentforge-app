@@ -204,6 +204,8 @@ export const useChatMessages = () => {
       return "英語または日本語でメッセージを入力してください...";
     } else if (currentLanguage === "russian") {
       return "Введите сообщение на английском или русском...";
+    } else if (currentLanguage === "french") {
+      return "Tapez votre message en anglais ou français...";
     }
     return t("typeMessage") || "Type your message...";
   };
@@ -225,6 +227,8 @@ export const useChatMessages = () => {
         return "英語または日本語でメッセージを入力してください...";
       } else if (currentLanguage === "russian") {
         return "Введите сообщение на английском или русском...";
+      } else if (currentLanguage === "french") {
+        return "Tapez votre message en anglais ou français...";
       }
       return t("typeMessage") || "Type your message...";
     }

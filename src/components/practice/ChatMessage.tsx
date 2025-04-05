@@ -11,8 +11,10 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation }) => {
   const { currentLanguage } = useLocalization();
   
-  // Always show translation for Japanese users or if translation exists
-  const showTranslation = (translation && translation.trim() !== "") || currentLanguage === "japanese";
+  // Always show translation for Japanese, French users or if translation exists
+  const showTranslation = (translation && translation.trim() !== "") || 
+    currentLanguage === "japanese" || 
+    currentLanguage === "french";
   
   return (
     <div
