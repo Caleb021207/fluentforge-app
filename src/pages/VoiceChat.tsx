@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Send, Volume2 } from "lucide-react";
+import { Mic, Send, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";

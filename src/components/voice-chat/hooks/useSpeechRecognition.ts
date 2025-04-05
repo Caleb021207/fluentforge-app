@@ -31,7 +31,7 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       if (isListening && recognitionRef.current) {
         stopListening();
       }
-    }, 10000);
+    }, 10000); // 10 second silence detection
   };
 
   useEffect(() => {
@@ -46,7 +46,11 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
                                    currentLanguage === "portuguese" ? "pt-BR" :
                                    currentLanguage === "japanese" ? "ja-JP" : 
                                    currentLanguage === "vietnamese" ? "vi-VN" :
-                                   currentLanguage === "russian" ? "ru-RU" : "en-US";
+                                   currentLanguage === "russian" ? "ru-RU" : 
+                                   currentLanguage === "french" ? "fr-FR" :
+                                   currentLanguage === "mandarin" ? "zh-CN" :
+                                   currentLanguage === "korean" ? "ko-KR" :
+                                   currentLanguage === "arabic" ? "ar-SA" : "en-US";
                                    
       console.log(`Setting speech recognition language to: ${recognitionRef.current.lang}`);
       
