@@ -49,7 +49,6 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecificTopics: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture",
   speechRecognitionError: "Erreur de reconnaissance vocale",
   speechRecognitionNotSupported: "La reconnaissance vocale n'est pas prise en charge par votre navigateur",
-  microphoneAccessRequired: "L'accès au microphone est requis pour cette fonctionnalité",
   failedToGetResponse: "Échec d'obtention de la réponse de l'IA. Veuillez réessayer.",
   failedToGenerateSpeech: "Échec de génération de la parole. Veuillez réessayer.",
   audioPlaybackError: "Erreur de lecture audio. Veuillez réessayer.",
