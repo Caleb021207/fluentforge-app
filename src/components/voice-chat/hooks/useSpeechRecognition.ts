@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -18,6 +19,7 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
+      // Set the appropriate language based on current language
       recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
                                    currentLanguage === "japanese" ? "en-US" : 
                                    currentLanguage === "french" ? "en-US" : "en-US";
@@ -34,26 +36,31 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
         if (event.error !== 'no-speech') {
-          setIsListening(false);
-          toast({
-            title: t("error"),
-            description: `${t("speechRecognitionError")}: ${event.error}`,
-            variant: "destructive",
-          });
+          // Don't stop listening on no-speech error, just log it
+          if (event.error === 'network') {
+            setIsListening(false);
+            toast({
+              title: t("error"),
+              description: `${t("speechRecognitionError")}: ${event.error}`,
+              variant: "destructive",
+            });
+          }
         }
       };
       
       recognitionRef.current.onend = () => {
+        // Only restart if still in listening mode
         if (isListening) {
           try {
             recognitionRef.current.start();
             console.log("Speech recognition restarted automatically");
           } catch (error) {
             console.error("Failed to restart speech recognition:", error);
-            setIsListening(false);
+            // Only update state if we couldn't restart and we're supposed to be listening
+            if (isListening) {
+              setIsListening(false);
+            }
           }
-        } else {
-          setIsListening(false);
         }
       };
     } else {
@@ -75,8 +82,8 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
     if (isListening) {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
+        setIsListening(false);
       }
-      setIsListening(false);
     } else {
       if (recognitionRef.current) {
         try {

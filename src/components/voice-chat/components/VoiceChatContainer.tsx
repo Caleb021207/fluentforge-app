@@ -41,15 +41,15 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
         practiceLevelText={practiceLevelText}
       />
       
-      {isListening && (
-        <div className="text-sm text-gray-500 animate-pulse">
-          {transcript ? transcript : "Listening now..."}
+      {isListening && !transcript && (
+        <div className="text-sm text-gray-500 animate-pulse mb-4">
+          {t("listeningNow")}...
         </div>
       )}
 
       {transcript && <UserTranscript transcript={transcript} />}
       
-      {isLoading && <LoadingIndicator />}
+      {isLoading && <LoadingIndicator isListening={isListening} />}
       
       {gptResponse && (
         <ResponseCard 
