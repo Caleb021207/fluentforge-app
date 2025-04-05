@@ -155,14 +155,38 @@ const VoiceChat = () => {
           message: text,
           userLanguage: currentLanguage,
           conversationHistory: apiConversationHistory,
-          cefrLevel: cefrLevel
+          cefrLevel: cefrLevel,
+          requestTranslation: true
         }
       });
 
       if (error) throw error;
       
       const content = data.content || data.reply || "";
-      const translationText = data.translation || "";
+      let translationText = data.translation || "";
+      
+      if (!translationText) {
+        console.log("No translation provided for response in language:", currentLanguage);
+        
+        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
+        
+        try {
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
+            body: {
+              message: content,
+              userLanguage: targetLanguage,
+              requestType: 'translation'
+            }
+          });
+          
+          if (!translationError && translationData && translationData.translation) {
+            translationText = translationData.translation;
+            console.log("Got translation manually:", translationText);
+          }
+        } catch (translationError) {
+          console.error("Failed to get translation:", translationError);
+        }
+      }
       
       const aiMessage: ConversationMessage = {
         role: 'assistant',
