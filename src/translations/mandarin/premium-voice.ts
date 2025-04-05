@@ -6,11 +6,13 @@ const premiumVoiceTranslations: TranslationRecord = {
   premiumVoiceChatIntro: "与高级AI导师进行自然语音对话，练习英语！AI将帮助您纠正语法、词汇和发音。",
   weeklyPracticeTime: "高级语音聊天每周允许15分钟的练习时间。您的时间在每周一上午6:00（中部时间）重置。",
   startVoiceChat: "开始语音聊天",
+  stopVoiceChat: "停止语音聊天",
+  remaining: "剩余",
   remainingThisWeek: "本周剩余{{time}}",
   benefitsOfPremiumVoice: "高级语音的好处",
   benefit1: "使用ElevenLabs技术进行自然、人性化的语音互动",
   benefit2: "准确的口音和发音，沉浸式学习",
-  benefit3: "5分钟会话，24小时冷却期，鼓励定期、集中的练习",
+  benefit3: "每周15分钟的练习时间，每周一上午6:00（中部时间）重置",
   recordingInstructions: "点击麦克风图标并说话。完成后再次点击。",
   connecting: "连接中...",
   microphoneAccess: "需要麦克风访问权限",
@@ -130,7 +132,18 @@ const premiumVoiceTranslations: TranslationRecord = {
   yourRecording: "您的录制",
   nativeSpeaker: "母语者",
   analyzeYourPronunciation: "分析您的发音",
-  feedback: "反馈"
+  feedback: "反馈",
+  loginRequired: "需要登录",
+  pleaseLoginToAccessPremiumFeature: "请登录以访问此高级功能。",
+  error: "错误",
+  networkConnectionIssue: "网络连接问题，请重试。",
+  redirectingToLogin: "正在重定向到登录页面...",
+  loginRequiredDescription: "您需要登录才能访问高级语音聊天功能。",
+  login: "登录",
+  cooldownActive: "冷却期活跃",
+  dailyLimitReached: "已达到每日限制，请稍后再试。",
+  cooldownPeriodActive: "每周限制已达到",
+  resetsAt6AM: "将在{{time}}后重置（周一上午6:00）"
 };
 
 export default premiumVoiceTranslations;
