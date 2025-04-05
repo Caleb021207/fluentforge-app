@@ -9,73 +9,6 @@ import { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Translation map for navigation items
-const navItemTranslations = {
-  english: {
-    "Text Practice": "Text Practice",
-    "Unlimited Voice Practice": "Unlimited Voice Practice",
-    "Premium Voice Chat": "Premium Voice Chat",
-    "Admin": "Admin",
-    "Home": "Home"
-  },
-  spanish: {
-    "Text Practice": "Práctica de Texto",
-    "Unlimited Voice Practice": "Práctica de Voz Ilimitada",
-    "Premium Voice Chat": "Chat de Voz Premium",
-    "Admin": "Admin",
-    "Home": "Inicio"
-  },
-  portuguese: {
-    "Text Practice": "Prática de Texto",
-    "Unlimited Voice Practice": "Prática de Voz Ilimitada",
-    "Premium Voice Chat": "Chat de Voz Premium",
-    "Admin": "Admin",
-    "Home": "Início"
-  },
-  korean: {
-    "Text Practice": "텍스트 연습",
-    "Unlimited Voice Practice": "무제한 음성 연습",
-    "Premium Voice Chat": "프리미엄 음성 채팅",
-    "Admin": "관리자",
-    "Home": "홈"
-  },
-  arabic: {
-    "Text Practice": "تدريب نصي",
-    "Unlimited Voice Practice": "تدريب صوتي غير محدود",
-    "Premium Voice Chat": "دردشة صوتية متميزة",
-    "Admin": "المشرف",
-    "Home": "الرئيسية"
-  },
-  mandarin: {
-    "Text Practice": "文本练习",
-    "Unlimited Voice Practice": "无限语音练习",
-    "Premium Voice Chat": "高级语音聊天",
-    "Admin": "管理员",
-    "Home": "首页"
-  },
-  vietnamese: {
-    "Text Practice": "Luyện tập văn bản",
-    "Unlimited Voice Practice": "Luyện tập giọng nói không giới hạn",
-    "Premium Voice Chat": "Trò chuyện bằng giọng nói cao cấp",
-    "Admin": "Quản trị viên",
-    "Home": "Trang chủ"
-  },
-  french: {
-    "Text Practice": "Pratique de Texte",
-    "Unlimited Voice Practice": "Pratique de Voix Illimitée",
-    "Premium Voice Chat": "Chat Vocal Premium",
-    "Admin": "Administrateur",
-    "Home": "Accueil"
-  },
-  japanese: {
-    "Text Practice": "テキスト練習",
-    "Unlimited Voice Practice": "無制限音声練習",
-    "Premium Voice Chat": "プレミアム音声チャット",
-    "Admin": "管理者",
-    "Home": "ホーム"
-  }
-};
-
 const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -114,23 +47,18 @@ const Navigation = () => {
     };
   }, []);
 
-  const getTranslatedLabel = (label: string) => {
-    const translations = navItemTranslations[currentLanguage as keyof typeof navItemTranslations] || navItemTranslations.english;
-    return translations[label as keyof typeof translations] || label;
-  };
-
   const navItems = [
-    { icon: MessageSquare, label: "Text Practice", path: "/practice" },
-    { icon: Mic, label: "Unlimited Voice Practice", path: "/voice-chat" },
-    { icon: Headphones, label: "Premium Voice Chat", path: "/premium-voice-chat" },
+    { icon: MessageSquare, label: "textPractice", path: "/practice" },
+    { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat" },
+    { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat" },
   ];
   
   if (isAdmin) {
-    navItems.push({ icon: Shield, label: "Admin", path: "/admin" });
+    navItems.push({ icon: Shield, label: "admin", path: "/admin" });
   }
 
   if (isMobile) {
-    navItems.unshift({ icon: Home, label: "Home", path: "/" });
+    navItems.unshift({ icon: Home, label: "home", path: "/" });
   }
 
   return (
@@ -172,7 +100,6 @@ const Navigation = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
-              const translatedLabel = getTranslatedLabel(item.label);
               
               return (
                 <Link 
@@ -187,7 +114,7 @@ const Navigation = () => {
                     }`}
                   >
                     <Icon className="h-5 w-5 md:mr-2" />
-                    <span className="hidden md:inline">{translatedLabel}</span>
+                    <span className="hidden md:inline">{t(item.label)}</span>
                   </Button>
                 </Link>
               );

@@ -24,6 +24,13 @@ const generalTranslations: TranslationRecord = {
   previous: "Назад",
   back: "Назад",
   continue: "Продолжить",
+  signedInAs: "Вы вошли как:",
+  home: "Главная",
+  textPractice: "Текстовая практика",
+  unlimitedVoicePractice: "Безлимитная голосовая практика",
+  premiumVoiceChat: "Премиум голосовой чат",
+  admin: "Администратор",
+  logout: "Выйти",
 };
 
 export default generalTranslations;

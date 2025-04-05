@@ -22,6 +22,11 @@ const authTranslations: TranslationRecord = {
   orContinueWith: "Или продолжить с",
   checkEmailForResetLink: "Проверьте электронную почту для сброса пароля",
   resetLinkSent: "Ссылка для сброса пароля отправлена",
+  loggedOutSuccessfully: "Успешно выполнен выход",
+  youHaveBeenSignedOut: "Вы вышли из системы",
+  errorSigningOut: "Ошибка при выходе",
+  errorOccurredWhileSigningOut: "Произошла ошибка при выходе из системы",
+  logout: "Выйти",
 };
 
 export default authTranslations;
