@@ -79,7 +79,7 @@ export const useChatMessages = () => {
         console.log("No translation provided for response in language:", currentLanguage);
         
         // For English users, we want Spanish translations
-        // For non-English users, we want translations in their native language
+        // For all other users, we want translations in their native language
         const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
         
         try {
@@ -220,17 +220,6 @@ export const useChatMessages = () => {
     sendLanguageLearningPrompt,
     handleSendPrompt,
     handleSubmit,
-    getPlaceholderText: () => {
-      if (currentLanguage === "english") {
-        return "Type your message in English or Spanish...";
-      } else if (currentLanguage === "japanese") {
-        return "英語または日本語でメッセージを入力してください...";
-      } else if (currentLanguage === "russian") {
-        return "Введите сообщение на английском или русском...";
-      } else if (currentLanguage === "french") {
-        return "Tapez votre message en anglais ou français...";
-      }
-      return t("typeMessage") || "Type your message...";
-    }
+    getPlaceholderText
   };
 };

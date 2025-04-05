@@ -49,7 +49,6 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecificTopics: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture",
   speechRecognitionError: "Erreur de reconnaissance vocale",
   speechRecognitionNotSupported: "La reconnaissance vocale n'est pas prise en charge par votre navigateur",
-  // Removed duplicate: microphoneAccessRequired (already defined above)
   failedToGetResponse: "Échec d'obtention de la réponse de l'IA. Veuillez réessayer.",
   failedToGenerateSpeech: "Échec de génération de la parole. Veuillez réessayer.",
   audioPlaybackError: "Erreur de lecture audio. Veuillez réessayer.",
@@ -78,7 +77,6 @@ const voiceChatTranslations: TranslationRecord = {
   aiModelInfo: "Modèle d'IA : Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la génération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.",
   
   // Voice chat timers
-  // Removed duplicate: voiceChatEnded (already defined above)
   timeLimit5MinReached: "La limite de temps de 5 minutes a été atteinte",
   browserBasedTTS: "Remarque : Ce système utilise la synthèse vocale basée sur le navigateur. Pour une qualité vocale premium avec ElevenLabs, essayez notre Chat Vocal Premium.",
   practiceLevel: "Niveau de pratique",
