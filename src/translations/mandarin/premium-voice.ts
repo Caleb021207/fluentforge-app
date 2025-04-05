@@ -41,7 +41,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   subscribeNow: "立即订阅",
   freeTrialEnded: "您的免费试用已结束",
   voicePremiumDisabled: "语音高级版已停用",
-  voicePremiumReactivateInstructions: "您可以随时通过返回此页面并单击\"立即订阅\"来重新激活您的订阅。",
+  voicePremiumReactivateInstructions: "您可以随时通过返回此页面并单击"立即订阅"来重新激活您的订阅。",
   monthlySubscription: "月度订阅",
   yearlySubscription: "年度订阅",
   voicePremiumMonthlyPrice: "$4.99/月",
