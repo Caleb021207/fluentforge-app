@@ -76,7 +76,12 @@ const voiceChatTranslations: TranslationRecord = {
   browserBasedTTS: "注意：このシステムはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。",
   practiceLevel: "練習レベル",
   cefrB1Description: "中級 - 身近な話題について議論できる",
-  conversationHistoryCleared: "会話履歴がクリアされました"
+  conversationHistoryCleared: "会話履歴がクリアされました",
+  
+  // Adding new translation-specific terms
+  translationSection: "翻訳",
+  englishResponse: "英語の返答",
+  japaneseTranslation: "日本語訳"
 };
 
 export default voiceChatTranslations;

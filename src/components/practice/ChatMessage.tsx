@@ -11,8 +11,8 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation }) => {
   const { currentLanguage } = useLocalization();
   
-  // Always show translation if it exists - this is the key change
-  const showTranslation = translation && translation.trim() !== "";
+  // Always show translation for Japanese users or if translation exists
+  const showTranslation = (translation && translation.trim() !== "") || currentLanguage === "japanese";
   
   return (
     <div
@@ -28,7 +28,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
         }`}
       >
         <p className={`${role === "user" ? "text-white" : "text-gray-800"}`}>{content}</p>
-        {showTranslation && (
+        {showTranslation && translation && (
           <div className="border-t border-gray-300 mt-2 pt-2">
             <p className={`text-sm ${role === "user" ? "text-gray-200" : "text-gray-500"}`}>
               {translation}
