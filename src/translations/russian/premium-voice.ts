@@ -18,6 +18,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   
   // Fixed premium voice chat cooldown messages
   cooldownPeriodActive: "Достигнут недельный лимит",
+  cooldownActive: "Достигнут недельный лимит",
   waitBeforeNextSession: "Вам нужно подождать перед началом следующего сеанса",
   cooldownPeriodDescription: "Вам нужно подождать {{time}} перед началом следующего премиум голосового чата.",
   resetsAt6AM: "Ваш еженедельный лимит в 15 минут будет сброшен через {{time}} (понедельник в 6:00 утра)",
@@ -50,7 +51,6 @@ const premiumVoiceTranslations: TranslationRecord = {
   timeLimit5MinReached: "Достигнут лимит времени в 15 минут",
   speaking: "Говорит...",
   startChatting: "Начать разговор",
-  cooldownActive: "Достигнут недельный лимит",
   
   // Additional translations
   elevenlabsLikeHumanVoice: "Высококачественные голосовые ответы AI от ElevenLabs",

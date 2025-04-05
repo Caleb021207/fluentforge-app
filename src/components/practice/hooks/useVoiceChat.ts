@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { supabase } from "@/integrations/supabase/client";
-import { LanguageCode, getElevenLabsVoiceId, getLanguageConfig } from "@/utils/languageConfig";
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
@@ -201,9 +201,13 @@ export const useVoiceChat = () => {
         return;
       }
 
-      // Get voice ID from our language config
-      const voiceId = getElevenLabsVoiceId(currentLanguage as LanguageCode);
-      const selectedAgentId = voiceId || getAgentIdForLanguage(currentLanguage);
+      let selectedAgentId = getAgentIdForLanguage(currentLanguage);
+      
+      if (currentLanguage === "japanese") {
+        selectedAgentId = "pViLJpVDvXIBEL7BXbam";
+      } else if (currentLanguage === "russian") {
+        selectedAgentId = "rlHSjx9Y19IqjWTspVRq";
+      }
       
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
@@ -277,5 +281,3 @@ export const useVoiceChat = () => {
     getCurrentWeekStart
   };
 };
-
-export default useVoiceChat;

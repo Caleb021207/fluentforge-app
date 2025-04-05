@@ -9,27 +9,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Helper function to get a language's full name from its code
-const getLanguageName = (langCode: string): string => {
-  const languageMap: Record<string, string> = {
-    "english": "English",
-    "spanish": "Spanish", 
-    "portuguese": "Portuguese",
-    "korean": "Korean",
-    "arabic": "Arabic",
-    "mandarin": "Mandarin Chinese",
-    "vietnamese": "Vietnamese",
-    "french": "French",
-    "japanese": "Japanese",
-    "russian": "Russian"
-  };
-  
-  return languageMap[langCode] || langCode;
-};
-
-// Languages that should always receive translations
-const alwaysTranslateLanguages = ["japanese", "russian", "french"];
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -46,10 +25,18 @@ serve(async (req) => {
 
     // Determine which language the system should respond in
     const responseLanguage = userLanguage === 'english' ? 'Spanish' : 'English';
-    const nativeLanguage = getLanguageName(userLanguage);
-    
-    // Check if we should always include translations regardless of request type
-    const alwaysIncludeTranslation = alwaysTranslateLanguages.includes(userLanguage);
+    const nativeLanguage = userLanguage === 'english' ? 'English' : 
+                          userLanguage === 'spanish' ? 'Spanish' : 
+                          userLanguage === 'portuguese' ? 'Portuguese' : 
+                          userLanguage === 'korean' ? 'Korean' :
+                          userLanguage === 'arabic' ? 'Arabic' :
+                          userLanguage === 'mandarin' ? 'Mandarin Chinese' :
+                          userLanguage === 'vietnamese' ? 'Vietnamese' :
+                          userLanguage === 'japanese' ? 'Japanese' :
+                          userLanguage === 'russian' ? 'Russian' : 'Unknown';
+                          
+    // For Japanese, Russian, and French users, always include translations regardless of request type
+    const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian' || userLanguage === 'french';
 
     // The comprehensive tutor instructions
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${responseLanguage} through natural, realistic conversation. The user has selected CEFR level ${cefrLevel}.
@@ -90,8 +77,10 @@ Stay in character as a patient tutor. Don't test the student — just talk with 
 You should never converse with the user in a manner that is not appropriate for a k-12 classroom setting.
 You should ask questions to continue the conversation if it ever seems to stall.
 
-${alwaysIncludeTranslation ? `ALWAYS add a translation in ${nativeLanguage} after your response in ${responseLanguage}, prefixed with "Translation: ".` : 
-`After your response in ${responseLanguage}, add a translation in ${nativeLanguage} prefixed with "Translation: ".`}`;
+${userLanguage === 'japanese' ? 'ALWAYS add a translation in Japanese after your response in English, prefixed with "Translation: ".' : 
+userLanguage === 'russian' ? 'ALWAYS add a translation in Russian after your response in English, prefixed with "Translation: ".' :
+userLanguage === 'french' ? 'ALWAYS add a translation in French after your response in English, prefixed with "Translation: ".' :
+'After your response in ' + responseLanguage + ', add a translation in ' + nativeLanguage + ' prefixed with "Translation: ".'}`;
 
     // Create an initial hidden message to ensure the AI behaves correctly from the start
     const initialHiddenPrompt = `This conversation is just starting. Remember to behave according to the user's CEFR level ${cefrLevel}. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions.`;
