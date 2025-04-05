@@ -1,11 +1,11 @@
 
-import { useState, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
 import { useSpeechRecognition } from "./useSpeechRecognition";
 import { useSpeechSynthesis } from "./useSpeechSynthesis";
 import { useConversationHistory } from "./useConversationHistory";
+import { useVoiceChatApi } from "./useVoiceChatApi";
+import { useState } from "react";
 
 /**
  * Hook for managing voice chat state and interactions
@@ -13,14 +13,11 @@ import { useConversationHistory } from "./useConversationHistory";
 export const useVoiceChatState = () => {
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   
   // Audio element reference
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Hooks
-  const { toast } = useToast();
-  const { t, currentLanguage } = useLocalization();
   const { 
     conversationHistory, 
     apiConversationHistory,
@@ -32,79 +29,31 @@ export const useVoiceChatState = () => {
   } = useConversationHistory();
 
   const { isSpeaking, speakText } = useSpeechSynthesis();
+  const { isLoading, processChatInput } = useVoiceChatApi();
+  
+  // Handle transcript after user stops recording
+  function handleSendTranscript(text: string) {
+    processUserInput(text);
+  }
   
   // Now handleSendTranscript is only called when user stops recording
   const { isListening, transcript, toggleListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
 
-  function handleSendTranscript(text: string) {
-    processUserInput(text);
-  }
-
   async function processUserInput(text: string) {
     addUserMessage(text);
-    setIsLoading(true);
     
-    try {
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
-        body: { 
-          message: text,
-          userLanguage: currentLanguage,
-          conversationHistory: apiConversationHistory,
-          cefrLevel: 'B1',
-          requestTranslation: true
-        }
-      });
-
-      if (error) throw error;
-      
-      const content = data.content || data.reply || "";
-      let translationText = data.translation || "";
-      
-      if (!translationText) {
-        console.log("No translation provided for response in language:", currentLanguage);
-        
-        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
-        
-        try {
-          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
-            body: {
-              message: content,
-              userLanguage: targetLanguage,
-              requestType: 'translation'
-            }
-          });
-          
-          if (!translationError && translationData && translationData.translation) {
-            translationText = translationData.translation;
-            console.log("Got translation manually:", translationText);
-          }
-        } catch (translationError) {
-          console.error("Failed to get translation:", translationError);
-        }
+    await processChatInput(
+      text,
+      apiConversationHistory,
+      'B1',
+      (content, translationText, updatedHistory) => {
+        addAssistantMessage(content, translationText);
+        setGptResponse(content);
+        setTranslation(translationText);
+        setApiConversationHistory(updatedHistory);
+        speakText(content);
       }
-      
-      addAssistantMessage(content, translationText);
-      
-      setGptResponse(content);
-      setTranslation(translationText);
-      
-      setApiConversationHistory(data.updatedHistory || [
-        ...apiConversationHistory,
-        { role: 'user', content: text },
-        { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
-      ]);
-      
-      speakText(content);
-    } catch (error) {
-      console.error('Error getting GPT response:', error);
-      toast({
-        title: t("error"),
-        description: t("failedToGetResponse"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    );
   }
 
   const handlePhraseClick = (phrase: string) => {
