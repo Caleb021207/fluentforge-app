@@ -13,6 +13,7 @@ import mandarinTranslations from "@/translations/mandarin";
 import vietnameseTranslations from "@/translations/vietnamese";
 import frenchTranslations from "@/translations/french";
 import japaneseTranslations from "@/translations/japanese";
+import russianTranslations from "@/translations/russian";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -53,7 +54,6 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set the language based on what the user is practicing
       recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
                                    currentLanguage === "japanese" ? "en-US" : "en-US";
       recognitionRef.current.interimResults = false;
@@ -273,6 +273,8 @@ const VoiceChat = () => {
       return { practice: "English", native: "French" };
     } else if (currentLanguage === "japanese") {
       return { practice: "English", native: "Japanese" };
+    } else if (currentLanguage === "russian") {
+      return { practice: "English", native: "Russian" };
     }
     return { practice: "English", native: "Vietnamese" };
   };
@@ -304,6 +306,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "russian") {
+      nativeLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -327,7 +332,7 @@ const VoiceChat = () => {
     setTranslation("");
     toast({
       title: t("Success"),
-      description: "Conversation history has been cleared",
+      description: t("conversationHistoryCleared"),
     });
   };
 
@@ -339,7 +344,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "french") {
       return "Intermédiaire - Peut discuter de sujets familiers";
     } else if (currentLanguage === "japanese") {
-      return "中級 - 身近な話題について議論できる";
+      return "中級 - 身近な話題につ��て議論できる";
+    } else if (currentLanguage === "russian") {
+      return "Средний - может обсуждать знакомые темы";
     }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
@@ -363,6 +370,8 @@ const VoiceChat = () => {
       return `Pratiquez vos compétences orales en ${getLanguagePair().practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${getLanguagePair().practice}. L'IA vous répondra en ${getLanguagePair().practice} et vous aidera à vous entraîner.`;
     } else if (currentLanguage === "japanese") {
       return `音声チャットで${getLanguagePair().practice}の会話スキルを練習しましょう。マイクボタンをクリックして${getLanguagePair().practice}で話し始めてください。AIは${getLanguagePair().practice}で返答し、あなたの練習をサポートします。`;
+    } else if (currentLanguage === "russian") {
+      return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -386,6 +395,8 @@ const VoiceChat = () => {
       return "Modèle d'IA : Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la génération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
     } else if (currentLanguage === "japanese") {
       return "AIモデル：自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
+    } else if (currentLanguage === "russian") {
+      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых ответов.";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -407,6 +418,8 @@ const VoiceChat = () => {
       return "Utilisez cet outil pour améliorer vos compétences en expression orale et en compréhension. Voici quelques conseils :";
     } else if (currentLanguage === "japanese") {
       return "このツールを使用してスピーキングとリスニングのスキルを向上させましょう。いくつかのヒント：";
+    } else if (currentLanguage === "russian") {
+      return "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:";
     }
     return t("practiceLanguageTips");
   };
@@ -430,6 +443,8 @@ const VoiceChat = () => {
       return "Remarque : Ce système utilise la synthèse vocale basée sur le navigateur. Pour une qualité vocale premium avec ElevenLabs, essayez notre Chat Vocal Premium.";
     } else if (currentLanguage === "japanese") {
       return "注意：これはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。";
+    } else if (currentLanguage === "russian") {
+      return "Примечание: Эта система использует синтез речи на основе браузера. Для премиального качества голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
     }
     return t("browserBasedTTS");
   };
@@ -443,6 +458,8 @@ const VoiceChat = () => {
       return "Niveau de pratique";
     } else if (currentLanguage === "japanese") {
       return "練習レベル";
+    } else if (currentLanguage === "russian") {
+      return "Уровень практики";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -460,7 +477,7 @@ const VoiceChat = () => {
           {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : currentLanguage === "french" ? "Modèle d'IA :" : "AI模型："}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : currentLanguage === "french" ? "Modèle d'IA :" : currentLanguage === "japanese" ? "AIモデル：" : currentLanguage === "russian" ? "Модель ИИ:" : "AI模型："}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
