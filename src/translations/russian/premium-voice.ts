@@ -134,8 +134,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   allowMicAccess: "Разрешите доступ к микрофону для использования голосового чата",
   networkConnectionIssue: "Проблема с сетевым подключением",
   login: "Войти",
-  success: "Успех",
-  error: "Ошибка" // This was the duplicate with "errorOccurred"
+  success: "Успех"
 };
 
 export default premiumVoiceTranslations;
