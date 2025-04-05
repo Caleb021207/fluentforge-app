@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,8 @@ const VoiceChat = () => {
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
+  const silenceTimerRef = useRef<number | null>(null);
+  const lastSpeechTimestampRef = useRef<number>(Date.now());
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
@@ -55,14 +58,40 @@ const VoiceChat = () => {
       recognitionRef.current = new SpeechRecognitionAPI();
       
       recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                                   currentLanguage === "japanese" ? "en-US" : "en-US";
-      recognitionRef.current.interimResults = false;
+                                   currentLanguage === "japanese" ? "en-US" : 
+                                   currentLanguage === "spanish" ? "en-US" :
+                                   currentLanguage === "portuguese" ? "en-US" :
+                                   currentLanguage === "mandarin" ? "en-US" :
+                                   currentLanguage === "vietnamese" ? "en-US" :
+                                   currentLanguage === "french" ? "en-US" :
+                                   currentLanguage === "russian" ? "en-US" : "en-US";
+      recognitionRef.current.interimResults = true;
       recognitionRef.current.maxAlternatives = 1;
       
       recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setTranscript(transcript);
-        handleSendTranscript(transcript);
+        const currentTranscript = Array.from(event.results)
+          .map((result: any) => result[0].transcript)
+          .join('');
+        
+        setTranscript(currentTranscript);
+        
+        // Update the last speech timestamp whenever we receive speech
+        lastSpeechTimestampRef.current = Date.now();
+        
+        // Reset any existing silence timer
+        if (silenceTimerRef.current !== null) {
+          clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = null;
+        }
+        
+        // Start a new silence timer
+        silenceTimerRef.current = window.setTimeout(() => {
+          if (isListening && currentTranscript.trim() !== '') {
+            console.log("5 seconds of silence detected, automatically sending message");
+            recognitionRef.current.stop();
+            handleSendTranscript(currentTranscript);
+          }
+        }, 5000);
       };
       
       recognitionRef.current.onerror = (event: any) => {
@@ -77,6 +106,12 @@ const VoiceChat = () => {
       
       recognitionRef.current.onend = () => {
         setIsListening(false);
+        
+        // Clear the silence timer when recognition ends
+        if (silenceTimerRef.current !== null) {
+          clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = null;
+        }
       };
     } else {
       toast({
@@ -109,6 +144,9 @@ const VoiceChat = () => {
       if (synthRef.current && utteranceRef.current) {
         synthRef.current.cancel();
       }
+      if (silenceTimerRef.current !== null) {
+        clearTimeout(silenceTimerRef.current);
+      }
     };
   }, [currentLanguage, toast, t]);
 
@@ -118,6 +156,15 @@ const VoiceChat = () => {
         recognitionRef.current.abort();
       }
       setIsListening(false);
+      if (silenceTimerRef.current !== null) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+      
+      // Send the transcript if there's content
+      if (transcript.trim() !== '') {
+        handleSendTranscript(transcript);
+      }
     } else {
       if (recognitionRef.current) {
         try {
@@ -126,6 +173,9 @@ const VoiceChat = () => {
           setTranscript("");
           setGptResponse("");
           setTranslation("");
+          
+          // Initialize the last speech timestamp
+          lastSpeechTimestampRef.current = Date.now();
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({
@@ -210,7 +260,13 @@ const VoiceChat = () => {
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
     utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                               currentLanguage === "japanese" ? "en-US" : "en-US";
+                               currentLanguage === "japanese" ? "en-US" : 
+                               currentLanguage === "spanish" ? "en-US" :
+                               currentLanguage === "portuguese" ? "en-US" :
+                               currentLanguage === "mandarin" ? "en-US" :
+                               currentLanguage === "vietnamese" ? "en-US" :
+                               currentLanguage === "french" ? "en-US" :
+                               currentLanguage === "russian" ? "en-US" : "en-US";
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
