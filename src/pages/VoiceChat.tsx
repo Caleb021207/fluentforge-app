@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Volume2 } from "lucide-react";
+import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,6 +38,7 @@ const VoiceChat = () => {
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
+  const silenceTimeoutRef = useRef<number | null>(null);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
@@ -56,13 +57,17 @@ const VoiceChat = () => {
       
       recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
                                    currentLanguage === "japanese" ? "en-US" : "en-US";
-      recognitionRef.current.interimResults = false;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.continuous = true;
       recognitionRef.current.maxAlternatives = 1;
       
       recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setTranscript(transcript);
-        handleSendTranscript(transcript);
+        const lastResultIndex = event.results.length - 1;
+        const latestTranscript = event.results[lastResultIndex][0].transcript;
+        
+        resetSilenceDetection();
+        
+        setTranscript(latestTranscript);
       };
       
       recognitionRef.current.onerror = (event: any) => {
@@ -76,7 +81,15 @@ const VoiceChat = () => {
       };
       
       recognitionRef.current.onend = () => {
-        setIsListening(false);
+        if (isListening) {
+          try {
+            recognitionRef.current.start();
+          } catch (e) {
+            console.error("Failed to restart speech recognition:", e);
+          }
+        } else {
+          setIsListening(false);
+        }
       };
     } else {
       toast({
@@ -109,14 +122,39 @@ const VoiceChat = () => {
       if (synthRef.current && utteranceRef.current) {
         synthRef.current.cancel();
       }
+      clearSilenceDetection();
     };
   }, [currentLanguage, toast, t]);
+
+  const resetSilenceDetection = () => {
+    clearSilenceDetection();
+    
+    silenceTimeoutRef.current = window.setTimeout(() => {
+      if (transcript && isListening) {
+        console.log("10 seconds of silence detected, automatically sending message");
+        handleSendTranscript(transcript);
+        
+        if (recognitionRef.current) {
+          recognitionRef.current.abort();
+        }
+        setIsListening(false);
+      }
+    }, 10000);
+  };
+
+  const clearSilenceDetection = () => {
+    if (silenceTimeoutRef.current !== null) {
+      clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
+  };
 
   const toggleListening = () => {
     if (isListening) {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
+      clearSilenceDetection();
       setIsListening(false);
     } else {
       if (recognitionRef.current) {
@@ -126,6 +164,7 @@ const VoiceChat = () => {
           setTranscript("");
           setGptResponse("");
           setTranslation("");
+          resetSilenceDetection();
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({
@@ -139,6 +178,9 @@ const VoiceChat = () => {
   };
 
   const handleSendTranscript = async (text: string) => {
+    if (!text.trim()) return;
+    
+    clearSilenceDetection();
     setIsLoading(true);
     
     const userMessage: ConversationMessage = {
@@ -182,6 +224,7 @@ const VoiceChat = () => {
       ]);
       
       speakWithBrowserSynthesis(content);
+      setTranscript("");
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -495,28 +538,42 @@ const VoiceChat = () => {
               </p>
             </div>
 
-            <Button
-              onClick={toggleListening}
-              variant={isListening ? "destructive" : "default"}
-              size="lg"
-              disabled={isLoading || isSpeaking}
-            >
-              {isListening ? (
-                <>
-                  <MicOff className="h-5 w-5 mr-2" />
-                  {t("stopListening")}
-                </>
-              ) : (
-                <>
-                  <Mic className="h-5 w-5 mr-2" />
-                  {t("startSpeaking")}
-                </>
+            <div className="flex gap-2">
+              <Button
+                onClick={toggleListening}
+                variant={isListening ? "destructive" : "default"}
+                size="lg"
+                disabled={isLoading || isSpeaking}
+              >
+                {isListening ? (
+                  <>
+                    <MicOff className="h-5 w-5 mr-2" />
+                    {t("stopListening")}
+                  </>
+                ) : (
+                  <>
+                    <Mic className="h-5 w-5 mr-2" />
+                    {t("startSpeaking")}
+                  </>
+                )}
+              </Button>
+              
+              {isListening && transcript && (
+                <Button
+                  onClick={() => handleSendTranscript(transcript)}
+                  variant="default"
+                  size="lg"
+                  disabled={isLoading || isSpeaking || !transcript.trim()}
+                >
+                  <Send className="h-5 w-5 mr-2" />
+                  {t("Send")}
+                </Button>
               )}
-            </Button>
+            </div>
           </div>
           
           {isListening && (
-            <div className="text-sm text-gray-500 animate-pulse">
+            <div className="text-sm text-gray-500 animate-pulse mb-4">
               {t("listeningNow")}...
             </div>
           )}
