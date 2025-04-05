@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ import portugueseTranslations from "@/translations/portuguese";
 import mandarinTranslations from "@/translations/mandarin";
 import vietnameseTranslations from "@/translations/vietnamese";
 import frenchTranslations from "@/translations/french";
+import japaneseTranslations from "@/translations/japanese";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -53,7 +53,9 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
+      // Set the language based on what the user is practicing
+      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                                   currentLanguage === "japanese" ? "en-US" : "en-US";
       recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
       
@@ -207,7 +209,8 @@ const VoiceChat = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : "en-US";
+    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                               currentLanguage === "japanese" ? "en-US" : "en-US";
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
@@ -268,6 +271,8 @@ const VoiceChat = () => {
       return { practice: "English", native: "Vietnamese" };
     } else if (currentLanguage === "french") {
       return { practice: "English", native: "French" };
+    } else if (currentLanguage === "japanese") {
+      return { practice: "English", native: "Japanese" };
     }
     return { practice: "English", native: "Vietnamese" };
   };
@@ -295,6 +300,9 @@ const VoiceChat = () => {
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "french") {
       nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "japanese") {
+      nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
@@ -330,6 +338,8 @@ const VoiceChat = () => {
       return "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc";
     } else if (currentLanguage === "french") {
       return "Intermédiaire - Peut discuter de sujets familiers";
+    } else if (currentLanguage === "japanese") {
+      return "中級 - 身近な話題について議論できる";
     }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
@@ -351,6 +361,8 @@ const VoiceChat = () => {
       return `Luyện tập kỹ năng nói tiếng ${getLanguagePair().practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${getLanguagePair().practice}. AI sẽ phản hồi bạn bằng tiếng ${getLanguagePair().practice} và giúp bạn luyện tập.`;
     } else if (currentLanguage === "french") {
       return `Pratiquez vos compétences orales en ${getLanguagePair().practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${getLanguagePair().practice}. L'IA vous répondra en ${getLanguagePair().practice} et vous aidera à vous entraîner.`;
+    } else if (currentLanguage === "japanese") {
+      return `音声チャットで${getLanguagePair().practice}の会話スキルを練習しましょう。マイクボタンをクリックして${getLanguagePair().practice}で話し始めてください。AIは${getLanguagePair().practice}で返答し、あなたの練習をサポートします。`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -372,6 +384,8 @@ const VoiceChat = () => {
       return "Mô hình AI: Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
     } else if (currentLanguage === "french") {
       return "Modèle d'IA : Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la génération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
+    } else if (currentLanguage === "japanese") {
+      return "AIモデル：自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -391,6 +405,8 @@ const VoiceChat = () => {
       return "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:";
     } else if (currentLanguage === "french") {
       return "Utilisez cet outil pour améliorer vos compétences en expression orale et en compréhension. Voici quelques conseils :";
+    } else if (currentLanguage === "japanese") {
+      return "このツールを使用してスピーキングとリスニングのスキルを向上させましょう。いくつかのヒント：";
     }
     return t("practiceLanguageTips");
   };
@@ -412,6 +428,8 @@ const VoiceChat = () => {
       return "Lưu ý: Tính năng này sử dụng chuyển văn bản thành giọng nói dựa trên trình duyệt. Để có chất lượng giọng nói cao cấp với ElevenLabs, hãy thử Trò chuyện bằng giọng nói cao cấp của chúng tôi.";
     } else if (currentLanguage === "french") {
       return "Remarque : Ce système utilise la synthèse vocale basée sur le navigateur. Pour une qualité vocale premium avec ElevenLabs, essayez notre Chat Vocal Premium.";
+    } else if (currentLanguage === "japanese") {
+      return "注意：これはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。";
     }
     return t("browserBasedTTS");
   };
@@ -423,6 +441,8 @@ const VoiceChat = () => {
       return "Cấp độ thực hành";
     } else if (currentLanguage === "french") {
       return "Niveau de pratique";
+    } else if (currentLanguage === "japanese") {
+      return "練習レベル";
     }
     return t("practiceLevel") || "Practice Level";
   };

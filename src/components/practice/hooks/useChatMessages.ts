@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -35,6 +34,8 @@ export const useChatMessages = () => {
     } else if (currentLanguage === "vietnamese") {
       prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "french") {
+      prompt = "Hello! I want to practice English with you!";
+    } else if (currentLanguage === "japanese") {
       prompt = "Hello! I want to practice English with you!";
     }
 
@@ -194,23 +195,12 @@ export const useChatMessages = () => {
   };
 
   const getPlaceholderText = () => {
-    if (currentLanguage === "spanish") {
-      return "Escribe tu mensaje en español o inglés...";
-    } else if (currentLanguage === "portuguese") {
-      return "Digite sua mensagem em português ou inglês...";
-    } else if (currentLanguage === "korean") {
-      return "한국어 또는 영어로 메시지를 입력하세요...";
-    } else if (currentLanguage === "arabic") {
-      return "اكتب رسالتك بالعربية أو الإنجليزية...";
-    } else if (currentLanguage === "mandarin") {
-      return "用中文或英语输入您的消息...";
-    } else if (currentLanguage === "vietnamese") {
-      return "Nhập tin nhắn của bạn bằng tiếng Việt hoặc tiếng Anh...";
-    } else if (currentLanguage === "french") {
-      return "Tapez votre message en français ou en anglais...";
-    } else {
+    if (currentLanguage === "english") {
       return "Type your message in English or Spanish...";
+    } else if (currentLanguage === "japanese") {
+      return "英語または日本語でメッセージを入力してください...";
     }
+    return t("typeMessage") || "Type your message...";
   };
 
   return {
@@ -223,6 +213,13 @@ export const useChatMessages = () => {
     sendLanguageLearningPrompt,
     handleSendPrompt,
     handleSubmit,
-    getPlaceholderText
+    getPlaceholderText: () => {
+      if (currentLanguage === "english") {
+        return "Type your message in English or Spanish...";
+      } else if (currentLanguage === "japanese") {
+        return "英語または日本語でメッセージを入力してください...";
+      }
+      return t("typeMessage") || "Type your message...";
+    }
   };
 };
