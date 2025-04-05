@@ -1,14 +1,7 @@
 
 import { ReactNode } from "react";
 import Navigation from "./Navigation";
-import { useNavigate, Routes, Route } from "react-router-dom";
-import Index from "../pages/Index";
-import NotFound from "../pages/NotFound";
-import PlacementQuiz from "../pages/PlacementQuiz";
-import Practice from "../pages/Practice";
-import Certificates from "../pages/Certificates";
-import ProgressPage from "../pages/Progress";
-import ProfilePage from "../pages/Profile";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -62,7 +55,6 @@ const Layout = ({ children }: LayoutProps) => {
         <Navigation />
         <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 mb-16 md:mb-0 md:ml-64 overflow-x-hidden w-full">
           <div className="max-w-full">
-            {/* Add Language Availability Banner that will show on all pages except the home page */}
             {window.location.pathname !== "/" && <LanguageAvailabilityBanner />}
             {children}
           </div>

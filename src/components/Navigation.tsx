@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +13,6 @@ const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const { currentLanguage, t } = useLocalization();
   const isMobile = useIsMobile();
 
@@ -22,11 +21,6 @@ const Navigation = () => {
       const { data } = await supabase.auth.getSession();
       const loggedIn = !!data.session;
       setIsLoggedIn(loggedIn);
-      
-      if (loggedIn) {
-        const { data: { user } } = await supabase.auth.getUser();
-        setIsAdmin(user?.email?.includes("admin") || false);
-      }
     };
     
     checkAuth();
@@ -34,11 +28,8 @@ const Navigation = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
         setIsLoggedIn(true);
-        const user = session?.user;
-        setIsAdmin(user?.email?.includes("admin") || false);
       } else if (event === 'SIGNED_OUT') {
         setIsLoggedIn(false);
-        setIsAdmin(false);
       }
     });
     
@@ -52,10 +43,6 @@ const Navigation = () => {
     { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat" },
     { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat" },
   ];
-  
-  if (isAdmin) {
-    navItems.push({ icon: Shield, label: "admin", path: "/admin" });
-  }
 
   if (isMobile) {
     navItems.unshift({ icon: Home, label: "home", path: "/" });
