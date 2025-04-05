@@ -55,13 +55,19 @@ export const useSpeechSynthesis = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                               currentLanguage === "japanese" ? "en-US" : "en-US";
+    // Set appropriate language for speech synthesis based on content
+    utteranceRef.current.lang = currentLanguage === "english" ? "en-US" : 
+                               currentLanguage === "spanish" ? "es-ES" :
+                               currentLanguage === "portuguese" ? "pt-BR" :
+                               currentLanguage === "japanese" ? "ja-JP" : 
+                               currentLanguage === "vietnamese" ? "vi-VN" :
+                               currentLanguage === "russian" ? "ru-RU" : "en-US";
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
-    const targetLang = currentLanguage === "english" ? "es" : "en";
+    // Find an appropriate voice for the current language
+    const targetLang = utteranceRef.current.lang.split('-')[0];
     
     const voice = voices.find(v => v.lang.startsWith(targetLang));
     if (voice) {

@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff } from "lucide-react";
+import { Mic, MicOff, Send, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -42,7 +42,7 @@ const VoiceChat = () => {
     setApiConversationHistory
   } = useConversationHistory();
   const { isSpeaking, speakText } = useSpeechSynthesis();
-  const { isListening, transcript, toggleListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
+  const { isListening, transcript, startListening, stopListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
 
   function handleSendTranscript(text: string) {
     processUserInput(text);
@@ -59,7 +59,8 @@ const VoiceChat = () => {
           userLanguage: currentLanguage,
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
-          requestTranslation: true
+          requestTranslation: true,
+          model: "gpt-4o-mini"
         }
       });
 
@@ -102,6 +103,7 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
+      // Auto-speak the response
       speakText(content);
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -138,29 +140,31 @@ const VoiceChat = () => {
               </p>
             </div>
 
-            <Button
-              onClick={toggleListening}
-              variant={isListening ? "destructive" : "default"}
-              size="lg"
-              disabled={isLoading || isSpeaking}
-            >
-              {isListening ? (
-                <>
-                  <MicOff className="h-5 w-5 mr-2" />
-                  {t("stopListening")}
-                </>
-              ) : (
-                <>
-                  <Mic className="h-5 w-5 mr-2" />
-                  {t("startSpeaking")}
-                </>
-              )}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={isListening ? stopListening : startListening}
+                variant={isListening ? "destructive" : "default"}
+                size="lg"
+                disabled={isLoading || isSpeaking}
+              >
+                {isListening ? (
+                  <>
+                    <Send className="h-5 w-5 mr-2" />
+                    {t("sendMessage")}
+                  </>
+                ) : (
+                  <>
+                    <Mic className="h-5 w-5 mr-2" />
+                    {t("startSpeaking")}
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
           
           {isListening && (
-            <div className="text-sm text-gray-500 animate-pulse">
-              {t("listeningNow")}...
+            <div className="text-sm text-gray-500 animate-pulse mb-3">
+              {t("listeningNow")}... <span className="text-xs">{t("silenceDetectionHint")}</span>
             </div>
           )}
 

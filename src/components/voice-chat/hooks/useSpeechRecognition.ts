@@ -4,14 +4,35 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 
 /**
- * Hook for speech recognition functionality
+ * Hook for speech recognition functionality with silence detection
  */
 export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) => void) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
+  const silenceTimerRef = useRef<number | null>(null);
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
+
+  // Clear silence timer
+  const clearSilenceTimer = () => {
+    if (silenceTimerRef.current) {
+      window.clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+  };
+
+  // Set up silence detection - if no speech detected for 10 seconds, submit
+  const resetSilenceTimer = () => {
+    clearSilenceTimer();
+    
+    silenceTimerRef.current = window.setTimeout(() => {
+      console.log("Silence detected for 10 seconds, stopping recognition");
+      if (isListening && recognitionRef.current) {
+        stopListening();
+      }
+    }, 10000);
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined" && 
@@ -19,35 +40,42 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Fix language mapping to ensure correct language is set
+      // Set the correct language for speech recognition
       recognitionRef.current.lang = currentLanguage === "english" ? "en-US" : 
                                    currentLanguage === "spanish" ? "es-ES" :
                                    currentLanguage === "portuguese" ? "pt-BR" :
                                    currentLanguage === "japanese" ? "ja-JP" : 
-                                   currentLanguage === "vietnamese" ? "vi-VN" : "en-US";
+                                   currentLanguage === "vietnamese" ? "vi-VN" :
+                                   currentLanguage === "russian" ? "ru-RU" : "en-US";
                                    
       console.log(`Setting speech recognition language to: ${recognitionRef.current.lang}`);
       
-      recognitionRef.current.continuous = false;
+      recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
       recognitionRef.current.maxAlternatives = 1;
       
       recognitionRef.current.onresult = (event: any) => {
         const currentTranscript = Array.from(event.results)
           .map((result: any) => result[0].transcript)
-          .join("");
+          .join(" ");
         
         console.log("Speech recognized:", currentTranscript);
         setTranscript(currentTranscript);
         
-        // Don't automatically send transcript on interim results
-        if (event.results[0].isFinal) {
-          console.log("Final transcript ready:", currentTranscript);
+        // Reset silence timer when speech is detected
+        resetSilenceTimer();
+        
+        // If final result is available for any result, update the transcript
+        for (let i = 0; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            console.log("Final result detected, continuing to listen");
+          }
         }
       };
       
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
+        clearSilenceTimer();
         setIsListening(false);
         toast({
           title: t("error"),
@@ -59,10 +87,12 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       recognitionRef.current.onstart = () => {
         console.log("Speech recognition started successfully");
         setIsListening(true);
+        resetSilenceTimer();
       };
       
       recognitionRef.current.onend = () => {
         console.log("Speech recognition ended, isListening state:", isListening);
+        clearSilenceTimer();
         setIsListening(false);
         
         // If we have a transcript when recognition ends, send it to the callback
@@ -81,6 +111,7 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
     }
 
     return () => {
+      clearSilenceTimer();
       if (recognitionRef.current) {
         console.log("Speech recognition aborted in cleanup");
         try {
@@ -90,33 +121,35 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
         }
       }
     };
-  }, [currentLanguage, toast, t, onTranscriptComplete]);
+  }, [currentLanguage, toast, t, onTranscriptComplete, transcript]);
 
-  const toggleListening = () => {
-    if (isListening) {
-      console.log("Stopping speech recognition");
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.stop();
-          // Transcript will be sent in the onend handler
-        } catch (error) {
-          console.error("Error stopping speech recognition:", error);
-        }
+  const startListening = () => {
+    console.log("Starting speech recognition");
+    if (recognitionRef.current) {
+      try {
+        setTranscript(""); // Clear previous transcript
+        recognitionRef.current.start();
+        resetSilenceTimer();
+      } catch (error) {
+        console.error("Error starting speech recognition:", error);
+        toast({
+          title: t("error"),
+          description: t("microphoneAccessRequired"),
+          variant: "destructive",
+        });
       }
-    } else {
-      console.log("Starting speech recognition");
-      if (recognitionRef.current) {
-        try {
-          setTranscript(""); // Clear previous transcript
-          recognitionRef.current.start();
-        } catch (error) {
-          console.error("Error starting speech recognition:", error);
-          toast({
-            title: t("error"),
-            description: t("microphoneAccessRequired"),
-            variant: "destructive",
-          });
-        }
+    }
+  };
+
+  const stopListening = () => {
+    console.log("Stopping speech recognition");
+    clearSilenceTimer();
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+        // Transcript will be sent in the onend handler
+      } catch (error) {
+        console.error("Error stopping speech recognition:", error);
       }
     }
   };
@@ -124,7 +157,8 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
   return {
     isListening,
     transcript,
-    toggleListening,
+    startListening,
+    stopListening,
     setTranscript
   };
 };
