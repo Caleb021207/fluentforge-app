@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -20,28 +19,42 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       recognitionRef.current = new SpeechRecognitionAPI();
       
       recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                                   currentLanguage === "japanese" ? "en-US" : "en-US";
+                                   currentLanguage === "japanese" ? "en-US" : 
+                                   currentLanguage === "french" ? "en-US" : "en-US";
       recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
+      recognitionRef.current.continuous = true;
       
       recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
+        const transcript = event.results[event.results.length - 1][0].transcript;
         setTranscript(transcript);
         onTranscriptComplete(transcript);
       };
       
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
-        setIsListening(false);
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
-        });
+        if (event.error !== 'no-speech') {
+          setIsListening(false);
+          toast({
+            title: t("error"),
+            description: `${t("speechRecognitionError")}: ${event.error}`,
+            variant: "destructive",
+          });
+        }
       };
       
       recognitionRef.current.onend = () => {
-        setIsListening(false);
+        if (isListening) {
+          try {
+            recognitionRef.current.start();
+            console.log("Speech recognition restarted automatically");
+          } catch (error) {
+            console.error("Failed to restart speech recognition:", error);
+            setIsListening(false);
+          }
+        } else {
+          setIsListening(false);
+        }
       };
     } else {
       toast({
@@ -56,7 +69,7 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
         recognitionRef.current.abort();
       }
     };
-  }, [currentLanguage, toast, t, onTranscriptComplete]);
+  }, [currentLanguage, toast, t, onTranscriptComplete, isListening]);
 
   const toggleListening = () => {
     if (isListening) {
