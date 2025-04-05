@@ -6,6 +6,7 @@ import UserTranscript from "./UserTranscript";
 import LoadingIndicator from "./LoadingIndicator";
 import ResponseCard from "./ResponseCard";
 import { useCefrLevel } from "../hooks/useCefrLevel";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface VoiceChatContainerProps {
   isLoading: boolean;
@@ -29,6 +30,7 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
   playAgain
 }) => {
   const { cefrDescription, practiceLevelText } = useCefrLevel();
+  const { t } = useLocalization();
 
   return (
     <Card className="p-6">
