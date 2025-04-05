@@ -1,8 +1,5 @@
 
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
-import { useChatApi } from "./useChatApi";
+import { useMessageHandlers } from "./useMessageHandlers";
 import { useTranslation } from "./useTranslation";
 
 export interface ChatMessage {
@@ -11,56 +8,31 @@ export interface ChatMessage {
   translation?: string;
 }
 
+/**
+ * Main hook for chat functionality combining all sub-hooks
+ */
 export const useChatMessages = () => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const { t } = useLocalization();
-  const { sendChatMessage, getLanguageLearningPrompt, isLoading, setIsLoading } = useChatApi();
+  const { 
+    messages, 
+    setMessages, 
+    input, 
+    setInput, 
+    isLoading, 
+    setIsLoading,
+    sendLanguageLearningPrompt: baseSendLanguageLearningPrompt,
+    handleSendPrompt,
+    handleSubmit: baseHandleSubmit
+  } = useMessageHandlers();
+  
   const { getPlaceholderText, currentLanguage } = useTranslation();
-
+  
+  // Wrap handlers to automatically pass the current language
   const sendLanguageLearningPrompt = () => {
-    const prompt = getLanguageLearningPrompt(currentLanguage);
-
-    if (prompt) {
-      const userMessage: ChatMessage = {
-        role: "user",
-        content: prompt,
-      };
-
-      setMessages((prev) => [...prev, userMessage]);
-      handleSendPrompt(prompt);
-    }
+    baseSendLanguageLearningPrompt(currentLanguage);
   };
-
-  const handleSendPrompt = async (promptText: string) => {
-    setIsLoading(true);
-
-    const assistantMessage = await sendChatMessage(promptText, currentLanguage);
-    
-    if (assistantMessage) {
-      setMessages((prev) => [...prev, assistantMessage]);
-    }
-    
-    setIsLoading(false);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    const userMessage: ChatMessage = {
-      role: "user",
-      content: input,
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    
-    const assistantMessage = await sendChatMessage(input, currentLanguage);
-    
-    if (assistantMessage) {
-      setMessages((prev) => [...prev, assistantMessage]);
-    }
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    baseHandleSubmit(e, currentLanguage);
   };
 
   return {
@@ -73,6 +45,7 @@ export const useChatMessages = () => {
     sendLanguageLearningPrompt,
     handleSendPrompt,
     handleSubmit,
-    getPlaceholderText
+    getPlaceholderText,
+    currentLanguage
   };
 };
