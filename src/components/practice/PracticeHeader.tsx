@@ -3,7 +3,7 @@ import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 
 const PracticeHeader: React.FC = () => {
-  const { t, currentLanguage } = useLocalization();
+  const { t } = useLocalization();
 
   return (
     <div className="mb-8">
@@ -11,27 +11,7 @@ const PracticeHeader: React.FC = () => {
         {t("textPractice")}
       </h1>
       <p className="text-gray-600 mb-4">
-        {currentLanguage === "arabic" 
-          ? t("chatWithAITutor")
-          : currentLanguage === "mandarin" 
-            ? `与我们的AI导师聊天，通过文本对话练习英语！AI将帮助您纠正语法、词汇和用法。请随时询问有关语言或文化的问题。`
-            : currentLanguage === "english" 
-              ? `Chat with our AI tutor to practice your Spanish through text conversations! The AI will help correct your grammar, vocabulary, and usage. Feel free to ask questions about language or culture.`
-              : currentLanguage === "spanish"
-                ? `¡Chatea con nuestro tutor de IA para practicar tu inglés a través de conversaciones de texto! La IA te ayudará a corregir tu gramática, vocabulario y uso. No dudes en hacer preguntas sobre el idioma o la cultura.`
-                : currentLanguage === "portuguese"
-                  ? `Converse com nosso tutor de IA para praticar seu inglês através de conversas de texto! A IA ajudará a corrigir sua gramática, vocabulário e uso. Sinta-se à vontade para fazer perguntas sobre idioma ou cultura.`
-                  : currentLanguage === "korean"
-                    ? `AI 튜터와 채팅하여 영어를 연습해보세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다. 언어나 문화에 대한 질문을 자유롭게 해보세요.`
-                  : currentLanguage === "vietnamese"
-                    ? `Trò chuyện với gia sư AI của chúng tôi để thực hành tiếng Anh thông qua hội thoại văn bản! AI sẽ giúp sửa ngữ pháp, từ vựng và cách sử dụng của bạn. Hãy thoải mái đặt câu hỏi về ngôn ngữ hoặc văn hóa.`
-                  : currentLanguage === "french"
-                    ? `Chattez avec notre tuteur IA pour pratiquer votre anglais à travers des conversations textuelles ! L'IA vous aidera à corriger votre grammaire, votre vocabulaire et votre utilisation. N'hésitez pas à poser des questions sur la langue ou la culture.`
-                  : currentLanguage === "japanese"
-                    ? `AIチューターとのテキスト会話で英語を練習しましょう！AIが文法、語彙、使い方を修正するのを手伝います。言語や文化についての質問も自由にしてください。`
-                  : currentLanguage === "russian"
-                    ? `Общайтесь с нашим AI-репетитором, чтобы практиковать английский язык через текстовые разговоры! AI поможет вам исправить грамматику, словарный запас и использование. Свободно задавайте вопросы о языке или культуре.`
-                  : `Chat with our AI tutor to practice your language skills through text conversations!`}
+        {t("chatWithAITutor")}
       </p>
       <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
         <p className="text-amber-800 text-sm">

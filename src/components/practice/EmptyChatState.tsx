@@ -1,18 +1,14 @@
 
 import React from "react";
-import { MessageCircle } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 
-const EmptyChatState: React.FC = () => {
+const EmptyChatState = () => {
   const { t } = useLocalization();
-
+  
   return (
-    <div className="text-center py-8 text-gray-500">
-      <MessageCircle className="mx-auto h-12 w-12 mb-4 opacity-50" />
-      <p>{t("startTextChatting")}</p>
-      <p className="text-sm mt-2">
-        {t("typeMessageBelow")}
-      </p>
+    <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+      <p className="mb-2 font-medium">{t("startChatting")}</p>
+      <p className="text-sm text-center">{t("typeMessageBelow")}</p>
     </div>
   );
 };
