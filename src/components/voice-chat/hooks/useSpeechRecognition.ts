@@ -14,21 +14,31 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
   const { t, currentLanguage } = useLocalization();
 
   useEffect(() => {
+    // Check if speech recognition is available in this browser
     if (typeof window !== "undefined" && 
         ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
+      console.log("Speech recognition initialized");
+      
       // Set the appropriate language based on current language
-      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                                   currentLanguage === "japanese" ? "en-US" : 
-                                   currentLanguage === "french" ? "en-US" : "en-US";
-      recognitionRef.current.interimResults = false;
+      const lang = currentLanguage === "english" ? "es-ES" : 
+                  currentLanguage === "japanese" ? "en-US" : 
+                  currentLanguage === "french" ? "en-US" : "en-US";
+      
+      console.log(`Setting speech recognition language to: ${lang}`);
+      recognitionRef.current.lang = lang;
+      recognitionRef.current.interimResults = true;  // Get interim results for better feedback
       recognitionRef.current.maxAlternatives = 1;
       recognitionRef.current.continuous = true;
       
       recognitionRef.current.onresult = (event: any) => {
+        console.log("Speech recognition result received", event);
         const currentTranscript = event.results[event.results.length - 1][0].transcript;
+        console.log("Transcribed text:", currentTranscript);
+        
         // Append new transcript to existing transcript
         setTranscript(prev => {
           const newTranscript = prev ? `${prev} ${currentTranscript}` : currentTranscript;
@@ -52,6 +62,7 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       };
       
       recognitionRef.current.onend = () => {
+        console.log("Speech recognition ended, isListening state:", isListening);
         // Only restart if still in listening mode
         if (isListening) {
           try {
@@ -66,7 +77,12 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
           }
         }
       };
+
+      recognitionRef.current.onstart = () => {
+        console.log("Speech recognition started successfully");
+      };
     } else {
+      console.error("Speech Recognition not supported in this browser");
       toast({
         title: t("error"),
         description: t("speechRecognitionNotSupported"),
@@ -77,22 +93,26 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
+        console.log("Speech recognition aborted in cleanup");
       }
     };
   }, [currentLanguage, toast, t, isListening]);
 
   const toggleListening = () => {
     if (isListening) {
+      console.log("Stopping speech recognition");
       if (recognitionRef.current) {
         recognitionRef.current.abort();
         setIsListening(false);
         
         // Only send the transcript to be processed when the user stops listening
         if (transcript) {
+          console.log("Sending transcript for processing:", transcript);
           onTranscriptComplete(transcript);
         }
       }
     } else {
+      console.log("Starting speech recognition");
       if (recognitionRef.current) {
         try {
           // Clear previous transcript when starting a new recording session
