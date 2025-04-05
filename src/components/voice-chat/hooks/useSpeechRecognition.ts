@@ -14,75 +14,36 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
   const { t, currentLanguage } = useLocalization();
 
   useEffect(() => {
-    // Check if speech recognition is available in this browser
     if (typeof window !== "undefined" && 
         ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      console.log("Speech recognition initialized");
-      
-      // Set the appropriate language based on current language
-      const lang = currentLanguage === "english" ? "es-ES" : 
-                  currentLanguage === "japanese" ? "en-US" : 
-                  currentLanguage === "french" ? "en-US" : "en-US";
-      
-      console.log(`Setting speech recognition language to: ${lang}`);
-      recognitionRef.current.lang = lang;
-      recognitionRef.current.interimResults = true;  // Get interim results for better feedback
+      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                                   currentLanguage === "japanese" ? "en-US" : "en-US";
+      recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
-      recognitionRef.current.continuous = true;
       
       recognitionRef.current.onresult = (event: any) => {
-        console.log("Speech recognition result received", event);
-        const currentTranscript = event.results[event.results.length - 1][0].transcript;
-        console.log("Transcribed text:", currentTranscript);
-        
-        // Append new transcript to existing transcript
-        setTranscript(prev => {
-          const newTranscript = prev ? `${prev} ${currentTranscript}` : currentTranscript;
-          return newTranscript;
-        });
+        const transcript = event.results[0][0].transcript;
+        setTranscript(transcript);
+        onTranscriptComplete(transcript);
       };
       
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
-        if (event.error !== 'no-speech') {
-          // Don't stop listening on no-speech error, just log it
-          if (event.error === 'network') {
-            setIsListening(false);
-            toast({
-              title: t("error"),
-              description: `${t("speechRecognitionError")}: ${event.error}`,
-              variant: "destructive",
-            });
-          }
-        }
+        setIsListening(false);
+        toast({
+          title: t("error"),
+          description: `${t("speechRecognitionError")}: ${event.error}`,
+          variant: "destructive",
+        });
       };
       
       recognitionRef.current.onend = () => {
-        console.log("Speech recognition ended, isListening state:", isListening);
-        // Only restart if still in listening mode
-        if (isListening) {
-          try {
-            recognitionRef.current.start();
-            console.log("Speech recognition restarted automatically");
-          } catch (error) {
-            console.error("Failed to restart speech recognition:", error);
-            // Only update state if we couldn't restart and we're supposed to be listening
-            if (isListening) {
-              setIsListening(false);
-            }
-          }
-        }
-      };
-
-      recognitionRef.current.onstart = () => {
-        console.log("Speech recognition started successfully");
+        setIsListening(false);
       };
     } else {
-      console.error("Speech Recognition not supported in this browser");
       toast({
         title: t("error"),
         description: t("speechRecognitionNotSupported"),
@@ -93,32 +54,22 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
-        console.log("Speech recognition aborted in cleanup");
       }
     };
-  }, [currentLanguage, toast, t, isListening]);
+  }, [currentLanguage, toast, t, onTranscriptComplete]);
 
   const toggleListening = () => {
     if (isListening) {
-      console.log("Stopping speech recognition");
       if (recognitionRef.current) {
         recognitionRef.current.abort();
-        setIsListening(false);
-        
-        // Only send the transcript to be processed when the user stops listening
-        if (transcript) {
-          console.log("Sending transcript for processing:", transcript);
-          onTranscriptComplete(transcript);
-        }
       }
+      setIsListening(false);
     } else {
-      console.log("Starting speech recognition");
       if (recognitionRef.current) {
         try {
-          // Clear previous transcript when starting a new recording session
-          setTranscript("");
           recognitionRef.current.start();
           setIsListening(true);
+          setTranscript("");
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({

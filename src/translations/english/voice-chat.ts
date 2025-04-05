@@ -7,7 +7,6 @@ const voiceChatTranslations: TranslationRecord = {
   startSpeaking: "Start Speaking",
   stopListening: "Stop Listening",
   listeningNow: "Listening now",
-  stopToSendMessage: "Stop to send your message",
   youSaid: "You said",
   aiResponse: "AI Response",
   playAgain: "Play Again",

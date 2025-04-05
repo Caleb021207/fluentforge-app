@@ -6,7 +6,6 @@ const voiceChatTranslations: TranslationRecord = {
   unlimitedVoicePractice: "Prática de Voz Ilimitada",
   startSpeaking: "Começar a Falar",
   stopListening: "Parar de Ouvir",
-  stopToSendMessage: "Clique em 'Parar de Ouvir' para enviar sua mensagem",
   listeningNow: "Ouvindo agora",
   youSaid: "Você disse",
   aiResponse: "Resposta da IA",
