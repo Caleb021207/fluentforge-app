@@ -17,6 +17,9 @@ export const useVoiceChatState = () => {
   // Audio element reference
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
+  // Toast notification
+  const { toast } = useToast();
+  
   // Hooks
   const { 
     conversationHistory, 
@@ -31,8 +34,14 @@ export const useVoiceChatState = () => {
   const { isSpeaking, speakText } = useSpeechSynthesis();
   const { isLoading, processChatInput } = useVoiceChatApi();
   
-  // Process user input function needs to be defined before useSpeechRecognition is called
+  // Process user input function - defined before useSpeechRecognition to avoid hook issues
   const processUserInput = async (text: string) => {
+    console.log("Processing user input:", text);
+    if (!text.trim()) {
+      console.log("Empty transcript, not processing");
+      return;
+    }
+    
     addUserMessage(text);
     
     await processChatInput(
@@ -51,10 +60,11 @@ export const useVoiceChatState = () => {
 
   // Handle transcript after user stops recording
   function handleSendTranscript(text: string) {
+    console.log("Transcript received for processing:", text);
     processUserInput(text);
   }
   
-  // Now handleSendTranscript is only called when user stops recording
+  // Now handleSendTranscript is defined before useSpeechRecognition
   const { isListening, transcript, toggleListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
 
   const handlePhraseClick = (phrase: string) => {
@@ -83,3 +93,4 @@ export const useVoiceChatState = () => {
     clearConversation
   };
 };
+
