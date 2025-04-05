@@ -79,7 +79,12 @@ export const useChatMessages = () => {
         
         // For English users, we want Spanish translations
         // For all other users, we want translations in their native language
-        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
+        let targetLanguage;
+        if (currentLanguage === "english") {
+          targetLanguage = "spanish";
+        } else {
+          targetLanguage = currentLanguage;
+        }
         
         try {
           // Try to get a translation manually if none was provided
@@ -199,12 +204,24 @@ export const useChatMessages = () => {
   const getPlaceholderText = () => {
     if (currentLanguage === "english") {
       return "Type your message in English or Spanish...";
+    } else if (currentLanguage === "spanish") {
+      return "Escribe tu mensaje en inglés o español...";
+    } else if (currentLanguage === "portuguese") {
+      return "Digite sua mensagem em inglês ou português...";
+    } else if (currentLanguage === "korean") {
+      return "영어 또는 한국어로 메시지를 입력하세요...";
+    } else if (currentLanguage === "arabic") {
+      return "اكتب رسالتك بالإنجليزية أو العربية...";
+    } else if (currentLanguage === "mandarin") {
+      return "用英语或中文输入您的消息...";
+    } else if (currentLanguage === "vietnamese") {
+      return "Nhập tin nhắn của bạn bằng tiếng Anh hoặc tiếng Việt...";
+    } else if (currentLanguage === "french") {
+      return "Tapez votre message en anglais ou français...";
     } else if (currentLanguage === "japanese") {
       return "英語または日本語でメッセージを入力してください...";
     } else if (currentLanguage === "russian") {
       return "Введите сообщение на английском или русском...";
-    } else if (currentLanguage === "french") {
-      return "Tapez votre message en anglais ou français...";
     }
     return t("typeMessage") || "Type your message...";
   };

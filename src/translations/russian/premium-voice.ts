@@ -129,7 +129,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   resumingPremiumChat: "Возобновление премиум-чата...",
   connecting: "Подключение...",
   speechRecognitionNotSupported: "Распознавание речи не поддерживается в этом браузере",
-  error: "Ошибка",
+  errorOccurred: "Произошла ошибка",
   microphoneAccessRequired: "Требуется доступ к микрофону",
   allowMicAccess: "Разрешите доступ к микрофону для использования голосового чата",
   networkConnectionIssue: "Проблема с сетевым подключением",
