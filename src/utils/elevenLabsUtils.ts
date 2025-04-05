@@ -1,32 +1,25 @@
-
 /**
  * Maps language codes to ElevenLabs agent IDs
  */
 export const getAgentIdForLanguage = (language: string): string => {
-  switch (language.toLowerCase()) {
+  switch (language) {
     case "english":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor
+      return "pn7jvpZrGTsgJn9nVDFn"; // English agent ID
     case "spanish":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for Spanish speakers
-    case "portuguese":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for Portuguese speakers
-    case "korean":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for Korean speakers
-    case "arabic":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for Arabic speakers
+      return "WiiY9JsnREKUJiZ7P1Ps"; // Spanish agent ID
     case "mandarin":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for Mandarin speakers
-    case "vietnamese":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for Vietnamese speakers
+      return "zcMenjbRPiwKQOKzI3vj"; // Mandarin agent ID
+    case "arabic":
+      return "eevEYBJJxmdzcYt9wd9z"; // Arabic agent ID
     case "french":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for French speakers
+      return "vZAvPMjaHNLw9aHg2xrH"; // French agent ID
     case "japanese":
-      return "pViLJpVDvXIBEL7BXbam"; // English tutor for Japanese speakers
+      return "pViLJpVDvXIBEL7BXbam"; // Japanese agent ID
     case "russian":
-      return "rlHSjx9Y19IqjWTspVRq"; // English tutor for Russian speakers
+      return "rlHSjx9Y19IqjWTspVRq"; // Russian agent ID
     case "ukrainian":
-      return "femZJQOmwbvFjGG46OO0"; // English tutor for Ukrainian speakers
+      return "eu1E63tLoKFYPB28lWks"; // Ukrainian agent ID
     default:
-      return "femZJQOmwbvFjGG46OO0"; // Default English tutor
+      return "pn7jvpZrGTsgJn9nVDFn"; // Default English agent ID
   }
 };

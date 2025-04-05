@@ -40,7 +40,12 @@ const voiceChatTranslations: TranslationRecord = {
   phrase6: "Що ви робили минулого вихідного?",
   phrase7: "Які у вас плани на завтра?",
   phrase8: "Як сказати... англійською?",
-  browserBasedTTS: "Примітка: Це використовує перетворення тексту в мовлення на основі браузера. Для преміум якості голосу від ElevenLabs спробуйте Преміум голосовий чат."
+  browserBasedTTS: "Примітка: Це використовує перетворення тексту в мовлення на основі браузера. Для преміум якості голосу від ElevenLabs спробуйте Преміум голосовий чат.",
+  practiceYourEnglishSpeakingSkills: "Практикуйте свої розмовні навички англійської мови з нашим голосовим чатом. Натисніть кнопку мікрофона та почніть говорити англійською.",
+  aiModel: "AI модель:",
+  aiModelDescription: "Використовує OpenAI's GPT-4o-mini з вбудованим у браузер синтезом мовлення.",
+  practiceLevel: "Рівень практики:",
+  voiceModelNote: "Для використання голосу ElevenLabs для української мови ми використовуємо ID: eu1E63tLoKFYPB28lWks"
 };
 
 export default voiceChatTranslations;

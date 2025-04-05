@@ -36,6 +36,8 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ onClick, is
                       ? "英語練習プロンプトを送信"
                     : currentLanguage === "russian"
                       ? "Отправить задание для практики английского"
+                    : currentLanguage === "ukrainian"
+                      ? "Надіслати практичне завдання"
                     : "Send Practice Prompt"}
       </Button>
     </div>

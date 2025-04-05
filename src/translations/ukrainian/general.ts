@@ -69,6 +69,13 @@ const generalTranslations: TranslationRecord = {
   unknownError: "Невідома помилка",
   tryAgain: "Спробуйте ще раз",
   pleaseWait: "Будь ласка, зачекайте...",
+  conversationHistoryCleared: "Історія розмов очищена",
+  allowMicAccess: "Дозвольте доступ до мікрофона у налаштуваннях браузера",
+  startChatting: "Починайте розмову",
+  startVoiceChat: "Початок голосового чату",
+  stopVoiceChat: "Зупинення голосового чату",
+  failedToCreateSession: "Не вдалося створити сесію",
+  sendEnglishPracticePrompt: "Надіслати підказку для практики англійської"
 };
 
 export default generalTranslations;
