@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
@@ -24,7 +23,9 @@ const progressTranslations: TranslationRecord = {
   testYourSkills: "Перевірте свої навички",
   thisWeek: "Цього тижня",
   dailyGoal: "Щоденна ціль",
-  completed: "Завершено"
+  completed: "Завершено",
+  authRequired: "Потрібна автентифікація",
+  pleaseSignInDashboard: "Будь ласка, увійдіть, щоб отримати доступ до панелі прогресу"
 };
 
 export default progressTranslations;

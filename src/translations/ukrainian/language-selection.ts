@@ -15,6 +15,8 @@ const languageSelectionTranslations: TranslationRecord = {
   studyMaterialsComingSoon: "Навчальні матеріали для вивчення {{targetLanguage}} з {{nativeLanguage}} скоро з'являться!",
   someFeaturesLimited: "Деякі функції можуть бути обмежені або недоступні.",
   selectYourLanguagePreferences: "Виберіть ваші мовні налаштування",
+  welcomeToLanguageLearning: "Ласкаво просимо до вивчення мов",
+  yourPersonalAICompanion: "Ваш персональний ШІ-компаньйон"
 };
 
 export default languageSelectionTranslations;

@@ -32,7 +32,11 @@ const authTranslations: TranslationRecord = {
   accessPasscode: "Код доступу",
   incorrectPasscode: "Невірний код доступу, спробуйте ще раз.",
   pleaseWait: "Будь ласка, зачекайте...",
-  processing: "Обробка..."
+  processing: "Обробка...",
+  
+  // Additional auth translations for home page context
+  authRequired: "Потрібна автентифікація",
+  pleaseSignInDashboard: "Будь ласка, увійдіть, щоб отримати доступ до панелі керування"
 };
 
 export default authTranslations;

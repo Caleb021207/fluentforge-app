@@ -37,7 +37,14 @@ const generalTranslations: TranslationRecord = {
   thisActionCannot: "Цю дію не можна скасувати",
   beta: "Бета",
   new: "Новий",
-  comingSoon: "Незабаром"
+  comingSoon: "Незабаром",
+  
+  // Home page specific translations
+  welcomeToLanguageLearning: "Ласкаво просимо до вивчення мов",
+  yourPersonalAICompanion: "Ваш персональний ШІ-компаньйон для вивчення мов",
+  practiceWithAI: "Практикуватися з ШІ",
+  selectLanguage: "Вибрати мову",
+  startLearning: "Почати навчання"
 };
 
 export default generalTranslations;
