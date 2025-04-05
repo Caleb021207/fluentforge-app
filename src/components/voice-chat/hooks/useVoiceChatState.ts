@@ -1,16 +1,16 @@
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSpeechRecognition } from "./useSpeechRecognition";
 import { useSpeechSynthesis } from "./useSpeechSynthesis";
 import { useConversationHistory } from "./useConversationHistory";
 import { useVoiceChatApi } from "./useVoiceChatApi";
-import { useState } from "react";
 
 /**
  * Hook for managing voice chat state and interactions
  */
 export const useVoiceChatState = () => {
+  // State hooks must be called before any other hooks that might use useState internally
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
   
@@ -31,15 +31,8 @@ export const useVoiceChatState = () => {
   const { isSpeaking, speakText } = useSpeechSynthesis();
   const { isLoading, processChatInput } = useVoiceChatApi();
   
-  // Handle transcript after user stops recording
-  function handleSendTranscript(text: string) {
-    processUserInput(text);
-  }
-  
-  // Now handleSendTranscript is only called when user stops recording
-  const { isListening, transcript, toggleListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
-
-  async function processUserInput(text: string) {
+  // Process user input function needs to be defined before useSpeechRecognition is called
+  const processUserInput = async (text: string) => {
     addUserMessage(text);
     
     await processChatInput(
@@ -54,7 +47,15 @@ export const useVoiceChatState = () => {
         speakText(content);
       }
     );
+  };
+
+  // Handle transcript after user stops recording
+  function handleSendTranscript(text: string) {
+    processUserInput(text);
   }
+  
+  // Now handleSendTranscript is only called when user stops recording
+  const { isListening, transcript, toggleListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
 
   const handlePhraseClick = (phrase: string) => {
     processUserInput(phrase);
