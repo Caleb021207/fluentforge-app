@@ -1,56 +1,153 @@
-
 import { useState, useEffect, useRef } from "react";
-import { Mic, Send, Volume2 } from "lucide-react";
+import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import englishTranslations from "@/translations/english";
+import spanishTranslations from "@/translations/spanish";
+import portugueseTranslations from "@/translations/portuguese";
+import mandarinTranslations from "@/translations/mandarin";
+import vietnameseTranslations from "@/translations/vietnamese";
+import frenchTranslations from "@/translations/french";
+import japaneseTranslations from "@/translations/japanese";
+import russianTranslations from "@/translations/russian";
 
-// Import refactored hooks
-import { useSpeechRecognition } from "@/components/voice-chat/hooks/useSpeechRecognition";
-import { useSpeechSynthesis } from "@/components/voice-chat/hooks/useSpeechSynthesis";
-import { useConversationHistory } from "@/components/voice-chat/hooks/useConversationHistory";
-import { useCefrLevel } from "@/components/voice-chat/hooks/useCefrLevel";
-
-// Import refactored components
-import VoiceChatHeader from "@/components/voice-chat/components/VoiceChatHeader";
-import ConversationList from "@/components/voice-chat/components/ConversationList";
-import ConversationStarters from "@/components/voice-chat/components/ConversationStarters";
-import PracticeGuide from "@/components/voice-chat/components/PracticeGuide";
-import ResponseCard from "@/components/voice-chat/components/ResponseCard";
+type ConversationMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+  translation?: string;
+  timestamp: Date;
+};
 
 const VoiceChat = () => {
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
+  const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
+  const cefrLevel = 'B1';
   
-  // Audio element reference
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const conversationEndRef = useRef<HTMLDivElement | null>(null);
   
-  // Hooks
   const { toast } = useToast();
-  const { t, currentLanguage } = useLocalization();
-  const { cefrLevel, cefrDescription, practiceLevelText } = useCefrLevel();
-  const { 
-    conversationHistory, 
-    apiConversationHistory,
-    conversationEndRef, 
-    addUserMessage, 
-    addAssistantMessage, 
-    clearConversation,
-    setApiConversationHistory
-  } = useConversationHistory();
-  const { isSpeaking, speakText } = useSpeechSynthesis();
-  const { isListening, transcript, startListening, stopListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
+  const { currentLanguage, t } = useLocalization();
 
-  function handleSendTranscript(text: string) {
-    processUserInput(text);
-  }
+  useEffect(() => {
+    if (conversationEndRef.current) {
+      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [conversationHistory]);
 
-  async function processUserInput(text: string) {
-    addUserMessage(text);
+  useEffect(() => {
+    if (typeof window !== "undefined" && 
+        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognitionAPI();
+      
+      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                                   currentLanguage === "japanese" ? "en-US" : "en-US";
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.maxAlternatives = 1;
+      
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setTranscript(transcript);
+        handleSendTranscript(transcript);
+      };
+      
+      recognitionRef.current.onerror = (event: any) => {
+        console.error("Speech recognition error:", event.error);
+        setIsListening(false);
+        toast({
+          title: t("error"),
+          description: `${t("speechRecognitionError")}: ${event.error}`,
+          variant: "destructive",
+        });
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    } else {
+      toast({
+        title: t("error"),
+        description: t("speechRecognitionNotSupported"),
+        variant: "destructive",
+      });
+    }
+
+    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+      
+      const handleVoicesChanged = () => {
+        console.log("Voices available:", synthRef.current?.getVoices().length);
+      };
+      
+      synthRef.current.onvoiceschanged = handleVoicesChanged;
+      
+      if (synthRef.current.getVoices().length > 0) {
+        handleVoicesChanged();
+      }
+    } else {
+      console.warn("Speech synthesis not supported in this browser");
+    }
+    
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
+      if (synthRef.current && utteranceRef.current) {
+        synthRef.current.cancel();
+      }
+    };
+  }, [currentLanguage, toast, t]);
+
+  const toggleListening = () => {
+    if (isListening) {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
+      setIsListening(false);
+    } else {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+          setTranscript("");
+          setGptResponse("");
+          setTranslation("");
+        } catch (error) {
+          console.error("Error starting speech recognition:", error);
+          toast({
+            title: t("error"),
+            description: t("microphoneAccessRequired"),
+            variant: "destructive",
+          });
+        }
+      }
+    }
+  };
+
+  const handleSendTranscript = async (text: string) => {
     setIsLoading(true);
+    
+    const userMessage: ConversationMessage = {
+      role: 'user',
+      content: text,
+      timestamp: new Date()
+    };
+    
+    setConversationHistory(prev => [...prev, userMessage]);
     
     try {
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
@@ -58,44 +155,25 @@ const VoiceChat = () => {
           message: text,
           userLanguage: currentLanguage,
           conversationHistory: apiConversationHistory,
-          cefrLevel: cefrLevel,
-          requestTranslation: true,
-          model: "gpt-4o-mini"
+          cefrLevel: cefrLevel
         }
       });
 
       if (error) throw error;
       
       const content = data.content || data.reply || "";
-      let translationText = data.translation || "";
+      const translationText = data.translation || "";
       
-      if (!translationText) {
-        console.log("No translation provided for response in language:", currentLanguage);
-        
-        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
-        
-        try {
-          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
-            body: {
-              message: content,
-              userLanguage: targetLanguage,
-              requestType: 'translation'
-            }
-          });
-          
-          if (!translationError && translationData && translationData.translation) {
-            translationText = translationData.translation;
-            console.log("Got translation manually:", translationText);
-          }
-        } catch (translationError) {
-          console.error("Failed to get translation:", translationError);
-        }
-      }
-      
-      addAssistantMessage(content, translationText);
+      const aiMessage: ConversationMessage = {
+        role: 'assistant',
+        content: content,
+        translation: translationText,
+        timestamp: new Date()
+      };
       
       setGptResponse(content);
       setTranslation(translationText);
+      setConversationHistory(prev => [...prev, aiMessage]);
       
       setApiConversationHistory(data.updatedHistory || [
         ...apiConversationHistory,
@@ -103,8 +181,7 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      // Auto-speak the response
-      speakText(content);
+      speakWithBrowserSynthesis(content);
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -115,56 +192,332 @@ const VoiceChat = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
-  const handlePhraseClick = (phrase: string) => {
-    processUserInput(phrase);
+  const speakWithBrowserSynthesis = (text: string) => {
+    if (!synthRef.current) {
+      console.error('Speech synthesis not available');
+      toast({
+        title: t("error"),
+        description: t("speechSynthesisNotSupported"),
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    synthRef.current.cancel();
+    
+    utteranceRef.current = new SpeechSynthesisUtterance(text);
+    
+    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                               currentLanguage === "japanese" ? "en-US" : "en-US";
+    
+    const voices = synthRef.current.getVoices();
+    console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
+    
+    const targetLang = currentLanguage === "english" ? "es" : "en";
+    
+    const voice = voices.find(v => v.lang.startsWith(targetLang));
+    if (voice) {
+      console.log(`Using voice: ${voice.name} (${voice.lang})`);
+      utteranceRef.current.voice = voice;
+    } else {
+      console.warn(`No matching voice found for language: ${targetLang}`);
+    }
+    
+    utteranceRef.current.onstart = () => {
+      console.log("Speech synthesis started");
+      setIsSpeaking(true);
+    };
+    
+    utteranceRef.current.onend = () => {
+      console.log("Speech synthesis ended");
+      setIsSpeaking(false);
+    };
+    
+    utteranceRef.current.onerror = (event) => {
+      console.error('Speech synthesis error:', event);
+      setIsSpeaking(false);
+      toast({
+        title: t("error"),
+        description: t("speechSynthesisError"),
+        variant: "destructive",
+      });
+    };
+    
+    synthRef.current.speak(utteranceRef.current);
   };
 
   const playAgain = () => {
     if (gptResponse) {
-      speakText(gptResponse);
+      speakWithBrowserSynthesis(gptResponse);
     }
   };
 
+  const getLanguagePair = () => {
+    if (currentLanguage === "english") {
+      return { practice: "Spanish", native: "English" };
+    } else if (currentLanguage === "spanish") {
+      return { practice: "English", native: "Spanish" };
+    } else if (currentLanguage === "portuguese") {
+      return { practice: "English", native: "Portuguese" };
+    } else if (currentLanguage === "korean") {
+      return { practice: "English", native: "Korean" };
+    } else if (currentLanguage === "arabic") {
+      return { practice: "English", native: "Arabic" };
+    } else if (currentLanguage === "mandarin") {
+      return { practice: "English", native: "Mandarin" };
+    } else if (currentLanguage === "vietnamese") {
+      return { practice: "English", native: "Vietnamese" };
+    } else if (currentLanguage === "french") {
+      return { practice: "English", native: "French" };
+    } else if (currentLanguage === "japanese") {
+      return { practice: "English", native: "Japanese" };
+    } else if (currentLanguage === "russian") {
+      return { practice: "English", native: "Russian" };
+    }
+    return { practice: "English", native: "Vietnamese" };
+  };
+
+  const getConversationStarters = () => {
+    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
+    
+    let nativeLanguagePhrases;
+    let targetLanguagePhrases;
+    
+    if (currentLanguage === "english") {
+      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+    } else if (currentLanguage === "spanish") {
+      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "portuguese") {
+      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "mandarin") {
+      nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "vietnamese") {
+      nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "french") {
+      nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "japanese") {
+      nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "russian") {
+      nativeLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else {
+      nativeLanguagePhrases = phraseKeys.map(key => t(key));
+      targetLanguagePhrases = phraseKeys.map(key => {
+        const englishPhrase = englishTranslations[key];
+        return englishPhrase || key;
+      });
+    }
+    
+    return { nativeLanguagePhrases, targetLanguagePhrases };
+  };
+
+  const handlePhraseClick = (phrase: string) => {
+    handleSendTranscript(phrase);
+  };
+
+  const clearConversation = () => {
+    setConversationHistory([]);
+    setApiConversationHistory([]);
+    setTranscript("");
+    setGptResponse("");
+    setTranslation("");
+    toast({
+      title: t("Success"),
+      description: t("conversationHistoryCleared"),
+    });
+  };
+
+  const getCEFRLevelDescription = () => {
+    if (currentLanguage === "mandarin") {
+      return "中级 - 能够讨论熟悉的话题";
+    } else if (currentLanguage === "vietnamese") {
+      return "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc";
+    } else if (currentLanguage === "french") {
+      return "Intermédiaire - Peut discuter de sujets familiers";
+    } else if (currentLanguage === "japanese") {
+      return "中級 - 身近な話題につ��て議論できる";
+    } else if (currentLanguage === "russian") {
+      return "Средний - может обсуждать знакомые темы";
+    }
+    return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
+  };
+
+  const getPracticeDescription = () => {
+    if (currentLanguage === "english") {
+      return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}. The AI will respond to you in ${getLanguagePair().practice} and help you practice.`;
+    } else if (currentLanguage === "spanish") {
+      return `Practica tus habilidades de habla en ${getLanguagePair().practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${getLanguagePair().practice}. La IA te responderá y te ayudará a practicar.`;
+    } else if (currentLanguage === "portuguese") {
+      return `Pratique suas habilidades de fala em ${getLanguagePair().practice} com nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
+    } else if (currentLanguage === "korean") {
+      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI가 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
+    } else if (currentLanguage === "arabic") {
+      return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
+    } else if (currentLanguage === "mandarin") {
+      return `使用我们的语音聊天练习您的${getLanguagePair().practice}口语技能。点击麦克风按钮，开始用${getLanguagePair().practice}说话。AI将用${getLanguagePair().practice}回应您并帮助您练习。`;
+    } else if (currentLanguage === "vietnamese") {
+      return `Luyện tập kỹ năng nói tiếng ${getLanguagePair().practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${getLanguagePair().practice}. AI sẽ phản hồi bạn bằng tiếng ${getLanguagePair().practice} và giúp bạn luyện tập.`;
+    } else if (currentLanguage === "french") {
+      return `Pratiquez vos compétences orales en ${getLanguagePair().practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${getLanguagePair().practice}. L'IA vous répondra en ${getLanguagePair().practice} et vous aidera à vous entraîner.`;
+    } else if (currentLanguage === "japanese") {
+      return `音声チャットで${getLanguagePair().practice}の会話スキルを練習しましょう。マイクボタンをクリックして${getLanguagePair().practice}で話し始めてください。AIは${getLanguagePair().practice}で返答し、あなたの練習をサポートします。`;
+    } else if (currentLanguage === "russian") {
+      return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
+    }
+    return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
+  };
+
+  const getAIModelInfoText = () => {
+    if (currentLanguage === "english") {
+      return "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
+    } else if (currentLanguage === "spanish") {
+      return "Modelo de IA: Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
+    } else if (currentLanguage === "portuguese") {
+      return "Modelo de IA: Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
+    } else if (currentLanguage === "korean") {
+      return "AI 모델: 자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
+    } else if (currentLanguage === "arabic") {
+      return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
+    } else if (currentLanguage === "mandarin") {
+      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
+    } else if (currentLanguage === "vietnamese") {
+      return "Mô hình AI: Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
+    } else if (currentLanguage === "french") {
+      return "Modèle d'IA : Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la génération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
+    } else if (currentLanguage === "japanese") {
+      return "AIモデル：自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
+    } else if (currentLanguage === "russian") {
+      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых ответов.";
+    }
+    return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
+  };
+
+  const getPracticeTipsText = () => {
+    if (currentLanguage === "english") {
+      return "Use this tool to improve your speaking and listening skills. Here are some tips:";
+    } else if (currentLanguage === "spanish") {
+      return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
+    } else if (currentLanguage === "portuguese") {
+      return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
+    } else if (currentLanguage === "arabic") {
+      return "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:";
+    } else if (currentLanguage === "mandarin") {
+      return "使用此工具提高口语和听力技能。以下是一些提示：";
+    } else if (currentLanguage === "vietnamese") {
+      return "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:";
+    } else if (currentLanguage === "french") {
+      return "Utilisez cet outil pour améliorer vos compétences en expression orale et en compréhension. Voici quelques conseils :";
+    } else if (currentLanguage === "japanese") {
+      return "このツールを使用してスピーキングとリスニングのスキルを向上させましょう。いくつかのヒント：";
+    } else if (currentLanguage === "russian") {
+      return "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:";
+    }
+    return t("practiceLanguageTips");
+  };
+
+  const getBrowserTTSNote = () => {
+    if (currentLanguage === "arabic") {
+      return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
+    } else if (currentLanguage === "korean") {
+      return t("browserBasedTTS");
+    } else if (currentLanguage === "english") {
+      return "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat.";
+    } else if (currentLanguage === "spanish") {
+      return "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.";
+    } else if (currentLanguage === "portuguese") {
+      return "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.";
+    } else if (currentLanguage === "mandarin") {
+      return "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。";
+    } else if (currentLanguage === "vietnamese") {
+      return "Lưu ý: Tính năng này sử dụng chuyển văn bản thành giọng nói dựa trên trình duyệt. Để có chất lượng giọng nói cao cấp với ElevenLabs, hãy thử Trò chuyện bằng giọng nói cao cấp của chúng tôi.";
+    } else if (currentLanguage === "french") {
+      return "Remarque : Ce système utilise la synthèse vocale basée sur le navigateur. Pour une qualité vocale premium avec ElevenLabs, essayez notre Chat Vocal Premium.";
+    } else if (currentLanguage === "japanese") {
+      return "注意：これはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。";
+    } else if (currentLanguage === "russian") {
+      return "Примечание: Эта система использует синтез речи на основе браузера. Для премиального качества голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
+    }
+    return t("browserBasedTTS");
+  };
+
+  const getPracticeLevelText = () => {
+    if (currentLanguage === "mandarin") {
+      return "练习水平";
+    } else if (currentLanguage === "vietnamese") {
+      return "Cấp độ thực hành";
+    } else if (currentLanguage === "french") {
+      return "Niveau de pratique";
+    } else if (currentLanguage === "japanese") {
+      return "練習レベル";
+    } else if (currentLanguage === "russian") {
+      return "Уровень практики";
+    }
+    return t("practiceLevel") || "Practice Level";
+  };
+
+  const { practice, native } = getLanguagePair();
+  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
+
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <VoiceChatHeader />
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-lingua-text mb-4">
+          {t("unlimitedVoicePractice")}
+        </h1>
+        <p className="text-gray-600 mb-4">
+          {getPracticeDescription()}
+        </p>
+        <p className="text-sm text-gray-500 mb-2">
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : currentLanguage === "french" ? "Modèle d'IA :" : currentLanguage === "japanese" ? "AIモデル：" : currentLanguage === "russian" ? "Модель ИИ:" : "AI模型："}</strong> {getAIModelInfoText()}
+        </p>
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+          <p className="text-amber-800 text-sm">
+            {getBrowserTTSNote()}
+          </p>
+        </div>
+      </div>
 
       <div className="flex flex-col gap-6">
         <Card className="p-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{practiceLevelText}: B1</span> - {cefrDescription}
+                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
-            <div className="flex gap-2">
-              <Button
-                onClick={isListening ? stopListening : startListening}
-                variant={isListening ? "destructive" : "default"}
-                size="lg"
-                disabled={isLoading || isSpeaking}
-              >
-                {isListening ? (
-                  <>
-                    <Send className="h-5 w-5 mr-2" />
-                    {t("sendMessage")}
-                  </>
-                ) : (
-                  <>
-                    <Mic className="h-5 w-5 mr-2" />
-                    {t("startSpeaking")}
-                  </>
-                )}
-              </Button>
-            </div>
+            <Button
+              onClick={toggleListening}
+              variant={isListening ? "destructive" : "default"}
+              size="lg"
+              disabled={isLoading || isSpeaking}
+            >
+              {isListening ? (
+                <>
+                  <MicOff className="h-5 w-5 mr-2" />
+                  {t("stopListening")}
+                </>
+              ) : (
+                <>
+                  <Mic className="h-5 w-5 mr-2" />
+                  {t("startSpeaking")}
+                </>
+              )}
+            </Button>
           </div>
           
           {isListening && (
-            <div className="text-sm text-gray-500 animate-pulse mb-3">
-              {t("listeningNow")}... <span className="text-xs">{t("silenceDetectionHint")}</span>
+            <div className="text-sm text-gray-500 animate-pulse">
+              {t("listeningNow")}...
             </div>
           )}
 
@@ -188,12 +541,33 @@ const VoiceChat = () => {
           )}
 
           {gptResponse && (
-            <ResponseCard 
-              gptResponse={gptResponse}
-              translation={translation}
-              isSpeaking={isSpeaking}
-              onPlay={playAgain}
-            />
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-medium">{t("aiResponse")}:</h3>
+                <Button 
+                  onClick={playAgain} 
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-2"
+                  disabled={isSpeaking}
+                >
+                  <Volume2 className="h-4 w-4" />
+                  {isSpeaking ? t("speaking") : t("playAgain")}
+                </Button>
+              </div>
+              <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
+                {gptResponse}
+                
+                {translation && (
+                  <>
+                    <div className="border-t border-gray-300 my-3"></div>
+                    <div className="text-sm text-gray-600">
+                      <strong>{t("translation")}:</strong> {translation}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           )}
         </Card>
         
@@ -212,16 +586,93 @@ const VoiceChat = () => {
               </Button>
             </div>
             
-            <ConversationList 
-              messages={conversationHistory}
-              conversationEndRef={conversationEndRef}
-            />
+            <ScrollArea className="h-[300px] rounded-md border p-4">
+              <div className="space-y-4">
+                {conversationHistory.map((message, index) => (
+                  <div 
+                    key={index} 
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div 
+                      className={`max-w-[80%] rounded-lg p-3 ${
+                        message.role === 'user' 
+                          ? 'bg-blue-100 text-gray-800' 
+                          : 'bg-green-100 text-gray-800'
+                      }`}
+                    >
+                      <p className="text-sm">{message.content}</p>
+                      {message.translation && (
+                        <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
+                          <span className="font-medium">{t("translation")}:</span> {message.translation}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                <div ref={conversationEndRef} />
+              </div>
+            </ScrollArea>
           </Card>
         )}
 
-        <ConversationStarters onPhraseClick={handlePhraseClick} />
+        <Card className="p-6">
+          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            {t("tryThesePhrases")}
+          </p>
+          
+          <div className="space-y-6">
+            <div>
+              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+                {t("inYourTargetLanguage")}: ({practice})
+              </h4>
+              <ul className="space-y-2">
+                {targetLanguagePhrases.map((phrase, index) => (
+                  <li 
+                    key={`target-${index}`} 
+                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+                {t("inYourNativeLanguage")}: ({native})
+              </h4>
+              <ul className="space-y-2">
+                {nativeLanguagePhrases.map((phrase, index) => (
+                  <li 
+                    key={`native-${index}`} 
+                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Card>
         
-        <PracticeGuide />
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
+          <p className="text-sm text-gray-600 mb-3">
+            {getPracticeTipsText()}
+          </p>
+          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+            <li>{t("askQuestionsAboutTopics")}</li>
+            <li>{t("practiceEverydayPhrases")}</li>
+            <li>{t("describeImagesOrScenes")}</li>
+            <li>{t("practiceVocabularyForSpecificTopics")}</li>
+          </ul>
+        </div>
       </div>
       
       <audio ref={audioRef} className="hidden" />
