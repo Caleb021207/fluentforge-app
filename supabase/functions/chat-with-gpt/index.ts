@@ -32,10 +32,12 @@ serve(async (req) => {
                           userLanguage === 'arabic' ? 'Arabic' :
                           userLanguage === 'mandarin' ? 'Mandarin Chinese' :
                           userLanguage === 'vietnamese' ? 'Vietnamese' :
-                          userLanguage === 'japanese' ? 'Japanese' : 'Unknown';
+                          userLanguage === 'japanese' ? 'Japanese' :
+                          userLanguage === 'russian' ? 'Russian' : 'Unknown';
                           
     // For Japanese users, always include translations regardless of request type
-    const alwaysIncludeTranslation = userLanguage === 'japanese';
+    // For Russian users too, always include translations
+    const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian';
 
     // The comprehensive tutor instructions
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${responseLanguage} through natural, realistic conversation. The user has selected CEFR level ${cefrLevel}.
@@ -77,6 +79,7 @@ You should never converse with the user in a manner that is not appropriate for 
 You should ask questions to continue the conversation if it ever seems to stall.
 
 ${userLanguage === 'japanese' ? 'ALWAYS add a translation in Japanese after your response in English, prefixed with "Translation: ".' : 
+userLanguage === 'russian' ? 'ALWAYS add a translation in Russian after your response in English, prefixed with "Translation: ".' :
 'After your response in ' + responseLanguage + ', add a translation in ' + nativeLanguage + ' prefixed with "Translation: ".'}`;
 
     // Create an initial hidden message to ensure the AI behaves correctly from the start

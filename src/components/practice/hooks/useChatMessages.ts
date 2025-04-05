@@ -38,6 +38,8 @@ export const useChatMessages = () => {
       prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "japanese") {
       prompt = "こんにちは！英語を練習したいと思います！";
+    } else if (currentLanguage === "russian") {
+      prompt = "Здравствуйте! Я хочу попрактиковаться в английском с вами!";
     }
 
     if (prompt) {
@@ -200,6 +202,8 @@ export const useChatMessages = () => {
       return "Type your message in English or Spanish...";
     } else if (currentLanguage === "japanese") {
       return "英語または日本語でメッセージを入力してください...";
+    } else if (currentLanguage === "russian") {
+      return "Введите сообщение на английском или русском...";
     }
     return t("typeMessage") || "Type your message...";
   };
@@ -219,6 +223,8 @@ export const useChatMessages = () => {
         return "Type your message in English or Spanish...";
       } else if (currentLanguage === "japanese") {
         return "英語または日本語でメッセージを入力してください...";
+      } else if (currentLanguage === "russian") {
+        return "Введите сообщение на английском или русском...";
       }
       return t("typeMessage") || "Type your message...";
     }

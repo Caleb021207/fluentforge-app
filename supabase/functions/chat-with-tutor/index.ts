@@ -37,7 +37,8 @@ serve(async (req) => {
                           userLanguage === 'arabic' ? 'Arabic' :
                           userLanguage === 'mandarin' ? 'Mandarin Chinese' : 
                           userLanguage === 'vietnamese' ? 'Vietnamese' :
-                          userLanguage === 'japanese' ? 'Japanese' : 'Unknown';
+                          userLanguage === 'japanese' ? 'Japanese' :
+                          userLanguage === 'russian' ? 'Russian' : 'Unknown';
     
     // Universal tutor instructions for all language combinations
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
@@ -197,7 +198,8 @@ async function getTranslation(message: string, userLanguage: string) {
                        userLanguage === 'arabic' ? 'Arabic' :
                        userLanguage === 'mandarin' ? 'Mandarin Chinese' :
                        userLanguage === 'vietnamese' ? 'Vietnamese' :
-                       userLanguage === 'japanese' ? 'Japanese' : 'English';
+                       userLanguage === 'japanese' ? 'Japanese' :
+                       userLanguage === 'russian' ? 'Russian' : 'English';
 
   return await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
