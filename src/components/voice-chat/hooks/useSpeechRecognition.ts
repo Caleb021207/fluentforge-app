@@ -28,9 +28,12 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
       recognitionRef.current.continuous = true;
       
       recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[event.results.length - 1][0].transcript;
-        setTranscript(transcript);
-        onTranscriptComplete(transcript);
+        const currentTranscript = event.results[event.results.length - 1][0].transcript;
+        // Append new transcript to existing transcript
+        setTranscript(prev => {
+          const newTranscript = prev ? `${prev} ${currentTranscript}` : currentTranscript;
+          return newTranscript;
+        });
       };
       
       recognitionRef.current.onerror = (event: any) => {
@@ -76,20 +79,26 @@ export const useSpeechRecognition = (onTranscriptComplete: (transcript: string) 
         recognitionRef.current.abort();
       }
     };
-  }, [currentLanguage, toast, t, onTranscriptComplete, isListening]);
+  }, [currentLanguage, toast, t, isListening]);
 
   const toggleListening = () => {
     if (isListening) {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
         setIsListening(false);
+        
+        // Only send the transcript to be processed when the user stops listening
+        if (transcript) {
+          onTranscriptComplete(transcript);
+        }
       }
     } else {
       if (recognitionRef.current) {
         try {
+          // Clear previous transcript when starting a new recording session
+          setTranscript("");
           recognitionRef.current.start();
           setIsListening(true);
-          setTranscript("");
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({

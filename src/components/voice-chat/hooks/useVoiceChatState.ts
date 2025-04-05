@@ -32,6 +32,8 @@ export const useVoiceChatState = () => {
   } = useConversationHistory();
 
   const { isSpeaking, speakText } = useSpeechSynthesis();
+  
+  // Now handleSendTranscript is only called when user stops recording
   const { isListening, transcript, toggleListening, setTranscript } = useSpeechRecognition(handleSendTranscript);
 
   function handleSendTranscript(text: string) {
