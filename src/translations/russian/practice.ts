@@ -16,6 +16,31 @@ const practiceTranslations: TranslationRecord = {
   practiceConversations: "Практикуйте разговоры в различных ситуациях",
   learnNewVocabulary: "Изучайте новый словарный запас",
   discussCulturalTopics: "Обсуждайте темы культуры",
+  
+  // Additional translations for text practice page
+  practiceWithAITutor: "Практика с AI-репетитором",
+  chatWithAITutor: "Общайтесь с нашим AI-репетитором, чтобы практиковать английский язык! AI поможет вам исправить грамматику, словарный запас и произношение. Свободно задавайте вопросы о языке или культуре.",
+  startVoiceChat: "Начать голосовой чат",
+  stopVoiceChat: "Остановить голосовой чат",
+  getSkillsAssessment: "Получить оценку навыков",
+  reading: "Чтение",
+  writing: "Письмо",
+  speaking: "Говорение",
+  listening: "Аудирование",
+  overallLevel: "Общий уровень",
+  startChatting: "Начните общение с вашим AI-репетитором!",
+  clickToStartVoice: "Нажмите 'Начать голосовой чат', чтобы начать говорить с репетитором",
+  allowMicAccess: "Пожалуйста, разрешите доступ к микрофону для использования голосовых функций",
+  typeMessageBelow: "Введите сообщение ниже, чтобы начать",
+  practiceWithTextChat: "Практика с текстовым чатом",
+  textConversationPractice: "Практика текстовых разговоров",
+  startTextChatting: "Начать текстовый чат с AI-репетитором",
+  noticeTextBasedPractice: "Примечание: Это функция текстовой практики. Для голосовой практики попробуйте наши функции Безлимитный голосовой чат или Премиум голосовой чат.",
+  askAboutGrammarRules: "Спрашивайте о правилах грамматики",
+  practiceConversationsDifferentSituations: "Практикуйте разговоры в различных ситуациях",
+  learnNewVocabulary: "Изучайте новый словарный запас",
+  discussCulturalTopics: "Обсуждайте темы культуры",
+  sendEnglishPracticePrompt: "Отправить задание для практики английского"
 };
 
 export default practiceTranslations;

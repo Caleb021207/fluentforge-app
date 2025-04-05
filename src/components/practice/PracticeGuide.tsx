@@ -27,6 +27,8 @@ const PracticeGuide: React.FC = () => {
                       ? "Utilisez cet outil pour pratiquer vos conversations en anglais. Vous pouvez poser des questions sur :"
                     : currentLanguage === "japanese"
                       ? "この会話ツールを使って英語の練習をしましょう。以下のような質問ができます："
+                    : currentLanguage === "russian"
+                      ? "Используйте этот инструмент для практики разговоров на английском языке. Вы можете спрашивать о:"
                     : "Use this tool to practice your conversations."}
       </p>
       <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
