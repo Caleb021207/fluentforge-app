@@ -60,7 +60,7 @@ const AuthDialog = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md max-w-[90vw] rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-lg">{isLogin ? t("signIn") : t("createAccount")}</DialogTitle>
+          <DialogTitle>{isLogin ? t("signIn") : t("createAccount")}</DialogTitle>
           <DialogDescription>
             {isLogin
               ? t("signInToContinue") 
@@ -81,7 +81,7 @@ const AuthDialog = ({
           <div>
             <Input
               type="password"
-              placeholder={t("password")}
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

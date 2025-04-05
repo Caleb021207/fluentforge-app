@@ -1,8 +1,8 @@
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -13,49 +13,64 @@ interface LogoutButtonProps {
 }
 
 const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useLocalization();
 
   const handleLogout = async () => {
-    setIsLoading(true);
-    
     try {
-      await supabase.auth.signOut();
+      setIsLoading(true);
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) throw error;
       
       toast({
-        title: t("success"),
-        description: t("logoutSuccess"),
+        title: t("loggedOutSuccessfully"),
+        description: t("youHaveBeenSignedOut"),
       });
-      
-      navigate("/");
       
       if (onClose) {
         onClose();
       }
+      
+      navigate("/");
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error("Error signing out:", error);
       toast({
-        title: t("error"),
-        description: t("errorOccurred"),
+        title: t("errorSigningOut"),
+        description: t("errorOccurredWhileSigningOut"),
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
     }
   };
-  
+
+  if (iconOnly) {
+    return (
+      <Button 
+        onClick={handleLogout} 
+        variant="ghost" 
+        className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+        disabled={isLoading}
+      >
+        <LogOut className="h-5 w-5 mr-2" />
+        <span>{t("signOut")}</span>
+      </Button>
+    );
+  }
+
   return (
-    <Button
-      variant="outline"
-      className="w-full"
-      onClick={handleLogout}
+    <Button 
+      onClick={handleLogout} 
+      variant="outline" 
+      size="sm"
       disabled={isLoading}
+      className="flex items-center gap-2"
     >
-      <LogOut className="h-4 w-4 mr-2" />
-      {iconOnly ? null : <span>{t("logout")}</span>}
-      {isLoading && <span className="animate-spin ml-1">⟳</span>}
+      <LogOut className="h-4 w-4" />
+      <span>{t("logout")}</span>
     </Button>
   );
 };

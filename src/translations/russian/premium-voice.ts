@@ -37,14 +37,14 @@ const premiumVoiceTranslations: TranslationRecord = {
   remaining: "осталось на этой неделе",
   
   // Premium voice benefits
-  premiumVoiceChatDescription: "Проведите естественные голосовые беседы с нашим премиум AI-репетитором для практики {{practice}}! AI поможет исправить вашу грамматику, словарный запас и произношение.",
+  premiumVoiceChatDescription: "Проведите естественные голосовые беседы с нашим премиум AI-репетитором для практики английского языка! AI поможет исправить вашу грамматику, словарный запас и произношение.",
   premiumVoiceNote: "Использование премиум голосового чата ограничено одним 15-минутным сеансом в неделю",
   premiumVoiceNoteWithReset: "Премиум голосовой чат предоставляет 15 минут времени практики еженедельно. Ваше время сбрасывается каждый понедельник в 6:00 утра по центральному времени.",
   benefitNaturalVoice: "Естественное, человеческое голосовое взаимодействие с использованием технологии ElevenLabs",
   benefitAccentPronunciation: "Точный акцент и произношение для погружения в обучение",
   benefitRegularPractice: "15 минут времени практики еженедельно, сброс каждый понедельник в 6:00 утра по центральному времени",
 
-  // Voice chat controls
+  // Added voice chat controls
   startVoiceChat: "Начать голосовой чат",
   stopVoiceChat: "Остановить голосовой чат",
   voiceChatEnded: "Голосовой чат завершен",
@@ -52,7 +52,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   speaking: "Говорит...",
   startChatting: "Начать разговор",
   
-  // Additional translations without duplicates
+  // Additional translations
   elevenlabsLikeHumanVoice: "Высококачественные голосовые ответы AI от ElevenLabs",
   startPremiumChat: "Начать премиум-чат",
   endPremiumChat: "Завершить премиум-чат",
@@ -111,6 +111,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   humorous: "С юмором",
   selectComplexity: "Выбрать сложность языка",
   simple: "Простой",
+  intermediate: "Средний",
   advanced: "Продвинутый",
   applySettings: "Применить настройки",
   defaultSettings: "Настройки по умолчанию",

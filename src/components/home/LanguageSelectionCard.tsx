@@ -36,8 +36,7 @@ const LanguageSelectionCard = ({
     vietnamese: "🇻🇳 Tiếng Việt",
     french: "🇫🇷 Français",
     japanese: "🇯🇵 日本語",
-    russian: "🇷🇺 Русский",
-    ukrainian: "🇺🇦 Українська"
+    russian: "🇷🇺 Русский"
   };
 
   return (

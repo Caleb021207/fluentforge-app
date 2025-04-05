@@ -33,11 +33,10 @@ serve(async (req) => {
                           userLanguage === 'mandarin' ? 'Mandarin Chinese' :
                           userLanguage === 'vietnamese' ? 'Vietnamese' :
                           userLanguage === 'japanese' ? 'Japanese' :
-                          userLanguage === 'ukrainian' ? 'Ukrainian' :
                           userLanguage === 'russian' ? 'Russian' : 'Unknown';
                           
-    // For Japanese, Russian, French, and Ukrainian users, always include translations regardless of request type
-    const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian' || userLanguage === 'french' || userLanguage === 'ukrainian';
+    // For Japanese, Russian, and French users, always include translations regardless of request type
+    const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian' || userLanguage === 'french';
 
     // The comprehensive tutor instructions
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${responseLanguage} through natural, realistic conversation. The user has selected CEFR level ${cefrLevel}.
@@ -81,7 +80,6 @@ You should ask questions to continue the conversation if it ever seems to stall.
 ${userLanguage === 'japanese' ? 'ALWAYS add a translation in Japanese after your response in English, prefixed with "Translation: ".' : 
 userLanguage === 'russian' ? 'ALWAYS add a translation in Russian after your response in English, prefixed with "Translation: ".' :
 userLanguage === 'french' ? 'ALWAYS add a translation in French after your response in English, prefixed with "Translation: ".' :
-userLanguage === 'ukrainian' ? 'ALWAYS add a translation in Ukrainian after your response in English, prefixed with "Translation: ".' :
 'After your response in ' + responseLanguage + ', add a translation in ' + nativeLanguage + ' prefixed with "Translation: ".'}`;
 
     // Create an initial hidden message to ensure the AI behaves correctly from the start
