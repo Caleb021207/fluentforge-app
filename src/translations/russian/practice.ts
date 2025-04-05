@@ -10,7 +10,6 @@ const practiceTranslations: TranslationRecord = {
   typeMessageInLanguage: "Введите сообщение на английском или русском...",
   send: "Отправить",
   sendPracticePrompt: "Отправить практическое задание",
-  practiceWithTextChat: "Практикуйтесь с текстовым чатом",
   textChatTips: "Используйте этот инструмент для практики разговоров.",
   askAboutGrammarRules: "Спрашивайте о правилах грамматики",
   practiceConversations: "Практикуйте разговоры в различных ситуациях",
@@ -32,14 +31,11 @@ const practiceTranslations: TranslationRecord = {
   clickToStartVoice: "Нажмите 'Начать голосовой чат', чтобы начать говорить с репетитором",
   allowMicAccess: "Пожалуйста, разрешите доступ к микрофону для использования голосовых функций",
   typeMessageBelow: "Введите сообщение ниже, чтобы начать",
-  practiceWithTextChat: "Практика с текстовым чатом",
   textConversationPractice: "Практика текстовых разговоров",
   startTextChatting: "Начать текстовый чат с AI-репетитором",
   noticeTextBasedPractice: "Примечание: Это функция текстовой практики. Для голосовой практики попробуйте наши функции Безлимитный голосовой чат или Премиум голосовой чат.",
-  askAboutGrammarRules: "Спрашивайте о правилах грамматики",
+  practiceWithTextChat: "Практикуйтесь с текстовым чатом",
   practiceConversationsDifferentSituations: "Практикуйте разговоры в различных ситуациях",
-  learnNewVocabulary: "Изучайте новый словарный запас",
-  discussCulturalTopics: "Обсуждайте темы культуры",
   sendEnglishPracticePrompt: "Отправить задание для практики английского"
 };
 
