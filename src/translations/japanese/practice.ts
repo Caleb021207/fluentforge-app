@@ -67,7 +67,22 @@ const practiceTranslations: TranslationRecord = {
   // User guidance
   howToUse: "使用方法",
   whatCanIAsk: "何を聞けますか？",
-  aboutAIPractice: "AI練習について"
+  aboutAIPractice: "AI練習について",
+  
+  // Text practice page specific translations
+  practiceWithTextChat: "テキストチャットで練習",
+  textConversationPractice: "テキスト会話練習",
+  startTextChatting: "AIチューターとのテキストチャットを始める",
+  typeMessageBelow: "下にメッセージを入力して開始",
+  
+  // Additional translations for the practice page
+  chatWithAITutor: "AIチューターとのテキスト会話で英語を練習しましょう！AIが文法、語彙、使い方を修正するのを手伝います。言語や文化についての質問も自由にしてください。",
+  noticeTextBasedPractice: "注：これはテキストベースの練習機能です。音声練習には、無制限音声チャットまたはプレミアム音声チャット機能をお試しください。",
+  sendEnglishPracticePrompt: "英語練習プロンプトを送信",
+  askAboutGrammarRules: "文法ルールについて質問する",
+  practiceConversationsDifferentSituations: "様々な状況での会話を練習する",
+  learnNewVocabulary: "新しい語彙を学ぶ",
+  discussCulturalTopics: "文化的なトピックについて議論する"
 };
 
 export default practiceTranslations;

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -36,7 +37,7 @@ export const useChatMessages = () => {
     } else if (currentLanguage === "french") {
       prompt = "Hello! I want to practice English with you!";
     } else if (currentLanguage === "japanese") {
-      prompt = "Hello! I want to practice English with you!";
+      prompt = "こんにちは！英語を練習したいと思います！";
     }
 
     if (prompt) {
