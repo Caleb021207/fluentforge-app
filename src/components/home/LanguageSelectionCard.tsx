@@ -25,17 +25,17 @@ const LanguageSelectionCard = ({
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
 
-  // Languages in their native names
+  // Languages in their native names with flag emojis
   const NATIVE_LANGUAGE_NAMES = {
-    english: "English",
-    spanish: "Español",
-    portuguese: "Português",
-    korean: "한국어",
-    arabic: "العربية",
-    mandarin: "中文",
-    vietnamese: "Tiếng Việt",
-    french: "Français",
-    japanese: "日本語"
+    english: "🇺🇸 English",
+    spanish: "🇪🇸 Español",
+    portuguese: "🇧🇷 Português",
+    korean: "🇰🇷 한국어",
+    arabic: "🇸🇦 العربية",
+    mandarin: "🇨🇳 中文",
+    vietnamese: "🇻🇳 Tiếng Việt",
+    french: "🇫🇷 Français",
+    japanese: "🇯🇵 日本語"
   };
 
   return (
