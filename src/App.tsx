@@ -5,6 +5,8 @@ import Layout from "@/components/Layout";
 import Index from "@/pages/Index";
 import Practice from "@/pages/Practice";
 import NotFound from "@/pages/NotFound";
+import ExampleData from "@/pages/ExampleData";
+import AdminDashboard from "@/pages/AdminDashboard";
 import VoiceChat from "@/pages/VoiceChat";
 import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
 import { BrowserRouter } from "react-router-dom";
@@ -25,6 +27,8 @@ function App() {
               <Route path="/practice" element={<Practice />} />
               <Route path="/voice-chat" element={<VoiceChat />} />
               <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />
+              <Route path="/example-data" element={<ExampleData />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

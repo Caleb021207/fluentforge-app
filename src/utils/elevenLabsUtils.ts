@@ -1,4 +1,3 @@
-
 /**
  * Maps language codes to ElevenLabs agent IDs
  */
@@ -20,12 +19,6 @@ export const getAgentIdForLanguage = (language: string): string => {
       return "rlHSjx9Y19IqjWTspVRq"; // Russian agent ID
     case "ukrainian":
       return "eu1E63tLoKFYPB28lWks"; // Ukrainian agent ID
-    case "portuguese":
-      return "pn7jvpZrGTsgJn9nVDFn"; // Fallback to English for now
-    case "korean":
-      return "pn7jvpZrGTsgJn9nVDFn"; // Fallback to English for now
-    case "vietnamese":
-      return "pn7jvpZrGTsgJn9nVDFn"; // Fallback to English for now
     default:
       return "pn7jvpZrGTsgJn9nVDFn"; // Default English agent ID
   }

@@ -1,13 +1,15 @@
 
+import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
 import ChatContainer from "@/components/practice/ChatContainer";
 import PracticePromptButton from "@/components/practice/PracticePromptButton";
 import PracticeGuide from "@/components/practice/PracticeGuide";
 import { useChatMessages } from "@/components/practice/hooks/useChatMessages";
+import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 
 const Practice = () => {
-  const { t } = useLocalization();
+  const { currentLanguage } = useLocalization();
   const {
     messages,
     input,
@@ -17,6 +19,17 @@ const Practice = () => {
     handleSubmit,
     getPlaceholderText
   } = useChatMessages();
+  
+  const {
+    voiceChatTimeRemaining,
+    startVoiceConversation,
+    endVoiceConversation
+  } = useVoiceChat();
+
+  const targetLanguage = currentLanguage === "english" ? "Spanish" : 
+                        currentLanguage === "french" ? "English" :
+                        currentLanguage === "japanese" ? "English" :
+                        currentLanguage === "ukrainian" ? "English" : "English";
 
   return (
     <div className="max-w-4xl mx-auto p-4">

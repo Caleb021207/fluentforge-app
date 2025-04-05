@@ -75,30 +75,7 @@ const generalTranslations: TranslationRecord = {
   startVoiceChat: "Початок голосового чату",
   stopVoiceChat: "Зупинення голосового чату",
   failedToCreateSession: "Не вдалося створити сесію",
-  sendEnglishPracticePrompt: "Надіслати підказку для практики англійської",
-  welcomeToLanguageLearning: "Ласкаво просимо до вивчення мов",
-  yourPersonalAICompanion: "Ваш персональний ШІ-помічник",
-  signIn: "Увійти",
-  createAccount: "Створити обліковий запис",
-  signInToContinue: "Увійдіть, щоб продовжити",
-  createAccountToGetStarted: "Створіть обліковий запис, щоб почати",
-  accessPasscode: "Пароль для доступу",
-  incorrectPasscode: "Неправильний пароль",
-  processing: "Обробка...",
-  continueWithGoogle: "Продовжити з Google",
-  dontHaveAccount: "Немає облікового запису?",
-  practiceWithAI: "Практикуйтеся з ШІ",
-  selectYourLanguagePreferences: "Виберіть мовні налаштування",
-  selectYourNativeLanguage: "Виберіть вашу рідну мову",
-  iSpeak: "Я розмовляю",
-  saveLanguagePreferences: "Зберегти мовні налаштування",
-  languagePreferencesSaved: "Мовні налаштування збережено",
-  youreNowLearning: "Тепер ви вивчаєте",
-  from: "з",
-  pleaseSelectBothLanguages: "Будь ласка, виберіть обидві мови",
-  youNeedToSelectBoth: "Вам потрібно вибрати обидві мови",
-  unlimitedVoicePractice: "Необмежена голосова практика",
-  premiumVoiceChat: "Преміум голосовий чат"
+  sendEnglishPracticePrompt: "Надіслати підказку для практики англійської"
 };
 
 export default generalTranslations;

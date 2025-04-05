@@ -71,7 +71,7 @@ const AuthDialog = ({
           <div>
             <Input
               type="email"
-              placeholder={t("email")}
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
