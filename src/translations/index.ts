@@ -8,6 +8,7 @@ import arabicTranslations from "./arabic/index";
 import mandarinTranslations from "./mandarin/index";
 import vietnameseTranslations from "./vietnamese/index";
 import frenchTranslations from "./french/index";
+import japaneseTranslations from "./japanese/index";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
@@ -18,7 +19,8 @@ const translations: LanguageTranslations = {
   arabic: arabicTranslations,
   mandarin: mandarinTranslations,
   vietnamese: vietnameseTranslations,
-  french: frenchTranslations
+  french: frenchTranslations,
+  japanese: japaneseTranslations
 };
 
 export default translations;
@@ -33,6 +35,7 @@ export const AVAILABLE_LANGUAGES = {
   mandarin: "中文",
   vietnamese: "Tiếng Việt",
   french: "Français",
+  japanese: "日本語",
 };
 
 // Default language

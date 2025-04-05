@@ -34,7 +34,8 @@ const LanguageSelectionCard = ({
     arabic: "العربية",
     mandarin: "中文",
     vietnamese: "Tiếng Việt",
-    french: "Français"
+    french: "Français",
+    japanese: "日本語"
   };
 
   return (

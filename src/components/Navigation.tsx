@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
@@ -65,6 +66,13 @@ const navItemTranslations = {
     "Premium Voice Chat": "Chat Vocal Premium",
     "Admin": "Administrateur",
     "Home": "Accueil"
+  },
+  japanese: {
+    "Text Practice": "テキスト練習",
+    "Unlimited Voice Practice": "無制限音声練習",
+    "Premium Voice Chat": "プレミアム音声チャット",
+    "Admin": "管理者",
+    "Home": "ホーム"
   }
 };
 
