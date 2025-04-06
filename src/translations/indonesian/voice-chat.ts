@@ -41,7 +41,25 @@ const voiceChatTranslations: TranslationRecord = {
   send: "Kirim",
   practiceLevel: "Tingkat Latihan",
   browserBasedTTS: "Catatan: Ini menggunakan text-to-speech berbasis browser. Untuk kualitas suara premium dengan ElevenLabs, coba Obrolan Suara Premium kami.",
-  Success: "Berhasil"
+  Success: "Berhasil",
+  
+  // Additional translations needed for the Voice Chat page
+  remaining: "tersisa",
+  error: "Kesalahan",
+  networkConnectionIssue: "Masalah koneksi jaringan",
+  speechRecognitionError: "Kesalahan pengenalan suara",
+  speechRecognitionNotSupported: "Pengenalan suara tidak didukung di browser ini",
+  speechSynthesisNotSupported: "Sintesis suara tidak didukung di browser ini",
+  speechSynthesisError: "Kesalahan sintesis suara",
+  loginRequired: "Login diperlukan",
+  failedToCreateSession: "Gagal membuat sesi",
+  failedToGetResponse: "Gagal mendapatkan respons",
+  conversationHistory: "Riwayat Percakapan",
+  clearConversation: "Hapus Percakapan",
+  conversationHistoryCleared: "Riwayat percakapan telah dihapus",
+  cefrB1Description: "Menengah - Dapat mendiskusikan topik yang sudah dikenal",
+  cooldownActive: "Cooldown aktif",
+  dailyLimitReached: "Batas harian tercapai"
 };
 
 export default voiceChatTranslations;
