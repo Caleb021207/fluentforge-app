@@ -49,7 +49,12 @@ const generalTranslations: TranslationRecord = {
   pageNotFound: "Halaman tidak ditemukan",
   networkConnectionIssue: "Masalah koneksi jaringan",
   pleaseWait: "Mohon tunggu",
-  sessionExpired: "Sesi Anda telah berakhir. Silakan masuk kembali."
+  sessionExpired: "Sesi Anda telah berakhir. Silakan masuk kembali.",
+  cooldownActive: "Masa Tunggu Aktif",
+  dailyLimitReached: "Batas harian tercapai",
+  loginRequired: "Login diperlukan",
+  failedToCreateSession: "Gagal membuat sesi",
+  cefrB1Description: "Menengah - Dapat mendiskusikan topik-topik yang dikenal"
 };
 
 export default generalTranslations;

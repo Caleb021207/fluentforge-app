@@ -32,7 +32,28 @@ const voiceChatTranslations: TranslationRecord = {
   microphoneAccessRequired: "Akses mikrofon diperlukan untuk fitur obrolan suara",
   failedToGetResponse: "Gagal mendapatkan respons, silakan coba lagi",
   speechSynthesisNotSupported: "Sintesis ucapan tidak didukung di browser ini",
-  speechSynthesisError: "Kesalahan saat mensintesis ucapan"
+  speechSynthesisError: "Kesalahan saat mensintesis ucapan",
+  
+  // Indonesian conversation starter phrases
+  phrase1: "Halo, apa kabar hari ini?",
+  phrase2: "Bagaimana cuaca di tempat Anda?",
+  phrase3: "Bisakah Anda merekomendasikan restoran yang bagus?",
+  phrase4: "Apa hobi dan minat Anda?",
+  phrase5: "Ceritakan tentang buku atau film favorit Anda.",
+  phrase6: "Apa yang Anda lakukan akhir pekan lalu?",
+  phrase7: "Apa rencana Anda untuk besok?",
+  phrase8: "Bagaimana cara mengatakan... dalam bahasa Inggris?",
+  
+  // Page specific translations
+  freePracticeWithVoice: "Latihan Suara Gratis",
+  practiceLanguageTips: "Gunakan alat ini untuk meningkatkan keterampilan berbicara dan mendengarkan Anda. Berikut beberapa tips:",
+  askQuestionsAboutTopics: "Ajukan pertanyaan tentang topik sehari-hari",
+  practiceEverydayPhrases: "Latih frasa umum dan ekspresi",
+  describeImagesOrScenes: "Jelaskan apa yang Anda lihat di sekitar Anda",
+  practiceVocabularyForSpecificTopics: "Latih kosakata untuk topik tertentu seperti perjalanan atau makanan",
+  voiceChatEnded: "Obrolan suara berakhir",
+  timeLimit5MinReached: "Batas waktu 5 menit telah tercapai",
+  aiModelInfo: "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara."
 };
 
 export default voiceChatTranslations;
