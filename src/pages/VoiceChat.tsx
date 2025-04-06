@@ -429,9 +429,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на англи��ском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल का अभ्यास करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें। AI आपको अंग्रेजी में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
+      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें। AI आपको अंग्रेजी में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
     } else if (currentLanguage === "indonesian") {
       return `Latih kemampuan berbicara ${languagePair.practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam ${languagePair.practice}. AI akan merespons Anda dalam ${languagePair.practice} dan membantu Anda berlatih.`;
     }
@@ -462,7 +462,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "ukrainian") {
       return "Модель ШІ: Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
     } else if (currentLanguage === "hindi") {
-      return "AI मॉडल: हम प्राकृतिक भाषा की समझ और उत्पादन के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे हैं।";
+      return "AI मॉडल: हम प्राकृतिक भाषा की समझ और उत्पादन के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे ���ैं।";
     } else if (currentLanguage === "indonesian") {
       return "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara.";
     }
@@ -510,7 +510,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return "Уровень практики";
     } else if (currentLanguage === "hindi") {
-      return "अभ्यास स्तर";
+      return "अभ्��ास स्तर";
     } else if (currentLanguage === "indonesian") {
       return "Tingkat Latihan";
     }
@@ -665,12 +665,19 @@ const VoiceChat = () => {
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {/* Always show translation for Hindi users or if translation exists */}
-                {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
+                {/* Always show translation for Hindi, Indonesian users or if translation exists */}
+                {((translation && translation.trim() !== "") || 
+                  currentLanguage === "hindi" || 
+                  currentLanguage === "indonesian") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
                     <div className="text-sm text-gray-600">
-                      <strong>{t("translation")}:</strong> {translation || "अनुवाद उपलब्ध नहीं है"}
+                      <strong>{t("translation")}:</strong> {
+                        translation || 
+                        (currentLanguage === "hindi" ? "अनुवाद उपलब्ध नहीं है" : 
+                         currentLanguage === "indonesian" ? t("translationNotAvailable") : 
+                         "Translation not available")
+                      }
                     </div>
                   </>
                 )}

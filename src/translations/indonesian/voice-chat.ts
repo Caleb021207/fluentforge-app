@@ -72,7 +72,10 @@ const voiceChatTranslations: TranslationRecord = {
   voiceChat: "Obrolan Suara",
   cooldownActive: "Periode Tunggu Aktif",
   dailyLimitReached: "Batas harian tercapai",
-  networkConnectionIssue: "Masalah koneksi jaringan"
+  networkConnectionIssue: "Masalah koneksi jaringan",
+  
+  // Additional translation for missing translation message
+  translationNotAvailable: "Terjemahan tidak tersedia"
 };
 
 export default voiceChatTranslations;

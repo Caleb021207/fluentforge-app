@@ -70,7 +70,13 @@ const voiceChatTranslations: TranslationRecord = {
   speechRecognitionNotSupported: "आपका ब्राउज़र स्पीच रिकग्निशन का समर्थन नहीं करता है",
   failedToGetResponse: "प्रतिक्रिया प्राप्त करने में विफल",
   speechSynthesisNotSupported: "आपका ब्राउज़र स्पीच सिंथेसिस का समर्थन नहीं करता है",
-  speechSynthesisError: "स्पीच सिंथेसिस त्रुटि"
+  speechSynthesisError: "स्पीच सिंथेसिस त्रुटि",
+
+  // Added translations for practice tips
+  askQuestionsAboutTopics: "रोजमर्रा के विषयों पर प्रश्न पूछें",
+  practiceEverydayPhrases: "सामान्य वाक्यांशों और अभिव्यक्तियों का अभ्यास करें",
+  describeImagesOrScenes: "अपने आसपास जो देख रहे हैं उसका वर्णन करें",
+  practiceVocabularyForSpecificTopics: "यात्रा या भोजन जैसे विशिष्ट विषयों के लिए शब्दावली का अभ्यास करें"
 };
 
 export default voiceChatTranslations;
