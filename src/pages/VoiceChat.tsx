@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -199,14 +200,35 @@ const VoiceChat = () => {
           message: text,
           userLanguage: currentLanguage,
           conversationHistory: apiConversationHistory,
-          cefrLevel: cefrLevel
+          cefrLevel: cefrLevel,
+          requestTranslation: true // Explicitly request translation
         }
       });
 
       if (error) throw error;
       
       const content = data.content || data.reply || "";
-      const translationText = data.translation || "";
+      let translationText = data.translation || "";
+      
+      // If no translation was provided but the user is using Hindi, try to get a translation
+      if (!translationText && currentLanguage === "hindi") {
+        try {
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
+            body: {
+              message: content,
+              userLanguage: currentLanguage,
+              requestType: 'translation'
+            }
+          });
+          
+          if (!translationError && translationData && translationData.translation) {
+            translationText = translationData.translation;
+            console.log("Got Hindi translation:", translationText);
+          }
+        } catch (translationError) {
+          console.error("Failed to get Hindi translation:", translationError);
+        }
+      }
       
       const aiMessage: ConversationMessage = {
         role: 'assistant',
@@ -641,11 +663,12 @@ const VoiceChat = () => {
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {translation && (
+                {/* Always show translation for Hindi users or if translation exists */}
+                {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
                     <div className="text-sm text-gray-600">
-                      <strong>{t("translation")}:</strong> {translation}
+                      <strong>{t("translation")}:</strong> {translation || "अनुवाद उपलब्ध नहीं है"}
                     </div>
                   </>
                 )}
@@ -684,9 +707,11 @@ const VoiceChat = () => {
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>
-                      {message.translation && (
+                      {/* Always show translation for Hindi users when it's an AI message */}
+                      {((message.translation && message.translation.trim() !== "") || 
+                       (message.role === 'assistant' && currentLanguage === "hindi")) && (
                         <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
-                          <span className="font-medium">{t("translation")}:</span> {message.translation}
+                          <span className="font-medium">{t("translation")}:</span> {message.translation || "अनुवाद उपलब्ध नहीं है"}
                         </p>
                       )}
                       <p className="text-xs text-gray-500 mt-1">
