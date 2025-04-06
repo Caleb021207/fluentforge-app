@@ -59,7 +59,15 @@ const voiceChatTranslations: TranslationRecord = {
   conversationHistoryCleared: "Riwayat percakapan telah dihapus",
   cefrB1Description: "Menengah - Dapat mendiskusikan topik yang sudah dikenal",
   cooldownActive: "Cooldown aktif",
-  dailyLimitReached: "Batas harian tercapai"
+  dailyLimitReached: "Batas harian tercapai",
+  phrase1: "Halo, apa kabar?",
+  phrase2: "Bagaimana cuacanya hari ini?",
+  phrase3: "Bisakah Anda merekomendasikan restoran yang bagus?",
+  phrase4: "Apa hobi dan minat Anda?",
+  phrase5: "Ceritakan tentang buku atau film favorit Anda.",
+  phrase6: "Apa yang Anda lakukan akhir pekan lalu?",
+  phrase7: "Apa rencana Anda untuk besok?",
+  phrase8: "Bagaimana cara mengatakan... dalam bahasa Inggris/Indonesia?"
 };
 
 export default voiceChatTranslations;

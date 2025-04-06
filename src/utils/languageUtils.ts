@@ -1,3 +1,4 @@
+
 export const getLanguagePair = (language: string) => {
   if (language === "english") {
     return { practice: "Spanish", native: "English" };
@@ -40,6 +41,10 @@ export const getAgentIdForLanguage = (language: string) => {
     return "6XJZ89nBQfO8bsuaJGsL"; // Example ID for Japanese
   } else if (language === "indonesian") {
     return "n0xawTpIZ6Zojiox0KZ5"; // Real ID for Indonesian
+  } else if (language === "turkish") {
+    return "placeholder_turkish_id"; // Placeholder ID for Turkish (to be replaced with real ID)
+  } else if (language === "polish") {
+    return "placeholder_polish_id"; // Placeholder ID for Polish (to be replaced with real ID)
   }
   // Default to English agent
   return "TKbzB6cLYZbldUphidg3";

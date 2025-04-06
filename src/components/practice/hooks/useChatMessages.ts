@@ -222,6 +222,20 @@ export const useChatMessages = () => {
       return "Mesajınızı İngilizce veya Türkçe olarak yazın...";
     } else if (currentLanguage === "polish") {
       return "Wpisz wiadomość po angielsku lub polsku...";
+    } else if (currentLanguage === "ukrainian") {
+      return "Введіть повідомлення англійською або українською...";
+    } else if (currentLanguage === "mandarin") {
+      return "用英语或中文输入您的信息...";
+    } else if (currentLanguage === "vietnamese") {
+      return "Nhập tin nhắn của bạn bằng tiếng Anh hoặc tiếng Việt...";
+    } else if (currentLanguage === "korean") {
+      return "영어나 한국어로 메시지를 입력하세요...";
+    } else if (currentLanguage === "arabic") {
+      return "اكتب رسالتك باللغة الإنجليزية أو العربية...";
+    } else if (currentLanguage === "portuguese") {
+      return "Digite sua mensagem em inglês ou português...";
+    } else if (currentLanguage === "spanish") {
+      return "Escribe tu mensaje en inglés o español...";
     }
     return t("typeMessage") || "Type your message...";
   };
