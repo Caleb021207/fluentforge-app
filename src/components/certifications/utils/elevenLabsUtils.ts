@@ -1,4 +1,5 @@
 
+
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
@@ -10,7 +11,7 @@ export const ARABIC_TUTOR_AGENT_ID = 'RFO6KG9COLQqxnxRzI0L'; // Arabic tutor for
 export const MANDARIN_TUTOR_AGENT_ID = 'MRQcwp0aUbQnbcLE0fjf'; // English tutor for Mandarin speakers
 export const VIETNAMESE_TUTOR_AGENT_ID = 'pc9rZRG8F2WnPEdV77yG'; // English tutor for Vietnamese speakers
 export const FRENCH_TUTOR_AGENT_ID = 'femZJQOmwbvFjGG46OO0'; // English tutor for French speakers
-export const JAPANESE_TUTOR_AGENT_ID = 'M2MhVrSMkj3Y6j5uaQE9'; // English tutor for Japanese speakers
+export const JAPANESE_TUTOR_AGENT_ID = 'pViLJpVDvXIBEL7BXbam'; // Updated English tutor for Japanese speakers
 export const RUSSIAN_TUTOR_AGENT_ID = 'pViLJpVDvXIBEL7BXbam'; // English tutor for Russian speakers
 export const UKRAINIAN_TUTOR_AGENT_ID = 'eu1E63tLoKFYPB28lWks'; // English tutor for Ukrainian speakers
 export const HINDI_TUTOR_AGENT_ID = 'KZaHLSD2sG8AptT09Feu'; // English tutor for Hindi speakers
@@ -181,3 +182,4 @@ export const useElevenLabsAgent = (language: string = 'english') => {
     isSpeaking: conversation.isSpeaking
   };
 };
+
