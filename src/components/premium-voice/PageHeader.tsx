@@ -18,7 +18,7 @@ const PageHeader = ({ practice }: PageHeaderProps) => {
   return (
     <div className="mb-8">
       <h1 className="text-3xl font-bold text-lingua-text mb-4">
-        {t("premiumVoiceTitle")}
+        {t("premiumVoiceChat")}
       </h1>
       <p className="text-gray-600 mb-4">
         {t("premiumVoiceChatDescription", { practice: practiceLanguage })}
