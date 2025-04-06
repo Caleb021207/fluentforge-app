@@ -392,7 +392,7 @@ const VoiceChat = () => {
     if (currentLanguage === "mandarin") {
       return "中级 - 能够讨论熟悉的话题";
     } else if (currentLanguage === "vietnamese") {
-      return "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc";
+      return "Trung cấp - C�� thể thảo luận về các chủ đề quen thuộc";
     } else if (currentLanguage === "french") {
       return "Intermédiaire - Peut discuter de sujets familiers";
     } else if (currentLanguage === "japanese") {
@@ -427,7 +427,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return `音声チャットで${languagePair.practice}の会話スキルを練習しましょう。マイクボタンをクリックして${languagePair.practice}で話し始めてください。AIは${languagePair.practice}で返答し、あなたの練習をサポートします。`;
     } else if (currentLanguage === "russian") {
-      return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
+      return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на англи��ском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
       return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
     } else if (currentLanguage === "hindi") {
@@ -684,3 +684,115 @@ const VoiceChat = () => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-medium">
                 {t("conversationHistory")}
+              </h3>
+              <Button 
+                onClick={clearConversation}
+                variant="outline" 
+                size="sm"
+              >
+                {t("clearConversation")}
+              </Button>
+            </div>
+            
+            <ScrollArea className="h-[300px] rounded-md border p-4">
+              <div className="space-y-4">
+                {conversationHistory.map((message, index) => (
+                  <div 
+                    key={index} 
+                    className={`flex flex-col ${
+                      message.role === "user" ? "items-end" : "items-start"
+                    }`}
+                  >
+                    <div 
+                      className={`max-w-[80%] rounded-lg p-3 ${
+                        message.role === "user" ? "bg-blue-100" : "bg-gray-100"
+                      }`}
+                    >
+                      <p className="text-sm">
+                        {message.content}
+                        {message.translation && (
+                          <>
+                            <div className="border-t border-gray-200 my-2"></div>
+                            <span className="text-xs text-gray-500">
+                              {message.translation}
+                            </span>
+                          </>
+                        )}
+                      </p>
+                    </div>
+                    <span className="text-xs text-gray-400 mt-1">
+                      {new Date(message.timestamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                ))}
+                <div ref={conversationEndRef}></div>
+              </div>
+            </ScrollArea>
+          </Card>
+        )}
+        
+        <Card className="p-6">
+          <h3 className="font-medium mb-4">
+            {t("conversationStarters")}
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            {t("tryThesePhrases")}
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="text-sm font-medium mb-2">
+                {t("inYourTargetLanguage")}
+              </h4>
+              <div className="space-y-2">
+                {targetLanguagePhrases.map((phrase, index) => (
+                  <button
+                    key={`target-${index}`}
+                    onClick={() => handlePhraseClick(phrase)}
+                    className="block w-full text-left p-2 rounded-md hover:bg-gray-100 text-sm"
+                  >
+                    {phrase}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">
+                {t("inYourNativeLanguage")}
+              </h4>
+              <div className="space-y-2">
+                {nativeLanguagePhrases.map((phrase, index) => (
+                  <button
+                    key={`native-${index}`}
+                    onClick={() => handlePhraseClick(phrase)}
+                    className="block w-full text-left p-2 rounded-md hover:bg-gray-100 text-sm"
+                  >
+                    {phrase}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+        
+        <Card className="p-6">
+          <h3 className="font-medium mb-4">
+            {t("practiceWithVoiceChat")}
+          </h3>
+          <p className="mb-3 text-sm">
+            {getPracticeTipsText()}
+          </p>
+          <ul className="space-y-2 list-disc pl-5 text-sm">
+            <li>{t("askQuestionsAboutTopics")}</li>
+            <li>{t("practiceEverydayPhrases")}</li>
+            <li>{t("describeImagesOrScenes")}</li>
+            <li>{t("practiceVocabularyForSpecificTopics")}</li>
+          </ul>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default VoiceChat;
