@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -42,6 +41,8 @@ export const useChatMessages = () => {
       prompt = "Здравствуйте! Я хочу попрактиковаться в английском с вами!";
     } else if (currentLanguage === "ukrainian") {
       prompt = "Привіт! Я хочу попрактикуватися в англійській з вами!";
+    } else if (currentLanguage === "hindi") {
+      prompt = "नमस्ते! मैं आपके साथ अंग्रेजी का अभ्यास करना चाहता हूँ!";
     }
 
     if (prompt) {
@@ -208,6 +209,8 @@ export const useChatMessages = () => {
       return "Введите сообщение на английском или русском...";
     } else if (currentLanguage === "french") {
       return "Tapez votre message en anglais ou français...";
+    } else if (currentLanguage === "hindi") {
+      return "अंग्रेजी या हिंदी में अपना संदेश टाइप करें...";
     }
     return t("typeMessage") || "Type your message...";
   };

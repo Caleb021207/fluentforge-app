@@ -10,6 +10,38 @@ const practiceTranslations: TranslationRecord = {
   practiceIntroduction: "अपनी अंग्रेजी का अभ्यास करने के लिए AI के साथ बातचीत करें। यहां कुछ प्रॉम्प्ट्स दिए गए हैं जो आप शुरू करने के लिए उपयोग कर सकते हैं।",
   continueConversation: "बातचीत जारी रखें...",
   translation: "अनुवाद",
+  
+  // Text Practice Page translations
+  textPractice: "टेक्स्ट अभ्यास",
+  practiceWithAITutor: "AI भाषा ट्यूटर के साथ अभ्यास करें",
+  chatWithAITutor: "अपनी अंग्रेजी का अभ्यास करने के लिए हमारे AI ट्यूटर के साथ चैट करें! AI आपके व्याकरण, शब्दावली और उच्चारण को सुधारने में मदद करेगा। भाषा या संस्कृति के बारे में प्रश्न पूछने के लिए स्वतंत्र महसूस करें।",
+  startVoiceChat: "वॉइस चैट शुरू करें",
+  stopVoiceChat: "वॉइस चैट बंद करें",
+  getSkillsAssessment: "कौशल मूल्यांकन प्राप्त करें",
+  reading: "पढ़ना",
+  writing: "लिखना",
+  speaking: "बोलना",
+  listening: "सुनना",
+  overallLevel: "समग्र स्तर",
+  startChatting: "अपने AI भाषा ट्यूटर के साथ चैट शुरू करें!",
+  clickToStartVoice: "ट्यूटर के साथ बात करने के लिए 'वॉइस चैट शुरू करें' पर क्लिक करें",
+  allowMicAccess: "वॉइस सुविधाओं का उपयोग करने के लिए कृपया माइक्रोफोन एक्सेस की अनुमति दें",
+  typeMessage: "अंग्रेजी या हिंदी में अपना संदेश टाइप करें...",
+  
+  // Text Practice Page specific translations
+  practiceWithTextChat: "टेक्स्ट चैट के साथ अभ्यास करें",
+  textConversationPractice: "टेक्स्ट वार्तालाप अभ्यास",
+  startTextChatting: "AI ट्यूटर के साथ टेक्स्ट चैटिंग शुरू करें",
+  typeMessageBelow: "शुरू करने के लिए नीचे एक संदेश टाइप करें",
+  
+  // Additional translations
+  send: "भेजें",
+  sendEnglishPracticePrompt: "अंग्रेजी अभ्यास प्रॉम्प्ट भेजें",
+  noticeTextBasedPractice: "नोट: यह टेक्स्ट आधारित अभ्यास सुविधा है। वॉइस अभ्यास के लिए, हमारी असीमित वॉइस चैट या प्रीमियम वॉइस चैट सुविधाओं का प्रयास करें।",
+  askAboutGrammarRules: "व्याकरण नियमों के बारे में पूछें",
+  practiceConversationsDifferentSituations: "विभिन्न परिस्थितियों में वार्तालाप का अभ्यास करें",
+  learnNewVocabulary: "नई शब्दावली सीखें",
+  discussCulturalTopics: "सांस्कृतिक विषयों पर चर्चा करें",
 };
 
 export default practiceTranslations;
