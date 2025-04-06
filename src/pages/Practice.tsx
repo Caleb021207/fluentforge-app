@@ -1,5 +1,4 @@
 
-import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
 import ChatContainer from "@/components/practice/ChatContainer";
