@@ -15,6 +15,7 @@ import frenchTranslations from "@/translations/french";
 import japaneseTranslations from "@/translations/japanese";
 import russianTranslations from "@/translations/russian";
 import ukrainianTranslations from "@/translations/ukrainian";
+import hindiTranslations from "@/translations/hindi";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -321,8 +322,10 @@ const VoiceChat = () => {
       return { practice: "English", native: "Russian" };
     } else if (currentLanguage === "ukrainian") {
       return { practice: "English", native: "Ukrainian" };
+    } else if (currentLanguage === "hindi") {
+      return { practice: "English", native: "Hindi" };
     }
-    return { practice: "English", native: "Ukrainian" };
+    return { practice: "English", native: "Your Language" };
   };
 
   const getConversationStarters = () => {
@@ -357,6 +360,9 @@ const VoiceChat = () => {
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "ukrainian") {
       nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "hindi") {
+      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
@@ -423,6 +429,8 @@ const VoiceChat = () => {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
       return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
+    } else if (currentLanguage === "hindi") {
+      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल का अभ्यास करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें। AI आपको अंग्रेजी में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -447,9 +455,11 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return "AIモデル：自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
     } else if (currentLanguage === "russian") {
-      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых ответов.";
+      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых відповідей.";
     } else if (currentLanguage === "ukrainian") {
       return "Модель ШІ: Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
+    } else if (currentLanguage === "hindi") {
+      return "AI मॉडल: हम प्राकृतिक भाषा की समझ और उत्पादन के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे हैं।";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -473,8 +483,10 @@ const VoiceChat = () => {
       return "このツールを使用してスピーキングとリスニングのスキルを向上させましょう。いくつかのヒント：";
     } else if (currentLanguage === "russian") {
       return "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:";
+    } else if (currentLanguage === "hindi") {
+      return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     }
-    return t("practiceLanguageTips");
+    return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
 
   const getBrowserTTSNote = () => {
@@ -498,8 +510,10 @@ const VoiceChat = () => {
       return "注意：これはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。";
     } else if (currentLanguage === "russian") {
       return "Примечание: Эта система использует синтез речи на основе браузера. Для премиального качества голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
+    } else if (currentLanguage === "hindi") {
+      return "नोट: यह ब्राउज़र-आधारित टेक्स्ट-टू-स्पीच का उपयोग करता है। ElevenLabs के साथ प्रीमियम आवाज़ की गुणवत्ता के लिए, हमारे प्रीमियम वॉइस चैट का प्रयास करें।";
     }
-    return t("browserBasedTTS");
+    return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
 
   const getPracticeLevelText = () => {
@@ -513,6 +527,8 @@ const VoiceChat = () => {
       return "練習レベル";
     } else if (currentLanguage === "russian") {
       return "Уровень практики";
+    } else if (currentLanguage === "hindi") {
+      return "अभ्यास स्तर";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -530,7 +546,7 @@ const VoiceChat = () => {
           {getPracticeDescription()}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : currentLanguage === "french" ? "Modèle d'IA :" : currentLanguage === "japanese" ? "AIモデル：" : currentLanguage === "russian" ? "Модель ИИ:" : "AI模型："}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "english" ? "AI Model:" : currentLanguage === "spanish" ? "Modelo de IA:" : currentLanguage === "portuguese" ? "Modelo de IA:" : currentLanguage === "korean" ? "AI 모델:" : currentLanguage === "arabic" ? "نموذج الذكاء الاصطناعي:" : currentLanguage === "vietnamese" ? "Mô hình AI:" : currentLanguage === "french" ? "Modèle d'IA :" : currentLanguage === "japanese" ? "AIモデル：" : currentLanguage === "russian" ? "Модель ИИ:" : currentLanguage === "hindi" ? "AI मॉडल:" : "AI模型："}</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
@@ -544,7 +560,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {getCEFRLevelDescription()}
+                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {t("cefrB1Description")}
               </p>
             </div>
 
@@ -576,7 +592,7 @@ const VoiceChat = () => {
                   disabled={isLoading || isSpeaking || !transcript.trim()}
                 >
                   <Send className="h-5 w-5 mr-2" />
-                  {t("Send")}
+                  {t("send")}
                 </Button>
               )}
             </div>
@@ -734,10 +750,10 @@ const VoiceChat = () => {
             {getPracticeTipsText()}
           </p>
           <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-            <li>{t("askQuestionsAboutTopics")}</li>
-            <li>{t("practiceEverydayPhrases")}</li>
-            <li>{t("describeImagesOrScenes")}</li>
-            <li>{t("practiceVocabularyForSpecificTopics")}</li>
+            <li>{t("askQuestions")}</li>
+            <li>{t("practiceCommonPhrases")}</li>
+            <li>{t("describeWhatYouSee")}</li>
+            <li>{t("practiceVocabularyForSpecific")}</li>
           </ul>
         </div>
       </div>
