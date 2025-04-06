@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getLanguagePair } from "@/utils/languageUtils";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
@@ -436,33 +437,33 @@ const VoiceChat = () => {
 
   const getPracticeDescription = () => {
     if (currentLanguage === "english") {
-      return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}. The AI will respond to you in ${getLanguagePair().practice} and help you practice.`;
+      return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
     } else if (currentLanguage === "spanish") {
-      return `Practica tus habilidades de habla en ${getLanguagePair().practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${getLanguagePair().practice}. La IA te responderá y te ayudará a practicar.`;
+      return `Practica tus habilidades de habla en ${getLanguagePair(currentLanguage).practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${getLanguagePair(currentLanguage).practice}. La IA te responderá y te ayudará a practicar.`;
     } else if (currentLanguage === "portuguese") {
-      return `Pratique suas habilidades de fala em ${getLanguagePair().practice} con nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
+      return `Pratique suas habilidades de fala em ${getLanguagePair(currentLanguage).practice} con nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair(currentLanguage).practice}. A IA responderá a você e o ajudará a praticar.`;
     } else if (currentLanguage === "korean") {
-      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI��� ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
+      return `저희 음성 채팅으로 ${getLanguagePair(currentLanguage).practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair(currentLanguage).practice}로 말하기 시작하세요. AI는 ${getLanguagePair(currentLanguage).practice}로 응답하고 연습을 도와드릴 것입니다.`;
     } else if (currentLanguage === "arabic") {
-      return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
+      return `مارس مهارات التحدث ��اللغة ${getLanguagePair(currentLanguage).practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair(currentLanguage).practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair(currentLanguage).practice} ويساعدك على التدريب.`;
     } else if (currentLanguage === "mandarin") {
-      return `使用我们的语音聊天练习您的${getLanguagePair().practice}口语技能。点击麦克风按钮，开始用${getLanguagePair().practice}说话。AI将用${getLanguagePair().practice}回应您并帮助您练习。`;
+      return `使用我们的语音聊天练习您的${getLanguagePair(currentLanguage).practice}口语技能。点击麦克风按钮，开始用${getLanguagePair(currentLanguage).practice}说话。AI将用${getLanguagePair(currentLanguage).practice}回应您并帮助您练习。`;
     } else if (currentLanguage === "vietnamese") {
-      return `Luyện tập kỹ năng nói tiếng ${getLanguagePair().practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${getLanguagePair().practice}. AI sẽ phản hồi bạn bằng tiếng ${getLanguagePair().practice} và giúp bạn luyện tập.`;
+      return `Luyện tập kỹ năng nói tiếng ${getLanguagePair(currentLanguage).practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${getLanguagePair(currentLanguage).practice}. AI sẽ phản hồi bạn bằng tiếng ${getLanguagePair(currentLanguage).practice} và giúp bạn luyện tập.`;
     } else if (currentLanguage === "french") {
-      return `Pratiquez vos compétences orales en ${getLanguagePair().practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${getLanguagePair().practice}. L'IA vous répondra en ${getLanguagePair().practice} et vous aidera à vous entraîner.`;
+      return `Pratiquez vos compétences orales en ${getLanguagePair(currentLanguage).practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${getLanguagePair(currentLanguage).practice}. L'IA vous répondra en ${getLanguagePair(currentLanguage).practice} et vous aidera à vous entraîner.`;
     } else if (currentLanguage === "japanese") {
-      return `音声チャットで${getLanguagePair().practice}の会話スキルを練習しましょう。マイクボタンをクリックして${getLanguagePair().practice}で��し始めてください。AIは${getLanguagePair().practice}で返答し、あなたの練習をサポートします。`;
+      return `音声チャットで${getLanguagePair(currentLanguage).practice}の会話スキルを練習しましょう。マイクボタンをクリックして${getLanguagePair(currentLanguage).practice}で話し始めてください。AIは${getLanguagePair(currentLanguage).practice}で返答し、あなたの練習をサポートします。`;
     } else if (currentLanguage === "russian") {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
+      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं।`;
     } else if (currentLanguage === "indonesian") {
-      return `Latih kemampuan berbicara ${getLanguagePair().practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair().practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair().practice} dan membantu Anda berlatih.`;
+      return `Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.`;
     }
-    return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
+    return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
   };
 
   const getAIModelLabelText = () => {
@@ -518,11 +519,11 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return "自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
     } else if (currentLanguage === "russian") {
-      return "Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых відповідей.";
+      return "Мы используем GPT-4o-mini от OpenAI для понимания и генерации природної мови, с синтезом речи на основе браузера для голосовых відповідей.";
     } else if (currentLanguage === "ukrainian") {
       return "Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
     } else if (currentLanguage === "hindi") {
-      return "हम प्राकृतिक भाषा की समझ और उत्पादन के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे हैं।";
+      return "हम प्राकृतिक भाषा की समझ और उत्पादन को सुधारने के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे हैं।";
     } else if (currentLanguage === "indonesian") {
       return "Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara.";
     }
@@ -604,7 +605,7 @@ const VoiceChat = () => {
     return t("practiceLevel") || "Practice Level";
   };
 
-  const { practice, native } = getLanguagePair();
+  const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
