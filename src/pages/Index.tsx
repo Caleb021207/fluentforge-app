@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -103,29 +104,6 @@ const Index = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      setIsLoading(true);
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin,
-        }
-      });
-      
-      if (error) throw error;
-    } catch (error: any) {
-      console.error("Google sign in error:", error);
-      toast({
-        title: "Error signing in",
-        description: error.message || "Please try again later",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleLanguageSelection = () => {
     if (nativeLanguage && targetLanguage) {
       localStorage.setItem("nativeLanguage", nativeLanguage);
@@ -208,7 +186,6 @@ const Index = () => {
         password={password}
         setPassword={setPassword}
         handleEmailAuth={handleEmailAuth}
-        handleGoogleLogin={handleGoogleLogin}
         isLoading={isLoading}
       />
     </div>

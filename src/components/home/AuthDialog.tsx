@@ -22,7 +22,6 @@ interface AuthDialogProps {
   password: string;
   setPassword: (password: string) => void;
   handleEmailAuth: (e: React.FormEvent) => void;
-  handleGoogleLogin: () => void;
   isLoading: boolean;
 }
 
@@ -36,7 +35,6 @@ const AuthDialog = ({
   password,
   setPassword,
   handleEmailAuth,
-  handleGoogleLogin,
   isLoading
 }: AuthDialogProps) => {
   const { t } = useLocalization();
@@ -116,15 +114,6 @@ const AuthDialog = ({
               {isLoading 
                 ? t("processing")
                 : isLogin ? t("signIn") : t("createAccount")}
-            </Button>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={handleGoogleLogin} 
-              className="text-sm"
-              disabled={isLoading}
-            >
-              {isLoading ? t("pleaseWait") : t("continueWithGoogle")}
             </Button>
           </div>
           <Button
