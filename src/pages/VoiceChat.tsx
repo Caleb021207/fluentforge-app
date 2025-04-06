@@ -128,7 +128,7 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, toast, t, isListening]);
+  }, [currentLanguage, toast, t]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -322,6 +322,37 @@ const VoiceChat = () => {
     }
   };
 
+  const getLanguagePair = () => {
+    if (currentLanguage === "english") {
+      return { practice: "Spanish", native: "English" };
+    } else if (currentLanguage === "spanish") {
+      return { practice: "English", native: "Spanish" };
+    } else if (currentLanguage === "portuguese") {
+      return { practice: "English", native: "Portuguese" };
+    } else if (currentLanguage === "korean") {
+      return { practice: "English", native: "Korean" };
+    } else if (currentLanguage === "arabic") {
+      return { practice: "English", native: "Arabic" };
+    } else if (currentLanguage === "mandarin") {
+      return { practice: "English", native: "Mandarin" };
+    } else if (currentLanguage === "vietnamese") {
+      return { practice: "English", native: "Vietnamese" };
+    } else if (currentLanguage === "french") {
+      return { practice: "English", native: "French" };
+    } else if (currentLanguage === "japanese") {
+      return { practice: "English", native: "Japanese" };
+    } else if (currentLanguage === "russian") {
+      return { practice: "English", native: "Russian" };
+    } else if (currentLanguage === "ukrainian") {
+      return { practice: "English", native: "Ukrainian" };
+    } else if (currentLanguage === "hindi") {
+      return { practice: "English", native: "Hindi" };
+    } else if (currentLanguage === "indonesian") {
+      return { practice: "English", native: "Indonesian" };
+    }
+    return { practice: "English", native: "Your Language" };
+  };
+
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
@@ -392,50 +423,48 @@ const VoiceChat = () => {
     if (currentLanguage === "mandarin") {
       return "中级 - 能够讨论熟悉的话题";
     } else if (currentLanguage === "vietnamese") {
-      return "Trung cấp - C�� thể thảo luận về các chủ đề quen thuộc";
+      return "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc";
     } else if (currentLanguage === "french") {
       return "Intermédiaire - Peut discuter de sujets familiers";
     } else if (currentLanguage === "japanese") {
-      return "中級 - 身近な話題につて議論できる";
+      return "中級 - 身近な話題につ��て議論できる";
     } else if (currentLanguage === "russian") {
       return "Средний - может обсуждать знакомые темы";
-    } else if (currentLanguage === "indonesian") {
-      return "Menengah - Dapat mendiskusikan topik yang familiar";
     }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
 
   const getPracticeDescription = () => {
-    const languagePair = getLanguagePair(currentLanguage);
+    const { practice, native } = getLanguagePair(currentLanguage);
     
     if (currentLanguage === "english") {
-      return `Practice your ${languagePair.practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${languagePair.practice}. The AI will respond to you in ${languagePair.practice} and help you practice.`;
+      return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}. The AI will respond to you in ${practice} and help you practice.`;
     } else if (currentLanguage === "spanish") {
-      return `Practica tus habilidades de habla en ${languagePair.practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${languagePair.practice}. La IA te responderá y te ayudará a practicar.`;
+      return `Practica tus habilidades de habla en ${practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${practice}. La IA te responderá y te ayudará a practicar.`;
     } else if (currentLanguage === "portuguese") {
-      return `Pratique suas habilidades de fala em ${languagePair.practice} con nosso chat de voz. Clique no botón do microfone e comece a falar em ${languagePair.practice}. A IA responderá a você e o ajudará a praticar.`;
+      return `Pratique suas habilidades de fala em ${practice} con nosso chat de voz. Clique no botón do microfone e comece a falar em ${practice}. A IA responderá a você e o ajudará a praticar.`;
     } else if (currentLanguage === "korean") {
-      return `저희 음성 채팅으로 ${languagePair.practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${languagePair.practice}로 말하기 시작하세요. AI가 ${languagePair.practice}로 응답하고 연습을 도와드릴 것입니다.`;
+      return `저희 음성 채팅으로 ${practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${practice}로 말하기 시작하세요. AI가 ${practice}로 응답하고 연습을 도와드릴 것입니다.`;
     } else if (currentLanguage === "arabic") {
-      return `مارس مهارات التحدث باللغة ${languagePair.practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${languagePair.practice}. سيرد الذكاء الاصطناعي عليك باللغة ${languagePair.practice} ويساعدك على التدريب.`;
+      return `مارس مهارات التحدث باللغة ${practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${practice}. سيرد الذكاء الاصطناعي عليك باللغة ${practice} ويساعدك على التدريب.`;
     } else if (currentLanguage === "mandarin") {
-      return `使用我们的语音聊天练习您的${languagePair.practice}口语技能。点击麦克风按钮，开始用${languagePair.practice}说话。AI将用${languagePair.practice}回应您并帮助您练习。`;
+      return `使用我们的语音聊天练习您的${practice}口语技能。点击麦克风按钮，开始用${practice}说话。AI将用${practice}回应您并帮助您练习。`;
     } else if (currentLanguage === "vietnamese") {
-      return `Luyện tập kỹ năng nói tiếng ${languagePair.practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${languagePair.practice}. AI sẽ phản hồi bạn bằng tiếng ${languagePair.practice} và giúp bạn luyện tập.`;
+      return `Luyện tập kỹ năng nói tiếng ${practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${practice}. AI sẽ phản hồi bạn bằng tiếng ${practice} và giúp bạn luyện tập.`;
     } else if (currentLanguage === "french") {
-      return `Pratiquez vos compétences orales en ${languagePair.practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${languagePair.practice}. L'IA vous répondra en ${languagePair.practice} et vous aidera à vous entraîner.`;
+      return `Pratiquez vos compétences orales en ${practice} avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en ${practice}. L'IA vous répondra en ${practice} et vous aidera à vous entraîner.`;
     } else if (currentLanguage === "japanese") {
-      return `音声チャットで${languagePair.practice}の会話スキルを練習しましょう。マイクボタンをクリックして${languagePair.practice}で話し始めてください。AIは${languagePair.practice}で返答し、あなたの練習をサポートします。`;
+      return `音声チャットで${practice}の会話スキルを練習しましょう。マイクボタンをクリックして${practice}で話し始めてください。AIは${practice}で返答し、あなたの練習をサポートします。`;
     } else if (currentLanguage === "russian") {
-      return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на англи��ском и поможет вам практиковаться.`;
+      return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें। AI आपको अंग्रेजी में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
+      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल का अभ्यास करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें। AI आपको अंग्रेजी में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
     } else if (currentLanguage === "indonesian") {
-      return `Latih kemampuan berbicara ${languagePair.practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam ${languagePair.practice}. AI akan merespons Anda dalam ${languagePair.practice} dan membantu Anda berlatih.`;
+      return `Latih kemampuan berbicara ${practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam ${practice}. AI akan merespons Anda dalam ${practice} dan membantu Anda berlatih.`;
     }
-    return `Practice your ${languagePair.practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${languagePair.practice}.`;
+    return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
   };
 
   const getAIModelInfoText = () => {
@@ -462,7 +491,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "ukrainian") {
       return "Модель ШІ: Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
     } else if (currentLanguage === "hindi") {
-      return "AI मॉडल: हम प्राकृतिक भाषा की समझ और उत्पादन के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे ���ैं।";
+      return "AI मॉडल: हम प्राकृतिक भाषा की समझ और उत्पादन के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे हैं।";
     } else if (currentLanguage === "indonesian") {
       return "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara.";
     }
@@ -510,7 +539,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return "Уровень практики";
     } else if (currentLanguage === "hindi") {
-      return "अभ्��ास स्तर";
+      return "अभ्यास स्तर";
     } else if (currentLanguage === "indonesian") {
       return "Tingkat Latihan";
     }
@@ -544,7 +573,7 @@ const VoiceChat = () => {
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
 
-  const languagePair = getLanguagePair(currentLanguage);
+  const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
@@ -584,7 +613,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {getCEFRLevelDescription()}
+                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {t("cefrB1Description")}
               </p>
             </div>
 
@@ -665,19 +694,12 @@ const VoiceChat = () => {
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {/* Always show translation for Hindi, Indonesian users or if translation exists */}
-                {((translation && translation.trim() !== "") || 
-                  currentLanguage === "hindi" || 
-                  currentLanguage === "indonesian") && (
+                {/* Always show translation for Hindi users or if translation exists */}
+                {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
                     <div className="text-sm text-gray-600">
-                      <strong>{t("translation")}:</strong> {
-                        translation || 
-                        (currentLanguage === "hindi" ? "अनुवाद उपलब्ध नहीं है" : 
-                         currentLanguage === "indonesian" ? t("translationNotAvailable") : 
-                         "Translation not available")
-                      }
+                      <strong>{t("translation")}:</strong> {translation || "अनुवाद उपलब्ध नहीं है"}
                     </div>
                   </>
                 )}
@@ -706,98 +728,93 @@ const VoiceChat = () => {
                 {conversationHistory.map((message, index) => (
                   <div 
                     key={index} 
-                    className={`flex flex-col ${
-                      message.role === "user" ? "items-end" : "items-start"
-                    }`}
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div 
                       className={`max-w-[80%] rounded-lg p-3 ${
-                        message.role === "user" ? "bg-blue-100" : "bg-gray-100"
+                        message.role === 'user' 
+                          ? 'bg-blue-100 text-gray-800' 
+                          : 'bg-green-100 text-gray-800'
                       }`}
                     >
-                      <p className="text-sm">
-                        {message.content}
-                        {message.translation && (
-                          <>
-                            <div className="border-t border-gray-200 my-2"></div>
-                            <span className="text-xs text-gray-500">
-                              {message.translation}
-                            </span>
-                          </>
-                        )}
+                      <p className="text-sm">{message.content}</p>
+                      {/* Always show translation for Hindi users when it's an AI message */}
+                      {((message.translation && message.translation.trim() !== "") || 
+                       (message.role === 'assistant' && currentLanguage === "hindi")) && (
+                        <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
+                          <span className="font-medium">{t("translation")}:</span> {message.translation || "अनुवाद उपलब्ध नहीं है"}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">
+                        {new Date(message.timestamp).toLocaleTimeString()}
                       </p>
                     </div>
-                    <span className="text-xs text-gray-400 mt-1">
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </span>
                   </div>
                 ))}
-                <div ref={conversationEndRef}></div>
+                <div ref={conversationEndRef} />
               </div>
             </ScrollArea>
           </Card>
         )}
-        
+
         <Card className="p-6">
-          <h3 className="font-medium mb-4">
-            {t("conversationStarters")}
-          </h3>
+          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
           <p className="text-sm text-gray-600 mb-4">
             {t("tryThesePhrases")}
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
             <div>
-              <h4 className="text-sm font-medium mb-2">
-                {t("inYourTargetLanguage")}
+              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+                {t("inYourTargetLanguage")}: ({practice})
               </h4>
-              <div className="space-y-2">
+              <ul className="space-y-2">
                 {targetLanguagePhrases.map((phrase, index) => (
-                  <button
-                    key={`target-${index}`}
+                  <li 
+                    key={`target-${index}`} 
+                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
                     onClick={() => handlePhraseClick(phrase)}
-                    className="block w-full text-left p-2 rounded-md hover:bg-gray-100 text-sm"
                   >
                     {phrase}
-                  </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
             
             <div>
-              <h4 className="text-sm font-medium mb-2">
-                {t("inYourNativeLanguage")}
+              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
+                {t("inYourNativeLanguage")}: ({native})
               </h4>
-              <div className="space-y-2">
+              <ul className="space-y-2">
                 {nativeLanguagePhrases.map((phrase, index) => (
-                  <button
-                    key={`native-${index}`}
+                  <li 
+                    key={`native-${index}`} 
+                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
                     onClick={() => handlePhraseClick(phrase)}
-                    className="block w-full text-left p-2 rounded-md hover:bg-gray-100 text-sm"
                   >
                     {phrase}
-                  </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </div>
         </Card>
         
-        <Card className="p-6">
-          <h3 className="font-medium mb-4">
-            {t("practiceWithVoiceChat")}
-          </h3>
-          <p className="mb-3 text-sm">
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
+          <p className="text-sm text-gray-600 mb-3">
             {getPracticeTipsText()}
           </p>
-          <ul className="space-y-2 list-disc pl-5 text-sm">
-            <li>{t("askQuestionsAboutTopics")}</li>
-            <li>{t("practiceEverydayPhrases")}</li>
-            <li>{t("describeImagesOrScenes")}</li>
-            <li>{t("practiceVocabularyForSpecificTopics")}</li>
+          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+            <li>{t("askQuestions")}</li>
+            <li>{t("practiceCommonPhrases")}</li>
+            <li>{t("describeWhatYouSee")}</li>
+            <li>{t("practiceVocabularyForSpecific")}</li>
           </ul>
-        </Card>
+        </div>
       </div>
+      
+      <audio ref={audioRef} className="hidden" />
     </div>
   );
 };
