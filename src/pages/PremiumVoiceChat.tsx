@@ -1,12 +1,16 @@
+
 import { useState, useEffect } from "react";
-import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
+
+// Import refactored components
+import LoginPrompt from "@/components/premium-voice/LoginPrompt";
+import CooldownMessage from "@/components/premium-voice/CooldownMessage";
+import BenefitsList from "@/components/premium-voice/BenefitsList";
+import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
+import PageHeader from "@/components/premium-voice/PageHeader";
 
 type VoiceMessage = {
   role: 'user' | 'assistant';
@@ -24,14 +28,8 @@ const PremiumVoiceChat = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [weeklyTimeRemaining, setWeeklyTimeRemaining] = useState<number | null>(null);
-  const {
-    toast
-  } = useToast();
-  const {
-    currentLanguage,
-    t
-  } = useLocalization();
-  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { currentLanguage, t } = useLocalization();
   
   const {
     microphoneAccess,
@@ -354,138 +352,43 @@ const PremiumVoiceChat = () => {
     });
   };
 
-  const {
-    practice,
-    native
-  } = getLanguagePair();
-
-  const redirectToLogin = () => {
-    navigate("/");
-    toast({
-      title: t("loginRequired"),
-      description: t("redirectingToLogin")
-    });
-  };
-
-  const renderLoginRequired = () => {
-    return <div className="max-w-4xl mx-auto p-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-lingua-text mb-4">
-            {t("premiumVoiceTitle")}
-          </h1>
-          <p className="text-gray-600 mb-4">
-            {t("premiumVoiceChatDesc", {practice})}
-          </p>
-        </div>
-        
-        <Card className="p-6 bg-amber-50 border-amber-200">
-          <div className="flex flex-col items-center text-center space-y-4">
-            <LogIn className="h-12 w-12 text-amber-600" />
-            <h2 className="text-xl font-semibold text-amber-800">
-              {t("loginRequired")}
-            </h2>
-            <p className="text-amber-700">
-              {t("loginRequiredDescription")}
-            </p>
-            <Button onClick={redirectToLogin} className="bg-lingua-primary hover:bg-lingua-primary/90">
-              {t("signIn")}
-            </Button>
-          </div>
-        </Card>
-      </div>;
-  };
-
-  const renderCooldownMessage = () => {
-    if (sessionStatus === 'cooldown' && cooldownTimeRemaining) {
-      return <Card className="p-4 mb-6 bg-red-50 border-red-200">
-          <div className="flex items-center space-x-3">
-            <LockIcon className="h-6 w-6 text-red-500" />
-            <div>
-              <h3 className="font-medium text-red-800">
-                {t("premiumSessionLimitReached")}
-              </h3>
-              <p className="text-sm text-red-600">
-                {t("resetsAt6AM", {
-                time: formatCooldownTime(cooldownTimeRemaining)
-              })}
-              </p>
-            </div>
-          </div>
-        </Card>;
-    }
-    return null;
-  };
+  const { practice, native } = getLanguagePair();
 
   if (isLoading) {
-    return <div className="max-w-4xl mx-auto p-4">
+    return (
+      <div className="max-w-4xl mx-auto p-4">
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lingua-primary"></div>
         </div>
-      </div>;
+      </div>
+    );
   }
 
   if (!isLoggedIn) {
-    return renderLoginRequired();
+    return <LoginPrompt />;
   }
 
-  return <div className="max-w-4xl mx-auto p-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-lingua-text mb-4">
-          {t("premiumVoiceTitle")}
-        </h1>
-        <p className="text-gray-600 mb-4">
-          {t("premiumVoiceChatDesc", {practice})}
-        </p>
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-          <p className="text-amber-800 text-sm font-normal">
-            {t("premiumVoiceNoteWithReset")}
-          </p>
-        </div>
-      </div>
+  return (
+    <div className="max-w-4xl mx-auto p-4">
+      <PageHeader practice={practice} />
+      
+      <CooldownMessage 
+        cooldownTimeRemaining={cooldownTimeRemaining} 
+        sessionStatus={sessionStatus} 
+        formatCooldownTime={formatCooldownTime} 
+      />
 
-      {renderCooldownMessage()}
+      <VoiceChatControls 
+        startConversation={startConversation}
+        isConversationActive={isConversationActive}
+        weeklyTimeRemaining={weeklyTimeRemaining}
+        sessionStatus={sessionStatus}
+        formatTime={formatTime}
+      />
 
-      <div className="flex flex-wrap gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <Button onClick={startConversation} variant={isConversationActive() ? "destructive" : "default"} className="bg-lingua-primary hover:bg-lingua-primary/90" disabled={sessionStatus === 'cooldown'}>
-            {isConversationActive() ? <>
-                <MicOff className="h-4 w-4 mr-2" />
-                {t("stopVoiceChat")}
-              </> : <>
-                <Mic className="h-4 w-4 mr-2" />
-                {t("startVoiceChat")}
-              </>}
-          </Button>
-          
-          {weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
-            <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
-              <Clock className="h-4 w-4" />
-              <span>{formatTime(weeklyTimeRemaining)} {t("remaining")}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-8 bg-gray-100 rounded-lg p-6">
-        <h3 className="font-semibold mb-3">
-          {t("premiumVoiceChatBenefits")}
-        </h3>
-        <ul className="space-y-2">
-          <li className="flex items-start gap-2">
-            <Volume2 className="h-5 w-5 text-lingua-primary mt-0.5" />
-            <span>{t("benefitNaturalVoice")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Headphones className="h-5 w-5 text-lingua-primary mt-0.5" />
-            <span>{t("benefitAccentPronunciation")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Clock className="h-5 w-5 text-lingua-primary mt-0.5" />
-            <span>{t("benefitRegularPractice")}</span>
-          </li>
-        </ul>
-      </div>
-    </div>;
+      <BenefitsList />
+    </div>
+  );
 };
 
 export default PremiumVoiceChat;
