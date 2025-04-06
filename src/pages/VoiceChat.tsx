@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -582,7 +583,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {t("cefrB1Description")}
+                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {getCEFRLevelDescription()}
               </p>
             </div>
 
@@ -697,4 +698,85 @@ const VoiceChat = () => {
                 {conversationHistory.map((message, index) => (
                   <div 
                     key={index} 
-                    className={`flex ${
+                    className={`p-3 rounded-lg ${
+                      message.role === 'user' 
+                        ? 'bg-gray-100 text-gray-800' 
+                        : 'bg-lingua-primary/10 text-gray-800'
+                    }`}
+                  >
+                    <p className="text-xs text-gray-500 mb-1">
+                      {message.role === 'user' ? t("youSaid") : t("aiResponse")}
+                      {' • '}
+                      {new Date(message.timestamp).toLocaleTimeString()}
+                    </p>
+                    <p>{message.content}</p>
+                    {message.translation && (
+                      <div className="mt-2 pt-2 border-t border-gray-200">
+                        <p className="text-xs text-gray-600">
+                          <strong>{t("translation")}:</strong> {message.translation}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                <div ref={conversationEndRef} />
+              </div>
+            </ScrollArea>
+          </Card>
+        )}
+        
+        <Card className="p-6">
+          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
+          <p className="text-gray-600 mb-4">{t("tryThesePhrases")}</p>
+          
+          <div className="space-y-4">
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">{t("inYourNativeLanguage")} ({native})</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {nativeLanguagePhrases.map((phrase, index) => (
+                  <Button
+                    key={`native-${index}`}
+                    variant="outline"
+                    className="justify-start h-auto py-2 text-left"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">{t("inYourTargetLanguage")} ({practice})</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {targetLanguagePhrases.map((phrase, index) => (
+                  <Button
+                    key={`target-${index}`}
+                    variant="outline"
+                    className="justify-start h-auto py-2 text-left"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+        
+        <Card className="p-6">
+          <h3 className="font-medium mb-4">{t("practiceWithVoiceChat")}</h3>
+          <p className="text-gray-600 mb-2">{getPracticeTipsText()}</p>
+          <ul className="list-disc pl-5 space-y-1 text-gray-600">
+            <li>{t("askQuestionsAboutTopics")}</li>
+            <li>{t("practiceEverydayPhrases")}</li>
+            <li>{t("describeImagesOrScenes")}</li>
+            <li>{t("practiceVocabularyForSpecificTopics")}</li>
+          </ul>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default VoiceChat;
