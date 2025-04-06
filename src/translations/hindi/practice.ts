@@ -3,7 +3,6 @@ import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
   practiceWithTutor: "ट्यूटर के साथ अभ्यास करें",
-  typeMessage: "अपना संदेश टाइप करें...",
   sendMessage: "संदेश भेजें",
   networkConnectionIssue: "नेटवर्क कनेक्शन समस्या, कृपया बाद में पुनः प्रयास करें",
   suggestedPrompts: "सुझाए गए प्रॉम्प्ट्स",

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -78,12 +79,11 @@ export const useChatMessages = () => {
       let translation = data.translation || "";
       
       // If no translation was provided but one is expected, make note of it and try to get one
-      if (!translation) {
+      if (!translation && currentLanguage !== "english") {
         console.log("No translation provided for response in language:", currentLanguage);
         
-        // For English users, we want Spanish translations
-        // For all other users, we want translations in their native language
-        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
+        // For non-English users, we want translations in their native language
+        const targetLanguage = currentLanguage;
         
         try {
           // Try to get a translation manually if none was provided
@@ -155,12 +155,11 @@ export const useChatMessages = () => {
       let translation = data.translation || "";
       
       // If no translation was provided, try to get one
-      if (!translation) {
+      if (!translation && currentLanguage !== "english") {
         console.warn("Missing translation for", currentLanguage, "user");
         
-        // For English users, we want Spanish translations
         // For non-English users, we want translations in their native language
-        const targetLanguage = currentLanguage === "english" ? "spanish" : currentLanguage;
+        const targetLanguage = currentLanguage;
         
         try {
           // Try to get a translation manually if none was provided
