@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -421,6 +422,8 @@ const VoiceChat = () => {
       return `音声チャットで${getLanguagePair().practice}の会話スキルを練習しましょう。マイクボタンをクリックして${getLanguagePair().practice}で話し始めてください。AIは${getLanguagePair().practice}で返答し、あなたの練習をサポートします。`;
     } else if (currentLanguage === "russian") {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
+    } else if (currentLanguage === "ukrainian") {
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -446,6 +449,8 @@ const VoiceChat = () => {
       return "AIモデル：自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
     } else if (currentLanguage === "russian") {
       return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых ответов.";
+    } else if (currentLanguage === "ukrainian") {
+      return "Модель ШІ: Ми використовуємо GPT-4o-mini від OpenAI для розуміння та генерації природної мови, із вбудованим у браузер синтезом мовлення для голосових відповідей.";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
