@@ -1,3 +1,4 @@
+
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
@@ -15,74 +16,38 @@ export const UKRAINIAN_TUTOR_AGENT_ID = 'eu1E63tLoKFYPB28lWks'; // English tutor
 export const HINDI_TUTOR_AGENT_ID = 'KZaHLSD2sG8AptT09Feu'; // English tutor for Hindi speakers
 export const INDONESIAN_TUTOR_AGENT_ID = 'n0xawTpIZ6Zojiox0KZ5'; // English tutor for Indonesian speakers
 
+// Language to agent ID mapping for better maintainability
+const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
+  "english": SPANISH_TUTOR_AGENT_ID, // English speakers learn Spanish
+  "spanish": ENGLISH_TUTOR_AGENT_ID, // Spanish speakers learn English
+  "portuguese": PORTUGUESE_TUTOR_AGENT_ID,
+  "korean": KOREAN_TUTOR_AGENT_ID,
+  "arabic": ARABIC_TUTOR_AGENT_ID,
+  "mandarin": MANDARIN_TUTOR_AGENT_ID,
+  "vietnamese": VIETNAMESE_TUTOR_AGENT_ID,
+  "french": FRENCH_TUTOR_AGENT_ID,
+  "japanese": JAPANESE_TUTOR_AGENT_ID,
+  "russian": RUSSIAN_TUTOR_AGENT_ID,
+  "ukrainian": UKRAINIAN_TUTOR_AGENT_ID,
+  "hindi": HINDI_TUTOR_AGENT_ID,
+  "indonesian": INDONESIAN_TUTOR_AGENT_ID
+};
+
 /**
  * Gets the appropriate agent ID based on the user's language
  * @param language The user's current language (english, spanish, portuguese, korean, arabic, mandarin, vietnamese, french, japanese, russian, ukrainian, indonesian)
  * @returns The appropriate agent ID for the user's language
  */
 export const getAgentIdForLanguage = (language: string): string => {
-  // If the user is Korean, use their specific tutor
-  if (language === "korean") {
-    console.log("Using Korean tutor:", KOREAN_TUTOR_AGENT_ID);
-    return KOREAN_TUTOR_AGENT_ID;
+  const normalizedLanguage = language.toLowerCase();
+  
+  if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
+    console.log(`Using tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
+    return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
   }
-  // If the user is Portuguese, use their specific tutor
-  if (language === "portuguese") {
-    console.log("Using Portuguese tutor:", PORTUGUESE_TUTOR_AGENT_ID);
-    return PORTUGUESE_TUTOR_AGENT_ID;
-  }
-  // If the user is Arabic, use their specific tutor
-  if (language === "arabic") {
-    console.log("Using Arabic tutor:", ARABIC_TUTOR_AGENT_ID);
-    return ARABIC_TUTOR_AGENT_ID;
-  }
-  // If the user is Mandarin speaker, use the English tutor for Mandarin speakers
-  if (language === "mandarin") {
-    console.log("Using English tutor for Mandarin speaker:", MANDARIN_TUTOR_AGENT_ID);
-    return MANDARIN_TUTOR_AGENT_ID;
-  }
-  // If the user is Vietnamese speaker, use the English tutor for Vietnamese speakers
-  if (language === "vietnamese") {
-    console.log("Using English tutor for Vietnamese speaker:", VIETNAMESE_TUTOR_AGENT_ID);
-    return VIETNAMESE_TUTOR_AGENT_ID;
-  }
-  // If the user is French speaker, use the English tutor for French speakers
-  if (language === "french") {
-    console.log("Using English tutor for French speaker:", FRENCH_TUTOR_AGENT_ID);
-    return FRENCH_TUTOR_AGENT_ID;
-  }
-  // If the user is Japanese speaker, use the English tutor for Japanese speakers
-  if (language === "japanese") {
-    console.log("Using English tutor for Japanese speaker:", JAPANESE_TUTOR_AGENT_ID);
-    return JAPANESE_TUTOR_AGENT_ID;
-  }
-  // If the user is Russian speaker, use the English tutor for Russian speakers
-  if (language === "russian") {
-    console.log("Using English tutor for Russian speaker:", RUSSIAN_TUTOR_AGENT_ID);
-    return RUSSIAN_TUTOR_AGENT_ID;
-  }
-  // If the user is Ukrainian speaker, use the English tutor for Ukrainian speakers
-  if (language === "ukrainian") {
-    console.log("Using English tutor for Ukrainian speaker:", UKRAINIAN_TUTOR_AGENT_ID);
-    return UKRAINIAN_TUTOR_AGENT_ID;
-  }
-  // If the user is Hindi speaker, use the English tutor for Hindi speakers
-  if (language === "hindi") {
-    console.log("Using English tutor for Hindi speaker:", HINDI_TUTOR_AGENT_ID);
-    return HINDI_TUTOR_AGENT_ID;
-  }
-  // If the user is Indonesian speaker, use the English tutor for Indonesian speakers
-  if (language === "indonesian") {
-    console.log("Using English tutor for Indonesian speaker:", INDONESIAN_TUTOR_AGENT_ID);
-    return INDONESIAN_TUTOR_AGENT_ID;
-  }
-  // For Spanish speakers, use the English tutor
-  if (language === "spanish") {
-    console.log("Using English tutor for Spanish speaker:", ENGLISH_TUTOR_AGENT_ID);
-    return ENGLISH_TUTOR_AGENT_ID;
-  }
-  // For English speakers, use the Spanish tutor
-  console.log("Using Spanish tutor for English speaker:", SPANISH_TUTOR_AGENT_ID);
+  
+  // Default to Spanish tutor for English speakers if language not found
+  console.log("Language not found, using default Spanish tutor for English speakers:", SPANISH_TUTOR_AGENT_ID);
   return SPANISH_TUTOR_AGENT_ID;
 };
 

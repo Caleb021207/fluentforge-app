@@ -2,18 +2,21 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import translations, { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } from "@/translations";
 import { LanguageTranslations } from "@/translations/types";
+import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 
 // Create context
 type LocalizationContextType = {
   currentLanguage: string;
   setCurrentLanguage: (lang: string) => void;
   t: (key: string, replacements?: Record<string, string>) => string;
+  getNativeLanguageName: (language: string) => string;
 };
 
 const LocalizationContext = createContext<LocalizationContextType>({
   currentLanguage: DEFAULT_LANGUAGE,
   setCurrentLanguage: () => {},
   t: () => "",
+  getNativeLanguageName: () => "",
 });
 
 // Provider component
@@ -43,8 +46,18 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     return text;
   };
 
+  // Get native language name
+  const getNativeLanguageName = (language: string): string => {
+    return getNativeLanguageDisplayName(language);
+  };
+
   return (
-    <LocalizationContext.Provider value={{ currentLanguage, setCurrentLanguage, t }}>
+    <LocalizationContext.Provider value={{ 
+      currentLanguage, 
+      setCurrentLanguage, 
+      t,
+      getNativeLanguageName
+    }}>
       {children}
     </LocalizationContext.Provider>
   );

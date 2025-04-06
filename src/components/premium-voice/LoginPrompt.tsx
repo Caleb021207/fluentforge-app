@@ -5,11 +5,15 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useNavigate } from "react-router-dom";
+import { getLanguagePair } from "@/utils/languageUtils";
 
 const LoginPrompt = () => {
   const { toast } = useToast();
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
   const navigate = useNavigate();
+  
+  // Get the practice language based on the user's interface language
+  const { practice } = getLanguagePair(currentLanguage);
 
   const redirectToLogin = () => {
     navigate("/");
@@ -26,7 +30,7 @@ const LoginPrompt = () => {
           {t("premiumVoiceTitle")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {t("premiumVoiceChatDescription", {practice: "Spanish"})}
+          {t("premiumVoiceChatDescription", { practice })}
         </p>
       </div>
       

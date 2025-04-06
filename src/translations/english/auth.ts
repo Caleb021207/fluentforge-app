@@ -41,7 +41,25 @@ const authTranslations: TranslationRecord = {
   
   // Additional auth translations
   authRequired: "Authentication Required",
-  pleaseSignInDashboard: "Please sign in to access the dashboard"
+  pleaseSignInDashboard: "Please sign in to access the dashboard",
+  
+  // Auth status messages
+  signInSuccess: "Signed in successfully",
+  signUpSuccess: "Account created successfully",
+  resetSuccess: "Password reset email sent",
+  verifyEmailSent: "Verification email sent",
+  accountVerified: "Account verified successfully",
+  passwordChanged: "Password changed successfully",
+  
+  // Auth errors
+  invalidEmail: "Invalid email address",
+  invalidPassword: "Invalid password",
+  wrongCredentials: "Wrong email or password",
+  accountExists: "An account with this email already exists",
+  weakPassword: "Password is too weak",
+  verificationRequired: "Please verify your email first",
+  sessionExpired: "Your session has expired. Please sign in again.",
+  authFailed: "Authentication failed. Please try again.",
 };
 
 export default authTranslations;

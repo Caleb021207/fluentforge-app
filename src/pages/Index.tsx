@@ -85,8 +85,8 @@ const Index = () => {
       setPassword("");
       
       toast({
-        title: isLogin ? "Successfully signed in" : "Account created",
-        description: isLogin ? "Welcome back!" : "Please check your email to verify your account",
+        title: isLogin ? t("signInSuccess") : t("accountCreated"),
+        description: isLogin ? t("welcomeBack") : t("pleaseCheckEmail"),
       });
       
       if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
@@ -95,8 +95,8 @@ const Index = () => {
     } catch (error: any) {
       console.error("Authentication error:", error);
       toast({
-        title: "Error",
-        description: error.message || "Authentication failed. Please try again.",
+        title: t("error"),
+        description: error.message || t("authFailed"),
         variant: "destructive",
       });
     } finally {
@@ -117,7 +117,10 @@ const Index = () => {
       
       toast({
         title: t("languagePreferencesSaved"),
-        description: `${t("youreNowLearning")} ${targetLanguage} ${t("from")} ${nativeLanguage}`,
+        description: t("learningLanguageFromNative", {
+          targetLanguage: t(`languages.${targetLanguage}`),
+          nativeLanguage: t(`languages.${nativeLanguage}`)
+        }),
       });
       
       window.location.reload();
