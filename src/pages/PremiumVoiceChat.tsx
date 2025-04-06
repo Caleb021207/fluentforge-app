@@ -43,6 +43,30 @@ const PremiumVoiceChat = () => {
   
   const { messages, clearMessages, addInitialMessage } = useVoiceChatMessages();
   
+  // Define endConversation function before using it in useVoiceChatTimer
+  const endConversation = async () => {
+    if (isConversationActive()) {
+      await endElevenLabsConversation();
+      setIsRecording(false);
+      
+      // Check and update the session status
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: activeSession } = await supabase
+          .from('premium_voice_chat_sessions')
+          .select('id')
+          .eq('user_id', user.id)
+          .is('session_end', null)
+          .single();
+          
+        if (activeSession) {
+          await endSession(activeSession.id);
+        }
+      }
+    }
+  };
+  
+  // Now we can safely use endConversation in useVoiceChatTimer
   const { timerValue, formatTimer } = useVoiceChatTimer({
     isConversationActive,
     weeklyTimeRemaining,
@@ -91,28 +115,6 @@ const PremiumVoiceChat = () => {
         description: t("networkConnectionIssue"),
         variant: "destructive"
       });
-    }
-  };
-
-  const endConversation = async () => {
-    if (isConversationActive()) {
-      await endElevenLabsConversation();
-      setIsRecording(false);
-      
-      // Check and update the session status
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: activeSession } = await supabase
-          .from('premium_voice_chat_sessions')
-          .select('id')
-          .eq('user_id', user.id)
-          .is('session_end', null)
-          .single();
-          
-        if (activeSession) {
-          await endSession(activeSession.id);
-        }
-      }
     }
   };
 
