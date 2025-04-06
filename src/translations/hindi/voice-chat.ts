@@ -15,7 +15,34 @@ const voiceChatTranslations: TranslationRecord = {
   chatEnded: "चैट समाप्त हो गई है",
   cooldownActive: "कूलडाउन सक्रिय",
   dailyLimitReached: "आपने अपनी दैनिक सीमा तक पहुंच गए हैं। कृपया कल पुनः प्रयास करें।",
-  voiceAssistantInfo: "अन्य भाषाओं के वक्ताओं के लिए वॉइस चैट"
+  voiceAssistantInfo: "अन्य भाषाओं के वक्ताओं के लिए वॉइस चैट",
+  
+  // Additional translations for voice practice page
+  unlimitedVoicePractice: "असीमित वॉइस अभ्यास",
+  practiceYourEnglishSpeaking: "अपने अंग्रेजी बोलने के कौशल का अभ्यास हमारे वॉइस चैट के साथ करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें।",
+  aiModel: "AI मॉडल",
+  usingOpenAI: "OpenAI के GPT-4o-mini का उपयोग ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस के साथ।",
+  browserBasedTTS: "ब्राउज़र आधारित TTS",
+  practiceLevel: "अभ्यास स्तर: B1 - मध्यवर्ती - परिचित विषयों पर चर्चा कर सकते हैं",
+  startSpeaking: "बोलना शुरू करें",
+  conversationStarters: "बातचीत शुरू करने के लिए",
+  tryThesePhrases: "बातचीत शुरू करने के लिए इन वाक्यों का प्रयास करें:",
+  inYourTargetLanguage: "आपकी लक्ष्य भाषा में: (अंग्रेजी)",
+  inYourNativeLanguage: "आपकी मातृभाषा में: (हिंदी)",
+  helloHowAreYou: "नमस्ते, आप कैसे हैं?",
+  whatsTheWeather: "आपके यहां मौसम कैसा है?",
+  canYouRecommend: "क्या आप कोई अच्छा रेस्तरां सुझा सकते हैं?",
+  whatAreYourHobbies: "आपके शौक और रुचियां क्या हैं?",
+  tellMeAbout: "अपनी पसंदीदा किताब या फिल्म के बारे में बताएं।",
+  whatDidYouDo: "आपने पिछले सप्ताहांत क्या किया?",
+  whatAreYourPlans: "कल के लिए आपकी क्या योजनाएं हैं?",
+  howDoYouSay: "आप स्पेनिश/अंग्रेजी में... कैसे कहते हैं?",
+  practiceWithVoiceChat: "वॉइस चैट के साथ अभ्यास करें",
+  useThisTool: "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:",
+  askQuestions: "रोजमर्रा के विषयों पर प्रश्न पूछें",
+  practiceCommonPhrases: "सामान्य वाक्यांशों और अभिव्यक्तियों का अभ्यास करें",
+  describeWhatYouSee: "अपने आसपास जो देख रहे हैं उसका वर्णन करें",
+  practiceVocabularyForSpecific: "यात्रा या भोजन जैसे विशिष्ट विषयों के लिए शब्दावली का अभ्यास करें"
 };
 
 export default voiceChatTranslations;
