@@ -35,7 +35,26 @@ const generalTranslations: TranslationRecord = {
   noResults: "Tidak ada hasil",
   welcomeToLanguageLearning: "Selamat Datang di Pembelajaran Bahasa",
   yourPersonalAICompanion: "Asisten AI pribadi Anda untuk belajar bahasa",
-  practiceWithAI: "Berlatih dengan AI"
+  practiceWithAI: "Berlatih dengan AI",
+  home: "Beranda",
+  admin: "Admin",
+  premiumVoiceChatDescription: "Latihan percakapan suara premium dengan tutor bahasa AI",
+  failedToGetResponse: "Gagal mendapatkan respons",
+  speechRecognitionError: "Kesalahan pengenalan suara",
+  speechRecognitionNotSupported: "Pengenalan suara tidak didukung di browser ini",
+  speechSynthesisNotSupported: "Sintesis suara tidak didukung di browser ini",
+  speechSynthesisError: "Kesalahan sintesis suara",
+  networkError: "Kesalahan jaringan",
+  sessionExpired: "Sesi berakhir",
+  pleaseLogInAgain: "Silakan masuk kembali",
+  phrase1: "Halo, apa kabar?",
+  phrase2: "Bisakah Anda membantu saya?",
+  phrase3: "Saya sedang belajar bahasa Inggris",
+  phrase4: "Saya suka bepergian",
+  phrase5: "Apa makanan favorit Anda?",
+  phrase6: "Berapa lama Anda telah belajar bahasa ini?",
+  phrase7: "Bisakah kita berbicara tentang film?",
+  phrase8: "Bagaimana cuacanya hari ini?"
 };
 
 export default generalTranslations;

@@ -20,6 +20,28 @@ const voiceChatTranslations: TranslationRecord = {
   waitingForResponse: "Menunggu respons...",
   waitingForYourVoice: "Menunggu suara Anda...",
   waitingForServerConnection: "Menunggu koneksi ke server...",
+  stopListening: "Berhenti Mendengarkan",
+  startSpeaking: "Mulai Berbicara",
+  youSaid: "Anda Mengatakan",
+  aiResponse: "Respons AI",
+  speaking: "Berbicara",
+  playAgain: "Putar Kembali",
+  conversationStarters: "Pendorong Percakapan",
+  tryThesePhrases: "Coba frasa-frasa ini untuk memulai percakapan",
+  inYourTargetLanguage: "Dalam Bahasa Target Anda",
+  inYourNativeLanguage: "Dalam Bahasa Asli Anda",
+  practiceWithVoiceChat: "Berlatih dengan Obrolan Suara",
+  useThisTool: "Gunakan alat ini untuk meningkatkan kemampuan berbicara dan mendengarkan Anda. Berikut beberapa tips:",
+  askQuestions: "Ajukan pertanyaan dalam bahasa target Anda",
+  practiceCommonPhrases: "Latih frasa umum dan ungkapan sehari-hari",
+  describeWhatYouSee: "Jelaskan apa yang Anda lihat di sekitar Anda",
+  practiceVocabularyForSpecific: "Latih kosakata untuk situasi tertentu",
+  translation: "Terjemahan",
+  listeningNow: "Mendengarkan sekarang",
+  send: "Kirim",
+  practiceLevel: "Tingkat Latihan",
+  browserBasedTTS: "Catatan: Ini menggunakan text-to-speech berbasis browser. Untuk kualitas suara premium dengan ElevenLabs, coba Obrolan Suara Premium kami.",
+  Success: "Berhasil"
 };
 
 export default voiceChatTranslations;

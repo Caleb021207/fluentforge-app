@@ -6,12 +6,10 @@ import practiceTranslations from "./practice";
 import premiumVoiceTranslations from "./premium-voice";
 import authTranslations from "./auth";
 import voiceChatTranslations from "./voice-chat";
-
-// Create empty objects for translations that don't exist yet
-const certificatesTranslations: TranslationRecord = {};
-const progressTranslations: TranslationRecord = {};
-const profileTranslations: TranslationRecord = {};
-const languageFrameworksTranslations: TranslationRecord = {};
+import certificatesTranslations from "./certificates";
+import progressTranslations from "./progress";
+import profileTranslations from "./profile";
+import languageFrameworksTranslations from "./language-frameworks";
 
 // Combine all the translation categories
 const indonesianTranslations: TranslationRecord = {

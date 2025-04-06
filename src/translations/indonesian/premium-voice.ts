@@ -3,6 +3,7 @@ import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
   premiumVoiceChat: "Obrolan Suara Premium",
+  premiumVoiceTitle: "Obrolan Suara Premium",
   premiumVoiceChatBenefits: "Manfaat Suara Premium",
   textConversationPractice: "Latihan Percakapan Teks",
   cefrA1Description: "Pemula - Frasa dan ekspresi dasar",
