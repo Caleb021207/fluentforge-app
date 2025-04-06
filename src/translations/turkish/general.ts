@@ -1,0 +1,81 @@
+
+import { TranslationRecord } from "../types";
+
+const generalTranslations: TranslationRecord = {
+  appName: "LinguaBot",
+  welcomeToLanguageLearning: "LinguaBot ile Dil Öğrenmeye Hoş Geldiniz",
+  yourPersonalAICompanion: "Dil öğrenimi için kişisel yapay zeka asistanınız",
+  practiceWithAI: "Yapay Zeka ile Pratik Yap",
+  practiceWithVoice: "Sesli Pratik Yap",
+  practiceConversation: "Konuşma Pratiği Yap",
+  viewProgress: "İlerlemeyi Görüntüle",
+  myCertificates: "Sertifikalarım",
+  home: "Ana Sayfa",
+  practice: "Pratik",
+  progress: "İlerleme",
+  profile: "Profil",
+  settings: "Ayarlar",
+  languagePreferences: "Dil Tercihleri",
+  notifications: "Bildirimler",
+  help: "Yardım",
+  logout: "Çıkış Yap",
+  error: "Hata",
+  success: "Başarılı",
+  warning: "Uyarı",
+  info: "Bilgi",
+  pleaseWait: "Lütfen Bekleyin...",
+  loading: "Yükleniyor...",
+  retry: "Yeniden Dene",
+  cancel: "İptal",
+  submit: "Gönder",
+  save: "Kaydet",
+  edit: "Düzenle",
+  delete: "Sil",
+  add: "Ekle",
+  confirm: "Onayla",
+  back: "Geri",
+  next: "İleri",
+  skip: "Atla",
+  finish: "Bitir",
+  continue: "Devam Et",
+  more: "Daha Fazla",
+  searchPlaceholder: "Ara...",
+  noResults: "Sonuç bulunamadı",
+  notImplemented: "Bu özellik henüz uygulanmadı",
+  comingSoon: "Çok yakında!",
+  supportEmail: "support@linguabot.ai",
+  
+  // Authentication related
+  signInSuccess: "Başarıyla giriş yapıldı",
+  accountCreated: "Hesap başarıyla oluşturuldu",
+  welcomeBack: "Tekrar hoş geldiniz!",
+  pleaseCheckEmail: "Hesabınızı doğrulamak için lütfen e-postanızı kontrol edin",
+  authFailed: "Kimlik doğrulama başarısız oldu. Lütfen tekrar deneyin.",
+  
+  // Language names in their native form
+  "languages.english": "English",
+  "languages.spanish": "Español",
+  "languages.portuguese": "Português",
+  "languages.korean": "한국어",
+  "languages.arabic": "العربية",
+  "languages.mandarin": "中文",
+  "languages.vietnamese": "Tiếng Việt", 
+  "languages.french": "Français",
+  "languages.japanese": "日本語",
+  "languages.russian": "Русский",
+  "languages.ukrainian": "Українська",
+  "languages.hindi": "हिन्दी",
+  "languages.indonesian": "Bahasa Indonesia",
+  "languages.turkish": "Türkçe",
+  
+  // Messages for language learning
+  learningLanguageFromNative: "Artık {{nativeLanguage}} dilinden {{targetLanguage}} öğreniyorsunuz",
+  
+  // Generic messages
+  yes: "Evet",
+  no: "Hayır",
+  okay: "Tamam",
+  close: "Kapat",
+};
+
+export default generalTranslations;

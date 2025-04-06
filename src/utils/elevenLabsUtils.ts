@@ -1,4 +1,3 @@
-
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
@@ -15,6 +14,7 @@ export const RUSSIAN_TUTOR_AGENT_ID = 'rlHSjx9Y19IqjWTspVRq'; // English tutor f
 export const UKRAINIAN_TUTOR_AGENT_ID = 'eu1E63tLoKFYPB28lWks'; // English tutor for Ukrainian speakers
 export const HINDI_TUTOR_AGENT_ID = 'KZaHLSD2sG8AptT09Feu'; // English tutor for Hindi speakers
 export const INDONESIAN_TUTOR_AGENT_ID = 'n0xawTpIZ6Zojiox0KZ5'; // English tutor for Indonesian speakers
+export const TURKISH_TUTOR_AGENT_ID = 'PLACEHOLDER_TURKISH_AGENT_ID'; // English tutor for Turkish speakers - replace with actual ID
 
 // Language to agent ID mapping for better maintainability
 const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
@@ -30,7 +30,8 @@ const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
   "russian": RUSSIAN_TUTOR_AGENT_ID,
   "ukrainian": UKRAINIAN_TUTOR_AGENT_ID,
   "hindi": HINDI_TUTOR_AGENT_ID,
-  "indonesian": INDONESIAN_TUTOR_AGENT_ID
+  "indonesian": INDONESIAN_TUTOR_AGENT_ID,
+  "turkish": TURKISH_TUTOR_AGENT_ID
 };
 
 /**

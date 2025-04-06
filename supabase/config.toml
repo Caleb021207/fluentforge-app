@@ -1,8 +1,3 @@
 
-project_id = "wfhktxvwlogdnuwdzzri"
-
-[functions.chat-with-gpt]
-verify_jwt = false
-
-[functions.chat-with-tutor]
+[functions.generate-translations]
 verify_jwt = false
