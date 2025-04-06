@@ -1,9 +1,11 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getLanguagePair } from "@/utils/languageUtils";
 
 const PracticeHeader: React.FC = () => {
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
+  const { practice } = getLanguagePair(currentLanguage);
 
   return (
     <div className="mb-8">

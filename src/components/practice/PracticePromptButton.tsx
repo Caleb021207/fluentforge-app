@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Book } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getLanguagePair } from "@/utils/languageUtils";
 
 interface PracticePromptButtonProps {
   onClick: () => void;
@@ -11,6 +12,7 @@ interface PracticePromptButtonProps {
 
 const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ onClick, isLoading }) => {
   const { t, currentLanguage } = useLocalization();
+  const { practice } = getLanguagePair(currentLanguage);
 
   return (
     <div className="flex justify-center mb-8">
