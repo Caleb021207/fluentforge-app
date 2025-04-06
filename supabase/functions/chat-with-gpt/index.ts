@@ -35,10 +35,11 @@ serve(async (req) => {
                           userLanguage === 'japanese' ? 'Japanese' :
                           userLanguage === 'ukrainian' ? 'Ukrainian' :
                           userLanguage === 'russian' ? 'Russian' : 
-                          userLanguage === 'hindi' ? 'Hindi' : 'Unknown';
+                          userLanguage === 'hindi' ? 'Hindi' : 
+                          userLanguage === 'indonesian' ? 'Indonesian' : 'Unknown';
                           
-    // For Japanese, Russian, French, Ukrainian and Hindi users, always include translations regardless of request type
-    const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian' || userLanguage === 'french' || userLanguage === 'ukrainian' || userLanguage === 'hindi';
+    // For Japanese, Russian, French, Ukrainian, Hindi and Indonesian users, always include translations regardless of request type
+    const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian' || userLanguage === 'french' || userLanguage === 'ukrainian' || userLanguage === 'hindi' || userLanguage === 'indonesian';
 
     // The comprehensive tutor instructions
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${responseLanguage} through natural, realistic conversation. The user has selected CEFR level ${cefrLevel}.
@@ -84,6 +85,7 @@ userLanguage === 'russian' ? 'ALWAYS add a translation in Russian after your res
 userLanguage === 'french' ? 'ALWAYS add a translation in French after your response in English, prefixed with "Translation: ".' :
 userLanguage === 'ukrainian' ? 'ALWAYS add a translation in Ukrainian after your response in English, prefixed with "Translation: ".' :
 userLanguage === 'hindi' ? 'ALWAYS add a translation in Hindi after your response in English, prefixed with "Translation: ". The Hindi translation should be an actual Hindi translation, not just another English paraphrase.' :
+userLanguage === 'indonesian' ? 'ALWAYS add a translation in Indonesian after your response in English, prefixed with "Translation: ". The Indonesian translation should accurately capture your English response.' :
 'After your response in ' + responseLanguage + ', add a translation in ' + nativeLanguage + ' prefixed with "Translation: ".'}`;
 
     // Create an initial hidden message to ensure the AI behaves correctly from the start
@@ -167,6 +169,42 @@ userLanguage === 'hindi' ? 'ALWAYS add a translation in Hindi after your respons
         }
       } catch (translateError) {
         console.error('Error getting Hindi translation:', translateError);
+        // Continue even if translation fails
+      }
+    }
+    
+    // For Indonesian users, if no proper translation is returned, make a separate API call to get a proper Indonesian translation
+    if (userLanguage === 'indonesian' && (!translation || translation.length < 10)) {
+      try {
+        console.log('Getting proper Indonesian translation for:', reply);
+        const translateResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openAIApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { 
+                role: 'system', 
+                content: 'You are a professional translator. Translate the following English text to Indonesian accurately. ONLY return the Indonesian translation, nothing else.'
+              },
+              { role: 'user', content: reply }
+            ],
+            temperature: 0.3,
+            max_tokens: 300,
+          }),
+        });
+
+        const translateData = await translateResponse.json();
+        
+        if (translateResponse.ok) {
+          translation = translateData.choices[0].message.content.trim();
+          console.log('Received Indonesian translation:', translation);
+        }
+      } catch (translateError) {
+        console.error('Error getting Indonesian translation:', translateError);
         // Continue even if translation fails
       }
     }
