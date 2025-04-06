@@ -362,7 +362,7 @@ const VoiceChat = () => {
       nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "hindi") {
-      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
+      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key] || `Missing Hindi translation for ${key}`);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
@@ -428,9 +428,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल का अभ्यास करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें। AI आपको अंग्रेजी में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
+      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -455,7 +455,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return "AIモデル：自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
     } else if (currentLanguage === "russian") {
-      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых відповідей.";
+      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации природної мови, с синтезом речи на основе браузера для голосовых відповідей.";
     } else if (currentLanguage === "ukrainian") {
       return "Модель ШІ: Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
     } else if (currentLanguage === "hindi") {
