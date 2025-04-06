@@ -26,6 +26,8 @@ export const getAgentIdForLanguage = (language: string): string => {
       return "rlHSjx9Y19IqjWTspVRq"; // English tutor for Russian speakers
     case "ukrainian":
       return "eu1E63tLoKFYPB28lWks"; // English tutor for Ukrainian speakers
+    case "hindi":
+      return "femZJQOmwbvFjGG46OO0"; // English tutor for Hindi speakers
     default:
       return "femZJQOmwbvFjGG46OO0"; // Default English tutor
   }

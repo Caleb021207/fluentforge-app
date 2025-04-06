@@ -11,6 +11,7 @@ import frenchTranslations from "./french/index";
 import japaneseTranslations from "./japanese/index";
 import russianTranslations from "./russian/index";
 import ukrainianTranslations from "./ukrainian/index";
+import hindiTranslations from "./hindi/index";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
@@ -24,7 +25,8 @@ const translations: LanguageTranslations = {
   french: frenchTranslations,
   japanese: japaneseTranslations,
   russian: russianTranslations,
-  ukrainian: ukrainianTranslations
+  ukrainian: ukrainianTranslations,
+  hindi: hindiTranslations
 };
 
 export default translations;
@@ -42,6 +44,7 @@ export const AVAILABLE_LANGUAGES = {
   japanese: "日本語",
   russian: "Русский",
   ukrainian: "Українська",
+  hindi: "हिन्दी",
 };
 
 // Default language
