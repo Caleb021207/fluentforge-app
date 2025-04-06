@@ -2,72 +2,63 @@
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
+  freePracticeWithVoice: "Ücretsiz Sesli Pratik",
   unlimitedVoicePractice: "Sınırsız Sesli Pratik",
-  voiceChat: "Sesli Sohbet",
-  startVoiceChat: "Sesli Sohbeti Başlat",
-  stopVoiceChat: "Sesli Sohbeti Durdur",
-  voiceChatEnded: "Sesli Sohbet Sona Erdi",
-  recordingMessage: "Mesajınız kaydediliyor...",
-  listeningForSpeech: "Konuşmanız dinleniyor...",
-  timeLimit5MinReached: "5 dakikalık zaman sınırına ulaşıldı",
-  startChatting: "Sohbete başla!",
-  microphoneAccessRequired: "Mikrofon Erişimi Gerekli",
-  allowMicAccess: "Lütfen bu özelliği kullanmak için mikrofon erişimine izin verin",
-  speakNow: "Şimdi konuşun",
-  initializing: "Başlatılıyor...",
-  tapToSpeak: "Konuşmak için dokunun",
-  tapToStop: "Durdurmak için dokunun",
-  waitingForResponse: "Yanıt bekleniyor...",
-  waitingForYourVoice: "Sesiniz bekleniyor...",
-  waitingForServerConnection: "Sunucu bağlantısı bekleniyor...",
-  stopListening: "Dinlemeyi Durdur",
   startSpeaking: "Konuşmaya Başla",
+  stopListening: "Dinlemeyi Durdur",
+  listeningNow: "Şimdi dinleniyor",
   youSaid: "Söylediğiniz",
   aiResponse: "AI Yanıtı",
-  speaking: "Konuşuyor",
   playAgain: "Tekrar Oynat",
-  conversationStarters: "Sohbet Başlatıcıları",
-  tryThesePhrases: "Sohbeti başlatmak için bu ifadeleri deneyin",
-  inYourTargetLanguage: "Hedef Dilinizde",
-  inYourNativeLanguage: "Ana Dilinizde",
-  practiceWithVoiceChat: "Sesli Sohbet ile Pratik Yapın",
-  useThisTool: "Konuşma ve dinleme becerilerinizi geliştirmek için bu aracı kullanın. İşte bazı ipuçları:",
-  askQuestions: "Günlük konular hakkında sorular sorun",
-  practiceCommonPhrases: "Yaygın ifadeleri ve deyimleri pratik edin",
-  describeWhatYouSee: "Çevrenizdeki gördüklerinizi tarif edin",
-  practiceVocabularyForSpecific: "Seyahat veya yemek gibi belirli konular için kelime hazinesi pratiği yapın",
-  translation: "Çeviri",
-  listeningNow: "Şimdi dinleniyor",
-  send: "Gönder",
-  practiceLevel: "Pratik Seviyesi",
-  browserBasedTTS: "Not: Bu, tarayıcı tabanlı text-to-speech kullanıyor. ElevenLabs ile premium ses kalitesi için Premium Sesli Sohbetimizi deneyin.",
-  Success: "Başarılı",
-  
-  // Additional translations needed for the Voice Chat page
-  remaining: "kalan",
-  error: "Hata",
-  networkConnectionIssue: "Ağ bağlantı sorunu",
+  practiceWithVoiceChat: "Sesli Sohbet ile Pratik Yap",
+  practiceLanguageTips: "Konuşma ve dinleme becerilerinizi geliştirmek için bu aracı kullanın. İşte bazı ipuçları:",
+  askQuestionsAboutTopics: "Günlük konular hakkında sorular sorun",
+  practiceEverydayPhrases: "Yaygın ifadeler ve deyimleri pratik yapın",
+  describeImagesOrScenes: "Etrafınızda gördüklerinizi tanımlayın",
+  practiceVocabularyForSpecificTopics: "Seyahat veya yemek gibi belirli konular için kelime haznesi çalışın",
   speechRecognitionError: "Konuşma tanıma hatası",
-  speechRecognitionNotSupported: "Konuşma tanıma bu tarayıcıda desteklenmiyor",
-  speechSynthesisNotSupported: "Konuşma sentezi bu tarayıcıda desteklenmiyor",
-  speechSynthesisError: "Konuşma sentezi hatası",
-  loginRequired: "Giriş Gerekli",
-  failedToCreateSession: "Oturum oluşturulamadı",
-  failedToGetResponse: "Yanıt alınamadı",
-  conversationHistory: "Sohbet Geçmişi",
-  clearConversation: "Sohbeti Temizle",
-  conversationHistoryCleared: "Sohbet geçmişi temizlendi",
-  cefrB1Description: "Orta Seviye - Tanıdık konuları tartışabilir",
-  cooldownActive: "Bekleme süresi aktif",
-  dailyLimitReached: "Günlük limite ulaşıldı",
-  phrase1: "Merhaba, nasılsınız?",
-  phrase2: "Hava nasıl?",
-  phrase3: "İyi bir restoran önerebilir misiniz?",
-  phrase4: "Hobileriniz ve ilgi alanlarınız nelerdir?",
-  phrase5: "Favori kitabınız veya filminiz hakkında konuşun.",
-  phrase6: "Geçen hafta sonu ne yaptınız?",
-  phrase7: "Yarın için planlarınız neler?",
-  phrase8: "İngilizce/Türkçe'de ... nasıl söylenir?"
+  speechRecognitionNotSupported: "Konuşma tanıma tarayıcınızda desteklenmiyor",
+  microphoneAccessRequired: "Bu özellik için mikrofon erişimi gerekli",
+  failedToGetResponse: "AI'dan yanıt alınamadı. Lütfen tekrar deneyin.",
+  failedToGenerateSpeech: "Konuşma oluşturulamadı. Lütfen tekrar deneyin.",
+  audioPlaybackError: "Ses oynatma hatası. Lütfen tekrar deneyin.",
+  
+  // Conversation starters section
+  conversationStarters: "Konuşma Başlatıcıları",
+  tryThesePhrases: "Konuşmaya başlamak için bu ifadeleri deneyin:",
+  inYourTargetLanguage: "Hedef dilinizde:",
+  inYourNativeLanguage: "Ana dilinizde:",
+  
+  // Conversation starter phrases
+  phrase1: "Merhaba, bugün nasılsın?",
+  phrase2: "Bulunduğun yerde hava nasıl?",
+  phrase3: "İyi bir restoran önerebilir misin?",
+  phrase4: "Hobilerin ve ilgi alanların nelerdir?",
+  phrase5: "Bana favori kitabın veya filmin hakkında bilgi ver.",
+  phrase6: "Geçen hafta sonu ne yaptın?",
+  phrase7: "Yarın için planların neler?",
+  phrase8: "İngilizce/İspanyolca ... nasıl denir?",
+  translation: "Çeviri",
+  translationNotAvailable: "Çeviri mevcut değil",
+  
+  // Voice chat UI
+  conversationHistory: "Konuşma Geçmişi",
+  clearConversation: "Konuşmayı Temizle",
+  aiModelInfo: "AI Modeli: Doğal dil anlama ve üretimi için OpenAI'ın GPT-4o-mini modelini kullanıyoruz. Sesli yanıtlar için tarayıcının yerleşik Konuşma Sentezi özelliğini kullanıyoruz.",
+  
+  // Voice chat timers
+  voiceChatEnded: "Sesli sohbet sonlandı",
+  timeLimit5MinReached: "5 dakikalık süre sınırına ulaşıldı",
+  
+  // Browser based TTS note
+  browserBasedTTS: "Not: Bu, tarayıcı tabanlı metin okuma özelliği kullanır. ElevenLabs ile premium ses kalitesi için Premium Sesli Sohbetimizi deneyin.",
+  
+  // Practice level
+  practiceLevel: "Pratik Seviyesi",
+  cefrB1Description: "Orta seviye - Tanıdık konularda tartışabilir",
+  
+  // Speaking states
+  speaking: "Konuşuyor...",
 };
 
 export default voiceChatTranslations;

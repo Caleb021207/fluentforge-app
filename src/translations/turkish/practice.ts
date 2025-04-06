@@ -2,13 +2,13 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
-  textPractice: "Metin Alıştırması",
-  startPracticing: "Alıştırmaya Başla",
+  textPractice: "Metin Pratiği",
+  startPracticing: "Pratik Yapmaya Başla",
   typeYourMessage: "Mesajınızı buraya yazın...",
   send: "Gönder",
-  practiceIntroTitle: "Konuşma Alıştırması",
-  practiceIntroDescription: "AI asistanla konuşarak dilinizi geliştirin. Aşağıdaki butona tıklayarak başlayın.",
-  suggestedPrompts: "Önerilen Komutlar",
+  practiceIntroTitle: "Konuşma Pratiği",
+  practiceIntroDescription: "AI asistanla konuşarak dilinizi geliştirin. Başlamak için aşağıdaki butona tıklayın.",
+  suggestedPrompts: "Önerilen İfadeler",
   conversationHistory: "Konuşma Geçmişi",
   clearConversation: "Konuşmayı Temizle",
   loadingResponse: "Yanıt yükleniyor...",

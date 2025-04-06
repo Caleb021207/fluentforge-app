@@ -2,72 +2,63 @@
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
+  freePracticeWithVoice: "Darmowa Praktyka Głosowa",
   unlimitedVoicePractice: "Nieograniczona Praktyka Głosowa",
-  voiceChat: "Czat Głosowy",
-  startVoiceChat: "Rozpocznij Czat Głosowy",
-  stopVoiceChat: "Zatrzymaj Czat Głosowy",
-  voiceChatEnded: "Czat Głosowy Zakończony",
-  recordingMessage: "Nagrywanie wiadomości...",
-  listeningForSpeech: "Nasłuchiwanie mowy...",
-  timeLimit5MinReached: "Osiągnięto limit czasu 5 minut",
-  startChatting: "Rozpocznij rozmowę!",
-  microphoneAccessRequired: "Wymagany Dostęp do Mikrofonu",
-  allowMicAccess: "Proszę zezwolić na dostęp do mikrofonu, aby korzystać z tej funkcji",
-  speakNow: "Mów teraz",
-  initializing: "Inicjowanie...",
-  tapToSpeak: "Dotknij, aby mówić",
-  tapToStop: "Dotknij, aby zatrzymać",
-  waitingForResponse: "Oczekiwanie na odpowiedź...",
-  waitingForYourVoice: "Oczekiwanie na Twój głos...",
-  waitingForServerConnection: "Oczekiwanie na połączenie z serwerem...",
-  stopListening: "Przestań Słuchać",
   startSpeaking: "Zacznij Mówić",
-  youSaid: "Powiedziałeś/-aś",
+  stopListening: "Przestań Słuchać",
+  listeningNow: "Słucham teraz",
+  youSaid: "Powiedziałeś",
   aiResponse: "Odpowiedź AI",
-  speaking: "Mówienie",
   playAgain: "Odtwórz Ponownie",
-  conversationStarters: "Pomysły na Rozpoczęcie Rozmowy",
-  tryThesePhrases: "Wypróbuj te frazy, aby rozpocząć rozmowę",
-  inYourTargetLanguage: "W Języku Docelowym",
-  inYourNativeLanguage: "W Twoim Języku Ojczystym",
   practiceWithVoiceChat: "Ćwicz z Czatem Głosowym",
-  useThisTool: "Używaj tego narzędzia, aby poprawić swoje umiejętności mówienia i słuchania. Oto kilka wskazówek:",
-  askQuestions: "Zadawaj pytania na codzienne tematy",
-  practiceCommonPhrases: "Ćwicz powszechne frazy i wyrażenia",
-  describeWhatYouSee: "Opisuj, co widzisz wokół siebie",
-  practiceVocabularyForSpecific: "Ćwicz słownictwo do konkretnych tematów, takich jak podróże czy jedzenie",
-  translation: "Tłumaczenie",
-  listeningNow: "Słuchanie teraz",
-  send: "Wyślij",
-  practiceLevel: "Poziom Praktyki",
-  browserBasedTTS: "Uwaga: To używa przeglądarki do zamiany tekstu na mowę. Dla wysokiej jakości dźwięku z ElevenLabs, wypróbuj nasz Premium Czat Głosowy.",
-  Success: "Sukces",
-  
-  // Additional translations needed for the Voice Chat page
-  remaining: "pozostało",
-  error: "Błąd",
-  networkConnectionIssue: "Problem z połączeniem sieciowym",
+  practiceLanguageTips: "Użyj tego narzędzia, aby poprawić swoje umiejętności mówienia i słuchania. Oto kilka wskazówek:",
+  askQuestionsAboutTopics: "Zadawaj pytania na codzienne tematy",
+  practiceEverydayPhrases: "Ćwicz popularne frazy i wyrażenia",
+  describeImagesOrScenes: "Opisuj to, co widzisz wokół siebie",
+  practiceVocabularyForSpecificTopics: "Ćwicz słownictwo dla określonych tematów, takich jak podróże lub jedzenie",
   speechRecognitionError: "Błąd rozpoznawania mowy",
-  speechRecognitionNotSupported: "Rozpoznawanie mowy nie jest obsługiwane w tej przeglądarce",
-  speechSynthesisNotSupported: "Synteza mowy nie jest obsługiwana w tej przeglądarce",
-  speechSynthesisError: "Błąd syntezy mowy",
-  loginRequired: "Wymagane Logowanie",
-  failedToCreateSession: "Nie udało się utworzyć sesji",
-  failedToGetResponse: "Nie udało się uzyskać odpowiedzi",
+  speechRecognitionNotSupported: "Rozpoznawanie mowy nie jest obsługiwane w Twojej przeglądarce",
+  microphoneAccessRequired: "Dostęp do mikrofonu jest wymagany dla tej funkcji",
+  failedToGetResponse: "Nie udało się uzyskać odpowiedzi od AI. Spróbuj ponownie.",
+  failedToGenerateSpeech: "Nie udało się wygenerować mowy. Spróbuj ponownie.",
+  audioPlaybackError: "Błąd odtwarzania dźwięku. Spróbuj ponownie.",
+  
+  // Conversation starters section
+  conversationStarters: "Propozycje Rozpoczęcia Rozmowy",
+  tryThesePhrases: "Wypróbuj te frazy, aby rozpocząć rozmowę:",
+  inYourTargetLanguage: "W języku docelowym:",
+  inYourNativeLanguage: "W Twoim języku ojczystym:",
+  
+  // Conversation starter phrases
+  phrase1: "Cześć, jak się dzisiaj masz?",
+  phrase2: "Jaka jest pogoda w Twoim miejscu?",
+  phrase3: "Czy możesz polecić dobrą restaurację?",
+  phrase4: "Jakie masz hobby i zainteresowania?",
+  phrase5: "Opowiedz mi o swojej ulubionej książce lub filmie.",
+  phrase6: "Co robiłeś w ostatni weekend?",
+  phrase7: "Jakie masz plany na jutro?",
+  phrase8: "Jak się mówi... po angielsku/hiszpańsku?",
+  translation: "Tłumaczenie",
+  translationNotAvailable: "Tłumaczenie niedostępne",
+  
+  // Voice chat UI
   conversationHistory: "Historia Rozmowy",
   clearConversation: "Wyczyść Rozmowę",
-  conversationHistoryCleared: "Historia rozmowy została wyczyszczona",
-  cefrB1Description: "Średnio zaawansowany - Może dyskutować na znane tematy",
-  cooldownActive: "Czas odnowienia aktywny",
-  dailyLimitReached: "Osiągnięto dzienny limit",
-  phrase1: "Cześć, jak się masz?",
-  phrase2: "Jaka jest pogoda?",
-  phrase3: "Czy możesz polecić dobrą restaurację?",
-  phrase4: "Jakie są twoje hobby i zainteresowania?",
-  phrase5: "Opowiedz o swojej ulubionej książce lub filmie.",
-  phrase6: "Co robiłeś/-aś w zeszły weekend?",
-  phrase7: "Jakie są twoje plany na jutro?",
-  phrase8: "Jak się mówi... po angielsku/polsku?"
+  aiModelInfo: "Model AI: Korzystamy z GPT-4o-mini firmy OpenAI do rozumienia i generowania języka naturalnego, z wbudowaną w przeglądarkę syntezą mowy dla odpowiedzi głosowych.",
+  
+  // Voice chat timers
+  voiceChatEnded: "Czat głosowy zakończony",
+  timeLimit5MinReached: "Osiągnięto limit 5 minut",
+  
+  // Browser based TTS note
+  browserBasedTTS: "Uwaga: Wykorzystuje przeglądarkową technologię tekst-na-mowę. Aby uzyskać premium jakość głosu z ElevenLabs, wypróbuj nasz Premium Czat Głosowy.",
+  
+  // Practice level
+  practiceLevel: "Poziom Praktyki",
+  cefrB1Description: "Średniozaawansowany - może dyskutować na znane tematy",
+  
+  // Speaking states
+  speaking: "Mówi...",
 };
 
 export default voiceChatTranslations;

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -441,6 +442,10 @@ const VoiceChat = () => {
       return "中級 - 身近な話題につて議論できる";
     } else if (currentLanguage === "russian") {
       return "Средний - может обсуждать знакомые темы";
+    } else if (currentLanguage === "polish") {
+      return "Średniozaawansowany - może dyskutować na znane tematy";
+    } else if (currentLanguage === "turkish") {
+      return "Orta seviye - Tanıdık konularda tartışabilir";
     }
     return t("cefrB1Description") || "Intermediate - Can discuss familiar topics";
   };
@@ -472,6 +477,10 @@ const VoiceChat = () => {
       return "AI मॉडल: हम प्राकृतिक भाषा की समझ और उत्पादन के लिए OpenAI के GPT-4o-mini का उपयोग कर रहे हैं, और आवाज़ प्रतिक्रियाओं के लिए ब्राउज़र के अंतर्निहित स्पीच सिंथेसिस का उपयोग कर रहे हैं।";
     } else if (currentLanguage === "indonesian") {
       return "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara.";
+    } else if (currentLanguage === "turkish") {
+      return "AI Modeli: Doğal dil anlama ve üretimi için OpenAI'ın GPT-4o-mini modelini kullanıyoruz. Sesli yanıtlar için tarayıcının yerleşik Konuşma Sentezi özelliğini kullanıyoruz.";
+    } else if (currentLanguage === "polish") {
+      return "Model AI: Korzystamy z GPT-4o-mini firmy OpenAI do rozumienia i generowania języka naturalnego, z wbudowaną w przeglądarkę syntezą mowy dla odpowiedzi głosowych.";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -501,6 +510,10 @@ const VoiceChat = () => {
       return "नोट: यह ब्राउज़र-आधारित टेक्स्ट-टू-स्पीच का उपयोग करता है। ElevenLabs के साथ प्रीमियम आवाज़ की गुणवत्ता के लिए, हमारे प्रीमियम वॉइस चैट का प्रयास करें।";
     } else if (currentLanguage === "indonesian") {
       return "Catatan: Ini menggunakan text-to-speech berbasis browser. Untuk kualitas suara premium dengan ElevenLabs, coba Obrolan Suara Premium kami.";
+    } else if (currentLanguage === "turkish") {
+      return "Not: Bu, tarayıcı tabanlı metin okuma özelliği kullanır. ElevenLabs ile premium ses kalitesi için Premium Sesli Sohbetimizi deneyin.";
+    } else if (currentLanguage === "polish") {
+      return "Uwaga: Wykorzystuje przeglądarkową technologię tekst-na-mowę. Aby uzyskać premium jakość głosu z ElevenLabs, wypróbuj nasz Premium Czat Głosowy.";
     }
     return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
@@ -520,6 +533,10 @@ const VoiceChat = () => {
       return "अभ्यास स्तर";
     } else if (currentLanguage === "indonesian") {
       return "Tingkat Latihan";
+    } else if (currentLanguage === "turkish") {
+      return "Pratik Seviyesi";
+    } else if (currentLanguage === "polish") {
+      return "Poziom Praktyki";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -547,6 +564,10 @@ const VoiceChat = () => {
       return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     } else if (currentLanguage === "indonesian") {
       return "Gunakan alat ini untuk meningkatkan kemampuan berbicara dan mendengarkan Anda. Berikut beberapa tips:";
+    } else if (currentLanguage === "turkish") {
+      return "Konuşma ve dinleme becerilerinizi geliştirmek için bu aracı kullanın. İşte bazı ipuçları:";
+    } else if (currentLanguage === "polish") {
+      return "Użyj tego narzędzia, aby poprawić swoje umiejętności mówienia i słuchania. Oto kilka wskazówek:";
     }
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
@@ -576,7 +597,9 @@ const VoiceChat = () => {
             currentLanguage === "russian" ? "Модель ИИ:" : 
             currentLanguage === "hindi" ? "AI मॉडल:" :
             currentLanguage === "indonesian" ? "Model AI:" :
-            "AI模型："
+            currentLanguage === "turkish" ? "AI Modeli:" :
+            currentLanguage === "polish" ? "Model AI:" :
+            "AI Model:"
           }</strong> {getAIModelInfoText()}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
@@ -674,5 +697,93 @@ const VoiceChat = () => {
                 
                 {/* Always show translation for Hindi users or if translation exists */}
                 {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
-                  <>
-                    <div className="border-t border-gray-30
+                  <div className="border-t border-gray-300 mt-2 pt-2">
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">{t("translation")}: </span>
+                      {translation || t("translationNotAvailable")}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          <div className="mt-10">
+            <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-sm font-medium mb-2">{t("inYourNativeLanguage")}:</h4>
+                <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                  {nativeLanguagePhrases.map((phrase, i) => (
+                    <div key={i} className="text-sm p-2 hover:bg-gray-100 rounded cursor-pointer">
+                      {phrase}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-2">{t("inYourTargetLanguage")}:</h4>
+                <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                  {targetLanguagePhrases.map((phrase, i) => (
+                    <div key={i} className="text-sm p-2 hover:bg-gray-100 rounded cursor-pointer">
+                      {phrase}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+        
+        {conversationHistory.length > 0 && (
+          <Card className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-medium">{t("conversationHistory")}</h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={clearConversation}
+              >
+                {t("clearConversation")}
+              </Button>
+            </div>
+            <ScrollArea className="h-[400px] pr-4">
+              <div className="space-y-4">
+                {conversationHistory.map((message, i) => (
+                  <div
+                    key={i}
+                    className={`flex ${
+                      message.role === "user" ? "justify-end" : "justify-start"
+                    } mb-4`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-lg p-4 ${
+                        message.role === "user"
+                          ? "bg-lingua-primary text-white"
+                          : "bg-gray-100"
+                      }`}
+                    >
+                      <p className={`${message.role === "user" ? "text-white" : "text-gray-800"}`}>
+                        {message.content}
+                      </p>
+                      {(message.translation || currentLanguage === "hindi") && (
+                        <div className="border-t border-gray-300 mt-2 pt-2">
+                          <p className={`text-sm ${message.role === "user" ? "text-gray-200" : "text-gray-500"}`}>
+                            {message.translation || t("translationNotAvailable")}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <div ref={conversationEndRef} />
+              </div>
+            </ScrollArea>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default VoiceChat;
