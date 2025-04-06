@@ -42,7 +42,35 @@ const voiceChatTranslations: TranslationRecord = {
   askQuestions: "रोजमर्रा के विषयों पर प्रश्न पूछें",
   practiceCommonPhrases: "सामान्य वाक्यांशों और अभिव्यक्तियों का अभ्यास करें",
   describeWhatYouSee: "अपने आसपास जो देख रहे हैं उसका वर्णन करें",
-  practiceVocabularyForSpecific: "यात्रा या भोजन जैसे विशिष्ट विषयों के लिए शब्दावली का अभ्यास करें"
+  practiceVocabularyForSpecific: "यात्रा या भोजन जैसे विशिष्ट विषयों के लिए शब्दावली का अभ्यास करें",
+  
+  // Additional translations needed for the voice chat page
+  phrase1: "नमस्ते, आप कैसे हैं?",
+  phrase2: "आपके यहां मौसम कैसा है?",
+  phrase3: "क्या आप कोई अच्छा रेस्तरां सुझा सकते हैं?",
+  phrase4: "आपके शौक और रुचियां क्या हैं?",
+  phrase5: "अपनी पसंदीदा किताब या फिल्म के बारे में बताएं।",
+  phrase6: "आपने पिछले सप्ताहांत क्या किया?",
+  phrase7: "कल के लिए आपकी क्या योजनाएं हैं?",
+  phrase8: "आप स्पेनिश/अंग्रेजी में... कैसे कहते हैं?",
+  
+  // UI elements for voice chat
+  youSaid: "आपने कहा",
+  aiResponse: "AI प्रतिक्रिया",
+  playAgain: "फिर से सुनें",
+  speaking: "बोल रहा है",
+  send: "भेजें",
+  translation: "अनुवाद",
+  conversationHistory: "वार्तालाप इतिहास",
+  clearConversation: "वार्तालाप साफ़ करें",
+  listeningNow: "सुन रहा है",
+  cefrB1Description: "मध्यवर्ती - परिचित विषयों पर चर्चा कर सकते हैं",
+  stopListening: "सुनना बंद करें",
+  speechRecognitionError: "स्पीच रिकग्निशन त्रुटि",
+  speechRecognitionNotSupported: "आपका ब्राउज़र स्पीच रिकग्निशन का समर्थन नहीं करता है",
+  failedToGetResponse: "प्रतिक्रिया प्राप्त करने में विफल",
+  speechSynthesisNotSupported: "आपका ब्राउज़र स्पीच सिंथेसिस का समर्थन नहीं करता है",
+  speechSynthesisError: "स्पीच सिंथेसिस त्रुटि"
 };
 
 export default voiceChatTranslations;
