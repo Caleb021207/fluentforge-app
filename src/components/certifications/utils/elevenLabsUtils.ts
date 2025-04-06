@@ -1,3 +1,4 @@
+
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
@@ -12,6 +13,7 @@ export const FRENCH_TUTOR_AGENT_ID = 'femZJQOmwbvFjGG46OO0'; // English tutor fo
 export const JAPANESE_TUTOR_AGENT_ID = 'M2MhVrSMkj3Y6j5uaQE9'; // English tutor for Japanese speakers
 export const RUSSIAN_TUTOR_AGENT_ID = 'pViLJpVDvXIBEL7BXbam'; // English tutor for Russian speakers
 export const UKRAINIAN_TUTOR_AGENT_ID = 'eu1E63tLoKFYPB28lWks'; // English tutor for Ukrainian speakers
+export const HINDI_TUTOR_AGENT_ID = 'KZaHLSD2sG8AptT09Feu'; // English tutor for Hindi speakers
 
 /**
  * Gets the appropriate agent ID based on the user's language
@@ -63,6 +65,11 @@ export const getAgentIdForLanguage = (language: string): string => {
   if (language === "ukrainian") {
     console.log("Using English tutor for Ukrainian speaker:", UKRAINIAN_TUTOR_AGENT_ID);
     return UKRAINIAN_TUTOR_AGENT_ID;
+  }
+  // If the user is Hindi speaker, use the English tutor for Hindi speakers
+  if (language === "hindi") {
+    console.log("Using English tutor for Hindi speaker:", HINDI_TUTOR_AGENT_ID);
+    return HINDI_TUTOR_AGENT_ID;
   }
   // For Spanish speakers, use the English tutor
   if (language === "spanish") {
