@@ -15,6 +15,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
   const showTranslation = (translation && translation.trim() !== "") || 
     currentLanguage !== "english";
   
+  // Get correct translation not available text based on language
+  const getTranslationNotAvailableText = () => {
+    switch (currentLanguage) {
+      case "indonesian": return "Terjemahan tidak tersedia";
+      case "turkish": return "Çeviri mevcut değil";
+      case "polish": return "Tłumaczenie niedostępne";
+      default: return "Translation not available";
+    }
+  };
+  
   return (
     <div
       className={`flex ${
@@ -32,7 +42,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
         {showTranslation && (
           <div className="border-t border-gray-300 mt-2 pt-2">
             <p className={`text-sm ${role === "user" ? "text-gray-200" : "text-gray-500"}`}>
-              {translation || (currentLanguage === "indonesian" ? "Terjemahan tidak tersedia" : "Translation not available")}
+              {translation || getTranslationNotAvailableText()}
             </p>
           </div>
         )}
