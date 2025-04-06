@@ -28,13 +28,6 @@ export const getAgentIdForLanguage = (language: string): string => {
       return "eu1E63tLoKFYPB28lWks"; // English tutor for Ukrainian speakers
     case "hindi":
       return "KZaHLSD2sG8AptT09Feu"; // English tutor for Hindi speakers
-    // Add new languages with placeholder agent IDs (these should be replaced with actual IDs)
-    case "indonesian":
-      return "n0xawTpIZ6Zojiox0KZ5"; // English tutor for Indonesian speakers
-    case "turkish":
-      return "placeholder_turkish_id"; // English tutor for Turkish speakers
-    case "polish":
-      return "placeholder_polish_id"; // English tutor for Polish speakers
     default:
       return "AOv9JDhkEdMmiU61vHg9"; // Default to Spanish tutor for English speakers
   };

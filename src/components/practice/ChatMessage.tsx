@@ -11,19 +11,12 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation }) => {
   const { currentLanguage } = useLocalization();
   
-  // Always show translation for all non-English users or if translation exists
+  // Always show translation for Japanese, French, Russian, Hindi users or if translation exists
   const showTranslation = (translation && translation.trim() !== "") || 
-    currentLanguage !== "english";
-  
-  // Get correct translation not available text based on language
-  const getTranslationNotAvailableText = () => {
-    switch (currentLanguage) {
-      case "indonesian": return "Terjemahan tidak tersedia";
-      case "turkish": return "Çeviri mevcut değil";
-      case "polish": return "Tłumaczenie niedostępne";
-      default: return "Translation not available";
-    }
-  };
+    currentLanguage === "japanese" || 
+    currentLanguage === "french" ||
+    currentLanguage === "russian" ||
+    currentLanguage === "hindi";
   
   return (
     <div
@@ -39,10 +32,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
         }`}
       >
         <p className={`${role === "user" ? "text-white" : "text-gray-800"}`}>{content}</p>
-        {showTranslation && (
+        {showTranslation && translation && (
           <div className="border-t border-gray-300 mt-2 pt-2">
             <p className={`text-sm ${role === "user" ? "text-gray-200" : "text-gray-500"}`}>
-              {translation || getTranslationNotAvailableText()}
+              {translation}
             </p>
           </div>
         )}
