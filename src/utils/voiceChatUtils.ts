@@ -64,11 +64,11 @@ export const calculateRemainingWeeklyTime = async (userId: string): Promise<numb
     
     if (error) {
       console.error("Error fetching session data:", error);
-      return 900; // Default to 15 minutes (900 seconds)
+      return 600; // Default to 10 minutes (600 seconds)
     }
     
     if (!data || data.length === 0) {
-      return 900;
+      return 600;
     }
     
     let totalTimeUsedSeconds = 0;
@@ -80,11 +80,11 @@ export const calculateRemainingWeeklyTime = async (userId: string): Promise<numb
       totalTimeUsedSeconds += sessionDuration;
     });
     
-    const remainingTime = Math.max(0, 900 - totalTimeUsedSeconds);
+    const remainingTime = Math.max(0, 600 - totalTimeUsedSeconds);
     return remainingTime;
     
   } catch (error) {
     console.error("Error in calculateRemainingWeeklyTime:", error);
-    return 900;
+    return 600;
   }
 };

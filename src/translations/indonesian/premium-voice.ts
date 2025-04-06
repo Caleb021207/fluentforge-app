@@ -4,9 +4,9 @@ import { TranslationRecord } from "../types";
 const premiumVoiceTranslations: TranslationRecord = {
   premiumVoiceTitle: "Obrolan Suara Premium dengan ElevenLabs AI",
   premiumVoiceChatDescription: "Latih kemampuan bicara {{practice}} Anda dengan asisten suara AI berkualitas tinggi. Cukup klik tombol mulai dan mulai berbicara.",
-  premiumVoiceNoteWithReset: "Catatan: Waktu Obrolan Premium dibatasi hingga 5 menit per hari. Batas waktu direset pada tengah malam UTC.",
+  premiumVoiceNoteWithReset: "Catatan: Waktu Obrolan Premium dibatasi hingga 10 menit per hari. Batas waktu direset pada tengah malam UTC.",
   voiceChatEnded: "Obrolan Suara Berakhir",
-  timeLimit5MinReached: "Batas waktu 5 menit telah tercapai",
+  timeLimit5MinReached: "Batas waktu 10 menit telah tercapai",
   stopVoiceChat: "Hentikan Obrolan Suara",
   startVoiceChat: "Mulai Obrolan Suara",
   remaining: "tersisa",
@@ -47,7 +47,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   cooldownPeriodActive: "Batas Mingguan Tercapai",
   waitBeforeNextSession: "Anda perlu menunggu sebelum memulai sesi lain",
   cooldownPeriodDescription: "Anda perlu menunggu {{time}} sebelum memulai sesi obrolan suara premium lainnya.",
-  resetsAt6AM: "Batas waktu 15 menit mingguan Anda akan direset dalam {{time}} (Senin jam 6:00 pagi)",
+  resetsAt6AM: "Batas waktu 10 menit mingguan Anda akan direset dalam {{time}} (Senin jam 6:00 pagi)",
   
   // Additional needed translations
   signIn: "Masuk",
@@ -56,10 +56,13 @@ const premiumVoiceTranslations: TranslationRecord = {
   success: "Berhasil",
   
   // Premium voice benefits
-  premiumVoiceNote: "Penggunaan obrolan suara premium dibatasi untuk satu sesi 15 menit setiap minggu",
+  premiumVoiceNote: "Penggunaan obrolan suara premium dibatasi untuk satu sesi 10 menit setiap minggu",
   benefitNaturalVoice: "Interaksi suara alami dan mirip manusia menggunakan teknologi ElevenLabs",
   benefitAccentPronunciation: "Aksen dan pengucapan yang akurat untuk pembelajaran yang mendalam",
-  benefitRegularPractice: "15 menit waktu latihan mingguan, direset setiap Senin jam 6:00 pagi Waktu Tengah"
+  benefitRegularPractice: "10 menit waktu latihan mingguan, direset setiap Senin jam 6:00 pagi Waktu Tengah",
+  
+  conversationHistoryCleared: "Riwayat percakapan dibersihkan",
+  failedToCreateSession: "Gagal membuat sesi"
 };
 
 export default premiumVoiceTranslations;

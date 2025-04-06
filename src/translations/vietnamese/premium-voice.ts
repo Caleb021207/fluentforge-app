@@ -21,8 +21,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   cooldownActive: "Đã đạt giới hạn hàng tuần",
   waitBeforeNextSession: "Bạn cần đợi trước khi bắt đầu phiên khác",
   cooldownPeriodDescription: "Bạn cần đợi {{time}} trước khi bắt đầu phiên trò chuyện bằng giọng nói cao cấp khác.",
-  resetsAt6AM: "Thời gian 15 phút hàng tuần của bạn sẽ được làm mới sau {{time}} (Thứ Hai lúc 6:00 sáng)",
-  dailyLimitReached: "Bạn đã sử dụng hết 15 phút hàng tuần. Thời gian sẽ được làm mới vào thứ Hai lúc 6:00 sáng.",
+  resetsAt6AM: "Thời gian 10 phút hàng tuần của bạn sẽ được làm mới sau {{time}} (Thứ Hai lúc 6:00 sáng)",
+  dailyLimitReached: "Bạn đã sử dụng hết 10 phút hàng tuần. Thời gian sẽ được làm mới vào thứ Hai lúc 6:00 sáng.",
   
   // Login related messages
   loginRequired: "Yêu cầu đăng nhập",
@@ -38,17 +38,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   
   // Premium voice benefits
   premiumVoiceChatDescription: "Trò chuyện tự nhiên với gia sư AI cao cấp của chúng tôi để luyện tập {{practice}}! AI sẽ giúp bạn sửa ngữ pháp, từ vựng và phát âm.",
-  premiumVoiceNote: "Sử dụng trò chuyện bằng giọng nói cao cấp giới hạn ở một phiên 15 phút mỗi tuần",
-  premiumVoiceNoteWithReset: "Trò chuyện bằng giọng nói cao cấp cho phép 15 phút thời gian luyện tập hàng tuần. Thời gian của bạn được làm mới mỗi thứ Hai lúc 6:00 sáng theo giờ Trung tâm.",
+  premiumVoiceNote: "Sử dụng trò chuyện bằng giọng nói cao cấp giới hạn ở một phiên 10 phút mỗi tuần",
+  premiumVoiceNoteWithReset: "Trò chuyện bằng giọng nói cao cấp cho phép 10 phút thời gian luyện tập hàng tuần. Thời gian của bạn được làm mới mỗi thứ Hai lúc 6:00 sáng theo giờ Trung tâm.",
   benefitNaturalVoice: "Tương tác giọng nói tự nhiên, giống con người sử dụng công nghệ ElevenLabs",
   benefitAccentPronunciation: "Giọng điệu và phát âm chính xác để học tập chìm đắm",
-  benefitRegularPractice: "15 phút thời gian luyện tập hàng tuần, làm mới mỗi thứ Hai lúc 6:00 sáng theo giờ Trung tâm",
+  benefitRegularPractice: "10 phút thời gian luyện tập hàng tuần, làm mới mỗi thứ Hai lúc 6:00 sáng theo giờ Trung tâm",
 
   // Added voice chat controls
   startVoiceChat: "Bắt đầu trò chuyện bằng giọng nói",
   stopVoiceChat: "Dừng trò chuyện bằng giọng nói",
   voiceChatEnded: "Trò chuyện bằng giọng nói đã kết thúc",
-  timeLimit5MinReached: "Đã đạt đến giới hạn thời gian 15 phút",
+  timeLimit5MinReached: "Đã đạt đến giới hạn thời gian 10 phút",
   speaking: "Đang nói...",
   startChatting: "Bắt đầu trò chuyện"
 };
