@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +10,8 @@ import { supabase } from "@/integrations/supabase/client";
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
+  const [connectionAttempts, setConnectionAttempts] = useState(0);
+  const maxConnectionAttempts = 3;
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
 
@@ -77,6 +80,7 @@ export const useVoiceChat = () => {
   }, [isConversationActive(), voiceChatTimeRemaining]);
 
   const startVoiceConversation = async () => {
+    setConnectionAttempts(0);
     if (!microphoneAccess) {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -137,21 +141,8 @@ export const useVoiceChat = () => {
         return;
       }
 
-      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
-      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
+      await tryStartConversation(sessionData.id);
       
-      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
-      const sessionId = await conversation.startSession({
-        agentId: selectedAgentId,
-      });
-      console.log(`Successfully started conversation session: ${sessionId}`);
-      
-      setVoiceChatTimeRemaining(remainingTime);
-      
-      toast({
-        title: t("startVoiceChat"),
-        description: t("startChatting"),
-      });
     } catch (error) {
       console.error("Voice conversation error:", error);
       toast({
@@ -159,6 +150,63 @@ export const useVoiceChat = () => {
         description: t("networkConnectionIssue"),
         variant: "destructive",
       });
+    }
+  };
+
+  const tryStartConversation = async (sessionId: string) => {
+    try {
+      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
+      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker (attempt ${connectionAttempts + 1})`);
+      
+      // End any existing session to make sure we start fresh
+      if (isConversationActive()) {
+        await conversation.endSession();
+      }
+      
+      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
+      const conversationId = await conversation.startSession({
+        agentId: selectedAgentId,
+      });
+      
+      console.log(`Successfully started conversation session: ${conversationId}`);
+      
+      const remainingTime = await calculateRemainingWeeklyTime(sessionId);
+      setVoiceChatTimeRemaining(remainingTime);
+      
+      toast({
+        title: t("startVoiceChat"),
+        description: t("startChatting"),
+      });
+      
+      return true;
+    } catch (error) {
+      console.error(`Connection attempt ${connectionAttempts + 1} failed:`, error);
+      setConnectionAttempts(prev => prev + 1);
+      
+      if (connectionAttempts < maxConnectionAttempts - 1) {
+        console.log(`Retrying connection (attempt ${connectionAttempts + 2} of ${maxConnectionAttempts})...`);
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Wait before retry
+        return tryStartConversation(sessionId);
+      } else {
+        console.error(`Failed to connect after ${maxConnectionAttempts} attempts`);
+        toast({
+          title: t("error"),
+          description: `${t("networkConnectionIssue")}. ${t("failedToCreateSession")}`,
+          variant: "destructive",
+        });
+        
+        // Close the session in database
+        try {
+          await supabase
+            .from('premium_voice_chat_sessions')
+            .update({ session_end: new Date().toISOString() })
+            .eq('id', sessionId);
+        } catch (dbError) {
+          console.error("Error updating session end time:", dbError);
+        }
+        
+        return false;
+      }
     }
   };
 
