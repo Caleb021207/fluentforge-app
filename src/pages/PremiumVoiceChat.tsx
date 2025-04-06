@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Mic, MicOff, Volume2, Headphones, Clock, LockIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -69,7 +68,6 @@ const PremiumVoiceChat = () => {
     };
   }, []);
 
-  // Check if a session is currently active or if the user has time remaining for the week
   const checkSessionStatus = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -78,7 +76,6 @@ const PremiumVoiceChat = () => {
         return;
       }
       
-      // Check for active sessions
       const { data: activeSessions, error: activeError } = await supabase
         .from('premium_voice_chat_sessions')
         .select('*')
@@ -99,26 +96,21 @@ const PremiumVoiceChat = () => {
         const remaining = await calculateRemainingWeeklyTime(user.id);
         setWeeklyTimeRemaining(remaining);
         
-        // If time remaining is 0, end the session
         if (remaining <= 0) {
           await endSession(activeSessions.id);
         }
         return;
       }
       
-      // Calculate remaining time for this week
       const remaining = await calculateRemainingWeeklyTime(user.id);
       setWeeklyTimeRemaining(remaining);
       
       if (remaining <= 0) {
-        // All time used up for this week
         setSessionStatus('cooldown');
         
-        // Calculate time until next Monday at 6 AM Central
         const now = new Date();
         const nextMonday6AM = new Date(getCurrentWeekStart());
-        nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7); // Next Monday
-        
+        nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7);
         const cooldownRemaining = Math.floor((nextMonday6AM.getTime() - now.getTime()) / 1000);
         setCooldownTimeRemaining(cooldownRemaining);
       } else {
@@ -164,7 +156,7 @@ const PremiumVoiceChat = () => {
         setCooldownTimeRemaining(prev => {
           if (prev === null || prev <= 0) {
             if (cooldownTimerId) clearInterval(cooldownTimerId);
-            checkSessionStatus(); // Re-check status when cooldown expires
+            checkSessionStatus();
             return null;
           }
           return prev - 1;
@@ -202,7 +194,6 @@ const PremiumVoiceChat = () => {
       
       setCurrentSessionId(null);
       
-      // Check if weekly limit is reached
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const remaining = await calculateRemainingWeeklyTime(user.id);
@@ -210,10 +201,9 @@ const PremiumVoiceChat = () => {
         if (remaining <= 0) {
           setSessionStatus('cooldown');
           
-          // Calculate time until next Monday at 6 AM Central
           const now = new Date();
           const nextMonday6AM = new Date(getCurrentWeekStart());
-          nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7); // Next Monday
+          nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7);
           
           const cooldownRemaining = Math.floor((nextMonday6AM.getTime() - now.getTime()) / 1000);
           setCooldownTimeRemaining(cooldownRemaining);
@@ -246,18 +236,15 @@ const PremiumVoiceChat = () => {
       return;
     }
 
-    // If already recording, stop it
     if (isConversationActive()) {
       await endConversation();
       return;
     }
 
-    // Otherwise start a new conversation
     try {
       await startVoiceConversation();
       setIsRecording(true);
       
-      // Get updated remaining time
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const remaining = await calculateRemainingWeeklyTime(user.id);
@@ -290,7 +277,6 @@ const PremiumVoiceChat = () => {
       await endVoiceConversation();
       setIsRecording(false);
       
-      // Check if weekly limit is reached
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const remaining = await calculateRemainingWeeklyTime(user.id);
@@ -299,10 +285,9 @@ const PremiumVoiceChat = () => {
         if (remaining <= 0) {
           setSessionStatus('cooldown');
           
-          // Calculate time until next Monday at 6 AM Central
           const now = new Date();
           const nextMonday6AM = new Date(getCurrentWeekStart());
-          nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7); // Next Monday
+          nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7);
           
           const cooldownRemaining = Math.floor((nextMonday6AM.getTime() - now.getTime()) / 1000);
           setCooldownTimeRemaining(cooldownRemaining);
@@ -349,6 +334,11 @@ const PremiumVoiceChat = () => {
         practice: "English",
         native: "Vietnamese"
       };
+    } else if (currentLanguage === "hindi") {
+      return {
+        practice: "English",
+        native: "Hindi"
+      };
     }
     return {
       practice: "Spanish",
@@ -381,12 +371,10 @@ const PremiumVoiceChat = () => {
     return <div className="max-w-4xl mx-auto p-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-lingua-text mb-4">
-            {t("premiumVoiceChat")}
+            {t("premiumVoiceTitle")}
           </h1>
           <p className="text-gray-600 mb-4">
-            {t("premiumVoiceChatDescription", {
-            practice
-          })}
+            {t("premiumVoiceChatDesc", {practice})}
           </p>
         </div>
         
@@ -400,7 +388,7 @@ const PremiumVoiceChat = () => {
               {t("loginRequiredDescription")}
             </p>
             <Button onClick={redirectToLogin} className="bg-lingua-primary hover:bg-lingua-primary/90">
-              {t("login")}
+              {t("signIn")}
             </Button>
           </div>
         </Card>
@@ -414,7 +402,7 @@ const PremiumVoiceChat = () => {
             <LockIcon className="h-6 w-6 text-red-500" />
             <div>
               <h3 className="font-medium text-red-800">
-                {t("cooldownPeriodActive")}
+                {t("premiumSessionLimitReached")}
               </h3>
               <p className="text-sm text-red-600">
                 {t("resetsAt6AM", {
@@ -443,12 +431,10 @@ const PremiumVoiceChat = () => {
   return <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-lingua-text mb-4">
-          {t("premiumVoiceChat")}
+          {t("premiumVoiceTitle")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {t("premiumVoiceChatDescription", {
-          practice
-        })}
+          {t("premiumVoiceChatDesc", {practice})}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm font-normal">
