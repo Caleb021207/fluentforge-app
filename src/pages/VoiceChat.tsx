@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -450,7 +449,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых ответов.";
     } else if (currentLanguage === "ukrainian") {
-      return "Модель ШІ: Ми використовуємо GPT-4o-mini від OpenAI для розуміння та генерації природної мови, із вбудованим у браузер синтезом мовлення для голосових відповідей.";
+      return "Модель ШІ: Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
     }
     return "AI Model: Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
