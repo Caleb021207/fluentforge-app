@@ -414,7 +414,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "portuguese") {
       return `Pratique suas habilidades de fala em ${getLanguagePair().practice} con nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
     } else if (currentLanguage === "korean") {
-      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI��� ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
+      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI는 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
     } else if (currentLanguage === "arabic") {
       return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
     } else if (currentLanguage === "mandarin") {
@@ -430,7 +430,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "ukrainian") {
       return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
+      return "हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल का अभ्यास करें। माइक्���ोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें।";
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -447,7 +447,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "arabic") {
       return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
     } else if (currentLanguage === "mandarin") {
-      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回���。";
+      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
     } else if (currentLanguage === "vietnamese") {
       return "Mô hình AI: Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
     } else if (currentLanguage === "french") {

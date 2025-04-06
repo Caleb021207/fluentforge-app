@@ -58,7 +58,7 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecific: "यात्रा या भोजन जैसे विशिष्ट विषयों के लिए शब्दावली का अभ्यास करें",
   
   // Additional translations needed
-  listeningNow: "अभी सुन रहा है...",
+  listeningNow: "अभी सुन रहा है",
   youSaid: "आपने कहा",
   aiResponse: "AI प्रतिक्रिया",
   playAgain: "फिर से सुनें",
@@ -75,7 +75,9 @@ const voiceChatTranslations: TranslationRecord = {
   timeLimit5MinReached: "5 मिनट की समय सीमा तक पहुंच गया है",
   cefrB1Description: "मध्यवर्ती - परिचित विषयों पर चर्चा कर सकते हैं",
   conversationHistoryCleared: "बातचीत इतिहास साफ कर दिया गया है",
-  send: "भेजें"
+  send: "भेजें",
+  speechSynthesisNotSupported: "आपके ब्राउज़र में स्पीच सिंथेसिस समर्थित नहीं है",
+  speechSynthesisError: "स्पीच सिंथेसिस त्रुटि"
 };
 
 export default voiceChatTranslations;
