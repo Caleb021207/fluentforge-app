@@ -3,9 +3,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getInitialPromptForLanguage, getPlaceholderForLanguage, sendChatMessage, requestTranslation } from "./utils/chatUtils";
-import { ChatMessage, UseChatMessagesResult } from "./types/chatTypes";
-
-export { ChatMessage } from "./types/chatTypes";
+import type { ChatMessage, UseChatMessagesResult } from "./types/chatTypes";
 
 export const useChatMessages = (): UseChatMessagesResult => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);

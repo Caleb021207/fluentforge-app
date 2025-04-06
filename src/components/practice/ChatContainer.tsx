@@ -6,15 +6,10 @@ import ChatInput from "./ChatInput";
 import EmptyChatState from "./EmptyChatState";
 import LoadingIndicator from "./LoadingIndicator";
 import { useLocalization } from "@/context/LocalizationContext";
-
-interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  translation?: string;
-}
+import type { ChatMessage as ChatMessageType } from "../practice/hooks/types/chatTypes";
 
 interface ChatContainerProps {
-  messages: ChatMessage[];
+  messages: ChatMessageType[];
   input: string;
   setInput: (input: string) => void;
   handleSubmit: (e: React.FormEvent) => void;
