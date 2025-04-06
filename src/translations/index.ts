@@ -12,6 +12,9 @@ import japaneseTranslations from "./japanese/index";
 import russianTranslations from "./russian/index";
 import ukrainianTranslations from "./ukrainian/index";
 import hindiTranslations from "./hindi/index";
+import indonesianTranslations from "./indonesian/index";
+import turkishTranslations from "./turkish/index";
+import polishTranslations from "./polish/index";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
@@ -26,7 +29,10 @@ const translations: LanguageTranslations = {
   japanese: japaneseTranslations,
   russian: russianTranslations,
   ukrainian: ukrainianTranslations,
-  hindi: hindiTranslations
+  hindi: hindiTranslations,
+  indonesian: indonesianTranslations,
+  turkish: turkishTranslations,
+  polish: polishTranslations
 };
 
 export default translations;
@@ -45,6 +51,9 @@ export const AVAILABLE_LANGUAGES = {
   russian: "Русский",
   ukrainian: "Українська",
   hindi: "हिन्दी",
+  indonesian: "Bahasa Indonesia",
+  turkish: "Türkçe",
+  polish: "Polski"
 };
 
 // Default language

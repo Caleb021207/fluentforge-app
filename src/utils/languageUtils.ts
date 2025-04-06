@@ -66,6 +66,22 @@ export const getLanguagePair = (currentLanguage: string) => {
         practice: "English",
         native: "French"
       };
+    // Add new languages
+    case "indonesian":
+      return {
+        practice: "English",
+        native: "Indonesian"
+      };
+    case "turkish":
+      return {
+        practice: "English",
+        native: "Turkish"
+      };
+    case "polish":
+      return {
+        practice: "English",
+        native: "Polish"
+      };
     default:
       return {
         practice: "Spanish",

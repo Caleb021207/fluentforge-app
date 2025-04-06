@@ -26,6 +26,12 @@ export const useVoiceChatMessages = () => {
       initialContent = `Hello, I'd like to practice ${practice} with you.`;
     } else if (currentLanguage === "mandarin") {
       initialContent = "你好，我想和你练习英语。";
+    } else if (currentLanguage === "indonesian") {
+      initialContent = "Halo, saya ingin berlatih Bahasa Inggris dengan Anda.";
+    } else if (currentLanguage === "turkish") {
+      initialContent = "Merhaba, sizinle İngilizce pratik yapmak istiyorum.";
+    } else if (currentLanguage === "polish") {
+      initialContent = "Cześć, chciałbym poćwiczyć z tobą język angielski.";
     } else {
       initialContent = `Hello, I'd like to practice ${practice} with you.`;
     }

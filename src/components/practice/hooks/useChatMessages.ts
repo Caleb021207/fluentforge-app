@@ -44,6 +44,12 @@ export const useChatMessages = () => {
       prompt = "Привіт! Я хочу попрактикуватися в англійській з вами!";
     } else if (currentLanguage === "hindi") {
       prompt = "नमस्ते! मैं आपके साथ अंग्रेजी का अभ्यास करना चाहता हूँ!";
+    } else if (currentLanguage === "indonesian") {
+      prompt = "Halo! Saya ingin berlatih bahasa Inggris dengan Anda!";
+    } else if (currentLanguage === "turkish") {
+      prompt = "Merhaba! Sizinle İngilizce pratik yapmak istiyorum!";
+    } else if (currentLanguage === "polish") {
+      prompt = "Cześć! Chcę poćwiczyć z Tobą angielski!";
     }
 
     if (prompt) {
@@ -210,6 +216,12 @@ export const useChatMessages = () => {
       return "Tapez votre message en anglais ou français...";
     } else if (currentLanguage === "hindi") {
       return "अंग्रेजी या हिंदी में अपना संदेश टाइप करें...";
+    } else if (currentLanguage === "indonesian") {
+      return "Ketik pesan Anda dalam bahasa Inggris atau Indonesia...";
+    } else if (currentLanguage === "turkish") {
+      return "Mesajınızı İngilizce veya Türkçe olarak yazın...";
+    } else if (currentLanguage === "polish") {
+      return "Wpisz wiadomość po angielsku lub polsku...";
     }
     return t("typeMessage") || "Type your message...";
   };
