@@ -30,7 +30,7 @@ export const getAgentIdForLanguage = (language: string): string => {
       return "KZaHLSD2sG8AptT09Feu"; // English tutor for Hindi speakers
     // Add new languages with placeholder agent IDs (these should be replaced with actual IDs)
     case "indonesian":
-      return "placeholder_indonesian_id"; // English tutor for Indonesian speakers
+      return "n0xawTpIZ6Zojiox0KZ5"; // English tutor for Indonesian speakers
     case "turkish":
       return "placeholder_turkish_id"; // English tutor for Turkish speakers
     case "polish":

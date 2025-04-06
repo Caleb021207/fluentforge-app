@@ -2,16 +2,16 @@
 import { TranslationRecord } from "../types";
 import generalTranslations from "./general";
 import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
 import premiumVoiceTranslations from "./premium-voice";
+import authTranslations from "./auth";
+import voiceChatTranslations from "./voice-chat";
 
 // Create empty objects for translations that don't exist yet
-const practiceTranslations: TranslationRecord = {};
 const certificatesTranslations: TranslationRecord = {};
 const progressTranslations: TranslationRecord = {};
 const profileTranslations: TranslationRecord = {};
-const voiceChatTranslations: TranslationRecord = {};
 const languageFrameworksTranslations: TranslationRecord = {};
-const authTranslations: TranslationRecord = {};
 
 // Combine all the translation categories
 const indonesianTranslations: TranslationRecord = {
