@@ -322,37 +322,6 @@ const VoiceChat = () => {
     }
   };
 
-  const getLanguagePair = () => {
-    if (currentLanguage === "english") {
-      return { practice: "Spanish", native: "English" };
-    } else if (currentLanguage === "spanish") {
-      return { practice: "English", native: "Spanish" };
-    } else if (currentLanguage === "portuguese") {
-      return { practice: "English", native: "Portuguese" };
-    } else if (currentLanguage === "korean") {
-      return { practice: "English", native: "Korean" };
-    } else if (currentLanguage === "arabic") {
-      return { practice: "English", native: "Arabic" };
-    } else if (currentLanguage === "mandarin") {
-      return { practice: "English", native: "Mandarin" };
-    } else if (currentLanguage === "vietnamese") {
-      return { practice: "English", native: "Vietnamese" };
-    } else if (currentLanguage === "french") {
-      return { practice: "English", native: "French" };
-    } else if (currentLanguage === "japanese") {
-      return { practice: "English", native: "Japanese" };
-    } else if (currentLanguage === "russian") {
-      return { practice: "English", native: "Russian" };
-    } else if (currentLanguage === "ukrainian") {
-      return { practice: "English", native: "Ukrainian" };
-    } else if (currentLanguage === "hindi") {
-      return { practice: "English", native: "Hindi" };
-    } else if (currentLanguage === "indonesian") {
-      return { practice: "English", native: "Indonesian" };
-    }
-    return { practice: "English", native: "Your Language" };
-  };
-
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
@@ -427,7 +396,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "french") {
       return "Intermédiaire - Peut discuter de sujets familiers";
     } else if (currentLanguage === "japanese") {
-      return "中級 - 身近な話題につ��て議論できる";
+      return "中級 - 身近な話題につて議論できる";
     } else if (currentLanguage === "russian") {
       return "Средний - может обсуждать знакомые темы";
     }
@@ -435,7 +404,7 @@ const VoiceChat = () => {
   };
 
   const getPracticeDescription = () => {
-    const { practice, native } = getLanguagePair(currentLanguage);
+    const { practice, native } = getLanguagePair();
     
     if (currentLanguage === "english") {
       return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}. The AI will respond to you in ${practice} and help you practice.`;
@@ -464,7 +433,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "indonesian") {
       return `Latih kemampuan berbicara ${practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam ${practice}. AI akan merespons Anda dalam ${practice} dan membantu Anda berlatih.`;
     }
-    return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
+    return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
 
   const getAIModelInfoText = () => {
@@ -573,7 +542,7 @@ const VoiceChat = () => {
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
 
-  const { practice, native } = getLanguagePair(currentLanguage);
+  const { practice, native } = getLanguagePair();
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
@@ -728,95 +697,4 @@ const VoiceChat = () => {
                 {conversationHistory.map((message, index) => (
                   <div 
                     key={index} 
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div 
-                      className={`max-w-[80%] rounded-lg p-3 ${
-                        message.role === 'user' 
-                          ? 'bg-blue-100 text-gray-800' 
-                          : 'bg-green-100 text-gray-800'
-                      }`}
-                    >
-                      <p className="text-sm">{message.content}</p>
-                      {/* Always show translation for Hindi users when it's an AI message */}
-                      {((message.translation && message.translation.trim() !== "") || 
-                       (message.role === 'assistant' && currentLanguage === "hindi")) && (
-                        <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
-                          <span className="font-medium">{t("translation")}:</span> {message.translation || "अनुवाद उपलब्ध नहीं है"}
-                        </p>
-                      )}
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(message.timestamp).toLocaleTimeString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                <div ref={conversationEndRef} />
-              </div>
-            </ScrollArea>
-          </Card>
-        )}
-
-        <Card className="p-6">
-          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            {t("tryThesePhrases")}
-          </p>
-          
-          <div className="space-y-6">
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourTargetLanguage")}: ({practice})
-              </h4>
-              <ul className="space-y-2">
-                {targetLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`target-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourNativeLanguage")}: ({native})
-              </h4>
-              <ul className="space-y-2">
-                {nativeLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`native-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Card>
-        
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
-          <p className="text-sm text-gray-600 mb-3">
-            {getPracticeTipsText()}
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-            <li>{t("askQuestions")}</li>
-            <li>{t("practiceCommonPhrases")}</li>
-            <li>{t("describeWhatYouSee")}</li>
-            <li>{t("practiceVocabularyForSpecific")}</li>
-          </ul>
-        </div>
-      </div>
-      
-      <audio ref={audioRef} className="hidden" />
-    </div>
-  );
-};
-
-export default VoiceChat;
+                    className={`flex ${
