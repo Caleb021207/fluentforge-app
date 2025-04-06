@@ -38,7 +38,8 @@ const LanguageSelectionCard = ({
     japanese: "🇯🇵 日本語",
     russian: "🇷🇺 Русский",
     ukrainian: "🇺🇦 Українська",
-    hindi: "🇮🇳 हिन्दी"
+    hindi: "🇮🇳 हिन्दी",
+    indonesian: "🇮🇩 Bahasa Indonesia"
   };
 
   return (
