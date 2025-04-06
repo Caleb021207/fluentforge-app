@@ -33,7 +33,6 @@ const practiceTranslations: TranslationRecord = {
   getSkillsAssessment: "Отримати оцінку навичок",
   reading: "Читання",
   writing: "Письмо",
-  speaking: "Розмова",
   listening: "Слухання",
   overallLevel: "Загальний рівень",
   startChatting: "Почніть спілкуватися з вашим ШІ-репетитором!",
