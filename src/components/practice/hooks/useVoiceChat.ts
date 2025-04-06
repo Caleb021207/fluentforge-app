@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -201,18 +200,7 @@ export const useVoiceChat = () => {
         return;
       }
 
-      let selectedAgentId = getAgentIdForLanguage(currentLanguage);
-      
-      if (currentLanguage === "japanese") {
-        selectedAgentId = "pViLJpVDvXIBEL7BXbam";
-      } else if (currentLanguage === "russian") {
-        selectedAgentId = "rlHSjx9Y19IqjWTspVRq";
-      } else if (currentLanguage === "ukrainian") {
-        selectedAgentId = "eu1E63tLoKFYPB28lWks";
-      } else if (currentLanguage === "hindi") {
-        selectedAgentId = "KZaHLSD2sG8AptT09Feu";
-      }
-      
+      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
       console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
