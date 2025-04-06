@@ -362,7 +362,7 @@ const VoiceChat = () => {
       nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "hindi") {
-      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key] || `Missing Hindi translation for ${key}`);
+      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
@@ -414,7 +414,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "portuguese") {
       return `Pratique suas habilidades de fala em ${getLanguagePair().practice} con nosso chat de voz. Clique no botón do microfone e comece a falar em ${getLanguagePair().practice}. A IA responderá a você e o ajudará a praticar.`;
     } else if (currentLanguage === "korean") {
-      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI는 ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
+      return `저희 음성 채팅으로 ${getLanguagePair().practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${getLanguagePair().practice}로 말하기 시작하세요. AI��� ${getLanguagePair().practice}로 응답하고 연습을 도와드릴 것입니다.`;
     } else if (currentLanguage === "arabic") {
       return `مارس مهارات التحدث باللغة ${getLanguagePair().practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair().practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair().practice} ويساعدك على التدريب.`;
     } else if (currentLanguage === "mandarin") {
@@ -428,9 +428,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return "हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल का अभ्यास करें। माइक्���ोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें।";
+      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल का अभ्यास करें। माइक्रोफोन बटन पर क्लिक करें और अंग्रेजी में बोलना शुरू करें। AI आपको अंग्रेजी में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
     }
     return `Practice your ${getLanguagePair().practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair().practice}.`;
   };
@@ -447,7 +447,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "arabic") {
       return "نموذج الذكاء الاصطناعي: نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
     } else if (currentLanguage === "mandarin") {
-      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
+      return "AI模型：我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回���。";
     } else if (currentLanguage === "vietnamese") {
       return "Mô hình AI: Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
     } else if (currentLanguage === "french") {
@@ -455,7 +455,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return "AIモデル：自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
     } else if (currentLanguage === "russian") {
-      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации природної мови, с синтезом речи на основе браузера для голосовых відповідей.";
+      return "Модель ИИ: Мы используем GPT-4o-mini от OpenAI для понимания и генерации естественного языка, с синтезом речи на основе браузера для голосовых відповідей.";
     } else if (currentLanguage === "ukrainian") {
       return "Модель ШІ: Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
     } else if (currentLanguage === "hindi") {
