@@ -26,7 +26,7 @@ const LoginPrompt = () => {
           {t("premiumVoiceTitle")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {t("premiumVoiceChatDesc", {practice: "Spanish"})}
+          {t("premiumVoiceChatDescription", {practice: "Spanish"})}
         </p>
       </div>
       

@@ -39,6 +39,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   
   // Premium voice benefits
   premiumVoiceChatDesc: "हमारे प्रीमियम AI ट्यूटर के साथ {{practice}} का अभ्यास करने के लिए प्राकृतिक आवाज वार्तालाप करें! AI आपके व्याकरण, शब्दावली और उच्चारण को सुधारने में मदद करेगा।",
+  premiumVoiceChatDescription: "हमारे प्रीमियम AI ट्यूटर के साथ {{practice}} का अभ्यास करने के लिए प्राकृतिक आवाज वार्तालाप करें! AI आपके व्याकरण, शब्दावली और उच्चारण को सुधारने में मदद करेगा।",
   premiumVoiceNote: "प्रीमियम वॉइस चैट का उपयोग प्रति सप्ताह एक 15-मिनट के सत्र तक सीमित है",
   premiumVoiceNoteWithReset: "प्रीमियम वॉइस चैट प्रति सप्ताह 15 मिनट के अभ्यास समय की अनुमति देता है। आपका समय हर सोमवार सुबह 6:00 बजे सेंट्रल टाइम पर रीसेट होता है।",
   benefitNaturalVoice: "ElevenLabs तकनीक का उपयोग करके प्राकृतिक, मानव जैसी आवाज़ बातचीत",
@@ -53,6 +54,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   timeLimit5MinReached: "5 मिनट की समय सीमा पूरी हो गई है।",
   signIn: "साइन इन करें",
   voiceChatEnded: "वॉइस चैट समाप्त हुआ",
+  premiumSessionLimitReached: "साप्ताहिक सीमा पहुंच गई"
 };
 
 export default premiumVoiceTranslations;
