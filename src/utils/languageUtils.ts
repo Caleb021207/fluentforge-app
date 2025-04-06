@@ -77,11 +77,6 @@ export const getLanguagePair = (currentLanguage: string) => {
         practice: "English",
         native: "Indonesian"
       };
-    case "turkish":
-      return {
-        practice: "English",
-        native: "Turkish"
-      };
     default:
       return {
         practice: "Spanish",
@@ -109,8 +104,7 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     "russian": "Русский",
     "ukrainian": "Українська",
     "hindi": "हिन्दी",
-    "indonesian": "Bahasa Indonesia",
-    "turkish": "Türkçe"
+    "indonesian": "Bahasa Indonesia"
   };
   
   return languageMap[language.toLowerCase()] || language;

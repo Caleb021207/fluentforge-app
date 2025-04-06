@@ -13,7 +13,6 @@ import russianTranslations from "./russian/index";
 import ukrainianTranslations from "./ukrainian/index";
 import hindiTranslations from "./hindi/index";
 import indonesianTranslations from "./indonesian/index";
-import turkishTranslations from "./turkish/index";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
@@ -29,8 +28,7 @@ const translations: LanguageTranslations = {
   russian: russianTranslations,
   ukrainian: ukrainianTranslations,
   hindi: hindiTranslations,
-  indonesian: indonesianTranslations,
-  turkish: turkishTranslations
+  indonesian: indonesianTranslations
 };
 
 export default translations;
@@ -50,7 +48,6 @@ export const AVAILABLE_LANGUAGES = {
   ukrainian: "Українська",
   hindi: "हिन्दी",
   indonesian: "Bahasa Indonesia",
-  turkish: "Türkçe",
 };
 
 // Default language
