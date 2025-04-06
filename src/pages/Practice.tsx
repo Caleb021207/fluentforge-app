@@ -30,7 +30,8 @@ const Practice = () => {
   const targetLanguage = currentLanguage === "english" ? "Spanish" : 
                         currentLanguage === "french" ? "English" :
                         currentLanguage === "japanese" ? "English" :
-                        currentLanguage === "hindi" ? "English" : "English";
+                        currentLanguage === "hindi" ? "English" :
+                        currentLanguage === "indonesian" ? "English" : "English";
 
   return (
     <div className="max-w-4xl mx-auto p-4">

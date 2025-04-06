@@ -28,6 +28,8 @@ export const getAgentIdForLanguage = (language: string): string => {
       return "eu1E63tLoKFYPB28lWks"; // English tutor for Ukrainian speakers
     case "hindi":
       return "KZaHLSD2sG8AptT09Feu"; // English tutor for Hindi speakers
+    case "indonesian":
+      return "n0xawTpIZ6Zojiox0KZ5"; // English tutor for Indonesian speakers
     default:
       return "AOv9JDhkEdMmiU61vHg9"; // Default to Spanish tutor for English speakers
   };

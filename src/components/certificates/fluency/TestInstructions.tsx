@@ -8,8 +8,9 @@ const TestInstructions = () => {
   
   // Determine the target language based on user's native language
   const getInstructions = () => {
-    if (currentLanguage === "spanish" || currentLanguage === "portuguese" || currentLanguage === "korean") {
-      // For Spanish/Portuguese/Korean speakers learning English
+    if (currentLanguage === "spanish" || currentLanguage === "portuguese" || 
+        currentLanguage === "korean" || currentLanguage === "indonesian") {
+      // For Spanish/Portuguese/Korean/Indonesian speakers learning English
       return (
         <ul className="text-sm text-gray-600 space-y-1 pl-6 list-disc">
           <li>{t("speakNaturallyInEnglish")}</li>
@@ -20,7 +21,7 @@ const TestInstructions = () => {
         </ul>
       );
     } else {
-      // For English speakers learning Spanish/Portuguese/Korean
+      // For English speakers learning Spanish/Portuguese/Korean/Indonesian
       return (
         <ul className="text-sm text-gray-600 space-y-1 pl-6 list-disc">
           <li>{t("speakNaturallyInTargetLanguage")}</li>
