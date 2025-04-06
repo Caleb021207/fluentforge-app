@@ -23,7 +23,8 @@ const Practice = () => {
   const {
     voiceChatTimeRemaining,
     startVoiceConversation,
-    endVoiceConversation
+    endVoiceConversation,
+    isConversationActive
   } = useVoiceChat();
 
   const targetLanguage = currentLanguage === "english" ? "Spanish" : 
