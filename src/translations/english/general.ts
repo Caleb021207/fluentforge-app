@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -72,7 +73,6 @@ const generalTranslations: TranslationRecord = {
   parentalConsentCheckbox: "I confirm that I have parental consent to use this application",
   parentalConsentRequired: "Parental consent is required for users under 13 years old",
   pleaseSelectBirthYear: "Please select your birth year",
-  continue: "Continue",
   privacyPolicyNote: "By continuing, you agree to our Privacy Policy and Terms of Service",
   
   // Parental Controls

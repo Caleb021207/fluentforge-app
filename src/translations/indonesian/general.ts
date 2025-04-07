@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -35,7 +36,6 @@ const generalTranslations: TranslationRecord = {
   next: "Berikutnya",
   previous: "Sebelumnya",
   back: "Kembali",
-  continue: "Lanjut",
   finish: "Selesai",
   restart: "Mulai Ulang",
   language: "Bahasa",
@@ -63,7 +63,6 @@ const generalTranslations: TranslationRecord = {
   parentalConsentCheckbox: "Saya mengonfirmasi bahwa saya memiliki izin orang tua untuk menggunakan aplikasi ini",
   parentalConsentRequired: "Izin orang tua diperlukan untuk pengguna di bawah 13 tahun",
   pleaseSelectBirthYear: "Silakan pilih tahun lahir Anda",
-  continue: "Lanjutkan",
   privacyPolicyNote: "Dengan melanjutkan, Anda menyetujui Kebijakan Privasi dan Ketentuan Layanan kami",
   
   // Parental Controls
