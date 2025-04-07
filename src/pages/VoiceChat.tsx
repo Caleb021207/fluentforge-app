@@ -321,6 +321,184 @@ const VoiceChat = () => {
     }
   };
 
+  const getConversationStarters = () => {
+    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
+    
+    let nativeLanguagePhrases;
+    let targetLanguagePhrases;
+    
+    if (currentLanguage === "english") {
+      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+    } else if (currentLanguage === "spanish") {
+      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "portuguese") {
+      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "mandarin") {
+      nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "vietnamese") {
+      nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "french") {
+      nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "japanese") {
+      nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "russian") {
+      nativeLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "ukrainian") {
+      nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "hindi") {
+      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "indonesian") {
+      nativeLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else {
+      nativeLanguagePhrases = phraseKeys.map(key => t(key));
+      targetLanguagePhrases = phraseKeys.map(key => {
+        const englishPhrase = englishTranslations[key];
+        return englishPhrase || key;
+      });
+    }
+    
+    return { nativeLanguagePhrases, targetLanguagePhrases };
+  };
+
+  const handlePhraseClick = (phrase: string) => {
+    handleSendTranscript(phrase);
+  };
+
+  const clearConversation = () => {
+    setConversationHistory([]);
+    setApiConversationHistory([]);
+    setTranscript("");
+    setGptResponse("");
+    setTranslation("");
+    toast({
+      title: t("Success"),
+      description: t("conversationHistoryCleared"),
+    });
+  };
+
+  const getAIModelLabelText = () => {
+    switch (currentLanguage) {
+      case "english":
+        return "AI Model:";
+      case "spanish":
+        return "Modelo de IA:";
+      case "portuguese":
+        return "Modelo de IA:";
+      case "korean":
+        return "AI 모델:";
+      case "arabic":
+        return "نموذج الذكاء الاصطناعي:";
+      case "mandarin":
+        return "AI模型：";
+      case "vietnamese":
+        return "Mô hình AI:";
+      case "french":
+        return "Modèle d'IA :";
+      case "japanese":
+        return "AIモデル：";
+      case "russian":
+        return "Модель ИИ:";
+      case "ukrainian":
+        return "Модель ШІ:";
+      case "hindi":
+        return "AI मॉडल:";
+      case "indonesian":
+        return "Model AI:";
+      default:
+        return "AI Model:";
+    }
+  };
+
+  const getAIModelInfoText = () => {
+    if (currentLanguage === "english") {
+      return "We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
+    } else if (currentLanguage === "spanish") {
+      return "Estamos utilizando GPT-4o-mini de OpenAI para la comprensión y generación de lenguaje natural, con la Síntesis de Voz incorporada en el navegador para las respuestas de voz.";
+    } else if (currentLanguage === "portuguese") {
+      return "Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
+    } else if (currentLanguage === "korean") {
+      return "자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
+    } else if (currentLanguage === "arabic") {
+      return "نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
+    } else if (currentLanguage === "mandarin") {
+      return "我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
+    } else if (currentLanguage === "vietnamese") {
+      return "Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
+    } else if (currentLanguage === "french") {
+      return "Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la g��nération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
+    } else if (currentLanguage === "japanese") {
+      return "自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
+    } else if (currentLanguage === "russian") {
+      return "Мы используем GPT-4o-mini от OpenAI для понимания и генерации природної мови, с синтезом речи на основе браузера для голосовых відповідей.";
+    } else if (currentLanguage === "ukrainian") {
+      return "Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
+    } else if (currentLanguage === "hindi") {
+      return "हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
+    } else if (currentLanguage === "indonesian") {
+      return "Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.";
+    }
+    return "Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
+  };
+
+  const getBrowserTTSNote = () => {
+    if (currentLanguage === "arabic") {
+      return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
+    } else if (currentLanguage === "korean") {
+      return t("browserBasedTTS");
+    } else if (currentLanguage === "english") {
+      return "Note: This uses browser-based text-to-speech. For premium voice quality with ElevenLabs, try our Premium Voice Chat.";
+    } else if (currentLanguage === "spanish") {
+      return "Nota: Esto utiliza la síntesis de voz basada en el navegador. Para una calidad de voz premium con ElevenLabs, prueba nuestro Chat de Voz Premium.";
+    } else if (currentLanguage === "portuguese") {
+      return "Nota: Isso usa síntese de fala baseada no navegador. Para qualidade de voz premium com ElevenLabs, experimente nosso Chat de Voz Premium.";
+    } else if (currentLanguage === "mandarin") {
+      return "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。";
+    } else if (currentLanguage === "vietnamese") {
+      return "Lưu ý: Tính năng này sử dụng chuyển văn bản thành giọng nói dựa trên trình duyệt. Để có chất lượng giọng nói cao cấp với ElevenLabs, hãy thử Trò chuyện bằng giọng nói cao cấp của chúng tôi.";
+    } else if (currentLanguage === "french") {
+      return "Remarque : Ce système utilise la synthèse vocale basée sur le navigateur. Pour une qualité vocale premium avec ElevenLabs, essayez notre Chat Vocal Premium.";
+    } else if (currentLanguage === "japanese") {
+      return "注意：これはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。";
+    } else if (currentLanguage === "russian") {
+      return "Примечание: Эта система использует синтез речи на основе браузера. Для преми��льного качества голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
+    } else if (currentLanguage === "hindi") {
+      return "नोट: यह ब्राउज़र-आधारित टेक्स्ट-टू-स्पीच का उपयोग करता है। ElevenLabs के साथ प्रीमियम आवाज़ की गुणवत्ता के लिए, हमारे प्रीमियम वॉइस चैट का प्रयास करें।";
+    } else if (currentLanguage === "indonesian") {
+      return "Catatan: Ini menggunakan text-to-speech berbasis browser. Untuk kualitas suara premium dengan ElevenLabs, coba Obrolan Suara Premium kami.";
+    }
+    return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
+  };
+
+  const getPracticeLevelText = () => {
+    if (currentLanguage === "mandarin") {
+      return "练习水平";
+    } else if (currentLanguage === "vietnamese") {
+      return "Cấp độ thực hành";
+    } else if (currentLanguage === "french") {
+      return "Niveau de pratique";
+    } else if (currentLanguage === "japanese") {
+      return "練習レベル";
+    } else if (currentLanguage === "russian") {
+      return "Уровень практики";
+    } else if (currentLanguage === "hindi") {
+      return "अभ्यास स्तर";
+    } else if (currentLanguage === "indonesian") {
+      return "Tingkat Latihan";
+    }
+    return t("practiceLevel") || "Practice Level";
+  };
+
   const getPracticeDescription = () => {
     if (currentLanguage === "english") {
       return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
@@ -350,6 +528,33 @@ const VoiceChat = () => {
       return `Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.`;
     }
     return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
+  };
+
+  const getPracticeTipsText = () => {
+    if (currentLanguage === "english") {
+      return "Use this tool to improve your speaking and listening skills. Here are some tips:";
+    } else if (currentLanguage === "spanish") {
+      return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
+    } else if (currentLanguage === "portuguese") {
+      return "Use esta ferramenta para melhorar suas habilidades de fala e escuta. Aqui estão algumas dicas:";
+    } else if (currentLanguage === "arabic") {
+      return "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:";
+    } else if (currentLanguage === "mandarin") {
+      return "使用此工具提高口语和听力技能。以下是一些提示：";
+    } else if (currentLanguage === "vietnamese") {
+      return "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:";
+    } else if (currentLanguage === "french") {
+      return "Utilisez cet outil pour améliorer vos compétences en expression orale et en compréhension. Voici quelques conseils :";
+    } else if (currentLanguage === "japanese") {
+      return "このツールを使用してスピーキングとリスニングのスキルを向上させましょう。いくつかのヒント：";
+    } else if (currentLanguage === "russian") {
+      return "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:";
+    } else if (currentLanguage === "hindi") {
+      return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
+    } else if (currentLanguage === "indonesian") {
+      return "Gunakan alat ini untuk meningkatkan keterampilan berbicara dan mendengarkan Anda. Berikut beberapa tips:";
+    }
+    return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
 
   const { practice, native } = getLanguagePair(currentLanguage);
