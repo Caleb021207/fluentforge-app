@@ -34,6 +34,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   benefitNaturalVoice: "ElevenLabs 기술을 사용한 자연스럽고 인간적인 음성 상호작용",
   benefitAccentPronunciation: "몰입형 학습을 위한 정확한 억양과 발음",
   benefitRegularPractice: "매주 월요일 오전 6시에 재설정되는 10분의 주간 연습 시간",
+  timeLimit10MinReached: "10분 시간 제한에 도달했습니다",
+  
+  // Voice chat controls
+  startVoiceChat: "음성 채팅 시작",
+  stopVoiceChat: "음성 채팅 중지",
+  voiceChatEnded: "음성 채팅이 종료되었습니다",
+  speaking: "말하는 중...",
+  startChatting: "채팅 시작하기",
+  
+  // Added missing key
+  premiumSessionLimitReached: "프리미엄 세션 제한에 도달했습니다"
 };
 
 export default premiumVoiceTranslations;

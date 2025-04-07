@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
@@ -158,7 +157,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   timeLimit10MinReached: "已达到10分钟时间限制",
   login: "登录",
   stopVoiceChat: "停止语音聊天",
-  Success: "成功"
+  Success: "成功",
+  premiumSessionLimitReached: "已达到高级会话限制"
 };
 
 export default premiumVoiceTranslations;

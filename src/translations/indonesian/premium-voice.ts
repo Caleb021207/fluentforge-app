@@ -6,7 +6,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   premiumVoiceChatDescription: "Latih kemampuan bicara {{practice}} Anda dengan asisten suara AI berkualitas tinggi. Cukup klik tombol mulai dan mulai berbicara.",
   premiumVoiceNoteWithReset: "Catatan: Waktu Obrolan Premium dibatasi hingga 10 menit per hari. Batas waktu direset pada tengah malam UTC.",
   voiceChatEnded: "Obrolan Suara Berakhir",
-  timeLimit5MinReached: "Batas waktu 10 menit telah tercapai",
+  timeLimit10MinReached: "Batas waktu 10 menit telah tercapai",
   stopVoiceChat: "Hentikan Obrolan Suara",
   startVoiceChat: "Mulai Obrolan Suara",
   remaining: "tersisa",
@@ -62,7 +62,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   benefitRegularPractice: "10 menit waktu latihan mingguan, direset setiap Senin jam 6:00 pagi Waktu Tengah",
   
   conversationHistoryCleared: "Riwayat percakapan dibersihkan",
-  failedToCreateSession: "Gagal membuat sesi"
+  failedToCreateSession: "Gagal membuat sesi",
+  speaking: "Berbicara...",
+  startChatting: "Mulai mengobrol",
+  
+  // Added missing key
+  premiumSessionLimitReached: "Batas Sesi Premium Tercapai"
 };
 
 export default premiumVoiceTranslations;

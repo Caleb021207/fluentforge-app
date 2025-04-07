@@ -34,6 +34,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   benefitNaturalVoice: "تفاعلات صوتية طبيعية وإنسانية باستخدام تقنية ElevenLabs",
   benefitAccentPronunciation: "لهجة ونطق دقيقين للتعلم الغامر",
   benefitRegularPractice: "10 دقائق من وقت التدريب أسبوعياً، مع إعادة التعيين كل يوم اثنين الساعة 6:00 صباحاً",
+  timeLimit10MinReached: "تم الوصول إلى الحد الزمني 10 دقائق",
+  
+  // Voice chat controls
+  startVoiceChat: "بدء الدردشة الصوتية",
+  stopVoiceChat: "إيقاف الدردشة الصوتية",
+  voiceChatEnded: "انتهت الدردشة الصوتية",
+  speaking: "يتحدث...",
+  startChatting: "بدء الدردشة",
+  
+  // Added missing key
+  premiumSessionLimitReached: "تم الوصول إلى حد الجلسة المتميزة"
 };
 
 export default premiumVoiceTranslations;

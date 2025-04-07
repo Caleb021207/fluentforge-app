@@ -40,9 +40,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   startVoiceChat: "Iniciar chat de voz",
   stopVoiceChat: "Parar chat de voz",
   voiceChatEnded: "Chat de voz encerrado",
-  timeLimit5MinReached: "Limite de tempo de 10 minutos atingido",
+  timeLimit10MinReached: "Limite de tempo de 10 minutos atingido",
   speaking: "Falando...",
-  startChatting: "Começar a conversar"
+  startChatting: "Começar a conversar",
+  
+  // Added missing key
+  premiumSessionLimitReached: "Limite de Sessão Premium Atingido"
 };
 
 export default premiumVoiceTranslations;

@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
@@ -49,7 +50,10 @@ const premiumVoiceTranslations: TranslationRecord = {
   voiceChatEnded: "Trò chuyện bằng giọng nói đã kết thúc",
   timeLimit10MinReached: "Đã đạt đến giới hạn thời gian 10 phút",
   speaking: "Đang nói...",
-  startChatting: "Bắt đầu trò chuyện"
+  startChatting: "Bắt đầu trò chuyện",
+  
+  // Added missing key
+  premiumSessionLimitReached: "Đã đạt giới hạn phiên cao cấp"
 };
 
 export default premiumVoiceTranslations;

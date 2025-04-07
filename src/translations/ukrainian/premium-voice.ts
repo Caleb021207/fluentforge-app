@@ -157,7 +157,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   timeLimit10MinReached: "Досягнуто 10-хвилинного ліміту часу",
   login: "Увійти",
   stopVoiceChat: "Зупинити голосовий чат",
-  Success: "Успіх"
+  Success: "Успіх",
+  premiumSessionLimitReached: "Досягнуто ліміту преміум сесій"
 };
 
 export default premiumVoiceTranslations;

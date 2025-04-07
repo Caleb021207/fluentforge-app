@@ -23,6 +23,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   cooldownPeriodDescription: "You need to wait {{time}} before starting another premium voice chat session.",
   resetsAt6AM: "Your 10-minute weekly allowance will reset in {{time}} (Monday at 6:00 AM)",
   dailyLimitReached: "You've used your 10-minute weekly allowance. Time will reset on Monday at 6:00 AM.",
+  premiumSessionLimitReached: "Weekly Premium Session Limit Reached",
   
   // Login related messages
   loginRequired: "Login Required",

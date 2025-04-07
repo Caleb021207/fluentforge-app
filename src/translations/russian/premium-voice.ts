@@ -23,6 +23,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   cooldownPeriodDescription: "Вам нужно подождать {{time}} перед началом следующего премиум голосового чата.",
   resetsAt6AM: "Ваш еженедельный лимит в 10 минут будет сброшен через {{time}} (понедельник в 6:00 утра)",
   dailyLimitReached: "Вы использовали свой еженедельный лимит в 10 минут. Время будет сброшено в понедельник в 6:00 утра.",
+  premiumSessionLimitReached: "Достигнут недельный лимит премиум-сессий",
   
   // Login related messages
   loginRequired: "Требуется авторизация",

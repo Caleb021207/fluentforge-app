@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
@@ -44,7 +45,10 @@ const premiumVoiceTranslations: TranslationRecord = {
   voiceChatEnded: "音声チャットが終了しました",
   timeLimit10MinReached: "10分の制限時間に達しました",
   speaking: "話し中...",
-  startChatting: "チャットを開始"
+  startChatting: "チャットを開始",
+  
+  // Added missing key
+  premiumSessionLimitReached: "プレミアムセッション制限に達しました"
 };
 
 export default premiumVoiceTranslations;

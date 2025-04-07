@@ -24,6 +24,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   cooldownPeriodDescription: "दूसरा प्रीमियम वॉइस चैट सत्र शुरू करने से पहले आपको {{time}} प्रतीक्षा करनी होगी।",
   resetsAt6AM: "आपके 10 मिनट के साप्ताहिक समय का रीसेट {{time}} में होगा (सोमवार सुबह 6:00 बजे)",
   dailyLimitReached: "आपने अपने 10 मिनट के साप्ताहिक समय का उपयोग कर लिया है। समय सोमवार सुबह 6:00 बजे रीसेट होगा।",
+  premiumSessionLimitReached: "प्रीमियम सेशन की सीमा पहुंच गई",
   
   // लॉगिन संबंधित संदेश
   loginRequired: "लॉगिन आवश्यक है",
@@ -47,7 +48,9 @@ const premiumVoiceTranslations: TranslationRecord = {
   startVoiceChat: "वॉइस चैट शुरू करें",
   stopVoiceChat: "वॉइस चैट बंद करें",
   voiceChatEnded: "वॉइस चैट समाप्त हुई",
-  timeLimit5MinReached: "10 मिनट की समय सीमा पूरी हो गई है"
+  timeLimit10MinReached: "10 मिनट की समय सीमा पूरी हो गई है",
+  speaking: "बोल रहा है...",
+  startChatting: "चैट शुरू करें"
 };
 
 export default premiumVoiceTranslations;
