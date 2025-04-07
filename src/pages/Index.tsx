@@ -7,12 +7,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
+import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog";
 import { useLocalization } from "@/context/LocalizationContext";
+import { needsAgeVerification } from "@/utils/contentSafetyUtils";
+import { Shield } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
   const { t, setCurrentLanguage } = useLocalization();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const [isAgeVerificationOpen, setIsAgeVerificationOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +42,12 @@ const Index = () => {
     
     if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
     if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
+    
+    // Check if age verification is needed
+    const needsVerification = needsAgeVerification();
+    if (needsVerification) {
+      setIsAgeVerificationOpen(true);
+    }
 
     return () => {
       subscription.unsubscribe();
@@ -176,6 +186,17 @@ const Index = () => {
               </Button>
             </Link>
           </div>
+          
+          <div className="mt-8 flex justify-center">
+            <Link to="/settings" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
+              <Shield size={16} className="mr-1" />
+              {t("parentalControls")}
+            </Link>
+            <span className="mx-2 text-gray-400">•</span>
+            <Link to="/safety-policy" className="text-sm text-gray-500 hover:text-gray-700">
+              {t("safetyPolicy")}
+            </Link>
+          </div>
         </motion.div>
       </div>
 
@@ -190,6 +211,11 @@ const Index = () => {
         setPassword={setPassword}
         handleEmailAuth={handleEmailAuth}
         isLoading={isLoading}
+      />
+      
+      <AgeVerificationDialog 
+        isOpen={isAgeVerificationOpen}
+        onOpenChange={setIsAgeVerificationOpen}
       />
     </div>
   );

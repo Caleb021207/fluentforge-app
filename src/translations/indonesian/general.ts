@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -54,7 +53,68 @@ const generalTranslations: TranslationRecord = {
   dailyLimitReached: "Batas harian tercapai",
   loginRequired: "Login diperlukan",
   failedToCreateSession: "Gagal membuat sesi",
-  cefrB1Description: "Menengah - Dapat mendiskusikan topik-topik yang dikenal"
+  cefrB1Description: "Menengah - Dapat mendiskusikan topik-topik yang dikenal",
+  
+  // CIPA Compliance Related
+  ageVerification: "Verifikasi Usia",
+  ageVerificationDescription: "Silakan verifikasi usia Anda untuk melanjutkan penggunaan aplikasi ini.",
+  birthYear: "Tahun Lahir",
+  selectYear: "Pilih Tahun",
+  parentalConsentCheckbox: "Saya mengonfirmasi bahwa saya memiliki izin orang tua untuk menggunakan aplikasi ini",
+  parentalConsentRequired: "Izin orang tua diperlukan untuk pengguna di bawah 13 tahun",
+  pleaseSelectBirthYear: "Silakan pilih tahun lahir Anda",
+  continue: "Lanjutkan",
+  privacyPolicyNote: "Dengan melanjutkan, Anda menyetujui Kebijakan Privasi dan Ketentuan Layanan kami",
+  
+  // Parental Controls
+  parentalControls: "Kontrol Orang Tua",
+  parentalControlsDescription: "Konfigurasikan pengaturan keamanan untuk melindungi pengguna yang lebih muda",
+  enterParentalPin: "Masukkan PIN Orang Tua",
+  unlock: "Buka Kunci",
+  defaultPinNote: "PIN default adalah 0000 jika Anda belum mengaturnya",
+  strictContentFiltering: "Pemfilteran Konten Ketat",
+  strictContentFilteringDescription: "Filter konten yang tidak pantas untuk pengguna yang lebih muda",
+  timeUsageLimits: "Batas Waktu Penggunaan",
+  timeUsageLimitsDescription: "Tetapkan batas waktu harian untuk penggunaan aplikasi",
+  dailyTimeLimit: "Batas Waktu Harian",
+  minutes: "menit",
+  changeParentalPin: "Ubah PIN Orang Tua",
+  newPin: "PIN Baru",
+  confirmPin: "Konfirmasi PIN",
+  updatePin: "Perbarui PIN",
+  lockSettings: "Kunci Pengaturan",
+  cipaCompliance: "Sesuai CIPA",
+  pinTooShort: "PIN harus minimal 4 digit",
+  pinMismatch: "PIN tidak cocok",
+  pinUpdated: "PIN berhasil diperbarui",
+  
+  // Safety Policy
+  safetyPolicy: "Kebijakan Keamanan",
+  cipaComplianceStatement: "Pernyataan Kepatuhan CIPA",
+  cipaComplianceDescription: "Aplikasi kami berkomitmen untuk menyediakan lingkungan belajar yang aman sesuai dengan Undang-Undang Perlindungan Internet Anak (CIPA).",
+  contentFiltering: "Pemfilteran Konten",
+  contentFilteringDescription: "Kami menerapkan langkah-langkah berikut untuk memastikan konten yang aman:",
+  contentFilteringPoint1: "Pemfilteran otomatis bahasa dan konten yang tidak pantas",
+  contentFilteringPoint2: "Materi pembelajaran yang sesuai dengan usia",
+  contentFilteringPoint3: "Moderasi konten yang didukung AI untuk percakapan",
+  parentalControlsFullDescription: "Kontrol orang tua kami memungkinkan orang dewasa mengelola cara anak-anak menggunakan aplikasi:",
+  parentalControlsPoint1: "Pengaturan yang dilindungi PIN untuk mencegah perubahan yang tidak sah",
+  parentalControlsPoint2: "Batas waktu untuk mengelola waktu layar",
+  parentalControlsPoint3: "Tingkat pemfilteran konten yang dapat disesuaikan berdasarkan usia",
+  userSafetyTips: "Tips Keamanan untuk Pengguna",
+  userSafetyTip1: "Jangan pernah berbagi informasi pribadi dengan asisten AI",
+  userSafetyTip2: "Laporkan segera konten yang tidak pantas",
+  userSafetyTip3: "Selalu gunakan aplikasi dengan bimbingan orang tua jika di bawah 13 tahun",
+  userSafetyTip4: "Perhatikan waktu layar dan ambil istirahat secara teratur",
+  contactInfo: "Informasi Kontak",
+  safetyPolicyContactInfo: "Jika Anda memiliki pertanyaan tentang praktik keamanan kami atau ingin melaporkan masalah, silakan hubungi kami di safety@palavox.com",
+  
+  // Settings
+  languageSettingsComingSoon: "Pengaturan bahasa akan segera hadir",
+  notificationSettingsComingSoon: "Pengaturan notifikasi akan segera hadir",
+  
+  // New general settings
+  notifications: "Notifikasi"
 };
 
 export default generalTranslations;
