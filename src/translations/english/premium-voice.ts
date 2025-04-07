@@ -43,6 +43,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   benefitNaturalVoice: "Natural, human-like voice interactions using ElevenLabs technology",
   benefitAccentPronunciation: "Accurate accent and pronunciation for immersive learning",
   benefitRegularPractice: "10 minutes of practice time weekly, resetting each Monday at 6:00 AM Central Time",
+  timeLimit10MinReached: "10-minute time limit reached",
 };
 
 export default premiumVoiceTranslations;

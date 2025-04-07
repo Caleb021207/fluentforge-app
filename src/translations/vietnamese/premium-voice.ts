@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
@@ -48,7 +47,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   startVoiceChat: "Bắt đầu trò chuyện bằng giọng nói",
   stopVoiceChat: "Dừng trò chuyện bằng giọng nói",
   voiceChatEnded: "Trò chuyện bằng giọng nói đã kết thúc",
-  timeLimit5MinReached: "Đã đạt đến giới hạn thời gian 10 phút",
+  timeLimit10MinReached: "Đã đạt đến giới hạn thời gian 10 phút",
   speaking: "Đang nói...",
   startChatting: "Bắt đầu trò chuyện"
 };

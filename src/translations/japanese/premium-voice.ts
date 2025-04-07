@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
@@ -43,7 +42,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   startVoiceChat: "音声チャットを開始",
   stopVoiceChat: "音声チャットを停止",
   voiceChatEnded: "音声チャットが終了しました",
-  timeLimit5MinReached: "10分の制限時間に達しました",
+  timeLimit10MinReached: "10分の制限時間に達しました",
   speaking: "話し中...",
   startChatting: "チャットを開始"
 };

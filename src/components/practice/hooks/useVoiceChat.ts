@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -64,7 +63,7 @@ export const useVoiceChat = () => {
               endVoiceConversation();
               toast({
                 title: t("voiceChatEnded"),
-                description: t("timeLimit5MinReached"),
+                description: t("timeLimit10MinReached"),
               });
             }
             return null;

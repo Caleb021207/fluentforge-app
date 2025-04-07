@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
@@ -155,7 +154,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   error: "Помилка",
   networkConnectionIssue: "Проблема з мережевим з'єднанням",
   voiceChatEnded: "Голосовий чат завершено",
-  timeLimit5MinReached: "Досягнуто 10-хвилинного ліміту часу",
+  timeLimit10MinReached: "Досягнуто 10-хвилинного ліміту часу",
   login: "Увійти",
   stopVoiceChat: "Зупинити голосовий чат",
   Success: "Успіх"

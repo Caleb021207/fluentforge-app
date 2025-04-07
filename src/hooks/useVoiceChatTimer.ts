@@ -32,7 +32,7 @@ export const useVoiceChatTimer = ({
             onTimeExpired();
             toast({
               title: t("voiceChatEnded"),
-              description: t("timeLimit5MinReached")
+              description: t("timeLimit10MinReached")
             });
             return 0;
           }
