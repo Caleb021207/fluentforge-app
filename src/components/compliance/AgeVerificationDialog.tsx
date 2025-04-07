@@ -10,9 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 import { AlertCircle } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Slider } from "@/components/ui/slider";
 
 interface AgeVerificationDialogProps {
   isOpen: boolean;
@@ -26,6 +27,23 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   
+  const currentYear = new Date().getFullYear();
+  const startYear = currentYear - 100;
+  const years = Array.from({ length: 101 }, (_, i) => (startYear + i).toString());
+  
+  // Default to middle of the range (around 50 years old)
+  const defaultYearIndex = 50;
+  const [sliderValue, setSliderValue] = useState([defaultYearIndex]);
+  const [selectedYearIndex, setSelectedYearIndex] = useState(defaultYearIndex);
+  
+  // Update birthYear based on selectedYearIndex
+  useEffect(() => {
+    if (selectedYearIndex !== defaultYearIndex || birthYear === "") {
+      const year = years[selectedYearIndex];
+      setBirthYear(year);
+    }
+  }, [selectedYearIndex, years]);
+  
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => {
@@ -35,8 +53,10 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
     }
   }, [error]);
   
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+  const handleSliderChange = (value: number[]) => {
+    setSliderValue(value);
+    setSelectedYearIndex(value[0]);
+  };
   
   const handleVerification = () => {
     if (!birthYear) {
@@ -80,18 +100,42 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
             <label className="block text-sm font-medium mb-1">
               {t("birthYear")}
             </label>
-            <Select onValueChange={setBirthYear} value={birthYear}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={t("selectYear")} />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map((year) => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            
+            <div className="flex flex-col items-center space-y-4">
+              <div className="w-full px-10">
+                <Slider
+                  value={sliderValue}
+                  onValueChange={handleSliderChange}
+                  max={100}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              
+              <div className="h-32 w-full relative">
+                <ScrollArea className="h-full w-full border rounded-md">
+                  <div className="py-2">
+                    {years.map((year, index) => (
+                      <div 
+                        key={year} 
+                        className={`px-4 py-2 cursor-pointer text-center transition-colors
+                          ${index === selectedYearIndex ? "bg-primary/20 font-bold" : "hover:bg-muted/60"}`}
+                        onClick={() => {
+                          setSelectedYearIndex(index);
+                          setSliderValue([index]);
+                        }}
+                      >
+                        {year}
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
+              
+              <div className="text-lg font-medium text-center w-full">
+                {birthYear}
+              </div>
+            </div>
           </div>
           
           {birthYear && parseInt(birthYear) > (currentYear - 13) && (
