@@ -67,7 +67,10 @@ const premiumVoiceTranslations: TranslationRecord = {
   startChatting: "Mulai mengobrol",
   
   // Added missing key
-  premiumSessionLimitReached: "Batas Sesi Premium Tercapai"
+  premiumSessionLimitReached: "Batas Sesi Premium Tercapai",
+  
+  // Added key to fix inconsistency with failedToStartSession
+  failedToStartSession: "Gagal memulai sesi"
 };
 
 export default premiumVoiceTranslations;

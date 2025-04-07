@@ -9,6 +9,23 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Language code mapping for better TTS results
+const languageVoiceMap: Record<string, string> = {
+  "english": "alloy", // Default English voice
+  "spanish": "nova",  // Spanish-friendly voice
+  "portuguese": "nova", // Portuguese-friendly voice
+  "korean": "shimmer", // Korean-friendly voice
+  "arabic": "shimmer", // Arabic-friendly voice
+  "mandarin": "shimmer", // Mandarin-friendly voice
+  "vietnamese": "nova", // Vietnamese-friendly voice
+  "french": "echo", // French-friendly voice
+  "japanese": "onyx", // Japanese-friendly voice
+  "russian": "echo", // Russian-friendly voice
+  "ukrainian": "echo", // Ukrainian-friendly voice
+  "hindi": "nova", // Hindi-friendly voice
+  "indonesian": "nova" // Indonesian-friendly voice
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -16,7 +33,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice } = await req.json();
+    const { text, voice, language } = await req.json();
     
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
@@ -24,6 +41,14 @@ serve(async (req) => {
 
     if (!text) {
       throw new Error('Text is required');
+    }
+
+    // Determine the best voice based on language or use provided voice
+    let selectedVoice = voice;
+    if (!selectedVoice && language) {
+      const normalizedLanguage = language.toLowerCase();
+      selectedVoice = languageVoiceMap[normalizedLanguage] || 'alloy';
+      console.log(`Using voice ${selectedVoice} for language ${normalizedLanguage}`);
     }
 
     // Generate speech from text
@@ -36,7 +61,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'tts-1',
         input: text,
-        voice: voice || 'alloy', // Default to alloy if no voice specified
+        voice: selectedVoice || 'alloy', // Default to alloy if no voice specified
         response_format: 'mp3',
       }),
     });
