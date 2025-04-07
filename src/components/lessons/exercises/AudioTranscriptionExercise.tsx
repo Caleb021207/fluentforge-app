@@ -3,6 +3,9 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { useLocalization } from '@/context/LocalizationContext';
+import { getLanguagePair } from '@/utils/languageUtils';
+import { supabase } from "@/integrations/supabase/client";
 
 interface AudioTranscriptionExerciseProps {
   exercise: {
@@ -26,6 +29,7 @@ const AudioTranscriptionExercise: React.FC<AudioTranscriptionExerciseProps> = ({
   const [userInput, setUserInput] = useState('');
   const [hasPlayed, setHasPlayed] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { currentLanguage } = useLocalization();
   
   const currentAudio = exercise.audio[currentAudioIndex];
 
@@ -36,18 +40,49 @@ const AudioTranscriptionExercise: React.FC<AudioTranscriptionExerciseProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const isCorrect = compareAnswers(userInput, currentAudio.transcript);
-    
-    if (currentAudioIndex < exercise.audio.length - 1) {
-      setCurrentAudioIndex(currentAudioIndex + 1);
-      setUserInput('');
-      setHasPlayed(false);
-    } else {
-      // Last audio, complete exercise
-      onAnswer(isCorrect);
+    try {
+      // Get user's practice language based on their interface language
+      const languagePair = getLanguagePair(currentLanguage);
+      const practiceLanguage = languagePair.practice.toLowerCase();
+      
+      // Map languages to OpenAI Whisper's supported language codes
+      const languageCodeMap: Record<string, string> = {
+        'english': 'en',
+        'spanish': 'es',
+        'portuguese': 'pt',
+        'french': 'fr',
+        'mandarin': 'zh',
+        'arabic': 'ar',
+        'japanese': 'ja',
+        'korean': 'ko',
+        'russian': 'ru',
+        'ukrainian': 'uk',
+        'vietnamese': 'vi',
+        'indonesian': 'id',
+        'hindi': 'hi'
+      };
+      
+      // Default to English if language not in map
+      const languageCode = languageCodeMap[practiceLanguage] || 'en';
+      
+      // For now we'll still use the simple string comparison, but this prepares for future improvements
+      // In a real implementation, we might want to send the user input to the API for comparison
+      const isCorrect = compareAnswers(userInput, currentAudio.transcript);
+      
+      if (currentAudioIndex < exercise.audio.length - 1) {
+        setCurrentAudioIndex(currentAudioIndex + 1);
+        setUserInput('');
+        setHasPlayed(false);
+      } else {
+        // Last audio, complete exercise
+        onAnswer(isCorrect);
+      }
+    } catch (error) {
+      console.error("Error in audio transcription exercise:", error);
+      onAnswer(false);
     }
   };
 

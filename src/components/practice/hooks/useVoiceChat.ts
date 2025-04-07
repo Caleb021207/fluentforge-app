@@ -5,6 +5,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
 import { supabase } from "@/integrations/supabase/client";
+import { getLanguagePair } from "@/utils/languageUtils";
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);

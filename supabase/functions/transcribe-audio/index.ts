@@ -50,13 +50,14 @@ serve(async (req) => {
       throw new Error('OpenAI API key is not configured');
     }
 
-    const { audio } = await req.json();
+    const { audio, language } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
     }
 
     console.log("Received audio data, processing...");
+    console.log(`Language specified: ${language || 'none, will use default'}`);
     
     // Process audio in chunks
     const binaryAudio = processBase64Chunks(audio);
@@ -66,9 +67,12 @@ serve(async (req) => {
     const blob = new Blob([binaryAudio], { type: 'audio/webm' });
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
-    formData.append('language', 'es');
+    
+    // Use the provided language or default to 'es' for backward compatibility
+    const transcriptionLanguage = language || 'es';
+    formData.append('language', transcriptionLanguage);
 
-    console.log("Sending to OpenAI Whisper API...");
+    console.log(`Sending to OpenAI Whisper API with language: ${transcriptionLanguage}...`);
 
     // Send to OpenAI
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
