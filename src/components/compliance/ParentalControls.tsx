@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -7,24 +7,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Lock } from "lucide-react";
-import { getSafetyMode, setSafetyMode } from "@/utils/contentSafetyUtils";
+import { 
+  getSafetyMode, 
+  setSafetyMode, 
+  getDailyTimeLimit, 
+  areParentalControlsLocked,
+  setParentalControlsLock
+} from "@/utils/contentSafetyUtils";
 
 const ParentalControls = () => {
   const { t } = useLocalization();
-  const [isLocked, setIsLocked] = useState(true);
+  const [isLocked, setIsLocked] = useState(areParentalControlsLocked());
   const [pin, setPin] = useState("");
   const [newPin, setNewPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [safetyMode, setSafetyModeState] = useState<'strict' | 'standard'>(getSafetyMode());
-  const [timedUsage, setTimedUsage] = useState(false);
-  const [dailyTimeLimit, setDailyTimeLimit] = useState(60); // minutes
+  const [timedUsage, setTimedUsage] = useState(getDailyTimeLimit() > 0);
+  const [dailyTimeLimit, setDailyTimeLimit] = useState(getDailyTimeLimit() || 60); // minutes
   
   const storedPin = localStorage.getItem("parentalPin") || "0000";
   
   const handleUnlock = () => {
     if (pin === storedPin) {
       setIsLocked(false);
+      setParentalControlsLock(false);
       setPin("");
       setError(null);
     } else {
@@ -34,6 +41,7 @@ const ParentalControls = () => {
   
   const handleLock = () => {
     setIsLocked(true);
+    setParentalControlsLock(true);
   };
   
   const handleSavePin = () => {
@@ -67,6 +75,15 @@ const ParentalControls = () => {
     if (!isNaN(limit) && limit >= 0) {
       setDailyTimeLimit(limit);
       localStorage.setItem("dailyTimeLimit", limit.toString());
+    }
+  };
+
+  const handleTimedUsageChange = (checked: boolean) => {
+    setTimedUsage(checked);
+    if (!checked) {
+      localStorage.setItem("dailyTimeLimit", "0");
+    } else {
+      localStorage.setItem("dailyTimeLimit", dailyTimeLimit.toString());
     }
   };
 
@@ -122,7 +139,7 @@ const ParentalControls = () => {
                 </div>
                 <Switch 
                   checked={timedUsage} 
-                  onCheckedChange={setTimedUsage}
+                  onCheckedChange={handleTimedUsageChange}
                 />
               </div>
               

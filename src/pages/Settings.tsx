@@ -1,10 +1,11 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Shield } from "lucide-react";
+import { Shield, FileText } from "lucide-react";
 import ParentalControls from "@/components/compliance/ParentalControls";
 import { useNavigate } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const Settings = () => {
   const { t } = useLocalization();
@@ -22,6 +23,17 @@ const Settings = () => {
             <CardDescription>{t("parentalControlsDescription")}</CardDescription>
           </div>
         </CardHeader>
+        <CardFooter className="flex justify-end">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1" 
+            onClick={() => navigate("/safety-policy")}
+          >
+            <FileText size={16} />
+            {t("safetyPolicy")}
+          </Button>
+        </CardFooter>
       </Card>
       
       <div className="mt-4">
