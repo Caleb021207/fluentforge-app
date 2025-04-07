@@ -5,31 +5,38 @@
 
 /**
  * List of terms to filter in child-safety mode
- * This implements a basic filter list for CIPA compliance
+ * This implements a comprehensive filter list for CIPA compliance
  * In production, you might want to use a more comprehensive API
  */
 const filteredTerms: string[] = [
   // Basic inappropriate language filter
-  "profanity",
-  "obscene",
-  "explicit",
+  "profanity", "obscene", "explicit", "curse", "swear",
+  
   // Violence-related terms
-  "violence",
-  "weapon",
-  "gun",
-  "kill",
+  "violence", "violent", "weapon", "gun", "rifle", "pistol", "knife", 
+  "kill", "murder", "assault", "attack", "fight", "harm", "blood",
+  
   // Substance-related terms
-  "drug",
-  "alcohol",
-  "tobacco",
+  "drug", "narcotic", "marijuana", "cocaine", "heroin", "substance", 
+  "alcohol", "beer", "wine", "liquor", "tobacco", "cigarette", "vape",
+  
   // Adult content indicators
-  "adult",
-  "mature",
-  "nsfw",
+  "adult", "mature", "nsfw", "pornography", "explicit", "nude", "naked",
+  "sexual", "sex", "inappropriate", "dating", "gambling",
+  
   // Discriminatory terms
-  "hate",
-  "discriminatory",
-  "slur"
+  "hate", "discriminatory", "slur", "racist", "sexist", 
+  "bigot", "discrimination", "offensive", "prejudice",
+  
+  // Self-harm related
+  "suicide", "self-harm", "cutting", "depression",
+  
+  // Bullying related
+  "bully", "harassment", "intimidation", "threat",
+  
+  // Additional CIPA-specific concerns
+  "private", "personal", "identity", "address", "phone",
+  "hacking", "hack", "password", "illegal", "restricted"
 ];
 
 /**
