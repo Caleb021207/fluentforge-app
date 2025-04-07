@@ -44,7 +44,6 @@ const generalTranslations: TranslationRecord = {
   next: "Next",
   previous: "Previous",
   back: "Back",
-  continue: "Continue",
   finish: "Finish",
   restart: "Restart",
   language: "Language",
@@ -64,6 +63,8 @@ const generalTranslations: TranslationRecord = {
   failedToCreateSession: "Failed to create session",
   cefrB1Description: "Intermediate - Can discuss familiar topics",
   startChatting: "Start Chatting",
+  continue: "Continue",
+  incorrectPin: "Incorrect PIN",
   
   // CIPA Compliance Related
   ageVerification: "Age Verification",
@@ -118,11 +119,7 @@ const generalTranslations: TranslationRecord = {
   contactInfo: "Contact Information",
   safetyPolicyContactInfo: "If you have any questions about our safety practices or want to report concerns, please contact us at safety@palavox.com",
   
-  // Settings
-  languageSettingsComingSoon: "Language settings coming soon",
-  notificationSettingsComingSoon: "Notification settings coming soon",
-  
-  // New general settings
+  // Removed no longer needed settings tabs
   notifications: "Notifications"
 };
 

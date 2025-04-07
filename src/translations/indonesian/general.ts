@@ -107,12 +107,10 @@ const generalTranslations: TranslationRecord = {
   userSafetyTip4: "Perhatikan waktu layar dan ambil istirahat secara teratur",
   contactInfo: "Informasi Kontak",
   safetyPolicyContactInfo: "Jika Anda memiliki pertanyaan tentang praktik keamanan kami atau ingin melaporkan masalah, silakan hubungi kami di safety@palavox.com",
+  continue: "Lanjutkan",
+  incorrectPin: "PIN tidak benar",
   
-  // Settings
-  languageSettingsComingSoon: "Pengaturan bahasa akan segera hadir",
-  notificationSettingsComingSoon: "Pengaturan notifikasi akan segera hadir",
-  
-  // New general settings
+  // Removed no longer needed settings tabs
   notifications: "Notifikasi"
 };
 
