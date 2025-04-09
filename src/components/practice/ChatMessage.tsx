@@ -11,13 +11,25 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation }) => {
   const { currentLanguage } = useLocalization();
   
-  // Always show translation for Japanese, French, Russian, Hindi, Indonesian users or if translation exists
+  // Languages that should always show translations
+  const showTranslationLanguages = [
+    "hindi", 
+    "japanese", 
+    "french", 
+    "russian", 
+    "ukrainian",
+    "indonesian",
+    "korean",
+    "arabic",
+    "vietnamese",
+    "mandarin"
+  ];
+  
+  // Show translation if it exists and either:
+  // 1. The user's language is in the list of languages that always show translations
+  // 2. The translation is not empty
   const showTranslation = (translation && translation.trim() !== "") || 
-    currentLanguage === "japanese" || 
-    currentLanguage === "french" ||
-    currentLanguage === "russian" ||
-    currentLanguage === "hindi" ||
-    currentLanguage === "indonesian";
+    showTranslationLanguages.includes(currentLanguage);
   
   return (
     <div
@@ -33,10 +45,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
         }`}
       >
         <p className={`${role === "user" ? "text-white" : "text-gray-800"}`}>{content}</p>
-        {showTranslation && translation && (
+        {showTranslation && (
           <div className="border-t border-gray-300 mt-2 pt-2">
             <p className={`text-sm ${role === "user" ? "text-gray-200" : "text-gray-500"}`}>
-              {translation}
+              {translation || `Translation not available for ${currentLanguage}`}
             </p>
           </div>
         )}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { containsScript } from "@/utils/languageUtils";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -80,19 +81,38 @@ export const useChatMessages = () => {
       // Ensure we always have a translation for all languages
       let translation = data.translation || "";
       
-      // If no translation was provided but one is expected, make note of it and try to get one
-      if (!translation && currentLanguage !== "english") {
-        console.log("No translation provided for response in language:", currentLanguage);
+      // For Hindi, verify we have proper Devanagari script
+      if (currentLanguage === "hindi" && !containsScript(translation, "devanagari")) {
+        console.log("Hindi translation doesn't contain Devanagari script, requesting specific translation");
         
-        // For non-English users, we want translations in their native language
-        const targetLanguage = currentLanguage;
+        try {
+          // Try to get a proper Hindi translation
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
+            body: {
+              message: data.content,
+              userLanguage: currentLanguage,
+              requestType: 'translation'
+            }
+          });
+          
+          if (!translationError && translationData && translationData.translation) {
+            translation = translationData.translation;
+            console.log("Got Hindi translation with Devanagari script:", translation);
+          }
+        } catch (translationError) {
+          console.error("Failed to get Hindi translation:", translationError);
+        }
+      } 
+      // For non-English users, try to get a translation if none was provided
+      else if (!translation && currentLanguage !== "english") {
+        console.log("No translation provided for response in language:", currentLanguage);
         
         try {
           // Try to get a translation manually if none was provided
           const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
             body: {
               message: data.content,
-              userLanguage: targetLanguage,
+              userLanguage: currentLanguage,
               requestType: 'translation'
             }
           });
@@ -156,19 +176,38 @@ export const useChatMessages = () => {
       // Ensure we always have a translation
       let translation = data.translation || "";
       
-      // If no translation was provided, try to get one
-      if (!translation && currentLanguage !== "english") {
-        console.warn("Missing translation for", currentLanguage, "user");
-        
-        // For non-English users, we want translations in their native language
-        const targetLanguage = currentLanguage;
+      // For Hindi, verify we have proper Devanagari script
+      if (currentLanguage === "hindi" && !containsScript(translation, "devanagari")) {
+        console.log("Hindi translation doesn't contain Devanagari script, requesting specific translation");
         
         try {
-          // Try to get a translation manually if none was provided
+          // Try to get a proper Hindi translation
           const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
             body: {
               message: data.content,
-              userLanguage: targetLanguage,
+              userLanguage: currentLanguage,
+              requestType: 'translation'
+            }
+          });
+          
+          if (!translationError && translationData && translationData.translation) {
+            translation = translationData.translation;
+            console.log("Got Hindi translation with Devanagari script:", translation);
+          }
+        } catch (translationError) {
+          console.error("Failed to get Hindi translation:", translationError);
+        }
+      }
+      // If no translation was provided for other languages, try to get one
+      else if (!translation && currentLanguage !== "english") {
+        console.warn("Missing translation for", currentLanguage, "user");
+        
+        try {
+          // Try to get a translation manually
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('chat-with-tutor', {
+            body: {
+              message: data.content,
+              userLanguage: currentLanguage,
               requestType: 'translation'
             }
           });
@@ -214,6 +253,16 @@ export const useChatMessages = () => {
       return "अंग्रेजी या हिंदी में अपना संदेश टाइप करें...";
     } else if (currentLanguage === "indonesian") {
       return "Ketikkan pesan Anda dalam bahasa Inggris atau Indonesia...";
+    } else if (currentLanguage === "korean") {
+      return "영어나 한국어로 메시지를 입력하세요...";
+    } else if (currentLanguage === "arabic") {
+      return "اكتب رسالتك باللغة الإنجليزية أو العربية...";
+    } else if (currentLanguage === "mandarin") {
+      return "用英语或中文输入您的消息...";
+    } else if (currentLanguage === "vietnamese") {
+      return "Nhập tin nhắn của bạn bằng tiếng Anh hoặc tiếng Việt...";
+    } else if (currentLanguage === "ukrainian") {
+      return "Введіть повідомлення англійською або українською...";
     }
     return t("typeMessage") || "Type your message...";
   };

@@ -109,3 +109,75 @@ export const getNativeLanguageDisplayName = (language: string): string => {
   
   return languageMap[language.toLowerCase()] || language;
 };
+
+/**
+ * Returns the OpenAI Whisper API language code for a given language
+ * @param language The language name
+ * @returns ISO language code used by Whisper API
+ */
+export const getWhisperLanguageCode = (language: string): string => {
+  const languageCodeMap: Record<string, string> = {
+    'english': 'en',
+    'spanish': 'es',
+    'portuguese': 'pt',
+    'french': 'fr',
+    'mandarin': 'zh',
+    'arabic': 'ar',
+    'japanese': 'ja',
+    'korean': 'ko',
+    'russian': 'ru',
+    'ukrainian': 'uk',
+    'vietnamese': 'vi',
+    'indonesian': 'id',
+    'hindi': 'hi'
+  };
+  
+  return languageCodeMap[language.toLowerCase()] || 'en';
+};
+
+/**
+ * Returns the Web Speech API language code for a given language
+ * @param language The language name
+ * @returns BCP 47 language tag used by Web Speech API
+ */
+export const getSpeechRecognitionLanguageCode = (language: string): string => {
+  const languageCodeMap: Record<string, string> = {
+    'english': 'en-US',
+    'spanish': 'es-ES',
+    'portuguese': 'pt-PT',
+    'french': 'fr-FR',
+    'mandarin': 'zh-CN',
+    'arabic': 'ar-SA',
+    'japanese': 'ja-JP',
+    'korean': 'ko-KR',
+    'russian': 'ru-RU',
+    'ukrainian': 'uk-UA',
+    'vietnamese': 'vi-VN',
+    'indonesian': 'id-ID',
+    'hindi': 'hi-IN'
+  };
+  
+  return languageCodeMap[language.toLowerCase()] || 'en-US';
+};
+
+/**
+ * Checks if text contains characters from specific scripts
+ * @param text The text to check
+ * @param script The script to check for (devanagari, cyrillic, etc.)
+ * @returns Boolean indicating if text contains characters from the script
+ */
+export const containsScript = (text: string, script: string): boolean => {
+  if (!text) return false;
+  
+  const scriptRanges: Record<string, RegExp> = {
+    devanagari: /[\u0900-\u097F]/,  // Hindi
+    cyrillic: /[\u0400-\u04FF]/,    // Russian, Ukrainian
+    arabic: /[\u0600-\u06FF]/,      // Arabic
+    han: /[\u4E00-\u9FFF]/,         // Chinese
+    hangul: /[\uAC00-\uD7AF]/,      // Korean
+    hiragana: /[\u3040-\u309F]/,    // Japanese
+    katakana: /[\u30A0-\u30FF]/,    // Japanese
+  };
+  
+  return scriptRanges[script.toLowerCase()]?.test(text) || false;
+};

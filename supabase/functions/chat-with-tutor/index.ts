@@ -27,20 +27,10 @@ serve(async (req) => {
       return await handleTranslationRequest(message, userLanguage);
     }
 
-    // Determine if user is learning English or Spanish based on their native language
+    // Determine if user is learning English or another language based on their native language
     const isLearningEnglish = userLanguage !== 'english';
     const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
-    const nativeLanguage = userLanguage === 'english' ? 'English' : 
-                          userLanguage === 'spanish' ? 'Spanish' : 
-                          userLanguage === 'portuguese' ? 'Portuguese' : 
-                          userLanguage === 'korean' ? 'Korean' :
-                          userLanguage === 'arabic' ? 'Arabic' :
-                          userLanguage === 'mandarin' ? 'Mandarin Chinese' : 
-                          userLanguage === 'vietnamese' ? 'Vietnamese' :
-                          userLanguage === 'french' ? 'French' :
-                          userLanguage === 'japanese' ? 'Japanese' :
-                          userLanguage === 'ukrainian' ? 'Ukrainian' :
-                          userLanguage === 'russian' ? 'Russian' : 'Unknown';
+    const nativeLanguage = getUserNativeLanguage(userLanguage);
     
     // Universal tutor instructions for all language combinations
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
@@ -161,6 +151,18 @@ You should ask questions to continue the conversation if it ever seems to stall.
       }
     }
 
+    // For Hindi, verify that the translation is actually in Hindi using script detection
+    if (userLanguage === 'hindi' && !containsDevanagariScript(translation)) {
+      console.log('Hindi translation does not contain Devanagari script, getting proper Hindi translation...');
+      try {
+        const hindiTranslation = await getSpecificLanguageTranslation(content, 'hindi', 'Devanagari');
+        translation = hindiTranslation;
+      } catch (error) {
+        console.error('Error getting Hindi translation:', error);
+        // Continue even if Hindi translation fails
+      }
+    }
+
     console.log('Formatted response:', { content, translation });
 
     return new Response(
@@ -191,44 +193,122 @@ You should ask questions to continue the conversation if it ever seems to stall.
   }
 });
 
+// Get the correct native language name based on user language
+function getUserNativeLanguage(userLanguage: string): string {
+  const languageMap: Record<string, string> = {
+    'english': 'English',
+    'spanish': 'Spanish',
+    'portuguese': 'Portuguese',
+    'korean': 'Korean',
+    'arabic': 'Arabic',
+    'mandarin': 'Mandarin Chinese',
+    'vietnamese': 'Vietnamese',
+    'french': 'French',
+    'japanese': 'Japanese',
+    'ukrainian': 'Ukrainian',
+    'russian': 'Russian',
+    'hindi': 'Hindi',
+    'indonesian': 'Indonesian'
+  };
+  
+  return languageMap[userLanguage] || 'English';
+}
+
+// Helper function to check if text contains Devanagari script (Hindi)
+function containsDevanagariScript(text: string): boolean {
+  // Devanagari Unicode range: U+0900 to U+097F
+  const devanagariRegex = /[\u0900-\u097F]/;
+  return devanagariRegex.test(text);
+}
+
+// Helper function to get special translation for specific languages like Hindi
+async function getSpecificLanguageTranslation(message: string, language: string, script: string): Promise<string> {
+  try {
+    console.log(`Getting ${language} translation with ${script} script for: "${message}"`);
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { 
+            role: 'system', 
+            content: `You are a professional translator. Translate the following text from English to ${language} using ${script} script. ONLY return the translation, no explanations or additional text. Ensure the translation is accurate and natural-sounding.` 
+          },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.3,
+        max_tokens: 500,
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Translation API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const translation = data.choices?.[0]?.message?.content || '';
+    console.log(`Got ${language} translation: "${translation}"`);
+    
+    return translation;
+  } catch (error) {
+    console.error(`Error getting ${language} translation:`, error);
+    throw error;
+  }
+}
+
 // Helper function to get translation for a message
 async function getTranslation(message: string, userLanguage: string) {
-  const targetLanguage = userLanguage === 'english' ? 'Spanish' : 
-                       userLanguage === 'spanish' ? 'English' : 
-                       userLanguage === 'portuguese' ? 'Portuguese' : 
-                       userLanguage === 'korean' ? 'Korean' :
-                       userLanguage === 'arabic' ? 'Arabic' :
-                       userLanguage === 'mandarin' ? 'Mandarin Chinese' :
-                       userLanguage === 'vietnamese' ? 'Vietnamese' :
-                       userLanguage === 'french' ? 'French' :
-                       userLanguage === 'japanese' ? 'Japanese' :
-                       userLanguage === 'ukrainian' ? 'Ukrainian' :
-                       userLanguage === 'russian' ? 'Russian' : 'English';
-
-  return await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${openAIApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { 
-          role: 'system', 
-          content: `You are a professional translator. Translate the following text from ${targetLanguage === 'Spanish' ? 'English' : targetLanguage} to ${targetLanguage}. Just return the translation, no explanations.` 
-        },
-        { role: 'user', content: message }
-      ],
-      temperature: 0.3,
-      max_tokens: 500,
-    }),
-  });
+  try {
+    const targetLanguage = getUserNativeLanguage(userLanguage);
+    
+    return await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { 
+            role: 'system', 
+            content: `You are a professional translator. Translate the following text from English to ${targetLanguage}. Just return the translation, no explanations. For Hindi translations, ensure you use Devanagari script.` 
+          },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.3,
+        max_tokens: 500,
+      }),
+    });
+  } catch (error) {
+    console.error('Error in getTranslation:', error);
+    throw error;
+  }
 }
 
 // Handler for translation-only requests
 async function handleTranslationRequest(message: string, userLanguage: string) {
   try {
+    // Special handling for Hindi to ensure proper Devanagari script
+    if (userLanguage === 'hindi') {
+      try {
+        const hindiTranslation = await getSpecificLanguageTranslation(message, 'hindi', 'Devanagari');
+        return new Response(
+          JSON.stringify({ translation: hindiTranslation }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        console.error('Error in Hindi translation request:', error);
+        throw error;
+      }
+    }
+    
+    // Regular translation flow for other languages
     const translationResponse = await getTranslation(message, userLanguage);
     
     if (!translationResponse.ok) {
