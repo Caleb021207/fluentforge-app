@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -126,7 +125,7 @@ const PortugueseVoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, practice, toast, t, isListening]);
+  }, [currentLanguage, practice, toast, t]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -342,9 +341,9 @@ const PortugueseVoiceChat = () => {
             </div>
 
             <div className="flex gap-2">
-              <Button
-                onClick={toggleListening}
-                variant={isListening ? "destructive" : "default"}
+              <Button 
+                onClick={toggleListening} 
+                variant={isListening ? "destructive" : "default"} 
                 size="lg"
                 disabled={isLoading || isSpeaking}
               >
