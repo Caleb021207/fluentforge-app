@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -356,12 +357,23 @@ const VoiceChat = () => {
     if (currentLanguage === "english") {
       nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
       
+      // Dynamically select the correct target language translations
       if (practice === "Spanish") {
         targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
       } else if (practice === "Portuguese") {
         targetLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
       } else if (practice === "French") {
         targetLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+      } else if (practice === "Japanese") {
+        targetLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
+      } else if (practice === "Russian") {
+        targetLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
+      } else if (practice === "Ukrainian") {
+        targetLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
+      } else if (practice === "Hindi") {
+        targetLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
+      } else if (practice === "Indonesian") {
+        targetLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
       } else {
         targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]); // Default to English if not found
       }
