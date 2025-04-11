@@ -38,9 +38,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
   // Determine if translation should be shown:
   // 1. If user's language is in the list of languages that always show translations
   // 2. OR if the translation exists and is not empty
+  // 3. OR if content was filtered (for transparency)
   const showTranslation = 
     showTranslationLanguages.includes(currentLanguage) || 
-    (translation && translation.trim() !== "");
+    (translation && translation.trim() !== "") ||
+    !isContentSafe || !isTranslationSafe;
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;
   
