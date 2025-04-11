@@ -35,6 +35,16 @@ export const usePromptGenerator = () => {
           return "안녕하세요! 한국어를 연습하고 싶어요.";
         case "russian":
           return "Привет! Я хочу попрактиковаться в русском с тобой.";
+        case "ukrainian":
+          return "Привіт! Я хочу попрактикуватися в українській з тобою.";
+        case "arabic":
+          return "مرحبا! أريد أن أتدرب على اللغة العربية معك.";
+        case "hindi":
+          return "नमस्ते! मैं आपके साथ हिंदी का अभ्यास करना चाहता हूँ।";
+        case "vietnamese":
+          return "Xin chào! Tôi muốn thực hành tiếng Việt với bạn.";
+        case "indonesian":
+          return "Halo! Saya ingin berlatih bahasa Indonesia dengan Anda.";
         default:
           return "Hello! I want to practice " + effectiveTarget + " with you!";
       }

@@ -1,3 +1,4 @@
+
 /**
  * Returns information about language pairs based on user's interface language
  * For language learning, we need to know which language the user is practicing
@@ -48,7 +49,7 @@ export const getLanguagePair = (currentLanguage: string, targetLanguage?: string
     case "mandarin":
       return {
         practice: "English",
-        native: "Mandarin"
+        native: "Mandarin Chinese"
       };
     case "vietnamese":
       return {
@@ -105,7 +106,7 @@ export const getLanguageDisplayName = (language: string): string => {
     "portuguese": "Portuguese",
     "korean": "Korean",
     "arabic": "Arabic",
-    "mandarin": "Mandarin",
+    "mandarin": "Mandarin Chinese",
     "vietnamese": "Vietnamese", 
     "french": "French",
     "japanese": "Japanese",
@@ -224,7 +225,7 @@ export const containsScript = (text: string, script: string): boolean => {
 export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
   // English speakers learning any supported language
   if (nativeLanguage.toLowerCase() === "english") {
-    const supportedTargets = ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian"];
+    const supportedTargets = ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian", "ukrainian", "arabic", "vietnamese", "hindi", "indonesian"];
     return supportedTargets.includes(targetLanguage.toLowerCase());
   }
   
@@ -250,7 +251,7 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
 export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
   if (nativeLanguage.toLowerCase() === "english") {
     // English speakers can learn these languages
-    return ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian"];
+    return ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian", "ukrainian", "arabic", "vietnamese", "hindi", "indonesian"];
   }
   
   // Non-English speakers can only learn English for now
