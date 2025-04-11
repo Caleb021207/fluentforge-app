@@ -38,7 +38,7 @@ const FrenchVoiceChat = () => {
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   
-  const native = currentLanguage === "french" ? "French" : getLanguageDisplayName(currentLanguage);
+  const native = "French";
   const target = "English";
   
   useEffect(() => {
@@ -53,13 +53,8 @@ const FrenchVoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      if (currentLanguage === "french") {
-        recognitionRef.current.lang = 'fr-FR';
-        console.log(`Setting speech recognition language to: fr-FR for French speaker`);
-      } else {
-        recognitionRef.current.lang = 'en-US';
-        console.log(`Setting speech recognition language to: en-US`);
-      }
+      recognitionRef.current.lang = 'fr-FR';
+      console.log(`Setting speech recognition language to: fr-FR for French speaker`);
       
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
@@ -128,7 +123,7 @@ const FrenchVoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, t, toast]);
+  }, [t, toast]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -305,12 +300,8 @@ const FrenchVoiceChat = () => {
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
-    let nativeLanguagePhrases;
-    let targetLanguagePhrases;
-    
-    targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    
-    nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+    const nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+    const targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     
     return { nativeLanguagePhrases, targetLanguagePhrases };
   };
@@ -334,12 +325,10 @@ const FrenchVoiceChat = () => {
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   const getPracticeDescription = () => {
-    if (currentLanguage === "english") {
-      return `Practice your French speaking skills with our voice chat. Click the microphone button and start speaking in French. The AI will respond to you in French and help you practice.`;
-    } else if (currentLanguage === "french") {
+    if (currentLanguage === "french") {
       return "Pratiquez votre anglais avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en français. L'IA vous répondra en anglais et vous aidera à vous entraîner.";
     } else {
-      return `${t("practiceWithVoiceChat")}`;
+      return `Practice your French speaking skills with our voice chat. Click the microphone button and start speaking in French. The AI will respond to you in English and help you practice.`;
     }
   };
 
