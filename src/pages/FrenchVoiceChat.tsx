@@ -1,5 +1,5 @@
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
@@ -16,6 +16,7 @@ import PracticeTips from "@/components/french-voice-chat/PracticeTips";
 const FrenchVoiceChat = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
+  const [permissionError, setPermissionError] = useState<string | null>(null);
   
   const {
     transcript,
@@ -38,12 +39,22 @@ const FrenchVoiceChat = () => {
   const { isListening, startListening, stopListening } = useSpeechRecognition({
     onTranscriptChange: setTranscript,
     onSilence: () => {
-      if (transcript) {
+      if (transcript && transcript.trim().length > 0) {
+        console.log("Silence detected, sending transcript:", transcript);
         handleSendTranscript(transcript);
         stopListening();
       }
     },
-    language: 'en-US'
+    onError: (errorMessage) => {
+      console.error("Speech recognition error:", errorMessage);
+      setPermissionError(errorMessage);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+    language: 'en-US' // Ensure this is en-US for French speakers practicing English
   });
 
   // Effect to handle audio playback of response
@@ -53,6 +64,13 @@ const FrenchVoiceChat = () => {
       speak(gptResponse, 'en-US');
     }
   }, [gptResponse, speak, isSpeaking]);
+
+  // Clear permission error when listening starts successfully
+  useEffect(() => {
+    if (isListening && permissionError) {
+      setPermissionError(null);
+    }
+  }, [isListening, permissionError]);
 
   const toggleListening = () => {
     console.log("Toggle listening called, current state:", isListening);
@@ -91,6 +109,17 @@ const FrenchVoiceChat = () => {
             onToggleListening={toggleListening}
             onSendTranscript={() => handleSendTranscript(transcript)}
           />
+          
+          {permissionError && (
+            <div className="mb-4 p-2 bg-red-50 text-red-600 rounded-md">
+              <p className="text-sm font-medium">
+                {permissionError}
+              </p>
+              <p className="text-xs mt-1">
+                Please ensure your browser has permission to access your microphone.
+              </p>
+            </div>
+          )}
           
           <TranscriptDisplay 
             transcript={transcript}

@@ -27,7 +27,8 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
     if (isListening) {
       return currentLanguage === "french" ? "Arrêter d'écouter" : t("stopListening");
     } else {
-      return currentLanguage === "french" ? "Commencer à parler en anglais" : t("startSpeaking");
+      // Be more explicit about practicing English
+      return currentLanguage === "french" ? "Parlez en anglais" : t("speakEnglish");
     }
   };
 
@@ -47,6 +48,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
           disabled={isLoading || isSpeaking}
           className="flex items-center gap-2"
           type="button"
+          aria-label={isListening ? "Stop listening" : "Start speaking in English"}
         >
           {isListening ? (
             <>

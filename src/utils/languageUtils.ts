@@ -1,3 +1,4 @@
+
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -98,18 +99,23 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
  * @returns Boolean indicating if study materials are available
  */
 export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
+  // Updated to include all available language pairs in the application
   const supportedPairs = [
     'english-spanish',
     'english-french',
-    'english-portuguese', // Added Portuguese support for English speakers
+    'english-portuguese',
     'spanish-english',
     'portuguese-english',
-    'french-english',
+    'french-english', // Explicitly adding French-English support
     'japanese-english',
     'korean-english',
     'mandarin-english',
     'russian-english',
-    'arabic-english'
+    'arabic-english',
+    'vietnamese-english',
+    'ukrainian-english',
+    'indonesian-english',
+    'hindi-english'
   ];
   
   const pairKey = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
