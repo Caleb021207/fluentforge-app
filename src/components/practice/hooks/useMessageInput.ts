@@ -14,8 +14,14 @@ export const useMessageInput = (targetLanguage?: string) => {
     const currentPath = window.location.pathname;
     if (
       currentPath === "/voice-chat" && 
-      ((currentLanguage === "english" && targetLanguage?.toLowerCase() === "french") ||
-      (currentLanguage === "french"))
+      (
+        // For English speakers targeting French
+        (currentLanguage === "english" && targetLanguage?.toLowerCase() === "french") ||
+        // For Spanish speakers targeting French
+        (currentLanguage === "spanish" && targetLanguage?.toLowerCase() === "french") ||
+        // For French speakers (they always go to French voice chat)
+        (currentLanguage === "french")
+      )
     ) {
       navigate("/french-voice-chat");
     }
@@ -57,4 +63,3 @@ export const useMessageInput = (targetLanguage?: string) => {
     getPlaceholderText
   };
 };
-
