@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguagePair } from "@/utils/languageUtils";
 
@@ -12,13 +12,20 @@ export type VoiceMessage = {
 export const useVoiceChatMessages = () => {
   const [messages, setMessages] = useState<VoiceMessage[]>([]);
   const { currentLanguage } = useLocalization();
+  const [targetLanguage, setTargetLanguage] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Get the target language from localStorage
+    const storedTargetLanguage = localStorage.getItem("targetLanguage");
+    setTargetLanguage(storedTargetLanguage);
+  }, []);
   
   const clearMessages = () => {
     setMessages([]);
   };
   
   const addInitialMessage = () => {
-    const { practice, native } = getLanguagePair(currentLanguage);
+    const { practice, native } = getLanguagePair(currentLanguage, targetLanguage || undefined);
     
     let initialContent = "";
     

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -10,16 +10,28 @@ interface PracticeHeaderProps {
   targetLanguage?: string;
 }
 
-const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage = "spanish" }) => {
+const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage }) => {
   const { t, currentLanguage } = useLocalization();
+  const [storedTargetLanguage, setStoredTargetLanguage] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // If no targetLanguage prop is provided, try to get it from localStorage
+    if (!targetLanguage) {
+      const stored = localStorage.getItem("targetLanguage");
+      setStoredTargetLanguage(stored);
+    }
+  }, [targetLanguage]);
+  
+  // Use provided targetLanguage prop if available, otherwise use the one from localStorage
+  const effectiveTargetLanguage = targetLanguage || storedTargetLanguage || "spanish";
   
   // Determine which language is being practiced
   const displayLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(targetLanguage)
+    ? getLanguageDisplayName(effectiveTargetLanguage)
     : "English";
   
   // Customized header for English speakers learning French
-  if (currentLanguage === "english" && targetLanguage === "french") {
+  if (currentLanguage === "english" && effectiveTargetLanguage === "french") {
     return (
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">

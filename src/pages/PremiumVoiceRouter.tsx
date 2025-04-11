@@ -12,8 +12,15 @@ export default function PremiumVoiceRouter() {
   useEffect(() => {
     // Get the target language from localStorage
     const storedTargetLanguage = localStorage.getItem("targetLanguage");
-    setTargetLanguage(storedTargetLanguage);
-  }, []);
+    
+    // If we're an English speaker with no target language, default to "spanish"
+    if (currentLanguage === "english" && !storedTargetLanguage) {
+      localStorage.setItem("targetLanguage", "spanish");
+      setTargetLanguage("spanish");
+    } else {
+      setTargetLanguage(storedTargetLanguage);
+    }
+  }, [currentLanguage]);
   
   // For English speakers learning French, use the specialized French voice chat
   if (currentLanguage === "english" && targetLanguage === "french") {
