@@ -22,6 +22,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
+    console.log('Forwarding request to chat-with-tutor:', body);
     
     // Forward the request to the chat-with-tutor function
     const response = await fetch(getEdgeFunctionUrl('chat-with-tutor'), {
@@ -33,7 +34,18 @@ serve(async (req) => {
       body: JSON.stringify(body),
     });
     
+    if (!response.ok) {
+      console.error('Error response from chat-with-tutor:', response.status, response.statusText);
+      throw new Error(`Failed to get response from chat-with-tutor: ${response.status} ${response.statusText}`);
+    }
+    
     const data = await response.json();
+    console.log('Received data from chat-with-tutor:', data);
+    
+    if (!data || (!data.content && !data.error)) {
+      console.error('Invalid response format from chat-with-tutor:', data);
+      throw new Error('Invalid response format from chat-with-tutor');
+    }
     
     return new Response(
       JSON.stringify(data),
@@ -43,7 +55,12 @@ serve(async (req) => {
     console.error('Error forwarding request to chat-with-tutor:', error);
     
     return new Response(
-      JSON.stringify({ error: 'Failed to process request', details: error.message }),
+      JSON.stringify({ 
+        error: 'Failed to process request', 
+        details: error.message,
+        content: null,
+        translation: null
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

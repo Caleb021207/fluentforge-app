@@ -38,25 +38,44 @@ export const useChatMessaging = () => {
       // Get the targetLanguage from localStorage 
       const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
       
+      console.log('Sending message to AI tutor:', { 
+        message, 
+        userLanguage: currentLanguage, 
+        targetLanguage, 
+        requestTranslation: true 
+      });
+      
       // Use chat-with-gpt endpoint
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: message,
           userLanguage: currentLanguage,
-          targetLanguage: targetLanguage,  // Pass the target language
+          targetLanguage: targetLanguage,
           requestTranslation: true
         }
       });
 
       if (error) {
+        console.error('Supabase invoke error:', error);
         throw error;
       }
 
       console.log('Response from AI tutor:', data);
       
       // Handle case where response is missing content
-      if (!data || !data.content) {
-        throw new Error("Invalid response from AI tutor");
+      if (!data) {
+        console.error('Empty response from AI tutor');
+        throw new Error("Empty response from AI tutor");
+      }
+      
+      if (data.error) {
+        console.error('Error from AI tutor:', data.error);
+        throw new Error(data.error);
+      }
+      
+      if (!data.content) {
+        console.error('Invalid response from AI tutor - missing content:', data);
+        throw new Error("Response from AI tutor is missing content");
       }
       
       let translation = data.translation || "";
