@@ -16,6 +16,7 @@ import russianTranslations from "@/translations/russian";
 import ukrainianTranslations from "@/translations/ukrainian";
 import hindiTranslations from "@/translations/hindi";
 import indonesianTranslations from "@/translations/indonesian";
+import { useNavigate } from "react-router-dom";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -34,6 +35,7 @@ const VoiceChat = () => {
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
   const cefrLevel = 'B1';
+  const navigate = useNavigate();
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
@@ -45,9 +47,23 @@ const VoiceChat = () => {
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   
+  useEffect(() => {
+    const savedTargetLanguage = localStorage.getItem("targetLanguage");
+    
+    if (
+      (currentLanguage === "english" && savedTargetLanguage?.toLowerCase() === "french") ||
+      (currentLanguage === "spanish" && savedTargetLanguage?.toLowerCase() === "french") ||
+      (currentLanguage === "french")
+    ) {
+      console.log("Redirecting to French voice chat from VoiceChat component");
+      navigate("/french-voice-chat");
+    }
+  }, [currentLanguage, navigate]);
+  
   const urlParams = new URLSearchParams(window.location.search);
   const urlTargetLang = urlParams.get('target') || "";
-  const { native, practice } = getLanguagePair(currentLanguage, urlTargetLang);
+  const savedTargetLanguage = urlTargetLang || localStorage.getItem("targetLanguage") || "";
+  const { native, practice } = getLanguagePair(currentLanguage, savedTargetLanguage);
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -554,7 +570,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "ukrainian") {
       return `Практикуйте свої навички розмови ${getLanguagePair(currentLanguage).practice} за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити ${getLanguagePair(currentLanguage).practice}. Штучний інтелект відповість вам ${getLanguagePair(currentLanguage).practice} та допомоге практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return `हमारे वॉइस चैट के साथ अपने ${getLanguagePair(currentLanguage).practice} बोलने के कौशल का अभ्यास करें। माइक्रोफोन बटन पर क्लिक करें और ${getLanguagePair(currentLanguage).practice} में बोलना शुरू करें। AI आपको ${getLanguagePair(currentLanguage).practice} में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
+      return `हमारे वॉइस चैट के साथ अपने ${getLanguagePair(currentLanguage).practice} बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। माइक्रोफोन बटन पर क्लिक करें और ${getLanguagePair(currentLanguage).practice} में बोलना शुरू करें। AI आपको ${getLanguagePair(currentLanguage).practice} में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
     } else if (currentLanguage === "indonesian") {
       return `Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.`;
     }

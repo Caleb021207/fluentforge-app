@@ -12,27 +12,35 @@ export const useMessageInput = (targetLanguage?: string) => {
   // Check if we should redirect to the French voice chat
   useEffect(() => {
     const currentPath = window.location.pathname;
+    
+    // Get target language from props or localStorage
+    const savedTargetLanguage = targetLanguage || localStorage.getItem("targetLanguage");
+    
     if (
       currentPath === "/voice-chat" && 
       (
         // For English speakers targeting French
-        (currentLanguage === "english" && targetLanguage?.toLowerCase() === "french") ||
+        (currentLanguage === "english" && savedTargetLanguage?.toLowerCase() === "french") ||
         // For Spanish speakers targeting French
-        (currentLanguage === "spanish" && targetLanguage?.toLowerCase() === "french") ||
+        (currentLanguage === "spanish" && savedTargetLanguage?.toLowerCase() === "french") ||
         // For French speakers (they always go to French voice chat)
         (currentLanguage === "french")
       )
     ) {
+      console.log("Redirecting to French voice chat from useMessageInput");
       navigate("/french-voice-chat");
     }
   }, [currentLanguage, targetLanguage, navigate]);
 
   const getPlaceholderText = () => {
+    // Get saved target language from localStorage if not provided
+    const savedTargetLanguage = targetLanguage || localStorage.getItem("targetLanguage");
+    
     // For English speakers, use the specified target language
     if (currentLanguage === "english") {
-      // If targetLanguage is provided, use it; otherwise, default to Spanish
-      const practiceLanguageName = targetLanguage 
-        ? getLanguageDisplayName(targetLanguage.toLowerCase())
+      // If savedTargetLanguage is provided, use it; otherwise, default to Spanish
+      const practiceLanguageName = savedTargetLanguage 
+        ? getLanguageDisplayName(savedTargetLanguage.toLowerCase())
         : "Spanish";
         
       return `Type your message in English or ${practiceLanguageName}...`;
