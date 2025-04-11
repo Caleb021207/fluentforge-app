@@ -33,7 +33,10 @@ const ferpaTranslations: TranslationRecord = {
   // Note: Removed duplicate ferpaComplianceDescription that was here
   ferpaConsentDescription: "Under the Family Educational Rights and Privacy Act (FERPA), we need your consent to collect and share certain educational information.",
   ferpaConsentCheckbox: "I consent to the collection and use of my educational data as described above. I understand I can revoke this consent at any time through my profile settings.",
-  consentRequired: "Consent is required to use all features of this application. Without consent, certain features will be limited."
+  consentRequired: "Consent is required to use all features of this application. Without consent, certain features will be limited.",
+  // Adding the missing keys
+  ferpaCompliance: "FERPA Compliance",
+  ferpaComplianceShortDesc: "Our platform adheres to FERPA regulations to protect student data and privacy"
 };
 
 export default ferpaTranslations;
