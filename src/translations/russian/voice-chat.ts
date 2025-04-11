@@ -81,14 +81,7 @@ const voiceChatTranslations: TranslationRecord = {
   translationSection: "Перевод",
   englishResponse: "Ответ на английском",
   japaneseTranslation: "Японский перевод",
-  russianTranslation: "Русский перевод",
-  
-  // Additional keys needed for the practice tips box
-  askQuestions: "Задавайте вопросы о повседневных темах",
-  practiceCommonPhrases: "Практикуйте общие фразы и выражения",
-  describeWhatYouSee: "Описывайте то, что видите вокруг",
-  practiceVocabularyForSpecific: "Практикуйте словарный запас для конкретных тем, таких как путешествия или еда",
-  useThisTool: "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:",
+  russianTranslation: "Русский перевод"
 };
 
 export default voiceChatTranslations;

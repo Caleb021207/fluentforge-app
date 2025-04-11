@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ensureUserProfile, getUserProfile, updateUserProfile } from "@/utils/profileUtils";
 import { useLocalization } from "@/context/LocalizationContext";
-import { UserProfile } from "@/types/supabase";
 
 interface ProfileData {
   currentLevel: string;
@@ -134,7 +133,7 @@ const DashboardPage = () => {
 
   const fetchProfileData = async (userId: string) => {
     try {
-      const profile = await getUserProfile(userId) as UserProfile;
+      const profile = await getUserProfile(userId);
 
       if (profile) {
         setProfileData(prev => ({

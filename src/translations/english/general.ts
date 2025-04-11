@@ -110,11 +110,11 @@ const generalTranslations: TranslationRecord = {
   ferpaPrivacySettings: "FERPA Privacy Settings",
   ferpaSettingsDescription: "Manage settings related to directory information, consent, and access to student usage data",
   whatIsFerpa: "What is FERPA?",
-  ferpaExplanation: "FERPA is a federal law that protects the privacy of student education records. It gives parents certain rights with respect to their children's education records. These rights transfer to the student when they reach the age of 18 or attend a post-secondary educational institution.",
   ferpaExplanationShort: "FERPA (Family Educational Rights and Privacy Act) protects the privacy of student education records",
   dataConsent: "Consent to Data Use",
   dataConsentDescription: "Allows Palavox to store anonymized learning progress data to improve educational outcomes. No personal information is collected",
-  dataPrivacyConsent: "Educational Data Privacy Consent",
+  directoryInformation: "Directory Information",
+  directoryInfoDescription: "Schools may allow limited information (like grade level or learning language) to be shared for educational purposes. Palavox does not share any student data externally",
   
   // Student Profile Settings
   yourName: "Your Name",
@@ -203,19 +203,7 @@ const generalTranslations: TranslationRecord = {
   saveChanges: "Save Changes",
   preferencesUpdated: "Privacy preferences updated",
   dataPreparing: "Data export preparing",
-  dataExportDescription: "Your data export is being prepared and will be emailed to you shortly",
-  
-  // FERPA consent related - fixed duplicates
-  ferpaConsentDescription: "Under the Family Educational Rights and Privacy Act (FERPA), we need your consent to collect and share certain educational information.",
-  dataWeCollect: "Data We Collect",
-  assessmentResults: "Language assessment results",
-  progressData: "Learning progress data",
-  practiceHistory: "Practice history and performance",
-  certificationsEarned: "Certifications earned",
-  directoryInformation: "Directory Information",
-  directoryInfoDescription: "Schools may allow limited information (like grade level or learning language) to be shared for educational purposes. Palavox does not share any student data externally.",
-  ferpaConsentCheckbox: "I consent to the collection and use of my educational data as described above. I understand I can revoke this consent at any time through my profile settings.",
-  consentRequired: "Consent is required to use all features of this application. Without consent, certain features will be limited."
+  dataExportDescription: "Your data export is being prepared and will be emailed to you shortly"
 };
 
 export default generalTranslations;

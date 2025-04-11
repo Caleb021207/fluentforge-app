@@ -4,26 +4,17 @@
  * For language learning, we need to know which language the user is practicing
  * and which language they are learning
  */
-export const getLanguagePair = (currentLanguage: string, targetLanguage?: string) => {
+export const getLanguagePair = (currentLanguage: string) => {
   // Default language pairs with English translations
   // When a user selects a native language, we determine which language
   // they are learning (practicing) based on this configuration
   
   const normalizedLanguage = currentLanguage.toLowerCase();
   
-  // If English speaker with explicit target language
-  if (normalizedLanguage === "english" && targetLanguage) {
-    return {
-      practice: getLanguageDisplayName(targetLanguage),
-      native: "English"
-    };
-  }
-  
-  // Default pairings for different native languages
   switch (normalizedLanguage) {
     case "english":
       return {
-        practice: "Spanish", // Default: English speakers learn Spanish
+        practice: "Spanish", // English speakers learn Spanish
         native: "English"
       };
     case "spanish":
@@ -49,7 +40,7 @@ export const getLanguagePair = (currentLanguage: string, targetLanguage?: string
     case "mandarin":
       return {
         practice: "English",
-        native: "Mandarin Chinese"
+        native: "Mandarin"
       };
     case "vietnamese":
       return {
@@ -95,32 +86,7 @@ export const getLanguagePair = (currentLanguage: string, targetLanguage?: string
 };
 
 /**
- * Returns the display name of a language
- * @param language The language code
- * @returns The display name of the language
- */
-export const getLanguageDisplayName = (language: string): string => {
-  const languageMap: Record<string, string> = {
-    "english": "English",
-    "spanish": "Spanish",
-    "portuguese": "Portuguese",
-    "korean": "Korean",
-    "arabic": "Arabic",
-    "mandarin": "Mandarin Chinese",
-    "vietnamese": "Vietnamese", 
-    "french": "French",
-    "japanese": "Japanese",
-    "russian": "Russian",
-    "ukrainian": "Ukrainian",
-    "hindi": "Hindi",
-    "indonesian": "Indonesian"
-  };
-  
-  return languageMap[language.toLowerCase()] || language;
-};
-
-/**
- * Returns the native display name of a language
+ * Returns the display name of a language in its native form
  * @param language The language code
  * @returns The native display name of the language
  */
@@ -214,46 +180,4 @@ export const containsScript = (text: string, script: string): boolean => {
   };
   
   return scriptRanges[script.toLowerCase()]?.test(text) || false;
-};
-
-/**
- * Checks if a language has study materials available
- * @param nativeLanguage The native language
- * @param targetLanguage The target language to learn
- * @returns Boolean indicating if study materials are available
- */
-export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
-  // English speakers learning any supported language
-  if (nativeLanguage.toLowerCase() === "english") {
-    const supportedTargets = ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian", "ukrainian", "arabic", "vietnamese", "hindi", "indonesian"];
-    return supportedTargets.includes(targetLanguage.toLowerCase());
-  }
-  
-  // Non-English speakers learning English
-  if (targetLanguage.toLowerCase() === "english") {
-    const supportedNatives = [
-      "spanish", "portuguese", "french", "mandarin", "japanese", 
-      "korean", "russian", "ukrainian", "arabic", "vietnamese", 
-      "hindi", "indonesian"
-    ];
-    return supportedNatives.includes(nativeLanguage.toLowerCase());
-  }
-  
-  // Default to false for unsupported combinations
-  return false;
-};
-
-/**
- * Gets the list of languages that can be learned from a given native language
- * @param nativeLanguage The native language
- * @returns Array of language codes that can be learned
- */
-export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
-  if (nativeLanguage.toLowerCase() === "english") {
-    // English speakers can learn these languages
-    return ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian", "ukrainian", "arabic", "vietnamese", "hindi", "indonesian"];
-  }
-  
-  // Non-English speakers can only learn English for now
-  return ["english"];
 };

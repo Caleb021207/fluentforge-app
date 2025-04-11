@@ -10,7 +10,6 @@ import voiceChatTranslations from "./voice-chat";
 import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
-import languagesTranslations from "./languages";
 
 // Combine all the translation categories
 const frenchTranslations: TranslationRecord = {
@@ -24,7 +23,6 @@ const frenchTranslations: TranslationRecord = {
   ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
   ...authTranslations,
-  ...languagesTranslations,
 };
 
 export default frenchTranslations;

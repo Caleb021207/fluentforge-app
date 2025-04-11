@@ -41,13 +41,6 @@ const voiceChatTranslations: TranslationRecord = {
   phrase7: "你明天有什么计划？",
   phrase8: "用英语怎么说...？",
   browserBasedTTS: "注意：这使用基于浏览器的文本转语音。如需获得ElevenLabs的高级语音质量，请尝试高级语音聊天。",
-  
-  // Additional keys needed for the practice tips box
-  askQuestions: "询问有关日常话题的问题",
-  practiceCommonPhrases: "练习常用短语和表达",
-  describeWhatYouSee: "描述您周围所看到的",
-  practiceVocabularyForSpecific: "针对特定主题练习词汇，如旅行或食物",
-  useThisTool: "使用此工具提高口语和听力技能。以下是一些提示：",
 };
 
 export default voiceChatTranslations;

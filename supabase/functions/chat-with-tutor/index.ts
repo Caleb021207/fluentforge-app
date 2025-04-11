@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -164,103 +165,14 @@ function logEducationalDataAccess(userId: string, dataType: string, purpose: str
   console.log(`FERPA Access Log: User ${userId} accessed ${dataType} for ${purpose} at ${new Date().toISOString()}`);
 }
 
-// Determine language pair
-function determineLanguagePair(userLanguage: string, targetLanguage?: string) {
-  // If both languages are specified, use them directly
-  if (userLanguage && targetLanguage) {
-    // English speaker learning another language
-    if (userLanguage.toLowerCase() === 'english') {
-      return {
-        isLearningEnglish: false,
-        targetLanguage: getLanguageDisplayName(targetLanguage),
-        nativeLanguage: 'English'
-      };
-    }
-    
-    // Non-English speaker learning English
-    if (targetLanguage.toLowerCase() === 'english') {
-      return {
-        isLearningEnglish: true,
-        targetLanguage: 'English',
-        nativeLanguage: getUserNativeLanguage(userLanguage)
-      };
-    }
-    
-    // Fallback for other combinations
-    return {
-      isLearningEnglish: false,
-      targetLanguage: getLanguageDisplayName(targetLanguage),
-      nativeLanguage: getUserNativeLanguage(userLanguage)
-    };
-  }
-  
-  // Legacy behavior for backward compatibility
-  const isLearningEnglish = userLanguage !== 'english';
-  const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
-  const nativeLanguage = getUserNativeLanguage(userLanguage);
-  
-  return { isLearningEnglish, targetLanguage, nativeLanguage };
-}
-
-// Get proper display name for a language
-function getLanguageDisplayName(language: string): string {
-  const languageMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Spanish',
-    'portuguese': 'Portuguese',
-    'french': 'French',
-    'japanese': 'Japanese',
-    'korean': 'Korean',
-    'mandarin': 'Mandarin Chinese',
-    'russian': 'Russian',
-    'arabic': 'Arabic',
-    'hindi': 'Hindi',
-    'vietnamese': 'Vietnamese',
-    'ukrainian': 'Ukrainian',
-    'indonesian': 'Indonesian'
-  };
-  
-  return languageMap[language.toLowerCase()] || language;
-}
-
-// Get the correct native language name based on user language
-function getUserNativeLanguage(userLanguage: string): string {
-  const languageMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Spanish',
-    'portuguese': 'Portuguese',
-    'korean': 'Korean',
-    'arabic': 'Arabic',
-    'mandarin': 'Mandarin Chinese',
-    'vietnamese': 'Vietnamese',
-    'french': 'French',
-    'japanese': 'Japanese',
-    'ukrainian': 'Ukrainian',
-    'russian': 'Russian',
-    'hindi': 'Hindi',
-    'indonesian': 'Indonesian'
-  };
-  
-  return languageMap[userLanguage] || 'English';
-}
-
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { 
-      message, 
-      requestType, 
-      userLanguage, 
-      targetLanguage,
-      requestTranslation, 
-      userId = "anonymous" 
-    } = await req.json();
-    console.log('Received message:', message, 'Request type:', requestType, 
-                'User language:', userLanguage, 'Target language:', targetLanguage, 
-                'Request translation:', requestTranslation);
+    const { message, requestType, userLanguage, requestTranslation, userId = "anonymous" } = await req.json();
+    console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage, 'Request translation:', requestTranslation);
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
@@ -296,10 +208,6 @@ serve(async (req) => {
       requestType === 'translation' ? "translation_request" : "language_learning"
     );
 
-    // Determine language pair using new function
-    const { isLearningEnglish, targetLanguage: langToLearn, nativeLanguage } = 
-      determineLanguagePair(userLanguage, targetLanguage);
-    
     // Handle translation-only requests
     if (requestType === 'translation') {
       return await handleTranslationRequest(safeMessage, userLanguage);
@@ -323,6 +231,11 @@ serve(async (req) => {
     }
     
     try {
+      // Determine if user is learning English or another language based on their native language
+      const isLearningEnglish = userLanguage !== 'english';
+      const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
+      const nativeLanguage = getUserNativeLanguage(userLanguage);
+      
       // Add CIPA/FERPA compliance instructions to tutor
       const cipaFerpaCompliance = `
       IMPORTANT COMPLIANCE REQUIREMENTS:
@@ -333,27 +246,27 @@ serve(async (req) => {
       `;
       
       // Universal tutor instructions for all language combinations
-      const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
+      const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
 
-PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
+  PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
 
-${cipaFerpaCompliance}
+  ${cipaFerpaCompliance}
 
-You MUST strictly follow these rules:
+  You MUST strictly follow these rules:
 
-1. **Only use grammar, vocabulary, and sentence structures appropriate to an intermediate level.**
-2. **Do not correct the user unless they specifically ask.**
-3. **Prioritize keeping the conversation flowing.** Ask questions, be friendly, and respond naturally.
-4. **Stay in the target language (${langToLearn}) unless the user asks for clarification in their native language (${nativeLanguage}).**
-5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
+  1. **Only use grammar, vocabulary, and sentence structures appropriate to an intermediate level.**
+  2. **Do not correct the user unless they specifically ask.**
+  3. **Prioritize keeping the conversation flowing.** Ask questions, be friendly, and respond naturally.
+  4. **Stay in the target language (${targetLanguage}) unless the user asks for clarification in their native language (${nativeLanguage}).**
+  5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
 
-IMPORTANT: ALWAYS provide a translation of your response in the user's native language (${nativeLanguage}).
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
+  IMPORTANT: ALWAYS provide a translation of your response in the user's native language (${nativeLanguage}).
+  Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
 
-Keep responses friendly but concise, focused on language learning.
-Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
-You should never converse with the user in a manner that is not appropriate for a k-12 classroom setting.
-You should ask questions to continue the conversation if it ever seems to stall.`;
+  Keep responses friendly but concise, focused on language learning.
+  Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
+  You should never converse with the user in a manner that is not appropriate for a k-12 classroom setting.
+  You should ask questions to continue the conversation if it ever seems to stall.`;
 
       // Create an initial hidden message to ensure the AI behaves correctly from the start
       const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions. ALWAYS provide a translation of your response in the user's native language.";
@@ -381,7 +294,7 @@ You should ask questions to continue the conversation if it ever seems to stall.
         messages = [
           { role: 'system', content: systemMessage },
           { role: 'user', content: initialHiddenPrompt },
-          { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to continue the conversation if it ever seems to stall." },
+          { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going. I'll always provide translations." },
           { role: 'user', content: safeMessage }
         ];
       }
@@ -549,6 +462,27 @@ You should ask questions to continue the conversation if it ever seems to stall.
     );
   }
 });
+
+// Get the correct native language name based on user language
+function getUserNativeLanguage(userLanguage: string): string {
+  const languageMap: Record<string, string> = {
+    'english': 'English',
+    'spanish': 'Spanish',
+    'portuguese': 'Portuguese',
+    'korean': 'Korean',
+    'arabic': 'Arabic',
+    'mandarin': 'Mandarin Chinese',
+    'vietnamese': 'Vietnamese',
+    'french': 'French',
+    'japanese': 'Japanese',
+    'ukrainian': 'Ukrainian',
+    'russian': 'Russian',
+    'hindi': 'Hindi',
+    'indonesian': 'Indonesian'
+  };
+  
+  return languageMap[userLanguage] || 'English';
+}
 
 // Helper function to check if text contains Devanagari script (Hindi)
 function containsDevanagariScript(text: string): boolean {

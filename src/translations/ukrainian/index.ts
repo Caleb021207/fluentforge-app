@@ -10,7 +10,6 @@ import premiumVoiceTranslations from "./premium-voice";
 import profileTranslations from "./profile";
 import progressTranslations from "./progress";
 import voiceChatTranslations from "./voice-chat";
-import languagesTranslations from "./languages";
 
 // Combine all Ukrainian translations
 const ukrainianTranslations: TranslationRecord = {
@@ -23,8 +22,7 @@ const ukrainianTranslations: TranslationRecord = {
   ...premiumVoiceTranslations,
   ...profileTranslations,
   ...progressTranslations,
-  ...voiceChatTranslations,
-  ...languagesTranslations
+  ...voiceChatTranslations
 };
 
 export default ukrainianTranslations;

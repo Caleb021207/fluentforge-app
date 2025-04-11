@@ -1,11 +1,10 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getAvailableTargetLanguages } from "@/utils/languageUtils";
 
 interface LanguageSelectionCardProps {
   nativeLanguage: string;
@@ -21,7 +20,7 @@ const LanguageSelectionCard = ({
   targetLanguage,
   setNativeLanguage,
   setTargetLanguage,
-  hasStudyMaterials: materialsAvailable,
+  hasStudyMaterials,
   handleLanguageSelection
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
@@ -41,36 +40,6 @@ const LanguageSelectionCard = ({
     ukrainian: "🇺🇦 Українська",
     hindi: "🇮🇳 हिन्दी",
     indonesian: "🇮🇩 Bahasa Indonesia"
-  };
-
-  // Available target languages based on native language
-  const availableTargetLanguages = getAvailableTargetLanguages(nativeLanguage);
-  
-  // Effect to auto-select first available target language when native language changes
-  useEffect(() => {
-    if (nativeLanguage && availableTargetLanguages.length > 0) {
-      // If current target is not available for this native language, reset it
-      if (!availableTargetLanguages.includes(targetLanguage)) {
-        setTargetLanguage(availableTargetLanguages[0]);
-      }
-    }
-  }, [nativeLanguage, targetLanguage, availableTargetLanguages, setTargetLanguage]);
-
-  // Target language flags and names mapping
-  const TARGET_LANGUAGE_NAMES = {
-    english: "🇺🇸 English",
-    spanish: "🇪🇸 Spanish",
-    portuguese: "🇧🇷 Portuguese",
-    korean: "🇰🇷 Korean",
-    arabic: "🇸🇦 Arabic",
-    mandarin: "🇨🇳 Mandarin",
-    vietnamese: "🇻🇳 Vietnamese",
-    french: "🇫🇷 French",
-    japanese: "🇯🇵 Japanese",
-    russian: "🇷🇺 Russian",
-    ukrainian: "🇺🇦 Ukrainian",
-    hindi: "🇮🇳 Hindi",
-    indonesian: "🇮🇩 Indonesian"
   };
 
   return (
@@ -93,49 +62,12 @@ const LanguageSelectionCard = ({
               </SelectContent>
             </Select>
           </div>
-
-          {nativeLanguage && (
-            <div className="space-y-2">
-              <Label htmlFor="targetLanguage">{t("iWantToLearn")}</Label>
-              <Select 
-                value={targetLanguage} 
-                onValueChange={setTargetLanguage}
-                disabled={availableTargetLanguages.length === 0}
-              >
-                <SelectTrigger id="targetLanguage" className="w-full">
-                  <SelectValue placeholder={t("selectLanguageToLearn")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableTargetLanguages.map((langCode) => (
-                    <SelectItem key={langCode} value={langCode}>
-                      {TARGET_LANGUAGE_NAMES[langCode] || langCode}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
         </div>
-        
-        {nativeLanguage && targetLanguage && (
-          <div className="mb-4">
-            {!materialsAvailable && (
-              <p className="text-amber-600 text-sm mb-2">
-                {t("studyMaterialsComingSoon", {
-                  targetLanguage: TARGET_LANGUAGE_NAMES[targetLanguage]?.split(" ")[1] || targetLanguage,
-                  nativeLanguage: NATIVE_LANGUAGE_NAMES[nativeLanguage]?.split(" ")[1] || nativeLanguage
-                })}
-                <br />
-                {t("someFeaturesLimited")}
-              </p>
-            )}
-          </div>
-        )}
         
         <Button 
           onClick={handleLanguageSelection} 
           className="w-full"
-          disabled={!nativeLanguage || !targetLanguage}
+          disabled={!nativeLanguage}
         >
           {t("saveLanguagePreferences")}
         </Button>

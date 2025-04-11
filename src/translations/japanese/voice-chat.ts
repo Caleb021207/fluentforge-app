@@ -81,14 +81,7 @@ const voiceChatTranslations: TranslationRecord = {
   // Adding new translation-specific terms
   translationSection: "翻訳",
   englishResponse: "英語の返答",
-  japaneseTranslation: "日本語訳",
-  
-  // Additional keys needed for the practice tips box
-  askQuestions: "日常的な話題について質問する",
-  practiceCommonPhrases: "一般的なフレーズや表現を練習する",
-  describeWhatYouSee: "周囲に見えるものを描写する",
-  practiceVocabularyForSpecific: "旅行や食べ物などの特定のトピックに関する語彙を練習する",
-  useThisTool: "このツールを使用して会話能力とリスニング能力を向上させましょう。いくつかのヒントを紹介します：",
+  japaneseTranslation: "日本語訳"
 };
 
 export default voiceChatTranslations;

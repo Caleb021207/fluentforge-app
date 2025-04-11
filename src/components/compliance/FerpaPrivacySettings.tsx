@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Check, InfoIcon } from "lucide-react";
+import { BookOpen, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { 
   getFerpaConsentStatus, 
@@ -87,14 +87,6 @@ const FerpaPrivacySettings = () => {
       
       <CardContent className="space-y-6">
         <FerpaInfoSection />
-        
-        <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-md flex items-start space-x-2 text-sm">
-          <InfoIcon className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
-          <div className="text-yellow-800">
-            <p className="font-medium mb-1">Demo Mode Notice</p>
-            <p>Palavox collects minimal or no real user data. This FERPA compliance interface is provided as a demonstration of how educational apps should handle data privacy, and for schools/districts that may require such documentation.</p>
-          </div>
-        </div>
         
         <div className="space-y-4 border-t pt-4">
           <ConsentToggle 

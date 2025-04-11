@@ -78,13 +78,6 @@ const voiceChatTranslations: TranslationRecord = {
   phrase6: "Що ти робив минулими вихідними?",
   phrase7: "Які в тебе плани на завтра?",
   phrase8: "Як сказати... англійською?",
-  
-  // Additional keys needed for the practice tips box
-  askQuestions: "Ставте запитання про повсякденні теми",
-  practiceCommonPhrases: "Практикуйте звичайні фрази та вирази",
-  describeWhatYouSee: "Описуйте те, що бачите навколо себе",
-  practiceVocabularyForSpecific: "Практикуйте словниковий запас на конкретні теми, як-от подорожі або їжа",
-  useThisTool: "Використовуйте цей інструмент для покращення навичок розмови та слухання. Ось кілька порад:",
 };
 
 export default voiceChatTranslations;

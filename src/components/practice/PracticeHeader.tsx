@@ -1,41 +1,25 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguageDisplayName } from "@/utils/languageUtils";
+import { getLanguagePair } from "@/utils/languageUtils";
 
-interface PracticeHeaderProps {
-  targetLanguage?: string;
-}
-
-const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage = "spanish" }) => {
+const PracticeHeader: React.FC = () => {
   const { t, currentLanguage } = useLocalization();
-  
-  // Determine which language is being practiced
-  const displayLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(targetLanguage)
-    : "English";
-  
+  const { practice } = getLanguagePair(currentLanguage);
+
   return (
-    <div className="mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <Link to="/">
-          <Button variant="outline" size="sm" className="gap-1">
-            <ArrowLeft className="h-4 w-4" />
-            {t("back")}
-          </Button>
-        </Link>
-      </div>
-      
-      <h1 className="text-3xl font-bold text-lingua-text mb-2">
-        {t("practiceYourLanguage", { language: displayLanguage })}
+    <div className="mb-8">
+      <h1 className="text-3xl font-bold text-lingua-text mb-4">
+        {t("textPractice")}
       </h1>
-      
       <p className="text-gray-600 mb-4">
-        {t("chatWithAI", { language: displayLanguage })}
+        {t("chatWithAITutor")}
       </p>
+      <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+        <p className="text-amber-800 text-sm">
+          {t("noticeTextBasedPractice")}
+        </p>
+      </div>
     </div>
   );
 };

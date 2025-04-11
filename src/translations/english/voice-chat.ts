@@ -48,14 +48,6 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
   timeLimit5MinReached: "The 5-minute time limit has been reached",
-  
-  // Additional keys needed for the practice tips box
-  askQuestions: "Ask questions about everyday topics",
-  practiceCommonPhrases: "Practice common phrases and expressions",
-  describeWhatYouSee: "Describe what you see around you",
-  practiceVocabularyForSpecific: "Practice vocabulary for specific topics like travel or food",
-  useThisTool: "Use this tool to improve your speaking and listening skills. Here are some tips:",
-  speaking: "Speaking",
 };
 
 export default voiceChatTranslations;

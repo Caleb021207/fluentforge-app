@@ -39,14 +39,6 @@ const voiceChatTranslations: TranslationRecord = {
   clearConversation: "Limpiar Conversación",
   voiceChatEnded: "Chat de voz finalizado",
   timeLimit5MinReached: "Se ha alcanzado el límite de tiempo de 5 minutos",
-  speaking: "Hablando",
-  
-  // Additional keys needed for the practice tips box
-  askQuestions: "Haz preguntas sobre temas cotidianos",
-  practiceCommonPhrases: "Practica frases y expresiones comunes",
-  describeWhatYouSee: "Describe lo que ves a tu alrededor",
-  practiceVocabularyForSpecific: "Practica vocabulario para temas específicos como viajes o comida",
-  useThisTool: "Usa esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:",
 };
 
 export default voiceChatTranslations;
