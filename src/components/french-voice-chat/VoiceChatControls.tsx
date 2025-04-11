@@ -40,7 +40,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
         </p>
         <p className="text-xs text-lingua-primary font-medium mt-1">
           {currentLanguage === "french" ? 
-            "Language de reconnaissance: Anglais (pour pratiquer l'anglais)" :
+            "Langue de reconnaissance: Anglais (pour pratiquer l'anglais)" :
             "Recognition language: English (for practicing English)"}
         </p>
       </div>

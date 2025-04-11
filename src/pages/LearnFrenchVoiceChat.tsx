@@ -44,7 +44,7 @@ const LearnFrenchVoiceChat = () => {
   });
 
   // Setting language to French (fr-FR) because English speakers are practicing French
-  const { isListening, startListening, stopListening } = useSpeechRecognition({
+  const { isListening, startListening, stopListening, usingFallback } = useSpeechRecognition({
     onTranscriptChange: setTranscript,
     onSilence: () => {
       if (transcript && transcript.trim().length > 0) {
@@ -127,6 +127,17 @@ const LearnFrenchVoiceChat = () => {
               </p>
               <p className="text-xs mt-1">
                 Please ensure your browser has permission to access your microphone.
+              </p>
+            </div>
+          )}
+          
+          {usingFallback && (
+            <div className="mb-4 p-2 bg-amber-50 text-amber-700 rounded-md">
+              <p className="text-sm font-medium">
+                Using server-side transcription (fallback mode)
+              </p>
+              <p className="text-xs mt-1">
+                Your browser's speech recognition is not available or not working well with French. We're using our server for transcription instead.
               </p>
             </div>
           )}

@@ -39,6 +39,30 @@ function processBase64Chunks(base64String: string, chunkSize = 32768) {
   return result;
 }
 
+// Map language code to Whisper language code
+function mapToWhisperLanguage(language: string): string {
+  // Normalize to lowercase
+  const lang = language.toLowerCase();
+  
+  // Map language codes to Whisper's expected format
+  const languageMap: Record<string, string> = {
+    'en': 'en',   // English
+    'fr': 'fr',   // French
+    'es': 'es',   // Spanish
+    'pt': 'pt',   // Portuguese
+    'de': 'de',   // German
+    'it': 'it',   // Italian
+    'ja': 'ja',   // Japanese
+    'zh': 'zh',   // Chinese
+    'ru': 'ru',   // Russian
+    'ar': 'ar',   // Arabic
+    'hi': 'hi',   // Hindi
+  };
+  
+  // Return the mapped language or default to 'en' if not found
+  return languageMap[lang] || 'en';
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -68,8 +92,8 @@ serve(async (req) => {
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
     
-    // Use the provided language or default to 'es' for backward compatibility
-    const transcriptionLanguage = language || 'es';
+    // Use the provided language or default to 'en'
+    const transcriptionLanguage = mapToWhisperLanguage(language || 'en');
     formData.append('language', transcriptionLanguage);
 
     console.log(`Sending to OpenAI Whisper API with language: ${transcriptionLanguage}...`);

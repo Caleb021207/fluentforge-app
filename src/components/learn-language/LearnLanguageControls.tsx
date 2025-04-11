@@ -50,7 +50,7 @@ const LearnLanguageControls: React.FC<LearnLanguageControlsProps> = ({
         <p className="text-xs text-lingua-primary font-medium mt-1">
           {currentLanguage === "english" ? 
             `Recognition language: ${language} (for practicing ${language})` :
-            `Language de reconnaissance: ${language} (pour pratiquer ${language})`}
+            `Langue de reconnaissance: ${language} (pour pratiquer ${language})`}
         </p>
       </div>
 
