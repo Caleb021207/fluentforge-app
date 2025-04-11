@@ -53,6 +53,13 @@ const voiceChatTranslations: TranslationRecord = {
   practiceLevel: "Cấp độ thực hành",
   cefrB1Description: "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc",
   conversationHistoryCleared: "Lịch sử hội thoại đã được xóa",
+  
+  // Additional keys needed for the practice tips box
+  askQuestions: "Đặt câu hỏi về các chủ đề hàng ngày",
+  practiceCommonPhrases: "Thực hành các cụm từ và biểu đạt thông dụng",
+  describeWhatYouSee: "Mô tả những gì bạn thấy xung quanh mình",
+  practiceVocabularyForSpecific: "Thực hành từ vựng cho các chủ đề cụ thể như du lịch hoặc ẩm thực",
+  useThisTool: "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:",
 };
 
 export default voiceChatTranslations;
