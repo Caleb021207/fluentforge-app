@@ -30,7 +30,11 @@ export const useVoiceChatMessages = () => {
     let initialContent = "";
     
     if (currentLanguage === "english") {
-      initialContent = `Hello, I'd like to practice ${practice} with you.`;
+      if (targetLanguage === "french") {
+        initialContent = `Hello, I'd like to practice French with you.`;
+      } else {
+        initialContent = `Hello, I'd like to practice ${practice} with you.`;
+      }
     } else if (currentLanguage === "mandarin") {
       initialContent = "你好，我想和你练习英语。";
     } else {

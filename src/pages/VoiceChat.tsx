@@ -70,8 +70,21 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                                   currentLanguage === "japanese" ? "en-US" : "en-US";
+      let recognitionLanguage = "en-US";
+      
+      if (currentLanguage === "english") {
+        if (targetLanguage === "french") {
+          recognitionLanguage = "fr-FR";
+        } else {
+          recognitionLanguage = "es-ES"; // Default to Spanish if not French
+        }
+      } else if (currentLanguage === "japanese") {
+        recognitionLanguage = "en-US";
+      } else {
+        recognitionLanguage = "en-US";
+      }
+      
+      recognitionRef.current.lang = recognitionLanguage;
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
       recognitionRef.current.maxAlternatives = 1;
@@ -139,7 +152,7 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, toast, t]);
+  }, [currentLanguage, targetLanguage, toast, t]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -421,7 +434,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "portuguese") {
       return "Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
     } else if (currentLanguage === "korean") {
-      return "자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 ��용합니다.";
+      return "자���어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 ��용합니다.";
     } else if (currentLanguage === "arabic") {
       return "نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
     } else if (currentLanguage === "mandarin") {
@@ -504,7 +517,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "korean") {
       return `저희 음성 채팅으로 ${practice} 말하기 능력을 연습하세요. 마이크 버튼을 클릭하고 ${practice}로 말하기 시작하세요. AI는 ${practice}로 응답하고 연습을 도와드릴 것입니다.`;
     } else if (currentLanguage === "arabic") {
-      return `مارس مهارات التحدث باللغة ${practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${practice}. سيرد الذكاء الاصطناعي عليك باللغة ${practice} ويساعدك على التدريب.`;
+      return `مارس مهارات التحدث باللغة ${practice} م�� خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${practice}. سيرد الذكاء الاصطناعي عليك باللغة ${practice} ويساعدك على التدريب.`;
     } else if (currentLanguage === "mandarin") {
       return `使用我们的语音聊天练习您的${practice}口语技能。点击麦克风按钮，开始用${practice}说话。AI将用${practice}回应您并帮助您练习。`;
     } else if (currentLanguage === "vietnamese") {
