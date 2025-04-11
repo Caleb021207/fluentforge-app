@@ -35,11 +35,15 @@ export const useChatMessaging = () => {
         "language_practice"
       );
       
+      // Get the targetLanguage from localStorage 
+      const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
+      
       // Use chat-with-gpt endpoint
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: message,
           userLanguage: currentLanguage,
+          targetLanguage: targetLanguage,  // Pass the target language
           requestTranslation: true
         }
       });

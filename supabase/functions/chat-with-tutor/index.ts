@@ -359,7 +359,7 @@ You should ask questions to continue the conversation if it ever seems to stall.
       const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions. ALWAYS provide a translation of your response in the user's native language.";
 
       const systemMessage = requestType === 'assessment' 
-        ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
+        ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : targetLanguage} language skills in the following areas:
            - Reading proficiency
            - Writing ability
            - Speaking competency
