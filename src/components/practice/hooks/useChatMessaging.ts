@@ -5,7 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { logDataAccess } from "@/utils/contentSafetyUtils";
 import { useTranslationHandler } from "./useTranslationHandler";
-import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 export const useChatMessaging = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +13,7 @@ export const useChatMessaging = () => {
   const { t, currentLanguage } = useLocalization();
   const { getTranslation, verifyHindiTranslation } = useTranslationHandler();
 
-  const sendChatMessage = async (message: string, targetLanguage?: string) => {
+  const sendChatMessage = async (message: string) => {
     if (!message || message.trim() === "") {
       toast({
         title: t("error"),
@@ -36,19 +35,12 @@ export const useChatMessaging = () => {
         "language_practice"
       );
       
-      // Determine which language to practice (for English speakers)
-      const practiceLanguage = targetLanguage || 
-                              (currentLanguage === "english" ? "Spanish" : "English");
-      
-      console.log("Sending practice request with target language:", practiceLanguage);
-      
       // Use chat-with-gpt endpoint
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: message,
           userLanguage: currentLanguage,
-          requestTranslation: true,
-          targetLanguage: practiceLanguage
+          requestTranslation: true
         }
       });
 
@@ -92,10 +84,10 @@ export const useChatMessaging = () => {
     }
   };
 
-  const retryLastMessage = async (message: string, targetLanguage?: string) => {
+  const retryLastMessage = async (message: string) => {
     if (hasError) {
       setHasError(false);
-      return await sendChatMessage(message, targetLanguage);
+      return await sendChatMessage(message);
     }
     return null;
   };

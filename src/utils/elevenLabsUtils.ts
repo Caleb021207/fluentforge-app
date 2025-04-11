@@ -16,9 +16,6 @@ export const UKRAINIAN_TUTOR_AGENT_ID = 'eu1E63tLoKFYPB28lWks'; // English tutor
 export const HINDI_TUTOR_AGENT_ID = 'KZaHLSD2sG8AptT09Feu'; // English tutor for Hindi speakers
 export const INDONESIAN_TUTOR_AGENT_ID = 'n0xawTpIZ6Zojiox0KZ5'; // English tutor for Indonesian speakers
 
-// Updated English Agent ID to use as target language tutor for all English varieties
-export const ENGLISH_VARIETIES_AGENT_ID = 'AOv9JDhkEdMmiU61vHg9';
-
 // Language to agent ID mapping for better maintainability
 const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
   "english": SPANISH_TUTOR_AGENT_ID, // English speakers learn Spanish
@@ -36,44 +33,16 @@ const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
   "indonesian": INDONESIAN_TUTOR_AGENT_ID
 };
 
-// Target language agents for English speakers only
-// ONLY English speakers learning these languages use AOv9JDhkEdMmiU61vHg9
-const TARGET_LANGUAGE_AGENTS: Record<string, string> = {
-  "spanish": ENGLISH_VARIETIES_AGENT_ID,  // English speakers learning Spanish use AOv9JDhkEdMmiU61vHg9
-  "french": ENGLISH_VARIETIES_AGENT_ID,   // English speakers learning French use AOv9JDhkEdMmiU61vHg9
-  "portuguese": ENGLISH_VARIETIES_AGENT_ID, // English speakers learning Portuguese use AOv9JDhkEdMmiU61vHg9
-  "english": ENGLISH_VARIETIES_AGENT_ID // Added English as a target language
-};
-
 /**
  * Gets the appropriate agent ID based on the user's language
  * @param language The user's current language (english, spanish, portuguese, korean, arabic, mandarin, vietnamese, french, japanese, russian, ukrainian, indonesian)
  * @returns The appropriate agent ID for the user's language
  */
-export const getAgentIdForLanguage = (language: string, targetLanguage?: string): string => {
+export const getAgentIdForLanguage = (language: string): string => {
   const normalizedLanguage = language.toLowerCase();
   
-  // If English speaker with target language specified
-  if (normalizedLanguage === 'english' && targetLanguage) {
-    const normalizedTarget = targetLanguage.toLowerCase();
-    if (TARGET_LANGUAGE_AGENTS[normalizedTarget]) {
-      console.log(`Using tutor for ${normalizedTarget} for ${normalizedLanguage} speaker:`, TARGET_LANGUAGE_AGENTS[normalizedTarget]);
-      return TARGET_LANGUAGE_AGENTS[normalizedTarget];
-    }
-  }
-  
-  // For non-English speakers learning English, use their specific tutor
-  if (normalizedLanguage !== 'english' && targetLanguage?.toLowerCase() === 'english') {
-    // Use the language-specific English tutor
-    if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
-      console.log(`Using tutor for ${normalizedLanguage} speaker learning English:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
-      return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
-    }
-  }
-  
-  // General case - use the agent for the user's native language
   if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
-    console.log(`Using default tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
+    console.log(`Using tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
     return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
   }
   
@@ -115,7 +84,7 @@ export const endElevenLabsConversation = async (conversationId: string) => {
 /**
  * Hook for using ElevenLabs conversation in React components
  */
-export const useElevenLabsAgent = (language: string = 'english', targetLanguage?: string) => {
+export const useElevenLabsAgent = (language: string = 'english') => {
   // Use the @11labs/react useConversation hook
   const conversation = useConversation();
   
@@ -132,9 +101,9 @@ export const useElevenLabsAgent = (language: string = 'english', targetLanguage?
         throw new Error("Microphone access is required for voice chat");
       }
       
-      // Use the appropriate agent ID based on language and target language
-      const agentId = getAgentIdForLanguage(language, targetLanguage);
-      console.log(`Starting ElevenLabs agent for ${language} with target ${targetLanguage || 'default'}, ID: ${agentId}`);
+      // Use the appropriate agent ID based on language
+      const agentId = getAgentIdForLanguage(language);
+      console.log(`Starting ElevenLabs agent for ${language} with ID: ${agentId}`);
       
       // If already connected, disconnect first
       if (isConversationActive()) {

@@ -12,61 +12,19 @@ const corsHeaders = {
 // Language code mapping for better TTS results
 const languageVoiceMap: Record<string, string> = {
   "english": "alloy", // Default English voice
-  "en": "alloy", // English
   "spanish": "nova",  // Spanish-friendly voice
-  "es": "nova", // Spanish
   "portuguese": "nova", // Portuguese-friendly voice
-  "pt": "nova", // Portuguese
   "korean": "shimmer", // Korean-friendly voice
-  "ko": "shimmer", // Korean
   "arabic": "shimmer", // Arabic-friendly voice
-  "ar": "shimmer", // Arabic
   "mandarin": "shimmer", // Mandarin-friendly voice
-  "zh": "shimmer", // Chinese
   "vietnamese": "nova", // Vietnamese-friendly voice
-  "vi": "nova", // Vietnamese
   "french": "echo", // French-friendly voice
-  "fr": "echo", // French
   "japanese": "onyx", // Japanese-friendly voice
-  "ja": "onyx", // Japanese
   "russian": "echo", // Russian-friendly voice
-  "ru": "echo", // Russian
   "ukrainian": "echo", // Ukrainian-friendly voice
-  "uk": "echo", // Ukrainian
   "hindi": "nova", // Hindi-friendly voice
-  "hi": "nova", // Hindi
-  "indonesian": "nova", // Indonesian-friendly voice
-  "id": "nova" // Indonesian
+  "indonesian": "nova" // Indonesian-friendly voice
 };
-
-// Process base64 in chunks to prevent memory issues
-function processBase64(arrayBuffer: ArrayBuffer): string {
-  const uint8Array = new Uint8Array(arrayBuffer);
-  let binaryString = '';
-  const chunkSize = 1024;
-  
-  // Process in chunks to avoid stack overflow
-  for (let i = 0; i < uint8Array.length; i += chunkSize) {
-    const chunk = uint8Array.slice(i, Math.min(i + chunkSize, uint8Array.length));
-    binaryString += String.fromCharCode.apply(null, Array.from(chunk));
-  }
-  
-  return btoa(binaryString);
-}
-
-// Normalize language code
-function normalizeLanguageCode(language: string): string {
-  if (!language) return 'english';
-  
-  const lowerLang = language.toLowerCase();
-  
-  // Handle full codes like en-US
-  if (lowerLang.includes('-')) {
-    return lowerLang.split('-')[0];
-  }
-  
-  return lowerLang;
-}
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -85,17 +43,12 @@ serve(async (req) => {
       throw new Error('Text is required');
     }
 
-    console.log(`Processing TTS request for language: ${language}, text: ${text.substring(0, 20)}...`);
-    
-    // Normalize language code
-    const normalizedLanguage = normalizeLanguageCode(language);
-    console.log(`Normalized language: ${normalizedLanguage}`);
-    
     // Determine the best voice based on language or use provided voice
     let selectedVoice = voice;
-    if (!selectedVoice) {
+    if (!selectedVoice && language) {
+      const normalizedLanguage = language.toLowerCase();
       selectedVoice = languageVoiceMap[normalizedLanguage] || 'alloy';
-      console.log(`Selected voice ${selectedVoice} for language ${normalizedLanguage}`);
+      console.log(`Using voice ${selectedVoice} for language ${normalizedLanguage}`);
     }
 
     // Generate speech from text
@@ -108,20 +61,29 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'tts-1',
         input: text,
-        voice: selectedVoice,
+        voice: selectedVoice || 'alloy', // Default to alloy if no voice specified
         response_format: 'mp3',
       }),
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`OpenAI API error: ${response.status} ${response.statusText} - ${errorText}`);
-      throw new Error(`OpenAI API error: ${response.statusText}`);
+      const errorData = await response.json().catch(() => null);
+      throw new Error(`OpenAI API error: ${JSON.stringify(errorData) || response.statusText}`);
     }
 
     // Convert audio buffer to base64 safely
     const arrayBuffer = await response.arrayBuffer();
-    const base64Audio = processBase64(arrayBuffer);
+    const uint8Array = new Uint8Array(arrayBuffer);
+    let binaryString = '';
+    const chunkSize = 1024;
+    
+    // Process in chunks to avoid stack overflow
+    for (let i = 0; i < uint8Array.length; i += chunkSize) {
+      const chunk = uint8Array.slice(i, Math.min(i + chunkSize, uint8Array.length));
+      binaryString += String.fromCharCode.apply(null, chunk);
+    }
+    
+    const base64Audio = btoa(binaryString);
 
     return new Response(
       JSON.stringify({ audioContent: base64Audio }),

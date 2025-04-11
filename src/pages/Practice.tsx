@@ -37,13 +37,14 @@ const Practice = () => {
     sendLanguageLearningPrompt,
     handleSubmit,
     getPlaceholderText
-  } = useChatMessages(targetLanguage);
+  } = useChatMessages();
   
   const {
+    voiceChatTimeRemaining,
     startVoiceConversation,
     endVoiceConversation,
     isConversationActive
-  } = useVoiceChat(targetLanguage);
+  } = useVoiceChat();
 
   return (
     <div className="max-w-4xl mx-auto p-4">

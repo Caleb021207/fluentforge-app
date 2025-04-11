@@ -12,14 +12,8 @@ const PageHeader = ({ practice }: PageHeaderProps) => {
   // Get the language pair based on current language
   const languagePair = getLanguagePair(currentLanguage);
   
-  // Try to get the target language from localStorage first
-  const savedTargetLanguage = localStorage.getItem("targetLanguage");
-  
-  // Use provided practice language, or saved target language, or fall back to the one from language pair
-  const practiceLanguage = practice || 
-                          (savedTargetLanguage ? 
-                           savedTargetLanguage.charAt(0).toUpperCase() + savedTargetLanguage.slice(1) : 
-                           languagePair.practice);
+  // Use provided practice language or fall back to the one from language pair
+  const practiceLanguage = practice || languagePair.practice;
 
   return (
     <div className="mb-8">

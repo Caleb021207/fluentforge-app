@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,16 +21,13 @@ const PremiumVoiceChat = () => {
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   
-  // Get saved target language if available
-  const savedTargetLanguage = localStorage.getItem("targetLanguage");
-  
   const {
     microphoneAccess,
     isConversationActive,
     startVoiceConversation: startElevenLabsConversation,
     endVoiceConversation: endElevenLabsConversation,
     conversation
-  } = useVoiceChat(savedTargetLanguage);
+  } = useVoiceChat();
 
   const {
     isLoggedIn,
@@ -131,11 +128,6 @@ const PremiumVoiceChat = () => {
 
   // Get the language pair based on the user's interface language
   const { practice } = getLanguagePair(currentLanguage);
-  
-  // Get the actual practice language to use
-  const practiceLanguage = savedTargetLanguage ? 
-    savedTargetLanguage.charAt(0).toUpperCase() + savedTargetLanguage.slice(1) : 
-    practice;
 
   if (isLoading) {
     return (
@@ -153,7 +145,7 @@ const PremiumVoiceChat = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <PageHeader practice={practiceLanguage} />
+      <PageHeader />
       
       <CooldownMessage 
         cooldownTimeRemaining={cooldownTimeRemaining} 

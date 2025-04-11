@@ -14,58 +14,53 @@ function processBase64Chunks(base64String: string, chunkSize = 32768) {
   const chunks: Uint8Array[] = [];
   let position = 0;
   
-  try {
-    while (position < base64String.length) {
-      const chunk = base64String.slice(position, position + chunkSize);
-      const binaryChunk = atob(chunk);
-      const bytes = new Uint8Array(binaryChunk.length);
-      
-      for (let i = 0; i < binaryChunk.length; i++) {
-        bytes[i] = binaryChunk.charCodeAt(i);
-      }
-      
-      chunks.push(bytes);
-      position += chunkSize;
+  while (position < base64String.length) {
+    const chunk = base64String.slice(position, position + chunkSize);
+    const binaryChunk = atob(chunk);
+    const bytes = new Uint8Array(binaryChunk.length);
+    
+    for (let i = 0; i < binaryChunk.length; i++) {
+      bytes[i] = binaryChunk.charCodeAt(i);
     }
-
-    const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-    const result = new Uint8Array(totalLength);
-    let offset = 0;
-
-    for (const chunk of chunks) {
-      result.set(chunk, offset);
-      offset += chunk.length;
-    }
-
-    return result;
-  } catch (error) {
-    console.error('Error processing base64 chunks:', error);
-    throw new Error('Failed to process audio data');
+    
+    chunks.push(bytes);
+    position += chunkSize;
   }
+
+  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+  const result = new Uint8Array(totalLength);
+  let offset = 0;
+
+  for (const chunk of chunks) {
+    result.set(chunk, offset);
+    offset += chunk.length;
+  }
+
+  return result;
 }
 
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
+      throw new Error('OpenAI API key is not configured');
     }
-    
-    const { audio, language = 'en' } = await req.json();
+
+    const { audio, language } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
     }
+
+    console.log("Received audio data, processing...");
+    console.log(`Language specified: ${language || 'none, will use default'}`);
     
-    console.log(`Processing audio transcription request for language: ${language}`);
-    
-    // Process audio in chunks to prevent memory issues
+    // Process audio in chunks
     const binaryAudio = processBase64Chunks(audio);
-    console.log(`Processed ${binaryAudio.length} bytes of audio data`);
     
     // Prepare form data
     const formData = new FormData();
@@ -73,10 +68,11 @@ serve(async (req) => {
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
     
-    // If a language is specified, add it to the request
-    if (language && language !== 'auto') {
-      formData.append('language', language);
-    }
+    // Use the provided language or default to 'es' for backward compatibility
+    const transcriptionLanguage = language || 'es';
+    formData.append('language', transcriptionLanguage);
+
+    console.log(`Sending to OpenAI Whisper API with language: ${transcriptionLanguage}...`);
 
     // Send to OpenAI
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
@@ -89,12 +85,12 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`OpenAI API error: ${response.status} ${response.statusText} - ${errorText}`);
-      throw new Error(`OpenAI API error: ${response.statusText}`);
+      console.error("OpenAI API error:", errorText);
+      throw new Error(`OpenAI API error: ${errorText}`);
     }
 
     const result = await response.json();
-    console.log(`Transcription result: ${result.text}`);
+    console.log("Transcription successful:", result.text);
 
     return new Response(
       JSON.stringify({ text: result.text }),
@@ -102,21 +98,12 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in transcribe-audio function:', error);
-    
-    let errorMessage = 'Failed to transcribe audio. Please try again.';
-    if (error.message.includes('API key not configured')) {
-      errorMessage = 'The transcription service is not properly configured. Please contact support.';
-    }
-
+    console.error("Error in transcribe-audio function:", error);
     return new Response(
-      JSON.stringify({ 
-        error: errorMessage,
-        details: error.message 
-      }),
-      { 
+      JSON.stringify({ error: error.message }),
+      {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }

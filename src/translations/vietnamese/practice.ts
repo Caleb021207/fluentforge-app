@@ -32,7 +32,6 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "Thực hành hội thoại trong các tình huống khác nhau",
   learnNewVocabulary: "Học từ vựng mới",
   discussCulturalTopics: "Thảo luận về các chủ đề văn hóa",
-  startConversationIn: "Bắt Đầu Trò Chuyện Bằng {language}"
 };
 
 export default practiceTranslations;
