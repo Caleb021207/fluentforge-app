@@ -1,9 +1,10 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
-import { AlertTriangle, Volume2 } from "lucide-react";
+import { AlertTriangle, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { getSpeechSynthesisLanguageCode } from "@/utils/languageUtils";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
@@ -14,6 +15,8 @@ interface ChatMessageProps {
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Languages that should always show translations
   const showTranslationLanguages = [
@@ -60,9 +63,86 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     );
   }
   
-  const handlePlayAudio = () => {
-    if (onPlayAudio && role === "assistant") {
+  const handlePlayAudio = async () => {
+    if (role !== "assistant") return;
+    
+    // If there's a parent handler, use that first
+    if (onPlayAudio) {
       onPlayAudio(safeContent);
+      return;
+    }
+    
+    // Otherwise, use our direct TTS implementation
+    setIsLoading(true);
+    setIsPlaying(true);
+    
+    try {
+      // Get language code for TTS based on who's learning what
+      let languageForTTS = currentLanguage === "english" ? "spanish" : "english";
+      
+      // Call the Supabase Edge Function for TTS
+      const { data, error } = await supabase.functions.invoke("text-to-speech", {
+        body: { 
+          text: safeContent,
+          language: languageForTTS
+        },
+      });
+      
+      if (error) throw new Error(`Edge function error: ${error.message}`);
+      if (!data || !data.audioContent) throw new Error("No audio content received");
+      
+      // Convert base64 to binary
+      const audioContent = data.audioContent;
+      const binaryString = atob(audioContent);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      
+      // Create blob and play
+      const blob = new Blob([bytes], { type: 'audio/mpeg' });
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      
+      audio.onended = () => {
+        setIsPlaying(false);
+        URL.revokeObjectURL(url);
+      };
+      
+      audio.onerror = (e) => {
+        console.error("Audio playback error:", e);
+        setIsPlaying(false);
+        URL.revokeObjectURL(url);
+      };
+      
+      await audio.play();
+      
+    } catch (err) {
+      console.error("Error playing audio:", err);
+      setIsPlaying(false);
+      
+      // Fallback to browser's speech synthesis
+      try {
+        const speechSynthesis = window.speechSynthesis;
+        if (speechSynthesis) {
+          const utterance = new SpeechSynthesisUtterance(safeContent);
+          
+          // Determine language code based on current language
+          const langCode = getSpeechSynthesisLanguageCode(
+            currentLanguage === "english" ? "spanish" : "english"
+          );
+          
+          utterance.lang = langCode;
+          utterance.onend = () => setIsPlaying(false);
+          utterance.onerror = () => setIsPlaying(false);
+          
+          speechSynthesis.speak(utterance);
+        }
+      } catch (fallbackError) {
+        console.error("Fallback speech synthesis error:", fallbackError);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
   
@@ -89,14 +169,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
         <div className="flex justify-between items-start">
           <p className={`${role === "user" ? "text-white" : "text-gray-800"}`}>{safeContent}</p>
           
-          {role === "assistant" && onPlayAudio && (
+          {role === "assistant" && (
             <Button 
               onClick={handlePlayAudio} 
               variant="ghost" 
               size="sm"
+              disabled={isLoading || isPlaying}
               className="ml-2 -mt-1 p-1 h-auto"
             >
-              <Volume2 className="h-4 w-4" />
+              {isLoading || isPlaying ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Volume2 className="h-4 w-4" />
+              )}
             </Button>
           )}
         </div>

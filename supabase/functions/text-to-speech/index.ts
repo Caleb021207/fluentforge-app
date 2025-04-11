@@ -42,6 +42,8 @@ serve(async (req) => {
     if (!text) {
       throw new Error('Text is required');
     }
+    
+    console.log(`TTS request for language: ${language}, text length: ${text.length}`);
 
     // Determine the best voice based on language or use provided voice
     let selectedVoice = voice;
@@ -50,6 +52,9 @@ serve(async (req) => {
       selectedVoice = languageVoiceMap[normalizedLanguage] || 'alloy';
       console.log(`Using voice ${selectedVoice} for language ${normalizedLanguage}`);
     }
+
+    // Trim text if it's too long (OpenAI has a limit)
+    const trimmedText = text.length > 4000 ? text.substring(0, 4000) + "..." : text;
 
     // Generate speech from text
     const response = await fetch('https://api.openai.com/v1/audio/speech', {
@@ -60,7 +65,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'tts-1',
-        input: text,
+        input: trimmedText,
         voice: selectedVoice || 'alloy', // Default to alloy if no voice specified
         response_format: 'mp3',
       }),
@@ -68,6 +73,7 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
+      console.error("OpenAI TTS API error:", errorData || response.statusText);
       throw new Error(`OpenAI API error: ${JSON.stringify(errorData) || response.statusText}`);
     }
 
@@ -80,10 +86,11 @@ serve(async (req) => {
     // Process in chunks to avoid stack overflow
     for (let i = 0; i < uint8Array.length; i += chunkSize) {
       const chunk = uint8Array.slice(i, Math.min(i + chunkSize, uint8Array.length));
-      binaryString += String.fromCharCode.apply(null, chunk);
+      binaryString += String.fromCharCode.apply(null, [...chunk]);
     }
     
     const base64Audio = btoa(binaryString);
+    console.log("Successfully generated speech, returning base64 audio");
 
     return new Response(
       JSON.stringify({ audioContent: base64Audio }),

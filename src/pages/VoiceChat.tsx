@@ -23,6 +23,7 @@ import ukrainianTranslations from "@/translations/ukrainian";
 import hindiTranslations from "@/translations/hindi";
 import indonesianTranslations from "@/translations/indonesian";
 import ChatMessage from "@/components/practice/ChatMessage";
+import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -267,62 +268,41 @@ const VoiceChat = () => {
   };
 
   const speakWithBrowserSynthesis = (text: string) => {
-    if (!synthRef.current) {
-      console.error('Speech synthesis not available');
-      toast({
-        title: t("error"),
-        description: t("speechSynthesisNotSupported"),
-        variant: "destructive",
-      });
+    if (!text || text.trim() === '') {
+      console.warn('Empty text provided to speakWithBrowserSynthesis');
       return;
     }
-    
-    synthRef.current.cancel();
+
+    console.log(`Speaking text: "${text.substring(0, 50)}..."`);
     
     // Get the target language based on user's UI language
     const { practice } = getLanguagePair(currentLanguage);
+    const practiceLanguage = practice.toLowerCase();
     
-    // Get the correct language code for speech synthesis
-    const ttsLangCode = getSpeechSynthesisLanguageCode(practice.toLowerCase());
-    console.log(`Using TTS language code: ${ttsLangCode} for practice language: ${practice}`);
+    setIsSpeaking(true);
     
-    utteranceRef.current = new SpeechSynthesisUtterance(text);
-    utteranceRef.current.lang = ttsLangCode;
-    
-    const voices = synthRef.current.getVoices();
-    console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
-    
-    // Find the best voice for this language
-    const voice = findBestVoiceForLanguage(synthRef.current, ttsLangCode);
-    
-    if (voice) {
-      console.log(`Using voice: ${voice.name} (${voice.lang}) for ${practice}`);
-      utteranceRef.current.voice = voice;
-    } else {
-      console.warn(`No matching voice found for language: ${ttsLangCode}`);
-    }
-    
-    utteranceRef.current.onstart = () => {
-      console.log("Speech synthesis started");
-      setIsSpeaking(true);
-    };
-    
-    utteranceRef.current.onend = () => {
-      console.log("Speech synthesis ended");
-      setIsSpeaking(false);
-    };
-    
-    utteranceRef.current.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      setIsSpeaking(false);
-      toast({
-        title: t("error"),
-        description: t("speechSynthesisError"),
-        variant: "destructive",
-      });
-    };
-    
-    synthRef.current.speak(utteranceRef.current);
+    // Use our TTS utility
+    playTTS({
+      text: text,
+      language: practiceLanguage,
+      onStart: () => {
+        console.log("TTS started");
+        setIsSpeaking(true);
+      },
+      onEnd: () => {
+        console.log("TTS ended");
+        setIsSpeaking(false);
+      },
+      onError: (error) => {
+        console.error("TTS error:", error);
+        setIsSpeaking(false);
+        toast({
+          title: t("error"),
+          description: t("speechSynthesisError"),
+          variant: "destructive",
+        });
+      }
+    });
   };
 
   const playAgain = () => {

@@ -21,7 +21,7 @@ export const getLanguageDisplayName = (language: string): string => {
     'indonesian': 'Indonesian'
   };
   
-  return languageMap[language.toLowerCase()] || language;
+  return languageMap[language?.toLowerCase()] || language || 'English';
 };
 
 /**
@@ -63,7 +63,7 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'indonesian': 'Bahasa Indonesia'
   };
   
-  return nativeNameMap[language.toLowerCase()] || getLanguageDisplayName(language);
+  return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
 };
 
 /**
@@ -103,7 +103,7 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'arabic-english'
   ];
   
-  const pairKey = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
+  const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
   return supportedPairs.includes(pairKey);
 };
 
@@ -129,7 +129,7 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'indonesian': 'id-ID'
   };
   
-  return languageCodeMap[language.toLowerCase()] || 'en-US';
+  return languageCodeMap[language?.toLowerCase()] || 'en-US';
 };
 
 /**
@@ -154,7 +154,12 @@ export const findBestVoiceForLanguage = (
   }
   
   const languagePrefix = langCode.split('-')[0].toLowerCase();
-  console.log(`Finding voice for language code: ${langCode}, prefix: ${languagePrefix}`);
+  console.log(`Finding voice for language code: ${langCode}, prefix: ${languagePrefix}, available voices: ${voices.length}`);
+  
+  // Log available voices for debugging
+  voices.forEach(v => {
+    console.log(`Voice: ${v.name}, Lang: ${v.lang}, Default: ${v.default}`);
+  });
   
   // Try to find an exact match first
   let voice = voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase());
@@ -175,6 +180,19 @@ export const findBestVoiceForLanguage = (
   if (voice) {
     console.log(`Found partial match voice: ${voice.name}`);
     return voice;
+  }
+  
+  // Try to find any default voice as a last resort
+  voice = voices.find(v => v.default === true);
+  if (voice) {
+    console.log(`Using default voice as fallback: ${voice.name}`);
+    return voice;
+  }
+  
+  // If all else fails, return the first available voice
+  if (voices.length > 0) {
+    console.log(`Using first available voice as fallback: ${voices[0].name}`);
+    return voices[0];
   }
   
   console.warn(`No voice found for language: ${langCode}`);
