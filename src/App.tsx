@@ -11,6 +11,8 @@ import VoiceChat from "@/pages/VoiceChat";
 import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
 import Settings from "@/pages/Settings";
 import SafetyPolicy from "@/pages/SafetyPolicy";
+import WritingCertification from "@/pages/WritingCertification";
+import ReadingCertification from "@/pages/ReadingCertification";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LocalizationProvider } from "@/context/LocalizationContext";
@@ -33,6 +35,8 @@ function App() {
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/safety-policy" element={<SafetyPolicy />} />
+              <Route path="/certification/writing" element={<WritingCertification />} />
+              <Route path="/certification/reading/:level?" element={<ReadingCertification />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
