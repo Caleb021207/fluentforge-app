@@ -11,39 +11,39 @@ const PrivacyTabContent = () => {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
           <Lock className="mr-2 h-5 w-5 text-lingua-primary" />
-          {t("dataPrivacyOverview") || "Data Privacy & Security Practices"}
+          {t("dataPrivacyOverview") || "Data Privacy Overview"}
         </h2>
         <p>
           {t("dataPrivacyDescription") || 
-            "Palavox is designed with security-first architecture and clear retention standards:"}
+            "Palavox collects minimal, anonymized data for platform performance and support purposes only. We do not collect, store, or distribute personal information from students or educators."}
         </p>
       </section>
       
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
           <Shield className="mr-2 h-5 w-5 text-lingua-primary" />
-          {t("dataSecurity") || "Data Handling & Security"}
+          {t("dataSecurity") || "Data Security"}
         </h2>
         <ul className="list-disc pl-6 space-y-2">
           <li className="text-base">
             {t("dataSecurityEncryption") || 
-              "End-to-end encryption (in transit and at rest)"}
+              "All data is encrypted both in transit (TLS 1.2 or higher) and at rest using AES-256 protocols"}
           </li>
           <li className="text-base">
             {t("dataSecurityAccess") || 
-              "Role-based access control for staff and admins"}
+              "Access to data is limited to authorized system administrators and monitored through role-based access control"}
           </li>
           <li className="text-base">
             {t("dataSecurityBackups") || 
-              "Regular secure data backups"}
+              "Data backups are performed regularly and stored securely to prevent loss or corruption"}
           </li>
           <li className="text-base">
             {t("dataSecurityMonitoring") || 
-              "Real-time monitoring for unauthorized activity"}
+              "We use real-time logging and automated alerts to detect suspicious activity or unauthorized access"}
           </li>
           <li className="text-base">
             {t("dataSecurityUpdates") || 
-              "Routine software and security updates"}
+              "Security patches and system updates are applied frequently to maintain a secure infrastructure"}
           </li>
         </ul>
       </section>
@@ -56,15 +56,15 @@ const PrivacyTabContent = () => {
         <ul className="list-disc pl-6 space-y-2">
           <li className="text-base">
             {t("dataRetentionPolicy1") || 
-              "We retain session data only as long as needed for educational use"}
+              "Palavox does not store student-identifying data. Session information is anonymized"}
           </li>
           <li className="text-base">
             {t("dataRetentionPolicy2") || 
-              "No permanent storage of PII or student-created content"}
+              "Usage data is retained only as long as necessary to support learning analytics or platform improvements"}
           </li>
           <li className="text-base">
             {t("dataRetentionPolicy3") || 
-              "Full data deletion available on request"}
+              "School administrators or districts can request deletion of all related records at any time"}
           </li>
         </ul>
       </section>
