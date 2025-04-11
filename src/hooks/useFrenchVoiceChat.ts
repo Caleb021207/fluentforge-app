@@ -26,6 +26,7 @@ export const useFrenchVoiceChat = () => {
   const { toast } = useToast();
   const { t } = useLocalization();
   
+  // These are reversed from before - now correctly set for French speakers learning English
   const native = "French";
   const target = "English";
 
@@ -58,8 +59,9 @@ export const useFrenchVoiceChat = () => {
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
-          userLanguage: 'english',
-          targetLanguage: 'french',
+          // Fixed: French speakers are learning English, so French is userLanguage and English is targetLanguage
+          userLanguage: 'french',
+          targetLanguage: 'english',
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
           requestTranslation: true

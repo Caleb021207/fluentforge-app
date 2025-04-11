@@ -27,10 +27,12 @@ const FrenchVoiceChat = () => {
     getConversationStarters
   } = useFrenchVoiceChat();
 
+  // Using English voice for the AI responses since this is for French speakers learning English
   const { speak, isSpeaking } = useSpeechSynthesis({
     defaultLanguage: 'en-US'
   });
 
+  // We're setting language to English (en-US) because French speakers should practice in English
   const { isListening, startListening, stopListening } = useSpeechRecognition({
     onTranscriptChange: setTranscript,
     onSilence: () => {
