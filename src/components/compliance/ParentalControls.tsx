@@ -16,7 +16,7 @@ import {
   setParentalControlsLock,
   getParentalDataConsentStatus,
   setParentalDataConsentStatus
-} from "@/utils/contentSafetyUtils";
+} from "@/utils/safety";
 import FerpaPrivacySettings from "./FerpaPrivacySettings";
 
 const ParentalControls = () => {

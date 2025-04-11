@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { filterContent, isSafeContent } from "@/utils/contentSafetyUtils";
+import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import { AlertTriangle } from "lucide-react";
 
 interface ChatMessageProps {

@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { filterContent, isSafeContent } from "@/utils/contentSafetyUtils";
+import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 
 export interface ChatMessage {
   role: "user" | "assistant";

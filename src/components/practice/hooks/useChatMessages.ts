@@ -5,7 +5,7 @@ import { useMessageState, type ChatMessage } from "./useMessageState";
 import { useMessageInput } from "./useMessageInput";
 import { useChatMessaging } from "./useChatMessaging";
 import { usePromptGenerator } from "./usePromptGenerator";
-import { isSafeContent, filterContent } from "@/utils/contentSafetyUtils";
+import { isSafeContent, filterContent } from "@/utils/safety/contentFilter";
 
 // Use 'export type' syntax for re-exporting types when isolatedModules is enabled
 export type { ChatMessage };
