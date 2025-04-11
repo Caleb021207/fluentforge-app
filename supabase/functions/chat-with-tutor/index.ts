@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -165,20 +166,20 @@ function logEducationalDataAccess(userId: string, dataType: string, purpose: str
 }
 
 // Determine language pair
-function determineLanguagePair(userLanguage: string, targetLanguage?: string) {
+function determineLanguagePair(userLanguage: string, targetLang?: string) {
   // If both languages are specified, use them directly
-  if (userLanguage && targetLanguage) {
+  if (userLanguage && targetLang) {
     // English speaker learning another language
     if (userLanguage.toLowerCase() === 'english') {
       return {
         isLearningEnglish: false,
-        targetLanguage: getLanguageDisplayName(targetLanguage),
+        targetLanguage: getLanguageDisplayName(targetLang),
         nativeLanguage: 'English'
       };
     }
     
     // Non-English speaker learning English
-    if (targetLanguage.toLowerCase() === 'english') {
+    if (targetLang.toLowerCase() === 'english') {
       return {
         isLearningEnglish: true,
         targetLanguage: 'English',
@@ -189,17 +190,17 @@ function determineLanguagePair(userLanguage: string, targetLanguage?: string) {
     // Fallback for other combinations
     return {
       isLearningEnglish: false,
-      targetLanguage: getLanguageDisplayName(targetLanguage),
+      targetLanguage: getLanguageDisplayName(targetLang),
       nativeLanguage: getUserNativeLanguage(userLanguage)
     };
   }
   
   // Legacy behavior for backward compatibility
   const isLearningEnglish = userLanguage !== 'english';
-  const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
+  const learnLanguage = isLearningEnglish ? 'English' : 'Spanish';
   const nativeLanguage = getUserNativeLanguage(userLanguage);
   
-  return { isLearningEnglish, targetLanguage, nativeLanguage };
+  return { isLearningEnglish, targetLanguage: learnLanguage, nativeLanguage };
 }
 
 // Get proper display name for a language
@@ -297,8 +298,8 @@ serve(async (req) => {
     );
 
     // Determine language pair using new function
-    const { isLearningEnglish, targetLanguage: langToLearn, nativeLanguage } = 
-      determineLanguagePair(userLanguage, targetLanguage);
+    const langPair = determineLanguagePair(userLanguage, targetLanguage);
+    const { isLearningEnglish, targetLanguage: langToLearn, nativeLanguage } = langPair;
     
     // Handle translation-only requests
     if (requestType === 'translation') {
