@@ -6,14 +6,18 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Lock } from "lucide-react";
+import { Lock, Shield, BookOpen, Clock } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   getSafetyMode, 
   setSafetyMode, 
   getDailyTimeLimit, 
   areParentalControlsLocked,
-  setParentalControlsLock
+  setParentalControlsLock,
+  getParentalDataConsentStatus,
+  setParentalDataConsentStatus
 } from "@/utils/contentSafetyUtils";
+import FerpaPrivacySettings from "./FerpaPrivacySettings";
 
 const ParentalControls = () => {
   const { t } = useLocalization();
@@ -25,6 +29,7 @@ const ParentalControls = () => {
   const [safetyMode, setSafetyModeState] = useState<'strict' | 'standard'>(getSafetyMode());
   const [timedUsage, setTimedUsage] = useState(getDailyTimeLimit() > 0);
   const [dailyTimeLimit, setDailyTimeLimit] = useState(getDailyTimeLimit() || 60); // minutes
+  const [parentalDataConsent, setParentalDataConsentState] = useState(getParentalDataConsentStatus());
   
   const storedPin = localStorage.getItem("parentalPin") || "0000";
   
@@ -86,12 +91,17 @@ const ParentalControls = () => {
       localStorage.setItem("dailyTimeLimit", dailyTimeLimit.toString());
     }
   };
+  
+  const handleParentalDataConsentChange = (checked: boolean) => {
+    setParentalDataConsentState(checked);
+    setParentalDataConsentStatus(checked);
+  };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
+    <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Lock size={20} /> {t("parentalControls")}
+          <Shield size={20} className="text-lingua-primary" /> {t("parentalControls")}
         </CardTitle>
         <CardDescription>
           {t("parentalControlsDescription")}
@@ -119,8 +129,23 @@ const ParentalControls = () => {
             </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="space-y-4">
+          <Tabs defaultValue="safety">
+            <TabsList className="mb-4">
+              <TabsTrigger value="safety" className="flex items-center">
+                <Shield className="mr-2 h-4 w-4" />
+                <span>{t("contentSafety") || "Content Safety"}</span>
+              </TabsTrigger>
+              <TabsTrigger value="time" className="flex items-center">
+                <Clock className="mr-2 h-4 w-4" />
+                <span>{t("timeControls") || "Time Controls"}</span>
+              </TabsTrigger>
+              <TabsTrigger value="privacy" className="flex items-center">
+                <BookOpen className="mr-2 h-4 w-4" />
+                <span>{t("dataPrivacy") || "Data Privacy"}</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="safety" className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium">{t("strictContentFiltering")}</h3>
@@ -132,6 +157,18 @@ const ParentalControls = () => {
                 />
               </div>
               
+              <div className="bg-blue-50 p-4 rounded-md">
+                <h3 className="font-medium text-blue-700 flex items-center">
+                  <Shield className="mr-2 h-4 w-4" />
+                  {t("cipaCompliance")}
+                </h3>
+                <p className="text-sm text-blue-600 mt-1">
+                  {t("cipaComplianceShortDesc") || "Strict content filtering complies with the Children's Internet Protection Act (CIPA) requirements for filtering inappropriate content in educational settings."}
+                </p>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="time" className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium">{t("timeUsageLimits")}</h3>
@@ -157,9 +194,36 @@ const ParentalControls = () => {
                   </div>
                 </div>
               )}
-            </div>
+            </TabsContent>
             
-            <div className="space-y-2 pt-4 border-t">
+            <TabsContent value="privacy" className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">{t("parentalDataConsent") || "Educational Data Consent (FERPA)"}</h3>
+                  <p className="text-sm text-gray-500">
+                    {t("parentalDataConsentDesc") || "As a parent or guardian, you can control whether your child's educational data can be collected and processed"}
+                  </p>
+                </div>
+                <Switch 
+                  checked={parentalDataConsent} 
+                  onCheckedChange={handleParentalDataConsentChange}
+                />
+              </div>
+              
+              <div className="bg-blue-50 p-4 rounded-md">
+                <h3 className="font-medium text-blue-700 flex items-center">
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  {t("ferpaCompliance") || "FERPA Compliance"}
+                </h3>
+                <p className="text-sm text-blue-600 mt-1">
+                  {t("ferpaComplianceShortDesc") || "The Family Educational Rights and Privacy Act (FERPA) gives parents certain rights with respect to their children's educational records. These rights transfer to the student at age 18."}
+                </p>
+              </div>
+              
+              <FerpaPrivacySettings />
+            </TabsContent>
+            
+            <div className="space-y-2 pt-6 mt-6 border-t">
               <h3 className="font-medium">{t("changeParentalPin")}</h3>
               <div className="space-y-2">
                 <div>
@@ -190,18 +254,19 @@ const ParentalControls = () => {
                 {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
               </div>
             </div>
-          </div>
+          </Tabs>
         )}
       </CardContent>
       
       <CardFooter className="flex justify-between">
         {!isLocked && (
-          <Button variant="outline" onClick={handleLock}>
+          <Button variant="outline" onClick={handleLock} className="flex items-center">
+            <Lock size={16} className="mr-2" />
             {t("lockSettings")}
           </Button>
         )}
         <div className="text-xs text-gray-500">
-          {t("cipaCompliance")}
+          {t("cipaFerpaCompliance") || "CIPA and FERPA compliant"}
         </div>
       </CardFooter>
     </Card>

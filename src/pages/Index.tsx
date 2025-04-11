@@ -8,15 +8,17 @@ import { useToast } from "@/hooks/use-toast";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog";
+import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
 import { useLocalization } from "@/context/LocalizationContext";
-import { needsAgeVerification } from "@/utils/contentSafetyUtils";
-import { Shield } from "lucide-react";
+import { needsAgeVerification, getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
+import { Shield, BookOpen } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
   const { t, setCurrentLanguage } = useLocalization();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [isAgeVerificationOpen, setIsAgeVerificationOpen] = useState(false);
+  const [isFerpaConsentOpen, setIsFerpaConsentOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +32,11 @@ const Index = () => {
     const checkUser = async () => {
       const { data } = await supabase.auth.getUser();
       setIsSignedIn(!!data.user);
+      
+      // Check if FERPA consent is needed after sign in
+      if (data.user && !getFerpaConsentStatus()) {
+        setIsFerpaConsentOpen(true);
+      }
     };
     checkUser();
 
@@ -102,6 +109,11 @@ const Index = () => {
       if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
       if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
       
+      // Show FERPA consent form if user just registered or hasn't provided consent yet
+      if (!isLogin || !getFerpaConsentStatus()) {
+        setIsFerpaConsentOpen(true);
+      }
+      
     } catch (error: any) {
       console.error("Authentication error:", error);
       toast({
@@ -141,6 +153,15 @@ const Index = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleFerpaConsentComplete = () => {
+    setIsFerpaConsentOpen(false);
+    
+    toast({
+      title: t("privacyPreferencesSaved") || "Privacy Preferences Saved",
+      description: t("ferpaPreferencesSaved") || "Your FERPA privacy preferences have been saved. You can change them anytime in your settings.",
+    });
   };
 
   return (
@@ -187,14 +208,20 @@ const Index = () => {
             </Link>
           </div>
           
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
             <Link to="/settings" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
               <Shield size={16} className="mr-1" />
               {t("parentalControls")}
             </Link>
-            <span className="mx-2 text-gray-400">•</span>
-            <Link to="/safety-policy" className="text-sm text-gray-500 hover:text-gray-700">
+            <span className="text-gray-400">•</span>
+            <Link to="/safety-policy" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
+              <Shield size={16} className="mr-1" />
               {t("safetyPolicy")}
+            </Link>
+            <span className="text-gray-400">•</span>
+            <Link to="/safety-policy?tab=ferpa" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
+              <BookOpen size={16} className="mr-1" />
+              {t("ferpaPrivacy") || "FERPA Privacy"}
             </Link>
           </div>
         </motion.div>
@@ -216,6 +243,12 @@ const Index = () => {
       <AgeVerificationDialog 
         isOpen={isAgeVerificationOpen}
         onOpenChange={setIsAgeVerificationOpen}
+      />
+      
+      <FerpaConsentForm
+        isOpen={isFerpaConsentOpen}
+        onOpenChange={setIsFerpaConsentOpen}
+        onComplete={handleFerpaConsentComplete}
       />
     </div>
   );

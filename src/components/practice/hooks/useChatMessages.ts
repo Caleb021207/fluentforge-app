@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { containsScript } from "@/utils/languageUtils";
+import { filterContent, isSafeContent, logDataAccess } from "@/utils/contentSafetyUtils";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -61,9 +62,35 @@ export const useChatMessages = () => {
   };
 
   const handleSendPrompt = async (promptText: string) => {
+    // First check if content is safe before sending
+    if (!isSafeContent(promptText)) {
+      // If content is not safe, filter it before sending
+      const filteredPrompt = filterContent(promptText);
+      
+      // Notify user about content filtering
+      toast({
+        title: t("contentFiltered"),
+        description: t("contentFilteredDescription"),
+        variant: "warning",
+      });
+      
+      // Proceed with filtered content
+      promptText = filteredPrompt;
+    }
+    
     setIsLoading(true);
 
     try {
+      // Log the educational data access for FERPA compliance
+      // In a full implementation, this would use actual user ID
+      const userId = "anonymous-or-current-user-id";
+      logDataAccess(
+        userId,
+        "practice_session", 
+        "student",
+        "language_practice"
+      );
+      
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: promptText,
@@ -126,10 +153,14 @@ export const useChatMessages = () => {
         }
       }
       
+      // Apply content filtering to response and translation if needed
+      const safeContent = filterContent(data.content);
+      const safeTranslation = filterContent(translation);
+      
       const assistantMessage: ChatMessage = {
         role: "assistant",
-        content: data.content,
-        translation: translation,
+        content: safeContent,
+        translation: safeTranslation,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -149,9 +180,25 @@ export const useChatMessages = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
+    // Check if input content is safe
+    const isSafe = isSafeContent(input);
+    let processedInput = input;
+    
+    // If unsafe content is detected, filter it
+    if (!isSafe) {
+      processedInput = filterContent(input);
+      
+      // Notify user about content filtering
+      toast({
+        title: t("contentFiltered"),
+        description: t("contentFilteredDescription"),
+        variant: "warning",
+      });
+    }
+    
     const userMessage: ChatMessage = {
       role: "user",
-      content: input,
+      content: processedInput,
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -159,9 +206,19 @@ export const useChatMessages = () => {
     setIsLoading(true);
 
     try {
+      // Log the educational data access for FERPA compliance
+      // In a full implementation, this would use actual user ID
+      const userId = "anonymous-or-current-user-id";
+      logDataAccess(
+        userId,
+        "practice_session", 
+        "student",
+        "language_practice"
+      );
+      
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
-          message: input,
+          message: processedInput,
           userLanguage: currentLanguage,
           requestTranslation: true // Explicitly request translation
         }
@@ -176,9 +233,9 @@ export const useChatMessages = () => {
       // Ensure we always have a translation
       let translation = data.translation || "";
       
-      // For Hindi, verify we have proper Devanagari script
+      // For Hindi, verify that the translation is actually in Hindi using script detection
       if (currentLanguage === "hindi" && !containsScript(translation, "devanagari")) {
-        console.log("Hindi translation doesn't contain Devanagari script, requesting specific translation");
+        console.log("Hindi translation does not contain Devanagari script, requesting specific translation");
         
         try {
           // Try to get a proper Hindi translation
@@ -221,10 +278,14 @@ export const useChatMessages = () => {
         }
       }
       
+      // Apply content filtering to response and translation if needed
+      const safeContent = filterContent(data.content);
+      const safeTranslation = filterContent(translation);
+      
       const assistantMessage: ChatMessage = {
         role: "assistant",
-        content: data.content,
-        translation: translation,
+        content: safeContent,
+        translation: safeTranslation,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);

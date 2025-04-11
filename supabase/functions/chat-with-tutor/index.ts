@@ -9,22 +9,88 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// CIPA/FERPA Compliance Content Filters
+const cipaFilteredTerms = [
+  // Inappropriate language filter
+  "profanity", "obscene", "explicit", "curse", "swear",
+  
+  // Violence-related terms
+  "violence", "violent", "weapon", "gun", "rifle", "pistol", "knife", 
+  "kill", "murder", "assault", "attack", "fight", "harm", "blood",
+  
+  // Substance-related terms
+  "drug", "narcotic", "marijuana", "cocaine", "heroin", "substance", 
+  "alcohol", "beer", "wine", "liquor", "tobacco", "cigarette", "vape",
+  
+  // Adult content indicators
+  "adult", "mature", "nsfw", "pornography", "explicit", "nude", "naked",
+  "sexual", "sex", "inappropriate", "dating", "gambling",
+  
+  // Discriminatory terms
+  "hate", "discriminatory", "slur", "racist", "sexist", 
+  "bigot", "discrimination", "offensive", "prejudice"
+];
+
+// Filter content for CIPA compliance
+function filterCipaProhibitedContent(text: string): string {
+  if (!text) return "";
+  
+  let filteredText = text;
+  cipaFilteredTerms.forEach(term => {
+    const regex = new RegExp(term, 'gi');
+    filteredText = filteredText.replace(regex, '*'.repeat(term.length));
+  });
+  
+  return filteredText;
+}
+
+// Check if content violates CIPA guidelines
+function containsProhibitedContent(text: string): boolean {
+  if (!text) return false;
+  
+  return cipaFilteredTerms.some(term => 
+    text.toLowerCase().includes(term.toLowerCase())
+  );
+}
+
+// Log access for FERPA compliance
+function logEducationalDataAccess(userId: string, dataType: string, purpose: string) {
+  // In a production environment, this would write to a database
+  console.log(`FERPA Access Log: User ${userId} accessed ${dataType} for ${purpose} at ${new Date().toISOString()}`);
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { message, requestType, userLanguage, requestTranslation } = await req.json();
+    const { message, requestType, userLanguage, requestTranslation, userId = "anonymous" } = await req.json();
     console.log('Received message:', message, 'Request type:', requestType, 'User language:', userLanguage, 'Request translation:', requestTranslation);
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
     }
+    
+    // CIPA Compliance: Check for prohibited content in the message
+    const containsProhibited = containsProhibitedContent(message);
+    let safeMessage = message;
+    
+    if (containsProhibited) {
+      console.log('Message contains prohibited content, filtering before processing');
+      safeMessage = filterCipaProhibitedContent(message);
+    }
+    
+    // Log educational data access for FERPA compliance
+    logEducationalDataAccess(
+      userId, 
+      "language_practice", 
+      requestType === 'translation' ? "translation_request" : "language_learning"
+    );
 
     // Handle translation-only requests
     if (requestType === 'translation') {
-      return await handleTranslationRequest(message, userLanguage);
+      return await handleTranslationRequest(safeMessage, userLanguage);
     }
 
     // Determine if user is learning English or another language based on their native language
@@ -32,10 +98,21 @@ serve(async (req) => {
     const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
     const nativeLanguage = getUserNativeLanguage(userLanguage);
     
+    // Add CIPA/FERPA compliance instructions to tutor
+    const cipaFerpaCompliance = `
+    IMPORTANT COMPLIANCE REQUIREMENTS:
+    1. Never request or store personal identifying information (names, addresses, phone numbers, etc).
+    2. Never use inappropriate language, discuss adult topics, or provide content unsuitable for K-12 students.
+    3. All explanations must be appropriate for educational contexts and classroom settings.
+    4. Stay focused on language learning without sharing non-educational content.
+    `;
+    
     // Universal tutor instructions for all language combinations
     const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
 
 PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
+
+${cipaFerpaCompliance}
 
 You MUST strictly follow these rules:
 
@@ -63,7 +140,9 @@ You should ask questions to continue the conversation if it ever seems to stall.
          - Speaking competency
          - Listening comprehension
          Also provide an overall estimated proficiency level (A1-C2).
-         Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.`
+         Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.
+         
+         ${cipaFerpaCompliance}`
       : tutorInstructions;
 
     // Add the hidden prompt and response only for regular conversations, not assessments
@@ -71,14 +150,14 @@ You should ask questions to continue the conversation if it ever seems to stall.
     if (requestType === 'assessment') {
       messages = [
         { role: 'system', content: systemMessage },
-        { role: 'user', content: message }
+        { role: 'user', content: safeMessage }
       ];
     } else {
       messages = [
         { role: 'system', content: systemMessage },
         { role: 'user', content: initialHiddenPrompt },
         { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going. I'll always provide translations." },
-        { role: 'user', content: message }
+        { role: 'user', content: safeMessage }
       ];
     }
 
@@ -134,6 +213,17 @@ You should ask questions to continue the conversation if it ever seems to stall.
       translation = translation.trim();
     }
 
+    // CIPA Compliance: Filter response content if needed
+    if (containsProhibitedContent(content)) {
+      console.log('Response contains prohibited content, filtering before sending');
+      content = filterCipaProhibitedContent(content);
+    }
+    
+    if (translation && containsProhibitedContent(translation)) {
+      console.log('Translation contains prohibited content, filtering before sending');
+      translation = filterCipaProhibitedContent(translation);
+    }
+
     // If no translation was provided, make a second API call to translate the response
     if (!translation || translation === '') {
       console.log('No translation provided, getting one now...');
@@ -143,6 +233,12 @@ You should ask questions to continue the conversation if it ever seems to stall.
           const translationData = await translationResponse.json();
           if (translationData.choices?.[0]?.message?.content) {
             translation = translationData.choices[0].message.content.trim();
+            
+            // CIPA Compliance: Filter translation if needed
+            if (containsProhibitedContent(translation)) {
+              console.log('Generated translation contains prohibited content, filtering');
+              translation = filterCipaProhibitedContent(translation);
+            }
           }
         }
       } catch (error) {
@@ -157,6 +253,12 @@ You should ask questions to continue the conversation if it ever seems to stall.
       try {
         const hindiTranslation = await getSpecificLanguageTranslation(content, 'hindi', 'Devanagari');
         translation = hindiTranslation;
+        
+        // CIPA Compliance: Filter Hindi translation if needed
+        if (containsProhibitedContent(translation)) {
+          console.log('Hindi translation contains prohibited content, filtering');
+          translation = filterCipaProhibitedContent(translation);
+        }
       } catch (error) {
         console.error('Error getting Hindi translation:', error);
         // Continue even if Hindi translation fails
@@ -226,6 +328,13 @@ async function getSpecificLanguageTranslation(message: string, language: string,
   try {
     console.log(`Getting ${language} translation with ${script} script for: "${message}"`);
     
+    // CIPA Compliance: Filter message before translation
+    let safeMessage = message;
+    if (containsProhibitedContent(message)) {
+      console.log('Message contains prohibited content, filtering before translation');
+      safeMessage = filterCipaProhibitedContent(message);
+    }
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -237,9 +346,11 @@ async function getSpecificLanguageTranslation(message: string, language: string,
         messages: [
           { 
             role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${language} using ${script} script. ONLY return the translation, no explanations or additional text. Ensure the translation is accurate and natural-sounding.` 
+            content: `You are a professional translator. Translate the following text from English to ${language} using ${script} script. ONLY return the translation, no explanations or additional text. Ensure the translation is accurate and natural-sounding.
+            
+            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
           },
-          { role: 'user', content: message }
+          { role: 'user', content: safeMessage }
         ],
         temperature: 0.3,
         max_tokens: 500,
@@ -254,6 +365,12 @@ async function getSpecificLanguageTranslation(message: string, language: string,
     const translation = data.choices?.[0]?.message?.content || '';
     console.log(`Got ${language} translation: "${translation}"`);
     
+    // CIPA Compliance: Filter translation before returning
+    if (containsProhibitedContent(translation)) {
+      console.log(`${language} translation contains prohibited content, filtering`);
+      return filterCipaProhibitedContent(translation);
+    }
+    
     return translation;
   } catch (error) {
     console.error(`Error getting ${language} translation:`, error);
@@ -266,6 +383,13 @@ async function getTranslation(message: string, userLanguage: string) {
   try {
     const targetLanguage = getUserNativeLanguage(userLanguage);
     
+    // CIPA Compliance: Filter message before translation 
+    let safeMessage = message;
+    if (containsProhibitedContent(message)) {
+      console.log('Message contains prohibited content, filtering before translation');
+      safeMessage = filterCipaProhibitedContent(message);
+    }
+    
     return await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -277,9 +401,11 @@ async function getTranslation(message: string, userLanguage: string) {
         messages: [
           { 
             role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${targetLanguage}. Just return the translation, no explanations. For Hindi translations, ensure you use Devanagari script.` 
+            content: `You are a professional translator. Translate the following text from English to ${targetLanguage}. Just return the translation, no explanations. For Hindi translations, ensure you use Devanagari script.
+            
+            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
           },
-          { role: 'user', content: message }
+          { role: 'user', content: safeMessage }
         ],
         temperature: 0.3,
         max_tokens: 500,
@@ -316,7 +442,13 @@ async function handleTranslationRequest(message: string, userLanguage: string) {
     }
     
     const translationData = await translationResponse.json();
-    const translation = translationData.choices?.[0]?.message?.content || '';
+    let translation = translationData.choices?.[0]?.message?.content || '';
+    
+    // CIPA Compliance: Filter translation before returning
+    if (containsProhibitedContent(translation)) {
+      console.log('Translation contains prohibited content, filtering');
+      translation = filterCipaProhibitedContent(translation);
+    }
     
     return new Response(
       JSON.stringify({ translation }),
