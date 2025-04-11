@@ -100,7 +100,11 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'korean-english',
     'mandarin-english',
     'russian-english',
-    'arabic-english'
+    'arabic-english',
+    'hindi-english',      // Adding Hindi
+    'vietnamese-english', // Adding Vietnamese
+    'ukrainian-english',  // Adding Ukrainian
+    'indonesian-english'  // Adding Indonesian
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
