@@ -67,7 +67,7 @@ export const useChatMessages = () => {
       toast({
         title: t("contentFiltered"),
         description: t("contentFilteredDescription"),
-        variant: "destructive",
+        variant: "warning",
       });
       
       promptText = filteredPrompt;
@@ -176,7 +176,7 @@ export const useChatMessages = () => {
       toast({
         title: t("contentFiltered"),
         description: t("contentFilteredDescription"),
-        variant: "destructive",
+        variant: "warning",
       });
     }
     

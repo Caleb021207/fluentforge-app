@@ -35,11 +35,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
   const isContentSafe = isSafeContent(content);
   const isTranslationSafe = translation ? isSafeContent(translation) : true;
   
-  // Show translation if it exists and either:
-  // 1. The user's language is in the list of languages that always show translations
-  // 2. The translation is not empty
-  const showTranslation = (translation && translation.trim() !== "") || 
-    showTranslationLanguages.includes(currentLanguage);
+  // Determine if translation should be shown:
+  // 1. If user's language is in the list of languages that always show translations
+  // 2. OR if the translation exists and is not empty
+  const showTranslation = 
+    showTranslationLanguages.includes(currentLanguage) || 
+    (translation && translation.trim() !== "");
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;
   
