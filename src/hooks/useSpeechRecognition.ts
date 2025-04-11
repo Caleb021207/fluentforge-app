@@ -22,15 +22,33 @@ export const useSpeechRecognition = ({
   const { toast } = useToast();
   const { t } = useLocalization();
 
+  // Initialize speech recognition only once
   useEffect(() => {
     if (typeof window !== "undefined" && 
         ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-      
+      if (!recognitionRef.current) {
+        recognitionRef.current = new SpeechRecognitionAPI();
+        console.log("Speech recognition initialized");
+      }
+    }
+    
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {
+          console.error("Error aborting speech recognition:", e);
+        }
+      }
+      clearSilenceDetection();
+    };
+  }, []);
+
+  // Configure speech recognition when language changes
+  useEffect(() => {
+    if (recognitionRef.current) {
       recognitionRef.current.lang = language;
-      console.log(`Setting speech recognition language to: ${language}`);
-      
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
       recognitionRef.current.maxAlternatives = 1;
@@ -45,40 +63,46 @@ export const useSpeechRecognition = ({
       
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
+        if (event.error === 'not-allowed') {
+          toast({
+            title: t("error"),
+            description: t("microphoneAccessRequired"),
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: t("error"),
+            description: `${t("speechRecognitionError")}: ${event.error}`,
+            variant: "destructive",
+          });
+        }
         setIsListening(false);
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
-        });
       };
       
       recognitionRef.current.onend = () => {
+        console.log("Speech recognition ended, isListening:", isListening);
         if (isListening) {
           try {
+            // Only restart if we're still supposed to be listening
             recognitionRef.current.start();
+            console.log("Restarted speech recognition");
           } catch (e) {
             console.error("Failed to restart speech recognition:", e);
+            setIsListening(false);
           }
-        } else {
-          setIsListening(false);
         }
       };
-    } else {
+      
+      console.log(`Speech recognition configured with language: ${language}`);
+    } else if (typeof window !== "undefined" && 
+               !('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
       toast({
         title: t("error"),
         description: t("speechRecognitionNotSupported"),
         variant: "destructive",
       });
     }
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      clearSilenceDetection();
-    };
-  }, [t, toast, isListening, language, onTranscriptChange]);
+  }, [language, isListening, t, toast, onTranscriptChange]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -90,7 +114,11 @@ export const useSpeechRecognition = ({
           onSilence();
           
           if (recognitionRef.current) {
-            recognitionRef.current.abort();
+            try {
+              recognitionRef.current.abort();
+            } catch (e) {
+              console.error("Error aborting speech recognition after silence:", e);
+            }
           }
           setIsListening(false);
         }
@@ -106,25 +134,46 @@ export const useSpeechRecognition = ({
   };
 
   const startListening = () => {
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.start();
-        setIsListening(true);
-        resetSilenceDetection();
-      } catch (error) {
-        console.error("Error starting speech recognition:", error);
+    if (!recognitionRef.current) {
+      if (typeof window !== "undefined" && 
+          ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognitionRef.current = new SpeechRecognitionAPI();
+        console.log("Speech recognition initialized during startListening");
+      } else {
         toast({
           title: t("error"),
-          description: t("microphoneAccessRequired"),
+          description: t("speechRecognitionNotSupported"),
           variant: "destructive",
         });
+        return;
       }
+    }
+    
+    try {
+      recognitionRef.current.start();
+      console.log("Started speech recognition");
+      setIsListening(true);
+      resetSilenceDetection();
+    } catch (error) {
+      console.error("Error starting speech recognition:", error);
+      toast({
+        title: t("error"),
+        description: t("microphoneAccessRequired"),
+        variant: "destructive",
+      });
+      setIsListening(false);
     }
   };
 
   const stopListening = () => {
     if (recognitionRef.current) {
-      recognitionRef.current.abort();
+      try {
+        recognitionRef.current.abort();
+        console.log("Stopped speech recognition");
+      } catch (e) {
+        console.error("Error stopping speech recognition:", e);
+      }
     }
     clearSilenceDetection();
     setIsListening(false);

@@ -1,9 +1,10 @@
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import { useFrenchVoiceChat } from "@/hooks/useFrenchVoiceChat";
+import { useToast } from "@/hooks/use-toast";
 import VoiceChatHeader from "@/components/french-voice-chat/VoiceChatHeader";
 import VoiceChatControls from "@/components/french-voice-chat/VoiceChatControls";
 import TranscriptDisplay from "@/components/french-voice-chat/TranscriptDisplay";
@@ -14,6 +15,7 @@ import PracticeTips from "@/components/french-voice-chat/PracticeTips";
 
 const FrenchVoiceChat = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { toast } = useToast();
   
   const {
     transcript,
@@ -44,12 +46,22 @@ const FrenchVoiceChat = () => {
     language: 'en-US'
   });
 
+  // Effect to handle audio playback of response
+  useEffect(() => {
+    if (gptResponse && !isSpeaking) {
+      // Automatically play the response when it's received
+      speak(gptResponse, 'en-US');
+    }
+  }, [gptResponse, speak, isSpeaking]);
+
   const toggleListening = () => {
+    console.log("Toggle listening called, current state:", isListening);
     if (isListening) {
       stopListening();
     } else {
-      startListening();
+      // Clear the transcript when starting a new recording
       setTranscript("");
+      startListening();
     }
   };
 

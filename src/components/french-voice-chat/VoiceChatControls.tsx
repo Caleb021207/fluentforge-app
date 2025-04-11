@@ -23,6 +23,14 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
 }) => {
   const { currentLanguage, t } = useLocalization();
 
+  const getMicButtonText = () => {
+    if (isListening) {
+      return currentLanguage === "french" ? "Arrêter d'écouter" : t("stopListening");
+    } else {
+      return currentLanguage === "french" ? "Commencer à parler en anglais" : t("startSpeaking");
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
       <div className="mb-4 md:mb-0">
@@ -37,26 +45,30 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
           variant={isListening ? "destructive" : "default"}
           size="lg"
           disabled={isLoading || isSpeaking}
+          className="flex items-center gap-2"
+          type="button"
         >
           {isListening ? (
             <>
               <MicOff className="h-5 w-5 mr-2" />
-              {currentLanguage === "french" ? "Arrêter d'écouter" : t("stopListening")}
+              {getMicButtonText()}
             </>
           ) : (
             <>
               <Mic className="h-5 w-5 mr-2" />
-              {currentLanguage === "french" ? "Commencer à parler" : t("startSpeaking")}
+              {getMicButtonText()}
             </>
           )}
         </Button>
         
-        {isListening && transcript && (
+        {transcript && (
           <Button
             onClick={onSendTranscript}
             variant="default"
             size="lg"
             disabled={isLoading || isSpeaking || !transcript.trim()}
+            className="flex items-center gap-2"
+            type="button"
           >
             <Send className="h-5 w-5 mr-2" />
             {currentLanguage === "french" ? "Envoyer" : t("send")}
