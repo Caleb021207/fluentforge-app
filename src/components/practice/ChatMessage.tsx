@@ -3,8 +3,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import { AlertTriangle, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { getSpeechSynthesisLanguageCode } from "@/utils/languageUtils";
+import { playTTS } from "@/utils/ttsUtils";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
@@ -40,10 +39,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const isContentSafe = isSafeContent(content);
   const isTranslationSafe = translation ? isSafeContent(translation) : true;
   
-  // Determine if translation should be shown:
-  // 1. If user's language is in the list of languages that always show translations
-  // 2. OR if the translation exists and is not empty
-  // 3. OR if content was filtered (for transparency)
+  // Determine if translation should be shown
   const showTranslation = 
     showTranslationLanguages.includes(currentLanguage) || 
     (translation && translation.trim() !== "") ||
@@ -76,72 +72,24 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     setIsLoading(true);
     setIsPlaying(true);
     
+    // Get language code for TTS based on who's learning what
+    let languageForTTS = currentLanguage === "english" ? "spanish" : "english";
+    
     try {
-      // Get language code for TTS based on who's learning what
-      let languageForTTS = currentLanguage === "english" ? "spanish" : "english";
-      
-      // Call the Supabase Edge Function for TTS
-      const { data, error } = await supabase.functions.invoke("text-to-speech", {
-        body: { 
-          text: safeContent,
-          language: languageForTTS
-        },
-      });
-      
-      if (error) throw new Error(`Edge function error: ${error.message}`);
-      if (!data || !data.audioContent) throw new Error("No audio content received");
-      
-      // Convert base64 to binary
-      const audioContent = data.audioContent;
-      const binaryString = atob(audioContent);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      
-      // Create blob and play
-      const blob = new Blob([bytes], { type: 'audio/mpeg' });
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      
-      audio.onended = () => {
-        setIsPlaying(false);
-        URL.revokeObjectURL(url);
-      };
-      
-      audio.onerror = (e) => {
-        console.error("Audio playback error:", e);
-        setIsPlaying(false);
-        URL.revokeObjectURL(url);
-      };
-      
-      await audio.play();
-      
-    } catch (err) {
-      console.error("Error playing audio:", err);
-      setIsPlaying(false);
-      
-      // Fallback to browser's speech synthesis
-      try {
-        const speechSynthesis = window.speechSynthesis;
-        if (speechSynthesis) {
-          const utterance = new SpeechSynthesisUtterance(safeContent);
-          
-          // Determine language code based on current language
-          const langCode = getSpeechSynthesisLanguageCode(
-            currentLanguage === "english" ? "spanish" : "english"
-          );
-          
-          utterance.lang = langCode;
-          utterance.onend = () => setIsPlaying(false);
-          utterance.onerror = () => setIsPlaying(false);
-          
-          speechSynthesis.speak(utterance);
+      await playTTS({
+        text: safeContent,
+        language: languageForTTS,
+        onStart: () => setIsLoading(false),
+        onEnd: () => setIsPlaying(false),
+        onError: (error) => {
+          console.error("TTS error:", error);
+          setIsPlaying(false);
+          setIsLoading(false);
         }
-      } catch (fallbackError) {
-        console.error("Fallback speech synthesis error:", fallbackError);
-      }
-    } finally {
+      });
+    } catch (error) {
+      console.error("Error playing audio:", error);
+      setIsPlaying(false);
       setIsLoading(false);
     }
   };

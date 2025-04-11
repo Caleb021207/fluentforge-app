@@ -9,7 +9,6 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { 
   getLanguagePair, 
   getSpeechSynthesisLanguageCode, 
-  findBestVoiceForLanguage 
 } from "@/utils/languageUtils";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
@@ -267,6 +266,7 @@ const VoiceChat = () => {
     }
   };
 
+  // Replace the speakWithBrowserSynthesis function with our new approach
   const speakWithBrowserSynthesis = (text: string) => {
     if (!text || text.trim() === '') {
       console.warn('Empty text provided to speakWithBrowserSynthesis');
@@ -298,7 +298,7 @@ const VoiceChat = () => {
         setIsSpeaking(false);
         toast({
           title: t("error"),
-          description: t("speechSynthesisError"),
+          description: t("failedToGenerateSpeech"),
           variant: "destructive",
         });
       }
@@ -426,7 +426,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "vietnamese") {
       return "Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
     } else if (currentLanguage === "french") {
-      return "Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la g��nération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
+      return "Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la gnération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
     } else if (currentLanguage === "japanese") {
       return "自然言語理解と生成にはOpenAIのGPT-4o-miniを使用し、音声応答にはブラウザ内蔵の音声合成を使用しています。";
     } else if (currentLanguage === "russian") {
@@ -461,7 +461,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return "注意：これはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。";
     } else if (currentLanguage === "russian") {
-      return "Примечание: Эта система использует синтез речи на основе браузера. Для преми��льного качества голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
+      return "Примечание: Эта система использует синтез речи на основе браузера. Для премильного качества голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
     } else if (currentLanguage === "hindi") {
       return "नोट: यह ब्राउज़र-आधारित टेक्स्ट-टू-स्पीच का उपयोग करता है। ElevenLabs के साथ प्रीमियम आवाज़ की गुणवत्ता के लिए, हमारे प्रीमियम वॉइस चैट का प्रयास करें।";
     } else if (currentLanguage === "indonesian") {
@@ -708,59 +708,3 @@ const VoiceChat = () => {
           </p>
           
           <div className="space-y-6">
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourTargetLanguage")}: ({practice})
-              </h4>
-              <ul className="space-y-2">
-                {targetLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`target-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {t("inYourNativeLanguage")}: ({native})
-              </h4>
-              <ul className="space-y-2">
-                {nativeLanguagePhrases.map((phrase, index) => (
-                  <li 
-                    key={`native-${index}`} 
-                    className="text-sm p-2 bg-gray-50 rounded-md hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Card>
-        
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h3 className="font-medium mb-2">{t("practiceWithVoiceChat")}</h3>
-          <p className="text-sm text-gray-600 mb-3">
-            {getPracticeTipsText()}
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-            <li>{t("askQuestions")}</li>
-            <li>{t("practiceCommonPhrases")}</li>
-            <li>{t("describeWhatYouSee")}</li>
-            <li>{t("practiceVocabularyForSpecific")}</li>
-          </ul>
-        </div>
-      </div>
-      
-      <audio ref={audioRef} className="hidden" />
-    </div>
-  );
-};
-
-export default VoiceChat;

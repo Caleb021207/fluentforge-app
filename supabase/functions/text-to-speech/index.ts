@@ -11,20 +11,50 @@ const corsHeaders = {
 
 // Language code mapping for better TTS results
 const languageVoiceMap: Record<string, string> = {
-  "english": "alloy", // Default English voice
-  "spanish": "nova",  // Spanish-friendly voice
+  "english": "alloy",   // Default English voice
+  "spanish": "nova",    // Spanish-friendly voice
   "portuguese": "nova", // Portuguese-friendly voice
-  "korean": "shimmer", // Korean-friendly voice
-  "arabic": "shimmer", // Arabic-friendly voice
-  "mandarin": "shimmer", // Mandarin-friendly voice
+  "korean": "shimmer",  // Korean-friendly voice
+  "arabic": "shimmer",  // Arabic-friendly voice
+  "mandarin": "onyx",   // Mandarin-friendly voice
   "vietnamese": "nova", // Vietnamese-friendly voice
-  "french": "echo", // French-friendly voice
-  "japanese": "onyx", // Japanese-friendly voice
-  "russian": "echo", // Russian-friendly voice
-  "ukrainian": "echo", // Ukrainian-friendly voice
-  "hindi": "nova", // Hindi-friendly voice
-  "indonesian": "nova" // Indonesian-friendly voice
+  "french": "echo",     // French-friendly voice
+  "japanese": "onyx",   // Japanese-friendly voice
+  "russian": "echo",    // Russian-friendly voice
+  "ukrainian": "echo",  // Ukrainian-friendly voice
+  "hindi": "nova",      // Hindi-friendly voice
+  "indonesian": "nova"  // Indonesian-friendly voice
 };
+
+// Maximum retries for API calls
+const MAX_RETRIES = 2;
+const RETRY_DELAY = 1000; // ms
+
+// Function to retry API calls
+async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_RETRIES) {
+  try {
+    const response = await fetch(url, options);
+    if (response.ok) return response;
+    
+    const errorData = await response.json().catch(() => ({ error: response.statusText }));
+    console.error(`API error (${response.status}):`, errorData);
+    
+    if (retries > 0 && (response.status === 429 || response.status >= 500)) {
+      console.log(`Retrying... (${retries} attempts left)`);
+      await new Promise(r => setTimeout(r, RETRY_DELAY));
+      return fetchWithRetry(url, options, retries - 1);
+    }
+    
+    throw new Error(`API error: ${JSON.stringify(errorData)}`);
+  } catch (error) {
+    if (retries > 0 && error.message.includes('fetch failed')) {
+      console.log(`Network error, retrying... (${retries} attempts left)`);
+      await new Promise(r => setTimeout(r, RETRY_DELAY));
+      return fetchWithRetry(url, options, retries - 1);
+    }
+    throw error;
+  }
+}
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -56,8 +86,8 @@ serve(async (req) => {
     // Trim text if it's too long (OpenAI has a limit)
     const trimmedText = text.length > 4000 ? text.substring(0, 4000) + "..." : text;
 
-    // Generate speech from text
-    const response = await fetch('https://api.openai.com/v1/audio/speech', {
+    // Generate speech from text with retry logic
+    const response = await fetchWithRetry('https://api.openai.com/v1/audio/speech', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openAIApiKey}`,

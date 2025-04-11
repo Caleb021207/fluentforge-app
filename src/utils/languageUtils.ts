@@ -108,9 +108,9 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
 };
 
 /**
- * Returns the browser speech synthesis language code for a language
+ * Returns the language code for a language
  * @param language The language name (english, spanish, etc.)
- * @returns The language code for speech synthesis (en-US, es-ES, etc.)
+ * @returns The language code (en-US, es-ES, etc.)
  */
 export const getSpeechSynthesisLanguageCode = (language: string): string => {
   const languageCodeMap: Record<string, string> = {
@@ -130,71 +130,4 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';
-};
-
-/**
- * Finds the best available voice for a given language
- * @param synthRef The speech synthesis instance
- * @param langCode The language code (e.g., en-US, es-ES)
- * @returns The best matching voice or undefined if none found
- */
-export const findBestVoiceForLanguage = (
-  synthRef: SpeechSynthesis, 
-  langCode: string
-): SpeechSynthesisVoice | undefined => {
-  if (!synthRef) {
-    console.error("Speech synthesis reference is undefined");
-    return undefined;
-  }
-  
-  const voices = synthRef.getVoices();
-  if (!voices || voices.length === 0) {
-    console.warn("No voices available in speech synthesis");
-    return undefined;
-  }
-  
-  const languagePrefix = langCode.split('-')[0].toLowerCase();
-  console.log(`Finding voice for language code: ${langCode}, prefix: ${languagePrefix}, available voices: ${voices.length}`);
-  
-  // Log available voices for debugging
-  voices.forEach(v => {
-    console.log(`Voice: ${v.name}, Lang: ${v.lang}, Default: ${v.default}`);
-  });
-  
-  // Try to find an exact match first
-  let voice = voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase());
-  if (voice) {
-    console.log(`Found exact match voice: ${voice.name}`);
-    return voice;
-  }
-  
-  // If no exact match, try to find a voice that starts with the language code
-  voice = voices.find(v => v.lang.toLowerCase().startsWith(languagePrefix));
-  if (voice) {
-    console.log(`Found prefix match voice: ${voice.name}`);
-    return voice;
-  }
-  
-  // If still no match, use any voice that contains the language code
-  voice = voices.find(v => v.lang.toLowerCase().includes(languagePrefix));
-  if (voice) {
-    console.log(`Found partial match voice: ${voice.name}`);
-    return voice;
-  }
-  
-  // Try to find any default voice as a last resort
-  voice = voices.find(v => v.default === true);
-  if (voice) {
-    console.log(`Using default voice as fallback: ${voice.name}`);
-    return voice;
-  }
-  
-  // If all else fails, return the first available voice
-  if (voices.length > 0) {
-    console.log(`Using first available voice as fallback: ${voices[0].name}`);
-    return voices[0];
-  }
-  
-  console.warn(`No voice found for language: ${langCode}`);
-  return undefined;
 };
