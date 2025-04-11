@@ -1,23 +1,48 @@
 
 import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { List, ListItem } from "@/components/ui/list";
+import { BrainCircuit } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getLanguageDisplayName } from "@/utils/languageUtils";
 
-const PracticeGuide: React.FC = () => {
-  const { t } = useLocalization();
+interface PracticeGuideProps {
+  targetLanguage?: string;
+}
 
+const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish" }) => {
+  const { t, currentLanguage } = useLocalization();
+  
+  // Determine which language is being practiced
+  const displayLanguage = currentLanguage === "english" 
+    ? getLanguageDisplayName(targetLanguage)
+    : "English";
+  
   return (
-    <div className="bg-gray-100 rounded-lg p-4 mb-8">
-      <h3 className="font-medium mb-2">{t("practiceWithTextChat")}</h3>
-      <p className="text-sm text-gray-600 mb-3">
-        {t("startTextChatting")}
-      </p>
-      <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-        <li>{t("askAboutGrammarRules")}</li>
-        <li>{t("practiceConversationsDifferentSituations")}</li>
-        <li>{t("learnNewVocabulary")}</li>
-        <li>{t("discussCulturalTopics")}</li>
-      </ul>
-    </div>
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-semibold flex items-center gap-2">
+          <BrainCircuit className="h-5 w-5 text-lingua-primary" />
+          {t("practiceGuide", { language: displayLanguage })}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600 mb-4">
+          {t("practiceGuideDescription", { language: displayLanguage })}
+        </p>
+        
+        <List className="text-sm text-gray-600 mb-4">
+          <ListItem>{t("practiceGuideItem1")}</ListItem>
+          <ListItem>{t("practiceGuideItem2")}</ListItem>
+          <ListItem>{t("practiceGuideItem3")}</ListItem>
+          <ListItem>{t("practiceGuideItem4")}</ListItem>
+        </List>
+        
+        <p className="text-sm text-gray-500 italic">
+          {t("practiceDisclaimer")}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 

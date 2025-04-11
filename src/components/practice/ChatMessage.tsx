@@ -28,7 +28,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
   ];
   
   // Filter content for safety if needed
-  const safeContent = filterContent(content);
+  const safeContent = content ? filterContent(content) : "";
   const safeTranslation = translation ? filterContent(translation) : "";
   
   // Check for potentially unsafe content
@@ -38,11 +38,25 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
   // Determine if translation should be shown:
   // 1. If user's language is in the list of languages that always show translations
   // 2. OR if the translation exists and is not empty
+  // 3. OR if content was filtered (for transparency)
   const showTranslation = 
     showTranslationLanguages.includes(currentLanguage) || 
-    (translation && translation.trim() !== "");
+    (translation && translation.trim() !== "") ||
+    !isContentSafe || !isTranslationSafe;
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;
+  
+  // Handle case where content is undefined or empty
+  if (!content && !translation) {
+    return (
+      <div className="flex justify-center mb-4">
+        <div className="bg-yellow-100 rounded p-4 text-yellow-700">
+          <AlertTriangle size={16} className="inline mr-2" />
+          <span>Empty message received</span>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div

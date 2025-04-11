@@ -41,6 +41,13 @@ const voiceChatTranslations: TranslationRecord = {
   phrase7: "ما هي خططك لغداً؟",
   phrase8: "كيف تقول... باللغة الإسبانية/الإنجليزية؟",
   browserBasedTTS: "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.",
+  
+  // Additional keys needed for the practice tips box
+  askQuestions: "اطرح أسئلة حول المواضيع اليومية",
+  practiceCommonPhrases: "تدرب على العبارات والتعبيرات الشائعة",
+  describeWhatYouSee: "صف ما تراه من حولك",
+  practiceVocabularyForSpecific: "تدرب على المفردات لمواضيع محددة مثل السفر أو الطعام",
+  useThisTool: "استخدم هذه الأداة لتحسين مهارات التحدث والاستماع. إليك بعض النصائح:",
 };
 
 export default voiceChatTranslations;

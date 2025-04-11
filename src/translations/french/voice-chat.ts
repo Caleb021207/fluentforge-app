@@ -82,6 +82,13 @@ const voiceChatTranslations: TranslationRecord = {
   practiceLevel: "Niveau de pratique",
   cefrB1Description: "Intermédiaire - Peut discuter de sujets familiers",
   conversationHistoryCleared: "L'historique de conversation a été effacé",
+  
+  // Additional keys needed for the practice tips box
+  askQuestions: "Posez des questions sur des sujets quotidiens",
+  practiceCommonPhrases: "Pratiquez des phrases et expressions courantes",
+  describeWhatYouSee: "Décrivez ce que vous voyez autour de vous",
+  practiceVocabularyForSpecific: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture",
+  useThisTool: "Utilisez cet outil pour améliorer vos compétences en expression orale et en compréhension. Voici quelques conseils :",
 };
 
 export default voiceChatTranslations;

@@ -10,6 +10,7 @@ import premiumVoiceTranslations from "./premium-voice";
 import profileTranslations from "./profile";
 import progressTranslations from "./progress";
 import voiceChatTranslations from "./voice-chat";
+import languagesTranslations from "./languages";
 
 // Combine all Indonesian translations
 const indonesianTranslations: TranslationRecord = {
@@ -22,7 +23,8 @@ const indonesianTranslations: TranslationRecord = {
   ...premiumVoiceTranslations,
   ...profileTranslations,
   ...progressTranslations,
-  ...voiceChatTranslations
+  ...voiceChatTranslations,
+  ...languagesTranslations
 };
 
 export default indonesianTranslations;

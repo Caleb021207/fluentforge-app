@@ -8,12 +8,23 @@ import { useTranslationHandler } from "./useTranslationHandler";
 
 export const useChatMessaging = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
   const { getTranslation, verifyHindiTranslation } = useTranslationHandler();
 
   const sendChatMessage = async (message: string) => {
+    if (!message || message.trim() === "") {
+      toast({
+        title: t("error"),
+        description: t("emptyMessage"),
+        variant: "destructive",
+      });
+      return null;
+    }
+    
     setIsLoading(true);
+    setHasError(false);
 
     try {
       const userId = "anonymous-or-current-user-id";
@@ -24,7 +35,8 @@ export const useChatMessaging = () => {
         "language_practice"
       );
       
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+      // Use chat-with-gpt endpoint
+      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: message,
           userLanguage: currentLanguage,
@@ -37,6 +49,11 @@ export const useChatMessaging = () => {
       }
 
       console.log('Response from AI tutor:', data);
+      
+      // Handle case where response is missing content
+      if (!data || !data.content) {
+        throw new Error("Invalid response from AI tutor");
+      }
       
       let translation = data.translation || "";
       
@@ -55,6 +72,7 @@ export const useChatMessaging = () => {
       
     } catch (error) {
       console.error('Error:', error);
+      setHasError(true);
       toast({
         title: t("error"),
         description: t("networkConnectionIssue"),
@@ -66,9 +84,19 @@ export const useChatMessaging = () => {
     }
   };
 
+  const retryLastMessage = async (message: string) => {
+    if (hasError) {
+      setHasError(false);
+      return await sendChatMessage(message);
+    }
+    return null;
+  };
+
   return {
     isLoading,
+    hasError,
     setIsLoading,
-    sendChatMessage
+    sendChatMessage,
+    retryLastMessage
   };
 };

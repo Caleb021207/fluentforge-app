@@ -34,6 +34,11 @@ export function useConnectionStatus() {
     setStatus("reconnecting");
   };
 
+  const setOnline = () => {
+    setStatus("online");
+    setLastOnlineAt(new Date());
+  };
+
   return {
     status,
     lastOnlineAt,
@@ -41,5 +46,6 @@ export function useConnectionStatus() {
     isOffline: status === "offline",
     isReconnecting: status === "reconnecting",
     setReconnecting,
+    setOnline,
   };
 }

@@ -1,24 +1,44 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Book } from "lucide-react";
+import { MessageSquare, Loader2 } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
+import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 interface PracticePromptButtonProps {
   onClick: () => void;
   isLoading: boolean;
+  targetLanguage?: string;
+  disabled?: boolean;
 }
 
-const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ onClick, isLoading }) => {
+const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ 
+  onClick, 
+  isLoading,
+  targetLanguage = "spanish",
+  disabled = false
+}) => {
   const { t, currentLanguage } = useLocalization();
-  const { practice } = getLanguagePair(currentLanguage);
-
+  
+  // Determine which language is being practiced
+  const displayLanguage = currentLanguage === "english" 
+    ? getLanguageDisplayName(targetLanguage)
+    : "English";
+  
   return (
     <div className="flex justify-center mb-8">
-      <Button onClick={onClick} disabled={isLoading} className="bg-lingua-primary w-full sm:w-auto">
-        <Book className="h-4 w-4 mr-2" />
-        {t("sendEnglishPracticePrompt")}
+      <Button
+        onClick={onClick}
+        disabled={isLoading || disabled}
+        className="gap-2"
+        size="lg"
+      >
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <MessageSquare className="h-4 w-4" />
+        )}
+        {t("startConversationIn", { language: displayLanguage })}
       </Button>
     </div>
   );

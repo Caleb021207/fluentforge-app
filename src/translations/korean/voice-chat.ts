@@ -40,6 +40,14 @@ const voiceChatTranslations: TranslationRecord = {
   phrase7: "내일 계획은 무엇인가요?",
   phrase8: "...을 영어/한국어로 어떻게 말하나요?",
   browserBasedTTS: "참고: 이것은 브라우저 기반 텍스트 음성 변환을 사용합니다. ElevenLabs를 통한 프리미엄 음성 품질을 원하시면 프리미엄 음성 채팅을 이용해보세요.",
+  speaking: "말하는 중",
+  
+  // Additional keys needed for the practice tips box
+  askQuestions: "일상적인 주제에 대해 질문하세요",
+  practiceCommonPhrases: "일상적인 문구와 표현을 연습하세요",
+  describeWhatYouSee: "주변에 보이는 것을 설명해보세요",
+  practiceVocabularyForSpecific: "여행이나 음식과 같은 특정 주제의 어휘를 연습하세요",
+  useThisTool: "이 도구를 사용하여 말하기와 듣기 능력을 향상시키세요. 몇 가지 팁을 소개합니다:",
 };
 
 export default voiceChatTranslations;

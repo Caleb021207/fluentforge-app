@@ -10,6 +10,7 @@ import voiceChatTranslations from "./voice-chat";
 import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
+import languagesTranslations from "./languages";
 
 // Combine all the translation categories
 const portugueseTranslations: TranslationRecord = {
@@ -23,6 +24,7 @@ const portugueseTranslations: TranslationRecord = {
   ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
   ...authTranslations,
+  ...languagesTranslations,
 };
 
 export default portugueseTranslations;

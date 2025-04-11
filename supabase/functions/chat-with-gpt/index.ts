@@ -2,7 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY') || "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";
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,7 +37,7 @@ serve(async (req) => {
                           userLanguage === 'russian' ? 'Russian' : 
                           userLanguage === 'hindi' ? 'Hindi' : 
                           userLanguage === 'indonesian' ? 'Indonesian' : 'Unknown';
-                          
+    
     // For Japanese, Russian, French, Ukrainian, Hindi and Indonesian users, always include translations regardless of request type
     const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian' || userLanguage === 'french' || userLanguage === 'ukrainian' || userLanguage === 'hindi' || userLanguage === 'indonesian';
 
