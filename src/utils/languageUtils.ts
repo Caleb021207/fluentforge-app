@@ -76,8 +76,8 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
     return ['english'];
   }
   
-  // Updated to include Portuguese for English speakers
-  const commonLanguages = ['spanish', 'french', 'portuguese', 'japanese', 'mandarin'];
+  // Updated to only include Spanish, Portuguese, and French for English speakers
+  const commonLanguages = ['spanish', 'french', 'portuguese'];
   
   return commonLanguages;
 };
