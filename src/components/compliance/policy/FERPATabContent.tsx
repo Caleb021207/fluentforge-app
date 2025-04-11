@@ -11,18 +11,21 @@ const FERPATabContent = () => {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
           <BookOpen className="mr-2 h-5 w-5 text-lingua-primary" />
-          {t("ferpaComplianceStatement") || "FERPA & Data Privacy"}
+          {t("ferpaComplianceStatement") || "FERPA Compliance"}
         </h2>
         <p>
           {t("ferpaComplianceDescription") || 
-            "Palavox is designed to comply with the Family Educational Rights and Privacy Act (FERPA), implementing comprehensive measures to protect student privacy and educational data:"}
+            "Palavox supports all core FERPA principles and is designed to protect student education records:"}
         </p>
         
+        <h3 className="text-lg font-medium mt-4 mb-2">
+          {t("ferpaProtections") || "FERPA Protections"}
+        </h3>
         <ul className="list-disc pl-6 mt-4 space-y-2">
-          <li className="text-base">{t("noPersonalInfo") || "No personally identifiable student information is collected"}</li>
-          <li className="text-base">{t("simpleLogin") || "No login required beyond a simple classroom code or alias if preferred"}</li>
-          <li className="text-base">{t("anonymizedData") || "All session data is anonymized and stored securely"}</li>
-          <li className="text-base">{t("noDataSelling") || "Palavox does not use or sell any user data for advertising or third-party services"}</li>
+          <li className="text-base">{t("noPersonalInfo") || "No personally identifiable information (PII) is collected"}</li>
+          <li className="text-base">{t("simpleLogin") || "No required student logins (classroom codes or aliases only)"}</li>
+          <li className="text-base">{t("anonymizedData") || "Anonymized session data, securely stored"}</li>
+          <li className="text-base">{t("noDataSelling") || "No advertising, data selling, or third-party sharing"}</li>
         </ul>
       </section>
       
@@ -31,26 +34,22 @@ const FERPATabContent = () => {
           <Lock className="mr-2 h-5 w-5 text-lingua-primary" />
           {t("yourRightsUnderFerpa") || "Your Rights Under FERPA"}
         </h2>
-        <p>
-          {t("ferpaRightsDescription") || 
-            "FERPA gives parents certain rights with respect to their children's education records. These rights transfer to the student when they reach the age of 18 or attend a school beyond the high school level."}
-        </p>
         <ul className="list-disc pl-6 mt-4 space-y-2">
           <li className="text-base">
             {t("ferpaRightInspect") || 
-              "The right to inspect and review educational records maintained by the school"}
+              "Right to Inspect: You may review educational records stored on our platform"}
           </li>
           <li className="text-base">
             {t("ferpaRightAmend") || 
-              "The right to request that a school correct records believed to be inaccurate or misleading"}
+              "Right to Amend: You may request corrections to inaccurate information"}
           </li>
           <li className="text-base">
             {t("ferpaRightConsent") || 
-              "The right to consent to the disclosure of personally identifiable information from educational records, except as allowed by law"}
+              "Right to Consent: We do not disclose student data without proper consent"}
           </li>
           <li className="text-base">
             {t("ferpaRightComplaint") || 
-              "The right to file a complaint with the U.S. Department of Education concerning alleged failures to comply with FERPA requirements"}
+              "Right to File Complaint: You may contact the U.S. Department of Education for concerns"}
           </li>
         </ul>
       </section>
@@ -62,7 +61,7 @@ const FERPATabContent = () => {
         </h2>
         <p>
           {t("fullComplianceAvailable") || 
-            "A full compliance breakdown and data security policy can be made available upon request. Contact us at safety@palavox.com for additional information or to request documentation for your district."}
+            "A detailed FERPA compliance breakdown and technical documentation are available upon request. Please email: caleb@palavox.org for additional information or to request documentation for your district."}
         </p>
       </section>
     </div>

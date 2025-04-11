@@ -11,39 +11,39 @@ const PrivacyTabContent = () => {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
           <Lock className="mr-2 h-5 w-5 text-lingua-primary" />
-          {t("dataPrivacyOverview") || "Data Privacy Overview"}
+          {t("dataPrivacyOverview") || "Data Privacy & Security Practices"}
         </h2>
         <p>
           {t("dataPrivacyDescription") || 
-            "We take the privacy and security of all user data seriously, implementing strict measures to protect information in accordance with FERPA and industry best practices."}
+            "Palavox is designed with security-first architecture and clear retention standards:"}
         </p>
       </section>
       
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
           <Shield className="mr-2 h-5 w-5 text-lingua-primary" />
-          {t("dataSecurity") || "Data Security Measures"}
+          {t("dataSecurity") || "Data Handling & Security"}
         </h2>
         <ul className="list-disc pl-6 space-y-2">
           <li className="text-base">
             {t("dataSecurityEncryption") || 
-              "Encryption: All data is encrypted in transit and at rest using industry-standard encryption methods"}
+              "End-to-end encryption (in transit and at rest)"}
           </li>
           <li className="text-base">
             {t("dataSecurityAccess") || 
-              "Access Controls: Strict access controls limit who can view and modify user data"}
+              "Role-based access control for staff and admins"}
           </li>
           <li className="text-base">
             {t("dataSecurityBackups") || 
-              "Regular Backups: We maintain secure backups of all data to prevent loss"}
+              "Regular secure data backups"}
           </li>
           <li className="text-base">
             {t("dataSecurityMonitoring") || 
-              "Continuous Monitoring: Our systems are monitored 24/7 for suspicious activity"}
+              "Real-time monitoring for unauthorized activity"}
           </li>
           <li className="text-base">
             {t("dataSecurityUpdates") || 
-              "Security Updates: All systems are regularly updated with the latest security patches"}
+              "Routine software and security updates"}
           </li>
         </ul>
       </section>
@@ -51,22 +51,32 @@ const PrivacyTabContent = () => {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
           <Server className="mr-2 h-5 w-5 text-lingua-primary" />
-          {t("dataRetention") || "Data Retention Policy"}
+          {t("dataRetention") || "Data Retention"}
         </h2>
-        <p>
-          {t("dataRetentionDescription") || 
-            "We retain your data only as long as necessary for the purposes for which it was collected, or as required by law. You can request deletion of your account and associated data at any time through your profile settings."}
-        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li className="text-base">
+            {t("dataRetentionPolicy1") || 
+              "We retain session data only as long as needed for educational use"}
+          </li>
+          <li className="text-base">
+            {t("dataRetentionPolicy2") || 
+              "No permanent storage of PII or student-created content"}
+          </li>
+          <li className="text-base">
+            {t("dataRetentionPolicy3") || 
+              "Full data deletion available on request"}
+          </li>
+        </ul>
       </section>
       
       <section>
         <h2 className="text-xl font-semibold mb-4 flex items-center">
           <FileText className="mr-2 h-5 w-5 text-lingua-primary" />
-          {t("contactInfo") || "Contact Information"}
+          {t("contactInfo") || "Need Full Documentation or Audit Info?"}
         </h2>
         <p>
           {t("safetyPolicyContactInfo") || 
-            "If you have any questions about our safety practices or need documentation for your district, please contact us at safety@palavox.com."}
+            "A detailed FERPA/CIPA compliance packet and technical documentation are available upon request. Please email: caleb@palavox.org"}
         </p>
       </section>
     </div>
