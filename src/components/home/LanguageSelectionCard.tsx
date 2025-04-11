@@ -21,7 +21,7 @@ const LanguageSelectionCard = ({
   targetLanguage,
   setNativeLanguage,
   setTargetLanguage,
-  hasStudyMaterials,
+  hasStudyMaterials: materialsAvailable,
   handleLanguageSelection
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
@@ -119,7 +119,7 @@ const LanguageSelectionCard = ({
         
         {nativeLanguage && targetLanguage && (
           <div className="mb-4">
-            {!hasStudyMaterials(nativeLanguage, targetLanguage) && (
+            {!materialsAvailable && (
               <p className="text-amber-600 text-sm mb-2">
                 {t("studyMaterialsComingSoon", {
                   targetLanguage: TARGET_LANGUAGE_NAMES[targetLanguage]?.split(" ")[1] || targetLanguage,
