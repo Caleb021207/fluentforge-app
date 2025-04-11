@@ -6,6 +6,7 @@ import { getLanguagePair } from "@/utils/languageUtils";
 export type VoiceMessage = {
   role: 'user' | 'assistant';
   content: string;
+  translation?: string;
   timestamp: Date;
 };
 
@@ -51,10 +52,11 @@ export const useVoiceChatMessages = () => {
     return initialUserMessage;
   };
   
-  const addMessage = (role: 'user' | 'assistant', content: string) => {
+  const addMessage = (role: 'user' | 'assistant', content: string, translation?: string) => {
     const newMessage: VoiceMessage = {
       role,
       content,
+      translation,
       timestamp: new Date()
     };
     
