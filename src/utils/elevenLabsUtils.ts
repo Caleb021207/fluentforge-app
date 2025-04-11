@@ -36,13 +36,13 @@ const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
   "indonesian": INDONESIAN_TUTOR_AGENT_ID
 };
 
-// Updated: Target language agents for English speakers
-// Now using the same agent ID (AOv9JDhkEdMmiU61vHg9) for Spanish, French, and Portuguese
+// Target language agents for English speakers only
+// ONLY English speakers learning these languages use AOv9JDhkEdMmiU61vHg9
 const TARGET_LANGUAGE_AGENTS: Record<string, string> = {
-  "spanish": ENGLISH_VARIETIES_AGENT_ID,  // Using the same agent for English speakers learning Spanish
-  "french": ENGLISH_VARIETIES_AGENT_ID,   // Using the same agent for English speakers learning French
-  "portuguese": ENGLISH_VARIETIES_AGENT_ID, // Using the same agent for English speakers learning Portuguese
-  "english": ENGLISH_VARIETIES_AGENT_ID // Added English as a target language with the new agent ID
+  "spanish": ENGLISH_VARIETIES_AGENT_ID,  // English speakers learning Spanish use AOv9JDhkEdMmiU61vHg9
+  "french": ENGLISH_VARIETIES_AGENT_ID,   // English speakers learning French use AOv9JDhkEdMmiU61vHg9
+  "portuguese": ENGLISH_VARIETIES_AGENT_ID, // English speakers learning Portuguese use AOv9JDhkEdMmiU61vHg9
+  "english": ENGLISH_VARIETIES_AGENT_ID // Added English as a target language
 };
 
 /**
@@ -62,15 +62,18 @@ export const getAgentIdForLanguage = (language: string, targetLanguage?: string)
     }
   }
   
-  // If target language is English, use the English varieties agent
-  if (targetLanguage?.toLowerCase() === 'english') {
-    console.log(`Using English varieties tutor for ${normalizedLanguage} speaker:`, ENGLISH_VARIETIES_AGENT_ID);
-    return ENGLISH_VARIETIES_AGENT_ID;
+  // For non-English speakers learning English, use their specific tutor
+  if (normalizedLanguage !== 'english' && targetLanguage?.toLowerCase() === 'english') {
+    // Use the default agent for that language, which teaches English
+    if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
+      console.log(`Using tutor for ${normalizedLanguage} speaker learning English:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
+      return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
+    }
   }
   
-  // General case
+  // General case - use the agent for the user's native language
   if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
-    console.log(`Using tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
+    console.log(`Using default tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
     return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
   }
   
