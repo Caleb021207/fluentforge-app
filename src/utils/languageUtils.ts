@@ -1,4 +1,3 @@
-
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -30,11 +29,9 @@ export const getLanguageDisplayName = (language: string): string => {
  * @returns Object with native and practice language names
  */
 export const getLanguagePair = (currentLanguage: string) => {
-  // Default case - English speakers learn Spanish
   let native = "English";
   let practice = "Spanish";
   
-  // Non-English speakers typically learn English
   if (currentLanguage !== "english") {
     native = getLanguageDisplayName(currentLanguage);
     practice = "English";
@@ -49,7 +46,6 @@ export const getLanguagePair = (currentLanguage: string) => {
  * @returns The native display name for the language
  */
 export const getNativeLanguageDisplayName = (language: string): string => {
-  // Returns language names in their native scripts
   const nativeNameMap: Record<string, string> = {
     'english': 'English',
     'spanish': 'Español',
@@ -75,11 +71,13 @@ export const getNativeLanguageDisplayName = (language: string): string => {
  * @returns Array of available target language codes
  */
 export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
-  // Default available languages for most users
-  const commonLanguages = ['english', 'spanish', 'french', 'mandarin', 'japanese'];
+  if (nativeLanguage.toLowerCase() !== 'english') {
+    return ['english'];
+  }
   
-  // Remove the native language from available targets
-  return commonLanguages.filter(lang => lang !== nativeLanguage.toLowerCase());
+  const commonLanguages = ['spanish', 'french', 'mandarin', 'japanese'];
+  
+  return commonLanguages;
 };
 
 /**
@@ -89,7 +87,6 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
  * @returns Boolean indicating if study materials are available
  */
 export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
-  // Common language pairs with full study materials
   const supportedPairs = [
     'english-spanish',
     'english-french',
