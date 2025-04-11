@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -708,3 +709,48 @@ const VoiceChat = () => {
           </p>
           
           <div className="space-y-6">
+            {/* Native language phrases */}
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium text-gray-700">
+                {native}:
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {nativeLanguagePhrases.map((phrase, index) => (
+                  <Button 
+                    key={index}
+                    variant="outline"
+                    className="justify-start text-left h-auto py-2 px-3"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Target language phrases */}
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium text-gray-700">
+                {practice}:
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {targetLanguagePhrases.map((phrase, index) => (
+                  <Button 
+                    key={index}
+                    variant="outline"
+                    className="justify-start text-left h-auto py-2 px-3 font-normal"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default VoiceChat;
