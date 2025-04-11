@@ -27,19 +27,15 @@ export const getLanguageDisplayName = (language: string): string => {
 /**
  * Returns native and practice language pair based on user's selected language
  * @param currentLanguage The user's current UI language
- * @param targetLanguage Optional target language override (for English speakers)
  * @returns Object with native and practice language names
  */
-export const getLanguagePair = (currentLanguage: string, targetLanguage?: string) => {
+export const getLanguagePair = (currentLanguage: string) => {
   let native = "English";
   let practice = "Spanish";
   
   if (currentLanguage !== "english") {
     native = getLanguageDisplayName(currentLanguage);
     practice = "English";
-  } else if (targetLanguage) {
-    // For English speakers, use the provided target language
-    practice = getLanguageDisplayName(targetLanguage);
   }
   
   return { native, practice };

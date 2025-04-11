@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { List, ListItem } from "@/components/ui/list";
 import { BrainCircuit, Globe, GraduationCap } from "lucide-react";
@@ -10,28 +10,16 @@ interface PracticeGuideProps {
   targetLanguage?: string;
 }
 
-const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
+const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish" }) => {
   const { t, currentLanguage } = useLocalization();
-  const [storedTargetLanguage, setStoredTargetLanguage] = useState<string | null>(null);
-  
-  useEffect(() => {
-    // If no targetLanguage prop is provided, try to get it from localStorage
-    if (!targetLanguage) {
-      const stored = localStorage.getItem("targetLanguage");
-      setStoredTargetLanguage(stored);
-    }
-  }, [targetLanguage]);
-  
-  // Use provided targetLanguage prop if available, otherwise use the one from localStorage
-  const effectiveTargetLanguage = targetLanguage || storedTargetLanguage || "spanish";
   
   // Determine which language is being practiced
   const displayLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(effectiveTargetLanguage)
+    ? getLanguageDisplayName(targetLanguage)
     : "English";
   
   // French-specific guide for English speakers
-  if (currentLanguage === "english" && effectiveTargetLanguage === "french") {
+  if (currentLanguage === "english" && targetLanguage === "french") {
     return (
       <Card>
         <CardHeader className="pb-2">
