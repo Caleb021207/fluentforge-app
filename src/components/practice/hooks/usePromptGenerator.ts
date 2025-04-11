@@ -15,7 +15,7 @@ export const usePromptGenerator = () => {
       
       // French-specific prompts for English speakers
       if (targetLanguage === "french") {
-        return "Hello! I'd like to practice French conversation. Can you help me learn some common phrases and vocabulary?";
+        return "Bonjour! I'm interested in practicing French conversation. Could you help me with some common phrases and expressions? I'm particularly interested in learning about proper pronunciation and everyday conversational French.";
       }
       
       // Default prompt for other languages (Spanish, etc.)
