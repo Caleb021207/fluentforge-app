@@ -11,7 +11,7 @@ import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog
 import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
 import { useLocalization } from "@/context/LocalizationContext";
 import { needsAgeVerification, getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
-import { hasStudyMaterials } from "@/utils/languageUtils";
+import { extractLanguagesFromPair, hasStudyMaterialsForPair } from "@/utils/languageUtils";
 import { Shield, BookOpen } from "lucide-react";
 
 const Index = () => {
@@ -25,8 +25,7 @@ const Index = () => {
   const [password, setPassword] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [nativeLanguage, setNativeLanguage] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
+  const [selectedLanguagePair, setSelectedLanguagePair] = useState("");
   const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
 
   useEffect(() => {
@@ -45,11 +44,14 @@ const Index = () => {
       checkUser();
     });
 
-    const savedNativeLanguage = localStorage.getItem("nativeLanguage");
-    const savedTargetLanguage = localStorage.getItem("targetLanguage");
+    const savedLanguagePair = localStorage.getItem("languagePair");
     
-    if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
-    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
+    if (savedLanguagePair) {
+      setSelectedLanguagePair(savedLanguagePair);
+    } else {
+      // Default to English for Spanish if no selection is saved
+      setSelectedLanguagePair("english-for-spanish");
+    }
     
     // Check if age verification is needed
     const needsVerification = needsAgeVerification();
@@ -63,14 +65,14 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (nativeLanguage && targetLanguage) {
-      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
+    if (selectedLanguagePair) {
+      const materialsAvailable = hasStudyMaterialsForPair(selectedLanguagePair);
       setStudyMaterialsAvailable(materialsAvailable);
       
-      sessionStorage.setItem("languagePair", `${nativeLanguage}-${targetLanguage}`);
+      sessionStorage.setItem("languagePair", selectedLanguagePair);
       sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
     }
-  }, [nativeLanguage, targetLanguage]);
+  }, [selectedLanguagePair]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +80,10 @@ const Index = () => {
     
     try {
       let result;
+      
+      // Extract languages from the selected pair
+      const { nativeLanguage, targetLanguage } = 
+        extractLanguagesFromPair(selectedLanguagePair);
       
       if (isLogin) {
         result = await supabase.auth.signInWithPassword({
@@ -92,6 +98,7 @@ const Index = () => {
             data: {
               native_language: nativeLanguage || undefined,
               target_language: targetLanguage || undefined,
+              language_pair: selectedLanguagePair || undefined
             }
           }
         });
@@ -108,8 +115,7 @@ const Index = () => {
         description: isLogin ? t("welcomeBack") : t("pleaseCheckEmail"),
       });
       
-      if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
-      if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
+      if (selectedLanguagePair) localStorage.setItem("languagePair", selectedLanguagePair);
       
       // Show FERPA consent form if user just registered or hasn't provided consent yet
       if (!isLogin || !getFerpaConsentStatus()) {
@@ -129,15 +135,17 @@ const Index = () => {
   };
 
   const handleLanguageSelection = () => {
-    if (nativeLanguage && targetLanguage) {
-      localStorage.setItem("nativeLanguage", nativeLanguage);
-      localStorage.setItem("targetLanguage", targetLanguage);
+    if (selectedLanguagePair) {
+      localStorage.setItem("languagePair", selectedLanguagePair);
       
-      const languagePair = `${nativeLanguage}-${targetLanguage}`;
-      sessionStorage.setItem("languagePair", languagePair);
+      sessionStorage.setItem("languagePair", selectedLanguagePair);
       
-      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
+      const materialsAvailable = hasStudyMaterialsForPair(selectedLanguagePair);
       sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
+      
+      // Extract languages from the selected pair
+      const { nativeLanguage, targetLanguage } = 
+        extractLanguagesFromPair(selectedLanguagePair);
       
       setCurrentLanguage(nativeLanguage);
       
@@ -184,11 +192,8 @@ const Index = () => {
           </p>
           
           <LanguageSelectionCard
-            nativeLanguage={nativeLanguage}
-            targetLanguage={targetLanguage}
-            setNativeLanguage={setNativeLanguage}
-            setTargetLanguage={setTargetLanguage}
-            hasStudyMaterials={studyMaterialsAvailable}
+            selectedLanguagePair={selectedLanguagePair}
+            setSelectedLanguagePair={setSelectedLanguagePair}
             handleLanguageSelection={handleLanguageSelection}
           />
           

@@ -15,6 +15,8 @@ const languageSelectionTranslations: TranslationRecord = {
   studyMaterialsComingSoon: "Os materiais de estudo para aprender {{targetLanguage}} de {{nativeLanguage}} estão chegando em breve!",
   someFeaturesLimited: "Alguns recursos podem ser limitados ou indisponíveis.",
   selectYourLanguagePreferences: "Selecione suas preferências de idioma",
+  selectLanguagePair: "Quais idiomas você quer usar?",
+  learningLanguageFromNative: "{{targetLanguage}} de {{nativeLanguage}}",
 };
 
 export default languageSelectionTranslations;

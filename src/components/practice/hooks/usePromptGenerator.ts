@@ -1,16 +1,18 @@
 
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
+import { extractLanguagesFromPair } from "@/utils/languageUtils";
 
 export const usePromptGenerator = () => {
   const { currentLanguage } = useLocalization();
 
   const generateLanguageLearningPrompt = () => {
-    const { native, practice } = getLanguagePair(currentLanguage);
+    // Get language pair from session storage
+    const storedPair = sessionStorage.getItem('languagePair') || localStorage.getItem('languagePair') || 'english-for-spanish';
+    const { nativeLanguage, targetLanguage } = extractLanguagesFromPair(storedPair);
     
-    // For English speakers, suggest different languages based on their profile
-    if (currentLanguage === "english") {
-      return `Hello! I'd like to practice ${practice}. Can you help me with a conversation?`;
+    // For English speakers learning other languages
+    if (nativeLanguage === "english") {
+      return `Hello! I'd like to practice ${targetLanguage}. Can you help me with a conversation?`;
     }
     
     // For non-English speakers learning English
@@ -29,7 +31,7 @@ export const usePromptGenerator = () => {
       french: "Bonjour! J'aimerais pratiquer l'anglais. Pouvons-nous avoir une conversation?"
     };
     
-    return promptsByLanguage[currentLanguage] || `Hello, I would like to practice ${practice}.`;
+    return promptsByLanguage[nativeLanguage] || `Hello, I would like to practice ${targetLanguage}.`;
   };
 
   return {

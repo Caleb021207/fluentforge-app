@@ -1,9 +1,11 @@
+
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import { AlertTriangle, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { playTTS } from "@/utils/ttsUtils";
+import { extractLanguagesFromPair } from "@/utils/languageUtils";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
@@ -72,13 +74,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     setIsLoading(true);
     setIsPlaying(true);
     
-    // Get language code for TTS based on who's learning what
-    let languageForTTS = currentLanguage === "english" ? "spanish" : "english";
+    // Get language for TTS based on stored language pair
+    const storedPair = sessionStorage.getItem('languagePair') || localStorage.getItem('languagePair') || 'english-for-spanish';
+    const { targetLanguage } = extractLanguagesFromPair(storedPair);
     
     try {
       await playTTS({
         text: safeContent,
-        language: languageForTTS,
+        language: targetLanguage,
         onStart: () => setIsLoading(false),
         onEnd: () => setIsPlaying(false),
         onError: (error) => {
