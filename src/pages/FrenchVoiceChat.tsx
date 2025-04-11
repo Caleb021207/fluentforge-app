@@ -38,10 +38,9 @@ const FrenchVoiceChat = () => {
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   
-  // Always use French as the practice language for this component
-  const practice = "French";
-  const native = currentLanguage === "english" ? "English" : getLanguageDisplayName(currentLanguage);
-
+  const native = currentLanguage === "french" ? "French" : getLanguageDisplayName(currentLanguage);
+  const target = "English";
+  
   useEffect(() => {
     if (conversationEndRef.current) {
       conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -54,9 +53,13 @@ const FrenchVoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set the language code for French
-      recognitionRef.current.lang = 'fr-FR';
-      console.log(`Setting speech recognition language to: fr-FR for French`);
+      if (currentLanguage === "french") {
+        recognitionRef.current.lang = 'fr-FR';
+        console.log(`Setting speech recognition language to: fr-FR for French speaker`);
+      } else {
+        recognitionRef.current.lang = 'en-US';
+        console.log(`Setting speech recognition language to: en-US`);
+      }
       
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
@@ -196,8 +199,8 @@ const FrenchVoiceChat = () => {
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
-          userLanguage: 'french', // Always use French as the user's language
-          targetLanguage: 'english', // Always use English as the target language
+          userLanguage: 'french',
+          targetLanguage: 'english',
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
           requestTranslation: true
@@ -226,7 +229,7 @@ const FrenchVoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      speakWithBrowserSynthesis(content);
+      speakWithBrowserSynthesis(content, 'en-US');
       setTranscript("");
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -240,7 +243,7 @@ const FrenchVoiceChat = () => {
     }
   };
 
-  const speakWithBrowserSynthesis = (text: string) => {
+  const speakWithBrowserSynthesis = (text: string, langCode: string = 'en-US') => {
     if (!synthRef.current) {
       console.error('Speech synthesis not available');
       toast({
@@ -255,20 +258,19 @@ const FrenchVoiceChat = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    // Set language to French
-    utteranceRef.current.lang = 'fr-FR';
-    console.log(`Setting speech synthesis language to: fr-FR for French`);
+    utteranceRef.current.lang = langCode;
+    console.log(`Setting speech synthesis language to: ${langCode}`);
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
-    // Find a French voice
-    const voice = voices.find(v => v.lang.startsWith('fr'));
+    const voiceLangPrefix = langCode.split('-')[0];
+    const voice = voices.find(v => v.lang.startsWith(voiceLangPrefix));
     if (voice) {
       console.log(`Using voice: ${voice.name} (${voice.lang})`);
       utteranceRef.current.voice = voice;
     } else {
-      console.warn(`No matching voice found for language: French`);
+      console.warn(`No matching voice found for language: ${langCode}`);
     }
     
     utteranceRef.current.onstart = () => {
@@ -296,7 +298,7 @@ const FrenchVoiceChat = () => {
 
   const playAgain = () => {
     if (gptResponse) {
-      speakWithBrowserSynthesis(gptResponse);
+      speakWithBrowserSynthesis(gptResponse, 'en-US');
     }
   };
 
@@ -306,15 +308,9 @@ const FrenchVoiceChat = () => {
     let nativeLanguagePhrases;
     let targetLanguagePhrases;
     
-    // Get French phrases for target language
-    targetLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+    targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     
-    // Get native language phrases (English or user's language)
-    if (currentLanguage === "english") {
-      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else {
-      nativeLanguagePhrases = phraseKeys.map(key => t(key));
-    }
+    nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
     
     return { nativeLanguagePhrases, targetLanguagePhrases };
   };
@@ -343,7 +339,6 @@ const FrenchVoiceChat = () => {
     } else if (currentLanguage === "french") {
       return "Pratiquez votre anglais avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en français. L'IA vous répondra en anglais et vous aidera à vous entraîner.";
     } else {
-      // For other languages, use their translations if available, or default to English
       return `${t("practiceWithVoiceChat")}`;
     }
   };
@@ -575,7 +570,7 @@ const FrenchVoiceChat = () => {
           <div className="space-y-6">
             <div>
               <h4 className="text-sm font-medium mb-2 text-lingua-primary">
-                {currentLanguage === "french" ? "Dans votre langue cible" : t("inYourTargetLanguage")}: (French)
+                {currentLanguage === "french" ? "Dans votre langue cible" : t("inYourTargetLanguage")}: (English)
               </h4>
               <ul className="space-y-2">
                 {targetLanguagePhrases.map((phrase, index) => (
