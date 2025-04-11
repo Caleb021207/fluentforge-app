@@ -3,8 +3,6 @@ import { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
-import englishTranslations from "@/translations/english";
-import frenchTranslations from "@/translations/french";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -26,7 +24,7 @@ export const useFrenchVoiceChat = () => {
   const { toast } = useToast();
   const { t } = useLocalization();
   
-  // These are reversed from before - now correctly set for French speakers learning English
+  // For French speakers learning English
   const native = "French";
   const target = "English";
 
@@ -59,7 +57,7 @@ export const useFrenchVoiceChat = () => {
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
-          // Fixed: French speakers are learning English, so French is userLanguage and English is targetLanguage
+          // French speaker learning English
           userLanguage: 'french',
           targetLanguage: 'english',
           conversationHistory: apiConversationHistory,
@@ -104,10 +102,29 @@ export const useFrenchVoiceChat = () => {
   };
 
   const getConversationStarters = () => {
-    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
+    // These phrases should be in English since French speakers are practicing English
+    const targetLanguagePhrases = [
+      "Hello, how are you today?",
+      "What's the weather like where you are?",
+      "Can you recommend a good restaurant?",
+      "What are your hobbies and interests?",
+      "I would like to practice my pronunciation.",
+      "Could you help me with grammar?",
+      "Tell me about yourself.",
+      "What time is it?"
+    ];
     
-    const nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
-    const targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    // These are French phrases since the user is a French speaker
+    const nativeLanguagePhrases = [
+      "Bonjour, comment allez-vous aujourd'hui?",
+      "Quel temps fait-il chez vous?",
+      "Pouvez-vous recommander un bon restaurant?",
+      "Quels sont vos passe-temps et centres d'intérêt?",
+      "Je voudrais pratiquer ma prononciation.",
+      "Pourriez-vous m'aider avec la grammaire?",
+      "Parlez-moi de vous.",
+      "Quelle heure est-il?"
+    ];
     
     return { nativeLanguagePhrases, targetLanguagePhrases };
   };
