@@ -2,15 +2,17 @@
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Volume2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
   translation?: string;
+  onPlayAudio?: (text: string) => void;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
   
   // Languages that should always show translations
@@ -58,6 +60,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
     );
   }
   
+  const handlePlayAudio = () => {
+    if (onPlayAudio && role === "assistant") {
+      onPlayAudio(safeContent);
+    }
+  };
+  
   return (
     <div
       className={`flex ${
@@ -78,7 +86,20 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
           </div>
         )}
         
-        <p className={`${role === "user" ? "text-white" : "text-gray-800"}`}>{safeContent}</p>
+        <div className="flex justify-between items-start">
+          <p className={`${role === "user" ? "text-white" : "text-gray-800"}`}>{safeContent}</p>
+          
+          {role === "assistant" && onPlayAudio && (
+            <Button 
+              onClick={handlePlayAudio} 
+              variant="ghost" 
+              size="sm"
+              className="ml-2 -mt-1 p-1 h-auto"
+            >
+              <Volume2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
         
         {showTranslation && (
           <div className="border-t border-gray-300 mt-2 pt-2">

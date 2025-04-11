@@ -22,6 +22,7 @@ import russianTranslations from "@/translations/russian";
 import ukrainianTranslations from "@/translations/ukrainian";
 import hindiTranslations from "@/translations/hindi";
 import indonesianTranslations from "@/translations/indonesian";
+import ChatMessage from "@/components/practice/ChatMessage";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -706,37 +707,20 @@ const VoiceChat = () => {
             <ScrollArea className="h-[300px] rounded-md border p-4">
               <div className="space-y-4">
                 {conversationHistory.map((message, index) => (
-                  <div 
-                    key={index} 
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div 
-                      className={`max-w-[80%] rounded-lg p-3 ${
-                        message.role === 'user' 
-                          ? 'bg-blue-100 text-gray-800' 
-                          : 'bg-green-100 text-gray-800'
-                      }`}
-                    >
-                      <p className="text-sm">{message.content}</p>
-                      {/* Always show translation for Hindi users when it's an AI message */}
-                      {((message.translation && message.translation.trim() !== "") || 
-                       (message.role === 'assistant' && currentLanguage === "hindi")) && (
-                        <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
-                          <span className="font-medium">{t("translation")}:</span> {message.translation || "अनुवाद उपलब्ध नहीं है"}
-                        </p>
-                      )}
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(message.timestamp).toLocaleTimeString()}
-                      </p>
-                    </div>
-                  </div>
+                  <ChatMessage
+                    key={index}
+                    role={message.role}
+                    content={message.content}
+                    translation={message.translation}
+                    onPlayAudio={(text) => speakWithBrowserSynthesis(text)}
+                  />
                 ))}
                 <div ref={conversationEndRef} />
               </div>
             </ScrollArea>
           </Card>
         )}
-
+        
         <Card className="p-6">
           <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
           <p className="text-sm text-gray-600 mb-4">

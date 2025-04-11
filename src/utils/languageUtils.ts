@@ -142,21 +142,41 @@ export const findBestVoiceForLanguage = (
   synthRef: SpeechSynthesis, 
   langCode: string
 ): SpeechSynthesisVoice | undefined => {
+  if (!synthRef) {
+    console.error("Speech synthesis reference is undefined");
+    return undefined;
+  }
+  
   const voices = synthRef.getVoices();
+  if (!voices || voices.length === 0) {
+    console.warn("No voices available in speech synthesis");
+    return undefined;
+  }
+  
   const languagePrefix = langCode.split('-')[0].toLowerCase();
+  console.log(`Finding voice for language code: ${langCode}, prefix: ${languagePrefix}`);
   
   // Try to find an exact match first
   let voice = voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase());
+  if (voice) {
+    console.log(`Found exact match voice: ${voice.name}`);
+    return voice;
+  }
   
   // If no exact match, try to find a voice that starts with the language code
-  if (!voice) {
-    voice = voices.find(v => v.lang.toLowerCase().startsWith(languagePrefix));
+  voice = voices.find(v => v.lang.toLowerCase().startsWith(languagePrefix));
+  if (voice) {
+    console.log(`Found prefix match voice: ${voice.name}`);
+    return voice;
   }
   
   // If still no match, use any voice that contains the language code
-  if (!voice) {
-    voice = voices.find(v => v.lang.toLowerCase().includes(languagePrefix));
+  voice = voices.find(v => v.lang.toLowerCase().includes(languagePrefix));
+  if (voice) {
+    console.log(`Found partial match voice: ${voice.name}`);
+    return voice;
   }
   
-  return voice;
+  console.warn(`No voice found for language: ${langCode}`);
+  return undefined;
 };
