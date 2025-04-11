@@ -1,248 +1,94 @@
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { corsHeaders } from "../_shared/cors.ts";
+import { 
+  determineLanguagePair, 
+  getLanguageDisplayName, 
+  getUserNativeLanguage,
+  containsDevanagariScript
+} from "./languageUtils.ts";
+import {
+  filterCipaProhibitedContent,
+  containsProhibitedContent,
+  logEducationalDataAccess,
+  getCipaFerpaInstructions
+} from "./complianceUtils.ts";
+import {
+  TranslationCache,
+  getTranslation,
+  getSpecificLanguageTranslation
+} from "./translationUtils.ts";
+import {
+  ConnectionPool,
+  RateLimiter
+} from "./performanceUtils.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY') || "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";
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY') || "";
 
-// Connection Pool for OpenAI requests
-class ConnectionPool {
-  private activeConnections = 0;
-  private maxConnections = 50; // Adjust based on load testing
-  private waitingQueue: { resolve: (value: boolean) => void; reject: (reason: Error) => void }[] = [];
-  
-  async acquire(): Promise<boolean> {
-    if (this.activeConnections < this.maxConnections) {
-      this.activeConnections++;
-      return true;
-    }
-    
-    return new Promise((resolve, reject) => {
-      this.waitingQueue.push({ resolve, reject });
-      setTimeout(() => {
-        // If we can't get a connection in 10 seconds, reject
-        const index = this.waitingQueue.findIndex(item => item.resolve === resolve);
-        if (index >= 0) {
-          this.waitingQueue.splice(index, 1);
-          reject(new Error("Connection pool timeout"));
-        }
-      }, 10000);
-    });
-  }
-  
-  release(): void {
-    if (this.waitingQueue.length > 0) {
-      const next = this.waitingQueue.shift();
-      if (next) {
-        next.resolve(true);
-      }
-    } else {
-      this.activeConnections--;
-    }
-  }
-}
-
-// Request rate limiting
-class RateLimiter {
-  private requests: Record<string, number[]> = {};
-  private windowMs = 60000; // 1 minute window
-  private maxRequests = 30; // 30 requests per minute per user
-  
-  isRateLimited(userId: string): boolean {
-    const now = Date.now();
-    if (!this.requests[userId]) {
-      this.requests[userId] = [];
-    }
-    
-    // Remove expired timestamps
-    this.requests[userId] = this.requests[userId].filter(
-      timestamp => now - timestamp < this.windowMs
-    );
-    
-    // Check if maxRequests reached
-    if (this.requests[userId].length >= this.maxRequests) {
-      return true;
-    }
-    
-    // Add current request timestamp
-    this.requests[userId].push(now);
-    return false;
-  }
-}
-
-// Simple in-memory cache for translations
-class TranslationCache {
-  private cache: Map<string, { content: string, timestamp: number }> = new Map();
-  private ttl = 3600000; // 1 hour cache TTL
-  
-  get(key: string): string | null {
-    const entry = this.cache.get(key);
-    if (!entry) return null;
-    
-    // Check if entry is expired
-    if (Date.now() - entry.timestamp > this.ttl) {
-      this.cache.delete(key);
-      return null;
-    }
-    
-    return entry.content;
-  }
-  
-  set(key: string, content: string): void {
-    this.cache.set(key, { content, timestamp: Date.now() });
-    
-    // Clear old entries periodically to avoid memory leaks
-    if (this.cache.size > 1000) {
-      this.pruneExpiredEntries();
-    }
-  }
-  
-  private pruneExpiredEntries(): void {
-    const now = Date.now();
-    this.cache.forEach((entry, key) => {
-      if (now - entry.timestamp > this.ttl) {
-        this.cache.delete(key);
-      }
-    });
-  }
-}
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
+// Initialize utility classes
 const connectionPool = new ConnectionPool();
 const rateLimiter = new RateLimiter();
 const translationCache = new TranslationCache();
 
-// CIPA/FERPA Compliance Content Filters
-const cipaFilteredTerms = [
-  // Inappropriate language filter
-  "profanity", "obscene", "explicit", "curse", "swear",
-  
-  // Violence-related terms
-  "violence", "violent", "weapon", "gun", "rifle", "pistol", "knife", 
-  "kill", "murder", "assault", "attack", "fight", "harm", "blood",
-  
-  // Substance-related terms
-  "drug", "narcotic", "marijuana", "cocaine", "heroin", "substance", 
-  "alcohol", "beer", "wine", "liquor", "tobacco", "cigarette", "vape",
-  
-  // Adult content indicators
-  "adult", "mature", "nsfw", "pornography", "explicit", "nude", "naked",
-  "sexual", "sex", "inappropriate", "dating", "gambling",
-  
-  // Discriminatory terms
-  "hate", "discriminatory", "slur", "racist", "sexist", 
-  "bigot", "discrimination", "offensive", "prejudice"
-];
-
-// Filter content for CIPA compliance
-function filterCipaProhibitedContent(text: string): string {
-  if (!text) return "";
-  
-  let filteredText = text;
-  cipaFilteredTerms.forEach(term => {
-    const regex = new RegExp(term, 'gi');
-    filteredText = filteredText.replace(regex, '*'.repeat(term.length));
-  });
-  
-  return filteredText;
-}
-
-// Check if content violates CIPA guidelines
-function containsProhibitedContent(text: string): boolean {
-  if (!text) return false;
-  
-  return cipaFilteredTerms.some(term => 
-    text.toLowerCase().includes(term.toLowerCase())
-  );
-}
-
-// Log access for FERPA compliance
-function logEducationalDataAccess(userId: string, dataType: string, purpose: string) {
-  // In a production environment, this would write to a database
-  console.log(`FERPA Access Log: User ${userId} accessed ${dataType} for ${purpose} at ${new Date().toISOString()}`);
-}
-
-// Determine language pair
-function determineLanguagePair(userLanguage: string, targetLang?: string) {
-  // If both languages are specified, use them directly
-  if (userLanguage && targetLang) {
-    // English speaker learning another language
-    if (userLanguage.toLowerCase() === 'english') {
-      return {
-        isLearningEnglish: false,
-        targetLanguage: getLanguageDisplayName(targetLang),
-        nativeLanguage: 'English'
-      };
+// Handler for translation-only requests
+async function handleTranslationRequest(message: string, userLanguage: string) {
+  try {
+    // Special handling for Hindi to ensure proper Devanagari script
+    if (userLanguage === 'hindi') {
+      try {
+        const hindiTranslation = await getSpecificLanguageTranslation(
+          message, 
+          'hindi', 
+          'Devanagari', 
+          openAIApiKey,
+          filterCipaProhibitedContent,
+          containsProhibitedContent
+        );
+        return new Response(
+          JSON.stringify({ translation: hindiTranslation }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        console.error('Error in Hindi translation request:', error);
+        throw error;
+      }
     }
     
-    // Non-English speaker learning English
-    if (targetLang.toLowerCase() === 'english') {
-      return {
-        isLearningEnglish: true,
-        targetLanguage: 'English',
-        nativeLanguage: getUserNativeLanguage(userLanguage)
-      };
+    // Regular translation flow for other languages
+    const translationResponse = await getTranslation(
+      message, 
+      userLanguage, 
+      openAIApiKey,
+      filterCipaProhibitedContent,
+      containsProhibitedContent,
+      getUserNativeLanguage
+    );
+    
+    if (!translationResponse.ok) {
+      throw new Error('Failed to get translation from OpenAI');
     }
     
-    // Fallback for other combinations
-    return {
-      isLearningEnglish: false,
-      targetLanguage: getLanguageDisplayName(targetLang),
-      nativeLanguage: getUserNativeLanguage(userLanguage)
-    };
+    const translationData = await translationResponse.json();
+    let translation = translationData.choices?.[0]?.message?.content || '';
+    
+    // CIPA Compliance: Filter translation before returning
+    if (containsProhibitedContent(translation)) {
+      console.log('Translation contains prohibited content, filtering');
+      translation = filterCipaProhibitedContent(translation);
+    }
+    
+    return new Response(
+      JSON.stringify({ translation }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error in translation request:', error);
+    return new Response(
+      JSON.stringify({ error: 'Failed to translate text', details: error.message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
-  
-  // Legacy behavior for backward compatibility
-  const isLearningEnglish = userLanguage !== 'english';
-  const learnLanguage = isLearningEnglish ? 'English' : 'Spanish';
-  const nativeLanguage = getUserNativeLanguage(userLanguage);
-  
-  return { isLearningEnglish, targetLanguage: learnLanguage, nativeLanguage };
-}
-
-// Get proper display name for a language
-function getLanguageDisplayName(language: string): string {
-  const languageMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Spanish',
-    'portuguese': 'Portuguese',
-    'french': 'French',
-    'japanese': 'Japanese',
-    'korean': 'Korean',
-    'mandarin': 'Mandarin Chinese',
-    'russian': 'Russian',
-    'arabic': 'Arabic',
-    'hindi': 'Hindi',
-    'vietnamese': 'Vietnamese',
-    'ukrainian': 'Ukrainian',
-    'indonesian': 'Indonesian'
-  };
-  
-  return languageMap[language.toLowerCase()] || language;
-}
-
-// Get the correct native language name based on user language
-function getUserNativeLanguage(userLanguage: string): string {
-  const languageMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Spanish',
-    'portuguese': 'Portuguese',
-    'korean': 'Korean',
-    'arabic': 'Arabic',
-    'mandarin': 'Mandarin Chinese',
-    'vietnamese': 'Vietnamese',
-    'french': 'French',
-    'japanese': 'Japanese',
-    'ukrainian': 'Ukrainian',
-    'russian': 'Russian',
-    'hindi': 'Hindi',
-    'indonesian': 'Indonesian'
-  };
-  
-  return languageMap[userLanguage] || 'English';
 }
 
 serve(async (req) => {
@@ -325,13 +171,7 @@ serve(async (req) => {
     
     try {
       // Add CIPA/FERPA compliance instructions to tutor
-      const cipaFerpaCompliance = `
-      IMPORTANT COMPLIANCE REQUIREMENTS:
-      1. Never request or store personal identifying information (names, addresses, phone numbers, etc).
-      2. Never use inappropriate language, discuss adult topics, or provide content unsuitable for K-12 students.
-      3. All explanations must be appropriate for educational contexts and classroom settings.
-      4. Stay focused on language learning without sharing non-educational content.
-      `;
+      const cipaFerpaCompliance = getCipaFerpaInstructions();
       
       // Universal tutor instructions for all language combinations
       const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
@@ -463,7 +303,15 @@ You should ask questions to continue the conversation if it ever seems to stall.
           translation = cachedTranslation;
         } else {
           try {
-            const translationResponse = await getTranslation(content, userLanguage);
+            const translationResponse = await getTranslation(
+              content, 
+              userLanguage, 
+              openAIApiKey,
+              filterCipaProhibitedContent,
+              containsProhibitedContent,
+              getUserNativeLanguage
+            );
+            
             if (translationResponse.ok) {
               const translationData = await translationResponse.json();
               if (translationData.choices?.[0]?.message?.content) {
@@ -499,7 +347,14 @@ You should ask questions to continue the conversation if it ever seems to stall.
           translation = cachedHindiTranslation;
         } else {
           try {
-            const hindiTranslation = await getSpecificLanguageTranslation(content, 'hindi', 'Devanagari');
+            const hindiTranslation = await getSpecificLanguageTranslation(
+              content, 
+              'hindi', 
+              'Devanagari', 
+              openAIApiKey,
+              filterCipaProhibitedContent,
+              containsProhibitedContent
+            );
             translation = hindiTranslation;
             
             // Cache the Hindi translation
@@ -550,150 +405,3 @@ You should ask questions to continue the conversation if it ever seems to stall.
     );
   }
 });
-
-// Helper function to check if text contains Devanagari script (Hindi)
-function containsDevanagariScript(text: string): boolean {
-  // Devanagari Unicode range: U+0900 to U+097F
-  const devanagariRegex = /[\u0900-\u097F]/;
-  return devanagariRegex.test(text);
-}
-
-// Helper function to get special translation for specific languages like Hindi
-async function getSpecificLanguageTranslation(message: string, language: string, script: string): Promise<string> {
-  try {
-    console.log(`Getting ${language} translation with ${script} script for: "${message}"`);
-    
-    // CIPA Compliance: Filter message before translation
-    let safeMessage = message;
-    if (containsProhibitedContent(message)) {
-      console.log('Message contains prohibited content, filtering before translation');
-      safeMessage = filterCipaProhibitedContent(message);
-    }
-    
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${language} using ${script} script. ONLY return the translation, no explanations or additional text. Ensure the translation is accurate and natural-sounding.
-            
-            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
-          },
-          { role: 'user', content: safeMessage }
-        ],
-        temperature: 0.3,
-        max_tokens: 500,
-      }),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Translation API error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    const translation = data.choices?.[0]?.message?.content || '';
-    console.log(`Got ${language} translation: "${translation}"`);
-    
-    // CIPA Compliance: Filter translation before returning
-    if (containsProhibitedContent(translation)) {
-      console.log(`${language} translation contains prohibited content, filtering`);
-      return filterCipaProhibitedContent(translation);
-    }
-    
-    return translation;
-  } catch (error) {
-    console.error(`Error getting ${language} translation:`, error);
-    throw error;
-  }
-}
-
-// Helper function to get translation for a message
-async function getTranslation(message: string, userLanguage: string) {
-  try {
-    const targetLanguage = getUserNativeLanguage(userLanguage);
-    
-    // CIPA Compliance: Filter message before translation 
-    let safeMessage = message;
-    if (containsProhibitedContent(message)) {
-      console.log('Message contains prohibited content, filtering before translation');
-      safeMessage = filterCipaProhibitedContent(message);
-    }
-    
-    return await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${targetLanguage}. Just return the translation, no explanations. For Hindi translations, ensure you use Devanagari script.
-            
-            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
-          },
-          { role: 'user', content: safeMessage }
-        ],
-        temperature: 0.3,
-        max_tokens: 500,
-      }),
-    });
-  } catch (error) {
-    console.error('Error in getTranslation:', error);
-    throw error;
-  }
-}
-
-// Handler for translation-only requests
-async function handleTranslationRequest(message: string, userLanguage: string) {
-  try {
-    // Special handling for Hindi to ensure proper Devanagari script
-    if (userLanguage === 'hindi') {
-      try {
-        const hindiTranslation = await getSpecificLanguageTranslation(message, 'hindi', 'Devanagari');
-        return new Response(
-          JSON.stringify({ translation: hindiTranslation }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      } catch (error) {
-        console.error('Error in Hindi translation request:', error);
-        throw error;
-      }
-    }
-    
-    // Regular translation flow for other languages
-    const translationResponse = await getTranslation(message, userLanguage);
-    
-    if (!translationResponse.ok) {
-      throw new Error('Failed to get translation from OpenAI');
-    }
-    
-    const translationData = await translationResponse.json();
-    let translation = translationData.choices?.[0]?.message?.content || '';
-    
-    // CIPA Compliance: Filter translation before returning
-    if (containsProhibitedContent(translation)) {
-      console.log('Translation contains prohibited content, filtering');
-      translation = filterCipaProhibitedContent(translation);
-    }
-    
-    return new Response(
-      JSON.stringify({ translation }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-  } catch (error) {
-    console.error('Error in translation request:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to translate text', details: error.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-  }
-}
