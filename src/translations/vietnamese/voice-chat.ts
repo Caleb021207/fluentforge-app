@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -18,6 +17,8 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecificTopics: "Thực hành từ vựng cho các chủ đề cụ thể như du lịch hoặc ẩm thực",
   speechRecognitionError: "Lỗi nhận dạng giọng nói",
   speechRecognitionNotSupported: "Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói",
+  speechSynthesisNotSupported: "Trình duyệt của bạn không hỗ trợ tính năng tổng hợp giọng nói",
+  speechSynthesisError: "Lỗi tổng hợp giọng nói. Vui lòng thử lại.",
   microphoneAccessRequired: "Cần quyền truy cập micrô cho tính năng này",
   failedToGetResponse: "Không nhận được phản hồi từ AI. Vui lòng thử lại.",
   failedToGenerateSpeech: "Không thể tạo giọng nói. Vui lòng thử lại.",

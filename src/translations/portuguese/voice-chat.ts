@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -18,6 +17,8 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecificTopics: "Pratique vocabulário para tópicos específicos como viagens ou comida",
   speechRecognitionError: "Erro de reconhecimento de voz",
   speechRecognitionNotSupported: "O reconhecimento de voz não é compatível com seu navegador",
+  speechSynthesisNotSupported: "A síntese de fala não é suportada no seu navegador",
+  speechSynthesisError: "Erro na síntese de fala. Por favor, tente novamente.",
   microphoneAccessRequired: "O acesso ao microfone é necessário para este recurso",
   failedToGetResponse: "Não foi possível obter resposta da IA. Por favor, tente novamente.",
   failedToGenerateSpeech: "Não foi possível gerar a fala. Por favor, tente novamente.",

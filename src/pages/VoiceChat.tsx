@@ -6,7 +6,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
+import { 
+  getLanguagePair, 
+  getSpeechSynthesisLanguageCode, 
+  findBestVoiceForLanguage 
+} from "@/utils/languageUtils";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
@@ -274,22 +278,27 @@ const VoiceChat = () => {
     
     synthRef.current.cancel();
     
-    utteranceRef.current = new SpeechSynthesisUtterance(text);
+    // Get the target language based on user's UI language
+    const { practice } = getLanguagePair(currentLanguage);
     
-    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                               currentLanguage === "japanese" ? "en-US" : "en-US";
+    // Get the correct language code for speech synthesis
+    const ttsLangCode = getSpeechSynthesisLanguageCode(practice.toLowerCase());
+    console.log(`Using TTS language code: ${ttsLangCode} for practice language: ${practice}`);
+    
+    utteranceRef.current = new SpeechSynthesisUtterance(text);
+    utteranceRef.current.lang = ttsLangCode;
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
-    const targetLang = currentLanguage === "english" ? "es" : "en";
+    // Find the best voice for this language
+    const voice = findBestVoiceForLanguage(synthRef.current, ttsLangCode);
     
-    const voice = voices.find(v => v.lang.startsWith(targetLang));
     if (voice) {
-      console.log(`Using voice: ${voice.name} (${voice.lang})`);
+      console.log(`Using voice: ${voice.name} (${voice.lang}) for ${practice}`);
       utteranceRef.current.voice = voice;
     } else {
-      console.warn(`No matching voice found for language: ${targetLang}`);
+      console.warn(`No matching voice found for language: ${ttsLangCode}`);
     }
     
     utteranceRef.current.onstart = () => {
@@ -521,7 +530,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
     } else if (currentLanguage === "hindi") {
       return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:`;
     } else if (currentLanguage === "indonesian") {

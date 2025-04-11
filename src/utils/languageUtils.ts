@@ -106,3 +106,57 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
   const pairKey = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
   return supportedPairs.includes(pairKey);
 };
+
+/**
+ * Returns the browser speech synthesis language code for a language
+ * @param language The language name (english, spanish, etc.)
+ * @returns The language code for speech synthesis (en-US, es-ES, etc.)
+ */
+export const getSpeechSynthesisLanguageCode = (language: string): string => {
+  const languageCodeMap: Record<string, string> = {
+    'english': 'en-US',
+    'spanish': 'es-ES',
+    'portuguese': 'pt-BR',
+    'french': 'fr-FR',
+    'japanese': 'ja-JP',
+    'korean': 'ko-KR',
+    'mandarin': 'zh-CN',
+    'russian': 'ru-RU',
+    'arabic': 'ar-SA',
+    'hindi': 'hi-IN',
+    'vietnamese': 'vi-VN',
+    'ukrainian': 'uk-UA',
+    'indonesian': 'id-ID'
+  };
+  
+  return languageCodeMap[language.toLowerCase()] || 'en-US';
+};
+
+/**
+ * Finds the best available voice for a given language
+ * @param synthRef The speech synthesis instance
+ * @param langCode The language code (e.g., en-US, es-ES)
+ * @returns The best matching voice or undefined if none found
+ */
+export const findBestVoiceForLanguage = (
+  synthRef: SpeechSynthesis, 
+  langCode: string
+): SpeechSynthesisVoice | undefined => {
+  const voices = synthRef.getVoices();
+  const languagePrefix = langCode.split('-')[0].toLowerCase();
+  
+  // Try to find an exact match first
+  let voice = voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase());
+  
+  // If no exact match, try to find a voice that starts with the language code
+  if (!voice) {
+    voice = voices.find(v => v.lang.toLowerCase().startsWith(languagePrefix));
+  }
+  
+  // If still no match, use any voice that contains the language code
+  if (!voice) {
+    voice = voices.find(v => v.lang.toLowerCase().includes(languagePrefix));
+  }
+  
+  return voice;
+};

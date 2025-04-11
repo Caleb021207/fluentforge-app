@@ -15,6 +15,7 @@ const generalCoreTranslations: TranslationRecord = {
   loginRequired: "Login required",
   failedToCreateSession: "Failed to create session",
   cefrB1Description: "Intermediate - Can discuss familiar topics",
+  speechSynthesisNotSupported: "Speech synthesis is not supported in your browser",
 };
 
 export default generalCoreTranslations;

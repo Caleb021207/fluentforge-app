@@ -20,7 +20,7 @@ const ListItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <li
     ref={ref}
-    className={cn("", className)}
+    className={cn("text-sm text-gray-600", className)}
     {...props}
   />
 ));
