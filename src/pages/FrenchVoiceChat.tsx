@@ -53,8 +53,8 @@ const FrenchVoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      recognitionRef.current.lang = 'fr-FR';
-      console.log(`Setting speech recognition language to: fr-FR for French speaker`);
+      recognitionRef.current.lang = 'en-US';
+      console.log(`Setting speech recognition language to: en-US for French speakers to practice English`);
       
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
@@ -194,8 +194,8 @@ const FrenchVoiceChat = () => {
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
-          userLanguage: 'french',
-          targetLanguage: 'english',
+          userLanguage: 'english',
+          targetLanguage: 'french',
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
           requestTranslation: true
@@ -326,9 +326,9 @@ const FrenchVoiceChat = () => {
 
   const getPracticeDescription = () => {
     if (currentLanguage === "french") {
-      return "Pratiquez votre anglais avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en français. L'IA vous répondra en anglais et vous aidera à vous entraîner.";
+      return "Pratiquez votre anglais avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en anglais. L'IA vous répondra en anglais et vous aidera à vous entraîner.";
     } else {
-      return `Practice your French speaking skills with our voice chat. Click the microphone button and start speaking in French. The AI will respond to you in English and help you practice.`;
+      return `Practice your English speaking skills with our voice chat. Click the microphone button and start speaking in English. The AI will respond to you in English and help you practice.`;
     }
   };
 
