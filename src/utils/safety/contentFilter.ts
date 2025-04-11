@@ -45,39 +45,17 @@ export const isSafeContent = (content: string): boolean => {
   
   // In strict mode (for users under 13), apply more aggressive filtering
   if (safetyMode === "strict") {
-    return !containsFilteredTerms(content);
+    return !filteredTerms.some(term => 
+      content.toLowerCase().includes(term.toLowerCase())
+    );
   }
   
   // In standard mode, only filter extremely inappropriate content
   // This is a simplified implementation - in production, you would use more sophisticated checks
   const highRiskTerms = filteredTerms.slice(0, 20);
-  return !containsFilteredTerms(content, highRiskTerms);
-};
-
-/**
- * Helper function to check if content contains any filtered terms using word boundary matching
- * to avoid false positives like censoring "alguna" because it contains "gun"
- */
-const containsFilteredTerms = (content: string, terms = filteredTerms): boolean => {
-  if (!content) return false;
-  
-  const contentLower = content.toLowerCase();
-  
-  // Create a list of languages to check for special handling
-  const spanishIndicators = ["alguna", "algunas", "algún", "ningun", "ninguna", "laguna"];
-  
-  // Special case for Spanish words that might trigger false positives
-  for (const word of spanishIndicators) {
-    if (contentLower.includes(word)) {
-      return false;
-    }
-  }
-  
-  return terms.some(term => {
-    // Use word boundary regex to match only whole words or words at boundaries
-    const regex = new RegExp(`\\b${term}\\b|\\b${term}|${term}\\b`, 'i');
-    return regex.test(contentLower);
-  });
+  return !highRiskTerms.some(term => 
+    content.toLowerCase().includes(term.toLowerCase())
+  );
 };
 
 /**
@@ -90,20 +68,10 @@ export const filterContent = (content: string): string => {
     return content;
   }
   
-  // Replace filtered terms with asterisks, using word boundary matching
+  // Replace filtered terms with asterisks
   let filteredContent = content;
-  
-  // Special case for Spanish words to avoid false positives
-  const spanishIndicators = ["alguna", "algunas", "algún", "ningun", "ninguna", "laguna"];
-  for (const word of spanishIndicators) {
-    if (content.toLowerCase().includes(word)) {
-      return content;
-    }
-  }
-  
   filteredTerms.forEach(term => {
-    // Use word boundary regex for replacement
-    const regex = new RegExp(`\\b${term}\\b|\\b${term}|${term}\\b`, 'gi');
+    const regex = new RegExp(term, 'gi');
     filteredContent = filteredContent.replace(regex, '*'.repeat(term.length));
   });
   

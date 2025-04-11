@@ -1,178 +1,259 @@
 
 /**
- * Returns display name for a language code
+ * Returns information about language pairs based on user's interface language
+ * For language learning, we need to know which language the user is practicing
+ * and which language they are learning
+ */
+export const getLanguagePair = (currentLanguage: string, targetLanguage?: string) => {
+  // Default language pairs with English translations
+  // When a user selects a native language, we determine which language
+  // they are learning (practicing) based on this configuration
+  
+  const normalizedLanguage = currentLanguage.toLowerCase();
+  
+  // If English speaker with explicit target language
+  if (normalizedLanguage === "english" && targetLanguage) {
+    return {
+      practice: getLanguageDisplayName(targetLanguage),
+      native: "English"
+    };
+  }
+  
+  // Default pairings for different native languages
+  switch (normalizedLanguage) {
+    case "english":
+      return {
+        practice: "Spanish", // Default: English speakers learn Spanish
+        native: "English"
+      };
+    case "spanish":
+      return {
+        practice: "English", // Spanish speakers learn English
+        native: "Spanish"
+      };
+    case "portuguese":
+      return {
+        practice: "English",
+        native: "Portuguese"
+      };
+    case "korean":
+      return {
+        practice: "English",
+        native: "Korean"
+      };
+    case "arabic":
+      return {
+        practice: "English",
+        native: "Arabic"
+      };
+    case "mandarin":
+      return {
+        practice: "English",
+        native: "Mandarin Chinese"
+      };
+    case "vietnamese":
+      return {
+        practice: "English",
+        native: "Vietnamese"
+      };
+    case "hindi":
+      return {
+        practice: "English",
+        native: "Hindi"
+      };
+    case "japanese":
+      return {
+        practice: "English",
+        native: "Japanese"
+      };
+    case "russian":
+      return {
+        practice: "English",
+        native: "Russian"
+      };
+    case "ukrainian":
+      return {
+        practice: "English",
+        native: "Ukrainian"
+      };
+    case "french":
+      return {
+        practice: "English",
+        native: "French"
+      };
+    case "indonesian":
+      return {
+        practice: "English",
+        native: "Indonesian"
+      };
+    default:
+      return {
+        practice: "Spanish",
+        native: "English"
+      };
+  }
+};
+
+/**
+ * Returns the display name of a language
  * @param language The language code
- * @returns The proper display name for the language
+ * @returns The display name of the language
  */
 export const getLanguageDisplayName = (language: string): string => {
   const languageMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Spanish',
-    'portuguese': 'Portuguese',
-    'french': 'French',
-    'japanese': 'Japanese',
-    'korean': 'Korean',
-    'mandarin': 'Mandarin Chinese',
-    'russian': 'Russian',
-    'arabic': 'Arabic',
-    'hindi': 'Hindi',
-    'vietnamese': 'Vietnamese',
-    'ukrainian': 'Ukrainian',
-    'indonesian': 'Indonesian',
-    'german': 'German',
-    'italian': 'Italian'
+    "english": "English",
+    "spanish": "Spanish",
+    "portuguese": "Portuguese",
+    "korean": "Korean",
+    "arabic": "Arabic",
+    "mandarin": "Mandarin Chinese",
+    "vietnamese": "Vietnamese", 
+    "french": "French",
+    "japanese": "Japanese",
+    "russian": "Russian",
+    "ukrainian": "Ukrainian",
+    "hindi": "Hindi",
+    "indonesian": "Indonesian"
   };
   
   return languageMap[language.toLowerCase()] || language;
 };
 
 /**
- * Returns native and practice language pair based on user's selected language
- * @param currentLanguage The user's current UI language
- * @returns Object with native and practice language names
- */
-export const getLanguagePair = (currentLanguage: string) => {
-  let native = "English";
-  let practice = "Spanish";
-  
-  if (currentLanguage !== "english") {
-    native = getLanguageDisplayName(currentLanguage);
-    practice = "English";
-  }
-  
-  return { native, practice };
-};
-
-/**
- * Returns the native language display name in its native script
+ * Returns the native display name of a language
  * @param language The language code
- * @returns The native display name for the language
+ * @returns The native display name of the language
  */
 export const getNativeLanguageDisplayName = (language: string): string => {
-  const nativeNameMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Español',
-    'portuguese': 'Português',
-    'french': 'Français',
-    'japanese': '日本語',
-    'korean': '한국어',
-    'mandarin': '中文',
-    'russian': 'Русский',
-    'arabic': 'العربية',
-    'hindi': 'हिन्दी',
-    'vietnamese': 'Tiếng Việt',
-    'ukrainian': 'Українська',
-    'indonesian': 'Bahasa Indonesia',
-    'german': 'Deutsch',
-    'italian': 'Italiano'
+  const languageMap: Record<string, string> = {
+    "english": "English",
+    "spanish": "Español",
+    "portuguese": "Português",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "mandarin": "中文",
+    "vietnamese": "Tiếng Việt", 
+    "french": "Français",
+    "japanese": "日本語",
+    "russian": "Русский",
+    "ukrainian": "Українська",
+    "hindi": "हिन्दी",
+    "indonesian": "Bahasa Indonesia"
   };
   
-  return nativeNameMap[language.toLowerCase()] || getLanguageDisplayName(language);
+  return languageMap[language.toLowerCase()] || language;
 };
 
 /**
- * Returns available target languages based on native language
- * @param nativeLanguage The user's native language
- * @returns Array of available target language codes
+ * Returns the OpenAI Whisper API language code for a given language
+ * @param language The language name
+ * @returns ISO language code used by Whisper API
  */
-export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
-  if (nativeLanguage.toLowerCase() !== 'english') {
-    return ['english'];
-  }
+export const getWhisperLanguageCode = (language: string): string => {
+  const languageCodeMap: Record<string, string> = {
+    'english': 'en',
+    'spanish': 'es',
+    'portuguese': 'pt',
+    'french': 'fr',
+    'mandarin': 'zh',
+    'arabic': 'ar',
+    'japanese': 'ja',
+    'korean': 'ko',
+    'russian': 'ru',
+    'ukrainian': 'uk',
+    'vietnamese': 'vi',
+    'indonesian': 'id',
+    'hindi': 'hi'
+  };
   
-  // Active languages for English speakers
-  const activeLanguages = ['spanish'];
-  
-  // Display these languages but mark them as under development
-  const developmentLanguages = ['french', 'portuguese', 'german', 'italian'];
-  
-  return [...activeLanguages, ...developmentLanguages];
+  return languageCodeMap[language.toLowerCase()] || 'en';
 };
 
 /**
- * Checks if a language is under development
- * @param language The language code to check
- * @returns Boolean indicating if the language is under development
+ * Returns the Web Speech API language code for a given language
+ * @param language The language name
+ * @returns BCP 47 language tag used by Web Speech API
  */
-export const isLanguageUnderDevelopment = (language: string): boolean => {
-  const developmentLanguages = ['french', 'portuguese', 'german', 'italian'];
-  return developmentLanguages.includes(language.toLowerCase());
-};
-
-/**
- * Checks if study materials are available for a language pair
- * @param nativeLanguage The user's native language
- * @param targetLanguage The language the user wants to learn
- * @returns Boolean indicating if study materials are available
- */
-export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
-  const supportedPairs = [
-    'english-spanish',
-    'english-french',
-    'spanish-english',
-    'portuguese-english',
-    'french-english',
-    'japanese-english',
-    'korean-english',
-    'mandarin-english',
-    'russian-english',
-    'arabic-english'
-  ];
-  
-  const pairKey = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
-  return supportedPairs.includes(pairKey);
-};
-
-/**
- * Convert language name to BCP 47 language tag for speech synthesis
- * @param language The language name (e.g., 'english', 'spanish')
- * @returns The BCP 47 language tag (e.g., 'en-US', 'es-ES')
- */
-export const getLanguageCodeForSpeech = (language: string): string => {
+export const getSpeechRecognitionLanguageCode = (language: string): string => {
   const languageCodeMap: Record<string, string> = {
     'english': 'en-US',
     'spanish': 'es-ES',
-    'portuguese': 'pt-BR',
+    'portuguese': 'pt-PT',
     'french': 'fr-FR',
+    'mandarin': 'zh-CN',
+    'arabic': 'ar-SA',
     'japanese': 'ja-JP',
     'korean': 'ko-KR',
-    'mandarin': 'zh-CN',
     'russian': 'ru-RU',
-    'arabic': 'ar-SA',
-    'hindi': 'hi-IN',
-    'vietnamese': 'vi-VN',
     'ukrainian': 'uk-UA',
+    'vietnamese': 'vi-VN',
     'indonesian': 'id-ID',
-    'german': 'de-DE',
-    'italian': 'it-IT'
+    'hindi': 'hi-IN'
   };
   
   return languageCodeMap[language.toLowerCase()] || 'en-US';
 };
 
 /**
- * Get the ISO 639-1 language code (2-letter code)
- * @param language The language name (e.g., 'english', 'spanish')
- * @returns The ISO 639-1 language code (e.g., 'en', 'es')
+ * Checks if text contains characters from specific scripts
+ * @param text The text to check
+ * @param script The script to check for (devanagari, cyrillic, etc.)
+ * @returns Boolean indicating if text contains characters from the script
  */
-export const getISOLanguageCode = (language: string): string => {
-  const isoCodeMap: Record<string, string> = {
-    'english': 'en',
-    'spanish': 'es',
-    'portuguese': 'pt',
-    'french': 'fr',
-    'japanese': 'ja',
-    'korean': 'ko',
-    'mandarin': 'zh',
-    'russian': 'ru',
-    'arabic': 'ar',
-    'hindi': 'hi',
-    'vietnamese': 'vi',
-    'ukrainian': 'uk',
-    'indonesian': 'id',
-    'german': 'de',
-    'italian': 'it'
+export const containsScript = (text: string, script: string): boolean => {
+  if (!text) return false;
+  
+  const scriptRanges: Record<string, RegExp> = {
+    devanagari: /[\u0900-\u097F]/,  // Hindi
+    cyrillic: /[\u0400-\u04FF]/,    // Russian, Ukrainian
+    arabic: /[\u0600-\u06FF]/,      // Arabic
+    han: /[\u4E00-\u9FFF]/,         // Chinese
+    hangul: /[\uAC00-\uD7AF]/,      // Korean
+    hiragana: /[\u3040-\u309F]/,    // Japanese
+    katakana: /[\u30A0-\u30FF]/,    // Japanese
   };
   
-  return isoCodeMap[language.toLowerCase()] || 'en';
+  return scriptRanges[script.toLowerCase()]?.test(text) || false;
+};
+
+/**
+ * Checks if a language has study materials available
+ * @param nativeLanguage The native language
+ * @param targetLanguage The target language to learn
+ * @returns Boolean indicating if study materials are available
+ */
+export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
+  // English speakers learning any supported language
+  if (nativeLanguage.toLowerCase() === "english") {
+    const supportedTargets = ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian", "ukrainian", "arabic", "vietnamese", "hindi", "indonesian"];
+    return supportedTargets.includes(targetLanguage.toLowerCase());
+  }
+  
+  // Non-English speakers learning English
+  if (targetLanguage.toLowerCase() === "english") {
+    const supportedNatives = [
+      "spanish", "portuguese", "french", "mandarin", "japanese", 
+      "korean", "russian", "ukrainian", "arabic", "vietnamese", 
+      "hindi", "indonesian"
+    ];
+    return supportedNatives.includes(nativeLanguage.toLowerCase());
+  }
+  
+  // Default to false for unsupported combinations
+  return false;
+};
+
+/**
+ * Gets the list of languages that can be learned from a given native language
+ * @param nativeLanguage The native language
+ * @returns Array of language codes that can be learned
+ */
+export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
+  if (nativeLanguage.toLowerCase() === "english") {
+    // English speakers can learn these languages
+    return ["spanish", "french", "portuguese", "mandarin", "japanese", "korean", "russian", "ukrainian", "arabic", "vietnamese", "hindi", "indonesian"];
+  }
+  
+  // Non-English speakers can only learn English for now
+  return ["english"];
 };

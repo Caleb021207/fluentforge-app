@@ -6,8 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair, getLanguageCodeForSpeech } from "@/utils/languageUtils";
-import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { getLanguagePair } from "@/utils/languageUtils";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
@@ -33,27 +32,20 @@ const VoiceChat = () => {
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
   const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const silenceTimeoutRef = useRef<number | null>(null);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  const { speak, cancel, isSpeaking } = useSpeechSynthesis({
-    onError: (error) => {
-      console.error('Speech synthesis error:', error);
-      toast({
-        title: t("error"),
-        description: t("audioPlaybackError"),
-        variant: "destructive",
-      });
-    }
-  });
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -67,20 +59,8 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      const { native, practice } = getLanguagePair(currentLanguage);
-      let recognitionLang = "en-US"; // Default
-      
-      if (practice === "Spanish") {
-        recognitionLang = "es-ES";
-      } else if (practice === "French") {
-        recognitionLang = "fr-FR";
-      } else if (native === "Spanish") {
-        recognitionLang = "es-ES";
-      } else if (native === "French") {
-        recognitionLang = "fr-FR";
-      }
-      
-      recognitionRef.current.lang = recognitionLang;
+      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                                   currentLanguage === "japanese" ? "en-US" : "en-US";
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
       recognitionRef.current.maxAlternatives = 1;
@@ -122,15 +102,33 @@ const VoiceChat = () => {
         variant: "destructive",
       });
     }
+
+    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+      
+      const handleVoicesChanged = () => {
+        console.log("Voices available:", synthRef.current?.getVoices().length);
+      };
+      
+      synthRef.current.onvoiceschanged = handleVoicesChanged;
+      
+      if (synthRef.current.getVoices().length > 0) {
+        handleVoicesChanged();
+      }
+    } else {
+      console.warn("Speech synthesis not supported in this browser");
+    }
     
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
-      cancel();
+      if (synthRef.current && utteranceRef.current) {
+        synthRef.current.cancel();
+      }
       clearSilenceDetection();
     };
-  }, [currentLanguage, toast, t, cancel]);
+  }, [currentLanguage, toast, t]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -249,21 +247,7 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      const responseLanguage = currentLanguage === "english" ? "spanish" : "english";
-      
-      console.log(`Speaking response in ${responseLanguage} language`);
-      try {
-        await speak(content, responseLanguage);
-      } catch (speakError) {
-        console.error("Failed to speak response:", speakError);
-        try {
-          console.log(`Retrying with current language: ${currentLanguage}`);
-          await speak(content, currentLanguage);
-        } catch (fallbackError) {
-          console.error("Fallback speech also failed:", fallbackError);
-        }
-      }
-      
+      speakWithBrowserSynthesis(content);
       setTranscript("");
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -277,16 +261,63 @@ const VoiceChat = () => {
     }
   };
 
+  const speakWithBrowserSynthesis = (text: string) => {
+    if (!synthRef.current) {
+      console.error('Speech synthesis not available');
+      toast({
+        title: t("error"),
+        description: t("speechSynthesisNotSupported"),
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    synthRef.current.cancel();
+    
+    utteranceRef.current = new SpeechSynthesisUtterance(text);
+    
+    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                               currentLanguage === "japanese" ? "en-US" : "en-US";
+    
+    const voices = synthRef.current.getVoices();
+    console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
+    
+    const targetLang = currentLanguage === "english" ? "es" : "en";
+    
+    const voice = voices.find(v => v.lang.startsWith(targetLang));
+    if (voice) {
+      console.log(`Using voice: ${voice.name} (${voice.lang})`);
+      utteranceRef.current.voice = voice;
+    } else {
+      console.warn(`No matching voice found for language: ${targetLang}`);
+    }
+    
+    utteranceRef.current.onstart = () => {
+      console.log("Speech synthesis started");
+      setIsSpeaking(true);
+    };
+    
+    utteranceRef.current.onend = () => {
+      console.log("Speech synthesis ended");
+      setIsSpeaking(false);
+    };
+    
+    utteranceRef.current.onerror = (event) => {
+      console.error('Speech synthesis error:', event);
+      setIsSpeaking(false);
+      toast({
+        title: t("error"),
+        description: t("speechSynthesisError"),
+        variant: "destructive",
+      });
+    };
+    
+    synthRef.current.speak(utteranceRef.current);
+  };
+
   const playAgain = () => {
     if (gptResponse) {
-      const responseLanguage = currentLanguage === "english" ? "spanish" : "english";
-      console.log(`Playing again in ${responseLanguage} language`);
-      speak(gptResponse, responseLanguage).catch(error => {
-        console.error("Error replaying speech:", error);
-        speak(gptResponse, currentLanguage).catch(fallbackError => {
-          console.error("Fallback replay also failed:", fallbackError);
-        });
-      });
+      speakWithBrowserSynthesis(gptResponse);
     }
   };
 
@@ -519,7 +550,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:";
     } else if (currentLanguage === "hindi") {
-      return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उप���رण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
+      return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     } else if (currentLanguage === "indonesian") {
       return "Gunakan alat ini untuk meningkatkan keterampilan berbicara dan mendengarkan Anda. Berikut beberapa tips:";
     }

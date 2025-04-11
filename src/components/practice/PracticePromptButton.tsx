@@ -9,14 +9,12 @@ interface PracticePromptButtonProps {
   onClick: () => void;
   isLoading: boolean;
   targetLanguage?: string;
-  disabled?: boolean;
 }
 
 const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ 
   onClick, 
   isLoading,
-  targetLanguage = "spanish",
-  disabled = false
+  targetLanguage = "spanish"
 }) => {
   const { t, currentLanguage } = useLocalization();
   
@@ -29,7 +27,7 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
     <div className="flex justify-center mb-8">
       <Button
         onClick={onClick}
-        disabled={isLoading || disabled}
+        disabled={isLoading}
         className="gap-2"
         size="lg"
       >

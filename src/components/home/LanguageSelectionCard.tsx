@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getAvailableTargetLanguages, isLanguageUnderDevelopment } from "@/utils/languageUtils";
+import { getAvailableTargetLanguages } from "@/utils/languageUtils";
 
 interface LanguageSelectionCardProps {
   nativeLanguage: string;
@@ -40,9 +40,7 @@ const LanguageSelectionCard = ({
     russian: "🇷🇺 Русский",
     ukrainian: "🇺🇦 Українська",
     hindi: "🇮🇳 हिन्दी",
-    indonesian: "🇮🇩 Bahasa Indonesia",
-    german: "🇩🇪 Deutsch",
-    italian: "🇮🇹 Italiano"
+    indonesian: "🇮🇩 Bahasa Indonesia"
   };
 
   // Available target languages based on native language
@@ -53,9 +51,7 @@ const LanguageSelectionCard = ({
     if (nativeLanguage && availableTargetLanguages.length > 0) {
       // If current target is not available for this native language, reset it
       if (!availableTargetLanguages.includes(targetLanguage)) {
-        // Find the first non-development language
-        const firstAvailable = availableTargetLanguages.find(lang => !isLanguageUnderDevelopment(lang)) || availableTargetLanguages[0];
-        setTargetLanguage(firstAvailable);
+        setTargetLanguage(availableTargetLanguages[0]);
       }
     }
   }, [nativeLanguage, targetLanguage, availableTargetLanguages, setTargetLanguage]);
@@ -74,9 +70,7 @@ const LanguageSelectionCard = ({
     russian: "🇷🇺 Russian",
     ukrainian: "🇺🇦 Ukrainian",
     hindi: "🇮🇳 Hindi",
-    indonesian: "🇮🇩 Indonesian",
-    german: "🇩🇪 German",
-    italian: "🇮🇹 Italian"
+    indonesian: "🇮🇩 Indonesian"
   };
 
   return (
@@ -112,20 +106,11 @@ const LanguageSelectionCard = ({
                   <SelectValue placeholder={t("selectLanguageToLearn")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableTargetLanguages.map((langCode) => {
-                    const isInDevelopment = isLanguageUnderDevelopment(langCode);
-                    return (
-                      <SelectItem 
-                        key={langCode} 
-                        value={langCode}
-                        disabled={isInDevelopment}
-                        className={isInDevelopment ? "opacity-60" : ""}
-                      >
-                        {TARGET_LANGUAGE_NAMES[langCode] || langCode}
-                        {isInDevelopment && " (under development)"}
-                      </SelectItem>
-                    );
-                  })}
+                  {availableTargetLanguages.map((langCode) => (
+                    <SelectItem key={langCode} value={langCode}>
+                      {TARGET_LANGUAGE_NAMES[langCode] || langCode}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
