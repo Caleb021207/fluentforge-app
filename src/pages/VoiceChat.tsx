@@ -57,6 +57,13 @@ const VoiceChat = () => {
     ) {
       console.log("Redirecting to French voice chat from VoiceChat component");
       navigate("/french-voice-chat");
+    } else if (
+      (currentLanguage === "english" && savedTargetLanguage?.toLowerCase() === "portuguese") ||
+      (currentLanguage === "spanish" && savedTargetLanguage?.toLowerCase() === "portuguese") ||
+      (currentLanguage === "portuguese")
+    ) {
+      console.log("Redirecting to Portuguese voice chat from VoiceChat component");
+      navigate("/portuguese-voice-chat");
     }
   }, [currentLanguage, navigate]);
   
@@ -491,7 +498,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "ukrainian") {
       return "Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
     } else if (currentLanguage === "hindi") {
-      return "हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
+      return "हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सु��ारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     } else if (currentLanguage === "indonesian") {
       return "Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.";
     }

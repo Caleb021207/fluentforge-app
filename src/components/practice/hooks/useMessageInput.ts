@@ -9,26 +9,35 @@ export const useMessageInput = (targetLanguage?: string) => {
   const { currentLanguage } = useLocalization();
   const navigate = useNavigate();
   
-  // Check if we should redirect to the French voice chat
+  // Check if we should redirect to the French or Portuguese voice chat
   useEffect(() => {
     const currentPath = window.location.pathname;
     
     // Get target language from props or localStorage
     const savedTargetLanguage = targetLanguage || localStorage.getItem("targetLanguage");
     
-    if (
-      currentPath === "/voice-chat" && 
-      (
+    if (currentPath === "/voice-chat") {
+      if (
         // For English speakers targeting French
         (currentLanguage === "english" && savedTargetLanguage?.toLowerCase() === "french") ||
         // For Spanish speakers targeting French
         (currentLanguage === "spanish" && savedTargetLanguage?.toLowerCase() === "french") ||
         // For French speakers (they always go to French voice chat)
         (currentLanguage === "french")
-      )
-    ) {
-      console.log("Redirecting to French voice chat from useMessageInput");
-      navigate("/french-voice-chat");
+      ) {
+        console.log("Redirecting to French voice chat from useMessageInput");
+        navigate("/french-voice-chat");
+      } else if (
+        // For English speakers targeting Portuguese
+        (currentLanguage === "english" && savedTargetLanguage?.toLowerCase() === "portuguese") ||
+        // For Spanish speakers targeting Portuguese
+        (currentLanguage === "spanish" && savedTargetLanguage?.toLowerCase() === "portuguese") ||
+        // For Portuguese speakers (they always go to Portuguese voice chat)
+        (currentLanguage === "portuguese")
+      ) {
+        console.log("Redirecting to Portuguese voice chat from useMessageInput");
+        navigate("/portuguese-voice-chat");
+      }
     }
   }, [currentLanguage, targetLanguage, navigate]);
 
