@@ -20,6 +20,12 @@ const LearnFrenchVoiceChat = () => {
   const [permissionError, setPermissionError] = useState<string | null>(null);
   const { currentLanguage, t } = useLocalization();
   
+  useEffect(() => {
+    // Store the target language in localStorage when this component mounts
+    localStorage.setItem("targetLanguage", "french");
+    // This helps with proper redirection from the main voice chat page
+  }, []);
+  
   const {
     transcript,
     setTranscript,
@@ -33,7 +39,7 @@ const LearnFrenchVoiceChat = () => {
   } = useLearnLanguageChat('french');
 
   // Using French voice for the AI responses since this is for English speakers learning French
-  const { speak, isSpeaking } = useSpeechSynthesis({
+  const { speak, isSpeaking, cancel } = useSpeechSynthesis({
     defaultLanguage: 'fr-FR'
   });
 
@@ -65,7 +71,12 @@ const LearnFrenchVoiceChat = () => {
       // Automatically play the response when it's received
       speak(gptResponse, 'fr-FR');
     }
-  }, [gptResponse, speak, isSpeaking]);
+    
+    // Cancel any ongoing speech when component unmounts
+    return () => {
+      cancel();
+    };
+  }, [gptResponse, speak, isSpeaking, cancel]);
 
   // Clear permission error when listening starts successfully
   useEffect(() => {
@@ -151,7 +162,7 @@ const LearnFrenchVoiceChat = () => {
         <ConversationStarters 
           nativeLanguagePhrases={nativeLanguagePhrases}
           targetLanguagePhrases={targetLanguagePhrases}
-          onPhraseClick={handlePhraseClick => handleSendTranscript(handlePhraseClick)}
+          onPhraseClick={phrase => handleSendTranscript(phrase)}
         />
         
         <PracticeTips />

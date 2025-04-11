@@ -3,6 +3,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { useNavigate, Link } from "react-router-dom";
 import { getVoiceChatRoute, getLanguagePair, getAvailableTargetLanguages } from "@/utils/languageUtils";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 const VoiceChat = () => {
   const { currentLanguage, t } = useLocalization();
@@ -48,35 +49,41 @@ const VoiceChat = () => {
           <h2 className="text-xl font-semibold mb-4">Choose a language to practice:</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <Link to="/learn-french">
-              <Button variant="outline" className="w-full">Practice French</Button>
+              <Button variant="outline" className="w-full h-16 text-lg">Practice French</Button>
             </Link>
             <Link to="/learn-portuguese">
-              <Button variant="outline" className="w-full">Practice Portuguese</Button>
+              <Button variant="outline" className="w-full h-16 text-lg">Practice Portuguese</Button>
             </Link>
             {/* Other languages can be added here */}
           </div>
         </>
       );
     }
-    // For non-English speakers, show option to practice English
+    // For French speakers, show option to practice English
     else if (currentLanguage === "french") {
       return (
-        <Link to="/french-voice-chat">
-          <Button className="w-full">Practice English (for French speakers)</Button>
-        </Link>
+        <div className="flex flex-col items-center">
+          <h2 className="text-xl font-semibold mb-4">Choisissez une langue à pratiquer :</h2>
+          <Link to="/french-voice-chat" className="w-full max-w-md">
+            <Button className="w-full h-16 text-lg">Pratiquer l'anglais (pour francophones)</Button>
+          </Link>
+        </div>
       );
     }
     else if (currentLanguage === "portuguese") {
       return (
-        <Link to="/portuguese-voice-chat">
-          <Button className="w-full">Practice English (for Portuguese speakers)</Button>
-        </Link>
+        <div className="flex flex-col items-center">
+          <h2 className="text-xl font-semibold mb-4">Escolha um idioma para praticar:</h2>
+          <Link to="/portuguese-voice-chat" className="w-full max-w-md">
+            <Button className="w-full h-16 text-lg">Praticar inglês (para falantes de português)</Button>
+          </Link>
+        </div>
       );
     }
     // Default case
     return (
       <div className="text-center">
-        <p className="text-red-500 mb-4">
+        <p className="text-amber-700 mb-4">
           No specific voice chat available for your language combination.
         </p>
         <Link to="/settings">
@@ -90,7 +97,7 @@ const VoiceChat = () => {
     <div className="flex flex-col items-center justify-center min-h-[50vh] p-6">
       <div className="w-full max-w-2xl text-center">
         {isRedirecting ? (
-          <>
+          <Card className="p-8">
             <h1 className="text-2xl font-bold mb-4">Redirecting to appropriate voice chat...</h1>
             <p className="text-gray-600 mb-6">
               Please wait while we redirect you to the right practice environment.
@@ -98,9 +105,9 @@ const VoiceChat = () => {
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-lingua-primary"></div>
             </div>
-          </>
+          </Card>
         ) : (
-          <>
+          <Card className="p-8">
             <h1 className="text-2xl font-bold mb-4">Voice Chat Practice</h1>
             <p className="text-gray-600 mb-8">
               Please select a language below to practice your speaking skills.
@@ -113,7 +120,7 @@ const VoiceChat = () => {
                 Tip: You can change your language settings on the <Link to="/settings" className="underline">settings page</Link>.
               </p>
             </div>
-          </>
+          </Card>
         )}
       </div>
     </div>

@@ -23,13 +23,21 @@ const LearnLanguageControls: React.FC<LearnLanguageControlsProps> = ({
   onSendTranscript,
   language
 }) => {
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
 
   const getMicButtonText = () => {
     if (isListening) {
       return t("stopListening");
     } else {
       return `Speak in ${language}`;
+    }
+  };
+
+  const getButtonAriaLabel = () => {
+    if (isListening) {
+      return `Stop listening`;
+    } else {
+      return `Start speaking in ${language}`;
     }
   };
 
@@ -49,7 +57,7 @@ const LearnLanguageControls: React.FC<LearnLanguageControlsProps> = ({
           disabled={isLoading || isSpeaking}
           className="flex items-center gap-2"
           type="button"
-          aria-label={isListening ? "Stop listening" : `Start speaking in ${language}`}
+          aria-label={getButtonAriaLabel()}
         >
           {isListening ? (
             <>
