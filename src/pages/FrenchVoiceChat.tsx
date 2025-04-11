@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -197,8 +196,8 @@ const FrenchVoiceChat = () => {
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
-          userLanguage: currentLanguage,
-          targetLanguage: 'french', // Always use French for this component
+          userLanguage: 'french', // Always use French as the user's language
+          targetLanguage: 'english', // Always use English as the target language
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
           requestTranslation: true
@@ -342,7 +341,7 @@ const FrenchVoiceChat = () => {
     if (currentLanguage === "english") {
       return `Practice your French speaking skills with our voice chat. Click the microphone button and start speaking in French. The AI will respond to you in French and help you practice.`;
     } else if (currentLanguage === "french") {
-      return "Pratiquez votre anglais avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en anglais. L'IA vous répondra en anglais et vous aidera à vous entraîner.";
+      return "Pratiquez votre anglais avec notre chat vocal. Cliquez sur le bouton du microphone et commencez à parler en français. L'IA vous répondra en anglais et vous aidera à vous entraîner.";
     } else {
       // For other languages, use their translations if available, or default to English
       return `${t("practiceWithVoiceChat")}`;

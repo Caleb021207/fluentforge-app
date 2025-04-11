@@ -64,7 +64,7 @@ export const getAgentIdForLanguage = (language: string, targetLanguage?: string)
   
   // For non-English speakers learning English, use their specific tutor
   if (normalizedLanguage !== 'english' && targetLanguage?.toLowerCase() === 'english') {
-    // Use the default agent for that language, which teaches English
+    // Use the language-specific English tutor
     if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
       console.log(`Using tutor for ${normalizedLanguage} speaker learning English:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
       return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
