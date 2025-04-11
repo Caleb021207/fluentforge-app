@@ -37,7 +37,7 @@ serve(async (req) => {
                           userLanguage === 'russian' ? 'Russian' : 
                           userLanguage === 'hindi' ? 'Hindi' : 
                           userLanguage === 'indonesian' ? 'Indonesian' : 'Unknown';
-                          
+    
     // For Japanese, Russian, French, Ukrainian, Hindi and Indonesian users, always include translations regardless of request type
     const alwaysIncludeTranslation = userLanguage === 'japanese' || userLanguage === 'russian' || userLanguage === 'french' || userLanguage === 'ukrainian' || userLanguage === 'hindi' || userLanguage === 'indonesian';
 
