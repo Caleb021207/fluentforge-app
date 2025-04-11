@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
+import { getLanguagePair, getLanguageCodeForSpeech } from "@/utils/languageUtils";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
@@ -44,7 +44,16 @@ const VoiceChat = () => {
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  const { speak, cancel, isSpeaking } = useSpeechSynthesis();
+  const { speak, cancel, isSpeaking } = useSpeechSynthesis({
+    onError: (error) => {
+      console.error('Speech synthesis error:', error);
+      toast({
+        title: t("error"),
+        description: t("audioPlaybackError"),
+        variant: "destructive",
+      });
+    }
+  });
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -240,7 +249,21 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      speak(content);
+      const responseLanguage = currentLanguage === "english" ? "spanish" : "english";
+      
+      console.log(`Speaking response in ${responseLanguage} language`);
+      try {
+        await speak(content, responseLanguage);
+      } catch (speakError) {
+        console.error("Failed to speak response:", speakError);
+        try {
+          console.log(`Retrying with current language: ${currentLanguage}`);
+          await speak(content, currentLanguage);
+        } catch (fallbackError) {
+          console.error("Fallback speech also failed:", fallbackError);
+        }
+      }
+      
       setTranscript("");
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -256,7 +279,14 @@ const VoiceChat = () => {
 
   const playAgain = () => {
     if (gptResponse) {
-      speak(gptResponse);
+      const responseLanguage = currentLanguage === "english" ? "spanish" : "english";
+      console.log(`Playing again in ${responseLanguage} language`);
+      speak(gptResponse, responseLanguage).catch(error => {
+        console.error("Error replaying speech:", error);
+        speak(gptResponse, currentLanguage).catch(fallbackError => {
+          console.error("Fallback replay also failed:", fallbackError);
+        });
+      });
     }
   };
 
@@ -489,7 +519,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:";
     } else if (currentLanguage === "hindi") {
-      return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
+      return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उप���رण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     } else if (currentLanguage === "indonesian") {
       return "Gunakan alat ini untuk meningkatkan keterampilan berbicara dan mendengarkan Anda. Berikut beberapa tips:";
     }

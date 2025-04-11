@@ -17,6 +17,8 @@ const voiceChatTranslations: TranslationRecord = {
   describeImagesOrScenes: "Describe lo que ves a tu alrededor",
   practiceVocabularyForSpecificTopics: "Practica vocabulario para temas específicos como viajes o comida",
   speechRecognitionError: "Error de reconocimiento de voz",
+  speechSynthesisError: "Error de síntesis de voz",
+  speechSynthesisNotSupported: "La síntesis de voz no es compatible con tu navegador",
   speechRecognitionNotSupported: "El reconocimiento de voz no es compatible con tu navegador",
   microphoneAccessRequired: "Se requiere acceso al micrófono para esta función",
   failedToGetResponse: "No se pudo obtener respuesta de la IA. Por favor, inténtalo de nuevo.",
@@ -40,6 +42,10 @@ const voiceChatTranslations: TranslationRecord = {
   voiceChatEnded: "Chat de voz finalizado",
   timeLimit5MinReached: "Se ha alcanzado el límite de tiempo de 5 minutos",
   speaking: "Hablando",
+  tryingFallbackVoice: "Intentando con una voz alternativa",
+  usingBrowserDefault: "Usando la voz predeterminada del navegador",
+  browserTTSSupport: "Este navegador soporta text-to-speech",
+  browserTTSNoSupport: "Este navegador no soporta text-to-speech",
   
   // Additional keys needed for the practice tips box
   askQuestions: "Haz preguntas sobre temas cotidianos",

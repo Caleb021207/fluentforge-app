@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getLanguageCodeForSpeech, getISOLanguageCode } from "@/utils/languageUtils";
 
 interface UseSpeechSynthesisProps {
   onStart?: () => void;
@@ -15,20 +16,28 @@ export const useSpeechSynthesis = (props?: UseSpeechSynthesisProps) => {
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const { toast } = useToast();
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && 'speechSynthesis' in window) {
       synthRef.current = window.speechSynthesis;
       
-      const handleVoicesChanged = () => {
-        console.log("Voices available:", synthRef.current?.getVoices().length);
+      const loadVoices = () => {
+        const voices = synthRef.current?.getVoices() || [];
+        setAvailableVoices(voices);
+        console.log("Speech synthesis voices loaded:", voices.length);
+        voices.forEach(voice => {
+          console.log(`Voice: ${voice.name}, Lang: ${voice.lang}, Default: ${voice.default}`);
+        });
       };
       
-      synthRef.current.onvoiceschanged = handleVoicesChanged;
-      
+      // Load voices immediately if they're already available
       if (synthRef.current.getVoices().length > 0) {
-        handleVoicesChanged();
+        loadVoices();
       }
+      
+      // Also set up the event for when voices are loaded asynchronously
+      synthRef.current.onvoiceschanged = loadVoices;
     } else {
       console.warn("Speech synthesis not supported in this browser");
     }
@@ -40,169 +49,148 @@ export const useSpeechSynthesis = (props?: UseSpeechSynthesisProps) => {
     };
   }, []);
 
-  const getVoiceForLanguage = (language: string) => {
-    if (!synthRef.current) return null;
-    
-    const voices = synthRef.current.getVoices();
-    console.log("Finding voice for language:", language);
-    
-    // Map current language to target language code
-    let targetLangCode: string;
-    
-    switch (language.toLowerCase()) {
-      case "english":
-        targetLangCode = "en";
-        break;
-      case "spanish":
-        targetLangCode = "es";
-        break;
-      case "french":
-        targetLangCode = "fr";
-        break;
-      case "portuguese":
-        targetLangCode = "pt";
-        break;
-      case "mandarin":
-        targetLangCode = "zh";
-        break;
-      case "japanese":
-        targetLangCode = "ja";
-        break;
-      case "german":
-        targetLangCode = "de";
-        break;
-      case "italian":
-        targetLangCode = "it";
-        break;
-      case "korean":
-        targetLangCode = "ko";
-        break;
-      case "arabic":
-        targetLangCode = "ar";
-        break;
-      case "hindi":
-        targetLangCode = "hi";
-        break;
-      case "russian":
-        targetLangCode = "ru";
-        break;
-      case "vietnamese":
-        targetLangCode = "vi";
-        break;
-      case "ukrainian":
-        targetLangCode = "uk";
-        break;
-      case "indonesian":
-        targetLangCode = "id";
-        break;
-      default:
-        targetLangCode = "en";
-        break;
+  const findVoiceForLanguage = (languageName: string): SpeechSynthesisVoice | null => {
+    if (!synthRef.current || availableVoices.length === 0) {
+      console.warn("Speech synthesis not initialized or no voices available");
+      return null;
     }
     
-    // Log available voices for debugging
-    console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
+    // Get the ISO language code for the specified language
+    const isoLangCode = getISOLanguageCode(languageName);
+    console.log(`Finding voice for language: ${languageName} (ISO code: ${isoLangCode})`);
     
-    // Try to find a voice for the target language
-    let voice = voices.find(v => v.lang.startsWith(targetLangCode));
+    // Look for exact language match first
+    let voice = availableVoices.find(v => 
+      v.lang.toLowerCase().startsWith(isoLangCode.toLowerCase()) && 
+      (v.name.includes("Google") || v.name.includes("Natural"))
+    );
     
-    // If no voice found, use default
-    if (!voice && voices.length > 0) {
-      console.warn(`No voice found for ${targetLangCode}, using default voice`);
-      voice = voices[0];
+    // If no exact match with preferred providers, look for any voice with matching language
+    if (!voice) {
+      voice = availableVoices.find(v => 
+        v.lang.toLowerCase().startsWith(isoLangCode.toLowerCase())
+      );
+    }
+    
+    // If still no match, try to find a more generic voice for the language
+    if (!voice) {
+      // For Chinese, try alternatives
+      if (isoLangCode === 'zh') {
+        voice = availableVoices.find(v => 
+          v.lang.includes("zh") || v.lang.includes("CN") || v.lang.includes("TW")
+        );
+      }
+      // For other languages, just take any voice that starts with the language code
+      else {
+        voice = availableVoices.find(v => 
+          v.lang.startsWith(isoLangCode)
+        );
+      }
+    }
+    
+    // Last resort: use any available voice
+    if (!voice && availableVoices.length > 0) {
+      console.warn(`No voice found for ${languageName} (${isoLangCode}), using default voice`);
+      // Try to find a default voice
+      voice = availableVoices.find(v => v.default) || availableVoices[0];
+    }
+    
+    if (voice) {
+      console.log(`Selected voice for ${languageName}: ${voice.name} (${voice.lang})`);
+    } else {
+      console.error(`No voice could be found for ${languageName}`);
     }
     
     return voice;
   };
 
-  const speak = (text: string, language?: string) => {
-    if (!synthRef.current) {
-      toast({
-        title: t("error"),
-        description: t("speechSynthesisNotSupported"),
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Cancel any ongoing speech
-    synthRef.current.cancel();
-    
-    // Create new utterance
-    utteranceRef.current = new SpeechSynthesisUtterance(text);
-    
-    // Set language based on provided language or current language
-    const langToUse = language || currentLanguage;
-    const voice = getVoiceForLanguage(langToUse);
-    
-    if (voice) {
-      utteranceRef.current.voice = voice;
-      console.log(`Using voice: ${voice.name} (${voice.lang})`);
-    }
-    
-    // Explicitly set the language code for the utterance
-    let langCode = "en-US";
-    switch (langToUse.toLowerCase()) {
-      case "spanish":
-        langCode = "es-ES";
-        break;
-      case "french":
-        langCode = "fr-FR";
-        break;
-      case "portuguese":
-        langCode = "pt-PT";
-        break;
-      case "german":
-        langCode = "de-DE";
-        break;
-      case "italian":
-        langCode = "it-IT";
-        break;
-      // Add other languages as needed
-      default:
-        langCode = "en-US";
-    }
-    utteranceRef.current.lang = langCode;
-    
-    // Set event handlers
-    utteranceRef.current.onstart = () => {
-      console.log("Speech synthesis started");
-      setIsSpeaking(true);
-      props?.onStart?.();
-    };
-    
-    utteranceRef.current.onend = () => {
-      console.log("Speech synthesis ended");
-      setIsSpeaking(false);
-      props?.onEnd?.();
-    };
-    
-    utteranceRef.current.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      setIsSpeaking(false);
-      props?.onError?.(event);
-      toast({
-        title: t("error"),
-        description: t("audioPlaybackError"),
-        variant: "destructive",
-      });
-    };
-    
-    // Set rate and pitch for better speech quality
-    utteranceRef.current.rate = 1.0;
-    utteranceRef.current.pitch = 1.0;
-    
-    // Start speaking
-    try {
-      synthRef.current.speak(utteranceRef.current);
-    } catch (error) {
-      console.error("Error starting speech synthesis:", error);
-      toast({
-        title: t("error"),
-        description: t("audioPlaybackError"),
-        variant: "destructive",
-      });
-    }
+  const speak = (text: string, language?: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      if (!synthRef.current) {
+        const errorMsg = "Speech synthesis not supported in this browser";
+        console.error(errorMsg);
+        toast({
+          title: t("error"),
+          description: t("speechSynthesisNotSupported"),
+          variant: "destructive",
+        });
+        reject(new Error(errorMsg));
+        return;
+      }
+      
+      // Cancel any ongoing speech
+      synthRef.current.cancel();
+      
+      // Clear any previous utterance
+      utteranceRef.current = null;
+      
+      // Create new utterance
+      const utterance = new SpeechSynthesisUtterance(text);
+      utteranceRef.current = utterance;
+      
+      // Set language based on provided language or current language
+      const langToUse = language || currentLanguage;
+      console.log(`Preparing speech for language: ${langToUse}`);
+      
+      // Get the BCP 47 language tag
+      const langCode = getLanguageCodeForSpeech(langToUse);
+      utterance.lang = langCode;
+      console.log(`Using language code: ${langCode}`);
+      
+      // Find an appropriate voice
+      const voice = findVoiceForLanguage(langToUse);
+      if (voice) {
+        utterance.voice = voice;
+        console.log(`Using voice: ${voice.name} (${voice.lang})`);
+      } else {
+        console.warn(`No voice found for ${langToUse}, using browser default`);
+      }
+      
+      // Set event handlers
+      utterance.onstart = () => {
+        console.log("Speech synthesis started");
+        setIsSpeaking(true);
+        props?.onStart?.();
+      };
+      
+      utterance.onend = () => {
+        console.log("Speech synthesis ended");
+        setIsSpeaking(false);
+        props?.onEnd?.();
+        resolve();
+      };
+      
+      utterance.onerror = (event) => {
+        console.error('Speech synthesis error:', event);
+        setIsSpeaking(false);
+        props?.onError?.(event);
+        toast({
+          title: t("error"),
+          description: t("audioPlaybackError"),
+          variant: "destructive",
+        });
+        reject(event);
+      };
+      
+      // Set rate and pitch for better speech quality
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      
+      // Start speaking
+      try {
+        console.log("Starting speech synthesis...");
+        synthRef.current.speak(utterance);
+      } catch (error) {
+        console.error("Error starting speech synthesis:", error);
+        setIsSpeaking(false);
+        toast({
+          title: t("error"),
+          description: t("audioPlaybackError"),
+          variant: "destructive",
+        });
+        reject(error);
+      }
+    });
   };
 
   const cancel = () => {
@@ -212,9 +200,18 @@ export const useSpeechSynthesis = (props?: UseSpeechSynthesisProps) => {
     }
   };
 
+  const getAvailableVoicesForLanguage = (language: string) => {
+    const isoCode = getISOLanguageCode(language);
+    return availableVoices.filter(voice => 
+      voice.lang.toLowerCase().startsWith(isoCode.toLowerCase())
+    );
+  };
+
   return {
     speak,
     cancel,
-    isSpeaking
+    isSpeaking,
+    availableVoices,
+    getAvailableVoicesForLanguage
   };
 };

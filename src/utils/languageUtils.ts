@@ -122,3 +122,57 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
   const pairKey = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
   return supportedPairs.includes(pairKey);
 };
+
+/**
+ * Convert language name to BCP 47 language tag for speech synthesis
+ * @param language The language name (e.g., 'english', 'spanish')
+ * @returns The BCP 47 language tag (e.g., 'en-US', 'es-ES')
+ */
+export const getLanguageCodeForSpeech = (language: string): string => {
+  const languageCodeMap: Record<string, string> = {
+    'english': 'en-US',
+    'spanish': 'es-ES',
+    'portuguese': 'pt-BR',
+    'french': 'fr-FR',
+    'japanese': 'ja-JP',
+    'korean': 'ko-KR',
+    'mandarin': 'zh-CN',
+    'russian': 'ru-RU',
+    'arabic': 'ar-SA',
+    'hindi': 'hi-IN',
+    'vietnamese': 'vi-VN',
+    'ukrainian': 'uk-UA',
+    'indonesian': 'id-ID',
+    'german': 'de-DE',
+    'italian': 'it-IT'
+  };
+  
+  return languageCodeMap[language.toLowerCase()] || 'en-US';
+};
+
+/**
+ * Get the ISO 639-1 language code (2-letter code)
+ * @param language The language name (e.g., 'english', 'spanish')
+ * @returns The ISO 639-1 language code (e.g., 'en', 'es')
+ */
+export const getISOLanguageCode = (language: string): string => {
+  const isoCodeMap: Record<string, string> = {
+    'english': 'en',
+    'spanish': 'es',
+    'portuguese': 'pt',
+    'french': 'fr',
+    'japanese': 'ja',
+    'korean': 'ko',
+    'mandarin': 'zh',
+    'russian': 'ru',
+    'arabic': 'ar',
+    'hindi': 'hi',
+    'vietnamese': 'vi',
+    'ukrainian': 'uk',
+    'indonesian': 'id',
+    'german': 'de',
+    'italian': 'it'
+  };
+  
+  return isoCodeMap[language.toLowerCase()] || 'en';
+};

@@ -17,7 +17,9 @@ const voiceChatTranslations: TranslationRecord = {
   describeImagesOrScenes: "Describe what you see around you",
   practiceVocabularyForSpecificTopics: "Practice vocabulary for specific topics like travel or food",
   speechRecognitionError: "Speech recognition error",
+  speechSynthesisError: "Speech synthesis error",
   speechRecognitionNotSupported: "Speech recognition is not supported in your browser",
+  speechSynthesisNotSupported: "Speech synthesis is not supported in your browser",
   microphoneAccessRequired: "Microphone access is required for this feature",
   failedToGetResponse: "Failed to get response from AI. Please try again.",
   failedToGenerateSpeech: "Failed to generate speech. Please try again.",
@@ -48,6 +50,12 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
   timeLimit5MinReached: "The 5-minute time limit has been reached",
+  
+  // Speech synthesis feedback
+  tryingFallbackVoice: "Trying fallback voice",
+  usingBrowserDefault: "Using browser default voice",
+  browserTTSSupport: "This browser supports text-to-speech",
+  browserTTSNoSupport: "This browser does not support text-to-speech",
   
   // Additional keys needed for the practice tips box
   askQuestions: "Ask questions about everyday topics",
