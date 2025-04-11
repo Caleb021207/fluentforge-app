@@ -1,16 +1,11 @@
 
-import { useRef, useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
-import { supabase } from "@/integrations/supabase/client";
-
-interface UseSpeechRecognitionProps {
-  onTranscriptChange: (transcript: string) => void;
-  onSilence?: () => void;
-  onError?: (errorMessage: string) => void;
-  silenceTimeout?: number;
-  language?: string;
-}
+import { SpeechRecognitionOptions, SpeechRecognitionResult } from "./speech-recognition/types";
+import { isBrowserSpeechSupported, createBrowserRecognition, useHandleRecognitionError } from "./speech-recognition/browser-recognition";
+import { useMediaRecording } from "./speech-recognition/fallback-recognition";
+import { useSilenceDetection } from "./speech-recognition/silence-detection";
 
 export const useSpeechRecognition = ({
   onTranscriptChange,
@@ -18,27 +13,33 @@ export const useSpeechRecognition = ({
   onError,
   silenceTimeout = 10000,
   language = 'en-US'
-}: UseSpeechRecognitionProps) => {
+}: SpeechRecognitionOptions): SpeechRecognitionResult => {
   const [isListening, setIsListening] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [useFallback, setUseFallback] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   
   const recognitionRef = useRef<any>(null);
-  const silenceTimeoutRef = useRef<number | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const languageRef = useRef(language);
   
   const { toast } = useToast();
   const { t } = useLocalization();
+  const handleRecognitionError = useHandleRecognitionError();
   
-  const languageRef = useRef(language);
+  const { resetSilenceDetection, clearSilenceDetection } = useSilenceDetection(
+    silenceTimeout,
+    onSilence && isListening ? () => {
+      onSilence();
+      stopListening();
+    } : undefined
+  );
   
-  // Check if browser supports SpeechRecognition
-  const isBrowserSpeechSupported = () => {
-    return typeof window !== "undefined" && 
-           ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
-  };
+  const {
+    isRecording,
+    audioChunks,
+    startMediaRecording,
+    stopMediaRecording,
+    processFallbackRecording,
+    setAudioChunks
+  } = useMediaRecording(language, onTranscriptChange, resetSilenceDetection);
   
   // Update language reference when it changes
   useEffect(() => {
@@ -61,6 +62,13 @@ export const useSpeechRecognition = ({
     }
   }, [language]);
   
+  // Process audio chunks whenever they're updated
+  useEffect(() => {
+    if (audioChunks.length > 0 && isListening && useFallback) {
+      processFallbackRecording();
+    }
+  }, [audioChunks]);
+  
   // Clean up on unmount
   useEffect(() => {
     return () => {
@@ -75,38 +83,6 @@ export const useSpeechRecognition = ({
       clearSilenceDetection();
     };
   }, []);
-
-  const handleRecognitionError = (error: string, event?: any) => {
-    console.error(`Speech recognition error: ${error}`, event);
-    
-    // Don't show errors for aborted recognitions (normal operation)
-    if (error === 'aborted') {
-      return;
-    }
-    
-    let errorMessage = t("speechRecognitionError");
-    
-    if (error === 'not-allowed') {
-      errorMessage = t("microphoneAccessRequired");
-    } else if (error === 'no-speech') {
-      errorMessage = t("noSpeechDetected");
-    } else {
-      errorMessage = `${t("speechRecognitionError")}: ${error}`;
-    }
-    
-    if (onError) {
-      onError(errorMessage);
-    } else {
-      toast({
-        title: t("error"),
-        description: errorMessage,
-        variant: "destructive",
-      });
-    }
-    
-    // If we get any error besides 'aborted', try switching to the fallback
-    switchToFallback();
-  };
 
   const switchToFallback = () => {
     console.log("Switching to server-side transcription fallback");
@@ -132,193 +108,39 @@ export const useSpeechRecognition = ({
       console.log("Browser speech recognition not supported, using fallback");
       return false;
     }
-      
-    try {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.abort();
-        } catch (e) {
-          console.error("Error aborting existing speech recognition:", e);
+    
+    const recognition = createBrowserRecognition(
+      languageRef.current,
+      onTranscriptChange,
+      resetSilenceDetection,
+      (error, event) => {
+        const shouldSwitchToFallback = handleRecognitionError(error, event, onError);
+        if (shouldSwitchToFallback) {
+          switchToFallback();
         }
       }
-      
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-      
-      recognitionRef.current.lang = languageRef.current;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.maxAlternatives = 1;
-      
-      console.log(`Speech recognition initialized with language: ${languageRef.current}`);
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const lastResultIndex = event.results.length - 1;
-        const latestTranscript = event.results[lastResultIndex][0].transcript;
-        
-        resetSilenceDetection();
-        onTranscriptChange(latestTranscript);
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        handleRecognitionError(event.error, event);
-      };
-      
-      recognitionRef.current.onend = () => {
-        console.log("Speech recognition ended, isListening state:", isListening);
-        if (isListening && !useFallback) {
-          try {
-            recognitionRef.current.start();
-            console.log("Restarted speech recognition");
-          } catch (e) {
-            console.error("Failed to restart speech recognition:", e);
-            switchToFallback();
-          }
-        }
-      };
-      
-      return true;
-    } catch (error) {
-      console.error("Error initializing speech recognition:", error);
+    );
+    
+    if (!recognition) {
       return false;
     }
-  };
-
-  // Media recording functions for fallback
-  const startMediaRecording = async () => {
-    try {
-      console.log("Starting media recording with fallback method");
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-      
-      const recorder = new MediaRecorder(stream);
-      setMediaRecorder(recorder);
-      setAudioChunks([]);
-      setIsRecording(true);
-      
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          setAudioChunks(currentChunks => [...currentChunks, event.data]);
+    
+    recognitionRef.current = recognition;
+    
+    recognitionRef.current.onend = () => {
+      console.log("Speech recognition ended, isListening state:", isListening);
+      if (isListening && !useFallback) {
+        try {
+          recognitionRef.current.start();
+          console.log("Restarted speech recognition");
+        } catch (e) {
+          console.error("Failed to restart speech recognition:", e);
+          switchToFallback();
         }
-      };
-      
-      // Every 3 seconds, process the recording
-      recorder.start(3000);
-      resetSilenceDetection();
-      
-      console.log("Media recorder started successfully");
-    } catch (error) {
-      console.error("Error starting media recording:", error);
-      setIsListening(false);
-      
-      const errorMessage = t("microphoneAccessRequired");
-      if (onError) {
-        onError(errorMessage);
-      } else {
-        toast({
-          title: t("error"),
-          description: errorMessage,
-          variant: "destructive",
-        });
       }
-    }
-  };
-  
-  const stopMediaRecording = () => {
-    if (mediaRecorder && isRecording) {
-      try {
-        console.log("Stopping media recording");
-        mediaRecorder.stop();
-        setIsRecording(false);
-      } catch (e) {
-        console.error("Error stopping media recorder:", e);
-      }
-    }
+    };
     
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-  };
-
-  // Process audio chunks whenever they're updated
-  useEffect(() => {
-    if (audioChunks.length > 0 && isListening && useFallback) {
-      processFallbackRecording();
-    }
-  }, [audioChunks]);
-  
-  const processFallbackRecording = async () => {
-    if (audioChunks.length === 0) return;
-    
-    try {
-      console.log(`Processing ${audioChunks.length} audio chunks with fallback method`);
-      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-      
-      // Convert to base64
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
-      reader.onloadend = async () => {
-        const base64data = reader.result as string;
-        // Remove the data URL prefix (e.g., "data:audio/webm;base64,")
-        const base64Audio = base64data.split(',')[1];
-        
-        // Reset chunks for next recording segment
-        setAudioChunks([]);
-        
-        // Send to Supabase function
-        const { data, error } = await supabase.functions.invoke('transcribe-audio', {
-          body: { 
-            audio: base64Audio,
-            language: languageRef.current.split('-')[0] // Send just the language code (e.g., 'en' from 'en-US')
-          }
-        });
-        
-        if (error) {
-          console.error("Error transcribing audio:", error);
-          return;
-        }
-        
-        if (data && data.text) {
-          console.log("Received transcription:", data.text);
-          onTranscriptChange(data.text);
-          resetSilenceDetection();
-        }
-      };
-    } catch (error) {
-      console.error("Error processing audio:", error);
-    }
-  };
-
-  const resetSilenceDetection = () => {
-    clearSilenceDetection();
-    
-    if (onSilence) {
-      silenceTimeoutRef.current = window.setTimeout(() => {
-        if (isListening) {
-          console.log(`${silenceTimeout/1000} seconds of silence detected, automatically sending message`);
-          onSilence();
-          
-          if (!useFallback && recognitionRef.current) {
-            try {
-              recognitionRef.current.abort();
-            } catch (e) {
-              console.error("Error aborting speech recognition after silence:", e);
-            }
-          } else if (useFallback) {
-            stopMediaRecording();
-          }
-          setIsListening(false);
-        }
-      }, silenceTimeout);
-    }
-  };
-
-  const clearSilenceDetection = () => {
-    if (silenceTimeoutRef.current !== null) {
-      clearTimeout(silenceTimeoutRef.current);
-      silenceTimeoutRef.current = null;
-    }
+    return true;
   };
 
   const startListening = () => {
