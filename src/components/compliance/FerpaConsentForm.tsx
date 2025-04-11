@@ -13,7 +13,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, Info } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { setFerpaConsentStatus, setFerpaDirectoryPreferences } from "@/utils/contentSafetyUtils";
+import { setFerpaConsentStatus, setFerpaDirectoryPreferences } from "@/utils/safety/ferpaCompliance";
+import { DirectoryPreference } from "./ferpa/DirectoryPreferencesSection";
 
 interface FerpaConsentFormProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
 }) => {
   const { t } = useLocalization();
   const [consentGiven, setConsentGiven] = useState(false);
-  const [directoryPreferences, setDirectoryPreferences] = useState({
+  const [directoryPreferences, setDirectoryPreferences] = useState<DirectoryPreference>({
     name: false,
     email: false,
     language: false,

@@ -12,10 +12,10 @@ import {
   setFerpaDirectoryPreferences
 } from "@/utils/safety/ferpaCompliance";
 
-// Import our new components
+// Import our components
 import FerpaInfoSection from "./ferpa/FerpaInfoSection";
 import ConsentToggle from "./ferpa/ConsentToggle";
-import DirectoryPreferencesSection from "./ferpa/DirectoryPreferencesSection";
+import DirectoryPreferencesSection, { DirectoryPreference } from "./ferpa/DirectoryPreferencesSection";
 import DataExportSection from "./ferpa/DataExportSection";
 
 const FerpaPrivacySettings = () => {
@@ -23,13 +23,13 @@ const FerpaPrivacySettings = () => {
   const { toast } = useToast();
   
   const [consentGiven, setConsentGiven] = useState(getFerpaConsentStatus());
-  const [directoryPreferences, setDirectoryPreferences] = useState(getFerpaDirectoryPreferences());
+  const [directoryPreferences, setDirectoryPreferences] = useState<DirectoryPreference>(getFerpaDirectoryPreferences() as DirectoryPreference);
   const [isSaving, setIsSaving] = useState(false);
   
   useEffect(() => {
     // Load initial values from localStorage
     setConsentGiven(getFerpaConsentStatus());
-    setDirectoryPreferences(getFerpaDirectoryPreferences());
+    setDirectoryPreferences(getFerpaDirectoryPreferences() as DirectoryPreference);
   }, []);
   
   const handleConsentChange = (checked: boolean) => {

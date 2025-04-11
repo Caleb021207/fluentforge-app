@@ -4,7 +4,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
-interface DirectoryPreference {
+export interface DirectoryPreference {
   name: boolean;
   email: boolean;
   language: boolean;

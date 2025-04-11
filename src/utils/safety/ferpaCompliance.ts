@@ -3,6 +3,8 @@
  * FERPA compliance utilities
  */
 
+import { DirectoryPreference } from "@/components/compliance/ferpa/DirectoryPreferencesSection";
+
 // List of educational data categories protected by FERPA
 export const ferpaProtectedDataTypes = [
   "grades", 
@@ -40,7 +42,7 @@ export const setFerpaConsentStatus = (hasConsent: boolean): void => {
  * Gets the user's FERPA directory information sharing preferences
  * Returns an object with boolean values for each directory information category
  */
-export const getFerpaDirectoryPreferences = (): Record<string, boolean> => {
+export const getFerpaDirectoryPreferences = (): DirectoryPreference => {
   const savedPrefs = localStorage.getItem("ferpaDirectoryPreferences");
   if (!savedPrefs) {
     // Default all to false (opt-out)
@@ -54,7 +56,7 @@ export const getFerpaDirectoryPreferences = (): Record<string, boolean> => {
   }
   
   try {
-    return JSON.parse(savedPrefs);
+    return JSON.parse(savedPrefs) as DirectoryPreference;
   } catch (e) {
     console.error("Error parsing FERPA directory preferences:", e);
     return {
@@ -70,7 +72,7 @@ export const getFerpaDirectoryPreferences = (): Record<string, boolean> => {
 /**
  * Sets the user's FERPA directory information sharing preferences
  */
-export const setFerpaDirectoryPreferences = (preferences: Record<string, boolean>): void => {
+export const setFerpaDirectoryPreferences = (preferences: DirectoryPreference): void => {
   localStorage.setItem("ferpaDirectoryPreferences", JSON.stringify(preferences));
 };
 
