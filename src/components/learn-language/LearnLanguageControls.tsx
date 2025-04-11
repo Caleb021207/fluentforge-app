@@ -47,6 +47,11 @@ const LearnLanguageControls: React.FC<LearnLanguageControlsProps> = ({
         <p className="text-sm text-gray-500">
           <span className="font-medium">{t("practiceLevel")}: B1</span> - {t("cefrB1Description")}
         </p>
+        <p className="text-xs text-lingua-primary font-medium mt-1">
+          {currentLanguage === "english" ? 
+            `Recognition language: ${language} (for practicing ${language})` :
+            `Language de reconnaissance: ${language} (pour pratiquer ${language})`}
+        </p>
       </div>
 
       <div className="flex gap-2">

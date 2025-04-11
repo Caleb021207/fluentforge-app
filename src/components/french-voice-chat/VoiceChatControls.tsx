@@ -38,6 +38,11 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
         <p className="text-sm text-gray-500">
           <span className="font-medium">{currentLanguage === "french" ? "Niveau de pratique" : t("practiceLevel")}: B1</span> - {t("cefrB1Description")}
         </p>
+        <p className="text-xs text-lingua-primary font-medium mt-1">
+          {currentLanguage === "french" ? 
+            "Language de reconnaissance: Anglais (pour pratiquer l'anglais)" :
+            "Recognition language: English (for practicing English)"}
+        </p>
       </div>
 
       <div className="flex gap-2">
