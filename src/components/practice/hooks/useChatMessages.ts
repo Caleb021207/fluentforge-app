@@ -10,7 +10,7 @@ import { isSafeContent, filterContent } from "@/utils/safety/contentFilter";
 // Use 'export type' syntax for re-exporting types when isolatedModules is enabled
 export type { ChatMessage };
 
-export const useChatMessages = () => {
+export const useChatMessages = (targetLanguage?: string) => {
   const { currentLanguage, t } = useLocalization();
   const { toast } = useToast();
   const { messages, setMessages, addUserMessage, addAssistantMessage } = useMessageState();
@@ -19,7 +19,7 @@ export const useChatMessages = () => {
   const { generateLanguageLearningPrompt } = usePromptGenerator();
 
   const sendLanguageLearningPrompt = () => {
-    const prompt = generateLanguageLearningPrompt();
+    const prompt = generateLanguageLearningPrompt(targetLanguage);
     
     if (prompt) {
       addUserMessage(prompt);
@@ -40,7 +40,7 @@ export const useChatMessages = () => {
       promptText = filteredPrompt;
     }
     
-    const response = await sendChatMessage(promptText);
+    const response = await sendChatMessage(promptText, targetLanguage);
     
     if (response) {
       addAssistantMessage(response.content, response.translation);

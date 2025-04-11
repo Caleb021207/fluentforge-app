@@ -37,7 +37,7 @@ const Practice = () => {
     sendLanguageLearningPrompt,
     handleSubmit,
     getPlaceholderText
-  } = useChatMessages();
+  } = useChatMessages(targetLanguage);
   
   const {
     voiceChatTimeRemaining,

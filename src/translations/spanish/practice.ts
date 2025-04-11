@@ -30,6 +30,7 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "Practicar conversaciones en diferentes situaciones",
   learnNewVocabulary: "Aprender nuevo vocabulario",
   discussCulturalTopics: "Discutir temas culturales",
+  startConversationIn: "Iniciar Conversación en {language}"
 };
 
 export default practiceTranslations;

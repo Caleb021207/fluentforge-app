@@ -16,15 +16,18 @@ serve(async (req) => {
   }
 
   try {
-    const { message, userLanguage, conversationHistory = [], cefrLevel = 'B1' } = await req.json();
-    console.log('Received message:', message, 'User language:', userLanguage, 'CEFR Level:', cefrLevel);
+    const { message, userLanguage, conversationHistory = [], cefrLevel = 'B1', targetLanguage } = await req.json();
+    console.log('Received message:', message, 'User language:', userLanguage, 'CEFR Level:', cefrLevel, 'Target language:', targetLanguage);
     
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
     }
 
     // Determine which language the system should respond in
-    const responseLanguage = userLanguage === 'english' ? 'Spanish' : 'English';
+    // If targetLanguage is provided, use it; otherwise, use the default logic
+    const responseLanguage = targetLanguage ? targetLanguage :
+                            userLanguage === 'english' ? 'Spanish' : 'English';
+                            
     const nativeLanguage = userLanguage === 'english' ? 'English' : 
                           userLanguage === 'spanish' ? 'Spanish' : 
                           userLanguage === 'portuguese' ? 'Portuguese' : 
