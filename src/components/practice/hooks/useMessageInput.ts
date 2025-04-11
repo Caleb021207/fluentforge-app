@@ -25,6 +25,8 @@ export const useMessageInput = () => {
       russian: "Введите ваше сообщение на русском или английском языке...",
       hindi: "अपना संदेश हिंदी या अंग्रेजी में टाइप करें...",
       indonesian: "Ketik pesan Anda dalam bahasa Indonesia atau Inggris...",
+      german: "Geben Sie Ihre Nachricht auf Deutsch oder Englisch ein...",
+      italian: "Scrivi il tuo messaggio in italiano o inglese..."
     };
 
     if (placeholders[currentLanguage]) {

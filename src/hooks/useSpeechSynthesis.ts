@@ -68,6 +68,33 @@ export const useSpeechSynthesis = (props?: UseSpeechSynthesisProps) => {
       case "japanese":
         targetLangCode = "ja";
         break;
+      case "german":
+        targetLangCode = "de";
+        break;
+      case "italian":
+        targetLangCode = "it";
+        break;
+      case "korean":
+        targetLangCode = "ko";
+        break;
+      case "arabic":
+        targetLangCode = "ar";
+        break;
+      case "hindi":
+        targetLangCode = "hi";
+        break;
+      case "russian":
+        targetLangCode = "ru";
+        break;
+      case "vietnamese":
+        targetLangCode = "vi";
+        break;
+      case "ukrainian":
+        targetLangCode = "uk";
+        break;
+      case "indonesian":
+        targetLangCode = "id";
+        break;
       default:
         targetLangCode = "en";
         break;
@@ -113,6 +140,30 @@ export const useSpeechSynthesis = (props?: UseSpeechSynthesisProps) => {
       console.log(`Using voice: ${voice.name} (${voice.lang})`);
     }
     
+    // Explicitly set the language code for the utterance
+    let langCode = "en-US";
+    switch (langToUse.toLowerCase()) {
+      case "spanish":
+        langCode = "es-ES";
+        break;
+      case "french":
+        langCode = "fr-FR";
+        break;
+      case "portuguese":
+        langCode = "pt-PT";
+        break;
+      case "german":
+        langCode = "de-DE";
+        break;
+      case "italian":
+        langCode = "it-IT";
+        break;
+      // Add other languages as needed
+      default:
+        langCode = "en-US";
+    }
+    utteranceRef.current.lang = langCode;
+    
     // Set event handlers
     utteranceRef.current.onstart = () => {
       console.log("Speech synthesis started");
@@ -137,8 +188,21 @@ export const useSpeechSynthesis = (props?: UseSpeechSynthesisProps) => {
       });
     };
     
+    // Set rate and pitch for better speech quality
+    utteranceRef.current.rate = 1.0;
+    utteranceRef.current.pitch = 1.0;
+    
     // Start speaking
-    synthRef.current.speak(utteranceRef.current);
+    try {
+      synthRef.current.speak(utteranceRef.current);
+    } catch (error) {
+      console.error("Error starting speech synthesis:", error);
+      toast({
+        title: t("error"),
+        description: t("audioPlaybackError"),
+        variant: "destructive",
+      });
+    }
   };
 
   const cancel = () => {

@@ -18,7 +18,9 @@ export const getLanguageDisplayName = (language: string): string => {
     'hindi': 'Hindi',
     'vietnamese': 'Vietnamese',
     'ukrainian': 'Ukrainian',
-    'indonesian': 'Indonesian'
+    'indonesian': 'Indonesian',
+    'german': 'German',
+    'italian': 'Italian'
   };
   
   return languageMap[language.toLowerCase()] || language;
@@ -60,7 +62,9 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'hindi': 'हिन्दी',
     'vietnamese': 'Tiếng Việt',
     'ukrainian': 'Українська',
-    'indonesian': 'Bahasa Indonesia'
+    'indonesian': 'Bahasa Indonesia',
+    'german': 'Deutsch',
+    'italian': 'Italiano'
   };
   
   return nativeNameMap[language.toLowerCase()] || getLanguageDisplayName(language);
@@ -76,10 +80,23 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
     return ['english'];
   }
   
-  // Limit to Spanish and French for English speakers
-  const commonLanguages = ['spanish', 'french'];
+  // Active languages for English speakers
+  const activeLanguages = ['spanish'];
   
-  return commonLanguages;
+  // Display these languages but mark them as under development
+  const developmentLanguages = ['french', 'portuguese', 'german', 'italian'];
+  
+  return [...activeLanguages, ...developmentLanguages];
+};
+
+/**
+ * Checks if a language is under development
+ * @param language The language code to check
+ * @returns Boolean indicating if the language is under development
+ */
+export const isLanguageUnderDevelopment = (language: string): boolean => {
+  const developmentLanguages = ['french', 'portuguese', 'german', 'italian'];
+  return developmentLanguages.includes(language.toLowerCase());
 };
 
 /**
