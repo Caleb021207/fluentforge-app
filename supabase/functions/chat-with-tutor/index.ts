@@ -4,10 +4,116 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY') || "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";
 
+// Connection Pool for OpenAI requests
+class ConnectionPool {
+  private activeConnections = 0;
+  private maxConnections = 50; // Adjust based on load testing
+  private waitingQueue: { resolve: (value: boolean) => void; reject: (reason: Error) => void }[] = [];
+  
+  async acquire(): Promise<boolean> {
+    if (this.activeConnections < this.maxConnections) {
+      this.activeConnections++;
+      return true;
+    }
+    
+    return new Promise((resolve, reject) => {
+      this.waitingQueue.push({ resolve, reject });
+      setTimeout(() => {
+        // If we can't get a connection in 10 seconds, reject
+        const index = this.waitingQueue.findIndex(item => item.resolve === resolve);
+        if (index >= 0) {
+          this.waitingQueue.splice(index, 1);
+          reject(new Error("Connection pool timeout"));
+        }
+      }, 10000);
+    });
+  }
+  
+  release(): void {
+    if (this.waitingQueue.length > 0) {
+      const next = this.waitingQueue.shift();
+      if (next) {
+        next.resolve(true);
+      }
+    } else {
+      this.activeConnections--;
+    }
+  }
+}
+
+// Request rate limiting
+class RateLimiter {
+  private requests: Record<string, number[]> = {};
+  private windowMs = 60000; // 1 minute window
+  private maxRequests = 30; // 30 requests per minute per user
+  
+  isRateLimited(userId: string): boolean {
+    const now = Date.now();
+    if (!this.requests[userId]) {
+      this.requests[userId] = [];
+    }
+    
+    // Remove expired timestamps
+    this.requests[userId] = this.requests[userId].filter(
+      timestamp => now - timestamp < this.windowMs
+    );
+    
+    // Check if maxRequests reached
+    if (this.requests[userId].length >= this.maxRequests) {
+      return true;
+    }
+    
+    // Add current request timestamp
+    this.requests[userId].push(now);
+    return false;
+  }
+}
+
+// Simple in-memory cache for translations
+class TranslationCache {
+  private cache: Map<string, { content: string, timestamp: number }> = new Map();
+  private ttl = 3600000; // 1 hour cache TTL
+  
+  get(key: string): string | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+    
+    // Check if entry is expired
+    if (Date.now() - entry.timestamp > this.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return entry.content;
+  }
+  
+  set(key: string, content: string): void {
+    this.cache.set(key, { content, timestamp: Date.now() });
+    
+    // Clear old entries periodically to avoid memory leaks
+    if (this.cache.size > 1000) {
+      this.pruneExpiredEntries();
+    }
+  }
+  
+  private pruneExpiredEntries(): void {
+    const now = Date.now();
+    this.cache.forEach((entry, key) => {
+      if (now - entry.timestamp > this.ttl) {
+        this.cache.delete(key);
+      }
+    });
+  }
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const connectionPool = new ConnectionPool();
+const rateLimiter = new RateLimiter();
+const translationCache = new TranslationCache();
 
 // CIPA/FERPA Compliance Content Filters
 const cipaFilteredTerms = [
@@ -72,6 +178,20 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
     
+    // Rate limiting check
+    if (rateLimiter.isRateLimited(userId)) {
+      return new Response(
+        JSON.stringify({ 
+          error: "Rate limit exceeded. Please try again later.",
+          details: "Too many requests in a short period of time."
+        }),
+        { 
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
     // CIPA Compliance: Check for prohibited content in the message
     const containsProhibited = containsProhibitedContent(message);
     let safeMessage = message;
@@ -93,184 +213,232 @@ serve(async (req) => {
       return await handleTranslationRequest(safeMessage, userLanguage);
     }
 
-    // Determine if user is learning English or another language based on their native language
-    const isLearningEnglish = userLanguage !== 'english';
-    const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
-    const nativeLanguage = getUserNativeLanguage(userLanguage);
-    
-    // Add CIPA/FERPA compliance instructions to tutor
-    const cipaFerpaCompliance = `
-    IMPORTANT COMPLIANCE REQUIREMENTS:
-    1. Never request or store personal identifying information (names, addresses, phone numbers, etc).
-    2. Never use inappropriate language, discuss adult topics, or provide content unsuitable for K-12 students.
-    3. All explanations must be appropriate for educational contexts and classroom settings.
-    4. Stay focused on language learning without sharing non-educational content.
-    `;
-    
-    // Universal tutor instructions for all language combinations
-    const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
-
-PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
-
-${cipaFerpaCompliance}
-
-You MUST strictly follow these rules:
-
-1. **Only use grammar, vocabulary, and sentence structures appropriate to an intermediate level.**
-2. **Do not correct the user unless they specifically ask.**
-3. **Prioritize keeping the conversation flowing.** Ask questions, be friendly, and respond naturally.
-4. **Stay in the target language (${targetLanguage}) unless the user asks for clarification in their native language (${nativeLanguage}).**
-5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
-
-IMPORTANT: ALWAYS provide a translation of your response in the user's native language (${nativeLanguage}).
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
-
-Keep responses friendly but concise, focused on language learning.
-Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
-You should never converse with the user in a manner that is not appropriate for a k-12 classroom setting.
-You should ask questions to continue the conversation if it ever seems to stall.`;
-
-    // Create an initial hidden message to ensure the AI behaves correctly from the start
-    const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions. ALWAYS provide a translation of your response in the user's native language.";
-
-    const systemMessage = requestType === 'assessment' 
-      ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
-         - Reading proficiency
-         - Writing ability
-         - Speaking competency
-         - Listening comprehension
-         Also provide an overall estimated proficiency level (A1-C2).
-         Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.
-         
-         ${cipaFerpaCompliance}`
-      : tutorInstructions;
-
-    // Add the hidden prompt and response only for regular conversations, not assessments
-    let messages = [];
-    if (requestType === 'assessment') {
-      messages = [
-        { role: 'system', content: systemMessage },
-        { role: 'user', content: safeMessage }
-      ];
-    } else {
-      messages = [
-        { role: 'system', content: systemMessage },
-        { role: 'user', content: initialHiddenPrompt },
-        { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going. I'll always provide translations." },
-        { role: 'user', content: safeMessage }
-      ];
+    // Performance optimization: Acquire connection from pool
+    try {
+      await connectionPool.acquire();
+    } catch (error) {
+      console.error('Connection pool error:', error);
+      return new Response(
+        JSON.stringify({ 
+          error: "Service is busy. Please try again later.",
+          details: "Too many concurrent requests."
+        }),
+        { 
+          status: 503,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
+    
+    try {
+      // Determine if user is learning English or another language based on their native language
+      const isLearningEnglish = userLanguage !== 'english';
+      const targetLanguage = isLearningEnglish ? 'English' : 'Spanish';
+      const nativeLanguage = getUserNativeLanguage(userLanguage);
+      
+      // Add CIPA/FERPA compliance instructions to tutor
+      const cipaFerpaCompliance = `
+      IMPORTANT COMPLIANCE REQUIREMENTS:
+      1. Never request or store personal identifying information (names, addresses, phone numbers, etc).
+      2. Never use inappropriate language, discuss adult topics, or provide content unsuitable for K-12 students.
+      3. All explanations must be appropriate for educational contexts and classroom settings.
+      4. Stay focused on language learning without sharing non-educational content.
+      `;
+      
+      // Universal tutor instructions for all language combinations
+      const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${targetLanguage} through natural, realistic conversation. 
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
+  PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
 
-    const data = await response.json();
-    console.log('OpenAI API Response:', data);
+  ${cipaFerpaCompliance}
 
-    if (!response.ok) {
-      if (data.error?.code === 'insufficient_quota') {
-        throw new Error('OpenAI API quota exceeded. Please check your billing details.');
+  You MUST strictly follow these rules:
+
+  1. **Only use grammar, vocabulary, and sentence structures appropriate to an intermediate level.**
+  2. **Do not correct the user unless they specifically ask.**
+  3. **Prioritize keeping the conversation flowing.** Ask questions, be friendly, and respond naturally.
+  4. **Stay in the target language (${targetLanguage}) unless the user asks for clarification in their native language (${nativeLanguage}).**
+  5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
+
+  IMPORTANT: ALWAYS provide a translation of your response in the user's native language (${nativeLanguage}).
+  Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
+
+  Keep responses friendly but concise, focused on language learning.
+  Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
+  You should never converse with the user in a manner that is not appropriate for a k-12 classroom setting.
+  You should ask questions to continue the conversation if it ever seems to stall.`;
+
+      // Create an initial hidden message to ensure the AI behaves correctly from the start
+      const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions. ALWAYS provide a translation of your response in the user's native language.";
+
+      const systemMessage = requestType === 'assessment' 
+        ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : 'Spanish'} language skills in the following areas:
+           - Reading proficiency
+           - Writing ability
+           - Speaking competency
+           - Listening comprehension
+           Also provide an overall estimated proficiency level (A1-C2).
+           Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.
+           
+           ${cipaFerpaCompliance}`
+        : tutorInstructions;
+
+      // Add the hidden prompt and response only for regular conversations, not assessments
+      let messages = [];
+      if (requestType === 'assessment') {
+        messages = [
+          { role: 'system', content: systemMessage },
+          { role: 'user', content: safeMessage }
+        ];
+      } else {
+        messages = [
+          { role: 'system', content: systemMessage },
+          { role: 'user', content: initialHiddenPrompt },
+          { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to keep the conversation going. I'll always provide translations." },
+          { role: 'user', content: safeMessage }
+        ];
       }
-      throw new Error(data.error?.message || 'Failed to get response from OpenAI');
-    }
 
-    if (!data.choices?.[0]?.message?.content) {
-      throw new Error('Invalid response structure from OpenAI');
-    }
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: messages,
+          temperature: 0.7,
+          max_tokens: 500,
+        }),
+      });
 
-    if (requestType === 'assessment') {
-      try {
-        const assessment = JSON.parse(data.choices[0].message.content);
-        console.log('Formatted assessment:', assessment);
-        return new Response(
-          JSON.stringify({ assessment }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      } catch (error) {
-        console.error('Error parsing assessment JSON:', error);
-        throw new Error('Failed to parse assessment response');
+      const data = await response.json();
+      console.log('OpenAI API Response:', data);
+
+      if (!response.ok) {
+        if (data.error?.code === 'insufficient_quota') {
+          throw new Error('OpenAI API quota exceeded. Please check your billing details.');
+        }
+        throw new Error(data.error?.message || 'Failed to get response from OpenAI');
       }
-    }
 
-    let content = data.choices[0].message.content;
-    let translation = '';
+      if (!data.choices?.[0]?.message?.content) {
+        throw new Error('Invalid response structure from OpenAI');
+      }
 
-    // Extract translation if available
-    if (content.includes('\nTranslation:')) {
-      [content, translation] = content.split('\nTranslation:');
-      content = content.trim();
-      translation = translation.trim();
-    }
+      if (requestType === 'assessment') {
+        try {
+          const assessment = JSON.parse(data.choices[0].message.content);
+          console.log('Formatted assessment:', assessment);
+          return new Response(
+            JSON.stringify({ assessment }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        } catch (error) {
+          console.error('Error parsing assessment JSON:', error);
+          throw new Error('Failed to parse assessment response');
+        }
+      }
 
-    // CIPA Compliance: Filter response content if needed
-    if (containsProhibitedContent(content)) {
-      console.log('Response contains prohibited content, filtering before sending');
-      content = filterCipaProhibitedContent(content);
-    }
-    
-    if (translation && containsProhibitedContent(translation)) {
-      console.log('Translation contains prohibited content, filtering before sending');
-      translation = filterCipaProhibitedContent(translation);
-    }
+      let content = data.choices[0].message.content;
+      let translation = '';
 
-    // If no translation was provided, make a second API call to translate the response
-    if (!translation || translation === '') {
-      console.log('No translation provided, getting one now...');
-      try {
-        const translationResponse = await getTranslation(content, userLanguage);
-        if (translationResponse.ok) {
-          const translationData = await translationResponse.json();
-          if (translationData.choices?.[0]?.message?.content) {
-            translation = translationData.choices[0].message.content.trim();
-            
-            // CIPA Compliance: Filter translation if needed
-            if (containsProhibitedContent(translation)) {
-              console.log('Generated translation contains prohibited content, filtering');
-              translation = filterCipaProhibitedContent(translation);
+      // Extract translation if available
+      if (content.includes('\nTranslation:')) {
+        [content, translation] = content.split('\nTranslation:');
+        content = content.trim();
+        translation = translation.trim();
+      }
+
+      // CIPA Compliance: Filter response content if needed
+      if (containsProhibitedContent(content)) {
+        console.log('Response contains prohibited content, filtering before sending');
+        content = filterCipaProhibitedContent(content);
+      }
+      
+      if (translation && containsProhibitedContent(translation)) {
+        console.log('Translation contains prohibited content, filtering before sending');
+        translation = filterCipaProhibitedContent(translation);
+      }
+
+      // If no translation was provided, make a second API call to translate the response
+      if (!translation || translation === '') {
+        console.log('No translation provided, getting one now...');
+        
+        // Check if we have this translation cached
+        const cacheKey = `${content}:${userLanguage}`;
+        const cachedTranslation = translationCache.get(cacheKey);
+        
+        if (cachedTranslation) {
+          console.log('Using cached translation');
+          translation = cachedTranslation;
+        } else {
+          try {
+            const translationResponse = await getTranslation(content, userLanguage);
+            if (translationResponse.ok) {
+              const translationData = await translationResponse.json();
+              if (translationData.choices?.[0]?.message?.content) {
+                translation = translationData.choices[0].message.content.trim();
+                
+                // Cache the translation for future use
+                translationCache.set(cacheKey, translation);
+                
+                // CIPA Compliance: Filter translation if needed
+                if (containsProhibitedContent(translation)) {
+                  console.log('Generated translation contains prohibited content, filtering');
+                  translation = filterCipaProhibitedContent(translation);
+                }
+              }
             }
+          } catch (error) {
+            console.error('Error getting translation:', error);
+            // Continue even if translation fails
           }
         }
-      } catch (error) {
-        console.error('Error getting translation:', error);
-        // Continue even if translation fails
       }
-    }
 
-    // For Hindi, verify that the translation is actually in Hindi using script detection
-    if (userLanguage === 'hindi' && !containsDevanagariScript(translation)) {
-      console.log('Hindi translation does not contain Devanagari script, getting proper Hindi translation...');
-      try {
-        const hindiTranslation = await getSpecificLanguageTranslation(content, 'hindi', 'Devanagari');
-        translation = hindiTranslation;
+      // For Hindi, verify that the translation is actually in Hindi using script detection
+      if (userLanguage === 'hindi' && !containsDevanagariScript(translation)) {
+        console.log('Hindi translation does not contain Devanagari script, getting proper Hindi translation...');
         
-        // CIPA Compliance: Filter Hindi translation if needed
-        if (containsProhibitedContent(translation)) {
-          console.log('Hindi translation contains prohibited content, filtering');
-          translation = filterCipaProhibitedContent(translation);
+        // Check if we have this Hindi translation cached
+        const hindiCacheKey = `hindi:${content}`;
+        const cachedHindiTranslation = translationCache.get(hindiCacheKey);
+        
+        if (cachedHindiTranslation) {
+          console.log('Using cached Hindi translation');
+          translation = cachedHindiTranslation;
+        } else {
+          try {
+            const hindiTranslation = await getSpecificLanguageTranslation(content, 'hindi', 'Devanagari');
+            translation = hindiTranslation;
+            
+            // Cache the Hindi translation
+            translationCache.set(hindiCacheKey, translation);
+            
+            // CIPA Compliance: Filter Hindi translation if needed
+            if (containsProhibitedContent(translation)) {
+              console.log('Hindi translation contains prohibited content, filtering');
+              translation = filterCipaProhibitedContent(translation);
+            }
+          } catch (error) {
+            console.error('Error getting Hindi translation:', error);
+            // Continue even if Hindi translation fails
+          }
         }
-      } catch (error) {
-        console.error('Error getting Hindi translation:', error);
-        // Continue even if Hindi translation fails
       }
+
+      console.log('Formatted response:', { content, translation });
+
+      return new Response(
+        JSON.stringify({ content, translation }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } finally {
+      // Always release the connection back to the pool
+      connectionPool.release();
     }
-
-    console.log('Formatted response:', { content, translation });
-
-    return new Response(
-      JSON.stringify({ content, translation }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
 
   } catch (error) {
     console.error('Error in chat-with-tutor function:', error);

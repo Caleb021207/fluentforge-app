@@ -2,7 +2,11 @@
 project_id = "wfhktxvwlogdnuwdzzri"
 
 [functions.chat-with-gpt]
-verify_jwt = false
+verify_jwt = true
 
 [functions.chat-with-tutor]
+verify_jwt = true
+
+[functions.health-check]
 verify_jwt = false
+
