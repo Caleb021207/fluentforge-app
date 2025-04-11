@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -136,7 +137,16 @@ const VoiceChat = () => {
       'Spanish': 'es-ES',
       'Portuguese': 'pt-PT',
       'French': 'fr-FR',
-      'English': 'en-US'
+      'English': 'en-US',
+      'Japanese': 'ja-JP',
+      'Korean': 'ko-KR',
+      'Mandarin Chinese': 'zh-CN',
+      'Russian': 'ru-RU',
+      'Arabic': 'ar-SA',
+      'Hindi': 'hi-IN',
+      'Vietnamese': 'vi-VN',
+      'Ukrainian': 'uk-UA',
+      'Indonesian': 'id-ID'
     };
     
     return languageCodes[language] || 'en-US';
@@ -212,6 +222,7 @@ const VoiceChat = () => {
         body: { 
           message: text,
           userLanguage: currentLanguage,
+          targetLanguage: practice.toLowerCase(),
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
           requestTranslation: true // Explicitly request translation
@@ -350,7 +361,7 @@ const VoiceChat = () => {
       } else if (practice === "French") {
         targetLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
       } else {
-        targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]); // Default to Spanish
+        targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]); // Default to English if not found
       }
     } else if (currentLanguage === "spanish") {
       nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
@@ -517,7 +528,7 @@ const VoiceChat = () => {
 
   const getPracticeDescription = () => {
     if (currentLanguage === "english") {
-      return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
+      return `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}. The AI will respond to you in ${practice} and help you practice.`;
     } else if (currentLanguage === "spanish") {
       return `Practica tus habilidades de habla en ${getLanguagePair(currentLanguage).practice} con nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en ${getLanguagePair(currentLanguage).practice}. La IA te responderá y te ayudará a practicar.`;
     } else if (currentLanguage === "portuguese") {

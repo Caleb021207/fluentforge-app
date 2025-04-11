@@ -33,7 +33,11 @@ export const getLanguagePair = (currentLanguage: string) => {
   let native = "English";
   let practice = "Spanish";
   
-  if (currentLanguage !== "english") {
+  if (currentLanguage === "english") {
+    const availableTargets = getAvailableTargetLanguages("english");
+    // Default to the first available language if Spanish isn't available
+    practice = getLanguageDisplayName(availableTargets[0] || "spanish");
+  } else if (currentLanguage !== "english") {
     native = getLanguageDisplayName(currentLanguage);
     practice = "English";
   }
@@ -76,7 +80,7 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
     return ['english'];
   }
   
-  // Updated to only include Spanish, Portuguese, and French for English speakers
+  // Updated to include Spanish, Portuguese, and French for English speakers
   const commonLanguages = ['spanish', 'french', 'portuguese'];
   
   return commonLanguages;
