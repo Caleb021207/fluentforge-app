@@ -25,9 +25,13 @@ export const useMessageInput = (targetLanguage?: string) => {
           savedTargetLanguage
         );
         
-        if (redirectRoute !== '/voice-chat') {
-          console.log(`Redirecting to ${redirectRoute} based on language settings`);
-          navigate(redirectRoute);
+        // Only redirect if we're not already on the target route
+        if (redirectRoute !== '/voice-chat' && redirectRoute !== currentPath) {
+          console.log(`Redirecting from useMessageInput to ${redirectRoute} based on language settings`);
+          // Add a short delay to prevent redirection loops
+          setTimeout(() => {
+            navigate(redirectRoute);
+          }, 300);
         }
       }
     }

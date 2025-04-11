@@ -1,16 +1,19 @@
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useNavigate } from "react-router-dom";
-import { getVoiceChatRoute } from "@/utils/languageUtils";
+import { useNavigate, Link } from "react-router-dom";
+import { getVoiceChatRoute, getLanguagePair, getAvailableTargetLanguages } from "@/utils/languageUtils";
+import { Button } from "@/components/ui/button";
 
 const VoiceChat = () => {
-  const { currentLanguage } = useLocalization();
+  const { currentLanguage, t } = useLocalization();
   const navigate = useNavigate();
+  const [isRedirecting, setIsRedirecting] = useState(true);
+  const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
   
   useEffect(() => {
     // Get the saved target language from localStorage
     const savedTargetLanguage = localStorage.getItem("targetLanguage");
+    setAvailableLanguages(getAvailableTargetLanguages(currentLanguage));
     
     if (savedTargetLanguage) {
       // Get appropriate route based on language direction
@@ -21,18 +24,97 @@ const VoiceChat = () => {
       
       if (redirectRoute !== '/voice-chat') {
         console.log(`Redirecting from VoiceChat to ${redirectRoute} based on language settings`);
-        navigate(redirectRoute);
+        // Short timeout to prevent immediate redirect loops
+        const timer = setTimeout(() => {
+          navigate(redirectRoute);
+        }, 500);
+        return () => clearTimeout(timer);
+      } else {
+        // If we end up with the same route, stop trying to redirect
+        setIsRedirecting(false);
       }
+    } else {
+      // No target language set, stop trying to redirect
+      setIsRedirecting(false);
     }
   }, [currentLanguage, navigate]);
 
-  return (
-    <div className="flex items-center justify-center min-h-[50vh]">
+  // Generate language-specific links
+  const renderLanguageOptions = () => {
+    // For English speakers, show options to learn other languages
+    if (currentLanguage === "english") {
+      return (
+        <>
+          <h2 className="text-xl font-semibold mb-4">Choose a language to practice:</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <Link to="/learn-french">
+              <Button variant="outline" className="w-full">Practice French</Button>
+            </Link>
+            <Link to="/learn-portuguese">
+              <Button variant="outline" className="w-full">Practice Portuguese</Button>
+            </Link>
+            {/* Other languages can be added here */}
+          </div>
+        </>
+      );
+    }
+    // For non-English speakers, show option to practice English
+    else if (currentLanguage === "french") {
+      return (
+        <Link to="/french-voice-chat">
+          <Button className="w-full">Practice English (for French speakers)</Button>
+        </Link>
+      );
+    }
+    else if (currentLanguage === "portuguese") {
+      return (
+        <Link to="/portuguese-voice-chat">
+          <Button className="w-full">Practice English (for Portuguese speakers)</Button>
+        </Link>
+      );
+    }
+    // Default case
+    return (
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Redirecting to appropriate voice chat...</h1>
-        <p className="text-gray-600">
-          Please select a language to learn in your settings if you're not automatically redirected.
+        <p className="text-red-500 mb-4">
+          No specific voice chat available for your language combination.
         </p>
+        <Link to="/settings">
+          <Button>Go to Settings</Button>
+        </Link>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[50vh] p-6">
+      <div className="w-full max-w-2xl text-center">
+        {isRedirecting ? (
+          <>
+            <h1 className="text-2xl font-bold mb-4">Redirecting to appropriate voice chat...</h1>
+            <p className="text-gray-600 mb-6">
+              Please wait while we redirect you to the right practice environment.
+            </p>
+            <div className="flex justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-lingua-primary"></div>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold mb-4">Voice Chat Practice</h1>
+            <p className="text-gray-600 mb-8">
+              Please select a language below to practice your speaking skills.
+            </p>
+            
+            {renderLanguageOptions()}
+            
+            <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-md">
+              <p className="text-amber-800 text-sm">
+                Tip: You can change your language settings on the <Link to="/settings" className="underline">settings page</Link>.
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
