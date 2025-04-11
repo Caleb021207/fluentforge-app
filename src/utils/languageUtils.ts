@@ -121,3 +121,55 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
   const pairKey = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
   return supportedPairs.includes(pairKey);
 };
+
+/**
+ * Determines if the user is learning towards or from English
+ * @param nativeLanguage The user's native language
+ * @param targetLanguage The language the user wants to learn
+ * @returns String indicating the learning direction: 'to-english', 'from-english', or null
+ */
+export const getLearningDirection = (nativeLanguage: string, targetLanguage: string): 'to-english' | 'from-english' | null => {
+  const normalizedNative = nativeLanguage.toLowerCase();
+  const normalizedTarget = targetLanguage.toLowerCase();
+  
+  if (normalizedNative === 'english' && normalizedTarget !== 'english') {
+    return 'from-english';
+  } else if (normalizedNative !== 'english' && normalizedTarget === 'english') {
+    return 'to-english';
+  }
+  return null;
+};
+
+/**
+ * Determines the appropriate route based on user's language settings
+ * @param nativeLanguage The user's native language
+ * @param targetLanguage The language the user wants to learn
+ * @returns String representing the route path
+ */
+export const getVoiceChatRoute = (nativeLanguage: string, targetLanguage: string): string => {
+  const direction = getLearningDirection(nativeLanguage, targetLanguage);
+  const normalizedTarget = targetLanguage.toLowerCase();
+  const normalizedNative = nativeLanguage.toLowerCase();
+  
+  if (direction === 'from-english') {
+    // English speaker learning another language
+    if (normalizedTarget === 'french') {
+      return '/learn-french';
+    } else if (normalizedTarget === 'portuguese') {
+      return '/learn-portuguese';
+    } else {
+      return '/voice-chat'; // Default for other languages
+    }
+  } else if (direction === 'to-english') {
+    // Non-English speaker learning English
+    if (normalizedNative === 'french') {
+      return '/french-voice-chat';
+    } else if (normalizedNative === 'portuguese') {
+      return '/portuguese-voice-chat';
+    } else {
+      return '/voice-chat'; // Default for other languages
+    }
+  }
+  
+  return '/voice-chat'; // Default fallback
+};
