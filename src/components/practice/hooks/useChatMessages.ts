@@ -1,13 +1,14 @@
 
 import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
-import { useMessageState, ChatMessage } from "./useMessageState";
+import { useMessageState, type ChatMessage } from "./useMessageState";
 import { useMessageInput } from "./useMessageInput";
 import { useChatMessaging } from "./useChatMessaging";
 import { usePromptGenerator } from "./usePromptGenerator";
 import { isSafeContent, filterContent } from "@/utils/contentSafetyUtils";
 
-export { ChatMessage };
+// Use 'export type' syntax for re-exporting types when isolatedModules is enabled
+export type { ChatMessage };
 
 export const useChatMessages = () => {
   const { currentLanguage, t } = useLocalization();
