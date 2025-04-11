@@ -26,9 +26,9 @@ export {
   setParentalControlsLock,
   getParentalDataConsentStatus,
   setParentalDataConsentStatus,
-  // Legacy exports from parentalControls.ts
-  getSafetyMode as getParentalSafetyMode,
-  setSafetyMode as setParentalSafetyMode
+  // Legacy exports with renamed functions
+  getParentalSafetyMode,
+  setParentalSafetyMode
 } from './parentalControls';
 
 // FERPA compliance

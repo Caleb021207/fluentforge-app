@@ -1,15 +1,14 @@
-
 /**
  * Parental controls utilities
  */
 
-import { getSafetyMode } from './safetyModes';
+import { getSafetyMode, setSafetyMode as setGlobalSafetyMode } from './safetyModes';
 
 /**
  * Gets the current safety mode
  * @deprecated Use getSafetyMode from './safetyModes' instead
  */
-export const getSafetyMode = (): 'strict' | 'standard' => {
+export const getParentalSafetyMode = (): 'strict' | 'standard' => {
   return (localStorage.getItem("safetyMode") as 'strict' | 'standard') || 'standard';
 };
 
@@ -17,7 +16,7 @@ export const getSafetyMode = (): 'strict' | 'standard' => {
  * Sets the safety mode
  * @deprecated Use setSafetyMode from './safetyModes' instead
  */
-export const setSafetyMode = (mode: 'strict' | 'standard'): void => {
+export const setParentalSafetyMode = (mode: 'strict' | 'standard'): void => {
   localStorage.getItem("parentalControlsLocked") !== "true" && localStorage.setItem("safetyMode", mode);
 };
 
