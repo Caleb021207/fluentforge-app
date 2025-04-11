@@ -1,4 +1,3 @@
-
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -27,16 +26,22 @@ export const getLanguageDisplayName = (language: string): string => {
 /**
  * Returns native and practice language pair based on user's selected language
  * @param currentLanguage The user's current UI language
+ * @param specifiedTargetLanguage Optional specified target language
  * @returns Object with native and practice language names
  */
-export const getLanguagePair = (currentLanguage: string) => {
+export const getLanguagePair = (currentLanguage: string, specifiedTargetLanguage?: string) => {
   let native = "English";
   let practice = "Spanish";
   
   if (currentLanguage === "english") {
-    const availableTargets = getAvailableTargetLanguages("english");
-    // Default to the first available language if Spanish isn't available
-    practice = getLanguageDisplayName(availableTargets[0] || "spanish");
+    // If a specific target language is provided, use it
+    if (specifiedTargetLanguage) {
+      practice = getLanguageDisplayName(specifiedTargetLanguage);
+    } else {
+      // Otherwise default to the first available language
+      const availableTargets = getAvailableTargetLanguages("english");
+      practice = getLanguageDisplayName(availableTargets[0] || "spanish");
+    }
   } else if (currentLanguage !== "english") {
     native = getLanguageDisplayName(currentLanguage);
     practice = "English";

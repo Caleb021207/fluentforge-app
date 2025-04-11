@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
+import { getLanguagePair, getLanguageDisplayName } from "@/utils/languageUtils";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
@@ -45,7 +44,10 @@ const VoiceChat = () => {
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  const { practice, native } = getLanguagePair(currentLanguage);
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlTargetLang = urlParams.get('target') || "";
+  const { native, practice } = getLanguagePair(currentLanguage, urlTargetLang);
 
   useEffect(() => {
     if (conversationEndRef.current) {
