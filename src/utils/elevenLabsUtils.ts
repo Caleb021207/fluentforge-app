@@ -1,3 +1,4 @@
+
 import { useConversation } from '@11labs/react';
 
 // Configuration for the ElevenLabs agents
@@ -14,6 +15,9 @@ export const RUSSIAN_TUTOR_AGENT_ID = 'rlHSjx9Y19IqjWTspVRq'; // English tutor f
 export const UKRAINIAN_TUTOR_AGENT_ID = 'eu1E63tLoKFYPB28lWks'; // English tutor for Ukrainian speakers
 export const HINDI_TUTOR_AGENT_ID = 'KZaHLSD2sG8AptT09Feu'; // English tutor for Hindi speakers
 export const INDONESIAN_TUTOR_AGENT_ID = 'n0xawTpIZ6Zojiox0KZ5'; // English tutor for Indonesian speakers
+
+// Updated English Agent ID to use as target language tutor for all English varieties
+export const ENGLISH_VARIETIES_AGENT_ID = 'AOv9JDhkEdMmiU61vHg9';
 
 // Language to agent ID mapping for better maintainability
 const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
@@ -36,7 +40,8 @@ const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
 const TARGET_LANGUAGE_AGENTS: Record<string, string> = {
   "spanish": SPANISH_TUTOR_AGENT_ID,
   "french": FRENCH_TUTOR_AGENT_ID,
-  "portuguese": PORTUGUESE_TUTOR_AGENT_ID
+  "portuguese": PORTUGUESE_TUTOR_AGENT_ID,
+  "english": ENGLISH_VARIETIES_AGENT_ID // Added English as a target language with the new agent ID
 };
 
 /**
@@ -54,6 +59,12 @@ export const getAgentIdForLanguage = (language: string, targetLanguage?: string)
       console.log(`Using tutor for ${normalizedTarget} for ${normalizedLanguage} speaker:`, TARGET_LANGUAGE_AGENTS[normalizedTarget]);
       return TARGET_LANGUAGE_AGENTS[normalizedTarget];
     }
+  }
+  
+  // If target language is English, use the English varieties agent
+  if (targetLanguage?.toLowerCase() === 'english') {
+    console.log(`Using English varieties tutor for ${normalizedLanguage} speaker:`, ENGLISH_VARIETIES_AGENT_ID);
+    return ENGLISH_VARIETIES_AGENT_ID;
   }
   
   // General case
