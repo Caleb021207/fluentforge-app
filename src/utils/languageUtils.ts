@@ -42,3 +42,67 @@ export const getLanguagePair = (currentLanguage: string) => {
   
   return { native, practice };
 };
+
+/**
+ * Returns the native language display name in its native script
+ * @param language The language code
+ * @returns The native display name for the language
+ */
+export const getNativeLanguageDisplayName = (language: string): string => {
+  // Returns language names in their native scripts
+  const nativeNameMap: Record<string, string> = {
+    'english': 'English',
+    'spanish': 'Español',
+    'portuguese': 'Português',
+    'french': 'Français',
+    'japanese': '日本語',
+    'korean': '한국어',
+    'mandarin': '中文',
+    'russian': 'Русский',
+    'arabic': 'العربية',
+    'hindi': 'हिन्दी',
+    'vietnamese': 'Tiếng Việt',
+    'ukrainian': 'Українська',
+    'indonesian': 'Bahasa Indonesia'
+  };
+  
+  return nativeNameMap[language.toLowerCase()] || getLanguageDisplayName(language);
+};
+
+/**
+ * Returns available target languages based on native language
+ * @param nativeLanguage The user's native language
+ * @returns Array of available target language codes
+ */
+export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
+  // Default available languages for most users
+  const commonLanguages = ['english', 'spanish', 'french', 'mandarin', 'japanese'];
+  
+  // Remove the native language from available targets
+  return commonLanguages.filter(lang => lang !== nativeLanguage.toLowerCase());
+};
+
+/**
+ * Checks if study materials are available for a language pair
+ * @param nativeLanguage The user's native language
+ * @param targetLanguage The language the user wants to learn
+ * @returns Boolean indicating if study materials are available
+ */
+export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
+  // Common language pairs with full study materials
+  const supportedPairs = [
+    'english-spanish',
+    'english-french',
+    'spanish-english',
+    'portuguese-english',
+    'french-english',
+    'japanese-english',
+    'korean-english',
+    'mandarin-english',
+    'russian-english',
+    'arabic-english'
+  ];
+  
+  const pairKey = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
+  return supportedPairs.includes(pairKey);
+};
