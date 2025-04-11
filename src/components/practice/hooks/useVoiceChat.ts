@@ -58,6 +58,9 @@ export const useVoiceChat = (targetLanguage?: string) => {
     endVoiceConversation,
     isConversationActive,
     isSpeaking,
+    // Add a voiceChatTimeRemaining property with a null value
+    // as it doesn't exist in this hook but is expected by Practice.tsx
+    voiceChatTimeRemaining: null,
     conversation: {
       isSpeaking
     }

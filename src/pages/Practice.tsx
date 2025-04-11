@@ -40,7 +40,8 @@ const Practice = () => {
   } = useChatMessages(targetLanguage);
   
   const {
-    voiceChatTimeRemaining,
+    // Remove the reference to voiceChatTimeRemaining since we're not using it
+    // voiceChatTimeRemaining,
     startVoiceConversation,
     endVoiceConversation,
     isConversationActive
