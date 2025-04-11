@@ -11,6 +11,7 @@ import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog
 import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
 import { useLocalization } from "@/context/LocalizationContext";
 import { needsAgeVerification, getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
+import { hasStudyMaterials } from "@/utils/languageUtils";
 import { Shield, BookOpen } from "lucide-react";
 
 const Index = () => {
@@ -26,7 +27,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("");
-  const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
+  const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -63,10 +64,11 @@ const Index = () => {
 
   useEffect(() => {
     if (nativeLanguage && targetLanguage) {
-      setHasStudyMaterials(true);
+      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
+      setStudyMaterialsAvailable(materialsAvailable);
       
       sessionStorage.setItem("languagePair", `${nativeLanguage}-${targetLanguage}`);
-      sessionStorage.setItem("hasStudyMaterials", "true");
+      sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
     }
   }, [nativeLanguage, targetLanguage]);
 
@@ -133,7 +135,9 @@ const Index = () => {
       
       const languagePair = `${nativeLanguage}-${targetLanguage}`;
       sessionStorage.setItem("languagePair", languagePair);
-      sessionStorage.setItem("hasStudyMaterials", "true");
+      
+      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
+      sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
       
       setCurrentLanguage(nativeLanguage);
       
@@ -184,7 +188,7 @@ const Index = () => {
             targetLanguage={targetLanguage}
             setNativeLanguage={setNativeLanguage}
             setTargetLanguage={setTargetLanguage}
-            hasStudyMaterials={hasStudyMaterials}
+            hasStudyMaterials={studyMaterialsAvailable}
             handleLanguageSelection={handleLanguageSelection}
           />
           

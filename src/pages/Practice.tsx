@@ -10,6 +10,25 @@ import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 
 const Practice = () => {
   const { currentLanguage } = useLocalization();
+  const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
+  
+  useEffect(() => {
+    // Get the user's target language from localStorage
+    const savedTargetLanguage = localStorage.getItem("targetLanguage");
+    const savedNativeLanguage = localStorage.getItem("nativeLanguage");
+    
+    if (savedNativeLanguage && savedTargetLanguage) {
+      setTargetLanguage(savedTargetLanguage);
+    } else {
+      // Fallback to default language pairing
+      if (currentLanguage === "english") {
+        setTargetLanguage("spanish");
+      } else {
+        setTargetLanguage("english");
+      }
+    }
+  }, [currentLanguage]);
+  
   const {
     messages,
     input,
@@ -27,15 +46,9 @@ const Practice = () => {
     isConversationActive
   } = useVoiceChat();
 
-  const targetLanguage = currentLanguage === "english" ? "Spanish" : 
-                        currentLanguage === "french" ? "English" :
-                        currentLanguage === "japanese" ? "English" :
-                        currentLanguage === "hindi" ? "English" :
-                        currentLanguage === "indonesian" ? "English" : "English";
-
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <PracticeHeader />
+      <PracticeHeader targetLanguage={targetLanguage} />
 
       <ChatContainer
         messages={messages}
@@ -49,9 +62,10 @@ const Practice = () => {
       <PracticePromptButton
         onClick={sendLanguageLearningPrompt}
         isLoading={isLoading}
+        targetLanguage={targetLanguage}
       />
 
-      <PracticeGuide />
+      <PracticeGuide targetLanguage={targetLanguage} />
     </div>
   );
 };
