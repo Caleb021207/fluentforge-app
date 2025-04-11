@@ -51,6 +51,7 @@ const uiElementsTranslations: TranslationRecord = {
   sort: "Sort",
   all: "All",
   none: "None",
+  startConversationIn: "Start Conversation in {{language}}",
   
   // Form related
   yourName: "Your Name",

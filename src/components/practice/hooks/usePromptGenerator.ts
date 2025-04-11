@@ -1,87 +1,35 @@
 
 import { useLocalization } from "@/context/LocalizationContext";
-import { useState, useEffect } from "react";
+import { getLanguagePair } from "@/utils/languageUtils";
 
 export const usePromptGenerator = () => {
   const { currentLanguage } = useLocalization();
-  const [targetLanguage, setTargetLanguage] = useState<string | null>(null);
-  
-  useEffect(() => {
-    // Get the user's target language from localStorage
-    const savedTargetLanguage = localStorage.getItem("targetLanguage");
-    if (savedTargetLanguage) {
-      setTargetLanguage(savedTargetLanguage);
-    }
-  }, []);
-  
-  const generateLanguageLearningPrompt = (specificTargetLanguage?: string): string => {
-    const effectiveTarget = specificTargetLanguage || targetLanguage;
-    let prompt = "";
-    
-    // English speaker learning another language
-    if (currentLanguage === "english" && effectiveTarget) {
-      switch (effectiveTarget.toLowerCase()) {
-        case "spanish":
-          return "¡Hola! Quiero practicar español contigo.";
-        case "french":
-          return "Bonjour! Je veux pratiquer le français avec toi.";
-        case "portuguese":
-          return "Olá! Eu quero praticar português com você.";
-        case "mandarin":
-          return "你好！我想和你练习中文。";
-        case "japanese":
-          return "こんにちは！日本語を練習したいです。";
-        case "korean":
-          return "안녕하세요! 한국어를 연습하고 싶어요.";
-        case "russian":
-          return "Привет! Я хочу попрактиковаться в русском с тобой.";
-        case "ukrainian":
-          return "Привіт! Я хочу попрактикуватися в українській з тобою.";
-        case "arabic":
-          return "مرحبا! أريد أن أتدرب على اللغة العربية معك.";
-        case "hindi":
-          return "नमस्ते! मैं आपके साथ हिंदी का अभ्यास करना चाहता हूँ।";
-        case "vietnamese":
-          return "Xin chào! Tôi muốn thực hành tiếng Việt với bạn.";
-        case "indonesian":
-          return "Halo! Saya ingin berlatih bahasa Indonesia dengan Anda.";
-        default:
-          return "Hello! I want to practice " + effectiveTarget + " with you!";
-      }
-    } 
-    // Non-English speakers learning English
-    else {
-      switch (currentLanguage) {
-        case "spanish":
-          return "Hello! I want to practice English with you!";
-        case "portuguese":
-          return "Hello! I want to practice English with you!";
-        case "korean":
-          return "Hello! I want to practice English with you!";
-        case "arabic":
-          return "Hello! I want to practice English with you!";
-        case "mandarin":
-          return "Hello! I want to practice English with you!";
-        case "vietnamese":
-          return "Hello! I want to practice English with you!";
-        case "french":
-          return "Hello! I want to practice English with you!";
-        case "japanese":
-          return "こんにちは！英語を練習したいと思います！";
-        case "russian":
-          return "Здравствуйте! Я хочу попрактиковаться в английском с вами!";
-        case "ukrainian":
-          return "Привіт! Я хочу попрактикуватися в англійській з вами!";
-        case "hindi":
-          return "नमस्ते! मैं आपके साथ अंग्रेजी का अभ्यास करना चाहता हूँ!";
-        case "indonesian":
-          return "Halo! Saya ingin berlatih bahasa Inggris dengan Anda!";
-        default:
-          return "Hello! I want to practice English with you!";
-      }
-    }
 
-    return prompt;
+  const generateLanguageLearningPrompt = () => {
+    const { native, practice } = getLanguagePair(currentLanguage);
+    
+    // For English speakers, suggest different languages based on their profile
+    if (currentLanguage === "english") {
+      return `Hello! I'd like to practice ${practice}. Can you help me with a conversation?`;
+    }
+    
+    // For non-English speakers learning English
+    const promptsByLanguage: Record<string, string> = {
+      spanish: "¡Hola! Me gustaría practicar inglés. ¿Podemos tener una conversación?",
+      portuguese: "Olá! Eu gostaria de praticar inglês. Podemos ter uma conversa?",
+      korean: "안녕하세요! 영어를 연습하고 싶습니다. 대화를 나눌 수 있을까요?",
+      arabic: "مرحبًا! أود أن أمارس اللغة الإنجليزية. هل يمكننا إجراء محادثة؟",
+      mandarin: "你好！我想练习英语。我们可以进行对话吗？",
+      vietnamese: "Xin chào! Tôi muốn thực hành tiếng Anh. Chúng ta có thể trò chuyện không?",
+      japanese: "こんにちは！英語を練習したいです。会話をしていただけますか？",
+      ukrainian: "Привіт! Я хотів би попрактикувати англійську. Можемо поговорити?",
+      russian: "Привет! Я хотел бы попрактиковаться в английском. Можем ли мы поговорить?",
+      hindi: "नमस्ते! मैं अंग्रेज़ी का अभ्यास करना चाहूंगा। क्या हम बातचीत कर सकते हैं?",
+      indonesian: "Halo! Saya ingin berlatih bahasa Inggris. Bisakah kita mengobrol?",
+      french: "Bonjour! J'aimerais pratiquer l'anglais. Pouvons-nous avoir une conversation?"
+    };
+    
+    return promptsByLanguage[currentLanguage] || `Hello, I would like to practice ${practice}.`;
   };
 
   return {

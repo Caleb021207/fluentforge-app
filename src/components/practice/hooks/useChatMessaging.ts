@@ -24,7 +24,8 @@ export const useChatMessaging = () => {
         "language_practice"
       );
       
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+      // Use chat-with-gpt endpoint instead of chat-with-tutor which is having issues
+      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: message,
           userLanguage: currentLanguage,
