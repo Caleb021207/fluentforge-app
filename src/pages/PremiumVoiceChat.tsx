@@ -7,6 +7,11 @@ import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { getLanguagePair } from "@/utils/languageUtils";
+import LoginPrompt from "@/components/premium-voice/LoginPrompt";
+import PageHeader from "@/components/premium-voice/PageHeader";
+import CooldownMessage from "@/components/premium-voice/CooldownMessage";
+import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
+import BenefitsList from "@/components/premium-voice/BenefitsList";
 
 const PremiumVoiceChat = () => {
   const [isRecording, setIsRecording] = useState(false);
