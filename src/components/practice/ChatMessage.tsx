@@ -31,10 +31,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
   const safeContent = filterContent(content);
   const safeTranslation = translation ? filterContent(translation) : "";
   
-  // Check for potentially unsafe content
-  const isContentSafe = isSafeContent(content);
-  const isTranslationSafe = translation ? isSafeContent(translation) : true;
-  
   // Determine if translation should be shown:
   // 1. If user's language is in the list of languages that always show translations
   // 2. OR if the translation exists and is not empty
