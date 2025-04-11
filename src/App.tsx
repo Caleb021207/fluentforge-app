@@ -7,8 +7,7 @@ import Practice from "@/pages/Practice";
 import NotFound from "@/pages/NotFound";
 import ExampleData from "@/pages/ExampleData";
 import AdminDashboard from "@/pages/AdminDashboard";
-import VoiceChat from "@/pages/VoiceChat";
-import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
+import VoiceChatRouter from "@/pages/VoiceChatRouter";
 import PremiumVoiceRouter from "@/pages/PremiumVoiceRouter";
 import Settings from "@/pages/Settings";
 import SafetyPolicy from "@/pages/SafetyPolicy";
@@ -30,7 +29,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/practice" element={<Practice />} />
-              <Route path="/voice-chat" element={<VoiceChat />} />
+              <Route path="/voice-chat" element={<VoiceChatRouter />} />
               <Route path="/premium-voice" element={<PremiumVoiceRouter />} />
               <Route path="/example-data" element={<ExampleData />} />
               <Route path="/admin" element={<AdminDashboard />} />
