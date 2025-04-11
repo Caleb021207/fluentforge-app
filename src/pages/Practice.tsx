@@ -40,12 +40,10 @@ const Practice = () => {
   } = useChatMessages(targetLanguage);
   
   const {
-    // Remove the reference to voiceChatTimeRemaining since we're not using it
-    // voiceChatTimeRemaining,
     startVoiceConversation,
     endVoiceConversation,
     isConversationActive
-  } = useVoiceChat();
+  } = useVoiceChat(targetLanguage);
 
   return (
     <div className="max-w-4xl mx-auto p-4">

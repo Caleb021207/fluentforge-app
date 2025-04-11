@@ -167,19 +167,7 @@ export const useElevenLabsAgent = (language: string = 'english', targetLanguage?
   
   return {
     startAgent,
-    stopAgent: async () => {
-      try {
-        if (isConversationActive()) {
-          await conversation.endSession();
-          console.log("Successfully ended ElevenLabs session");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("Error stopping ElevenLabs agent:", error);
-        return false;
-      }
-    },
+    stopAgent,
     isConnected: isConversationActive(),
     isSpeaking: conversation.isSpeaking
   };

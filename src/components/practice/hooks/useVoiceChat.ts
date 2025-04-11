@@ -41,6 +41,7 @@ export const useVoiceChat = (targetLanguage?: string) => {
   }, []);
   
   const startVoiceConversation = async () => {
+    console.log(`Starting voice conversation with language: ${currentLanguage}, target: ${targetLanguage || 'default'}`);
     return await startAgent();
   };
   
