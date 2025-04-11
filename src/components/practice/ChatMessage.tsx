@@ -41,6 +41,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
   const showTranslation = (translation && translation.trim() !== "") || 
     showTranslationLanguages.includes(currentLanguage);
   
+  const wasContentFiltered = !isContentSafe || !isTranslationSafe;
+  
   return (
     <div
       className={`flex ${
@@ -54,7 +56,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation })
             : "bg-gray-100"
         }`}
       >
-        {(!isContentSafe || !isTranslationSafe) && (
+        {wasContentFiltered && (
           <div className="mb-2 p-1 bg-yellow-100 rounded text-yellow-700 text-xs flex items-center">
             <AlertTriangle size={12} className="mr-1" />
             <span>Some content was filtered for safety</span>
