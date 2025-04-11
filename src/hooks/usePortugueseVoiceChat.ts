@@ -23,7 +23,7 @@ export const usePortugueseVoiceChat = () => {
   const cefrLevel = 'B1';
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
-  const { t } = useLocalization();
+  const { t, setCurrentLanguage } = useLocalization();
   
   // For Portuguese speakers learning English
   const native = "Portuguese";
@@ -31,8 +31,11 @@ export const usePortugueseVoiceChat = () => {
   
   // Set this to true to ensure setCurrentLanguage is called with "portuguese"
   useEffect(() => {
+    setCurrentLanguage("portuguese");
     localStorage.setItem("currentLanguage", "portuguese");
-  }, []);
+    localStorage.setItem("nativeLanguage", "portuguese");
+    localStorage.setItem("targetLanguage", "english");
+  }, [setCurrentLanguage]);
 
   const clearConversation = () => {
     setConversationHistory([]);
@@ -60,6 +63,13 @@ export const usePortugueseVoiceChat = () => {
     setConversationHistory(prev => [...prev, userMessage]);
     
     try {
+      console.log("Sending message to chat-with-gpt function:", {
+        message: text,
+        userLanguage: 'portuguese',
+        targetLanguage: 'english',
+        cefrLevel: cefrLevel
+      });
+      
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: text,
@@ -72,7 +82,12 @@ export const usePortugueseVoiceChat = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase function error:", error);
+        throw error;
+      }
+      
+      console.log("Received response from chat-with-gpt:", data);
       
       const content = data.content || data.reply || "";
       let translationText = data.translation || "";

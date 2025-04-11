@@ -10,15 +10,24 @@ export const useMediaRecording = (
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [isRecording, setIsRecording] = useState(false);
+  const [lastTranscriptTime, setLastTranscriptTime] = useState<number>(0);
   const streamRef = useRef<MediaStream | null>(null);
   
   const startMediaRecording = async () => {
     try {
-      console.log("Starting media recording with fallback method");
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log("Starting media recording with fallback method for language:", language);
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: { 
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        } 
+      });
       streamRef.current = stream;
       
-      const recorder = new MediaRecorder(stream);
+      // Use MediaRecorder with best available codec
+      const options = { mimeType: 'audio/webm' };
+      const recorder = new MediaRecorder(stream, options);
       setMediaRecorder(recorder);
       setAudioChunks([]);
       setIsRecording(true);
@@ -29,11 +38,11 @@ export const useMediaRecording = (
         }
       };
       
-      // Every 3 seconds, process the recording
-      recorder.start(3000);
+      // Record in shorter chunks for better responsiveness
+      recorder.start(2000);
       resetSilenceDetection();
       
-      console.log("Media recorder started successfully");
+      console.log("Media recorder started successfully with language:", language);
       return true;
     } catch (error) {
       console.error("Error starting media recording:", error);
@@ -62,7 +71,16 @@ export const useMediaRecording = (
     if (audioChunks.length === 0) return;
     
     try {
-      console.log(`Processing ${audioChunks.length} audio chunks with fallback method`);
+      console.log(`Processing ${audioChunks.length} audio chunks with fallback method for language: ${language}`);
+      
+      // Don't transcribe too frequently to avoid overwhelming the server
+      const now = Date.now();
+      if (now - lastTranscriptTime < 1000) {
+        console.log("Skipping transcription - too frequent");
+        return;
+      }
+      setLastTranscriptTime(now);
+      
       const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
       
       // Convert to base64

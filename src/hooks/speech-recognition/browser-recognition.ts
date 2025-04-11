@@ -9,6 +9,33 @@ export const isBrowserSpeechSupported = () => {
          ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
 };
 
+// Helper function to get standardized language code
+export const getStandardizedLanguageCode = (language: string): string => {
+  if (!language) return 'en-US';
+  
+  // Make sure we have correct format like 'en-US', 'fr-FR', etc.
+  if (language.includes('-')) {
+    return language;
+  }
+  
+  // Map of language codes to standardized formats
+  const languageMap: Record<string, string> = {
+    'en': 'en-US',
+    'fr': 'fr-FR',
+    'pt': 'pt-PT',
+    'es': 'es-ES',
+    'ja': 'ja-JP',
+    'ko': 'ko-KR',
+    'zh': 'zh-CN',
+    'ru': 'ru-RU',
+    'ar': 'ar-SA',
+    'hi': 'hi-IN',
+    'vi': 'vi-VN'
+  };
+  
+  return languageMap[language.toLowerCase()] || `${language}-${language.toUpperCase()}`;
+};
+
 export const createBrowserRecognition = (
   language: string,
   onTranscriptChange: (transcript: string) => void,
@@ -23,22 +50,26 @@ export const createBrowserRecognition = (
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognitionAPI();
     
-    recognition.lang = language;
+    // Standardize language code
+    const standardizedLanguage = getStandardizedLanguageCode(language);
+    recognition.lang = standardizedLanguage;
     recognition.interimResults = true;
     recognition.continuous = true;
     recognition.maxAlternatives = 1;
     
-    console.log(`Speech recognition initialized with language: ${language}`);
+    console.log(`Speech recognition initialized with language: ${standardizedLanguage}`);
     
     recognition.onresult = (event: any) => {
       const lastResultIndex = event.results.length - 1;
       const latestTranscript = event.results[lastResultIndex][0].transcript;
       
+      console.log(`Speech recognition result: "${latestTranscript}"`);
       resetSilenceDetection();
       onTranscriptChange(latestTranscript);
     };
     
     recognition.onerror = (event: any) => {
+      console.error(`Speech recognition error: ${event.error}`, event);
       onError(event.error, event);
     };
     
@@ -62,11 +93,15 @@ export const useHandleRecognitionError = () => {
     }
     
     let errorMessage = t("speechRecognitionError");
+    let shouldSwitchToFallback = true;
     
     if (error === 'not-allowed') {
       errorMessage = t("microphoneAccessRequired");
     } else if (error === 'no-speech') {
       errorMessage = t("noSpeechDetected");
+      shouldSwitchToFallback = false; // No need to switch for no speech
+    } else if (error === 'language-not-supported') {
+      errorMessage = `Language not supported: ${event?.message || "The selected language is not supported by your browser"}`;
     } else {
       errorMessage = `${t("speechRecognitionError")}: ${error}`;
     }
@@ -81,7 +116,7 @@ export const useHandleRecognitionError = () => {
       });
     }
     
-    // If we get any error besides 'aborted', try switching to the fallback
-    return true;
+    // Return whether we should switch to the fallback
+    return shouldSwitchToFallback;
   };
 };

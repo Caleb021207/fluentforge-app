@@ -1,27 +1,42 @@
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
 export const useSilenceDetection = (
-  silenceTimeout: number,
+  silenceTimeout: number = 5000,
   onSilence?: () => void
 ) => {
-  const silenceTimeoutRef = useRef<number | null>(null);
+  const silenceTimerRef = useRef<number | null>(null);
+  
+  // Clear up any timers on unmount
+  useEffect(() => {
+    return () => {
+      if (silenceTimerRef.current) {
+        window.clearTimeout(silenceTimerRef.current);
+      }
+    };
+  }, []);
   
   const resetSilenceDetection = () => {
-    clearSilenceDetection();
-    
     if (onSilence) {
-      silenceTimeoutRef.current = window.setTimeout(() => {
-        console.log(`${silenceTimeout/1000} seconds of silence detected, automatically sending message`);
-        onSilence();
+      // Clear any existing timer
+      if (silenceTimerRef.current) {
+        window.clearTimeout(silenceTimerRef.current);
+      }
+      
+      // Set a new timer
+      silenceTimerRef.current = window.setTimeout(() => {
+        console.log(`Silence detected after ${silenceTimeout}ms`);
+        if (onSilence) {
+          onSilence();
+        }
       }, silenceTimeout);
     }
   };
-
+  
   const clearSilenceDetection = () => {
-    if (silenceTimeoutRef.current !== null) {
-      clearTimeout(silenceTimeoutRef.current);
-      silenceTimeoutRef.current = null;
+    if (silenceTimerRef.current) {
+      window.clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
     }
   };
   

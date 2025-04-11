@@ -23,6 +23,11 @@ const FrenchVoiceChat = () => {
   // Set the current language to French
   useEffect(() => {
     setCurrentLanguage("french");
+    
+    // Ensure the HTML lang attribute is also set correctly for accessibility
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = 'fr';
+    }
   }, [setCurrentLanguage]);
   
   const {
@@ -43,7 +48,12 @@ const FrenchVoiceChat = () => {
   });
 
   // We're setting language to English (en-US) because French speakers should practice in English
-  const { isListening, startListening, stopListening, usingFallback } = useSpeechRecognition({
+  const { 
+    isListening, 
+    startListening, 
+    stopListening, 
+    usingFallback 
+  } = useSpeechRecognition({
     onTranscriptChange: setTranscript,
     onSilence: () => {
       if (transcript && transcript.trim().length > 0) {

@@ -1,5 +1,4 @@
 
-// Types for speech recognition functionality
 export interface SpeechRecognitionOptions {
   onTranscriptChange: (transcript: string) => void;
   onSilence?: () => void;
@@ -13,4 +12,5 @@ export interface SpeechRecognitionResult {
   startListening: () => void;
   stopListening: () => void;
   usingFallback: boolean;
+  transcript?: string;
 }

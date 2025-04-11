@@ -18,11 +18,16 @@ const PortugueseVoiceChat = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
   const [permissionError, setPermissionError] = useState<string | null>(null);
-  const { t, setCurrentLanguage } = useLocalization();
+  const { setCurrentLanguage } = useLocalization();
   
   // Set the current language to Portuguese
   useEffect(() => {
     setCurrentLanguage("portuguese");
+    
+    // Ensure the HTML lang attribute is also set correctly for accessibility
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = 'pt';
+    }
   }, [setCurrentLanguage]);
   
   const {
@@ -43,7 +48,12 @@ const PortugueseVoiceChat = () => {
   });
 
   // Setting language to English (en-US) because Portuguese speakers should practice in English
-  const { isListening, startListening, stopListening, usingFallback } = useSpeechRecognition({
+  const { 
+    isListening, 
+    startListening, 
+    stopListening, 
+    usingFallback 
+  } = useSpeechRecognition({
     onTranscriptChange: setTranscript,
     onSilence: () => {
       if (transcript && transcript.trim().length > 0) {
@@ -56,7 +66,7 @@ const PortugueseVoiceChat = () => {
       console.error("Speech recognition error:", errorMessage);
       setPermissionError(errorMessage);
       toast({
-        title: t("error"),
+        title: "Error",
         description: errorMessage,
         variant: "destructive",
       });

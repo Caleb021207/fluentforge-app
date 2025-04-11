@@ -14,77 +14,58 @@ function processBase64Chunks(base64String: string, chunkSize = 32768) {
   const chunks: Uint8Array[] = [];
   let position = 0;
   
-  while (position < base64String.length) {
-    const chunk = base64String.slice(position, position + chunkSize);
-    const binaryChunk = atob(chunk);
-    const bytes = new Uint8Array(binaryChunk.length);
-    
-    for (let i = 0; i < binaryChunk.length; i++) {
-      bytes[i] = binaryChunk.charCodeAt(i);
+  try {
+    while (position < base64String.length) {
+      const chunk = base64String.slice(position, position + chunkSize);
+      const binaryChunk = atob(chunk);
+      const bytes = new Uint8Array(binaryChunk.length);
+      
+      for (let i = 0; i < binaryChunk.length; i++) {
+        bytes[i] = binaryChunk.charCodeAt(i);
+      }
+      
+      chunks.push(bytes);
+      position += chunkSize;
     }
-    
-    chunks.push(bytes);
-    position += chunkSize;
+
+    const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+    const result = new Uint8Array(totalLength);
+    let offset = 0;
+
+    for (const chunk of chunks) {
+      result.set(chunk, offset);
+      offset += chunk.length;
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error processing base64 chunks:', error);
+    throw new Error('Failed to process audio data');
   }
-
-  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-  const result = new Uint8Array(totalLength);
-  let offset = 0;
-
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
-  }
-
-  return result;
-}
-
-// Map language code to Whisper language code
-function mapToWhisperLanguage(language: string): string {
-  // Normalize to lowercase
-  const lang = language.toLowerCase();
-  
-  // Map language codes to Whisper's expected format
-  const languageMap: Record<string, string> = {
-    'en': 'en',   // English
-    'fr': 'fr',   // French
-    'es': 'es',   // Spanish
-    'pt': 'pt',   // Portuguese
-    'de': 'de',   // German
-    'it': 'it',   // Italian
-    'ja': 'ja',   // Japanese
-    'zh': 'zh',   // Chinese
-    'ru': 'ru',   // Russian
-    'ar': 'ar',   // Arabic
-    'hi': 'hi',   // Hindi
-  };
-  
-  // Return the mapped language or default to 'en' if not found
-  return languageMap[lang] || 'en';
 }
 
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
     if (!openAIApiKey) {
-      throw new Error('OpenAI API key is not configured');
+      throw new Error('OpenAI API key not configured');
     }
-
-    const { audio, language } = await req.json();
+    
+    const { audio, language = 'en' } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
     }
-
-    console.log("Received audio data, processing...");
-    console.log(`Language specified: ${language || 'none, will use default'}`);
     
-    // Process audio in chunks
+    console.log(`Processing audio transcription request for language: ${language}`);
+    
+    // Process audio in chunks to prevent memory issues
     const binaryAudio = processBase64Chunks(audio);
+    console.log(`Processed ${binaryAudio.length} bytes of audio data`);
     
     // Prepare form data
     const formData = new FormData();
@@ -92,11 +73,10 @@ serve(async (req) => {
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
     
-    // Use the provided language or default to 'en'
-    const transcriptionLanguage = mapToWhisperLanguage(language || 'en');
-    formData.append('language', transcriptionLanguage);
-
-    console.log(`Sending to OpenAI Whisper API with language: ${transcriptionLanguage}...`);
+    // If a language is specified, add it to the request
+    if (language && language !== 'auto') {
+      formData.append('language', language);
+    }
 
     // Send to OpenAI
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
@@ -109,12 +89,12 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("OpenAI API error:", errorText);
-      throw new Error(`OpenAI API error: ${errorText}`);
+      console.error(`OpenAI API error: ${response.status} ${response.statusText} - ${errorText}`);
+      throw new Error(`OpenAI API error: ${response.statusText}`);
     }
 
     const result = await response.json();
-    console.log("Transcription successful:", result.text);
+    console.log(`Transcription result: ${result.text}`);
 
     return new Response(
       JSON.stringify({ text: result.text }),
@@ -122,12 +102,21 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error("Error in transcribe-audio function:", error);
+    console.error('Error in transcribe-audio function:', error);
+    
+    let errorMessage = 'Failed to transcribe audio. Please try again.';
+    if (error.message.includes('API key not configured')) {
+      errorMessage = 'The transcription service is not properly configured. Please contact support.';
+    }
+
     return new Response(
-      JSON.stringify({ error: error.message }),
-      {
+      JSON.stringify({ 
+        error: errorMessage,
+        details: error.message 
+      }),
+      { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
   }

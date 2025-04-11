@@ -15,6 +15,7 @@ export const useSpeechRecognition = ({
   language = 'en-US'
 }: SpeechRecognitionOptions): SpeechRecognitionResult => {
   const [isListening, setIsListening] = useState(false);
+  const [transcript, setLocalTranscript] = useState("");
   const [useFallback, setUseFallback] = useState(false);
   
   const recognitionRef = useRef<any>(null);
@@ -24,10 +25,20 @@ export const useSpeechRecognition = ({
   const { t } = useLocalization();
   const handleRecognitionError = useHandleRecognitionError();
   
+  // Apply the transcript update and trigger the callback
+  const updateTranscript = (text: string) => {
+    setLocalTranscript(text);
+    if (onTranscriptChange) {
+      onTranscriptChange(text);
+    }
+  };
+  
   const { resetSilenceDetection, clearSilenceDetection } = useSilenceDetection(
     silenceTimeout,
     onSilence && isListening ? () => {
-      onSilence();
+      if (onSilence && transcript.trim().length > 0) {
+        onSilence();
+      }
       stopListening();
     } : undefined
   );
@@ -39,7 +50,7 @@ export const useSpeechRecognition = ({
     stopMediaRecording,
     processFallbackRecording,
     setAudioChunks
-  } = useMediaRecording(language, onTranscriptChange, resetSilenceDetection);
+  } = useMediaRecording(language, updateTranscript, resetSilenceDetection);
   
   // Update language reference when it changes
   useEffect(() => {
@@ -111,7 +122,7 @@ export const useSpeechRecognition = ({
     
     const recognition = createBrowserRecognition(
       languageRef.current,
-      onTranscriptChange,
+      updateTranscript,
       resetSilenceDetection,
       (error, event) => {
         const shouldSwitchToFallback = handleRecognitionError(error, event, onError);
@@ -149,7 +160,11 @@ export const useSpeechRecognition = ({
       return;
     }
     
+    console.log(`Starting speech recognition with language: ${language}`);
     setIsListening(true);
+    
+    // Clear the transcript when starting a new session
+    updateTranscript("");
     
     if (useFallback || !isBrowserSpeechSupported()) {
       // Use the server-side transcription fallback
@@ -180,6 +195,13 @@ export const useSpeechRecognition = ({
   };
 
   const stopListening = () => {
+    if (!isListening) {
+      console.log("Not listening, ignoring stopListening call");
+      return;
+    }
+    
+    console.log("Stopping speech recognition");
+    
     if (!useFallback && recognitionRef.current) {
       try {
         recognitionRef.current.abort();
@@ -203,6 +225,7 @@ export const useSpeechRecognition = ({
     isListening, 
     startListening, 
     stopListening,
-    usingFallback: useFallback
+    usingFallback: useFallback,
+    transcript: transcript
   };
 };
