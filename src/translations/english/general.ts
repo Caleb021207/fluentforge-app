@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -93,10 +92,40 @@ const generalTranslations: TranslationRecord = {
   confirmPin: "Confirm PIN",
   updatePin: "Update PIN",
   lockSettings: "Lock Settings",
-  cipaCompliance: "CIPA Compliant",
   pinTooShort: "PIN must be at least 4 digits",
   pinMismatch: "PINs don't match",
   pinUpdated: "PIN successfully updated",
+  
+  // Safety Controls
+  contentSafety: "Content Safety",
+  contentSafetyDescription: "Filter inappropriate content and enforce age-based safety rules during conversations",
+  timeControls: "Time Controls",
+  timeControlsDescription: "Set daily or weekly time limits to manage student screen time",
+  
+  // Data Privacy Controls
+  parentalDataConsent: "Parental Data Consent",
+  parentalDataConsentDesc: "Palavox does not collect personal data from students under 13 without parental or school administrator consent",
+  ferpaCompliance: "FERPA Compliance",
+  ferpaComplianceShortDesc: "Palavox is designed to meet FERPA standards for protecting student education records and privacy",
+  ferpaPrivacySettings: "FERPA Privacy Settings",
+  ferpaSettingsDescription: "Manage settings related to directory information, consent, and access to student usage data",
+  whatIsFerpa: "What is FERPA?",
+  ferpaExplanationShort: "FERPA (Family Educational Rights and Privacy Act) protects the privacy of student education records",
+  dataConsent: "Consent to Data Use",
+  dataConsentDescription: "Allows Palavox to store anonymized learning progress data to improve educational outcomes. No personal information is collected",
+  directoryInformation: "Directory Information",
+  directoryInfoDescription: "Schools may allow limited information (like grade level or learning language) to be shared for educational purposes. Palavox does not share any student data externally",
+  
+  // Student Profile Settings
+  yourName: "Your Name",
+  yourEmail: "Your Email",
+  languagesStudied: "Languages Studied",
+  learningProgress: "Learning Progress",
+  achievements: "Achievements",
+  
+  // Download Data
+  downloadMyData: "Download My Data",
+  downloadDataDescription: "Download an anonymized summary of your usage history and achievements. No personal data is stored or exported",
   
   // Safety Policy
   safetyPolicy: "Safety Policy",
@@ -161,8 +190,20 @@ const generalTranslations: TranslationRecord = {
   dataRetentionPolicy2: "Usage data is retained only as long as necessary to support learning analytics or platform improvements",
   dataRetentionPolicy3: "School administrators or districts can request deletion of all related records at any time",
   
-  // Removed no longer needed settings tabs
-  notifications: "Notifications"
+  // Miscellaneous
+  cipaFerpaCompliance: "CIPA and FERPA compliant",
+  
+  // Other settings tabs
+  notifications: "Notifications",
+  
+  // New additions
+  savePreferences: "Save Preferences",
+  privacySettingsSaved: "Your privacy and data sharing preferences have been saved",
+  saving: "Saving...",
+  saveChanges: "Save Changes",
+  preferencesUpdated: "Privacy preferences updated",
+  dataPreparing: "Data export preparing",
+  dataExportDescription: "Your data export is being prepared and will be emailed to you shortly"
 };
 
 export default generalTranslations;
