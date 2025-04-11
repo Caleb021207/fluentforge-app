@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 
@@ -23,7 +22,11 @@ export const useMessageInput = () => {
       french: "Tapez votre message en français ou en anglais...",
     };
 
-    return placeholders[currentLanguage] || t("typeMessage");
+    if (placeholders[currentLanguage]) {
+      return placeholders[currentLanguage];
+    }
+    
+    return t("typeMessage");
   };
 
   return {

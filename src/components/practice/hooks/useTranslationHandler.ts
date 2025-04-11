@@ -1,14 +1,20 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useToast } from "@/hooks/use-toast";
 
 export const useTranslationHandler = () => {
-  const { currentLanguage } = useLocalization();
+  const { currentLanguage, t } = useLocalization();
+  const { toast } = useToast();
 
   /**
    * Gets translation for a message using the Supabase edge function
    */
   const getTranslation = async (content: string, targetLanguage: string): Promise<string> => {
+    if (!content || content.trim() === "") {
+      return "";
+    }
+    
     try {
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
@@ -20,10 +26,15 @@ export const useTranslationHandler = () => {
 
       if (error) {
         console.error('Translation error:', error);
+        toast({
+          title: t("translationError"),
+          description: t("failedToGetTranslation"),
+          variant: "destructive",
+        });
         return "";
       }
 
-      return data.translation || "";
+      return data?.translation || "";
     } catch (error) {
       console.error('Failed to get translation:', error);
       return "";
@@ -47,8 +58,29 @@ export const useTranslationHandler = () => {
     return translation;
   };
 
+  /**
+   * Check if a translation is needed for the current language
+   */
+  const needsTranslation = (language: string): boolean => {
+    const translationNeededLanguages = [
+      "hindi", 
+      "japanese", 
+      "french", 
+      "russian", 
+      "ukrainian",
+      "indonesian",
+      "korean",
+      "arabic",
+      "vietnamese",
+      "mandarin"
+    ];
+    
+    return translationNeededLanguages.includes(language.toLowerCase());
+  };
+
   return {
     getTranslation,
-    verifyHindiTranslation
+    verifyHindiTranslation,
+    needsTranslation
   };
 };

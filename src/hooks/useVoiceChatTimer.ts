@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { formatTime } from "@/utils/voiceChatUtils";
 
@@ -18,22 +18,43 @@ export const useVoiceChatTimer = ({
 }: UseVoiceChatTimerProps) => {
   const [timerValue, setTimerValue] = useState<number | null>(null);
   const { toast } = useToast();
+  const timerIdRef = useRef<number | null>(null);
+  const hasExpiredRef = useRef<boolean>(false);
 
   useEffect(() => {
-    let timerId: number | null = null;
+    // Clean up the previous timer if exists
+    if (timerIdRef.current !== null) {
+      clearInterval(timerIdRef.current);
+      timerIdRef.current = null;
+    }
+    
+    // Reset expiration flag when starting a new timer
+    hasExpiredRef.current = false;
     
     if (isConversationActive() && weeklyTimeRemaining !== null) {
       setTimerValue(weeklyTimeRemaining);
       
-      timerId = window.setInterval(() => {
+      timerIdRef.current = window.setInterval(() => {
         setTimerValue(prev => {
           if (prev === null || prev <= 0) {
-            if (timerId) clearInterval(timerId);
-            onTimeExpired();
-            toast({
-              title: t("voiceChatEnded"),
-              description: t("timeLimit10MinReached")
-            });
+            // Only trigger expiration once
+            if (!hasExpiredRef.current) {
+              hasExpiredRef.current = true;
+              // Clean up timer
+              if (timerIdRef.current !== null) {
+                clearInterval(timerIdRef.current);
+                timerIdRef.current = null;
+              }
+              
+              // Call the expiration callback
+              onTimeExpired();
+              
+              // Show toast notification
+              toast({
+                title: t("voiceChatEnded"),
+                description: t("timeLimit10MinReached")
+              });
+            }
             return 0;
           }
           return prev - 1;
@@ -43,10 +64,14 @@ export const useVoiceChatTimer = ({
       setTimerValue(null);
     }
     
+    // Cleanup function
     return () => {
-      if (timerId) clearInterval(timerId);
+      if (timerIdRef.current !== null) {
+        clearInterval(timerIdRef.current);
+        timerIdRef.current = null;
+      }
     };
-  }, [isConversationActive(), weeklyTimeRemaining]);
+  }, [isConversationActive(), weeklyTimeRemaining, onTimeExpired, t, toast]);
 
   return {
     timerValue,
