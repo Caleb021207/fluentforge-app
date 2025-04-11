@@ -30,7 +30,7 @@ const ferpaTranslations: TranslationRecord = {
   whatIsFerpa: "What is FERPA?",
   ferpaExplanation: "FERPA is a federal law that protects the privacy of student education records. It gives parents certain rights with respect to their children's education records. These rights transfer to the student when they reach the age of 18 or attend a post-secondary educational institution.",
   ferpaExplanationShort: "FERPA (Family Educational Rights and Privacy Act) protects the privacy of student education records",
-  ferpaComplianceDescription: "Palavox is designed to comply fully with the Family Educational Rights and Privacy Act (FERPA), implementing strict measures to safeguard student privacy and educational data. We believe every student deserves access to language education without compromising their personal information or digital safety.",
+  // Note: Removed duplicate ferpaComplianceDescription that was here
   ferpaConsentDescription: "Under the Family Educational Rights and Privacy Act (FERPA), we need your consent to collect and share certain educational information.",
   ferpaConsentCheckbox: "I consent to the collection and use of my educational data as described above. I understand I can revoke this consent at any time through my profile settings.",
   consentRequired: "Consent is required to use all features of this application. Without consent, certain features will be limited."
