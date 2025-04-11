@@ -113,8 +113,6 @@ const generalTranslations: TranslationRecord = {
   ferpaExplanationShort: "FERPA (Family Educational Rights and Privacy Act) protects the privacy of student education records",
   dataConsent: "Consent to Data Use",
   dataConsentDescription: "Allows Palavox to store anonymized learning progress data to improve educational outcomes. No personal information is collected",
-  directoryInformation: "Directory Information",
-  directoryInfoDescription: "Schools may allow limited information (like grade level or learning language) to be shared for educational purposes. Palavox does not share any student data externally",
   
   // Student Profile Settings
   yourName: "Your Name",
