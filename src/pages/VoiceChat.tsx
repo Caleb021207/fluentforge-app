@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -357,7 +356,6 @@ const VoiceChat = () => {
     if (currentLanguage === "english") {
       nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
       
-      // Dynamically select the correct target language translations
       if (practice === "Spanish") {
         targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
       } else if (practice === "Portuguese") {
@@ -375,38 +373,30 @@ const VoiceChat = () => {
       } else if (practice === "Indonesian") {
         targetLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
       } else {
-        targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]); // Default to English if not found
+        targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
       }
-    } else if (currentLanguage === "spanish") {
-      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "portuguese") {
-      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "french") {
-      nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "japanese") {
-      nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "russian") {
-      nativeLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "ukrainian") {
-      nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "hindi") {
-      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "indonesian") {
-      nativeLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
-      nativeLanguagePhrases = phraseKeys.map(key => t(key));
-      targetLanguagePhrases = phraseKeys.map(key => {
-        const englishPhrase = englishTranslations[key];
-        return englishPhrase || key;
-      });
+      if (currentLanguage === "spanish") {
+        nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      } else if (currentLanguage === "portuguese") {
+        nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
+      } else if (currentLanguage === "french") {
+        nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+      } else if (currentLanguage === "japanese") {
+        nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
+      } else if (currentLanguage === "russian") {
+        nativeLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
+      } else if (currentLanguage === "ukrainian") {
+        nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
+      } else if (currentLanguage === "hindi") {
+        nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
+      } else if (currentLanguage === "indonesian") {
+        nativeLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
+      } else {
+        nativeLanguagePhrases = phraseKeys.map(key => t(key));
+      }
+      
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     }
     
     return { nativeLanguagePhrases, targetLanguagePhrases };
@@ -560,11 +550,11 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return `音声チャットで${getLanguagePair(currentLanguage).practice}の会話スキルを練習しましょう。マイクボタンをクリックして${getLanguagePair(currentLanguage).practice}で話し始めてください。AIは${getLanguagePair(currentLanguage).practice}で返答し、あなたの練習をサポートします。`;
     } else if (currentLanguage === "russian") {
-      return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
+      return `Практикуйте свои разговорные навыки на ${getLanguagePair(currentLanguage).practice} языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на ${getLanguagePair(currentLanguage).practice}. ИИ ответит вам на ${getLanguagePair(currentLanguage).practice} и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
+      return `Практикуйте свої навички розмови ${getLanguagePair(currentLanguage).practice} за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити ${getLanguagePair(currentLanguage).practice}. Штучний інтелект відповість вам ${getLanguagePair(currentLanguage).practice} та допомоге практикуватися.`;
     } else if (currentLanguage === "hindi") {
-      return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:`;
+      return `हमारे वॉइस चैट के साथ अपने ${getLanguagePair(currentLanguage).practice} बोलने के कौशल का अभ्यास करें। माइक्रोफोन बटन पर क्लिक करें और ${getLanguagePair(currentLanguage).practice} में बोलना शुरू करें। AI आपको ${getLanguagePair(currentLanguage).practice} में जवाब देगा और आपको अभ्यास करने में मदद करेगा।`;
     } else if (currentLanguage === "indonesian") {
       return `Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.`;
     }
