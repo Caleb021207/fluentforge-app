@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,6 +19,7 @@ export const usePortugueseVoiceChat = () => {
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
   
+  // Set a fixed CEFR level (B1 = Intermediate)
   const cefrLevel = 'B1';
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
@@ -27,6 +28,11 @@ export const usePortugueseVoiceChat = () => {
   // For Portuguese speakers learning English
   const native = "Portuguese";
   const target = "English";
+  
+  // Set this to true to ensure setCurrentLanguage is called with "portuguese"
+  useEffect(() => {
+    localStorage.setItem("currentLanguage", "portuguese");
+  }, []);
 
   const clearConversation = () => {
     setConversationHistory([]);

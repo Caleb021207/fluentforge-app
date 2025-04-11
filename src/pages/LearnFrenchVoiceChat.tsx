@@ -18,13 +18,14 @@ const LearnFrenchVoiceChat = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
   const [permissionError, setPermissionError] = useState<string | null>(null);
-  const { currentLanguage, t } = useLocalization();
+  const { currentLanguage, t, setCurrentLanguage } = useLocalization();
   
+  // Set language to English since this is for English speakers learning French
   useEffect(() => {
-    // Store the target language in localStorage when this component mounts
+    setCurrentLanguage("english");
+    // Store French as the target language
     localStorage.setItem("targetLanguage", "french");
-    // This helps with proper redirection from the main voice chat page
-  }, []);
+  }, [setCurrentLanguage]);
   
   const {
     transcript,
@@ -102,6 +103,10 @@ const LearnFrenchVoiceChat = () => {
     }
   };
 
+  const handlePhraseClick = (phrase: string) => {
+    handleSendTranscript(phrase);
+  };
+
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
@@ -173,7 +178,7 @@ const LearnFrenchVoiceChat = () => {
         <ConversationStarters 
           nativeLanguagePhrases={nativeLanguagePhrases}
           targetLanguagePhrases={targetLanguagePhrases}
-          onPhraseClick={phrase => handleSendTranscript(phrase)}
+          onPhraseClick={handlePhraseClick}
         />
         
         <PracticeTips />

@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,6 +27,11 @@ export const useFrenchVoiceChat = () => {
   // For French speakers learning English
   const native = "French";
   const target = "English";
+  
+  // Set this to true to ensure setCurrentLanguage is called with "french"
+  useEffect(() => {
+    localStorage.setItem("currentLanguage", "french");
+  }, []);
 
   const clearConversation = () => {
     setConversationHistory([]);

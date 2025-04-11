@@ -18,7 +18,14 @@ const LearnPortugueseVoiceChat = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
   const [permissionError, setPermissionError] = useState<string | null>(null);
-  const { currentLanguage, t } = useLocalization();
+  const { currentLanguage, t, setCurrentLanguage } = useLocalization();
+  
+  // Set language to English since this is for English speakers learning Portuguese
+  useEffect(() => {
+    setCurrentLanguage("english");
+    // Store Portuguese as the target language
+    localStorage.setItem("targetLanguage", "portuguese");
+  }, [setCurrentLanguage]);
   
   const {
     transcript,
@@ -33,12 +40,12 @@ const LearnPortugueseVoiceChat = () => {
   } = useLearnLanguageChat('portuguese');
 
   // Using Portuguese voice for the AI responses since this is for English speakers learning Portuguese
-  const { speak, isSpeaking } = useSpeechSynthesis({
+  const { speak, isSpeaking, cancel } = useSpeechSynthesis({
     defaultLanguage: 'pt-PT'
   });
 
   // Setting language to Portuguese (pt-PT) because English speakers are practicing Portuguese
-  const { isListening, startListening, stopListening } = useSpeechRecognition({
+  const { isListening, startListening, stopListening, usingFallback } = useSpeechRecognition({
     onTranscriptChange: setTranscript,
     onSilence: () => {
       if (transcript && transcript.trim().length > 0) {
@@ -65,7 +72,11 @@ const LearnPortugueseVoiceChat = () => {
       // Automatically play the response when it's received
       speak(gptResponse, 'pt-PT');
     }
-  }, [gptResponse, speak, isSpeaking]);
+    
+    return () => {
+      cancel();
+    };
+  }, [gptResponse, speak, isSpeaking, cancel]);
 
   // Clear permission error when listening starts successfully
   useEffect(() => {
@@ -89,6 +100,10 @@ const LearnPortugueseVoiceChat = () => {
     if (gptResponse) {
       speak(gptResponse, 'pt-PT');
     }
+  };
+
+  const handlePhraseClick = (phrase: string) => {
+    handleSendTranscript(phrase);
   };
 
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
@@ -116,6 +131,17 @@ const LearnPortugueseVoiceChat = () => {
               </p>
               <p className="text-xs mt-1">
                 Please ensure your browser has permission to access your microphone.
+              </p>
+            </div>
+          )}
+          
+          {usingFallback && (
+            <div className="mb-4 p-2 bg-amber-50 text-amber-700 rounded-md">
+              <p className="text-sm font-medium">
+                Using server-side transcription (fallback mode)
+              </p>
+              <p className="text-xs mt-1">
+                Your browser's speech recognition is not available or not working well with Portuguese. We're using our server for transcription instead.
               </p>
             </div>
           )}
@@ -151,7 +177,7 @@ const LearnPortugueseVoiceChat = () => {
         <ConversationStarters 
           nativeLanguagePhrases={nativeLanguagePhrases}
           targetLanguagePhrases={targetLanguagePhrases}
-          onPhraseClick={handlePhraseClick => handleSendTranscript(handlePhraseClick)}
+          onPhraseClick={handlePhraseClick}
         />
         
         <PracticeTips />

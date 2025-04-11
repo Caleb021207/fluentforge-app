@@ -38,7 +38,7 @@ const PortugueseVoiceChat = () => {
   } = usePortugueseVoiceChat();
 
   // Using English voice for the AI responses since this is for Portuguese speakers learning English
-  const { speak, isSpeaking } = useSpeechSynthesis({
+  const { speak, isSpeaking, cancel } = useSpeechSynthesis({
     defaultLanguage: 'en-US'
   });
 
@@ -56,7 +56,7 @@ const PortugueseVoiceChat = () => {
       console.error("Speech recognition error:", errorMessage);
       setPermissionError(errorMessage);
       toast({
-        title: "Error",
+        title: t("error"),
         description: errorMessage,
         variant: "destructive",
       });
@@ -70,7 +70,11 @@ const PortugueseVoiceChat = () => {
       // Automatically play the response when it's received
       speak(gptResponse, 'en-US');
     }
-  }, [gptResponse, speak, isSpeaking]);
+    
+    return () => {
+      cancel();
+    };
+  }, [gptResponse, speak, isSpeaking, cancel]);
 
   // Clear permission error when listening starts successfully
   useEffect(() => {

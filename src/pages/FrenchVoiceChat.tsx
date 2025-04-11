@@ -12,11 +12,18 @@ import AIResponseDisplay from "@/components/french-voice-chat/AIResponseDisplay"
 import ConversationHistory from "@/components/french-voice-chat/ConversationHistory";
 import ConversationStarters from "@/components/french-voice-chat/ConversationStarters";
 import PracticeTips from "@/components/french-voice-chat/PracticeTips";
+import { useLocalization } from "@/context/LocalizationContext";
 
 const FrenchVoiceChat = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
   const [permissionError, setPermissionError] = useState<string | null>(null);
+  const { setCurrentLanguage } = useLocalization();
+  
+  // Set the current language to French
+  useEffect(() => {
+    setCurrentLanguage("french");
+  }, [setCurrentLanguage]);
   
   const {
     transcript,
@@ -31,7 +38,7 @@ const FrenchVoiceChat = () => {
   } = useFrenchVoiceChat();
 
   // Using English voice for the AI responses since this is for French speakers learning English
-  const { speak, isSpeaking } = useSpeechSynthesis({
+  const { speak, isSpeaking, cancel } = useSpeechSynthesis({
     defaultLanguage: 'en-US'
   });
 
@@ -63,7 +70,11 @@ const FrenchVoiceChat = () => {
       // Automatically play the response when it's received
       speak(gptResponse, 'en-US');
     }
-  }, [gptResponse, speak, isSpeaking]);
+    
+    return () => {
+      cancel();
+    };
+  }, [gptResponse, speak, isSpeaking, cancel]);
 
   // Clear permission error when listening starts successfully
   useEffect(() => {
