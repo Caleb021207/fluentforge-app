@@ -1,4 +1,3 @@
-
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -76,8 +75,7 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
     return ['english'];
   }
   
-  // Removed Portuguese, Japanese, and Mandarin - only offering Spanish and French for English speakers
-  const commonLanguages = ['spanish', 'french'];
+  const commonLanguages = ['spanish', 'french', 'mandarin', 'japanese'];
   
   return commonLanguages;
 };
