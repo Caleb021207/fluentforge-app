@@ -1,11 +1,25 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
+import { useNavigate } from "react-router-dom";
 
 export const useMessageInput = (targetLanguage?: string) => {
   const [input, setInput] = useState("");
   const { currentLanguage } = useLocalization();
+  const navigate = useNavigate();
+  
+  // Check if we should redirect to the French voice chat
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    if (
+      currentPath === "/voice-chat" && 
+      ((currentLanguage === "english" && targetLanguage?.toLowerCase() === "french") ||
+      (currentLanguage === "french"))
+    ) {
+      navigate("/french-voice-chat");
+    }
+  }, [currentLanguage, targetLanguage, navigate]);
 
   const getPlaceholderText = () => {
     // For English speakers, use the specified target language
@@ -43,3 +57,4 @@ export const useMessageInput = (targetLanguage?: string) => {
     getPlaceholderText
   };
 };
+
