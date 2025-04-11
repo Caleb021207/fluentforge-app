@@ -26,25 +26,24 @@ const languageVoiceMap: Record<string, string> = {
   "indonesian": "nova"  // Indonesian-friendly voice
 };
 
-// Maximum retries for API calls
-const MAX_RETRIES = 2;
-const RETRY_DELAY = 1000; // ms
+// Maximum retries for API calls (reduced)
+const MAX_RETRIES = 1;
+const RETRY_DELAY = 500; // ms (reduced from 1000)
 
-// Function to retry API calls
+// Function to retry API calls only for network errors and rate limits
 async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_RETRIES) {
   try {
     const response = await fetch(url, options);
     if (response.ok) return response;
     
-    const errorData = await response.json().catch(() => ({ error: response.statusText }));
-    console.error(`API error (${response.status}):`, errorData);
-    
+    // Only retry on rate limits or potential network issues
     if (retries > 0 && (response.status === 429 || response.status >= 500)) {
-      console.log(`Retrying... (${retries} attempts left)`);
+      console.log(`Retrying due to status ${response.status}... (${retries} attempts left)`);
       await new Promise(r => setTimeout(r, RETRY_DELAY));
       return fetchWithRetry(url, options, retries - 1);
     }
     
+    const errorData = await response.json().catch(() => ({ error: response.statusText }));
     throw new Error(`API error: ${JSON.stringify(errorData)}`);
   } catch (error) {
     if (retries > 0 && error.message.includes('fetch failed')) {
@@ -54,6 +53,20 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_R
     }
     throw error;
   }
+}
+
+// More efficient base64 conversion for large audio files
+function bufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 2048; // Increased chunk size for better performance
+  let binary = '';
+  
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.slice(i, Math.min(i + chunkSize, bytes.length));
+    binary += String.fromCharCode.apply(null, [...chunk]);
+  }
+  
+  return btoa(binary);
 }
 
 serve(async (req) => {
@@ -86,7 +99,7 @@ serve(async (req) => {
     // Trim text if it's too long (OpenAI has a limit)
     const trimmedText = text.length > 4000 ? text.substring(0, 4000) + "..." : text;
 
-    // Generate speech from text with retry logic
+    // Generate speech from text with optimized retry logic
     const response = await fetchWithRetry('https://api.openai.com/v1/audio/speech', {
       method: 'POST',
       headers: {
@@ -101,25 +114,9 @@ serve(async (req) => {
       }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      console.error("OpenAI TTS API error:", errorData || response.statusText);
-      throw new Error(`OpenAI API error: ${JSON.stringify(errorData) || response.statusText}`);
-    }
-
-    // Convert audio buffer to base64 safely
+    // Convert audio buffer to base64 with improved method
     const arrayBuffer = await response.arrayBuffer();
-    const uint8Array = new Uint8Array(arrayBuffer);
-    let binaryString = '';
-    const chunkSize = 1024;
-    
-    // Process in chunks to avoid stack overflow
-    for (let i = 0; i < uint8Array.length; i += chunkSize) {
-      const chunk = uint8Array.slice(i, Math.min(i + chunkSize, uint8Array.length));
-      binaryString += String.fromCharCode.apply(null, [...chunk]);
-    }
-    
-    const base64Audio = btoa(binaryString);
+    const base64Audio = bufferToBase64(arrayBuffer);
     console.log("Successfully generated speech, returning base64 audio");
 
     return new Response(
