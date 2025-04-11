@@ -10,8 +10,6 @@ import { getLanguagePair } from "@/utils/languageUtils";
 import englishTranslations from "@/translations/english";
 import spanishTranslations from "@/translations/spanish";
 import portugueseTranslations from "@/translations/portuguese";
-import mandarinTranslations from "@/translations/mandarin";
-import vietnameseTranslations from "@/translations/vietnamese";
 import frenchTranslations from "@/translations/french";
 import japaneseTranslations from "@/translations/japanese";
 import russianTranslations from "@/translations/russian";
@@ -46,6 +44,7 @@ const VoiceChat = () => {
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
+  const { practice, native } = getLanguagePair(currentLanguage);
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -59,8 +58,10 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                                   currentLanguage === "japanese" ? "en-US" : "en-US";
+      const targetLangCode = getTargetLanguageCode(practice);
+      recognitionRef.current.lang = targetLangCode;
+      console.log(`Setting speech recognition language to: ${targetLangCode} for ${practice}`);
+      
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
       recognitionRef.current.maxAlternatives = 1;
@@ -128,7 +129,18 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, toast, t]);
+  }, [currentLanguage, practice, toast, t]);
+
+  const getTargetLanguageCode = (language: string): string => {
+    const languageCodes: Record<string, string> = {
+      'Spanish': 'es-ES',
+      'Portuguese': 'pt-PT',
+      'French': 'fr-FR',
+      'English': 'en-US'
+    };
+    
+    return languageCodes[language] || 'en-US';
+  };
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -276,20 +288,21 @@ const VoiceChat = () => {
     
     utteranceRef.current = new SpeechSynthesisUtterance(text);
     
-    utteranceRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                               currentLanguage === "japanese" ? "en-US" : "en-US";
+    const targetLangCode = getTargetLanguageCode(practice);
+    utteranceRef.current.lang = targetLangCode;
+    console.log(`Setting speech synthesis language to: ${targetLangCode} for ${practice}`);
     
     const voices = synthRef.current.getVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`).join(', '));
     
-    const targetLang = currentLanguage === "english" ? "es" : "en";
+    const targetLangPrefix = targetLangCode.split('-')[0];
     
-    const voice = voices.find(v => v.lang.startsWith(targetLang));
+    const voice = voices.find(v => v.lang.startsWith(targetLangPrefix));
     if (voice) {
       console.log(`Using voice: ${voice.name} (${voice.lang})`);
       utteranceRef.current.voice = voice;
     } else {
-      console.warn(`No matching voice found for language: ${targetLang}`);
+      console.warn(`No matching voice found for language: ${targetLangPrefix}`);
     }
     
     utteranceRef.current.onstart = () => {
@@ -329,18 +342,21 @@ const VoiceChat = () => {
     
     if (currentLanguage === "english") {
       nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      
+      if (practice === "Spanish") {
+        targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      } else if (practice === "Portuguese") {
+        targetLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
+      } else if (practice === "French") {
+        targetLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
+      } else {
+        targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]); // Default to Spanish
+      }
     } else if (currentLanguage === "spanish") {
       nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "portuguese") {
       nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "mandarin") {
-      nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "vietnamese") {
-      nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "french") {
       nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
@@ -521,7 +537,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return `Практикуйте свои разговорные навыки на английском языке с помощью нашего голосового чата. Нажмите на кнопку микрофона и начните говорить на английском. ИИ ответит вам на английском и поможет вам практиковаться.`;
     } else if (currentLanguage === "ukrainian") {
-      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допоможе практикуватися.`;
+      return `Практикуйте свої навички розмови англійською за допомогою нашого голосового чату. Натисніть на кнопку мікрофона та почніть говорити англійською. Штучний інтелект відповість вам англійською та допомоге практикуватися.`;
     } else if (currentLanguage === "hindi") {
       return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:`;
     } else if (currentLanguage === "indonesian") {
@@ -557,7 +573,6 @@ const VoiceChat = () => {
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
 
-  const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
@@ -665,7 +680,6 @@ const VoiceChat = () => {
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {/* Always show translation for Hindi users or if translation exists */}
                 {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
@@ -709,7 +723,6 @@ const VoiceChat = () => {
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>
-                      {/* Always show translation for Hindi users when it's an AI message */}
                       {((message.translation && message.translation.trim() !== "") || 
                        (message.role === 'assistant' && currentLanguage === "hindi")) && (
                         <p className="text-xs mt-2 text-gray-600 border-t border-gray-200 pt-2">
