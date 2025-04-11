@@ -36,11 +36,12 @@ const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
   "indonesian": INDONESIAN_TUTOR_AGENT_ID
 };
 
-// Target language agents for English speakers
+// Updated: Target language agents for English speakers
+// Now using the same agent ID (AOv9JDhkEdMmiU61vHg9) for Spanish, French, and Portuguese
 const TARGET_LANGUAGE_AGENTS: Record<string, string> = {
-  "spanish": SPANISH_TUTOR_AGENT_ID,
-  "french": FRENCH_TUTOR_AGENT_ID,
-  "portuguese": PORTUGUESE_TUTOR_AGENT_ID,
+  "spanish": ENGLISH_VARIETIES_AGENT_ID,  // Using the same agent for English speakers learning Spanish
+  "french": ENGLISH_VARIETIES_AGENT_ID,   // Using the same agent for English speakers learning French
+  "portuguese": ENGLISH_VARIETIES_AGENT_ID, // Using the same agent for English speakers learning Portuguese
   "english": ENGLISH_VARIETIES_AGENT_ID // Added English as a target language with the new agent ID
 };
 
