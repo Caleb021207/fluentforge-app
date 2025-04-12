@@ -30,11 +30,11 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish
         </CardHeader>
         <CardContent>
           <p className="text-gray-600 mb-4">
-            We're working on adding French language support. Please check back later or try practicing Spanish in the meantime.
+            We're actively developing our French language curriculum and conversational AI. Please check back soon for a complete French learning experience, or try practicing Spanish, Portuguese, or another supported language in the meantime.
           </p>
           
           <div className="text-sm text-gray-500 italic border-t pt-4 mt-2">
-            <p>Our team is currently developing comprehensive French language materials to ensure a quality learning experience.</p>
+            <p>Our team of linguists and AI specialists is currently developing comprehensive French language materials with native speaker audio to ensure an authentic, high-quality learning experience.</p>
           </div>
         </CardContent>
       </Card>
@@ -53,36 +53,36 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish
       <CardContent>
         <p className="text-gray-600 mb-4">
           {t("practiceGuideDescription", { language: displayLanguage }) || 
-           `Here are some tips to help you get the most out of your ${displayLanguage} practice:`}
+           `Here are some effective strategies to help you maximize your ${displayLanguage} practice sessions and make consistent progress:`}
         </p>
         
         <List className="text-sm text-gray-600 mb-4">
           <ListItem>
             <BookOpen className="h-4 w-4 mr-2 text-lingua-primary" />
-            {t("practiceGuideItem1") || "Try to form complete sentences, even if they're simple."}
+            {t("practiceGuideItem1") || "Try to form complete sentences, even if they're simple. This builds your grammatical fluency faster than single-word responses."}
           </ListItem>
           <ListItem>
             <MessageSquare className="h-4 w-4 mr-2 text-lingua-primary" />
-            {t("practiceGuideItem2") || "Don't worry about making mistakes - they're part of learning!"}
+            {t("practiceGuideItem2") || "Don't worry about making mistakes - they're an essential part of the learning process! Our AI tutor will help you improve gradually."}
           </ListItem>
           <ListItem>
             <GraduationCap className="h-4 w-4 mr-2 text-lingua-primary" />
-            {t("practiceGuideItem3") || "Ask for clarification if you don't understand something."}
+            {t("practiceGuideItem3") || "Ask for clarification if you don't understand something. Learning to navigate confusion is an important language skill."}
           </ListItem>
           <ListItem>
             <Globe className="h-4 w-4 mr-2 text-lingua-primary" />
-            {t("practiceGuideItem4") || "Try to use vocabulary you've recently learned."}
+            {t("practiceGuideItem4") || "Try to incorporate vocabulary you've recently learned into your conversations. This helps solidify new words in your memory."}
           </ListItem>
           <ListItem>
             <BrainCircuit className="h-4 w-4 mr-2 text-lingua-primary" />
-            {t("practiceGuideItem5") || "Practice with different topics to expand your vocabulary."}
+            {t("practiceGuideItem5") || "Practice with different topics to expand your vocabulary range and comfort with various conversational contexts."}
           </ListItem>
         </List>
         
         <div className="bg-blue-50 p-3 rounded-md">
           <p className="text-sm text-blue-600 italic">
             {t("practiceDisclaimer") || 
-             "Our AI will adapt to your skill level and help you improve gradually. Each practice session builds your confidence and fluency."}
+             "Our AI tutor will adapt intelligently to your skill level, providing appropriate challenges while building your confidence. Each practice session strengthens your neural pathways for language, improving both fluency and comprehension over time."}
           </p>
         </div>
       </CardContent>

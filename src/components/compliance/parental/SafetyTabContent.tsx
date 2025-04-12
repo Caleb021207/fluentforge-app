@@ -55,7 +55,7 @@ const SafetyTabContent: React.FC<SafetyTabContentProps> = ({
           {t("cipaCompliance") || "CIPA Compliance"}
         </h3>
         <p className="text-sm text-blue-600 mt-1">
-          {t("cipaComplianceShortDesc") || "Strict content filtering complies with the Children's Internet Protection Act (CIPA) requirements for filtering inappropriate content in educational settings."}
+          {t("cipaComplianceShortDesc") || "Strict content filtering complies with the Children's Internet Protection Act (CIPA) requirements for filtering inappropriate content in educational settings. This ensures all learning materials are age-appropriate and safe for classroom use."}
         </p>
       </div>
       
@@ -65,7 +65,7 @@ const SafetyTabContent: React.FC<SafetyTabContentProps> = ({
           {t("languageLearningCaution") || "Language Learning Safeguards"}
         </h3>
         <p className="text-sm text-amber-600 mt-1">
-          {t("languageLearningCautionDesc") || "Our filtering system is designed to avoid false positives in educational contexts, ensuring language learning vocabulary and phrases are preserved while still filtering out inappropriate content."}
+          {t("languageLearningCautionDesc") || "Our intelligent filtering system is designed to recognize educational context, ensuring language learning vocabulary is preserved while still filtering inappropriate content. This prevents overly-aggressive blocking that could interfere with legitimate learning materials."}
         </p>
       </div>
       
@@ -75,7 +75,7 @@ const SafetyTabContent: React.FC<SafetyTabContentProps> = ({
           {t("parentalPin") || "Parental PIN Protection"}
         </h3>
         <p className="text-sm text-green-600 mt-1">
-          {t("parentalPinDesc") || "Safety settings are protected by a PIN code to prevent children from changing them. The default PIN is 0000 if you haven't set a custom one."}
+          {t("parentalPinDesc") || "Safety settings are protected by a PIN code to prevent children from changing them without adult supervision. The default PIN is 0000 if you haven't set a custom one. We recommend changing this PIN to a unique number that only authorized adults know."}
         </p>
       </div>
     </div>

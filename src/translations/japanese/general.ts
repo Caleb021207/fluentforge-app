@@ -89,12 +89,12 @@ const generalTranslations: TranslationRecord = {
   proficient: "熟練",
   fluent: "流暢",
   cefr: "CEFR",
-  a1: "A1",
-  a2: "A2",
-  b1: "B1",
-  b2: "B2",
-  c1: "C1",
-  c2: "C2",
+  a1: "A1 (入門) - 基本的な表現を理解し、日常的なニーズを満たすことができる",
+  a2: "A2 (初級) - 身近な事柄についてのやりとりができる",
+  b1: "B1 (中級) - 仕事、学校、余暇など身近な話題について対応できる",
+  b2: "B2 (中上級) - 幅広い話題について明確で詳細な表現ができる",
+  c1: "C1 (上級) - 複雑なテキストを理解し、流暢に自然に表現できる",
+  c2: "C2 (熟練) - ほぼネイティブに近いレベルで言語を理解し使用できる",
   languageSkills: "言語スキル",
   listening: "リスニング",
   reading: "リーディング",
@@ -125,7 +125,16 @@ const generalTranslations: TranslationRecord = {
   french: "フランス語",
   japanese: "日本語",
   networkConnectionIssue: "ネットワーク接続の問題",
-  startChatting: "チャットを始める"
+  startChatting: "チャットを始める",
+  
+  // Safety and Compliance
+  safety: "安全性",
+  dataPrivacy: "データプライバシー",
+  audioSettings: "音声設定",
+  parentalControls: "ペアレンタルコントロール",
+  safetyPolicy: "安全ポリシー",
+  account: "アカウント",
+  language: "言語"
 };
 
 export default generalTranslations;
