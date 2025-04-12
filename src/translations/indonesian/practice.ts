@@ -32,30 +32,7 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "Latih percakapan dalam situasi berbeda",
   learnNewVocabulary: "Pelajari kosakata baru",
   discussCulturalTopics: "Diskusikan topik-topik budaya",
-  practiceConversation: "Latihan Percakapan",
-  
-  // Practice guide components
-  practiceGuide: "Panduan Latihan {{language}}",
-  practiceGuideDescription: "Berikut adalah beberapa strategi efektif untuk membantu Anda memaksimalkan sesi latihan {{language}} dan membuat kemajuan yang konsisten:",
-  practiceGuideItem1: "Cobalah membentuk kalimat lengkap, meskipun sederhana. Ini membangun kelancaran gramatikal Anda lebih cepat daripada respons kata tunggal.",
-  practiceGuideItem2: "Jangan khawatir tentang membuat kesalahan - itu adalah bagian penting dari proses pembelajaran! Tutor AI kami akan membantu Anda meningkat secara bertahap.",
-  practiceGuideItem3: "Mintalah klarifikasi jika Anda tidak memahami sesuatu. Belajar mengatasi kebingungan adalah keterampilan bahasa yang penting.",
-  practiceGuideItem4: "Cobalah memasukkan kosakata yang baru saja Anda pelajari ke dalam percakapan Anda. Ini membantu memantapkan kata-kata baru dalam ingatan Anda.",
-  practiceGuideItem5: "Berlatihlah dengan berbagai topik untuk memperluas rentang kosakata Anda dan kenyamanan dengan berbagai konteks percakapan.",
-  practiceDisclaimer: "Tutor AI kami akan beradaptasi secara cerdas dengan tingkat kemampuan Anda, memberikan tantangan yang sesuai sambil membangun kepercayaan diri Anda. Setiap sesi latihan memperkuat jalur saraf Anda untuk bahasa, meningkatkan kelancaran dan pemahaman dari waktu ke waktu.",
-  
-  // Conversation starters
-  conversationStarters: "Pemulai Percakapan",
-  talkAboutYourself: "Berbicara tentang diri Anda",
-  askAboutWeather: "Tanyakan tentang cuaca",
-  discussHobbies: "Diskusikan hobi",
-  askForDirections: "Minta petunjuk arah",
-  orderInRestaurant: "Memesan di restoran",
-  
-  // Status messages
-  connecting: "Menghubungkan...",
-  loadingChat: "Memuat obrolan...",
-  errorLoading: "Kesalahan saat memuat obrolan"
+  practiceConversation: "Latihan Percakapan"
 };
 
 export default practiceTranslations;

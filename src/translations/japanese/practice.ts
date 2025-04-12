@@ -70,42 +70,19 @@ const practiceTranslations: TranslationRecord = {
   aboutAIPractice: "AI練習について",
   
   // Text practice page specific translations
-  practiceWithAITutor: "AI言語チューターと練習",
-  chatWithAITutor: "AIチューターとのテキスト会話で英語を練習しましょう！AIが文法、語彙、使い方を修正するのを手伝います。言語や文化についての質問も自由にしてください。",
-  startVoiceChat: "音声チャットを開始",
-  stopVoiceChat: "音声チャットを停止",
-  getSkillsAssessment: "スキル評価を受ける",
-  reading: "読解力",
-  writing: "文章力",
-  speaking: "会話力",
-  listening: "聴解力",
-  overallLevel: "総合レベル",
-  startChatting: "AIチューターとの会話を始めましょう！",
-  clickToStartVoice: "チューターと会話するには「音声チャットを開始」をクリックしてください",
-  allowMicAccess: "音声機能を使用するにはマイクへのアクセスを許可してください",
-  typeMessage: "日本語または英語でメッセージを入力してください...",
   practiceWithTextChat: "テキストチャットで練習",
   textConversationPractice: "テキスト会話練習",
   startTextChatting: "AIチューターとのテキストチャットを始める",
-  typeMessageBelow: "始めるには下にメッセージを入力してください",
+  typeMessageBelow: "下にメッセージを入力して開始",
   
   // Additional translations for the practice page
+  chatWithAITutor: "AIチューターとのテキスト会話で英語を練習しましょう！AIが文法、語彙、使い方を修正するのを手伝います。言語や文化についての質問も自由にしてください。",
   noticeTextBasedPractice: "注：これはテキストベースの練習機能です。音声練習には、無制限音声チャットまたはプレミアム音声チャット機能をお試しください。",
   sendEnglishPracticePrompt: "英語練習プロンプトを送信",
   askAboutGrammarRules: "文法ルールについて質問する",
   practiceConversationsDifferentSituations: "様々な状況での会話を練習する",
   learnNewVocabulary: "新しい語彙を学ぶ",
-  discussCulturalTopics: "文化的なトピックについて議論する",
-  
-  // Practice guide components
-  practiceGuide: "{{language}}練習ガイド",
-  practiceGuideDescription: "{{language}}の練習を最大限に活用するためのヒント：",
-  practiceGuideItem1: "短くても完全な文章を作るよう心がけましょう。",
-  practiceGuideItem2: "間違いを気にしないでください - それは学習の一部です！",
-  practiceGuideItem3: "理解できないことがあれば、説明を求めましょう。",
-  practiceGuideItem4: "最近学んだ語彙を使うよう心がけましょう。",
-  practiceGuideItem5: "様々なトピックで練習して語彙を増やしましょう。",
-  practiceDisclaimer: "AIはあなたのスキルレベルに合わせて、少しずつ上達をサポートします。毎回の練習で自信と流暢さを高めていきましょう。"
+  discussCulturalTopics: "文化的なトピックについて議論する"
 };
 
 export default practiceTranslations;
