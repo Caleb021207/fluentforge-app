@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { List, ListItem } from "@/components/ui/list";
-import { BrainCircuit, Globe, GraduationCap, AlertCircle } from "lucide-react";
+import { BrainCircuit, Globe, GraduationCap, AlertCircle, MessageSquare, BookOpen } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
 
@@ -47,24 +47,44 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           <BrainCircuit className="h-5 w-5 text-lingua-primary" />
-          {t("practiceGuide", { language: displayLanguage })}
+          {t("practiceGuide", { language: displayLanguage }) || `${displayLanguage} Practice Guide`}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-gray-600 mb-4">
-          {t("practiceGuideDescription", { language: displayLanguage })}
+          {t("practiceGuideDescription", { language: displayLanguage }) || 
+           `Here are some tips to help you get the most out of your ${displayLanguage} practice:`}
         </p>
         
         <List className="text-sm text-gray-600 mb-4">
-          <ListItem>{t("practiceGuideItem1")}</ListItem>
-          <ListItem>{t("practiceGuideItem2")}</ListItem>
-          <ListItem>{t("practiceGuideItem3")}</ListItem>
-          <ListItem>{t("practiceGuideItem4")}</ListItem>
+          <ListItem>
+            <BookOpen className="h-4 w-4 mr-2 text-lingua-primary" />
+            {t("practiceGuideItem1") || "Try to form complete sentences, even if they're simple."}
+          </ListItem>
+          <ListItem>
+            <MessageSquare className="h-4 w-4 mr-2 text-lingua-primary" />
+            {t("practiceGuideItem2") || "Don't worry about making mistakes - they're part of learning!"}
+          </ListItem>
+          <ListItem>
+            <GraduationCap className="h-4 w-4 mr-2 text-lingua-primary" />
+            {t("practiceGuideItem3") || "Ask for clarification if you don't understand something."}
+          </ListItem>
+          <ListItem>
+            <Globe className="h-4 w-4 mr-2 text-lingua-primary" />
+            {t("practiceGuideItem4") || "Try to use vocabulary you've recently learned."}
+          </ListItem>
+          <ListItem>
+            <BrainCircuit className="h-4 w-4 mr-2 text-lingua-primary" />
+            {t("practiceGuideItem5") || "Practice with different topics to expand your vocabulary."}
+          </ListItem>
         </List>
         
-        <p className="text-sm text-gray-500 italic">
-          {t("practiceDisclaimer")}
-        </p>
+        <div className="bg-blue-50 p-3 rounded-md">
+          <p className="text-sm text-blue-600 italic">
+            {t("practiceDisclaimer") || 
+             "Our AI will adapt to your skill level and help you improve gradually. Each practice session builds your confidence and fluency."}
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
