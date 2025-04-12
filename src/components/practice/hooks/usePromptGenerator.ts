@@ -8,17 +8,12 @@ export const usePromptGenerator = () => {
   const generateLanguageLearningPrompt = () => {
     const { native, practice } = getLanguagePair(currentLanguage);
     
-    // For English speakers, customize prompts based on target language
+    // For English speakers
     if (currentLanguage === "english") {
       // Get target language from localStorage
       const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
       
-      // French-specific prompts for English speakers
-      if (targetLanguage === "french") {
-        return "Hello! I'd like to practice French conversation. Can you help me learn some common phrases and vocabulary?";
-      }
-      
-      // Default prompt for other languages (Spanish, etc.)
+      // Generic prompt for Spanish (or any other target language)
       return `Hello! I'd like to practice ${practice}. Can you help me with a conversation?`;
     }
     
