@@ -1,12 +1,21 @@
 
 import { useState, useEffect } from "react";
-import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { getLanguagePair } from "@/utils/languageUtils";
+
+// Mock conversation interface until we implement the real ElevenLabs integration
+interface MockConversation {
+  status: string;
+  startSession: (options: any) => Promise<string>;
+  endSession: () => Promise<void>;
+  isSpeaking: boolean;
+  onMessage?: (handler: (data: any) => void) => void;
+  onError?: (handler: (error: any) => void) => void;
+}
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
@@ -16,20 +25,19 @@ export const useVoiceChat = () => {
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
 
-  const conversation = useConversation({
-    onMessage: (message) => {
-      if (message.type === "llm_response") {
-        console.log("LLM response received:", message.content);
-      }
+  // Mock conversation object until we implement the real ElevenLabs integration
+  const [conversation] = useState<MockConversation>({
+    status: "disconnected",
+    startSession: async () => {
+      console.log("Mock conversation started");
+      conversation.status = "connected";
+      return "mock-session-id";
     },
-    onError: (error) => {
-      console.error("ElevenLabs conversation error:", error);
-      toast({
-        title: t("error"),
-        description: error.message,
-        variant: "destructive",
-      });
+    endSession: async () => {
+      console.log("Mock conversation ended");
+      conversation.status = "disconnected";
     },
+    isSpeaking: false
   });
 
   const isConversationActive = () => conversation.status !== "disconnected";

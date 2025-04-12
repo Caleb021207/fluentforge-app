@@ -1,7 +1,19 @@
 
 import React from 'react';
-import { ElevenLabsVoiceProvider } from '@11labs/react';
+import { createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+
+interface ElevenLabsContextType {
+  apiKey: string | null;
+  isLoading: boolean;
+}
+
+const ElevenLabsContext = createContext<ElevenLabsContextType>({
+  apiKey: null,
+  isLoading: true
+});
+
+export const useElevenLabs = () => useContext(ElevenLabsContext);
 
 interface ElevenLabsProviderProps {
   children: React.ReactNode;
@@ -43,16 +55,10 @@ const ElevenLabsProvider: React.FC<ElevenLabsProviderProps> = ({ children }) => 
     );
   }
 
-  // If we couldn't get an API key, just render children without the provider
-  if (!apiKey) {
-    console.warn('ElevenLabs API key not available. Voice features will be limited.');
-    return <>{children}</>;
-  }
-
   return (
-    <ElevenLabsVoiceProvider apiKey={apiKey}>
+    <ElevenLabsContext.Provider value={{ apiKey, isLoading }}>
       {children}
-    </ElevenLabsVoiceProvider>
+    </ElevenLabsContext.Provider>
   );
 };
 
