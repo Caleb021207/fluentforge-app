@@ -12,13 +12,14 @@ export const checkAdminAccess = async (): Promise<boolean> => {
     
     const { data: profile, error } = await supabase
       .from('user_profiles')
-      .select('is_admin')
+      .select('*')
       .eq('id', user.id)
       .single();
       
     if (error || !profile) return false;
     
-    return !!profile.is_admin;
+    // Check if is_admin exists in the profile object
+    return profile.is_admin === true;
   } catch (error) {
     console.error("Error checking admin access:", error);
     return false;
@@ -98,10 +99,9 @@ export const generateTestAccessCodes = async (quantity: number = 1): Promise<{
  */
 export const setUserAsAdmin = async (userId: string): Promise<boolean> => {
   try {
-    const { error } = await supabase
-      .from('user_profiles')
-      .update({ is_admin: true })
-      .eq('id', userId);
+    // Use Raw SQL upsert to ensure we can add the is_admin field
+    // even if TypeScript types don't yet reflect the database schema change
+    const { error } = await supabase.rpc('set_user_as_admin', { user_id: userId });
       
     if (error) {
       console.error("Error setting user as admin:", error);
@@ -114,3 +114,14 @@ export const setUserAsAdmin = async (userId: string): Promise<boolean> => {
     return false;
   }
 };
+
+// Let's create the stored procedure for setting admin access
+const createStoredProcedure = async () => {
+  const { error } = await supabase.rpc('create_admin_procedure');
+  if (error) {
+    console.error("Failed to create admin procedure:", error);
+  }
+};
+
+// Run this once on import to make sure the procedure exists
+createStoredProcedure().catch(console.error);

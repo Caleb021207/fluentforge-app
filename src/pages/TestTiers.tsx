@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { generateTestAccessCodes, checkAdminAccess } from "@/utils/testUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, AlertTriangle, Copy, Check } from "lucide-react";
+import AdminLogger from "@/components/debug/AdminLogger";
 
 interface GeneratedCodes {
   tier2Codes: string[];
@@ -94,6 +95,9 @@ const TestTiers = () => {
             </div>
           </CardContent>
         </Card>
+        
+        {/* Add the debug logger in development mode */}
+        <AdminLogger />
       </div>
     );
   }
@@ -179,6 +183,9 @@ const TestTiers = () => {
           </ol>
         </CardContent>
       </Card>
+      
+      {/* Add the debug logger in development mode */}
+      <AdminLogger />
     </div>
   );
 };
