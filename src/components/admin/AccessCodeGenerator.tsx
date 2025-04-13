@@ -119,7 +119,7 @@ const AccessCodeGenerator = () => {
           <div>
             <Label htmlFor="tier">{t("selectTier")}</Label>
             <Select 
-              value={selectedTier.toString()} 
+              value={String(selectedTier)} 
               onValueChange={(value) => setSelectedTier(parseInt(value))}
             >
               <SelectTrigger className="w-full">
