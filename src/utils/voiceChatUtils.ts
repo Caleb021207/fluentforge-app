@@ -3,6 +3,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { getUserTier, getWeeklyTimeLimit } from "./tierUtils";
 
 /**
+ * Format seconds into minutes:seconds display
+ */
+export const formatTime = (seconds: number): string => {
+  if (seconds <= 0) return "0:00";
+  
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
+/**
  * Get the start of the current week (Monday 6 AM UTC)
  */
 export const getCurrentWeekStart = (): Date => {

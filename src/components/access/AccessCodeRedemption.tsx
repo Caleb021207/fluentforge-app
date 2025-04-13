@@ -1,13 +1,12 @@
-
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Key } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { redeemAccessCode } from "@/utils/tierUtils";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
 
 interface AccessCodeRedemptionProps {
   onSuccess?: (tier: number) => void;
@@ -16,102 +15,82 @@ interface AccessCodeRedemptionProps {
 const AccessCodeRedemption = ({ onSuccess }: AccessCodeRedemptionProps) => {
   const { t } = useLocalization();
   const [accessCode, setAccessCode] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!accessCode.trim()) {
-      toast({
-        title: t("formError"),
-        description: t("pleaseEnterAccessCode"),
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    
+  
+  const handleRedeemCode = async () => {
+    setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        toast({
-          title: t("error"),
-          description: t("loginRequired"),
-          variant: "destructive",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      const result = await redeemAccessCode(accessCode.trim(), user.id);
-      
-      if (result.success) {
-        toast({
-          title: t("success"),
-          description: t(result.message, { tier: result.tier }),
-        });
+      const { data } = await supabase.auth.getSession();
+      if (data.session?.user) {
+        const userId = data.session.user.id;
+        const result = await redeemAccessCode(accessCode, userId);
         
-        setAccessCode("");
-        
-        if (onSuccess && result.tier) {
-          onSuccess(result.tier);
+        if (result.success) {
+          toast({
+            title: t("success"),
+            description: t(result.message, { tier: result.tier }),
+          });
+          onSuccess?.(result.tier || 1);
+        } else {
+          toast({
+            title: t("error"),
+            description: t(result.message),
+            variant: "destructive",
+          });
         }
       } else {
         toast({
           title: t("error"),
-          description: t(result.message),
+          description: t("pleaseEnterAccessCode"),
           variant: "destructive",
         });
       }
     } catch (error) {
-      console.error("Error redeeming access code:", error);
+      console.error("Redeem code error:", error);
       toast({
         title: t("error"),
         description: t("unexpectedError"),
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
-
+  
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{t("redeemAccessCode")}</CardTitle>
-        <CardDescription>{t("enterAccessCodeDescription")}</CardDescription>
+        <CardTitle className="flex items-center">
+          <Key className="h-5 w-5 mr-2" />
+          {t("redeemAccessCode")}
+        </CardTitle>
+        <CardDescription>
+          {t("enterAccessCodeDescription")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Input
-              id="access-code"
+        <div className="grid gap-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Input 
+              id="access-code" 
+              className="col-span-3" 
               placeholder={t("accessCodePlaceholder")}
               value={accessCode}
               onChange={(e) => setAccessCode(e.target.value)}
-              disabled={isSubmitting}
+              disabled={isLoading}
             />
+            <Button 
+              className="col-span-1" 
+              onClick={handleRedeemCode}
+              disabled={isLoading}
+            >
+              {isLoading ? t("processing") : t("redeemCode")}
+            </Button>
           </div>
-          <Button 
-            type="submit" 
-            disabled={isSubmitting} 
-            className="w-full"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("processing")}
-              </>
-            ) : (
-              t("redeemCode")
-            )}
-          </Button>
-        </form>
+        </div>
       </CardContent>
-      <CardFooter className="text-xs text-gray-500">
+      <CardFooter className="text-sm">
         {t("accessCodeHelp")}
       </CardFooter>
     </Card>

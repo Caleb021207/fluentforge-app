@@ -1,105 +1,78 @@
-
-import React, { useState, useEffect } from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import React, { useState } from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, AlertTriangle, Copy, Check } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-interface AccessCode {
-  id: string;
-  code: string;
-  tier: number;
-  is_used: boolean;
-  used_by: string | null;
-  created_at: string;
-  used_at: string | null;
-  generated_by: string | null;
-}
+import { Clipboard, Check } from "lucide-react";
+import { useLocalization } from "@/context/LocalizationContext";
 
 const AccessCodeGenerator = () => {
-  const { t } = useLocalization();
-  const [selectedTier, setSelectedTier] = useState<string>("2");
-  const [quantity, setQuantity] = useState<string>("1");
-  const [generatedCodes, setGeneratedCodes] = useState<AccessCode[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [copied, setCopied] = useState<{[key: string]: boolean}>({});
+  const [selectedTier, setSelectedTier] = useState<number>(2);
+  const [quantity, setQuantity] = useState<number>(5);
+  const [isLoading, setIsLoading] = useState(false);
+  const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session?.user) {
-        const email = data.session.user.email;
-        setIsAdmin(email?.includes('admin') || false);
-      }
-    };
-    
-    checkAdminStatus();
-  }, []);
+  const { t } = useLocalization();
 
   const generateAccessCodes = async () => {
-    if (!selectedTier || !quantity) {
-      toast({
-        title: t("formError"),
-        description: t("pleaseSelectTierAndQuantity"),
-        variant: "destructive",
-      });
-      return;
-    }
+    setIsLoading(true);
+    setGeneratedCodes([]);
+    setCopiedIndex(null);
 
-    const parsedQuantity = parseInt(quantity);
-    if (isNaN(parsedQuantity) || parsedQuantity < 1 || parsedQuantity > 100) {
-      toast({
-        title: t("invalidQuantity"),
-        description: t("quantityMustBeBetween1And100"),
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsGenerating(true);
-    
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      const userEmail = userData.user?.email || 'unknown';
-      
-      const codes: AccessCode[] = [];
-      
-      for (let i = 0; i < parsedQuantity; i++) {
-        const randomCode = Array(3).fill(0).map(() => 
-          Math.random().toString(36).substring(2, 5).toUpperCase()
-        ).join('-');
-        
-        const { data, error } = await supabase
-          .from('access_codes')
-          .insert({
-            code: randomCode,
-            tier: parseInt(selectedTier),
-            generated_by: userEmail
-          })
-          .select()
-          .single();
-          
-        if (error) {
-          console.error("Error generating access code:", error);
-          throw error;
-        }
-        
-        if (data) {
-          codes.push(data as AccessCode);
-        }
+      if (!selectedTier || !quantity) {
+        toast({
+          title: t("error"),
+          description: t("pleaseSelectTierAndQuantity"),
+          variant: "destructive",
+        });
+        return;
       }
-      
-      setGeneratedCodes(codes);
-      
+
+      if (quantity < 1 || quantity > 100) {
+        toast({
+          title: t("error"),
+          description: t("quantityMustBeBetween1And100"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const newCodes: string[] = [];
+      for (let i = 0; i < quantity; i++) {
+        const code = generateRandomCode(8);
+        newCodes.push(code);
+      }
+
+      // Insert the generated codes into the database
+      const { data, error } = await supabase
+        .from('access_codes')
+        .insert(
+          newCodes.map(code => ({
+            code: code,
+            tier: selectedTier,
+            is_used: false,
+          }))
+        );
+
+      if (error) {
+        console.error("Error inserting access codes:", error);
+        toast({
+          title: t("error"),
+          description: t("errorGeneratingAccessCodes"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setGeneratedCodes(newCodes);
       toast({
         title: t("success"),
-        description: t("accessCodesGenerated", { count: codes.length }),
+        description: t("accessCodesGenerated", { count: quantity }),
       });
     } catch (error) {
       console.error("Error generating access codes:", error);
@@ -109,37 +82,30 @@ const AccessCodeGenerator = () => {
         variant: "destructive",
       });
     } finally {
-      setIsGenerating(false);
+      setIsLoading(false);
     }
   };
 
-  const copyToClipboard = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopied(prev => ({ ...prev, [code]: true }));
-    
-    setTimeout(() => {
-      setCopied(prev => ({ ...prev, [code]: false }));
-    }, 2000);
-    
+  const generateRandomCode = (length: number): string => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    for (let i = 0; i < length; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return code;
+  };
+
+  const copyToClipboard = (text: string, index: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIndex(index);
     toast({
       title: t("copied"),
       description: t("accessCodeCopiedToClipboard"),
     });
+    setTimeout(() => {
+      setCopiedIndex(null);
+    }, 2000);
   };
-
-  if (!isAdmin) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>{t("accessCodeGenerator")}</CardTitle>
-          <CardDescription>{t("adminOnlyFeature")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>{t("mustBeAdminToAccessThisFeature")}</p>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card className="w-full">
@@ -147,80 +113,82 @@ const AccessCodeGenerator = () => {
         <CardTitle>{t("accessCodeGenerator")}</CardTitle>
         <CardDescription>{t("generateAccessCodesForUsers")}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label htmlFor="tier-select" className="text-sm font-medium">
-                {t("selectTier")}
-              </label>
-              <Select value={selectedTier} onValueChange={setSelectedTier}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t("selectTier")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2">{t("tierBasic")} - 10 min/week</SelectItem>
-                  <SelectItem value="3">{t("tierStandard")} - 20 min/week</SelectItem>
-                  <SelectItem value="4">{t("tierPremium")} - 30 min/week</SelectItem>
-                  <SelectItem value="5">{t("tierUnlimited")} - 60 min/week</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="quantity" className="text-sm font-medium">
-                {t("quantity")}
-              </label>
-              <Input
-                id="quantity"
-                type="number"
-                min="1"
-                max="100"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-            </div>
+      <CardContent className="grid gap-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="tier">{t("selectTier")}</Label>
+            <Select value={selectedTier.toString()} onValueChange={(value) => setSelectedTier(parseInt(value))}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t("selectTier")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2">Tier 2 (Basic)</SelectItem>
+                <SelectItem value="3">Tier 3 (Standard)</SelectItem>
+                <SelectItem value="4">Tier 4 (Premium)</SelectItem>
+                <SelectItem value="5">Tier 5 (Unlimited)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          
-          <Button 
-            onClick={generateAccessCodes}
-            disabled={isGenerating}
-            className="w-full"
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("generating")}
-              </>
-            ) : (
-              t("generateAccessCodes")
-            )}
-          </Button>
-          
-          {generatedCodes.length > 0 && (
-            <div className="mt-4 border rounded-md p-4">
-              <h3 className="text-sm font-medium mb-2">{t("generatedAccessCodes")}</h3>
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {generatedCodes.map((code) => (
-                  <div key={code.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                    <div className="font-mono">{code.code}</div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => copyToClipboard(code.code)}
-                    >
-                      {copied[code.code] ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <div>
+            <Label htmlFor="quantity">{t("quantity")}</Label>
+            <Input
+              id="quantity"
+              type="number"
+              value={quantity.toString()}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value)) {
+                  setQuantity(value);
+                } else {
+                  setQuantity(1);
+                }
+              }}
+              min="1"
+              max="100"
+            />
+          </div>
         </div>
       </CardContent>
+      <CardFooter>
+        <Button onClick={generateAccessCodes} disabled={isLoading}>
+          {isLoading ? t("generating") : t("generateAccessCodes")}
+        </Button>
+      </CardFooter>
+      {generatedCodes.length > 0 && (
+        <CardContent>
+          <div className="grid gap-2">
+            <Label>{t("generatedAccessCodes")}</Label>
+            {generatedCodes.map((code, index) => (
+              <div key={index} className="flex items-center justify-between rounded-md border p-2">
+                <Input
+                  type="text"
+                  value={code}
+                  readOnly
+                  className="mr-2"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(code, index)}
+                  disabled={copiedIndex === index}
+                >
+                  {copiedIndex === index ? (
+                    <>
+                      <Check className="mr-2 h-4 w-4" />
+                      {t("copied")}
+                    </>
+                  ) : (
+                    <>
+                      <Clipboard className="mr-2 h-4 w-4" />
+                      {t("copy")}
+                    </>
+                  )}
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      )}
     </Card>
   );
 };
