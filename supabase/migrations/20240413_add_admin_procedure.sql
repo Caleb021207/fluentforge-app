@@ -6,6 +6,13 @@ language plpgsql
 security definer
 as $$
 begin
+  -- Check if is_admin column exists, if not add it
+  begin
+    alter table public.user_profiles add column if not exists is_admin boolean default false;
+  exception when others then
+    raise notice 'Error adding is_admin column: %', sqlerrm;
+  end;
+  
   -- Create the procedure to set a user as admin
   create or replace function public.set_user_as_admin(user_id uuid)
   returns boolean

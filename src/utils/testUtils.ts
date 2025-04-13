@@ -1,6 +1,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { generateRandomCode } from "@/components/admin/utils/codeGeneratorUtils";
+import { UserProfile } from "@/types/supabase";
 
 /**
  * Check if the current user has admin access
@@ -19,7 +20,7 @@ export const checkAdminAccess = async (): Promise<boolean> => {
     if (error || !profile) return false;
     
     // Check if is_admin exists in the profile object
-    return profile.is_admin === true;
+    return (profile as UserProfile).is_admin === true;
   } catch (error) {
     console.error("Error checking admin access:", error);
     return false;

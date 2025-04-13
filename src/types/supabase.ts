@@ -11,8 +11,8 @@ export interface UserProfile {
   avatar_url: string | null;
   created_at: string;
   updated_at: string;
-  tier?: number;
-  is_admin?: boolean;
+  tier: number | null;
+  is_admin: boolean | null;
 }
 
 export interface LessonProgress {

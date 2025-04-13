@@ -70,7 +70,7 @@ const AdminLogger = () => {
   }
 
   return (
-    <Card className="mt-4 border-dashed border-red-300 bg-red-50 hidden">
+    <Card className="mt-4 border-dashed border-red-300 bg-red-50">
       <CardHeader>
         <CardTitle>Admin Debug Log</CardTitle>
         <CardDescription>Only visible in development</CardDescription>
