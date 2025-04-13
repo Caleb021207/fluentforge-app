@@ -56,7 +56,6 @@ const AccessCodeRedemption = ({ onSuccess }: AccessCodeRedemptionProps) => {
         
         setAccessCode("");
         
-        // Fixed TypeScript error - tier is now properly typed as number
         if (onSuccess && result.tier) {
           onSuccess(result.tier);
         }

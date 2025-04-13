@@ -7,15 +7,17 @@ import { supabase } from "@/integrations/supabase/client";
 import LearningGoals from "@/components/profile/LearningGoals";
 import TierInfoCard from "@/components/profile/TierInfoCard";
 import { getUserProfile } from "@/utils/profileUtils";
+import { User } from "@supabase/supabase-js";
+import { UserProfile } from "@/types/supabase"; // Import the UserProfile type
 
 const Profile = () => {
   const { t } = useLocalization();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [profileData, setProfileData] = useState({
     displayName: "",
-    avatarUrl: null,
+    avatarUrl: null as string | null,
     learningGoal: "",
     targetLevel: "B2",
     targetDate: ""
@@ -33,7 +35,7 @@ const Profile = () => {
           
           // Fetch user profile data
           try {
-            const profile = await getUserProfile(data.session.user.id);
+            const profile = await getUserProfile(data.session.user.id) as UserProfile;
             if (profile) {
               setProfileData({
                 displayName: profile.display_name || "",

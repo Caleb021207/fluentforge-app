@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Copy, Check } from "lucide-react";
+import { Loader2, AlertTriangle, Copy, Check } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface AccessCode {
@@ -79,7 +79,7 @@ const AccessCodeGenerator = () => {
           .from('access_codes')
           .insert({
             code: randomCode,
-            tier: parseInt(selectedTier), // Convert string to number for database
+            tier: parseInt(selectedTier),
             generated_by: userEmail
           })
           .select()
