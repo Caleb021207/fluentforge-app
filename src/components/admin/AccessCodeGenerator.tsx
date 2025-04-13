@@ -55,7 +55,7 @@ const AccessCodeGenerator = () => {
         .insert(
           newCodes.map(code => ({
             code: code,
-            tier: selectedTier, // Keep as number to match database schema
+            tier: selectedTier, // This is a number as required by the DB
             is_used: false,
           }))
         );
@@ -118,7 +118,10 @@ const AccessCodeGenerator = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="tier">{t("selectTier")}</Label>
-            <Select value={selectedTier.toString()} onValueChange={(value) => setSelectedTier(parseInt(value))}>
+            <Select 
+              value={selectedTier.toString()} 
+              onValueChange={(value) => setSelectedTier(parseInt(value))}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={t("selectTier")} />
               </SelectTrigger>
