@@ -72,6 +72,11 @@ export const redeemAccessCode = async (code: string, userId: string): Promise<{
       return { success: false, message: 'invalidOrUsedCode' };
     }
 
+    // Make sure tier is treated as a number
+    const tierNumber = typeof codeData.tier === 'string' 
+      ? parseInt(codeData.tier, 10) 
+      : codeData.tier;
+
     // Mark the code as used
     const { error: updateError } = await supabase
       .from('access_codes')
@@ -90,7 +95,7 @@ export const redeemAccessCode = async (code: string, userId: string): Promise<{
     // Update the user's tier
     const { error: userUpdateError } = await supabase
       .from('user_profiles')
-      .update({ tier: codeData.tier })
+      .update({ tier: tierNumber })
       .eq('id', userId);
 
     if (userUpdateError) {
@@ -101,7 +106,7 @@ export const redeemAccessCode = async (code: string, userId: string): Promise<{
     return { 
       success: true, 
       message: 'codeRedeemSuccess', 
-      tier: codeData.tier 
+      tier: tierNumber 
     };
   } catch (error) {
     console.error('Error redeeming access code:', error);
@@ -125,7 +130,8 @@ export const getUserTier = async (userId: string): Promise<number> => {
       return 1; // Default to free tier on error
     }
 
-    return data?.tier || 1;
+    // Make sure to return tier as a number
+    return typeof data?.tier === 'string' ? parseInt(data.tier, 10) : (data?.tier || 1);
   } catch (error) {
     console.error('Error in getUserTier:', error);
     return 1; // Default to free tier on error

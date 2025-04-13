@@ -30,7 +30,7 @@ const AccessCodeRedemption = ({ onSuccess }: AccessCodeRedemptionProps) => {
         if (result.success) {
           toast({
             title: t("success"),
-            description: t(result.message, { tier: result.tier?.toString() }), // Convert tier to string
+            description: t(result.message, { tier: result.tier?.toString() }),
           });
           onSuccess?.(result.tier || 1);
         } else {

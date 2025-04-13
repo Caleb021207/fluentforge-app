@@ -55,7 +55,7 @@ const AccessCodeGenerator = () => {
         .insert(
           newCodes.map(code => ({
             code: code,
-            tier: selectedTier.toString(), // Convert to string to match database schema
+            tier: selectedTier, // Keep as number to match database schema
             is_used: false,
           }))
         );
