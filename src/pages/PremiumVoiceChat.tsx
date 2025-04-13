@@ -38,7 +38,8 @@ const PremiumVoiceChat = () => {
     setWeeklyTimeRemaining,
     createSession,
     endSession,
-    formatCooldownTime
+    formatCooldownTime,
+    userTier
   } = useSessionManagement(t);
   
   const { messages, clearMessages, addInitialMessage } = useVoiceChatMessages();
@@ -159,6 +160,7 @@ const PremiumVoiceChat = () => {
         weeklyTimeRemaining={weeklyTimeRemaining}
         sessionStatus={sessionStatus}
         formatTime={formatTimer}
+        userTier={userTier}
       />
 
       <BenefitsList />
