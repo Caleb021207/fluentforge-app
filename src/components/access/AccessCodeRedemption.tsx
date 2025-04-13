@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,7 +30,7 @@ const AccessCodeRedemption = ({ onSuccess }: AccessCodeRedemptionProps) => {
         if (result.success) {
           toast({
             title: t("success"),
-            description: t(result.message, { tier: result.tier }),
+            description: t(result.message, { tier: result.tier?.toString() }), // Convert tier to string
           });
           onSuccess?.(result.tier || 1);
         } else {

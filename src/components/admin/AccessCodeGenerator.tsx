@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ const AccessCodeGenerator = () => {
         .insert(
           newCodes.map(code => ({
             code: code,
-            tier: selectedTier,
+            tier: selectedTier.toString(), // Convert to string to match database schema
             is_used: false,
           }))
         );
