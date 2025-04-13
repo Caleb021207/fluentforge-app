@@ -9,7 +9,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-const AccessCodeRedemption = ({ onSuccess }: { onSuccess?: (tier: number) => void }) => {
+interface AccessCodeRedemptionProps {
+  onSuccess?: (tier: number) => void;
+}
+
+const AccessCodeRedemption = ({ onSuccess }: AccessCodeRedemptionProps) => {
   const { t } = useLocalization();
   const [accessCode, setAccessCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +56,7 @@ const AccessCodeRedemption = ({ onSuccess }: { onSuccess?: (tier: number) => voi
         
         setAccessCode("");
         
-        // Fixed TypeScript error - pass the numeric tier value to the callback
+        // Fixed TypeScript error - tier is now properly typed as number
         if (onSuccess && result.tier) {
           onSuccess(result.tier);
         }

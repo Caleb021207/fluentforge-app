@@ -79,7 +79,7 @@ const AccessCodeGenerator = () => {
           .from('access_codes')
           .insert({
             code: randomCode,
-            tier: parseInt(selectedTier), // Fixed TypeScript error - convert string to number
+            tier: parseInt(selectedTier), // Convert string to number for database
             generated_by: userEmail
           })
           .select()

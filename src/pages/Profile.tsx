@@ -6,23 +6,64 @@ import ManualScoreForm from "@/components/profile/ManualScoreForm";
 import { supabase } from "@/integrations/supabase/client";
 import LearningGoals from "@/components/profile/LearningGoals";
 import TierInfoCard from "@/components/profile/TierInfoCard";
+import { getUserProfile } from "@/utils/profileUtils";
 
 const Profile = () => {
   const { t } = useLocalization();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [profileData, setProfileData] = useState({
+    displayName: "",
+    avatarUrl: null,
+    learningGoal: "",
+    targetLevel: "B2",
+    targetDate: ""
+  });
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setIsLoggedIn(!!data.session);
-      setLoading(false);
+      try {
+        const { data } = await supabase.auth.getSession();
+        const loggedIn = !!data.session;
+        setIsLoggedIn(loggedIn);
+        
+        if (loggedIn && data.session?.user) {
+          setUser(data.session.user);
+          
+          // Fetch user profile data
+          try {
+            const profile = await getUserProfile(data.session.user.id);
+            if (profile) {
+              setProfileData({
+                displayName: profile.display_name || "",
+                avatarUrl: profile.avatar_url || null,
+                learningGoal: profile.learning_goal || "",
+                targetLevel: profile.target_level || "B2",
+                targetDate: profile.target_date || ""
+              });
+            }
+          } catch (error) {
+            console.error("Error fetching profile data:", error);
+          }
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error("Error checking session:", error);
+        setLoading(false);
+      }
     };
     
     checkSession();
     
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsLoggedIn(!!session);
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        setUser(null);
+      }
     });
     
     return () => subscription.unsubscribe();
@@ -53,8 +94,19 @@ const Profile = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
-          <UserInfo />
-          <LearningGoals />
+          <UserInfo 
+            user={user} 
+            displayName={profileData.displayName} 
+            setProfileData={setProfileData} 
+            avatarUrl={profileData.avatarUrl} 
+            setAvatarUrl={(url) => setProfileData(prev => ({...prev, avatarUrl: url}))} 
+          />
+          <LearningGoals 
+            user={user}
+            profileData={profileData}
+            setProfileData={setProfileData}
+            avatarUrl={profileData.avatarUrl}
+          />
           <ManualScoreForm />
         </div>
         
