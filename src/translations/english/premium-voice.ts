@@ -45,6 +45,21 @@ const premiumVoiceTranslations: TranslationRecord = {
   benefitAccentPronunciation: "Accurate accent and pronunciation for immersive learning",
   benefitRegularPractice: "10 minutes of practice time weekly, resetting each Monday at 6:00 AM Central Time",
   timeLimit10MinReached: "10-minute time limit reached",
+  
+  // Added voice chat controls
+  startVoiceChat: "Start Voice Chat",
+  stopVoiceChat: "Stop Voice Chat",
+  voiceChatEnded: "Voice Chat Ended",
+  speaking: "Speaking...",
+  startChatting: "Start Chatting",
+  
+  // Added messaging controls
+  typeYourMessageHere: "Type your message here...",
+  sendMessage: "Send Message",
+  
+  // Added tier information
+  viewTierDetails: "View your account tier details",
+  upgradeAccount: "Upgrade Account",
 };
 
 export default premiumVoiceTranslations;

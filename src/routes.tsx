@@ -19,13 +19,13 @@ const ReadingCertification = lazy(() => import("@/pages/ReadingCertification"));
 const WritingCertification = lazy(() => import("@/pages/WritingCertification"));
 const Certificates = lazy(() => import("@/pages/Certificates"));
 const PremiumVoiceChat = lazy(() => import("@/pages/PremiumVoiceChat"));
-const TestTiers = lazy(() => import("@/pages/TestTiers")); // Add the new page
+const TestTiers = lazy(() => import("@/pages/TestTiers"));
 
 // Create router with routes
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <Layout children={<></>} />, // Fixed TS error by providing children prop
     children: [
       {
         index: true,
@@ -84,7 +84,7 @@ export const router = createBrowserRouter([
         element: <AdminDashboard />,
       },
       {
-        path: "test-tiers", // Add the new route
+        path: "test-tiers",
         element: <TestTiers />,
       },
       {

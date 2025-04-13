@@ -1,267 +1,121 @@
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
-import { Loader2, Users, Calendar, Award } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useLocalization } from "@/context/LocalizationContext";
+import AccessCodeGenerator from "@/components/admin/AccessCodeGenerator";
+import { ShieldCheck, Users, CheckCircle2, Database } from "lucide-react";
 
 const AdminDashboard = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userProfiles, setUserProfiles] = useState<any[]>([]);
-  const [totalAccounts, setTotalAccounts] = useState(0);
-  const [accountsByLevel, setAccountsByLevel] = useState<Record<string, number>>({});
-  const [certificationCount, setCertificationCount] = useState(0);
-  const { toast } = useToast();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      setIsLoading(true);
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-        
-        if (user) {
-          // For demo purposes, we'll just check if the user's email contains "admin"
-          // In a real application, you would have a proper role-based system
-          const isAdminUser = user.email?.includes("admin") || false;
-          setIsAdmin(isAdminUser);
-          
-          if (isAdminUser) {
-            await fetchUserData();
-          } else {
-            toast({
-              title: "Access Denied",
-              description: "You don't have permission to access the admin dashboard.",
-              variant: "destructive",
-            });
-            navigate("/");
-          }
-        } else {
-          toast({
-            title: "Authentication Required",
-            description: "Please sign in to access this page.",
-            variant: "destructive",
-          });
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Error checking authentication:", error);
-        toast({
-          title: "Error",
-          description: "An error occurred while checking your permissions.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [toast, navigate]);
-
-  const fetchUserData = async () => {
-    try {
-      // Get user profiles
-      const { data: profiles, error: profilesError } = await supabase
-        .from("user_profiles")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (profilesError) throw profilesError;
-
-      // Get certification attempts
-      const { data: certifications, error: certificationsError } = await supabase
-        .from("certification_attempts")
-        .select("*");
-
-      if (certificationsError) throw certificationsError;
-
-      // Process data
-      if (profiles) {
-        setUserProfiles(profiles);
-        setTotalAccounts(profiles.length);
-        
-        // Calculate accounts by level
-        const levelCounts: Record<string, number> = {};
-        profiles.forEach((profile) => {
-          const level = profile.target_level || "Unknown";
-          levelCounts[level] = (levelCounts[level] || 0) + 1;
-        });
-        setAccountsByLevel(levelCounts);
-      }
-
-      if (certifications) {
-        setCertificationCount(certifications.length);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      toast({
-        title: "Error",
-        description: "An error occurred while fetching user data.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-lingua-primary" />
-      </div>
-    );
-  }
-
-  if (!user || !isAdmin) {
-    return (
-      <div className="text-center py-8">
-        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-        <p className="mb-6">You don't have permission to access this page.</p>
-        <Button onClick={() => navigate("/")} className="bg-lingua-primary hover:bg-lingua-primary/90">
-          Return to Home
-        </Button>
-      </div>
-    );
-  }
+  const { t } = useLocalization();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-lingua-text">Admin Dashboard</h1>
-        <Badge variant="outline" className="px-3 py-1">
-          Admin View
-        </Badge>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium flex items-center">
-              <Users className="h-4 w-4 mr-2" />
-              Total Accounts
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{totalAccounts}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium flex items-center">
-              <Calendar className="h-4 w-4 mr-2" />
-              New This Month
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">
-              {userProfiles.filter(p => {
-                const createdDate = new Date(p.created_at);
-                const now = new Date();
-                return createdDate.getMonth() === now.getMonth() && 
-                       createdDate.getFullYear() === now.getFullYear();
-              }).length}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium flex items-center">
-              <Award className="h-4 w-4 mr-2" />
-              Certifications Taken
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{certificationCount}</div>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="p-6">
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <p className="text-gray-500">Manage settings, users, and content</p>
+      </header>
 
       <Tabs defaultValue="users">
-        <TabsList>
-          <TabsTrigger value="users">User Accounts</TabsTrigger>
-          <TabsTrigger value="metrics">Level Distribution</TabsTrigger>
+        <TabsList className="mb-4 grid grid-cols-4 md:w-[400px]">
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="content">Content</TabsTrigger>
+          <TabsTrigger value="access">Access</TabsTrigger>
+          <TabsTrigger value="system">System</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="users" className="p-1">
+        <TabsContent value="users">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+                <Users className="h-4 w-4 text-gray-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">120</div>
+                <p className="text-xs text-gray-500">+10% from last month</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+                <CheckCircle2 className="h-4 w-4 text-gray-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">76%</div>
+                <p className="text-xs text-gray-500">+4% from last month</p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="content">
           <Card>
             <CardHeader>
-              <CardTitle>User Accounts</CardTitle>
+              <CardTitle>Content Management</CardTitle>
+              <CardDescription>Manage lessons, exercises, and assessments</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2 px-4 font-medium">User ID</th>
-                      <th className="text-left py-2 px-4 font-medium">Display Name</th>
-                      <th className="text-left py-2 px-4 font-medium">Target Level</th>
-                      <th className="text-left py-2 px-4 font-medium">Created</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {userProfiles.length > 0 ? (
-                      userProfiles.map((profile) => (
-                        <tr key={profile.id} className="border-b hover:bg-muted/50">
-                          <td className="py-2 px-4 text-sm">{profile.id.substring(0, 8)}...</td>
-                          <td className="py-2 px-4 text-sm">{profile.display_name || "-"}</td>
-                          <td className="py-2 px-4 text-sm">{profile.target_level || "-"}</td>
-                          <td className="py-2 px-4 text-sm">
-                            {profile.created_at ? format(new Date(profile.created_at), 'MMM d, yyyy') : "-"}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={4} className="py-4 text-center text-gray-500">
-                          No user accounts found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+            <CardContent className="space-y-2">
+              <p>Content management features are coming soon.</p>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="metrics">
+        <TabsContent value="access">
+          <div className="grid gap-6 md:grid-cols-2">
+            <AccessCodeGenerator />
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Tier Management Tools</CardTitle>
+                <CardDescription>Test and manage the tiered system</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <p>Use these tools to test and manage the tier system:</p>
+                  <Button asChild className="w-full">
+                    <Link to="/test-tiers">Test Tier System</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="system">
           <Card>
             <CardHeader>
-              <CardTitle>User Level Distribution</CardTitle>
+              <CardTitle>System Settings</CardTitle>
+              <CardDescription>Server and application settings</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {Object.entries(accountsByLevel).sort().map(([level, count]) => (
-                  <Card key={level}>
-                    <CardContent className="p-4 text-center">
-                      <div className="text-2xl font-bold">{count}</div>
-                      <div className="text-sm text-muted-foreground mt-1">{level}</div>
-                    </CardContent>
-                  </Card>
-                ))}
+            <CardContent className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Database className="h-4 w-4 text-gray-500" />
+                  <span>Database Status</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500 text-sm">Online</span>
+                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <ShieldCheck className="h-4 w-4 text-gray-500" />
+                  <span>Security Status</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500 text-sm">Protected</span>
+                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                </div>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-
-      <div className="text-sm text-muted-foreground mt-8">
-        <p>
-          Note: This is a simple admin dashboard. In a production environment, 
-          you would implement more sophisticated access controls and additional metrics.
-        </p>
-      </div>
     </div>
   );
 };

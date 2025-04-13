@@ -69,6 +69,11 @@ const profileTranslations: TranslationRecord = {
   noTimeAllowance: "No premium voice access",
   upgradeTierForAccess: "Upgrade your tier to access premium features",
   premiumFeatureRestricted: "Premium Feature Restricted",
+  tierFeatures: "Tier Features",
+  premiumVoiceAccess: "Premium voice chat access",
+  increasedTimeAllowance: "Increased weekly time allowance",
+  prioritySupport: "Priority support",
+  fullContentAccess: "Full content access",
   
   // Access code related translations
   redeemAccessCode: "Redeem Access Code",

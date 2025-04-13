@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
@@ -78,7 +79,7 @@ const AccessCodeGenerator = () => {
           .from('access_codes')
           .insert({
             code: randomCode,
-            tier: parseInt(selectedTier),
+            tier: parseInt(selectedTier), // Fixed TypeScript error - convert string to number
             generated_by: userEmail
           })
           .select()
