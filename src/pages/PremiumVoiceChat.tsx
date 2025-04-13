@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
 import CooldownMessage from "@/components/premium-voice/CooldownMessage";
 import TierIndicator from "@/components/premium-voice/TierIndicator";
+import TierStatusCard from "@/components/premium-voice/TierStatusCard";
 import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { hasPremiumVoiceAccess } from "@/utils/tierUtils";
@@ -31,7 +32,8 @@ const PremiumVoiceChat = () => {
     createSession,
     endSession,
     currentSessionId,
-    formatCooldownTime
+    formatCooldownTime,
+    checkSessionStatus
   } = useSessionManagement(t);
   
   const isConversationActive = () => isVoiceChatActive;
@@ -94,51 +96,62 @@ const PremiumVoiceChat = () => {
         <TierIndicator userTier={userTier} />
       </div>
       
-      <BenefitsList />
-      
-      {!hasAccess && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <h3 className="text-lg font-medium text-amber-800">{t("premiumFeatureRestricted")}</h3>
-          <p className="mt-2 text-amber-700">{t("upgradeTierForAccess")}</p>
-          <Button asChild className="mt-3" variant="outline">
-            <Link to="/profile">
-              <ArrowUpCircle className="mr-2 h-4 w-4" />
-              {t("upgradeAccount")}
-            </Link>
-          </Button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 space-y-6">
+          <BenefitsList />
+          
+          {!hasAccess && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <h3 className="text-lg font-medium text-amber-800">{t("premiumFeatureRestricted")}</h3>
+              <p className="mt-2 text-amber-700">{t("upgradeTierForAccess")}</p>
+              <Button asChild className="mt-3" variant="outline">
+                <Link to="/profile">
+                  <ArrowUpCircle className="mr-2 h-4 w-4" />
+                  {t("upgradeAccount")}
+                </Link>
+              </Button>
+            </div>
+          )}
+          
+          <CooldownMessage 
+            cooldownTimeRemaining={cooldownTimeRemaining} 
+            sessionStatus={sessionStatus} 
+            formatCooldownTime={formatCooldownTime} 
+          />
+          
+          <VoiceChatControls 
+            startConversation={handleStartConversation}
+            isConversationActive={isConversationActive}
+            weeklyTimeRemaining={timerValue}
+            sessionStatus={sessionStatus}
+            formatTime={formatTimer}
+            userTier={userTier}
+          />
+          
+          <div className="space-y-4">
+            <Textarea
+              placeholder={t("typeYourMessageHere")}
+              className="min-h-[120px]"
+              value={currentPrompt}
+              onChange={(e) => setCurrentPrompt(e.target.value)}
+              disabled={!isVoiceChatActive || sessionStatus === 'cooldown'}
+            />
+            
+            <Button 
+              className="w-full" 
+              disabled={!isVoiceChatActive || !currentPrompt.trim() || sessionStatus === 'cooldown'}
+            >
+              {t("sendMessage")}
+            </Button>
+          </div>
         </div>
-      )}
-      
-      <CooldownMessage 
-        cooldownTimeRemaining={cooldownTimeRemaining} 
-        sessionStatus={sessionStatus} 
-        formatCooldownTime={formatCooldownTime} 
-      />
-      
-      <VoiceChatControls 
-        startConversation={handleStartConversation}
-        isConversationActive={isConversationActive}
-        weeklyTimeRemaining={timerValue}
-        sessionStatus={sessionStatus}
-        formatTime={formatTimer}
-        userTier={userTier}
-      />
-      
-      <div className="space-y-4">
-        <Textarea
-          placeholder={t("typeYourMessageHere")}
-          className="min-h-[120px]"
-          value={currentPrompt}
-          onChange={(e) => setCurrentPrompt(e.target.value)}
-          disabled={!isVoiceChatActive || sessionStatus === 'cooldown'}
-        />
         
-        <Button 
-          className="w-full" 
-          disabled={!isVoiceChatActive || !currentPrompt.trim() || sessionStatus === 'cooldown'}
-        >
-          {t("sendMessage")}
-        </Button>
+        <div className="space-y-6">
+          <TierStatusCard 
+            userTier={userTier}
+            onRefresh={checkSessionStatus}
+          />
+        </div>
       </div>
     </div>
   );

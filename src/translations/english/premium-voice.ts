@@ -24,14 +24,18 @@ const premiumVoiceTranslations: TranslationRecord = {
   upgradeToGetMoreTime: "Upgrade your tier to get more weekly practice time with our AI tutors",
   upgradeNow: "Upgrade Now",
   tierResetInfo: "Your weekly time resets every Monday at 6:00 AM UTC",
+  viewTierDetails: "View tier details",
+  refresh: "Refresh data",
+  total: "total",
+  upgradeAccount: "Upgrade Account",
   
   // Fixed premium voice chat cooldown messages
   cooldownPeriodActive: "Weekly limit reached",
   cooldownActive: "Weekly limit reached",
   waitBeforeNextSession: "You need to wait before starting another session",
   cooldownPeriodDescription: "You need to wait {{time}} before starting another premium voice chat session.",
-  resetsAt6AM: "Your 10 minutes weekly time will reset after {{time}} (Monday 6:00 AM)",
-  dailyLimitReached: "You've used up your 10 minutes weekly. Time will reset on Monday at 6:00 AM.",
+  resetsAt6AM: "Your weekly time will reset after {{time}} (Monday 6:00 AM)",
+  dailyLimitReached: "You've used up your weekly time allowance. Time will reset on Monday at 6:00 AM.",
   
   // Login related messages
   loginRequired: "Login Required",
@@ -43,23 +47,25 @@ const premiumVoiceTranslations: TranslationRecord = {
   
   // Success messages
   conversationHistoryCleared: "Conversation history cleared",
-  remaining: "remaining this week",
+  remaining: "remaining",
   
   // Premium voice benefits
   premiumVoiceChatDescription: "Chat naturally with our premium AI tutor to practice {{practice}}! The AI will help you correct grammar, vocabulary, and pronunciation.",
-  premiumVoiceNote: "Premium voice chat is limited to a 10-minute session per week",
-  premiumVoiceNoteWithReset: "Premium voice chat allows 10 minutes of practice time per week. Your time is refreshed every Monday at 6:00 AM Central Time.",
+  premiumVoiceNote: "Premium voice chat time is limited based on your account tier",
+  premiumVoiceNoteWithReset: "Premium voice chat allows practice time based on your account tier. Your time is refreshed every Monday at 6:00 AM UTC.",
   benefitNaturalVoice: "Natural, human-like voice interactions using ElevenLabs technology",
   benefitAccentPronunciation: "Accurate accent and pronunciation for immersive learning",
-  benefitRegularPractice: "10 minutes of weekly practice time, refreshed every Monday at 6:00 AM Central Time",
+  benefitRegularPractice: "Weekly practice time (based on your tier), refreshed every Monday at 6:00 AM UTC",
 
   // Added voice chat controls
   startVoiceChat: "Start Voice Chat",
   stopVoiceChat: "Stop Voice Chat",
   voiceChatEnded: "Voice Chat Ended",
-  timeLimit10MinReached: "10-minute time limit reached",
+  timeLimit10MinReached: "Time limit reached",
   speaking: "Speaking...",
   startChatting: "Start chatting",
+  sendMessage: "Send Message",
+  typeYourMessageHere: "Type your message here",
   
   // Added missing key
   premiumSessionLimitReached: "Premium session limit reached",

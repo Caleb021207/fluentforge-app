@@ -74,6 +74,8 @@ const profileTranslations: TranslationRecord = {
   increasedTimeAllowance: "Increased weekly time allowance",
   prioritySupport: "Priority support",
   fullContentAccess: "Full content access",
+  total: "total",
+  remaining: "remaining",
   
   // Access code related translations
   redeemAccessCode: "Redeem Access Code",

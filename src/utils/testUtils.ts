@@ -1,9 +1,32 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { generateRandomCode } from "@/components/admin/utils/codeGeneratorUtils";
 
 /**
- * Generates a batch of test access codes for each tier level
- * This is a utility function for testing purposes only
+ * Check if the current user has admin access
+ */
+export const checkAdminAccess = async (): Promise<boolean> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+    
+    const { data: profile, error } = await supabase
+      .from('user_profiles')
+      .select('is_admin')
+      .eq('id', user.id)
+      .single();
+      
+    if (error || !profile) return false;
+    
+    return !!profile.is_admin;
+  } catch (error) {
+    console.error("Error checking admin access:", error);
+    return false;
+  }
+};
+
+/**
+ * Generate test access codes for each tier
  */
 export const generateTestAccessCodes = async (quantity: number = 1): Promise<{
   tier2Codes: string[];
@@ -11,58 +34,83 @@ export const generateTestAccessCodes = async (quantity: number = 1): Promise<{
   tier4Codes: string[];
   tier5Codes: string[];
 }> => {
-  const tier2Codes: string[] = [];
-  const tier3Codes: string[] = [];
-  const tier4Codes: string[] = [];
-  const tier5Codes: string[] = [];
-  
-  const generateForTier = async (tier: number, targetArray: string[]) => {
-    for (let i = 0; i < quantity; i++) {
-      // Format: TIER{N}-TEST-{random}
-      const code = `TIER${tier}-TEST-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-      
-      const { data, error } = await supabase
-        .from('access_codes')
-        .insert({
-          code: code,
-          tier: tier,
-          generated_by: 'test-util',
-          is_used: false
-        })
-        .select()
-        .single();
-        
-      if (data && !error) {
-        targetArray.push(code);
-      } else {
-        console.error(`Error generating tier ${tier} code:`, error);
-      }
+  try {
+    const isAdmin = await checkAdminAccess();
+    if (!isAdmin) {
+      throw new Error("Admin access required");
     }
-  };
-  
-  // Generate codes for each tier
-  await generateForTier(2, tier2Codes);
-  await generateForTier(3, tier3Codes);
-  await generateForTier(4, tier4Codes);
-  await generateForTier(5, tier5Codes);
-  
-  return {
-    tier2Codes,
-    tier3Codes,
-    tier4Codes,
-    tier5Codes
-  };
+    
+    const tier2Codes: string[] = [];
+    const tier3Codes: string[] = [];
+    const tier4Codes: string[] = [];
+    const tier5Codes: string[] = [];
+    
+    // Generate codes for each tier
+    for (let i = 0; i < quantity; i++) {
+      // Tier 2 codes
+      const tier2Code = generateRandomCode(8);
+      tier2Codes.push(tier2Code);
+      
+      // Tier 3 codes
+      const tier3Code = generateRandomCode(8);
+      tier3Codes.push(tier3Code);
+      
+      // Tier 4 codes
+      const tier4Code = generateRandomCode(8);
+      tier4Codes.push(tier4Code);
+      
+      // Tier 5 codes
+      const tier5Code = generateRandomCode(8);
+      tier5Codes.push(tier5Code);
+    }
+    
+    // Insert all codes into the database
+    const codesToInsert = [
+      ...tier2Codes.map(code => ({ code, tier: 2, is_used: false })),
+      ...tier3Codes.map(code => ({ code, tier: 3, is_used: false })),
+      ...tier4Codes.map(code => ({ code, tier: 4, is_used: false })),
+      ...tier5Codes.map(code => ({ code, tier: 5, is_used: false }))
+    ];
+    
+    const { error } = await supabase
+      .from('access_codes')
+      .insert(codesToInsert);
+      
+    if (error) {
+      console.error("Error inserting test access codes:", error);
+      throw error;
+    }
+    
+    return {
+      tier2Codes,
+      tier3Codes,
+      tier4Codes,
+      tier5Codes
+    };
+  } catch (error) {
+    console.error("Error generating test access codes:", error);
+    throw error;
+  }
 };
 
 /**
- * Checks if a user has admin access
- * This is a simple check based on email containing 'admin'
+ * Set a user as admin (for testing purposes)
  */
-export const checkAdminAccess = async (): Promise<boolean> => {
-  const { data } = await supabase.auth.getSession();
-  if (data.session?.user) {
-    const email = data.session.user.email;
-    return email?.includes('admin') || false;
+export const setUserAsAdmin = async (userId: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('user_profiles')
+      .update({ is_admin: true })
+      .eq('id', userId);
+      
+    if (error) {
+      console.error("Error setting user as admin:", error);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Error in setUserAsAdmin:", error);
+    return false;
   }
-  return false;
 };

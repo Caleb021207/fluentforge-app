@@ -2,17 +2,20 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getUserTier, getTierDescription, getWeeklyTimeLimit } from "@/utils/tierUtils";
 import { Clock } from "lucide-react";
 import AccessCodeRedemption from "@/components/access/AccessCodeRedemption";
+import { calculateRemainingWeeklyTime, formatTime } from "@/utils/voiceChatUtils";
 
 const TierInfoCard = () => {
   const { t } = useLocalization();
   const [userTier, setUserTier] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [weeklyTimeRemaining, setWeeklyTimeRemaining] = useState<number | null>(null);
 
   useEffect(() => {
     const checkUserTier = async () => {
@@ -23,6 +26,12 @@ const TierInfoCard = () => {
         setUserId(user.id);
         const tier = await getUserTier(user.id);
         setUserTier(tier);
+        
+        // Get remaining time
+        if (tier > 1) {
+          const remaining = await calculateRemainingWeeklyTime(user.id);
+          setWeeklyTimeRemaining(remaining);
+        }
       }
       
       setIsLoading(false);
@@ -31,18 +40,44 @@ const TierInfoCard = () => {
     checkUserTier();
   }, []);
 
-  const handleUpgradeTier = (newTier: number) => {
+  const handleUpgradeTier = async (newTier: number) => {
     setUserTier(newTier);
+    
+    // Refresh time allowance when tier changes
+    if (userId && newTier > 1) {
+      const remaining = await calculateRemainingWeeklyTime(userId);
+      setWeeklyTimeRemaining(remaining);
+    }
   };
 
   const getTimeAllowance = (tier: number): string => {
-    const minutes = Math.floor(getWeeklyTimeLimit(tier) / 60);
+    const seconds = getWeeklyTimeLimit(tier);
+    const minutes = Math.floor(seconds / 60);
     
     if (minutes <= 0) {
       return t("noTimeAllowance");
     }
     
     return `${minutes} ${t("minutesPerWeek")}`;
+  };
+  
+  const getTimeUsageDisplay = () => {
+    if (weeklyTimeRemaining === null || userTier <= 1) return null;
+    
+    const maxTime = getWeeklyTimeLimit(userTier);
+    const timeUsedPercentage = maxTime ? 100 - (weeklyTimeRemaining / maxTime * 100) : 0;
+    const minutesRemaining = Math.ceil(weeklyTimeRemaining / 60);
+    const maxMinutes = Math.floor(maxTime / 60);
+    
+    return (
+      <div className="mt-4 space-y-2">
+        <div className="flex justify-between text-sm">
+          <span>{minutesRemaining} min {t("remaining")}</span>
+          <span>{maxMinutes} min {t("total")}</span>
+        </div>
+        <Progress value={timeUsedPercentage} className="h-2" />
+      </div>
+    );
   };
 
   return (
@@ -77,6 +112,8 @@ const TierInfoCard = () => {
                   </div>
                 </div>
               </div>
+              
+              {getTimeUsageDisplay()}
               
               <div className="mt-4 pt-4 border-t">
                 <h3 className="text-sm font-medium mb-2">{t("tierFeatures")}</h3>
