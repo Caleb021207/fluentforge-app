@@ -6,15 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocalization } from "@/context/LocalizationContext";
-
-interface CodeGeneratorFormProps {
-  selectedTier: number;
-  quantity: number;
-  isLoading: boolean;
-  onTierChange: (tier: number) => void;
-  onQuantityChange: (quantity: number) => void;
-  onGenerateClick: () => void;
-}
+import { CodeGeneratorFormProps } from "../types";
 
 const CodeGeneratorForm = ({
   selectedTier,
@@ -34,7 +26,7 @@ const CodeGeneratorForm = ({
             <Label htmlFor="tier">{t("selectTier")}</Label>
             <Select 
               value={String(selectedTier)} 
-              onValueChange={(value) => onTierChange(parseInt(value))}
+              onValueChange={(value) => onTierChange(parseInt(value) as CodeGeneratorFormProps["selectedTier"])}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={t("selectTier")} />

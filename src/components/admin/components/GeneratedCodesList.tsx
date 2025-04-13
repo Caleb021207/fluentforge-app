@@ -7,12 +7,7 @@ import { CardContent } from "@/components/ui/card";
 import { Clipboard, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
-
-interface GeneratedCodesListProps {
-  generatedCodes: string[];
-  copiedIndex: number | null;
-  onCopyCode: (code: string, index: number) => void;
-}
+import { GeneratedCodesListProps } from "../types";
 
 const GeneratedCodesList = ({ 
   generatedCodes, 

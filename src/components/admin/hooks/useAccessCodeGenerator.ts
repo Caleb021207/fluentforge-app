@@ -4,9 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { generateRandomCode } from "../utils/codeGeneratorUtils";
+import { AccessCodeTier } from "../types";
 
 export const useAccessCodeGenerator = () => {
-  const [selectedTier, setSelectedTier] = useState<number>(2);
+  const [selectedTier, setSelectedTier] = useState<AccessCodeTier>(2);
   const [quantity, setQuantity] = useState<number>(5);
   const [isLoading, setIsLoading] = useState(false);
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
