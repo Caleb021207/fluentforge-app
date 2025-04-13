@@ -41,7 +41,7 @@ export const hasPremiumVoiceAccess = (tier: number): boolean => {
  * Get weekly time limit in seconds based on user tier
  */
 export const getWeeklyTimeLimit = (tier: number): number => {
-  return TIER_TIME_LIMITS[tier] || 0;
+  return TIER_TIME_LIMITS[tier as keyof typeof TIER_TIME_LIMITS] || 0;
 };
 
 /**
@@ -130,4 +130,21 @@ export const getUserTier = async (userId: string): Promise<number> => {
     console.error('Error in getUserTier:', error);
     return 1; // Default to free tier on error
   }
+};
+
+/**
+ * Check if a user needs to upgrade their tier
+ */
+export const shouldUpgradeTier = async (userId: string): Promise<boolean> => {
+  const tier = await getUserTier(userId);
+  return tier === 1; // User should upgrade if they're on the free tier
+};
+
+/**
+ * Get remaining minutes for a tier
+ */
+export const getRemainingMinutes = (tier: number, usedSeconds: number): number => {
+  const totalSeconds = getWeeklyTimeLimit(tier);
+  const remainingSeconds = Math.max(0, totalSeconds - usedSeconds);
+  return Math.ceil(remainingSeconds / 60);
 };

@@ -3,23 +3,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { getUserTier, getWeeklyTimeLimit } from "./tierUtils";
 
 /**
- * Returns the start of the current week in Central Time (UTC-6)
- * This is used to calculate weekly voice chat usage limits
+ * Get the start of the current week (Monday 6 AM UTC)
  */
 export const getCurrentWeekStart = (): Date => {
   const now = new Date();
+  const dayOfWeek = now.getUTCDay(); // 0 for Sunday, 1 for Monday, etc.
   
-  const centralTimeOffset = -6;
-  const utcHours = now.getUTCHours();
-  const centralHours = (utcHours + centralTimeOffset + 24) % 24;
+  // Calculate days to subtract to get to the most recent Monday
+  const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   
-  const dayOfWeek = now.getUTCDay();
-  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-  
+  // Set to Monday
   const monday = new Date(now);
-  monday.setUTCDate(monday.getUTCDate() - daysSinceMonday);
-  monday.setUTCHours(6 - centralTimeOffset, 0, 0, 0);
+  monday.setUTCDate(now.getUTCDate() - daysToMonday);
   
+  // Set to 6:00 AM UTC
+  monday.setUTCHours(6, 0, 0, 0);
+  
+  // If current time is before Monday 6 AM, use previous week's Monday
   if (now < monday) {
     monday.setUTCDate(monday.getUTCDate() - 7);
   }
@@ -28,73 +28,108 @@ export const getCurrentWeekStart = (): Date => {
 };
 
 /**
- * Format time in minutes and seconds (MM:SS)
- */
-export const formatTime = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-};
-
-/**
- * Format cooldown time in days, hours, and minutes
- */
-export const formatCooldownTime = (seconds: number): string => {
-  const days = Math.floor(seconds / 86400);
-  const hours = Math.floor((seconds % 86400) / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  
-  if (days > 0) {
-    return `${days}d ${hours}h`;
-  }
-  return `${hours}h ${mins}m`;
-};
-
-/**
- * Calculate remaining weekly voice chat time for a user
+ * Calculate the remaining weekly time for a user's premium voice sessions
  */
 export const calculateRemainingWeeklyTime = async (userId: string): Promise<number> => {
-  const weekStart = getCurrentWeekStart();
-  
   try {
-    // Get the user's tier to determine their time limit
-    const userTier = await getUserTier(userId);
-    const tierTimeLimit = getWeeklyTimeLimit(userTier);
+    // Get user's tier
+    const tier = await getUserTier(userId);
+    const maxWeeklyTime = getWeeklyTimeLimit(tier);
     
-    // If user has no premium voice access (tier 1), return 0
-    if (tierTimeLimit <= 0) {
-      return 0;
+    if (maxWeeklyTime <= 0) {
+      return 0; // No time allocation for this tier
     }
     
+    // Get the current week's start (Monday 6 AM UTC)
+    const weekStart = getCurrentWeekStart();
+    
+    // Query sessions from this week
     const { data, error } = await supabase
       .from('premium_voice_chat_sessions')
       .select('session_start, session_end')
       .eq('user_id', userId)
-      .gte('session_start', weekStart.toISOString());
+      .gte('session_start', weekStart.toISOString())
+      .order('session_start', { ascending: false });
     
     if (error) {
-      console.error("Error fetching session data:", error);
-      return tierTimeLimit; // Return tier-based limit on error
+      console.error('Error calculating weekly time:', error);
+      return maxWeeklyTime; // Return max time on error to be safe
     }
     
-    if (!data || data.length === 0) {
-      return tierTimeLimit;
+    // Calculate used time
+    let usedTime = 0;
+    
+    for (const session of data || []) {
+      const startTime = new Date(session.session_start);
+      let endTime;
+      
+      if (session.session_end) {
+        endTime = new Date(session.session_end);
+      } else {
+        // For ongoing sessions, use current time
+        endTime = new Date();
+      }
+      
+      // Calculate session duration in seconds
+      const durationSeconds = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+      usedTime += durationSeconds;
     }
     
-    let totalTimeUsedSeconds = 0;
-    
-    data.forEach(session => {
-      const start = new Date(session.session_start).getTime();
-      const end = session.session_end ? new Date(session.session_end).getTime() : Date.now();
-      const sessionDuration = Math.floor((end - start) / 1000);
-      totalTimeUsedSeconds += sessionDuration;
-    });
-    
-    const remainingTime = Math.max(0, tierTimeLimit - totalTimeUsedSeconds);
+    // Calculate remaining time
+    const remainingTime = Math.max(0, maxWeeklyTime - usedTime);
     return remainingTime;
-    
   } catch (error) {
-    console.error("Error in calculateRemainingWeeklyTime:", error);
-    return 0; // Default to 0 on error as a safety measure
+    console.error('Error in calculateRemainingWeeklyTime:', error);
+    return 0; // Return 0 on error to be safe
   }
+};
+
+/**
+ * Format cooldown time for display
+ */
+export const formatCooldownTime = (seconds: number): string => {
+  if (seconds < 60) {
+    return `${seconds} seconds`;
+  }
+  
+  if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+  }
+  
+  if (seconds < 86400) {
+    const hours = Math.floor(seconds / 3600);
+    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+  }
+  
+  const days = Math.floor(seconds / 86400);
+  return `${days} day${days !== 1 ? 's' : ''}`;
+};
+
+/**
+ * Calculate time until next weekly reset
+ */
+export const calculateTimeUntilReset = (): number => {
+  const now = new Date();
+  const nextMonday = new Date(getCurrentWeekStart());
+  nextMonday.setUTCDate(nextMonday.getUTCDate() + 7);
+  return Math.floor((nextMonday.getTime() - now.getTime()) / 1000);
+};
+
+/**
+ * Format the reset date for display
+ */
+export const formatResetDate = (): string => {
+  const nextMonday = new Date(getCurrentWeekStart());
+  nextMonday.setUTCDate(nextMonday.getUTCDate() + 7);
+  
+  return nextMonday.toLocaleString(undefined, {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short'
+  });
 };
