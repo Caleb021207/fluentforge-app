@@ -7,8 +7,9 @@ import {
   getCurrentWeekStart, 
   formatCooldownTime 
 } from "@/utils/voiceChatUtils";
+import { getUserTier, hasPremiumVoiceAccess } from "@/utils/tierUtils";
 
-export type SessionStatus = 'available' | 'active' | 'cooldown';
+export type SessionStatus = 'available' | 'active' | 'cooldown' | 'unauthorized';
 
 export const useSessionManagement = (t: (key: string, options?: any) => string) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,6 +18,7 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [weeklyTimeRemaining, setWeeklyTimeRemaining] = useState<number | null>(null);
   const [cooldownTimeRemaining, setCooldownTimeRemaining] = useState<number | null>(null);
+  const [userTier, setUserTier] = useState<number>(1);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
       setIsLoggedIn(!!data.session);
       setIsLoading(false);
       if (data.session) {
+        await getUserTierInfo(data.session.user.id);
         checkSessionStatus();
       }
     };
@@ -34,7 +37,8 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       const isAuthenticated = !!session;
       setIsLoggedIn(isAuthenticated);
-      if (isAuthenticated) {
+      if (isAuthenticated && session) {
+        getUserTierInfo(session.user.id);
         checkSessionStatus();
       }
     });
@@ -44,11 +48,32 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
     };
   }, []);
 
+  const getUserTierInfo = async (userId: string) => {
+    try {
+      const tier = await getUserTier(userId);
+      setUserTier(tier);
+      return tier;
+    } catch (error) {
+      console.error("Error getting user tier:", error);
+      setUserTier(1);
+      return 1;
+    }
+  };
+
   const checkSessionStatus = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         setSessionStatus('available');
+        return;
+      }
+      
+      // Check user's tier for access
+      const tier = await getUserTierInfo(user.id);
+      const hasAccess = hasPremiumVoiceAccess(tier);
+      
+      if (!hasAccess) {
+        setSessionStatus('unauthorized');
         return;
       }
       
@@ -105,6 +130,19 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
         toast({
           title: t("loginRequired"),
           description: t("pleaseLoginToAccessPremiumFeature"),
+          variant: "destructive"
+        });
+        return null;
+      }
+
+      // Check user's tier for access
+      const tier = await getUserTierInfo(user.id);
+      const hasAccess = hasPremiumVoiceAccess(tier);
+      
+      if (!hasAccess) {
+        toast({
+          title: t("premiumFeatureRestricted"),
+          description: t("upgradeTierForAccess"),
           variant: "destructive"
         });
         return null;
@@ -205,10 +243,12 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
     currentSessionId,
     weeklyTimeRemaining,
     cooldownTimeRemaining,
+    userTier,
     setWeeklyTimeRemaining,
     checkSessionStatus,
     createSession,
     endSession,
-    formatCooldownTime
+    formatCooldownTime,
+    getUserTierInfo
   };
 };

@@ -1,5 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { getUserTier, getWeeklyTimeLimit } from "./tierUtils";
 
 /**
  * Returns the start of the current week in Central Time (UTC-6)
@@ -56,6 +57,15 @@ export const calculateRemainingWeeklyTime = async (userId: string): Promise<numb
   const weekStart = getCurrentWeekStart();
   
   try {
+    // Get the user's tier to determine their time limit
+    const userTier = await getUserTier(userId);
+    const tierTimeLimit = getWeeklyTimeLimit(userTier);
+    
+    // If user has no premium voice access (tier 1), return 0
+    if (tierTimeLimit <= 0) {
+      return 0;
+    }
+    
     const { data, error } = await supabase
       .from('premium_voice_chat_sessions')
       .select('session_start, session_end')
@@ -64,11 +74,11 @@ export const calculateRemainingWeeklyTime = async (userId: string): Promise<numb
     
     if (error) {
       console.error("Error fetching session data:", error);
-      return 600; // Default to 10 minutes (600 seconds)
+      return tierTimeLimit; // Return tier-based limit on error
     }
     
     if (!data || data.length === 0) {
-      return 600;
+      return tierTimeLimit;
     }
     
     let totalTimeUsedSeconds = 0;
@@ -80,11 +90,11 @@ export const calculateRemainingWeeklyTime = async (userId: string): Promise<numb
       totalTimeUsedSeconds += sessionDuration;
     });
     
-    const remainingTime = Math.max(0, 600 - totalTimeUsedSeconds);
+    const remainingTime = Math.max(0, tierTimeLimit - totalTimeUsedSeconds);
     return remainingTime;
     
   } catch (error) {
     console.error("Error in calculateRemainingWeeklyTime:", error);
-    return 600;
+    return 0; // Default to 0 on error as a safety measure
   }
 };

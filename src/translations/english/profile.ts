@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const profileTranslations: TranslationRecord = {
@@ -54,6 +53,36 @@ const profileTranslations: TranslationRecord = {
   strengths: "Strengths",
   areasForImprovement: "Areas for Improvement",
   recommendations: "Recommendations",
+  
+  // Tier-related translations
+  accountTier: "Account Tier",
+  yourCurrentPlanAndFeatures: "Your current plan and features",
+  currentTier: "Current Tier",
+  tierFree: "Free (Tier 1)",
+  tierBasic: "Basic (Tier 2)",
+  tierStandard: "Standard (Tier 3)",
+  tierPremium: "Premium (Tier 4)",
+  tierUnlimited: "Unlimited (Tier 5)",
+  premiumVoiceTimeAllowance: "Premium Voice Time Allowance",
+  minutesPerWeek: "minutes per week",
+  noTimeAllowance: "No premium voice access",
+  upgradeTierForAccess: "Upgrade your tier to access premium features",
+  premiumFeatureRestricted: "Premium Feature Restricted",
+  
+  // Access code related translations
+  redeemAccessCode: "Redeem Access Code",
+  enterAccessCodeDescription: "Enter your access code to unlock premium features",
+  accessCodePlaceholder: "Enter access code here",
+  processing: "Processing...",
+  redeemCode: "Redeem Code",
+  accessCodeHelp: "Contact your administrator if you need an access code",
+  pleaseEnterAccessCode: "Please enter an access code",
+  codeRedeemSuccess: "Access code redeemed successfully! Your account has been upgraded to Tier {{tier}}",
+  invalidOrUsedCode: "Invalid or already used access code",
+  databaseError: "Error accessing the database",
+  codeUpdateError: "Error updating the access code",
+  userUpdateError: "Error updating user information",
+  unexpectedError: "An unexpected error occurred",
 };
 
 export default profileTranslations;
