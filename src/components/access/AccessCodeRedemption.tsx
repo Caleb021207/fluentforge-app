@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
+// Fix the type in the props interface
 const AccessCodeRedemption = ({ onSuccess }: { onSuccess?: (tier: number) => void }) => {
   const { t } = useLocalization();
   const [accessCode, setAccessCode] = useState("");
@@ -52,6 +52,7 @@ const AccessCodeRedemption = ({ onSuccess }: { onSuccess?: (tier: number) => voi
         
         setAccessCode("");
         
+        // Fix type issue: pass the numeric tier value to the callback
         if (onSuccess && result.tier) {
           onSuccess(result.tier);
         }

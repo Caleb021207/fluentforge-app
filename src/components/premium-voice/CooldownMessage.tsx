@@ -1,37 +1,34 @@
 
-import { LockIcon } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Clock } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 
 interface CooldownMessageProps {
   cooldownTimeRemaining: number | null;
-  sessionStatus: 'available' | 'active' | 'cooldown';
+  sessionStatus: 'available' | 'active' | 'cooldown' | 'unauthorized';
   formatCooldownTime: (seconds: number) => string;
 }
 
-const CooldownMessage = ({ cooldownTimeRemaining, sessionStatus, formatCooldownTime }: CooldownMessageProps) => {
+const CooldownMessage = ({ 
+  cooldownTimeRemaining, 
+  sessionStatus, 
+  formatCooldownTime 
+}: CooldownMessageProps) => {
   const { t } = useLocalization();
-
+  
   if (sessionStatus !== 'cooldown' || !cooldownTimeRemaining) {
     return null;
   }
-
+  
   return (
-    <Card className="p-4 mb-6 bg-red-50 border-red-200">
-      <div className="flex items-center space-x-3">
-        <LockIcon className="h-6 w-6 text-red-500" />
-        <div>
-          <h3 className="font-medium text-red-800">
-            {t("premiumSessionLimitReached")}
-          </h3>
-          <p className="text-sm text-red-600">
-            {t("resetsAt6AM", {
-              time: formatCooldownTime(cooldownTimeRemaining)
-            })}
-          </p>
-        </div>
+    <div className="mb-6 rounded-lg bg-amber-50 p-4 border border-amber-200">
+      <div className="flex items-center gap-2">
+        <Clock className="h-5 w-5 text-amber-700" />
+        <h3 className="font-medium text-amber-800">{t("cooldownPeriodActive")}</h3>
       </div>
-    </Card>
+      <p className="mt-2 text-amber-700">
+        {t("resetsAt6AM", { time: formatCooldownTime(cooldownTimeRemaining) })}
+      </p>
+    </div>
   );
 };
 

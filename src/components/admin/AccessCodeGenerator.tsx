@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
@@ -35,7 +34,6 @@ const AccessCodeGenerator = () => {
       const { data } = await supabase.auth.getSession();
       if (data.session?.user) {
         const email = data.session.user.email;
-        // Simple admin check - in reality you'd want a more robust system
         setIsAdmin(email?.includes('admin') || false);
       }
     };
@@ -72,7 +70,6 @@ const AccessCodeGenerator = () => {
       const codes: AccessCode[] = [];
       
       for (let i = 0; i < parsedQuantity; i++) {
-        // Generate a random code with format XXX-YYY-ZZZ
         const randomCode = Array(3).fill(0).map(() => 
           Math.random().toString(36).substring(2, 5).toUpperCase()
         ).join('-');

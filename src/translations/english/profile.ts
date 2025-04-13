@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const profileTranslations: TranslationRecord = {
@@ -83,6 +84,33 @@ const profileTranslations: TranslationRecord = {
   codeUpdateError: "Error updating the access code",
   userUpdateError: "Error updating user information",
   unexpectedError: "An unexpected error occurred",
+  
+  // Test tier page translations
+  generateTestCodes: "Generate Test Codes",
+  tierSystemTesting: "Tier System Testing",
+  testTierDescription: "Generate and manage test access codes for different tier levels",
+  generating: "Generating...",
+  accessCodesGenerated: "{{count}} access codes generated successfully",
+  errorGeneratingAccessCodes: "Error generating access codes",
+  copied: "Copied!",
+  accessCodeCopiedToClipboard: "Access code copied to clipboard",
+  adminOnlyFeature: "Admin Only Feature",
+  mustBeAdminToAccessThisFeature: "You must be an administrator to access this feature",
+  testingInstructions: "Testing Instructions",
+  howToTestTiers: "How to test the tiered system",
+  tier2Codes: "Tier 2 (Basic) Codes", 
+  tier3Codes: "Tier 3 (Standard) Codes",
+  tier4Codes: "Tier 4 (Premium) Codes",
+  tier5Codes: "Tier 5 (Unlimited) Codes",
+  pleaseSelectTierAndQuantity: "Please select a tier and quantity",
+  quantityMustBeBetween1And100: "Quantity must be between 1 and 100",
+  invalidQuantity: "Invalid quantity",
+  selectTier: "Select tier",
+  quantity: "Quantity",
+  accessCodeGenerator: "Access Code Generator",
+  generateAccessCodesForUsers: "Generate access codes to give users premium features",
+  generateAccessCodes: "Generate Access Codes",
+  generatedAccessCodes: "Generated Access Codes",
 };
 
 export default profileTranslations;
