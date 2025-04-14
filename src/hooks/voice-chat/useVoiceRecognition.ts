@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -5,7 +6,7 @@ import { initAzureSpeechToText } from "@/utils/azureSpeechUtils";
 
 export const useVoiceRecognition = () => {
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] useState("");
+  const [transcript, setTranscript] = useState("");
   const recognizerRef = useRef<any>(null);
   const silenceTimeoutRef = useRef<number | null>(null);
   
