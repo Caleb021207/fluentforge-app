@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import translations, { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } from "@/translations";
-import { LanguageTranslations } from "@/translations/types";
+import { LanguageTranslations, TranslationRecord } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 
 // Create context
@@ -34,10 +33,31 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   // Translation function
   const t = (key: string, replacements?: Record<string, string>) => {
     // Get translation for current language or fallback to default
-    let text = translations[currentLanguage]?.[key] || translations[DEFAULT_LANGUAGE][key] || key;
+    const langTranslations = translations[currentLanguage];
+    const defaultTranslations = translations[DEFAULT_LANGUAGE];
+    
+    let text: string;
+    
+    // Handle different translation structures (nested vs flat)
+    if (currentLanguage === "english") {
+      // English uses nested structure - try to extract from module
+      const [module, moduleKey] = key.includes(".") ? key.split(".") : [null, key];
+      
+      if (module && langTranslations[module] && typeof langTranslations[module] === "object") {
+        text = (langTranslations[module] as TranslationRecord)[moduleKey] || key;
+      } else {
+        // Try direct lookup for non-modularized keys
+        text = (langTranslations as any)[key] || key;
+      }
+    } else {
+      // Other languages use flat structure
+      text = (langTranslations as TranslationRecord)[key] || 
+             (defaultTranslations.common as TranslationRecord)[key] || 
+             key;
+    }
     
     // Apply replacements if any
-    if (replacements) {
+    if (replacements && typeof text === 'string') {
       Object.entries(replacements).forEach(([placeholder, value]) => {
         text = text.replace(`{{${placeholder}}}`, value);
       });
