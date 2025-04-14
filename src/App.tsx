@@ -29,6 +29,7 @@ function App() {
               <Route path="/practice" element={<Practice />} />
               <Route path="/voice-chat" element={<VoiceChat />} />
               <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />
+              <Route path="/pro-voice-chat" element={<PremiumVoiceChat />} />
               <Route path="/example-data" element={<ExampleData />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/settings" element={<Settings />} />
