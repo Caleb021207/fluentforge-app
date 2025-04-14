@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Provider as ElevenLabsProviderBase } from "@11labs/react";
+import { ElevenLabsProvider as ElevenLabsProviderBase } from "@11labs/react";
 
 export const ElevenLabsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
