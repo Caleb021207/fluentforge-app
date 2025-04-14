@@ -37,7 +37,10 @@ const proVoiceTranslations: TranslationRecord = {
   allowMicAccess: "Please allow microphone access to use Voice Chat",
   failedToStartSession: "Failed to start session. Please try again.",
   failedToProcessSpeech: "Failed to process speech. Please try again.",
-  pleaseLoginToAccessProFeature: "Please log in to access the Pro Voice Chat feature"
+  pleaseLoginToAccessProFeature: "Please log in to access the Pro Voice Chat feature",
+  speechRecognitionError: "Speech recognition error. Please try again.",
+  warning: "Warning",
+  usingSpeechFallback: "Using fallback speech system due to Azure services unavailability."
 };
 
 export default proVoiceTranslations;

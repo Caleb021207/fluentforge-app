@@ -1,3 +1,4 @@
+
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 
 // Check if the Azure Speech key is available
@@ -30,32 +31,49 @@ export const initAzureSpeechToText = (language: string) => {
     // Return a mock implementation if no speech config is available
     console.warn('Azure Speech services are not available. Speech recognition disabled.');
     return {
+      recognizer: null,
       startRecognition: () => Promise.resolve(""),
       stopRecognition: () => Promise.resolve(),
+      close: () => {},
       isRecognizing: false,
     };
   }
   
-  speechConfig.speechRecognitionLanguage = mapLanguageToAzureCode(language);
-  const audioConfig = sdk.AudioConfig.fromDefaultMicrophoneInput();
-  const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
+  try {
+    speechConfig.speechRecognitionLanguage = mapLanguageToAzureCode(language);
+    const audioConfig = sdk.AudioConfig.fromDefaultMicrophoneInput();
+    const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
 
-  return {
-    startRecognition: () => {
-      return new Promise((resolve) => {
-        recognizer.recognized = (s, e) => {
-          if (e.result.reason === sdk.ResultReason.RecognizedSpeech) {
-            resolve(e.result.text);
-          }
-        };
-        recognizer.startContinuousRecognitionAsync();
-      });
-    },
-    stopRecognition: () => {
-      return recognizer.stopContinuousRecognitionAsync();
-    },
-    isRecognizing: false,
-  };
+    return {
+      recognizer: recognizer,
+      startRecognition: () => {
+        return new Promise((resolve) => {
+          recognizer.recognized = (s, e) => {
+            if (e.result.reason === sdk.ResultReason.RecognizedSpeech) {
+              resolve(e.result.text);
+            }
+          };
+          recognizer.startContinuousRecognitionAsync();
+        });
+      },
+      stopRecognition: () => {
+        return recognizer.stopContinuousRecognitionAsync();
+      },
+      close: () => {
+        recognizer.close();
+      },
+      isRecognizing: false,
+    };
+  } catch (error) {
+    console.error('Error initializing Azure speech recognizer:', error);
+    return {
+      recognizer: null,
+      startRecognition: () => Promise.resolve(""),
+      stopRecognition: () => Promise.resolve(),
+      close: () => {},
+      isRecognizing: false,
+    };
+  }
 };
 
 export const azureTextToSpeech = async (text: string, language: string): Promise<ArrayBuffer> => {
@@ -63,49 +81,87 @@ export const azureTextToSpeech = async (text: string, language: string): Promise
     console.warn('Azure Speech services are not available. Using browser speech synthesis instead.');
     // Return a mock implementation that uses browser's Speech Synthesis API as fallback
     try {
-      // Create an audio element to play the synthesized speech
-      const utterance = new SpeechSynthesisUtterance(text);
-      // Try to set an appropriate voice based on language
-      const voices = window.speechSynthesis.getVoices();
-      const languageCode = mapLanguageToAzureCode(language);
-      const voice = voices.find(v => v.lang.includes(languageCode.split('-')[0]));
-      if (voice) {
-        utterance.voice = voice;
-      }
-      
       // Create a promise that resolves with an empty ArrayBuffer
-      // This is a simplified fallback that won't return actual audio data
-      // but will at least attempt to speak using the browser's capabilities
-      window.speechSynthesis.speak(utterance);
-      return new ArrayBuffer(0);
+      // This will trigger the fallback in the calling code
+      return Promise.reject(new Error("Azure Speech services not available"));
     } catch (error) {
       console.error('Browser speech synthesis failed:', error);
-      return new ArrayBuffer(0);
+      return Promise.reject(error);
     }
   }
   
-  speechConfig.speechSynthesisLanguage = mapLanguageToAzureCode(language);
-  speechConfig.speechSynthesisVoiceName = getAzureVoiceForLanguage(language);
-  
-  const synthesizer = new sdk.SpeechSynthesizer(speechConfig);
-  
-  return new Promise((resolve, reject) => {
-    synthesizer.speakTextAsync(
-      text,
-      (result) => {
-        if (result.audioData) {
-          resolve(result.audioData);
-        } else {
-          reject(new Error('No audio data received'));
+  try {
+    // Set up voice for synthesis
+    speechConfig.speechSynthesisLanguage = mapLanguageToAzureCode(language);
+    speechConfig.speechSynthesisVoiceName = getAzureVoiceForLanguage(language);
+    
+    const synthesizer = new sdk.SpeechSynthesizer(speechConfig);
+    
+    return new Promise((resolve, reject) => {
+      synthesizer.speakTextAsync(
+        text,
+        (result) => {
+          if (result.audioData && result.audioData.byteLength > 0) {
+            resolve(result.audioData);
+          } else {
+            reject(new Error('No audio data received'));
+          }
+          synthesizer.close();
+        },
+        (error) => {
+          synthesizer.close();
+          reject(error);
         }
-        synthesizer.close();
-      },
-      (error) => {
-        synthesizer.close();
-        reject(error);
-      }
-    );
-  });
+      );
+    });
+  } catch (error) {
+    console.error('Error in Azure text-to-speech:', error);
+    return Promise.reject(error);
+  }
+};
+
+// Streaming TTS implementation for more real-time audio response
+export const streamingAzureTTS = async (text: string, language: string, onAudioAvailable: (audio: ArrayBuffer) => void) => {
+  if (!speechConfig) {
+    return Promise.reject(new Error("Azure Speech services not available"));
+  }
+  
+  try {
+    // Set up voice for synthesis
+    speechConfig.speechSynthesisLanguage = mapLanguageToAzureCode(language);
+    speechConfig.speechSynthesisVoiceName = getAzureVoiceForLanguage(language);
+    
+    // Configure the synthesizer for streaming
+    const synthesizer = new sdk.SpeechSynthesizer(speechConfig);
+    
+    // Split text into sentences to stream them gradually
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    
+    for (const sentence of sentences) {
+      await new Promise<void>((resolve, reject) => {
+        synthesizer.speakTextAsync(
+          sentence.trim(),
+          (result) => {
+            if (result.audioData && result.audioData.byteLength > 0) {
+              onAudioAvailable(result.audioData);
+              resolve();
+            } else {
+              reject(new Error('No audio data received for sentence'));
+            }
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      });
+    }
+    
+    synthesizer.close();
+    return true;
+  } catch (error) {
+    console.error('Error in streaming Azure TTS:', error);
+    return Promise.reject(error);
+  }
 };
 
 export const getAzureVoiceForLanguage = (language: string): string => {

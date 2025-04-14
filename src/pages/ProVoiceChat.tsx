@@ -15,6 +15,7 @@ const ProVoiceChat: React.FC = () => {
     status,
     microphoneAccess,
     transcript,
+    interimTranscript,
     response,
     isActive,
     sessionTimeRemaining,
@@ -75,6 +76,16 @@ const ProVoiceChat: React.FC = () => {
 
       {isActive && (
         <div className="mt-8 space-y-4">
+          {status === "listening" && interimTranscript && (
+            <Card className="border-dashed border-gray-300">
+              <CardContent className="pt-4">
+                <p className="text-gray-500 italic animate-pulse">
+                  {interimTranscript}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
           {transcript && (
             <Card>
               <CardHeader>
