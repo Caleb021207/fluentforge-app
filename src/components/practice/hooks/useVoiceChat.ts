@@ -26,7 +26,7 @@ export const useVoiceChat = () => {
       console.error("ElevenLabs conversation error:", error);
       toast({
         title: t("error"),
-        description: error?.toString() || "Unknown error",
+        description: typeof error === 'object' && error !== null ? error.toString() : String(error),
         variant: "destructive",
       });
     },

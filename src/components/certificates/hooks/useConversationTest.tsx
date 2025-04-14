@@ -53,7 +53,7 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       console.error("Conversation error:", error);
       toast({
         title: "Error",
-        description: error?.toString() || "Unknown error occurred",
+        description: typeof error === 'object' && error !== null ? error.toString() : String(error),
         variant: "destructive",
       });
     },

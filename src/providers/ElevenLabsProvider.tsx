@@ -40,14 +40,16 @@ const ElevenLabsProvider: React.FC<ElevenLabsProviderProps> = ({ children }) => 
     );
   }
 
-  // Since we can't use VoiceProvider from @11labs/react, we'll just pass the API key
-  // through React Context for components to use
   if (!apiKey) {
     console.warn('ElevenLabs API key not available. Voice features will be limited.');
-    return <>{children}</>;
   }
 
-  // We're just returning the children without the VoiceProvider since it doesn't exist
+  // Simply pass the API key through React context for components to use 
+  // via Window API since @11labs/react will look for it there
+  if (apiKey && typeof window !== 'undefined') {
+    (window as any).ELEVEN_LABS_API_KEY = apiKey;
+  }
+
   return <>{children}</>;
 };
 
