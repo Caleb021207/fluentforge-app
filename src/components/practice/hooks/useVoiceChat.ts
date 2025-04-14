@@ -15,7 +15,10 @@ export const useVoiceChat = () => {
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
 
+  const apiKey = import.meta.env.VITE_ELEVEN_LABS_API_KEY;
+
   const conversation = useConversation({
+    apiKey,
     onMessage: (message) => {
       if (message.type === "llm_response") {
         console.log("LLM response received:", message.content);
