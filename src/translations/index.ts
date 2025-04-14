@@ -1,5 +1,5 @@
 
-import { TranslationRecord, LanguageTranslations } from "./types";
+import { LanguageTranslations } from "./types";
 import englishTranslations from "./english";
 import spanishTranslations from "./spanish";
 import frenchTranslations from "./french";

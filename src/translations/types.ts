@@ -2,7 +2,7 @@
 export type TranslationRecord = Record<string, string>;
 
 export type LanguageTranslations = {
-  [key: string]: TranslationRecord;
+  [key: string]: TranslationRecord | Record<string, TranslationRecord>;
 };
 
 export type TranslationModule =
