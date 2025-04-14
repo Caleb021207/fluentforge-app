@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const safetyTranslations: TranslationRecord = {
@@ -7,7 +8,6 @@ const safetyTranslations: TranslationRecord = {
   safetyPolicyIntro: "Palavox is fully committed to providing a safe, age-appropriate, and educationally sound platform in compliance with the Children's Internet Protection Act (CIPA) and FERPA (Family Educational Rights and Privacy Act).",
   cipaComplianceStatement: "CIPA Compliance",
   cipaComplianceDescription: "Palavox maintains a safe digital learning environment through:",
-  cipaComplianceShortDesc: "Smart content filtering and safety controls to protect students in digital learning environments.",
   contentFiltering: "Content Filtering",
   contentFilteringDescription: "We implement the following measures to ensure safe content:",
   contentFilteringPoint1: "Automated content filtering to detect and block inappropriate language or material",

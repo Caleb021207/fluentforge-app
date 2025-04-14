@@ -7,32 +7,14 @@ import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { getLanguagePair } from "@/utils/languageUtils";
-import { getUserTier, hasPremiumVoiceAccess } from "@/utils/tierUtils";
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const [connectionAttempts, setConnectionAttempts] = useState(0);
-  const [userTier, setUserTier] = useState<number>(1);
   const maxConnectionAttempts = 3;
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
-
-  useEffect(() => {
-    const fetchUserTier = async () => {
-      try {
-        const { data } = await supabase.auth.getSession();
-        if (data.session?.user) {
-          const tier = await getUserTier(data.session.user.id);
-          setUserTier(tier);
-        }
-      } catch (error) {
-        console.error("Error fetching user tier:", error);
-      }
-    };
-    
-    fetchUserTier();
-  }, []);
 
   const conversation = useConversation({
     onMessage: (message) => {
@@ -121,20 +103,6 @@ export const useVoiceChat = () => {
         toast({
           title: t("error"),
           description: t("loginRequired"),
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      // Check user tier for premium voice access
-      const tier = await getUserTier(user.id);
-      setUserTier(tier);
-      
-      const hasAccess = hasPremiumVoiceAccess(tier);
-      if (!hasAccess) {
-        toast({
-          title: t("premiumFeatureRestricted"),
-          description: t("upgradeTierForAccess"),
           variant: "destructive",
         });
         return;
@@ -282,7 +250,6 @@ export const useVoiceChat = () => {
   return {
     microphoneAccess,
     voiceChatTimeRemaining,
-    userTier,
     isConversationActive,
     startVoiceConversation,
     endVoiceConversation,

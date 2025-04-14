@@ -23,7 +23,6 @@ const CIPATabContent = () => {
           <li className="text-base">{t("contentFilteringPoint2") || "AI moderation for all conversations"}</li>
           <li className="text-base">{t("contentFilteringPoint3") || "Curated, age-appropriate topics and vocabulary"}</li>
           <li className="text-base">{t("cipaNoExternalContent") || "No access to external search engines, media, or third-party websites"}</li>
-          <li className="text-base">Smart filtering that understands language learning context, preventing false positives in educational settings</li>
         </ul>
       </section>
       

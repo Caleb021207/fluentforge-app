@@ -11,8 +11,6 @@ export interface UserProfile {
   avatar_url: string | null;
   created_at: string;
   updated_at: string;
-  tier: number | null;
-  is_admin: boolean | null;
 }
 
 export interface LessonProgress {
@@ -47,17 +45,5 @@ export interface PremiumVoiceChatSession {
   created_at: string;
 }
 
-// Type for access codes
-export interface AccessCode {
-  id: string;
-  code: string;
-  tier: number;
-  is_used: boolean;
-  used_by: string | null;
-  used_at: string | null;
-  created_at: string;
-  generated_by: string | null;
-}
-
 // Use these types in your components like this:
-// import { UserProfile, LessonProgress, CertificationAttempt, PremiumVoiceChatSession, AccessCode } from "@/types/supabase";
+// import { UserProfile, LessonProgress, CertificationAttempt, PremiumVoiceChatSession } from "@/types/supabase";

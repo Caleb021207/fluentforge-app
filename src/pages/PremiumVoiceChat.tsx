@@ -1,26 +1,34 @@
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
-import PageHeader from "@/components/premium-voice/PageHeader";
-import BenefitsList from "@/components/premium-voice/BenefitsList";
-import LoginPrompt from "@/components/premium-voice/LoginPrompt";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
-import CooldownMessage from "@/components/premium-voice/CooldownMessage";
-import TierIndicator from "@/components/premium-voice/TierIndicator";
-import TierStatusCard from "@/components/premium-voice/TierStatusCard";
+import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 import { useSessionManagement } from "@/hooks/useSessionManagement";
+import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
-import { hasPremiumVoiceAccess } from "@/utils/tierUtils";
-import { Link } from "react-router-dom";
-import { ArrowUpCircle } from "lucide-react";
+import { getLanguagePair } from "@/utils/languageUtils";
+import { ElevenLabsVoiceProvider } from "@11labs/react";
+
+// Import refactored components
+import LoginPrompt from "@/components/premium-voice/LoginPrompt";
+import CooldownMessage from "@/components/premium-voice/CooldownMessage";
+import BenefitsList from "@/components/premium-voice/BenefitsList";
+import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
+import PageHeader from "@/components/premium-voice/PageHeader";
 
 const PremiumVoiceChat = () => {
-  const { t } = useLocalization();
-  const [isVoiceChatActive, setIsVoiceChatActive] = useState(false);
-  const [currentPrompt, setCurrentPrompt] = useState<string>(""); 
+  const [isRecording, setIsRecording] = useState(false);
+  const { toast } = useToast();
+  const { currentLanguage, t } = useLocalization();
+  
+  const {
+    microphoneAccess,
+    isConversationActive,
+    startVoiceConversation: startElevenLabsConversation,
+    endVoiceConversation: endElevenLabsConversation,
+    conversation
+  } = useVoiceChat();
 
   const {
     isLoggedIn,
@@ -28,58 +36,105 @@ const PremiumVoiceChat = () => {
     sessionStatus,
     weeklyTimeRemaining,
     cooldownTimeRemaining,
-    userTier,
+    setWeeklyTimeRemaining,
     createSession,
     endSession,
-    currentSessionId,
-    formatCooldownTime,
-    checkSessionStatus
+    formatCooldownTime
   } = useSessionManagement(t);
   
-  const isConversationActive = () => isVoiceChatActive;
+  const { messages, clearMessages, addInitialMessage } = useVoiceChatMessages();
   
+  // Define endConversation function before using it in useVoiceChatTimer
+  const endConversation = async () => {
+    if (isConversationActive()) {
+      await endElevenLabsConversation();
+      setIsRecording(false);
+      
+      // Check and update the session status
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: activeSession } = await supabase
+          .from('premium_voice_chat_sessions')
+          .select('id')
+          .eq('user_id', user.id)
+          .is('session_end', null)
+          .single();
+          
+        if (activeSession) {
+          await endSession(activeSession.id);
+        }
+      }
+    }
+  };
+  
+  // Now we can safely use endConversation in useVoiceChatTimer
   const { timerValue, formatTimer } = useVoiceChatTimer({
     isConversationActive,
     weeklyTimeRemaining,
-    onTimeExpired: async () => {
-      setIsVoiceChatActive(false);
-      if (currentSessionId) {
-        await endSession(currentSessionId);
-      }
-    },
+    onTimeExpired: endConversation,
     t
   });
 
-  const hasAccess = hasPremiumVoiceAccess(userTier);
-
-  const handleStartConversation = async () => {
-    if (isVoiceChatActive) {
-      setIsVoiceChatActive(false);
-      if (currentSessionId) {
-        await endSession(currentSessionId);
-      }
-      return;
-    }
-    
+  const startConversation = async () => {
     if (!isLoggedIn) {
+      toast({
+        title: t("loginRequired"),
+        description: t("pleaseLoginToAccessPremiumFeature"),
+        variant: "destructive"
+      });
       return;
     }
     
     if (sessionStatus === 'cooldown') {
+      toast({
+        title: t("cooldownActive"),
+        description: t("dailyLimitReached"),
+        variant: "destructive"
+      });
       return;
     }
-    
-    const sessionId = await createSession();
-    if (sessionId) {
-      setIsVoiceChatActive(true);
+
+    if (isConversationActive()) {
+      await endConversation();
+      return;
+    }
+
+    try {
+      const sessionId = await createSession();
+      if (!sessionId) return;
+      
+      await startElevenLabsConversation();
+      setIsRecording(true);
+      
+      // Add initial message to the conversation
+      addInitialMessage();
+      
+    } catch (error) {
+      console.error("Error starting conversation:", error);
+      toast({
+        title: t("error"),
+        description: t("networkConnectionIssue"),
+        variant: "destructive"
+      });
     }
   };
 
+  const clearConversation = () => {
+    clearMessages();
+    toast({
+      title: t("success"),
+      description: t("conversationHistoryCleared")
+    });
+  };
+
+  // Get the language pair based on the user's interface language
+  const { practice } = getLanguagePair(currentLanguage);
+
   if (isLoading) {
     return (
-      <div className="container max-w-4xl mx-auto p-6">
-        <div className="h-24 flex justify-center items-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-lingua-primary"></div>
+      <div className="max-w-4xl mx-auto p-4">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lingua-primary"></div>
         </div>
       </div>
     );
@@ -90,70 +145,27 @@ const PremiumVoiceChat = () => {
   }
 
   return (
-    <div className="container max-w-4xl mx-auto p-6 space-y-8">
-      <div className="flex justify-between items-center">
+    <ElevenLabsVoiceProvider apiKey={process.env.ELEVEN_LABS_API_KEY}>
+      <div className="max-w-4xl mx-auto p-4">
         <PageHeader />
-        <TierIndicator userTier={userTier} />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
-          <BenefitsList />
-          
-          {!hasAccess && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-              <h3 className="text-lg font-medium text-amber-800">{t("premiumFeatureRestricted")}</h3>
-              <p className="mt-2 text-amber-700">{t("upgradeTierForAccess")}</p>
-              <Button asChild className="mt-3" variant="outline">
-                <Link to="/profile">
-                  <ArrowUpCircle className="mr-2 h-4 w-4" />
-                  {t("upgradeAccount")}
-                </Link>
-              </Button>
-            </div>
-          )}
-          
-          <CooldownMessage 
-            cooldownTimeRemaining={cooldownTimeRemaining} 
-            sessionStatus={sessionStatus} 
-            formatCooldownTime={formatCooldownTime} 
-          />
-          
-          <VoiceChatControls 
-            startConversation={handleStartConversation}
-            isConversationActive={isConversationActive}
-            weeklyTimeRemaining={timerValue}
-            sessionStatus={sessionStatus}
-            formatTime={formatTimer}
-            userTier={userTier}
-          />
-          
-          <div className="space-y-4">
-            <Textarea
-              placeholder={t("typeYourMessageHere")}
-              className="min-h-[120px]"
-              value={currentPrompt}
-              onChange={(e) => setCurrentPrompt(e.target.value)}
-              disabled={!isVoiceChatActive || sessionStatus === 'cooldown'}
-            />
-            
-            <Button 
-              className="w-full" 
-              disabled={!isVoiceChatActive || !currentPrompt.trim() || sessionStatus === 'cooldown'}
-            >
-              {t("sendMessage")}
-            </Button>
-          </div>
-        </div>
         
-        <div className="space-y-6">
-          <TierStatusCard 
-            userTier={userTier}
-            onRefresh={checkSessionStatus}
-          />
-        </div>
+        <CooldownMessage 
+          cooldownTimeRemaining={cooldownTimeRemaining} 
+          sessionStatus={sessionStatus} 
+          formatCooldownTime={formatCooldownTime} 
+        />
+
+        <VoiceChatControls 
+          startConversation={startConversation}
+          isConversationActive={isConversationActive}
+          weeklyTimeRemaining={weeklyTimeRemaining}
+          sessionStatus={sessionStatus}
+          formatTime={formatTimer}
+        />
+
+        <BenefitsList />
       </div>
-    </div>
+    </ElevenLabsVoiceProvider>
   );
 };
 
