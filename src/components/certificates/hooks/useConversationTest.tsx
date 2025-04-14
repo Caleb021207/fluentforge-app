@@ -34,26 +34,26 @@ export const useConversationTest = (onTestComplete?: () => void) => {
   });
 
   const conversation = useConversation({
-    onMessage: (message: any) => {
+    onMessage: (message) => {
       console.log("Message received:", message);
       
-      if (message.source === "user") {
+      if (message.role === "user") {
         setConversationTranscript(prev => ({
           ...prev,
           userMessages: [...prev.userMessages, message]
         }));
-      } else if (message.source === "assistant") {
+      } else if (message.role === "assistant") {
         setConversationTranscript(prev => ({
           ...prev,
           aiResponses: [...prev.aiResponses, message]
         }));
       }
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Conversation error:", error);
       toast({
         title: "Error",
-        description: typeof error === 'object' && error !== null ? error.toString() : String(error),
+        description: error.message,
         variant: "destructive",
       });
     },

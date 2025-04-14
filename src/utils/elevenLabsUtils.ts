@@ -52,6 +52,36 @@ export const getAgentIdForLanguage = (language: string): string => {
 };
 
 /**
+ * Initializes an ElevenLabs conversation agent
+ * @returns A promise that resolves to the conversation ID
+ */
+export const initializeElevenLabsAgent = async (language: string = 'english') => {
+  try {
+    // This is where you would integrate with the ElevenLabs API
+    // For now, we'll return a mock conversation ID
+    return `mock-conversation-${Date.now()}-${language}`;
+  } catch (error) {
+    console.error("Error initializing ElevenLabs agent:", error);
+    return null;
+  }
+};
+
+/**
+ * Ends an active ElevenLabs conversation
+ * @param conversationId The ID of the conversation to end
+ */
+export const endElevenLabsConversation = async (conversationId: string) => {
+  try {
+    console.log(`Ending ElevenLabs conversation: ${conversationId}`);
+    // This is where you would call the ElevenLabs API to end the conversation
+    return true;
+  } catch (error) {
+    console.error("Error ending ElevenLabs conversation:", error);
+    return false;
+  }
+};
+
+/**
  * Hook for using ElevenLabs conversation in React components
  */
 export const useElevenLabsAgent = (language: string = 'english') => {

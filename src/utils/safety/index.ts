@@ -6,7 +6,8 @@
 // Content filtering
 export { 
   isSafeContent, 
-  filterContent 
+  filterContent,
+  isLanguageLearningContent 
 } from './contentFilter';
 
 // Age verification
