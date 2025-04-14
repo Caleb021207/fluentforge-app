@@ -1,6 +1,7 @@
+
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
+import { filterContent, isSafeContent, isLanguageLearningContent } from "@/utils/safety/contentFilter";
 import { AlertTriangle, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { playTTS } from "@/utils/ttsUtils";
@@ -31,13 +32,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     "mandarin"
   ];
   
-  // Filter content for safety if needed
-  const safeContent = content ? filterContent(content) : "";
-  const safeTranslation = translation ? filterContent(translation) : "";
+  // Check if this is language learning content (prevents false positives)
+  const isEducationalContent = isLanguageLearningContent(content, currentLanguage !== "english" ? "english" : "spanish");
+  
+  // Filter content for safety if needed - skipping filtering for educational content
+  const safeContent = content ? (isEducationalContent ? content : filterContent(content)) : "";
+  const safeTranslation = translation ? (isEducationalContent ? translation : filterContent(translation)) : "";
   
   // Check for potentially unsafe content
-  const isContentSafe = isSafeContent(content);
-  const isTranslationSafe = translation ? isSafeContent(translation) : true;
+  const isContentSafe = isEducationalContent || isSafeContent(content);
+  const isTranslationSafe = isEducationalContent || (translation ? isSafeContent(translation) : true);
   
   // Determine if translation should be shown
   const showTranslation = 
@@ -45,7 +49,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     (translation && translation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
   
-  const wasContentFiltered = !isContentSafe || !isTranslationSafe;
+  const wasContentFiltered = !isEducationalContent && (!isContentSafe || !isTranslationSafe);
   
   // Handle case where content is undefined or empty
   if (!content && !translation) {

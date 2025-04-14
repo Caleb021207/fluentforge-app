@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -10,28 +10,17 @@ interface PracticeHeaderProps {
   targetLanguage?: string;
 }
 
-const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage }) => {
+const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage = "spanish" }) => {
   const { t, currentLanguage } = useLocalization();
-  const [storedTargetLanguage, setStoredTargetLanguage] = useState<string | null>(null);
-  
-  useEffect(() => {
-    // If no targetLanguage prop is provided, try to get it from localStorage
-    if (!targetLanguage) {
-      const stored = localStorage.getItem("targetLanguage");
-      setStoredTargetLanguage(stored);
-    }
-  }, [targetLanguage]);
-  
-  // Use provided targetLanguage prop if available, otherwise use the one from localStorage
-  const effectiveTargetLanguage = targetLanguage || storedTargetLanguage || "spanish";
   
   // Determine which language is being practiced
   const displayLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(effectiveTargetLanguage)
+    ? getLanguageDisplayName(targetLanguage)
     : "English";
   
-  // Customized header for English speakers learning French
-  if (currentLanguage === "english" && effectiveTargetLanguage === "french") {
+  // This section for French is kept but will not be accessible via normal UI flows
+  // since we've removed French from getAvailableTargetLanguages
+  if (currentLanguage === "english" && targetLanguage === "french") {
     return (
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
@@ -44,12 +33,11 @@ const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage }) => {
         </div>
         
         <h1 className="text-3xl font-bold text-lingua-text mb-2">
-          Practice Your French
+          Practice Your French <span className="text-gray-400 text-lg">(Coming Soon)</span>
         </h1>
         
         <p className="text-gray-600 mb-4">
-          Chat with our AI tutor to practice your French! The AI will help correct your grammar, 
-          vocabulary, and provide tips on French pronunciation and culture.
+          French language practice is currently under development. Please check back later!
         </p>
       </div>
     );

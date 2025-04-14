@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { List, ListItem } from "@/components/ui/list";
-import { BrainCircuit, Globe, GraduationCap } from "lucide-react";
+import { BrainCircuit, Globe, GraduationCap, AlertCircle } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
 
@@ -10,63 +10,32 @@ interface PracticeGuideProps {
   targetLanguage?: string;
 }
 
-const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
+const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish" }) => {
   const { t, currentLanguage } = useLocalization();
-  const [storedTargetLanguage, setStoredTargetLanguage] = useState<string | null>(null);
-  
-  useEffect(() => {
-    // If no targetLanguage prop is provided, try to get it from localStorage
-    if (!targetLanguage) {
-      const stored = localStorage.getItem("targetLanguage");
-      setStoredTargetLanguage(stored);
-    }
-  }, [targetLanguage]);
-  
-  // Use provided targetLanguage prop if available, otherwise use the one from localStorage
-  const effectiveTargetLanguage = targetLanguage || storedTargetLanguage || "spanish";
   
   // Determine which language is being practiced
   const displayLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(effectiveTargetLanguage)
+    ? getLanguageDisplayName(targetLanguage)
     : "English";
   
-  // French-specific guide for English speakers
-  if (currentLanguage === "english" && effectiveTargetLanguage === "french") {
+  // French-specific guide has been modified to show "coming soon" message
+  if (currentLanguage === "english" && targetLanguage === "french") {
     return (
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <BrainCircuit className="h-5 w-5 text-lingua-primary" />
-            French Practice Guide
+            <AlertCircle className="h-5 w-5 text-amber-500" />
+            French Language Support Coming Soon
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-gray-600 mb-4">
-            Practice your French conversation skills with our AI tutor. Here are some suggestions:
+            We're working on adding French language support. Please check back later or try practicing Spanish in the meantime.
           </p>
           
-          <List className="text-sm text-gray-600 mb-4">
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Practice French greetings and introductions: <i>"Bonjour, comment allez-vous?"</i></span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Ask about French grammar rules, like when to use <i>"tu"</i> vs <i>"vous"</i></span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Practice ordering food or asking for directions in French</span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <Globe className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Discuss French culture, cuisine, or travel destinations</span>
-            </ListItem>
-          </List>
-          
-          <p className="text-sm text-gray-500 italic">
-            The AI will help correct your grammar and vocabulary as you practice.
-          </p>
+          <div className="text-sm text-gray-500 italic border-t pt-4 mt-2">
+            <p>Our team is currently developing comprehensive French language materials to ensure a quality learning experience.</p>
+          </div>
         </CardContent>
       </Card>
     );
