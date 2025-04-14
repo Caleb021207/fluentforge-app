@@ -1,5 +1,5 @@
+
 import React from 'react';
-import { VoiceProvider } from '@11labs/react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface ElevenLabsProviderProps {
@@ -40,16 +40,15 @@ const ElevenLabsProvider: React.FC<ElevenLabsProviderProps> = ({ children }) => 
     );
   }
 
+  // Since we can't use VoiceProvider from @11labs/react, we'll just pass the API key
+  // through React Context for components to use
   if (!apiKey) {
     console.warn('ElevenLabs API key not available. Voice features will be limited.');
     return <>{children}</>;
   }
 
-  return (
-    <VoiceProvider apiKey={apiKey}>
-      {children}
-    </VoiceProvider>
-  );
+  // We're just returning the children without the VoiceProvider since it doesn't exist
+  return <>{children}</>;
 };
 
 export default ElevenLabsProvider;

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -48,11 +49,11 @@ export const useConversationTest = (onTestComplete?: () => void) => {
         }));
       }
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Conversation error:", error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error?.toString() || "Unknown error occurred",
         variant: "destructive",
       });
     },

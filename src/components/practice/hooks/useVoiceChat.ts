@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -21,11 +22,11 @@ export const useVoiceChat = () => {
         console.log("LLM response received:", message.message.content);
       }
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("ElevenLabs conversation error:", error);
       toast({
         title: t("error"),
-        description: error.message,
+        description: error?.toString() || "Unknown error",
         variant: "destructive",
       });
     },
