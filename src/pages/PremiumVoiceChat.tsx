@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -8,7 +7,7 @@ import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { getLanguagePair } from "@/utils/languageUtils";
-import { ElevenLabsVoiceProvider } from "@11labs/react";
+import { VoiceProvider } from '@11labs/react';
 
 // Import refactored components
 import LoginPrompt from "@/components/premium-voice/LoginPrompt";
@@ -145,7 +144,7 @@ const PremiumVoiceChat = () => {
   }
 
   return (
-    <ElevenLabsVoiceProvider apiKey={process.env.ELEVEN_LABS_API_KEY}>
+    <VoiceProvider apiKey={process.env.ELEVEN_LABS_API_KEY}>
       <div className="max-w-4xl mx-auto p-4">
         <PageHeader />
         
@@ -165,7 +164,7 @@ const PremiumVoiceChat = () => {
 
         <BenefitsList />
       </div>
-    </ElevenLabsVoiceProvider>
+    </VoiceProvider>
   );
 };
 

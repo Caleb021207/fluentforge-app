@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,15 +33,15 @@ export const useConversationTest = (onTestComplete?: () => void) => {
   });
 
   const conversation = useConversation({
-    onMessage: (message) => {
+    onMessage: (message: any) => {
       console.log("Message received:", message);
       
-      if (message.role === "user") {
+      if (message.source === "user") {
         setConversationTranscript(prev => ({
           ...prev,
           userMessages: [...prev.userMessages, message]
         }));
-      } else if (message.role === "assistant") {
+      } else if (message.source === "assistant") {
         setConversationTranscript(prev => ({
           ...prev,
           aiResponses: [...prev.aiResponses, message]

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -17,9 +16,9 @@ export const useVoiceChat = () => {
   const { t, currentLanguage } = useLocalization();
 
   const conversation = useConversation({
-    onMessage: (message) => {
-      if (message.type === "llm_response") {
-        console.log("LLM response received:", message.content);
+    onMessage: (message: any) => {
+      if (message.message?.type === "llm_response") {
+        console.log("LLM response received:", message.message.content);
       }
     },
     onError: (error) => {
