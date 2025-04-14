@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Shield, AlertTriangle, Info, Lock } from "lucide-react";
+import { Shield, AlertTriangle, Info } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { 
   Tooltip,
@@ -41,7 +41,7 @@ const SafetyTabContent: React.FC<SafetyTabContentProps> = ({
               </Tooltip>
             </TooltipProvider>
           </h3>
-          <p className="text-sm text-gray-500">{t("strictContentFilteringDescription") || "Provides stronger content filtering appropriate for children and educational settings."}</p>
+          <p className="text-sm text-gray-500">{t("strictContentFilteringDescription")}</p>
         </div>
         <Switch 
           checked={safetyMode === 'strict'} 
@@ -52,30 +52,20 @@ const SafetyTabContent: React.FC<SafetyTabContentProps> = ({
       <div className="bg-blue-50 p-4 rounded-md">
         <h3 className="font-medium text-blue-700 flex items-center">
           <Shield className="mr-2 h-4 w-4" />
-          {t("cipaCompliance") || "CIPA Compliance"}
+          {t("cipaCompliance")}
         </h3>
         <p className="text-sm text-blue-600 mt-1">
-          {t("cipaComplianceShortDesc") || "Strict content filtering complies with the Children's Internet Protection Act (CIPA) requirements for filtering inappropriate content in educational settings. This ensures all learning materials are age-appropriate and safe for classroom use."}
+          {t("cipaComplianceShortDesc") || "Strict content filtering complies with the Children's Internet Protection Act (CIPA) requirements for filtering inappropriate content in educational settings."}
         </p>
       </div>
       
       <div className="bg-amber-50 p-4 rounded-md">
         <h3 className="font-medium text-amber-700 flex items-center">
           <AlertTriangle className="mr-2 h-4 w-4" />
-          {t("languageLearningCaution") || "Language Learning Safeguards"}
+          Language Learning Safeguards
         </h3>
         <p className="text-sm text-amber-600 mt-1">
-          {t("languageLearningCautionDesc") || "Our intelligent filtering system is designed to recognize educational context, ensuring language learning vocabulary is preserved while still filtering inappropriate content. This prevents overly-aggressive blocking that could interfere with legitimate learning materials."}
-        </p>
-      </div>
-      
-      <div className="bg-green-50 p-4 rounded-md">
-        <h3 className="font-medium text-green-700 flex items-center">
-          <Lock className="mr-2 h-4 w-4" />
-          {t("parentalPin") || "Parental PIN Protection"}
-        </h3>
-        <p className="text-sm text-green-600 mt-1">
-          {t("parentalPinDesc") || "Safety settings are protected by a PIN code to prevent children from changing them without adult supervision. The default PIN is 0000 if you haven't set a custom one. We recommend changing this PIN to a unique number that only authorized adults know."}
+          Our filtering system is designed to avoid false positives in educational contexts, ensuring language learning vocabulary and phrases are preserved while still filtering out inappropriate content.
         </p>
       </div>
     </div>
