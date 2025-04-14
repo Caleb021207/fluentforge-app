@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -17,15 +18,15 @@ export const useVoiceChat = () => {
 
   const conversation = useConversation({
     onMessage: (message) => {
-      if (message.source === "llm") {
-        console.log("LLM response received:", message.message);
+      if (message.type === "llm_response") {
+        console.log("LLM response received:", message.content);
       }
     },
     onError: (error) => {
       console.error("ElevenLabs conversation error:", error);
       toast({
         title: t("error"),
-        description: error?.toString() || String(error),
+        description: error.message,
         variant: "destructive",
       });
     },

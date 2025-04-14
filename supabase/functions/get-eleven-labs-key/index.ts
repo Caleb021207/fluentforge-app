@@ -6,9 +6,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// The fixed API key
-const ELEVEN_LABS_API_KEY = "sk-proj-uj4EFHw3w7FWowdZ2QpdРDЗBilH-QQemPNvvcjOI9SEGGQA1cgFVhhbj4HeuLy2lvRanGIVbEMT3BIbkFJnOL5Q8ffbuV95RslwnKYTfDQkg70HUgVhiDgVI2QHIG3laJqkR407rytHJUyQoHvwMvZfZav4A";
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -23,12 +20,14 @@ serve(async (req) => {
     }
 
     // Return the ElevenLabs API key
-    if (!ELEVEN_LABS_API_KEY) {
+    // This is stored as a secret in the Supabase project
+    const apiKey = Deno.env.get('ELEVEN_LABS_API_KEY');
+    if (!apiKey) {
       throw new Error('ElevenLabs API key not configured');
     }
 
     return new Response(
-      JSON.stringify({ apiKey: ELEVEN_LABS_API_KEY }),
+      JSON.stringify({ apiKey }),
       { 
         headers: { 
           ...corsHeaders, 

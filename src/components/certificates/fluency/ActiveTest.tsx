@@ -1,58 +1,58 @@
 
 import React from "react";
+import { Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Mic } from "lucide-react";
-import { useLocalization } from "@/context/LocalizationContext";
+import TestInstructions from "./TestInstructions";
+import { formatTime } from "../hooks/useConversationTest";
 
 interface ActiveTestProps {
   timeRemaining: number;
   conversationStatus: string;
   onEndEarly: () => void;
-  formatTime?: (seconds: number) => string;
 }
 
-const ActiveTest: React.FC<ActiveTestProps> = ({
+const ActiveTest = ({
   timeRemaining,
   conversationStatus,
-  onEndEarly,
-  formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  }
-}) => {
-  const { t } = useLocalization();
-
+  onEndEarly
+}: ActiveTestProps) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-        <div className="flex items-center space-x-2">
-          <Mic className="h-5 w-5 text-blue-500" />
-          <span className="font-medium">{t("listeningNow")}</span>
+        <div className="flex items-center">
+          {conversationStatus === "connected" ? (
+            <Mic className="h-5 w-5 text-green-500 mr-2 animate-pulse" />
+          ) : (
+            <MicOff className="h-5 w-5 text-red-500 mr-2" />
+          )}
+          <span className="font-medium">
+            {conversationStatus === "connected" 
+              ? "Speak in Spanish to the AI tutor" 
+              : "Connecting to AI tutor..."}
+          </span>
         </div>
-        <div className="text-lg font-bold">
-          {formatTime(timeRemaining)}
+        <div className="text-right">
+          <div className="text-lg font-bold">{formatTime(timeRemaining)}</div>
+          <div className="text-xs text-gray-500">remaining</div>
         </div>
       </div>
       
-      <p className="text-sm text-gray-600">
-        {t("speakClearlyInstructions")}
-      </p>
+      <TestInstructions />
       
-      <div className="flex justify-center">
-        <Button
-          variant="outline"
-          onClick={onEndEarly}
-          className="mt-2"
+      <div className="flex justify-between">
+        <Button 
+          variant="outline" 
+          onClick={() => {
+            if (window.confirm("Are you sure you want to end the test early?")) {
+              onEndEarly();
+            }
+          }}
         >
-          {t("endTestEarly")}
+          End Test Early
         </Button>
-      </div>
-      
-      <div className="text-xs text-gray-500 text-center mt-4">
-        {conversationStatus === "connected" 
-          ? t("activeConnection") 
-          : t("connectingToService")}
+        <div className="text-sm text-gray-500 pt-2">
+          Test will automatically end in {formatTime(timeRemaining)}
+        </div>
       </div>
     </div>
   );
