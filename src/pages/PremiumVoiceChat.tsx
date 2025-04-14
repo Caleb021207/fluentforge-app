@@ -1,9 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
-import { useSessionManagement } from "@/hooks/session/useSessionManagement";
+import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { getLanguagePair } from "@/utils/languageUtils";

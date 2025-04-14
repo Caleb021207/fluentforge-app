@@ -1,33 +1,38 @@
 
-import common from "./common";
-import auth from "./auth";
-import dashboard from "./dashboard";
-import practice from "./practice";
-import voiceChat from "./voice-chat";
-import premiumVoice from "./premium-voice";
-import proVoice from "./pro-voice";
-import uiElements from "./ui-elements";
-import settings from "./settings";
-import lessons from "./lessons";
-import certifications from "./certifications";
-import errors from "./errors";
-import profile from "./profile";
-import { TranslationModule, TranslationRecord } from "../types";
+import { TranslationRecord } from "../types";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
+import ferpaTranslations from "./ferpa";
+import safetyTranslations from "./safety";
+import dataPrivacyTranslations from "./data-privacy";
+import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
+import certificatesTranslations from "./certificates";
+import progressTranslations from "./progress";
+import profileTranslations from "./profile";
+import voiceChatTranslations from "./voice-chat";
+import premiumVoiceTranslations from "./premium-voice";
+import languageFrameworksTranslations from "./language-frameworks";
+import authTranslations from "./auth";
+import languagesTranslations from "./languages";
 
-const translations: Record<TranslationModule, TranslationRecord> = {
-  common: common,
-  auth: auth,
-  dashboard: dashboard,
-  practice: practice,
-  "voice-chat": voiceChat,
-  "premium-voice": premiumVoice,
-  "pro-voice": proVoice,
-  "ui-elements": uiElements,
-  settings: settings,
-  lessons: lessons,
-  certifications: certifications,
-  errors: errors,
-  profile: profile,
+// Combine all the translation categories
+const englishTranslations: TranslationRecord = {
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
+  ...ferpaTranslations,
+  ...safetyTranslations,
+  ...dataPrivacyTranslations,
+  ...languageSelectionTranslations,
+  ...practiceTranslations,
+  ...certificatesTranslations,
+  ...progressTranslations,
+  ...profileTranslations,
+  ...voiceChatTranslations,
+  ...premiumVoiceTranslations,
+  ...languageFrameworksTranslations,
+  ...authTranslations,
+  ...languagesTranslations,
 };
 
-export default translations;
+export default englishTranslations;
