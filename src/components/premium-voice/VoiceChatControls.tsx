@@ -1,5 +1,5 @@
 
-import { Mic, MicOff, Clock } from "lucide-react";
+import { Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 
@@ -32,19 +32,18 @@ const VoiceChatControls = ({
           {isConversationActive() ? (
             <>
               <MicOff className="h-4 w-4 mr-2" />
-              {t("stopVoiceChat")}
+              {t("endSession")}
             </>
           ) : (
             <>
               <Mic className="h-4 w-4 mr-2" />
-              {t("startVoiceChat")}
+              {t("startProVoiceChat")}
             </>
           )}
         </Button>
         
         {weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
           <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
-            <Clock className="h-4 w-4" />
             <span>{formatTime(weeklyTimeRemaining)} {t("remaining")}</span>
           </div>
         )}

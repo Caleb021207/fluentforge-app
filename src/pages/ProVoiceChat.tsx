@@ -7,6 +7,7 @@ import ProVoiceStatus from "@/components/pro-voice/ProVoiceStatus";
 import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
 import BenefitsList from "@/components/premium-voice/BenefitsList";
 import { Card } from "@/components/ui/card";
+import { formatTime } from "@/utils/timeUtils";
 
 const ProVoiceChat = () => {
   const { t, currentLanguage } = useLocalization();
@@ -41,6 +42,17 @@ const ProVoiceChat = () => {
     }
   };
 
+  // Create wrapper functions to match the expected props interface
+  const startConversation = () => {
+    if (microphoneAccess) {
+      startSession();
+    }
+  };
+
+  const isConversationActive = () => {
+    return isActive;
+  };
+
   return (
     <div className="container max-w-4xl mx-auto p-6">
       <div className="space-y-6">
@@ -60,10 +72,11 @@ const ProVoiceChat = () => {
           />
 
           <VoiceChatControls
-            isActive={isActive}
-            onStart={startSession}
-            onStop={endSession}
-            disabled={!microphoneAccess}
+            startConversation={startConversation}
+            isConversationActive={isConversationActive}
+            weeklyTimeRemaining={sessionTimeRemaining}
+            sessionStatus={isActive ? 'active' : 'available'}
+            formatTime={formatTime}
           />
 
           {isActive && (transcript || interimTranscript || response) && (
