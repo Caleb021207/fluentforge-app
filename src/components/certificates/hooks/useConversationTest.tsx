@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,7 +52,7 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       console.error("Conversation error:", error);
       toast({
         title: "Error",
-        description: error.message,
+        description: typeof error === 'object' ? error.message || String(error) : error,
         variant: "destructive",
       });
     },

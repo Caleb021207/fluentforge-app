@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      access_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          generated_by: string | null
+          id: string
+          is_used: boolean | null
+          tier: number
+          used_at: string | null
+          used_by: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          generated_by?: string | null
+          id?: string
+          is_used?: boolean | null
+          tier: number
+          used_at?: string | null
+          used_by?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          generated_by?: string | null
+          id?: string
+          is_used?: boolean | null
+          tier?: number
+          used_at?: string | null
+          used_by?: string | null
+        }
+        Relationships: []
+      }
       certification_attempts: {
         Row: {
           certification_type: string
@@ -188,6 +221,7 @@ export type Database = {
           learning_goal: string | null
           target_date: string | null
           target_level: string | null
+          tier: number | null
           updated_at: string
         }
         Insert: {
@@ -198,6 +232,7 @@ export type Database = {
           learning_goal?: string | null
           target_date?: string | null
           target_level?: string | null
+          tier?: number | null
           updated_at?: string
         }
         Update: {
@@ -208,6 +243,7 @@ export type Database = {
           learning_goal?: string | null
           target_date?: string | null
           target_level?: string | null
+          tier?: number | null
           updated_at?: string
         }
         Relationships: []

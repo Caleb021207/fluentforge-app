@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -26,7 +25,7 @@ export const useVoiceChat = () => {
       console.error("ElevenLabs conversation error:", error);
       toast({
         title: t("error"),
-        description: error.message,
+        description: typeof error === 'object' ? error.message || String(error) : String(error),
         variant: "destructive",
       });
     },
