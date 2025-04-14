@@ -22,12 +22,22 @@ export const useVoiceChatMessages = () => {
     
     let initialContent = "";
     
-    if (currentLanguage === "english") {
-      initialContent = `Hello, I'd like to practice ${practice} with you.`;
-    } else if (currentLanguage === "mandarin") {
-      initialContent = "你好，我想和你练习英语。";
-    } else {
-      initialContent = `Hello, I'd like to practice ${practice} with you.`;
+    // Customize initial content based on user's interface language
+    switch (currentLanguage) {
+      case "english":
+        initialContent = `Hello, I'd like to practice ${practice} with you.`;
+        break;
+      case "spanish":
+        initialContent = `Hola, me gustaría practicar ${practice} contigo.`;
+        break;
+      case "french":
+        initialContent = `Bonjour, j'aimerais pratiquer ${practice} avec vous.`;
+        break;
+      case "russian":
+        initialContent = `Здравствуйте, я хотел бы попрактиковаться в ${practice} с вами.`;
+        break;
+      default:
+        initialContent = `Hello, I'd like to practice ${practice} with you.`;
     }
     
     const initialUserMessage: VoiceMessage = {
