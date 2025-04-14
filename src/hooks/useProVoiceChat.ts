@@ -155,7 +155,10 @@ export const useProVoiceChat = () => {
       
       // Convert the response to speech using Azure TTS
       const voice = getAzureVoiceForLanguage(currentLanguage);
-      const audioBlob = await azureTextToSpeech(mockResponse, currentLanguage);
+      const audioArrayBuffer = await azureTextToSpeech(mockResponse, currentLanguage);
+      
+      // Convert ArrayBuffer to Blob before creating a URL
+      const audioBlob = new Blob([audioArrayBuffer], { type: 'audio/wav' });
       
       // Play the audio
       if (audioRef.current) {

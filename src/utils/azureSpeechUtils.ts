@@ -1,7 +1,9 @@
+
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 
+// Use an environment variable approach that works in the browser
 const speechConfig = sdk.SpeechConfig.fromSubscription(
-  Deno.env.get('AZURE_SPEECH_KEY') || '',
+  process.env.AZURE_SPEECH_KEY || '',
   'eastus' // default region, can be configured per deployment
 );
 
