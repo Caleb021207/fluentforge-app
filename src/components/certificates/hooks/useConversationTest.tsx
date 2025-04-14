@@ -1,21 +1,14 @@
-import { useState, useEffect } from "react";
-import { useConversation } from "@11labs/react";
-import { useToast } from "@/hooks/use-toast";
+import { TEST_DURATION, ELEVEN_LABS_AGENT_ID } from "@/utils/constants";
 import { useLocalization } from "@/context/LocalizationContext";
-import { supabase } from "@/integrations/supabase/client";
-import { 
-  convertSkillScoreToPercentage, 
-  determineLevel,
-  analyzeSpeakingComplexity,
-  calculateEnhancedScore,
-  generateDetailedFeedback
-} from "@/components/certifications/utils/scoreUtils";
+import { useToast } from "@/hooks/use-toast";
+import { useConversation } from "@11labs/react";
 
 export interface UseConversationTestProps {
   onTestComplete?: () => void;
 }
 
 export const useConversationTest = ({ onTestComplete }: UseConversationTestProps) => {
+  const { t } = useLocalization();
   const [isStarted, setIsStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION);
@@ -196,7 +189,7 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
       
       toast({
         title: "Test Started",
-        description: localization.conversationTestStartMessage,
+        description: t("conversationTestStartMessage"),
       });
     } catch (error: any) {
       console.error("Error starting test:", error);

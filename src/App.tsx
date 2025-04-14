@@ -1,9 +1,20 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Layout from "@/components/Layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LocalizationProvider } from "@/context/LocalizationContext";
 import { ElevenLabsProvider } from "@/providers/ElevenLabsProvider";
+import Index from "@/pages/Index";
+import Practice from "@/pages/Practice";
+import VoiceChat from "@/pages/VoiceChat";
+import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
+import ExampleData from "@/pages/ExampleData";
+import AdminDashboard from "@/pages/AdminDashboard";
+import Settings from "@/pages/Settings";
+import SafetyPolicy from "@/pages/SafetyPolicy";
+import WritingCertification from "@/pages/WritingCertification";
+import ReadingCertification from "@/pages/ReadingCertification";
+import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
