@@ -1,21 +1,28 @@
 
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { supabase } from "@/integrations/supabase/client";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
-import { supabase } from "@/integrations/supabase/client";
+import { useMicrophoneAccess } from "@/hooks/voice-chat/useMicrophoneAccess";
+import { useVoiceChatTimer } from "@/hooks/voice-chat/useVoiceChatTimer";
+import { useVoiceChatMessages } from "@/hooks/voice-chat/useVoiceChatMessages";
 
 export const useVoiceChat = () => {
-  const [microphoneAccess, setMicrophoneAccess] = useState(false);
   const [voiceChatTimeRemaining, setVoiceChatTimeRemaining] = useState<number | null>(null);
   const [connectionAttempts, setConnectionAttempts] = useState(0);
   const maxConnectionAttempts = 3;
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
 
+  const apiKey = import.meta.env.VITE_ELEVEN_LABS_API_KEY;
+  const { microphoneAccess, checkMicrophoneAccess } = useMicrophoneAccess(t);
+  const { messages, clearMessages, addInitialMessage, addMessage } = useVoiceChatMessages();
+
   const conversation = useConversation({
+    apiKey,
     onMessage: (message) => {
       if (message.type === "llm_response") {
         console.log("LLM response received:", message.content);
@@ -33,68 +40,76 @@ export const useVoiceChat = () => {
 
   const isConversationActive = () => conversation.status !== "disconnected";
 
-  useEffect(() => {
-    const initMicrophone = async () => {
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-        setMicrophoneAccess(true);
-      } catch (error) {
-        console.error("Microphone access error:", error);
-        setMicrophoneAccess(false);
+  const { timerValue, formatTimer } = useVoiceChatTimer({
+    isConversationActive,
+    weeklyTimeRemaining: voiceChatTimeRemaining,
+    onTimeExpired: () => {
+      if (isConversationActive()) {
+        endVoiceConversation();
+      }
+    },
+    t
+  });
+
+  const tryStartConversation = async (sessionId: string) => {
+    try {
+      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
+      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker (attempt ${connectionAttempts + 1})`);
+      
+      if (isConversationActive()) {
+        await conversation.endSession();
+      }
+      
+      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
+      const conversationId = await conversation.startSession({
+        agentId: selectedAgentId,
+      });
+      
+      console.log(`Successfully started conversation session: ${conversationId}`);
+      
+      const remainingTime = await calculateRemainingWeeklyTime(sessionId);
+      setVoiceChatTimeRemaining(remainingTime);
+      
+      toast({
+        title: t("startVoiceChat"),
+        description: t("startChatting"),
+      });
+      
+      return true;
+    } catch (error) {
+      console.error(`Connection attempt ${connectionAttempts + 1} failed:`, error);
+      setConnectionAttempts(prev => prev + 1);
+      
+      if (connectionAttempts < maxConnectionAttempts - 1) {
+        console.log(`Retrying connection (attempt ${connectionAttempts + 2} of ${maxConnectionAttempts})...`);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        return tryStartConversation(sessionId);
+      } else {
+        console.error(`Failed to connect after ${maxConnectionAttempts} attempts`);
         toast({
-          title: t("microphoneAccessRequired"),
-          description: t("allowMicAccess"),
+          title: t("error"),
+          description: `${t("networkConnectionIssue")}. ${t("failedToCreateSession")}`,
           variant: "destructive",
         });
+        
+        try {
+          await supabase
+            .from('premium_voice_chat_sessions')
+            .update({ session_end: new Date().toISOString() })
+            .eq('id', sessionId);
+        } catch (dbError) {
+          console.error("Error updating session end time:", dbError);
+        }
+        
+        return false;
       }
-    };
-
-    initMicrophone();
-  }, [toast, t]);
-
-  useEffect(() => {
-    let timerId: number | null = null;
-    
-    if (isConversationActive() && voiceChatTimeRemaining !== null) {
-      timerId = window.setInterval(() => {
-        setVoiceChatTimeRemaining(prev => {
-          if (prev === null || prev <= 0) {
-            if (timerId) clearInterval(timerId);
-            if (isConversationActive()) {
-              endVoiceConversation();
-              toast({
-                title: t("voiceChatEnded"),
-                description: t("timeLimit10MinReached"),
-              });
-            }
-            return null;
-          }
-          return prev - 1;
-        });
-      }, 1000);
     }
-    
-    return () => {
-      if (timerId) clearInterval(timerId);
-    };
-  }, [isConversationActive(), voiceChatTimeRemaining]);
+  };
 
   const startVoiceConversation = async () => {
     setConnectionAttempts(0);
-    if (!microphoneAccess) {
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-        setMicrophoneAccess(true);
-      } catch (error) {
-        console.error("Microphone access error on start:", error);
-        toast({
-          title: t("microphoneAccessRequired"),
-          description: t("allowMicAccess"),
-          variant: "destructive",
-        });
-        return;
-      }
-    }
+    const hasAccess = await checkMicrophoneAccess();
+    if (!hasAccess) return;
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -150,63 +165,6 @@ export const useVoiceChat = () => {
         description: t("networkConnectionIssue"),
         variant: "destructive",
       });
-    }
-  };
-
-  const tryStartConversation = async (sessionId: string) => {
-    try {
-      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
-      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker (attempt ${connectionAttempts + 1})`);
-      
-      // End any existing session to make sure we start fresh
-      if (isConversationActive()) {
-        await conversation.endSession();
-      }
-      
-      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
-      const conversationId = await conversation.startSession({
-        agentId: selectedAgentId,
-      });
-      
-      console.log(`Successfully started conversation session: ${conversationId}`);
-      
-      const remainingTime = await calculateRemainingWeeklyTime(sessionId);
-      setVoiceChatTimeRemaining(remainingTime);
-      
-      toast({
-        title: t("startVoiceChat"),
-        description: t("startChatting"),
-      });
-      
-      return true;
-    } catch (error) {
-      console.error(`Connection attempt ${connectionAttempts + 1} failed:`, error);
-      setConnectionAttempts(prev => prev + 1);
-      
-      if (connectionAttempts < maxConnectionAttempts - 1) {
-        console.log(`Retrying connection (attempt ${connectionAttempts + 2} of ${maxConnectionAttempts})...`);
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Wait before retry
-        return tryStartConversation(sessionId);
-      } else {
-        console.error(`Failed to connect after ${maxConnectionAttempts} attempts`);
-        toast({
-          title: t("error"),
-          description: `${t("networkConnectionIssue")}. ${t("failedToCreateSession")}`,
-          variant: "destructive",
-        });
-        
-        // Close the session in database
-        try {
-          await supabase
-            .from('premium_voice_chat_sessions')
-            .update({ session_end: new Date().toISOString() })
-            .eq('id', sessionId);
-        } catch (dbError) {
-          console.error("Error updating session end time:", dbError);
-        }
-        
-        return false;
-      }
     }
   };
 

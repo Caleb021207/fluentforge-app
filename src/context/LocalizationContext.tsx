@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import translations, { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } from "@/translations";
-import { LanguageTranslations } from "@/translations/types";
+import { LanguageTranslations, TranslationModule, TranslationRecord } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 
 // Create context
@@ -32,12 +31,47 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Translation function
-  const t = (key: string, replacements?: Record<string, string>) => {
+  const t = (key: string, replacements?: Record<string, string>): string => {
     // Get translation for current language or fallback to default
-    let text = translations[currentLanguage]?.[key] || translations[DEFAULT_LANGUAGE][key] || key;
+    const langTranslations = translations[currentLanguage];
+    const defaultTranslations = translations[DEFAULT_LANGUAGE];
+    
+    let text: string = key;
+    
+    // Try to get translation based on the structure
+    if (key.includes(".")) {
+      // Handle nested keys (e.g., "voice-chat.startSpeaking")
+      const [module, moduleKey] = key.split(".");
+      
+      if (currentLanguage === "english") {
+        // English uses modular structure
+        const moduleTranslations = (defaultTranslations as Record<string, TranslationRecord>)[module as TranslationModule];
+        if (moduleTranslations && moduleKey) {
+          text = moduleTranslations[moduleKey] || key;
+        }
+      } else {
+        // Other languages use flat structure
+        text = (langTranslations as TranslationRecord)[key] || 
+               (defaultTranslations.common as TranslationRecord)[key] || 
+               key;
+      }
+    } else {
+      // Handle flat keys
+      if (currentLanguage === "english") {
+        // For English, try to find in common translations first
+        text = ((defaultTranslations as Record<string, TranslationRecord>).common?.[key] ||
+                (defaultTranslations as Record<string, any>)[key] ||
+                key);
+      } else {
+        // For other languages, use flat structure
+        text = ((langTranslations as TranslationRecord)[key] ||
+                (defaultTranslations.common as TranslationRecord)[key] ||
+                key);
+      }
+    }
     
     // Apply replacements if any
-    if (replacements) {
+    if (replacements && typeof text === 'string') {
       Object.entries(replacements).forEach(([placeholder, value]) => {
         text = text.replace(`{{${placeholder}}}`, value);
       });

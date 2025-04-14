@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Shield, Mic, Home, Headphones } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, Speaker } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,32 +13,22 @@ const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const { currentLanguage, t } = useLocalization();
   const isMobile = useIsMobile();
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
-      const loggedIn = !!data.session;
-      setIsLoggedIn(loggedIn);
-      
-      if (loggedIn) {
-        const { data: { user } } = await supabase.auth.getUser();
-        setIsAdmin(user?.email?.includes("admin") || false);
-      }
+      setIsLoggedIn(!!data.session);
     };
     
     checkAuth();
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_IN') {
         setIsLoggedIn(true);
-        const user = session?.user;
-        setIsAdmin(user?.email?.includes("admin") || false);
       } else if (event === 'SIGNED_OUT') {
         setIsLoggedIn(false);
-        setIsAdmin(false);
       }
     });
     
@@ -50,13 +40,10 @@ const Navigation = () => {
   const navItems = [
     { icon: MessageSquare, label: "textPractice", path: "/practice" },
     { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat" },
+    { icon: Speaker, label: "proVoiceChat", path: "/pro-voice-chat" },
     { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat" },
   ];
   
-  if (isAdmin) {
-    navItems.push({ icon: Shield, label: "admin", path: "/admin" });
-  }
-
   if (isMobile) {
     navItems.unshift({ icon: Home, label: "home", path: "/" });
   }

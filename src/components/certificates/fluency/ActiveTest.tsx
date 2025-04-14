@@ -3,7 +3,7 @@ import React from "react";
 import { Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TestInstructions from "./TestInstructions";
-import { formatTime } from "../hooks/useConversationTest";
+import { formatTime } from "@/utils/timeUtils";
 
 interface ActiveTestProps {
   timeRemaining: number;
