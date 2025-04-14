@@ -25,29 +25,7 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
     ? getLanguageDisplayName(targetLanguage)
     : "English";
   
-  // This section for French is kept but will not be accessible via normal UI flows
-  // since we've removed French from getAvailableTargetLanguages
-  if (currentLanguage === "english" && targetLanguage === "french") {
-    return (
-      <div className="flex justify-center mb-8">
-        <Button
-          onClick={onClick}
-          disabled={true} // Always disable French button
-          className="gap-2 opacity-50 cursor-not-allowed"
-          size="lg"
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <MessageSquare className="h-4 w-4" />
-          )}
-          Start French Conversation (Coming Soon)
-        </Button>
-      </div>
-    );
-  }
-  
-  // Default button for other language combinations
+  // Default button for all language combinations
   return (
     <div className="flex justify-center mb-8">
       <Button
