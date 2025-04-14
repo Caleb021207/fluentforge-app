@@ -1,11 +1,7 @@
 
 export type TranslationRecord = Record<string, string>;
 
-export type LanguageTranslations = {
-  [key: string]: TranslationRecord | Record<string, TranslationRecord>;
-};
-
-export type TranslationModule =
+export type TranslationModule = 
   | "common"
   | "auth"
   | "dashboard"
@@ -19,3 +15,7 @@ export type TranslationModule =
   | "certifications"
   | "errors"
   | "profile";
+
+export type LanguageTranslations = {
+  [key: string]: TranslationRecord | Record<TranslationModule, TranslationRecord>;
+};

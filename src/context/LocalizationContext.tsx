@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import translations, { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } from "@/translations";
-import { LanguageTranslations, TranslationRecord } from "@/translations/types";
+import { LanguageTranslations, TranslationModule, TranslationRecord } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 
 // Create context
@@ -31,29 +31,43 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Translation function
-  const t = (key: string, replacements?: Record<string, string>) => {
+  const t = (key: string, replacements?: Record<string, string>): string => {
     // Get translation for current language or fallback to default
     const langTranslations = translations[currentLanguage];
     const defaultTranslations = translations[DEFAULT_LANGUAGE];
     
-    let text: string;
+    let text: string = key;
     
-    // Handle different translation structures (nested vs flat)
-    if (currentLanguage === "english") {
-      // English uses nested structure - try to extract from module
-      const [module, moduleKey] = key.includes(".") ? key.split(".") : [null, key];
+    // Try to get translation based on the structure
+    if (key.includes(".")) {
+      // Handle nested keys (e.g., "voice-chat.startSpeaking")
+      const [module, moduleKey] = key.split(".");
       
-      if (module && langTranslations[module] && typeof langTranslations[module] === "object") {
-        text = (langTranslations[module] as TranslationRecord)[moduleKey] || key;
+      if (currentLanguage === "english") {
+        // English uses modular structure
+        const moduleTranslations = (defaultTranslations as Record<string, TranslationRecord>)[module as TranslationModule];
+        if (moduleTranslations && moduleKey) {
+          text = moduleTranslations[moduleKey] || key;
+        }
       } else {
-        // Try direct lookup for non-modularized keys
-        text = (langTranslations as any)[key] || key;
+        // Other languages use flat structure
+        text = (langTranslations as TranslationRecord)[key] || 
+               (defaultTranslations.common as TranslationRecord)[key] || 
+               key;
       }
     } else {
-      // Other languages use flat structure
-      text = (langTranslations as TranslationRecord)[key] || 
-             (defaultTranslations.common as TranslationRecord)[key] || 
-             key;
+      // Handle flat keys
+      if (currentLanguage === "english") {
+        // For English, try to find in common translations first
+        text = ((defaultTranslations as Record<string, TranslationRecord>).common?.[key] ||
+                (defaultTranslations as Record<string, any>)[key] ||
+                key);
+      } else {
+        // For other languages, use flat structure
+        text = ((langTranslations as TranslationRecord)[key] ||
+                (defaultTranslations.common as TranslationRecord)[key] ||
+                key);
+      }
     }
     
     // Apply replacements if any

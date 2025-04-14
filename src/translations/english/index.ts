@@ -1,3 +1,4 @@
+
 import common from "./common";
 import auth from "./auth";
 import dashboard from "./dashboard";
@@ -11,9 +12,9 @@ import lessons from "./lessons";
 import certifications from "./certifications";
 import errors from "./errors";
 import profile from "./profile";
-import { TranslationRecord } from "../types";
+import { TranslationModule, TranslationRecord } from "../types";
 
-const translations: Record<string, TranslationRecord> = {
+const translations: Record<TranslationModule, TranslationRecord> = {
   common: common,
   auth: auth,
   dashboard: dashboard,
