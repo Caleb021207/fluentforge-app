@@ -3,7 +3,7 @@ import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 
 // Use an environment variable approach that works in the browser
 const speechConfig = sdk.SpeechConfig.fromSubscription(
-  process.env.AZURE_SPEECH_KEY || '',
+  import.meta.env.VITE_AZURE_SPEECH_KEY || '',
   'eastus' // default region, can be configured per deployment
 );
 
