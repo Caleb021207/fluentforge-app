@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Shield, Users, Clock, Sliders } from "lucide-react";
+import { Shield, Users, Clock, Sliders, AlertCircle, Lock } from "lucide-react";
 
 const CIPATabContent = () => {
   const { t } = useLocalization();
@@ -23,7 +23,7 @@ const CIPATabContent = () => {
           <li className="text-base">{t("contentFilteringPoint2") || "AI moderation for all conversations"}</li>
           <li className="text-base">{t("contentFilteringPoint3") || "Curated, age-appropriate topics and vocabulary"}</li>
           <li className="text-base">{t("cipaNoExternalContent") || "No access to external search engines, media, or third-party websites"}</li>
-          <li className="text-base">Smart filtering that understands language learning context, preventing false positives in educational settings</li>
+          <li className="text-base">{t("smartFiltering") || "Smart filtering that understands language learning context, preventing false positives in educational settings"}</li>
         </ul>
       </section>
       
@@ -36,12 +36,26 @@ const CIPATabContent = () => {
           <li className="text-base">{t("parentalControlsPoint1") || "PIN-protected settings to prevent unauthorized changes"}</li>
           <li className="text-base">{t("parentalControlsPoint2") || "Optional screen time limits for students"}</li>
           <li className="text-base">{t("parentalControlsPoint3") || "Adjustable content levels by age or proficiency"}</li>
+          <li className="text-base">{t("parentalControlsPoint4") || "Separate profiles for different users with independent settings"}</li>
+          <li className="text-base">{t("parentalControlsPoint5") || "Activity reports available for parents and educators"}</li>
+        </ul>
+      </section>
+      
+      <section className="mb-8">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <Clock className="mr-2 h-5 w-5 text-lingua-primary" />
+          {t("sessionLimits") || "Session Limits & Monitoring"}
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li className="text-base">{t("sessionLimitsPoint1") || "Configurable time limits for practice sessions"}</li>
+          <li className="text-base">{t("sessionLimitsPoint2") || "Automatic timeouts for inactive sessions"}</li>
+          <li className="text-base">{t("sessionLimitsPoint3") || "Usage reports and analytics for educators"}</li>
         </ul>
       </section>
       
       <section>
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Users className="mr-2 h-5 w-5 text-lingua-primary" />
+          <AlertCircle className="mr-2 h-5 w-5 text-lingua-primary" />
           {t("userSafetyTips") || "Student Safety Reminders"}
         </h2>
         <ul className="list-disc pl-6 space-y-2">
@@ -49,6 +63,8 @@ const CIPATabContent = () => {
           <li className="text-base">{t("userSafetyTip2") || "Report any inappropriate content immediately"}</li>
           <li className="text-base">{t("userSafetyTip3") || "Under 13? Use with adult supervision"}</li>
           <li className="text-base">{t("userSafetyTip4") || "Take breaks during long sessions"}</li>
+          <li className="text-base">{t("userSafetyTip5") || "Focus on educational topics and language learning"}</li>
+          <li className="text-base">{t("userSafetyTip6") || "If something doesn't seem right, notify a teacher or parent"}</li>
         </ul>
       </section>
     </div>
