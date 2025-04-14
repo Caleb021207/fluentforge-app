@@ -14,7 +14,7 @@ import ukrainianTranslations from "./ukrainian/index";
 import hindiTranslations from "./hindi/index";
 import indonesianTranslations from "./indonesian/index";
 
-// Combine all translations into a single object
+// Define translations object that matches the LanguageTranslations type
 const translations: LanguageTranslations = {
   english: englishTranslations,
   spanish: spanishTranslations,
