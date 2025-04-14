@@ -1,10 +1,18 @@
+import { useState, useEffect } from "react";
 import { TEST_DURATION, ELEVEN_LABS_AGENT_ID } from "@/utils/constants";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { useConversation } from "@11labs/react";
+import { supabase } from "@/integrations/supabase/client";
+import { 
+  determineLevel,
+  analyzeSpeakingComplexity,
+  calculateEnhancedScore,
+  generateDetailedFeedback
+} from "@/components/certifications/utils/scoreUtils";
 
 export interface UseConversationTestProps {
-  onTestComplete?: () => void;
+  onTestComplete?: (() => void) | undefined;
 }
 
 export const useConversationTest = ({ onTestComplete }: UseConversationTestProps) => {
@@ -18,7 +26,6 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
   const [isLoading, setIsLoading] = useState(false);
   const [attemptId, setAttemptId] = useState<string | null>(null);
   const { toast } = useToast();
-  const { localization } = useLocalization();
 
   const [conversationTranscript, setConversationTranscript] = useState<{
     userMessages: any[];
