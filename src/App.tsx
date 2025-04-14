@@ -1,48 +1,31 @@
 
-import { Routes, Route } from "react-router-dom";
-import "./App.css";
-import Layout from "@/components/Layout";
-import Index from "@/pages/Index";
-import Practice from "@/pages/Practice";
-import NotFound from "@/pages/NotFound";
-import ExampleData from "@/pages/ExampleData";
-import AdminDashboard from "@/pages/AdminDashboard";
-import VoiceChat from "@/pages/VoiceChat";
-import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
-import Settings from "@/pages/Settings";
-import SafetyPolicy from "@/pages/SafetyPolicy";
-import WritingCertification from "@/pages/WritingCertification";
-import ReadingCertification from "@/pages/ReadingCertification";
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LocalizationProvider } from "@/context/LocalizationContext";
-
-// Create a client
-const queryClient = new QueryClient();
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import FreeTierPractice from './pages/FreeTierPractice';
+import StudyPage from './pages/StudyPage';
+import PremiumVoiceChat from './pages/PremiumVoiceChat';
+import { Toaster } from "@/components/ui/toaster";
+import { LocalizationProvider } from './context/LocalizationContext';
+import { MotionConfig } from 'framer-motion';
+import ElevenLabsProvider from './providers/ElevenLabsProvider';
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <ElevenLabsProvider>
       <LocalizationProvider>
-        <BrowserRouter>
-          <Layout>
+        <MotionConfig reducedMotion="user">
+          <Router>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/practice" element={<Practice />} />
-              <Route path="/voice-chat" element={<VoiceChat />} />
-              <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />
-              <Route path="/example-data" element={<ExampleData />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/safety-policy" element={<SafetyPolicy />} />
-              <Route path="/certification/writing" element={<WritingCertification />} />
-              <Route path="/certification/reading/:level?" element={<ReadingCertification />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/practice" element={<FreeTierPractice />} />
+              <Route path="/voice-chat" element={<PremiumVoiceChat />} />
+              <Route path="/study/:studyId" element={<StudyPage />} />
             </Routes>
-          </Layout>
-        </BrowserRouter>
+            <Toaster />
+          </Router>
+        </MotionConfig>
       </LocalizationProvider>
-    </QueryClientProvider>
+    </ElevenLabsProvider>
   );
 }
 

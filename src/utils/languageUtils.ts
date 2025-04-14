@@ -75,7 +75,6 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
     return ['english'];
   }
   
-  // Only return Spanish for English speakers (removed French)
   return ['spanish'];
 };
 
@@ -88,8 +87,6 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
 export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
   const supportedPairs = [
     'english-spanish',
-    // French support temporarily disabled: 'english-french',
-    'english-portuguese', 
     'spanish-english',
     'portuguese-english',
     'french-english',
@@ -98,10 +95,10 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'mandarin-english',
     'russian-english',
     'arabic-english',
-    'hindi-english',
-    'vietnamese-english',
-    'ukrainian-english',
-    'indonesian-english'
+    'hindi-english',      // Adding Hindi
+    'vietnamese-english', // Adding Vietnamese
+    'ukrainian-english',  // Adding Ukrainian
+    'indonesian-english'  // Adding Indonesian
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
