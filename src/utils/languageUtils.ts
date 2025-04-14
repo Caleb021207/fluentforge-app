@@ -1,3 +1,4 @@
+
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -26,15 +27,19 @@ export const getLanguageDisplayName = (language: string): string => {
 /**
  * Returns native and practice language pair based on user's selected language
  * @param currentLanguage The user's current UI language
+ * @param targetLanguage Optional target language override (for English speakers)
  * @returns Object with native and practice language names
  */
-export const getLanguagePair = (currentLanguage: string) => {
+export const getLanguagePair = (currentLanguage: string, targetLanguage?: string) => {
   let native = "English";
   let practice = "Spanish";
   
   if (currentLanguage !== "english") {
     native = getLanguageDisplayName(currentLanguage);
     practice = "English";
+  } else if (targetLanguage) {
+    // For English speakers, use the provided target language
+    practice = getLanguageDisplayName(targetLanguage);
   }
   
   return { native, practice };
@@ -75,7 +80,10 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
     return ['english'];
   }
   
-  return ['spanish'];
+  // Updated to only include Spanish and French for English speakers
+  const commonLanguages = ['spanish', 'french'];
+  
+  return commonLanguages;
 };
 
 /**
@@ -87,6 +95,8 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
 export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
   const supportedPairs = [
     'english-spanish',
+    'english-french',
+    'english-portuguese', // Added Portuguese support for English speakers
     'spanish-english',
     'portuguese-english',
     'french-english',

@@ -1,0 +1,56 @@
+
+import { Mic, MicOff, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useLocalization } from "@/context/LocalizationContext";
+
+interface FrenchVoiceChatControlsProps {
+  startConversation: () => void;
+  isConversationActive: () => boolean;
+  weeklyTimeRemaining: number | null;
+  sessionStatus: 'available' | 'active' | 'cooldown';
+  formatTime: (seconds: number) => string;
+}
+
+const FrenchVoiceChatControls = ({ 
+  startConversation, 
+  isConversationActive, 
+  weeklyTimeRemaining, 
+  sessionStatus,
+  formatTime
+}: FrenchVoiceChatControlsProps) => {
+  const { t } = useLocalization();
+
+  return (
+    <div className="flex flex-wrap gap-4 mb-6">
+      <div className="flex items-center gap-2">
+        <Button 
+          onClick={startConversation} 
+          variant={isConversationActive() ? "destructive" : "default"} 
+          className="bg-lingua-primary hover:bg-lingua-primary/90" 
+          disabled={sessionStatus === 'cooldown'}
+        >
+          {isConversationActive() ? (
+            <>
+              <MicOff className="h-4 w-4 mr-2" />
+              Stop French Voice Chat
+            </>
+          ) : (
+            <>
+              <Mic className="h-4 w-4 mr-2" />
+              Start French Voice Chat
+            </>
+          )}
+        </Button>
+        
+        {weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
+          <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
+            <Clock className="h-4 w-4" />
+            <span>{formatTime(weeklyTimeRemaining)} remaining this week</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default FrenchVoiceChatControls;

@@ -1,147 +1,138 @@
 
-// Translation utilities
+// Translation utilities for the chat-with-tutor function
 
-// Simple in-memory cache for translations
+// Translation cache to improve performance
 export class TranslationCache {
-  private cache: Map<string, { content: string, timestamp: number }> = new Map();
-  private ttl = 3600000; // 1 hour cache TTL
+  private cache: Map<string, string> = new Map();
+  private maxSize: number = 100; // Cache size limit
   
-  get(key: string): string | null {
-    const entry = this.cache.get(key);
-    if (!entry) return null;
-    
-    // Check if entry is expired
-    if (Date.now() - entry.timestamp > this.ttl) {
-      this.cache.delete(key);
-      return null;
-    }
-    
-    return entry.content;
+  // Get cached translation
+  get(key: string): string | undefined {
+    return this.cache.get(key);
   }
   
-  set(key: string, content: string): void {
-    this.cache.set(key, { content, timestamp: Date.now() });
-    
-    // Clear old entries periodically to avoid memory leaks
-    if (this.cache.size > 1000) {
-      this.pruneExpiredEntries();
+  // Store translation in cache
+  set(key: string, value: string): void {
+    // Implement simple LRU by removing oldest entry when cache is full
+    if (this.cache.size >= this.maxSize) {
+      const oldestKey = this.cache.keys().next().value;
+      this.cache.delete(oldestKey);
     }
+    
+    this.cache.set(key, value);
   }
   
-  private pruneExpiredEntries(): void {
-    const now = Date.now();
-    this.cache.forEach((entry, key) => {
-      if (now - entry.timestamp > this.ttl) {
-        this.cache.delete(key);
-      }
-    });
+  // Clear the cache
+  clear(): void {
+    this.cache.clear();
   }
 }
 
-// Helper function to get translation for a message
+// Function to get translation from OpenAI API
 export async function getTranslation(
-  message: string, 
-  userLanguage: string, 
-  openAIApiKey: string,
-  filterContentCallback: (text: string) => string,
-  containsProhibitedCallback: (text: string) => boolean,
-  getLanguageNameCallback: (lang: string) => string
-) {
-  try {
-    const targetLanguage = getLanguageNameCallback(userLanguage);
-    
-    // CIPA Compliance: Filter message before translation 
-    let safeMessage = message;
-    if (containsProhibitedCallback(message)) {
-      console.log('Message contains prohibited content, filtering before translation');
-      safeMessage = filterContentCallback(message);
-    }
-    
-    return await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${targetLanguage}. Just return the translation, no explanations. For Hindi translations, ensure you use Devanagari script.
-            
-            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
-          },
-          { role: 'user', content: safeMessage }
-        ],
-        temperature: 0.3,
-        max_tokens: 500,
-      }),
-    });
-  } catch (error) {
-    console.error('Error in getTranslation:', error);
-    throw error;
+  content: string,
+  userLanguage: string,
+  apiKey: string,
+  filterFn: (text: string) => string,
+  containsProhibitedFn: (text: string) => boolean,
+  getUserNativeLanguageFn: (lang: string) => string
+): Promise<Response> {
+  const nativeLanguage = getUserNativeLanguageFn(userLanguage);
+  
+  // Special prompt for French translations to ensure proper accent marks and grammar
+  let systemPrompt = "";
+  if (userLanguage === "english" && localStorage.getItem("targetLanguage") === "french") {
+    systemPrompt = `You are a professional French language translator. Translate the following English text to natural, accurate French, preserving the tone and meaning. Make sure to include all proper French accent marks (é, è, ê, ë, à, ù, û, ç, etc.) and follow French grammar rules. The translation should be suitable for an intermediate French learner.`;
+  } else {
+    systemPrompt = `You are a professional translator. Translate the following text to ${nativeLanguage} in a natural, accurate way that preserves the tone and meaning.`;
   }
+  
+  return fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content }
+      ],
+      temperature: 0.3,
+      max_tokens: 500,
+    }),
+  });
 }
 
-// Helper function to get special translation for specific languages like Hindi
+// Function to get translation with specific script requirements (e.g., Hindi in Devanagari)
 export async function getSpecificLanguageTranslation(
-  message: string, 
-  language: string, 
-  script: string, 
-  openAIApiKey: string,
-  filterContentCallback: (text: string) => string,
-  containsProhibitedCallback: (text: string) => boolean
+  content: string,
+  language: string,
+  script: string,
+  apiKey: string,
+  filterFn: (text: string) => string,
+  containsProhibitedFn: (text: string) => boolean
 ): Promise<string> {
-  try {
-    console.log(`Getting ${language} translation with ${script} script for: "${message}"`);
-    
-    // CIPA Compliance: Filter message before translation
-    let safeMessage = message;
-    if (containsProhibitedCallback(message)) {
-      console.log('Message contains prohibited content, filtering before translation');
-      safeMessage = filterContentCallback(message);
-    }
-    
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${language} using ${script} script. ONLY return the translation, no explanations or additional text. Ensure the translation is accurate and natural-sounding.
-            
-            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
-          },
-          { role: 'user', content: safeMessage }
-        ],
-        temperature: 0.3,
-        max_tokens: 500,
-      }),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Translation API error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    const translation = data.choices?.[0]?.message?.content || '';
-    console.log(`Got ${language} translation: "${translation}"`);
-    
-    // CIPA Compliance: Filter translation before returning
-    if (containsProhibitedCallback(translation)) {
-      console.log(`${language} translation contains prohibited content, filtering`);
-      return filterContentCallback(translation);
-    }
-    
-    return translation;
-  } catch (error) {
-    console.error(`Error getting ${language} translation:`, error);
-    throw error;
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        { 
+          role: 'system', 
+          content: `You are a professional translator. Translate the following text to ${language} using ${script} script. The output MUST use ${script} script characters only.` 
+        },
+        { role: 'user', content }
+      ],
+      temperature: 0.3,
+      max_tokens: 500,
+    }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to get ${language} translation: ${response.status}`);
   }
+  
+  const data = await response.json();
+  let translation = data.choices?.[0]?.message?.content || '';
+  
+  // Filter any prohibited content
+  if (containsProhibitedFn(translation)) {
+    translation = filterFn(translation);
+  }
+  
+  return translation;
+}
+
+// French-specific translation helpers for better language learning
+export function getFrenchTranslationWithExplanation(
+  content: string,
+  apiKey: string,
+  filterFn: (text: string) => string,
+  containsProhibitedFn: (text: string) => boolean
+): Promise<Response> {
+  return fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        { 
+          role: 'system', 
+          content: `You are a professional French language educator. Translate the following text from English to French, including proper accent marks and following French grammar rules. After the translation, provide a brief note about any notable grammar points or idioms used in the translation, marked with "Note:".` 
+        },
+        { role: 'user', content }
+      ],
+      temperature: 0.3,
+      max_tokens: 500,
+    }),
+  });
 }

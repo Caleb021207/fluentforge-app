@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -8,16 +7,15 @@ import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { getLanguagePair } from "@/utils/languageUtils";
-
-// Import refactored components
 import LoginPrompt from "@/components/premium-voice/LoginPrompt";
-import CooldownMessage from "@/components/premium-voice/CooldownMessage";
-import BenefitsList from "@/components/premium-voice/BenefitsList";
-import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
 import PageHeader from "@/components/premium-voice/PageHeader";
+import CooldownMessage from "@/components/premium-voice/CooldownMessage";
+import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
+import BenefitsList from "@/components/premium-voice/BenefitsList";
 
 const PremiumVoiceChat = () => {
   const [isRecording, setIsRecording] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState<string | null>(null);
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   
@@ -43,13 +41,11 @@ const PremiumVoiceChat = () => {
   
   const { messages, clearMessages, addInitialMessage } = useVoiceChatMessages();
   
-  // Define endConversation function before using it in useVoiceChatTimer
   const endConversation = async () => {
     if (isConversationActive()) {
       await endElevenLabsConversation();
       setIsRecording(false);
       
-      // Check and update the session status
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: activeSession } = await supabase
@@ -66,7 +62,6 @@ const PremiumVoiceChat = () => {
     }
   };
   
-  // Now we can safely use endConversation in useVoiceChatTimer
   const { timerValue, formatTimer } = useVoiceChatTimer({
     isConversationActive,
     weeklyTimeRemaining,
@@ -102,10 +97,14 @@ const PremiumVoiceChat = () => {
       const sessionId = await createSession();
       if (!sessionId) return;
       
+      if (currentLanguage === "english") {
+        const currentTarget = targetLanguage || "spanish";
+        localStorage.setItem("targetLanguage", currentTarget);
+      }
+      
       await startElevenLabsConversation();
       setIsRecording(true);
       
-      // Add initial message to the conversation
       addInitialMessage();
       
     } catch (error) {
@@ -126,8 +125,12 @@ const PremiumVoiceChat = () => {
     });
   };
 
-  // Get the language pair based on the user's interface language
-  const { practice } = getLanguagePair(currentLanguage);
+  useEffect(() => {
+    const storedTargetLanguage = localStorage.getItem("targetLanguage");
+    setTargetLanguage(storedTargetLanguage);
+  }, []);
+
+  const { practice } = getLanguagePair(currentLanguage, targetLanguage || undefined);
 
   if (isLoading) {
     return (
