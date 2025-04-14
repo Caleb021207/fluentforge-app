@@ -6,7 +6,6 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
 import { supabase } from "@/integrations/supabase/client";
-import { getLanguagePair } from "@/utils/languageUtils";
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
@@ -18,15 +17,15 @@ export const useVoiceChat = () => {
 
   const conversation = useConversation({
     onMessage: (message) => {
-      if (message.role === "llm") {
-        console.log("LLM response received:", message.text);
+      if (message.type === "llm_response") {
+        console.log("LLM response received:", message.content);
       }
     },
     onError: (error) => {
       console.error("ElevenLabs conversation error:", error);
       toast({
         title: t("error"),
-        description: error?.toString() || String(error),
+        description: error.message,
         variant: "destructive",
       });
     },

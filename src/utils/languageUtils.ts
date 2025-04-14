@@ -1,3 +1,4 @@
+
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -75,7 +76,10 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
     return ['english'];
   }
   
-  return ['spanish'];
+  // Updated to only include Spanish and French for English speakers
+  const commonLanguages = ['spanish', 'french'];
+  
+  return commonLanguages;
 };
 
 /**
@@ -87,6 +91,8 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
 export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
   const supportedPairs = [
     'english-spanish',
+    'english-french',
+    'english-portuguese', // Added Portuguese support for English speakers
     'spanish-english',
     'portuguese-english',
     'french-english',
