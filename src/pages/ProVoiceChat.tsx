@@ -1,16 +1,17 @@
 
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useProVoiceChat } from "@/hooks/useProVoiceChat";
 import ProVoiceStatus from "@/components/pro-voice/ProVoiceStatus";
-import ProVoiceControls from "@/components/pro-voice/ProVoiceControls";
-import ProVoiceBenefits from "@/components/pro-voice/ProVoiceBenefits";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
+import BenefitsList from "@/components/premium-voice/BenefitsList";
+import { Card } from "@/components/ui/card";
 
-const ProVoiceChat: React.FC = () => {
-  const { t } = useLocalization();
+const ProVoiceChat = () => {
+  const { t, currentLanguage } = useLocalization();
   const { toast } = useToast();
+  
   const {
     status,
     microphoneAccess,
@@ -23,19 +24,6 @@ const ProVoiceChat: React.FC = () => {
     endSession,
     audioRef
   } = useProVoiceChat();
-
-  // Create audio element for text-to-speech playback
-  useEffect(() => {
-    const audio = new Audio();
-    audioRef.current = audio;
-    
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
 
   // Get status text based on current status
   const getStatusText = () => {
@@ -54,63 +42,61 @@ const ProVoiceChat: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-2">{t("proVoiceChat")}</h1>
-      <p className="text-gray-600 mb-6">
-        {t("proVoiceChatDescription")}
-      </p>
-
-      <ProVoiceStatus
-        status={status}
-        isActive={isActive}
-        timeRemaining={sessionTimeRemaining}
-        statusText={getStatusText()}
-      />
-
-      <ProVoiceControls
-        isActive={isActive}
-        onStart={startSession}
-        onStop={endSession}
-        disabled={!microphoneAccess}
-      />
-
-      {isActive && (
-        <div className="mt-8 space-y-4">
-          {status === "listening" && interimTranscript && (
-            <Card className="border-dashed border-gray-300">
-              <CardContent className="pt-4">
-                <p className="text-gray-500 italic animate-pulse">
-                  {interimTranscript}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          {transcript && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("youSaid")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{transcript}</p>
-              </CardContent>
-            </Card>
-          )}
-          
-          {response && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("aiResponse")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{response}</p>
-              </CardContent>
-            </Card>
-          )}
+    <div className="container max-w-4xl mx-auto p-6">
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">{t("premiumVoiceChat")}</h1>
+          <p className="text-gray-600">
+            {t("premiumVoiceChatDescription", { practice: currentLanguage })}
+          </p>
         </div>
-      )}
 
-      <ProVoiceBenefits />
+        <div className="grid gap-6">
+          <ProVoiceStatus
+            status={status}
+            isActive={isActive}
+            timeRemaining={sessionTimeRemaining}
+            statusText={getStatusText()}
+          />
+
+          <VoiceChatControls
+            isActive={isActive}
+            onStart={startSession}
+            onStop={endSession}
+            disabled={!microphoneAccess}
+          />
+
+          {isActive && (transcript || interimTranscript || response) && (
+            <Card className="p-6 space-y-4">
+              {interimTranscript && (
+                <div className="italic text-gray-500 animate-pulse">
+                  {interimTranscript}
+                </div>
+              )}
+              
+              {transcript && (
+                <div>
+                  <h3 className="font-medium mb-2">{t("youSaid")}</h3>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    {transcript}
+                  </div>
+                </div>
+              )}
+              
+              {response && (
+                <div>
+                  <h3 className="font-medium mb-2">{t("aiResponse")}</h3>
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    {response}
+                  </div>
+                </div>
+              )}
+            </Card>
+          )}
+
+          <BenefitsList />
+        </div>
+      </div>
     </div>
   );
 };
