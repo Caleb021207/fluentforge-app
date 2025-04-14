@@ -1,20 +1,21 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLocalization } from "@/context/LocalizationContext";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   convertSkillScoreToPercentage, 
-  determineLevel, 
+  determineLevel,
   analyzeSpeakingComplexity,
   calculateEnhancedScore,
   generateDetailedFeedback
 } from "@/components/certifications/utils/scoreUtils";
 
-const TEST_DURATION = 180; // 3 minutes in seconds
-const ELEVEN_LABS_AGENT_ID = "gruprmRz1lZ5awx10Ejc";
+export interface UseConversationTestProps {
+  onTestComplete?: () => void;
+}
 
-export const useConversationTest = (onTestComplete?: () => void) => {
+export const useConversationTest = ({ onTestComplete }: UseConversationTestProps) => {
   const [isStarted, setIsStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION);
@@ -24,6 +25,7 @@ export const useConversationTest = (onTestComplete?: () => void) => {
   const [isLoading, setIsLoading] = useState(false);
   const [attemptId, setAttemptId] = useState<string | null>(null);
   const { toast } = useToast();
+  const { localization } = useLocalization();
 
   const [conversationTranscript, setConversationTranscript] = useState<{
     userMessages: any[];
@@ -37,12 +39,12 @@ export const useConversationTest = (onTestComplete?: () => void) => {
     onMessage: (message) => {
       console.log("Message received:", message);
       
-      if (message.role === "user") {
+      if (message.type === "transcription") {
         setConversationTranscript(prev => ({
           ...prev,
           userMessages: [...prev.userMessages, message]
         }));
-      } else if (message.role === "assistant") {
+      } else if (message.type === "llm_response") {
         setConversationTranscript(prev => ({
           ...prev,
           aiResponses: [...prev.aiResponses, message]
@@ -194,7 +196,7 @@ export const useConversationTest = (onTestComplete?: () => void) => {
       
       toast({
         title: "Test Started",
-        description: "The conversational fluency test has begun. Speak clearly in Spanish.",
+        description: localization.conversationTestStartMessage,
       });
     } catch (error: any) {
       console.error("Error starting test:", error);
