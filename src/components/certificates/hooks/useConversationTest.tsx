@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -28,10 +29,10 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
 
   const conversation = useConversation({
     onMessage: (message) => {
-      if (message.role === "llm") {
+      if (message.source === "llm") {
         setTestResult(prevResult => ({
           ...prevResult,
-          responses: [...(prevResult?.responses || []), message.text]
+          responses: [...(prevResult?.responses || []), message.message]
         }));
       }
     },
@@ -50,16 +51,19 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
     setIsComplete(true);
     try {
       await conversation.endSession();
-      const transcript = await conversation.getTranscript();
+      
+      // Get conversation messages to create a transcript
+      // Since getTranscript doesn't exist, we'll create our own transcript from our state
+      const transcript = testResult?.responses.join("\n") || "No conversation transcript available.";
       setConversationTranscript(transcript);
       
       // Basic scoring logic (can be improved)
-      const numResponses = transcript.split("User:").length - 1;
+      const numResponses = transcript.split("\n").length - 1;
       const score = Math.min(numResponses * 5, 100); // Example scoring
       
       setTestResult({
         score: score,
-        responses: [],
+        responses: testResult?.responses || [],
         transcript: transcript
       });
       
@@ -74,7 +78,7 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
         variant: "destructive"
       });
     }
-  }, [conversation, onTestComplete, t, toast]);
+  }, [conversation, onTestComplete, t, toast, testResult]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -119,6 +123,13 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
     return () => clearInterval(intervalId);
   }, [isStarted, timeRemaining, endTest]);
 
+  // Format time helper function
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
   const startTest = useCallback(async () => {
     setIsStarted(true);
     setIsComplete(false);
@@ -156,9 +167,10 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
     testResult,
     isLoading,
     conversation,
-    startTest: () => {}, // Placeholder
+    startTest,
     endTest,
-    resetTest: () => {}, // Placeholder
-    conversationTranscript
+    resetTest,
+    conversationTranscript,
+    formatTime
   };
 };

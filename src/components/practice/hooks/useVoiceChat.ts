@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -18,8 +17,8 @@ export const useVoiceChat = () => {
 
   const conversation = useConversation({
     onMessage: (message) => {
-      if (message.role === "llm") {
-        console.log("LLM response received:", message.text);
+      if (message.source === "llm") {
+        console.log("LLM response received:", message.message);
       }
     },
     onError: (error) => {
