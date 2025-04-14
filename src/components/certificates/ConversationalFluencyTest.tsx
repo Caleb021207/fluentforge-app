@@ -26,8 +26,9 @@ const ConversationalFluencyTest = ({ onTestComplete }: ConversationalFluencyTest
     conversation,
     startTest,
     endTest,
-    resetTest
-  } = useConversationTest({ onTestComplete });
+    resetTest,
+    conversationTranscript
+  } = useConversationTest(onTestComplete);
 
   // Function to get localized description
   const getLocalizedDescription = () => {
