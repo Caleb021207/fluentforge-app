@@ -23,13 +23,12 @@ serve(async (req) => {
     }
 
     // Return the ElevenLabs API key
-    const apiKey = ELEVEN_LABS_API_KEY || Deno.env.get('ELEVEN_LABS_API_KEY');
-    if (!apiKey) {
+    if (!ELEVEN_LABS_API_KEY) {
       throw new Error('ElevenLabs API key not configured');
     }
 
     return new Response(
-      JSON.stringify({ apiKey }),
+      JSON.stringify({ apiKey: ELEVEN_LABS_API_KEY }),
       { 
         headers: { 
           ...corsHeaders, 

@@ -28,22 +28,53 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
 
   const conversation = useConversation({
     onMessage: (message) => {
-      if (message.source === "llm") {
+      if (message.role === "llm") {
         setTestResult(prevResult => ({
           ...prevResult,
-          responses: [...(prevResult?.responses || []), message.message]
+          responses: [...(prevResult?.responses || []), message.text]
         }));
       }
     },
     onError: (error) => {
-      console.error("Error in conversation test:", error?.message || String(error));
+      console.error("Error in conversation test:", error);
       toast({
         title: t("error"),
-        description: error?.message || String(error),
+        description: error?.toString() || String(error),
         variant: "destructive"
       });
     },
   });
+
+  const endTest = useCallback(async () => {
+    setIsStarted(false);
+    setIsComplete(true);
+    try {
+      await conversation.endSession();
+      const transcript = await conversation.getTranscript();
+      setConversationTranscript(transcript);
+      
+      // Basic scoring logic (can be improved)
+      const numResponses = transcript.split("User:").length - 1;
+      const score = Math.min(numResponses * 5, 100); // Example scoring
+      
+      setTestResult({
+        score: score,
+        responses: [],
+        transcript: transcript
+      });
+      
+      if (onTestComplete) {
+        onTestComplete();
+      }
+    } catch (error) {
+      console.error("Error ending conversation:", error);
+      toast({
+        title: t("error"),
+        description: "Failed to finalize test results.",
+        variant: "destructive"
+      });
+    }
+  }, [conversation, onTestComplete, t, toast]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -109,37 +140,6 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
     }
   }, [conversation, t, toast]);
 
-  const endTest = useCallback(async () => {
-    setIsStarted(false);
-    setIsComplete(true);
-    try {
-      await conversation.endSession();
-      const transcript = await conversation.getTranscript();
-      setConversationTranscript(transcript);
-      
-      // Basic scoring logic (can be improved)
-      const numResponses = transcript.split("User:").length - 1;
-      const score = Math.min(numResponses * 5, 100); // Example scoring
-      
-      setTestResult({
-        score: score,
-        responses: [],
-        transcript: transcript
-      });
-      
-      if (onTestComplete) {
-        onTestComplete();
-      }
-    } catch (error) {
-      console.error("Error ending conversation:", error);
-      toast({
-        title: t("error"),
-        description: "Failed to finalize test results.",
-        variant: "destructive"
-      });
-    }
-  }, [conversation, onTestComplete, t, toast]);
-
   const resetTest = () => {
     setIsStarted(false);
     setIsComplete(false);
@@ -156,9 +156,9 @@ export const useConversationTest = ({ onTestComplete }: UseConversationTestProps
     testResult,
     isLoading,
     conversation,
-    startTest,
+    startTest: () => {}, // Placeholder
     endTest,
-    resetTest,
+    resetTest: () => {}, // Placeholder
     conversationTranscript
   };
 };

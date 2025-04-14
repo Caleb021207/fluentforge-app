@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ElevenLabsProvider as Provider } from '@11labs/react';
+import { useElevenLabs } from '@11labs/react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface ElevenLabsProviderProps {
@@ -33,6 +33,8 @@ const ElevenLabsProvider: React.FC<ElevenLabsProviderProps> = ({ children }) => 
     fetchApiKey();
   }, []);
 
+  const ElevenLabsProvider = useElevenLabs({ apiKey });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -47,9 +49,9 @@ const ElevenLabsProvider: React.FC<ElevenLabsProviderProps> = ({ children }) => 
   }
 
   return (
-    <Provider apiKey={apiKey}>
+    <ElevenLabsProvider>
       {children}
-    </Provider>
+    </ElevenLabsProvider>
   );
 };
 
