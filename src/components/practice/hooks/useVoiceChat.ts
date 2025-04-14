@@ -17,15 +17,15 @@ export const useVoiceChat = () => {
 
   const conversation = useConversation({
     onMessage: (message) => {
-      if (message.type === "llm_response") {
-        console.log("LLM response received:", message.content);
+      if (message.source === "llm") {
+        console.log("LLM response received:", message.message);
       }
     },
     onError: (error) => {
-      console.error("ElevenLabs conversation error:", error);
+      console.error("ElevenLabs conversation error:", error?.message || String(error));
       toast({
         title: t("error"),
-        description: typeof error === 'object' ? error.message || String(error) : String(error),
+        description: error?.message || String(error),
         variant: "destructive",
       });
     },

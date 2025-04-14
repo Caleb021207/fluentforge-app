@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ElevenLabsVoiceProvider } from '@11labs/react';
+import { ElevenLabsProvider as Provider } from '@11labs/react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface ElevenLabsProviderProps {
@@ -8,14 +8,12 @@ interface ElevenLabsProviderProps {
 }
 
 const ElevenLabsProvider: React.FC<ElevenLabsProviderProps> = ({ children }) => {
-  // We'll fetch the API key from an environment variable or from Supabase
   const [apiKey, setApiKey] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchApiKey = async () => {
       try {
-        // Try to get the API key from Supabase secrets
         const { data, error } = await supabase.functions.invoke('get-eleven-labs-key', {
           method: 'GET',
         });
@@ -43,16 +41,15 @@ const ElevenLabsProvider: React.FC<ElevenLabsProviderProps> = ({ children }) => 
     );
   }
 
-  // If we couldn't get an API key, just render children without the provider
   if (!apiKey) {
     console.warn('ElevenLabs API key not available. Voice features will be limited.');
     return <>{children}</>;
   }
 
   return (
-    <ElevenLabsVoiceProvider apiKey={apiKey}>
+    <Provider apiKey={apiKey}>
       {children}
-    </ElevenLabsVoiceProvider>
+    </Provider>
   );
 };
 

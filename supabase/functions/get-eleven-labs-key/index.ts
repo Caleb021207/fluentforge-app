@@ -6,8 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// The fixed API key - using a hardcoded key for immediate functionality
-const ELEVEN_LABS_API_KEY = "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";
+// The fixed API key
+const ELEVEN_LABS_API_KEY = "sk-proj-uj4EFHw3w7FWowdZ2QpdРDЗBilH-QQemPNvvcjOI9SEGGQA1cgFVhhbj4HeuLy2lvRanGIVbEMT3BIbkFJnOL5Q8ffbuV95RslwnKYTfDQkg70HUgVhiDgVI2QHIG3laJqkR407rytHJUyQoHvwMvZfZav4A";
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -23,8 +23,6 @@ serve(async (req) => {
     }
 
     // Return the ElevenLabs API key
-    // Using the hardcoded key for immediate functionality
-    // but also checking the environment variable as fallback
     const apiKey = ELEVEN_LABS_API_KEY || Deno.env.get('ELEVEN_LABS_API_KEY');
     if (!apiKey) {
       throw new Error('ElevenLabs API key not configured');
