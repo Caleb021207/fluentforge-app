@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -13,7 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AgeVerificationDialogProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
   
   const currentYear = new Date().getFullYear();
   const startYear = currentYear - 100;
-  const years = Array.from({ length: 101 }, (_, i) => (startYear + i).toString());
+  const [years, setYears] = useState(Array.from({ length: 101 }, (_, i) => (startYear + i).toString()));
   
   const defaultYearIndex = 50;
   const [sliderValue, setSliderValue] = useState([defaultYearIndex]);
@@ -134,7 +135,7 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
                 <Slider
                   value={sliderValue}
                   onValueChange={handleSliderChange}
-                  max={100}
+                  max={years.length - 1}
                   step={1}
                   className="w-full"
                 />
