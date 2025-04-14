@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -14,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
+import { supabase } from "@/lib/supabase";
 
 interface AgeVerificationDialogProps {
   isOpen: boolean;
@@ -31,12 +31,43 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
   const startYear = currentYear - 100;
   const years = Array.from({ length: 101 }, (_, i) => (startYear + i).toString());
   
-  // Default to middle of the range (around 50 years old)
   const defaultYearIndex = 50;
   const [sliderValue, setSliderValue] = useState([defaultYearIndex]);
   const [selectedYearIndex, setSelectedYearIndex] = useState(defaultYearIndex);
   
-  // Update birthYear based on selectedYearIndex
+  useEffect(() => {
+    const checkDistrictSettings = async () => {
+      try {
+        const { data: settings } = await supabase
+          .from('district_settings')
+          .select('*')
+          .eq('district_id', (await supabase
+            .from('school_districts')
+            .select('id')
+            .eq('code', 'SCBOE')
+            .single()).data?.id)
+          .single();
+
+        if (settings) {
+          const currentYear = new Date().getFullYear();
+          const minBirthYear = currentYear - settings.max_age;
+          const maxBirthYear = currentYear - settings.min_age;
+          
+          const updatedYears = Array.from(
+            { length: maxBirthYear - minBirthYear + 1 }, 
+            (_, i) => (minBirthYear + i).toString()
+          );
+          
+          setYears(updatedYears);
+        }
+      } catch (error) {
+        console.error('Error fetching district settings:', error);
+      }
+    };
+
+    checkDistrictSettings();
+  }, []);
+
   useEffect(() => {
     if (selectedYearIndex !== defaultYearIndex || birthYear === "") {
       const year = years[selectedYearIndex];
@@ -66,17 +97,14 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
     
     const age = currentYear - parseInt(birthYear);
     
-    // COPPA/CIPA compliance typically requires parental consent for users under 13
     if (age < 13 && !parentalConsent) {
       setError(t("parentalConsentRequired"));
       return;
     }
     
-    // Store age verification status in localStorage
     localStorage.setItem("ageVerified", "true");
     
     if (age < 13) {
-      // Set child-safety mode for users under 13
       localStorage.setItem("safetyMode", "strict");
     } else {
       localStorage.setItem("safetyMode", "standard");

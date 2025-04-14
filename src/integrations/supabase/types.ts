@@ -116,6 +116,103 @@ export type Database = {
           },
         ]
       }
+      district_settings: {
+        Row: {
+          consent_type:
+            | Database["public"]["Enums"]["district_consent_type"]
+            | null
+          created_at: string | null
+          district_id: string | null
+          id: string
+          max_age: number | null
+          min_age: number | null
+          require_parental_consent: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          consent_type?:
+            | Database["public"]["Enums"]["district_consent_type"]
+            | null
+          created_at?: string | null
+          district_id?: string | null
+          id?: string
+          max_age?: number | null
+          min_age?: number | null
+          require_parental_consent?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          consent_type?:
+            | Database["public"]["Enums"]["district_consent_type"]
+            | null
+          created_at?: string | null
+          district_id?: string | null
+          id?: string
+          max_age?: number | null
+          min_age?: number | null
+          require_parental_consent?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "district_settings_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: true
+            referencedRelation: "school_districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      district_users: {
+        Row: {
+          consent_date: string | null
+          consent_provided: boolean | null
+          consent_type:
+            | Database["public"]["Enums"]["district_consent_type"]
+            | null
+          created_at: string | null
+          district_id: string | null
+          id: string
+          role: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consent_date?: string | null
+          consent_provided?: boolean | null
+          consent_type?:
+            | Database["public"]["Enums"]["district_consent_type"]
+            | null
+          created_at?: string | null
+          district_id?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consent_date?: string | null
+          consent_provided?: boolean | null
+          consent_type?:
+            | Database["public"]["Enums"]["district_consent_type"]
+            | null
+          created_at?: string | null
+          district_id?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "district_users_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "school_districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_progress: {
         Row: {
           completed: boolean
@@ -212,6 +309,30 @@ export type Database = {
         }
         Relationships: []
       }
+      school_districts: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null
@@ -256,7 +377,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      district_consent_type:
+        | "individual"
+        | "code_of_conduct"
+        | "written_permission"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -371,6 +495,12 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      district_consent_type: [
+        "individual",
+        "code_of_conduct",
+        "written_permission",
+      ],
+    },
   },
 } as const
