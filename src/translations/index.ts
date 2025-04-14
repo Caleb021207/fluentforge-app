@@ -1,5 +1,5 @@
 
-import { TranslationRecord } from "./types";
+import { TranslationRecord, LanguageTranslations } from "./types";
 import englishTranslations from "./english";
 import spanishTranslations from "./spanish";
 import frenchTranslations from "./french";
@@ -12,8 +12,6 @@ import ukrainianTranslations from "./ukrainian";
 import vietnameseTranslations from "./vietnamese";
 import indonesianTranslations from "./indonesian";
 import portugueseTranslations from "./portuguese";
-// Import for mandarin if needed - noticed reference in the code but no file in the list
-// import mandarinTranslations from "./mandarin";
 
 // Update the available languages to only include those that actually exist
 export const AVAILABLE_LANGUAGES = [
@@ -33,8 +31,8 @@ export const AVAILABLE_LANGUAGES = [
 
 export const DEFAULT_LANGUAGE = "english";
 
-// Fix type issue by properly matching the expected Record<string, TranslationRecord> type
-const translations: Record<string, TranslationRecord> = {
+// Fix type issue by properly matching language records
+const translations: LanguageTranslations = {
   english: englishTranslations,
   spanish: spanishTranslations,
   french: frenchTranslations,
