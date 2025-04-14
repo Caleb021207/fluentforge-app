@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const safetyTranslations: TranslationRecord = {
@@ -63,6 +62,7 @@ const safetyTranslations: TranslationRecord = {
   contentSafetyDescription: "Filter inappropriate content and enforce age-based safety rules during conversations",
   timeControls: "Time Controls",
   timeControlsDescription: "Set daily or weekly time limits to manage student screen time",
+  cipaComplianceShortDesc: "Strict content filtering complies with the Children's Internet Protection Act (CIPA) requirements for filtering inappropriate content in educational settings."
 };
 
 export default safetyTranslations;
