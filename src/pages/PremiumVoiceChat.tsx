@@ -8,7 +8,6 @@ import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { getLanguagePair } from "@/utils/languageUtils";
-import { ElevenLabsVoiceProvider } from "@11labs/react";
 
 // Import refactored components
 import LoginPrompt from "@/components/premium-voice/LoginPrompt";
@@ -145,27 +144,25 @@ const PremiumVoiceChat = () => {
   }
 
   return (
-    <ElevenLabsVoiceProvider apiKey={process.env.ELEVEN_LABS_API_KEY}>
-      <div className="max-w-4xl mx-auto p-4">
-        <PageHeader />
-        
-        <CooldownMessage 
-          cooldownTimeRemaining={cooldownTimeRemaining} 
-          sessionStatus={sessionStatus} 
-          formatCooldownTime={formatCooldownTime} 
-        />
+    <div className="max-w-4xl mx-auto p-4">
+      <PageHeader />
+      
+      <CooldownMessage 
+        cooldownTimeRemaining={cooldownTimeRemaining} 
+        sessionStatus={sessionStatus} 
+        formatCooldownTime={formatCooldownTime} 
+      />
 
-        <VoiceChatControls 
-          startConversation={startConversation}
-          isConversationActive={isConversationActive}
-          weeklyTimeRemaining={weeklyTimeRemaining}
-          sessionStatus={sessionStatus}
-          formatTime={formatTimer}
-        />
+      <VoiceChatControls 
+        startConversation={startConversation}
+        isConversationActive={isConversationActive}
+        weeklyTimeRemaining={weeklyTimeRemaining}
+        sessionStatus={sessionStatus}
+        formatTime={formatTimer}
+      />
 
-        <BenefitsList />
-      </div>
-    </ElevenLabsVoiceProvider>
+      <BenefitsList />
+    </div>
   );
 };
 
