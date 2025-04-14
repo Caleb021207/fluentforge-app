@@ -18,8 +18,7 @@ const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage = "spani
     ? getLanguageDisplayName(targetLanguage)
     : "English";
   
-  // This section for French is kept but will not be accessible via normal UI flows
-  // since we've removed French from getAvailableTargetLanguages
+  // Customized header for English speakers learning French
   if (currentLanguage === "english" && targetLanguage === "french") {
     return (
       <div className="mb-6">
@@ -33,11 +32,12 @@ const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage = "spani
         </div>
         
         <h1 className="text-3xl font-bold text-lingua-text mb-2">
-          Practice Your French <span className="text-gray-400 text-lg">(Coming Soon)</span>
+          Practice Your French
         </h1>
         
         <p className="text-gray-600 mb-4">
-          French language practice is currently under development. Please check back later!
+          Chat with our AI tutor to practice your French! The AI will help correct your grammar, 
+          vocabulary, and provide tips on French pronunciation and culture.
         </p>
       </div>
     );
