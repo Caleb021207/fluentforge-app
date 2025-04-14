@@ -1,13 +1,41 @@
-
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 
-// Use an environment variable approach that works in the browser
-const speechConfig = sdk.SpeechConfig.fromSubscription(
-  import.meta.env.VITE_AZURE_SPEECH_KEY || '',
-  'eastus' // default region, can be configured per deployment
-);
+// Check if the Azure Speech key is available
+const hasAzureSpeechKey = !!import.meta.env.VITE_AZURE_SPEECH_KEY;
+
+// Create speech config with proper error handling
+const createSpeechConfig = () => {
+  try {
+    if (!hasAzureSpeechKey) {
+      console.warn('Azure Speech key is not configured. Some speech features may not work properly.');
+      // Return null instead of creating an invalid config
+      return null;
+    }
+    
+    return sdk.SpeechConfig.fromSubscription(
+      import.meta.env.VITE_AZURE_SPEECH_KEY,
+      'eastus' // default region, can be configured per deployment
+    );
+  } catch (error) {
+    console.error('Error creating speech config:', error);
+    return null;
+  }
+};
+
+// Create speechConfig only if key is available
+const speechConfig = createSpeechConfig();
 
 export const initAzureSpeechToText = (language: string) => {
+  if (!speechConfig) {
+    // Return a mock implementation if no speech config is available
+    console.warn('Azure Speech services are not available. Speech recognition disabled.');
+    return {
+      startRecognition: () => Promise.resolve(""),
+      stopRecognition: () => Promise.resolve(),
+      isRecognizing: false,
+    };
+  }
+  
   speechConfig.speechRecognitionLanguage = mapLanguageToAzureCode(language);
   const audioConfig = sdk.AudioConfig.fromDefaultMicrophoneInput();
   const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
@@ -31,6 +59,31 @@ export const initAzureSpeechToText = (language: string) => {
 };
 
 export const azureTextToSpeech = async (text: string, language: string): Promise<ArrayBuffer> => {
+  if (!speechConfig) {
+    console.warn('Azure Speech services are not available. Using browser speech synthesis instead.');
+    // Return a mock implementation that uses browser's Speech Synthesis API as fallback
+    try {
+      // Create an audio element to play the synthesized speech
+      const utterance = new SpeechSynthesisUtterance(text);
+      // Try to set an appropriate voice based on language
+      const voices = window.speechSynthesis.getVoices();
+      const languageCode = mapLanguageToAzureCode(language);
+      const voice = voices.find(v => v.lang.includes(languageCode.split('-')[0]));
+      if (voice) {
+        utterance.voice = voice;
+      }
+      
+      // Create a promise that resolves with an empty ArrayBuffer
+      // This is a simplified fallback that won't return actual audio data
+      // but will at least attempt to speak using the browser's capabilities
+      window.speechSynthesis.speak(utterance);
+      return new ArrayBuffer(0);
+    } catch (error) {
+      console.error('Browser speech synthesis failed:', error);
+      return new ArrayBuffer(0);
+    }
+  }
+  
   speechConfig.speechSynthesisLanguage = mapLanguageToAzureCode(language);
   speechConfig.speechSynthesisVoiceName = getAzureVoiceForLanguage(language);
   

@@ -97,7 +97,18 @@ export const useProVoiceChat = () => {
 
       // Start the Azure speech recognition
       const speechRecognition = initAzureSpeechToText(currentLanguage);
-      await speechRecognition.startRecognition();
+      
+      try {
+        await speechRecognition.startRecognition();
+      } catch (error) {
+        console.error("Failed to start speech recognition:", error);
+        toast({
+          title: t("error"),
+          description: t("speechRecognitionError"),
+          variant: "destructive",
+        });
+        return;
+      }
 
       setIsActive(true);
       setStatus("listening");
@@ -154,22 +165,33 @@ export const useProVoiceChat = () => {
       setResponse(mockResponse);
       
       // Convert the response to speech using Azure TTS
-      const voice = getAzureVoiceForLanguage(currentLanguage);
-      const audioArrayBuffer = await azureTextToSpeech(mockResponse, currentLanguage);
-      
-      // Convert ArrayBuffer to Blob before creating a URL
-      const audioBlob = new Blob([audioArrayBuffer], { type: 'audio/wav' });
-      
-      // Play the audio
-      if (audioRef.current) {
-        const audioUrl = URL.createObjectURL(audioBlob);
-        audioRef.current.src = audioUrl;
-        audioRef.current.play();
+      try {
+        const audioArrayBuffer = await azureTextToSpeech(mockResponse, currentLanguage);
         
+        // Convert ArrayBuffer to Blob before creating a URL
+        const audioBlob = new Blob([audioArrayBuffer], { type: 'audio/wav' });
+        
+        // Play the audio
+        if (audioRef.current) {
+          const audioUrl = URL.createObjectURL(audioBlob);
+          audioRef.current.src = audioUrl;
+          audioRef.current.play();
+          
+          setStatus("speaking");
+          
+          audioRef.current.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            setStatus("listening");
+          };
+        }
+      } catch (error) {
+        console.error("Error with text-to-speech:", error);
+        // Fallback to browser's built-in speech synthesis
+        const utterance = new SpeechSynthesisUtterance(mockResponse);
+        window.speechSynthesis.speak(utterance);
         setStatus("speaking");
         
-        audioRef.current.onended = () => {
-          URL.revokeObjectURL(audioUrl);
+        utterance.onend = () => {
           setStatus("listening");
         };
       }
