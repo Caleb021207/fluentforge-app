@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Lock } from "lucide-react";
+import { Lock, Shield, BookOpen } from "lucide-react";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog";
