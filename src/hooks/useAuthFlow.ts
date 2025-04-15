@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 
-export const useAuthFlow = () => {
+export const useAuthFlow = (onAuthSuccess?: () => void) => {
   const { toast } = useToast();
   const { t } = useLocalization();
   const [isLogin, setIsLogin] = useState(true);
@@ -46,6 +46,9 @@ export const useAuthFlow = () => {
         title: isLogin ? t("signInSuccess") : t("accountCreated"),
         description: isLogin ? t("welcomeBack") : t("pleaseCheckEmail"),
       });
+
+      // Call the success callback if provided
+      onAuthSuccess?.();
       
     } catch (error: any) {
       console.error("Authentication error:", error);

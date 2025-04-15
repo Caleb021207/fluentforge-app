@@ -33,7 +33,7 @@ const Index = () => {
     setPassword,
     isLoading,
     handleEmailAuth
-  } = useAuthFlow();
+  } = useAuthFlow(() => setIsAuthDialogOpen(false));
 
   useEffect(() => {
     const checkUser = async () => {
