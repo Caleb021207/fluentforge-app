@@ -1,10 +1,10 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Lock } from "lucide-react";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog";
@@ -12,7 +12,12 @@ import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
 import { useLocalization } from "@/context/LocalizationContext";
 import { needsAgeVerification, getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
 import { hasStudyMaterials } from "@/utils/languageUtils";
-import { Shield, BookOpen } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const Index = () => {
   const { toast } = useToast();
@@ -34,7 +39,6 @@ const Index = () => {
       const { data } = await supabase.auth.getUser();
       setIsSignedIn(!!data.user);
       
-      // Check if FERPA consent is needed after sign in
       if (data.user && !getFerpaConsentStatus()) {
         setIsFerpaConsentOpen(true);
       }
@@ -51,7 +55,6 @@ const Index = () => {
     if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
     if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
     
-    // Check if age verification is needed
     const needsVerification = needsAgeVerification();
     if (needsVerification) {
       setIsAgeVerificationOpen(true);
@@ -111,7 +114,6 @@ const Index = () => {
       if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
       if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
       
-      // Show FERPA consent form if user just registered or hasn't provided consent yet
       if (!isLogin || !getFerpaConsentStatus()) {
         setIsFerpaConsentOpen(true);
       }
@@ -168,6 +170,34 @@ const Index = () => {
     });
   };
 
+  const renderPracticeButton = () => {
+    if (!isSignedIn) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="lg" variant="outline" disabled className="opacity-60">
+                <Lock className="w-4 h-4 mr-2" />
+                {t("practiceWithAI")}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t("loginRequiredForFeature")}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return (
+      <Link to="/practice">
+        <Button size="lg" variant="outline">
+          {t("practiceWithAI")}
+        </Button>
+      </Link>
+    );
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-8 max-w-2xl mx-auto p-6">
@@ -205,11 +235,7 @@ const Index = () => {
                 {t("signIn")}
               </Button>
             ) : null}
-            <Link to="/practice">
-              <Button size="lg" variant="outline">
-                {t("practiceWithAI")}
-              </Button>
-            </Link>
+            {renderPracticeButton()}
           </div>
           
           <div className="mt-8 flex flex-wrap justify-center gap-2">
