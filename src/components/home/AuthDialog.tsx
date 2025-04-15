@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useLocalization } from "@/context/LocalizationContext";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 interface AuthDialogProps {
   isOpen: boolean;
@@ -24,6 +24,7 @@ interface AuthDialogProps {
   handleEmailAuth: (e: React.FormEvent, passcode?: string) => void;
   isLoading: boolean;
   authError?: string | null;
+  retryCount?: number;
 }
 
 const AuthDialog = ({
@@ -37,7 +38,8 @@ const AuthDialog = ({
   setPassword,
   handleEmailAuth,
   isLoading,
-  authError
+  authError,
+  retryCount = 0
 }: AuthDialogProps) => {
   const { t } = useLocalization();
   const [passcode, setPasscode] = useState("");
@@ -53,6 +55,10 @@ const AuthDialog = ({
     e.preventDefault();
     handleEmailAuth(e, passcode);
   };
+  
+  const isNetworkError = authError?.includes("Connection") || 
+                          authError?.includes("Network") || 
+                          authError?.includes("fetch");
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -111,7 +117,7 @@ const AuthDialog = ({
           
           {isLogin && authError && (
             <div className="flex items-center mt-2 text-red-500 text-sm">
-              <AlertCircle className="h-4 w-4 mr-1" />
+              {isNetworkError ? <RefreshCw className="h-4 w-4 mr-1 animate-spin" /> : <AlertCircle className="h-4 w-4 mr-1" />}
               <span>{authError}</span>
             </div>
           )}
@@ -119,7 +125,7 @@ const AuthDialog = ({
           <div className="flex flex-col gap-2">
             <Button type="submit" className="text-sm" disabled={isLoading}>
               {isLoading 
-                ? t("processing")
+                ? retryCount > 0 ? `${t("retrying")}... (${retryCount}/3)` : t("processing")
                 : isLogin ? t("signIn") : t("createAccount")}
             </Button>
           </div>

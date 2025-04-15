@@ -1,7 +1,6 @@
 
 import { AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 /**
  * Tries to reconnect to Supabase when there are connection issues
