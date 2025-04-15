@@ -11,9 +11,11 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  const handleEmailAuth = async (e: React.FormEvent) => {
+  const handleEmailAuth = async (e: React.FormEvent, passcode?: string) => {
     e.preventDefault();
+    setAuthError(null);
     setIsLoading(true);
     
     try {
@@ -25,6 +27,13 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
           password,
         });
       } else {
+        // Verify passcode for signup
+        if (!isLogin && (!passcode || passcode !== "08132010")) {
+          setIsLoading(false);
+          setAuthError("Incorrect passcode");
+          return;
+        }
+
         result = await supabase.auth.signUp({
           email,
           password,
@@ -37,10 +46,14 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
         });
       }
 
-      if (result.error) throw result.error;
+      if (result.error) {
+        setAuthError(result.error.message);
+        throw result.error;
+      }
 
       setEmail("");
       setPassword("");
+      setAuthError(null);
       
       toast({
         title: isLogin ? t("signInSuccess") : t("accountCreated"),
@@ -71,5 +84,7 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
     setPassword,
     isLoading,
     handleEmailAuth,
+    authError,
+    setAuthError
   };
 };

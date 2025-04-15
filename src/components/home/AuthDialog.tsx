@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,8 +21,9 @@ interface AuthDialogProps {
   setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
-  handleEmailAuth: (e: React.FormEvent) => void;
+  handleEmailAuth: (e: React.FormEvent, passcode?: string) => void;
   isLoading: boolean;
+  authError?: string | null;
 }
 
 const AuthDialog = ({
@@ -35,23 +36,22 @@ const AuthDialog = ({
   password,
   setPassword,
   handleEmailAuth,
-  isLoading
+  isLoading,
+  authError
 }: AuthDialogProps) => {
   const { t } = useLocalization();
   const [passcode, setPasscode] = useState("");
   const [passcodeError, setPasscodeError] = useState(false);
   
+  // Reset passcode error when dialog opens/closes or login mode changes
+  useEffect(() => {
+    setPasscodeError(false);
+    setPasscode("");
+  }, [isOpen, isLogin]);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Only check passcode for signup, not login
-    if (!isLogin && passcode !== "08132010") {
-      setPasscodeError(true);
-      return;
-    }
-    
-    setPasscodeError(false);
-    handleEmailAuth(e);
+    handleEmailAuth(e, passcode);
   };
   
   return (
@@ -98,14 +98,21 @@ const AuthDialog = ({
                   if (passcodeError) setPasscodeError(false);
                 }}
                 required
-                className={`text-sm ${passcodeError ? 'border-red-500' : ''}`}
+                className={`text-sm ${passcodeError || authError ? 'border-red-500' : ''}`}
               />
-              {passcodeError && (
+              {(passcodeError || authError) && (
                 <div className="flex items-center mt-2 text-red-500 text-sm">
                   <AlertCircle className="h-4 w-4 mr-1" />
-                  <span>{t("incorrectPasscode")}</span>
+                  <span>{authError || t("incorrectPasscode")}</span>
                 </div>
               )}
+            </div>
+          )}
+          
+          {isLogin && authError && (
+            <div className="flex items-center mt-2 text-red-500 text-sm">
+              <AlertCircle className="h-4 w-4 mr-1" />
+              <span>{authError}</span>
             </div>
           )}
           

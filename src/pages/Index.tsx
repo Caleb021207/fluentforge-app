@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,7 +33,8 @@ const Index = () => {
     password,
     setPassword,
     isLoading,
-    handleEmailAuth
+    handleEmailAuth,
+    authError
   } = useAuthFlow(() => setIsAuthDialogOpen(false));
 
   useEffect(() => {
@@ -163,6 +165,7 @@ const Index = () => {
         setPassword={setPassword}
         handleEmailAuth={handleEmailAuth}
         isLoading={isLoading}
+        authError={authError}
       />
       
       <AgeVerificationDialog 
