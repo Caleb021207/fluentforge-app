@@ -1,12 +1,19 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const Navigation = () => {
   const location = useLocation();
@@ -38,14 +45,57 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
-    { icon: MessageSquare, label: "textPractice", path: "/practice" },
-    { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat" },
-    { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat" },
+    { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
+    { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
+    { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
   ];
 
   if (isMobile) {
-    navItems.unshift({ icon: Home, label: "home", path: "/" });
+    navItems.unshift({ icon: Home, label: "home", path: "/", requiresAuth: false });
   }
+
+  const renderNavButton = (item: any) => {
+    const Icon = item.icon;
+    const isActive = location.pathname === item.path;
+    const button = (
+      <Button
+        variant={isActive ? "default" : "ghost"}
+        className={`w-full justify-start ${
+          isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
+        }`}
+        disabled={item.requiresAuth && !isLoggedIn}
+      >
+        <Icon className="h-5 w-5 md:mr-2" />
+        <span className="hidden md:inline">{t(item.label)}</span>
+        {item.requiresAuth && !isLoggedIn && (
+          <Lock className="h-4 w-4 ml-2 opacity-50" />
+        )}
+      </Button>
+    );
+
+    if (item.requiresAuth && !isLoggedIn) {
+      return (
+        <TooltipProvider key={item.path}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-full">
+                {button}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t("loginRequiredForFeature")}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return (
+      <Link key={item.path} to={item.path} onClick={() => setIsOpen(false)}>
+        {button}
+      </Link>
+    );
+  };
 
   return (
     <>
@@ -83,28 +133,7 @@ const Navigation = () => {
           </Link>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              
-              return (
-                <Link 
-                  key={item.path} 
-                  to={item.path}
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Button
-                    variant={isActive ? "default" : "ghost"}
-                    className={`w-full justify-start ${
-                      isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
-                    }`}
-                  >
-                    <Icon className="h-5 w-5 md:mr-2" />
-                    <span className="hidden md:inline">{t(item.label)}</span>
-                  </Button>
-                </Link>
-              );
-            })}
+            {navItems.map(item => renderNavButton(item))}
             
             {isLoggedIn && isOpen && (
               <div className="md:hidden mt-4 pt-4 border-t">

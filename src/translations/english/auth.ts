@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const authTranslations: TranslationRecord = {
@@ -60,6 +59,13 @@ const authTranslations: TranslationRecord = {
   verificationRequired: "Please verify your email first",
   sessionExpired: "Your session has expired. Please sign in again.",
   authFailed: "Authentication failed. Please try again.",
+  
+  // New translations
+  loginRequired: "Login Required",
+  loginRequiredDescription: "Please sign in to access this feature",
+  pleaseLoginToAccessFeature: "Please log in to access this feature",
+  redirectingToLogin: "Redirecting to login page...",
+  loginRequiredForFeature: "Login required to access this feature",
 };
 
 export default authTranslations;
