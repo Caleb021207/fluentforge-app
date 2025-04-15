@@ -1,38 +1,39 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { Lock, Shield, BookOpen } from "lucide-react";
+import { useLocalization } from "@/context/LocalizationContext";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog";
 import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useToast } from "@/hooks/use-toast";
 import { needsAgeVerification, getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
 import { hasStudyMaterials } from "@/utils/languageUtils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { useAuthFlow } from "@/hooks/useAuthFlow";
+import HomeActions from "@/components/home/HomeActions";
+import HomeFooter from "@/components/home/HomeFooter";
 
 const Index = () => {
-  const { toast } = useToast();
   const { t, setCurrentLanguage } = useLocalization();
+  const { toast } = useToast();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [isAgeVerificationOpen, setIsAgeVerificationOpen] = useState(false);
   const [isFerpaConsentOpen, setIsFerpaConsentOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("");
   const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
+  
+  const {
+    isLogin,
+    setIsLogin,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    isLoading,
+    handleEmailAuth
+  } = useAuthFlow();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -75,61 +76,6 @@ const Index = () => {
     }
   }, [nativeLanguage, targetLanguage]);
 
-  const handleEmailAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      let result;
-      
-      if (isLogin) {
-        result = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-      } else {
-        result = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              native_language: nativeLanguage || undefined,
-              target_language: targetLanguage || undefined,
-            }
-          }
-        });
-      }
-
-      if (result.error) throw result.error;
-
-      setIsAuthDialogOpen(false);
-      setEmail("");
-      setPassword("");
-      
-      toast({
-        title: isLogin ? t("signInSuccess") : t("accountCreated"),
-        description: isLogin ? t("welcomeBack") : t("pleaseCheckEmail"),
-      });
-      
-      if (nativeLanguage) localStorage.setItem("nativeLanguage", nativeLanguage);
-      if (targetLanguage) localStorage.setItem("targetLanguage", targetLanguage);
-      
-      if (!isLogin || !getFerpaConsentStatus()) {
-        setIsFerpaConsentOpen(true);
-      }
-      
-    } catch (error: any) {
-      console.error("Authentication error:", error);
-      toast({
-        title: t("error"),
-        description: error.message || t("authFailed"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleLanguageSelection = () => {
     if (nativeLanguage && targetLanguage) {
       localStorage.setItem("nativeLanguage", nativeLanguage);
@@ -170,34 +116,6 @@ const Index = () => {
     });
   };
 
-  const renderPracticeButton = () => {
-    if (!isSignedIn) {
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size="lg" variant="outline" disabled className="opacity-60">
-                <Lock className="w-4 h-4 mr-2" />
-                {t("practiceWithAI")}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{t("loginRequiredForFeature")}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    }
-
-    return (
-      <Link to="/practice">
-        <Button size="lg" variant="outline">
-          {t("practiceWithAI")}
-        </Button>
-      </Link>
-    );
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-8 max-w-2xl mx-auto p-6">
@@ -222,38 +140,15 @@ const Index = () => {
             handleLanguageSelection={handleLanguageSelection}
           />
           
-          <div className="space-x-4">
-            {!isSignedIn ? (
-              <Button 
-                size="lg" 
-                className="bg-lingua-primary hover:bg-lingua-primary/90"
-                onClick={() => {
-                  setIsLogin(true);
-                  setIsAuthDialogOpen(true);
-                }}
-              >
-                {t("signIn")}
-              </Button>
-            ) : null}
-            {renderPracticeButton()}
-          </div>
+          <HomeActions 
+            isSignedIn={isSignedIn}
+            onLoginClick={() => {
+              setIsLogin(true);
+              setIsAuthDialogOpen(true);
+            }}
+          />
           
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
-            <Link to="/settings" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-              <Shield size={16} className="mr-1" />
-              {t("parentalControls")}
-            </Link>
-            <span className="text-gray-400">•</span>
-            <Link to="/safety-policy" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-              <Shield size={16} className="mr-1" />
-              {t("safetyPolicy")}
-            </Link>
-            <span className="text-gray-400">•</span>
-            <Link to="/safety-policy?tab=ferpa" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-              <BookOpen size={16} className="mr-1" />
-              {t("ferpaPrivacy") || "FERPA Privacy"}
-            </Link>
-          </div>
+          <HomeFooter />
         </motion.div>
       </div>
 
