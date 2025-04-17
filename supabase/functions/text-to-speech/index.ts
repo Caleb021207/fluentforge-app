@@ -1,72 +1,45 @@
 
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+import { PollyClient, SynthesizeSpeechCommand } from "npm:@aws-sdk/client-polly";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Language code mapping for better TTS results
-const languageVoiceMap: Record<string, string> = {
-  "english": "alloy",   // Default English voice
-  "spanish": "nova",    // Spanish-friendly voice
-  "portuguese": "nova", // Portuguese-friendly voice
-  "korean": "shimmer",  // Korean-friendly voice
-  "arabic": "shimmer",  // Arabic-friendly voice
-  "mandarin": "onyx",   // Mandarin-friendly voice
-  "vietnamese": "nova", // Vietnamese-friendly voice
-  "french": "echo",     // French-friendly voice
-  "japanese": "onyx",   // Japanese-friendly voice
-  "russian": "echo",    // Russian-friendly voice
-  "ukrainian": "echo",  // Ukrainian-friendly voice
-  "hindi": "nova",      // Hindi-friendly voice
-  "indonesian": "nova"  // Indonesian-friendly voice
+// Language code mapping for better Polly voices
+const languageVoiceMap: Record<string, { voiceId: string, engine: string }> = {
+  "english": { voiceId: "Matthew", engine: "neural" },
+  "spanish": { voiceId: "Lupe", engine: "neural" },
+  "portuguese": { voiceId: "Camila", engine: "neural" },
+  "korean": { voiceId: "Seoyeon", engine: "neural" },
+  "french": { voiceId: "Lea", engine: "neural" },
+  "japanese": { voiceId: "Takumi", engine: "neural" },
+  "mandarin": { voiceId: "Zhiyu", engine: "neural" },
+  "hindi": { voiceId: "Kajal", engine: "neural" },
+  "indonesian": { voiceId: "Siti", engine: "standard" }, // Standard engine as neural not available
 };
 
-// Maximum retries for API calls (reduced)
+// Maximum retries for API calls
 const MAX_RETRIES = 1;
-const RETRY_DELAY = 500; // ms (reduced from 1000)
+const RETRY_DELAY = 500;
 
-// Function to retry API calls only for network errors and rate limits
-async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_RETRIES) {
+// Function to retry API calls
+async function fetchWithRetry(client: PollyClient, command: SynthesizeSpeechCommand, retries = MAX_RETRIES) {
   try {
-    const response = await fetch(url, options);
-    if (response.ok) return response;
-    
-    // Only retry on rate limits or potential network issues
-    if (retries > 0 && (response.status === 429 || response.status >= 500)) {
-      console.log(`Retrying due to status ${response.status}... (${retries} attempts left)`);
-      await new Promise(r => setTimeout(r, RETRY_DELAY));
-      return fetchWithRetry(url, options, retries - 1);
+    const response = await client.send(command);
+    if (!response.AudioStream) {
+      throw new Error('No audio stream in response');
     }
-    
-    const errorData = await response.json().catch(() => ({ error: response.statusText }));
-    throw new Error(`API error: ${JSON.stringify(errorData)}`);
+    return response;
   } catch (error) {
-    if (retries > 0 && error.message.includes('fetch failed')) {
-      console.log(`Network error, retrying... (${retries} attempts left)`);
+    if (retries > 0 && (error.name === 'NetworkError' || error.name === 'ThrottlingException')) {
+      console.log(`Retrying due to ${error.name}... (${retries} attempts left)`);
       await new Promise(r => setTimeout(r, RETRY_DELAY));
-      return fetchWithRetry(url, options, retries - 1);
+      return fetchWithRetry(client, command, retries - 1);
     }
     throw error;
   }
-}
-
-// More efficient base64 conversion for large audio files
-function bufferToBase64(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer);
-  const chunkSize = 2048; // Increased chunk size for better performance
-  let binary = '';
-  
-  for (let i = 0; i < bytes.length; i += chunkSize) {
-    const chunk = bytes.slice(i, Math.min(i + chunkSize, bytes.length));
-    binary += String.fromCharCode.apply(null, [...chunk]);
-  }
-  
-  return btoa(binary);
 }
 
 serve(async (req) => {
@@ -76,47 +49,41 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice, language } = await req.json();
+    const { text, language } = await req.json();
     
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
-    }
-
     if (!text) {
       throw new Error('Text is required');
     }
-    
+
     console.log(`TTS request for language: ${language}, text length: ${text.length}`);
 
-    // Determine the best voice based on language or use provided voice
-    let selectedVoice = voice;
-    if (!selectedVoice && language) {
-      const normalizedLanguage = language.toLowerCase();
-      selectedVoice = languageVoiceMap[normalizedLanguage] || 'alloy';
-      console.log(`Using voice ${selectedVoice} for language ${normalizedLanguage}`);
-    }
-
-    // Trim text if it's too long (OpenAI has a limit)
-    const trimmedText = text.length > 4000 ? text.substring(0, 4000) + "..." : text;
-
-    // Generate speech from text with optimized retry logic
-    const response = await fetchWithRetry('https://api.openai.com/v1/audio/speech', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
+    // Initialize Polly client
+    const polly = new PollyClient({
+      region: "us-east-1", // Using US East 1 as it has all voices available
+      credentials: {
+        accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID")!,
+        secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
       },
-      body: JSON.stringify({
-        model: 'tts-1',
-        input: trimmedText,
-        voice: selectedVoice || 'alloy', // Default to alloy if no voice specified
-        response_format: 'mp3',
-      }),
     });
 
-    // Convert audio buffer to base64 with improved method
-    const arrayBuffer = await response.arrayBuffer();
-    const base64Audio = bufferToBase64(arrayBuffer);
+    // Get voice settings based on language
+    const voiceSettings = languageVoiceMap[language?.toLowerCase()] || languageVoiceMap["english"];
+
+    // Trim text if it's too long (Polly has a 3000 character limit)
+    const trimmedText = text.length > 3000 ? text.substring(0, 3000) + "..." : text;
+
+    const command = new SynthesizeSpeechCommand({
+      Engine: voiceSettings.engine,
+      OutputFormat: "mp3",
+      Text: trimmedText,
+      VoiceId: voiceSettings.voiceId,
+    });
+
+    // Generate speech with retry logic
+    const response = await fetchWithRetry(polly, command);
+    const audioArray = await response.AudioStream?.transformToByteArray();
+    const base64Audio = btoa(String.fromCharCode(...audioArray));
+
     console.log("Successfully generated speech, returning base64 audio");
 
     return new Response(
@@ -128,7 +95,7 @@ serve(async (req) => {
     console.error('Error in text-to-speech function:', error);
     
     let errorMessage = 'Failed to generate speech. Please try again.';
-    if (error.message.includes('API key not configured')) {
+    if (error.message.includes('credentials')) {
       errorMessage = 'The speech service is not properly configured. Please contact support.';
     }
 
