@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -65,42 +64,53 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
-                                   currentLanguage === "japanese" ? "en-US" : "en-US";
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.maxAlternatives = 1;
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const lastResultIndex = event.results.length - 1;
-        const latestTranscript = event.results[lastResultIndex][0].transcript;
+      if (recognitionRef.current) {
+        // Set language based on target language
+        const { practice } = getLanguagePair(currentLanguage);
+        let recognitionLang = "es-ES"; // Default for English speakers learning Spanish
         
-        resetSilenceDetection();
-        
-        setTranscript(latestTranscript);
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        setIsListening(false);
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
-        });
-      };
-      
-      recognitionRef.current.onend = () => {
-        if (isListening) {
-          try {
-            recognitionRef.current.start();
-          } catch (e) {
-            console.error("Failed to restart speech recognition:", e);
-          }
-        } else {
-          setIsListening(false);
+        if (currentLanguage === "english" && practice.toLowerCase() === "french") {
+          recognitionLang = "fr-FR";
+        } else if (currentLanguage !== "english") {
+          recognitionLang = "en-US"; // For non-English speakers learning English
         }
-      };
+        
+        recognitionRef.current.lang = recognitionLang;
+        recognitionRef.current.interimResults = true;
+        recognitionRef.current.continuous = true;
+        recognitionRef.current.maxAlternatives = 1;
+        
+        recognitionRef.current.onresult = (event: any) => {
+          const lastResultIndex = event.results.length - 1;
+          const latestTranscript = event.results[lastResultIndex][0].transcript;
+          
+          resetSilenceDetection();
+          
+          setTranscript(latestTranscript);
+        };
+        
+        recognitionRef.current.onerror = (event: any) => {
+          console.error("Speech recognition error:", event.error);
+          setIsListening(false);
+          toast({
+            title: t("error"),
+            description: `${t("speechRecognitionError")}: ${event.error}`,
+            variant: "destructive",
+          });
+        };
+        
+        recognitionRef.current.onend = () => {
+          if (isListening) {
+            try {
+              recognitionRef.current.start();
+            } catch (e) {
+              console.error("Failed to restart speech recognition:", e);
+            }
+          } else {
+            setIsListening(false);
+          }
+        };
+      }
     } else {
       toast({
         title: t("error"),
@@ -314,49 +324,37 @@ const VoiceChat = () => {
 
   const getConversationStarters = () => {
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
+    const { practice } = getLanguagePair(currentLanguage);
     
-    let nativeLanguagePhrases;
-    let targetLanguagePhrases;
-    
+    let nativeLanguagePhrases = phraseKeys.map(key => t(key));
+    let targetLanguagePhrases = phraseKeys.map(key => t(key));
+
+    // Load appropriate translations based on language pair
     if (currentLanguage === "english") {
-      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-    } else if (currentLanguage === "spanish") {
-      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "portuguese") {
-      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "mandarin") {
-      nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "vietnamese") {
-      nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "french") {
-      nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "japanese") {
-      nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "russian") {
-      nativeLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "ukrainian") {
-      nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "hindi") {
-      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "indonesian") {
-      nativeLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else {
-      nativeLanguagePhrases = phraseKeys.map(key => t(key));
-      targetLanguagePhrases = phraseKeys.map(key => {
-        const englishPhrase = englishTranslations[key];
-        return englishPhrase || key;
-      });
+      if (practice.toLowerCase() === "french") {
+        targetLanguagePhrases = [
+          "Bonjour, comment allez-vous aujourd'hui ?",
+          "Quel temps fait-il chez vous ?",
+          "Pouvez-vous recommander un bon restaurant ?",
+          "Quels sont vos passe-temps et centres d'intérêt ?",
+          "Parlez-moi de votre livre ou film préféré.",
+          "Qu'avez-vous fait le week-end dernier ?",
+          "Quels sont vos projets pour demain ?",
+          "Comment dit-on... en anglais ?"
+        ];
+      } else {
+        // Default Spanish phrases for English speakers
+        targetLanguagePhrases = [
+          "¡Hola! ¿Cómo estás hoy?",
+          "¿Qué tiempo hace donde vives?",
+          "¿Puedes recomendar un buen restaurante?",
+          "¿Cuáles son tus pasatiempos e intereses?",
+          "Háblame de tu libro o película favorita.",
+          "¿Qué hiciste el fin de semana pasado?",
+          "¿Cuáles son tus planes para mañana?",
+          "¿Cómo se dice... en inglés?"
+        ];
+      }
     }
     
     return { nativeLanguagePhrases, targetLanguagePhrases };
@@ -491,6 +489,12 @@ const VoiceChat = () => {
   };
 
   const getPracticeDescription = () => {
+    const { practice } = getLanguagePair(currentLanguage);
+    
+    if (currentLanguage === "english" && practice.toLowerCase() === "french") {
+      return `Practice your French speaking skills with our voice chat. Click the microphone button and start speaking in French. The AI will respond to you in French and help you practice.`;
+    }
+    
     if (currentLanguage === "english") {
       return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
     } else if (currentLanguage === "spanish") {
@@ -727,30 +731,3 @@ const VoiceChat = () => {
                 ))}
               </div>
             </div>
-            
-            {/* Target language phrases */}
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-gray-700">
-                {practice}:
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {targetLanguagePhrases.map((phrase, index) => (
-                  <Button 
-                    key={index}
-                    variant="outline"
-                    className="justify-start text-left h-auto py-2 px-3 font-normal"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-};
-
-export default VoiceChat;
