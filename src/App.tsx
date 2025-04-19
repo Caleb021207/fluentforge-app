@@ -1,3 +1,4 @@
+
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Layout from "@/components/Layout";
@@ -13,6 +14,7 @@ import SafetyPolicy from "@/pages/SafetyPolicy";
 import WritingCertification from "@/pages/WritingCertification";
 import ReadingCertification from "@/pages/ReadingCertification";
 import NotFound from "@/pages/NotFound";
+import FrenchVoiceChat from "@/pages/FrenchVoiceChat";
 
 const queryClient = new QueryClient();
 
