@@ -25,7 +25,7 @@ const DownloadCopyrightDeposit = () => {
       toast({
         title: "Package Ready",
         description: "Your copyright deposit package has been created successfully.",
-        variant: "success",
+        variant: "default", // Changed from "success" to "default"
       });
     } catch (error) {
       toast({
@@ -117,6 +117,8 @@ const DownloadCopyrightDeposit = () => {
           This package contains all necessary files for copyright registration, including source code, instructional content, and legal documentation.
         </p>
       </div>
+      
+      <ScriptInstructions />
     </div>
   );
 };
