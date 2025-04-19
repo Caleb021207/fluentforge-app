@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -68,6 +67,8 @@ const voiceChatTranslations: TranslationRecord = {
   phrase6: "Qu'avez-vous fait le week-end dernier ?",
   phrase7: "Quels sont vos projets pour demain ?",
   phrase8: "Comment dit-on... en anglais ?",
+  phrase9: "Parlez-moi de la cuisine française.",
+  phrase10: "Comment dit-on... en anglais?",
   translation: "Traduction",
   speaking: "En train de parler",
   
@@ -89,6 +90,17 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "Décrivez ce que vous voyez autour de vous",
   practiceVocabularyForSpecific: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture",
   useThisTool: "Utilisez cet outil pour améliorer vos compétences en expression orale et en compréhension. Voici quelques conseils :",
+  
+  // French-specific voice chat phrases
+  frenchVoicePractice: "Pratique vocale française",
+  frenchSpecificGreeting: "Bonjour et bienvenue à la pratique vocale française!",
+  tryFrenchPhrases: "Essayez ces phrases en français:",
+  basicFrenchGreeting: "Bonjour, comment ça va?",
+  basicFrenchQuestion: "Comment t'appelles-tu?",
+  basicFrenchResponse: "Je m'appelle...",
+  whatIsYourName: "Comment vous appelez-vous?",
+  whereAreYouFrom: "D'où venez-vous?",
+  whatTimeIsIt: "Quelle heure est-il?",
 };
 
 export default voiceChatTranslations;
