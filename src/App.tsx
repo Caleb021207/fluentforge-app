@@ -14,6 +14,7 @@ import SafetyPolicy from "@/pages/SafetyPolicy";
 import WritingCertification from "@/pages/WritingCertification";
 import ReadingCertification from "@/pages/ReadingCertification";
 import NotFound from "@/pages/NotFound";
+import FrenchVoiceChat from "@/pages/FrenchVoiceChat";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function App() {
               <Route path="/" element={<Index />} />
               <Route path="/practice" element={<Practice />} />
               <Route path="/voice-chat" element={<VoiceChat />} />
+              <Route path="/french-voice-chat" element={<FrenchVoiceChat />} />
               <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />
               <Route path="/pro-voice-chat" element={<PremiumVoiceChat />} />
               <Route path="/example-data" element={<ExampleData />} />

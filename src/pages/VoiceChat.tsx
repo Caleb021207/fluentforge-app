@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,10 +52,6 @@ const VoiceChat = () => {
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  const { practice, native } = getLanguagePair(currentLanguage);
-
-  // Add logic to determine if this is English speaker learning French
-  const isEnglishToFrench = currentLanguage === "english" && practice === "French";
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -68,9 +65,8 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set recognition language based on target language
-      recognitionRef.current.lang = isEnglishToFrench ? "fr-FR" : 
-                                   currentLanguage === "english" ? "es-ES" : "en-US";
+      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                                   currentLanguage === "japanese" ? "en-US" : "en-US";
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
       recognitionRef.current.maxAlternatives = 1;
@@ -138,7 +134,7 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, isEnglishToFrench, toast, t]);
+  }, [currentLanguage, toast, t]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -322,12 +318,12 @@ const VoiceChat = () => {
     let nativeLanguagePhrases;
     let targetLanguagePhrases;
     
-    if (isEnglishToFrench) {
-      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
-    } else if (currentLanguage === "english") {
+    if (currentLanguage === "english") {
       nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+    } else if (currentLanguage === "spanish") {
+      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "portuguese") {
       nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
@@ -416,11 +412,6 @@ const VoiceChat = () => {
   };
 
   const getAIModelInfoText = () => {
-    // Special case for English speakers learning French
-    if (isEnglishToFrench) {
-      return "We're using OpenAI's GPT-4o-mini for natural language understanding and generation, optimized for French language learning.";
-    }
-
     if (currentLanguage === "english") {
       return "We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
     } else if (currentLanguage === "spanish") {
@@ -452,11 +443,6 @@ const VoiceChat = () => {
   };
 
   const getBrowserTTSNote = () => {
-    // Special case for English speakers learning French
-    if (isEnglishToFrench) {
-      return "Note: This uses browser-based text-to-speech optimized for French pronunciation. For premium voice quality with ElevenLabs, try our Premium Voice Chat.";
-    }
-
     if (currentLanguage === "arabic") {
       return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
     } else if (currentLanguage === "korean") {
@@ -505,11 +491,6 @@ const VoiceChat = () => {
   };
 
   const getPracticeDescription = () => {
-    // Special case for English speakers learning French
-    if (isEnglishToFrench) {
-      return `Practice your French speaking skills with our voice chat. Click the microphone button and start speaking in French. The AI will respond to you in French and help you practice.`;
-    }
-
     if (currentLanguage === "english") {
       return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
     } else if (currentLanguage === "spanish") {
@@ -567,6 +548,7 @@ const VoiceChat = () => {
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
 
+  const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
@@ -703,4 +685,72 @@ const VoiceChat = () => {
               </Button>
             </div>
             
-            <
+            <ScrollArea className="h-[300px] rounded-md border p-4">
+              <div className="space-y-4">
+                {conversationHistory.map((message, index) => (
+                  <ChatMessage
+                    key={index}
+                    role={message.role}
+                    content={message.content}
+                    translation={message.translation}
+                    onPlayAudio={(text) => speakWithBrowserSynthesis(text)}
+                  />
+                ))}
+                <div ref={conversationEndRef} />
+              </div>
+            </ScrollArea>
+          </Card>
+        )}
+        
+        <Card className="p-6">
+          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            {t("tryThesePhrases")}
+          </p>
+          
+          <div className="space-y-6">
+            {/* Native language phrases */}
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium text-gray-700">
+                {native}:
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {nativeLanguagePhrases.map((phrase, index) => (
+                  <Button 
+                    key={index}
+                    variant="outline"
+                    className="justify-start text-left h-auto py-2 px-3"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Target language phrases */}
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium text-gray-700">
+                {practice}:
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {targetLanguagePhrases.map((phrase, index) => (
+                  <Button 
+                    key={index}
+                    variant="outline"
+                    className="justify-start text-left h-auto py-2 px-3 font-normal"
+                    onClick={() => handlePhraseClick(phrase)}
+                  >
+                    {phrase}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default VoiceChat;

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock, Languages } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +21,7 @@ const Navigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { currentLanguage, t } = useLocalization();
   const isMobile = useIsMobile();
+  const [targetLanguage, setTargetLanguage] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -39,16 +40,39 @@ const Navigation = () => {
       }
     });
     
+    // Check the user's target language
+    const savedTargetLanguage = localStorage.getItem("targetLanguage");
+    if (savedTargetLanguage) {
+      setTargetLanguage(savedTargetLanguage);
+    }
+    
     return () => {
       subscription.unsubscribe();
     };
   }, []);
 
-  const navItems = [
+  // Base navigation items
+  const baseNavItems = [
     { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
-    { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
-    { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
   ];
+  
+  // Add voice chat items based on target language
+  let voiceItems = [];
+  
+  if (currentLanguage === "english" && targetLanguage === "french") {
+    voiceItems = [
+      { icon: Mic, label: "frenchVoicePractice", path: "/french-voice-chat", requiresAuth: true },
+      { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
+      { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
+    ];
+  } else {
+    voiceItems = [
+      { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
+      { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
+    ];
+  }
+  
+  const navItems = [...baseNavItems, ...voiceItems];
 
   if (isMobile) {
     navItems.unshift({ icon: Home, label: "home", path: "/", requiresAuth: false });
