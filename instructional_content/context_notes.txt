@@ -1,0 +1,38 @@
+
+# Instructional Content Context Notes for Palavox
+
+## Overview
+This directory contains the instructional materials, learning content, and supporting resources for the Palavox language learning application.
+
+## Content Structure
+- translations/: Localized content for multiple languages
+- lesson_content/: Dialogues, learning sequences, and practice materials
+- certification/: Assessment materials and certification test content
+
+## Content Generation Methodology
+- Multilingual approach focusing on conversational learning
+- AI-assisted dialogue generation
+- Contextual language learning with real-world scenarios
+- Adaptive difficulty levels (A1 to C2)
+
+## Key Features
+- Voice chat practice
+- Interactive learning dialogues
+- Certification assessment frameworks
+- Culturally relevant content
+
+## Language Coverage
+- English
+- Spanish
+- Portuguese
+- And other supported languages in the application
+
+## Notes on Usage
+Content is dynamically loaded and personalized based on:
+- User's native language
+- Target language
+- Learning level
+- Individual progress
+
+Created by Caleb Jaworski
+© 2024-2025 Palavox
