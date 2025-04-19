@@ -20,8 +20,7 @@ const Index = () => {
   const [isAgeVerificationOpen, setIsAgeVerificationOpen] = useState(false);
   const [isFerpaConsentOpen, setIsFerpaConsentOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [nativeLanguage, setNativeLanguage] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
+  const [selectedPair, setSelectedPair] = useState("");
   const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
   
   const {
@@ -52,11 +51,8 @@ const Index = () => {
       checkUser();
     });
 
-    const savedNativeLanguage = localStorage.getItem("nativeLanguage");
-    const savedTargetLanguage = localStorage.getItem("targetLanguage");
-    
-    if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
-    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
+    const savedPair = localStorage.getItem("languagePair");
+    if (savedPair) setSelectedPair(savedPair);
     
     const needsVerification = needsAgeVerification();
     if (needsVerification) {
@@ -69,25 +65,26 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (nativeLanguage && targetLanguage) {
+    if (selectedPair) {
+      const [nativeLanguage, targetLanguage] = selectedPair.split("-");
       const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
       setStudyMaterialsAvailable(materialsAvailable);
       
-      sessionStorage.setItem("languagePair", `${nativeLanguage}-${targetLanguage}`);
+      sessionStorage.setItem("languagePair", selectedPair);
       sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
     }
-  }, [nativeLanguage, targetLanguage]);
+  }, [selectedPair]);
 
   const handleLanguageSelection = () => {
-    if (nativeLanguage && targetLanguage) {
+    if (selectedPair) {
+      const [nativeLanguage, targetLanguage] = selectedPair.split("-");
+      
+      localStorage.setItem("languagePair", selectedPair);
       localStorage.setItem("nativeLanguage", nativeLanguage);
       localStorage.setItem("targetLanguage", targetLanguage);
       
-      const languagePair = `${nativeLanguage}-${targetLanguage}`;
-      sessionStorage.setItem("languagePair", languagePair);
-      
-      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
-      sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
+      sessionStorage.setItem("languagePair", selectedPair);
+      sessionStorage.setItem("hasStudyMaterials", hasStudyMaterials(nativeLanguage, targetLanguage).toString());
       
       setCurrentLanguage(nativeLanguage);
       
@@ -102,8 +99,8 @@ const Index = () => {
       window.location.reload();
     } else {
       toast({
-        title: t("pleaseSelectBothLanguages"),
-        description: t("youNeedToSelectBoth"),
+        title: t("pleaseSelectLanguage"),
+        description: t("youNeedToSelectLanguage"),
         variant: "destructive",
       });
     }
@@ -134,10 +131,8 @@ const Index = () => {
           </p>
           
           <LanguageSelectionCard
-            nativeLanguage={nativeLanguage}
-            targetLanguage={targetLanguage}
-            setNativeLanguage={setNativeLanguage}
-            setTargetLanguage={setTargetLanguage}
+            selectedPair={selectedPair}
+            setSelectedPair={setSelectedPair}
             hasStudyMaterials={studyMaterialsAvailable}
             handleLanguageSelection={handleLanguageSelection}
           />
