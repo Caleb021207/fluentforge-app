@@ -18,7 +18,7 @@ export const useVoiceChatMessages = () => {
   };
   
   const addInitialMessage = () => {
-    const { practice } = getLanguagePair(currentLanguage);
+    const { practice, native } = getLanguagePair(currentLanguage);
     
     let initialContent = "";
     
