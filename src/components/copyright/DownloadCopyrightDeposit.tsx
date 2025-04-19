@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { FileArchive } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ScriptInstructions from "./ScriptInstructions";
 
 const DownloadCopyrightDeposit = () => {
   const { toast } = useToast();
@@ -50,6 +51,7 @@ const DownloadCopyrightDeposit = () => {
         <FileArchive className="mr-2 h-5 w-5" />
         Download Copyright Package
       </Button>
+      <ScriptInstructions />
     </div>
   );
 };
