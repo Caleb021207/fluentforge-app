@@ -32,6 +32,16 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "Practice conversations in different situations",
   learnNewVocabulary: "Learn new vocabulary",
   discussCulturalTopics: "Discuss cultural topics",
+  
+  // French-specific practice prompts for English speakers
+  frenchGreeting: "Bonjour, comment allez-vous aujourd'hui?",
+  frenchIntroduction: "Je m'appelle [votre nom]. Comment vous appelez-vous?",
+  frenchWeather: "Quel temps fait-il aujourd'hui?",
+  frenchHobbies: "Quels sont vos passe-temps préférés?",
+  frenchFood: "Quels sont les plats français que vous aimez?",
+  frenchTravel: "Avez-vous déjà visité la France?",
+  frenchLearning: "J'apprends le français. Pouvez-vous m'aider?",
+  frenchDirections: "Comment puis-je aller au musée?",
 };
 
 export default practiceTranslations;

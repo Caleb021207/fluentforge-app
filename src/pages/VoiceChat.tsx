@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -278,7 +277,6 @@ const VoiceChat = () => {
     }
   };
 
-  // Replace the speakWithBrowserSynthesis function with our new approach
   const speakWithBrowserSynthesis = (text: string) => {
     if (!text || text.trim() === '') {
       console.warn('Empty text provided to speakWithBrowserSynthesis');
@@ -287,13 +285,11 @@ const VoiceChat = () => {
 
     console.log(`Speaking text: "${text.substring(0, 50)}..."`);
     
-    // Get the target language based on user's UI language
     const { practice } = getLanguagePair(currentLanguage);
     const practiceLanguage = practice.toLowerCase();
     
     setIsSpeaking(true);
     
-    // Use our TTS utility
     playTTS({
       text: text,
       language: practiceLanguage,
@@ -330,7 +326,6 @@ const VoiceChat = () => {
     let nativeLanguagePhrases = phraseKeys.map(key => t(key));
     let targetLanguagePhrases = phraseKeys.map(key => t(key));
 
-    // Load appropriate translations based on language pair
     if (currentLanguage === "english") {
       if (practice.toLowerCase() === "french") {
         targetLanguagePhrases = [
@@ -344,7 +339,6 @@ const VoiceChat = () => {
           "Comment dit-on... en anglais ?"
         ];
       } else {
-        // Default Spanish phrases for English speakers
         targetLanguagePhrases = [
           "¡Hola! ¿Cómo estás hoy?",
           "¿Qué tiempo hace donde vives?",
@@ -424,7 +418,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "mandarin") {
       return "我们使用OpenAI的GPT-4o-mini进行自然语言理解和生成，并使用浏览器内置的语音合成功能进行语音回应。";
     } else if (currentLanguage === "vietnamese") {
-      return "Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng nói.";
+      return "Chúng tôi sử dụng GPT-4o-mini của OpenAI để hiểu và tạo ngôn ngữ tự nhiên, với tính năng Tổng hợp Giọng nói tích hợp trong trình duyệt cho các phản hồi bằng giọng n��i.";
     } else if (currentLanguage === "french") {
       return "Nous utilisons GPT-4o-mini d'OpenAI pour la compréhension et la gnération du langage naturel, avec la synthèse vocale intégrée au navigateur pour les réponses vocales.";
     } else if (currentLanguage === "japanese") {
@@ -661,7 +655,6 @@ const VoiceChat = () => {
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {/* Always show translation for Hindi users or if translation exists */}
                 {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
@@ -714,7 +707,6 @@ const VoiceChat = () => {
           </p>
           
           <div className="space-y-6">
-            {/* Native language phrases */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-gray-700">
                 {native}:
@@ -733,7 +725,6 @@ const VoiceChat = () => {
               </div>
             </div>
             
-            {/* Target language phrases */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-gray-700">
                 {practice}:
