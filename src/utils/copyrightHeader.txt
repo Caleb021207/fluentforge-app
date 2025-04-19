@@ -1,6 +1,6 @@
 
 /**
- * © 2024-2025 [Your Name/Company Name]
+ * © 2024-2025 Caleb Jaworski
  * 
  * This source code is licensed under a strict copyright
  * that permits limited use. No unauthorized use, reproduction, or

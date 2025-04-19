@@ -1,23 +1,22 @@
-
 # Copyright Registration Checklist
 
 ## Required Information for Registration
 
-1. **Title of Work**: [Your App Name]
-   - Version: [Current Version Number]
-   - Year of Completion: 2024
+1. **Title of Work**: Palavox
+   - Version: 1.0.0
+   - Year of Completion: 2025
 
 2. **Author Information**:
-   - Name: [Your Name/Company Name]
-   - Citizenship: [Your Country]
-   - Year of Birth: [Year]
-   - Organization Details (if applicable)
+   - Name: Caleb Jaworski
+   - Citizenship: United States
+   - Year of Birth: [Redacted]
+   - Organization Details: Palavox LLC
 
 3. **Type of Work**: Computer Program/Software Application
 
 4. **Publication Status**:
-   - Date of First Publication: [Date]
-   - Nation of First Publication: [Country]
+   - Date of First Publication: April 19, 2025
+   - Nation of First Publication: United States
 
 5. **Deposit Materials to Prepare**:
    - First 25 and last 25 pages of source code

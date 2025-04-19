@@ -1,0 +1,15 @@
+
+PROPRIETARY SOFTWARE LICENSE
+
+Copyright (c) 2024-2025 Caleb Jaworski
+All Rights Reserved
+
+This software and associated documentation files (the "Software") are the proprietary and confidential property of Caleb Jaworski. The Software is protected by copyright laws and international copyright treaties, as well as other intellectual property laws and treaties.
+
+NO PORTION OF THIS SOFTWARE, INCLUDING BUT NOT LIMITED TO THE SOURCE CODE, DOCUMENTATION, USER INTERFACE DESIGN, EDUCATIONAL CONTENT, OR ALGORITHMS MAY BE REPRODUCED, DISTRIBUTED, COPIED, MODIFIED, MERGED, PUBLISHED, SUBLICENSED, SOLD, OR TRANSMITTED IN ANY FORM OR BY ANY MEANS WITHOUT THE PRIOR WRITTEN PERMISSION OF THE COPYRIGHT HOLDER.
+
+ANY UNAUTHORIZED USE, REPRODUCTION, OR DISTRIBUTION OF THIS SOFTWARE OR ANY PORTION OF IT MAY RESULT IN SEVERE CIVIL AND CRIMINAL PENALTIES, AND WILL BE PROSECUTED TO THE MAXIMUM EXTENT POSSIBLE UNDER THE LAW.
+
+For licensing inquiries, please contact:
+Caleb Jaworski
+Email: caleb@palavox.org

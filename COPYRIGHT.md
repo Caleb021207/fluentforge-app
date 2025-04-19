@@ -1,7 +1,7 @@
 
 # Copyright Notice
 
-© 2024-2025 [Your Name/Company Name]. All Rights Reserved.
+© 2024-2025 Caleb Jaworski. All Rights Reserved.
 
 This language learning application, including but not limited to:
 - Source code
@@ -38,4 +38,4 @@ This software uses several open-source components, each of which retains its ori
 ## Legal Notice
 Unauthorized use, reproduction, or distribution of this software or any of its components may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under law.
 
-For licensing inquiries, please contact: [Your Contact Information]
+For licensing inquiries, please contact: caleb@palavox.org
