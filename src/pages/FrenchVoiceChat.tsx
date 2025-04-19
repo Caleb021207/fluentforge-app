@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -112,7 +111,7 @@ const FrenchVoiceChat = () => {
   const { t } = useLocalization();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { isSignedIn, isLoading } = useAuthGuard();
+  const { isAuthenticated, isLoading } = useAuthGuard();
   const [isRecording, setIsRecording] = useState(false);
   const [recognizedText, setRecognizedText] = useState("");
   const [aiResponseText, setAiResponseText] = useState("");
@@ -169,12 +168,12 @@ const FrenchVoiceChat = () => {
         setRecognizedText(transcript);
       };
       
-      recognition.onerror = (event: SpeechRecognitionError) => {
-        console.error("Speech recognition error", event.error);
+      recognition.onerror = (event: Event) => {
+        console.error("Speech recognition error", (event as any).error);
         setIsRecording(false);
         toast({
           title: t("speechRecognitionError"),
-          description: event.error,
+          description: (event as any).error,
           variant: "destructive",
         });
       };
@@ -298,7 +297,7 @@ const FrenchVoiceChat = () => {
     );
   }
 
-  if (!isSignedIn) {
+  if (!isAuthenticated) {
     return <AuthRequiredPrompt />;
   }
 
