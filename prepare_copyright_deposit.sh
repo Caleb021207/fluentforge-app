@@ -58,4 +58,3 @@ zip -r Palavox_Copyright_Deposit_2025.zip Palavox_Copyright_Deposit_2025
 chmod +x prepare_copyright_deposit.sh
 
 echo "Copyright deposit prepared successfully!"
-
