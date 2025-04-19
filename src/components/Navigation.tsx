@@ -47,7 +47,6 @@ const Navigation = () => {
   const navItems = [
     { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
     { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
-    { icon: Mic, label: "frenchVoicePractice", path: "/french-voice-chat", requiresAuth: true },
     { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
   ];
 
