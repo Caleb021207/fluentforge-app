@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,13 @@ import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import { ConversationStarters } from "@/components/voice-chat/ConversationStarters";
 import { ConversationHistory } from "@/components/voice-chat/ConversationHistory";
 import { VoiceChatControls } from "@/components/voice-chat/VoiceChatControls";
+import {
+  getPracticeDescription,
+  getAIModelInfoText,
+  getBrowserTTSNote,
+  getPracticeLevelText,
+  getAIModelLabelText,
+} from "@/utils/voiceChatTextUtils";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -201,10 +209,10 @@ const VoiceChat = () => {
           {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {getPracticeDescription()}
+          {getPracticeDescription(currentLanguage)}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{getAIModelLabelText()}</strong> {getAIModelInfoText()}
+          <strong>{getAIModelLabelText()}</strong> {getAIModelInfoText(currentLanguage)}
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
