@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,9 +7,23 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair, getSpeechSynthesisLanguageCode } from "@/utils/languageUtils";
+import { 
+  getLanguagePair, 
+  getSpeechSynthesisLanguageCode, 
+} from "@/utils/languageUtils";
+import englishTranslations from "@/translations/english";
+import spanishTranslations from "@/translations/spanish";
+import portugueseTranslations from "@/translations/portuguese";
+import mandarinTranslations from "@/translations/mandarin";
+import vietnameseTranslations from "@/translations/vietnamese";
+import frenchTranslations from "@/translations/french";
+import japaneseTranslations from "@/translations/japanese";
+import russianTranslations from "@/translations/russian";
+import ukrainianTranslations from "@/translations/ukrainian";
+import hindiTranslations from "@/translations/hindi";
+import indonesianTranslations from "@/translations/indonesian";
 import ChatMessage from "@/components/practice/ChatMessage";
-import { playTTS } from "@/utils/ttsUtils";
+import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -37,7 +52,6 @@ const VoiceChat = () => {
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  const targetLanguage = localStorage.getItem("targetLanguage");
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -51,9 +65,8 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      const isEnglishLearningFrench = currentLanguage === "english" && targetLanguage === "french";
-      recognitionRef.current.lang = isEnglishLearningFrench ? "fr-FR" : 
-                                   currentLanguage === "english" ? "es-ES" : "en-US";
+      recognitionRef.current.lang = currentLanguage === "english" ? "es-ES" : 
+                                   currentLanguage === "japanese" ? "en-US" : "en-US";
       recognitionRef.current.interimResults = true;
       recognitionRef.current.continuous = true;
       recognitionRef.current.maxAlternatives = 1;
@@ -121,7 +134,7 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, targetLanguage, toast, t]);
+  }, [currentLanguage, toast, t]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -254,6 +267,7 @@ const VoiceChat = () => {
     }
   };
 
+  // Replace the speakWithBrowserSynthesis function with our new approach
   const speakWithBrowserSynthesis = (text: string) => {
     if (!text || text.trim() === '') {
       console.warn('Empty text provided to speakWithBrowserSynthesis');
@@ -262,12 +276,13 @@ const VoiceChat = () => {
 
     console.log(`Speaking text: "${text.substring(0, 50)}..."`);
     
-    const isEnglishLearningFrench = currentLanguage === "english" && targetLanguage === "french";
-    const practiceLanguage = isEnglishLearningFrench ? "french" : 
-                            currentLanguage === "english" ? "spanish" : "english";
+    // Get the target language based on user's UI language
+    const { practice } = getLanguagePair(currentLanguage);
+    const practiceLanguage = practice.toLowerCase();
     
     setIsSpeaking(true);
     
+    // Use our TTS utility
     playTTS({
       text: text,
       language: practiceLanguage,
@@ -404,7 +419,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "portuguese") {
       return "Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
     } else if (currentLanguage === "korean") {
-      return "자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 ��장 음성 합성을 사용합니다.";
+      return "자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하고, 음성 응답을 위해 브라우저의 내장 음성 합성을 사용합니다.";
     } else if (currentLanguage === "arabic") {
       return "نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
     } else if (currentLanguage === "mandarin") {
@@ -641,7 +656,8 @@ const VoiceChat = () => {
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {(translation && translation.trim() !== "") || currentLanguage === "hindi" && (
+                {/* Always show translation for Hindi users or if translation exists */}
+                {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
                     <div className="text-sm text-gray-600">
@@ -693,6 +709,7 @@ const VoiceChat = () => {
           </p>
           
           <div className="space-y-6">
+            {/* Native language phrases */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-gray-700">
                 {native}:
@@ -711,6 +728,7 @@ const VoiceChat = () => {
               </div>
             </div>
             
+            {/* Target language phrases */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-gray-700">
                 {practice}:
