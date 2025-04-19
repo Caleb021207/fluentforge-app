@@ -1,4 +1,3 @@
-
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Layout from "@/components/Layout";
@@ -27,6 +26,7 @@ function App() {
               <Route path="/" element={<Index />} />
               <Route path="/practice" element={<Practice />} />
               <Route path="/voice-chat" element={<VoiceChat />} />
+              <Route path="/french-voice-chat" element={<FrenchVoiceChat />} />
               <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />
               <Route path="/pro-voice-chat" element={<PremiumVoiceChat />} />
               <Route path="/example-data" element={<ExampleData />} />
