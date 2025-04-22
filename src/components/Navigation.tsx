@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock } from "lucide-react";
@@ -125,15 +126,16 @@ const Navigation = () => {
         <div className="p-4">
           <Link 
             to="/" 
-            className="hidden md:flex items-center space-x-2 mb-8"
+            className="hidden md:flex items-center justify-center mb-6"
             onClick={() => setIsOpen(false)}
           >
-            <img 
-              src="/logo.png" 
-              alt="Palavox Logo" 
-              className="h-10 w-auto object-contain"
-              style={{ maxWidth: 180 }}
-            />
+            <div className="flex justify-center w-full">
+              <img 
+                src="/logo.png" 
+                alt="Palavox Logo" 
+                className="h-12 w-auto object-contain mx-auto"
+              />
+            </div>
           </Link>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
