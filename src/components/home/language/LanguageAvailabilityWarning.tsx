@@ -1,20 +1,22 @@
 
 interface LanguageAvailabilityWarningProps {
-  selectedPair: string;
-  languagePairs: Record<string, string>;
+  targetLanguage: string;
+  nativeLanguage: string;
+  targetLanguageNames: Record<string, string>;
+  nativeLanguageNames: Record<string, string>;
 }
 
 const LanguageAvailabilityWarning = ({
-  selectedPair,
-  languagePairs
+  targetLanguage,
+  nativeLanguage,
+  targetLanguageNames,
+  nativeLanguageNames
 }: LanguageAvailabilityWarningProps) => {
-  if (!selectedPair) return null;
-
-  const selectedLanguageName = languagePairs[selectedPair]?.split(" ")[1] || selectedPair;
+  if (!targetLanguage || !nativeLanguage) return null;
 
   return (
     <p className="text-amber-600 text-sm mb-2">
-      {"Study materials for this language pair are coming soon!"}
+      {`Study materials for learning ${targetLanguageNames[targetLanguage]?.split(" ")[1] || targetLanguage} from ${nativeLanguageNames[nativeLanguage]?.split(" ")[1] || nativeLanguage} are coming soon!`}
       <br />
       {"Some features might be limited or unavailable."}
     </p>
