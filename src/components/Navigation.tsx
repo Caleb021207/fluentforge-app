@@ -134,6 +134,10 @@ const Navigation = () => {
                 src="/logo.png" 
                 alt="Palavox Logo" 
                 className="h-12 w-auto object-contain mx-auto"
+                onError={(e) => {
+                  console.error('Logo failed to load', e);
+                  e.currentTarget.style.display = 'none';
+                }}
               />
             </div>
           </Link>
