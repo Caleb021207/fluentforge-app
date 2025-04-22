@@ -1,4 +1,3 @@
-
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -75,11 +74,9 @@ export const getAvailableTargetLanguages = (nativeLanguage: string): string[] =>
   if (nativeLanguage.toLowerCase() !== 'english') {
     return ['english'];
   }
-  
-  // Updated to only include Spanish and French for English speakers
-  const commonLanguages = ['spanish', 'french'];
-  
-  return commonLanguages;
+
+  // Always show both Spanish and French for English speakers, even if French is not available yet
+  return ['spanish', 'french'];
 };
 
 /**
@@ -92,7 +89,7 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
   const supportedPairs = [
     'english-spanish',
     'english-french',
-    'english-portuguese', // Added Portuguese support for English speakers
+    'english-portuguese',
     'spanish-english',
     'portuguese-english',
     'french-english',
@@ -101,10 +98,10 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'mandarin-english',
     'russian-english',
     'arabic-english',
-    'hindi-english',      // Adding Hindi
-    'vietnamese-english', // Adding Vietnamese
-    'ukrainian-english',  // Adding Ukrainian
-    'indonesian-english'  // Adding Indonesian
+    'hindi-english',
+    'vietnamese-english',
+    'ukrainian-english',
+    'indonesian-english'
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
