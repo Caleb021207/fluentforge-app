@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -63,6 +62,11 @@ const LanguageSelectionCard = ({
     indonesian: "🇮🇩 Indonesian"
   };
   
+  // Determine disabled options based on native language
+  const disabledTargetLanguages = nativeLanguage === 'english' 
+    ? ['french'] 
+    : [];
+  
   // Effect to auto-select first available target language when native language changes
   useEffect(() => {
     if (nativeLanguage && availableTargetLanguages.length > 0) {
@@ -100,6 +104,7 @@ const LanguageSelectionCard = ({
               placeholder={t("selectLanguageToLearn")}
               options={targetLanguageOptions}
               disabled={availableTargetLanguages.length === 0}
+              disabledOptions={disabledTargetLanguages}
             />
           )}
         </div>

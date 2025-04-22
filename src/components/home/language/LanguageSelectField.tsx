@@ -10,6 +10,7 @@ interface LanguageSelectFieldProps {
   placeholder: string;
   options: Record<string, string>;
   disabled?: boolean;
+  disabledOptions?: string[];
 }
 
 const LanguageSelectField = ({
@@ -19,7 +20,8 @@ const LanguageSelectField = ({
   label,
   placeholder,
   options,
-  disabled = false
+  disabled = false,
+  disabledOptions = []
 }: LanguageSelectFieldProps) => {
   return (
     <div className="space-y-2">
@@ -30,8 +32,13 @@ const LanguageSelectField = ({
         </SelectTrigger>
         <SelectContent>
           {Object.entries(options).map(([value, label]) => (
-            <SelectItem key={value} value={value}>
+            <SelectItem 
+              key={value} 
+              value={value} 
+              disabled={disabledOptions.includes(value)}
+            >
               {label}
+              {disabledOptions.includes(value) && " (Under Development)"}
             </SelectItem>
           ))}
         </SelectContent>
