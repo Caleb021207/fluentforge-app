@@ -126,20 +126,10 @@ const Navigation = () => {
         <div className="p-4">
           <Link 
             to="/" 
-            className="hidden md:flex items-center justify-center mb-6"
+            className="hidden md:flex items-center space-x-2 mb-8"
             onClick={() => setIsOpen(false)}
           >
-            <div className="flex justify-center w-full">
-              <img 
-                src="/logo.png" 
-                alt="Palavox Logo" 
-                className="h-12 w-auto object-contain mx-auto"
-                onError={(e) => {
-                  console.error('Logo failed to load', e);
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </div>
+            <span className="font-bold text-2xl text-lingua-primary">Palavox</span>
           </Link>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
