@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock } from "lucide-react";
@@ -129,7 +128,12 @@ const Navigation = () => {
             className="hidden md:flex items-center space-x-2 mb-8"
             onClick={() => setIsOpen(false)}
           >
-            <span className="font-bold text-2xl text-lingua-primary">Palavox</span>
+            <img 
+              src="/logo.png" 
+              alt="Palavox Logo" 
+              className="h-10 w-auto object-contain"
+              style={{ maxWidth: 180 }}
+            />
           </Link>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
