@@ -26,7 +26,6 @@ const LanguageSelectionCard = ({
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
 
-  // Languages in their native names with flag emojis
   const NATIVE_LANGUAGE_NAMES = {
     english: "🇺🇸 English",
     spanish: "🇪🇸 Español",
@@ -43,10 +42,8 @@ const LanguageSelectionCard = ({
     indonesian: "🇮🇩 Bahasa Indonesia"
   };
 
-  // Available target languages based on native language
   const availableTargetLanguages = getAvailableTargetLanguages(nativeLanguage);
-  
-  // Target language flags and names mapping
+
   const TARGET_LANGUAGE_NAMES = {
     english: "🇺🇸 English",
     spanish: "🇪🇸 Spanish",
@@ -62,20 +59,40 @@ const LanguageSelectionCard = ({
     hindi: "🇮🇳 Hindi",
     indonesian: "🇮🇩 Indonesian"
   };
-  
+
   // Effect to auto-select first available target language when native language changes
   useEffect(() => {
     if (nativeLanguage && availableTargetLanguages.length > 0) {
-      if (!availableTargetLanguages.includes(targetLanguage)) {
-        setTargetLanguage(availableTargetLanguages[0]);
+      // Don't auto-select if first available is disabled
+      const valid = availableTargetLanguages.find(lang =>
+        !(nativeLanguage.toLowerCase() === "english" && lang === "french")
+      );
+      if (!availableTargetLanguages.includes(targetLanguage) || (nativeLanguage.toLowerCase() === "english" && targetLanguage === "french")) {
+        setTargetLanguage(valid || "");
       }
     }
   }, [nativeLanguage, targetLanguage, availableTargetLanguages, setTargetLanguage]);
 
-  // Create target language options based on available languages
-  const targetLanguageOptions = Object.fromEntries(
-    availableTargetLanguages.map(lang => [lang, TARGET_LANGUAGE_NAMES[lang] || lang])
-  );
+  // Build select options: as array for supporting "disabled"
+  let targetLanguageOptions: { value: string; label: string; disabled?: boolean }[] = [];
+  if (nativeLanguage.toLowerCase() === "english") {
+    targetLanguageOptions = [
+      {
+        value: "spanish",
+        label: TARGET_LANGUAGE_NAMES["spanish"]
+      },
+      {
+        value: "french",
+        label: "🇫🇷 French (under development)",
+        disabled: true
+      }
+    ];
+  } else {
+    targetLanguageOptions = availableTargetLanguages.map(lang => ({
+      value: lang,
+      label: TARGET_LANGUAGE_NAMES[lang] || lang
+    }));
+  }
 
   return (
     <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
@@ -103,7 +120,7 @@ const LanguageSelectionCard = ({
             />
           )}
         </div>
-        
+
         {nativeLanguage && targetLanguage && !materialsAvailable && (
           <div className="mb-4">
             <LanguageAvailabilityWarning
@@ -114,11 +131,15 @@ const LanguageSelectionCard = ({
             />
           </div>
         )}
-        
-        <Button 
-          onClick={handleLanguageSelection} 
+
+        <Button
+          onClick={handleLanguageSelection}
           className="w-full"
-          disabled={!nativeLanguage || !targetLanguage}
+          disabled={
+            !nativeLanguage ||
+            !targetLanguage ||
+            (nativeLanguage.toLowerCase() === "english" && targetLanguage === "french")
+          }
         >
           {t("saveLanguagePreferences")}
         </Button>
