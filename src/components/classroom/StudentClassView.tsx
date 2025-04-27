@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 interface ClassData {
   class_name: string;
   teacher_email?: string;
+  teacher_name?: string;
   joined_at: string;
   code: string;
 }
@@ -18,20 +19,35 @@ const StudentClassView = () => {
   const { t } = useLocalization();
   const [classData, setClassData] = useState<ClassData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchClassData = async () => {
       try {
-        const { data: userData } = await supabase.auth.getUser();
-        if (!userData.user) {
-          throw new Error("User not authenticated");
+        const { data: session, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) throw sessionError;
+        if (!session.session) {
+          setError("No authenticated session");
+          setIsLoading(false);
+          return;
         }
 
-        // First get the classroom membership
+        // First get the classroom membership with related data
         const { data: membershipData, error: membershipError } = await supabase
           .from('classroom_memberships')
-          .select('classroom_id, joined_at')
-          .eq('student_id', userData.user.id)
+          .select(`
+            joined_at,
+            classroom: classroom_codes (
+              class_name,
+              code,
+              teacher: profiles (
+                email,
+                display_name
+              )
+            )
+          `)
+          .eq('student_id', session.session.user.id)
           .maybeSingle();
 
         if (membershipError) throw membershipError;
@@ -40,43 +56,23 @@ const StudentClassView = () => {
           setIsLoading(false);
           return; // No class joined
         }
-        
-        // Then get the classroom details
-        const { data: classroomData, error: classroomError } = await supabase
-          .from('classroom_codes')
-          .select('class_name, code, teacher_id')
-          .eq('id', membershipData.classroom_id)
-          .single();
-          
-        if (classroomError) throw classroomError;
-        
-        // Get teacher email if teacher_id exists
-        let teacherEmail = null;
-        if (classroomData.teacher_id) {
-          const { data: teacherData, error: teacherError } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', classroomData.teacher_id)
-            .single();
-            
-          if (teacherError) {
-            console.error('Error fetching teacher email:', teacherError);
-          } else if (teacherData) {
-            teacherEmail = teacherData.email;
-          }
-        }
 
-        setClassData({
-          class_name: classroomData.class_name,
-          teacher_email: teacherEmail || undefined,
-          joined_at: membershipData.joined_at ? new Date(membershipData.joined_at).toLocaleDateString() : '',
-          code: classroomData.code
-        });
+        // Transform the data to match our ClassData interface
+        const classInfo: ClassData = {
+          class_name: membershipData.classroom.class_name,
+          teacher_email: membershipData.classroom.teacher?.email,
+          teacher_name: membershipData.classroom.teacher?.display_name,
+          joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
+          code: membershipData.classroom.code
+        };
+
+        setClassData(classInfo);
       } catch (error: any) {
         console.error('Error fetching class data:', error);
+        setError(error.message);
         toast({
-          title: t("error") || "Error",
-          description: error.message || "Failed to load class data",
+          title: t("error"),
+          description: error.message || t("failedToLoadClassData"),
           variant: "destructive",
         });
       } finally {
@@ -95,11 +91,21 @@ const StudentClassView = () => {
     );
   }
 
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-red-500">{error}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (!classData) {
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-muted-foreground">{t("noClassJoined") || "No class joined yet"}</p>
+          <p className="text-muted-foreground">{t("noClassJoined")}</p>
         </CardContent>
       </Card>
     );
@@ -111,21 +117,18 @@ const StudentClassView = () => {
         <CardTitle>{classData.class_name}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        {classData.teacher_email && (
+        {(classData.teacher_name || classData.teacher_email) && (
           <div>
-            <span className="font-medium">{t("teacher") || "Teacher"}:</span> {classData.teacher_email}
+            <span className="font-medium">{t("teacher")}:</span>{' '}
+            {classData.teacher_name || classData.teacher_email}
           </div>
         )}
-        {classData.joined_at && (
-          <div>
-            <span className="font-medium">{t("joined") || "Joined"}:</span> {classData.joined_at}
-          </div>
-        )}
-        {classData.code && (
-          <div>
-            <span className="font-medium">{t("classCode") || "Class Code"}:</span> {classData.code}
-          </div>
-        )}
+        <div>
+          <span className="font-medium">{t("joined")}:</span> {classData.joined_at}
+        </div>
+        <div>
+          <span className="font-medium">{t("classCode")}:</span> {classData.code}
+        </div>
       </CardContent>
     </Card>
   );
