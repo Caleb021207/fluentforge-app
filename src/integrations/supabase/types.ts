@@ -116,6 +116,76 @@ export type Database = {
           },
         ]
       }
+      classroom_codes: {
+        Row: {
+          active: boolean
+          class_name: string
+          code: string
+          created_at: string
+          id: string
+          teacher_id: string
+        }
+        Insert: {
+          active?: boolean
+          class_name: string
+          code: string
+          created_at?: string
+          id?: string
+          teacher_id: string
+        }
+        Update: {
+          active?: boolean
+          class_name?: string
+          code?: string
+          created_at?: string
+          id?: string
+          teacher_id?: string
+        }
+        Relationships: []
+      }
+      classroom_memberships: {
+        Row: {
+          classroom_id: string
+          id: string
+          joined_at: string
+          student_id: string
+        }
+        Insert: {
+          classroom_id: string
+          id?: string
+          joined_at?: string
+          student_id: string
+        }
+        Update: {
+          classroom_id?: string
+          id?: string
+          joined_at?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "student_usage_metrics"
+            referencedColumns: ["classroom_id"]
+          },
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_students"
+            referencedColumns: ["classroom_id"]
+          },
+        ]
+      }
       district_settings: {
         Row: {
           consent_type:
@@ -371,10 +441,59 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      student_usage_metrics: {
+        Row: {
+          avg_certification_score: number | null
+          certification_attempts: number | null
+          class_name: string | null
+          classroom_id: string | null
+          completed_lessons: number | null
+          last_certification: string | null
+          last_lesson_progress: string | null
+          last_voice_chat: string | null
+          student_id: string | null
+          teacher_id: string | null
+          total_lessons: number | null
+          voice_chat_minutes: number | null
+          voice_chat_sessions: number | null
+        }
+        Relationships: []
+      }
+      teacher_students: {
+        Row: {
+          class_code: string | null
+          class_name: string | null
+          classroom_id: string | null
+          joined_at: string | null
+          student_email: string | null
+          student_id: string | null
+          student_name: string | null
+          teacher_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      create_classroom: {
+        Args: { class_name: string }
+        Returns: Json
+      }
+      generate_class_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      is_teacher: {
+        Args: { user_id?: string }
+        Returns: boolean
+      }
+      is_teacher_of_student: {
+        Args: { student_id: string }
+        Returns: boolean
+      }
+      join_classroom: {
+        Args: { class_code: string }
+        Returns: Json
+      }
     }
     Enums: {
       district_consent_type:
