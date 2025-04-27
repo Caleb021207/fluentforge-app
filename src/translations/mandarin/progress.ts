@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
@@ -20,22 +21,6 @@ const progressTranslations: TranslationRecord = {
   viewingDetails: "查看详情",
   featureComingSoon: "此功能将在未来的更新中实现。",
   recentCertificationAttempts: "最近的认证尝试",
-  createFirstClassToSeeProgress: "创建您的第一个班级以开始跟踪学生进度",
-  joinClassToSeeProgress: "使用班级代码加入班级以查看您的进度",
-  createNewClass: "创建新班级",
-  classCode: "班级代码",
-  studentProgress: "学生进度",
-  joinClass: "加入班级",
-  enterClassName: "输入班级名称",
-  creating: "创建中...",
-  createClass: "创建班级",
-  enterClassCode: "输入班级代码",
-  joining: "加入中...",
-  student: "学生",
-  voiceChatSessions: "语音聊天次数",
-  certificationAttempts: "认证尝试次数",
-  avgCertificationScore: "平均分数",
-  noStudentsYet: "还没有学生加入这个班级"
 };
 
 export default progressTranslations;
