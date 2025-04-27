@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -6,14 +5,14 @@ const practiceTranslations: TranslationRecord = {
   sendMessage: "संदेश भेजें",
   networkConnectionIssue: "नेटवर्क कनेक्शन समस्या, कृपया बाद में पुनः प्रयास करें",
   suggestedPrompts: "सुझाए गए प्रॉम्प्ट्स",
-  practiceIntroduction: "अपनी अंग्रेजी का अभ्यास करने के लिए AI के साथ बातचीत करें। यहां कुछ प्रॉम्प्ट्स दिए गए हैं जो आप शुरू करने के लिए उपयोग कर सकते हैं।",
+  practiceIntroduction: "अपनी अंग्रेजी का अभ्यास करने के लिए AI के साथ बातचीत करें। यहां कुछ प्रॉम्प्ट्स दिए गए हैं जो आप शुरू करने के लिए उपयोग कर सकते हैं。",
   continueConversation: "बातचीत जारी रखें...",
   translation: "अनुवाद",
   
   // Text Practice Page translations
   textPractice: "टेक्स्ट अभ्यास",
   practiceWithAITutor: "AI भाषा ट्यूटर के साथ अभ्यास करें",
-  chatWithAITutor: "अपनी अंग्रेजी का अभ्यास करने के लिए हमारे AI ट्यूटर के साथ चैट करें! AI आपके व्याकरण, शब्दावली और उच्चारण को सुधारने में मदद करेगा। भाषा या संस्कृति के बारे में प्रश्न पूछने के लिए स्वतंत्र महसूस करें।",
+  chatWithAITutor: "अपनी अंग्रेजी का अभ्यास करने के लिए हमारे AI ट्यूटर के साथ चैट करें! AI आपके व्याकरण, शब्दावली और उच्चारण को सुधारने में मदद करेगा। भाषा या संस्कृति के बारे में प्रश्न पूछने के लिए स्वतंत्र महसूस करें。",
   startVoiceChat: "वॉइस चैट शुरू करें",
   stopVoiceChat: "वॉइस चैट बंद करें",
   getSkillsAssessment: "कौशल मूल्यांकन प्राप्त करें",
@@ -36,11 +35,14 @@ const practiceTranslations: TranslationRecord = {
   // Additional translations
   send: "भेजें",
   sendEnglishPracticePrompt: "अंग्रेजी अभ्यास प्रॉम्प्ट भेजें",
-  noticeTextBasedPractice: "नोट: यह टेक्स्ट आधारित अभ्यास सुविधा है। वॉइस अभ्यास के लिए, हमारी असीमित वॉइस चैट या प्रीमियम वॉइस चैट सुविधाओं का प्रयास करें।",
+  noticeTextBasedPractice: "नोट: यह टेक्स्ट आधारित अभ्यास सुविधा है। वॉइस अभ्यास के लिए, हमारी असीमित वॉइस चैट या प्रीमियम वॉइस चैट सुविधाओं का प्रयास करें。",
   askAboutGrammarRules: "व्याकरण नियमों के बारे में पूछें",
   practiceConversationsDifferentSituations: "विभिन्न परिस्थितियों में वार्तालाप का अभ्यास करें",
   learnNewVocabulary: "नई शब्दावली सीखें",
   discussCulturalTopics: "सांस्कृतिक विषयों पर चर्चा करें",
+  
+  practicePrompt: "नमस्ते! मैं {{targetLanguage}} वार्तालाप का अभ्यास करना चाहता/चाहती हूं। कृपया मेरी {{targetLanguage}} व्याकरण, शब्दावली और उपयोग को सुधारने में मदद करें। क्या हम बुनियादी बातचीत से शुरू कर सकते हैं?",
+  chatPlaceholder: "{{targetLanguage}} का अभ्यास करने के लिए अपना संदेश टाइप करें..."
 };
 
 export default practiceTranslations;

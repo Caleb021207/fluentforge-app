@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -77,12 +76,18 @@ const practiceTranslations: TranslationRecord = {
   
   // Additional translations for the practice page
   chatWithAITutor: "AIチューターとのテキスト会話で英語を練習しましょう！AIが文法、語彙、使い方を修正するのを手伝います。言語や文化についての質問も自由にしてください。",
-  noticeTextBasedPractice: "注：これはテキストベースの練習機能です。音声練習には、無制限音声チャットまたはプレミアム音声チャット機能をお試しください。",
+  noticeTextBasedPractice: "注：これはテキストベースの練習機能です。音声練習には、無制限音声チャットまたはプレミアム音���チャット機能をお試しください。",
   sendEnglishPracticePrompt: "英語練習プロンプトを送信",
   askAboutGrammarRules: "文法ルールについて質問する",
   practiceConversationsDifferentSituations: "様々な状況での会話を練習する",
   learnNewVocabulary: "新しい語彙を学ぶ",
-  discussCulturalTopics: "文化的なトピックについて議論する"
+  discussCulturalTopics: "文化的なトピックについて議論する",
+  
+  // Practice prompt
+  practicePrompt: "こんにちは！{{targetLanguage}}の会話を練習したいと思います。{{targetLanguage}}の文法、語彙、使い方を修正してください。基本的な会話から始められますか？",
+  
+  // Chat placeholder
+  chatPlaceholder: "{{targetLanguage}}を練習するためのメッセージを入力してください..."
 };
 
 export default practiceTranslations;

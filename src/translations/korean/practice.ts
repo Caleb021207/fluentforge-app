@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -30,6 +29,8 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "다양한 상황에서 대화 연습하기",
   learnNewVocabulary: "새로운 어휘 배우기",
   discussCulturalTopics: "문화적 주제 토론하기",
+  practicePrompt: "안녕하세요! {{targetLanguage}} 대화를 연습하고 싶습니다. {{targetLanguage}}의 문법, 어휘, 사용법을 교정해주세요. 기본적인 대화부터 시작할 수 있을까요?",
+  chatPlaceholder: "{{targetLanguage}} 연습을 위한 메시지를 입력하세요..."
 };
 
 export default practiceTranslations;

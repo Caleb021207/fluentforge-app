@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -32,7 +31,10 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "Latih percakapan dalam situasi berbeda",
   learnNewVocabulary: "Pelajari kosakata baru",
   discussCulturalTopics: "Diskusikan topik-topik budaya",
-  practiceConversation: "Latihan Percakapan"
+  practiceConversation: "Latihan Percakapan",
+  
+  practicePrompt: "Halo! Saya ingin berlatih percakapan {{targetLanguage}}. Mohon bantu saya memperbaiki tata bahasa, kosakata, dan penggunaan {{targetLanguage}}. Bisakah kita mulai dengan percakapan dasar?",
+  chatPlaceholder: "Ketik pesan Anda untuk berlatih {{targetLanguage}}..."
 };
 
 export default practiceTranslations;

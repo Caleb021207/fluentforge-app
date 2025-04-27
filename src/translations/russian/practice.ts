@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -36,7 +35,10 @@ const practiceTranslations: TranslationRecord = {
   noticeTextBasedPractice: "Примечание: Это функция текстовой практики. Для голосовой практики попробуйте наши функции Безлимитный голосовой чат или Премиум голосовой чат.",
   practiceWithTextChat: "Практикуйтесь с текстовым чатом",
   practiceConversationsDifferentSituations: "Практикуйте разговоры в различных ситуациях",
-  sendEnglishPracticePrompt: "Отправить задание для практики английского"
+  sendEnglishPracticePrompt: "Отправить задание для практики английского",
+  
+  practicePrompt: "Здравствуйте! Я хотел(а) бы попрактиковаться в разговоре на {{targetLanguage}}. Пожалуйста, помогите мне исправить грамматику, словарный запас и использование {{targetLanguage}}. Можем ли мы начать с базовой беседы?",
+  chatPlaceholder: "Введите сообщение, чтобы практиковать {{targetLanguage}}..."
 };
 
 export default practiceTranslations;

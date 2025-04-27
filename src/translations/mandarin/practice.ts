@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -30,6 +29,8 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "在不同情境中练习对话",
   learnNewVocabulary: "学习新词汇",
   discussCulturalTopics: "讨论文化话题",
+  practicePrompt: "你好！我想练习{{targetLanguage}}对话。请帮我纠正{{targetLanguage}}的语法、词汇和用法。我们可以从基本对话开始吗？",
+  chatPlaceholder: "输入消息练习{{targetLanguage}}..."
 };
 
 export default practiceTranslations;
