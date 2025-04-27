@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -95,7 +96,7 @@ export const useClassData = () => {
       }
 
       const { data: metricsData, error: metricsError } = await supabase
-        .from('class_student_metrics')
+        .from('student_metrics')
         .select(`
           text_practice_calls,
           premium_voice_calls,
