@@ -26,6 +26,14 @@ interface StudentUsageMetrics {
   last_lesson_progress: string | null;
 }
 
+interface ClassroomResponse {
+  success: boolean;
+  message: string;
+  classroom_id?: string;
+  class_code?: string;
+  class_name?: string;
+}
+
 export function useClassroom() {
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
   const [classrooms, setClassrooms] = useState<ClassroomData[]>([]);
@@ -57,10 +65,11 @@ export function useClassroom() {
       return null;
     }
 
-    if (data.success) {
+    const response = data as ClassroomResponse;
+    if (response.success) {
       toast({
         title: t("success"),
-        description: data.message
+        description: response.message
       });
       fetchClassrooms();
       return data;
@@ -83,17 +92,18 @@ export function useClassroom() {
       return false;
     }
 
-    if (data.success) {
+    const response = data as ClassroomResponse;
+    if (response.success) {
       toast({
         title: t("success"),
-        description: data.message
+        description: response.message
       });
       return true;
     }
 
     toast({
       title: t("error"),
-      description: data.message,
+      description: response.message,
       variant: "destructive"
     });
     return false;
@@ -124,7 +134,7 @@ export function useClassroom() {
       return;
     }
 
-    setStudentMetrics(data);
+    setStudentMetrics(data as StudentUsageMetrics[]);
   };
 
   useEffect(() => {
