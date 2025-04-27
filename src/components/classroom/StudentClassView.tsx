@@ -33,7 +33,7 @@ const StudentClassView = () => {
           return;
         }
 
-        // First get the classroom membership with related data
+        // First get the classroom membership with the classroom code
         const { data: membershipData, error: membershipError } = await supabase
           .from('classroom_memberships')
           .select(`
@@ -41,10 +41,7 @@ const StudentClassView = () => {
             classroom: classroom_codes (
               class_name,
               code,
-              teacher: profiles (
-                email,
-                display_name
-              )
+              teacher_id
             )
           `)
           .eq('student_id', session.session.user.id)
@@ -57,13 +54,34 @@ const StudentClassView = () => {
           return; // No class joined
         }
 
+        // Then get the teacher's profile information in a separate query
+        const teacherId = membershipData.classroom?.teacher_id;
+        
+        let teacherEmail = undefined;
+        let teacherName = undefined;
+        
+        if (teacherId) {
+          const { data: teacherData, error: teacherError } = await supabase
+            .from('profiles')
+            .select('email, display_name')
+            .eq('id', teacherId)
+            .maybeSingle();
+          
+          if (teacherError) {
+            console.error('Error fetching teacher data:', teacherError);
+          } else if (teacherData) {
+            teacherEmail = teacherData.email;
+            teacherName = teacherData.display_name;
+          }
+        }
+
         // Transform the data to match our ClassData interface
         const classInfo: ClassData = {
-          class_name: membershipData.classroom.class_name,
-          teacher_email: membershipData.classroom.teacher?.email,
-          teacher_name: membershipData.classroom.teacher?.display_name,
+          class_name: membershipData.classroom?.class_name || 'Unknown Class',
+          teacher_email: teacherEmail,
+          teacher_name: teacherName,
           joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-          code: membershipData.classroom.code
+          code: membershipData.classroom?.code || 'Unknown Code'
         };
 
         setClassData(classInfo);
