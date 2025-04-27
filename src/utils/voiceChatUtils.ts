@@ -71,18 +71,17 @@ export const calculateRemainingWeeklyTime = async (userId: string): Promise<numb
       console.log(`Found ${abandonedSessions.length} abandoned sessions for user ${userId}`);
       
       // Close abandoned sessions with max 10 min duration
-      const updates = abandonedSessions.map(session => {
+      for (const session of abandonedSessions) {
         const sessionStart = new Date(session.session_start);
         const maxEnd = new Date(sessionStart.getTime() + 10 * 60 * 1000);
         const sessionEnd = maxEnd < now ? maxEnd : now;
         
-        return {
-          id: session.id,
-          session_end: sessionEnd.toISOString()
-        };
-      });
-      
-      await supabase.from('premium_voice_chat_sessions').upsert(updates);
+        // Update each session individually instead of using upsert with an array
+        await supabase
+          .from('premium_voice_chat_sessions')
+          .update({ session_end: sessionEnd.toISOString() })
+          .eq('id', session.id);
+      }
     }
     
     // Now get all completed sessions for this week
