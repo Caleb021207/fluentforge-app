@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +34,6 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
 
       if (error) throw error;
       
-      // Transform data to match StudentMetrics interface
       const transformedData: StudentMetrics[] = (data || []).map(student => ({
         student_id: student.student_id || null,
         student_name: student.student_name || null,

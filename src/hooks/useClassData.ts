@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -14,11 +13,10 @@ interface ClassData {
     text_practice_calls: number;
     premium_voice_calls: number;
     premium_voice_sessions: number;
-    premium_voice_minutes: number;
+    premium_voice_minutes_used: number;
+    premium_voice_minutes_remaining: number;
     certification_attempts: number;
     highest_certification_score: number;
-    completed_lessons: number;
-    total_lessons: number;
     last_activity: string | null;
   };
 }
@@ -83,7 +81,6 @@ export const useClassData = () => {
         }
       }
 
-      // Try to trigger a recalculation of metrics
       try {
         const { error: recalcError } = await supabase.rpc(
           'recalculate_student_metrics',
@@ -97,10 +94,18 @@ export const useClassData = () => {
         console.error('Failed to recalculate metrics:', e);
       }
 
-      // Get student metrics from the class_student_metrics view with more detailed error logging
       const { data: metricsData, error: metricsError } = await supabase
         .from('class_student_metrics')
-        .select('*')
+        .select(`
+          text_practice_calls,
+          premium_voice_calls,
+          premium_voice_sessions,
+          premium_voice_minutes_used,
+          premium_voice_minutes_remaining,
+          certification_attempts,
+          highest_certification_score,
+          last_activity
+        `)
         .eq('classroom_id', membershipData.classroom_id)
         .eq('student_id', session.session.user.id)
         .maybeSingle();
@@ -134,7 +139,6 @@ export const useClassData = () => {
   };
 
   useEffect(() => {
-    // Enable realtime updates for the metrics table
     const channel = supabase
       .channel('class_metrics_changes')
       .on(
@@ -151,7 +155,6 @@ export const useClassData = () => {
       )
       .subscribe();
 
-    // Initial fetch
     fetchClassData();
 
     return () => {
