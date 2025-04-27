@@ -33,7 +33,8 @@ const StudentClassView = () => {
           return;
         }
 
-        // First get the classroom membership with the classroom code
+        console.log('Fetching class data for user:', session.session.user.id);
+
         const { data: membershipData, error: membershipError } = await supabase
           .from('classroom_memberships')
           .select(`
@@ -47,6 +48,9 @@ const StudentClassView = () => {
           .eq('student_id', session.session.user.id)
           .maybeSingle();
 
+        console.log('Membership data:', membershipData);
+        console.log('Membership error:', membershipError);
+
         if (membershipError) throw membershipError;
         
         if (!membershipData) {
@@ -54,7 +58,6 @@ const StudentClassView = () => {
           return; // No class joined
         }
 
-        // Then get the teacher's profile information in a separate query
         const teacherId = membershipData.classroom?.teacher_id;
         
         let teacherEmail = undefined;
@@ -66,6 +69,8 @@ const StudentClassView = () => {
             .select('email, display_name')
             .eq('id', teacherId)
             .maybeSingle();
+          
+          console.log('Teacher data:', teacherData);
           
           if (teacherError) {
             console.error('Error fetching teacher data:', teacherError);
@@ -83,6 +88,8 @@ const StudentClassView = () => {
           joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
           code: membershipData.classroom?.code || 'Unknown Code'
         };
+
+        console.log('Transformed class info:', classInfo);
 
         setClassData(classInfo);
       } catch (error: any) {
