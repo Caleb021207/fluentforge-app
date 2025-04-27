@@ -1,10 +1,10 @@
 import React from 'react';
-import { useLocalization } from "@/context/LocalizationContext";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface StudentMetrics {
   student_id: string | null;
@@ -31,7 +31,6 @@ interface ClassStudentsListProps {
 }
 
 const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStudentsListProps) => {
-  const { t } = useLocalization();
   const { toast } = useToast();
   const [students, setStudents] = React.useState<StudentMetrics[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -66,7 +65,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
     };
 
     fetchStudents();
-  }, [classId, open, toast, t]);
+  }, [classId, open, toast]);
 
   const handleSort = (field: keyof StudentMetrics) => {
     if (field === sortField) {
@@ -84,7 +83,6 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
       <ChevronDown className="w-4 h-4 inline ml-1" />;
   };
 
-  // Sort students based on current sort field and direction
   const sortedStudents = [...students].sort((a, b) => {
     const valA = a[sortField];
     const valB = b[sortField];
@@ -108,13 +106,13 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
       <DialogContent className="max-w-7xl">
         <DialogHeader>
           <DialogTitle>
-            {className} - {t("students")}
+            {className} - {CLASSROOM_TEXT.STUDENTS}
           </DialogTitle>
         </DialogHeader>
         {isLoading ? (
-          <div className="py-8 text-center">{t("loading")}</div>
-        ) : sortedStudents.length === 0 ? (
-          <div className="py-8 text-center text-muted-foreground">{t("noStudentsInClass")}</div>
+          <div className="py-8 text-center">Loading...</div>
+        ) : students.length === 0 ? (
+          <div className="py-8 text-center text-muted-foreground">{CLASSROOM_TEXT.NO_STUDENTS_IN_CLASS}</div>
         ) : (
           <div className="max-h-[600px] overflow-auto">
             <Table>
@@ -124,58 +122,58 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
                     className="cursor-pointer"
                     onClick={() => handleSort('student_name')}
                   >
-                    {t("name")} <SortIcon field="student_name" />
+                    {CLASSROOM_TEXT.NAME} <SortIcon field="student_name" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('certification_attempts')}
                   >
-                    {t("certificationAttempts")} <SortIcon field="certification_attempts" />
+                    {CLASSROOM_TEXT.CERTIFICATION_ATTEMPTS} <SortIcon field="certification_attempts" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('highest_certification_score')}
                   >
-                    {t("highestScore")} <SortIcon field="highest_certification_score" />
+                    {CLASSROOM_TEXT.HIGH_SCORE} <SortIcon field="highest_certification_score" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('voice_chat_sessions')}
                   >
-                    {t("voiceSessions")} <SortIcon field="voice_chat_sessions" />
+                    {CLASSROOM_TEXT.VOICE_CHAT_SESSIONS} <SortIcon field="voice_chat_sessions" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('voice_chat_minutes')}
                   >
-                    {t("voiceMinutes")} <SortIcon field="voice_chat_minutes" />
+                    {CLASSROOM_TEXT.VOICE_CHAT_MINUTES} <SortIcon field="voice_chat_minutes" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('text_inputs')}
                   >
-                    {t("textInputs")} <SortIcon field="text_inputs" />
+                    {CLASSROOM_TEXT.TEXT_INPUTS} <SortIcon field="text_inputs" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('text_outputs')}
                   >
-                    {t("textOutputs")} <SortIcon field="text_outputs" />
+                    {CLASSROOM_TEXT.TEXT_OUTPUTS} <SortIcon field="text_outputs" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('premium_voice_sessions')}
                   >
-                    {t("unlimitedSessions")} <SortIcon field="premium_voice_sessions" />
+                    {CLASSROOM_TEXT.UNLIMITED_SESSIONS} <SortIcon field="premium_voice_sessions" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('premium_voice_minutes')}
                   >
-                    {t("unlimitedMinutes")} <SortIcon field="premium_voice_minutes" />
+                    {CLASSROOM_TEXT.UNLIMITED_MINUTES} <SortIcon field="premium_voice_minutes" />
                   </TableHead>
                   <TableHead>
-                    {t("lastActivity")}
+                    {CLASSROOM_TEXT.LAST_ACTIVITY}
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -183,7 +181,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
                 {sortedStudents.map((student, index) => (
                   <TableRow key={student.student_id || index}>
                     <TableCell className="font-medium">
-                      {student.student_name || student.student_email || t("unnamed")}
+                      {student.student_name || student.student_email || CLASSROOM_TEXT.UNNAMED}
                     </TableCell>
                     <TableCell>{student.certification_attempts}</TableCell>
                     <TableCell>

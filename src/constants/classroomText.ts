@@ -1,4 +1,3 @@
-
 export const CLASSROOM_TEXT = {
   // Page titles
   MY_CLASS: "My Class",
@@ -41,5 +40,9 @@ export const CLASSROOM_TEXT = {
   UNLIMITED_MINUTES: "Unlimited Minutes",
   LAST_ACTIVITY: "Last Activity",
   NO_STUDENTS_IN_CLASS: "No students in this class yet",
-  UNNAMED: "Unnamed"
+  UNNAMED: "Unnamed",
+  
+  // New constants for ClassStudentsList
+  HIGH_SCORE: "Highest Score",
+  VOICE_CHAT_MINUTES: "Voice Chat Minutes"
 } as const;
