@@ -37,11 +37,14 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
       
       const transformedData: StudentMetrics[] = (data || []).map(student => {
         // Handle database schema differences by checking which fields are available
-        const minutes_used = 'premium_voice_minutes_used' in student 
+        // Ensure we're working with proper number types
+        const minutes_used: number = typeof student.premium_voice_minutes_used === 'number' 
           ? student.premium_voice_minutes_used 
-          : student.premium_voice_minutes;
+          : (typeof student.premium_voice_minutes === 'number' 
+              ? student.premium_voice_minutes 
+              : 0);
           
-        const minutes_remaining = 'premium_voice_minutes_remaining' in student
+        const minutes_remaining: number = typeof student.premium_voice_minutes_remaining === 'number'
           ? student.premium_voice_minutes_remaining
           : 10;
 
@@ -52,8 +55,8 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
           text_practice_calls: student.text_practice_calls || 0,
           premium_voice_calls: student.premium_voice_calls || 0,
           premium_voice_sessions: student.premium_voice_sessions || 0,
-          premium_voice_minutes_used: minutes_used || 0,
-          premium_voice_minutes_remaining: minutes_remaining || 10,
+          premium_voice_minutes_used: minutes_used,
+          premium_voice_minutes_remaining: minutes_remaining,
           certification_attempts: student.certification_attempts || 0,
           highest_certification_score: student.highest_certification_score || 0,
           completed_lessons: student.completed_lessons || 0,
