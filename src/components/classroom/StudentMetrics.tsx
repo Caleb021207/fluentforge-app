@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
+import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface StudentMetricsProps {
   metrics: {
@@ -35,30 +36,30 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <span className="font-medium">{t("certificationAttempts")}:</span>{' '}
+          <span className="font-medium">{CLASSROOM_TEXT.CERTIFICATION_ATTEMPTS}:</span>{' '}
           {metrics.certification_attempts}
         </div>
         {metrics.highest_certification_score > 0 && (
           <div>
-            <span className="font-medium">{t("highestScore")}:</span>{' '}
+            <span className="font-medium">{CLASSROOM_TEXT.HIGH_SCORE}:</span>{' '}
             {metrics.highest_certification_score}%
           </div>
         )}
         <div>
-          <span className="font-medium">{t("practiceCalls")}:</span>{' '}
+          <span className="font-medium">{CLASSROOM_TEXT.PRACTICE_CALLS}:</span>{' '}
           {totalPracticeCalls}
         </div>
         <div>
-          <span className="font-medium">{t("premiumVoiceSessions")}:</span>{' '}
+          <span className="font-medium">{CLASSROOM_TEXT.PREMIUM_VOICE_SESSIONS}:</span>{' '}
           {metrics.premium_voice_sessions}
         </div>
         <div>
-          <span className="font-medium">{t("premiumVoiceMinutes")}:</span>{' '}
+          <span className="font-medium">{CLASSROOM_TEXT.PREMIUM_VOICE_MINUTES}:</span>{' '}
           {voiceMinutesDisplay}
         </div>
         {metrics.last_activity && (
           <div>
-            <span className="font-medium">{t("lastActivity")}:</span>{' '}
+            <span className="font-medium">{CLASSROOM_TEXT.LAST_ACTIVITY}:</span>{' '}
             {new Date(metrics.last_activity).toLocaleDateString()}
           </div>
         )}
