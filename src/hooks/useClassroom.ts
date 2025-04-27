@@ -65,7 +65,8 @@ export function useClassroom() {
       return null;
     }
 
-    const response = data as ClassroomResponse;
+    // Use type assertion with an intermediate step for safety
+    const response = data as unknown as ClassroomResponse;
     if (response.success) {
       toast({
         title: t("success"),
@@ -92,7 +93,8 @@ export function useClassroom() {
       return false;
     }
 
-    const response = data as ClassroomResponse;
+    // Use type assertion with an intermediate step for safety
+    const response = data as unknown as ClassroomResponse;
     if (response.success) {
       toast({
         title: t("success"),
@@ -134,7 +136,8 @@ export function useClassroom() {
       return;
     }
 
-    setStudentMetrics(data as StudentUsageMetrics[]);
+    // Use proper type assertion to match the interface
+    setStudentMetrics(data as unknown as StudentUsageMetrics[]);
   };
 
   useEffect(() => {
