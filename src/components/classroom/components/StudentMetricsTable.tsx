@@ -46,29 +46,15 @@ export const StudentMetricsTable = ({
               onSort={onSort}
             />
             <SortableTableHeader
-              field="voice_chat_sessions"
-              label={CLASSROOM_TEXT.VOICE_CHAT_SESSIONS}
+              field="text_practice_calls"
+              label={CLASSROOM_TEXT.TEXT_PRACTICE_CALLS}
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableTableHeader
-              field="voice_chat_minutes"
-              label={CLASSROOM_TEXT.VOICE_CHAT_MINUTES}
-              currentSortField={sortField}
-              sortDirection={sortDirection}
-              onSort={onSort}
-            />
-            <SortableTableHeader
-              field="text_inputs"
-              label={CLASSROOM_TEXT.TEXT_INPUTS}
-              currentSortField={sortField}
-              sortDirection={sortDirection}
-              onSort={onSort}
-            />
-            <SortableTableHeader
-              field="text_outputs"
-              label={CLASSROOM_TEXT.TEXT_OUTPUTS}
+              field="premium_voice_calls"
+              label={CLASSROOM_TEXT.PREMIUM_VOICE_CALLS}
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -108,4 +94,3 @@ export const StudentMetricsTable = ({
     </div>
   );
 };
-

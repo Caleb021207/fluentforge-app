@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
@@ -109,24 +110,13 @@ export const useVoiceChat = () => {
         return;
       }
       
-      // Create voice chat session
-      const { data: sessionData, error: sessionError } = await supabase
-        .from('voice_practice_interactions')
+      // Track this as a voice API call
+      await supabase
+        .from('api_calls_tracking')
         .insert({
-          user_id: user.id
-        })
-        .select()
-        .single();
-        
-      if (sessionError) {
-        console.error("Error creating session:", sessionError);
-        toast({
-          title: t("error"),
-          description: t("failedToCreateSession"),
-          variant: "destructive",
+          user_id: user.id,
+          call_type: 'unlimited_voice'
         });
-        return;
-      }
 
       const selectedAgentId = getAgentIdForLanguage(currentLanguage);
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
@@ -156,29 +146,6 @@ export const useVoiceChat = () => {
     if (isConversationActive()) {
       await conversation.endSession();
       console.log("Ended conversation session");
-      
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data: activeSession, error: findError } = await supabase
-            .from('voice_practice_interactions')
-            .select('id')
-            .eq('user_id', user.id)
-            .is('session_end', null)
-            .order('session_start', { ascending: false })
-            .limit(1)
-            .single();
-            
-          if (!findError && activeSession) {
-            await supabase
-              .from('voice_practice_interactions')
-              .update({ session_end: new Date().toISOString() })
-              .eq('id', activeSession.id);
-          }
-        }
-      } catch (error) {
-        console.error("Error updating session end time:", error);
-      }
       
       setVoiceChatTimeRemaining(null);
       toast({

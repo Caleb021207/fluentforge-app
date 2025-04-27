@@ -2,6 +2,26 @@
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
+  yourProgress: "Kemajuan Anda",
+  lessonsCompleted: "Pelajaran Selesai",
+  throughCurriculum: "melalui kurikulum",
+  experienceAchievements: "Pencapaian Pengalaman",
+  xpPoints: "Poin XP",
+  dailyStreak: "Rangkaian Harian",
+  days: "hari",
+  nextLevel: "Level Berikutnya",
+  yourLearningProgress: "Kemajuan Belajar Anda",
+  scoreTrends: "Tren Skor",
+  noProgressData: "Tidak Ada Data Kemajuan",
+  takeTestToSeeProgress: "Ambil tes untuk melihat kemajuan Anda",
+  completeTestsToSeeProgress: "Selesaikan beberapa percobaan sertifikasi untuk melihat kemajuan Anda!",
+  offlineDataMayNotBeUpToDate: "Anda sedang offline. Data yang ditampilkan mungkin tidak diperbarui.",
+  networkConnectionIssue: "Masalah koneksi jaringan. Tidak dapat memuat data kemajuan Anda.",
+  problemLoadingProgressData: "Terjadi masalah saat memuat data kemajuan Anda. Silakan coba lagi nanti.",
+  failedToLoadProgressData: "Gagal memuat data kemajuan. Silakan coba lagi nanti.",
+  viewingDetails: "Melihat detail",
+  featureComingSoon: "Fitur ini akan diimplementasikan dalam pembaruan mendatang.",
+  recentCertificationAttempts: "Percobaan Sertifikasi Terakhir",
   myProgress: "Kemajuan Saya",
   learningStats: "Statistik Pembelajaran",
   daysStreak: "Rangkaian Hari",
@@ -26,7 +46,15 @@ const progressTranslations: TranslationRecord = {
   dailyGoal: "Target Harian",
   completed: "Selesai",
   authRequired: "Autentikasi Diperlukan",
-  pleaseSignInDashboard: "Silakan masuk untuk mengakses dasbor kemajuan"
+  pleaseSignInDashboard: "Silakan masuk untuk mengakses dasbor kemajuan",
+  refresh: "Segarkan",
+  refreshing: "Menyegarkan...",
+  refreshingProgressData: "Menyegarkan data kemajuan Anda...",
+  metricsRefreshed: "Metrik berhasil disegarkan",
+  failedToRefreshMetrics: "Gagal menyegarkan metrik. Silakan coba lagi nanti.",
+  textPracticeCalls: "Panggilan Praktik Teks",
+  unlimitedMinutes: "Menit Suara Tak Terbatas",
+  unlimitedSessions: "Sesi Suara Tak Terbatas"
 };
 
 export default progressTranslations;

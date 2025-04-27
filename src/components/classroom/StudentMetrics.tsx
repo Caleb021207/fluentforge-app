@@ -6,6 +6,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 interface StudentMetricsProps {
   metrics: {
     text_practice_calls: number;
+    premium_voice_calls: number;
     premium_voice_sessions: number;
     premium_voice_minutes: number;
     certification_attempts: number;

@@ -3,10 +3,8 @@ export interface StudentMetrics {
   student_id: string | null;
   student_name: string | null;
   student_email: string | null;
-  voice_chat_sessions: number;
-  voice_chat_minutes: number;
-  text_inputs: number;
-  text_outputs: number;
+  text_practice_calls: number;
+  premium_voice_calls: number;
   premium_voice_sessions: number;
   premium_voice_minutes: number;
   certification_attempts: number;

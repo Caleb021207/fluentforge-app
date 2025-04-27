@@ -13,6 +13,7 @@ const progressTranslations: TranslationRecord = {
   yourLearningProgress: "تقدم التعلم الخاص بك",
   scoreTrends: "اتجاهات النتائج",
   noProgressData: "لا توجد بيانات تقدم",
+  takeTestToSeeProgress: "خذ اختبارًا لرؤية تقدمك",
   completeTestsToSeeProgress: "أكمل بعض محاولات الشهادة لرؤية تقدمك!",
   offlineDataMayNotBeUpToDate: "أنت غير متصل بالإنترنت. قد لا تكون البيانات المعروضة محدثة.",
   networkConnectionIssue: "مشكلة في اتصال الشبكة. لا يمكن تحميل بيانات التقدم الخاصة بك.",
@@ -21,6 +22,14 @@ const progressTranslations: TranslationRecord = {
   viewingDetails: "عرض التفاصيل",
   featureComingSoon: "هذه الميزة ستكون متاحة في تحديث مستقبلي.",
   recentCertificationAttempts: "محاولات الشهادة الأخيرة",
+  refresh: "تحديث",
+  refreshing: "جارٍ التحديث",
+  refreshingProgressData: "جارٍ تحديث بيانات التقدم الخاص بك...",
+  metricsRefreshed: "تم تحديث المقاييس بنجاح",
+  failedToRefreshMetrics: "فشل في تحديث المقاييس. يرجى المحاولة مرة أخرى لاحقًا.",
+  textPracticeCalls: "مكالمات التدريب النصي",
+  unlimitedMinutes: "دقائق الصوت غير المحدودة",
+  unlimitedSessions: "جلسات الصوت غير المحدودة"
 };
 
 export default progressTranslations;

@@ -20,10 +20,8 @@ export const StudentTableRow = ({ student }: StudentTableRowProps) => {
           ? `${Math.round(student.highest_certification_score)}%` 
           : '-'}
       </TableCell>
-      <TableCell>{student.voice_chat_sessions}</TableCell>
-      <TableCell>{Math.round(student.voice_chat_minutes)} min</TableCell>
-      <TableCell>{student.text_inputs}</TableCell>
-      <TableCell>{student.text_outputs}</TableCell>
+      <TableCell>{student.text_practice_calls}</TableCell>
+      <TableCell>{student.premium_voice_calls}</TableCell>
       <TableCell>{student.premium_voice_sessions}</TableCell>
       <TableCell>{Math.round(student.premium_voice_minutes)} min</TableCell>
       <TableCell>

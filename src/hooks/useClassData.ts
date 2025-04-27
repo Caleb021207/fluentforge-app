@@ -11,10 +11,8 @@ interface ClassData {
   joined_at: string;
   code: string;
   metrics?: {
-    voice_chat_sessions: number;
-    voice_chat_minutes: number;
-    text_inputs: number;
-    text_outputs: number;
+    text_practice_calls: number;
+    premium_voice_calls: number;
     premium_voice_sessions: number;
     premium_voice_minutes: number;
     certification_attempts: number;
