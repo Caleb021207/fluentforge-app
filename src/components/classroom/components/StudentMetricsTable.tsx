@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Table, TableHeader, TableBody, TableHead } from "@/components/ui/table";
+import { Table, TableHeader, TableBody } from "@/components/ui/table";
 import { SortableTableHeader } from './SortableTableHeader';
 import { StudentTableRow } from './StudentTableRow';
 import { StudentMetrics, SortField, SortDirection } from '../types/studentTypes';
@@ -87,7 +87,13 @@ export const StudentMetricsTable = ({
               sortDirection={sortDirection}
               onSort={onSort}
             />
-            <TableHead>{CLASSROOM_TEXT.LAST_ACTIVITY}</TableHead>
+            <SortableTableHeader
+              field="last_activity"
+              label={CLASSROOM_TEXT.LAST_ACTIVITY}
+              currentSortField={sortField}
+              sortDirection={sortDirection}
+              onSort={onSort}
+            />
           </tr>
         </TableHeader>
         <TableBody>
@@ -102,3 +108,4 @@ export const StudentMetricsTable = ({
     </div>
   );
 };
+
