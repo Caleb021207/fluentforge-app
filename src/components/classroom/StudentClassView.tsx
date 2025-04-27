@@ -27,35 +27,47 @@ const StudentClassView = () => {
           throw new Error("User not authenticated");
         }
 
-        const { data, error } = await supabase
+        // First get the classroom membership
+        const { data: membershipData, error: membershipError } = await supabase
           .from('classroom_memberships')
-          .select(`
-            classroom_id,
-            joined_at,
-            classrooms:classroom_id (
-              class_name,
-              code,
-              teacher_id,
-              teacher:teacher_id (
-                email
-              )
-            )
-          `)
+          .select('classroom_id, joined_at')
           .eq('student_id', userData.user.id)
           .single();
 
-        if (error) throw error;
-
-        if (data) {
-          const teacherEmail = data.classrooms?.teacher?.email;
-          
-          setClassData({
-            class_name: data.classrooms.class_name,
-            teacher_email: teacherEmail,
-            joined_at: new Date(data.joined_at).toLocaleDateString(),
-            code: data.classrooms.code
-          });
+        if (membershipError) throw membershipError;
+        
+        if (!membershipData) {
+          setIsLoading(false);
+          return; // No class joined
         }
+        
+        // Then get the classroom details
+        const { data: classroomData, error: classroomError } = await supabase
+          .from('classroom_codes')
+          .select('class_name, code, teacher_id')
+          .eq('id', membershipData.classroom_id)
+          .single();
+          
+        if (classroomError) throw classroomError;
+        
+        // Get teacher email if teacher_id exists
+        let teacherEmail;
+        if (classroomData.teacher_id) {
+          const { data: teacherData } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('id', classroomData.teacher_id)
+            .single();
+            
+          teacherEmail = teacherData?.email;
+        }
+
+        setClassData({
+          class_name: classroomData.class_name,
+          teacher_email: teacherEmail,
+          joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
+          code: classroomData.code
+        });
       } catch (error: any) {
         console.error('Error fetching class data:', error);
         toast({
