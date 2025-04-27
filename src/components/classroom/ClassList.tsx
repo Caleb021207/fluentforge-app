@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -151,7 +152,7 @@ const ClassList = () => {
                 size="sm"
                 onClick={() => setSelectedClass({ id: classItem.id, name: classItem.class_name })}
               >
-                <Users className="mr-2" />
+                <Users className="mr-2 h-4 w-4" />
                 {t("viewStudents")}
               </Button>
               <Button 
