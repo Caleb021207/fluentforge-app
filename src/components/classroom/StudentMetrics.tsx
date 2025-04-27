@@ -11,24 +11,19 @@ interface StudentMetricsProps {
     premium_voice_minutes: number;
     certification_attempts: number;
     highest_certification_score: number;
-    completed_lessons: number;
-    total_lessons: number;
     last_activity: string | null;
   };
 }
 
 const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
   const { t } = useLocalization();
+  const totalPracticeCalls = metrics.text_practice_calls + metrics.premium_voice_calls;
   
   return (
     <div className="mt-6 space-y-4 border-t pt-4">
       <h3 className="text-lg font-semibold">{t("yourProgress")}</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <span className="font-medium">{t("completedLessons")}:</span>{' '}
-          {metrics.completed_lessons} / {metrics.total_lessons}
-        </div>
         <div>
           <span className="font-medium">{t("certificationAttempts")}:</span>{' '}
           {metrics.certification_attempts}
@@ -40,15 +35,15 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
           </div>
         )}
         <div>
-          <span className="font-medium">{t("textPracticeCalls")}:</span>{' '}
-          {metrics.text_practice_calls}
+          <span className="font-medium">{t("practiceCalls")}:</span>{' '}
+          {totalPracticeCalls}
         </div>
         <div>
-          <span className="font-medium">{t("unlimitedSessions")}:</span>{' '}
+          <span className="font-medium">{t("premiumVoiceSessions")}:</span>{' '}
           {metrics.premium_voice_sessions}
         </div>
         <div>
-          <span className="font-medium">{t("unlimitedMinutes")}:</span>{' '}
+          <span className="font-medium">{t("premiumVoiceMinutes")}:</span>{' '}
           {Math.round(metrics.premium_voice_minutes)} min
         </div>
         {metrics.last_activity && (

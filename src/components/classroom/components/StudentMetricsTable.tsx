@@ -47,28 +47,21 @@ export const StudentMetricsTable = ({
             />
             <SortableTableHeader
               field="text_practice_calls"
-              label={CLASSROOM_TEXT.TEXT_PRACTICE_CALLS}
-              currentSortField={sortField}
-              sortDirection={sortDirection}
-              onSort={onSort}
-            />
-            <SortableTableHeader
-              field="premium_voice_calls"
-              label={CLASSROOM_TEXT.PREMIUM_VOICE_CALLS}
+              label={CLASSROOM_TEXT.PRACTICE_CALLS}
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableTableHeader
               field="premium_voice_sessions"
-              label={CLASSROOM_TEXT.UNLIMITED_SESSIONS}
+              label={CLASSROOM_TEXT.PREMIUM_VOICE_SESSIONS}
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableTableHeader
               field="premium_voice_minutes"
-              label={CLASSROOM_TEXT.UNLIMITED_MINUTES}
+              label={CLASSROOM_TEXT.PREMIUM_VOICE_MINUTES}
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}

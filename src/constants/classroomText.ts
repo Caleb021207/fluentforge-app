@@ -1,4 +1,3 @@
-
 export const CLASSROOM_TEXT = {
   // Page titles
   MY_CLASS: "My Class",
@@ -34,13 +33,10 @@ export const CLASSROOM_TEXT = {
   NAME: "Name",
   COMPLETED_LESSONS: "Completed Lessons",
   CERTIFICATION_ATTEMPTS: "Certification Attempts",
-  TEXT_PRACTICE_CALLS: "Text Practice Calls",
-  PREMIUM_VOICE_CALLS: "Premium Voice Calls",
+  PRACTICE_CALLS: "Practice Calls",
   PREMIUM_VOICE_SESSIONS: "Premium Voice Sessions",
   PREMIUM_VOICE_MINUTES: "Premium Voice Minutes",
   VOICE_CHAT_MINUTES: "Voice Chat Minutes",
-  UNLIMITED_SESSIONS: "Unlimited Sessions",
-  UNLIMITED_MINUTES: "Unlimited Minutes",
   LAST_ACTIVITY: "Last Activity",
   NO_STUDENTS_IN_CLASS: "No students in this class yet",
   UNNAMED: "Unnamed",
