@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones, LayoutDashboard } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, LayoutDashboard, LockKeyhole } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,7 +70,7 @@ const Navigation = () => {
         <Icon className="h-5 w-5 md:mr-2" />
         <span className="hidden md:inline">{t(item.label)}</span>
         {item.requiresAuth && !isLoggedIn && (
-          <Lock className="h-4 w-4 ml-2 opacity-50" />
+          <LockKeyhole className="h-4 w-4 ml-2 opacity-50" />
         )}
       </Button>
     );
@@ -156,3 +156,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
