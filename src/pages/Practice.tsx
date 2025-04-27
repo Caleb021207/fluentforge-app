@@ -9,7 +9,6 @@ import { useChatMessages } from "@/components/practice/hooks/useChatMessages";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
-import LocalizationDebug from "@/components/practice/LocalizationDebug";
 
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
@@ -29,11 +28,6 @@ const Practice = () => {
         setTargetLanguage("english");
       }
     }
-    
-    // Debug log
-    console.log("Practice page loaded. Current language:", currentLanguage);
-    console.log("Saved native language:", savedNativeLanguage);
-    console.log("Saved target language:", savedTargetLanguage);
   }, [currentLanguage]);
   
   const {
@@ -83,9 +77,6 @@ const Practice = () => {
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />
-      
-      {/* Add debug component to help diagnose localization issues */}
-      <LocalizationDebug />
     </div>
   );
 };
