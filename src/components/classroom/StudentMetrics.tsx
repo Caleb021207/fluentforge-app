@@ -2,13 +2,15 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 
 interface StudentMetricsProps {
   metrics: {
     text_practice_calls: number;
     premium_voice_calls: number;
     premium_voice_sessions: number;
-    premium_voice_minutes: number;
+    premium_voice_minutes_used: number;
+    premium_voice_minutes_remaining: number;
     certification_attempts: number;
     highest_certification_score: number;
     last_activity: string | null;
@@ -17,8 +19,15 @@ interface StudentMetricsProps {
 
 const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
   const { t } = useLocalization();
+  const { isTeacher } = useTeacherStatus();
+  
   // Calculate total practice calls
   const totalPracticeCalls = metrics.text_practice_calls + metrics.premium_voice_calls;
+  
+  // Display minutes used for teachers, minutes remaining for students
+  const voiceMinutesDisplay = isTeacher ? 
+    `${Math.round(metrics.premium_voice_minutes_used)} min used` :
+    `${Math.round(metrics.premium_voice_minutes_remaining)} min remaining`;
   
   return (
     <div className="mt-6 space-y-4 border-t pt-4">
@@ -45,7 +54,7 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
         </div>
         <div>
           <span className="font-medium">{t("premiumVoiceMinutes")}:</span>{' '}
-          {Math.round(metrics.premium_voice_minutes)} min
+          {voiceMinutesDisplay}
         </div>
         {metrics.last_activity && (
           <div>

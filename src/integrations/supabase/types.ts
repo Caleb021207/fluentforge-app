@@ -439,6 +439,8 @@ export type Database = {
           last_activity: string | null
           premium_voice_calls: number | null
           premium_voice_minutes: number | null
+          premium_voice_minutes_remaining: number | null
+          premium_voice_minutes_used: number | null
           premium_voice_sessions: number | null
           student_email: string | null
           student_id: string
@@ -454,6 +456,8 @@ export type Database = {
           last_activity?: string | null
           premium_voice_calls?: number | null
           premium_voice_minutes?: number | null
+          premium_voice_minutes_remaining?: number | null
+          premium_voice_minutes_used?: number | null
           premium_voice_sessions?: number | null
           student_email?: string | null
           student_id: string
@@ -469,6 +473,8 @@ export type Database = {
           last_activity?: string | null
           premium_voice_calls?: number | null
           premium_voice_minutes?: number | null
+          premium_voice_minutes_remaining?: number | null
+          premium_voice_minutes_used?: number | null
           premium_voice_sessions?: number | null
           student_email?: string | null
           student_id?: string

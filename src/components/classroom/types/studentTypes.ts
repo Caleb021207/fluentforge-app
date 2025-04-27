@@ -6,7 +6,8 @@ export interface StudentMetrics {
   text_practice_calls: number;
   premium_voice_calls: number;
   premium_voice_sessions: number;
-  premium_voice_minutes: number;
+  premium_voice_minutes_used: number;
+  premium_voice_minutes_remaining: number;
   certification_attempts: number;
   highest_certification_score: number;
   completed_lessons: number;
