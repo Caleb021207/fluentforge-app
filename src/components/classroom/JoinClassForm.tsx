@@ -21,11 +21,13 @@ const JoinClassForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!classCode.trim()) return;
+    
     setIsLoading(true);
 
     try {
       const { data, error } = await supabase.rpc('join_classroom', {
-        class_code: classCode
+        class_code: classCode.trim()
       });
 
       if (error) throw error;
@@ -34,15 +36,21 @@ const JoinClassForm = () => {
       const response = data as unknown as ClassroomResponse;
 
       toast({
-        title: t("success"),
+        title: t("success") || "Success",
         description: response.message,
       });
       
+      // Clear the form after successful submission
       setClassCode('');
+      
+      // Reload the page to show updated class information
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error: any) {
       toast({
-        title: t("error"),
-        description: error.message,
+        title: t("error") || "Error",
+        description: error.message || "Failed to join class",
         variant: "destructive",
       });
     } finally {
@@ -52,15 +60,16 @@ const JoinClassForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-sm space-y-4 mt-8">
-      <h2 className="text-xl font-semibold">{t("joinClass")}</h2>
+      <h2 className="text-xl font-semibold">{t("joinClass") || "Join Class"}</h2>
       <Input
-        placeholder={t("enterClassCode")}
+        placeholder={t("enterClassCode") || "Enter class code"}
         value={classCode}
         onChange={(e) => setClassCode(e.target.value)}
         required
+        className="w-full"
       />
-      <Button type="submit" disabled={isLoading}>
-        {isLoading ? t("joining") : t("joinClass")}
+      <Button type="submit" disabled={isLoading || !classCode.trim()}>
+        {isLoading ? (t("joining") || "Joining...") : (t("joinClass") || "Join Class")}
       </Button>
     </form>
   );

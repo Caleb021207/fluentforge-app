@@ -30,6 +30,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   isLoading,
   getPlaceholderText,
 }) => {
+  const { t } = useLocalization();
+
   return (
     <Card className="mb-4 p-6">
       <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
@@ -53,7 +55,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         setInput={setInput}
         handleSubmit={handleSubmit}
         isLoading={isLoading}
-        placeholder={getPlaceholderText()}
+        placeholder={getPlaceholderText() || "Type a message..."}
       />
     </Card>
   );

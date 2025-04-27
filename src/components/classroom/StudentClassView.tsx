@@ -61,7 +61,7 @@ const StudentClassView = () => {
             
           if (teacherError) {
             console.error('Error fetching teacher email:', teacherError);
-          } else {
+          } else if (teacherData) {
             teacherEmail = teacherData.email;
           }
         }
@@ -69,14 +69,14 @@ const StudentClassView = () => {
         setClassData({
           class_name: classroomData.class_name,
           teacher_email: teacherEmail || undefined,
-          joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
+          joined_at: membershipData.joined_at ? new Date(membershipData.joined_at).toLocaleDateString() : '',
           code: classroomData.code
         });
       } catch (error: any) {
         console.error('Error fetching class data:', error);
         toast({
-          title: t("error"),
-          description: error.message,
+          title: t("error") || "Error",
+          description: error.message || "Failed to load class data",
           variant: "destructive",
         });
       } finally {
@@ -99,7 +99,7 @@ const StudentClassView = () => {
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-muted-foreground">{t("noClassJoined")}</p>
+          <p className="text-muted-foreground">{t("noClassJoined") || "No class joined yet"}</p>
         </CardContent>
       </Card>
     );
@@ -108,22 +108,22 @@ const StudentClassView = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{classData?.class_name}</CardTitle>
+        <CardTitle>{classData.class_name}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        {classData?.teacher_email && (
+        {classData.teacher_email && (
           <div>
-            <span className="font-medium">{t("teacher")}:</span> {classData.teacher_email}
+            <span className="font-medium">{t("teacher") || "Teacher"}:</span> {classData.teacher_email}
           </div>
         )}
-        {classData?.joined_at && (
+        {classData.joined_at && (
           <div>
-            <span className="font-medium">{t("joined")}:</span> {classData.joined_at}
+            <span className="font-medium">{t("joined") || "Joined"}:</span> {classData.joined_at}
           </div>
         )}
-        {classData?.code && (
+        {classData.code && (
           <div>
-            <span className="font-medium">{t("classCode")}:</span> {classData.code}
+            <span className="font-medium">{t("classCode") || "Class Code"}:</span> {classData.code}
           </div>
         )}
       </CardContent>
