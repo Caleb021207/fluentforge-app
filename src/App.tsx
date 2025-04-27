@@ -1,7 +1,9 @@
+
 import React from "react";
 import {
   createBrowserRouter,
   RouterProvider,
+  Outlet
 } from "react-router-dom";
 import Layout from "@/components/Layout";
 import Index from "@/pages/Index";
@@ -22,7 +24,7 @@ function App() {
       router={createBrowserRouter([
         {
           path: "/",
-          element: <Layout />,
+          element: <Layout><Outlet /></Layout>,
           errorElement: <NotFound />,
           children: [
             { index: true, element: <Index /> },

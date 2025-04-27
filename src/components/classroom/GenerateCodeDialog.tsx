@@ -17,6 +17,14 @@ interface GenerateCodeDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+interface ClassroomResponse {
+  success: boolean;
+  message: string;
+  classroom_id?: string;
+  class_code?: string;
+  class_name?: string;
+}
+
 const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => {
   const { toast } = useToast();
   const { t } = useLocalization();
@@ -34,9 +42,11 @@ const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => 
 
       if (error) throw error;
 
+      const response = data as ClassroomResponse;
+
       toast({
         title: t("success"),
-        description: data.message,
+        description: response.message,
       });
       
       onOpenChange(false);

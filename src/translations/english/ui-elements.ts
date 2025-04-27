@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const uiElementsTranslations: TranslationRecord = {
@@ -89,6 +90,23 @@ const uiElementsTranslations: TranslationRecord = {
   unauthorized: "Unauthorized",
   teacherAccessRequired: "Teacher access is required for this page",
   generateCode: "Generate Code",
+  
+  // Class list and student class view
+  classActivated: "Class has been activated",
+  classDeactivated: "Class has been deactivated",
+  active: "Active",
+  inactive: "Inactive",
+  code: "Code",
+  students: "Students",
+  created: "Created",
+  activate: "Activate",
+  deactivate: "Deactivate",
+  noClassesCreated: "No classes created yet",
+  noClassJoined: "You haven't joined any class yet",
+  teacher: "Teacher",
+  joined: "Joined",
+  classCode: "Class Code",
 };
 
 export default uiElementsTranslations;
+

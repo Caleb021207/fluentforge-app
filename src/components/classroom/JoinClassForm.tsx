@@ -6,6 +6,13 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 
+interface ClassroomResponse {
+  success: boolean;
+  message: string;
+  classroom_id?: string;
+  class_name?: string;
+}
+
 const JoinClassForm = () => {
   const { toast } = useToast();
   const { t } = useLocalization();
@@ -23,9 +30,11 @@ const JoinClassForm = () => {
 
       if (error) throw error;
 
+      const response = data as ClassroomResponse;
+
       toast({
         title: t("success"),
-        description: data.message,
+        description: response.message,
       });
       
       setClassCode('');
