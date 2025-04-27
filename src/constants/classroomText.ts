@@ -1,4 +1,3 @@
-
 export const CLASSROOM_TEXT = {
   // Page titles
   MY_CLASS: "My Class",
@@ -44,11 +43,13 @@ export const CLASSROOM_TEXT = {
   NO_STUDENTS_IN_CLASS: "No students in this class yet",
   UNNAMED: "Unnamed",
   
-  // New constants for ClassStudentsList
-  HIGH_SCORE: "Highest Score",
-  VOICE_CHAT_MINUTES: "Voice Chat Minutes",
-  
   // New constants for metrics
+  HIGH_SCORE: "Highest Score",
+  TEXT_PRACTICE_CALLS: "Text Practice Calls",
+  PREMIUM_VOICE_CALLS: "Premium Voice Calls",
+  PREMIUM_VOICE_SESSIONS: "Premium Voice Sessions",
+  PREMIUM_VOICE_MINUTES: "Premium Voice Minutes",
+  VOICE_CHAT_MINUTES: "Voice Chat Minutes",
   REFRESH_METRICS: "Refresh Metrics",
   REFRESHING: "Refreshing...",
   SUCCESS: "Success",

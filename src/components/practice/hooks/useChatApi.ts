@@ -23,13 +23,11 @@ export const useChatApi = () => {
       });
 
       if (error) {
-        // Try to handle connection errors by refreshing the session
         const reconnected = await handleConnectionError();
         if (!reconnected) {
           throw error;
         }
         
-        // Retry after reconnection
         const retryResponse = await supabase.functions.invoke('chat-with-tutor', {
           body: {
             message: input,
@@ -40,6 +38,13 @@ export const useChatApi = () => {
         if (retryResponse.error) {
           throw retryResponse.error;
         }
+
+        // Track successful text practice call
+        await supabase
+          .from('api_calls_tracking')
+          .insert({
+            call_type: 'text_practice'
+          });
         
         return {
           role: "assistant",
@@ -51,6 +56,13 @@ export const useChatApi = () => {
       if (!data || !data.content) {
         throw new Error("Invalid response from tutor");
       }
+
+      // Track successful text practice call
+      await supabase
+        .from('api_calls_tracking')
+        .insert({
+          call_type: 'text_practice'
+        });
 
       return {
         role: "assistant",
