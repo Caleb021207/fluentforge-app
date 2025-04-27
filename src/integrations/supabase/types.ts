@@ -658,7 +658,7 @@ export type Database = {
         Returns: boolean
       }
       recalculate_student_metrics: {
-        Args: { target_student_id?: string }
+        Args: { target_student_id: string }
         Returns: undefined
       }
     }
