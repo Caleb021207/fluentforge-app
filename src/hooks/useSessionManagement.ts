@@ -5,7 +5,8 @@ import { useToast } from "@/hooks/use-toast";
 import { 
   calculateRemainingWeeklyTime, 
   getCurrentWeekStart, 
-  formatCooldownTime 
+  formatCooldownTime,
+  scheduleVoiceSessionCleanup 
 } from "@/utils/voiceChatUtils";
 
 export type SessionStatus = 'available' | 'active' | 'cooldown';
@@ -27,6 +28,13 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
       setIsLoading(false);
       if (data.session) {
         checkSessionStatus();
+        
+        // Run cleanup on component mount to fix any abandoned sessions
+        try {
+          await scheduleVoiceSessionCleanup();
+        } catch (error) {
+          console.error("Failed to run session cleanup:", error);
+        }
       }
     };
     checkAuth();
@@ -54,7 +62,7 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
       
       const { data: activeSessions, error: activeError } = await supabase
         .from('premium_voice_chat_sessions')
-        .select('*')
+        .select('id')
         .eq('user_id', user.id)
         .is('session_end', null)
         .single();
@@ -110,6 +118,27 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
         return null;
       }
 
+      // Check remaining time before creating the session
+      const remaining = await calculateRemainingWeeklyTime(user.id);
+      if (remaining <= 0) {
+        const now = new Date();
+        const nextMonday6AM = new Date(getCurrentWeekStart());
+        nextMonday6AM.setUTCDate(nextMonday6AM.getUTCDate() + 7);
+        const cooldownRemaining = Math.floor((nextMonday6AM.getTime() - now.getTime()) / 1000);
+        
+        setSessionStatus('cooldown');
+        setCooldownTimeRemaining(cooldownRemaining);
+        setWeeklyTimeRemaining(0);
+        
+        toast({
+          title: t("cooldownActive"),
+          description: t("dailyLimitReached"),
+          variant: "destructive"
+        });
+        
+        return null;
+      }
+
       const { data: sessionData, error: sessionError } = await supabase
         .from('premium_voice_chat_sessions')
         .insert({
@@ -131,7 +160,14 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
       setCurrentSessionId(sessionData.id);
       setSessionStatus('active');
       
-      const remaining = await calculateRemainingWeeklyTime(user.id);
+      // Track this as a premium voice API call
+      await supabase
+        .from('api_calls_tracking')
+        .insert({
+          user_id: user.id,
+          call_type: 'premium_voice'  // Consistent terminology
+        });
+      
       setWeeklyTimeRemaining(remaining);
       
       return sessionData.id;
@@ -158,6 +194,13 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
       
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        try {
+          // Recalculate metrics after closing a session
+          await supabase.rpc('recalculate_student_metrics', { target_student_id: user.id });
+        } catch (recalcError) {
+          console.error("Error recalculating metrics:", recalcError);
+        }
+        
         const remaining = await calculateRemainingWeeklyTime(user.id);
         
         if (remaining <= 0) {
@@ -197,6 +240,24 @@ export const useSessionManagement = (t: (key: string, options?: any) => string) 
       if (cooldownTimerId) clearInterval(cooldownTimerId);
     };
   }, [sessionStatus, cooldownTimeRemaining]);
+
+  // Add automatic periodic cleanup of abandoned sessions
+  useEffect(() => {
+    // Run cleanup every 5 minutes
+    const cleanupInterval = window.setInterval(async () => {
+      if (isLoggedIn) {
+        try {
+          await scheduleVoiceSessionCleanup();
+        } catch (error) {
+          console.error("Failed to run session cleanup:", error);
+        }
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+    
+    return () => {
+      window.clearInterval(cleanupInterval);
+    };
+  }, [isLoggedIn]);
 
   return {
     isLoggedIn,

@@ -17,6 +17,7 @@ interface StudentMetricsProps {
 
 const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
   const { t } = useLocalization();
+  // Calculate total practice calls
   const totalPracticeCalls = metrics.text_practice_calls + metrics.premium_voice_calls;
   
   return (
