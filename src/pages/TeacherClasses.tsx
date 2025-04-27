@@ -2,10 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useClassroomText } from "@/hooks/useClassroomText";
 import GenerateCodeDialog from "@/components/classroom/GenerateCodeDialog";
 import ClassList from "@/components/classroom/ClassList";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
@@ -13,7 +11,7 @@ import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 const TeacherClasses = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useLocalization();
+  const classroomText = useClassroomText();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { isTeacher, isLoading } = useTeacherStatus();
 
@@ -21,23 +19,23 @@ const TeacherClasses = () => {
     if (!isLoading && !isTeacher) {
       navigate('/');
       toast({
-        title: t("unauthorized"),
-        description: t("teacherAccessRequired"),
+        title: "Unauthorized",
+        description: classroomText.TEACHER_ACCESS_REQUIRED,
         variant: "destructive",
       });
     }
-  }, [isTeacher, isLoading, navigate, toast, t]);
+  }, [isTeacher, isLoading, navigate, toast]);
 
   if (isLoading) {
-    return <div className="p-8">{t("loading")}...</div>;
+    return <div className="p-8">Loading...</div>;
   }
 
   return (
     <div className="container max-w-4xl mx-auto p-6">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">{t("myClasses")}</h1>
+        <h1 className="text-2xl font-bold">{classroomText.MY_CLASSES}</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          {t("generateCode")}
+          {classroomText.GENERATE_CODE}
         </Button>
       </div>
       

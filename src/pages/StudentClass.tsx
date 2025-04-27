@@ -3,14 +3,15 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { useClassroomText } from "@/hooks/useClassroomText";
 import StudentClassView from "@/components/classroom/StudentClassView";
 import JoinClassForm from "@/components/classroom/JoinClassForm";
-import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 const StudentClass = () => {
   const navigate = useNavigate();
   const { isTeacher, isLoading: teacherStatusLoading } = useTeacherStatus();
   const { isLoading: authLoading, isAuthenticated } = useAuthGuard();
+  const classroomText = useClassroomText();
 
   const isLoading = teacherStatusLoading || authLoading;
 
@@ -33,7 +34,7 @@ const StudentClass = () => {
 
   return (
     <div className="container max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-8">{CLASSROOM_TEXT.MY_CLASS}</h1>
+      <h1 className="text-2xl font-bold mb-8">{classroomText.MY_CLASS}</h1>
       <StudentClassView />
       <JoinClassForm />
     </div>

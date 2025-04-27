@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { CLASSROOM_TEXT } from "@/constants/classroomText";
+import { useClassroomText } from "@/hooks/useClassroomText";
 
 interface ClassroomResponse {
   success: boolean;
@@ -15,6 +15,7 @@ interface ClassroomResponse {
 
 const JoinClassForm = () => {
   const { toast } = useToast();
+  const classroomText = useClassroomText();
   const [classCode, setClassCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,16 +57,16 @@ const JoinClassForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-sm space-y-4 mt-8">
-      <h2 className="text-xl font-semibold">{CLASSROOM_TEXT.JOIN_CLASS}</h2>
+      <h2 className="text-xl font-semibold">{classroomText.JOIN_CLASS}</h2>
       <Input
-        placeholder={CLASSROOM_TEXT.ENTER_CLASS_CODE}
+        placeholder={classroomText.ENTER_CLASS_CODE}
         value={classCode}
         onChange={(e) => setClassCode(e.target.value)}
         required
         className="w-full"
       />
       <Button type="submit" disabled={isLoading || !classCode.trim()}>
-        {isLoading ? CLASSROOM_TEXT.JOINING : CLASSROOM_TEXT.JOIN_CLASS}
+        {isLoading ? classroomText.JOINING : classroomText.JOIN_CLASS}
       </Button>
     </form>
   );
