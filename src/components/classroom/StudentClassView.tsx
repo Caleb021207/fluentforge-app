@@ -82,11 +82,12 @@ const StudentClassView = () => {
           }
         }
 
-        // Fetch student metrics
+        // Fixed: Use the correct field to identify the classroom for metrics
+        // The classroom_id needed for the metrics query is the classroom_id from the membership
         const { data: metricsData } = await supabase
           .from('class_student_metrics')
           .select('*')
-          .eq('classroom_id', membershipData.classroom.id)
+          .eq('classroom_id', membershipData.classroom_id)
           .eq('student_id', session.session.user.id)
           .maybeSingle();
 
