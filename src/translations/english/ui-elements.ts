@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const uiElementsTranslations: TranslationRecord = {
@@ -74,6 +73,10 @@ const uiElementsTranslations: TranslationRecord = {
   // Contact information
   salesContactInfo: "For school or district demo requests, please contact: sales@palavox.org",
   safetyPolicyContactInfo: "A detailed FERPA/CIPA compliance packet and technical documentation are available upon request. Please email: info@palavox.org",
+  
+  // Navigation
+  myClasses: "My Classes",
+  myClass: "My Class",
 };
 
 export default uiElementsTranslations;

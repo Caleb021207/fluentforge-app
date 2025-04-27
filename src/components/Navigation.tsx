@@ -1,13 +1,13 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock, BookUser } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import {
   Tooltip,
   TooltipContent,
@@ -21,6 +21,7 @@ const Navigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { currentLanguage, t } = useLocalization();
   const isMobile = useIsMobile();
+  const { isTeacher, isLoading: teacherStatusLoading } = useTeacherStatus();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -44,15 +45,28 @@ const Navigation = () => {
     };
   }, []);
 
-  const navItems = [
-    { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
-    { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
-    { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
-  ];
+  const getNavItems = () => {
+    const items = [
+      { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
+      { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
+      { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
+    ];
 
-  if (isMobile) {
-    navItems.unshift({ icon: Home, label: "home", path: "/", requiresAuth: false });
-  }
+    if (isLoggedIn && !teacherStatusLoading) {
+      items.splice(3, 0, {
+        icon: BookUser,
+        label: isTeacher ? "myClasses" : "myClass",
+        path: isTeacher ? "/teacher/classes" : "/student/class",
+        requiresAuth: true
+      });
+    }
+
+    if (isMobile) {
+      items.unshift({ icon: Home, label: "home", path: "/", requiresAuth: false });
+    }
+
+    return items;
+  };
 
   const renderNavButton = (item: any) => {
     const Icon = item.icon;
@@ -133,7 +147,7 @@ const Navigation = () => {
           </Link>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
-            {navItems.map(item => renderNavButton(item))}
+            {getNavItems().map(item => renderNavButton(item))}
             
             {isLoggedIn && isOpen && (
               <div className="md:hidden mt-4 pt-4 border-t">
