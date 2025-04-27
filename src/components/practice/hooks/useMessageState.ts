@@ -1,7 +1,6 @@
 
 import { useState } from "react";
-import { ChatMessage } from "@/types/chat";
-import { MessageCount } from "@/types/chat";
+import { ChatMessage, MessageCount } from "@/types/chat";
 
 export const useMessageState = (setMessageCount: (count: MessageCount) => void) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -13,18 +12,22 @@ export const useMessageState = (setMessageCount: (count: MessageCount) => void) 
       content,
     };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setMessageCount(prev => ({
-      ...prev,
-      inputs: prev.inputs + 1
-    }));
+    
+    // Fix: Create a new MessageCount object instead of using an updater function
+    setMessageCount({
+      inputs: messages.filter(msg => msg.role === "user").length + 1,
+      outputs: messages.filter(msg => msg.role === "assistant").length
+    });
   };
 
   const addAssistantMessage = (message: ChatMessage) => {
     setMessages((prevMessages) => [...prevMessages, message]);
-    setMessageCount(prev => ({
-      ...prev,
-      outputs: prev.outputs + 1
-    }));
+    
+    // Fix: Create a new MessageCount object instead of using an updater function
+    setMessageCount({
+      inputs: messages.filter(msg => msg.role === "user").length,
+      outputs: messages.filter(msg => msg.role === "assistant").length + 1
+    });
   };
 
   return {
