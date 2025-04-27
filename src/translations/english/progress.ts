@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
@@ -21,6 +20,8 @@ const progressTranslations: TranslationRecord = {
   viewingDetails: "Viewing details",
   featureComingSoon: "This feature will be implemented in a future update.",
   recentCertificationAttempts: "Recent Certification Attempts",
+  createFirstClassToSeeProgress: "Create your first class to start tracking student progress",
+  joinClassToSeeProgress: "Join a class with your class code to see your progress",
 };
 
 export default progressTranslations;

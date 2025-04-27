@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
@@ -22,7 +21,9 @@ const progressTranslations: TranslationRecord = {
   progressChart: "進捗チャート",
   progressBreakdown: "進捗内訳",
   noProgressYet: "まだ進捗はありません",
-  startLearningNow: "今すぐ学習を始める"
+  startLearningNow: "今すぐ学習を始める",
+  createFirstClassToSeeProgress: "最初のクラスを作成して生徒の進捗状況の追跡を開始",
+  joinClassToSeeProgress: "クラスコードでクラスに参加して進捗状況を確認",
 };
 
 export default progressTranslations;

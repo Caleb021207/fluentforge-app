@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
@@ -21,6 +20,8 @@ const progressTranslations: TranslationRecord = {
   viewingDetails: "查看详情",
   featureComingSoon: "此功能将在未来的更新中实现。",
   recentCertificationAttempts: "最近的认证尝试",
+  createFirstClassToSeeProgress: "创建您的第一个班级以开始跟踪学生进度",
+  joinClassToSeeProgress: "使用班级代码加入班级以查看您的进度",
 };
 
 export default progressTranslations;
