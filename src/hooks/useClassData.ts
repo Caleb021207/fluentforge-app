@@ -55,7 +55,10 @@ export const useClassData = () => {
         `)
         .maybeSingle();
 
-      if (membershipError) throw membershipError;
+      if (membershipError) {
+        console.error('Membership error:', membershipError);
+        throw membershipError;
+      }
       
       if (!membershipData) {
         setIsLoading(false);
@@ -66,11 +69,15 @@ export const useClassData = () => {
       let teacherEmail = undefined;
 
       if (membershipData.classroom.teacher_id) {
-        const { data: teacherData } = await supabase
+        const { data: teacherData, error: teacherError } = await supabase
           .from('profiles')
           .select('email, display_name')
           .eq('id', membershipData.classroom.teacher_id)
           .maybeSingle();
+
+        if (teacherError) {
+          console.error('Teacher data error:', teacherError);
+        }
 
         if (teacherData) {
           teacherEmail = teacherData.email;
@@ -78,13 +85,18 @@ export const useClassData = () => {
         }
       }
 
-      // Get student metrics from the class_student_metrics view
-      const { data: metricsData } = await supabase
+      // Get student metrics from the class_student_metrics view with more detailed error logging
+      const { data: metricsData, error: metricsError } = await supabase
         .from('class_student_metrics')
         .select('*')
         .eq('classroom_id', membershipData.classroom_id)
         .eq('student_id', session.session.user.id)
         .maybeSingle();
+
+      if (metricsError) {
+        console.error('Metrics error:', metricsError);
+        throw metricsError;
+      }
 
       const classInfo: ClassData = {
         class_name: membershipData.classroom.class_name,
@@ -109,24 +121,16 @@ export const useClassData = () => {
     }
   };
 
-  // Set up real-time subscription for metrics updates
+  // Poll for updates every 30 seconds
   useEffect(() => {
-    const subscription = supabase
-      .channel('class_metrics_changes')
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'class_student_metrics' 
-      }, () => {
-        fetchClassData();
-      })
-      .subscribe();
-
-    // Initial fetch
     fetchClassData();
+    
+    const interval = setInterval(() => {
+      fetchClassData();
+    }, 30000);
 
     return () => {
-      subscription.unsubscribe();
+      clearInterval(interval);
     };
   }, []);
 
