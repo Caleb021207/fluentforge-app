@@ -29,21 +29,47 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     if (savedLanguage && translations[savedLanguage]) {
       setCurrentLanguage(savedLanguage);
     }
+    
+    // Debug - log available translations
+    console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
+    console.log("Available translations:", Object.keys(translations));
   }, []);
 
   // Translation function
   const t = (key: string, replacements?: Record<string, string>) => {
-    // Get translation for current language or fallback to default
-    let text = translations[currentLanguage]?.[key] || translations[DEFAULT_LANGUAGE][key] || key;
-    
-    // Apply replacements if any
-    if (replacements) {
-      Object.entries(replacements).forEach(([placeholder, value]) => {
-        text = text.replace(`{{${placeholder}}}`, value);
-      });
+    try {
+      // Check if translations exist
+      if (!translations) {
+        console.error("No translations available");
+        return key;
+      }
+      
+      // Check if current language exists
+      if (!translations[currentLanguage]) {
+        console.error(`No translations for language: ${currentLanguage}`);
+        return key;
+      }
+      
+      // Get translation for current language or fallback to default
+      let text = translations[currentLanguage]?.[key] || translations[DEFAULT_LANGUAGE]?.[key] || key;
+      
+      // Apply replacements if any
+      if (replacements) {
+        Object.entries(replacements).forEach(([placeholder, value]) => {
+          const regex = new RegExp(`{{${placeholder}}}`, 'g');
+          text = text.replace(regex, value);
+          
+          // Also support {language} format (without double braces)
+          const simpleRegex = new RegExp(`{${placeholder}}`, 'g');
+          text = text.replace(simpleRegex, value);
+        });
+      }
+      
+      return text;
+    } catch (error) {
+      console.error("Translation error:", error);
+      return key; // Return the key as fallback
     }
-    
-    return text;
   };
 
   // Get native language name
@@ -64,7 +90,15 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // Custom hook for using the localization context
-export const useLocalization = () => useContext(LocalizationContext);
+export const useLocalization = () => {
+  const context = useContext(LocalizationContext);
+  
+  if (context === undefined) {
+    console.error("useLocalization must be used within a LocalizationProvider");
+  }
+  
+  return context;
+};
 
 // Re-export from translations module for easy access
 export { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE };
