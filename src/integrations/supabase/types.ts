@@ -416,6 +416,36 @@ export type Database = {
         }
         Relationships: []
       }
+      text_practice_interactions: {
+        Row: {
+          created_at: string
+          id: string
+          inputs_count: number | null
+          outputs_count: number | null
+          session_end: string | null
+          session_start: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inputs_count?: number | null
+          outputs_count?: number | null
+          session_end?: string | null
+          session_start?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inputs_count?: number | null
+          outputs_count?: number | null
+          session_end?: string | null
+          session_start?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null
@@ -473,24 +503,49 @@ export type Database = {
         }
         Relationships: []
       }
+      voice_practice_interactions: {
+        Row: {
+          created_at: string
+          id: string
+          inputs_count: number | null
+          outputs_count: number | null
+          session_end: string | null
+          session_start: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inputs_count?: number | null
+          outputs_count?: number | null
+          session_end?: string | null
+          session_start?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inputs_count?: number | null
+          outputs_count?: number | null
+          session_end?: string | null
+          session_start?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       class_student_metrics: {
         Row: {
           avg_certification_score: number | null
           certification_attempts: number | null
-          class_name: string | null
           classroom_id: string | null
           completed_lessons: number | null
-          last_certification: string | null
           last_lesson_progress: string | null
-          last_voice_chat: string | null
           student_email: string | null
           student_id: string | null
           student_name: string | null
-          teacher_id: string | null
           total_lessons: number | null
-          voice_chat_minutes: number | null
           voice_chat_sessions: number | null
         }
         Relationships: []

@@ -1,22 +1,21 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useLocalization } from "@/context/LocalizationContext";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronUp, ChevronDown, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface StudentMetrics {
   student_id: string | null;
   student_name: string | null;
   student_email: string | null;
-  voice_chat_sessions: number | null;
-  certification_attempts: number | null;
+  voice_chat_sessions: number;
+  certification_attempts: number;
   avg_certification_score: number | null;
-  completed_lessons: number | null;
-  total_lessons: number | null;
+  completed_lessons: number;
+  total_lessons: number;
   last_lesson_progress: string | null;
 }
 
@@ -35,22 +34,17 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
   const [sortField, setSortField] = React.useState<keyof StudentMetrics>('student_name');
   const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
 
-  console.log('ClassStudentsList rendered:', { classId, open, studentsCount: students.length });
-
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchStudents = async () => {
       if (!open || !classId) return;
       
       setIsLoading(true);
-      console.log('Fetching students for classroom:', classId);
 
       try {
         const { data, error } = await supabase
           .from('class_student_metrics')
           .select('*')
           .eq('classroom_id', classId);
-
-        console.log('Student data fetch result:', { data, error });
 
         if (error) throw error;
         setStudents(data || []);
@@ -81,7 +75,9 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
 
   const SortIcon = ({ field }: { field: keyof StudentMetrics }) => {
     if (field !== sortField) return null;
-    return sortDirection === 'asc' ? <ChevronUp className="w-4 h-4 inline ml-1" /> : <ChevronDown className="w-4 h-4 inline ml-1" />;
+    return sortDirection === 'asc' ? 
+      <ChevronUp className="w-4 h-4 inline ml-1" /> : 
+      <ChevronDown className="w-4 h-4 inline ml-1" />;
   };
 
   // Sort students based on current sort field and direction
@@ -107,8 +103,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+          <DialogTitle>
             {className} - {t("students")}
           </DialogTitle>
         </DialogHeader>
@@ -162,14 +157,14 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
                     <TableCell className="font-medium">
                       {student.student_name || student.student_email || t("unnamed")}
                     </TableCell>
-                    <TableCell>{student.completed_lessons || 0} / {student.total_lessons || 0}</TableCell>
-                    <TableCell>{student.certification_attempts || 0}</TableCell>
+                    <TableCell>{student.completed_lessons} / {student.total_lessons}</TableCell>
+                    <TableCell>{student.certification_attempts}</TableCell>
                     <TableCell>
                       {student.avg_certification_score 
                         ? `${Math.round(student.avg_certification_score)}%` 
                         : '-'}
                     </TableCell>
-                    <TableCell>{student.voice_chat_sessions || 0}</TableCell>
+                    <TableCell>{student.voice_chat_sessions}</TableCell>
                     <TableCell>
                       {student.last_lesson_progress 
                         ? new Date(student.last_lesson_progress).toLocaleDateString() 
