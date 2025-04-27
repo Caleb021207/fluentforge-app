@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Table, TableHeader, TableBody } from "@/components/ui/table";
+import { Table, TableHeader, TableBody, TableHead } from "@/components/ui/table";
 import { SortableTableHeader } from './SortableTableHeader';
 import { StudentTableRow } from './StudentTableRow';
 import { StudentMetrics, SortField, SortDirection } from '../types/studentTypes';
