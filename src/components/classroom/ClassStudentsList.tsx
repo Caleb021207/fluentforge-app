@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
@@ -54,7 +55,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
       } catch (error: any) {
         console.error('Error fetching students:', error);
         toast({
-          title: t("error"),
+          title: "Error",
           description: error.message,
           variant: "destructive",
         });
