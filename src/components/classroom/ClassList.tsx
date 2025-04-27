@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ClassStudentsList from './ClassStudentsList';
 
 interface ClassItem {
   id: string;
@@ -22,6 +22,7 @@ const ClassList = () => {
   const { t } = useLocalization();
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedClass, setSelectedClass] = useState<{id: string, name: string} | null>(null);
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -40,7 +41,6 @@ const ClassList = () => {
 
         if (error) throw error;
 
-        // Get student count for each class
         const classesWithCount = await Promise.all(
           (data || []).map(async (classItem) => {
             const { count, error: countError } = await supabase
@@ -145,7 +145,15 @@ const ClassList = () => {
               </div>
             </div>
             
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setSelectedClass({ id: classItem.id, name: classItem.class_name })}
+              >
+                <Users className="mr-2" />
+                {t("viewStudents")}
+              </Button>
               <Button 
                 variant="outline" 
                 size="sm"
@@ -157,6 +165,15 @@ const ClassList = () => {
           </CardContent>
         </Card>
       ))}
+
+      {selectedClass && (
+        <ClassStudentsList
+          classId={selectedClass.id}
+          className={selectedClass.name}
+          open={!!selectedClass}
+          onOpenChange={(open) => !open && setSelectedClass(null)}
+        />
+      )}
     </div>
   );
 };

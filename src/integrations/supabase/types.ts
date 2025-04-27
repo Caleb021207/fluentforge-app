@@ -170,6 +170,13 @@ export type Database = {
             foreignKeyName: "classroom_memberships_classroom_id_fkey"
             columns: ["classroom_id"]
             isOneToOne: false
+            referencedRelation: "class_student_metrics"
+            referencedColumns: ["classroom_id"]
+          },
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
             referencedRelation: "classroom_codes"
             referencedColumns: ["id"]
           },
@@ -468,6 +475,26 @@ export type Database = {
       }
     }
     Views: {
+      class_student_metrics: {
+        Row: {
+          avg_certification_score: number | null
+          certification_attempts: number | null
+          class_name: string | null
+          classroom_id: string | null
+          completed_lessons: number | null
+          last_certification: string | null
+          last_lesson_progress: string | null
+          last_voice_chat: string | null
+          student_email: string | null
+          student_id: string | null
+          student_name: string | null
+          teacher_id: string | null
+          total_lessons: number | null
+          voice_chat_minutes: number | null
+          voice_chat_sessions: number | null
+        }
+        Relationships: []
+      }
       student_usage_metrics: {
         Row: {
           avg_certification_score: number | null
@@ -530,6 +557,10 @@ export type Database = {
       }
       is_teacher: {
         Args: { user_id?: string }
+        Returns: boolean
+      }
+      is_teacher_of_class: {
+        Args: { classroom_id: string }
         Returns: boolean
       }
       is_teacher_of_student: {

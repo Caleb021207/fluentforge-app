@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const uiElementsTranslations: TranslationRecord = {
@@ -106,7 +105,15 @@ const uiElementsTranslations: TranslationRecord = {
   teacher: "Teacher",
   joined: "Joined",
   classCode: "Class Code",
+  viewStudents: "View Students",
+  noStudentsInClass: "No students in this class yet",
+  name: "Name",
+  completedLessons: "Completed Lessons",
+  certificationAttempts: "Certification Attempts",
+  avgScore: "Average Score",
+  voiceChatSessions: "Voice Chat Sessions",
+  lastActivity: "Last Activity",
+  unnamed: "Unnamed",
 };
 
 export default uiElementsTranslations;
-
