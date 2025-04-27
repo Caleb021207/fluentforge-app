@@ -11,22 +11,39 @@ export const useMessageState = (setMessageCount: (count: MessageCount) => void) 
       role: "user",
       content,
     };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
     
-    // Fix: Create a new MessageCount object instead of using an updater function
-    setMessageCount({
-      inputs: messages.filter(msg => msg.role === "user").length + 1,
-      outputs: messages.filter(msg => msg.role === "assistant").length
+    setMessages((prevMessages) => {
+      const updatedMessages = [...prevMessages, userMessage];
+      
+      // Calculate counts from the updated messages array
+      const userCount = updatedMessages.filter(msg => msg.role === "user").length;
+      const assistantCount = updatedMessages.filter(msg => msg.role === "assistant").length;
+      
+      // Update message count with correct values
+      setMessageCount({
+        inputs: userCount,
+        outputs: assistantCount
+      });
+      
+      return updatedMessages;
     });
   };
 
   const addAssistantMessage = (message: ChatMessage) => {
-    setMessages((prevMessages) => [...prevMessages, message]);
-    
-    // Fix: Create a new MessageCount object instead of using an updater function
-    setMessageCount({
-      inputs: messages.filter(msg => msg.role === "user").length,
-      outputs: messages.filter(msg => msg.role === "assistant").length + 1
+    setMessages((prevMessages) => {
+      const updatedMessages = [...prevMessages, message];
+      
+      // Calculate counts from the updated messages array
+      const userCount = updatedMessages.filter(msg => msg.role === "user").length;
+      const assistantCount = updatedMessages.filter(msg => msg.role === "assistant").length;
+      
+      // Update message count with correct values
+      setMessageCount({
+        inputs: userCount,
+        outputs: assistantCount
+      });
+      
+      return updatedMessages;
     });
   };
 

@@ -30,13 +30,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   isLoading,
   getPlaceholderText,
 }) => {
-  const { t, currentLanguage } = useLocalization();
+  const { t } = useLocalization();
   
-  // Debug information
-  console.log("Current Language:", currentLanguage);
-  console.log("Translation example:", t("send"));
-  console.log("Translation missing example:", t("some_random_key_to_test_fallback"));
-
   return (
     <Card className="mb-4 p-6">
       <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
