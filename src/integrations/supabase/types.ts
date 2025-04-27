@@ -537,15 +537,20 @@ export type Database = {
     Views: {
       class_student_metrics: {
         Row: {
-          avg_certification_score: number | null
           certification_attempts: number | null
           classroom_id: string | null
           completed_lessons: number | null
-          last_lesson_progress: string | null
+          highest_certification_score: number | null
+          last_activity: string | null
+          premium_voice_minutes: number | null
+          premium_voice_sessions: number | null
           student_email: string | null
           student_id: string | null
           student_name: string | null
+          text_inputs: number | null
+          text_outputs: number | null
           total_lessons: number | null
+          voice_chat_minutes: number | null
           voice_chat_sessions: number | null
         }
         Relationships: []

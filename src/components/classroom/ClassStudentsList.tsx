@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLocalization } from "@/context/LocalizationContext";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
@@ -12,11 +11,16 @@ interface StudentMetrics {
   student_name: string | null;
   student_email: string | null;
   voice_chat_sessions: number;
+  voice_chat_minutes: number;
+  text_inputs: number;
+  text_outputs: number;
+  premium_voice_sessions: number;
+  premium_voice_minutes: number;
   certification_attempts: number;
-  avg_certification_score: number | null;
+  highest_certification_score: number;
   completed_lessons: number;
   total_lessons: number;
-  last_lesson_progress: string | null;
+  last_activity: string | null;
 }
 
 interface ClassStudentsListProps {
@@ -101,7 +105,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="max-w-7xl">
         <DialogHeader>
           <DialogTitle>
             {className} - {t("students")}
@@ -124,27 +128,51 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
-                    onClick={() => handleSort('completed_lessons')}
-                  >
-                    {t("completedLessons")} <SortIcon field="completed_lessons" />
-                  </TableHead>
-                  <TableHead 
-                    className="cursor-pointer"
                     onClick={() => handleSort('certification_attempts')}
                   >
                     {t("certificationAttempts")} <SortIcon field="certification_attempts" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
-                    onClick={() => handleSort('avg_certification_score')}
+                    onClick={() => handleSort('highest_certification_score')}
                   >
-                    {t("avgScore")} <SortIcon field="avg_certification_score" />
+                    {t("highestScore")} <SortIcon field="highest_certification_score" />
                   </TableHead>
                   <TableHead 
                     className="cursor-pointer"
                     onClick={() => handleSort('voice_chat_sessions')}
                   >
-                    {t("voiceChatSessions")} <SortIcon field="voice_chat_sessions" />
+                    {t("voiceSessions")} <SortIcon field="voice_chat_sessions" />
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer"
+                    onClick={() => handleSort('voice_chat_minutes')}
+                  >
+                    {t("voiceMinutes")} <SortIcon field="voice_chat_minutes" />
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer"
+                    onClick={() => handleSort('text_inputs')}
+                  >
+                    {t("textInputs")} <SortIcon field="text_inputs" />
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer"
+                    onClick={() => handleSort('text_outputs')}
+                  >
+                    {t("textOutputs")} <SortIcon field="text_outputs" />
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer"
+                    onClick={() => handleSort('premium_voice_sessions')}
+                  >
+                    {t("unlimitedSessions")} <SortIcon field="premium_voice_sessions" />
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer"
+                    onClick={() => handleSort('premium_voice_minutes')}
+                  >
+                    {t("unlimitedMinutes")} <SortIcon field="premium_voice_minutes" />
                   </TableHead>
                   <TableHead>
                     {t("lastActivity")}
@@ -157,17 +185,21 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
                     <TableCell className="font-medium">
                       {student.student_name || student.student_email || t("unnamed")}
                     </TableCell>
-                    <TableCell>{student.completed_lessons} / {student.total_lessons}</TableCell>
                     <TableCell>{student.certification_attempts}</TableCell>
                     <TableCell>
-                      {student.avg_certification_score 
-                        ? `${Math.round(student.avg_certification_score)}%` 
+                      {student.highest_certification_score > 0 
+                        ? `${Math.round(student.highest_certification_score)}%` 
                         : '-'}
                     </TableCell>
                     <TableCell>{student.voice_chat_sessions}</TableCell>
+                    <TableCell>{Math.round(student.voice_chat_minutes)} min</TableCell>
+                    <TableCell>{student.text_inputs}</TableCell>
+                    <TableCell>{student.text_outputs}</TableCell>
+                    <TableCell>{student.premium_voice_sessions}</TableCell>
+                    <TableCell>{Math.round(student.premium_voice_minutes)} min</TableCell>
                     <TableCell>
-                      {student.last_lesson_progress 
-                        ? new Date(student.last_lesson_progress).toLocaleDateString() 
+                      {student.last_activity 
+                        ? new Date(student.last_activity).toLocaleDateString() 
                         : '-'}
                     </TableCell>
                   </TableRow>
