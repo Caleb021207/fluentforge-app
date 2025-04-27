@@ -22,29 +22,38 @@ const StudentClassView = () => {
   useEffect(() => {
     const fetchClassData = async () => {
       try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData.user) {
+          throw new Error("User not authenticated");
+        }
+
         const { data, error } = await supabase
           .from('classroom_memberships')
           .select(`
             classroom_id,
             joined_at,
-            classroom_codes:classroom_id (
+            classrooms:classroom_id (
               class_name,
               code,
               teacher_id,
-              profiles:teacher_id (email)
+              teacher:teacher_id (
+                email
+              )
             )
           `)
-          .eq('student_id', (await supabase.auth.getUser()).data.user?.id)
+          .eq('student_id', userData.user.id)
           .single();
 
         if (error) throw error;
 
         if (data) {
+          const teacherEmail = data.classrooms?.teacher?.email;
+          
           setClassData({
-            class_name: data.classroom_codes.class_name,
-            teacher_email: data.classroom_codes.profiles?.email,
+            class_name: data.classrooms.class_name,
+            teacher_email: teacherEmail,
             joined_at: new Date(data.joined_at).toLocaleDateString(),
-            code: data.classroom_codes.code
+            code: data.classrooms.code
           });
         }
       } catch (error: any) {

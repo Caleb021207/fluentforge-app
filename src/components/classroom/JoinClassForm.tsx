@@ -30,7 +30,8 @@ const JoinClassForm = () => {
 
       if (error) throw error;
 
-      const response = data as ClassroomResponse;
+      // Type assertion to ensure data is treated as ClassroomResponse
+      const response = data as unknown as ClassroomResponse;
 
       toast({
         title: t("success"),
