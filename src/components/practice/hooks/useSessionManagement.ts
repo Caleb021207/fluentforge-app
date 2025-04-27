@@ -33,7 +33,7 @@ export const useSessionManagement = () => {
       } catch (error: any) {
         console.error('Error creating chat session:', error);
         toast({
-          title: t("sessionError") || "Session Error",
+          title: t("error"),
           description: t("failedToCreateSession") || "Failed to create chat session.",
           variant: "warning",
         });
@@ -45,7 +45,6 @@ export const useSessionManagement = () => {
 
   // Update session when component unmounts or user leaves page
   useEffect(() => {
-    // Create a function to handle closing the session
     const closeSession = async () => {
       if (!sessionId) return;
       
@@ -63,7 +62,6 @@ export const useSessionManagement = () => {
       }
     };
     
-    // Call closeSession when component unmounts
     return () => {
       closeSession();
     };

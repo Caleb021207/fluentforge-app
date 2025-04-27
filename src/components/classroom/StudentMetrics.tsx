@@ -42,14 +42,6 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
           </div>
         )}
         <div>
-          <span className="font-medium">{t("voiceChatSessions")}:</span>{' '}
-          {metrics.voice_chat_sessions}
-        </div>
-        <div>
-          <span className="font-medium">{t("voiceChatMinutes")}:</span>{' '}
-          {Math.round(metrics.voice_chat_minutes)} min
-        </div>
-        <div>
           <span className="font-medium">{t("textInputs")}:</span>{' '}
           {metrics.text_inputs}
         </div>
