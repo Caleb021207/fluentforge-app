@@ -83,6 +83,7 @@ export const useClassData = () => {
       }
 
       try {
+        // Force a recalculation of student metrics to ensure up-to-date data
         const { error: recalcError } = await supabase.rpc(
           'recalculate_student_metrics',
           { target_student_id: session.session.user.id }
@@ -94,6 +95,9 @@ export const useClassData = () => {
       } catch (e) {
         console.error('Failed to recalculate metrics:', e);
       }
+
+      // Add a slight delay to ensure the recalculation completes
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const { data: metricsData, error: metricsError } = await supabase
         .from('student_metrics')
@@ -125,6 +129,7 @@ export const useClassData = () => {
         metrics: metricsData || undefined
       };
 
+      console.log('Fetched class data:', classInfo);
       setClassData(classInfo);
     } catch (error: any) {
       console.error('Error fetching class data:', error);

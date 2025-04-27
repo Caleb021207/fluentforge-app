@@ -25,6 +25,17 @@ export const useSessionManagement = () => {
             user_id: user.id,
             call_type: 'text_practice'
           });
+          
+        console.log('Created text practice session for:', user.id);
+        
+        // Force a recalculation of metrics after creating a text practice session
+        try {
+          await supabase.rpc('recalculate_student_metrics', { 
+            target_student_id: user.id 
+          });
+        } catch (recalcError) {
+          console.error('Error recalculating metrics:', recalcError);
+        }
 
       } catch (error: any) {
         console.error('Error creating chat session:', error);

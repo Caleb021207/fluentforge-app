@@ -19,13 +19,20 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
+      console.log("Starting metrics recalculation for:", studentId || "all students");
+      
       // Call the recalculate_student_metrics function
-      const { error } = await supabase.rpc(
+      const { data, error } = await supabase.rpc(
         'recalculate_student_metrics',
         { target_student_id: studentId }
       );
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error from recalculate_student_metrics:", error);
+        throw error;
+      }
+      
+      console.log("Metrics recalculation response:", data);
       
       toast({
         title: CLASSROOM_TEXT.SUCCESS,
@@ -34,7 +41,12 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
           : CLASSROOM_TEXT.ALL_METRICS_REFRESHED,
       });
 
-      if (onSuccess) onSuccess();
+      // Add a small delay to ensure the database has time to update
+      setTimeout(() => {
+        if (onSuccess) onSuccess();
+        setRefreshing(false);
+      }, 1000);
+      
     } catch (error: any) {
       console.error('Error refreshing metrics:', error);
       toast({
@@ -42,7 +54,6 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
         description: CLASSROOM_TEXT.FAILED_TO_REFRESH_METRICS,
         variant: "destructive",
       });
-    } finally {
       setRefreshing(false);
     }
   };
