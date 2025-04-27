@@ -22,6 +22,7 @@ const LocalizationContext = createContext<LocalizationContextType>({
 // Provider component
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
+  const [missingKeys, setMissingKeys] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Load language preference from localStorage
@@ -35,7 +36,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     console.log("Available translations:", Object.keys(translations));
   }, []);
 
-  // Translation function
+  // Translation function with enhanced fallback and logging
   const t = (key: string, replacements?: Record<string, string>) => {
     try {
       // Check if translations exist
@@ -45,21 +46,44 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // Check if current language exists
-      if (!translations[currentLanguage]) {
+      const currentTranslations = translations[currentLanguage];
+      const defaultTranslations = translations[DEFAULT_LANGUAGE];
+      
+      if (!currentTranslations) {
         console.error(`No translations for language: ${currentLanguage}`);
-        return key;
+        return defaultTranslations?.[key] || key;
       }
       
       // Get translation for current language or fallback to default
-      let text = translations[currentLanguage]?.[key] || translations[DEFAULT_LANGUAGE]?.[key] || key;
+      let text = currentTranslations[key];
+      
+      // If translation is missing in current language but exists in default language
+      if (!text && defaultTranslations?.[key]) {
+        // Only log each missing key once per session
+        if (!missingKeys.has(key)) {
+          console.warn(`Missing translation for key "${key}" in language "${currentLanguage}"`);
+          setMissingKeys(prev => new Set([...prev, key]));
+        }
+        text = defaultTranslations[key];
+      }
+      
+      // If translation is missing in both languages, return the key
+      if (!text) {
+        if (!missingKeys.has(key)) {
+          console.error(`Translation key not found: "${key}" in any language`);
+          setMissingKeys(prev => new Set([...prev, key]));
+        }
+        return key;
+      }
       
       // Apply replacements if any
       if (replacements) {
         Object.entries(replacements).forEach(([placeholder, value]) => {
+          // Support {{placeholder}} format
           const regex = new RegExp(`{{${placeholder}}}`, 'g');
           text = text.replace(regex, value);
           
-          // Also support {language} format (without double braces)
+          // Also support {placeholder} format
           const simpleRegex = new RegExp(`{${placeholder}}`, 'g');
           text = text.replace(simpleRegex, value);
         });
@@ -93,8 +117,8 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
 export const useLocalization = () => {
   const context = useContext(LocalizationContext);
   
-  if (context === undefined) {
-    console.error("useLocalization must be used within a LocalizationProvider");
+  if (!context) {
+    throw new Error("useLocalization must be used within a LocalizationProvider");
   }
   
   return context;
