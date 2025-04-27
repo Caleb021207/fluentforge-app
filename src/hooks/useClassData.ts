@@ -1,0 +1,116 @@
+
+import { useState, useEffect } from 'react';
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useLocalization } from "@/context/LocalizationContext";
+
+interface ClassData {
+  class_name: string;
+  teacher_email?: string;
+  teacher_name?: string;
+  joined_at: string;
+  code: string;
+  metrics?: {
+    voice_chat_sessions: number;
+    voice_chat_minutes: number;
+    text_inputs: number;
+    text_outputs: number;
+    premium_voice_sessions: number;
+    premium_voice_minutes: number;
+    certification_attempts: number;
+    highest_certification_score: number;
+    completed_lessons: number;
+    total_lessons: number;
+    last_activity: string | null;
+  };
+}
+
+export const useClassData = () => {
+  const { toast } = useToast();
+  const { t } = useLocalization();
+  const [classData, setClassData] = useState<ClassData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchClassData = async () => {
+      try {
+        const { data: session } = await supabase.auth.getSession();
+        
+        if (!session.session) {
+          setError("No authenticated session");
+          setIsLoading(false);
+          return;
+        }
+
+        const { data: membershipData, error: membershipError } = await supabase
+          .from('classroom_memberships')
+          .select(`
+            classroom_id,
+            joined_at,
+            classroom:classroom_codes!inner (
+              class_name,
+              code,
+              teacher_id
+            )
+          `)
+          .maybeSingle();
+
+        if (membershipError) throw membershipError;
+        
+        if (!membershipData) {
+          setIsLoading(false);
+          return;
+        }
+
+        let teacherName = undefined;
+        let teacherEmail = undefined;
+
+        if (membershipData.classroom.teacher_id) {
+          const { data: teacherData } = await supabase
+            .from('profiles')
+            .select('email, display_name')
+            .eq('id', membershipData.classroom.teacher_id)
+            .maybeSingle();
+
+          if (teacherData) {
+            teacherEmail = teacherData.email;
+            teacherName = teacherData.display_name;
+          }
+        }
+
+        const { data: metricsData } = await supabase
+          .from('class_student_metrics')
+          .select('*')
+          .eq('classroom_id', membershipData.classroom_id)
+          .eq('student_id', session.session.user.id)
+          .maybeSingle();
+
+        const classInfo: ClassData = {
+          class_name: membershipData.classroom.class_name,
+          teacher_email: teacherEmail,
+          teacher_name: teacherName,
+          joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
+          code: membershipData.classroom.code,
+          metrics: metricsData || undefined
+        };
+
+        setClassData(classInfo);
+      } catch (error: any) {
+        console.error('Error fetching class data:', error);
+        setError(error.message);
+        toast({
+          title: t("error"),
+          description: error.message || t("failedToLoadClassData"),
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchClassData();
+  }, [toast, t]);
+
+  return { classData, isLoading, error };
+};
