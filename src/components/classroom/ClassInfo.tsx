@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { CardContent } from "@/components/ui/card";
-import { useLocalization } from "@/context/LocalizationContext";
+import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface ClassInfoProps {
   className: string;
@@ -12,21 +12,19 @@ interface ClassInfoProps {
 }
 
 const ClassInfo = ({ className, teacherName, teacherEmail, joinedAt, code }: ClassInfoProps) => {
-  const { t } = useLocalization();
-  
   return (
     <CardContent className="space-y-4">
       {(teacherName || teacherEmail) && (
         <div>
-          <span className="font-medium">{t("teacher")}:</span>{' '}
+          <span className="font-medium">{CLASSROOM_TEXT.TEACHER}:</span>{' '}
           {teacherName || teacherEmail}
         </div>
       )}
       <div>
-        <span className="font-medium">{t("joined")}:</span> {joinedAt}
+        <span className="font-medium">{CLASSROOM_TEXT.JOINED}:</span> {joinedAt}
       </div>
       <div>
-        <span className="font-medium">{t("classCode")}:</span> {code}
+        <span className="font-medium">{CLASSROOM_TEXT.CLASS_CODE}:</span> {code}
       </div>
     </CardContent>
   );
