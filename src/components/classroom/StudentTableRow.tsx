@@ -9,9 +9,6 @@ interface StudentTableRowProps {
 }
 
 export const StudentTableRow = ({ student }: StudentTableRowProps) => {
-  // Calculate total practice calls
-  const totalPracticeCalls = student.text_practice_calls + student.premium_voice_calls;
-
   return (
     <TableRow>
       <TableCell className="font-medium">
@@ -23,7 +20,7 @@ export const StudentTableRow = ({ student }: StudentTableRowProps) => {
           ? `${Math.round(student.highest_certification_score)}%` 
           : '-'}
       </TableCell>
-      <TableCell>{totalPracticeCalls}</TableCell>
+      <TableCell>{student.text_practice_calls}</TableCell>
       <TableCell>{student.premium_voice_sessions}</TableCell>
       <TableCell>{Math.round(student.premium_voice_minutes_used)} min</TableCell>
       <TableCell>

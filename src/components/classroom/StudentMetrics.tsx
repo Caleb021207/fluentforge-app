@@ -22,9 +22,6 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
   const { t } = useLocalization();
   const { isTeacher } = useTeacherStatus();
   
-  // Calculate total practice calls - sum of text and premium voice calls
-  const totalPracticeCalls = metrics.text_practice_calls + metrics.premium_voice_calls;
-  
   // Display minutes used for teachers, minutes remaining for students
   const voiceMinutesDisplay = isTeacher ? 
     `${Math.round(metrics.premium_voice_minutes_used)} min used` :
@@ -47,7 +44,7 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
         )}
         <div>
           <span className="font-medium">{CLASSROOM_TEXT.PRACTICE_CALLS}:</span>{' '}
-          {totalPracticeCalls}
+          {metrics.text_practice_calls}
         </div>
         <div>
           <span className="font-medium">{CLASSROOM_TEXT.PREMIUM_VOICE_SESSIONS}:</span>{' '}

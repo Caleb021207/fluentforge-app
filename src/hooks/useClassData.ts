@@ -97,7 +97,7 @@ export const useClassData = () => {
       }
 
       // Add a slight delay to ensure the recalculation completes
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const { data: metricsData, error: metricsError } = await supabase
         .from('student_metrics')

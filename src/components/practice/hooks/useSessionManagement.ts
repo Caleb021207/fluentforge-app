@@ -30,11 +30,15 @@ export const useSessionManagement = () => {
         
         // Force a recalculation of metrics after creating a text practice session
         try {
-          await supabase.rpc('recalculate_student_metrics', { 
+          const { error: recalcError } = await supabase.rpc('recalculate_student_metrics', { 
             target_student_id: user.id 
           });
+          
+          if (recalcError) {
+            console.error('Error recalculating metrics:', recalcError);
+          }
         } catch (recalcError) {
-          console.error('Error recalculating metrics:', recalcError);
+          console.error('Exception recalculating metrics:', recalcError);
         }
 
       } catch (error: any) {

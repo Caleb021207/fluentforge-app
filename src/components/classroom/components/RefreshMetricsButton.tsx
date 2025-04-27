@@ -45,13 +45,13 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
       setTimeout(() => {
         if (onSuccess) onSuccess();
         setRefreshing(false);
-      }, 1000);
+      }, 1500); // Increased from 1000ms to 1500ms for better reliability
       
     } catch (error: any) {
       console.error('Error refreshing metrics:', error);
       toast({
         title: CLASSROOM_TEXT.ERROR,
-        description: CLASSROOM_TEXT.FAILED_TO_REFRESH_METRICS,
+        description: error.message || CLASSROOM_TEXT.FAILED_TO_REFRESH_METRICS,
         variant: "destructive",
       });
       setRefreshing(false);
