@@ -17,6 +17,7 @@ import NotFound from "@/pages/NotFound";
 import SafetyPolicy from "@/pages/SafetyPolicy";
 import TeacherClasses from "@/pages/TeacherClasses";
 import StudentClass from "@/pages/StudentClass";
+import Settings from "@/pages/Settings";
 import { LocalizationProvider } from "@/context/LocalizationContext";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
               { path: "safety-policy", element: <SafetyPolicy /> },
               { path: "teacher/classes", element: <TeacherClasses /> },
               { path: "student/class", element: <StudentClass /> },
+              { path: "settings", element: <Settings /> }
             ],
           },
         ])}
