@@ -16,6 +16,7 @@ export type Database = {
           generated_by: string | null
           id: string
           is_used: boolean | null
+          role_type: string
           tier: number
           used_at: string | null
           used_by: string | null
@@ -26,6 +27,7 @@ export type Database = {
           generated_by?: string | null
           id?: string
           is_used?: boolean | null
+          role_type?: string
           tier: number
           used_at?: string | null
           used_by?: string | null
@@ -36,6 +38,7 @@ export type Database = {
           generated_by?: string | null
           id?: string
           is_used?: boolean | null
+          role_type?: string
           tier?: number
           used_at?: string | null
           used_by?: string | null
@@ -507,6 +510,14 @@ export type Database = {
         Returns: Json
       }
       generate_class_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_student_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_teacher_code: {
         Args: Record<PropertyKey, never>
         Returns: string
       }

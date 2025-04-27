@@ -77,6 +77,18 @@ const uiElementsTranslations: TranslationRecord = {
   // Navigation
   myClasses: "My Classes",
   myClass: "My Class",
+  
+  // Classroom Management
+  createNewClass: "Create New Class",
+  className: "Class Name",
+  creating: "Creating...",
+  createClass: "Create Class",
+  joinClass: "Join Class",
+  enterClassCode: "Enter Class Code",
+  joining: "Joining...",
+  unauthorized: "Unauthorized",
+  teacherAccessRequired: "Teacher access is required for this page",
+  generateCode: "Generate Code",
 };
 
 export default uiElementsTranslations;

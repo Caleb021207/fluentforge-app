@@ -1,45 +1,44 @@
-
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import "./App.css";
+import React from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import Layout from "@/components/Layout";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LocalizationProvider } from "@/context/LocalizationContext";
 import Index from "@/pages/Index";
 import Practice from "@/pages/Practice";
 import VoiceChat from "@/pages/VoiceChat";
 import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
-import ExampleData from "@/pages/ExampleData";
-import Settings from "@/pages/Settings";
-import SafetyPolicy from "@/pages/SafetyPolicy";
-import WritingCertification from "@/pages/WritingCertification";
-import ReadingCertification from "@/pages/ReadingCertification";
+import Progress from "@/pages/Progress";
+import Profile from "@/pages/Profile";
+import Certificates from "@/pages/Certificates";
 import NotFound from "@/pages/NotFound";
-
-const queryClient = new QueryClient();
+import SafetyPolicy from "@/pages/SafetyPolicy";
+import TeacherClasses from "@/pages/TeacherClasses";
+import StudentClass from "@/pages/StudentClass";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <LocalizationProvider>
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/practice" element={<Practice />} />
-              <Route path="/voice-chat" element={<VoiceChat />} />
-              <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />
-              <Route path="/pro-voice-chat" element={<PremiumVoiceChat />} />
-              <Route path="/example-data" element={<ExampleData />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/safety-policy" element={<SafetyPolicy />} />
-              <Route path="/certification/writing" element={<WritingCertification />} />
-              <Route path="/certification/reading/:level?" element={<ReadingCertification />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </LocalizationProvider>
-    </QueryClientProvider>
+    <RouterProvider
+      router={createBrowserRouter([
+        {
+          path: "/",
+          element: <Layout />,
+          errorElement: <NotFound />,
+          children: [
+            { index: true, element: <Index /> },
+            { path: "practice", element: <Practice /> },
+            { path: "voice-chat", element: <VoiceChat /> },
+            { path: "premium-voice-chat", element: <PremiumVoiceChat /> },
+            { path: "progress", element: <Progress /> },
+            { path: "profile", element: <Profile /> },
+            { path: "certificates", element: <Certificates /> },
+            { path: "safety-policy", element: <SafetyPolicy /> },
+            { path: "teacher/classes", element: <TeacherClasses /> },
+            { path: "student/class", element: <StudentClass /> },
+          ],
+        },
+      ])}
+    />
   );
 }
 
