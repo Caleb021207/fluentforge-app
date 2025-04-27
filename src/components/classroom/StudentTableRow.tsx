@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { TableRow, TableCell } from "@/components/ui/table";
-import { StudentMetrics } from '../types/studentTypes';
+import { StudentMetrics, SortField, SortDirection } from '@/components/classroom/types/studentTypes';
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface StudentTableRowProps {

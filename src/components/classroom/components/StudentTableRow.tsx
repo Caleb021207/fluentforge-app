@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { TableRow, TableCell } from "@/components/ui/table";
-import { StudentMetrics } from '../types/studentTypes';
+import { StudentMetrics } from '@/components/classroom/types/studentTypes';
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface StudentTableRowProps {
@@ -9,6 +9,9 @@ interface StudentTableRowProps {
 }
 
 export const StudentTableRow = ({ student }: StudentTableRowProps) => {
+  // Calculate total practice calls
+  const totalPracticeCalls = student.text_practice_calls + student.premium_voice_calls;
+
   return (
     <TableRow>
       <TableCell className="font-medium">
@@ -20,8 +23,7 @@ export const StudentTableRow = ({ student }: StudentTableRowProps) => {
           ? `${Math.round(student.highest_certification_score)}%` 
           : '-'}
       </TableCell>
-      <TableCell>{student.text_practice_calls}</TableCell>
-      <TableCell>{student.premium_voice_calls}</TableCell>
+      <TableCell>{totalPracticeCalls}</TableCell>
       <TableCell>{student.premium_voice_sessions}</TableCell>
       <TableCell>{Math.round(student.premium_voice_minutes)} min</TableCell>
       <TableCell>

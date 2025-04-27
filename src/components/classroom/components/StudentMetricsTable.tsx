@@ -3,7 +3,7 @@ import React from 'react';
 import { Table, TableHeader, TableBody } from "@/components/ui/table";
 import { SortableTableHeader } from './SortableTableHeader';
 import { StudentTableRow } from './StudentTableRow';
-import { StudentMetrics, SortField, SortDirection } from '../types/studentTypes';
+import { StudentMetrics, SortField, SortDirection } from '@/components/classroom/types/studentTypes';
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface StudentMetricsTableProps {
