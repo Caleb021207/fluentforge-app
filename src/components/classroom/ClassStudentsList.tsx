@@ -2,11 +2,14 @@
 import React from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { StudentMetricsTable } from './components/StudentMetricsTable';
 import { useSortableData } from './hooks/useSortableData';
 import { StudentMetrics } from './types/studentTypes';
+import { RefreshMetricsButton } from './components/RefreshMetricsButton';
 
 interface ClassStudentsListProps {
   classId: string;
@@ -21,33 +24,33 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
   const [isLoading, setIsLoading] = React.useState(true);
   const { sortedData, sortField, sortDirection, handleSort } = useSortableData(students);
 
+  const fetchStudents = async () => {
+    if (!open || !classId) return;
+    
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase
+        .from('class_student_metrics')
+        .select('*')
+        .eq('classroom_id', classId);
+
+      if (error) throw error;
+      setStudents(data || []);
+    } catch (error: any) {
+      console.error('Error fetching students:', error);
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      setStudents([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   React.useEffect(() => {
-    const fetchStudents = async () => {
-      if (!open || !classId) return;
-      
-      setIsLoading(true);
-
-      try {
-        const { data, error } = await supabase
-          .from('class_student_metrics')
-          .select('*')
-          .eq('classroom_id', classId);
-
-        if (error) throw error;
-        setStudents(data || []);
-      } catch (error: any) {
-        console.error('Error fetching students:', error);
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
-        setStudents([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchStudents();
   }, [classId, open, toast]);
 
@@ -55,9 +58,15 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-7xl">
         <DialogHeader>
-          <DialogTitle>
-            {className} - {CLASSROOM_TEXT.STUDENTS}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>
+              {className} - {CLASSROOM_TEXT.STUDENTS}
+            </DialogTitle>
+            <RefreshMetricsButton 
+              classId={classId} 
+              onSuccess={fetchStudents} 
+            />
+          </div>
         </DialogHeader>
         {isLoading ? (
           <div className="py-8 text-center">Loading...</div>

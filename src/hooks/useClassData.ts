@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -84,6 +85,20 @@ export const useClassData = () => {
         }
       }
 
+      // Try to trigger a recalculation of metrics
+      try {
+        const { error: recalcError } = await supabase.rpc(
+          'recalculate_student_metrics',
+          { target_student_id: session.session.user.id }
+        );
+        
+        if (recalcError) {
+          console.error('Error recalculating metrics:', recalcError);
+        }
+      } catch (e) {
+        console.error('Failed to recalculate metrics:', e);
+      }
+
       // Get student metrics from the class_student_metrics view with more detailed error logging
       const { data: metricsData, error: metricsError } = await supabase
         .from('class_student_metrics')
@@ -129,7 +144,7 @@ export const useClassData = () => {
         {
           event: '*',
           schema: 'public',
-          table: 'class_student_metrics'
+          table: 'student_metrics'
         },
         (payload) => {
           console.log('Metrics updated:', payload);

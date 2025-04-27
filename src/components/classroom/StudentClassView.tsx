@@ -1,15 +1,38 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import ClassInfo from './ClassInfo';
 import StudentMetrics from './StudentMetrics';
 import { useClassData } from '@/hooks/useClassData';
 
 const StudentClassView = () => {
   const { t } = useLocalization();
-  const { classData, isLoading, error } = useClassData();
+  const { toast } = useToast();
+  const { classData, isLoading, error, refetchData } = useClassData();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await refetchData();
+      toast({
+        title: t("success"),
+        description: t("metricsRefreshed"),
+      });
+    } catch (error) {
+      toast({
+        title: t("error"),
+        description: t("failedToRefreshMetrics"),
+        variant: "destructive",
+      });
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -41,8 +64,21 @@ const StudentClassView = () => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{classData.class_name}</CardTitle>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleRefresh} 
+          disabled={refreshing}
+        >
+          {refreshing ? (
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4 mr-2" />
+          )}
+          {refreshing ? t("refreshing") : t("refresh")}
+        </Button>
       </CardHeader>
       
       <ClassInfo

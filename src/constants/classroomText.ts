@@ -44,5 +44,14 @@ export const CLASSROOM_TEXT = {
   
   // New constants for ClassStudentsList
   HIGH_SCORE: "Highest Score",
-  VOICE_CHAT_MINUTES: "Voice Chat Minutes"
+  VOICE_CHAT_MINUTES: "Voice Chat Minutes",
+  
+  // New constants for metrics
+  REFRESH_METRICS: "Refresh Metrics",
+  REFRESHING: "Refreshing...",
+  SUCCESS: "Success",
+  ERROR: "Error",
+  STUDENT_METRICS_REFRESHED: "Student metrics have been refreshed",
+  ALL_METRICS_REFRESHED: "All student metrics have been refreshed",
+  FAILED_TO_REFRESH_METRICS: "Failed to refresh metrics"
 } as const;

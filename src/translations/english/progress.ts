@@ -25,6 +25,8 @@ const progressTranslations: TranslationRecord = {
   refresh: "Refresh",
   refreshing: "Refreshing",
   refreshingProgressData: "Refreshing your progress data...",
+  metricsRefreshed: "Metrics refreshed successfully",
+  failedToRefreshMetrics: "Failed to refresh metrics. Please try again later."
 };
 
 export default progressTranslations;

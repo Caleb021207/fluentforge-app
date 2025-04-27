@@ -416,6 +416,89 @@ export type Database = {
         }
         Relationships: []
       }
+      student_metrics: {
+        Row: {
+          certification_attempts: number | null
+          classroom_id: string
+          completed_lessons: number | null
+          highest_certification_score: number | null
+          last_activity: string | null
+          premium_voice_minutes: number | null
+          premium_voice_sessions: number | null
+          student_email: string | null
+          student_id: string
+          student_name: string | null
+          text_inputs: number | null
+          text_outputs: number | null
+          total_lessons: number | null
+          voice_chat_minutes: number | null
+          voice_chat_sessions: number | null
+        }
+        Insert: {
+          certification_attempts?: number | null
+          classroom_id: string
+          completed_lessons?: number | null
+          highest_certification_score?: number | null
+          last_activity?: string | null
+          premium_voice_minutes?: number | null
+          premium_voice_sessions?: number | null
+          student_email?: string | null
+          student_id: string
+          student_name?: string | null
+          text_inputs?: number | null
+          text_outputs?: number | null
+          total_lessons?: number | null
+          voice_chat_minutes?: number | null
+          voice_chat_sessions?: number | null
+        }
+        Update: {
+          certification_attempts?: number | null
+          classroom_id?: string
+          completed_lessons?: number | null
+          highest_certification_score?: number | null
+          last_activity?: string | null
+          premium_voice_minutes?: number | null
+          premium_voice_sessions?: number | null
+          student_email?: string | null
+          student_id?: string
+          student_name?: string | null
+          text_inputs?: number | null
+          text_outputs?: number | null
+          total_lessons?: number | null
+          voice_chat_minutes?: number | null
+          voice_chat_sessions?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_metrics_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "class_student_metrics"
+            referencedColumns: ["classroom_id"]
+          },
+          {
+            foreignKeyName: "student_metrics_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_metrics_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "student_usage_metrics"
+            referencedColumns: ["classroom_id"]
+          },
+          {
+            foreignKeyName: "student_metrics_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_students"
+            referencedColumns: ["classroom_id"]
+          },
+        ]
+      }
       text_practice_interactions: {
         Row: {
           created_at: string
@@ -634,6 +717,10 @@ export type Database = {
       make_myself_teacher: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      recalculate_student_metrics: {
+        Args: { target_student_id?: string }
+        Returns: undefined
       }
     }
     Enums: {
