@@ -42,7 +42,9 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
         text_practice_calls: student.text_practice_calls || 0,
         premium_voice_calls: student.premium_voice_calls || 0,
         premium_voice_sessions: student.premium_voice_sessions || 0,
-        premium_voice_minutes_used: student.premium_voice_minutes_used || 0,
+        // Map premium_voice_minutes to premium_voice_minutes_used if available, otherwise use it directly
+        premium_voice_minutes_used: student.premium_voice_minutes_used || student.premium_voice_minutes || 0,
+        // Use premium_voice_minutes_remaining if available, otherwise default to 10
         premium_voice_minutes_remaining: student.premium_voice_minutes_remaining || 10,
         certification_attempts: student.certification_attempts || 0,
         highest_certification_score: student.highest_certification_score || 0,
