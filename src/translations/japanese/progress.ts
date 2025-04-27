@@ -24,6 +24,20 @@ const progressTranslations: TranslationRecord = {
   startLearningNow: "今すぐ学習を始める",
   createFirstClassToSeeProgress: "最初のクラスを作成して生徒の進捗状況の追跡を開始",
   joinClassToSeeProgress: "クラスコードでクラスに参加して進捗状況を確認",
+  createNewClass: "新しいクラスを作成",
+  classCode: "クラスコード",
+  studentProgress: "生徒の進捗",
+  joinClass: "クラスに参加",
+  enterClassName: "クラス名を入力",
+  creating: "作成中...",
+  createClass: "クラスを作成",
+  enterClassCode: "クラスコードを入力",
+  joining: "参加中...",
+  student: "生徒",
+  voiceChatSessions: "音声チャットセッション",
+  certificationAttempts: "認定試験の受験回数",
+  avgCertificationScore: "平均スコア",
+  noStudentsYet: "まだ生徒が参加していません"
 };
 
 export default progressTranslations;

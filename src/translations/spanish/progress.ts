@@ -22,6 +22,20 @@ const progressTranslations: TranslationRecord = {
   recentCertificationAttempts: "Intentos de Certificación Recientes",
   createFirstClassToSeeProgress: "Crea tu primera clase para comenzar a seguir el progreso de los estudiantes",
   joinClassToSeeProgress: "Únete a una clase con tu código de clase para ver tu progreso",
+  createNewClass: "Crear Nueva Clase",
+  classCode: "Código de Clase",
+  studentProgress: "Progreso del Estudiante",
+  joinClass: "Unirse a la Clase",
+  enterClassName: "Ingrese el nombre de la clase",
+  creating: "Creando...",
+  createClass: "Crear Clase",
+  enterClassCode: "Ingrese el código de clase",
+  joining: "Uniéndose...",
+  student: "Estudiante",
+  voiceChatSessions: "Sesiones de Chat de Voz",
+  certificationAttempts: "Intentos de Certificación",
+  avgCertificationScore: "Puntuación Promedio",
+  noStudentsYet: "Aún no hay estudiantes inscritos en esta clase"
 };
 
 export default progressTranslations;
