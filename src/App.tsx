@@ -11,6 +11,7 @@ import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
 import ExampleData from "@/pages/ExampleData";
 import Settings from "@/pages/Settings";
 import SafetyPolicy from "@/pages/SafetyPolicy";
+import Progress from "@/pages/Progress";
 import WritingCertification from "@/pages/WritingCertification";
 import ReadingCertification from "@/pages/ReadingCertification";
 import NotFound from "@/pages/NotFound";
@@ -25,6 +26,7 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/progress" element={<Progress />} />
               <Route path="/practice" element={<Practice />} />
               <Route path="/voice-chat" element={<VoiceChat />} />
               <Route path="/premium-voice-chat" element={<PremiumVoiceChat />} />

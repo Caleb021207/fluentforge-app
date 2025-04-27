@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, LayoutDashboard } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,6 +45,8 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
+    { icon: Home, label: "home", path: "/", requiresAuth: false },
+    { icon: LayoutDashboard, label: "progress", path: "/progress", requiresAuth: true },
     { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
     { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
     { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
