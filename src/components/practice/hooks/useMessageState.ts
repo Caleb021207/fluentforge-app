@@ -1,51 +1,37 @@
 
 import { useState } from "react";
-import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
+import { ChatMessage } from "@/types/chat";
+import { MessageCount } from "@/types/chat";
 
-export interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  translation?: string;
-}
-
-export const useMessageState = () => {
+export const useMessageState = (setMessageCount: (count: MessageCount) => void) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addUserMessage = (content: string) => {
-    const isSafe = isSafeContent(content);
-    let processedContent = content;
-    
-    if (!isSafe) {
-      processedContent = filterContent(content);
-    }
-    
     const userMessage: ChatMessage = {
       role: "user",
-      content: processedContent,
+      content,
     };
-
-    setMessages((prev) => [...prev, userMessage]);
-    return userMessage;
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setMessageCount(prev => ({
+      ...prev,
+      inputs: prev.inputs + 1
+    }));
   };
 
-  const addAssistantMessage = (content: string, translation?: string) => {
-    const safeContent = filterContent(content);
-    const safeTranslation = translation ? filterContent(translation) : "";
-    
-    const assistantMessage: ChatMessage = {
-      role: "assistant",
-      content: safeContent,
-      translation: safeTranslation,
-    };
-
-    setMessages((prev) => [...prev, assistantMessage]);
-    return assistantMessage;
+  const addAssistantMessage = (message: ChatMessage) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+    setMessageCount(prev => ({
+      ...prev,
+      outputs: prev.outputs + 1
+    }));
   };
 
   return {
     messages,
-    setMessages,
+    isLoading,
+    setIsLoading,
     addUserMessage,
-    addAssistantMessage
+    addAssistantMessage,
   };
 };
