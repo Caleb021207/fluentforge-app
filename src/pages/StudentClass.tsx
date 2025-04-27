@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import { useLocalization } from "@/context/LocalizationContext";
+import StudentClassView from "@/components/classroom/StudentClassView";
+import JoinClassForm from "@/components/classroom/JoinClassForm";
 
 const StudentClass = () => {
   const navigate = useNavigate();
