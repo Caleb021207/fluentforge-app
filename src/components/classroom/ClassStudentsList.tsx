@@ -36,17 +36,19 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
       if (error) throw error;
       
       const transformedData: StudentMetrics[] = (data || []).map(student => {
-        // Handle database schema differences by checking which fields are available
-        // Ensure we're working with proper number types
-        const minutes_used: number = typeof student.premium_voice_minutes_used === 'number' 
-          ? student.premium_voice_minutes_used 
-          : (typeof student.premium_voice_minutes === 'number' 
-              ? student.premium_voice_minutes 
-              : 0);
-          
-        const minutes_remaining: number = typeof student.premium_voice_minutes_remaining === 'number'
-          ? student.premium_voice_minutes_remaining
-          : 10;
+        // Access properties safely, checking if they exist on the student object
+        // This handles schema differences between different database versions
+        let minutes_used = 0;
+        if ('premium_voice_minutes_used' in student && student.premium_voice_minutes_used !== null) {
+          minutes_used = Number(student.premium_voice_minutes_used);
+        } else if ('premium_voice_minutes' in student && student.premium_voice_minutes !== null) {
+          minutes_used = Number(student.premium_voice_minutes);
+        }
+        
+        let minutes_remaining = 10; // Default value
+        if ('premium_voice_minutes_remaining' in student && student.premium_voice_minutes_remaining !== null) {
+          minutes_remaining = Number(student.premium_voice_minutes_remaining);
+        }
 
         return {
           student_id: student.student_id || null,
