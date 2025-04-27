@@ -78,7 +78,11 @@ const FERPATabContent = () => {
         </h2>
         <p>
           {t("fullComplianceAvailable") || 
-            "A detailed FERPA compliance breakdown and technical documentation are available upon request. Please email: caleb@palavox.org for additional information or to request documentation for your district."}
+            "A detailed FERPA compliance breakdown and technical documentation are available upon request. Please email: info@palavox.org for additional information or to request documentation for your district."}
+        </p>
+        <p className="mt-2">
+          {t("salesContactInfo") || 
+            "For school or district demo requests, please contact: sales@palavox.org"}
         </p>
       </section>
     </div>

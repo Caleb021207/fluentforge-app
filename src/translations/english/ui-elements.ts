@@ -70,6 +70,10 @@ const uiElementsTranslations: TranslationRecord = {
   startChatting: "Start Chatting",
   continue: "Continue",
   incorrectPin: "Incorrect PIN",
+  
+  // Contact information
+  salesContactInfo: "For school or district demo requests, please contact: sales@palavox.org",
+  safetyPolicyContactInfo: "A detailed FERPA/CIPA compliance packet and technical documentation are available upon request. Please email: info@palavox.org",
 };
 
 export default uiElementsTranslations;

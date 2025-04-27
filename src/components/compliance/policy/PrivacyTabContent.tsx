@@ -76,7 +76,11 @@ const PrivacyTabContent = () => {
         </h2>
         <p>
           {t("safetyPolicyContactInfo") || 
-            "A detailed FERPA/CIPA compliance packet and technical documentation are available upon request. Please email: caleb@palavox.org"}
+            "A detailed FERPA/CIPA compliance packet and technical documentation are available upon request. Please email: info@palavox.org"}
+        </p>
+        <p className="mt-2">
+          {t("salesContactInfo") || 
+            "For school or district demo requests, please contact: sales@palavox.org"}
         </p>
       </section>
     </div>
