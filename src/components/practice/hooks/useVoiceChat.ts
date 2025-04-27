@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { supabase } from "@/integrations/supabase/client";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
-import { supabase } from "@/integrations/supabase/client";
 
 export const useVoiceChat = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);
@@ -110,24 +109,9 @@ export const useVoiceChat = () => {
         return;
       }
       
-      if (isConversationActive()) {
-        endVoiceConversation();
-        return;
-      }
-      
-      const remainingTime = await calculateRemainingWeeklyTime(user.id);
-      
-      if (remainingTime <= 0) {
-        toast({
-          title: t("cooldownActive"),
-          description: t("dailyLimitReached"),
-          variant: "destructive",
-        });
-        return;
-      }
-      
+      // Create voice chat session
       const { data: sessionData, error: sessionError } = await supabase
-        .from('premium_voice_chat_sessions')
+        .from('voice_practice_interactions')
         .insert({
           user_id: user.id
         })
@@ -144,7 +128,19 @@ export const useVoiceChat = () => {
         return;
       }
 
-      await tryStartConversation(sessionData.id);
+      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
+      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
+      const conversationId = await conversation.startSession({
+        agentId: selectedAgentId,
+      });
+      
+      const remainingTime = await calculateRemainingWeeklyTime(user.id);
+      setVoiceChatTimeRemaining(remainingTime);
+      
+      toast({
+        title: t("startVoiceChat"),
+        description: t("startChatting"),
+      });
       
     } catch (error) {
       console.error("Voice conversation error:", error);
@@ -153,63 +149,6 @@ export const useVoiceChat = () => {
         description: t("networkConnectionIssue"),
         variant: "destructive",
       });
-    }
-  };
-
-  const tryStartConversation = async (sessionId: string) => {
-    try {
-      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
-      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker (attempt ${connectionAttempts + 1})`);
-      
-      // End any existing session to make sure we start fresh
-      if (isConversationActive()) {
-        await conversation.endSession();
-      }
-      
-      console.log(`Attempting to start session with agent ID: ${selectedAgentId}`);
-      const conversationId = await conversation.startSession({
-        agentId: selectedAgentId,
-      });
-      
-      console.log(`Successfully started conversation session: ${conversationId}`);
-      
-      const remainingTime = await calculateRemainingWeeklyTime(sessionId);
-      setVoiceChatTimeRemaining(remainingTime);
-      
-      toast({
-        title: t("startVoiceChat"),
-        description: t("startChatting"),
-      });
-      
-      return true;
-    } catch (error) {
-      console.error(`Connection attempt ${connectionAttempts + 1} failed:`, error);
-      setConnectionAttempts(prev => prev + 1);
-      
-      if (connectionAttempts < maxConnectionAttempts - 1) {
-        console.log(`Retrying connection (attempt ${connectionAttempts + 2} of ${maxConnectionAttempts})...`);
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Wait before retry
-        return tryStartConversation(sessionId);
-      } else {
-        console.error(`Failed to connect after ${maxConnectionAttempts} attempts`);
-        toast({
-          title: t("error"),
-          description: `${t("networkConnectionIssue")}. ${t("failedToCreateSession")}`,
-          variant: "destructive",
-        });
-        
-        // Close the session in database
-        try {
-          await supabase
-            .from('premium_voice_chat_sessions')
-            .update({ session_end: new Date().toISOString() })
-            .eq('id', sessionId);
-        } catch (dbError) {
-          console.error("Error updating session end time:", dbError);
-        }
-        
-        return false;
-      }
     }
   };
 
@@ -222,7 +161,7 @@ export const useVoiceChat = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           const { data: activeSession, error: findError } = await supabase
-            .from('premium_voice_chat_sessions')
+            .from('voice_practice_interactions')
             .select('id')
             .eq('user_id', user.id)
             .is('session_end', null)
@@ -232,7 +171,7 @@ export const useVoiceChat = () => {
             
           if (!findError && activeSession) {
             await supabase
-              .from('premium_voice_chat_sessions')
+              .from('voice_practice_interactions')
               .update({ session_end: new Date().toISOString() })
               .eq('id', activeSession.id);
           }

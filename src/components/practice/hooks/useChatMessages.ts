@@ -1,71 +1,180 @@
-
+import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useToast } from "@/hooks/use-toast";
-import { useMessageState, type ChatMessage } from "./useMessageState";
-import { useMessageInput } from "./useMessageInput";
-import { useChatMessaging } from "./useChatMessaging";
-import { usePromptGenerator } from "./usePromptGenerator";
-import { isSafeContent, filterContent } from "@/utils/safety/contentFilter";
+import { supabase } from "@/integrations/supabase/client";
+import { getLanguagePair } from "@/utils/languageUtils";
 
-// Use 'export type' syntax for re-exporting types when isolatedModules is enabled
-export type { ChatMessage };
+export type ChatMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+  translation?: string;
+};
 
 export const useChatMessages = () => {
-  const { currentLanguage, t } = useLocalization();
-  const { toast } = useToast();
-  const { messages, setMessages, addUserMessage, addAssistantMessage } = useMessageState();
-  const { input, setInput, getPlaceholderText } = useMessageInput();
-  const { isLoading, setIsLoading, sendChatMessage } = useChatMessaging();
-  const { generateLanguageLearningPrompt } = usePromptGenerator();
+  const [messages, setMessages] = useState<any[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { t, currentLanguage } = useLocalization();
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [messageCount, setMessageCount] = useState({ inputs: 0, outputs: 0 });
 
-  const sendLanguageLearningPrompt = () => {
-    const prompt = generateLanguageLearningPrompt();
-    
-    if (prompt) {
-      addUserMessage(prompt);
-      handleSendPrompt(prompt);
-    }
-  };
+  // Initialize chat session
+  useEffect(() => {
+    const initSession = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-  const handleSendPrompt = async (promptText: string) => {
-    if (!isSafeContent(promptText)) {
-      const filteredPrompt = filterContent(promptText);
-      
-      toast({
-        title: t("contentFiltered"),
-        description: t("contentFilteredDescription"),
-        variant: "warning",
-      });
-      
-      promptText = filteredPrompt;
-    }
-    
-    const response = await sendChatMessage(promptText);
-    
-    if (response) {
-      addAssistantMessage(response.content, response.translation);
-    }
-  };
+      const { data, error } = await supabase
+        .from('text_practice_interactions')
+        .insert({
+          user_id: user.id,
+          inputs_count: 0,
+          outputs_count: 0
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating chat session:', error);
+        return;
+      }
+
+      setSessionId(data.id);
+    };
+
+    initSession();
+
+    // Cleanup session when component unmounts
+    return () => {
+      if (sessionId) {
+        supabase
+          .from('text_practice_interactions')
+          .update({
+            session_end: new Date().toISOString(),
+            inputs_count: messageCount.inputs,
+            outputs_count: messageCount.outputs
+          })
+          .eq('id', sessionId)
+          .then(({ error }) => {
+            if (error) console.error('Error closing session:', error);
+          });
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
-    addUserMessage(input);
-    setInput("");
-    
-    await handleSendPrompt(input);
+    try {
+      setIsLoading(true);
+      
+      // Update message counts
+      setMessageCount(prev => ({
+        ...prev,
+        inputs: prev.inputs + 1
+      }));
+
+      const userMessage = {
+        role: "user" as const,
+        content: input,
+      };
+      setMessages((prevMessages) => [...prevMessages, userMessage]);
+      setInput("");
+
+      const { data, error } = await supabase.functions.invoke('generate-language-learning-response', {
+        body: {
+          message: input,
+          language: currentLanguage,
+        },
+      });
+
+      if (error) {
+        console.error("Function invocation error:", error);
+        throw new Error(error.message);
+      }
+
+      if (!data || !data.response) {
+        console.error("Invalid response from function:", data);
+        throw new Error("Invalid response from the language model.");
+      }
+
+      const assistantMessage = {
+        role: "assistant" as const,
+        content: data.response,
+      };
+
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+
+      setMessageCount(prev => ({
+        ...prev,
+        outputs: prev.outputs + 1
+      }));
+
+    } catch (error) {
+      console.error('Chat error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendLanguageLearningPrompt = async () => {
+    if (isLoading) return;
+
+    try {
+      setIsLoading(true);
+      const { practice, native } = getLanguagePair(currentLanguage);
+      const prompt = t("practicePrompt", {
+        nativeLanguage: native,
+        targetLanguage: practice,
+      });
+
+      const userMessage = {
+        role: "user" as const,
+        content: prompt,
+      };
+      setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+      const { data, error } = await supabase.functions.invoke('generate-language-learning-response', {
+        body: {
+          message: prompt,
+          language: currentLanguage,
+        },
+      });
+
+      if (error) {
+        console.error("Function invocation error:", error);
+        throw new Error(error.message);
+      }
+
+      if (!data || !data.response) {
+        console.error("Invalid response from function:", data);
+        throw new Error("Invalid response from the language model.");
+      }
+
+      const assistantMessage = {
+        role: "assistant" as const,
+        content: data.response,
+      };
+
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+    } catch (error: any) {
+      console.error("Error sending language learning prompt:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getPlaceholderText = () => {
+    const { practice } = getLanguagePair(currentLanguage);
+    return t("chatPlaceholder", { targetLanguage: practice });
   };
 
   return {
     messages,
-    setMessages,
     input,
     setInput,
     isLoading,
-    setIsLoading,
     sendLanguageLearningPrompt,
-    handleSendPrompt,
     handleSubmit,
     getPlaceholderText
   };

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -121,16 +120,29 @@ export const useClassData = () => {
     }
   };
 
-  // Poll for updates every 30 seconds
   useEffect(() => {
+    // Enable realtime updates for the metrics table
+    const channel = supabase
+      .channel('class_metrics_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'class_student_metrics'
+        },
+        (payload) => {
+          console.log('Metrics updated:', payload);
+          fetchClassData();
+        }
+      )
+      .subscribe();
+
+    // Initial fetch
     fetchClassData();
-    
-    const interval = setInterval(() => {
-      fetchClassData();
-    }, 30000);
 
     return () => {
-      clearInterval(interval);
+      supabase.removeChannel(channel);
     };
   }, []);
 
