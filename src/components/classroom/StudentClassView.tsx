@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 interface ClassData {
   class_name: string;
-  teacher_email?: string;
+  teacher_email?: string;  
   teacher_name?: string;
   joined_at: string;
   code: string;
@@ -35,11 +35,13 @@ const StudentClassView = () => {
 
         console.log('Fetching class data for user:', session.session.user.id);
 
+        // Updated query to properly join classroom_memberships with classroom_codes
         const { data: membershipData, error: membershipError } = await supabase
           .from('classroom_memberships')
           .select(`
+            classroom_id,
             joined_at,
-            classroom: classroom_codes (
+            classroom:classroom_codes!inner (
               class_name,
               code,
               teacher_id
@@ -80,13 +82,12 @@ const StudentClassView = () => {
           }
         }
 
-        // Transform the data to match our ClassData interface
         const classInfo: ClassData = {
-          class_name: membershipData.classroom?.class_name || 'Unknown Class',
+          class_name: membershipData.classroom.class_name,
           teacher_email: teacherEmail,
           teacher_name: teacherName,
           joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-          code: membershipData.classroom?.code || 'Unknown Code'
+          code: membershipData.classroom.code
         };
 
         console.log('Transformed class info:', classInfo);
@@ -139,20 +140,20 @@ const StudentClassView = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{classData.class_name}</CardTitle>
+        <CardTitle>{classData?.class_name}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        {(classData.teacher_name || classData.teacher_email) && (
+        {(classData?.teacher_name || classData?.teacher_email) && (
           <div>
             <span className="font-medium">{t("teacher")}:</span>{' '}
             {classData.teacher_name || classData.teacher_email}
           </div>
         )}
         <div>
-          <span className="font-medium">{t("joined")}:</span> {classData.joined_at}
+          <span className="font-medium">{t("joined")}:</span> {classData?.joined_at}
         </div>
         <div>
-          <span className="font-medium">{t("classCode")}:</span> {classData.code}
+          <span className="font-medium">{t("classCode")}:</span> {classData?.code}
         </div>
       </CardContent>
     </Card>
