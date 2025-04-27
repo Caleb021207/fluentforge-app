@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
@@ -26,7 +25,10 @@ const progressTranslations: TranslationRecord = {
   refreshing: "Refreshing",
   refreshingProgressData: "Refreshing your progress data...",
   metricsRefreshed: "Metrics refreshed successfully",
-  failedToRefreshMetrics: "Failed to refresh metrics. Please try again later."
+  failedToRefreshMetrics: "Failed to refresh metrics. Please try again later.",
+  textPracticeCalls: "Text Practice Calls",
+  unlimitedMinutes: "Unlimited Voice Minutes",
+  unlimitedSessions: "Unlimited Voice Sessions"
 };
 
 export default progressTranslations;

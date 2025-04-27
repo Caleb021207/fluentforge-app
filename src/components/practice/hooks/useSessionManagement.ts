@@ -18,18 +18,14 @@ export const useSessionManagement = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { data, error } = await supabase
-          .from('text_practice_interactions')
+        // Track this as a text practice API call
+        await supabase
+          .from('api_calls_tracking')
           .insert({
             user_id: user.id,
-            inputs_count: 0,
-            outputs_count: 0
-          })
-          .select()
-          .single();
+            call_type: 'text_practice'
+          });
 
-        if (error) throw error;
-        setSessionId(data.id);
       } catch (error: any) {
         console.error('Error creating chat session:', error);
         toast({
@@ -42,52 +38,6 @@ export const useSessionManagement = () => {
 
     initSession();
   }, [toast, t]);
-
-  // Update session when component unmounts or user leaves page
-  useEffect(() => {
-    const closeSession = async () => {
-      if (!sessionId) return;
-      
-      try {
-        await supabase
-          .from('text_practice_interactions')
-          .update({
-            session_end: new Date().toISOString(),
-            inputs_count: messageCount.inputs,
-            outputs_count: messageCount.outputs
-          })
-          .eq('id', sessionId);
-      } catch (error: any) {
-        console.error('Error closing session:', error);
-      }
-    };
-    
-    return () => {
-      closeSession();
-    };
-  }, [sessionId, messageCount]);
   
-  // Add periodic updates during long sessions
-  useEffect(() => {
-    if (!sessionId) return;
-    
-    // Update session data every 5 minutes to prevent data loss
-    const intervalId = setInterval(async () => {
-      try {
-        await supabase
-          .from('text_practice_interactions')
-          .update({
-            inputs_count: messageCount.inputs,
-            outputs_count: messageCount.outputs
-          })
-          .eq('id', sessionId);
-      } catch (error) {
-        console.error('Error updating session:', error);
-      }
-    }, 5 * 60 * 1000); // 5 minutes
-    
-    return () => clearInterval(intervalId);
-  }, [sessionId, messageCount]);
-
-  return { sessionId, messageCount, setMessageCount };
+  return { messageCount, setMessageCount };
 };

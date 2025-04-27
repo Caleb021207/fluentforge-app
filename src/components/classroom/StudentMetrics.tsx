@@ -5,10 +5,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 
 interface StudentMetricsProps {
   metrics: {
-    voice_chat_sessions: number;
-    voice_chat_minutes: number;
-    text_inputs: number;
-    text_outputs: number;
+    text_practice_calls: number;
     premium_voice_sessions: number;
     premium_voice_minutes: number;
     certification_attempts: number;
@@ -42,12 +39,8 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
           </div>
         )}
         <div>
-          <span className="font-medium">{t("textInputs")}:</span>{' '}
-          {metrics.text_inputs}
-        </div>
-        <div>
-          <span className="font-medium">{t("textOutputs")}:</span>{' '}
-          {metrics.text_outputs}
+          <span className="font-medium">{t("textPracticeCalls")}:</span>{' '}
+          {metrics.text_practice_calls}
         </div>
         <div>
           <span className="font-medium">{t("unlimitedSessions")}:</span>{' '}

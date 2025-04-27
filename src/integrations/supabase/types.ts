@@ -45,6 +45,27 @@ export type Database = {
         }
         Relationships: []
       }
+      api_calls_tracking: {
+        Row: {
+          call_type: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          call_type: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          call_type?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       certification_attempts: {
         Row: {
           certification_type: string
@@ -166,13 +187,6 @@ export type Database = {
           student_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "class_student_metrics"
-            referencedColumns: ["classroom_id"]
-          },
           {
             foreignKeyName: "classroom_memberships_classroom_id_fkey"
             columns: ["classroom_id"]
@@ -423,16 +437,14 @@ export type Database = {
           completed_lessons: number | null
           highest_certification_score: number | null
           last_activity: string | null
+          premium_voice_calls: number | null
           premium_voice_minutes: number | null
           premium_voice_sessions: number | null
           student_email: string | null
           student_id: string
           student_name: string | null
-          text_inputs: number | null
-          text_outputs: number | null
+          text_practice_calls: number | null
           total_lessons: number | null
-          voice_chat_minutes: number | null
-          voice_chat_sessions: number | null
         }
         Insert: {
           certification_attempts?: number | null
@@ -440,16 +452,14 @@ export type Database = {
           completed_lessons?: number | null
           highest_certification_score?: number | null
           last_activity?: string | null
+          premium_voice_calls?: number | null
           premium_voice_minutes?: number | null
           premium_voice_sessions?: number | null
           student_email?: string | null
           student_id: string
           student_name?: string | null
-          text_inputs?: number | null
-          text_outputs?: number | null
+          text_practice_calls?: number | null
           total_lessons?: number | null
-          voice_chat_minutes?: number | null
-          voice_chat_sessions?: number | null
         }
         Update: {
           certification_attempts?: number | null
@@ -457,75 +467,14 @@ export type Database = {
           completed_lessons?: number | null
           highest_certification_score?: number | null
           last_activity?: string | null
+          premium_voice_calls?: number | null
           premium_voice_minutes?: number | null
           premium_voice_sessions?: number | null
           student_email?: string | null
           student_id?: string
           student_name?: string | null
-          text_inputs?: number | null
-          text_outputs?: number | null
+          text_practice_calls?: number | null
           total_lessons?: number | null
-          voice_chat_minutes?: number | null
-          voice_chat_sessions?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "student_metrics_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "class_student_metrics"
-            referencedColumns: ["classroom_id"]
-          },
-          {
-            foreignKeyName: "student_metrics_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classroom_codes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "student_metrics_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "student_usage_metrics"
-            referencedColumns: ["classroom_id"]
-          },
-          {
-            foreignKeyName: "student_metrics_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_students"
-            referencedColumns: ["classroom_id"]
-          },
-        ]
-      }
-      text_practice_interactions: {
-        Row: {
-          created_at: string
-          id: string
-          inputs_count: number | null
-          outputs_count: number | null
-          session_end: string | null
-          session_start: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          inputs_count?: number | null
-          outputs_count?: number | null
-          session_end?: string | null
-          session_start?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          inputs_count?: number | null
-          outputs_count?: number | null
-          session_end?: string | null
-          session_start?: string
-          user_id?: string
         }
         Relationships: []
       }
@@ -586,36 +535,6 @@ export type Database = {
         }
         Relationships: []
       }
-      voice_practice_interactions: {
-        Row: {
-          created_at: string
-          id: string
-          inputs_count: number | null
-          outputs_count: number | null
-          session_end: string | null
-          session_start: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          inputs_count?: number | null
-          outputs_count?: number | null
-          session_end?: string | null
-          session_start?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          inputs_count?: number | null
-          outputs_count?: number | null
-          session_end?: string | null
-          session_start?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       class_student_metrics: {
@@ -625,18 +544,38 @@ export type Database = {
           completed_lessons: number | null
           highest_certification_score: number | null
           last_activity: string | null
+          premium_voice_calls: number | null
           premium_voice_minutes: number | null
           premium_voice_sessions: number | null
           student_email: string | null
           student_id: string | null
           student_name: string | null
-          text_inputs: number | null
-          text_outputs: number | null
+          text_practice_calls: number | null
           total_lessons: number | null
-          voice_chat_minutes: number | null
-          voice_chat_sessions: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "student_usage_metrics"
+            referencedColumns: ["classroom_id"]
+          },
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_students"
+            referencedColumns: ["classroom_id"]
+          },
+        ]
       }
       student_usage_metrics: {
         Row: {
