@@ -524,6 +524,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      is_class_member: {
+        Args: { classroom_id: string }
+        Returns: boolean
+      }
       is_teacher: {
         Args: { user_id?: string }
         Returns: boolean

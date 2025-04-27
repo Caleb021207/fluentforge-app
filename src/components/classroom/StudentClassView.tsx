@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 interface ClassData {
   class_name: string;
-  teacher_email?: string;  
+  teacher_email?: string;
   teacher_name?: string;
   joined_at: string;
   code: string;
@@ -33,13 +33,10 @@ const StudentClassView = () => {
           return;
         }
 
-        console.log('Fetching class data for user:', session.session.user.id);
-
-        // Updated query to properly join classroom_memberships with classroom_codes
+        // Fetch classroom data - the RLS policy will automatically filter for the current user
         const { data: membershipData, error: membershipError } = await supabase
           .from('classroom_memberships')
           .select(`
-            classroom_id,
             joined_at,
             classroom:classroom_codes!inner (
               class_name,
@@ -47,11 +44,7 @@ const StudentClassView = () => {
               teacher_id
             )
           `)
-          .eq('student_id', session.session.user.id)
           .maybeSingle();
-
-        console.log('Membership data:', membershipData);
-        console.log('Membership error:', membershipError);
 
         if (membershipError) throw membershipError;
         
@@ -60,23 +53,17 @@ const StudentClassView = () => {
           return; // No class joined
         }
 
-        const teacherId = membershipData.classroom?.teacher_id;
-        
-        let teacherEmail = undefined;
         let teacherName = undefined;
-        
-        if (teacherId) {
-          const { data: teacherData, error: teacherError } = await supabase
+        let teacherEmail = undefined;
+
+        if (membershipData.classroom.teacher_id) {
+          const { data: teacherData } = await supabase
             .from('profiles')
             .select('email, display_name')
-            .eq('id', teacherId)
+            .eq('id', membershipData.classroom.teacher_id)
             .maybeSingle();
-          
-          console.log('Teacher data:', teacherData);
-          
-          if (teacherError) {
-            console.error('Error fetching teacher data:', teacherError);
-          } else if (teacherData) {
+
+          if (teacherData) {
             teacherEmail = teacherData.email;
             teacherName = teacherData.display_name;
           }
@@ -89,8 +76,6 @@ const StudentClassView = () => {
           joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
           code: membershipData.classroom.code
         };
-
-        console.log('Transformed class info:', classInfo);
 
         setClassData(classInfo);
       } catch (error: any) {
@@ -140,20 +125,20 @@ const StudentClassView = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{classData?.class_name}</CardTitle>
+        <CardTitle>{classData.class_name}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        {(classData?.teacher_name || classData?.teacher_email) && (
+        {(classData.teacher_name || classData.teacher_email) && (
           <div>
             <span className="font-medium">{t("teacher")}:</span>{' '}
             {classData.teacher_name || classData.teacher_email}
           </div>
         )}
         <div>
-          <span className="font-medium">{t("joined")}:</span> {classData?.joined_at}
+          <span className="font-medium">{t("joined")}:</span> {classData.joined_at}
         </div>
         <div>
-          <span className="font-medium">{t("classCode")}:</span> {classData?.code}
+          <span className="font-medium">{t("classCode")}:</span> {classData.code}
         </div>
       </CardContent>
     </Card>
