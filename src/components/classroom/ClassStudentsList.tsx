@@ -44,7 +44,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
         premium_voice_calls: student.premium_voice_calls || 0,
         premium_voice_sessions: student.premium_voice_sessions || 0,
         premium_voice_minutes_used: student.premium_voice_minutes_used || 0,
-        premium_voice_minutes_remaining: student.premium_voice_minutes_remaining || 0,
+        premium_voice_minutes_remaining: student.premium_voice_minutes_remaining || 10,
         certification_attempts: student.certification_attempts || 0,
         highest_certification_score: student.highest_certification_score || 0,
         completed_lessons: student.completed_lessons || 0,

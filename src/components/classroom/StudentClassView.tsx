@@ -61,6 +61,10 @@ const StudentClassView = () => {
     );
   }
 
+  if (!classData.metrics) {
+    return null;
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -88,24 +92,20 @@ const StudentClassView = () => {
         code={classData.code}
       />
 
-      {classData.metrics && (
-        <CardContent>
-          <StudentMetrics 
-            metrics={{
-              text_practice_calls: classData.metrics.text_practice_calls || 0,
-              premium_voice_calls: classData.metrics.premium_voice_calls || 0,
-              premium_voice_sessions: classData.metrics.premium_voice_sessions || 0,
-              premium_voice_minutes_used: classData.metrics.premium_voice_minutes_used || 0,
-              premium_voice_minutes_remaining: classData.metrics.premium_voice_minutes_remaining || 0,
-              certification_attempts: classData.metrics.certification_attempts || 0,
-              highest_certification_score: classData.metrics.highest_certification_score || 0,
-              completed_lessons: classData.metrics.completed_lessons || 0,
-              total_lessons: classData.metrics.total_lessons || 0,
-              last_activity: classData.metrics.last_activity || null
-            }} 
-          />
-        </CardContent>
-      )}
+      <CardContent>
+        <StudentMetrics 
+          metrics={{
+            text_practice_calls: classData.metrics.text_practice_calls || 0,
+            premium_voice_calls: classData.metrics.premium_voice_calls || 0,
+            premium_voice_sessions: classData.metrics.premium_voice_sessions || 0,
+            premium_voice_minutes_used: classData.metrics.premium_voice_minutes_used || 0,
+            premium_voice_minutes_remaining: classData.metrics.premium_voice_minutes_remaining || 10,
+            certification_attempts: classData.metrics.certification_attempts || 0,
+            highest_certification_score: classData.metrics.highest_certification_score || 0,
+            last_activity: classData.metrics.last_activity || null
+          }} 
+        />
+      </CardContent>
     </Card>
   );
 };
