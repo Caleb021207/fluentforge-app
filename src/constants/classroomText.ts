@@ -1,3 +1,4 @@
+
 export const CLASSROOM_TEXT = {
   // Page titles
   MY_CLASS: "My Class",
@@ -35,8 +36,9 @@ export const CLASSROOM_TEXT = {
   CERTIFICATION_ATTEMPTS: "Certification Attempts",
   TEXT_PRACTICE_CALLS: "Text Practice Calls",
   PREMIUM_VOICE_CALLS: "Premium Voice Calls",
-  TEXT_INPUTS: "Text Inputs",
-  TEXT_OUTPUTS: "Text Outputs",
+  PREMIUM_VOICE_SESSIONS: "Premium Voice Sessions",
+  PREMIUM_VOICE_MINUTES: "Premium Voice Minutes",
+  VOICE_CHAT_MINUTES: "Voice Chat Minutes",
   UNLIMITED_SESSIONS: "Unlimited Sessions",
   UNLIMITED_MINUTES: "Unlimited Minutes",
   LAST_ACTIVITY: "Last Activity",
@@ -45,11 +47,6 @@ export const CLASSROOM_TEXT = {
   
   // New constants for metrics
   HIGH_SCORE: "Highest Score",
-  TEXT_PRACTICE_CALLS: "Text Practice Calls",
-  PREMIUM_VOICE_CALLS: "Premium Voice Calls",
-  PREMIUM_VOICE_SESSIONS: "Premium Voice Sessions",
-  PREMIUM_VOICE_MINUTES: "Premium Voice Minutes",
-  VOICE_CHAT_MINUTES: "Voice Chat Minutes",
   REFRESH_METRICS: "Refresh Metrics",
   REFRESHING: "Refreshing...",
   SUCCESS: "Success",

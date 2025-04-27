@@ -40,11 +40,15 @@ export const useChatApi = () => {
         }
 
         // Track successful text practice call
-        await supabase
-          .from('api_calls_tracking')
-          .insert({
-            call_type: 'text_practice'
-          });
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase
+            .from('api_calls_tracking')
+            .insert({
+              user_id: user.id,
+              call_type: 'text_practice'
+            });
+        }
         
         return {
           role: "assistant",
@@ -58,11 +62,15 @@ export const useChatApi = () => {
       }
 
       // Track successful text practice call
-      await supabase
-        .from('api_calls_tracking')
-        .insert({
-          call_type: 'text_practice'
-        });
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('api_calls_tracking')
+          .insert({
+            user_id: user.id,
+            call_type: 'text_practice'
+          });
+      }
 
       return {
         role: "assistant",
