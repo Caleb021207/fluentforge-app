@@ -13,7 +13,7 @@ interface ClassroomData {
 
 interface StudentUsageMetrics {
   student_id: string;
-  student_email: string;
+  student_email: string | null;
   student_name: string | null;
   voice_chat_sessions: number;
   voice_chat_minutes: number;
@@ -24,6 +24,9 @@ interface StudentUsageMetrics {
   last_voice_chat: string | null;
   last_certification: string | null;
   last_lesson_progress: string | null;
+  class_name?: string;
+  classroom_id?: string;
+  teacher_id?: string;
 }
 
 interface ClassroomResponse {
@@ -162,7 +165,14 @@ export function useClassroom() {
       return;
     }
 
-    setStudentMetrics(data);
+    // Make sure each record has the required fields, even if null
+    const processedData = data.map(item => ({
+      ...item,
+      student_email: item.student_email || null,
+      student_name: item.student_name || null
+    })) as StudentUsageMetrics[];
+
+    setStudentMetrics(processedData);
   }, [isTeacher]);
 
   useEffect(() => {
