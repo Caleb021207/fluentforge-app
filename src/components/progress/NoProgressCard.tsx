@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,10 @@ const NoProgressCard = () => {
     <Card className="border border-dashed border-gray-300 bg-gray-50">
       <CardContent className="text-center py-12">
         <p className="text-lg text-gray-600 mb-4">{t("noProgressData")}</p>
-        <Button onClick={() => navigate('/certificates')} className="bg-lingua-primary">
+        <Button 
+          onClick={() => navigate('/certificates')} 
+          className="bg-lingua-primary hover:bg-lingua-primary/90"
+        >
           {t("takeTestToSeeProgress")}
         </Button>
       </CardContent>

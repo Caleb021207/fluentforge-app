@@ -9,10 +9,11 @@ const progressTranslations: TranslationRecord = {
   xpPoints: "XP Points",
   dailyStreak: "Daily Streak",
   days: "days",
-  nextLevel: "Próximo Nível",
+  nextLevel: "Next Level",
   yourLearningProgress: "Your Learning Progress",
   scoreTrends: "Score Trends",
   noProgressData: "No Progress Data",
+  takeTestToSeeProgress: "Take a test to see your progress",
   completeTestsToSeeProgress: "Complete some certification attempts to see your progress!",
   offlineDataMayNotBeUpToDate: "You're currently offline. Data shown may not be up to date.",
   networkConnectionIssue: "Network connection issue. Unable to load your progress data.",
@@ -21,6 +22,9 @@ const progressTranslations: TranslationRecord = {
   viewingDetails: "Viewing details",
   featureComingSoon: "This feature will be implemented in a future update.",
   recentCertificationAttempts: "Recent Certification Attempts",
+  refresh: "Refresh",
+  refreshing: "Refreshing",
+  refreshingProgressData: "Refreshing your progress data...",
 };
 
 export default progressTranslations;
