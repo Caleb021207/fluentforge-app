@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -106,7 +105,7 @@ const generalTranslations: TranslationRecord = {
   userSafetyTip3: "Selalu gunakan aplikasi dengan bimbingan orang tua jika di bawah 13 tahun",
   userSafetyTip4: "Perhatikan waktu layar dan ambil istirahat secara teratur",
   contactInfo: "Informasi Kontak",
-  safetyPolicyContactInfo: "Jika Anda memiliki pertanyaan tentang praktik keamanan kami atau ingin melaporkan masalah, silakan hubungi kami di safety@palavox.com",
+  safetyPolicyContactInfo: "Jika Anda memiliki pertanyaan tentang praktik keamanan kami atau ingin melaporkan masalah, silakan hubungi kami di info@palavox.org",
   continue: "Lanjutkan",
   incorrectPin: "PIN tidak benar",
   

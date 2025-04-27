@@ -23,7 +23,7 @@ const safetyTranslations: TranslationRecord = {
   userSafetyTip3: "For users under 13, we recommend use with teacher or parent supervision",
   userSafetyTip4: "Encourage breaks during long sessions to support healthy usage habits",
   contactInfo: "Contact Information",
-  safetyPolicyContactInfo: "If you have any questions about our safety practices or need documentation for your district, please contact us at safety@palavox.com",
+  safetyPolicyContactInfo: "If you have any questions about our safety practices or need documentation for your district, please contact us at info@palavox.org",
   cipaFerpaCompliance: "CIPA and FERPA compliant",
   
   // CIPA Compliance Related
