@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { getLanguagePair } from "@/utils/languageUtils";
 
 export type ChatMessage = {
@@ -10,10 +12,11 @@ export type ChatMessage = {
 };
 
 export const useChatMessages = () => {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { t, currentLanguage } = useLocalization();
+  const { toast } = useToast();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messageCount, setMessageCount] = useState({ inputs: 0, outputs: 0 });
 
@@ -23,22 +26,22 @@ export const useChatMessages = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
-        .from('text_practice_interactions')
-        .insert({
-          user_id: user.id,
-          inputs_count: 0,
-          outputs_count: 0
-        })
-        .select()
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('text_practice_interactions')
+          .insert({
+            user_id: user.id,
+            inputs_count: 0,
+            outputs_count: 0
+          })
+          .select()
+          .single();
 
-      if (error) {
+        if (error) throw error;
+        setSessionId(data.id);
+      } catch (error: any) {
         console.error('Error creating chat session:', error);
-        return;
       }
-
-      setSessionId(data.id);
     };
 
     initSession();
@@ -81,37 +84,38 @@ export const useChatMessages = () => {
       setMessages((prevMessages) => [...prevMessages, userMessage]);
       setInput("");
 
-      const { data, error } = await supabase.functions.invoke('generate-language-learning-response', {
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: {
           message: input,
-          language: currentLanguage,
+          userLanguage: currentLanguage,
         },
       });
 
-      if (error) {
-        console.error("Function invocation error:", error);
-        throw new Error(error.message);
-      }
+      if (error) throw error;
 
-      if (!data || !data.response) {
-        console.error("Invalid response from function:", data);
-        throw new Error("Invalid response from the language model.");
+      if (!data) {
+        throw new Error("No response from tutor");
       }
 
       const assistantMessage = {
         role: "assistant" as const,
-        content: data.response,
+        content: data.content,
+        translation: data.translation
       };
 
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
-
       setMessageCount(prev => ({
         ...prev,
         outputs: prev.outputs + 1
       }));
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+      toast({
+        title: t("error"),
+        description: error.message || t("networkConnectionIssue"),
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -134,31 +138,39 @@ export const useChatMessages = () => {
       };
       setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-      const { data, error } = await supabase.functions.invoke('generate-language-learning-response', {
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: {
           message: prompt,
-          language: currentLanguage,
+          userLanguage: currentLanguage,
         },
       });
 
-      if (error) {
-        console.error("Function invocation error:", error);
-        throw new Error(error.message);
-      }
+      if (error) throw error;
 
-      if (!data || !data.response) {
-        console.error("Invalid response from function:", data);
-        throw new Error("Invalid response from the language model.");
+      if (!data) {
+        throw new Error("No response from tutor");
       }
 
       const assistantMessage = {
         role: "assistant" as const,
-        content: data.response,
+        content: data.content,
+        translation: data.translation
       };
 
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      setMessageCount(prev => ({
+        ...prev,
+        outputs: prev.outputs + 1,
+        inputs: prev.inputs + 1
+      }));
+
     } catch (error: any) {
-      console.error("Error sending language learning prompt:", error);
+      console.error("Error sending prompt:", error);
+      toast({
+        title: t("error"),
+        description: error.message || t("networkConnectionIssue"),
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
