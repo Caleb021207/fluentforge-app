@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Table, TableHeader, TableBody } from "@/components/ui/table";
 import { SortableTableHeader } from './SortableTableHeader';
@@ -60,7 +59,7 @@ export const StudentMetricsTable = ({
               onSort={onSort}
             />
             <SortableTableHeader
-              field="premium_voice_minutes"
+              field="premium_voice_minutes_used"
               label={CLASSROOM_TEXT.PREMIUM_VOICE_MINUTES}
               currentSortField={sortField}
               sortDirection={sortDirection}

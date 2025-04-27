@@ -2,9 +2,7 @@
 import React from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { StudentMetricsTable } from './components/StudentMetricsTable';
 import { useSortableData } from './hooks/useSortableData';
@@ -36,7 +34,25 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
         .eq('classroom_id', classId);
 
       if (error) throw error;
-      setStudents(data || []);
+      
+      // Transform data to match StudentMetrics interface
+      const transformedData: StudentMetrics[] = (data || []).map(student => ({
+        student_id: student.student_id || null,
+        student_name: student.student_name || null,
+        student_email: student.student_email || null,
+        text_practice_calls: student.text_practice_calls || 0,
+        premium_voice_calls: student.premium_voice_calls || 0,
+        premium_voice_sessions: student.premium_voice_sessions || 0,
+        premium_voice_minutes_used: student.premium_voice_minutes_used || 0,
+        premium_voice_minutes_remaining: student.premium_voice_minutes_remaining || 0,
+        certification_attempts: student.certification_attempts || 0,
+        highest_certification_score: student.highest_certification_score || 0,
+        completed_lessons: student.completed_lessons || 0,
+        total_lessons: student.total_lessons || 0,
+        last_activity: student.last_activity || null,
+      }));
+
+      setStudents(transformedData);
     } catch (error: any) {
       console.error('Error fetching students:', error);
       toast({

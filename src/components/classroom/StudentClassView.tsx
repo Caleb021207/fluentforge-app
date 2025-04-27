@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -91,7 +90,20 @@ const StudentClassView = () => {
 
       {classData.metrics && (
         <CardContent>
-          <StudentMetrics metrics={classData.metrics} />
+          <StudentMetrics 
+            metrics={{
+              text_practice_calls: classData.metrics.text_practice_calls || 0,
+              premium_voice_calls: classData.metrics.premium_voice_calls || 0,
+              premium_voice_sessions: classData.metrics.premium_voice_sessions || 0,
+              premium_voice_minutes_used: classData.metrics.premium_voice_minutes_used || 0,
+              premium_voice_minutes_remaining: classData.metrics.premium_voice_minutes_remaining || 0,
+              certification_attempts: classData.metrics.certification_attempts || 0,
+              highest_certification_score: classData.metrics.highest_certification_score || 0,
+              completed_lessons: classData.metrics.completed_lessons || 0,
+              total_lessons: classData.metrics.total_lessons || 0,
+              last_activity: classData.metrics.last_activity || null
+            }} 
+          />
         </CardContent>
       )}
     </Card>
