@@ -439,6 +439,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       student_usage_metrics: {
@@ -474,6 +495,13 @@ export type Database = {
       }
     }
     Functions: {
+      assign_role: {
+        Args: {
+          target_user_id: string
+          role_name: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
       create_classroom: {
         Args: { class_name: string }
         Returns: Json
@@ -494,8 +522,13 @@ export type Database = {
         Args: { class_code: string }
         Returns: Json
       }
+      make_myself_teacher: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "teacher" | "student"
       district_consent_type:
         | "individual"
         | "code_of_conduct"
@@ -615,6 +648,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["teacher", "student"],
       district_consent_type: [
         "individual",
         "code_of_conduct",

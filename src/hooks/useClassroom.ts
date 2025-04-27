@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useLocalization } from '@/context/LocalizationContext';
@@ -36,82 +36,106 @@ interface ClassroomResponse {
 
 export function useClassroom() {
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [classrooms, setClassrooms] = useState<ClassroomData[]>([]);
   const [studentMetrics, setStudentMetrics] = useState<StudentUsageMetrics[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const { t } = useLocalization();
 
-  const checkTeacherStatus = async () => {
-    const { data, error } = await supabase.rpc('is_teacher');
-    if (error) {
+  const checkTeacherStatus = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.rpc('is_teacher');
+      if (error) {
+        console.error('Error checking teacher status:', error);
+        return false;
+      }
+      return data;
+    } catch (error) {
       console.error('Error checking teacher status:', error);
       return false;
     }
-    return data;
-  };
+  }, []);
 
   const createClassroom = async (className: string) => {
-    const { data, error } = await supabase.rpc('create_classroom', {
-      class_name: className
-    });
+    try {
+      const { data, error } = await supabase.rpc('create_classroom', {
+        class_name: className
+      });
 
-    if (error) {
+      if (error) {
+        toast({
+          title: t("error"),
+          description: error.message,
+          variant: "destructive"
+        });
+        return null;
+      }
+
+      const response = data as { success: boolean; message: string; classroom_id?: string; };
+      if (response.success) {
+        toast({
+          title: t("success"),
+          description: response.message
+        });
+        fetchClassrooms();
+        return data;
+      }
+
       toast({
         title: t("error"),
-        description: error.message,
+        description: response.message,
+        variant: "destructive"
+      });
+      return null;
+    } catch (error) {
+      console.error('Error creating classroom:', error);
+      toast({
+        title: t("error"),
+        description: t("errorCreatingClass"),
         variant: "destructive"
       });
       return null;
     }
-
-    // Use type assertion with an intermediate step for safety
-    const response = data as unknown as ClassroomResponse;
-    if (response.success) {
-      toast({
-        title: t("success"),
-        description: response.message
-      });
-      fetchClassrooms();
-      return data;
-    }
-
-    return null;
   };
 
   const joinClassroom = async (classCode: string) => {
-    const { data, error } = await supabase.rpc('join_classroom', {
-      class_code: classCode
-    });
+    try {
+      const { data, error } = await supabase.rpc('join_classroom', {
+        class_code: classCode
+      });
 
-    if (error) {
+      if (error) {
+        toast({
+          title: t("error"),
+          description: error.message,
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      const response = data as { success: boolean; message: string; };
+      
+      toast({
+        title: response.success ? t("success") : t("error"),
+        description: response.message,
+        variant: response.success ? "default" : "destructive"
+      });
+      
+      return response.success;
+    } catch (error) {
+      console.error('Error joining classroom:', error);
       toast({
         title: t("error"),
-        description: error.message,
+        description: t("errorJoiningClass"),
         variant: "destructive"
       });
       return false;
     }
-
-    // Use type assertion with an intermediate step for safety
-    const response = data as unknown as ClassroomResponse;
-    if (response.success) {
-      toast({
-        title: t("success"),
-        description: response.message
-      });
-      return true;
-    }
-
-    toast({
-      title: t("error"),
-      description: response.message,
-      variant: "destructive"
-    });
-    return false;
   };
 
-  const fetchClassrooms = async () => {
+  const fetchClassrooms = useCallback(async () => {
+    if (!isTeacher) return;
+
     const { data, error } = await supabase
       .from('classroom_codes')
       .select('*')
@@ -123,9 +147,11 @@ export function useClassroom() {
     }
 
     setClassrooms(data);
-  };
+  }, [isTeacher]);
 
-  const fetchStudentMetrics = async () => {
+  const fetchStudentMetrics = useCallback(async () => {
+    if (!isTeacher) return;
+
     const { data, error } = await supabase
       .from('student_usage_metrics')
       .select('*')
@@ -136,9 +162,8 @@ export function useClassroom() {
       return;
     }
 
-    // Use proper type assertion to match the interface
-    setStudentMetrics(data as unknown as StudentUsageMetrics[]);
-  };
+    setStudentMetrics(data);
+  }, [isTeacher]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -156,8 +181,16 @@ export function useClassroom() {
       setIsLoading(false);
     };
 
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      initialize();
+    });
+
     initialize();
-  }, []);
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [checkTeacherStatus, fetchClassrooms, fetchStudentMetrics]);
 
   return {
     isTeacher,
