@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -22,10 +21,14 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
   const { t } = useLocalization();
   const { isTeacher } = useTeacherStatus();
   
-  // Display minutes used for teachers, minutes remaining for students
-  const voiceMinutesDisplay = isTeacher ? 
-    `${Math.round(metrics.premium_voice_minutes_used)} min used` :
-    `${Math.round(metrics.premium_voice_minutes_remaining)} min remaining`;
+  // Calculate and format minutes display
+  const formatMinutes = () => {
+    const usedMinutes = Math.min(Math.round(metrics.premium_voice_minutes_used || 0), 10);
+    const remainingMinutes = Math.max(0, 10 - usedMinutes);
+    return isTeacher 
+      ? `${usedMinutes} / 10 min used`
+      : `${remainingMinutes} min remaining`;
+  };
   
   return (
     <div className="mt-6 space-y-4 border-t pt-4">
@@ -52,7 +55,7 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
         </div>
         <div>
           <span className="font-medium">{CLASSROOM_TEXT.PREMIUM_VOICE_MINUTES}:</span>{' '}
-          {voiceMinutesDisplay}
+          {formatMinutes()}
         </div>
         {metrics.last_activity && (
           <div>
