@@ -1,8 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import type { MessageCount, SessionStatus } from "@/types/chat";
+import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
 
 export const useSessionManagement = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -16,13 +18,17 @@ export const useSessionManagement = () => {
   const { toast } = useToast();
   const { t } = useLocalization();
 
+  // Check auth and calculate remaining time on mount
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuthAndTime = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setIsLoggedIn(!!user);
         
         if (user) {
+          const remainingTime = await calculateRemainingWeeklyTime(user.id);
+          setWeeklyTimeRemaining(remainingTime);
+          
           try {
             const { error: recalcError } = await supabase.rpc('recalculate_student_metrics', { 
               target_student_id: user.id 
@@ -48,7 +54,22 @@ export const useSessionManagement = () => {
       }
     };
 
-    checkAuth();
+    checkAuthAndTime();
+
+    // Set up auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setIsLoggedIn(!!session?.user);
+      if (session?.user) {
+        const remainingTime = await calculateRemainingWeeklyTime(session.user.id);
+        setWeeklyTimeRemaining(remainingTime);
+      } else {
+        setWeeklyTimeRemaining(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [toast, t]);
 
   const createSession = async () => {
@@ -56,6 +77,7 @@ export const useSessionManagement = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // Create the session
       await supabase
         .from('api_calls_tracking')
         .insert({
@@ -66,9 +88,9 @@ export const useSessionManagement = () => {
       setSessionStatus('active');
       console.log('Created premium voice session for:', user.id);
       
-      await supabase.rpc('recalculate_student_metrics', { 
-        target_student_id: user.id 
-      });
+      // Update the remaining time immediately after creating a session
+      const remainingTime = await calculateRemainingWeeklyTime(user.id);
+      setWeeklyTimeRemaining(remainingTime);
 
     } catch (error: any) {
       console.error('Error creating voice session:', error);
@@ -95,6 +117,10 @@ export const useSessionManagement = () => {
         console.error('Error recalculating metrics:', error);
         return false;
       }
+
+      // Update remaining time after ending session
+      const remainingTime = await calculateRemainingWeeklyTime(user.id);
+      setWeeklyTimeRemaining(remainingTime);
 
       return true;
     } catch (error: any) {

@@ -44,19 +44,18 @@ const VoiceChatControls = ({
           )}
         </Button>
         
-        {isConversationActive() && timerValue !== null ? (
-          <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
-            <Clock className="h-4 w-4" />
-            <span>{formatTime(timerValue)}</span>
-          </div>
-        ) : (
-          weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
-            <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
-              <Clock className="h-4 w-4" />
-              <span>{formatTime(weeklyTimeRemaining)} {t("remaining")}</span>
-            </div>
-          )
-        )}
+        <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
+          <Clock className="h-4 w-4" />
+          <span>
+            {isConversationActive() && timerValue !== null ? (
+              formatTime(timerValue)
+            ) : weeklyTimeRemaining !== null ? (
+              `${formatTime(weeklyTimeRemaining)} ${t("remaining")}`
+            ) : (
+              "--:--"
+            )}
+          </span>
+        </div>
       </div>
     </div>
   );
