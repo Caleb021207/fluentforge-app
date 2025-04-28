@@ -24,6 +24,7 @@ export const useVoiceChat = () => {
   const apiKey = import.meta.env.VITE_ELEVEN_LABS_API_KEY;
   const maxConnectionAttempts = 3;
 
+  // Initialize the conversation with appropriate configs
   const conversation = useConversation({
     apiKey,
     onMessage: (message) => {
@@ -54,7 +55,7 @@ export const useVoiceChat = () => {
           description: t("allowMicAccess"),
           variant: "destructive",
         });
-        return;
+        return { conversationId: null };
       }
     }
 
@@ -66,7 +67,7 @@ export const useVoiceChat = () => {
           description: t("loginRequired"),
           variant: "destructive",
         });
-        return;
+        return { conversationId: null };
       }
 
       await createConversationSession(user.id);

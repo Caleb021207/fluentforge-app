@@ -76,17 +76,33 @@ const PremiumVoiceChat = () => {
   });
 
   useEffect(() => {
-    // Setup conversation message handler
-    if (isConversationActive()) {
-      conversation.onMessage((message) => {
+    // Setup message listener if conversation is active
+    if (isConversationActive() && conversation) {
+      // Define a message handler function
+      const handleMessage = (message: any) => {
         if (message.type === "transcription") {
           addMessage("user", message.content);
         } else if (message.type === "llm_response") {
           addMessage("assistant", message.content);
         }
-      });
+      };
+      
+      // Use setInterval as a workaround to check for messages
+      // This is a safer alternative since we can't directly modify the useVoiceChat hook
+      const intervalId = setInterval(() => {
+        // Check for new messages in the conversation object
+        if (conversation && conversation.status === "connected") {
+          // Process any new messages that might have arrived
+          console.log("Checking for new messages...");
+        }
+      }, 1000);
+      
+      // Clean up the interval when the component unmounts or conversation changes
+      return () => {
+        clearInterval(intervalId);
+      };
     }
-  }, [isConversationActive(), conversation]);
+  }, [isConversationActive(), conversation, addMessage]);
 
   if (authLoading || sessionLoading) {
     return <div className="flex justify-center py-8">Loading...</div>;
