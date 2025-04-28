@@ -76,27 +76,38 @@ const JoinClassForm = () => {
         return;
       }
 
-      const response = data as ClassroomResponse;
-      console.log('Processed response:', response);
+      // First cast to unknown, then to ClassroomResponse to avoid TypeScript errors
+      // Check if data appears to have the expected structure before casting
+      if (typeof data === 'object' && data !== null && 'success' in data && 'message' in data) {
+        const response = data as unknown as ClassroomResponse;
+        console.log('Processed response:', response);
 
-      if (response?.success) {
-        toast({
-          title: "Success",
-          description: response.message || "Successfully joined class",
-        });
-        
-        setClassCode('');
-        console.log('Successfully joined classroom:', response.class_name);
-        
-        // Reload after a short delay to show the success message
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        if (response.success) {
+          toast({
+            title: "Success",
+            description: response.message || "Successfully joined class",
+          });
+          
+          setClassCode('');
+          console.log('Successfully joined classroom:', response.class_name);
+          
+          // Reload after a short delay to show the success message
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          console.error('Join classroom failed:', response);
+          toast({
+            title: "Error",
+            description: response.message || "Failed to join class",
+            variant: "destructive",
+          });
+        }
       } else {
-        console.error('Join classroom failed:', response);
+        console.error('Invalid response format:', data);
         toast({
           title: "Error",
-          description: response?.message || "Failed to join class",
+          description: "Server returned an unexpected response format",
           variant: "destructive",
         });
       }
