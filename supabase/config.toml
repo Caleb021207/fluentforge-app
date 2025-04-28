@@ -12,3 +12,6 @@ verify_jwt = false
 
 [functions.cleanup-voice-sessions]
 verify_jwt = true
+
+[functions.voice-chat-auth]
+verify_jwt = true

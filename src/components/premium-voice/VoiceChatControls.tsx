@@ -1,62 +1,72 @@
 
-import { Mic, MicOff, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { Button } from "@/components/ui/card";
+import { Mic, MicOff, Loader2 } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
+import type { SessionStatus } from "@/types/chat";
 
 interface VoiceChatControlsProps {
-  startConversation: () => void;
+  startConversation: () => Promise<void>;
   isConversationActive: () => boolean;
   weeklyTimeRemaining: number | null;
-  sessionStatus: 'available' | 'active' | 'cooldown';
+  sessionStatus: SessionStatus;
   timerValue: number | null;
   formatTime: (seconds: number) => string;
 }
 
-const VoiceChatControls = ({ 
-  startConversation, 
-  isConversationActive, 
-  weeklyTimeRemaining, 
+const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
+  startConversation,
+  isConversationActive,
+  weeklyTimeRemaining,
   sessionStatus,
   timerValue,
   formatTime
-}: VoiceChatControlsProps) => {
+}) => {
   const { t } = useLocalization();
+  const isActive = isConversationActive();
+
+  const renderRemainingTime = () => {
+    if (timerValue !== null && isActive) {
+      return (
+        <div className="ml-3 flex items-center gap-2 text-sm">
+          <span className="animate-pulse bg-red-500 w-2 h-2 rounded-full"></span>
+          <span>{formatTime(timerValue)}</span>
+        </div>
+      );
+    } else if (weeklyTimeRemaining !== null && !isActive) {
+      return (
+        <div className="ml-3 text-sm text-muted-foreground">
+          {formatTime(weeklyTimeRemaining)} {t("remaining")}
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
-    <div className="flex flex-wrap gap-4 mb-6">
-      <div className="flex items-center gap-2">
-        <Button 
-          onClick={startConversation} 
-          variant={isConversationActive() ? "destructive" : "default"} 
-          className="bg-lingua-primary hover:bg-lingua-primary/90" 
-          disabled={sessionStatus === 'cooldown'}
-        >
-          {isConversationActive() ? (
-            <>
-              <MicOff className="h-4 w-4 mr-2" />
-              {t("stopVoiceChat")}
-            </>
-          ) : (
-            <>
-              <Mic className="h-4 w-4 mr-2" />
-              {t("startVoiceChat")}
-            </>
-          )}
-        </Button>
+    <div className="flex flex-col items-center md:flex-row gap-4 mb-6">
+      <Button 
+        onClick={startConversation}
+        disabled={sessionStatus === 'loading' || weeklyTimeRemaining === 0}
+        className={`flex items-center justify-center px-6 py-2 rounded-full ${
+          isActive ? "bg-red-500 hover:bg-red-600" : "bg-lingua-primary hover:bg-lingua-primary-dark"
+        }`}
+      >
+        {sessionStatus === 'loading' ? (
+          <Loader2 className="h-5 w-5 animate-spin mr-2" />
+        ) : isActive ? (
+          <MicOff className="h-5 w-5 mr-2" />
+        ) : (
+          <Mic className="h-5 w-5 mr-2" />
+        )}
         
-        <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
-          <Clock className="h-4 w-4" />
-          <span>
-            {isConversationActive() && timerValue !== null ? (
-              formatTime(timerValue)
-            ) : weeklyTimeRemaining !== null ? (
-              `${formatTime(weeklyTimeRemaining)} ${t("remaining")}`
-            ) : (
-              "--:--"
-            )}
-          </span>
-        </div>
-      </div>
+        <span>
+          {sessionStatus === 'loading' ? t("connecting") : 
+            isActive ? t("stopVoiceChat") : t("startVoiceChat")}
+        </span>
+      </Button>
+
+      {renderRemainingTime()}
     </div>
   );
 };

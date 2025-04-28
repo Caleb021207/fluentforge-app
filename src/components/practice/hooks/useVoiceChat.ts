@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useConversation } from '@11labs/react';
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -8,11 +8,14 @@ import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { useConversationState } from "@/hooks/useConversationState";
 import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
+import { useSecureApiKeys } from "@/hooks/useSecureApiKeys";
 
 export const useVoiceChat = () => {
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
   const { microphoneAccess, requestMicrophoneAccess } = useMicrophoneAccess();
+  const [onMessageCallback, setOnMessageCallback] = useState<(message: any) => void>(() => () => {});
+  const { fetchApiKey } = useSecureApiKeys();
   const {
     currentSessionId,
     connectionAttempts,
@@ -21,16 +24,17 @@ export const useVoiceChat = () => {
     endConversationSession
   } = useConversationState();
 
-  const apiKey = import.meta.env.VITE_ELEVEN_LABS_API_KEY;
   const maxConnectionAttempts = 3;
 
   // Initialize the conversation with appropriate configs
   const conversation = useConversation({
-    apiKey,
+    apiKey: "", // We'll set this dynamically at runtime
     onMessage: (message) => {
       if (message.type === "llm_response") {
         console.log("LLM response received:", message.content);
       }
+      // Call the dynamic message handler if set
+      onMessageCallback(message);
     },
     onError: (error) => {
       console.error("ElevenLabs conversation error:", error);
@@ -71,6 +75,15 @@ export const useVoiceChat = () => {
       }
 
       await createConversationSession(user.id);
+      
+      // Securely fetch the API key
+      const apiKey = await fetchApiKey(currentLanguage);
+      if (!apiKey) {
+        throw new Error("Failed to retrieve API key");
+      }
+      
+      // Set the API key dynamically
+      conversation.options.apiKey = apiKey;
       
       const selectedAgentId = getAgentIdForLanguage(currentLanguage);
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
@@ -133,6 +146,11 @@ export const useVoiceChat = () => {
     }
   };
 
+  // Method to set a custom message handler
+  const setMessageHandler = (handler: (message: any) => void) => {
+    setOnMessageCallback(() => handler);
+  };
+
   // Cleanup effect
   useEffect(() => {
     return () => {
@@ -149,6 +167,7 @@ export const useVoiceChat = () => {
     isConversationActive,
     startVoiceConversation,
     endVoiceConversation,
-    conversation
+    conversation,
+    setMessageHandler
   };
 };
