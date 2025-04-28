@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -17,7 +16,6 @@ export const useSessionManagement = () => {
   const { toast } = useToast();
   const { t } = useLocalization();
 
-  // Check authentication and initialize session
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -25,7 +23,6 @@ export const useSessionManagement = () => {
         setIsLoggedIn(!!user);
         
         if (user) {
-          // Force a recalculation of metrics
           try {
             const { error: recalcError } = await supabase.rpc('recalculate_student_metrics', { 
               target_student_id: user.id 
@@ -54,13 +51,11 @@ export const useSessionManagement = () => {
     checkAuth();
   }, [toast, t]);
 
-  // Create a new session
   const createSession = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Track this as a voice practice API call
       await supabase
         .from('api_calls_tracking')
         .insert({
@@ -71,7 +66,6 @@ export const useSessionManagement = () => {
       setSessionStatus('active');
       console.log('Created premium voice session for:', user.id);
       
-      // Force a recalculation of metrics
       await supabase.rpc('recalculate_student_metrics', { 
         target_student_id: user.id 
       });
@@ -87,18 +81,22 @@ export const useSessionManagement = () => {
     }
   };
 
-  // End the current session
-  const endSession = async () => {
+  const endSession = async (): Promise<boolean> => {
     try {
       setSessionStatus('available');
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) return false;
 
-      // Force a recalculation of metrics
-      await supabase.rpc('recalculate_student_metrics', { 
+      const { error } = await supabase.rpc('recalculate_student_metrics', { 
         target_student_id: user.id 
       });
 
+      if (error) {
+        console.error('Error recalculating metrics:', error);
+        return false;
+      }
+
+      return true;
     } catch (error: any) {
       console.error('Error ending session:', error);
       toast({
@@ -106,10 +104,10 @@ export const useSessionManagement = () => {
         description: t("failedToEndSession"),
         variant: "warning",
       });
+      return false;
     }
   };
 
-  // Format cooldown time
   const formatCooldownTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);

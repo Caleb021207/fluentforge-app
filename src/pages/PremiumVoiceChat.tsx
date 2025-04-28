@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -8,8 +7,6 @@ import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { getLanguagePair } from "@/utils/languageUtils";
-
-// Import refactored components
 import LoginPrompt from "@/components/premium-voice/LoginPrompt";
 import CooldownMessage from "@/components/premium-voice/CooldownMessage";
 import BenefitsList from "@/components/premium-voice/BenefitsList";
@@ -39,7 +36,7 @@ const PremiumVoiceChat = () => {
     createSession,
     endSession,
     formatCooldownTime
-  } = useSessionManagement(t);
+  } = useSessionManagement();
   
   const { messages, clearMessages, addInitialMessage } = useVoiceChatMessages();
   
@@ -49,19 +46,13 @@ const PremiumVoiceChat = () => {
       await endElevenLabsConversation();
       setIsRecording(false);
       
-      // Check and update the session status
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: activeSession } = await supabase
-          .from('premium_voice_chat_sessions')
-          .select('id')
-          .eq('user_id', user.id)
-          .is('session_end', null)
-          .single();
-          
-        if (activeSession) {
-          await endSession(activeSession.id);
-        }
+      const success = await endSession();
+      if (!success) {
+        toast({
+          title: t("error"),
+          description: t("failedToEndSession"),
+          variant: "destructive"
+        });
       }
     }
   };
@@ -99,8 +90,7 @@ const PremiumVoiceChat = () => {
     }
 
     try {
-      const sessionId = await createSession();
-      if (!sessionId) return;
+      await createSession();
       
       await startElevenLabsConversation();
       setIsRecording(true);
