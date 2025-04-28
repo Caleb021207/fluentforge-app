@@ -82,15 +82,17 @@ export const useVoiceChat = () => {
         throw new Error("Failed to retrieve API key");
       }
       
-      // Set the API key dynamically - using the conversation object directly
-      const updatedConfig = { ...conversation };
-      updatedConfig.apiKey = apiKey;
+      // Instead of trying to modify the conversation object directly,
+      // we'll create a new conversation instance with the API key
+      // and use that for the session
       
       const selectedAgentId = getAgentIdForLanguage(currentLanguage);
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
+      // Start the session with the agent ID
       const conversationId = await conversation.startSession({
         agentId: selectedAgentId,
+        apiKey: apiKey, // Pass the API key as part of the startSession options
       });
       
       toast({
