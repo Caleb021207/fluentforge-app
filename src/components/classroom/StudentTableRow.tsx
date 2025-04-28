@@ -22,7 +22,9 @@ export const StudentTableRow = ({ student }: StudentTableRowProps) => {
       </TableCell>
       <TableCell>{student.text_practice_calls}</TableCell>
       <TableCell>{student.premium_voice_sessions}</TableCell>
-      <TableCell>{Math.round(student.premium_voice_minutes_used)} min</TableCell>
+      <TableCell>
+        {`${Math.round(student.premium_voice_minutes_used)} / ${Math.round(student.premium_voice_minutes_remaining + student.premium_voice_minutes_used)} min`}
+      </TableCell>
       <TableCell>
         {student.last_activity 
           ? new Date(student.last_activity).toLocaleDateString() 

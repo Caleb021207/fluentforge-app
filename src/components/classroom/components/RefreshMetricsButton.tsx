@@ -21,10 +21,15 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
     try {
       console.log("Starting metrics recalculation for:", studentId || "all students");
       
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+      
       // Call the recalculate_student_metrics function
       const { data, error } = await supabase.rpc(
         'recalculate_student_metrics',
-        { target_student_id: studentId }
+        { target_student_id: studentId || user.id }
       );
       
       if (error) {
@@ -45,7 +50,7 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
       setTimeout(() => {
         if (onSuccess) onSuccess();
         setRefreshing(false);
-      }, 1500); // Increased from 1000ms to 1500ms for better reliability
+      }, 2000); // Increased delay for better reliability
       
     } catch (error: any) {
       console.error('Error refreshing metrics:', error);
