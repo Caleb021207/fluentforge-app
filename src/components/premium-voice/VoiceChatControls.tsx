@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Loader2 } from "lucide-react";
+import { Mic, MicOff, Clock } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 import type { SessionStatus } from "@/types/chat";
 
@@ -28,14 +28,15 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
   const renderRemainingTime = () => {
     if (timerValue !== null && isActive) {
       return (
-        <div className="ml-3 flex items-center gap-2 text-sm">
-          <span className="animate-pulse bg-red-500 w-2 h-2 rounded-full"></span>
+        <div className="flex items-center gap-2 text-lg font-medium">
+          <Clock className="h-5 w-5 text-red-500" />
           <span>{formatTime(timerValue)}</span>
         </div>
       );
     } else if (weeklyTimeRemaining !== null && !isActive) {
       return (
-        <div className="ml-3 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-lg text-muted-foreground">
+          <Clock className="h-5 w-5" />
           {formatTime(weeklyTimeRemaining)} {t("remaining")}
         </div>
       );
@@ -44,25 +45,23 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center md:flex-row gap-4 mb-6">
+    <div className="flex flex-col items-center gap-4 mb-8">
       <Button 
         onClick={startConversation}
         disabled={sessionStatus === 'loading' || weeklyTimeRemaining === 0}
-        className={`flex items-center justify-center px-6 py-2 rounded-full ${
+        size="lg"
+        className={`flex items-center justify-center px-8 py-3 rounded-full text-lg ${
           isActive ? "bg-red-500 hover:bg-red-600" : "bg-lingua-primary hover:bg-lingua-primary-dark"
         }`}
       >
-        {sessionStatus === 'loading' ? (
-          <Loader2 className="h-5 w-5 animate-spin mr-2" />
-        ) : isActive ? (
-          <MicOff className="h-5 w-5 mr-2" />
+        {isActive ? (
+          <MicOff className="h-6 w-6 mr-2" />
         ) : (
-          <Mic className="h-5 w-5 mr-2" />
+          <Mic className="h-6 w-6 mr-2" />
         )}
         
         <span>
-          {sessionStatus === 'loading' ? t("connecting") : 
-            isActive ? t("stopVoiceChat") : t("startVoiceChat")}
+          {isActive ? t("stopVoiceChat") : t("startVoiceChat")}
         </span>
       </Button>
 

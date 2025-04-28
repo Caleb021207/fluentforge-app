@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
@@ -12,13 +12,14 @@ import ConversationStarters from "@/components/premium-voice/ConversationStarter
 import PracticeLevelSelector from "@/components/premium-voice/PracticeLevelSelector";
 import PracticeGuide from "@/components/practice/PracticeGuide";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import PageHeader from "@/components/premium-voice/PageHeader";
+import BenefitsList from "@/components/premium-voice/BenefitsList";
 
 const PremiumVoiceChat = () => {
   const { isLoading: authLoading, isAuthenticated } = useAuthGuard();
-  const { t, currentLanguage } = useLocalization();
+  const { t } = useLocalization();
   const [practiceLevel, setPracticeLevel] = useState("B1");
-  const [targetLanguage, setTargetLanguage] = useState("spanish");
-  
+
   const {
     weeklyTimeRemaining,
     isLoading: sessionLoading,
@@ -42,6 +43,15 @@ const PremiumVoiceChat = () => {
     addInitialMessage,
     addMessage 
   } = useVoiceChatMessages();
+
+  // Create message handler callback outside useEffect
+  const handleMessage = useCallback((message: any) => {
+    if (message.type === "transcription") {
+      addMessage("user", message.content);
+    } else if (message.type === "llm_response") {
+      addMessage("assistant", message.content);
+    }
+  }, [addMessage]);
 
   const handleStartConversation = async () => {
     if (isConversationActive()) {
@@ -76,23 +86,11 @@ const PremiumVoiceChat = () => {
     t
   });
 
-  // Set up message handler
+  // Set up message handler with proper dependency
   useEffect(() => {
-    const handleMessage = (message: any) => {
-      if (message.type === "transcription") {
-        addMessage("user", message.content);
-      } else if (message.type === "llm_response") {
-        addMessage("assistant", message.content);
-      }
-    };
-    
     setMessageHandler(handleMessage);
-    
-    return () => {
-      // Reset message handler when component unmounts
-      setMessageHandler(() => {});
-    };
-  }, [addMessage, setMessageHandler]);
+    return () => setMessageHandler(() => {});
+  }, [handleMessage, setMessageHandler]);
 
   if (authLoading || sessionLoading) {
     return <div className="flex justify-center py-8">Loading...</div>;
@@ -104,17 +102,7 @@ const PremiumVoiceChat = () => {
 
   return (
     <div className="container max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{t("premiumVoiceChat")}</h1>
-      
-      <p className="text-muted-foreground mb-6">
-        {t("premiumVoiceChatDescription", { practice: t(targetLanguage) })}
-      </p>
-      
-      <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-6">
-        <p className="text-amber-800 text-sm">
-          {t("premiumVoiceNoteWithReset")}
-        </p>
-      </div>
+      <PageHeader />
       
       <VoiceChatControls 
         startConversation={handleStartConversation}
@@ -124,6 +112,8 @@ const PremiumVoiceChat = () => {
         timerValue={timerValue}
         formatTime={formatTimer}
       />
+      
+      <BenefitsList />
       
       <PracticeLevelSelector 
         selectedLevel={practiceLevel}
@@ -137,7 +127,7 @@ const PremiumVoiceChat = () => {
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         <ConversationStarters />
-        <PracticeGuide targetLanguage={targetLanguage} />
+        <PracticeGuide />
       </div>
     </div>
   );
