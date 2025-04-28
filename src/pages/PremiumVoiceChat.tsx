@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -89,10 +90,8 @@ const PremiumVoiceChat = () => {
 
     try {
       await createSession();
-      
       await startElevenLabsConversation();
       setIsRecording(true);
-      
       addInitialMessage();
       
     } catch (error) {
@@ -105,6 +104,7 @@ const PremiumVoiceChat = () => {
     }
   };
 
+  // Clear conversation functionality
   const clearConversation = () => {
     clearMessages();
     toast({

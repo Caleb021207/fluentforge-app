@@ -44,10 +44,10 @@ const VoiceChatControls = ({
           )}
         </Button>
         
-        {isConversationActive() ? (
+        {isConversationActive() && timerValue !== null ? (
           <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
             <Clock className="h-4 w-4" />
-            <span>{timerValue !== null ? formatTime(timerValue) : '--:--'}</span>
+            <span>{formatTime(timerValue)}</span>
           </div>
         ) : (
           weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
