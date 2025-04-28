@@ -6,6 +6,14 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useClassroomText } from "@/hooks/useClassroomText";
 
+// Define the interface for the response from join_classroom RPC
+interface ClassroomResponse {
+  success: boolean;
+  message: string;
+  classroom_id?: string;
+  class_name?: string;
+}
+
 const JoinClassForm = () => {
   const { toast } = useToast();
   const classroomText = useClassroomText();
@@ -59,14 +67,17 @@ const JoinClassForm = () => {
         return;
       }
 
-      if (data && data.success) {
+      // Cast the data to the proper type
+      const response = data as ClassroomResponse;
+
+      if (response && response.success) {
         toast({
           title: "Success",
-          description: data.message,
+          description: response.message,
         });
         
         setClassCode('');
-        console.log('Successfully joined classroom:', data.class_name);
+        console.log('Successfully joined classroom:', response.class_name);
         
         // Reload after a short delay to show the success message
         setTimeout(() => {
@@ -76,7 +87,7 @@ const JoinClassForm = () => {
         console.error('Join classroom failed:', data);
         toast({
           title: "Error",
-          description: data?.message || "Failed to join class",
+          description: response?.message || "Failed to join class",
           variant: "destructive",
         });
       }
