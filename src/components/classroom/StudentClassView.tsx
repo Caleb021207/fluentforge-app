@@ -69,20 +69,33 @@ const StudentClassView = () => {
   }
 
   if (error) {
+    console.error('StudentClassView error:', error);
     return (
       <Card>
         <CardContent className="pt-6">
           <p className="text-red-500">{error}</p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => refetchData()} 
+            className="mt-4"
+          >
+            Try Again
+          </Button>
         </CardContent>
       </Card>
     );
   }
 
   if (!classData) {
+    console.log('No class data found for current user');
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-muted-foreground">{t("noClassJoined")}</p>
+          <p className="text-muted-foreground mb-4">{t("noClassJoined")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("useClassCodeToJoin")}
+          </p>
         </CardContent>
       </Card>
     );
