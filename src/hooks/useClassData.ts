@@ -39,7 +39,7 @@ export const useClassData = () => {
         return;
       }
 
-      // Use the new secure view
+      // Use the secure view with the corrected column names
       const { data: membershipData, error: membershipError } = await supabase
         .from('teacher_students_secure')
         .select(`
