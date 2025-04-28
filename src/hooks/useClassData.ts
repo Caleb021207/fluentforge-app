@@ -31,13 +31,17 @@ export const useClassData = () => {
 
   const fetchClassData = async () => {
     try {
+      console.log("Fetching class data...");
       const { data: session } = await supabase.auth.getSession();
       
       if (!session.session) {
+        console.error("No authenticated session found");
         setError("No authenticated session");
         setIsLoading(false);
         return;
       }
+
+      console.log("Authenticated user:", session.session.user.id);
 
       // First check if the teacher_students_secure view has the columns we need
       const { data: viewInfo, error: viewError } = await supabase
@@ -45,121 +49,88 @@ export const useClassData = () => {
         .select('*')
         .limit(1);
       
-      // If there's an error with the view itself, try an alternative approach
       if (viewError) {
-        console.error('View error:', viewError);
-        
-        // Get basic class info from classroom_memberships and classroom_codes instead
-        const { data: membershipData, error: membershipError } = await supabase
-          .from('classroom_memberships')
-          .select(`
-            classroom_id,
-            joined_at,
-            classroom_codes(id, class_name, code)
-          `)
-          .eq('student_id', session.session.user.id)
-          .maybeSingle();
-
-        if (membershipError) {
-          console.error('Membership error:', membershipError);
-          throw membershipError;
-        }
-        
-        if (!membershipData) {
-          setIsLoading(false);
-          return;
-        }
-
-        // Get metrics using RLS-protected student_metrics table
-        const { data: metricsData, error: metricsError } = await supabase
-          .from('student_metrics')
-          .select(`
-            text_practice_calls,
-            premium_voice_calls,
-            premium_voice_sessions,
-            premium_voice_minutes_used,
-            premium_voice_minutes_remaining,
-            certification_attempts,
-            highest_certification_score,
-            last_activity
-          `)
-          .eq('classroom_id', membershipData.classroom_id)
-          .eq('student_id', session.session.user.id)
-          .maybeSingle();
-
-        if (metricsError) {
-          console.error('Metrics error:', metricsError);
-          throw metricsError;
-        }
-
-        const classInfo: ClassData = {
-          class_name: membershipData.classroom_codes.class_name,
-          joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-          code: membershipData.classroom_codes.code,
-          metrics: metricsData || undefined
-        };
-
-        console.log('Fetched class data via alternative method:', classInfo);
-        setClassData(classInfo);
-      } else {
-        // Use the secure view with the existing columns
-        const { data: membershipData, error: membershipError } = await supabase
-          .from('teacher_students_secure')
-          .select(`
-            classroom_id,
-            joined_at,
-            class_name,
-            code,
-            student_id
-          `)
-          .eq('student_id', session.session.user.id)
-          .maybeSingle();
-
-        if (membershipError) {
-          console.error('Membership error:', membershipError);
-          throw membershipError;
-        }
-        
-        if (!membershipData) {
-          setIsLoading(false);
-          return;
-        }
-
-        // Get metrics using RLS-protected student_metrics table
-        const { data: metricsData, error: metricsError } = await supabase
-          .from('student_metrics')
-          .select(`
-            text_practice_calls,
-            premium_voice_calls,
-            premium_voice_sessions,
-            premium_voice_minutes_used,
-            premium_voice_minutes_remaining,
-            certification_attempts,
-            highest_certification_score,
-            last_activity
-          `)
-          .eq('classroom_id', membershipData.classroom_id)
-          .eq('student_id', session.session.user.id)
-          .maybeSingle();
-
-        if (metricsError) {
-          console.error('Metrics error:', metricsError);
-          throw metricsError;
-        }
-
-        const classInfo: ClassData = {
-          class_name: membershipData.class_name,
-          joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-          code: membershipData.code,
-          metrics: metricsData || undefined
-        };
-
-        console.log('Fetched class data:', classInfo);
-        setClassData(classInfo);
+        console.error('View access error:', viewError);
       }
+      
+      // Check if student is a member of a classroom
+      const { data: membershipData, error: membershipError } = await supabase
+        .from('classroom_memberships')
+        .select(`
+          classroom_id,
+          joined_at,
+          classroom_codes(id, class_name, code, teacher_id)
+        `)
+        .eq('student_id', session.session.user.id)
+        .maybeSingle();
+
+      if (membershipError) {
+        console.error('Membership lookup error:', membershipError);
+        throw membershipError;
+      }
+      
+      if (!membershipData) {
+        console.log("No classroom membership found for user");
+        setClassData(null);
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("Found classroom membership:", membershipData);
+
+      // Get teacher profile if available
+      let teacherName = undefined;
+      let teacherEmail = undefined;
+      
+      if (membershipData.classroom_codes?.teacher_id) {
+        const { data: teacherData } = await supabase
+          .from('profiles')
+          .select('display_name, email')
+          .eq('id', membershipData.classroom_codes.teacher_id)
+          .maybeSingle();
+          
+        if (teacherData) {
+          teacherName = teacherData.display_name;
+          teacherEmail = teacherData.email;
+        }
+      }
+
+      // Get metrics using RLS-protected student_metrics table
+      const { data: metricsData, error: metricsError } = await supabase
+        .from('student_metrics')
+        .select(`
+          text_practice_calls,
+          premium_voice_calls,
+          premium_voice_sessions,
+          premium_voice_minutes_used,
+          premium_voice_minutes_remaining,
+          certification_attempts,
+          highest_certification_score,
+          last_activity
+        `)
+        .eq('classroom_id', membershipData.classroom_id)
+        .eq('student_id', session.session.user.id)
+        .maybeSingle();
+
+      if (metricsError) {
+        console.error('Metrics error:', metricsError);
+      }
+
+      const classInfo: ClassData = {
+        class_name: membershipData.classroom_codes.class_name,
+        teacher_name: teacherName,
+        teacher_email: teacherEmail,
+        joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
+        code: membershipData.classroom_codes.code,
+        metrics: metricsData || undefined
+      };
+
+      console.log('Fetched class data:', classInfo);
+      setClassData(classInfo);
+      setError(null);
     } catch (error: any) {
       console.error('Error fetching class data:', error);
-      setError(error.message);
+      setError(error.message || "Failed to load class data");
       toast({
         title: t("error"),
         description: error.message || t("failedToLoadClassData"),
