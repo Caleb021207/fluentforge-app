@@ -68,7 +68,7 @@ const JoinClassForm = () => {
       }
 
       // Cast the data to the proper type
-      const response = data as ClassroomResponse;
+      const response = data as unknown as ClassroomResponse;
 
       if (response && response.success) {
         toast({
