@@ -1,11 +1,15 @@
+export type SessionStatus = 'available' | 'active' | 'cooldown';
 
-export type ChatMessage = {
-  role: 'user' | 'assistant';
-  content: string;
-  translation?: string;
-};
-
-export type MessageCount = {
+export interface MessageCount {
   inputs: number;
   outputs: number;
-};
+}
+
+export interface SessionManagementState {
+  messageCount: MessageCount;
+  isLoggedIn: boolean;
+  isLoading: boolean;
+  sessionStatus: SessionStatus;
+  weeklyTimeRemaining: number | null;
+  cooldownTimeRemaining: number | null;
+}
