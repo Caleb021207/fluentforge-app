@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useConversation } from '@11labs/react';
 import { useToast } from "@/hooks/use-toast";
@@ -31,10 +30,8 @@ export const useVoiceChat = () => {
     apiKey: "", // We'll set this dynamically at runtime
     onMessage: (message) => {
       if (message.type === "llm_response") {
-        console.log("LLM response received:", message.content);
+        console.log("LLM response received");
       }
-      // Call the dynamic message handler if set
-      onMessageCallback(message);
     },
     onError: (error) => {
       console.error("ElevenLabs conversation error:", error);
@@ -170,7 +167,6 @@ export const useVoiceChat = () => {
     isConversationActive,
     startVoiceConversation,
     endVoiceConversation,
-    conversation,
-    setMessageHandler
+    conversation
   };
 };

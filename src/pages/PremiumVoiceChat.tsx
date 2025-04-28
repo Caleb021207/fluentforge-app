@@ -3,11 +3,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
-import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
-import VoiceChatMessages from "@/components/premium-voice/VoiceChatMessages";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import PageHeader from "@/components/premium-voice/PageHeader";
 import BenefitsList from "@/components/premium-voice/BenefitsList";
@@ -29,38 +27,18 @@ const PremiumVoiceChat = () => {
     startVoiceConversation,
     endVoiceConversation,
     isConversationActive,
-    conversation,
-    setMessageHandler
+    conversation
   } = useVoiceChat();
-
-  const { 
-    messages,
-    clearMessages,
-    addInitialMessage,
-    addMessage 
-  } = useVoiceChatMessages();
-
-  // Create message handler callback outside useEffect
-  const handleMessage = useCallback((message: any) => {
-    if (message.type === "transcription") {
-      addMessage("user", message.content);
-    } else if (message.type === "llm_response") {
-      addMessage("assistant", message.content);
-    }
-  }, [addMessage]);
 
   const handleStartConversation = async () => {
     if (isConversationActive()) {
       await endVoiceConversation();
       await endSession();
     } else {
-      clearMessages();
       await createSession();
       
       try {
-        addInitialMessage();
-        const { conversationId } = await startVoiceConversation();
-        console.log("Started conversation with ID:", conversationId);
+        await startVoiceConversation();
       } catch (error) {
         console.error("Failed to start conversation:", error);
         await endSession();
@@ -81,12 +59,6 @@ const PremiumVoiceChat = () => {
     onTimeExpired: handleTimeExpired,
     t
   });
-
-  // Set up message handler with proper dependency
-  useEffect(() => {
-    setMessageHandler(handleMessage);
-    return () => setMessageHandler(() => {});
-  }, [handleMessage, setMessageHandler]);
 
   if (authLoading || sessionLoading) {
     return <div className="flex justify-center py-8">Loading...</div>;
@@ -110,11 +82,6 @@ const PremiumVoiceChat = () => {
       />
       
       <BenefitsList />
-      
-      <VoiceChatMessages 
-        messages={messages}
-        onClearMessages={clearMessages}
-      />
     </div>
   );
 };
