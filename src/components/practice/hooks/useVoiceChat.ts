@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { useConversationState } from "@/hooks/useConversationState";
 import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
+import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
 
 export const useVoiceChat = () => {
   const { toast } = useToast();

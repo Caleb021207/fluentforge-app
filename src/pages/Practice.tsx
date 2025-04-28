@@ -41,7 +41,6 @@ const Practice = () => {
   } = useChatMessages();
   
   const {
-    voiceChatTimeRemaining,
     startVoiceConversation,
     endVoiceConversation,
     isConversationActive
