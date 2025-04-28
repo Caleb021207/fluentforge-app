@@ -40,7 +40,6 @@ const PremiumVoiceChat = () => {
   
   const { messages, clearMessages, addInitialMessage } = useVoiceChatMessages();
   
-  // Define endConversation function before using it in useVoiceChatTimer
   const endConversation = async () => {
     if (isConversationActive()) {
       await endElevenLabsConversation();
@@ -57,7 +56,6 @@ const PremiumVoiceChat = () => {
     }
   };
   
-  // Now we can safely use endConversation in useVoiceChatTimer
   const { timerValue, formatTimer } = useVoiceChatTimer({
     isConversationActive,
     weeklyTimeRemaining,
@@ -95,7 +93,6 @@ const PremiumVoiceChat = () => {
       await startElevenLabsConversation();
       setIsRecording(true);
       
-      // Add initial message to the conversation
       addInitialMessage();
       
     } catch (error) {
@@ -116,7 +113,6 @@ const PremiumVoiceChat = () => {
     });
   };
 
-  // Get the language pair based on the user's interface language
   const { practice } = getLanguagePair(currentLanguage);
 
   if (isLoading) {
@@ -148,6 +144,7 @@ const PremiumVoiceChat = () => {
         isConversationActive={isConversationActive}
         weeklyTimeRemaining={weeklyTimeRemaining}
         sessionStatus={sessionStatus}
+        timerValue={timerValue}
         formatTime={formatTimer}
       />
 

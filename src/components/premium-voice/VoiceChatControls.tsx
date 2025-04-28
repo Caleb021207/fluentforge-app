@@ -8,6 +8,7 @@ interface VoiceChatControlsProps {
   isConversationActive: () => boolean;
   weeklyTimeRemaining: number | null;
   sessionStatus: 'available' | 'active' | 'cooldown';
+  timerValue: number | null;
   formatTime: (seconds: number) => string;
 }
 
@@ -16,6 +17,7 @@ const VoiceChatControls = ({
   isConversationActive, 
   weeklyTimeRemaining, 
   sessionStatus,
+  timerValue,
   formatTime
 }: VoiceChatControlsProps) => {
   const { t } = useLocalization();
@@ -42,11 +44,18 @@ const VoiceChatControls = ({
           )}
         </Button>
         
-        {weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
+        {isConversationActive() ? (
           <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
             <Clock className="h-4 w-4" />
-            <span>{formatTime(weeklyTimeRemaining)} {t("remaining")}</span>
+            <span>{timerValue !== null ? formatTime(timerValue) : '--:--'}</span>
           </div>
+        ) : (
+          weeklyTimeRemaining !== null && weeklyTimeRemaining > 0 && (
+            <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-md">
+              <Clock className="h-4 w-4" />
+              <span>{formatTime(weeklyTimeRemaining)} {t("remaining")}</span>
+            </div>
+          )
         )}
       </div>
     </div>
