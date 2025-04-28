@@ -39,17 +39,16 @@ export const useClassData = () => {
         return;
       }
 
+      // Use the new secure view
       const { data: membershipData, error: membershipError } = await supabase
-        .from('classroom_memberships')
+        .from('teacher_students_secure')
         .select(`
           classroom_id,
           joined_at,
-          classroom:classroom_codes!inner (
-            class_name,
-            code,
-            teacher_id
-          )
+          class_name,
+          class_code: code
         `)
+        .match({ student_id: session.session.user.id })
         .maybeSingle();
 
       if (membershipError) {
@@ -62,43 +61,7 @@ export const useClassData = () => {
         return;
       }
 
-      let teacherName = undefined;
-      let teacherEmail = undefined;
-
-      if (membershipData.classroom.teacher_id) {
-        const { data: teacherData, error: teacherError } = await supabase
-          .from('profiles')
-          .select('email, display_name')
-          .eq('id', membershipData.classroom.teacher_id)
-          .maybeSingle();
-
-        if (teacherError) {
-          console.error('Teacher data error:', teacherError);
-        }
-
-        if (teacherData) {
-          teacherEmail = teacherData.email;
-          teacherName = teacherData.display_name;
-        }
-      }
-
-      try {
-        // Force a recalculation of student metrics to ensure up-to-date data
-        const { error: recalcError } = await supabase.rpc(
-          'recalculate_student_metrics',
-          { target_student_id: session.session.user.id }
-        );
-        
-        if (recalcError) {
-          console.error('Error recalculating metrics:', recalcError);
-        }
-      } catch (e) {
-        console.error('Failed to recalculate metrics:', e);
-      }
-
-      // Add a slight delay to ensure the recalculation completes
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
+      // Get metrics using RLS-protected student_metrics table
       const { data: metricsData, error: metricsError } = await supabase
         .from('student_metrics')
         .select(`
@@ -121,11 +84,9 @@ export const useClassData = () => {
       }
 
       const classInfo: ClassData = {
-        class_name: membershipData.classroom.class_name,
-        teacher_email: teacherEmail,
-        teacher_name: teacherName,
+        class_name: membershipData.class_name,
         joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-        code: membershipData.classroom.code,
+        code: membershipData.class_code,
         metrics: metricsData || undefined
       };
 

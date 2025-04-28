@@ -614,6 +614,41 @@ export type Database = {
         }
         Relationships: []
       }
+      teacher_students_secure: {
+        Row: {
+          class_code: string | null
+          class_name: string | null
+          classroom_id: string | null
+          joined_at: string | null
+          student_email: string | null
+          student_id: string | null
+          student_name: string | null
+          teacher_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "student_usage_metrics"
+            referencedColumns: ["classroom_id"]
+          },
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_students"
+            referencedColumns: ["classroom_id"]
+          },
+        ]
+      }
     }
     Functions: {
       assign_role: {
@@ -666,6 +701,14 @@ export type Database = {
       recalculate_student_metrics: {
         Args: { target_student_id: string }
         Returns: undefined
+      }
+      safe_is_teacher: {
+        Args: { user_id?: string }
+        Returns: boolean
+      }
+      safe_is_teacher_of_class: {
+        Args: { classroom_id: string }
+        Returns: boolean
       }
     }
     Enums: {

@@ -9,7 +9,8 @@ export const useTeacherStatus = () => {
   useEffect(() => {
     const checkTeacherStatus = async () => {
       try {
-        const { data, error } = await supabase.rpc('is_teacher');
+        // Use the new safe_is_teacher function
+        const { data, error } = await supabase.rpc('safe_is_teacher');
         if (error) throw error;
         setIsTeacher(!!data);
       } catch (error) {

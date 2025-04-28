@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -16,10 +15,8 @@ const StudentClassView = () => {
   const { classData, isLoading, error, refetchData } = useClassData();
   const [refreshing, setRefreshing] = useState(false);
 
-  // Ensure metrics are refreshed when component mounts
   useEffect(() => {
     if (!isLoading && classData) {
-      // Trigger metrics recalculation on mount
       handleRefresh(false);
     }
   }, [isLoading, classData]);
@@ -27,7 +24,6 @@ const StudentClassView = () => {
   const handleRefresh = async (showToast = true) => {
     setRefreshing(true);
     try {
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error("User not authenticated");
@@ -35,7 +31,6 @@ const StudentClassView = () => {
 
       console.log("Refreshing metrics for user:", user.id);
       
-      // Force recalculation of metrics
       const { error: recalcError } = await supabase.rpc(
         'recalculate_student_metrics',
         { target_student_id: user.id }
@@ -46,10 +41,8 @@ const StudentClassView = () => {
         throw recalcError;
       }
       
-      // Add a small delay to ensure DB updates are complete
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Fetch updated data
       await refetchData();
       
       if (showToast) {
