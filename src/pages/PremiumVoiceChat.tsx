@@ -8,9 +8,6 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
 import VoiceChatMessages from "@/components/premium-voice/VoiceChatMessages";
-import ConversationStarters from "@/components/premium-voice/ConversationStarters";
-import PracticeLevelSelector from "@/components/premium-voice/PracticeLevelSelector";
-import PracticeGuide from "@/components/practice/PracticeGuide";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import PageHeader from "@/components/premium-voice/PageHeader";
 import BenefitsList from "@/components/premium-voice/BenefitsList";
@@ -18,7 +15,6 @@ import BenefitsList from "@/components/premium-voice/BenefitsList";
 const PremiumVoiceChat = () => {
   const { isLoading: authLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
-  const [practiceLevel, setPracticeLevel] = useState("B1");
 
   const {
     weeklyTimeRemaining,
@@ -115,20 +111,10 @@ const PremiumVoiceChat = () => {
       
       <BenefitsList />
       
-      <PracticeLevelSelector 
-        selectedLevel={practiceLevel}
-        onSelectLevel={setPracticeLevel}
-      />
-
       <VoiceChatMessages 
         messages={messages}
         onClearMessages={clearMessages}
       />
-
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <ConversationStarters />
-        <PracticeGuide />
-      </div>
     </div>
   );
 };
