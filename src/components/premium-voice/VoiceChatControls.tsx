@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Button } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Loader2 } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 import type { SessionStatus } from "@/types/chat";

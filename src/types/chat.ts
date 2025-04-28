@@ -1,5 +1,5 @@
 
-export type SessionStatus = 'available' | 'active' | 'cooldown';
+export type SessionStatus = 'available' | 'loading' | 'active' | 'cooldown';
 
 export interface MessageCount {
   inputs: number;

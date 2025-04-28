@@ -82,8 +82,9 @@ export const useVoiceChat = () => {
         throw new Error("Failed to retrieve API key");
       }
       
-      // Set the API key dynamically
-      conversation.options.apiKey = apiKey;
+      // Set the API key dynamically - using the conversation object directly
+      const updatedConfig = { ...conversation };
+      updatedConfig.apiKey = apiKey;
       
       const selectedAgentId = getAgentIdForLanguage(currentLanguage);
       console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
