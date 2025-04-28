@@ -46,7 +46,7 @@ export const useClassData = () => {
           classroom_id,
           joined_at,
           class_name,
-          class_code: code
+          code
         `)
         .match({ student_id: session.session.user.id })
         .maybeSingle();
@@ -86,7 +86,7 @@ export const useClassData = () => {
       const classInfo: ClassData = {
         class_name: membershipData.class_name,
         joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-        code: membershipData.class_code,
+        code: membershipData.code,
         metrics: metricsData || undefined
       };
 
