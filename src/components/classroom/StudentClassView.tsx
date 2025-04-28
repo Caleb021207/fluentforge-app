@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
@@ -14,12 +15,6 @@ const StudentClassView = () => {
   const { toast } = useToast();
   const { classData, isLoading, error, refetchData } = useClassData();
   const [refreshing, setRefreshing] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && classData) {
-      handleRefresh(false);
-    }
-  }, [isLoading, classData]);
 
   const handleRefresh = async (showToast = true) => {
     setRefreshing(true);
@@ -122,18 +117,7 @@ const StudentClassView = () => {
 
       <CardContent>
         {classData.metrics ? (
-          <StudentMetrics 
-            metrics={{
-              text_practice_calls: classData.metrics.text_practice_calls || 0,
-              premium_voice_calls: classData.metrics.premium_voice_calls || 0,
-              premium_voice_sessions: classData.metrics.premium_voice_sessions || 0,
-              premium_voice_minutes_used: classData.metrics.premium_voice_minutes_used || 0,
-              premium_voice_minutes_remaining: classData.metrics.premium_voice_minutes_remaining || 10,
-              certification_attempts: classData.metrics.certification_attempts || 0,
-              highest_certification_score: classData.metrics.highest_certification_score || 0,
-              last_activity: classData.metrics.last_activity || null
-            }} 
-          />
+          <StudentMetrics metrics={classData.metrics} />
         ) : (
           <p>{t("loadingMetrics")}</p>
         )}
