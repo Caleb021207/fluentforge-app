@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { DataCache } from "./cacheUtils";
@@ -276,4 +275,71 @@ export const getAllLessonProgress = async (userId: string) => {
 export const clearUserCache = (userId: string) => {
   cache.remove(`profile-${userId}`);
   cache.remove(`lesson-progress-${userId}`);
+};
+
+/**
+ * Checks if a user has a specific role
+ */
+export const checkUserRole = async (userId: string, role: 'student' | 'teacher'): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('role', role)
+      .maybeSingle();
+      
+    if (error) {
+      console.error('Error checking user role:', error);
+      return false;
+    }
+    
+    return !!data;
+  } catch (error) {
+    console.error('Error in checkUserRole:', error);
+    return false;
+  }
+};
+
+/**
+ * Creates a utility to easily promote a user to teacher role
+ */
+export const promoteToTeacher = async (userId: string): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase.rpc('assign_role', {
+      target_user_id: userId,
+      role_name: 'teacher'
+    });
+    
+    if (error) {
+      console.error('Error promoting user to teacher:', error);
+      return false;
+    }
+    
+    return !!data;
+  } catch (error) {
+    console.error('Error in promoteToTeacher:', error);
+    return false;
+  }
+};
+
+/**
+ * Function to make the currently logged in user a teacher
+ * (for development and testing purposes)
+ */
+export const makeMyselfTeacher = async (): Promise<boolean> => {
+  try {
+    // Create a convenience RPC function for this
+    const { data, error } = await supabase.rpc('make_myself_teacher');
+    
+    if (error) {
+      console.error('Error making self teacher:', error);
+      return false;
+    }
+    
+    return !!data;
+  } catch (error) {
+    console.error('Error in makeMyselfTeacher:', error);
+    return false;
+  }
 };

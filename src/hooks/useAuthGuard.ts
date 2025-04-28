@@ -27,6 +27,22 @@ export const useAuthGuard = (redirectTo = '/auth') => {
           return;
         }
         
+        // Ensure the user has a role (should be handled by DB trigger, but double-check)
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', session.user.id)
+          .maybeSingle();
+        
+        // If no role found, we should ensure one exists (fallback only - the trigger should handle this)
+        if (!roleData) {
+          // Try to assign default student role
+          await supabase.rpc('assign_role', {
+            target_user_id: session.user.id,
+            role_name: 'student'
+          });
+        }
+        
         setIsAuthenticated(true);
       } catch (error) {
         console.error('Auth check error:', error);
