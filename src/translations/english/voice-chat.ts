@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -47,7 +46,7 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
-  timeLimit5MinReached: "The 5-minute time limit has been reached",
+  timeLimit10MinReached: "The 10-minute time limit has been reached",
   
   // Additional keys needed for the practice tips box
   askQuestions: "Ask questions about everyday topics",

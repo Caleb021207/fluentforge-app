@@ -52,7 +52,7 @@ export const useVoiceChatTimer = ({
               // Show toast notification
               toast({
                 title: t("voiceChatEnded"),
-                description: t("timeLimit10MinReached")
+                description: t("timeLimit10MinReached") // Updated to 10 minutes
               });
             }
             return 0;

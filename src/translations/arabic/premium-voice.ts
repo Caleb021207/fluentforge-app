@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
@@ -17,7 +16,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   cooldownPeriodActive: "تم الوصول إلى الحد الأسبوعي",
   cooldownActive: "تم الوصول إلى الحد الأسبوعي",
   waitBeforeNextSession: "يجب عليك الانتظار قبل بدء جلسة أخرى",
-  cooldownPeriodDescription: "يجب عليك الانتظار {{time}} قبل بدء جلسة دردشة صوتية متميزة أخرى.",
+  cooldownPeriodDescription: "يجب عليك الانتظار {{time}} قبل بدء جلسة أخرى",
   resetsAt6AM: "سيتم إعادة تعيين الوقت المسموح به أسبوعياً وهو 10 دقائق في {{time}} (الاثنين الساعة 6:00 صباحاً)",
   dailyLimitReached: "لقد استخدمت الـ 10 دقائق المسموح بها أسبوعياً. سيتم إعادة تعيين الوقت يوم الاثنين الساعة 6:00 صباحاً.",
   loginRequired: "تسجيل الدخول مطلوب",

@@ -1,154 +1,138 @@
 
-import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
-import { supabase } from "@/integrations/supabase/client";
-import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
+import React, { useState, useEffect } from "react";
 import { useSessionManagement } from "@/hooks/useSessionManagement";
-import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
-import { getLanguagePair } from "@/utils/languageUtils";
-import LoginPrompt from "@/components/premium-voice/LoginPrompt";
-import CooldownMessage from "@/components/premium-voice/CooldownMessage";
-import BenefitsList from "@/components/premium-voice/BenefitsList";
+import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
+import { useVoiceChatMessages } from "@/hooks/useVoiceChatMessages";
+import { useLocalization } from "@/context/LocalizationContext";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
-import PageHeader from "@/components/premium-voice/PageHeader";
+import VoiceChatMessages from "@/components/premium-voice/VoiceChatMessages";
+import ConversationStarters from "@/components/premium-voice/ConversationStarters";
+import PracticeLevelSelector from "@/components/premium-voice/PracticeLevelSelector";
+import PracticeGuide from "@/components/practice/PracticeGuide";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 
 const PremiumVoiceChat = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const { toast } = useToast();
-  const { currentLanguage, t } = useLocalization();
+  const { isLoading: authLoading, isAuthenticated } = useAuthGuard();
+  const { t, currentLanguage } = useLocalization();
+  const [practiceLevel, setPracticeLevel] = useState("B1");
+  const [targetLanguage, setTargetLanguage] = useState("spanish");
   
   const {
-    microphoneAccess,
+    weeklyTimeRemaining,
+    isLoading: sessionLoading,
+    isLoggedIn,
+    sessionStatus,
+    createSession,
+    endSession
+  } = useSessionManagement();
+
+  const {
+    startVoiceConversation,
+    endVoiceConversation,
     isConversationActive,
-    startVoiceConversation: startElevenLabsConversation,
-    endVoiceConversation: endElevenLabsConversation,
     conversation
   } = useVoiceChat();
 
-  const {
-    isLoggedIn,
-    isLoading,
-    sessionStatus,
-    weeklyTimeRemaining,
-    cooldownTimeRemaining,
-    setWeeklyTimeRemaining,
-    createSession,
-    endSession,
-    formatCooldownTime
-  } = useSessionManagement();
-  
-  const { messages, clearMessages, addInitialMessage } = useVoiceChatMessages();
-  
-  const endConversation = async () => {
+  const { 
+    messages,
+    clearMessages,
+    addInitialMessage,
+    addMessage 
+  } = useVoiceChatMessages();
+
+  const handleStartConversation = async () => {
     if (isConversationActive()) {
-      await endElevenLabsConversation();
-      setIsRecording(false);
+      await endVoiceConversation();
+      await endSession();
+    } else {
+      clearMessages();
+      await createSession();
       
-      const success = await endSession();
-      if (!success) {
-        toast({
-          title: t("error"),
-          description: t("failedToEndSession"),
-          variant: "destructive"
-        });
+      try {
+        const initialMessage = addInitialMessage();
+        const { conversationId } = await startVoiceConversation();
+        console.log("Started conversation with ID:", conversationId);
+      } catch (error) {
+        console.error("Failed to start conversation:", error);
+        await endSession();
       }
     }
   };
-  
+
+  const handleTimeExpired = async () => {
+    if (isConversationActive()) {
+      await endVoiceConversation();
+      await endSession();
+    }
+  };
+
   const { timerValue, formatTimer } = useVoiceChatTimer({
     isConversationActive,
     weeklyTimeRemaining,
-    onTimeExpired: endConversation,
+    onTimeExpired: handleTimeExpired,
     t
   });
 
-  const startConversation = async () => {
-    if (!isLoggedIn) {
-      toast({
-        title: t("loginRequired"),
-        description: t("pleaseLoginToAccessPremiumFeature"),
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (sessionStatus === 'cooldown') {
-      toast({
-        title: t("cooldownActive"),
-        description: t("dailyLimitReached"),
-        variant: "destructive"
-      });
-      return;
-    }
-
+  useEffect(() => {
+    // Setup conversation message handler
     if (isConversationActive()) {
-      await endConversation();
-      return;
-    }
-
-    try {
-      await createSession();
-      await startElevenLabsConversation();
-      setIsRecording(true);
-      addInitialMessage();
-      
-    } catch (error) {
-      console.error("Error starting conversation:", error);
-      toast({
-        title: t("error"),
-        description: t("networkConnectionIssue"),
-        variant: "destructive"
+      conversation.onMessage((message) => {
+        if (message.type === "transcription") {
+          addMessage("user", message.content);
+        } else if (message.type === "llm_response") {
+          addMessage("assistant", message.content);
+        }
       });
     }
-  };
+  }, [isConversationActive(), conversation]);
 
-  // Clear conversation functionality
-  const clearConversation = () => {
-    clearMessages();
-    toast({
-      title: t("success"),
-      description: t("conversationHistoryCleared")
-    });
-  };
-
-  const { practice } = getLanguagePair(currentLanguage);
-
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lingua-primary"></div>
-        </div>
-      </div>
-    );
+  if (authLoading || sessionLoading) {
+    return <div className="flex justify-center py-8">Loading...</div>;
   }
 
-  if (!isLoggedIn) {
-    return <LoginPrompt />;
+  if (!isAuthenticated || !isLoggedIn) {
+    return <AuthRequiredPrompt />;
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <PageHeader />
+    <div className="container max-w-4xl mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">{t("premiumVoiceChat")}</h1>
       
-      <CooldownMessage 
-        cooldownTimeRemaining={cooldownTimeRemaining} 
-        sessionStatus={sessionStatus} 
-        formatCooldownTime={formatCooldownTime} 
-      />
-
+      <p className="text-muted-foreground mb-6">
+        {t("premiumVoiceChatDescription", { practice: t(targetLanguage) })}
+      </p>
+      
+      <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-6">
+        <p className="text-amber-800 text-sm">
+          {t("premiumVoiceNoteWithReset")}
+        </p>
+      </div>
+      
       <VoiceChatControls 
-        startConversation={startConversation}
+        startConversation={handleStartConversation}
         isConversationActive={isConversationActive}
         weeklyTimeRemaining={weeklyTimeRemaining}
         sessionStatus={sessionStatus}
         timerValue={timerValue}
         formatTime={formatTimer}
       />
+      
+      <PracticeLevelSelector 
+        selectedLevel={practiceLevel}
+        onSelectLevel={setPracticeLevel}
+      />
 
-      <BenefitsList />
+      <VoiceChatMessages 
+        messages={messages}
+        onClearMessages={clearMessages}
+      />
+
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <ConversationStarters />
+        <PracticeGuide targetLanguage={targetLanguage} />
+      </div>
     </div>
   );
 };
