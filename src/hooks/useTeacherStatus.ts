@@ -19,13 +19,7 @@ export const useTeacherStatus = () => {
 
         console.log('Checking teacher status for user:', session.session.user.id);
         
-        // Check if current user has teacher role
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.session.user.id)
-          .eq('role', 'teacher')
-          .maybeSingle();
+        const { data, error } = await supabase.rpc('safe_is_teacher');
         
         if (error) {
           console.error('Error checking teacher status:', error);
