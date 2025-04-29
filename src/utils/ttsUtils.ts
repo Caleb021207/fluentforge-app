@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { DataCache } from "@/utils/cacheUtils";
 
@@ -36,13 +35,13 @@ const trackTTSUsage = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    // Log the API call to the tracking table
+    // Log the API call to the tracking table with aws_polly as the call type
     await supabase.from('api_calls_tracking').insert({
       user_id: user.id,
-      call_type: 'premium_voice'
+      call_type: 'aws_polly'
     });
     
-    console.log("Premium voice call tracked successfully");
+    console.log("AWS Polly call tracked successfully");
   } catch (error) {
     console.error("Error tracking TTS usage:", error);
   }
