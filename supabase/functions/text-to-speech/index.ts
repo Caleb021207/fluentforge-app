@@ -18,7 +18,8 @@ const languageVoiceMap: Record<string, { voiceId: string, engine: string }> = {
   "mandarin": { voiceId: "Zhiyu", engine: "neural" },
   "hindi": { voiceId: "Kajal", engine: "neural" },
   "indonesian": { voiceId: "Siti", engine: "standard" }, // Standard engine as neural not available
-  "farsi": { voiceId: "Lupe", engine: "standard" },      // Using a standard voice as Farsi specific voice not available in Polly
+  // For Farsi, we'll handle it separately in the code since AWS Polly doesn't support it
+  "farsi": { voiceId: "NONE", engine: "standard" },
 };
 
 // Maximum character count per chunk (Amazon Polly limit is 3000)
@@ -139,6 +140,20 @@ serve(async (req) => {
     }
 
     console.log(`TTS request for language: ${language}, text length: ${text.length}`);
+
+    // Special handling for Farsi - return a special response that will trigger browser TTS
+    // Since AWS Polly doesn't support Farsi
+    if (language?.toLowerCase() === "farsi") {
+      console.log("Farsi language detected - sending browser TTS fallback signal");
+      
+      return new Response(
+        JSON.stringify({ 
+          useBrowserTTS: true, 
+          message: "Farsi is not supported by our TTS service. Falling back to browser TTS." 
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Initialize Polly client
     const polly = new PollyClient({

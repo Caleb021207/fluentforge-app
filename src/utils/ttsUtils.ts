@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { DataCache } from "@/utils/cacheUtils";
 
@@ -83,6 +82,45 @@ const trackTTSUsage = async () => {
 };
 
 /**
+ * Uses browser's built-in TTS for Farsi language
+ */
+const useBrowserTTS = (text: string, onEnd?: () => void, onError?: (error: Error) => void): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (!window.speechSynthesis) {
+        const error = new Error("Browser speech synthesis not available");
+        onError?.(error);
+        reject(error);
+        return;
+      }
+
+      console.log("Using browser's built-in TTS for Farsi text");
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'fa-IR'; // Set language to Farsi
+      
+      utterance.onend = () => {
+        onEnd?.();
+        resolve();
+      };
+      
+      utterance.onerror = (event) => {
+        console.error("Browser TTS error:", event);
+        const error = new Error(`Browser TTS error: ${event.error}`);
+        onError?.(error);
+        reject(error);
+      };
+      
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      console.error("Error with browser TTS:", err);
+      onError?.(new Error(`Browser TTS failed: ${err.message}`));
+      reject(err);
+    }
+  });
+};
+
+/**
  * Plays text using the Supabase Edge Function for OpenAI TTS.
  * Includes caching to reduce API calls and improve performance.
  */
@@ -98,6 +136,13 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
   
   try {
     console.log(`TTS request for language: ${language}, text length: ${text.length}`);
+    
+    // For Farsi language, use browser's built-in TTS directly
+    if (language.toLowerCase() === "farsi") {
+      await useBrowserTTS(text, onEnd, onError);
+      await trackTTSUsage();
+      return;
+    }
     
     // Create a cache key based on text and language
     const cacheKey = `${Date.now()}_${language}_${text.substring(0, 50)}`;
@@ -122,6 +167,15 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
       });
       
       if (error) throw new Error(`Edge function error: ${error.message}`);
+      
+      // Handle the special case for Farsi from the edge function
+      if (data && data.useBrowserTTS) {
+        console.log("Edge function indicated to use browser TTS");
+        await useBrowserTTS(text, onEnd, onError);
+        await trackTTSUsage();
+        return;
+      }
+      
       if (!data || !data.audioContent) throw new Error("No audio content received");
       
       audioContent = data.audioContent;
@@ -179,6 +233,9 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
  */
 export const preloadTTS = async (text: string, language: string): Promise<void> => {
   if (!text || text.trim() === "") return;
+  
+  // Don't preload for Farsi as we'll use browser TTS
+  if (language.toLowerCase() === "farsi") return;
   
   try {
     const cacheKey = `${Date.now()}_${language}_${text.substring(0, 50)}`;
