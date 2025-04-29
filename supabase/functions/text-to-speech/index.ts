@@ -7,21 +7,29 @@ const corsHeaders = {
 };
 
 // Language code mapping for Azure Cognitive Services
-const languageVoiceMap: Record<string, { languageCode: string, voiceName: string }> = {
-  "english": { languageCode: "en-US", voiceName: "en-US-GuyNeural" },
-  "spanish": { languageCode: "es-ES", voiceName: "es-ES-AlvaroNeural" },
-  "portuguese": { languageCode: "pt-BR", voiceName: "pt-BR-AntonioNeural" },
-  "korean": { languageCode: "ko-KR", voiceName: "ko-KR-InJoonNeural" },
-  "french": { languageCode: "fr-FR", voiceName: "fr-FR-HenriNeural" },
-  "japanese": { languageCode: "ja-JP", voiceName: "ja-JP-KeitaNeural" },
-  "mandarin": { languageCode: "zh-CN", voiceName: "zh-CN-YunxiNeural" }, 
-  "hindi": { languageCode: "hi-IN", voiceName: "hi-IN-MadhurNeural" },
-  "indonesian": { languageCode: "id-ID", voiceName: "id-ID-ArdiNeural" },
-  "farsi": { languageCode: "fa-IR", voiceName: "fa-IR-FaridNeural" }, // Azure supports Farsi!
-  "russian": { languageCode: "ru-RU", voiceName: "ru-RU-DmitryNeural" },
-  "arabic": { languageCode: "ar-SA", voiceName: "ar-SA-HamedNeural" },
-  "vietnamese": { languageCode: "vi-VN", voiceName: "vi-VN-NamMinhNeural" },
-  "ukrainian": { languageCode: "uk-UA", voiceName: "uk-UA-OstapNeural" }
+const languageVoiceMap: Record<string, { languageCode: string, voiceName: string, useAzure: boolean }> = {
+  "english": { languageCode: "en-US", voiceName: "en-US-JennyNeural", useAzure: false }, // Use Polly for English
+  "spanish": { languageCode: "es-ES", voiceName: "es-ES-AlvaroNeural", useAzure: true },
+  "portuguese": { languageCode: "pt-BR", voiceName: "pt-BR-AntonioNeural", useAzure: true },
+  "korean": { languageCode: "ko-KR", voiceName: "ko-KR-InJoonNeural", useAzure: true },
+  "french": { languageCode: "fr-FR", voiceName: "fr-FR-HenriNeural", useAzure: true },
+  "japanese": { languageCode: "ja-JP", voiceName: "ja-JP-KeitaNeural", useAzure: true },
+  "mandarin": { languageCode: "zh-CN", voiceName: "zh-CN-YunxiNeural", useAzure: true }, 
+  "hindi": { languageCode: "hi-IN", voiceName: "hi-IN-MadhurNeural", useAzure: true },
+  "indonesian": { languageCode: "id-ID", voiceName: "id-ID-ArdiNeural", useAzure: true },
+  "farsi": { languageCode: "fa-IR", voiceName: "fa-IR-FaridNeural", useAzure: true },
+  "russian": { languageCode: "ru-RU", voiceName: "ru-RU-DmitryNeural", useAzure: true },
+  "arabic": { languageCode: "ar-SA", voiceName: "ar-SA-HamedNeural", useAzure: true },
+  "vietnamese": { languageCode: "vi-VN", voiceName: "vi-VN-NamMinhNeural", useAzure: true },
+  "ukrainian": { languageCode: "uk-UA", voiceName: "uk-UA-OstapNeural", useAzure: true },
+  "urdu": { languageCode: "ur-PK", voiceName: "ur-PK-AsadNeural", useAzure: true }, // Added Urdu
+  "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural", useAzure: true } // Added Pashto
+};
+
+// Polly voice mapping
+const pollyVoiceMap: Record<string, string> = {
+  "english": "Joanna",
+  // Add more mappings if needed in the future
 };
 
 // Maximum character count per chunk (Azure TTS limit is 10000)
@@ -196,6 +204,128 @@ async function textToSpeechAzure(text: string, voice: string, language: string):
   return await response.arrayBuffer();
 }
 
+// Convert text to speech with AWS Polly
+async function textToSpeechPolly(text: string, voiceName: string): Promise<ArrayBuffer> {
+  const AWS_REGION = Deno.env.get('AWS_REGION') || 'us-east-1';
+  const AWS_ACCESS_KEY_ID = Deno.env.get('AWS_ACCESS_KEY_ID');
+  const AWS_SECRET_ACCESS_KEY = Deno.env.get('AWS_SECRET_ACCESS_KEY');
+  
+  if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+    throw new Error('AWS credentials are not configured');
+  }
+
+  // AWS Signature V4 process
+  const host = `polly.${AWS_REGION}.amazonaws.com`;
+  const endpoint = `https://${host}/v1/speech`;
+  const service = 'polly';
+  const method = 'POST';
+  
+  const timestamp = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
+  const datestamp = timestamp.slice(0, 8);
+
+  // Request body
+  const body = JSON.stringify({
+    Text: text,
+    OutputFormat: 'mp3',
+    VoiceId: voiceName,
+    Engine: 'neural'
+  });
+
+  // Create canonical request
+  const canonicalHeaders = `content-type:application/json\nhost:${host}\nx-amz-date:${timestamp}\n`;
+  const signedHeaders = 'content-type;host;x-amz-date';
+  
+  const payloadHash = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(body)
+  ).then(hash => Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+  );
+  
+  const canonicalRequest = [
+    method,
+    '/',
+    '',
+    canonicalHeaders,
+    signedHeaders,
+    payloadHash
+  ].join('\n');
+  
+  // Create string to sign
+  const algorithm = 'AWS4-HMAC-SHA256';
+  const credentialScope = `${datestamp}/${AWS_REGION}/${service}/aws4_request`;
+  
+  const canonicalRequestHash = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(canonicalRequest)
+  ).then(hash => Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+  );
+  
+  const stringToSign = [
+    algorithm,
+    timestamp,
+    credentialScope,
+    canonicalRequestHash
+  ].join('\n');
+  
+  // Calculate signature
+  async function hmacSha256(key: ArrayBuffer, message: string): Promise<ArrayBuffer> {
+    const keyObj = await crypto.subtle.importKey(
+      'raw',
+      key,
+      { name: 'HMAC', hash: { name: 'SHA-256' } },
+      false,
+      ['sign']
+    );
+    return await crypto.subtle.sign(
+      'HMAC',
+      keyObj,
+      new TextEncoder().encode(message)
+    );
+  }
+  
+  const kDate = await hmacSha256(
+    new TextEncoder().encode(`AWS4${AWS_SECRET_ACCESS_KEY}`),
+    datestamp
+  );
+  const kRegion = await hmacSha256(kDate, AWS_REGION);
+  const kService = await hmacSha256(kRegion, service);
+  const kSigning = await hmacSha256(kService, 'aws4_request');
+  
+  const signature = await hmacSha256(kSigning, stringToSign).then(
+    hash => Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('')
+  );
+  
+  // Create authorization header
+  const authorizationHeader = [
+    `${algorithm} Credential=${AWS_ACCESS_KEY_ID}/${credentialScope}`,
+    `SignedHeaders=${signedHeaders}`,
+    `Signature=${signature}`
+  ].join(', ');
+  
+  // Send request
+  const response = await fetch(endpoint, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Amz-Date': timestamp,
+      'Authorization': authorizationHeader
+    },
+    body
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Polly TTS failed: ${await response.text()}`);
+  }
+  
+  return await response.arrayBuffer();
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -222,12 +352,19 @@ serve(async (req) => {
     const audioPromises = textChunks.map(async (chunk, index) => {
       console.log(`Processing chunk ${index + 1}/${textChunks.length}, length: ${chunk.length}`);
       
-      // Convert text to speech using Azure
-      return await textToSpeechAzure(
-        chunk, 
-        voiceSettings.voiceName,
-        voiceSettings.languageCode
-      );
+      // Determine which TTS service to use based on language
+      if (voiceSettings.useAzure) {
+        // Convert text to speech using Azure
+        return await textToSpeechAzure(
+          chunk, 
+          voiceSettings.voiceName,
+          voiceSettings.languageCode
+        );
+      } else {
+        // Use AWS Polly for English
+        const pollyVoice = pollyVoiceMap[language?.toLowerCase()] || "Joanna";
+        return await textToSpeechPolly(chunk, pollyVoice);
+      }
     });
 
     // Wait for all audio chunks to be generated
@@ -252,6 +389,8 @@ serve(async (req) => {
     let errorMessage = 'Failed to generate speech. Please try again.';
     if (error.message.includes('Azure Speech key')) {
       errorMessage = 'The speech service is not properly configured. Please contact support.';
+    } else if (error.message.includes('AWS credentials')) {
+      errorMessage = 'AWS Polly is not properly configured. Please contact support.';
     }
 
     return new Response(

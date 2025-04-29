@@ -30,7 +30,9 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'vietnamese': 'vi-VN',
     'ukrainian': 'uk-UA',
     'indonesian': 'id-ID',
-    'farsi': 'fa-IR'
+    'farsi': 'fa-IR',
+    'urdu': 'ur-PK',   // Added Urdu
+    'pashto': 'ps-AF', // Added Pashto
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';
