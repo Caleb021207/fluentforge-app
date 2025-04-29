@@ -30,6 +30,24 @@ if (typeof window !== 'undefined') {
   setInterval(cleanupCache, 10 * 60 * 1000);
 }
 
+// Track TTS usage in the database
+const trackTTSUsage = async () => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Log the API call to the tracking table
+    await supabase.from('api_calls_tracking').insert({
+      user_id: user.id,
+      call_type: 'premium_voice'
+    });
+    
+    console.log("Premium voice call tracked successfully");
+  } catch (error) {
+    console.error("Error tracking TTS usage:", error);
+  }
+};
+
 /**
  * Plays text using the Supabase Edge Function for OpenAI TTS.
  * Includes caching to reduce API calls and improve performance.
@@ -54,6 +72,8 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
     const cachedAudio = ttsCache.get(cacheKey);
     
     let audioContent;
+    let shouldTrackUsage = false;
+    
     if (cachedAudio) {
       console.log("Using cached audio response");
       audioContent = cachedAudio;
@@ -70,6 +90,7 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
       if (!data || !data.audioContent) throw new Error("No audio content received");
       
       audioContent = data.audioContent;
+      shouldTrackUsage = true; // Only track when we actually call the TTS service
       
       // Cache the result for future use
       ttsCache.set(cacheKey, audioContent);
@@ -108,6 +129,11 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
     console.log("Playing audio...");
     await audio.play();
     
+    // Track AWS Polly usage in the database (if not using cache)
+    if (shouldTrackUsage) {
+      await trackTTSUsage();
+    }
+    
   } catch (err) {
     console.error("Error with TTS:", err);
     onEnd?.();
@@ -145,6 +171,9 @@ export const preloadTTS = async (text: string, language: string): Promise<void> 
     // Cache the result
     ttsCache.set(cacheKey, data.audioContent);
     console.log("TTS preloaded successfully");
+    
+    // Track AWS Polly usage for preloading as well
+    await trackTTSUsage();
     
   } catch (err) {
     console.error("Error preloading TTS:", err);
