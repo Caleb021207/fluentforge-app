@@ -9,10 +9,11 @@ import {
   preloadTTS as preloadTTSInternal,
   isTTSSupported as isTTSSupportedInternal,
   getSpeechSynthesisLanguageCode as getLanguageCodeInternal,
-  TTSOptions,
 } from './tts';
 
-export { TTSOptions };
+import type { TTSOptions } from './tts/types';
+
+export type { TTSOptions };
 
 export const getSpeechSynthesisLanguageCode = getLanguageCodeInternal;
 export const isTTSSupported = isTTSSupportedInternal;
