@@ -31,7 +31,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     "korean",
     "arabic",
     "vietnamese",
-    "mandarin"
+    "mandarin",
+    "urdu",
+    "pashto"
   ];
   
   // Filter content for safety if needed
@@ -83,6 +85,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
       await playTTS({
         text: safeContent,
         language: targetLanguage,
+        isTargetLanguage: true, // This is the target language (using Polly)
         onStart: () => setIsLoading(false),
         onEnd: () => setIsPlaying(false),
         onError: (error) => {
@@ -109,6 +112,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
       await playTTS({
         text: safeTranslation,
         language: nativeLanguage,
+        isTargetLanguage: false, // This is the native language (using Azure)
         onStart: () => setIsTranslationLoading(false),
         onEnd: () => setIsTranslationPlaying(false),
         onError: (error) => {

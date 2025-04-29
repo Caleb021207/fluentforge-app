@@ -5,6 +5,7 @@ import { DataCache } from "@/utils/cacheUtils";
 export interface TTSOptions {
   text: string;
   language: string;
+  isTargetLanguage?: boolean;
   onStart?: () => void;
   onEnd?: () => void;
   onError?: (error: Error) => void;
@@ -151,11 +152,12 @@ const useBrowserTTS = (text: string, language: string, onEnd?: () => void, onErr
 };
 
 /**
- * Plays text using the Supabase Edge Function for Azure TTS.
+ * Plays text using the Supabase Edge Function for TTS.
+ * Uses AWS Polly for target language and Azure for native language.
  * Includes caching to reduce API calls and improve performance.
  */
 export const playTTS = async (options: TTSOptions): Promise<void> => {
-  const { text, language, onStart, onEnd, onError } = options;
+  const { text, language, isTargetLanguage = false, onStart, onEnd, onError } = options;
   
   if (!text || text.trim() === "") {
     onError?.(new Error("Empty text provided"));
@@ -165,10 +167,10 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
   onStart?.();
   
   try {
-    console.log(`TTS request for language: ${language}, text length: ${text.length}`);
+    console.log(`TTS request for language: ${language}, text length: ${text.length}, isTargetLanguage: ${isTargetLanguage}`);
     
-    // Create a cache key based on text and language
-    const cacheKey = `${Date.now()}_${language}_${text.substring(0, 50)}`;
+    // Create a cache key based on text, language, and whether it's target language
+    const cacheKey = `${Date.now()}_${language}_${isTargetLanguage ? 'target' : 'native'}_${text.substring(0, 50)}`;
     
     // Check if we have a cached version
     const cachedAudio = ttsCache.get(cacheKey);
@@ -186,6 +188,7 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
         body: { 
           text,
           language,
+          isTargetLanguage
         },
       });
       
@@ -264,21 +267,22 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
  * Preloads TTS audio for future usage
  * Useful for preloading common phrases
  */
-export const preloadTTS = async (text: string, language: string): Promise<void> => {
+export const preloadTTS = async (text: string, language: string, isTargetLanguage: boolean = false): Promise<void> => {
   if (!text || text.trim() === "") return;
   
   try {
-    const cacheKey = `${Date.now()}_${language}_${text.substring(0, 50)}`;
+    const cacheKey = `${Date.now()}_${language}_${isTargetLanguage ? 'target' : 'native'}_${text.substring(0, 50)}`;
     
     // If already cached, don't preload again
     if (ttsCache.has(cacheKey)) return;
     
-    console.log(`Preloading TTS for language: ${language}, text: ${text.substring(0, 30)}...`);
+    console.log(`Preloading TTS for language: ${language}, text: ${text.substring(0, 30)}..., isTargetLanguage: ${isTargetLanguage}`);
     
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: { 
         text,
         language,
+        isTargetLanguage
       },
     });
     
