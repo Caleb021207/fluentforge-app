@@ -27,7 +27,7 @@ const practiceTranslations: TranslationRecord = {
   // Adding conversation starters in Urdu
   startChatting: "اپنے اے آئی زبان کے ٹیوٹر کے ساتھ بات چیت شروع کریں!",
   typeMessageBelow: "شروع کرنے کے لیے نیچے پیغام لکھیں",
-  chatPlaceholder: "{{language}} کی مشق کرنے کے لیے اپنا پیغام لکھیں...",
+  chatPlaceholder: "انگریزی کی مشق کرنے کے لیے اپنا پیغام لکھیں...",
   
   // Sample conversation phrases
   phrase1: "آداب، آج آپ کیسے ہیں؟",
@@ -39,7 +39,11 @@ const practiceTranslations: TranslationRecord = {
   phrase7: "کل کے لیے آپ کے کیا منصوبے ہیں؟",
   phrase8: "... کو ہسپانوی/انگریزی میں کیا کہتے ہیں؟",
   
-  useThisTool: "اپنے بولنے اور سننے کے کوشل کو بہتر بنانے کے لیے اس ٹول کا استعمال کریں۔ یہاں کچھ ٹپس ہیں:"
+  useThisTool: "اپنے بولنے اور سننے کے کوشل کو بہتر بنانے کے لیے اس ٹول کا استعمال کریں۔ یہاں کچھ ٹپس ہیں:",
+  
+  // Add missing practice-related translations
+  send: "بھیجیں",
+  practicePrompt: "السلام علیکم! میں انگریزی کی مشق کرنا چاہتا/چاہتی ہوں۔ کیا آپ میری انگریزی گرامر، لفظ اور استعمال میں بہتری لانے میں میری مدد کر سکتے ہیں؟"
 };
 
 export default practiceTranslations;
