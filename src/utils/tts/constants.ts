@@ -17,6 +17,18 @@ export const languageCodeMap: Record<string, string> = {
   'farsi': 'fa-IR',
   'urdu': 'ur-PK',
   'pashto': 'ps-AF',
+  'swahili': 'sw-KE',
+  // Adding new language codes
+  'bengali': 'bn-BD',
+  'somali': 'so-SO',
+  'yoruba': 'yo-NG',
+  'amharic': 'am-ET',
+  'haitian': 'ht-HT',
+  'malayalam': 'ml-IN',
+  'igbo': 'ig-NG',
+  'polish': 'pl-PL',
+  'turkish': 'tr-TR',
+  'romanian': 'ro-RO'
 };
 
 // TTS cache constants

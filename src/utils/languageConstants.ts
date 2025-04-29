@@ -15,7 +15,18 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "mandarin",
   "urdu",
   "pashto",
-  "swahili"
+  "swahili",
+  // Adding new languages
+  "bengali",
+  "somali",
+  "yoruba",
+  "amharic",
+  "haitian",
+  "malayalam",
+  "igbo",
+  "polish",
+  "turkish",
+  "romanian"
 ];
 
 /**

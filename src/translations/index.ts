@@ -17,6 +17,17 @@ import farsiTranslations from "./farsi/index";
 import urduTranslations from "./urdu/index";
 import pashtoTranslations from "./pashto/index";
 import swahiliTranslations from "./swahili/index";
+// Import new language translations
+import bengaliTranslations from "./bengali/index";
+import somaliTranslations from "./somali/index";
+import yorubaTranslations from "./yoruba/index";
+import amharicTranslations from "./amharic/index";
+import haitianTranslations from "./haitian/index";
+import malayalamTranslations from "./malayalam/index";
+import igboTranslations from "./igbo/index";
+import polishTranslations from "./polish/index";
+import turkishTranslations from "./turkish/index";
+import romanianTranslations from "./romanian/index";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
@@ -36,7 +47,18 @@ const translations: LanguageTranslations = {
   farsi: farsiTranslations,
   urdu: urduTranslations,
   pashto: pashtoTranslations,
-  swahili: swahiliTranslations
+  swahili: swahiliTranslations,
+  // Add new languages to the translations object
+  bengali: bengaliTranslations,
+  somali: somaliTranslations,
+  yoruba: yorubaTranslations,
+  amharic: amharicTranslations,
+  haitian: haitianTranslations,
+  malayalam: malayalamTranslations,
+  igbo: igboTranslations,
+  polish: polishTranslations,
+  turkish: turkishTranslations,
+  romanian: romanianTranslations
 };
 
 export default translations;
@@ -59,7 +81,18 @@ export const AVAILABLE_LANGUAGES = {
   farsi: "فارسی",
   urdu: "اردو",
   pashto: "پښتو",
-  swahili: "Kiswahili"
+  swahili: "Kiswahili",
+  // Add new languages with their native names
+  bengali: "বাংলা",
+  somali: "Soomaali",
+  yoruba: "Yorùbá",
+  amharic: "አማርኛ",
+  haitian: "Kreyòl Ayisyen",
+  malayalam: "മലയാളം",
+  igbo: "Igbo",
+  polish: "Polski",
+  turkish: "Türkçe",
+  romanian: "Română"
 };
 
 // Default language

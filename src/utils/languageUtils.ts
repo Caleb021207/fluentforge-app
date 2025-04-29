@@ -22,7 +22,18 @@ export const getLanguageDisplayName = (language: string): string => {
     'farsi': 'Farsi/Dari',
     'urdu': 'Urdu',
     'pashto': 'Pashto',
-    'swahili': 'Swahili'
+    'swahili': 'Swahili',
+    // Adding new languages
+    'bengali': 'Bengali',
+    'somali': 'Somali',
+    'yoruba': 'Yoruba',
+    'amharic': 'Amharic',
+    'haitian': 'Haitian Creole',
+    'malayalam': 'Malayalam',
+    'igbo': 'Igbo',
+    'polish': 'Polish',
+    'turkish': 'Turkish',
+    'romanian': 'Romanian'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -68,7 +79,18 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'farsi': 'فارسی',
     'urdu': 'اردو',
     'pashto': 'پښتو',
-    'swahili': 'Kiswahili'
+    'swahili': 'Kiswahili',
+    // Adding new languages in their native scripts
+    'bengali': 'বাংলা',
+    'somali': 'Soomaali',
+    'yoruba': 'Yorùbá',
+    'amharic': 'አማርኛ',
+    'haitian': 'Kreyòl Ayisyen',
+    'malayalam': 'മലയാളം',
+    'igbo': 'Igbo',
+    'polish': 'Polski',
+    'turkish': 'Türkçe',
+    'romanian': 'Română'
   };
   
   return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
@@ -117,7 +139,18 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'english-farsi',      // English speakers learning Farsi
     'urdu-english',       // Urdu speakers learning English
     'pashto-english',     // Pashto speakers learning English
-    'swahili-english'     // Swahili speakers learning English
+    'swahili-english',    // Swahili speakers learning English
+    // Adding new language pairs
+    'bengali-english',    // Bengali speakers learning English
+    'somali-english',     // Somali speakers learning English
+    'yoruba-english',     // Yoruba speakers learning English
+    'amharic-english',    // Amharic speakers learning English
+    'haitian-english',    // Haitian Creole speakers learning English
+    'malayalam-english',  // Malayalam speakers learning English
+    'igbo-english',       // Igbo speakers learning English
+    'polish-english',     // Polish speakers learning English
+    'turkish-english',    // Turkish speakers learning English
+    'romanian-english'    // Romanian speakers learning English
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
@@ -147,7 +180,18 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'farsi': 'fa-IR',
     'urdu': 'ur-PK',
     'pashto': 'ps-AF',
-    'swahili': 'sw-KE'
+    'swahili': 'sw-KE',
+    // Adding new languages with their language codes
+    'bengali': 'bn-BD',
+    'somali': 'so-SO',
+    'yoruba': 'yo-NG',
+    'amharic': 'am-ET',
+    'haitian': 'ht-HT',
+    'malayalam': 'ml-IN',
+    'igbo': 'ig-NG',
+    'polish': 'pl-PL',
+    'turkish': 'tr-TR',
+    'romanian': 'ro-RO'
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';

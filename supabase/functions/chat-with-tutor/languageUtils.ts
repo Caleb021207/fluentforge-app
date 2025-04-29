@@ -18,7 +18,20 @@ export function getLanguageDisplayName(language: string): string {
     'ukrainian': 'Ukrainian',
     'indonesian': 'Indonesian',
     'farsi': 'Farsi/Dari',
-    'urdu': 'Urdu'
+    'urdu': 'Urdu',
+    'pashto': 'Pashto',
+    'swahili': 'Swahili',
+    // Adding new languages
+    'bengali': 'Bengali',
+    'somali': 'Somali',
+    'yoruba': 'Yoruba',
+    'amharic': 'Amharic',
+    'haitian': 'Haitian Creole',
+    'malayalam': 'Malayalam',
+    'igbo': 'Igbo',
+    'polish': 'Polish',
+    'turkish': 'Turkish',
+    'romanian': 'Romanian'
   };
   
   return languageMap[language.toLowerCase()] || language;
@@ -41,7 +54,20 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'hindi': 'Hindi',
     'indonesian': 'Indonesian',
     'farsi': 'Farsi/Dari',
-    'urdu': 'Urdu'
+    'urdu': 'Urdu',
+    'pashto': 'Pashto',
+    'swahili': 'Swahili',
+    // Adding new languages
+    'bengali': 'Bengali',
+    'somali': 'Somali',
+    'yoruba': 'Yoruba',
+    'amharic': 'Amharic',
+    'haitian': 'Haitian Creole',
+    'malayalam': 'Malayalam',
+    'igbo': 'Igbo',
+    'polish': 'Polish',
+    'turkish': 'Turkish',
+    'romanian': 'Romanian'
   };
   
   return languageMap[userLanguage] || 'English';
@@ -97,4 +123,25 @@ export function containsFarsiScript(text: string): boolean {
   // Farsi Unicode range: U+0600 to U+06FF (Arabic, which includes Farsi)
   const farsiRegex = /[\u0600-\u06FF]/;
   return farsiRegex.test(text);
+}
+
+// Helper function to check if text contains Bengali script
+export function containsBengaliScript(text: string): boolean {
+  // Bengali Unicode range: U+0980 to U+09FF
+  const bengaliRegex = /[\u0980-\u09FF]/;
+  return bengaliRegex.test(text);
+}
+
+// Helper function to check if text contains Amharic script
+export function containsAmharicScript(text: string): boolean {
+  // Amharic Unicode range: U+1200 to U+137F (Ethiopic)
+  const amharicRegex = /[\u1200-\u137F]/;
+  return amharicRegex.test(text);
+}
+
+// Helper function to check if text contains Malayalam script
+export function containsMalayalamScript(text: string): boolean {
+  // Malayalam Unicode range: U+0D00 to U+0D7F
+  const malayalamRegex = /[\u0D00-\u0D7F]/;
+  return malayalamRegex.test(text);
 }

@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,7 +43,18 @@ const LanguageSelectionCard = ({
     farsi: "🇮🇷 فارسی",
     urdu: "🇵🇰 اردو",
     pashto: "🇦🇫 پښتو",
-    swahili: "🇰🇪 Kiswahili"
+    swahili: "🇰🇪 Kiswahili",
+    // Added new languages
+    bengali: "🇧🇩 বাংলা",
+    somali: "🇸🇴 Soomaali",
+    yoruba: "🇳🇬 Yorùbá",
+    amharic: "🇪🇹 አማርኛ",
+    haitian: "🇭🇹 Kreyòl Ayisyen",
+    malayalam: "🇮🇳 മലയാളം",
+    igbo: "🇳🇬 Igbo",
+    polish: "🇵🇱 Polski",
+    turkish: "🇹🇷 Türkçe",
+    romanian: "🇷🇴 Română"
   };
 
   // Available target languages based on native language
@@ -68,7 +78,18 @@ const LanguageSelectionCard = ({
     farsi: "🇮🇷 Farsi/Dari",
     urdu: "🇵🇰 Urdu",
     pashto: "🇦🇫 Pashto",
-    swahili: "🇰🇪 Swahili"
+    swahili: "🇰🇪 Swahili",
+    // Added new languages
+    bengali: "🇧🇩 Bengali",
+    somali: "🇸🇴 Somali",
+    yoruba: "🇳🇬 Yoruba",
+    amharic: "🇪🇹 Amharic",
+    haitian: "🇭🇹 Haitian Creole",
+    malayalam: "🇮🇳 Malayalam",
+    igbo: "🇳🇬 Igbo",
+    polish: "🇵🇱 Polish",
+    turkish: "🇹🇷 Turkish",
+    romanian: "🇷🇴 Romanian"
   };
   
   // Determine disabled options based on native language
