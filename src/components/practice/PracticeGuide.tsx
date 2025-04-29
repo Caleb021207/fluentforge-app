@@ -75,10 +75,22 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish
         </p>
         
         <List className="text-sm text-gray-600 mb-4">
-          <ListItem>{t("practiceGuideItem1")}</ListItem>
-          <ListItem>{t("practiceGuideItem2")}</ListItem>
-          <ListItem>{t("practiceGuideItem3")}</ListItem>
-          <ListItem>{t("practiceGuideItem4")}</ListItem>
+          <ListItem className="flex items-start gap-2">
+            <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+            <span>{t("practiceGuideItem1")}</span>
+          </ListItem>
+          <ListItem className="flex items-start gap-2">
+            <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+            <span>{t("practiceGuideItem2")}</span>
+          </ListItem>
+          <ListItem className="flex items-start gap-2">
+            <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+            <span>{t("practiceGuideItem3")}</span>
+          </ListItem>
+          <ListItem className="flex items-start gap-2">
+            <Globe className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+            <span>{t("practiceGuideItem4")}</span>
+          </ListItem>
         </List>
         
         <p className="text-sm text-gray-500 italic">

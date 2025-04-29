@@ -8,6 +8,11 @@ export const useMessageInput = () => {
   const { t, currentLanguage } = useLocalization();
 
   const getPlaceholderText = () => {
+    // For Swahili, we'll use the specific translation that's been added
+    if (currentLanguage === "swahili") {
+      return t("chatPlaceholder", { targetLanguage: "English" });
+    }
+    
     // For Urdu, we'll use a specific hardcoded translation to avoid placeholder issues
     if (currentLanguage === "urdu") {
       return t("chatPlaceholder");
