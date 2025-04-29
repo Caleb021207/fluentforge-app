@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useClassroomText } from "@/hooks/useClassroomText";
 
+// Define the interface for the response from join_classroom RPC
 interface ClassroomResponse {
   success: boolean;
   message: string;
@@ -19,24 +20,16 @@ const JoinClassForm = () => {
   const [classCode, setClassCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const validateClassCode = (code: string): boolean => {
-    const trimmedCode = code.trim();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedCode = classCode.trim();
+    
     if (!trimmedCode) {
       toast({
         title: "Error",
         description: "Please enter a class code",
         variant: "destructive",
       });
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmedCode = classCode.trim();
-    
-    if (!validateClassCode(trimmedCode)) {
       return;
     }
     
@@ -53,7 +46,6 @@ const JoinClassForm = () => {
           description: "Please sign in to join a class",
           variant: "destructive",
         });
-        setIsLoading(false);
         return;
       }
 
@@ -72,42 +64,30 @@ const JoinClassForm = () => {
           description: error.message || "Failed to join class",
           variant: "destructive",
         });
-        setIsLoading(false);
         return;
       }
 
-      // First cast to unknown, then to ClassroomResponse to avoid TypeScript errors
-      // Check if data appears to have the expected structure before casting
-      if (typeof data === 'object' && data !== null && 'success' in data && 'message' in data) {
-        const response = data as unknown as ClassroomResponse;
-        console.log('Processed response:', response);
+      // Cast the data to the proper type
+      const response = data as unknown as ClassroomResponse;
 
-        if (response.success) {
-          toast({
-            title: "Success",
-            description: response.message || "Successfully joined class",
-          });
-          
-          setClassCode('');
-          console.log('Successfully joined classroom:', response.class_name);
-          
-          // Reload after a short delay to show the success message
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-        } else {
-          console.error('Join classroom failed:', response);
-          toast({
-            title: "Error",
-            description: response.message || "Failed to join class",
-            variant: "destructive",
-          });
-        }
+      if (response && response.success) {
+        toast({
+          title: "Success",
+          description: response.message,
+        });
+        
+        setClassCode('');
+        console.log('Successfully joined classroom:', response.class_name);
+        
+        // Reload after a short delay to show the success message
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
-        console.error('Invalid response format:', data);
+        console.error('Join classroom failed:', data);
         toast({
           title: "Error",
-          description: "Server returned an unexpected response format",
+          description: response?.message || "Failed to join class",
           variant: "destructive",
         });
       }
@@ -115,7 +95,7 @@ const JoinClassForm = () => {
       console.error('Unexpected error joining classroom:', error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred while joining the class",
+        description: "An unexpected error occurred",
         variant: "destructive",
       });
     } finally {
