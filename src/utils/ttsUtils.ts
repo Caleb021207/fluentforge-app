@@ -149,7 +149,7 @@ const useBrowserTTS = (text: string, language: string, onEnd?: () => void, onErr
 };
 
 /**
- * Plays text using the Supabase Edge Function for Google Cloud TTS.
+ * Plays text using the Supabase Edge Function for Azure TTS.
  * Includes caching to reduce API calls and improve performance.
  */
 export const playTTS = async (options: TTSOptions): Promise<void> => {
