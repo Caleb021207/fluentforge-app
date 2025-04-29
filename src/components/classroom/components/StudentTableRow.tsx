@@ -23,4 +23,4 @@ export const StudentTableRow = ({ student }: StudentTableRowProps) => {
       </TableCell>
     </TableRow>
   );
-};
+}
