@@ -16,6 +16,7 @@ import indonesianTranslations from "./indonesian/index";
 import farsiTranslations from "./farsi/index";
 import urduTranslations from "./urdu/index";
 import pashtoTranslations from "./pashto/index";
+import swahiliTranslations from "./swahili/index";
 
 // Combine all translations into a single object
 const translations: LanguageTranslations = {
@@ -34,7 +35,8 @@ const translations: LanguageTranslations = {
   indonesian: indonesianTranslations,
   farsi: farsiTranslations,
   urdu: urduTranslations,
-  pashto: pashtoTranslations
+  pashto: pashtoTranslations,
+  swahili: swahiliTranslations
 };
 
 export default translations;
@@ -57,6 +59,7 @@ export const AVAILABLE_LANGUAGES = {
   farsi: "فارسی",
   urdu: "اردو",
   pashto: "پښتو",
+  swahili: "Kiswahili"
 };
 
 // Default language

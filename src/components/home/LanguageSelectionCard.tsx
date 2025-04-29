@@ -43,7 +43,8 @@ const LanguageSelectionCard = ({
     indonesian: "🇮🇩 Bahasa Indonesia",
     farsi: "🇮🇷 فارسی",
     urdu: "🇵🇰 اردو",
-    pashto: "🇦🇫 پښتو" // Added Pashto with Afghanistan flag emoji
+    pashto: "🇦🇫 پښتو",
+    swahili: "🇰🇪 Kiswahili" // Added Swahili with Kenya flag emoji
   };
 
   // Available target languages based on native language
@@ -66,7 +67,8 @@ const LanguageSelectionCard = ({
     indonesian: "🇮🇩 Indonesian",
     farsi: "🇮🇷 Farsi/Dari",
     urdu: "🇵🇰 Urdu",
-    pashto: "🇦🇫 Pashto" // Added Pashto to target languages
+    pashto: "🇦🇫 Pashto",
+    swahili: "🇰🇪 Swahili" // Added Swahili to target languages
   };
   
   // Determine disabled options based on native language

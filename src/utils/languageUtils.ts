@@ -21,7 +21,8 @@ export const getLanguageDisplayName = (language: string): string => {
     'indonesian': 'Indonesian',
     'farsi': 'Farsi/Dari',
     'urdu': 'Urdu',
-    'pashto': 'Pashto'
+    'pashto': 'Pashto',
+    'swahili': 'Swahili'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -66,7 +67,8 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'indonesian': 'Bahasa Indonesia',
     'farsi': 'فارسی',
     'urdu': 'اردو',
-    'pashto': 'پښتو'
+    'pashto': 'پښتو',
+    'swahili': 'Kiswahili'
   };
   
   return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
@@ -143,7 +145,8 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'indonesian': 'id-ID',
     'farsi': 'fa-IR',
     'urdu': 'ur-PK',
-    'pashto': 'ps-AF'
+    'pashto': 'ps-AF',
+    'swahili': 'sw-KE'
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';

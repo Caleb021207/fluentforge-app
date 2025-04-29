@@ -18,7 +18,8 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "vietnamese": { languageCode: "vi-VN", voiceName: "vi-VN-NamMinhNeural" },
   "ukrainian": { languageCode: "uk-UA", voiceName: "uk-UA-OstapNeural" },
   "urdu": { languageCode: "ur-PK", voiceName: "ur-PK-AsadNeural" },
-  "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" }
+  "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" },
+  "swahili": { languageCode: "sw-KE", voiceName: "sw-KE-RafikiNeural" }
 };
 
 // Polly voice mapping
@@ -38,7 +39,8 @@ export const pollyVoiceMap: Record<string, string> = {
   "vietnamese": "Hiếu", // Fictional - may need to use another language if this doesn't exist
   "ukrainian": "Tatyana", // Use Russian voice as fallback
   "urdu": "Kajal", // Use Hindi voice as fallback
-  "pashto": "Kajal" // Use Hindi voice as fallback
+  "pashto": "Kajal", // Use Hindi voice as fallback
+  "swahili": "Joanna" // Use English voice as fallback
 };
 
 // Constants

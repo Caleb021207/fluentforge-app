@@ -1,0 +1,45 @@
+
+import { TranslationRecord } from "../types";
+
+const practiceTranslations: TranslationRecord = {
+  startPractice: "Anza Mazoezi",
+  practiceMore: "Zoezi Zaidi",
+  yourProgress: "Maendeleo Yako",
+  dailyGoal: "Lengo la Kila Siku",
+  streakDays: "Siku za Mfululizo",
+  practiceTime: "Muda wa Mazoezi",
+  practiceHistory: "Historia ya Mazoezi",
+  practiceStats: "Takwimu za Mazoezi",
+  practiceTips: "Vidokezo vya Mazoezi",
+  practiceExercises: "Mazoezi",
+  practiceResults: "Matokeo ya Mazoezi",
+  practiceAgain: "Zoezi Tena",
+  practiceLater: "Zoezi Baadaye",
+  practiceSummary: "Muhtasari wa Mazoezi",
+  practiceLevel: "Kiwango cha Mazoezi",
+  beginnerPractice: "Mazoezi ya Mwanzo",
+  intermediatePractice: "Mazoezi ya Kati",
+  advancedPractice: "Mazoezi ya Juu",
+  practiceWith: "Zoezi na",
+  conversationPractice: "Zoezi la Mazungumzo",
+  readingPractice: "Zoezi la Kusoma",
+  writingPractice: "Zoezi la Kuandika",
+  listeningPractice: "Zoezi la Kusikiliza",
+  speakingPractice: "Zoezi la Kuzungumza",
+  grammarPractice: "Zoezi la Sarufi",
+  vocabularyPractice: "Zoezi la Msamiati",
+  pronunciationPractice: "Zoezi la Matamshi",
+  dailyPractice: "Zoezi la Kila Siku",
+  weeklyPractice: "Zoezi la Kila Wiki",
+  monthlyPractice: "Zoezi la Kila Mwezi",
+  customPractice: "Zoezi Maalum",
+  practiceChat: "Mazungumzo ya Mazoezi",
+  askQuestion: "Uliza Swali",
+  practiceWithAI: "Zoezi na AI",
+  practiceWithTutor: "Zoezi na Mwalimu",
+  practiceTopics: "Mada za Mazoezi",
+  suggestedTopics: "Mada Zilizopendekezwa",
+  popularTopics: "Mada Maarufu"
+};
+
+export default practiceTranslations;

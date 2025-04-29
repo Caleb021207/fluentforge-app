@@ -14,7 +14,8 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "vietnamese",
   "mandarin",
   "urdu",
-  "pashto"
+  "pashto",
+  "swahili"
 ];
 
 /**
