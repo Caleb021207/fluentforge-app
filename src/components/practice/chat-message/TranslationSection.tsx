@@ -13,7 +13,6 @@ interface TranslationSectionProps {
 }
 
 const TranslationSection: React.FC<TranslationSectionProps> = ({
-  showTranslation,
   role,
   translation,
   currentLanguage,
@@ -21,10 +20,6 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   isTranslationLoading,
   onPlayTranslationAudio
 }) => {
-  if (!showTranslation) {
-    return null;
-  }
-
   return (
     <div className="border-t border-gray-300 mt-2 pt-2">
       <TranslationContent
