@@ -116,7 +116,8 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'farsi-english',      // Adding Farsi/Dari
     'english-farsi',      // English speakers learning Farsi
     'urdu-english',       // Urdu speakers learning English
-    'pashto-english'      // Pashto speakers learning English
+    'pashto-english',     // Pashto speakers learning English
+    'swahili-english'     // Swahili speakers learning English
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;

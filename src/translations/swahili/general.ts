@@ -75,7 +75,12 @@ const generalTranslations: TranslationRecord = {
   expand: "Panua",
   collapse: "Kunja",
   optional: "Hiari",
-  required: "Inahitajika"
+  required: "Inahitajika",
+  startChatting: "Anza Kuongea",
+  typeMessageBelow: "Andika ujumbe hapa chini",
+  practiceYourLanguage: "Fanya Mazoezi ya {language} Yako",
+  chatWithAI: "Ongea na AI yetu ili kufanya mazoezi ya {language}! AI itasaidia kurekebisha sarufi yako, msamiati, na kutoa vidokezo juu ya matamshi na utamaduni wa {language}.",
+  startConversationIn: "Anza Mazungumzo kwa {language}"
 };
 
 export default generalTranslations;

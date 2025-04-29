@@ -44,7 +44,7 @@ const LanguageSelectionCard = ({
     farsi: "🇮🇷 فارسی",
     urdu: "🇵🇰 اردو",
     pashto: "🇦🇫 پښتو",
-    swahili: "🇰🇪 Kiswahili" // Added Swahili with Kenya flag emoji
+    swahili: "🇰🇪 Kiswahili"
   };
 
   // Available target languages based on native language
@@ -68,7 +68,7 @@ const LanguageSelectionCard = ({
     farsi: "🇮🇷 Farsi/Dari",
     urdu: "🇵🇰 Urdu",
     pashto: "🇦🇫 Pashto",
-    swahili: "🇰🇪 Swahili" // Added Swahili to target languages
+    swahili: "🇰🇪 Swahili"
   };
   
   // Determine disabled options based on native language

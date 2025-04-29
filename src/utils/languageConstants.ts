@@ -35,4 +35,3 @@ export const getTargetLanguage = (currentLanguage: string): string => {
 export const getNativeLanguage = (currentLanguage: string): string => {
   return currentLanguage;
 };
-
