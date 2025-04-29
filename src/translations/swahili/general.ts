@@ -80,7 +80,30 @@ const generalTranslations: TranslationRecord = {
   typeMessageBelow: "Andika ujumbe hapa chini",
   practiceYourLanguage: "Fanya Mazoezi ya {language} Yako",
   chatWithAI: "Ongea na AI yetu ili kufanya mazoezi ya {language}! AI itasaidia kurekebisha sarufi yako, msamiati, na kutoa vidokezo juu ya matamshi na utamaduni wa {language}.",
-  startConversationIn: "Anza Mazungumzo kwa {language}"
+  startConversationIn: "Anza Mazungumzo kwa {language}",
+  
+  // Additional homepage translations
+  welcomeToLanguageLearning: "Karibu kwenye Palavox",
+  yourPersonalAICompanion: "Msaidizi wako binafsi wa AI kwa kujifunza kwa ufanisi",
+  welcomeMessage: "Karibu kwenye programu ya kujifunza lugha ya Palavox!",
+  pageNotFound: "Ukurasa haupatikani",
+  networkConnectionIssue: "Tatizo la muunganisho wa mtandao",
+  pleaseWait: "Tafadhali subiri",
+  sessionExpired: "Kikao chako kimeisha. Tafadhali ingia tena.",
+  cooldownActive: "Upozaji Umewashwa",
+  dailyLimitReached: "Kikomo cha kila siku kimefikiwa",
+  loginRequired: "Ingia inahitajika",
+  failedToCreateSession: "Imeshindwa kuunda kikao",
+  cefrB1Description: "Kati - Anaweza kujadili mada zinazojulikana",
+  speechSynthesisNotSupported: "Usanidi wa usemi hautumiki kwenye kivinjari chako",
+  
+  // Home page-specific translations
+  languagePreferencesSaved: "Mapendeleo ya lugha yamehifadhiwa",
+  learningLanguageFromNative: "Sasa unajifunza {targetLanguage} kutoka {nativeLanguage}",
+  pleaseSelectBothLanguages: "Tafadhali chagua lugha zote mbili",
+  youNeedToSelectBoth: "Unahitaji kuchagua lugha yako ya asili na lugha unayotaka kujifunza",
+  privacyPreferencesSaved: "Mapendeleo ya faragha yamehifadhiwa",
+  ferpaPreferencesSaved: "Mapendeleo yako ya faragha ya FERPA yamehifadhiwa. Unaweza kuyabadilisha wakati wowote katika mipangilio yako."
 };
 
 export default generalTranslations;
