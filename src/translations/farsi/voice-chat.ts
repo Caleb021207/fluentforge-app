@@ -46,7 +46,7 @@ const voiceChatTranslations: TranslationRecord = {
   aiModelInfo: "مدل هوش مصنوعی: ما از GPT-4o-mini OpenAI برای درک و تولید زبان طبیعی استفاده می‌کنیم، همراه با سیستم تولید گفتار داخلی مرورگر برای پاسخ‌های صوتی.",
   
   // Voice chat timers
-  voiceChatEnded: "چت صوتی پایان یافت",
+  voiceChatEndedMessage: "چت صوتی پایان یافت",
   timeLimit10MinReached: "محدودیت زمانی ۱۰ دقیقه به پایان رسیده است",
   
   // Additional keys needed for the practice tips box
@@ -70,8 +70,15 @@ const voiceChatTranslations: TranslationRecord = {
   failedToCreateSession: "ایجاد جلسه ناموفق بود. لطفاً دوباره تلاش کنید.",
   failedToEndSession: "پایان دادن به جلسه ناموفق بود.",
   metricsUpdateFailed: "به‌روزرسانی معیارها ناموفق بود.",
-  microphoneAccessRequired: "دسترسی به میکروفون برای این ویژگی ضروری است",
-  allowMicAccess: "لطفاً به مرورگر خود اجازه دسترسی به میکروفون را بدهید"
+  allowMicAccess: "لطفاً به مرورگر خود اجازه دسترسی به میکروفون را بدهید",
+  
+  // Adding missing translations for the unlimited voice practice page
+  practiceWithEnglish: "تمرین مهارت‌های گفتاری انگلیسی خود با چت صوتی ما. روی دکمه میکروفون کلیک کنید و به انگلیسی صحبت کنید.",
+  usingOpenAI: "استفاده از GPT-4o-mini OpenAI با سیستم تولید گفتار داخلی مرورگر.",
+  browserBasedTTS: "توجه: این از سیستم تبدیل متن به گفتار مبتنی بر مرورگر استفاده می‌کند. برای کیفیت صدای برتر با ElevenLabs، چت صوتی ویژه ما را امتحان کنید.",
+  practiceLevel: "سطح تمرین: B1 - متوسط - می‌تواند درباره موضوعات آشنا بحث کند",
+  cefrB1Description: "سطح متوسط - می‌تواند درباره موضوعات آشنا بحث کند",
+  conversationHistoryCleared: "تاریخچه مکالمه پاک شد"
 };
 
 export default voiceChatTranslations;
