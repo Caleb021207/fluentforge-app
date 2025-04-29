@@ -46,7 +46,7 @@ const voiceChatTranslations: TranslationRecord = {
   aiModelInfo: "مدل هوش مصنوعی: ما از GPT-4o-mini OpenAI برای درک و تولید زبان طبیعی استفاده می‌کنیم، همراه با سیستم تولید گفتار داخلی مرورگر برای پاسخ‌های صوتی.",
   
   // Voice chat timers
-  voiceChatEndedMessage: "چت صوتی پایان یافت",
+  voiceChatEnded: "چت صوتی پایان یافت",
   timeLimit10MinReached: "محدودیت زمانی ۱۰ دقیقه به پایان رسیده است",
   
   // Additional keys needed for the practice tips box
@@ -64,12 +64,13 @@ const voiceChatTranslations: TranslationRecord = {
   remaining: "باقیمانده",
   startVoiceChat: "شروع گفتگوی صوتی",
   stopVoiceChat: "پایان گفتگوی صوتی",
-  voiceChatEnded: "گفتگوی صوتی پایان یافت",  // Changed from duplicate property
+  voiceChatEnded: "گفتگوی صوتی پایان یافت",
   loginRequired: "برای استفاده از این ویژگی باید وارد شوید",
   networkConnectionIssue: "مشکل اتصال به شبکه. لطفاً اتصال خود را بررسی کنید و دوباره تلاش کنید.",
   failedToCreateSession: "ایجاد جلسه ناموفق بود. لطفاً دوباره تلاش کنید.",
   failedToEndSession: "پایان دادن به جلسه ناموفق بود.",
   metricsUpdateFailed: "به‌روزرسانی معیارها ناموفق بود.",
+  microphoneAccessRequired: "دسترسی به میکروفون برای این ویژگی ضروری است",
   allowMicAccess: "لطفاً به مرورگر خود اجازه دسترسی به میکروفون را بدهید"
 };
 
