@@ -30,7 +30,6 @@ const languagesTranslations: TranslationRecord = {
   malay: "Malaay",
   filipino: "Filibbiin",
   ukrainian: "Yukreeniyaan",
-  romanian: "Roomaaniyaan",
   bengali: "Bengaali",
   persian: "Faarsi",
   hebrew: "Cibraani",
@@ -51,7 +50,8 @@ const languagesTranslations: TranslationRecord = {
   haitian: "Haaytiyaan Kiriyool",
   malayalam: "Malaayalam",
   igbo: "Igbo",
-  turkish: "Turki",
+  turkish_tr: "Turki",
+  polish_pl: "Boolish",
   romanian: "Roomaaniyaan"
 };
 
