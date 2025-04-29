@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useConversation } from '@11labs/react';
+
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,27 +23,23 @@ export const useVoiceChat = () => {
     endConversationSession
   } = useConversationState();
 
-  const maxConnectionAttempts = 3;
-
-  // Initialize the conversation with appropriate configs
-  const conversation = useConversation({
-    apiKey: "", // We'll set this dynamically at runtime
-    onMessage: (message) => {
-      if (message.type === "llm_response") {
-        console.log("LLM response received");
-      }
+  const [isActive, setIsActive] = useState(false);
+  
+  // Placeholder for ElevenLabs conversation
+  const conversation = {
+    status: isActive ? "connected" : "disconnected",
+    isSpeaking: false,
+    startSession: async (opts: any) => {
+      console.log("[PLACEHOLDER] Would start conversation session with:", opts);
+      return `placeholder-conversation-${Date.now()}`;
     },
-    onError: (error) => {
-      console.error("ElevenLabs conversation error:", error);
-      toast({
-        title: t("error"),
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+    endSession: async () => {
+      console.log("[PLACEHOLDER] Would end conversation session");
+      return true;
+    }
+  };
 
-  const isConversationActive = () => conversation.status !== "disconnected";
+  const isConversationActive = () => isActive;
 
   const startVoiceConversation = async () => {
     setConnectionAttempts(0);
@@ -73,24 +69,16 @@ export const useVoiceChat = () => {
 
       await createConversationSession(user.id);
       
-      // Securely fetch the API key
-      const apiKey = await fetchApiKey(currentLanguage);
-      if (!apiKey) {
-        throw new Error("Failed to retrieve API key");
-      }
+      // Placeholder for API key fetch
+      console.log("[PLACEHOLDER] Would fetch API key for", currentLanguage);
       
-      // Instead of trying to modify the conversation object directly,
-      // we'll create a new conversation instance with the API key
-      // and use that for the session
-      
+      // Placeholder for agent ID
       const selectedAgentId = getAgentIdForLanguage(currentLanguage);
-      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
+      console.log(`[PLACEHOLDER] Would start voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
       
-      // Start the session with the agent ID
-      const conversationId = await conversation.startSession({
-        agentId: selectedAgentId,
-        apiKey: apiKey, // Pass the API key as part of the startSession options
-      });
+      // Simulate session start
+      setIsActive(true);
+      const conversationId = `placeholder-conversation-${Date.now()}`;
       
       toast({
         title: t("startVoiceChat"),
@@ -125,8 +113,8 @@ export const useVoiceChat = () => {
   const endVoiceConversation = async () => {
     try {
       if (isConversationActive()) {
-        await conversation.endSession();
-        console.log("Ended conversation session");
+        console.log("[PLACEHOLDER] Would end conversation session");
+        setIsActive(false);
       }
       
       const { data: { user } } = await supabase.auth.getUser();

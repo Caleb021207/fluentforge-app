@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock, BookUser } from "lucide-react";
@@ -49,11 +50,11 @@ const Navigation = () => {
     const items = [
       { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
       { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
-      { icon: Headphones, label: "premiumVoiceChat", path: "/premium-voice-chat", requiresAuth: true },
+      // Premium Voice Chat button removed
     ];
 
     if (isLoggedIn && !teacherStatusLoading) {
-      items.splice(3, 0, {
+      items.splice(2, 0, {
         icon: BookUser,
         label: isTeacher ? "myClasses" : "myClass",
         path: isTeacher ? "/teacher/classes" : "/student/class",
