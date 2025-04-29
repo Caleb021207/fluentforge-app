@@ -52,6 +52,13 @@ const uiElementsTranslations: TranslationRecord = {
   all: "سب",
   none: "کوئی نہیں",
   startConversationIn: "{{language}} میں بات چیت شروع کریں",
+  
+  // Navigation menu items
+  textPractice: "متنی مشق",
+  unlimitedVoicePractice: "لامحدود آواز کی مشق",
+  myClasses: "میری کلاسز",
+  myClass: "میری کلاس",
+  loginRequiredForFeature: "اس خصوصیت کا استعمال کرنے کے لیے لاگ ان کریں",
 };
 
 export default uiElementsTranslations;
