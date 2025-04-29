@@ -62,49 +62,49 @@ const uiElementsTranslations: TranslationRecord = {
   goToDashboard: "Nenda kwenye Dashibodi",
   practiceWithAI: "Fanya Mazoezi na AI",
   processing: "Inachakata...",
-  error: "Hitilafu",
-  send: "Tuma",
-  cancel: "Ghairi",
-  success: "Mafanikio",
+  // error: "Hitilafu", // Removed duplicate
+  // send: "Tuma", // Removed duplicate
+  // cancel: "Ghairi", // Removed duplicate
+  // success: "Mafanikio", // Removed duplicate
   home: "Nyumbani",
   practice: "Mazoezi",
   vocabulary: "Msamiati",
   lessons: "Masomo",
   certificates: "Vyeti",
-  progress: "Maendeleo",
-  settings: "Mipangilio",
-  profile: "Wasifu",
-  help: "Msaada",
+  // progress: "Maendeleo", // Removed duplicate
+  // settings: "Mipangilio", // Removed duplicate
+  // profile: "Wasifu", // Removed duplicate
+  // help: "Msaada", // Removed duplicate
   about: "Kuhusu",
   contact: "Wasiliana",
-  logout: "Toka",
+  // logout: "Toka", // Removed duplicate
   voiceChat: "Mazungumzo ya Sauti",
   premiumVoiceChat: "Mazungumzo ya Sauti ya Premium",
   startingUp: "Inaanza...",
-  login: "Ingia",
+  // login: "Ingia", // Removed duplicate
   signup: "Jiandikishe",
-  submit: "Wasilisha",
-  save: "Hifadhi",
-  edit: "Hariri",
-  delete: "Futa",
-  loading: "Inapakia...",
-  warning: "Onyo",
-  info: "Habari",
+  // submit: "Wasilisha", // Removed duplicate
+  // save: "Hifadhi", // Removed duplicate
+  // edit: "Hariri", // Removed duplicate
+  // delete: "Futa", // Removed duplicate
+  // loading: "Inapakia...", // Removed duplicate
+  // warning: "Onyo", // Removed duplicate
+  // info: "Habari", // Removed duplicate
   confirmation: "Uthibitisho",
-  yes: "Ndio",
-  no: "Hapana",
+  // yes: "Ndio", // Removed duplicate
+  // no: "Hapana", // Removed duplicate
   ok: "Sawa",
-  next: "Ifuatayo",
+  // next: "Ifuatayo", // Removed duplicate
   previous: "Iliyotangulia",
-  back: "Rudi nyuma",
+  // back: "Rudi nyuma", // Removed duplicate
   finish: "Maliza",
   restart: "Anza tena",
   language: "Lugha",
-  search: "Tafuta",
-  filter: "Chuja",
-  sort: "Panga",
-  all: "Zote",
-  none: "Hakuna",
+  // search: "Tafuta", // Removed duplicate
+  // filter: "Chuja", // Removed duplicate
+  // sort: "Panga", // Removed duplicate
+  // all: "Zote", // Removed duplicate
+  // none: "Hakuna", // Removed duplicate
   
   // UI specific elements for homepage
   signedInAs: "Umeingia kama",
@@ -112,14 +112,14 @@ const uiElementsTranslations: TranslationRecord = {
   unlimitedVoicePractice: "Mazoezi ya Sauti Yasiyona Kikomo",
   myClasses: "Madarasa Yangu",
   myClass: "Darasa Langu",
-  welcomeToLanguageLearning: "Karibu kwenye Palavox",
-  yourPersonalAICompanion: "Msaidizi wako binafsi wa AI kwa kujifunza kwa ufanisi",
+  // welcomeToLanguageLearning: "Karibu kwenye Palavox", // Removed duplicate
+  // yourPersonalAICompanion: "Msaidizi wako binafsi wa AI kwa kujifunza kwa ufanisi", // Removed duplicate
   loginRequiredForFeature: "Unahitaji kuingia ili kutumia kipengele hiki",
   notSignedIn: "Hujajiandikisha",
 
   // Buttons and actions
-  startChatting: "Anza Kuongea",
-  continue: "Endelea",
+  // startChatting: "Anza Kuongea", // Removed duplicate
+  // continue: "Endelea", // Removed duplicate
   incorrectPin: "PIN sio sahihi",
   
   // Parental controls and footer

@@ -92,7 +92,6 @@ const generalTranslations: TranslationRecord = {
   sessionExpired: "Kikao chako kimeisha. Tafadhali ingia tena.",
   cooldownActive: "Upozaji Umewashwa",
   dailyLimitReached: "Kikomo cha kila siku kimefikiwa",
-  loginRequired: "Ingia inahitajika",
   failedToCreateSession: "Imeshindwa kuunda kikao",
   cefrB1Description: "Kati - Anaweza kujadili mada zinazojulikana",
   speechSynthesisNotSupported: "Usanidi wa usemi hautumiki kwenye kivinjari chako",
