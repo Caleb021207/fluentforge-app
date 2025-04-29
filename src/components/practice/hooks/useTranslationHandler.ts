@@ -57,6 +57,23 @@ export const useTranslationHandler = () => {
     
     return translation;
   };
+  
+  /**
+   * Special case for Farsi translations to ensure they use proper Farsi script
+   */
+  const verifyFarsiTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'farsi') return translation;
+    
+    // Check if the translation contains Arabic script (used in Farsi)
+    const containsFarsi = /[\u0600-\u06FF]/.test(translation);
+    
+    if (!containsFarsi && userLanguage === 'farsi') {
+      console.log('Getting proper Farsi translation with Persian script');
+      return await getTranslation(originalContent, 'farsi');
+    }
+    
+    return translation;
+  };
 
   /**
    * Check if a translation is needed for the current language
@@ -72,7 +89,8 @@ export const useTranslationHandler = () => {
       "korean",
       "arabic",
       "vietnamese",
-      "mandarin"
+      "mandarin",
+      "farsi"
     ];
     
     return translationNeededLanguages.includes(language.toLowerCase());
@@ -81,6 +99,7 @@ export const useTranslationHandler = () => {
   return {
     getTranslation,
     verifyHindiTranslation,
+    verifyFarsiTranslation,
     needsTranslation
   };
 };

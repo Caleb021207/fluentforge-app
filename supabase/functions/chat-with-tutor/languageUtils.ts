@@ -1,4 +1,3 @@
-
 // Language utilities for the chat-with-tutor function
 
 // Get proper display name for a language
@@ -16,7 +15,8 @@ export function getLanguageDisplayName(language: string): string {
     'hindi': 'Hindi',
     'vietnamese': 'Vietnamese',
     'ukrainian': 'Ukrainian',
-    'indonesian': 'Indonesian'
+    'indonesian': 'Indonesian',
+    'farsi': 'Farsi/Dari'
   };
   
   return languageMap[language.toLowerCase()] || language;
@@ -37,7 +37,8 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'ukrainian': 'Ukrainian',
     'russian': 'Russian',
     'hindi': 'Hindi',
-    'indonesian': 'Indonesian'
+    'indonesian': 'Indonesian',
+    'farsi': 'Farsi/Dari'
   };
   
   return languageMap[userLanguage] || 'English';
@@ -86,4 +87,11 @@ export function containsDevanagariScript(text: string): boolean {
   // Devanagari Unicode range: U+0900 to U+097F
   const devanagariRegex = /[\u0900-\u097F]/;
   return devanagariRegex.test(text);
+}
+
+// Helper function to check if text contains Farsi script
+export function containsFarsiScript(text: string): boolean {
+  // Farsi Unicode range: U+0600 to U+06FF (Arabic, which includes Farsi)
+  const farsiRegex = /[\u0600-\u06FF]/;
+  return farsiRegex.test(text);
 }

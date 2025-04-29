@@ -18,6 +18,7 @@ const languageVoiceMap: Record<string, { voiceId: string, engine: string }> = {
   "mandarin": { voiceId: "Zhiyu", engine: "neural" },
   "hindi": { voiceId: "Kajal", engine: "neural" },
   "indonesian": { voiceId: "Siti", engine: "standard" }, // Standard engine as neural not available
+  "farsi": { voiceId: "Lupe", engine: "standard" },      // Using a standard voice as Farsi specific voice not available in Polly
 };
 
 // Maximum character count per chunk (Amazon Polly limit is 3000)

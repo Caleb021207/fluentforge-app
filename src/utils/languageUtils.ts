@@ -18,7 +18,8 @@ export const getLanguageDisplayName = (language: string): string => {
     'hindi': 'Hindi',
     'vietnamese': 'Vietnamese',
     'ukrainian': 'Ukrainian',
-    'indonesian': 'Indonesian'
+    'indonesian': 'Indonesian',
+    'farsi': 'Farsi/Dari'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -60,7 +61,8 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'hindi': 'हिन्दी',
     'vietnamese': 'Tiếng Việt',
     'ukrainian': 'Українська',
-    'indonesian': 'Bahasa Indonesia'
+    'indonesian': 'Bahasa Indonesia',
+    'farsi': 'فارسی'
   };
   
   return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
@@ -104,7 +106,9 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'hindi-english',      // Adding Hindi
     'vietnamese-english', // Adding Vietnamese
     'ukrainian-english',  // Adding Ukrainian
-    'indonesian-english'  // Adding Indonesian
+    'indonesian-english', // Adding Indonesian
+    'farsi-english',      // Adding Farsi/Dari
+    'english-farsi'       // English speakers learning Farsi
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
@@ -130,7 +134,8 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'hindi': 'hi-IN',
     'vietnamese': 'vi-VN',
     'ukrainian': 'uk-UA',
-    'indonesian': 'id-ID'
+    'indonesian': 'id-ID',
+    'farsi': 'fa-IR'
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';
