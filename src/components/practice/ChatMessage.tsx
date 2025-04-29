@@ -122,7 +122,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
           currentLanguage={currentLanguage}
           isTranslationPlaying={isTranslationPlaying}
           isTranslationLoading={isTranslationLoading}
-          onPlayAudio={role === "assistant" ? handlePlayAudio : undefined}
           onPlayTranslationAudio={role === "assistant" && safeTranslation ? playTranslationAudio : undefined}
         />
       </div>
