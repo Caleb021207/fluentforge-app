@@ -1,29 +1,27 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { PollyClient, SynthesizeSpeechCommand } from "npm:@aws-sdk/client-polly";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Language code mapping for better Polly voices
-const languageVoiceMap: Record<string, { voiceId: string, engine: string }> = {
-  "english": { voiceId: "Matthew", engine: "neural" },
-  "spanish": { voiceId: "Lupe", engine: "neural" },
-  "portuguese": { voiceId: "Camila", engine: "neural" },
-  "korean": { voiceId: "Seoyeon", engine: "neural" },
-  "french": { voiceId: "Lea", engine: "neural" },
-  "japanese": { voiceId: "Takumi", engine: "neural" },
-  "mandarin": { voiceId: "Zhiyu", engine: "neural" },
-  "hindi": { voiceId: "Kajal", engine: "neural" },
-  "indonesian": { voiceId: "Siti", engine: "standard" }, // Standard engine as neural not available
-  // For Farsi, we'll handle it separately in the code since AWS Polly doesn't support it
-  "farsi": { voiceId: "NONE", engine: "standard" },
+// Language code mapping for Google Cloud Text-to-Speech
+const languageVoiceMap: Record<string, { languageCode: string, voiceName: string }> = {
+  "english": { languageCode: "en-US", voiceName: "en-US-Neural2-D" },
+  "spanish": { languageCode: "es-ES", voiceName: "es-ES-Neural2-C" },
+  "portuguese": { languageCode: "pt-BR", voiceName: "pt-BR-Neural2-B" },
+  "korean": { languageCode: "ko-KR", voiceName: "ko-KR-Neural2-C" },
+  "french": { languageCode: "fr-FR", voiceName: "fr-FR-Neural2-A" },
+  "japanese": { languageCode: "ja-JP", voiceName: "ja-JP-Neural2-C" },
+  "mandarin": { languageCode: "cmn-CN", voiceName: "cmn-CN-Neural2-A" }, 
+  "hindi": { languageCode: "hi-IN", voiceName: "hi-IN-Neural2-B" },
+  "indonesian": { languageCode: "id-ID", voiceName: "id-ID-Neural2-A" },
+  "farsi": { languageCode: "fa-IR", voiceName: "fa-IR-Wavenet-A" }, // Google Cloud supports Farsi!
 };
 
-// Maximum character count per chunk (Amazon Polly limit is 3000)
-const MAX_CHUNK_SIZE = 2800;
+// Maximum character count per chunk (Google Cloud TTS limit is 5000)
+const MAX_CHUNK_SIZE = 4800;
 const MAX_RETRIES = 2;
 const RETRY_DELAY = 500;
 
@@ -75,18 +73,19 @@ function splitTextIntoChunks(text: string, maxChunkSize: number = MAX_CHUNK_SIZE
 }
 
 // Function to retry API calls
-async function fetchWithRetry(client: PollyClient, command: SynthesizeSpeechCommand, retries = MAX_RETRIES) {
+async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_RETRIES) {
   try {
-    const response = await client.send(command);
-    if (!response.AudioStream) {
-      throw new Error('No audio stream in response');
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`API request failed with status ${response.status}: ${errorData}`);
     }
     return response;
   } catch (error) {
-    if (retries > 0 && (error.name === 'NetworkError' || error.name === 'ThrottlingException')) {
-      console.log(`Retrying due to ${error.name}... (${retries} attempts left)`);
+    if (retries > 0 && (error.name === 'NetworkError' || error.name === 'TypeError' || error.message.includes('429') || error.message.includes('500'))) {
+      console.log(`Retrying due to ${error.message}... (${retries} attempts left)`);
       await new Promise(r => setTimeout(r, RETRY_DELAY));
-      return fetchWithRetry(client, command, retries - 1);
+      return fetchWithRetry(url, options, retries - 1);
     }
     throw error;
   }
@@ -141,29 +140,6 @@ serve(async (req) => {
 
     console.log(`TTS request for language: ${language}, text length: ${text.length}`);
 
-    // Special handling for Farsi - return a special response that will trigger browser TTS
-    // Since AWS Polly doesn't support Farsi
-    if (language?.toLowerCase() === "farsi") {
-      console.log("Farsi language detected - sending browser TTS fallback signal");
-      
-      return new Response(
-        JSON.stringify({ 
-          useBrowserTTS: true, 
-          message: "Farsi is not supported by our TTS service. Falling back to browser TTS." 
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Initialize Polly client
-    const polly = new PollyClient({
-      region: "us-east-1", // Using US East 1 as it has all voices available
-      credentials: {
-        accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID")!,
-        secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
-      },
-    });
-
     // Get voice settings based on language
     const voiceSettings = languageVoiceMap[language?.toLowerCase()] || languageVoiceMap["english"];
 
@@ -175,23 +151,52 @@ serve(async (req) => {
     const audioPromises = textChunks.map(async (chunk, index) => {
       console.log(`Processing chunk ${index + 1}/${textChunks.length}, length: ${chunk.length}`);
       
-      const command = new SynthesizeSpeechCommand({
-        Engine: voiceSettings.engine,
-        OutputFormat: "mp3",
-        Text: chunk,
-        VoiceId: voiceSettings.voiceId,
-      });
+      // Prepare request body for Google Cloud TTS
+      const requestBody = {
+        input: { text: chunk },
+        voice: {
+          languageCode: voiceSettings.languageCode,
+          name: voiceSettings.voiceName
+        },
+        audioConfig: { audioEncoding: 'MP3' }
+      };
 
-      // Generate speech with retry logic
-      const response = await fetchWithRetry(polly, command);
-      return await response.AudioStream?.transformToByteArray();
+      // Google Cloud TTS API request
+      const response = await fetchWithRetry(
+        'https://texttospeech.googleapis.com/v1/text:synthesize',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Deno.env.get('GOOGLE_CLOUD_TOKEN')}`
+          },
+          body: JSON.stringify(requestBody)
+        }
+      );
+
+      // Process the response
+      const data = await response.json();
+      if (!data.audioContent) {
+        throw new Error('No audio content in response');
+      }
+
+      // Decode base64 audio to binary
+      const audioBytes = atob(data.audioContent);
+      const arrayBuffer = new ArrayBuffer(audioBytes.length);
+      const bytes = new Uint8Array(arrayBuffer);
+      
+      for (let i = 0; i < audioBytes.length; i++) {
+        bytes[i] = audioBytes.charCodeAt(i);
+      }
+
+      return arrayBuffer;
     });
 
     // Wait for all audio chunks to be generated
     const audioBuffers = await Promise.all(audioPromises);
     
     // Concatenate audio streams
-    const combinedAudio = await concatenateAudioStreams(audioBuffers.map(buffer => buffer.buffer));
+    const combinedAudio = await concatenateAudioStreams(audioBuffers);
     
     // Process to base64 efficiently
     const base64Audio = processAudioToBase64(combinedAudio);
@@ -207,7 +212,7 @@ serve(async (req) => {
     console.error('Error in text-to-speech function:', error);
     
     let errorMessage = 'Failed to generate speech. Please try again.';
-    if (error.message.includes('credentials')) {
+    if (error.message.includes('Authorization')) {
       errorMessage = 'The speech service is not properly configured. Please contact support.';
     }
 
