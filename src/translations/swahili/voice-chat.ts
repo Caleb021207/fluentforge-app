@@ -24,7 +24,7 @@ const voiceChatTranslations: TranslationRecord = {
   failedToGenerateSpeech: "Imeshindwa kuzalisha usemi. Tafadhali jaribu tena.",
   audioPlaybackError: "Hitilafu ya kucheza sauti. Tafadhali jaribu tena.",
   conversationStarters: "Vianzilishi vya Mazungumzo",
-  tryThesePhrases: "Jaribu sentensi hizi kuanza mazungumzo:",
+  tryThesePhrases: "Jaribu sentenzi hizi kuanza mazungumzo:",
   inYourTargetLanguage: "Katika lugha yako lengwa:",
   inYourNativeLanguage: "Katika lugha yako ya asili:",
   translation: "Tafsiri",

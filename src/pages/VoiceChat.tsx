@@ -377,6 +377,8 @@ const VoiceChat = () => {
   const getAIModelLabelText = () => {
     if (currentLanguage === "pashto") {
       return t("aiModelLabel");
+    } else if (currentLanguage === "swahili") {
+      return t("aiModelLabel");
     }
     
     switch (currentLanguage) {
@@ -414,6 +416,8 @@ const VoiceChat = () => {
   const getAIModelInfoText = () => {
     if (currentLanguage === "pashto") {
       return t("aiModelInfoText");
+    } else if (currentLanguage === "swahili") {
+      return t("aiModelInfoText");
     }
     
     if (currentLanguage === "english") {
@@ -423,7 +427,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "portuguese") {
       return "Estamos usando o GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com a Síntese de Fala incorporada do navegador para respostas de voz.";
     } else if (currentLanguage === "korean") {
-      return "자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하��, 음성 응답을 ���해 브라우저의 내장 음성 합성을 사용합니다.";
+      return "자연어 이해 및 생성을 위해 OpenAI의 GPT-4o-mini를 사용하��, 음성 응답을 �����해 브라우저의 내장 음성 합성을 사용합니다.";
     } else if (currentLanguage === "arabic") {
       return "نستخدم GPT-4o-mini من OpenAI لفهم وإنشاء اللغة الطبيعية، مع استخدام خاصية تحويل النص إلى كلام المدمجة في المتصفح للردود الصوتية.";
     } else if (currentLanguage === "mandarin") {
@@ -477,30 +481,11 @@ const VoiceChat = () => {
     return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
 
-  // Get the existing getPracticeLevelText function
-  const getPracticeLevelText = () => {
-    if (currentLanguage === "pashto") {
-      return t("practiceLevel");
-    } else if (currentLanguage === "mandarin") {
-      return "练习水平";
-    } else if (currentLanguage === "vietnamese") {
-      return "Cấp độ thực hành";
-    } else if (currentLanguage === "french") {
-      return "Niveau de pratique";
-    } else if (currentLanguage === "japanese") {
-      return "練習レベル";
-    } else if (currentLanguage === "russian") {
-      return "Уровень практики";
-    } else if (currentLanguage === "hindi") {
-      return "अभ्यास स्तर";
-    } else if (currentLanguage === "indonesian") {
-      return "Tingkat Latihan";
-    }
-    return t("practiceLevel") || "Practice Level";
-  };
-
+  // Get the existing getPracticeDescription function but modify it for Swahili
   const getPracticeDescription = () => {
-    if (currentLanguage === "pashto") {
+    if (currentLanguage === "swahili") {
+      return t("practiceDescription");
+    } else if (currentLanguage === "pashto") {
       return t("practiceDescription");
     } else if (currentLanguage === "english") {
       return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
@@ -530,6 +515,27 @@ const VoiceChat = () => {
       return `Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.`;
     }
     return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
+  };
+
+  const getPracticeLevelText = () => {
+    if (currentLanguage === "pashto") {
+      return t("practiceLevel");
+    } else if (currentLanguage === "mandarin") {
+      return "练习水平";
+    } else if (currentLanguage === "vietnamese") {
+      return "Cấp độ thực hành";
+    } else if (currentLanguage === "french") {
+      return "Niveau de pratique";
+    } else if (currentLanguage === "japanese") {
+      return "練習レベル";
+    } else if (currentLanguage === "russian") {
+      return "Уровень практики";
+    } else if (currentLanguage === "hindi") {
+      return "अभ्यास स्तर";
+    } else if (currentLanguage === "indonesian") {
+      return "Tingkat Latihan";
+    }
+    return t("practiceLevel") || "Practice Level";
   };
 
   const getPracticeTipsText = () => {
