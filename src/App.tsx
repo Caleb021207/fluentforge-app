@@ -9,7 +9,6 @@ import Layout from "@/components/Layout";
 import Index from "@/pages/Index";
 import Practice from "@/pages/Practice";
 import VoiceChat from "@/pages/VoiceChat";
-import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
 import Progress from "@/pages/Progress";
 import Profile from "@/pages/Profile";
 import Certificates from "@/pages/Certificates";
@@ -33,7 +32,6 @@ function App() {
               { index: true, element: <Index /> },
               { path: "practice", element: <Practice /> },
               { path: "voice-chat", element: <VoiceChat /> },
-              { path: "premium-voice-chat", element: <PremiumVoiceChat /> },
               { path: "progress", element: <Progress /> },
               { path: "profile", element: <Profile /> },
               { path: "certificates", element: <Certificates /> },
