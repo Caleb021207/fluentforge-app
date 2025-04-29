@@ -36,34 +36,22 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
       if (error) throw error;
       
       const transformedData: StudentMetrics[] = (data || []).map(student => {
-        // Access properties safely, checking if they exist on the student object
-        // This handles schema differences between different database versions
-        let minutes_used = 0;
-        if ('premium_voice_minutes_used' in student && student.premium_voice_minutes_used !== null) {
-          minutes_used = Number(student.premium_voice_minutes_used);
-        } else if ('premium_voice_minutes' in student && student.premium_voice_minutes !== null) {
-          minutes_used = Number(student.premium_voice_minutes);
-        }
-        
-        let minutes_remaining = 10; // Default value
-        if ('premium_voice_minutes_remaining' in student && student.premium_voice_minutes_remaining !== null) {
-          minutes_remaining = Number(student.premium_voice_minutes_remaining);
-        }
-
         return {
           student_id: student.student_id || null,
           student_name: student.student_name || null,
           student_email: student.student_email || null,
           text_practice_calls: student.text_practice_calls || 0,
           premium_voice_calls: student.premium_voice_calls || 0,
-          premium_voice_sessions: student.premium_voice_sessions || 0,
-          premium_voice_minutes_used: minutes_used,
-          premium_voice_minutes_remaining: minutes_remaining,
-          certification_attempts: student.certification_attempts || 0,
-          highest_certification_score: student.highest_certification_score || 0,
-          completed_lessons: student.completed_lessons || 0,
-          total_lessons: student.total_lessons || 0,
           last_activity: student.last_activity || null,
+          
+          // Include these properties to satisfy TypeScript, but we won't display them
+          premium_voice_sessions: 0,
+          premium_voice_minutes_used: 0,
+          premium_voice_minutes_remaining: 0,
+          certification_attempts: 0,
+          highest_certification_score: 0,
+          completed_lessons: 0,
+          total_lessons: 0,
         };
       });
 

@@ -13,11 +13,6 @@ interface ClassData {
   metrics?: {
     text_practice_calls: number;
     premium_voice_calls: number;
-    premium_voice_sessions: number;
-    premium_voice_minutes_used: number;
-    premium_voice_minutes_remaining: number;
-    certification_attempts: number;
-    highest_certification_score: number;
     last_activity: string | null;
   };
 }
@@ -43,16 +38,6 @@ export const useClassData = () => {
 
       console.log("Authenticated user:", session.session.user.id);
 
-      // First check if the teacher_students_secure view has the columns we need
-      const { data: viewInfo, error: viewError } = await supabase
-        .from('teacher_students_secure')
-        .select('*')
-        .limit(1);
-      
-      if (viewError) {
-        console.error('View access error:', viewError);
-      }
-      
       // Check if student is a member of a classroom
       const { data: membershipData, error: membershipError } = await supabase
         .from('classroom_memberships')
@@ -101,11 +86,6 @@ export const useClassData = () => {
         .select(`
           text_practice_calls,
           premium_voice_calls,
-          premium_voice_sessions,
-          premium_voice_minutes_used,
-          premium_voice_minutes_remaining,
-          certification_attempts,
-          highest_certification_score,
           last_activity
         `)
         .eq('classroom_id', membershipData.classroom_id)

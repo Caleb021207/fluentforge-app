@@ -14,15 +14,8 @@ export const StudentTableRow = ({ student }: StudentTableRowProps) => {
       <TableCell className="font-medium">
         {student.student_name || student.student_email || CLASSROOM_TEXT.UNNAMED}
       </TableCell>
-      <TableCell>{student.certification_attempts}</TableCell>
-      <TableCell>
-        {student.highest_certification_score > 0 
-          ? `${Math.round(student.highest_certification_score)}%` 
-          : '-'}
-      </TableCell>
-      <TableCell>{student.text_practice_calls}</TableCell>
-      <TableCell>{student.premium_voice_sessions}</TableCell>
-      <TableCell>{Math.round(student.premium_voice_minutes_used)} min</TableCell>
+      <TableCell>{student.text_practice_calls} (OpenAI)</TableCell>
+      <TableCell>{student.premium_voice_calls} (AWS Polly)</TableCell>
       <TableCell>
         {student.last_activity 
           ? new Date(student.last_activity).toLocaleDateString() 
