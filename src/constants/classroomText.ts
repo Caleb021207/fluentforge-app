@@ -41,6 +41,8 @@ export const CLASSROOM_TEXT = {
   // Adding the missing constants
   SUCCESS: 'Success',
   ERROR: 'Error',
+  CLASS_ACTIVATED: 'Class activated successfully',
+  CLASS_DEACTIVATED: 'Class deactivated successfully',
   STUDENT_METRICS_REFRESHED: 'Student metrics refreshed successfully',
   ALL_METRICS_REFRESHED: 'All metrics refreshed successfully',
   FAILED_TO_REFRESH_METRICS: 'Failed to refresh metrics',
