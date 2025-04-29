@@ -41,7 +41,8 @@ const LanguageSelectionCard = ({
     ukrainian: "🇺🇦 Українська",
     hindi: "🇮🇳 हिन्दी",
     indonesian: "🇮🇩 Bahasa Indonesia",
-    farsi: "🇮🇷 فارسی"
+    farsi: "🇮🇷 فارسی",
+    urdu: "🇵🇰 اردو" // Added Urdu with Pakistan flag emoji
   };
 
   // Available target languages based on native language
@@ -54,7 +55,7 @@ const LanguageSelectionCard = ({
     portuguese: "🇧🇷 Portuguese",
     korean: "🇰🇷 Korean",
     arabic: "🇸🇦 Arabic",
-    mandarin: "🇨🇳 Mandarin",
+    mandarin: "🇨🇳 Mandarin Chinese",
     vietnamese: "🇻🇳 Vietnamese",
     french: "🇫🇷 French",
     japanese: "🇯🇵 Japanese",
@@ -62,7 +63,8 @@ const LanguageSelectionCard = ({
     ukrainian: "🇺🇦 Ukrainian",
     hindi: "🇮🇳 Hindi",
     indonesian: "🇮🇩 Indonesian",
-    farsi: "🇮🇷 Farsi/Dari"
+    farsi: "🇮🇷 Farsi/Dari",
+    urdu: "🇵🇰 Urdu" // Added Urdu to target languages
   };
   
   // Determine disabled options based on native language
