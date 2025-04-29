@@ -2,7 +2,7 @@
 import { TranslationRecord } from "../types";
 
 const languageSelectionTranslations: TranslationRecord = {
-  selectLanguage: "Dil Seçin",
+  selectLanguage: "Dil Seç",
   changeLanguage: "Dili Değiştir",
   currentLanguage: "Mevcut Dil",
   saveLanguagePreference: "Dil Tercihini Kaydet",
@@ -16,14 +16,10 @@ const languageSelectionTranslations: TranslationRecord = {
   languagePreferencesSaved: "Dil tercihleri kaydedildi",
   languageNotAvailable: "Dil mevcut değil",
   tryDifferentLanguage: "Farklı bir dil deneyin",
-  languageChangeError: "Dil değiştirirken hata oluştu",
-  languageDetected: "Dil algılandı",
-  usingYourBrowserLanguage: "Tarayıcı dilinizi kullanıyor",
-  recommendedForYou: "Size önerilen",
-  youreNowLearning: "Şimdi öğreniyorsunuz",
-  from: "dilinden",
-  pleaseSelectBothLanguages: "Lütfen her iki dili de seçin",
-  youNeedToSelectBoth: "Hem ana dilinizi hem de öğrenmek istediğiniz dili seçmeniz gerekiyor"
+  languageChangeError: "Dil değiştirme hatası",
+  languageDetected: "Dil tespit edildi",
+  usingYourBrowserLanguage: "Tarayıcı diliniz kullanılıyor",
+  recommendedForYou: "Sizin için önerilen"
 };
 
 export default languageSelectionTranslations;

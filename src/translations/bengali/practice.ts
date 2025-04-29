@@ -35,50 +35,7 @@ const practiceTranslations: TranslationRecord = {
   customPractice: "কাস্টম অনুশীলন",
   practiceChat: "অনুশীলন চ্যাট",
   askQuestion: "প্রশ্ন করুন",
-  practiceWithAI: "এআই এর সাথে অনুশীলন করুন",
-  practiceWithTutor: "শিক্ষকের সাথে অনুশীলন করুন",
-  practiceTopics: "অনুশীলনের বিষয়",
-  suggestedTopics: "প্রস্তাবিত বিষয়",
-  popularTopics: "জনপ্রিয় বিষয়",
-  textPractice: "পাঠ্য অনুশীলন",
-  practiceWithAITutor: "এআই শিক্ষকের সাথে অনুশীলন করুন",
-  chatWithAITutor: "আমাদের এআই এর সাথে চ্যাট করে ইংরেজি অনুশীলন করুন! এআই আপনার ব্যাকরণ, শব্দভান্ডার এবং উচ্চারণ সংশোধনে সাহায্য করবে।",
-  startVoiceChat: "ভয়েস চ্যাট শুরু করুন",
-  stopVoiceChat: "ভয়েস চ্যাট বন্ধ করুন",
-  getSkillsAssessment: "দক্ষতা মূল্যায়ন পান",
-  reading: "পাঠ",
-  writing: "লেখা",
-  speaking: "কথা বলা",
-  listening: "শোনা",
-  overallLevel: "সামগ্রিক স্তর",
-  startChatting: "আপনার এআই ভাষা সহায়কের সাথে চ্যাট শুরু করুন!",
-  clickToStartVoice: "সহকারীর সাথে কথা শুরু করতে 'ভয়েস চ্যাট শুরু করুন' ক্লিক করুন",
-  allowMicAccess: "ভয়েস বৈশিষ্ট্য ব্যবহার করতে অনুগ্রহ করে মাইক্রোফোনের অ্যাক্সেস অনুমতি দিন",
-  typeMessage: "ইংরেজিতে আপনার বার্তা লিখুন...",
-  
-  practiceWithTextChat: "পাঠ্য চ্যাটের সাথে অনুশীলন করুন",
-  textConversationPractice: "পাঠ্য কথোপকথন অনুশীলন",
-  startTextChatting: "এআই সহায়কের সাথে পাঠ্য চ্যাট শুরু করুন",
-  typeMessageBelow: "নীচে বার্তা লিখুন",
-  
-  send: "পাঠান",
-  sendEnglishPracticePrompt: "ইংরেজি অনুশীলন প্রম্পট পাঠান",
-  noticeTextBasedPractice: "নোটিশ: এটি পাঠ্য ভিত্তিক অনুশীলন বৈশিষ্ট্য। ভয়েস অনুশীলনের জন্য, আমাদের আনলিমিটেড ভয়েস চ্যাট বা প্রিমিয়াম ভয়েস চ্যাট বৈশিষ্ট্য চেষ্টা করুন।",
-  askAboutGrammarRules: "ব্যাকরণের নিয়ম সম্পর্কে জিজ্ঞাসা করুন",
-  practiceConversationsDifferentSituations: "বিভিন্ন পরিস্থিতিতে কথোপকথন অনুশীলন করুন",
-  learnNewVocabulary: "নতুন শব্দভান্ডার শিখুন",
-  discussCulturalTopics: "সাংস্কৃতিক বিষয় নিয়ে আলোচনা করুন",
-  
-  practicePrompt: "হ্যালো! আমি {{targetLanguage}} কথোপকথন অনুশীলন করতে চাই। অনুগ্রহ করে আমার {{targetLanguage}} ব্যাকরণ, শব্দভান্ডার এবং ব্যবহার সংশোধনে সাহায্য করুন। আমরা কি মৌলিক কথোপকথন দিয়ে শুরু করতে পারি?",
-  chatPlaceholder: "{{targetLanguage}} অনুশীলন করতে আপনার বার্তা লিখুন...",
-  
-  practiceGuide: "{{language}} অনুশীলন গাইড",
-  practiceGuideDescription: "আপনার {{language}} অনুশীলন থেকে সর্বাধিক সুবিধা পাওয়ার জন্য এখানে কিছু টিপস রয়েছে:",
-  practiceGuideItem1: "সহজ হলেও সম্পূর্ণ বাক্য তৈরি করার চেষ্টা করুন।",
-  practiceGuideItem2: "ভুল করতে ভয় পাবেন না - এটি শেখার অংশ!",
-  practiceGuideItem3: "কিছু বুঝতে না পারলে স্পষ্টীকরণ চান।",
-  practiceGuideItem4: "সম্প্রতি শেখা শব্দভান্ডার ব্যবহার করার চেষ্টা করুন।",
-  practiceDisclaimer: "আমাদের এআই আপনার দক্ষতার স্তরের সাথে নিজেকে খাপ খাইয়ে নিবে এবং আপনাকে ধীরে ধীরে উন্নতি করতে সাহায্য করবে।"
+  practiceWithAI: "এআই এর সাথে অনুশীলন করুন"
 };
 
 export default practiceTranslations;

@@ -2,28 +2,24 @@
 import { TranslationRecord } from "../types";
 
 const languageSelectionTranslations: TranslationRecord = {
-  selectLanguage: "Selectează Limba",
-  changeLanguage: "Schimbă Limba",
-  currentLanguage: "Limba Curentă",
-  saveLanguagePreference: "Salvează Preferințele de Limbă",
+  selectLanguage: "Selectați Limba",
+  changeLanguage: "Schimbați Limba",
+  currentLanguage: "Limba Actuală",
+  saveLanguagePreference: "Salvați Preferințele Lingvistice",
   languageChanged: "Limba a fost schimbată",
-  selectYourLanguagePreferences: "Selectează preferințele tale de limbă",
+  selectYourLanguagePreferences: "Selectați preferințele dvs. lingvistice",
   iSpeak: "Vorbesc",
   iWantToLearn: "Vreau să învăț",
-  selectYourNativeLanguage: "Selectează limba ta nativă",
-  selectLanguageToLearn: "Selectează limba pe care vrei să o înveți",
-  saveLanguagePreferences: "Salvează preferințele de limbă",
-  languagePreferencesSaved: "Preferințele de limbă au fost salvate",
+  selectYourNativeLanguage: "Selectați limba dvs. maternă",
+  selectLanguageToLearn: "Selectați limba pe care doriți s-o învățați",
+  saveLanguagePreferences: "Salvați preferințele lingvistice",
+  languagePreferencesSaved: "Preferințele lingvistice au fost salvate",
   languageNotAvailable: "Limba nu este disponibilă",
-  tryDifferentLanguage: "Încearcă o altă limbă",
+  tryDifferentLanguage: "Încercați o limbă diferită",
   languageChangeError: "Eroare la schimbarea limbii",
-  languageDetected: "Limba a fost detectată",
-  usingYourBrowserLanguage: "Folosind limba browser-ului tău",
-  recommendedForYou: "Recomandat pentru tine",
-  youreNowLearning: "Acum înveți",
-  from: "din",
-  pleaseSelectBothLanguages: "Te rugăm să selectezi ambele limbi",
-  youNeedToSelectBoth: "Trebuie să selectezi atât limba ta nativă, cât și limba pe care vrei să o înveți"
+  languageDetected: "Limbă detectată",
+  usingYourBrowserLanguage: "Se folosește limba browser-ului dvs.",
+  recommendedForYou: "Recomandat pentru dvs."
 };
 
 export default languageSelectionTranslations;
