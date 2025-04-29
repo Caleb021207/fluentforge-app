@@ -131,7 +131,7 @@ async function concatenateAudioStreams(audioStreams: ArrayBuffer[]): Promise<Arr
 
 // Get Azure access token
 async function getAzureToken(): Promise<string> {
-  const AZURE_SPEECH_KEY = Deno.env.get('AZURE_SPEECH_KEY');
+  const AZURE_SPEECH_KEY = Deno.env.get('AZURE_SPEECH_KEY') || '7QiOIwzneRTyQdfBRbkNTNCkQEqAnR3RLwF0IEIG4resGOP1WfbeJQQJ99BDACYeBjFXJ3w3AAAYACOGMQxo';
   const AZURE_REGION = Deno.env.get('AZURE_REGION') || 'eastus';
   
   if (!AZURE_SPEECH_KEY) {
