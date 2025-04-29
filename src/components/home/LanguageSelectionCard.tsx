@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,8 @@ const LanguageSelectionCard = ({
     russian: "🇷🇺 Русский",
     ukrainian: "🇺🇦 Українська",
     hindi: "🇮🇳 हिन्दी",
-    indonesian: "🇮🇩 Bahasa Indonesia"
+    indonesian: "🇮🇩 Bahasa Indonesia",
+    farsi: "🇮🇷 فارسی"
   };
 
   // Available target languages based on native language
@@ -59,7 +61,8 @@ const LanguageSelectionCard = ({
     russian: "🇷🇺 Russian",
     ukrainian: "🇺🇦 Ukrainian",
     hindi: "🇮🇳 Hindi",
-    indonesian: "🇮🇩 Indonesian"
+    indonesian: "🇮🇩 Indonesian",
+    farsi: "🇮🇷 Farsi/Dari"
   };
   
   // Determine disabled options based on native language
