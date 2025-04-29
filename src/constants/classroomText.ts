@@ -9,7 +9,7 @@ export const CLASSROOM_TEXT = {
   CLASS_CODE: 'Class Code',
   NAME: 'Student Name',
   PRACTICE_CALLS: 'Text Practice Calls',
-  VOICE_PRACTICE_CALLS: 'Voice Practice Calls',
+  VOICE_PRACTICE_CALLS: 'Voice Practice Uses', // Updated label
   PREMIUM_VOICE_SESSIONS: 'Voice Sessions',
   PREMIUM_VOICE_MINUTES: 'Voice Minutes',
   CERTIFICATION_ATTEMPTS: 'Certification Attempts',

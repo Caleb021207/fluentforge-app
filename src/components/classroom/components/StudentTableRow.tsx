@@ -15,7 +15,7 @@ export const StudentTableRow = ({ student }: StudentTableRowProps) => {
         {student.student_name || student.student_email || CLASSROOM_TEXT.UNNAMED}
       </TableCell>
       <TableCell>{student.text_practice_calls} (OpenAI)</TableCell>
-      <TableCell>{student.premium_voice_calls} (AWS Polly)</TableCell>
+      <TableCell>{student.premium_voice_calls} (Voice Practice)</TableCell>
       <TableCell>
         {student.last_activity 
           ? new Date(student.last_activity).toLocaleDateString() 

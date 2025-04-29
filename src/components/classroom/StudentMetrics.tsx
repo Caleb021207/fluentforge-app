@@ -26,7 +26,7 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
         </div>
         <div>
           <span className="font-medium">{CLASSROOM_TEXT.VOICE_PRACTICE_CALLS}:</span>{' '}
-          {metrics.premium_voice_calls} (AWS Polly)
+          {metrics.premium_voice_calls} (Voice Practice)
         </div>
         {metrics.last_activity && (
           <div>
