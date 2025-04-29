@@ -1,0 +1,55 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Class management translations
+  MY_CLASSES: "Klas Mwen yo",
+  MY_CLASS: "Klas Mwen",
+  GENERATE_CODE: "Jenere Kòd Klas",
+  STUDENTS: "Elèv yo",
+  TEACHER: "Pwofesè",
+  JOINED: "Te Antre",
+  CLASS_CODE: "Kòd Klas",
+  NAME: "Non Elèv",
+  PRACTICE_CALLS: "Apèl Pratik Tèks",
+  PRACTICE_CALLS_SHORT: "Tèks",
+  VOICE_PRACTICE_CALLS: "Apèl Pratik Vwa",
+  VOICE_PRACTICE_CALLS_SHORT: "Vwa",
+  PREMIUM_VOICE_SESSIONS: "Sesyon Vwa Premium",
+  PREMIUM_VOICE_MINUTES: "Minit Vwa Premium",
+  CERTIFICATION_ATTEMPTS: "Tantativ Sètifikasyon",
+  HIGH_SCORE: "Pi Gwo Nòt",
+  LAST_ACTIVITY: "Dènye Aktivite",
+  REFRESH_METRICS: "Rafrechi Metrik yo",
+  REFRESHING_METRICS: "Ap Rafrechi...",
+  NO_STUDENTS_IN_CLASS: "Okenn elèv pa janm antre nan klas sa a.",
+  UNNAMED: "Elèv San Non",
+  CLASS_JOIN_CODE: "Kòd pou Antre nan Klas",
+  JOIN_CLASS: "Antre nan Klas",
+  JOINING: "Ap Antre...",
+  ENTER_CLASS_CODE: "Antre kòd klas",
+  ENTER_VALID_CODE: "Tanpri antre yon kòd klas valid",
+  ERROR_JOINING: "Erè pandan w ap antre nan klas",
+  SUCCESS_JOINING: "Te antre nan klas avèk siksè",
+  TEACHER_ACCESS_REQUIRED: "Aksè pwofesè obligatwa pou wè paj sa a",
+  COPIED: "Kopye nan clipboard!",
+  COPY_CODE: "Kopye Kòd",
+  COPY_INVITE_LINK: "Kopye Lyen Envitasyon",
+  CREATE_CLASS: "Kreye Klas",
+  CLASS_NAME: "Non Klas",
+  CLASS_NAME_REQUIRED: "Non klas obligatwa",
+  CREATING_CLASS: "Ap kreye klas...",
+  ERROR_CREATING_CLASS: "Erè pandan kreyasyon klas",
+  SHARE_CODE_WITH_STUDENTS: "Pataje kòd sa a ak elèv ou yo pou pèmèt yo antre nan klas ou.",
+  // Additional constants
+  SUCCESS: "Siksè",
+  ERROR: "Erè",
+  CLASS_ACTIVATED: "Klas te aktive avèk siksè",
+  CLASS_DEACTIVATED: "Klas te dezaktive avèk siksè",
+  STUDENT_METRICS_REFRESHED: "Metrik elèv te rafrechi avèk siksè",
+  ALL_METRICS_REFRESHED: "Tout metrik te rafrechi avèk siksè",
+  FAILED_TO_REFRESH_METRICS: "Echwe pou rafrechi metrik yo",
+  REFRESHING: "Ap Rafrechi..."
+};
+
+export default classroomTranslations;

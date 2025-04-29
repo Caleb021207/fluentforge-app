@@ -1,0 +1,55 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Class management translations
+  MY_CLASSES: "Klaasị M",
+  MY_CLASS: "Klaasị M",
+  GENERATE_CODE: "Mepụta Koodu Klaasị",
+  STUDENTS: "Ụmụ Akwụkwọ",
+  TEACHER: "Onye Nkuzi",
+  JOINED: "Sonyere",
+  CLASS_CODE: "Koodu Klaasị",
+  NAME: "Aha Nwata Akwụkwọ",
+  PRACTICE_CALLS: "Ọkwa Omume Ederede",
+  PRACTICE_CALLS_SHORT: "Ederede",
+  VOICE_PRACTICE_CALLS: "Ọkwa Omume Olu",
+  VOICE_PRACTICE_CALLS_SHORT: "Olu",
+  PREMIUM_VOICE_SESSIONS: "Oge Olu Premium",
+  PREMIUM_VOICE_MINUTES: "Nkeji Olu Premium",
+  CERTIFICATION_ATTEMPTS: "Mgbalị Nrịbama",
+  HIGH_SCORE: "Ọnụọgụ Kacha Elu",
+  LAST_ACTIVITY: "Omume Ikpeazụ",
+  REFRESH_METRICS: "Megharịa Metrics",
+  REFRESHING_METRICS: "Na-emegharị...",
+  NO_STUDENTS_IN_CLASS: "Ọ dịghị ụmụ akwụkwọ sonyere klaasị a ugbu a.",
+  UNNAMED: "Nwata Akwụkwọ Na-enweghị Aha",
+  CLASS_JOIN_CODE: "Koodu Ịsonye na Klaasị",
+  JOIN_CLASS: "Sonyere Klaasị",
+  JOINING: "Na-asonye...",
+  ENTER_CLASS_CODE: "Tinye koodu klaasị",
+  ENTER_VALID_CODE: "Biko tinye koodu klaasị dị irè",
+  ERROR_JOINING: "Nsogbu ịsonye klaasị",
+  SUCCESS_JOINING: "Esonyela klaasị nke ọma",
+  TEACHER_ACCESS_REQUIRED: "Ịchọrọ ohere onye nkuzi iji hụ peeji a",
+  COPIED: "Edekọrọla na klipbọọdụ!",
+  COPY_CODE: "Depịa Koodu",
+  COPY_INVITE_LINK: "Depịa Njikọ Ọkpụkpọ",
+  CREATE_CLASS: "Mepụta Klaasị",
+  CLASS_NAME: "Aha Klaasị",
+  CLASS_NAME_REQUIRED: "Achọrọ aha klaasị",
+  CREATING_CLASS: "Na-emepụta klaasị...",
+  ERROR_CREATING_CLASS: "Nsogbu na-emepụta klaasị",
+  SHARE_CODE_WITH_STUDENTS: "Kekọrịta koodu a na ụmụ akwụkwọ gị ka ha wee sonyere klaasị gị.",
+  // Additional constants
+  SUCCESS: "Ihe Ịga Nke Ọma",
+  ERROR: "Mpụ",
+  CLASS_ACTIVATED: "Akpatala klaasị nke ọma",
+  CLASS_DEACTIVATED: "Akwụsịla klaasị nke ọma",
+  STUDENT_METRICS_REFRESHED: "Emegharịala metrics nke nwata akwụkwọ nke ọma",
+  ALL_METRICS_REFRESHED: "Emegharịala metrics niile nke ọma",
+  FAILED_TO_REFRESH_METRICS: "Ọdighi mma imegharịa metrics",
+  REFRESHING: "Na-emegharị..."
+};
+
+export default classroomTranslations;

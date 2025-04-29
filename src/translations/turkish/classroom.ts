@@ -1,0 +1,55 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Class management translations
+  MY_CLASSES: "Sınıflarım",
+  MY_CLASS: "Sınıfım",
+  GENERATE_CODE: "Sınıf Kodu Oluştur",
+  STUDENTS: "Öğrenciler",
+  TEACHER: "Öğretmen",
+  JOINED: "Katıldı",
+  CLASS_CODE: "Sınıf Kodu",
+  NAME: "Öğrenci Adı",
+  PRACTICE_CALLS: "Metin Alıştırma Çağrıları",
+  PRACTICE_CALLS_SHORT: "Metin",
+  VOICE_PRACTICE_CALLS: "Ses Alıştırma Kullanımları",
+  VOICE_PRACTICE_CALLS_SHORT: "Ses",
+  PREMIUM_VOICE_SESSIONS: "Premium Ses Oturumları",
+  PREMIUM_VOICE_MINUTES: "Premium Ses Dakikaları",
+  CERTIFICATION_ATTEMPTS: "Sertifika Denemeleri",
+  HIGH_SCORE: "En Yüksek Puan",
+  LAST_ACTIVITY: "Son Aktivite",
+  REFRESH_METRICS: "Metrikleri Yenile",
+  REFRESHING_METRICS: "Yenileniyor...",
+  NO_STUDENTS_IN_CLASS: "Henüz bu sınıfa katılan öğrenci yok.",
+  UNNAMED: "İsimsiz Öğrenci",
+  CLASS_JOIN_CODE: "Sınıf Katılım Kodu",
+  JOIN_CLASS: "Sınıfa Katıl",
+  JOINING: "Katılıyor...",
+  ENTER_CLASS_CODE: "Sınıf kodunu girin",
+  ENTER_VALID_CODE: "Lütfen geçerli bir sınıf kodu girin",
+  ERROR_JOINING: "Sınıfa katılma hatası",
+  SUCCESS_JOINING: "Sınıfa başarıyla katıldınız",
+  TEACHER_ACCESS_REQUIRED: "Bu sayfayı görüntülemek için öğretmen erişimi gereklidir",
+  COPIED: "Panoya kopyalandı!",
+  COPY_CODE: "Kodu Kopyala",
+  COPY_INVITE_LINK: "Davet Linkini Kopyala",
+  CREATE_CLASS: "Sınıf Oluştur",
+  CLASS_NAME: "Sınıf Adı",
+  CLASS_NAME_REQUIRED: "Sınıf adı gereklidir",
+  CREATING_CLASS: "Sınıf oluşturuluyor...",
+  ERROR_CREATING_CLASS: "Sınıf oluşturma hatası",
+  SHARE_CODE_WITH_STUDENTS: "Öğrencilerinizin sınıfınıza katılmalarını sağlamak için bu kodu paylaşın.",
+  // Additional constants
+  SUCCESS: "Başarılı",
+  ERROR: "Hata",
+  CLASS_ACTIVATED: "Sınıf başarıyla etkinleştirildi",
+  CLASS_DEACTIVATED: "Sınıf başarıyla devre dışı bırakıldı",
+  STUDENT_METRICS_REFRESHED: "Öğrenci metrikleri başarıyla yenilendi",
+  ALL_METRICS_REFRESHED: "Tüm metrikler başarıyla yenilendi",
+  FAILED_TO_REFRESH_METRICS: "Metrikleri yenilemede başarısız olundu",
+  REFRESHING: "Yenileniyor..."
+};
+
+export default classroomTranslations;

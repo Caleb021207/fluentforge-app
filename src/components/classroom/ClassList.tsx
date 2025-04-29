@@ -4,10 +4,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useClassroomText } from "@/hooks/useClassroomText";
 import { Loader2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ClassStudentsList from './ClassStudentsList';
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface ClassItem {
   id: string;
@@ -20,7 +20,7 @@ interface ClassItem {
 
 const ClassList = () => {
   const { toast } = useToast();
-  const classroomText = useClassroomText();
+  const { t } = useLocalization();
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedClass, setSelectedClass] = useState<{id: string, name: string} | null>(null);
@@ -65,7 +65,7 @@ const ClassList = () => {
       } catch (error: any) {
         console.error('Error fetching classes:', error);
         toast({
-          title: "Error",
+          title: t("error"),
           description: error.message,
           variant: "destructive",
         });
@@ -75,7 +75,7 @@ const ClassList = () => {
     };
 
     fetchClasses();
-  }, [toast]);
+  }, [toast, t]);
 
   const toggleClassStatus = async (id: string, currentStatus: boolean) => {
     try {
@@ -91,12 +91,12 @@ const ClassList = () => {
       ));
 
       toast({
-        title: "Success",
-        description: !currentStatus ? classroomText.CLASS_ACTIVATED : classroomText.CLASS_DEACTIVATED,
+        title: t("success"),
+        description: !currentStatus ? t("classActivated") : t("classDeactivated"),
       });
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t("error"),
         description: error.message,
         variant: "destructive",
       });
@@ -115,7 +115,7 @@ const ClassList = () => {
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-muted-foreground">{classroomText.NO_STUDENTS_IN_CLASS}</p>
+          <p className="text-muted-foreground">{t("noClassesCreated")}</p>
         </CardContent>
       </Card>
     );
@@ -129,20 +129,20 @@ const ClassList = () => {
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">{classItem.class_name}</CardTitle>
               <Badge variant={classItem.active ? "default" : "outline"}>
-                {classItem.active ? "Active" : "Inactive"}
+                {classItem.active ? t("active") : t("inactive")}
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="text-sm space-y-2">
               <div>
-                <span className="font-medium">Code:</span> {classItem.code}
+                <span className="font-medium">{t("code")}:</span> {classItem.code}
               </div>
               <div>
-                <span className="font-medium">Students:</span> {classItem.student_count || 0}
+                <span className="font-medium">{t("students")}:</span> {classItem.student_count || 0}
               </div>
               <div>
-                <span className="font-medium">Created:</span> {new Date(classItem.created_at).toLocaleDateString()}
+                <span className="font-medium">{t("created")}:</span> {new Date(classItem.created_at).toLocaleDateString()}
               </div>
             </div>
             
@@ -153,14 +153,14 @@ const ClassList = () => {
                 onClick={() => setSelectedClass({ id: classItem.id, name: classItem.class_name })}
               >
                 <Users className="mr-2 h-4 w-4" />
-                View Students
+                {t("viewStudents")}
               </Button>
               <Button 
                 variant="outline" 
                 size="sm"
                 onClick={() => toggleClassStatus(classItem.id, classItem.active)}
               >
-                {classItem.active ? "Deactivate" : "Activate"}
+                {classItem.active ? t("deactivate") : t("activate")}
               </Button>
             </div>
           </CardContent>

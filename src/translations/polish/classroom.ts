@@ -1,0 +1,55 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Class management translations
+  MY_CLASSES: "Moje Klasy",
+  MY_CLASS: "Moja Klasa",
+  GENERATE_CODE: "Generuj Kod Klasy",
+  STUDENTS: "Uczniowie",
+  TEACHER: "Nauczyciel",
+  JOINED: "Dołączył",
+  CLASS_CODE: "Kod Klasy",
+  NAME: "Imię Ucznia",
+  PRACTICE_CALLS: "Ćwiczenia Tekstowe",
+  PRACTICE_CALLS_SHORT: "Tekst",
+  VOICE_PRACTICE_CALLS: "Ćwiczenia Głosowe",
+  VOICE_PRACTICE_CALLS_SHORT: "Głos",
+  PREMIUM_VOICE_SESSIONS: "Sesje Głosowe Premium",
+  PREMIUM_VOICE_MINUTES: "Minuty Głosowe Premium",
+  CERTIFICATION_ATTEMPTS: "Próby Certyfikacji",
+  HIGH_SCORE: "Najwyższy Wynik",
+  LAST_ACTIVITY: "Ostatnia Aktywność",
+  REFRESH_METRICS: "Odśwież Dane",
+  REFRESHING_METRICS: "Odświeżanie...",
+  NO_STUDENTS_IN_CLASS: "Żaden uczeń jeszcze nie dołączył do tej klasy.",
+  UNNAMED: "Uczeń Bez Nazwy",
+  CLASS_JOIN_CODE: "Kod Dołączenia do Klasy",
+  JOIN_CLASS: "Dołącz do Klasy",
+  JOINING: "Dołączanie...",
+  ENTER_CLASS_CODE: "Wprowadź kod klasy",
+  ENTER_VALID_CODE: "Proszę wprowadzić prawidłowy kod klasy",
+  ERROR_JOINING: "Błąd podczas dołączania do klasy",
+  SUCCESS_JOINING: "Pomyślnie dołączono do klasy",
+  TEACHER_ACCESS_REQUIRED: "Aby wyświetlić tę stronę, wymagany jest dostęp nauczyciela",
+  COPIED: "Skopiowano do schowka!",
+  COPY_CODE: "Kopiuj Kod",
+  COPY_INVITE_LINK: "Kopiuj Link Zaproszenia",
+  CREATE_CLASS: "Utwórz Klasę",
+  CLASS_NAME: "Nazwa Klasy",
+  CLASS_NAME_REQUIRED: "Nazwa klasy jest wymagana",
+  CREATING_CLASS: "Tworzenie klasy...",
+  ERROR_CREATING_CLASS: "Błąd podczas tworzenia klasy",
+  SHARE_CODE_WITH_STUDENTS: "Udostępnij ten kod swoim uczniom, aby mogli dołączyć do Twojej klasy.",
+  // Additional constants
+  SUCCESS: "Sukces",
+  ERROR: "Błąd",
+  CLASS_ACTIVATED: "Klasa została pomyślnie aktywowana",
+  CLASS_DEACTIVATED: "Klasa została pomyślnie dezaktywowana",
+  STUDENT_METRICS_REFRESHED: "Dane ucznia zostały pomyślnie odświeżone",
+  ALL_METRICS_REFRESHED: "Wszystkie dane zostały pomyślnie odświeżone",
+  FAILED_TO_REFRESH_METRICS: "Nie udało się odświeżyć danych",
+  REFRESHING: "Odświeżanie..."
+};
+
+export default classroomTranslations;

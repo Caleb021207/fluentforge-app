@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
+import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
 
 export const useTranslationHandler = () => {
   const { currentLanguage, t } = useLocalization();
@@ -76,31 +77,34 @@ export const useTranslationHandler = () => {
   };
 
   /**
+   * Special case for Bengali translations to ensure they use proper Bengali script
+   */
+  const verifyBengaliTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'bengali') return translation;
+    
+    // Check if the translation contains Bengali script
+    const containsBengali = /[\u0980-\u09FF]/.test(translation);
+    
+    if (!containsBengali && userLanguage === 'bengali') {
+      console.log('Getting proper Bengali translation with Bengali script');
+      return await getTranslation(originalContent, 'bengali');
+    }
+    
+    return translation;
+  };
+
+  /**
    * Check if a translation is needed for the current language
    */
   const needsTranslation = (language: string): boolean => {
-    const translationNeededLanguages = [
-      "hindi", 
-      "japanese", 
-      "french", 
-      "russian", 
-      "ukrainian",
-      "indonesian",
-      "korean",
-      "arabic",
-      "vietnamese",
-      "mandarin",
-      "farsi",
-      "urdu"
-    ];
-    
-    return translationNeededLanguages.includes(language.toLowerCase());
+    return TRANSLATION_REQUIRED_LANGUAGES.includes(language.toLowerCase());
   };
 
   return {
     getTranslation,
     verifyHindiTranslation,
     verifyFarsiTranslation,
+    verifyBengaliTranslation,
     needsTranslation
   };
 };

@@ -1,0 +1,55 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Class management translations
+  MY_CLASSES: "Clasele Mele",
+  MY_CLASS: "Clasa Mea",
+  GENERATE_CODE: "Generează Cod Clasă",
+  STUDENTS: "Elevi",
+  TEACHER: "Profesor",
+  JOINED: "S-a alăturat",
+  CLASS_CODE: "Cod Clasă",
+  NAME: "Nume Elev",
+  PRACTICE_CALLS: "Apeluri Practică Text",
+  PRACTICE_CALLS_SHORT: "Text",
+  VOICE_PRACTICE_CALLS: "Utilizări Practică Vocală",
+  VOICE_PRACTICE_CALLS_SHORT: "Voce",
+  PREMIUM_VOICE_SESSIONS: "Sesiuni Voce Premium",
+  PREMIUM_VOICE_MINUTES: "Minute Voce Premium",
+  CERTIFICATION_ATTEMPTS: "Încercări Certificare",
+  HIGH_SCORE: "Scor Maxim",
+  LAST_ACTIVITY: "Ultima Activitate",
+  REFRESH_METRICS: "Reîmprospătare Metrici",
+  REFRESHING_METRICS: "Se reîmprospătează...",
+  NO_STUDENTS_IN_CLASS: "Niciun elev nu s-a alăturat încă acestei clase.",
+  UNNAMED: "Elev Fără Nume",
+  CLASS_JOIN_CODE: "Cod Alăturare Clasă",
+  JOIN_CLASS: "Alătură-te Clasei",
+  JOINING: "Se alătură...",
+  ENTER_CLASS_CODE: "Introduceți codul clasei",
+  ENTER_VALID_CODE: "Vă rugăm introduceți un cod de clasă valid",
+  ERROR_JOINING: "Eroare la alăturarea la clasă",
+  SUCCESS_JOINING: "Alăturat cu succes la clasă",
+  TEACHER_ACCESS_REQUIRED: "Accesul de profesor este necesar pentru a vizualiza această pagină",
+  COPIED: "Copiat în clipboard!",
+  COPY_CODE: "Copiază Codul",
+  COPY_INVITE_LINK: "Copiază Link-ul de Invitație",
+  CREATE_CLASS: "Creează Clasă",
+  CLASS_NAME: "Nume Clasă",
+  CLASS_NAME_REQUIRED: "Numele clasei este obligatoriu",
+  CREATING_CLASS: "Se creează clasa...",
+  ERROR_CREATING_CLASS: "Eroare la crearea clasei",
+  SHARE_CODE_WITH_STUDENTS: "Distribuiți acest cod elevilor dvs. pentru a le permite să se alăture clasei dvs.",
+  // Additional constants
+  SUCCESS: "Succes",
+  ERROR: "Eroare",
+  CLASS_ACTIVATED: "Clasa a fost activată cu succes",
+  CLASS_DEACTIVATED: "Clasa a fost dezactivată cu succes",
+  STUDENT_METRICS_REFRESHED: "Metricile elevului au fost reîmprospătate cu succes",
+  ALL_METRICS_REFRESHED: "Toate metricile au fost reîmprospătate cu succes",
+  FAILED_TO_REFRESH_METRICS: "Reîmprospătarea metricilor a eșuat",
+  REFRESHING: "Se reîmprospătează..."
+};
+
+export default classroomTranslations;

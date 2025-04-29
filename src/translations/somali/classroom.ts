@@ -1,0 +1,55 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Class management translations
+  MY_CLASSES: "Fasalladayda",
+  MY_CLASS: "Fasalkayga",
+  GENERATE_CODE: "Samee Koodhka Fasalka",
+  STUDENTS: "Ardayda",
+  TEACHER: "Macallin",
+  JOINED: "Ku biiray",
+  CLASS_CODE: "Koodhka Fasalka",
+  NAME: "Magaca Ardayga",
+  PRACTICE_CALLS: "Wicitaanada Tababarka Qoraalka",
+  PRACTICE_CALLS_SHORT: "Qoraalka",
+  VOICE_PRACTICE_CALLS: "Wicitaanada Tababarka Codka",
+  VOICE_PRACTICE_CALLS_SHORT: "Codka",
+  PREMIUM_VOICE_SESSIONS: "Kalfadhiyada Codka Premium",
+  PREMIUM_VOICE_MINUTES: "Daqiiqadaha Codka Premium",
+  CERTIFICATION_ATTEMPTS: "Isku dayada Shahaadaynta",
+  HIGH_SCORE: "Dhibcaha ugu Sarreeya",
+  LAST_ACTIVITY: "Waxqabadkii ugu Dambeeyay",
+  REFRESH_METRICS: "Cusboonaysii Cabbirada",
+  REFRESHING_METRICS: "Cusboonaysiinaya...",
+  NO_STUDENTS_IN_CLASS: "Weli ma jiraan arday ku biiray fasalkan.",
+  UNNAMED: "Arday aan Magac lahayn",
+  CLASS_JOIN_CODE: "Koodhka ku Biirista Fasalka",
+  JOIN_CLASS: "Ku Biir Fasalka",
+  JOINING: "Ku Biirayaa...",
+  ENTER_CLASS_CODE: "Gali koodhka fasalka",
+  ENTER_VALID_CODE: "Fadlan gali koodhka fasalka oo ansax ah",
+  ERROR_JOINING: "Khalad ku biirista fasalka",
+  SUCCESS_JOINING: "Si guul leh ugu biiray fasalka",
+  TEACHER_ACCESS_REQUIRED: "Helitaanka macallinka ayaa loo baahan yahay si loo daawado boggan",
+  COPIED: "Waa la koobiyeeyay clipboard-ka!",
+  COPY_CODE: "Koobiyee Koodhka",
+  COPY_INVITE_LINK: "Koobiyee Linkiga Casuumaadda",
+  CREATE_CLASS: "Abuur Fasal",
+  CLASS_NAME: "Magaca Fasalka",
+  CLASS_NAME_REQUIRED: "Magaca fasalka ayaa loo baahan yahay",
+  CREATING_CLASS: "Abuuraya fasalka...",
+  ERROR_CREATING_CLASS: "Khalad abuurista fasalka",
+  SHARE_CODE_WITH_STUDENTS: "La wadaag koodhkan ardaydaada si ay ugu biiraan fasalkaaga.",
+  // Additional constants
+  SUCCESS: "Guul",
+  ERROR: "Khalad",
+  CLASS_ACTIVATED: "Fasalka si guul leh ayaa loo hawlgeliyay",
+  CLASS_DEACTIVATED: "Fasalka si guul leh ayaa loo joojiyay",
+  STUDENT_METRICS_REFRESHED: "Cabbirada ardayga si guul leh ayaa loo cusboonaysiiyay",
+  ALL_METRICS_REFRESHED: "Dhammaan cabbirada si guul leh ayaa loo cusboonaysiiyay",
+  FAILED_TO_REFRESH_METRICS: "Ku guuldareystay in la cusboonaysiiyo cabbirada",
+  REFRESHING: "Cusboonaysiinaya..."
+};
+
+export default classroomTranslations;

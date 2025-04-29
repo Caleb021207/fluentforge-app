@@ -1,0 +1,55 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Class management translations
+  MY_CLASSES: "আমার ক্লাসগুলি",
+  MY_CLASS: "আমার ক্লাস",
+  GENERATE_CODE: "ক্লাস কোড তৈরি করুন",
+  STUDENTS: "শিক্ষার্থীরা",
+  TEACHER: "শিক্ষক",
+  JOINED: "যোগদান করেছে",
+  CLASS_CODE: "ক্লাস কোড",
+  NAME: "শিক্ষার্থীর নাম",
+  PRACTICE_CALLS: "টেক্সট অনুশীলন কল",
+  PRACTICE_CALLS_SHORT: "টেক্সট",
+  VOICE_PRACTICE_CALLS: "ভয়েস অনুশীলন কল",
+  VOICE_PRACTICE_CALLS_SHORT: "ভয়েস",
+  PREMIUM_VOICE_SESSIONS: "প্রিমিয়াম ভয়েস সেশন",
+  PREMIUM_VOICE_MINUTES: "প্রিমিয়াম ভয়েস মিনিট",
+  CERTIFICATION_ATTEMPTS: "সার্টিফিকেশন প্রচেষ্টা",
+  HIGH_SCORE: "সর্বোচ্চ স্কোর",
+  LAST_ACTIVITY: "সর্বশেষ কার্যকলাপ",
+  REFRESH_METRICS: "মেট্রিক রিফ্রেশ করুন",
+  REFRESHING_METRICS: "রিফ্রেশ হচ্ছে...",
+  NO_STUDENTS_IN_CLASS: "এখনও কোন শিক্ষার্থী এই ক্লাসে যোগদান করেনি।",
+  UNNAMED: "অনামী শিক্ষার্থী",
+  CLASS_JOIN_CODE: "ক্লাসে যোগদানের কোড",
+  JOIN_CLASS: "ক্লাসে যোগদান করুন",
+  JOINING: "যোগদান করছে...",
+  ENTER_CLASS_CODE: "ক্লাস কোড লিখুন",
+  ENTER_VALID_CODE: "দয়া করে একটি বৈধ ক্লাস কোড লিখুন",
+  ERROR_JOINING: "ক্লাসে যোগদানে ত্রুটি",
+  SUCCESS_JOINING: "ক্লাসে সফলভাবে যোগদান করেছেন",
+  TEACHER_ACCESS_REQUIRED: "এই পৃষ্ঠা দেখার জন্য শিক্ষক অ্যাকসেস প্রয়োজন",
+  COPIED: "ক্লিপবোর্ডে কপি করা হয়েছে!",
+  COPY_CODE: "কোড কপি করুন",
+  COPY_INVITE_LINK: "আমন্ত্রণ লিঙ্ক কপি করুন",
+  CREATE_CLASS: "ক্লাস তৈরি করুন",
+  CLASS_NAME: "ক্লাসের নাম",
+  CLASS_NAME_REQUIRED: "ক্লাসের নাম প্রয়োজন",
+  CREATING_CLASS: "ক্লাস তৈরি হচ্ছে...",
+  ERROR_CREATING_CLASS: "ক্লাস তৈরিতে ত্রুটি",
+  SHARE_CODE_WITH_STUDENTS: "আপনার শিক্ষার্থীদের এই কোড শেয়ার করুন যাতে তারা আপনার ক্লাসে যোগদান করতে পারে।",
+  // Additional constants
+  SUCCESS: "সাফল্য",
+  ERROR: "ত্রুটি",
+  CLASS_ACTIVATED: "ক্লাস সফলভাবে সক্রিয় করা হয়েছে",
+  CLASS_DEACTIVATED: "ক্লাস সফলভাবে নিষ্ক্রিয় করা হয়েছে",
+  STUDENT_METRICS_REFRESHED: "শিক্ষার্থীর মেট্রিক সফলভাবে রিফ্রেশ করা হয়েছে",
+  ALL_METRICS_REFRESHED: "সমস্ত মেট্রিক সফলভাবে রিফ্রেশ করা হয়েছে",
+  FAILED_TO_REFRESH_METRICS: "মেট্রিক রিফ্রেশ করতে ব্যর্থ হয়েছে",
+  REFRESHING: "রিফ্রেশ হচ্ছে..."
+};
+
+export default classroomTranslations;
