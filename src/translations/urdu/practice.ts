@@ -23,6 +23,11 @@ const practiceTranslations: TranslationRecord = {
   suggestedTopics: "تجویز کردہ موضوعات",
   translatingYourMessage: "آپ کے پیغام کا ترجمہ کیا جا رہا ہے...",
   translationFailed: "ترجمہ ناکام ہوا",
+  
+  // Adding the requested translations
+  startChatting: "اپنے اے آئی زبان کے ٹیوٹر کے ساتھ بات چیت شروع کریں!",
+  typeMessageBelow: "شروع کرنے کے لیے نیچے پیغام لکھیں",
+  chatPlaceholder: "{{language}} کی مشق کرنے کے لیے اپنا پیغام لکھیں..."
 };
 
 export default practiceTranslations;
