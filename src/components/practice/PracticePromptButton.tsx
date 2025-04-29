@@ -25,28 +25,6 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
     ? getLanguageDisplayName(targetLanguage)
     : "English";
   
-  // Customize button text for English speakers learning French
-  if (currentLanguage === "english" && targetLanguage === "french") {
-    return (
-      <div className="flex justify-center mb-8">
-        <Button
-          onClick={onClick}
-          disabled={isLoading || disabled}
-          className="gap-2"
-          size="lg"
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <MessageSquare className="h-4 w-4" />
-          )}
-          Start French Conversation
-        </Button>
-      </div>
-    );
-  }
-  
-  // Default button for other language combinations
   return (
     <div className="flex justify-center mb-8">
       <Button

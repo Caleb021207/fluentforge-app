@@ -24,10 +24,22 @@ const practiceTranslations: TranslationRecord = {
   translatingYourMessage: "آپ کے پیغام کا ترجمہ کیا جا رہا ہے...",
   translationFailed: "ترجمہ ناکام ہوا",
   
-  // Adding the requested translations
+  // Adding conversation starters in Urdu
   startChatting: "اپنے اے آئی زبان کے ٹیوٹر کے ساتھ بات چیت شروع کریں!",
   typeMessageBelow: "شروع کرنے کے لیے نیچے پیغام لکھیں",
-  chatPlaceholder: "{{language}} کی مشق کرنے کے لیے اپنا پیغام لکھیں..."
+  chatPlaceholder: "{{language}} کی مشق کرنے کے لیے اپنا پیغام لکھیں...",
+  
+  // Sample conversation phrases
+  phrase1: "آداب، آج آپ کیسے ہیں؟",
+  phrase2: "آپ کے علاقے میں موسم کیسا ہے؟",
+  phrase3: "کیا آپ کوئی اچھا ریستوراں تجویز کر سکتے ہیں؟",
+  phrase4: "آپ کے مشغلے اور دلچسپیاں کیا ہیں؟",
+  phrase5: "اپنی پسندیدہ کتاب یا فلم کے بارے میں بتائیں۔",
+  phrase6: "پچھلے ہفتے آپ نے کیا کیا؟",
+  phrase7: "کل کے لیے آپ کے کیا منصوبے ہیں؟",
+  phrase8: "... کو ہسپانوی/انگریزی میں کیا کہتے ہیں؟",
+  
+  useThisTool: "اپنے بولنے اور سننے کے کوشل کو بہتر بنانے کے لیے اس ٹول کا استعمال کریں۔ یہاں کچھ ٹپس ہیں:"
 };
 
 export default practiceTranslations;
