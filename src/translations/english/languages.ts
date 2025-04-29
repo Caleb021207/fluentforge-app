@@ -16,6 +16,7 @@ const languagesTranslations: TranslationRecord = {
   "languages.ukrainian": "Ukrainian",
   "languages.indonesian": "Indonesian",
   "languages.farsi": "Farsi/Dari",
+  "languages.urdu": "Urdu",
   
   // Practice page translations
   "practiceYourLanguage": "Practice Your {{language}}",

@@ -1,3 +1,4 @@
+
 // Language utilities for the chat-with-tutor function
 
 // Get proper display name for a language
@@ -16,7 +17,8 @@ export function getLanguageDisplayName(language: string): string {
     'vietnamese': 'Vietnamese',
     'ukrainian': 'Ukrainian',
     'indonesian': 'Indonesian',
-    'farsi': 'Farsi/Dari'
+    'farsi': 'Farsi/Dari',
+    'urdu': 'Urdu'
   };
   
   return languageMap[language.toLowerCase()] || language;
@@ -38,7 +40,8 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'russian': 'Russian',
     'hindi': 'Hindi',
     'indonesian': 'Indonesian',
-    'farsi': 'Farsi/Dari'
+    'farsi': 'Farsi/Dari',
+    'urdu': 'Urdu'
   };
   
   return languageMap[userLanguage] || 'English';

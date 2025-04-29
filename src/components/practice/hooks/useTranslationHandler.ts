@@ -90,7 +90,8 @@ export const useTranslationHandler = () => {
       "arabic",
       "vietnamese",
       "mandarin",
-      "farsi"
+      "farsi",
+      "urdu"
     ];
     
     return translationNeededLanguages.includes(language.toLowerCase());
