@@ -266,7 +266,6 @@ const VoiceChat = () => {
     }
   };
 
-  // Replace the speakWithBrowserSynthesis function with our new approach
   const speakWithBrowserSynthesis = (text: string) => {
     if (!text || text.trim() === '') {
       console.warn('Empty text provided to speakWithBrowserSynthesis');
@@ -275,13 +274,11 @@ const VoiceChat = () => {
 
     console.log(`Speaking text: "${text.substring(0, 50)}..."`);
     
-    // Get the target language based on user's UI language
     const { practice } = getLanguagePair(currentLanguage);
     const practiceLanguage = practice.toLowerCase();
     
     setIsSpeaking(true);
     
-    // Use our TTS utility
     playTTS({
       text: text,
       language: practiceLanguage,
@@ -378,6 +375,10 @@ const VoiceChat = () => {
   };
 
   const getAIModelLabelText = () => {
+    if (currentLanguage === "pashto") {
+      return t("aiModelLabel");
+    }
+    
     switch (currentLanguage) {
       case "english":
         return "AI Model:";
@@ -411,6 +412,10 @@ const VoiceChat = () => {
   };
 
   const getAIModelInfoText = () => {
+    if (currentLanguage === "pashto") {
+      return t("aiModelInfoText");
+    }
+    
     if (currentLanguage === "english") {
       return "We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.";
     } else if (currentLanguage === "spanish") {

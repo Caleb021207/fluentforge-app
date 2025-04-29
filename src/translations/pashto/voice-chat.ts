@@ -50,7 +50,11 @@ const voiceChatTranslations: TranslationRecord = {
   useThisTool: "د خبرو کولو او اوریدو مهارتونو د ښه کولو لپاره دا وسیله وکاروئ. دلته ځینې مشورې دي:",
   
   // Specific translation for the practice description
-  practiceDescription: "د انګلیسي ژبې خبرو کولو مهارتونه زموږ د غږیز چټ سره تمرین کړئ. د مایکروفون تڼۍ کلیک کړئ او په انګلیسي خبرې پیل کړئ. AI به تاسو ته په انګلیسي ځواب درکړي او تمرین کې به مرسته وکړي."
+  practiceDescription: "د انګلیسي ژبې خبرو کولو مهارتونه زموږ د غږیز چټ سره تمرین کړئ. د مایکروفون تڼۍ کلیک کړئ او په انګلیسي خبرې پیل کړئ. AI به تاسو ته په انګلیسي ځواب درکړي او تمرین کې به مرسته وکړي.",
+  
+  // Adding AI model info text translation
+  aiModelLabel: "د AI ماډل:",
+  aiModelInfoText: "موږ د طبیعي ژبې پوهاوي او جوړولو لپاره د OpenAI's GPT-4o-mini کاروو، د غږیز ځوابونو لپاره د لټونګر داخلي د وینا سینتیسس سره."
 };
 
 export default voiceChatTranslations;
