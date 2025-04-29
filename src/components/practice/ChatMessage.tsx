@@ -1,10 +1,9 @@
-
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import { AlertTriangle, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { playTTS } from "@/utils/ttsUtils";
+import { playTTS } from "@/utils/tts";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
