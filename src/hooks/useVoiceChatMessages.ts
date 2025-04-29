@@ -28,6 +28,8 @@ export const useVoiceChatMessages = () => {
       initialContent = "你好，我想和你练习英语。";
     } else if (currentLanguage === "urdu") {
       initialContent = "السلام علیکم، میں آپ کے ساتھ انگریزی کی مشق کرنا چاہتا ہوں۔";
+    } else if (currentLanguage === "pashto") {
+      initialContent = "سلام، زه غواړم چې ستاسو سره انګلیسي تمرین وکړم.";
     } else {
       initialContent = `Hello, I'd like to practice ${practice} with you.`;
     }
