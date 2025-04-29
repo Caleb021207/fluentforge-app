@@ -3,8 +3,9 @@ import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import EmptyMessageWarning from "./chat-message/EmptyMessageWarning";
-import SafetyWarning from "./chat-message/SafetyWarning";
 import ChatMessageBubble from "./chat-message/ChatMessageBubble";
+import { TRANSLATION_REQUIRED_LANGUAGES, getTargetLanguage, getNativeLanguage } from "@/utils/languageConstants";
+import type { ChatMessage as ChatMessageType } from "@/types/chat";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
@@ -14,14 +15,12 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
-  // Languages that should always show translations
-  const showTranslationLanguages = [
-    "hindi", "japanese", "french", "russian", "ukrainian",
-    "indonesian", "korean", "arabic", "vietnamese", 
-    "mandarin", "urdu", "pashto"
-  ];
-  
   const { currentLanguage } = useLocalization();
+  
+  // Handle case where content is undefined or empty
+  if (!content && !translation) {
+    return <EmptyMessageWarning />;
+  }
   
   // Filter content for safety if needed
   const safeContent = content ? filterContent(content) : "";
@@ -33,20 +32,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   
   // Determine if translation should be shown
   const showTranslation = 
-    showTranslationLanguages.includes(currentLanguage) || 
+    TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage) || 
     (translation && translation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;
   
-  // Handle case where content is undefined or empty
-  if (!content && !translation) {
-    return <EmptyMessageWarning />;
-  }
-  
   // Get language code for TTS based on who's learning what
-  const targetLanguage = currentLanguage === "english" ? "spanish" : "english";
-  const nativeLanguage = currentLanguage;
+  const targetLanguage = getTargetLanguage(currentLanguage);
+  const nativeLanguage = getNativeLanguage(currentLanguage);
   
   return (
     <div className={`flex ${role === "user" ? "justify-end" : "justify-start"} mb-4`}>
