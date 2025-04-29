@@ -10,6 +10,32 @@ export interface TTSOptions {
   onError?: (error: Error) => void;
 }
 
+/**
+ * Returns the language code for a language
+ * @param language The language name (english, spanish, etc.)
+ * @returns The language code (en-US, es-ES, etc.)
+ */
+export const getSpeechSynthesisLanguageCode = (language: string): string => {
+  const languageCodeMap: Record<string, string> = {
+    'english': 'en-US',
+    'spanish': 'es-ES',
+    'portuguese': 'pt-BR',
+    'french': 'fr-FR',
+    'japanese': 'ja-JP',
+    'korean': 'ko-KR',
+    'mandarin': 'zh-CN',
+    'russian': 'ru-RU',
+    'arabic': 'ar-SA',
+    'hindi': 'hi-IN',
+    'vietnamese': 'vi-VN',
+    'ukrainian': 'uk-UA',
+    'indonesian': 'id-ID',
+    'farsi': 'fa-IR'
+  };
+  
+  return languageCodeMap[language?.toLowerCase()] || 'en-US';
+};
+
 // Create a dedicated audio cache for TTS
 const ttsCache = new Map<string, string>();
 const TTL_DURATION = 30 * 60 * 1000; // 30 minutes
