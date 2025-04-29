@@ -23,6 +23,16 @@ const generalTranslations: TranslationRecord = {
   edit: "سمول",
   continue: "ادامه ورکول",
   back: "شاته",
+  
+  // Additional navigation items
+  textPractice: "لیکلی تمرین",
+  unlimitedVoicePractice: "نامحدود غږیز تمرین",
+  loginRequiredForFeature: "د دې ځانګړتیا کارولو لپاره باید ننوتل وکړئ",
+  parentalControls: "د والدینو کنټرولونه",
+  safetyPolicy: "د خوندیتوب تګلاره",
+  ferpaPrivacy: "د FERPA محرمیت",
+  chatWithAI: "د {{language}} تمرین لپاره زموږ د AI استاد سره خبرې وکړئ",
+  practiceYourLanguage: "خپل {{language}} تمرین کړئ"
 };
 
 export default generalTranslations;
