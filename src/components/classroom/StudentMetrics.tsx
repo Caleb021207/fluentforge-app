@@ -22,11 +22,11 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <span className="font-medium">{CLASSROOM_TEXT.PRACTICE_CALLS}:</span>{' '}
-          {metrics.text_practice_calls} (OpenAI)
+          {metrics.text_practice_calls} ({CLASSROOM_TEXT.PRACTICE_CALLS_SHORT})
         </div>
         <div>
           <span className="font-medium">{CLASSROOM_TEXT.VOICE_PRACTICE_CALLS}:</span>{' '}
-          {metrics.premium_voice_calls} (Voice Practice)
+          {metrics.premium_voice_calls} ({CLASSROOM_TEXT.VOICE_PRACTICE_CALLS_SHORT})
         </div>
         {metrics.last_activity && (
           <div>
