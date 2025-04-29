@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
@@ -15,7 +16,9 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isTranslationPlaying, setIsTranslationPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   
   // Languages that should always show translations
   const showTranslationLanguages = [
@@ -59,6 +62,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     );
   }
   
+  // Get language code for TTS based on who's learning what
+  const targetLanguage = currentLanguage === "english" ? "spanish" : "english";
+  const nativeLanguage = currentLanguage;
+  
   const handlePlayAudio = async () => {
     if (role !== "assistant") return;
     
@@ -72,13 +79,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     setIsLoading(true);
     setIsPlaying(true);
     
-    // Get language code for TTS based on who's learning what
-    let languageForTTS = currentLanguage === "english" ? "spanish" : "english";
-    
     try {
       await playTTS({
         text: safeContent,
-        language: languageForTTS,
+        language: targetLanguage,
         onStart: () => setIsLoading(false),
         onEnd: () => setIsPlaying(false),
         onError: (error) => {
@@ -91,6 +95,32 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
       console.error("Error playing audio:", error);
       setIsPlaying(false);
       setIsLoading(false);
+    }
+  };
+  
+  // New function to handle playing translation audio
+  const handlePlayTranslationAudio = async () => {
+    if (role !== "assistant" || !safeTranslation) return;
+    
+    setIsTranslationLoading(true);
+    setIsTranslationPlaying(true);
+    
+    try {
+      await playTTS({
+        text: safeTranslation,
+        language: nativeLanguage,
+        onStart: () => setIsTranslationLoading(false),
+        onEnd: () => setIsTranslationPlaying(false),
+        onError: (error) => {
+          console.error("Translation TTS error:", error);
+          setIsTranslationPlaying(false);
+          setIsTranslationLoading(false);
+        }
+      });
+    } catch (error) {
+      console.error("Error playing translation audio:", error);
+      setIsTranslationPlaying(false);
+      setIsTranslationLoading(false);
     }
   };
   
@@ -124,6 +154,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
               size="sm"
               disabled={isLoading || isPlaying}
               className="ml-2 -mt-1 p-1 h-auto"
+              aria-label="Play target language audio"
             >
               {isLoading || isPlaying ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -136,9 +167,28 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
         
         {showTranslation && (
           <div className="border-t border-gray-300 mt-2 pt-2">
-            <p className={`text-sm ${role === "user" ? "text-gray-200" : "text-gray-500"}`}>
-              {safeTranslation || `Translation not available for ${currentLanguage}`}
-            </p>
+            <div className="flex justify-between items-start">
+              <p className={`text-sm ${role === "user" ? "text-gray-200" : "text-gray-500"}`}>
+                {safeTranslation || `Translation not available for ${currentLanguage}`}
+              </p>
+              
+              {role === "assistant" && safeTranslation && (
+                <Button 
+                  onClick={handlePlayTranslationAudio} 
+                  variant="ghost" 
+                  size="sm"
+                  disabled={isTranslationLoading || isTranslationPlaying}
+                  className="ml-2 -mt-1 p-1 h-auto"
+                  aria-label="Play native language audio"
+                >
+                  {isTranslationLoading || isTranslationPlaying ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Volume2 className="h-4 w-4 text-gray-500" />
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </div>
