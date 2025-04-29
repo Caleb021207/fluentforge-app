@@ -54,7 +54,11 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Adding AI model info text translation
   aiModelLabel: "د AI ماډل:",
-  aiModelInfoText: "موږ د طبیعي ژبې پوهاوي او جوړولو لپاره د OpenAI's GPT-4o-mini کاروو، د غږیز ځوابونو لپاره د لټونګر داخلي د وینا سینتیسس سره."
+  aiModelInfoText: "موږ د طبیعي ژبې پوهاوي او جوړولو لپاره د OpenAI's GPT-4o-mini کاروو، د غږیز ځوابونو لپاره د لټونګر داخلي د وینا سینتیسس سره.",
+  
+  // Adding practice level text translation
+  practiceLevel: "د تمرین کچه",
+  cefrB1Description: "منځنۍ کچه - په آشنا موضوعاتو خبرې کولی شي"
 };
 
 export default voiceChatTranslations;
