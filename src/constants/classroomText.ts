@@ -1,3 +1,4 @@
+
 export const CLASSROOM_TEXT = {
   MY_CLASS: 'My Class',
   MY_CLASSES: 'My Classes',
@@ -35,4 +36,11 @@ export const CLASSROOM_TEXT = {
   CREATING_CLASS: 'Creating class...',
   ERROR_CREATING_CLASS: 'Error creating class',
   SHARE_CODE_WITH_STUDENTS: 'Share this code with your students to let them join your class.',
+  // Adding the missing constants
+  SUCCESS: 'Success',
+  ERROR: 'Error',
+  STUDENT_METRICS_REFRESHED: 'Student metrics refreshed successfully',
+  ALL_METRICS_REFRESHED: 'All metrics refreshed successfully',
+  FAILED_TO_REFRESH_METRICS: 'Failed to refresh metrics',
+  REFRESHING: 'Refreshing...',
 }
