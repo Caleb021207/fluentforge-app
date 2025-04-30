@@ -14,7 +14,9 @@ const premiumVoiceTranslations: TranslationRecord = {
   phrase3: "ጥሩ ምግብ ቤት ሊያቀርቡልኝ ይችላሉ?",
   phrase4: "ምን ዓይነት ሆቢዎች እና ፍላጎቶች አሉዎት?",
   phrase5: "ስለሚወዱት መጽሐፍ ወይም ፊልም ይንገሩኝ።",
-  phrase6: "ባለፈው ሳምንት መጨረሻ ምን አደረጉ?"
+  phrase6: "ባለፈው ሳምንት መጨረሻ ምን አደረጉ?",
+  phrase7: "ለነገ ምን እቅዶች አሉዎት?",
+  phrase8: "እንዴት... በእንግሊዝኛ/በስፓኒሽ ይባላል?"
 };
 
 export default premiumVoiceTranslations;
