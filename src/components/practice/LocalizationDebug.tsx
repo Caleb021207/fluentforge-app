@@ -65,7 +65,7 @@ const LocalizationDebug = () => {
           <ul className="list-disc pl-5 mt-1">
             {commonTestKeys.map(key => (
               <li key={key} className={!translations[currentLanguage]?.[key] ? "text-red-500" : ""}>
-                Key: <code>{key}</code> → Result: "<span className="font-semibold">{t(key)}</span>"
+                Key: <code>{key}</code> → Result: "<span className="font-semibold">{getDisplayValue(t(key))}</span>"
                 {!translations[currentLanguage]?.[key] && translations["english"]?.[key] && 
                   <span className="text-red-500 ml-2">(using fallback)</span>}
               </li>
@@ -78,7 +78,7 @@ const LocalizationDebug = () => {
           <ul className="list-disc pl-5 mt-1">
             {practiceTestKeys.map(key => (
               <li key={key} className={!translations[currentLanguage]?.[key] ? "text-red-500" : ""}>
-                Key: <code>{key}</code> → Result: "<span className="font-semibold">{t(key)}</span>"
+                Key: <code>{key}</code> → Result: "<span className="font-semibold">{getDisplayValue(t(key))}</span>"
                 {!translations[currentLanguage]?.[key] && translations["english"]?.[key] && 
                   <span className="text-red-500 ml-2">(using fallback)</span>}
               </li>

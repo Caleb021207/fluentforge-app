@@ -20,14 +20,12 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "urdu": { languageCode: "ur-PK", voiceName: "ur-PK-AsadNeural" },
   "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" },
   "swahili": { languageCode: "sw-KE", voiceName: "sw-KE-RafikiNeural" },
-  // Adding new languages
+  // Adding new languages (excluding igbo and haitian)
   "bengali": { languageCode: "bn-BD", voiceName: "bn-BD-PradeepNeural" },
   "somali": { languageCode: "so-SO", voiceName: "so-SO-MuuseNeural" },
   "yoruba": { languageCode: "yo-NG", voiceName: "yo-NG-AbeoNeural" },
   "amharic": { languageCode: "am-ET", voiceName: "am-ET-AmehaNeural" },
-  "haitian": { languageCode: "ht-HT", voiceName: "en-US-JennyNeural" }, // Fallback to English as Haitian might not be available
   "malayalam": { languageCode: "ml-IN", voiceName: "ml-IN-SobhanaNeural" },
-  "igbo": { languageCode: "ig-NG", voiceName: "ig-NG-AfamNeural" },
   "polish": { languageCode: "pl-PL", voiceName: "pl-PL-MarekNeural" },
   "turkish": { languageCode: "tr-TR", voiceName: "tr-TR-EmelNeural" },
   "romanian": { languageCode: "ro-RO", voiceName: "ro-RO-EmilNeural" }
@@ -52,14 +50,12 @@ export const pollyVoiceMap: Record<string, string> = {
   "urdu": "Kajal", // Use Hindi voice as fallback
   "pashto": "Kajal", // Use Hindi voice as fallback
   "swahili": "Joanna", // Use English voice as fallback
-  // Adding new languages with fallbacks where needed
+  // Adding new languages with fallbacks where needed (excluding igbo and haitian)
   "bengali": "Kajal", // Use Hindi voice as fallback
   "somali": "Joanna", // Use English voice as fallback
   "yoruba": "Joanna", // Use English voice as fallback
   "amharic": "Joanna", // Use English voice as fallback
-  "haitian": "Joanna", // Use English voice as fallback
   "malayalam": "Kajal", // Use Hindi voice as fallback
-  "igbo": "Joanna", // Use English voice as fallback
   "polish": "Tatyana", // Use Russian voice as fallback
   "turkish": "Tatyana", // Use Russian voice as fallback
   "romanian": "Tatyana" // Use Russian voice as fallback

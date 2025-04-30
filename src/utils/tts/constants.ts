@@ -18,14 +18,12 @@ export const languageCodeMap: Record<string, string> = {
   'urdu': 'ur-PK',
   'pashto': 'ps-AF',
   'swahili': 'sw-KE',
-  // Adding new language codes
+  // Adding new language codes (excluding igbo and haitian)
   'bengali': 'bn-BD',
   'somali': 'so-SO',
   'yoruba': 'yo-NG',
   'amharic': 'am-ET',
-  'haitian': 'ht-HT',
   'malayalam': 'ml-IN',
-  'igbo': 'ig-NG',
   'polish': 'pl-PL',
   'turkish': 'tr-TR',
   'romanian': 'ro-RO'
