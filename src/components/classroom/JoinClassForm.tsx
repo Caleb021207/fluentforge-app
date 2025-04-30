@@ -26,8 +26,8 @@ const JoinClassForm = () => {
     
     if (!trimmedCode) {
       toast({
-        title: "Error",
-        description: "Please enter a class code",
+        title: classroomText.ERROR,
+        description: classroomText.ENTER_VALID_CODE,
         variant: "destructive",
       });
       return;
@@ -42,7 +42,7 @@ const JoinClassForm = () => {
       if (!session) {
         console.error('No authenticated session found');
         toast({
-          title: "Error",
+          title: classroomText.ERROR,
           description: "Please sign in to join a class",
           variant: "destructive",
         });
@@ -60,8 +60,8 @@ const JoinClassForm = () => {
       if (error) {
         console.error('Error joining classroom:', error);
         toast({
-          title: "Error",
-          description: error.message || "Failed to join class",
+          title: classroomText.ERROR,
+          description: error.message || classroomText.ERROR_JOINING,
           variant: "destructive",
         });
         return;
@@ -72,8 +72,8 @@ const JoinClassForm = () => {
 
       if (response && response.success) {
         toast({
-          title: "Success",
-          description: response.message,
+          title: classroomText.SUCCESS,
+          description: response.message || classroomText.SUCCESS_JOINING,
         });
         
         setClassCode('');
@@ -86,15 +86,15 @@ const JoinClassForm = () => {
       } else {
         console.error('Join classroom failed:', data);
         toast({
-          title: "Error",
-          description: response?.message || "Failed to join class",
+          title: classroomText.ERROR,
+          description: response?.message || classroomText.ERROR_JOINING,
           variant: "destructive",
         });
       }
     } catch (error: any) {
       console.error('Unexpected error joining classroom:', error);
       toast({
-        title: "Error",
+        title: classroomText.ERROR,
         description: "An unexpected error occurred",
         variant: "destructive",
       });

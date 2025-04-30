@@ -1,14 +1,20 @@
 
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { useLocalization } from "@/context/LocalizationContext";
+import translations from "@/translations";
 
-// This hook ensures proper translations for classroom pages
+// This hook ensures classroom pages always use English text
 export const useClassroomText = () => {
   const { t } = useLocalization();
   
-  // Map each CLASSROOM_TEXT key to its translation
+  // Always use English translations for classroom text
+  // This ensures UI consistency regardless of selected language
   const translatedText: typeof CLASSROOM_TEXT = Object.keys(CLASSROOM_TEXT).reduce((acc, key) => {
-    acc[key as keyof typeof CLASSROOM_TEXT] = t(key.toLowerCase());
+    // Get the English translation for this key
+    const englishTranslation = translations.english[key.toLowerCase()] || key;
+    
+    // Use the English translation instead of the current language translation
+    acc[key as keyof typeof CLASSROOM_TEXT] = englishTranslation;
     return acc;
   }, {} as typeof CLASSROOM_TEXT);
   

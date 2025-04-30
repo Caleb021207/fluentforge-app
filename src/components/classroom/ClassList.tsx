@@ -8,6 +8,7 @@ import { Loader2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ClassStudentsList from './ClassStudentsList';
 import { useLocalization } from "@/context/LocalizationContext";
+import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface ClassItem {
   id: string;
@@ -65,7 +66,7 @@ const ClassList = () => {
       } catch (error: any) {
         console.error('Error fetching classes:', error);
         toast({
-          title: t("error"),
+          title: CLASSROOM_TEXT.ERROR,
           description: error.message,
           variant: "destructive",
         });
@@ -75,7 +76,7 @@ const ClassList = () => {
     };
 
     fetchClasses();
-  }, [toast, t]);
+  }, [toast]);
 
   const toggleClassStatus = async (id: string, currentStatus: boolean) => {
     try {
@@ -91,12 +92,12 @@ const ClassList = () => {
       ));
 
       toast({
-        title: t("success"),
-        description: !currentStatus ? t("classActivated") : t("classDeactivated"),
+        title: CLASSROOM_TEXT.SUCCESS,
+        description: !currentStatus ? CLASSROOM_TEXT.CLASS_ACTIVATED : CLASSROOM_TEXT.CLASS_DEACTIVATED,
       });
     } catch (error: any) {
       toast({
-        title: t("error"),
+        title: CLASSROOM_TEXT.ERROR,
         description: error.message,
         variant: "destructive",
       });
@@ -129,17 +130,17 @@ const ClassList = () => {
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">{classItem.class_name}</CardTitle>
               <Badge variant={classItem.active ? "default" : "outline"}>
-                {classItem.active ? t("active") : t("inactive")}
+                {classItem.active ? "Active" : "Inactive"}
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="text-sm space-y-2">
               <div>
-                <span className="font-medium">{t("code")}:</span> {classItem.code}
+                <span className="font-medium">{CLASSROOM_TEXT.CLASS_CODE}:</span> {classItem.code}
               </div>
               <div>
-                <span className="font-medium">{t("students")}:</span> {classItem.student_count || 0}
+                <span className="font-medium">{CLASSROOM_TEXT.STUDENTS}:</span> {classItem.student_count || 0}
               </div>
               <div>
                 <span className="font-medium">{t("created")}:</span> {new Date(classItem.created_at).toLocaleDateString()}
@@ -153,7 +154,7 @@ const ClassList = () => {
                 onClick={() => setSelectedClass({ id: classItem.id, name: classItem.class_name })}
               >
                 <Users className="mr-2 h-4 w-4" />
-                {t("viewStudents")}
+                {CLASSROOM_TEXT.STUDENTS}
               </Button>
               <Button 
                 variant="outline" 

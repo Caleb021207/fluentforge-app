@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
+import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface GenerateCodeDialogProps {
   open: boolean;
@@ -27,7 +27,6 @@ interface ClassroomResponse {
 
 const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => {
   const { toast } = useToast();
-  const { t } = useLocalization();
   const [className, setClassName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,7 +45,7 @@ const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => 
       const response = data as unknown as ClassroomResponse;
 
       toast({
-        title: t("success"),
+        title: CLASSROOM_TEXT.SUCCESS,
         description: response.message,
       });
       
@@ -54,7 +53,7 @@ const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => 
       setClassName('');
     } catch (error: any) {
       toast({
-        title: t("error"),
+        title: CLASSROOM_TEXT.ERROR,
         description: error.message,
         variant: "destructive",
       });
@@ -67,18 +66,18 @@ const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("createNewClass")}</DialogTitle>
+          <DialogTitle>{CLASSROOM_TEXT.CREATE_CLASS}</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            placeholder={t("className")}
+            placeholder={CLASSROOM_TEXT.CLASS_NAME}
             value={className}
             onChange={(e) => setClassName(e.target.value)}
             required
           />
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? t("creating") : t("createClass")}
+            {isLoading ? CLASSROOM_TEXT.CREATING_CLASS : CLASSROOM_TEXT.CREATE_CLASS}
           </Button>
         </form>
       </DialogContent>
