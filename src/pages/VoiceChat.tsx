@@ -149,7 +149,7 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, toast, t, isListening]);
+  }, [currentLanguage, toast, t]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
