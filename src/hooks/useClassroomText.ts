@@ -23,7 +23,8 @@ export const useClassroomText = () => {
   // This ensures UI consistency regardless of selected language
   const translatedText = Object.keys(CLASSROOM_TEXT).reduce<ClassroomTextType>((acc, key) => {
     // Get the English translation for this key
-    const englishTranslation = translations.english[key.toLowerCase()];
+    const englishKey = key.toLowerCase();
+    const englishTranslation = translations.english[englishKey];
     
     // Use the English translation instead of the current language translation
     // Only use the value if it's a string

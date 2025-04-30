@@ -74,7 +74,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     }
     
     // Always return a string, even for complex objects
-    return typeof obj === 'string' ? obj : String(path);
+    return String(path);
   };
 
   // Translation function with enhanced fallback and logging
@@ -96,7 +96,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       if (!selectedTranslations) {
         console.error(`No translations for language: ${languageToUse}`);
-        return defaultTranslations?.[key] || key;
+        return defaultTranslations?.[key] as string || key;
       }
       
       // Get translation for selected language or fallback to default
@@ -108,7 +108,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         const parentObject = selectedTranslations[parentKey];
         
         if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
-          const nestedValue = (parentObject as Record<string, string | Record<string, string>>)[childKey];
+          const nestedValue = (parentObject as Record<string, any>)[childKey];
           // Ensure we return a string
           translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
         }
@@ -127,7 +127,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
           const parentObject = defaultTranslations[parentKey];
           
           if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
-            const nestedValue = (parentObject as Record<string, string | Record<string, string>>)[childKey];
+            const nestedValue = (parentObject as Record<string, any>)[childKey];
             // Ensure we return a string
             translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
           }
