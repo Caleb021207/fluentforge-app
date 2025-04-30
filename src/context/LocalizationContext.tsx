@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import translations, { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } from "@/translations";
 import { LanguageTranslations } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
+import { useLocation } from "react-router-dom";
 
 // Create context
 type LocalizationContextType = {
@@ -19,10 +20,31 @@ const LocalizationContext = createContext<LocalizationContextType>({
   getNativeLanguageName: () => "",
 });
 
+// Check if current path is a classroom-related route
+const isClassroomRoute = (path: string): boolean => {
+  return path.includes("/teacher/classes") || 
+         path.includes("/student/class");
+};
+
 // Provider component
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
   const [missingKeys, setMissingKeys] = useState<Set<string>>(new Set());
+  // We need to get the location in a different way since we're outside the router context
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  
+  // Update path when it changes
+  useEffect(() => {
+    const updatePath = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    
+    window.addEventListener('popstate', updatePath);
+    
+    return () => {
+      window.removeEventListener('popstate', updatePath);
+    };
+  }, []);
 
   useEffect(() => {
     // Load language preference from localStorage
@@ -45,23 +67,27 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         return key;
       }
       
-      // Check if current language exists
-      const currentTranslations = translations[currentLanguage];
+      // Always use English translations for classroom routes
+      const isClassroom = isClassroomRoute(currentPath);
+      const languageToUse = isClassroom ? DEFAULT_LANGUAGE : currentLanguage;
+      
+      // Check if selected language exists
+      const selectedTranslations = translations[languageToUse];
       const defaultTranslations = translations[DEFAULT_LANGUAGE];
       
-      if (!currentTranslations) {
-        console.error(`No translations for language: ${currentLanguage}`);
+      if (!selectedTranslations) {
+        console.error(`No translations for language: ${languageToUse}`);
         return defaultTranslations?.[key] || key;
       }
       
-      // Get translation for current language or fallback to default
-      let text = currentTranslations[key];
+      // Get translation for selected language or fallback to default
+      let text = selectedTranslations[key];
       
-      // If translation is missing in current language but exists in default language
+      // If translation is missing in selected language but exists in default language
       if (!text && defaultTranslations?.[key]) {
         // Only log each missing key once per session
         if (!missingKeys.has(key)) {
-          console.warn(`Missing translation for key "${key}" in language "${currentLanguage}"`);
+          console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
           setMissingKeys(prev => new Set([...prev, key]));
         }
         text = defaultTranslations[key];
