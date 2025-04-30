@@ -2,30 +2,26 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
+  // Practice page
+  practiceYourLanguage: "Ćwicz swój {{language}}",
+  chatWithAI: "Rozmawiaj z naszym tutorem AI, aby ćwiczyć swój {{language}}! AI pomoże ci poprawić gramatykę, słownictwo i dostarczy wskazówek dotyczących wymowy i kultury {{language}}.",
+  typeMessage: "Wpisz wiadomość...",
+  startConversationIn: "Rozpocznij rozmowę w {{language}}",
   practiceWithAI: "Ćwicz z AI",
-  chatWithAI: "Rozmawiaj z naszym nauczycielem AI, aby ćwiczyć {{language}}! AI pomoże ci poprawić twoją gramatykę, słownictwo i udzieli wskazówek dotyczących wymowy i kultury {{language}}.",
-  startChatting: "Rozpocznij Rozmowę",
-  typeMessageBelow: "Wpisz swoją wiadomość poniżej",
-  sendingMessage: "Wysyłanie wiadomości...",
-  errorSendingMessage: "Błąd wysyłania wiadomości",
-  connecting: "Łączenie...",
-  sessionExpired: "Twoja sesja wygasła. Proszę zalogować się ponownie.",
-  sessionEnded: "Twoja sesja została zakończona",
-  sessionEndedDescription: "Twoje darmowe sesje ćwiczeniowe na dzisiaj zostały wyczerpane",
-  continueWithPremium: "Kontynuuj z Premium",
-  limitExceeded: "Przekroczono limit",
-  cooldownActive: "Okres odnowienia jest aktywny",
-  tryAgainSoon: "Proszę spróbować ponownie za chwilę",
-  preferredLanguage: "Preferowany Język",
-  practiceLanguage: "Język Ćwiczeń",
-  practiceMode: "Tryb Ćwiczeń",
-  startNewChat: "Rozpocznij Nową Rozmowę",
-  clearChat: "Wyczyść Rozmowę",
-  loading: "Ładowanie...",
-  waitingForResponse: "Oczekiwanie na odpowiedź...",
-  cancel: "Anuluj",
-  submit: "Wyślij",
-  close: "Zamknij"
+  startTextChatting: "Rozpocznij czat tekstowy",
+  noticeTextBasedPractice: "Uwaga: To jest praktyka oparta na tekście. Otrzymasz odpowiedzi tekstowe od AI.",
+  aiResponding: "AI odpowiada...",
+  textPractice: "Praktyka tekstowa",
+  voicePractice: "Praktyka głosowa",
+  translationShown: "Pokazano tłumaczenie",
+  hideTranslation: "Ukryj tłumaczenie",
+  showTranslation: "Pokaż tłumaczenie",
+  translationError: "Błąd tłumaczenia",
+  failedToGetTranslation: "Nie udało się uzyskać tłumaczenia",
+  trySimpleWords: "Spróbuj prostszych słów",
+  useBuiltInPhrases: "Użyj wbudowanych zwrotów",
+  startNewConversation: "Rozpocznij nową rozmowę",
+  sentenceStarters: "Początkowe zdania"
 };
 
 export default practiceTranslations;

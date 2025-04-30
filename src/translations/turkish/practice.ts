@@ -2,30 +2,26 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
-  practiceWithAI: "AI ile Pratik Yap",
-  chatWithAI: "{{language}} pratiği yapmak için AI öğretmenimizle sohbet edin! AI, dilinizi, kelime dağarcığınızı düzeltmenize yardımcı olacak ve {{language}} telaffuzu ve kültürü hakkında ipuçları verecektir.",
-  startChatting: "Sohbete Başla",
-  typeMessageBelow: "Mesajınızı aşağıya yazın",
-  sendingMessage: "Mesaj gönderiliyor...",
-  errorSendingMessage: "Mesaj gönderme hatası",
-  connecting: "Bağlanıyor...",
-  sessionExpired: "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
-  sessionEnded: "Oturumunuz sona erdi",
-  sessionEndedDescription: "Bugün için ücretsiz pratik oturumlarınız sona erdi",
-  continueWithPremium: "Premium ile Devam Et",
-  limitExceeded: "Limit aşıldı",
-  cooldownActive: "Bekleme süresi aktif",
-  tryAgainSoon: "Lütfen kısa süre sonra tekrar deneyin",
-  preferredLanguage: "Tercih Edilen Dil",
-  practiceLanguage: "Pratik Dili",
-  practiceMode: "Pratik Modu",
-  startNewChat: "Yeni Sohbet Başlat",
-  clearChat: "Sohbeti Temizle",
-  loading: "Yükleniyor...",
-  waitingForResponse: "Yanıt bekleniyor...",
-  cancel: "İptal",
-  submit: "Gönder",
-  close: "Kapat"
+  // Practice page
+  practiceYourLanguage: "{{language}} Pratiği Yapın",
+  chatWithAI: "{{language}} pratiği yapmak için AI eğitmenimizle sohbet edin! Yapay zeka, dilbilgisi, kelime dağarcığı ve {{language}} telaffuz ve kültür hakkında ipuçları konusunda size yardımcı olacaktır.",
+  typeMessage: "Bir mesaj yazın...",
+  startConversationIn: "{{language}} dilinde bir konuşma başlatın",
+  practiceWithAI: "AI ile Pratik Yapın",
+  startTextChatting: "Metin sohbetine başlayın",
+  noticeTextBasedPractice: "Not: Bu metin tabanlı bir pratiktir. Yapay zekadan metin yanıtları alacaksınız.",
+  aiResponding: "Yapay zeka yanıt veriyor...",
+  textPractice: "Metin pratiği",
+  voicePractice: "Ses pratiği",
+  translationShown: "Çeviri gösteriliyor",
+  hideTranslation: "Çeviriyi gizle",
+  showTranslation: "Çeviriyi göster",
+  translationError: "Çeviri hatası",
+  failedToGetTranslation: "Çeviri alınamadı",
+  trySimpleWords: "Daha basit kelimeler deneyin",
+  useBuiltInPhrases: "Yerleşik ifadeleri kullanın",
+  startNewConversation: "Yeni bir konuşma başlat",
+  sentenceStarters: "Cümle başlangıçları"
 };
 
 export default practiceTranslations;

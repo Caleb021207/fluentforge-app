@@ -2,30 +2,26 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
+  // Practice page
+  practiceYourLanguage: "Exersați {{language}}",
+  chatWithAI: "Conversați cu tutorul nostru AI pentru a vă practica {{language}}! AI-ul vă va ajuta să corectați gramatica, vocabularul și vă va oferi sfaturi despre pronunție și cultură.",
+  typeMessage: "Tastați un mesaj...",
+  startConversationIn: "Începe o conversație în {{language}}",
   practiceWithAI: "Practică cu AI",
-  chatWithAI: "Conversează cu profesorul nostru AI pentru a-ți practica {{language}}! AI-ul te va ajuta să-ți corectezi gramatica, vocabularul și îți va oferi sfaturi despre pronunția și cultura {{language}}.",
-  startChatting: "Începe Conversația",
-  typeMessageBelow: "Scrie mesajul tău mai jos",
-  sendingMessage: "Se trimite mesajul...",
-  errorSendingMessage: "Eroare la trimiterea mesajului",
-  connecting: "Se conectează...",
-  sessionExpired: "Sesiunea ta a expirat. Te rugăm să te autentifici din nou.",
-  sessionEnded: "Sesiunea ta s-a încheiat",
-  sessionEndedDescription: "Sesiunile tale gratuite de practică pentru astăzi s-au încheiat",
-  continueWithPremium: "Continuă cu Premium",
-  limitExceeded: "Limită depășită",
-  cooldownActive: "Perioada de așteptare este activă",
-  tryAgainSoon: "Te rugăm să încerci din nou în curând",
-  preferredLanguage: "Limba Preferată",
-  practiceLanguage: "Limba de Practică",
-  practiceMode: "Mod de Practică",
-  startNewChat: "Începe o Nouă Conversație",
-  clearChat: "Șterge Conversația",
-  loading: "Se încarcă...",
-  waitingForResponse: "Se așteaptă răspunsul...",
-  cancel: "Anulează",
-  submit: "Trimite",
-  close: "Închide"
+  startTextChatting: "Începeți să conversați prin text",
+  noticeTextBasedPractice: "Notă: Aceasta este o practică bazată pe text. Veți primi răspunsuri text de la AI.",
+  aiResponding: "AI răspunde...",
+  textPractice: "Practică text",
+  voicePractice: "Practică vocală",
+  translationShown: "Traducere afișată",
+  hideTranslation: "Ascunde traducerea",
+  showTranslation: "Arată traducerea",
+  translationError: "Eroare de traducere",
+  failedToGetTranslation: "Nu s-a putut obține traducerea",
+  trySimpleWords: "Încercați cuvinte mai simple",
+  useBuiltInPhrases: "Utilizați frazele integrate",
+  startNewConversation: "Începe o conversație nouă",
+  sentenceStarters: "Începători de propoziții"
 };
 
 export default practiceTranslations;
