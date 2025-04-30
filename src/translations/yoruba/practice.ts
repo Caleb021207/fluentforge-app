@@ -52,7 +52,15 @@ const practiceTranslations: TranslationRecord = {
   startChatting: "Ó ti lè bẹ̀rẹ̀ ìbárasọ̀rọ̀!",
   allowMicAccess: "Jọwọ́ gba ààyè láti lo maikírófoonu rẹ",
   conversationHistoryCleared: "Ìtàn ìbáraẹnisọ̀rọ̀ ti paarẹ́",
-  back: "Padà"
+  back: "Padà",
+  
+  // Additional translations for practice tips section
+  practiceGuideDescription: "Àwọn ìmọ̀ràn díẹ̀ láti mú kí ìdánrawó èdè Gẹ̀ẹ́sì rẹ dára jù:",
+  practiceGuideItem1: "Gbìyànjú láti ṣẹ̀dá àwọn gbólóhùn tó péye, bótilẹ̀jẹ́pé wọ́n rọrùn.",
+  practiceGuideItem2: "Má ṣe wá lórí àwọn àṣìṣe - wọ́n jẹ́ apá kan tí ẹ̀kọ́!",
+  practiceGuideItem3: "Béèrè fún àlàyé tí o kò bá ní òye ohun kan.",
+  practiceGuideItem4: "Gbìyànjú láti lo àwọn ọ̀rọ̀ ìsọfúnni tí o ṣẹ̀ṣẹ̀ kọ́.",
+  practiceDisclaimer: "AI wa yóò fara mọ́ ipele ìmọ̀ rẹ yóò sì ràn ọ́ lọ́wọ́ láti dàgbà díẹ̀díẹ̀."
 };
 
 export default practiceTranslations;
