@@ -5,7 +5,7 @@ const practiceTranslations: TranslationRecord = {
   practiceWithAI: "এআই এর সাথে অনুশীলন করুন",
   chatWithAI: "আপনার {{language}} অনুশীলনের জন্য আমাদের এআই শিক্ষকের সাথে চ্যাট করুন! এআই আপনার ব্যাকরণ, শব্দভাণ্ডার সংশোধন করতে এবং {{language}} উচ্চারণ ও সংস্কৃতি সম্পর্কে নির্দেশনা দিতে সাহায্য করবে।",
   startChatting: "চ্যাট শুরু করুন",
-  typeMessageBelow: "নিচে আপনার বার্তা লিখুন",
+  typeMessageBelow: "শুরু করতে নিচে একটি বার্তা টাইপ করো",
   sendingMessage: "বার্তা পাঠানো হচ্ছে...",
   errorSendingMessage: "বার্তা পাঠাতে ত্রুটি হয়েছে",
   connecting: "সংযোগ করা হচ্ছে...",
@@ -25,7 +25,25 @@ const practiceTranslations: TranslationRecord = {
   waitingForResponse: "প্রতিক্রিয়ার জন্য অপেক্ষা করছে...",
   cancel: "বাতিল করুন",
   submit: "জমা দিন",
-  close: "বন্ধ করুন"
+  close: "বন্ধ করুন",
+  
+  // New translations from the request
+  startConversationIn: "{{language}} এ কথোপকথন শুরু করুন",
+  startTextChatting: "তোমার কৃত্রিম বুদ্ধিমত্তা ভাষা শিক্ষকের সাথে কথা বলা শুরু করো!",
+  noticeTextBasedPractice: "শুরু করতে নিচে একটি বার্তা টাইপ করো",
+  typeMessage: "ইংরেজি অনুশীলনের জন্য তোমার বার্তা টাইপ করো…",
+  
+  // Practice guide
+  practiceGuide: "ইংরেজি অনুশীলন নির্দেশিকা",
+  practiceGuideDescription: "এখানে {{language}} ভাষা অনুশীলন থেকে সর্বাধিক লাভ পাওয়ার জন্য কিছু টিপস রয়েছে:",
+  practiceGuideItem1: "সম্পূর্ণ বাক্য তৈরির চেষ্টা করো, যত সহজই হোক না কেন।",
+  practiceGuideItem2: "ভুল নিয়ে চিন্তা করো না — এগুলো শেখার অংশ।",
+  practiceGuideItem3: "যদি কিছু না বুঝো, তাহলে ব্যাখ্যার জন্য জিজ্ঞাসা করো।",
+  practiceGuideItem4: "সম্প্রতি শেখা শব্দভাণ্ডার ব্যবহার করার চেষ্টা করো।",
+  practiceDisclaimer: "আমাদের AI তোমার দক্ষতার স্তরের সাথে খাপ খাইয়ে নেবে এবং ধীরে ধীরে তোমাকে উন্নত করতে সাহায্য করবে।",
+  
+  // Additional necessary keys
+  send: "পাঠাও"
 };
 
 export default practiceTranslations;

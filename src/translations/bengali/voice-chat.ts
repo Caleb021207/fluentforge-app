@@ -12,7 +12,43 @@ const voiceChatTranslations: TranslationRecord = {
   networkConnectionIssue: "একটি নেটওয়ার্ক সংযোগ সমস্যা ছিল। দয়া করে পরে আবার চেষ্টা করুন।",
   timeExpiredTitle: "সময় শেষ হয়েছে",
   timeExpiredMessage: "আপনার সাপ্তাহিক কন্ঠস্বর চ্যাট সময় শেষ হয়েছে",
-  startNewConversation: "নতুন কথোপকথন শুরু করুন"
+  startNewConversation: "নতুন কথোপকথন শুরু করুন",
+  
+  // New translations
+  practiceDescription: "আমাদের ভয়েস চ্যাটের সাহায্যে ইংরেজিতে কথা বলার অনুশীলন করো। মাইক্রোফোন বোতামে ক্লিক করো এবং ইংরেজিতে কথা বলা শুরু করো।",
+  aiModelInfo: "AI মডেল: আমরা OpenAI GPT-4o-mini ব্যবহার করছি, যা ব্রাউজার-ভিত্তিক স্পিচ সিন্থেসিসের মাধ্যমে ভয়েস আউটপুট দেয়।",
+  practiceLevel: "অনুশীলনের স্তর: B1 – মধ্যবর্তী স্তর – পরিচিত বিষয় নিয়ে কথা বলতে পারে",
+  startSpeaking: "কথা বলা শুরু করো",
+  conversationStarters: "আলোচনা শুরু করার জন্য কিছু বাক্য",
+  tryThesePhrases: "কথোপকথন শুরু করতে এই বাক্যগুলো ব্যবহার করো:",
+  
+  // Sample conversation phrases
+  phrase1: "হ্যালো, আজ তুমি কেমন আছো?",
+  phrase2: "তোমার জায়গায় আবহাওয়া কেমন?",
+  phrase3: "তুমি কি ভালো কোনো রেস্টুরেন্ট সুপারিশ করতে পারো?",
+  phrase4: "তোমার শখ ও আগ্রহ কী?",
+  phrase5: "তোমার প্রিয় বই বা সিনেমা সম্পর্কে বলো।",
+  phrase6: "গত সপ্তাহান্তে তুমি কী করেছিলে?",
+  phrase7: "আগামীকাল তোমার কী পরিকল্পনা?",
+  phrase8: "... কীভাবে ইংরেজি/স্প্যানিশে বলা হয়?",
+  
+  // Additional voice chat translations
+  listenAndRepeat: "শুনুন এবং পুনরাবৃত্তি করুন",
+  speakFreely: "স্বাধীনভাবে কথা বলুন",
+  startListening: "শোনা শুরু করুন",
+  stopListening: "শোনা বন্ধ করুন",
+  listeningToYou: "আপনাকে শোনা হচ্ছে...",
+  processingYourSpeech: "আপনার কথা প্রক্রিয়া করা হচ্ছে...",
+  speakNow: "এখন কথা বলুন",
+  waitingForSpeech: "কথা বলার জন্য অপেক্ষা করা হচ্ছে...",
+  noSpeechDetected: "কোনো কথা শনাক্ত হয়নি",
+  speechRecognitionError: "কথা শনাক্তকরণ ত্রুটি",
+  browserNotSupported: "আপনার ব্রাউজার কথা শনাক্তকরণ সমর্থন করে না",
+  tryAgain: "আবার চেষ্টা করুন",
+  yourPronunciation: "আপনার উচ্চারণ",
+  modelPronunciation: "মডেল উচ্চারণ",
+  translation: "অনুবাদ",
+  browserBasedTTS: "দ্রষ্টব্য: এটি ব্রাউজার-ভিত্তিক টেক্সট-টু-স্পিচ ব্যবহার করে। ElevenLabs এর সাথে প্রিমিয়াম ভয়েস কোয়ালিটির জন্য আমাদের প্রিমিয়াম ভয়েস চ্যাট ব্যবহার করুন।"
 };
 
 export default voiceChatTranslations;
