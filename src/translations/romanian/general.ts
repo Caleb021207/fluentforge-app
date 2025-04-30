@@ -27,7 +27,20 @@ const generalTranslations: TranslationRecord = {
   send: "Trimite",
   cancel: "Anulează",
   success: "Succes",
-  back: "Înapoi"
+  back: "Înapoi",
+  
+  // Navigation menu
+  home: "Pagina principală",
+  textPractice: "Practică text",
+  unlimitedVoicePractice: "Practică vocală nelimitată",
+  myClasses: "Clasele mele",
+  myClass: "Clasa mea",
+  signedInAs: "Autentificat ca",
+  logout: "Deconectare",
+  loginRequiredForFeature: "Autentifică-te pentru a utiliza această funcție",
+  
+  // Additional translations needed for the application
+  remaining: "rămas"
 };
 
 export default generalTranslations;

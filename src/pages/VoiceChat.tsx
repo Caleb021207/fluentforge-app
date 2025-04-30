@@ -22,6 +22,7 @@ import ukrainianTranslations from "@/translations/ukrainian";
 import hindiTranslations from "@/translations/hindi";
 import indonesianTranslations from "@/translations/indonesian";
 import polishTranslations from "@/translations/polish";
+import romanianTranslations from "@/translations/romanian";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
@@ -351,6 +352,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "polish") {
       nativeLanguagePhrases = phraseKeys.map(key => polishTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "romanian") {
+      nativeLanguagePhrases = phraseKeys.map(key => romanianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -414,6 +418,8 @@ const VoiceChat = () => {
         return "Model AI:";
       case "polish":
         return "Model Praktyki:";
+      case "romanian":
+        return "Model AI:";
       default:
         return "AI Model:";
     }
@@ -454,6 +460,8 @@ const VoiceChat = () => {
       return "Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.";
     } else if (currentLanguage === "polish") {
       return "Używamy modelu GPT-4o-mini od OpenAI do rozumienia i generowania języka naturalnego, z wbudowaną w przeglądarkę syntezą mowy dla odpowiedzi głosowych.";
+    } else if (currentLanguage === "romanian") {
+      return "Folosim OpenAI GPT-4o-mini pentru procesarea limbajului, cu sinteza vocală integrată în browser.";
     }
     return "Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -487,6 +495,8 @@ const VoiceChat = () => {
       return "Catatan: Ini menggunakan text-to-speech berbasis browser. Untuk kualitas suara premium dengan ElevenLabs, coba Obrolan Suara Premium kami.";
     } else if (currentLanguage === "polish") {
       return "Uwaga: Ta funkcja używa syntezę mowy opartą na przeglądarce. Aby uzyskać lepszą jakość głosu z ElevenLabs, wypróbuj nasz Premium Voice Chat.";
+    } else if (currentLanguage === "romanian") {
+      return "Notă: Această funcție folosește sinteza vocală bazată pe browser. Pentru o calitate vocală premium cu ElevenLabs, încercați Chat-ul nostru vocal premium.";
     }
     return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
@@ -525,6 +535,8 @@ const VoiceChat = () => {
       return `Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.`;
     } else if (currentLanguage === "polish") {
       return `Ćwicz swoje umiejętności mówienia po angielsku z naszym czatem głosowym. Kliknij przycisk mikrofonu i zacznij mówić po angielsku. AI odpowie ci po angielsku i pomoże ci ćwiczyć.`;
+    } else if (currentLanguage === "romanian") {
+      return `Exersează-ți abilitățile de vorbire în engleză cu ajutorul chatului nostru vocal. Apasă pe butonul microfonului și începe să vorbești.`;
     }
     return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
   };
@@ -548,6 +560,8 @@ const VoiceChat = () => {
       return "Tingkat Latihan";
     } else if (currentLanguage === "polish") {
       return "Poziom praktyki";
+    } else if (currentLanguage === "romanian") {
+      return "Nivel de practică";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -577,6 +591,8 @@ const VoiceChat = () => {
       return "Gunakan alat ini untuk meningkatkan keterampilan berbicara dan mendengarkan Anda. Berikut beberapa tips:";
     } else if (currentLanguage === "polish") {
       return "Użyj tego narzędzia, aby poprawić swoje umiejętności mówienia. Oto kilka wskazówek:";
+    } else if (currentLanguage === "romanian") {
+      return "Folosește acest instrument pentru a-ți îmbunătăți abilitățile de vorbire și ascultare. Iată câteva sfaturi:";
     }
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };

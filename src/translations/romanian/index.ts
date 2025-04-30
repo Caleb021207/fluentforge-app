@@ -10,6 +10,9 @@ import progressTranslations from "./progress";
 import profileTranslations from "./profile";
 import voiceChatTranslations from "./voice-chat";
 import classroomTranslations from "./classroom";
+import premiumVoiceTranslations from "./premium-voice";
+import languageFrameworksTranslations from "./language-frameworks";
+import languagesTranslations from "./languages";
 
 // Combine all Romanian translations
 const romanianTranslations: TranslationRecord = {
@@ -22,7 +25,10 @@ const romanianTranslations: TranslationRecord = {
   ...progressTranslations,
   ...profileTranslations,
   ...voiceChatTranslations,
-  ...classroomTranslations
+  ...classroomTranslations,
+  ...premiumVoiceTranslations,
+  ...languageFrameworksTranslations,
+  ...languagesTranslations
 };
 
 export default romanianTranslations;

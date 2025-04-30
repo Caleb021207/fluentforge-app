@@ -21,7 +21,24 @@ const practiceTranslations: TranslationRecord = {
   trySimpleWords: "Încercați cuvinte mai simple",
   useBuiltInPhrases: "Utilizați frazele integrate",
   startNewConversation: "Începe o conversație nouă",
-  sentenceStarters: "Începători de propoziții"
+  sentenceStarters: "Începători de propoziții",
+  
+  // New translations
+  practiceWithTextChat: "Practică cu chat text",
+  textConversationPractice: "Practică conversație text",
+  startChatting: "Începe o conversație cu tutorul tău AI de limba engleză!",
+  typeMessageBelow: "Scrie un mesaj mai jos pentru a începe",
+  chatPlaceholder: "Scrie mesajul tău pentru a exersa {{language}}...",
+  practicePrompt: "Bună! Aș dori să practic conversația în {{targetLanguage}} cu tine. Te rog să mă ajuți corectând gramatica, vocabularul și utilizarea {{targetLanguage}}. Putem începe cu o conversație de bază?",
+  
+  // Practice guide
+  practiceGuide: "Ghid de practică pentru limba {{language}}",
+  practiceGuideDescription: "Iată câteva sfaturi pentru a profita la maximum de practica limbii {{language}}:",
+  practiceGuideItem1: "Încearcă să formulezi propoziții complete, chiar dacă sunt simple.",
+  practiceGuideItem2: "Nu-ți face griji pentru greșeli – ele fac parte din procesul de învățare!",
+  practiceGuideItem3: "Cere lămuriri dacă nu înțelegi ceva.",
+  practiceGuideItem4: "Încearcă să folosești vocabularul pe care l-ai învățat recent.",
+  practiceDisclaimer: "AI-ul nostru se va adapta nivelului tău și te va ajuta să progresezi treptat."
 };
 
 export default practiceTranslations;
