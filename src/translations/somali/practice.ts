@@ -26,18 +26,21 @@ const practiceTranslations: TranslationRecord = {
   suggestedTopicsTitle: "Mawduucyada la soo jeediyay",
   loadingText: "Waa soo socotaa...",
   somethingWentWrong: "Wax khaldan ayaa dhacay",
-  suggestedTopics: {
-    introductions: "Hordhaca iyo is-barashada",
-    dailyRoutines: "Jadwalka maalinlaha ah",
-    food: "Cunto iyo maqaayadaha",
-    shopping: "Wax iibsiga",
-    travel: "Safarka",
-    weather: "Cimilada",
-    hobbies: "Hiwaayadaha",
-    family: "Qoyska",
-    work: "Shaqada iyo xirfadaha",
-    education: "Waxbarashada"
-  }
+  
+  // Add missing keys that were in the English file
+  send: "Dir",
+  
+  // Flatten the suggested topics to avoid the type error
+  "suggestedTopics.introductions": "Hordhaca iyo is-barashada",
+  "suggestedTopics.dailyRoutines": "Jadwalka maalinlaha ah",
+  "suggestedTopics.food": "Cunto iyo maqaayadaha",
+  "suggestedTopics.shopping": "Wax iibsiga",
+  "suggestedTopics.travel": "Safarka",
+  "suggestedTopics.weather": "Cimilada",
+  "suggestedTopics.hobbies": "Hiwaayadaha",
+  "suggestedTopics.family": "Qoyska",
+  "suggestedTopics.work": "Shaqada iyo xirfadaha",
+  "suggestedTopics.education": "Waxbarashada"
 };
 
 export default practiceTranslations;
