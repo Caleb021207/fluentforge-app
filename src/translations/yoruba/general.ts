@@ -2,18 +2,8 @@
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
-  signedInAs: "Wọlé gẹ́gẹ́ bí",
-  logout: "Jáde",
-  textPractice: "Idánrawó Ọ̀rọ̀",
-  unlimitedVoicePractice: "Idánrawó Ohùn Aláìlópin",
-  myClass: "Kíláàsì Mi",
-  myClasses: "Àwọn Kíláàsì Mi",
-  home: "Ilé",
-  loginRequiredForFeature: "Wíwọlé nílò fún ìní yìí",
-  loading: "Ńgbéwọlé...",
-  error: "Àṣìṣe",
-  success: "Àṣeyọrí",
-  practice: "Idánrawó"
+  welcomeToLanguageLearning: "Ẹ káàbọ̀ sí Palavox",
+  yourPersonalAICompanion: "Ẹ̀gbẹ́ AI tí ó ní ìdánimọ́ fún ẹ̀kọ́ tó dára"
 };
 
 export default generalTranslations;

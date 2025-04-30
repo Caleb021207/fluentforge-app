@@ -13,7 +13,9 @@ const generalTranslations: TranslationRecord = {
   loading: "ലോഡ് ചെയ്യുന്നു...",
   error: "പിശക്",
   success: "വിജയം",
-  practice: "പരിശീലനം"
+  practice: "പരിശീലനം",
+  welcomeToLanguageLearning: "പലവോക്സിലേക്ക് സ്വാഗതം",
+  yourPersonalAICompanion: "ഫലപ്രദമായ പഠനത്തിനുള്ള നിങ്ങളുടെ സ്വകാര്യ AI കൂട്ടാളി"
 };
 
 export default generalTranslations;

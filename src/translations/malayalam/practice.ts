@@ -41,7 +41,8 @@ const practiceTranslations: TranslationRecord = {
   practiceWithTextChat: "ടെക്സ്റ്റ് ചാറ്റുമായി പരിശീലിക്കുക",
   textConversationPractice: "ടെക്സ്റ്റ് സംഭാഷണ പരിശീലനം",
   practicePrompt: "ഹലോ! ഞാൻ {{targetLanguage}} സംഭാഷണ പരിശീലിക്കാൻ ആഗ്രഹിക്കുന്നു. ദയവായി എന്റെ {{targetLanguage}} വ്യാകരണം, വാക്ക് ശേഖരം, ഉപയോഗം എന്നിവ തിരുത്താൻ സഹായിക്കുക. നമുക്ക് അടിസ്ഥാന സംഭാഷണത്തിൽ നിന്ന് ആരംഭിക്കാമോ?",
-  chatPlaceholder: "{{targetLanguage}} പരിശീലിക്കാൻ സന്ദേശം ടൈപ്പ് ചെയ്യുക..."
+  chatPlaceholder: "{{targetLanguage}} പരിശീലിക്കാൻ സന്ദേശം ടൈപ്പ് ചെയ്യുക...",
+  practiceYourLanguage: "നിങ്ങളുടെ {{language}} പരിശീലിക്കുക"
 };
 
 export default practiceTranslations;
