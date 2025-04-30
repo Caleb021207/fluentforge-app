@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import translations, { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } from "@/translations";
+import translations from "@/translations";
+import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "@/translations/constants";
 import { LanguageTranslations } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 import { useLocation } from "react-router-dom";

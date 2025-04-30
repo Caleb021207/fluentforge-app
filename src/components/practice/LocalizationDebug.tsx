@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
-import translations, { AVAILABLE_LANGUAGES } from "@/translations";
+import translations from "@/translations";
+import { AVAILABLE_LANGUAGES } from "@/translations/constants";
 
 const LocalizationDebug = () => {
   const { currentLanguage, t } = useLocalization();

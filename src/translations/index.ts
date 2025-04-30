@@ -27,6 +27,7 @@ import urdu from "./urdu";
 import vietnamese from "./vietnamese";
 import yoruba from "./yoruba";
 import amharic from "./amharic";
+import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "./constants";
 
 // Map of all translations by language code
 const translations: Record<string, TranslationRecord> = {
@@ -59,4 +60,5 @@ const translations: Record<string, TranslationRecord> = {
   romanian
 };
 
+export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };
 export default translations;
