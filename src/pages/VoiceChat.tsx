@@ -26,6 +26,7 @@ import romanianTranslations from "@/translations/romanian";
 import turkishTranslations from "@/translations/turkish";
 import farsiTranslations from "@/translations/farsi";
 import urduTranslations from "@/translations/urdu";
+import bengaliTranslations from "@/translations/bengali";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
@@ -367,6 +368,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "urdu") {
       nativeLanguagePhrases = phraseKeys.map(key => urduTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "bengali") {
+      nativeLanguagePhrases = phraseKeys.map(key => bengaliTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -403,6 +407,8 @@ const VoiceChat = () => {
       return "مدل هوش مصنوعی:";
     } else if (currentLanguage === "urdu") {
       return "اے آئی ماڈل:";
+    } else if (currentLanguage === "bengali") {
+      return "AI মডেল:";
     }
     
     switch (currentLanguage) {
@@ -452,6 +458,8 @@ const VoiceChat = () => {
       return t("aiModelInfoText");
     } else if (currentLanguage === "urdu") {
       return t("aiModelInfoText");
+    } else if (currentLanguage === "bengali") {
+      return t("aiModelInfo");
     }
     
     if (currentLanguage === "english") {
@@ -475,7 +483,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "russian") {
       return "Мы используем GPT-4o-mini от OpenAI для понимания и генерации природної мови, с синтезом речи на основе браузера для голосовых відповідей.";
     } else if (currentLanguage === "ukrainian") {
-      return "Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосових відповідей.";
+      return "Ми використовуємо GPT-4o Mini від OpenAI для розуміння та генерації природної мови, з використанням вбудованого в браузер синтезу мовлення для голосов��х відповідей.";
     } else if (currentLanguage === "hindi") {
       return "हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     } else if (currentLanguage === "indonesian") {
@@ -499,6 +507,8 @@ const VoiceChat = () => {
       return t("browserBasedTTS");
     } else if (currentLanguage === "urdu") {
       return t("browserBasedTTS");
+    } else if (currentLanguage === "bengali") {
+      return t("browserBasedTTS");
     } else if (currentLanguage === "arabic") {
       return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
     } else if (currentLanguage === "korean") {
@@ -518,7 +528,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "japanese") {
       return "注意：これはブラウザベースの音声合成を使用しています。ElevenLabsによるプレミアム音声品質については、プレミアム音声チャットをお試しください。";
     } else if (currentLanguage === "russian") {
-      return "Примечание: Эта система использует синтез речи на основе браузера. Для премильного качества голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
+      return "Примечание: Эта система использует синтез речи на основе браузера. Для премильного кач��ства голоса от ElevenLabs, попробуйте наш премиум голосовой чат.";
     } else if (currentLanguage === "hindi") {
       return "नोट: यह ब्राउज़र-आधारित टेक्स्ट-टू-स्पीच का उपयोग करता है। ElevenLabs के साथ प्रीमियम आवाज़ की गुणवत्ता के लिए, हमारे प्रीमियम वॉइस चैट का प्रयास करें।";
     } else if (currentLanguage === "indonesian") {
@@ -543,6 +553,8 @@ const VoiceChat = () => {
       return t("practiceDescription");
     } else if (currentLanguage === "urdu") {
       return t("practiceDescription");
+    } else if (currentLanguage === "bengali") {
+      return t("practiceDescription");
     } else if (currentLanguage === "english") {
       return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
     } else if (currentLanguage === "spanish") {
@@ -554,7 +566,7 @@ const VoiceChat = () => {
     } else if (currentLanguage === "arabic") {
       return `مارس مهارات التحدث باللغة ${getLanguagePair(currentLanguage).practice} من خلال الدردشة الصوتية. انقر على زر الميكروفون وابدأ بالتحدث باللغة ${getLanguagePair(currentLanguage).practice}. سيرد الذكاء الاصطناعي عليك باللغة ${getLanguagePair(currentLanguage).practice} ويساعدك على التدريب.`;
     } else if (currentLanguage === "mandarin") {
-      return `使用我们的语音聊天练习您的${getLanguagePair(currentLanguage).practice}口语技能。点击麦克风按钮，开始用${getLanguagePair(currentLanguage).practice}说话。AI将用${getLanguagePair(currentLanguage).practice}回应您并帮助您练习。`;
+      return `使用我们的语音聊天练习您的${getLanguagePair(currentLanguage).practice}口语技能。点击麦克风按���，开始用${getLanguagePair(currentLanguage).practice}说话。AI将用${getLanguagePair(currentLanguage).practice}回应您并帮助您练习。`;
     } else if (currentLanguage === "vietnamese") {
       return `Luyện tập kỹ năng nói tiếng ${getLanguagePair(currentLanguage).practice} với trò chuyện giọng nói của chúng tôi. Nhấp vào nút micrô và bắt đầu nói bằng tiếng ${getLanguagePair(currentLanguage).practice}. AI sẽ phản hồi bạn bằng tiếng ${getLanguagePair(currentLanguage).practice} và giúp bạn luyện tập.`;
     } else if (currentLanguage === "french") {
@@ -587,6 +599,8 @@ const VoiceChat = () => {
     } else if (currentLanguage === "farsi") {
       return t("practiceLevel");
     } else if (currentLanguage === "urdu") {
+      return t("practiceLevel");
+    } else if (currentLanguage === "bengali") {
       return t("practiceLevel");
     } else if (currentLanguage === "mandarin") {
       return "练习水平";

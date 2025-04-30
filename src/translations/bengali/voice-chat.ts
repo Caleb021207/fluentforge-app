@@ -48,7 +48,21 @@ const voiceChatTranslations: TranslationRecord = {
   yourPronunciation: "আপনার উচ্চারণ",
   modelPronunciation: "মডেল উচ্চারণ",
   translation: "অনুবাদ",
-  browserBasedTTS: "দ্রষ্টব্য: এটি ব্রাউজার-ভিত্তিক টেক্সট-টু-স্পিচ ব্যবহার করে। ElevenLabs এর সাথে প্রিমিয়াম ভয়েস কোয়ালিটির জন্য আমাদের প্রিমিয়াম ভয়েস চ্যাট ব্যবহার করুন।"
+  browserBasedTTS: "দ্রষ্টব্য: এটি ব্রাউজার-ভিত্তিক টেক্সট-টু-স্পিচ ব্যবহার করে। ElevenLabs এর সাথে প্রিমিয়াম ভয়েস কোয়ালিটির জন্য আমাদের প্রিমিয়াম ভয়েস চ্যাট ব্যবহার করুন।",
+  listeningNow: "এখন শোনা হচ্ছে",
+  youSaid: "আপনি যা বললেন",
+  aiResponse: "এআই প্রতিক্রিয়া",
+  speaking: "কথা বলা হচ্ছে",
+  playAgain: "আবার শোনান",
+  conversationHistory: "কথোপকথনের ইতিহাস",
+  clearConversation: "কথোপকথন মুছুন",
+  useThisTool: "আপনার বলা ও শোনার দক্ষতা উন্নত করতে এই টুল ব্যবহার করুন। এখানে কিছু টিপস রয়েছে:",
+  cefrB1Description: "মধ্যবর্তী স্তর - পরিচিত বিষয় নিয়ে কথা বলতে পারে",
+  failedToGetResponse: "প্রতিক্রিয়া পেতে ব্যর্থ হয়েছে",
+  failedToGenerateSpeech: "কথা উৎপাদন করতে ব্যর্থ হয়েছে",
+  speechRecognitionNotSupported: "আপনার ব্রাউজার কথা শনাক্তকরণ সমর্থন করে না",
+  Success: "সফল",
+  conversationHistoryCleared: "কথোপকথনের ইতিহাস মুছে ফেলা হয়েছে"
 };
 
 export default voiceChatTranslations;
