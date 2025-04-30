@@ -14,7 +14,7 @@ const generalTranslations: TranslationRecord = {
   dailyLimitReached: "Günlük limit aşıldı",
   loginRequired: "Giriş gerekli",
   failedToCreateSession: "Oturum oluşturulamadı",
-  cefrB1Description: "Orta Seviye - Tanıdık konular hakkında konuşabilir",
+  cefrB1Description: "Orta seviye - Tanıdık konular hakkında konuşabilir",
   speechSynthesisNotSupported: "Konuşma sentezi tarayıcınızda desteklenmiyor",
   
   // General buttons and actions
@@ -27,7 +27,20 @@ const generalTranslations: TranslationRecord = {
   send: "Gönder",
   cancel: "İptal",
   success: "Başarılı",
-  back: "Geri"
+  back: "Geri",
+  
+  // Navigation menu
+  home: "Ana Sayfa",
+  textPractice: "Yazılı Pratik",
+  unlimitedVoicePractice: "Sınırsız Sesli Pratik",
+  myClasses: "Sınıflarım",
+  myClass: "Sınıfım",
+  signedInAs: "Olarak giriş yaptınız",
+  logout: "Çıkış Yap",
+  loginRequiredForFeature: "Bu özelliği kullanmak için giriş yapmalısınız",
+  
+  // Additional translations
+  remaining: "kalan"
 };
 
 export default generalTranslations;

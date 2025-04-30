@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ import hindiTranslations from "@/translations/hindi";
 import indonesianTranslations from "@/translations/indonesian";
 import polishTranslations from "@/translations/polish";
 import romanianTranslations from "@/translations/romanian";
+import turkishTranslations from "@/translations/turkish";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
@@ -355,6 +357,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "romanian") {
       nativeLanguagePhrases = phraseKeys.map(key => romanianTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "turkish") {
+      nativeLanguagePhrases = phraseKeys.map(key => turkishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -420,6 +425,8 @@ const VoiceChat = () => {
         return "Model Praktyki:";
       case "romanian":
         return "Model AI:";
+      case "turkish":
+        return "Yapay Zekâ Modeli:";
       default:
         return "AI Model:";
     }
@@ -462,6 +469,8 @@ const VoiceChat = () => {
       return "Używamy modelu GPT-4o-mini od OpenAI do rozumienia i generowania języka naturalnego, z wbudowaną w przeglądarkę syntezą mowy dla odpowiedzi głosowych.";
     } else if (currentLanguage === "romanian") {
       return "Folosim OpenAI GPT-4o-mini pentru procesarea limbajului, cu sinteza vocală integrată în browser.";
+    } else if (currentLanguage === "turkish") {
+      return "OpenAI GPT-4o-mini kullanıyoruz, yanıtlar için tarayıcı tabanlı ses sentezi ile birlikte.";
     }
     return "Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -497,11 +506,13 @@ const VoiceChat = () => {
       return "Uwaga: Ta funkcja używa syntezę mowy opartą na przeglądarce. Aby uzyskać lepszą jakość głosu z ElevenLabs, wypróbuj nasz Premium Voice Chat.";
     } else if (currentLanguage === "romanian") {
       return "Notă: Această funcție folosește sinteza vocală bazată pe browser. Pentru o calitate vocală premium cu ElevenLabs, încercați Chat-ul nostru vocal premium.";
+    } else if (currentLanguage === "turkish") {
+      return "Not: Bu, tarayıcı tabanlı metin-konuşma dönüşümü kullanır. ElevenLabs ile premium ses kalitesi için Premium Sesli Sohbet'i deneyin.";
     }
     return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
 
-  // Get the existing getPracticeDescription function but modify it for Swahili
+  // Get the existing getPracticeDescription function but modify it for Turkish
   const getPracticeDescription = () => {
     if (currentLanguage === "swahili") {
       return t("practiceDescription");
@@ -537,6 +548,8 @@ const VoiceChat = () => {
       return `Ćwicz swoje umiejętności mówienia po angielsku z naszym czatem głosowym. Kliknij przycisk mikrofonu i zacznij mówić po angielsku. AI odpowie ci po angielsku i pomoże ci ćwiczyć.`;
     } else if (currentLanguage === "romanian") {
       return `Exersează-ți abilitățile de vorbire în engleză cu ajutorul chatului nostru vocal. Apasă pe butonul microfonului și începe să vorbești.`;
+    } else if (currentLanguage === "turkish") {
+      return `Sesli sohbetimizle İngilizce konuşma becerilerini geliştir. Mikrofon simgesine tıkla ve İngilizce konuşmaya başla.`;
     }
     return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
   };
@@ -562,6 +575,8 @@ const VoiceChat = () => {
       return "Poziom praktyki";
     } else if (currentLanguage === "romanian") {
       return "Nivel de practică";
+    } else if (currentLanguage === "turkish") {
+      return "Pratik Seviyesi";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -593,6 +608,8 @@ const VoiceChat = () => {
       return "Użyj tego narzędzia, aby poprawić swoje umiejętności mówienia. Oto kilka wskazówek:";
     } else if (currentLanguage === "romanian") {
       return "Folosește acest instrument pentru a-ți îmbunătăți abilitățile de vorbire și ascultare. Iată câteva sfaturi:";
+    } else if (currentLanguage === "turkish") {
+      return "Konuşma ve dinleme becerilerinizi geliştirmek için bu aracı kullanın. İşte bazı ipuçları:";
     }
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
