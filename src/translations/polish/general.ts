@@ -40,7 +40,16 @@ const generalTranslations: TranslationRecord = {
   loginRequiredForFeature: "Zaloguj się, aby korzystać z tej funkcji",
   
   // Additional translations needed for the application
-  remaining: "pozostało"
+  remaining: "pozostało",
+  
+  // Practice Guide translations
+  practiceGuide: "Przewodnik do praktyki {{language}}",
+  practiceGuideDescription: "Oto kilka wskazówek, aby wyciągnąć jak najwięcej z praktyki języka {{language}}:",
+  practiceGuideItem1: "Staraj się formułować pełne zdania, nawet jeśli są proste.",
+  practiceGuideItem2: "Nie martw się popełnianiem błędów - są częścią nauki!",
+  practiceGuideItem3: "Pytaj o wyjaśnienia, jeśli czegoś nie rozumiesz.",
+  practiceGuideItem4: "Staraj się używać nowo poznanego słownictwa.",
+  practiceDisclaimer: "Nasza sztuczna inteligencja dostosuje się do Twojego poziomu umiejętności i pomoże Ci stopniowo się doskonalić."
 };
 
 export default generalTranslations;
