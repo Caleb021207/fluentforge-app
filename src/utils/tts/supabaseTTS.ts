@@ -123,16 +123,18 @@ export const preloadTTS = async (
     // If already cached, don't preload again
     if (ttsCache.get(cacheKey)) return;
     
-    // Use low priority fetch for preloading
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout for preloads
-    
-    const { data, error } = await supabase.functions.invoke("text-to-speech", {
-      body: { text, language, isTargetLanguage },
-      signal: controller.signal,
+    // Use a timeout instead of AbortController for preloading
+    const timeoutPromise = new Promise<{data: null, error: Error}>((_, reject) => {
+      setTimeout(() => reject(new Error("Preload timeout")), 10000); // 10s timeout
     });
     
-    clearTimeout(timeoutId);
+    // Regular API call
+    const apiPromise = supabase.functions.invoke("text-to-speech", {
+      body: { text, language, isTargetLanguage }
+    });
+    
+    // Race between API call and timeout
+    const { data, error } = await Promise.race([apiPromise, timeoutPromise]);
     
     if (error || !data || !data.audioContent) {
       console.error("Failed to preload TTS:", error || "No audio content");
