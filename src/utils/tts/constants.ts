@@ -1,5 +1,4 @@
 
-
 // Language code mappings for speech synthesis
 export const languageCodeMap: Record<string, string> = {
   'english': 'en-US',
@@ -30,7 +29,16 @@ export const languageCodeMap: Record<string, string> = {
   'romanian': 'ro-RO'
 };
 
+// Meta MMS specific language codes (ISO 639-3)
+export const metaMmsLanguageMap: Record<string, string> = {
+  'yoruba': 'yor',
+  'somali': 'som',
+  'bengali': 'ben',
+  'amharic': 'amh',
+  'malayalam': 'mal',
+  // Add other languages supported by Meta MMS
+};
+
 // TTS cache constants
 export const TTL_DURATION = 30 * 60 * 1000; // 30 minutes
 export const CACHE_CLEANUP_INTERVAL = 10 * 60 * 1000; // 10 minutes
-

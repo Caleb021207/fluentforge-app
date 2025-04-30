@@ -20,7 +20,7 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "urdu": { languageCode: "ur-PK", voiceName: "ur-PK-AsadNeural" },
   "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" },
   "swahili": { languageCode: "sw-KE", voiceName: "sw-KE-RafikiNeural" },
-  // Adding new languages (removed igbo and haitian)
+  // Adding new language codes (removed igbo and haitian)
   "bengali": { languageCode: "bn-BD", voiceName: "bn-BD-PradeepNeural" },
   "somali": { languageCode: "so-SO", voiceName: "so-SO-MuuseNeural" },
   "yoruba": { languageCode: "yo-NG", voiceName: "yo-NG-AbeoNeural" },
@@ -59,6 +59,16 @@ export const pollyVoiceMap: Record<string, string> = {
   "polish": "Tatyana", // Use Russian voice as fallback
   "turkish": "Tatyana", // Use Russian voice as fallback
   "romanian": "Tatyana" // Use Russian voice as fallback
+};
+
+// Meta MMS language support
+export const metaMmsLanguageMap: Record<string, string> = {
+  "yoruba": "yor", // Yoruba ISO 639-3 code
+  "somali": "som", // Somali ISO 639-3 code
+  "bengali": "ben", // Bengali ISO 639-3 code
+  "amharic": "amh", // Amharic ISO 639-3 code
+  "malayalam": "mal", // Malayalam ISO 639-3 code
+  // Add other languages supported by Meta MMS but not by Azure/Polly
 };
 
 // Constants

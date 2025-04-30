@@ -3,152 +3,154 @@ import { supabase } from "@/integrations/supabase/client";
 import { ttsCache } from "./cache";
 import { useBrowserTTS } from "./browserTTS";
 import { trackTTSUsage } from "./tracking";
+import { metaMmsLanguageMap } from "./constants";
 import type { TTSOptions } from "./types";
 
 /**
- * Plays text using the Supabase Edge Function for TTS.
- * Optimized for performance with efficient caching.
+ * Play audio using Supabase Edge Function TTS
  */
-export const playTTS = async (options: TTSOptions): Promise<void> => {
-  const { text, language, isTargetLanguage = false, onStart, onEnd, onError } = options;
-  
+export const playTTS = async ({
+  text,
+  language,
+  isTargetLanguage = false,
+  onStart,
+  onEnd,
+  onError
+}: TTSOptions) => {
   if (!text || text.trim() === "") {
-    onError?.(new Error("Empty text provided"));
+    console.warn("Empty text provided to playTTS");
+    onError?.("Empty text provided");
     return;
   }
-  
-  onStart?.();
-  
+
+  // Check for existing cached audio for this text and language
+  const cacheKey = `${language}:${text}`;
+  const cachedAudio = ttsCache.get(cacheKey);
+
+  if (cachedAudio) {
+    console.log("Using cached audio for", language, text.substring(0, 40) + "...");
+    return playAudioFromBase64(cachedAudio, onStart, onEnd, onError);
+  }
+
   try {
-    // Check if we have a cached version first
-    const cacheKey = ttsCache.createKey(text, language, isTargetLanguage);
-    const cachedAudio = ttsCache.get(cacheKey);
+    // Determine if this language is supported by Meta MMS
+    const usesMetaMms = metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
     
-    let audioContent;
-    let isFromCache = false;
-    
-    if (cachedAudio) {
-      console.log("Using cached audio response");
-      audioContent = cachedAudio;
-      isFromCache = true;
-    } else {
-      // Call the optimized Supabase Edge Function
-      const { data, error } = await supabase.functions.invoke("text-to-speech", {
-        body: { text, language, isTargetLanguage },
-      });
+    if (usesMetaMms) {
+      console.log(`Using Meta MMS for ${language} text-to-speech`);
+    }
+
+    // Call the Supabase Edge Function
+    const { data, error } = await supabase.functions.invoke("text-to-speech", {
+      body: {
+        text,
+        language,
+        isTargetLanguage,
+        useMetaMms: usesMetaMms
+      },
+    });
+
+    if (error || !data?.audioContent) {
+      console.error("TTS error from Supabase:", error || "No audio content returned");
       
-      if (error) {
-        console.error("Edge function error:", error.message);
-        // Immediately try browser TTS as fallback
-        await useBrowserTTS(text, language, onEnd, onError);
-        await trackTTSUsage();
-        return;
+      // Fall back to browser TTS if available
+      const browserTTS = useBrowserTTS();
+      if (browserTTS.isBrowserSupported) {
+        console.log("Falling back to browser TTS");
+        return browserTTS.speak(text, language, onStart, onEnd, onError);
       }
       
-      if (!data || !data.audioContent) {
-        throw new Error("No audio content received");
-      }
-      
-      audioContent = data.audioContent;
-      ttsCache.set(cacheKey, audioContent);
+      onError?.(error?.message || "Failed to generate speech");
+      return;
     }
-    
-    // Create and play audio more efficiently
-    const binaryString = atob(audioContent);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    
-    // Process in larger chunks for better performance
-    const chunkSize = 8192;
-    for (let i = 0; i < len; i += chunkSize) {
-      const end = Math.min(i + chunkSize, len);
-      for (let j = i; j < end; j++) {
-        bytes[j] = binaryString.charCodeAt(j);
-      }
-    }
-    
-    // Create blob and play
-    const blob = new Blob([bytes], { type: 'audio/mpeg' });
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    
-    audio.onended = () => {
-      onEnd?.();
-      URL.revokeObjectURL(url);
-    };
-    
-    audio.onerror = (e) => {
-      console.error("Audio playback error:", e);
-      onEnd?.();
-      URL.revokeObjectURL(url);
-      onError?.(new Error("Audio playback failed"));
-    };
-    
-    await audio.play();
-    
-    // Track TTS usage
-    if (!isFromCache) {
-      await trackTTSUsage();
-    }
-    
+
+    // Cache the audio for future requests
+    ttsCache.set(cacheKey, data.audioContent);
+
+    // Track usage for analytics
+    trackTTSUsage(language, text.length);
+
+    // Play the audio
+    return playAudioFromBase64(data.audioContent, onStart, onEnd, onError);
   } catch (err) {
-    console.error("Error with TTS:", err);
-    
-    // Try browser's native TTS as fallback
-    try {
-      await useBrowserTTS(text, language, onEnd, onError);
-      await trackTTSUsage();
-    } catch (browserErr) {
-      console.error("Browser TTS also failed:", browserErr);
-      onEnd?.();
-      onError?.(new Error(`TTS failed: ${err.message}`));
-    }
+    console.error("TTS error:", err);
+    onError?.(err?.message || "Failed to generate speech");
   }
 };
 
 /**
- * Preloads TTS audio for future usage
- * Optimized for background loading
+ * Preload TTS audio for future use
  */
-export const preloadTTS = async (
-  text: string, 
-  language: string, 
-  isTargetLanguage: boolean = false
-): Promise<void> => {
+export const preloadTTS = async (text: string, language: string, isTargetLanguage = false) => {
   if (!text || text.trim() === "") return;
-  
+
+  const cacheKey = `${language}:${text}`;
+  if (ttsCache.has(cacheKey)) {
+    console.log("Audio already preloaded for", language, text.substring(0, 40) + "...");
+    return;
+  }
+
   try {
-    const cacheKey = ttsCache.createKey(text, language, isTargetLanguage);
-    
-    // If already cached, don't preload again
-    if (ttsCache.get(cacheKey)) return;
-    
-    // Use a timeout instead of AbortController for preloading
-    const timeoutPromise = new Promise<{data: null, error: Error}>((_, reject) => {
-      setTimeout(() => reject(new Error("Preload timeout")), 10000); // 10s timeout
+    // Determine if this language is supported by Meta MMS
+    const usesMetaMms = metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
+
+    const { data, error } = await supabase.functions.invoke("text-to-speech", {
+      body: {
+        text,
+        language,
+        isTargetLanguage,
+        useMetaMms: usesMetaMms
+      },
     });
-    
-    // Regular API call
-    const apiPromise = supabase.functions.invoke("text-to-speech", {
-      body: { text, language, isTargetLanguage }
-    });
-    
-    // Race between API call and timeout
-    const { data, error } = await Promise.race([apiPromise, timeoutPromise]);
-    
-    if (error || !data || !data.audioContent) {
-      console.error("Failed to preload TTS:", error || "No audio content");
+
+    if (error || !data?.audioContent) {
+      console.error("Preload TTS error from Supabase:", error || "No audio content returned");
       return;
     }
-    
-    // Cache the result
+
+    // Cache the audio
     ttsCache.set(cacheKey, data.audioContent);
-    
-    // Track voice practice usage for preloading
-    await trackTTSUsage();
-    
+    console.log("Successfully preloaded audio for", language, text.substring(0, 40) + "...");
   } catch (err) {
-    // Silently fail for preloads - they're not critical
-    console.error("Error preloading TTS:", err);
+    console.error("Preload TTS error:", err);
+  }
+};
+
+/**
+ * Helper to play base64 audio
+ */
+const playAudioFromBase64 = (base64Audio: string, onStart?: () => void, onEnd?: () => void, onError?: (error: string) => void) => {
+  try {
+    // Create an audio context and source
+    const audio = new Audio("data:audio/mp3;base64," + base64Audio);
+
+    // Set up event listeners
+    audio.addEventListener("play", () => {
+      onStart?.();
+    });
+
+    audio.addEventListener("ended", () => {
+      onEnd?.();
+    });
+
+    audio.addEventListener("error", (e) => {
+      console.error("Audio playback error:", e);
+      onError?.("Audio playback error");
+    });
+
+    // Play the audio
+    const playPromise = audio.play();
+    if (playPromise) {
+      playPromise.catch((error) => {
+        console.error("Error playing audio:", error);
+        onError?.("Error playing audio: " + error.message);
+      });
+    }
+
+    return audio;
+  } catch (err) {
+    console.error("Error creating audio element:", err);
+    onError?.("Error creating audio element: " + err.message);
+    return null;
   }
 };
