@@ -10,6 +10,7 @@ import progressTranslations from "./progress";
 import profileTranslations from "./profile";
 import voiceChatTranslations from "./voice-chat";
 import classroomTranslations from "./classroom";
+import premiumVoiceTranslations from "./premium-voice";
 
 // Combine all Polish translations
 const polishTranslations: TranslationRecord = {
@@ -22,7 +23,8 @@ const polishTranslations: TranslationRecord = {
   ...progressTranslations,
   ...profileTranslations,
   ...voiceChatTranslations,
-  ...classroomTranslations
+  ...classroomTranslations,
+  ...premiumVoiceTranslations
 };
 
 export default polishTranslations;

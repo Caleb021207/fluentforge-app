@@ -27,7 +27,20 @@ const generalTranslations: TranslationRecord = {
   send: "Wyślij",
   cancel: "Anuluj",
   success: "Sukces",
-  back: "Powrót"
+  back: "Powrót",
+  
+  // Navigation menu
+  home: "Strona główna",
+  textPractice: "Praktyka tekstowa",
+  unlimitedVoicePractice: "Nieograniczona praktyka głosowa",
+  myClasses: "Moje klasy",
+  myClass: "Moja klasa",
+  signedInAs: "Zalogowano jako",
+  logout: "Wyloguj się",
+  loginRequiredForFeature: "Zaloguj się, aby korzystać z tej funkcji",
+  
+  // Additional translations needed for the application
+  remaining: "pozostało"
 };
 
 export default generalTranslations;
