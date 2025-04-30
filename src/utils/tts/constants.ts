@@ -18,7 +18,9 @@ export const languageCodeMap: Record<string, string> = {
   'urdu': 'ur-PK',
   'pashto': 'ps-AF',
   'swahili': 'sw-KE',
-  // Adding new language codes (removed igbo and haitian)
+  // Re-adding languages that were removed
+  'haitian': 'ht-HT',
+  'igbo': 'ig-NG',
   'bengali': 'bn-BD',
   'somali': 'so-SO',
   'yoruba': 'yo-NG',
@@ -31,6 +33,8 @@ export const languageCodeMap: Record<string, string> = {
 
 // Meta MMS specific language codes (ISO 639-3)
 export const metaMmsLanguageMap: Record<string, string> = {
+  'haitian': 'hat',
+  'igbo': 'ibo',
   'yoruba': 'yor',
   'somali': 'som',
   'bengali': 'ben',

@@ -390,6 +390,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "igbo") {
       nativeLanguagePhrases = phraseKeys.map(key => igboTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "haitian") {
+      nativeLanguagePhrases = phraseKeys.map(key => haitianTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else if (currentLanguage === "amharic") {
       nativeLanguagePhrases = phraseKeys.map(key => amharicTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);

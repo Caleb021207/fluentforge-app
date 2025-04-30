@@ -17,7 +17,7 @@ export async function textToSpeechMetaMms(text: string, languageCode: string): P
   };
 
   try {
-    // Call the Meta MMS server (update the URL to match your deployment)
+    // Call the Meta MMS server
     const response = await fetch(MMS_SERVER_URL, {
       method: "POST",
       headers: {

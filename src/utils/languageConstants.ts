@@ -16,7 +16,9 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "urdu",
   "pashto",
   "swahili",
-  // Adding new languages (removed haitian and igbo)
+  // Re-adding languages that were previously removed
+  "haitian",
+  "igbo",
   "bengali",
   "somali",
   "yoruba",

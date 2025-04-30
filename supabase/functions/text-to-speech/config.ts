@@ -20,7 +20,9 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "urdu": { languageCode: "ur-PK", voiceName: "ur-PK-AsadNeural" },
   "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" },
   "swahili": { languageCode: "sw-KE", voiceName: "sw-KE-RafikiNeural" },
-  // Adding new language codes (removed igbo and haitian)
+  // Re-adding previously removed languages
+  "haitian": { languageCode: "ht-HT", voiceName: "ht-HT-DefaultNeural" },
+  "igbo": { languageCode: "ig-NG", voiceName: "ig-NG-DefaultNeural" },
   "bengali": { languageCode: "bn-BD", voiceName: "bn-BD-PradeepNeural" },
   "somali": { languageCode: "so-SO", voiceName: "so-SO-MuuseNeural" },
   "yoruba": { languageCode: "yo-NG", voiceName: "yo-NG-AbeoNeural" },
@@ -50,7 +52,9 @@ export const pollyVoiceMap: Record<string, string> = {
   "urdu": "Kajal", // Use Hindi voice as fallback
   "pashto": "Kajal", // Use Hindi voice as fallback
   "swahili": "Joanna", // Use English voice as fallback
-  // Adding new languages with fallbacks where needed (removed igbo and haitian)
+  // Re-adding previously removed languages
+  "haitian": "Joanna", // Use English voice as fallback
+  "igbo": "Joanna", // Use English voice as fallback
   "bengali": "Kajal", // Use Hindi voice as fallback
   "somali": "Joanna", // Use English voice as fallback
   "yoruba": "Joanna", // Use English voice as fallback
@@ -63,6 +67,8 @@ export const pollyVoiceMap: Record<string, string> = {
 
 // Meta MMS language support
 export const metaMmsLanguageMap: Record<string, string> = {
+  "haitian": "hat", // Haitian Creole ISO 639-3 code
+  "igbo": "ibo", // Igbo ISO 639-3 code
   "yoruba": "yor", // Yoruba ISO 639-3 code
   "somali": "som", // Somali ISO 639-3 code
   "bengali": "ben", // Bengali ISO 639-3 code
