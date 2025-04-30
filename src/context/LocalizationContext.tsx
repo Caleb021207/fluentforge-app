@@ -73,6 +73,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       }
     }
     
+    // Always return a string, even for complex objects
     return typeof obj === 'string' ? obj : String(path);
   };
 
@@ -99,33 +100,45 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // Get translation for selected language or fallback to default
-      let value: any = undefined;
+      let translationValue: string = "";
       
       // Handle nested objects in translations (e.g., suggestedTopics.introductions)
       if (key.includes('.')) {
         const [parentKey, childKey] = key.split('.');
         const parentObject = selectedTranslations[parentKey];
+        
         if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
-          value = (parentObject as Record<string, string>)[childKey];
+          const nestedValue = (parentObject as Record<string, string | Record<string, string>>)[childKey];
+          // Ensure we return a string
+          translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
         }
       } else {
-        value = selectedTranslations[key];
+        const value = selectedTranslations[key];
+        // Ensure we return a string
+        translationValue = typeof value === 'string' ? value : 
+                           (value !== undefined ? String(value) : "");
       }
       
-      // Fallback to default language if not found
-      if (value === undefined && defaultTranslations) {
+      // Fallback to default language if not found or not a string
+      if (translationValue === "" && defaultTranslations) {
         // Try to get from default translations
         if (key.includes('.')) {
           const [parentKey, childKey] = key.split('.');
           const parentObject = defaultTranslations[parentKey];
+          
           if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
-            value = (parentObject as Record<string, string>)[childKey];
+            const nestedValue = (parentObject as Record<string, string | Record<string, string>>)[childKey];
+            // Ensure we return a string
+            translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
           }
         } else {
-          value = defaultTranslations[key];
+          const value = defaultTranslations[key];
+          // Ensure we return a string
+          translationValue = typeof value === 'string' ? value : 
+                             (value !== undefined ? String(value) : key);
         }
         
-        if (value !== undefined) {
+        if (translationValue !== key) {
           // Only log each missing key once per session
           if (!missingKeys.has(key)) {
             console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
@@ -135,7 +148,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // If translation is missing in both languages, return the key
-      if (value === undefined) {
+      if (translationValue === "") {
         if (!missingKeys.has(key)) {
           console.error(`Translation key not found: "${key}" in any language`);
           setMissingKeys(prev => new Set([...prev, key]));
@@ -143,12 +156,9 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         return key;
       }
       
-      // Ensure we have a string value
-      const stringValue = getStringValueFromTranslation(value, key);
-      
       // Apply replacements if any
-      if (replacements && stringValue) {
-        let result = stringValue;
+      if (replacements && translationValue) {
+        let result = translationValue;
         Object.entries(replacements).forEach(([placeholder, replaceValue]) => {
           // Support {{placeholder}} format
           const regex = new RegExp(`{{${placeholder}}}`, 'g');
@@ -161,7 +171,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         return result;
       }
       
-      return stringValue;
+      return translationValue;
     } catch (error) {
       console.error("Translation error:", error);
       return key; // Return the key as fallback
