@@ -25,7 +25,25 @@ const practiceTranslations: TranslationRecord = {
   waitingForResponse: "Waxaa sugayaa jawaabta...",
   cancel: "Jooji",
   submit: "Gudbi",
-  close: "Xidh"
+  close: "Xidh",
+  
+  // New translations from the request
+  startConversationIn: "{{language}} ku bilow wada sheekaysi",
+  startTextChatting: "Bilow wada sheekaysiga macalinkaaga luqadda AI!",
+  noticeTextBasedPractice: "Geli fariin hoos si aad u bilowdo",
+  typeMessage: "Geli fariintaada si aad u tababarto Ingiriisiga…",
+  
+  // Practice guide
+  practiceGuide: "Tilmaamaha Ku Tababarka Ingiriisiga",
+  practiceGuideDescription: "Waxaa halkan ku yaal qaar ka mid ah talooyin ku saabsan sida {{language}} uga heli karto faa'iido ugu badan:",
+  practiceGuideItem1: "Isku day inaad dhisto jumlado buuxa, xitaa haddii ay fudud yihiin.",
+  practiceGuideItem2: "Ha ka welwelin khaladaadka – waa qayb ka mid ah barashada!",
+  practiceGuideItem3: "Weydii faahfaahin haddii aadan fahmin wax.",
+  practiceGuideItem4: "Isku day inaad isticmaasho erayada aad dhowaan baratay.",
+  practiceDisclaimer: "AI-du waxay la jaanqaadaysaa heerkaaga waxayna kaa caawinaysaa inaad si tartiib tartiib ah u horumarto.",
+  
+  // Additional necessary keys
+  send: "Dir"
 };
 
 export default practiceTranslations;

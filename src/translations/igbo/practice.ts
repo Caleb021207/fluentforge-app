@@ -25,7 +25,25 @@ const practiceTranslations: TranslationRecord = {
   waitingForResponse: "Na-eche azịza...",
   cancel: "Kagbuo",
   submit: "Nyefee",
-  close: "Mechie"
+  close: "Mechie",
+  
+  // New translations from the request
+  startConversationIn: "Malite mkparịta ụka na {{language}}",
+  startTextChatting: "Malite mkparịta ụka na onye nkuzi asụsụ AI gị!",
+  noticeTextBasedPractice: "Tinye ozi n'okpuru ka ịmalite",
+  typeMessage: "Tinye ozi gị ka ị rụọ ọrụ n'Igbo…",
+  
+  // Practice guide
+  practiceGuide: "Ntuziaka Maka Ịmụ Asụsụ Bekee",
+  practiceGuideDescription: "Lee ụfọdụ atụmatụ maka ịnweta uru kachasị elu site na ịmụ {{language}}:",
+  practiceGuideItem1: "Gbalịa ịmepụta ahịrịokwu zuru ezu, ọbụlagodi ma ha dị mfe.",
+  practiceGuideItem2: "Echegbula banyere mmejọ – ọ bụ akụkụ nke ọmụmụ ihe!",
+  practiceGuideItem3: "Jụọ maka nkọwa ma ọ bụrụ na ịghọtaghị ihe.",
+  practiceGuideItem4: "Gbalịa iji okwu ndị ị mụtara ọhụrụ.",
+  practiceDisclaimer: "AI anyị ga-adabara ọkwa nka gị ma nyere gị aka ka ị na-emepe emepe nwayọ nwayọ.",
+  
+  // Additional necessary keys
+  send: "Zipụ"
 };
 
 export default practiceTranslations;
