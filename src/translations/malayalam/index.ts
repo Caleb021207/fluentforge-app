@@ -3,16 +3,16 @@ import { TranslationRecord } from "../types";
 import languageSelectionTranslations from "./language-selection";
 import classroomTranslations from "./classroom";
 import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
 import premiumVoiceTranslations from "./premium-voice";
+import voiceChatTranslations from "./voice-chat";
 import generalTranslations from "./general";
 
 const malayalamTranslations: TranslationRecord = {
   ...languageSelectionTranslations,
   ...classroomTranslations,
   ...practiceTranslations,
-  ...voiceChatTranslations,
   ...premiumVoiceTranslations,
+  ...voiceChatTranslations,
   ...generalTranslations
 };
 

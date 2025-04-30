@@ -29,6 +29,9 @@ import urduTranslations from "@/translations/urdu";
 import bengaliTranslations from "@/translations/bengali";
 import somaliTranslations from "@/translations/somali";
 import igboTranslations from "@/translations/igbo";
+import amharicTranslations from "@/translations/amharic";
+import yorubaTranslations from "@/translations/yoruba";
+import malayalamTranslations from "@/translations/malayalam";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
@@ -387,6 +390,15 @@ const VoiceChat = () => {
     } else if (currentLanguage === "igbo") {
       nativeLanguagePhrases = phraseKeys.map(key => igboTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "amharic") {
+      nativeLanguagePhrases = phraseKeys.map(key => amharicTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "yoruba") {
+      nativeLanguagePhrases = phraseKeys.map(key => yorubaTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "malayalam") {
+      nativeLanguagePhrases = phraseKeys.map(key => malayalamTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -429,6 +441,12 @@ const VoiceChat = () => {
       return "Modelka AI:";
     } else if (currentLanguage === "igbo") {
       return "Ụdị AI:";
+    } else if (currentLanguage === "amharic") {
+      return "የAI ሞዴል:";
+    } else if (currentLanguage === "yoruba") {
+      return "Àwọn àwòrán AI:";
+    } else if (currentLanguage === "malayalam") {
+      return "AI മോഡൽ:";
     }
     
     switch (currentLanguage) {
@@ -470,64 +488,29 @@ const VoiceChat = () => {
   };
 
   const getAIModelInfoText = () => {
-    if (currentLanguage === "pashto") {
-      return t("aiModelInfo");
-    } else if (currentLanguage === "swahili") {
-      return t("aiModelInfo");
-    } else if (currentLanguage === "farsi") {
-      return t("aiModelInfo");
-    } else if (currentLanguage === "urdu") {
-      return t("aiModelInfo");
-    } else if (currentLanguage === "bengali") {
-      return t("aiModelInfo");
-    } else if (currentLanguage === "somali") {
-      return t("aiModelInfo");
-    } else if (currentLanguage === "igbo") {
-      return t("aiModelInfo");
+    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
+         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
+      return t("aiModelUsing");
     }
     
     return "Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
 
   const getBrowserTTSNote = () => {
-    if (currentLanguage === "pashto") {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "swahili") {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "farsi") {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "urdu") {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "bengali") {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "somali") {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "igbo") {
+    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
+         "korean", "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
       return t("browserBasedTTS");
     } else if (currentLanguage === "arabic") {
       return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
-    } else if (currentLanguage === "korean") {
-      return t("browserBasedTTS");
     }
     
     return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
 
   const getPracticeDescription = () => {
-    if (currentLanguage === "swahili") {
-      return t("practiceDescription");
-    } else if (currentLanguage === "pashto") {
-      return t("practiceDescription");
-    } else if (currentLanguage === "farsi") {
-      return t("practiceDescription");
-    } else if (currentLanguage === "urdu") {
-      return t("practiceDescription");
-    } else if (currentLanguage === "bengali") {
-      return t("practiceDescription");
-    } else if (currentLanguage === "somali") {
-      return t("practiceDescription");
-    } else if (currentLanguage === "igbo") {
-      return t("practiceDescription");
+    if (["swahili", "pashto", "farsi", "urdu", "bengali", "somali", "igbo", 
+         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
+      return t("practiceYourSpeaking");
     } else if (currentLanguage === "english") {
       return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
     }
