@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -50,7 +51,11 @@ const practiceTranslations: TranslationRecord = {
   startSpeaking: "መናገር ይጀምሩ",
   
   // Browser TTS note
-  browserBasedTTS: "ማሳሰቢያ፡ ይህ በአሳሽ ላይ የተመሰረተ የጽሁፍ-ወደ-ንግግር ይጠቀማል። ለምርጥ የድምፅ ጥራት ከElevenLabs ጋር፣ የፕሪሚየም ድምፅ ውይይትን ይሞክሩ።"
+  browserBasedTTS: "ማሳሰቢያ፡ ይህ በአሳሽ ላይ የተመሰረተ የጽሁፍ-ወደ-ንግግር ይጠቀማል። ለምርጥ የድምፅ ጥራት ከElevenLabs ጋር፣ የፕሪሚየም ድምፅ ውይይትን ይሞክሩ።",
+  
+  // New translations for voice chat
+  practiceYourSpeaking: "የእኛን የላቀ AI የድምፅ ረዳት በመጠቀም የእንግሊዝኛ ንግግርዎን ይለማመዱ። ውስብስብ ርዕሶችን ይወያዩ፣ የንግግርዎን ያሻሽሉ፣ እንዲሁም ለሁሉም ደረጃዎች ጠቃሚ ግብረመልስ ያግኙ።",
+  aiModelUsing: "የAI ሞዴል: የOpenAI's GPT-4o-mini ይጠቀማል፣ ይህም ከፍተኛ ለሆነ የተፈጥሮ ድምፅ ውይይት እና የድምፅ ግምገማ የተሰለጠነ ነው"
 };
 
 export default practiceTranslations;
