@@ -2,48 +2,42 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
-  practiceWithAI: "Kula Shaqeyso AI",
-  chatWithAI: "La sheekeyso macallinkaaga AI si aad ugu dhaqanto {{language}}! AI-ga ayaa kaa caawin doona saxidda naxwaha, ereyada, wuxuuna ku siin doonaa tilmaamo ku saabsan nidaamka codka iyo dhaqanka {{language}}.",
-  startChatting: "Bilow Sheekada",
-  typeMessageBelow: "Ku qor fariintaada hoosta",
-  sendingMessage: "Fariin dirista...",
-  errorSendingMessage: "Khalad ka dhacay diritaanka fariin",
-  connecting: "Xidhiidhka...",
-  sessionExpired: "Kulankagu waa dhacay. Fadlan mar kale soo gal.",
-  sessionEnded: "Kulankagu waa dhamaaday",
-  sessionEndedDescription: "Kalfadhiyadaada tababbarka bilaashka ah ee maanta waa dhammaadeen",
-  continueWithPremium: "Kula soco Premium",
-  limitExceeded: "Xaddiga waa laga gudbay",
-  cooldownActive: "Qaboojiyaha waa firfircoon yahay",
-  tryAgainSoon: "Fadlan mar kale iskuday dhowaan",
-  preferredLanguage: "Luuqadda La Doorbidayo",
-  practiceLanguage: "Luuqadda Tababbarka",
-  practiceMode: "Qaabka Tababbarka",
-  startNewChat: "Bilow Sheekeysi Cusub",
-  clearChat: "Tirtir Sheekeysiga",
+  practice: "Tababbar",
+  textPractice: "Tababbar Qoraal",
+  chatWithAI: "La sheekeyso AI",
+  chatPlaceholder: "Qor fariintaada si aad ugu tababarto {targetLanguage}...",
+  sendMessage: "Dir Fariinta",
   loading: "Waa soo socotaa...",
-  waitingForResponse: "Waxaa sugayaa jawaabta...",
-  cancel: "Jooji",
-  submit: "Gudbi",
-  close: "Xidh",
-  
-  // New translations from the request
-  startConversationIn: "{{language}} ku bilow wada sheekaysi",
-  startTextChatting: "Bilow wada sheekaysiga macalinkaaga luqadda AI!",
-  noticeTextBasedPractice: "Geli fariin hoos si aad u bilowdo",
-  typeMessage: "Geli fariintaada si aad u tababarto Ingiriisiga…",
-  
-  // Practice guide
-  practiceGuide: "Tilmaamaha Ku Tababarka Ingiriisiga",
-  practiceGuideDescription: "Waxaa halkan ku yaal qaar ka mid ah talooyin ku saabsan sida {{language}} uga heli karto faa'iido ugu badan:",
-  practiceGuideItem1: "Isku day inaad dhisto jumlado buuxa, xitaa haddii ay fudud yihiin.",
-  practiceGuideItem2: "Ha ka welwelin khaladaadka – waa qayb ka mid ah barashada!",
-  practiceGuideItem3: "Weydii faahfaahin haddii aadan fahmin wax.",
-  practiceGuideItem4: "Isku day inaad isticmaasho erayada aad dhowaan baratay.",
-  practiceDisclaimer: "AI-du waxay la jaanqaadaysaa heerkaaga waxayna kaa caawinaysaa inaad si tartiib tartiib ah u horumarto.",
-  
-  // Additional necessary keys
-  send: "Dir"
+  typeHere: "Halkan qor...",
+  tryAgain: "Isku day mar kale",
+  errorGettingResponse: "Khalad ayaa ka dhacay marka jawaabta la helayey",
+  conversationLimitReached: "Waxaad gaartay xadadka wada-hadalka",
+  limitInfo: "Fadlan sugto {minutes} daqiiqo si aad dib ugu bilowdo wada-hadalka.",
+  loginPrompt: "Fadlan gal si aad u hesho waaya-aragnimada buuxda",
+  practiceNow: "Tababbar Hadda",
+  practiceWith: "Ku tababar {language}",
+  intensivePractice: "Tababarka Culus",
+  intensivePracticeDescription: "Xeeldhin luqadeed oo dhamaystiran oo loogu talagalay horumarinta dhaqso badan",
+  intensivePracticeTagline: "Xeeldhin luqadeed oo dhamaystiran",
+  startNow: "Bilow Hadda",
+  welcomeToPractice: "Ku soo dhowow Tababarka",
+  practicePrompt: "Maxaad rabta inaad ku tababarto maanta?",
+  practiceFlow: "Wada-sheekaysigan wuxuu kaa caawin doonaa inaad ku tababarto {language}",
+  suggestedTopicsTitle: "Mawduucyada la soo jeediyay",
+  loadingText: "Waa soo socotaa...",
+  somethingWentWrong: "Wax khaldan ayaa dhacay",
+  suggestedTopics: {
+    introductions: "Hordhaca iyo is-barashada",
+    dailyRoutines: "Jadwalka maalinlaha ah",
+    food: "Cunto iyo maqaayadaha",
+    shopping: "Wax iibsiga",
+    travel: "Safarka",
+    weather: "Cimilada",
+    hobbies: "Hiwaayadaha",
+    family: "Qoyska",
+    work: "Shaqada iyo xirfadaha",
+    education: "Waxbarashada"
+  }
 };
 
 export default practiceTranslations;
