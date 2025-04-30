@@ -16,9 +16,12 @@ const getStringTranslation = (obj: any, key: string): string => {
 export const useClassroomText = () => {
   const { t } = useLocalization();
   
+  // Declare the type of translatedText with all string properties
+  type ClassroomTextType = Record<keyof typeof CLASSROOM_TEXT, string>;
+  
   // Always use English translations for classroom text
   // This ensures UI consistency regardless of selected language
-  const translatedText: typeof CLASSROOM_TEXT = Object.keys(CLASSROOM_TEXT).reduce((acc, key) => {
+  const translatedText = Object.keys(CLASSROOM_TEXT).reduce<ClassroomTextType>((acc, key) => {
     // Get the English translation for this key
     const englishTranslation = translations.english[key.toLowerCase()];
     
@@ -27,8 +30,9 @@ export const useClassroomText = () => {
     acc[key as keyof typeof CLASSROOM_TEXT] = typeof englishTranslation === 'string' 
       ? englishTranslation 
       : getStringTranslation(englishTranslation, key);
+    
     return acc;
-  }, {} as typeof CLASSROOM_TEXT);
+  }, {} as ClassroomTextType);
   
   return translatedText;
 };
