@@ -7,8 +7,7 @@ import type { TTSOptions } from "./types";
 
 /**
  * Plays text using the Supabase Edge Function for TTS.
- * Uses AWS Polly for target language and Azure for native language.
- * Includes caching to reduce API calls and improve performance.
+ * Optimized for performance with efficient caching.
  */
 export const playTTS = async (options: TTSOptions): Promise<void> => {
   const { text, language, isTargetLanguage = false, onStart, onEnd, onError } = options;
@@ -21,9 +20,7 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
   onStart?.();
   
   try {
-    console.log(`TTS request for language: ${language}, text length: ${text.length}, isTargetLanguage: ${isTargetLanguage}`);
-    
-    // Check if we have a cached version
+    // Check if we have a cached version first
     const cacheKey = ttsCache.createKey(text, language, isTargetLanguage);
     const cachedAudio = ttsCache.get(cacheKey);
     
@@ -35,19 +32,14 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
       audioContent = cachedAudio;
       isFromCache = true;
     } else {
-      // Call the Supabase Edge Function for TTS
+      // Call the optimized Supabase Edge Function
       const { data, error } = await supabase.functions.invoke("text-to-speech", {
-        body: { 
-          text,
-          language,
-          isTargetLanguage
-        },
+        body: { text, language, isTargetLanguage },
       });
       
       if (error) {
         console.error("Edge function error:", error.message);
-        // Try using browser TTS as fallback
-        console.log("Attempting to use browser TTS as fallback");
+        // Immediately try browser TTS as fallback
         await useBrowserTTS(text, language, onEnd, onError);
         await trackTTSUsage();
         return;
@@ -58,19 +50,18 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
       }
       
       audioContent = data.audioContent;
-      
-      // Cache the result for future use
       ttsCache.set(cacheKey, audioContent);
     }
     
-    // Convert base64 to binary more efficiently
+    // Create and play audio more efficiently
     const binaryString = atob(audioContent);
-    const bytes = new Uint8Array(binaryString.length);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
     
-    // Process in chunks to prevent memory issues
-    const chunkSize = 2048;
-    for (let i = 0; i < binaryString.length; i += chunkSize) {
-      const end = Math.min(i + chunkSize, binaryString.length);
+    // Process in larger chunks for better performance
+    const chunkSize = 8192;
+    for (let i = 0; i < len; i += chunkSize) {
+      const end = Math.min(i + chunkSize, len);
       for (let j = i; j < end; j++) {
         bytes[j] = binaryString.charCodeAt(j);
       }
@@ -93,18 +84,18 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
       onError?.(new Error("Audio playback failed"));
     };
     
-    console.log("Playing audio...");
     await audio.play();
     
-    // Track ALL TTS usage in the database, whether from cache or not
-    await trackTTSUsage();
+    // Track TTS usage
+    if (!isFromCache) {
+      await trackTTSUsage();
+    }
     
   } catch (err) {
     console.error("Error with TTS:", err);
     
-    // As a last resort, try the browser's native TTS
+    // Try browser's native TTS as fallback
     try {
-      console.log("Attempting browser's native TTS as last resort");
       await useBrowserTTS(text, language, onEnd, onError);
       await trackTTSUsage();
     } catch (browserErr) {
@@ -117,7 +108,7 @@ export const playTTS = async (options: TTSOptions): Promise<void> => {
 
 /**
  * Preloads TTS audio for future usage
- * Useful for preloading common phrases
+ * Optimized for background loading
  */
 export const preloadTTS = async (
   text: string, 
@@ -132,15 +123,16 @@ export const preloadTTS = async (
     // If already cached, don't preload again
     if (ttsCache.get(cacheKey)) return;
     
-    console.log(`Preloading TTS for language: ${language}, text: ${text.substring(0, 30)}..., isTargetLanguage: ${isTargetLanguage}`);
+    // Use low priority fetch for preloading
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout for preloads
     
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
-      body: { 
-        text,
-        language,
-        isTargetLanguage
-      },
+      body: { text, language, isTargetLanguage },
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
     
     if (error || !data || !data.audioContent) {
       console.error("Failed to preload TTS:", error || "No audio content");
@@ -149,12 +141,12 @@ export const preloadTTS = async (
     
     // Cache the result
     ttsCache.set(cacheKey, data.audioContent);
-    console.log("TTS preloaded successfully");
     
-    // Track voice practice usage for preloading as well
+    // Track voice practice usage for preloading
     await trackTTSUsage();
     
   } catch (err) {
+    // Silently fail for preloads - they're not critical
     console.error("Error preloading TTS:", err);
   }
 };

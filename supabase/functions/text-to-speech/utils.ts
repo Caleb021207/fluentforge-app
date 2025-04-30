@@ -1,8 +1,9 @@
 
-import { MAX_CHUNK_SIZE, MAX_RETRIES, RETRY_DELAY } from "./config.ts";
+import { MAX_CHUNK_SIZE } from "./config.ts";
 
 /**
  * Split text into manageable chunks at sentence boundaries
+ * Only used for very long texts
  */
 export function splitTextIntoChunks(text: string, maxChunkSize: number = MAX_CHUNK_SIZE): string[] {
   if (text.length <= maxChunkSize) {
@@ -19,28 +20,26 @@ export function splitTextIntoChunks(text: string, maxChunkSize: number = MAX_CHU
     }
 
     // Find a good splitting point (end of sentence)
-    let splitPoint = remainingText.lastIndexOf('. ', maxChunkSize);
+    let splitPoint = -1;
+    const sentenceEnders = ['. ', '! ', '? '];
     
-    if (splitPoint === -1) {
-      // If no period found, try other sentence endings
-      splitPoint = remainingText.lastIndexOf('! ', maxChunkSize);
+    // Try to find sentence endings first
+    for (const ender of sentenceEnders) {
+      const lastIndex = remainingText.lastIndexOf(ender, maxChunkSize);
+      if (lastIndex > splitPoint) {
+        splitPoint = lastIndex + 2; // Include the punctuation mark and space
+      }
     }
     
+    // If no sentence break found, try commas
     if (splitPoint === -1) {
-      splitPoint = remainingText.lastIndexOf('? ', maxChunkSize);
-    }
-    
-    if (splitPoint === -1) {
-      // If no sentence break found, look for commas
       splitPoint = remainingText.lastIndexOf(', ', maxChunkSize);
+      if (splitPoint !== -1) splitPoint += 2;
     }
 
+    // If still no good breaking point, just split at maxChunkSize
     if (splitPoint === -1) {
-      // If no good breaking point, just split at maxChunkSize
       splitPoint = maxChunkSize;
-    } else {
-      // Include the punctuation mark and space
-      splitPoint += 2;
     }
 
     chunks.push(remainingText.substring(0, splitPoint));
@@ -51,45 +50,25 @@ export function splitTextIntoChunks(text: string, maxChunkSize: number = MAX_CHU
 }
 
 /**
- * Function to retry API calls with exponential backoff
- */
-export async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_RETRIES) {
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      const errorData = await response.text();
-      throw new Error(`API request failed with status ${response.status}: ${errorData}`);
-    }
-    return response;
-  } catch (error) {
-    if (retries > 0 && (error.name === 'NetworkError' || error.name === 'TypeError' || error.message.includes('429') || error.message.includes('500'))) {
-      console.log(`Retrying due to ${error.message}... (${retries} attempts left)`);
-      await new Promise(r => setTimeout(r, RETRY_DELAY));
-      return fetchWithRetry(url, options, retries - 1);
-    }
-    throw error;
-  }
-}
-
-/**
- * Efficiently process a chunk to base64
+ * Efficiently process audio to base64
  */
 export function processAudioToBase64(arrayBuffer: ArrayBuffer): string {
+  // Convert array buffer to base64 in one go
   const bytes = new Uint8Array(arrayBuffer);
-  const CHUNK_SIZE = 4096;
-  let result = '';
+  let binary = '';
+  const chunkSize = 10000; // Process in chunks to avoid call stack issues
   
-  // Process in smaller chunks to prevent memory issues
-  for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
-    const chunk = bytes.slice(i, Math.min(i + CHUNK_SIZE, bytes.length));
-    result += String.fromCharCode.apply(null, [...chunk]);
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.slice(i, Math.min(i + chunkSize, bytes.length));
+    binary += String.fromCharCode.apply(null, [...chunk]);
   }
   
-  return btoa(result);
+  return btoa(binary);
 }
 
 /**
- * Concatenate audio streams (MP3 format)
+ * We don't need this function anymore as we're processing audio in a single step
+ * This significantly reduces processing overhead
  */
 export async function concatenateAudioStreams(audioStreams: ArrayBuffer[]): Promise<ArrayBuffer> {
   if (audioStreams.length === 1) {

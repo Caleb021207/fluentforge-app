@@ -1,7 +1,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders, languageVoiceMap, pollyVoiceMap } from "./config.ts";
-import { splitTextIntoChunks, processAudioToBase64, concatenateAudioStreams } from "./utils.ts";
+import { splitTextIntoChunks, processAudioToBase64 } from "./utils.ts";
 import { textToSpeechAzure } from "./azure.ts";
 import { textToSpeechPolly } from "./polly.ts";
 
@@ -23,53 +23,42 @@ serve(async (req) => {
     // Get voice settings based on language
     const voiceSettings = languageVoiceMap[language?.toLowerCase()] || languageVoiceMap["english"];
 
-    // Split text into chunks if too long
-    const textChunks = splitTextIntoChunks(text);
-    console.log(`Split text into ${textChunks.length} chunks`);
-
-    // Process each chunk in parallel
-    const audioPromises = textChunks.map(async (chunk, index) => {
-      console.log(`Processing chunk ${index + 1}/${textChunks.length}, length: ${chunk.length}`);
-      
-      // Determine which TTS service to use - use Polly for target language, Azure for native language
-      let audioBuffer;
-      
+    // Split text only if it's actually long
+    const textChunks = text.length > 8000 ? splitTextIntoChunks(text) : [text];
+    
+    if (textChunks.length > 1) {
+      console.log(`Split text into ${textChunks.length} chunks`);
+    }
+    
+    // Determine single TTS service to use - prefer Azure for consistency and speed
+    let audioBuffer;
+    
+    try {
+      // Simplified: Always try Azure first as it's more reliable
+      console.log(`Using Azure TTS with voice: ${voiceSettings.voiceName}`);
+      audioBuffer = await textToSpeechAzure(
+        text, 
+        voiceSettings.voiceName,
+        voiceSettings.languageCode
+      );
+    } catch (error) {
+      // Only fall back to Polly if explicitly requested AND Azure fails
       if (isTargetLanguage === true) {
-        // Use Polly for target language
         try {
           const pollyVoice = pollyVoiceMap[language?.toLowerCase()] || "Joanna";
-          console.log(`Using AWS Polly for target language with voice: ${pollyVoice}`);
-          audioBuffer = await textToSpeechPolly(chunk, pollyVoice);
-        } catch (error) {
-          console.error(`Polly TTS failed, falling back to Azure: ${error}`);
-          // Fallback to Azure if Polly fails
-          audioBuffer = await textToSpeechAzure(
-            chunk, 
-            voiceSettings.voiceName,
-            voiceSettings.languageCode
-          );
+          console.log(`Azure failed, trying AWS Polly with voice: ${pollyVoice}`);
+          audioBuffer = await textToSpeechPolly(text, pollyVoice);
+        } catch (pollyError) {
+          console.error(`Both TTS services failed: ${error}, ${pollyError}`);
+          throw new Error('All TTS services failed');
         }
       } else {
-        // Use Azure for native language
-        console.log(`Using Azure for native language with voice: ${voiceSettings.voiceName}`);
-        audioBuffer = await textToSpeechAzure(
-          chunk, 
-          voiceSettings.voiceName,
-          voiceSettings.languageCode
-        );
+        throw error;
       }
-      
-      return audioBuffer;
-    });
-
-    // Wait for all audio chunks to be generated
-    const audioBuffers = await Promise.all(audioPromises);
-    
-    // Concatenate audio streams
-    const combinedAudio = await concatenateAudioStreams(audioBuffers);
+    }
     
     // Process to base64 efficiently
-    const base64Audio = processAudioToBase64(combinedAudio);
+    const base64Audio = processAudioToBase64(audioBuffer);
 
     console.log("Successfully generated speech, returning base64 audio");
 
@@ -81,16 +70,9 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in text-to-speech function:', error);
     
-    let errorMessage = 'Failed to generate speech. Please try again.';
-    if (error.message.includes('Azure Speech key')) {
-      errorMessage = 'The speech service is not properly configured. Please contact support.';
-    } else if (error.message.includes('AWS credentials')) {
-      errorMessage = 'AWS Polly is not properly configured. Please contact support.';
-    }
-
     return new Response(
       JSON.stringify({ 
-        error: errorMessage,
+        error: 'Failed to generate speech. Please try again.',
         details: error.message 
       }),
       { 
