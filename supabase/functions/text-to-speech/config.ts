@@ -20,7 +20,7 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "urdu": { languageCode: "ur-PK", voiceName: "ur-PK-AsadNeural" },
   "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" },
   "swahili": { languageCode: "sw-KE", voiceName: "sw-KE-RafikiNeural" },
-  // Adding new languages (excluding igbo and haitian)
+  // Adding new languages (removed igbo and haitian)
   "bengali": { languageCode: "bn-BD", voiceName: "bn-BD-PradeepNeural" },
   "somali": { languageCode: "so-SO", voiceName: "so-SO-MuuseNeural" },
   "yoruba": { languageCode: "yo-NG", voiceName: "yo-NG-AbeoNeural" },
@@ -50,7 +50,7 @@ export const pollyVoiceMap: Record<string, string> = {
   "urdu": "Kajal", // Use Hindi voice as fallback
   "pashto": "Kajal", // Use Hindi voice as fallback
   "swahili": "Joanna", // Use English voice as fallback
-  // Adding new languages with fallbacks where needed (excluding igbo and haitian)
+  // Adding new languages with fallbacks where needed (removed igbo and haitian)
   "bengali": "Kajal", // Use Hindi voice as fallback
   "somali": "Joanna", // Use English voice as fallback
   "yoruba": "Joanna", // Use English voice as fallback

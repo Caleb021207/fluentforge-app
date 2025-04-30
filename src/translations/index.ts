@@ -5,9 +5,7 @@ import bengali from "./bengali";
 import english from "./english";
 import farsi from "./farsi";
 import french from "./french";
-import haitian from "./haitian";
 import hindi from "./hindi";
-import igbo from "./igbo";
 import indonesian from "./indonesian";
 import japanese from "./japanese";
 import korean from "./korean";
@@ -52,9 +50,7 @@ const translations: Record<string, TranslationRecord> = {
   somali,
   yoruba,
   amharic,
-  haitian,
   malayalam,
-  igbo,
   polish,
   turkish,
   romanian

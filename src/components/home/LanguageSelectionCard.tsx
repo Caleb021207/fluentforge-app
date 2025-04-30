@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,14 +45,12 @@ const LanguageSelectionCard = ({
     urdu: "🇵🇰 اردو",
     pashto: "🇦🇫 پښتو",
     swahili: "🇰🇪 Kiswahili",
-    // Added new languages
+    // Added new languages (removed haitian and igbo)
     bengali: "🇧🇩 বাংলা",
     somali: "🇸🇴 Soomaali",
     yoruba: "🇳🇬 Yorùbá",
     amharic: "🇪🇹 አማርኛ",
-    haitian: "🇭🇹 Kreyòl Ayisyen",
     malayalam: "🇮🇳 മലയാളം",
-    igbo: "🇳🇬 Igbo",
     polish: "🇵🇱 Polski",
     turkish: "🇹🇷 Türkçe",
     romanian: "🇷🇴 Română"
@@ -79,14 +78,12 @@ const LanguageSelectionCard = ({
     urdu: "🇵🇰 Urdu",
     pashto: "🇦🇫 Pashto",
     swahili: "🇰🇪 Swahili",
-    // Added new languages
+    // Added new languages (removed haitian and igbo)
     bengali: "🇧🇩 Bengali",
     somali: "🇸🇴 Somali",
     yoruba: "🇳🇬 Yoruba",
     amharic: "🇪🇹 Amharic",
-    haitian: "🇭🇹 Haitian Creole",
     malayalam: "🇮🇳 Malayalam",
-    igbo: "🇳🇬 Igbo",
     polish: "🇵🇱 Polish",
     turkish: "🇹🇷 Turkish",
     romanian: "🇷🇴 Romanian"

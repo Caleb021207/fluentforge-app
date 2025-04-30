@@ -25,9 +25,7 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   somali: "Soomaali",
   yoruba: "Yorùbá",
   amharic: "አማርኛ",
-  haitian: "Kreyòl Ayisyen",
   malayalam: "മലയാളം",
-  igbo: "Igbo",
   polish: "Polski",
   turkish: "Türkçe",
   romanian: "Română"

@@ -1,4 +1,5 @@
 
+
 // Language code mappings for speech synthesis
 export const languageCodeMap: Record<string, string> = {
   'english': 'en-US',
@@ -18,7 +19,7 @@ export const languageCodeMap: Record<string, string> = {
   'urdu': 'ur-PK',
   'pashto': 'ps-AF',
   'swahili': 'sw-KE',
-  // Adding new language codes (excluding igbo and haitian)
+  // Adding new language codes (removed igbo and haitian)
   'bengali': 'bn-BD',
   'somali': 'so-SO',
   'yoruba': 'yo-NG',
@@ -32,3 +33,4 @@ export const languageCodeMap: Record<string, string> = {
 // TTS cache constants
 export const TTL_DURATION = 30 * 60 * 1000; // 30 minutes
 export const CACHE_CLEANUP_INTERVAL = 10 * 60 * 1000; // 10 minutes
+

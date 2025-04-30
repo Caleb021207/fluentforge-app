@@ -96,7 +96,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       if (!selectedTranslations) {
         console.error(`No translations for language: ${languageToUse}`);
-        return defaultTranslations?.[key] as string || key;
+        return String(defaultTranslations?.[key]) || key;
       }
       
       // Get translation for selected language or fallback to default
