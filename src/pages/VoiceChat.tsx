@@ -59,6 +59,7 @@ const VoiceChat = () => {
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
+  const { practice: targetLanguage } = getLanguagePair(currentLanguage);
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -72,30 +73,13 @@ const VoiceChat = () => {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognitionAPI();
       
-      // Set language based on current language
-      let recognitionLanguage = 'en-US'; // Default
+      // Get the target language the user is practicing (not their UI language)
+      const { practice } = getLanguagePair(currentLanguage);
       
-      if (currentLanguage === "spanish") {
-        recognitionLanguage = "es-ES";
-      } else if (currentLanguage === "portuguese") {
-        recognitionLanguage = "pt-PT";
-      } else if (currentLanguage === "french") {
-        recognitionLanguage = "fr-FR";
-      } else if (currentLanguage === "mandarin") {
-        recognitionLanguage = "zh-CN";
-      } else if (currentLanguage === "russian") {
-        recognitionLanguage = "ru-RU";
-      } else if (currentLanguage === "japanese") {
-        recognitionLanguage = "ja-JP";
-      } else if (currentLanguage === "hindi") {
-        recognitionLanguage = "hi-IN";
-      } else if (currentLanguage === "bengali") {
-        recognitionLanguage = "bn-BD";
-      } else if (currentLanguage === "somali") {
-        recognitionLanguage = "so-SO";
-      } else if (currentLanguage === "igbo") {
-        recognitionLanguage = "ig-NG";
-      }
+      // Use the practice/target language for speech recognition
+      let recognitionLanguage = getSpeechSynthesisLanguageCode(practice.toLowerCase());
+      
+      console.log(`Setting speech recognition to target language: ${practice} (${recognitionLanguage})`);
       
       recognitionRef.current.lang = recognitionLanguage;
       recognitionRef.current.interimResults = true;
@@ -165,7 +149,7 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, toast, t]);
+  }, [currentLanguage, toast, t, isListening]);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
