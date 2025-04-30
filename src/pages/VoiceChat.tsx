@@ -427,14 +427,35 @@ const VoiceChat = () => {
   };
 
   const getAIModelLabelText = () => {
-    if (currentLanguage === "pashto") {
-      return t("aiModelLabel");
-    } else if (currentLanguage === "swahili") {
+    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
+         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
       return t("aiModelLabel");
     } else if (currentLanguage === "farsi") {
       return "مدل هوش مصنوعی:";
-    } else if (currentLanguage === "urdu") {
-      return "اے آئی ماڈل:";
+    } else if (currentLanguage === "arabic") {
+      return "نموذج الذكاء الاصطناعي:";
+    } else if (currentLanguage === "mandarin") {
+      return "AI模型：";
+    } else if (currentLanguage === "vietnamese") {
+      return "Mô hình AI:";
+    } else if (currentLanguage === "french") {
+      return "Modèle d'IA :";
+    } else if (currentLanguage === "japanese") {
+      return "AIモデル：";
+    } else if (currentLanguage === "russian") {
+      return "Модель ИИ:";
+    } else if (currentLanguage === "ukrainian") {
+      return "Модель ШІ:";
+    } else if (currentLanguage === "hindi") {
+      return "AI मॉडल:";
+    } else if (currentLanguage === "indonesian") {
+      return "Model AI:";
+    } else if (currentLanguage === "polish") {
+      return "Model AI:";
+    } else if (currentLanguage === "romanian") {
+      return "Model AI:";
+    } else if (currentLanguage === "turkish") {
+      return "Yapay Zekâ Modeli:";
     } else if (currentLanguage === "bengali") {
       return "AI মডেল:";
     } else if (currentLanguage === "somali") {
@@ -519,19 +540,8 @@ const VoiceChat = () => {
   };
 
   const getPracticeLevelText = () => {
-    if (currentLanguage === "pashto") {
-      return t("practiceLevel");
-    } else if (currentLanguage === "swahili") {
-      return t("practiceLevel");
-    } else if (currentLanguage === "farsi") {
-      return t("practiceLevel");
-    } else if (currentLanguage === "urdu") {
-      return t("practiceLevel");
-    } else if (currentLanguage === "bengali") {
-      return t("practiceLevel");
-    } else if (currentLanguage === "somali") {
-      return t("practiceLevel");
-    } else if (currentLanguage === "igbo") {
+    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
+         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
       return t("practiceLevel");
     } else if (currentLanguage === "mandarin") {
       return "练习水平";
@@ -545,10 +555,8 @@ const VoiceChat = () => {
       return "Use this tool to improve your speaking and listening skills. Here are some tips:";
     } else if (currentLanguage === "spanish") {
       return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
-    } else if (currentLanguage === "somali") {
-      return t("useThisTool") || "Isticmaal qalab kan si aad u horumariso xirfadahaaga ku hadalka iyo dhageysiga. Halkaan waxaa ah qaar ka mid ah talooyin:";
-    } else if (currentLanguage === "igbo") {
-      return t("useThisTool") || "Jiri ngwá ọrụ a mee ka nkà gị n'ikwu na ịnụ okwu ka mma. Lee ụfọdụ atụmatụ:";
+    } else if (["somali", "igbo", "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
+      return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
     }
     
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
