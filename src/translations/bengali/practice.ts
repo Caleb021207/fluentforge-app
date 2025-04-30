@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
   practiceWithAI: "এআই এর সাথে অনুশীলন করুন",
-  chatWithAI: "আপনার {{language}} অনুশীলনের জন্য আমাদের এআই শিক্ষকের সাথে চ্যাট করুন",
+  chatWithAI: "আপনার {{language}} অনুশীলনের জন্য আমাদের এআই শিক্ষকের সাথে চ্যাট করুন! এআই আপনার ব্যাকরণ, শব্দভাণ্ডার সংশোধন করতে এবং {{language}} উচ্চারণ ও সংস্কৃতি সম্পর্কে নির্দেশনা দিতে সাহায্য করবে।",
   startChatting: "চ্যাট শুরু করুন",
   typeMessageBelow: "নিচে আপনার বার্তা লিখুন",
   sendingMessage: "বার্তা পাঠানো হচ্ছে...",

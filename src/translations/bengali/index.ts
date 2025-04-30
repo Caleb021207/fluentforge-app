@@ -1,13 +1,20 @@
 
 import { TranslationRecord } from "../types";
-import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
+import premiumVoiceTranslations from "./premium-voice";
+import generalTranslations from "./general";
+import languageSelectionTranslations from "./language-selection";
+import languagesTranslations from "./languages";
 import classroomTranslations from "./classroom";
 
-// Combine available translation categories
 const bengaliTranslations: TranslationRecord = {
-  ...languageSelectionTranslations,
   ...practiceTranslations,
+  ...voiceChatTranslations,
+  ...premiumVoiceTranslations,
+  ...generalTranslations,
+  ...languageSelectionTranslations,
+  ...languagesTranslations,
   ...classroomTranslations
 };
 
