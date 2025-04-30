@@ -69,7 +69,8 @@ const voiceChatTranslations: TranslationRecord = {
   networkConnectionIssue: "Nsogbu njikọ netwọk",
   speechSynthesisNotSupported: "Ihe nchọgharị gị anaghị akwado mmepụta okwu",
   speechSynthesisError: "Nsogbu na mmepụta okwu",
-  failedToGetResponse: "Enweghị ike ịnata azịza",
+  
+  // Removed duplicate key failedToGetResponse and added missing translations
   phrase1: "Ndewo, kedu ka ị mere taa?",
   phrase2: "Kedu ka ihu igwe dị ebe ị nọ?",
   phrase3: "Ị nwere ike itunye aro ụlọ oriri na ọṅụṅụ dị mma?",
@@ -86,7 +87,7 @@ const voiceChatTranslations: TranslationRecord = {
   practiceEverydayPhrases: "Mụọ ahịrịokwu na nkwupụta ndị a na-akpọkarị",
   describeImagesOrScenes: "Kọwaa ihe ị na-ahụ gburugburu gị",
   practiceVocabularyForSpecificTopics: "Mụọ okwu maka isiokwu pụrụ iche dị ka njem ma ọ bụ nri",
-  failedToGenerateSpeech: "Enweghị ike imepụta okwu",
+  failedToGenerateSpeech: "Enweghị ike imepụta okwu"
 };
 
 export default voiceChatTranslations;

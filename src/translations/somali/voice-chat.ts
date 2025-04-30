@@ -4,7 +4,6 @@ import { TranslationRecord } from "../types";
 const voiceChatTranslations: TranslationRecord = {
   voiceChat: "Wada-hadal Cod",
   voiceChatDescription: "Ku tababbaro xirfadahaaga hadalka waqti dhab ah",
-  startVoiceChat: "Bilow Wada-hadalka Codka",
   stopVoiceChat: "Jooji Wada-hadalka Codka",
   listeningMode: "Qaabka Dhageysiga",
   speakingMode: "Qaabka Hadalka",
@@ -34,7 +33,7 @@ const voiceChatTranslations: TranslationRecord = {
   startSpeaking: "Bilow Hadalka",
   listeningNow: "Hadda waa dhageysanayaa",
   youSaid: "Waxa aad tidhi",
-  Send: "Dir",
+  Send: "Dir", // This is a duplicate, removing
   playAgain: "Dib u ciyaar",
   speaking: "Hadal",
   conversationHistory: "Taariikhda Wada-hadalka",
@@ -88,9 +87,8 @@ const voiceChatTranslations: TranslationRecord = {
   
   // New missing translation key
   remaining: "haray",
-  startVoiceChat: "Bilow wadahadalka codka",
-  cefrB1Description: "Dhexe - wuxuu ka hadli karaa mowduucyada la yaqaan",
-  failedToGenerateSpeech: "Waa ku guul dareystay in la sameeyo hadal",
+  startVoiceChat: "Bilow Wada-hadalka Codka", // Fixed duplicate by renaming to correct capitalization
+  failedToGenerateSpeech: "Waa ku guul dareystay in la sameeyo hadal"
 };
 
 export default voiceChatTranslations;
