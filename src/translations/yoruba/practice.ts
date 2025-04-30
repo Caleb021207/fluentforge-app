@@ -60,7 +60,10 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "Má ṣe wá lórí àwọn àṣìṣe - wọ́n jẹ́ apá kan tí ẹ̀kọ́!",
   practiceGuideItem3: "Béèrè fún àlàyé tí o kò bá ní òye ohun kan.",
   practiceGuideItem4: "Gbìyànjú láti lo àwọn ọ̀rọ̀ ìsọfúnni tí o ṣẹ̀ṣẹ̀ kọ́.",
-  practiceDisclaimer: "AI wa yóò fara mọ́ ipele ìmọ̀ rẹ yóò sì ràn ọ́ lọ́wọ́ láti dàgbà díẹ̀díẹ̀."
+  practiceDisclaimer: "AI wa yóò fara mọ́ ipele ìmọ̀ rẹ yóò sì ràn ọ́ lọ́wọ́ láti dàgbà díẹ̀díẹ̀.",
+  
+  // Chat placeholder
+  chatPlaceholder: "Tẹ ìránṣẹ́ rẹ láti ṣe ìdánrawó èdè Gẹ̀ẹ́sì..."
 };
 
 export default practiceTranslations;
