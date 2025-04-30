@@ -72,7 +72,7 @@ export const playTTS = async ({
 
     // Play the audio
     return playAudioFromBase64(data.audioContent, onStart, onEnd, onError);
-  } catch (err) {
+  } catch (err: any) {
     console.error("TTS error:", err);
     onError?.(err?.message || "Failed to generate speech");
   }
@@ -148,7 +148,7 @@ const playAudioFromBase64 = (base64Audio: string, onStart?: () => void, onEnd?: 
     }
 
     return audio;
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error creating audio element:", err);
     onError?.("Error creating audio element: " + err.message);
     return null;

@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 /**
  * Track TTS usage in the database
  */
-export async function trackTTSUsage(): Promise<void> {
+export async function trackTTSUsage(language: string, textLength: number): Promise<void> {
   try {
-    console.log("Starting voice practice tracking...");
+    console.log(`Tracking TTS usage for ${language} with text length ${textLength}...`);
     
     const { data: userResponse, error: userError } = await supabase.auth.getUser();
     if (userError) {
@@ -25,7 +25,9 @@ export async function trackTTSUsage(): Promise<void> {
     // Log the API call to the tracking table with voice_practice as the call type
     const { data, error } = await supabase.from('api_calls_tracking').insert({
       user_id: user.id,
-      call_type: 'voice_practice'
+      call_type: 'voice_practice',
+      language: language,
+      text_length: textLength
     });
     
     if (error) {

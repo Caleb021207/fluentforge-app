@@ -30,7 +30,7 @@ export const useTTS = ({ text, language, isTargetLanguage }: UseTTSOptions) => {
           setIsLoading(false);
         }
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error playing ${isTargetLanguage ? 'target' : 'native'} audio:`, error);
       setIsPlaying(false);
       setIsLoading(false);

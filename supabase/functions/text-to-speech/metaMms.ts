@@ -5,21 +5,20 @@ import { corsHeaders } from "./config.ts";
 export async function textToSpeechMetaMms(text: string, languageCode: string): Promise<Uint8Array> {
   console.log(`Using Meta MMS TTS with language code: ${languageCode}`);
   
+  // Get Meta MMS server URL from environment variable, with a fallback
+  const MMS_SERVER_URL = Deno.env.get('META_MMS_SERVER_URL') || 'http://localhost:8080/tts';
+  
   // Prepare payload for Meta MMS API
   const payload = {
     text: text,
     language: languageCode,
-    // Add any other parameters required by the Meta MMS model
+    voice_id: "v2/en", // Default voice, adjust based on your Meta MMS setup
+    model_id: "mms" // Default model, adjust based on your Meta MMS setup
   };
 
   try {
-    // Here you would typically make an API call to a service hosting the Meta MMS model
-    // Since the model is downloaded locally, we would need to create an endpoint that exposes 
-    // the model through a REST API or use a local server
-    
-    // Placeholder for actual API call - replace with your actual implementation
-    // This could be a call to a local server running the Meta MMS model
-    const response = await fetch("http://your-local-meta-mms-server/tts", {
+    // Call the Meta MMS server (update the URL to match your deployment)
+    const response = await fetch(MMS_SERVER_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

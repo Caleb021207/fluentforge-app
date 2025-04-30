@@ -35,6 +35,22 @@ class TTSCache {
   }
 
   /**
+   * Check if the key exists in the cache
+   */
+  has(key: string): boolean {
+    const entry = this.cache.get(key);
+    if (!entry) return false;
+    
+    // Check if the entry has expired
+    if (Date.now() - entry.timestamp > TTL_DURATION) {
+      this.cache.delete(key);
+      return false;
+    }
+    
+    return true;
+  }
+
+  /**
    * Store audio content in the cache
    */
   set(key: string, audioContent: string): void {

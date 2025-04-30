@@ -13,13 +13,13 @@ serve(async (req) => {
   }
 
   try {
-    const { text, language, isTargetLanguage } = await req.json();
+    const { text, language, isTargetLanguage, useMetaMms } = await req.json();
     
     if (!text) {
       throw new Error('Text is required');
     }
 
-    console.log(`TTS request for language: ${language}, text length: ${text.length}, isTargetLanguage: ${isTargetLanguage}`);
+    console.log(`TTS request for language: ${language}, text length: ${text.length}, isTargetLanguage: ${isTargetLanguage}, useMetaMms: ${useMetaMms}`);
 
     // Get voice settings based on language
     const voiceSettings = languageVoiceMap[language?.toLowerCase()] || languageVoiceMap["english"];
@@ -31,7 +31,7 @@ serve(async (req) => {
       console.log(`Split text into ${textChunks.length} chunks`);
     }
     
-    // Determine TTS service to use based on language support
+    // Determine TTS service to use based on language support and explicit flag
     let audioBuffer;
     const languageLower = language?.toLowerCase();
     
@@ -46,11 +46,12 @@ serve(async (req) => {
     } catch (azureError) {
       console.error('Azure TTS failed:', azureError);
       
-      // Check if Meta MMS supports this language
-      if (metaMmsLanguageMap[languageLower]) {
+      // Check if Meta MMS supports this language and if it was explicitly requested
+      if (metaMmsLanguageMap[languageLower] || useMetaMms === true) {
         try {
-          console.log(`Azure failed, trying Meta MMS with language code: ${metaMmsLanguageMap[languageLower]}`);
-          audioBuffer = await textToSpeechMetaMms(text, metaMmsLanguageMap[languageLower]);
+          const metaMmsLangCode = metaMmsLanguageMap[languageLower] || "eng"; // fallback to English
+          console.log(`Azure failed, trying Meta MMS with language code: ${metaMmsLangCode}`);
+          audioBuffer = await textToSpeechMetaMms(text, metaMmsLangCode);
         } catch (metaError) {
           console.error('Meta MMS failed:', metaError);
           
