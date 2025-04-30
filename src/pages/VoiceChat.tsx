@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,8 @@ import indonesianTranslations from "@/translations/indonesian";
 import polishTranslations from "@/translations/polish";
 import romanianTranslations from "@/translations/romanian";
 import turkishTranslations from "@/translations/turkish";
+import farsiTranslations from "@/translations/farsi";
+import urduTranslations from "@/translations/urdu";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
@@ -360,6 +361,12 @@ const VoiceChat = () => {
     } else if (currentLanguage === "turkish") {
       nativeLanguagePhrases = phraseKeys.map(key => turkishTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "farsi") {
+      nativeLanguagePhrases = phraseKeys.map(key => farsiTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "urdu") {
+      nativeLanguagePhrases = phraseKeys.map(key => urduTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -392,6 +399,10 @@ const VoiceChat = () => {
       return t("aiModelLabel");
     } else if (currentLanguage === "swahili") {
       return t("aiModelLabel");
+    } else if (currentLanguage === "farsi") {
+      return "مدل هوش مصنوعی:";
+    } else if (currentLanguage === "urdu") {
+      return "اے آئی ماڈل:";
     }
     
     switch (currentLanguage) {
@@ -437,6 +448,10 @@ const VoiceChat = () => {
       return t("aiModelInfoText");
     } else if (currentLanguage === "swahili") {
       return t("aiModelInfoText");
+    } else if (currentLanguage === "farsi") {
+      return t("aiModelInfoText");
+    } else if (currentLanguage === "urdu") {
+      return t("aiModelInfoText");
     }
     
     if (currentLanguage === "english") {
@@ -478,6 +493,12 @@ const VoiceChat = () => {
   const getBrowserTTSNote = () => {
     if (currentLanguage === "pashto") {
       return t("browserBasedTTS");
+    } else if (currentLanguage === "swahili") {
+      return t("browserBasedTTS");
+    } else if (currentLanguage === "farsi") {
+      return t("browserBasedTTS");
+    } else if (currentLanguage === "urdu") {
+      return t("browserBasedTTS");
     } else if (currentLanguage === "arabic") {
       return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
     } else if (currentLanguage === "korean") {
@@ -512,11 +533,15 @@ const VoiceChat = () => {
     return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
 
-  // Get the existing getPracticeDescription function but modify it for Turkish
+  // Get the existing getPracticeDescription function but incorporate Farsi and Urdu
   const getPracticeDescription = () => {
     if (currentLanguage === "swahili") {
       return t("practiceDescription");
     } else if (currentLanguage === "pashto") {
+      return t("practiceDescription");
+    } else if (currentLanguage === "farsi") {
+      return t("practiceDescription");
+    } else if (currentLanguage === "urdu") {
       return t("practiceDescription");
     } else if (currentLanguage === "english") {
       return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
@@ -556,6 +581,12 @@ const VoiceChat = () => {
 
   const getPracticeLevelText = () => {
     if (currentLanguage === "pashto") {
+      return t("practiceLevel");
+    } else if (currentLanguage === "swahili") {
+      return t("practiceLevel");
+    } else if (currentLanguage === "farsi") {
+      return t("practiceLevel");
+    } else if (currentLanguage === "urdu") {
       return t("practiceLevel");
     } else if (currentLanguage === "mandarin") {
       return "练习水平";

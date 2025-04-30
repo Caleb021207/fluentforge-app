@@ -18,8 +18,8 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Adding new translations for voice chat page
   unlimitedVoicePractice: "لامحدود آواز کی مشق",
-  practiceEnglishSpeaking: "ہمارے وائس چیٹ کے ساتھ اپنی انگریزی بولنے کی مہارت کی مشق کریں۔ مائیکروفون بٹن پر کلک کریں اور انگریزی میں بات کرنا شروع کریں۔",
-  aiModelInfo: "اے آئی ماڈل: بروزر کے اندر موجود اسپیچ سنتھیسس کے ساتھ OpenAI کا GPT-4o-mini استعمال کر رہا ہے۔",
+  practiceDescription: "ہمارے وائس چیٹ کے ساتھ اپنی انگریزی بولنے کی مہارت کی مشق کریں۔ مائیکروفون بٹن پر کلک کریں اور انگریزی میں بات کرنا شروع کریں۔",
+  aiModelInfoText: "اے آئی ماڈل: بروزر کے اندر موجود اسپیچ سنتھیسس کے ساتھ OpenAI کا GPT-4o-mini استعمال کر رہا ہے۔",
   browserBasedTTS: "نوٹ: یہ براؤزر پر مبنی ٹیکسٹ-ٹو-سپیچ کا استعمال کرتا ہے۔ ElevenLabs کے ساتھ پریمیم آواز کی کوالٹی کے لیے، ہمارے پریمیم وائس چیٹ استعمال کریں۔",
   practiceLevel: "مشق کی سطح: B1 - درمیانہ - جانے پہچانے موضوعات پر بات چیت کر سکتے ہیں",
   startSpeaking: "بولنا شروع کریں",
@@ -45,6 +45,8 @@ const voiceChatTranslations: TranslationRecord = {
   networkConnectionIssue: "نیٹ ورک کنیکشن میں مسئلہ",
   stopVoiceChat: "وائس چیٹ بند کریں",
   cefrB1Description: "سادہ زبان میں جانی پہچانی چیزوں پر بات کر سکتے ہیں",
+  conversationHistoryCleared: "گفتگو کی تاریخ صاف کر دی گئی",
+  aiModelInfo: "ہم اوپن اے آئی GPT-4o-mini کا استعمال کرتے ہیں، براؤزر پر مبنی اسپیچ سنتھیسس کے ساتھ۔"
 };
 
 export default voiceChatTranslations;

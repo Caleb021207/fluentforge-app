@@ -73,8 +73,8 @@ const voiceChatTranslations: TranslationRecord = {
   allowMicAccess: "لطفاً به مرورگر خود اجازه دسترسی به میکروفون را بدهید",
   
   // Adding missing translations for the unlimited voice practice page
-  practiceWithEnglish: "تمرین مهارت‌های گفتاری انگلیسی خود با چت صوتی ما. روی دکمه میکروفون کلیک کنید و به انگلیسی صحبت کنید.",
-  usingOpenAI: "استفاده از GPT-4o-mini OpenAI با سیستم تولید گفتار داخلی مرورگر.",
+  practiceDescription: "مهارت‌های انگلیسی صحبت کردن خود را با چت صوتی ما تمرین کنید. روی دکمه میکروفن کلیک کنید و به انگلیسی صحبت کنید.",
+  aiModelInfoText: "استفاده از GPT-4o-mini OpenAI با سیستم تولید گفتار داخلی مرورگر.",
   browserBasedTTS: "توجه: این از سیستم تبدیل متن به گفتار مبتنی بر مرورگر استفاده می‌کند. برای کیفیت صدای برتر با ElevenLabs، چت صوتی ویژه ما را امتحان کنید.",
   practiceLevel: "سطح تمرین: B1 - متوسط - می‌تواند درباره موضوعات آشنا بحث کند",
   cefrB1Description: "سطح متوسط - می‌تواند درباره موضوعات آشنا بحث کند",
