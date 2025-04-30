@@ -11,6 +11,8 @@ import profileTranslations from "./profile";
 import voiceChatTranslations from "./voice-chat";
 import classroomTranslations from "./classroom";
 import premiumVoiceTranslations from "./premium-voice";
+import languageFrameworksTranslations from "./language-frameworks";
+import languagesTranslations from "./languages";
 
 // Combine all Polish translations
 const polishTranslations: TranslationRecord = {
@@ -24,7 +26,9 @@ const polishTranslations: TranslationRecord = {
   ...profileTranslations,
   ...voiceChatTranslations,
   ...classroomTranslations,
-  ...premiumVoiceTranslations
+  ...premiumVoiceTranslations,
+  ...languageFrameworksTranslations,
+  ...languagesTranslations
 };
 
 export default polishTranslations;

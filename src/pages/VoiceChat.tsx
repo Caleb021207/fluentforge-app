@@ -21,6 +21,7 @@ import russianTranslations from "@/translations/russian";
 import ukrainianTranslations from "@/translations/ukrainian";
 import hindiTranslations from "@/translations/hindi";
 import indonesianTranslations from "@/translations/indonesian";
+import polishTranslations from "@/translations/polish";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
@@ -347,6 +348,9 @@ const VoiceChat = () => {
     } else if (currentLanguage === "indonesian") {
       nativeLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "polish") {
+      nativeLanguagePhrases = phraseKeys.map(key => polishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -408,6 +412,8 @@ const VoiceChat = () => {
         return "AI मॉडल:";
       case "indonesian":
         return "Model AI:";
+      case "polish":
+        return "Model Praktyki:";
       default:
         return "AI Model:";
     }
@@ -446,6 +452,8 @@ const VoiceChat = () => {
       return "हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     } else if (currentLanguage === "indonesian") {
       return "Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.";
+    } else if (currentLanguage === "polish") {
+      return "Używamy modelu GPT-4o-mini od OpenAI do rozumienia i generowania języka naturalnego, z wbudowaną w przeglądarkę syntezą mowy dla odpowiedzi głosowych.";
     }
     return "Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
   };
@@ -477,6 +485,8 @@ const VoiceChat = () => {
       return "नोट: यह ब्राउज़र-आधारित टेक्स्ट-टू-स्पीच का उपयोग करता है। ElevenLabs के साथ प्रीमियम आवाज़ की गुणवत्ता के लिए, हमारे प्रीमियम वॉइस चैट का प्रयास करें।";
     } else if (currentLanguage === "indonesian") {
       return "Catatan: Ini menggunakan text-to-speech berbasis browser. Untuk kualitas suara premium dengan ElevenLabs, coba Obrolan Suara Premium kami.";
+    } else if (currentLanguage === "polish") {
+      return "Uwaga: Ta funkcja używa syntezę mowy opartą na przeglądarce. Aby uzyskać lepszą jakość głosu z ElevenLabs, wypróbuj nasz Premium Voice Chat.";
     }
     return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
   };
@@ -513,6 +523,8 @@ const VoiceChat = () => {
       return `हमारे वॉइस चैट के साथ अपने अंग्रेजी बोलने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:`;
     } else if (currentLanguage === "indonesian") {
       return `Latih kemampuan berbicara ${getLanguagePair(currentLanguage).practice} Anda dengan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa ${getLanguagePair(currentLanguage).practice}. AI akan merespons Anda dalam bahasa ${getLanguagePair(currentLanguage).practice} dan membantu Anda berlatih.`;
+    } else if (currentLanguage === "polish") {
+      return `Ćwicz swoje umiejętności mówienia po angielsku z naszym czatem głosowym. Kliknij przycisk mikrofonu i zacznij mówić po angielsku. AI odpowie ci po angielsku i pomoże ci ćwiczyć.`;
     }
     return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
   };
@@ -534,6 +546,8 @@ const VoiceChat = () => {
       return "अभ्यास स्तर";
     } else if (currentLanguage === "indonesian") {
       return "Tingkat Latihan";
+    } else if (currentLanguage === "polish") {
+      return "Poziom praktyki";
     }
     return t("practiceLevel") || "Practice Level";
   };
@@ -561,6 +575,8 @@ const VoiceChat = () => {
       return "अपने बोलने और सुनने के कौशल को सुधारने के लिए इस उपकरण का उपयोग करें। यहां कुछ सुझाव दिए गए हैं:";
     } else if (currentLanguage === "indonesian") {
       return "Gunakan alat ini untuk meningkatkan keterampilan berbicara dan mendengarkan Anda. Berikut beberapa tips:";
+    } else if (currentLanguage === "polish") {
+      return "Użyj tego narzędzia, aby poprawić swoje umiejętności mówienia. Oto kilka wskazówek:";
     }
     return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
   };
