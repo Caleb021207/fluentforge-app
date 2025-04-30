@@ -60,7 +60,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Translation function with enhanced fallback and logging
-  const t = (key: string, replacements?: Record<string, string>) => {
+  const t = (key: string, replacements?: Record<string, string>): string => {
     try {
       // Check if translations exist
       if (!translations) {
@@ -82,22 +82,45 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // Get translation for selected language or fallback to default
-      let text = selectedTranslations[key];
+      let value = selectedTranslations[key];
       
-      // If translation is missing in selected language but exists in default language
-      if (!text && defaultTranslations?.[key]) {
-        // Only log each missing key once per session
-        if (!missingKeys.has(key)) {
-          console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
-          setMissingKeys(prev => new Set([...prev, key]));
+      // Handle nested objects in translations (e.g., suggestedTopics.introductions)
+      if (!value && key.includes('.')) {
+        const [parentKey, childKey] = key.split('.');
+        const parentObject = selectedTranslations[parentKey];
+        if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
+          value = (parentObject as Record<string, string>)[childKey];
         }
-        text = defaultTranslations[key];
       }
       
-      // If translation is missing in both languages, return the key
-      if (!text) {
+      // Fallback to default language if not found
+      if (!value && defaultTranslations) {
+        // Try to get from default translations
+        let defaultValue = defaultTranslations[key];
+        
+        // Handle nested objects in default translations
+        if (!defaultValue && key.includes('.')) {
+          const [parentKey, childKey] = key.split('.');
+          const parentObject = defaultTranslations[parentKey];
+          if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
+            defaultValue = (parentObject as Record<string, string>)[childKey];
+          }
+        }
+        
+        if (defaultValue) {
+          // Only log each missing key once per session
+          if (!missingKeys.has(key)) {
+            console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
+            setMissingKeys(prev => new Set([...prev, key]));
+          }
+          value = defaultValue;
+        }
+      }
+      
+      // If translation is missing in both languages or is an object (not string), return the key
+      if (!value || typeof value !== 'string') {
         if (!missingKeys.has(key)) {
-          console.error(`Translation key not found: "${key}" in any language`);
+          console.error(`Translation key not found or not a string: "${key}" in any language`);
           setMissingKeys(prev => new Set([...prev, key]));
         }
         return key;
@@ -105,18 +128,18 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       // Apply replacements if any
       if (replacements) {
-        Object.entries(replacements).forEach(([placeholder, value]) => {
+        Object.entries(replacements).forEach(([placeholder, replaceValue]) => {
           // Support {{placeholder}} format
           const regex = new RegExp(`{{${placeholder}}}`, 'g');
-          text = text.replace(regex, value);
+          value = (value as string).replace(regex, replaceValue);
           
           // Also support {placeholder} format
           const simpleRegex = new RegExp(`{${placeholder}}`, 'g');
-          text = text.replace(simpleRegex, value);
+          value = (value as string).replace(simpleRegex, replaceValue);
         });
       }
       
-      return text;
+      return value;
     } catch (error) {
       console.error("Translation error:", error);
       return key; // Return the key as fallback

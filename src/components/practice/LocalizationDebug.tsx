@@ -29,6 +29,14 @@ const LocalizationDebug = () => {
   
   const allMissingKeys = getAllMissingKeys();
   
+  // Helper function to safely get string representation of translation
+  const getDisplayValue = (value: any): string => {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object' && value !== null) return '[Object]';
+    if (value === undefined) return 'undefined';
+    return String(value);
+  };
+  
   return (
     <Card className="mt-4 bg-amber-50 border-amber-200">
       <CardHeader className="pb-2">
@@ -92,7 +100,8 @@ const LocalizationDebug = () => {
             <div className="mt-1 max-h-40 overflow-y-auto bg-amber-100/50 p-2 rounded text-xs">
               {allMissingKeys.map(key => (
                 <div key={key} className="mb-1">
-                  <code className="bg-amber-100 px-1 rounded">{key}</code>: "{translations["english"]?.[key] || ""}"
+                  <code className="bg-amber-100 px-1 rounded">{key}</code>: "
+                  {getDisplayValue(translations["english"]?.[key]) || ""}"
                 </div>
               ))}
             </div>
