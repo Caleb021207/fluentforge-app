@@ -43,7 +43,16 @@ const practiceTranslations: TranslationRecord = {
   phrase8: "Báwo ni... ṣe ń jẹ́ ní èdè Gẹ̀ẹ́sì/Yorùbá?",
   
   // CEFR descriptions
-  cefrB1Description: "Lè jíròrò nípa àwọn kókó tó mọ̀ dáadáa"
+  cefrB1Description: "Lè jíròrò nípa àwọn kókó tó mọ̀ dáadáa",
+  
+  // New translations for the remaining English text
+  useThisTool: "Lo ohun èlò yìí láti mu àwọn ìṣeré sísọ àti gbígbọ́ rẹ dára. Àwọn ìmọ̀ràn díẹ̀ nìyí:",
+  aiLabel: "Àwọn àwòrán AI:",
+  aiModelLabel: "Àwọn àwòrán AI:",
+  startChatting: "Ó ti lè bẹ̀rẹ̀ ìbárasọ̀rọ̀!",
+  allowMicAccess: "Jọwọ́ gba ààyè láti lo maikírófoonu rẹ",
+  conversationHistoryCleared: "Ìtàn ìbáraẹnisọ̀rọ̀ ti paarẹ́",
+  back: "Padà"
 };
 
 export default practiceTranslations;

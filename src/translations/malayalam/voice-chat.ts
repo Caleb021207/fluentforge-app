@@ -13,7 +13,11 @@ const voiceChatTranslations: TranslationRecord = {
   speechRecognitionNotSupported: "ഈ ബ്രൗസറിൽ സംസാര തിരിച്ചറിയൽ പിന്തുണയ്ക്കുന്നില്ല",
   microphoneAccessRequired: "മൈക്രോഫോൺ ആക്സസ് ആവശ്യമാണ്",
   failedToGenerateSpeech: "സംസാരം സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു",
-  networkConnectionIssue: "നെറ്റ്‌വർക്ക് കണക്ഷൻ പ്രശ്നം"
+  networkConnectionIssue: "നെറ്റ്‌വർക്ക് കണക്ഷൻ പ്രശ്നം",
+  startChatting: "ഇപ്പോൾ സംസാരിക്കാൻ തുടങ്ങാം!",
+  allowMicAccess: "ദയവായി നിങ്ങളുടെ മൈക്രോഫോൺ ഉപയോഗിക്കാൻ അനുവദിക്കുക",
+  useThisTool: "നിങ്ങളുടെ സംസാരവും കേൾക്കുന്നതിനുള്ള കഴിവുകളും മെച്ചപ്പെടുത്താൻ ഈ ഉപകരണം ഉപയോഗിക്കുക. ചില നുറുങ്ങുകൾ ഇതാ:",
+  aiModelLabel: "AI മോഡൽ:"
 };
 
 export default voiceChatTranslations;

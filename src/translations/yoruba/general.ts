@@ -16,7 +16,13 @@ const generalTranslations: TranslationRecord = {
   speaking: "Ń sọ̀rọ̀",
   send: "Firánṣẹ́",
   listeningNow: "Ń fetísí báyìí",
-  stopListening: "Dúró Fetísílẹ̀"
+  stopListening: "Dúró Fetísílẹ̀",
+  Success: "Àṣeyọrí", // Added capital version for success messages
+  tooLongMessage: "Ọ̀rọ̀ yí gùn jù, jọ̀wọ́ ṣe àkúnpọ̀ rẹ́",
+  emptyMessage: "Ọ̀rọ̀ kò lè jẹ́ òfo",
+  failedToGetTranslation: "Kò lè gba ìyèdè",
+  translationError: "Àṣìṣe Ìyèdè",
+  back: "Padà"
 };
 
 export default generalTranslations;
