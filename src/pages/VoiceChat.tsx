@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ import igboTranslations from "@/translations/igbo";
 import amharicTranslations from "@/translations/amharic";
 import yorubaTranslations from "@/translations/yoruba";
 import malayalamTranslations from "@/translations/malayalam";
+import haitianTranslations from "@/translations/haitian";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 

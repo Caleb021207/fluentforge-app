@@ -28,5 +28,7 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   malayalam: "മലയാളം",
   polish: "Polski",
   turkish: "Türkçe",
-  romanian: "Română"
+  romanian: "Română",
+  haitian: "Kreyòl Ayisyen",
+  igbo: "Igbo"
 };
