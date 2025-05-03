@@ -27,10 +27,10 @@ export const useChatMessages = () => {
       const assistantMessage = await sendMessage(prompt);
       setMessages(prev => [
         ...prev,
-        { role: "user", content: prompt },
+        { role: "user" as const, content: prompt },
         // Fix: Make sure assistantMessage is properly handled as a ChatMessage object
         ...(assistantMessage ? [{ 
-          role: "assistant", 
+          role: "assistant" as const, 
           content: assistantMessage.content, 
           translation: assistantMessage.translation 
         }] : [])
@@ -47,14 +47,14 @@ export const useChatMessages = () => {
     
     const userMessage = input;
     setInput("");
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    setMessages(prev => [...prev, { role: "user" as const, content: userMessage }]);
     
     try {
       const assistantMessage = await sendMessage(userMessage);
       // Fix: Make sure assistantMessage is properly handled as a ChatMessage object
       if (assistantMessage) {
         setMessages(prev => [...prev, { 
-          role: "assistant", 
+          role: "assistant" as const, 
           content: assistantMessage.content,
           translation: assistantMessage.translation 
         }]);
@@ -62,7 +62,7 @@ export const useChatMessages = () => {
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 
-        role: "assistant", 
+        role: "assistant" as const, 
         content: t("errorSendingMessage") 
       }]);
     }
