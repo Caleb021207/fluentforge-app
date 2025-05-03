@@ -1,45 +1,69 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
-import { useSessionManagement } from "./useSessionManagement";
-import { useMessageHandler } from "./useMessageHandler";
+import { useChatApi } from "./useChatApi";
+import { useTranslationHandler } from "./useTranslationHandler";
 
-export type ChatMessage = {
-  role: 'user' | 'assistant';
+// Define the ChatMessage type
+interface ChatMessage {
+  role: "user" | "assistant";
   content: string;
   translation?: string;
-};
+}
 
 export const useChatMessages = () => {
+  const { t, currentLanguage } = useLocalization();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const { currentLanguage, t } = useLocalization();
-  const { messageCount, setMessageCount } = useSessionManagement();
-  const { messages, isLoading, handleMessage } = useMessageHandler(setMessageCount);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await handleMessage(input);
-    setInput("");
-  };
-
-  const sendLanguageLearningPrompt = async () => {
+  const { sendMessage, isLoading } = useChatApi();
+  const { needsTranslation } = useTranslationHandler();
+  
+  // Get placeholder text for the chat input
+  const getPlaceholderText = useCallback(() => {
+    const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
+    return t("chatPlaceholder", { targetLanguage: targetLanguage === "english" ? "anglè" : targetLanguage });
+  }, [t]);
+  
+  // Send a language learning prompt to start the conversation
+  const sendLanguageLearningPrompt = useCallback(async () => {
     if (isLoading) return;
-
-    const { practice, native } = getLanguagePair(currentLanguage);
-    const prompt = t("practicePrompt", {
-      nativeLanguage: native,
-      targetLanguage: practice,
-    });
-
-    await handleMessage(prompt);
-  };
-
-  const getPlaceholderText = () => {
-    const { practice } = getLanguagePair(currentLanguage);
-    return t("chatPlaceholder", { targetLanguage: practice });
-  };
-
+    
+    const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
+    const prompt = t("practicePrompt", { targetLanguage: targetLanguage === "english" ? "anglè" : targetLanguage });
+    
+    try {
+      const assistantMessage = await sendMessage(prompt);
+      setMessages(prev => [
+        ...prev,
+        { role: "user", content: prompt },
+        { role: "assistant", content: assistantMessage }
+      ]);
+    } catch (error) {
+      console.error("Error sending language learning prompt:", error);
+    }
+  }, [isLoading, t, sendMessage]);
+  
+  // Handle chat form submission
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    
+    const userMessage = input;
+    setInput("");
+    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    
+    try {
+      const assistantMessage = await sendMessage(userMessage);
+      setMessages(prev => [...prev, { role: "assistant", content: assistantMessage }]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: t("errorSendingMessage") 
+      }]);
+    }
+  }, [input, isLoading, sendMessage, t]);
+  
   return {
     messages,
     input,
