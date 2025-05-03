@@ -25,8 +25,7 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "malayalam",
   "polish",
   "turkish",
-  "romanian",
-  "tagalog"
+  "romanian"
 ];
 
 /**

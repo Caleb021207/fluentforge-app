@@ -27,7 +27,6 @@ import yoruba from "./yoruba";
 import amharic from "./amharic";
 import igbo from "./igbo";
 import haitian from "./haitian";
-import tagalog from "./tagalog";
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "./constants";
 
 // Map of all translations by language code
@@ -58,8 +57,7 @@ const translations: Record<string, TranslationRecord> = {
   turkish,
   romanian,
   igbo,
-  haitian,
-  tagalog
+  haitian
 };
 
 export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };

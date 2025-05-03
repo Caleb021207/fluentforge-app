@@ -1,31 +1,12 @@
 
-import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
-import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
 import { supabase } from "@/integrations/supabase/client";
+import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
+import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
 
 export const useTranslationHandler = () => {
   const { currentLanguage, t } = useLocalization();
   const { toast } = useToast();
-  
-  // Check if translation is needed based on the user's language settings
-  const needsTranslation = () => {
-    const { native, practice } = getLanguagePair(currentLanguage);
-    
-    // Languages that need translation functionality
-    const needsTranslationLanguages = [
-      "spanish", "portuguese", "korean", "arabic", 
-      "mandarin", "vietnamese", "french", "japanese", 
-      "russian", "ukrainian", "hindi", "indonesian", 
-      "farsi", "urdu", "pashto", "swahili", "bengali", 
-      "somali", "yoruba", "amharic", "haitian", "malayalam", 
-      "igbo", "polish", "turkish", "romanian", "tagalog"
-    ];
-    
-    return needsTranslationLanguages.includes(native) || 
-           needsTranslationLanguages.includes(practice);
-  };
 
   /**
    * Gets translation for a message using the Supabase edge function
@@ -112,11 +93,18 @@ export const useTranslationHandler = () => {
     return translation;
   };
 
+  /**
+   * Check if a translation is needed for the current language
+   */
+  const needsTranslation = (language: string): boolean => {
+    return TRANSLATION_REQUIRED_LANGUAGES.includes(language.toLowerCase());
+  };
+
   return {
-    needsTranslation,
     getTranslation,
     verifyHindiTranslation,
     verifyFarsiTranslation,
-    verifyBengaliTranslation
+    verifyBengaliTranslation,
+    needsTranslation
   };
 };

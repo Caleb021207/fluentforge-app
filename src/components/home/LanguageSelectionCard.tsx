@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getAvailableTargetLanguages, hasStudyMaterials } from "@/utils/languageUtils";
+import { getAvailableTargetLanguages } from "@/utils/languageUtils";
 import LanguageSelectField from "./language/LanguageSelectField";
 import LanguageAvailabilityWarning from "./language/LanguageAvailabilityWarning";
 
@@ -54,8 +54,7 @@ const LanguageSelectionCard = ({
     turkish: "🇹🇷 Türkçe",
     romanian: "🇷🇴 Română",
     haitian: "🇭🇹 Kreyòl Ayisyen",
-    igbo: "🇳🇬 Igbo",
-    tagalog: "🇵🇭 Tagalog"
+    igbo: "🇳🇬 Igbo"
   };
 
   // Available target languages based on native language
@@ -89,8 +88,7 @@ const LanguageSelectionCard = ({
     turkish: "🇹🇷 Turkish",
     romanian: "🇷🇴 Romanian",
     haitian: "🇭🇹 Haitian Creole",
-    igbo: "🇳🇬 Igbo",
-    tagalog: "🇵🇭 Tagalog"
+    igbo: "🇳🇬 Igbo"
   };
   
   // Determine disabled options based on native language
@@ -118,20 +116,24 @@ const LanguageSelectionCard = ({
         <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguagePreferences")}</h2>
         <div className="grid grid-cols-1 gap-4 mb-4">
           <LanguageSelectField
+            id="nativeLanguage"
             value={nativeLanguage}
             onChange={setNativeLanguage}
             label={t("iSpeak")}
             placeholder={t("selectYourNativeLanguage")}
-            excludeLanguages={[]}
+            options={NATIVE_LANGUAGE_NAMES}
           />
 
           {nativeLanguage && (
             <LanguageSelectField
+              id="targetLanguage"
               value={targetLanguage}
               onChange={setTargetLanguage}
               label={t("iWantToLearn")}
               placeholder={t("selectLanguageToLearn")}
-              excludeLanguages={disabledTargetLanguages}
+              options={targetLanguageOptions}
+              disabled={availableTargetLanguages.length === 0}
+              disabledOptions={disabledTargetLanguages}
             />
           )}
         </div>

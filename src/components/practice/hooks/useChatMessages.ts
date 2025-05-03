@@ -3,7 +3,13 @@ import { useState, useCallback } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useChatApi } from "./useChatApi";
 import { useTranslationHandler } from "./useTranslationHandler";
-import { ChatMessage } from "@/types/chat";
+
+// Define the ChatMessage type
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  translation?: string;
+}
 
 export const useChatMessages = () => {
   const { t, currentLanguage } = useLocalization();
@@ -27,13 +33,8 @@ export const useChatMessages = () => {
       const assistantMessage = await sendMessage(prompt);
       setMessages(prev => [
         ...prev,
-        { role: "user" as const, content: prompt },
-        // Make sure assistantMessage is properly handled as a ChatMessage object
-        ...(assistantMessage ? [{ 
-          role: "assistant" as const, 
-          content: assistantMessage.content, 
-          translation: assistantMessage.translation 
-        }] : [])
+        { role: "user", content: prompt },
+        { role: "assistant", content: assistantMessage }
       ]);
     } catch (error) {
       console.error("Error sending language learning prompt:", error);
@@ -47,22 +48,15 @@ export const useChatMessages = () => {
     
     const userMessage = input;
     setInput("");
-    setMessages(prev => [...prev, { role: "user" as const, content: userMessage }]);
+    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     
     try {
       const assistantMessage = await sendMessage(userMessage);
-      // Make sure assistantMessage is properly handled as a ChatMessage object
-      if (assistantMessage) {
-        setMessages(prev => [...prev, { 
-          role: "assistant" as const, 
-          content: assistantMessage.content,
-          translation: assistantMessage.translation 
-        }]);
-      }
+      setMessages(prev => [...prev, { role: "assistant", content: assistantMessage }]);
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 
-        role: "assistant" as const, 
+        role: "assistant", 
         content: t("errorSendingMessage") 
       }]);
     }
