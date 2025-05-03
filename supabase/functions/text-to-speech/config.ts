@@ -68,9 +68,9 @@ export const pollyVoiceMap: Record<string, string> = {
 // Meta MMS language support
 export const metaMmsLanguageMap: Record<string, string> = {
   "haitian": "hat", // Haitian Creole ISO 639-3 code
-  "igbo": "ibo", // Igbo ISO 639-3 code
-  "yoruba": "yor", // Yoruba ISO 639-3 code
-  "somali": "som", // Somali ISO 639-3 code
+  "igbo": "ibo",    // Igbo ISO 639-3 code
+  "yoruba": "yor",  // Yoruba ISO 639-3 code
+  "somali": "som",  // Somali ISO 639-3 code
   "bengali": "ben", // Bengali ISO 639-3 code
   "amharic": "amh", // Amharic ISO 639-3 code
   "malayalam": "mal", // Malayalam ISO 639-3 code
