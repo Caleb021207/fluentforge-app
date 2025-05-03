@@ -52,7 +52,10 @@ export const useChatMessages = () => {
     
     try {
       const assistantMessage = await sendMessage(userMessage);
-      setMessages(prev => [...prev, { role: "assistant", content: assistantMessage }]);
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: assistantMessage 
+      }]);
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 

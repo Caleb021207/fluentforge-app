@@ -33,7 +33,8 @@ export const getLanguageDisplayName = (language: string): string => {
     'igbo': 'Igbo',
     'polish': 'Polish',
     'turkish': 'Turkish',
-    'romanian': 'Romanian'
+    'romanian': 'Romanian',
+    'tagalog': 'Tagalog'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -150,7 +151,8 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'igbo-english',       // Igbo speakers learning English
     'polish-english',     // Polish speakers learning English
     'turkish-english',    // Turkish speakers learning English
-    'romanian-english'    // Romanian speakers learning English
+    'romanian-english',    // Romanian speakers learning English
+    'tagalog-english'     // Tagalog speakers learning English
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
@@ -191,7 +193,8 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'igbo': 'ig-NG',
     'polish': 'pl-PL',
     'turkish': 'tr-TR',
-    'romanian': 'ro-RO'
+    'romanian': 'ro-RO',
+    'tagalog': 'fil-PH'
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';
