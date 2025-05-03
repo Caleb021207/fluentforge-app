@@ -1,201 +1,91 @@
-
-/**
- * Returns display name for a language code
- * @param language The language code
- * @returns The proper display name for the language
- */
-export const getLanguageDisplayName = (language: string): string => {
-  const languageMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Spanish',
-    'portuguese': 'Portuguese',
-    'french': 'French',
-    'japanese': 'Japanese',
-    'korean': 'Korean',
-    'mandarin': 'Mandarin Chinese',
-    'russian': 'Russian',
-    'arabic': 'Arabic',
-    'hindi': 'Hindi',
-    'vietnamese': 'Vietnamese',
-    'ukrainian': 'Ukrainian',
-    'indonesian': 'Indonesian',
-    'farsi': 'Farsi/Dari',
-    'urdu': 'Urdu',
-    'pashto': 'Pashto',
-    'swahili': 'Swahili',
-    // Adding new languages
-    'bengali': 'Bengali',
-    'somali': 'Somali',
-    'yoruba': 'Yoruba',
-    'amharic': 'Amharic',
-    'haitian': 'Haitian Creole',
-    'malayalam': 'Malayalam',
-    'igbo': 'Igbo',
-    'polish': 'Polish',
-    'turkish': 'Turkish',
-    'romanian': 'Romanian',
-    'tagalog': 'Tagalog'
-  };
-  
-  return languageMap[language?.toLowerCase()] || language || 'English';
-};
-
-/**
- * Returns native and practice language pair based on user's selected language
- * @param currentLanguage The user's current UI language
- * @returns Object with native and practice language names
- */
+// Helper function to get language pairs (native language and practice language)
 export const getLanguagePair = (currentLanguage: string) => {
-  let native = "English";
-  let practice = "Spanish";
-  
-  if (currentLanguage !== "english") {
-    native = getLanguageDisplayName(currentLanguage);
-    practice = "English";
+  // Default to English if no language is provided
+  if (!currentLanguage) {
+    return { native: "english", practice: "spanish" };
   }
-  
-  return { native, practice };
-};
 
-/**
- * Returns the native language display name in its native script
- * @param language The language code
- * @returns The native display name for the language
- */
-export const getNativeLanguageDisplayName = (language: string): string => {
-  const nativeNameMap: Record<string, string> = {
-    'english': 'English',
-    'spanish': 'Español',
-    'portuguese': 'Português',
-    'french': 'Français',
-    'japanese': '日本語',
-    'korean': '한국어',
-    'mandarin': '中文',
-    'russian': 'Русский',
-    'arabic': 'العربية',
-    'hindi': 'हिन्दी',
-    'vietnamese': 'Tiếng Việt',
-    'ukrainian': 'Українська',
-    'indonesian': 'Bahasa Indonesia',
-    'farsi': 'فارسی',
-    'urdu': 'اردو',
-    'pashto': 'پښتو',
-    'swahili': 'Kiswahili',
-    // Adding new languages in their native scripts
-    'bengali': 'বাংলা',
-    'somali': 'Soomaali',
-    'yoruba': 'Yorùbá',
-    'amharic': 'አማርኛ',
-    'haitian': 'Kreyòl Ayisyen',
-    'malayalam': 'മലയാളം',
-    'igbo': 'Igbo',
-    'polish': 'Polski',
-    'turkish': 'Türkçe',
-    'romanian': 'Română'
+  // Static mapping for language pairs based on user's interface language
+  const languagePairs: Record<string, { native: string; practice: string }> = {
+    english: { native: "english", practice: "spanish" },
+    spanish: { native: "spanish", practice: "english" },
+    portuguese: { native: "portuguese", practice: "english" },
+    korean: { native: "korean", practice: "english" },
+    arabic: { native: "arabic", practice: "english" },
+    mandarin: { native: "mandarin", practice: "english" },
+    vietnamese: { native: "vietnamese", practice: "english" },
+    french: { native: "french", practice: "english" },
+    japanese: { native: "japanese", practice: "english" },
+    russian: { native: "russian", practice: "english" },
+    ukrainian: { native: "ukrainian", practice: "english" },
+    hindi: { native: "hindi", practice: "english" },
+    indonesian: { native: "indonesian", practice: "english" },
+    farsi: { native: "farsi", practice: "english" },
+    urdu: { native: "urdu", practice: "english" },
+    pashto: { native: "pashto", practice: "english" },
+    swahili: { native: "swahili", practice: "english" },
+    bengali: { native: "bengali", practice: "english" },
+    somali: { native: "somali", practice: "english" },
+    yoruba: { native: "yoruba", practice: "english" },
+    amharic: { native: "amharic", practice: "english" },
+    malayalam: { native: "malayalam", practice: "english" },
+    haitian: { native: "haitian", practice: "english" },
+    igbo: { native: "igbo", practice: "english" },
+    polish: { native: "polish", practice: "english" },
+    turkish: { native: "turkish", practice: "english" },
+    romanian: { native: "romanian", practice: "english" },
+    tagalog: { native: "tagalog", practice: "english" }
   };
-  
-  return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
+
+  // Return the language pair or default if not found
+  return languagePairs[currentLanguage] || { native: "english", practice: "spanish" };
 };
 
-/**
- * Returns available target languages based on native language
- * @param nativeLanguage The user's native language
- * @returns Array of available target language codes
- */
-export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
-  if (nativeLanguage.toLowerCase() !== 'english') {
-    return ['english'];
-  }
-  
-  // Updated to only include Spanish and French for English speakers
-  const commonLanguages = ['spanish', 'french'];
-  
-  return commonLanguages;
-};
-
-/**
- * Checks if study materials are available for a language pair
- * @param nativeLanguage The user's native language
- * @param targetLanguage The language the user wants to learn
- * @returns Boolean indicating if study materials are available
- */
-export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
-  const supportedPairs = [
-    'english-spanish',
-    'english-french',
-    'english-portuguese', // Added Portuguese support for English speakers
-    'spanish-english',
-    'portuguese-english',
-    'french-english',
-    'japanese-english',
-    'korean-english',
-    'mandarin-english',
-    'russian-english',
-    'arabic-english',
-    'hindi-english',      // Adding Hindi
-    'vietnamese-english', // Adding Vietnamese
-    'ukrainian-english',  // Adding Ukrainian
-    'indonesian-english', // Adding Indonesian
-    'farsi-english',      // Adding Farsi/Dari
-    'english-farsi',      // English speakers learning Farsi
-    'urdu-english',       // Urdu speakers learning English
-    'pashto-english',     // Pashto speakers learning English
-    'swahili-english',    // Swahili speakers learning English
-    // Adding new language pairs
-    'bengali-english',    // Bengali speakers learning English
-    'somali-english',     // Somali speakers learning English
-    'yoruba-english',     // Yoruba speakers learning English
-    'amharic-english',    // Amharic speakers learning English
-    'haitian-english',    // Haitian Creole speakers learning English
-    'malayalam-english',  // Malayalam speakers learning English
-    'igbo-english',       // Igbo speakers learning English
-    'polish-english',     // Polish speakers learning English
-    'turkish-english',    // Turkish speakers learning English
-    'romanian-english',    // Romanian speakers learning English
-    'tagalog-english'     // Tagalog speakers learning English
-  ];
-  
-  const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
-  return supportedPairs.includes(pairKey);
-};
-
-/**
- * Returns the language code for a language
- * @param language The language name (english, spanish, etc.)
- * @returns The language code (en-US, es-ES, etc.)
- */
+// Helper to get language code for speech synthesis
 export const getSpeechSynthesisLanguageCode = (language: string): string => {
-  const languageCodeMap: Record<string, string> = {
-    'english': 'en-US',
-    'spanish': 'es-ES',
-    'portuguese': 'pt-BR',
-    'french': 'fr-FR',
-    'japanese': 'ja-JP',
-    'korean': 'ko-KR',
-    'mandarin': 'zh-CN',
-    'russian': 'ru-RU',
-    'arabic': 'ar-SA',
-    'hindi': 'hi-IN',
-    'vietnamese': 'vi-VN',
-    'ukrainian': 'uk-UA',
-    'indonesian': 'id-ID',
-    'farsi': 'fa-IR',
-    'urdu': 'ur-PK',
-    'pashto': 'ps-AF',
-    'swahili': 'sw-KE',
-    // Adding new languages with their language codes
-    'bengali': 'bn-BD',
-    'somali': 'so-SO',
-    'yoruba': 'yo-NG',
-    'amharic': 'am-ET',
-    'haitian': 'ht-HT',
-    'malayalam': 'ml-IN',
-    'igbo': 'ig-NG',
-    'polish': 'pl-PL',
-    'turkish': 'tr-TR',
-    'romanian': 'ro-RO',
-    'tagalog': 'fil-PH'
+  const languageCodes: Record<string, string> = {
+    english: "en-US",
+    spanish: "es-ES",
+    portuguese: "pt-PT",
+    korean: "ko-KR",
+    arabic: "ar-SA",
+    mandarin: "zh-CN",
+    vietnamese: "vi-VN",
+    french: "fr-FR",
+    japanese: "ja-JP",
+    russian: "ru-RU",
+    ukrainian: "uk-UA",
+    hindi: "hi-IN",
+    indonesian: "id-ID",
+    farsi: "fa-IR",
+    urdu: "ur-PK",
+    pashto: "ps",
+    swahili: "sw-KE",
+    bengali: "bn-IN",
+    somali: "so-SO",
+    yoruba: "yo",
+    amharic: "am-ET",
+    malayalam: "ml-IN",
+    haitian: "ht",
+    igbo: "ig-NG",
+    polish: "pl-PL",
+    turkish: "tr-TR",
+    romanian: "ro-RO",
+    tagalog: "fil-PH"
   };
-  
-  return languageCodeMap[language?.toLowerCase()] || 'en-US';
+
+  return languageCodes[language] || "en-US";
+};
+
+// Function to determine if the current environment is the client-side
+export const isClientSide = (): boolean => {
+  return typeof window !== 'undefined';
+};
+
+// Function to get the user's preferred language from localStorage
+export const getPreferredLanguage = (): string => {
+  if (isClientSide()) {
+    return localStorage.getItem('preferredLanguage') || 'english';
+  }
+  return 'english';
 };

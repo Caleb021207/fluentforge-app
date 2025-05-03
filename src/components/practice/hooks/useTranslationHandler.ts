@@ -1,110 +1,29 @@
 
-import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useToast } from "@/hooks/use-toast";
-import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
+import { getLanguagePair } from "@/utils/languageUtils";
 
 export const useTranslationHandler = () => {
-  const { currentLanguage, t } = useLocalization();
-  const { toast } = useToast();
-
-  /**
-   * Gets translation for a message using the Supabase edge function
-   */
-  const getTranslation = async (content: string, targetLanguage: string): Promise<string> => {
-    if (!content || content.trim() === "") {
-      return "";
-    }
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
-        body: { 
-          message: content,
-          userLanguage: targetLanguage,
-          requestType: 'translation'
-        }
-      });
-
-      if (error) {
-        console.error('Translation error:', error);
-        toast({
-          title: t("translationError"),
-          description: t("failedToGetTranslation"),
-          variant: "destructive",
-        });
-        return "";
-      }
-
-      return data?.translation || "";
-    } catch (error) {
-      console.error('Failed to get translation:', error);
-      return "";
-    }
-  };
-
-  /**
-   * Special case for Hindi translations to ensure they use Devanagari script
-   */
-  const verifyHindiTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'hindi') return translation;
-    
-    // Check if the translation contains Devanagari script (used in Hindi)
-    const containsDevanagari = /[\u0900-\u097F]/.test(translation);
-    
-    if (!containsDevanagari && userLanguage === 'hindi') {
-      console.log('Getting proper Hindi translation with Devanagari script');
-      return await getTranslation(originalContent, 'hindi');
-    }
-    
-    return translation;
-  };
+  const { currentLanguage } = useLocalization();
   
-  /**
-   * Special case for Farsi translations to ensure they use proper Farsi script
-   */
-  const verifyFarsiTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'farsi') return translation;
+  // Check if translation is needed based on the user's language settings
+  const needsTranslation = () => {
+    const { native, practice } = getLanguagePair(currentLanguage);
     
-    // Check if the translation contains Arabic script (used in Farsi)
-    const containsFarsi = /[\u0600-\u06FF]/.test(translation);
+    // Languages that need translation functionality
+    const needsTranslationLanguages = [
+      "spanish", "portuguese", "korean", "arabic", 
+      "mandarin", "vietnamese", "french", "japanese", 
+      "russian", "ukrainian", "hindi", "indonesian", 
+      "farsi", "urdu", "pashto", "swahili", "bengali", 
+      "somali", "yoruba", "amharic", "haitian", "malayalam", 
+      "igbo", "polish", "turkish", "romanian", "tagalog"
+    ];
     
-    if (!containsFarsi && userLanguage === 'farsi') {
-      console.log('Getting proper Farsi translation with Persian script');
-      return await getTranslation(originalContent, 'farsi');
-    }
-    
-    return translation;
-  };
-
-  /**
-   * Special case for Bengali translations to ensure they use proper Bengali script
-   */
-  const verifyBengaliTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'bengali') return translation;
-    
-    // Check if the translation contains Bengali script
-    const containsBengali = /[\u0980-\u09FF]/.test(translation);
-    
-    if (!containsBengali && userLanguage === 'bengali') {
-      console.log('Getting proper Bengali translation with Bengali script');
-      return await getTranslation(originalContent, 'bengali');
-    }
-    
-    return translation;
-  };
-
-  /**
-   * Check if a translation is needed for the current language
-   */
-  const needsTranslation = (language: string): boolean => {
-    return TRANSLATION_REQUIRED_LANGUAGES.includes(language.toLowerCase());
+    return needsTranslationLanguages.includes(native) || 
+           needsTranslationLanguages.includes(practice);
   };
 
   return {
-    getTranslation,
-    verifyHindiTranslation,
-    verifyFarsiTranslation,
-    verifyBengaliTranslation,
     needsTranslation
   };
 };
