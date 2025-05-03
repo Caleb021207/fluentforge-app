@@ -3,13 +3,7 @@ import { useState, useCallback } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useChatApi } from "./useChatApi";
 import { useTranslationHandler } from "./useTranslationHandler";
-
-// Define the ChatMessage type
-interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  translation?: string;
-}
+import { ChatMessage } from "@/types/chat";
 
 export const useChatMessages = () => {
   const { t, currentLanguage } = useLocalization();
@@ -34,7 +28,12 @@ export const useChatMessages = () => {
       setMessages(prev => [
         ...prev,
         { role: "user", content: prompt },
-        { role: "assistant", content: assistantMessage }
+        // Fix: Make sure assistantMessage is properly handled as a ChatMessage object
+        ...(assistantMessage ? [{ 
+          role: "assistant", 
+          content: assistantMessage.content, 
+          translation: assistantMessage.translation 
+        }] : [])
       ]);
     } catch (error) {
       console.error("Error sending language learning prompt:", error);
@@ -52,10 +51,14 @@ export const useChatMessages = () => {
     
     try {
       const assistantMessage = await sendMessage(userMessage);
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: assistantMessage 
-      }]);
+      // Fix: Make sure assistantMessage is properly handled as a ChatMessage object
+      if (assistantMessage) {
+        setMessages(prev => [...prev, { 
+          role: "assistant", 
+          content: assistantMessage.content,
+          translation: assistantMessage.translation 
+        }]);
+      }
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 
