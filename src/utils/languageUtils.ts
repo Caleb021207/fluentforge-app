@@ -1,3 +1,4 @@
+
 // Helper function to get language pairs (native language and practice language)
 export const getLanguagePair = (currentLanguage: string) => {
   // Default to English if no language is provided
@@ -88,4 +89,119 @@ export const getPreferredLanguage = (): string => {
     return localStorage.getItem('preferredLanguage') || 'english';
   }
   return 'english';
+};
+
+// Get the display name for a language
+export const getLanguageDisplayName = (language: string): string => {
+  const displayNames: Record<string, string> = {
+    english: "English",
+    spanish: "Spanish",
+    portuguese: "Portuguese",
+    korean: "Korean",
+    arabic: "Arabic",
+    mandarin: "Mandarin Chinese",
+    vietnamese: "Vietnamese",
+    french: "French",
+    japanese: "Japanese",
+    russian: "Russian",
+    ukrainian: "Ukrainian",
+    hindi: "Hindi",
+    indonesian: "Indonesian",
+    farsi: "Farsi",
+    urdu: "Urdu",
+    pashto: "Pashto",
+    swahili: "Swahili",
+    bengali: "Bengali",
+    somali: "Somali",
+    yoruba: "Yoruba",
+    amharic: "Amharic",
+    malayalam: "Malayalam",
+    haitian: "Haitian Creole",
+    igbo: "Igbo",
+    polish: "Polish",
+    turkish: "Turkish",
+    romanian: "Romanian",
+    tagalog: "Tagalog"
+  };
+
+  return displayNames[language.toLowerCase()] || language;
+};
+
+// Get available target languages based on native language
+export const getAvailableTargetLanguages = (nativeLanguage: string): string[] => {
+  if (!nativeLanguage) return [];
+
+  // English speakers can learn many languages
+  if (nativeLanguage.toLowerCase() === 'english') {
+    return [
+      'spanish', 'portuguese', 'french', 'mandarin', 'japanese',
+      'korean', 'arabic', 'vietnamese', 'russian', 'ukrainian',
+      'hindi', 'indonesian', 'farsi', 'urdu', 'pashto',
+      'swahili', 'bengali', 'somali', 'yoruba', 'amharic',
+      'malayalam', 'haitian', 'igbo', 'polish', 'turkish',
+      'romanian', 'tagalog'
+    ];
+  }
+  
+  // Non-English speakers primarily learn English
+  return ['english'];
+};
+
+// Get the native language display name in its native script
+export const getNativeLanguageDisplayName = (language: string): string => {
+  const nativeNames: Record<string, string> = {
+    english: "English",
+    spanish: "Español",
+    portuguese: "Português",
+    korean: "한국어",
+    arabic: "العربية",
+    mandarin: "中文",
+    vietnamese: "Tiếng Việt",
+    french: "Français",
+    japanese: "日本語",
+    russian: "Русский",
+    ukrainian: "Українська",
+    hindi: "हिन्दी",
+    indonesian: "Bahasa Indonesia",
+    farsi: "فارسی",
+    urdu: "اردو",
+    pashto: "پښتو",
+    swahili: "Kiswahili",
+    bengali: "বাংলা",
+    somali: "Soomaali",
+    yoruba: "Yorùbá",
+    amharic: "አማርኛ",
+    malayalam: "മലയാളം",
+    haitian: "Kreyòl Ayisyen",
+    igbo: "Igbo",
+    polish: "Polski",
+    turkish: "Türkçe",
+    romanian: "Română",
+    tagalog: "Tagalog"
+  };
+
+  return nativeNames[language.toLowerCase()] || language;
+};
+
+// Check if study materials are available for a language pair
+export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string): boolean => {
+  // Most comprehensive materials exist for English speakers learning other languages
+  if (nativeLanguage.toLowerCase() === 'english') {
+    return true;
+  }
+  
+  // Materials for speakers of other languages learning English
+  if (targetLanguage.toLowerCase() === 'english') {
+    return true;
+  }
+  
+  // Special cases where non-English to non-English materials exist
+  const specialPairs = [
+    'spanish-french',
+    'spanish-portuguese',
+    'portuguese-spanish'
+  ];
+
+  const pair = `${nativeLanguage.toLowerCase()}-${targetLanguage.toLowerCase()}`;
+  return specialPairs.includes(pair);
 };

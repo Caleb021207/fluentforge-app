@@ -28,7 +28,7 @@ export const useChatMessages = () => {
       setMessages(prev => [
         ...prev,
         { role: "user" as const, content: prompt },
-        // Fix: Make sure assistantMessage is properly handled as a ChatMessage object
+        // Make sure assistantMessage is properly handled as a ChatMessage object
         ...(assistantMessage ? [{ 
           role: "assistant" as const, 
           content: assistantMessage.content, 
@@ -51,7 +51,7 @@ export const useChatMessages = () => {
     
     try {
       const assistantMessage = await sendMessage(userMessage);
-      // Fix: Make sure assistantMessage is properly handled as a ChatMessage object
+      // Make sure assistantMessage is properly handled as a ChatMessage object
       if (assistantMessage) {
         setMessages(prev => [...prev, { 
           role: "assistant" as const, 
