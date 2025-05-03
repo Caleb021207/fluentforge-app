@@ -18,7 +18,6 @@ export const languageCodeMap: Record<string, string> = {
   'urdu': 'ur-PK',
   'pashto': 'ps-AF',
   'swahili': 'sw-KE',
-  // Re-adding languages that were removed
   'haitian': 'ht-HT',
   'igbo': 'ig-NG',
   'bengali': 'bn-BD',

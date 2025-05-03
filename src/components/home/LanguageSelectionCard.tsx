@@ -45,7 +45,6 @@ const LanguageSelectionCard = ({
     urdu: "🇵🇰 اردو",
     pashto: "🇦🇫 پښتو",
     swahili: "🇰🇪 Kiswahili",
-    // Added new languages (removed haitian and igbo)
     bengali: "🇧🇩 বাংলা",
     somali: "🇸🇴 Soomaali",
     yoruba: "🇳🇬 Yorùbá",
@@ -53,7 +52,9 @@ const LanguageSelectionCard = ({
     malayalam: "🇮🇳 മലയാളം",
     polish: "🇵🇱 Polski",
     turkish: "🇹🇷 Türkçe",
-    romanian: "🇷🇴 Română"
+    romanian: "🇷🇴 Română",
+    haitian: "🇭🇹 Kreyòl Ayisyen",
+    igbo: "🇳🇬 Igbo"
   };
 
   // Available target languages based on native language
@@ -78,7 +79,6 @@ const LanguageSelectionCard = ({
     urdu: "🇵🇰 Urdu",
     pashto: "🇦🇫 Pashto",
     swahili: "🇰🇪 Swahili",
-    // Added new languages (removed haitian and igbo)
     bengali: "🇧🇩 Bengali",
     somali: "🇸🇴 Somali",
     yoruba: "🇳🇬 Yoruba",
@@ -86,7 +86,9 @@ const LanguageSelectionCard = ({
     malayalam: "🇮🇳 Malayalam",
     polish: "🇵🇱 Polish",
     turkish: "🇹🇷 Turkish",
-    romanian: "🇷🇴 Romanian"
+    romanian: "🇷🇴 Romanian",
+    haitian: "🇭🇹 Haitian Creole",
+    igbo: "🇳🇬 Igbo"
   };
   
   // Determine disabled options based on native language
