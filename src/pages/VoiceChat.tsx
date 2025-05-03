@@ -12,28 +12,8 @@ import {
   getSpeechSynthesisLanguageCode, 
 } from "@/utils/languageUtils";
 import englishTranslations from "@/translations/english";
-import spanishTranslations from "@/translations/spanish";
-import portugueseTranslations from "@/translations/portuguese";
-import mandarinTranslations from "@/translations/mandarin";
-import vietnameseTranslations from "@/translations/vietnamese";
-import frenchTranslations from "@/translations/french";
-import japaneseTranslations from "@/translations/japanese";
-import russianTranslations from "@/translations/russian";
-import ukrainianTranslations from "@/translations/ukrainian";
-import hindiTranslations from "@/translations/hindi";
-import indonesianTranslations from "@/translations/indonesian";
-import polishTranslations from "@/translations/polish";
-import romanianTranslations from "@/translations/romanian";
-import turkishTranslations from "@/translations/turkish";
-import farsiTranslations from "@/translations/farsi";
-import urduTranslations from "@/translations/urdu";
-import bengaliTranslations from "@/translations/bengali";
-import somaliTranslations from "@/translations/somali";
-import igboTranslations from "@/translations/igbo";
-import amharicTranslations from "@/translations/amharic";
-import yorubaTranslations from "@/translations/yoruba";
-import malayalamTranslations from "@/translations/malayalam";
 import haitianTranslations from "@/translations/haitian";
+import spanishTranslations from "@/translations/spanish";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
 
@@ -273,7 +253,7 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      speakWithBrowserSynthesis(content);
+      speakWithMetaMMS(content);
       setTranscript("");
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -287,9 +267,9 @@ const VoiceChat = () => {
     }
   };
 
-  const speakWithBrowserSynthesis = (text: string) => {
+  const speakWithMetaMMS = (text: string) => {
     if (!text || text.trim() === '') {
-      console.warn('Empty text provided to speakWithBrowserSynthesis');
+      console.warn('Empty text provided to speakWithMetaMMS');
       return;
     }
 
@@ -300,11 +280,16 @@ const VoiceChat = () => {
     
     setIsSpeaking(true);
     
+    // Force the use of Meta MMS for Haitian and Igbo
+    const useMetaMms = true;
+    
     playTTS({
       text: text,
       language: practiceLanguage,
+      isTargetLanguage: true,
+      useMetaMms: useMetaMms,
       onStart: () => {
-        console.log("TTS started");
+        console.log("TTS started with Meta MMS");
         setIsSpeaking(true);
       },
       onEnd: () => {
@@ -325,7 +310,7 @@ const VoiceChat = () => {
 
   const playAgain = () => {
     if (gptResponse) {
-      speakWithBrowserSynthesis(gptResponse);
+      speakWithMetaMMS(gptResponse);
     }
   };
 
@@ -335,75 +320,12 @@ const VoiceChat = () => {
     let nativeLanguagePhrases;
     let targetLanguagePhrases;
     
-    if (currentLanguage === "english") {
-      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-    } else if (currentLanguage === "spanish") {
-      nativeLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "portuguese") {
-      nativeLanguagePhrases = phraseKeys.map(key => portugueseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "mandarin") {
-      nativeLanguagePhrases = phraseKeys.map(key => mandarinTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "vietnamese") {
-      nativeLanguagePhrases = phraseKeys.map(key => vietnameseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "french") {
-      nativeLanguagePhrases = phraseKeys.map(key => frenchTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "japanese") {
-      nativeLanguagePhrases = phraseKeys.map(key => japaneseTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "russian") {
-      nativeLanguagePhrases = phraseKeys.map(key => russianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "ukrainian") {
-      nativeLanguagePhrases = phraseKeys.map(key => ukrainianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "hindi") {
-      nativeLanguagePhrases = phraseKeys.map(key => hindiTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "indonesian") {
-      nativeLanguagePhrases = phraseKeys.map(key => indonesianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "polish") {
-      nativeLanguagePhrases = phraseKeys.map(key => polishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "romanian") {
-      nativeLanguagePhrases = phraseKeys.map(key => romanianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "turkish") {
-      nativeLanguagePhrases = phraseKeys.map(key => turkishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "farsi") {
-      nativeLanguagePhrases = phraseKeys.map(key => farsiTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "urdu") {
-      nativeLanguagePhrases = phraseKeys.map(key => urduTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "bengali") {
-      nativeLanguagePhrases = phraseKeys.map(key => bengaliTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "somali") {
-      nativeLanguagePhrases = phraseKeys.map(key => somaliTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "igbo") {
-      nativeLanguagePhrases = phraseKeys.map(key => igboTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "haitian") {
+    if (currentLanguage === "haitian") {
       nativeLanguagePhrases = phraseKeys.map(key => haitianTranslations[key]);
       targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "amharic") {
-      nativeLanguagePhrases = phraseKeys.map(key => amharicTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "yoruba") {
-      nativeLanguagePhrases = phraseKeys.map(key => yorubaTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "malayalam") {
-      nativeLanguagePhrases = phraseKeys.map(key => malayalamTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+    } else if (currentLanguage === "english") {
+      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
+      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
     } else {
       nativeLanguagePhrases = phraseKeys.map(key => t(key));
       targetLanguagePhrases = phraseKeys.map(key => {
@@ -431,142 +353,6 @@ const VoiceChat = () => {
     });
   };
 
-  const getAIModelLabelText = () => {
-    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
-         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
-      return t("aiModelLabel");
-    } else if (currentLanguage === "farsi") {
-      return "مدل هوش مصنوعی:";
-    } else if (currentLanguage === "arabic") {
-      return "نموذج الذكاء الاصطناعي:";
-    } else if (currentLanguage === "mandarin") {
-      return "AI模型：";
-    } else if (currentLanguage === "vietnamese") {
-      return "Mô hình AI:";
-    } else if (currentLanguage === "french") {
-      return "Modèle d'IA :";
-    } else if (currentLanguage === "japanese") {
-      return "AIモデル：";
-    } else if (currentLanguage === "russian") {
-      return "Модель ИИ:";
-    } else if (currentLanguage === "ukrainian") {
-      return "Модель ШІ:";
-    } else if (currentLanguage === "hindi") {
-      return "AI मॉडल:";
-    } else if (currentLanguage === "indonesian") {
-      return "Model AI:";
-    } else if (currentLanguage === "polish") {
-      return "Model AI:";
-    } else if (currentLanguage === "romanian") {
-      return "Model AI:";
-    } else if (currentLanguage === "turkish") {
-      return "Yapay Zekâ Modeli:";
-    } else if (currentLanguage === "bengali") {
-      return "AI মডেল:";
-    } else if (currentLanguage === "somali") {
-      return "Modelka AI:";
-    } else if (currentLanguage === "igbo") {
-      return "Ụdị AI:";
-    } else if (currentLanguage === "amharic") {
-      return "የAI ሞዴል:";
-    } else if (currentLanguage === "yoruba") {
-      return "Àwọn àwòrán AI:";
-    } else if (currentLanguage === "malayalam") {
-      return "AI മോഡൽ:";
-    }
-    
-    switch (currentLanguage) {
-      case "english":
-        return "AI Model:";
-      case "spanish":
-        return "Modelo de IA:";
-      case "portuguese":
-        return "Modelo de IA:";
-      case "korean":
-        return "AI 모델:";
-      case "arabic":
-        return "نموذج الذكاء الاصطناعي:";
-      case "mandarin":
-        return "AI模型：";
-      case "vietnamese":
-        return "Mô hình AI:";
-      case "french":
-        return "Modèle d'IA :";
-      case "japanese":
-        return "AIモデル：";
-      case "russian":
-        return "Модель ИИ:";
-      case "ukrainian":
-        return "Модель ШІ:";
-      case "hindi":
-        return "AI मॉडल:";
-      case "indonesian":
-        return "Model AI:";
-      case "polish":
-        return "Model AI:";
-      case "romanian":
-        return "Model AI:";
-      case "turkish":
-        return "Yapay Zekâ Modeli:";
-      default:
-        return "AI Model:";
-    }
-  };
-
-  const getAIModelInfoText = () => {
-    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
-         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
-      return t("aiModelUsing");
-    }
-    
-    return "Using OpenAI's GPT-4o-mini with browser's built-in Speech Synthesis.";
-  };
-
-  const getBrowserTTSNote = () => {
-    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
-         "korean", "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
-      return t("browserBasedTTS");
-    } else if (currentLanguage === "arabic") {
-      return "ملاحظة: هذا يستخدم تحويل النص إلى كلام المستند إلى المتصفح. للحصول على جودة صوت متميزة مع ElevenLabs، جرب الدردشة الصوتية المتميزة.";
-    }
-    
-    return t("browserBasedTTS") || "Note: This uses browser-based text-to-speech.";
-  };
-
-  const getPracticeDescription = () => {
-    if (["swahili", "pashto", "farsi", "urdu", "bengali", "somali", "igbo", 
-         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
-      return t("practiceYourSpeaking");
-    } else if (currentLanguage === "english") {
-      return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}. The AI will respond to you in ${getLanguagePair(currentLanguage).practice} and help you practice.`;
-    }
-    
-    return `Practice your ${getLanguagePair(currentLanguage).practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${getLanguagePair(currentLanguage).practice}.`;
-  };
-
-  const getPracticeLevelText = () => {
-    if (["pashto", "swahili", "farsi", "urdu", "bengali", "somali", "igbo", 
-         "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
-      return t("practiceLevel");
-    } else if (currentLanguage === "mandarin") {
-      return "练习水平";
-    } 
-    
-    return t("practiceLevel") || "Practice Level";
-  };
-
-  const getPracticeTipsText = () => {
-    if (currentLanguage === "english") {
-      return "Use this tool to improve your speaking and listening skills. Here are some tips:";
-    } else if (currentLanguage === "spanish") {
-      return "Utiliza esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:";
-    } else if (["somali", "igbo", "amharic", "yoruba", "malayalam"].includes(currentLanguage)) {
-      return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
-    }
-    
-    return t("useThisTool") || "Use this tool to improve your speaking and listening skills. Here are some tips:";
-  };
-
   const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
@@ -577,14 +363,23 @@ const VoiceChat = () => {
           {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {getPracticeDescription()}
+          {currentLanguage === "haitian" 
+            ? "Pratike konpetans anglè w yo avèk tchat vwa nou. Klike sou bouton mikwofòn lan epi kòmanse pale an anglè."
+            : `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}.`
+          }
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{getAIModelLabelText()}</strong> {getAIModelInfoText()}
+          <strong>{currentLanguage === "haitian" ? "Modèl IA:" : "AI Model:"}</strong> {currentLanguage === "haitian" 
+            ? "Itilize GPT-4o-mini OpenAI a avèk Meta MMS pou TTS."
+            : `Using OpenAI's GPT-4o-mini with Meta MMS for TTS.`
+          }
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
           <p className="text-amber-800 text-sm">
-            {getBrowserTTSNote()}
+            {currentLanguage === "haitian"
+              ? "Note: Sa a ap itilize Meta MMS pou sèvis tekst-a-diskou."
+              : t("browserBasedTTS")
+            }
           </p>
         </div>
       </div>
@@ -594,7 +389,7 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{getPracticeLevelText()}: B1</span> - {t("cefrB1Description")}
+                <span className="font-medium">{currentLanguage === "haitian" ? "Nivo Pratik: B1" : `${t("practiceLevel")}: B1`}</span> - {currentLanguage === "haitian" ? "Entèmedyè - kapab diskite sou sijè familye" : t("cefrB1Description")}
               </p>
             </div>
 
@@ -608,12 +403,12 @@ const VoiceChat = () => {
                 {isListening ? (
                   <>
                     <MicOff className="h-5 w-5 mr-2" />
-                    {t("stopListening")}
+                    {currentLanguage === "haitian" ? "Sispann Koute" : t("stopListening")}
                   </>
                 ) : (
                   <>
                     <Mic className="h-5 w-5 mr-2" />
-                    {t("startSpeaking")}
+                    {currentLanguage === "haitian" ? "Kòmanse Pale" : t("startSpeaking")}
                   </>
                 )}
               </Button>
@@ -626,7 +421,7 @@ const VoiceChat = () => {
                   disabled={isLoading || isSpeaking || !transcript.trim()}
                 >
                   <Send className="h-5 w-5 mr-2" />
-                  {t("send")}
+                  {currentLanguage === "haitian" ? "Voye" : t("send")}
                 </Button>
               )}
             </div>
@@ -634,13 +429,13 @@ const VoiceChat = () => {
           
           {isListening && (
             <div className="text-sm text-gray-500 animate-pulse mb-4">
-              {t("listeningNow")}...
+              {currentLanguage === "haitian" ? "Ap koute kounye a..." : `${t("listeningNow")}...`}
             </div>
           )}
 
           {transcript && (
             <div className="mb-6">
-              <h3 className="font-medium mb-2">{t("youSaid")}:</h3>
+              <h3 className="font-medium mb-2">{currentLanguage === "haitian" ? "Ou te di:" : `${t("youSaid")}:`}</h3>
               <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
                 {transcript}
               </div>
@@ -660,7 +455,7 @@ const VoiceChat = () => {
           {gptResponse && (
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="font-medium">{t("aiResponse")}:</h3>
+                <h3 className="font-medium">{currentLanguage === "haitian" ? "Repons IA:" : `${t("aiResponse")}:`}</h3>
                 <Button 
                   onClick={playAgain} 
                   variant="outline" 
@@ -669,18 +464,20 @@ const VoiceChat = () => {
                   disabled={isSpeaking}
                 >
                   <Volume2 className="h-4 w-4" />
-                  {isSpeaking ? t("speaking") : t("playAgain")}
+                  {isSpeaking 
+                    ? (currentLanguage === "haitian" ? "Ap pale" : t("speaking")) 
+                    : (currentLanguage === "haitian" ? "Jwe ankò" : t("playAgain"))}
                 </Button>
               </div>
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {/* Always show translation for Hindi users or if translation exists */}
-                {((translation && translation.trim() !== "") || currentLanguage === "hindi") && (
+                {/* Always show translation for Haitian users or if translation exists */}
+                {((translation && translation.trim() !== "") || currentLanguage === "haitian") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
                     <div className="text-sm text-gray-600">
-                      <strong>{t("translation")}:</strong> {translation || "अनुवाद उपलब्ध नहीं है"}
+                      <strong>{currentLanguage === "haitian" ? "Tradiksyon:" : t("translation")}:</strong> {translation || "Tradiksyon pa disponib"}
                     </div>
                   </>
                 )}
@@ -693,14 +490,14 @@ const VoiceChat = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-medium">
-                {t("conversationHistory")}
+                {currentLanguage === "haitian" ? "Istwa Konvèsasyon" : t("conversationHistory")}
               </h3>
               <Button 
                 onClick={clearConversation}
                 variant="outline" 
                 size="sm"
               >
-                {t("clearConversation")}
+                {currentLanguage === "haitian" ? "Efase Konvèsasyon" : t("clearConversation")}
               </Button>
             </div>
             
@@ -712,7 +509,7 @@ const VoiceChat = () => {
                     role={message.role}
                     content={message.content}
                     translation={message.translation}
-                    onPlayAudio={(text) => speakWithBrowserSynthesis(text)}
+                    onPlayAudio={(text) => speakWithMetaMMS(text)}
                   />
                 ))}
                 <div ref={conversationEndRef} />
@@ -722,9 +519,9 @@ const VoiceChat = () => {
         )}
         
         <Card className="p-6">
-          <h3 className="font-medium mb-4">{t("conversationStarters")}</h3>
+          <h3 className="font-medium mb-4">{currentLanguage === "haitian" ? "Konvèsasyon Demaraj" : t("conversationStarters")}</h3>
           <p className="text-sm text-gray-600 mb-4">
-            {t("tryThesePhrases")}
+            {currentLanguage === "haitian" ? "Eseye fraz sa yo" : t("tryThesePhrases")}
           </p>
           
           <div className="space-y-6">

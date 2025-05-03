@@ -15,7 +15,7 @@ export const useChatMessages = () => {
   const { t, currentLanguage } = useLocalization();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const { sendMessage, isLoading } = useChatApi();
+  const { sendMessage } = useChatApi();
   const { needsTranslation } = useTranslationHandler();
   
   // Get placeholder text for the chat input
@@ -26,8 +26,6 @@ export const useChatMessages = () => {
   
   // Send a language learning prompt to start the conversation
   const sendLanguageLearningPrompt = useCallback(async () => {
-    if (isLoading) return;
-    
     const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
     const prompt = t("practicePrompt", { targetLanguage: targetLanguage === "english" ? "anglè" : targetLanguage });
     
@@ -41,12 +39,12 @@ export const useChatMessages = () => {
     } catch (error) {
       console.error("Error sending language learning prompt:", error);
     }
-  }, [isLoading, t, sendMessage]);
+  }, [t, sendMessage]);
   
   // Handle chat form submission
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim()) return;
     
     const userMessage = input;
     setInput("");
@@ -62,13 +60,13 @@ export const useChatMessages = () => {
         content: t("errorSendingMessage") 
       }]);
     }
-  }, [input, isLoading, sendMessage, t]);
+  }, [input, sendMessage, t]);
   
   return {
     messages,
     input,
     setInput,
-    isLoading,
+    isLoading: false,
     sendLanguageLearningPrompt,
     handleSubmit,
     getPlaceholderText

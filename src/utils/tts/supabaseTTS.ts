@@ -13,6 +13,7 @@ export const playTTS = async ({
   text,
   language,
   isTargetLanguage = false,
+  useMetaMms = false,
   onStart,
   onEnd,
   onError
@@ -34,7 +35,7 @@ export const playTTS = async ({
 
   try {
     // Determine if this language is supported by Meta MMS
-    const usesMetaMms = metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
+    const usesMetaMms = useMetaMms || metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
     
     if (usesMetaMms) {
       console.log(`Using Meta MMS for ${language} text-to-speech`);
@@ -81,7 +82,7 @@ export const playTTS = async ({
 /**
  * Preload TTS audio for future use
  */
-export const preloadTTS = async (text: string, language: string, isTargetLanguage = false) => {
+export const preloadTTS = async (text: string, language: string, isTargetLanguage = false, useMetaMms = false) => {
   if (!text || text.trim() === "") return;
 
   const cacheKey = `${language}:${text}`;
@@ -92,7 +93,7 @@ export const preloadTTS = async (text: string, language: string, isTargetLanguag
 
   try {
     // Determine if this language is supported by Meta MMS
-    const usesMetaMms = metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
+    const usesMetaMms = useMetaMms || metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
 
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: {
