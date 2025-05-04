@@ -1,11 +1,10 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { determineLevel, ensureValidScore } from "@/components/certifications/utils/scoreUtils";
 import { CertificationAttempt } from "@/types/supabase";
 import { Award, MessageSquare } from "lucide-react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface CertificateScoreCardProps {
   type: string;

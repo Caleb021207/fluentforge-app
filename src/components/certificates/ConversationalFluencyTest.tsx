@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare } from "lucide-react";
@@ -6,7 +5,7 @@ import { useConversationTest } from "./hooks/useConversationTest";
 import TestStartPrompt from "./fluency/TestStartPrompt";
 import ActiveTest from "./fluency/ActiveTest";
 import TestResults from "./fluency/TestResults";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface ConversationalFluencyTestProps {
   onTestComplete?: () => void;

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock, BookUser } from "lucide-react";
@@ -8,6 +9,12 @@ import { useEffect } from "react";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const Navigation = () => {
   const location = useLocation();

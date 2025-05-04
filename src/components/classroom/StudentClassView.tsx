@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Button } from "@/components/ui/button";
 import { Loader2, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";

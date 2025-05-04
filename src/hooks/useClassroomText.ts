@@ -1,6 +1,5 @@
-
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import translations from "@/translations";
 
 // Helper function to get string value from potentially nested translation
