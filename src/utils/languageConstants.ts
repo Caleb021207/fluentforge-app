@@ -26,7 +26,7 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "polish",
   "turkish",
   "romanian",
-  "tagalog"
+  "tagalog"  // Added tagalog explicitly to this list
 ];
 
 /**

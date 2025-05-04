@@ -1,6 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useToast } from "@/hooks/use-toast";
 import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
 
@@ -17,6 +17,7 @@ export const useTranslationHandler = () => {
     }
     
     try {
+      console.log(`Getting translation for "${content}" to ${targetLanguage}`);
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: content,
@@ -35,6 +36,7 @@ export const useTranslationHandler = () => {
         return "";
       }
 
+      console.log(`Received translation: "${data?.translation}"`);
       return data?.translation || "";
     } catch (error) {
       console.error('Failed to get translation:', error);
@@ -97,7 +99,15 @@ export const useTranslationHandler = () => {
    * Check if a translation is needed for the current language
    */
   const needsTranslation = (language: string): boolean => {
-    return TRANSLATION_REQUIRED_LANGUAGES.includes(language.toLowerCase());
+    // Make explicit logging for Tagalog
+    if (language.toLowerCase() === "tagalog") {
+      console.log("Tagalog detected, translation should be shown");
+      return true;
+    }
+    
+    const result = TRANSLATION_REQUIRED_LANGUAGES.includes(language.toLowerCase());
+    console.log(`Translation needed for ${language}: ${result}`);
+    return result;
   };
 
   return {

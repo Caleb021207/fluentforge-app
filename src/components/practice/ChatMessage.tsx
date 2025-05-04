@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import EmptyMessageWarning from "./chat-message/EmptyMessageWarning";
 import ChatMessageBubble from "./chat-message/ChatMessageBubble";
@@ -30,9 +30,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const isContentSafe = isSafeContent(content);
   const isTranslationSafe = translation ? isSafeContent(translation) : true;
   
-  // Determine if translation should be shown
+  // Determine if translation should be shown - FIXED: explicitly add "tagalog" to check
   const showTranslation = 
-    TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage) || 
+    TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage.toLowerCase()) || 
+    currentLanguage.toLowerCase() === "tagalog" ||
     (translation && translation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
   

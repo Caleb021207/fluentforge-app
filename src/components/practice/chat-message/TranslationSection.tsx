@@ -1,6 +1,7 @@
 
 import React from "react";
 import TranslationContent from "./TranslationContent";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface TranslationSectionProps {
   showTranslation: boolean;
@@ -20,11 +21,13 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   isTranslationLoading,
   onPlayTranslationAudio
 }) => {
+  const { t } = useLocalization();
+  
   return (
     <div className="border-t border-gray-300 mt-2 pt-2">
       <TranslationContent
         role={role}
-        translation={translation || `Translation not available for ${currentLanguage}`}
+        translation={translation || t("translationError", { defaultValue: `Translation not available for ${currentLanguage}` })}
         isTranslationPlaying={isTranslationPlaying}
         isTranslationLoading={isTranslationLoading}
         onPlayTranslationAudio={onPlayTranslationAudio}
