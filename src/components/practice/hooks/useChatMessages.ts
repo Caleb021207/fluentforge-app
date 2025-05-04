@@ -28,7 +28,7 @@ export const useChatMessages = () => {
       setMessages(prev => [
         ...prev,
         { role: "user", content: prompt },
-        { role: "assistant", content: assistantMessage }
+        { role: "assistant", content: typeof assistantMessage === 'string' ? assistantMessage : assistantMessage.content }
       ]);
     } catch (error) {
       console.error("Error sending language learning prompt:", error);
@@ -46,7 +46,10 @@ export const useChatMessages = () => {
     
     try {
       const assistantMessage = await sendMessage(userMessage);
-      setMessages(prev => [...prev, { role: "assistant", content: assistantMessage }]);
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: typeof assistantMessage === 'string' ? assistantMessage : assistantMessage.content 
+      }]);
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 
