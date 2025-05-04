@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock, BookUser } from "lucide-react";
@@ -6,15 +5,9 @@ import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 const Navigation = () => {
   const location = useLocation();

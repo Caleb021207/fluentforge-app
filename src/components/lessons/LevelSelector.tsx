@@ -1,6 +1,5 @@
-
 import { Button } from "@/components/ui/button";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface LevelSelectorProps {
   currentLevel: string;

@@ -1,9 +1,8 @@
-
 import { LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useNavigate } from "react-router-dom";
 import { getLanguagePair } from "@/utils/languageUtils";
 

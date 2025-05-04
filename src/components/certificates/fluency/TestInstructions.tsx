@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Info } from "lucide-react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const TestInstructions = () => {
   const { currentLanguage, t } = useLocalization();

@@ -1,6 +1,8 @@
-
+import { useState, useEffect, useCallback } from "react";
+import { CacheType } from "@/types/cache";
+import { useLocalization } from "@/hooks/useLocalization";
+import { getLanguagePair } from "@/utils/languageUtils";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
 

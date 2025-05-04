@@ -1,9 +1,8 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, TrendingUp, BarChart } from "lucide-react";
 import { getLevelDescription, CEFR_TO_ACTFL } from "@/components/certifications/utils/scoreUtils";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface LevelRoadmapProps {
   currentLevel: string;

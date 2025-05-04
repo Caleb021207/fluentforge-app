@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +13,7 @@ import { processAttemptsByDate, generateRecommendations, normalizeAttempts } fro
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, WifiOff } from "lucide-react";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface AuthenticatedProgressProps {
   user: User;

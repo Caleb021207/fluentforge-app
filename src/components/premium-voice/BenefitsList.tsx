@@ -1,6 +1,5 @@
-
 import { Volume2, Headphones, Clock } from "lucide-react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const BenefitsList = () => {
   const { t } = useLocalization();

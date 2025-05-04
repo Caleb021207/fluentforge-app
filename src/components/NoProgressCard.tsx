@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const NoProgressCard = () => {
   const { t } = useLocalization();
@@ -17,7 +17,7 @@ const NoProgressCard = () => {
           onClick={() => navigate('/certificates')} 
           className="bg-lingua-primary hover:bg-lingua-primary/90"
         >
-          {t("completeTestsToSeeProgress")}
+          {t("takeTestToSeeProgress")}
         </Button>
       </CardContent>
     </Card>

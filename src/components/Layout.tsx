@@ -1,4 +1,3 @@
-
 import { ReactNode } from "react";
 import Navigation from "./Navigation";
 import { useNavigate, Routes, Route } from "react-router-dom";
@@ -16,7 +15,7 @@ import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import LogoutButton from "./auth/LogoutButton";
 import LanguageAvailabilityBanner from "./LanguageAvailabilityBanner";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface LayoutProps {
   children: ReactNode;

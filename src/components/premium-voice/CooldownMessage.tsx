@@ -1,7 +1,6 @@
-
 import { LockIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface CooldownMessageProps {
   cooldownTimeRemaining: number | null;

@@ -1,8 +1,7 @@
-
 import { Trophy, Star, BookOpen, Target } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface ProgressStats {
   totalLessons: number;
