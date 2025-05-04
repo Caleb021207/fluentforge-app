@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";

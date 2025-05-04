@@ -1,13 +1,11 @@
 
-import { useState, useEffect, useRef } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { formatTime } from "@/utils/timeUtils";
+import { useState, useEffect, useCallback } from "react";
 
-interface UseVoiceChatTimerProps {
+interface VoiceChatTimerProps {
   isConversationActive: () => boolean;
   weeklyTimeRemaining: number | null;
   onTimeExpired: () => void;
-  t: (key: string, options?: any) => string;
+  t: (key: string) => string;
 }
 
 export const useVoiceChatTimer = ({
@@ -15,66 +13,55 @@ export const useVoiceChatTimer = ({
   weeklyTimeRemaining,
   onTimeExpired,
   t
-}: UseVoiceChatTimerProps) => {
+}: VoiceChatTimerProps) => {
   const [timerValue, setTimerValue] = useState<number | null>(null);
-  const { toast } = useToast();
-  const timerIdRef = useRef<number | null>(null);
-  const hasExpiredRef = useRef<boolean>(false);
+  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Clean up the previous timer if exists
-    if (timerIdRef.current !== null) {
-      clearInterval(timerIdRef.current);
-      timerIdRef.current = null;
-    }
-    
-    // Reset expiration flag when starting a new timer
-    hasExpiredRef.current = false;
-    
     if (isConversationActive() && weeklyTimeRemaining !== null) {
-      setTimerValue(weeklyTimeRemaining);
+      // Convert minutes to seconds
+      setTimerValue(weeklyTimeRemaining * 60);
       
-      timerIdRef.current = window.setInterval(() => {
-        setTimerValue(prev => {
-          if (prev === null || prev <= 0) {
-            // Only trigger expiration once
-            if (!hasExpiredRef.current) {
-              hasExpiredRef.current = true;
-              // Clean up timer
-              if (timerIdRef.current !== null) {
-                clearInterval(timerIdRef.current);
-                timerIdRef.current = null;
-              }
-              
-              // Call the expiration callback
-              onTimeExpired();
-              
-              // Show toast notification
-              toast({
-                title: t("voiceChatEnded"),
-                description: t("timeLimit10MinReached") // Updated to 10 minutes
-              });
-            }
+      // Start the timer
+      const interval = setInterval(() => {
+        setTimerValue((prev) => {
+          if (prev === null) return null;
+          if (prev <= 1) {
+            // Time's up
+            clearInterval(interval);
+            onTimeExpired();
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
+      
+      setTimerInterval(interval);
+      
+      return () => {
+        clearInterval(interval);
+      };
     } else {
-      setTimerValue(null);
-    }
-    
-    // Cleanup function
-    return () => {
-      if (timerIdRef.current !== null) {
-        clearInterval(timerIdRef.current);
-        timerIdRef.current = null;
+      // Stop the timer if conversation is not active
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        setTimerInterval(null);
       }
-    };
-  }, [isConversationActive(), weeklyTimeRemaining, onTimeExpired, t, toast]);
+      
+      if (!isConversationActive()) {
+        setTimerValue(null);
+      }
+    }
+  }, [isConversationActive, weeklyTimeRemaining, onTimeExpired]);
+
+  const formatTimer = useCallback((seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }, []);
 
   return {
     timerValue,
-    formatTimer: formatTime
+    formatTimer
   };
 };

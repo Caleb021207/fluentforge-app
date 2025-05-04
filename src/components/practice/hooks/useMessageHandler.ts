@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { useMessageState } from "./useMessageState";
 import { useChatApi } from "./useChatApi";
-import type { MessageCount } from "@/types/chat";
+import type { MessageCount, ChatMessage } from "@/types/chat";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useTranslationHandler } from "./useTranslationHandler";
 
 export const useMessageHandler = (setMessageCount: (count: MessageCount) => void) => {
   const {
@@ -21,6 +22,7 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
   const { sendMessage } = useChatApi();
   const { toast } = useToast();
   const { t } = useLocalization();
+  const { getTranslation } = useTranslationHandler();
 
   // Process the message queue
   const processQueue = async () => {
@@ -36,7 +38,14 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
       const assistantMessage = await sendMessage(nextMessage);
       
       if (assistantMessage) {
-        addAssistantMessage(assistantMessage);
+        const content = typeof assistantMessage === 'string' 
+          ? assistantMessage 
+          : assistantMessage.content;
+          
+        addAssistantMessage({
+          role: "assistant",
+          content: content
+        });
       }
       
       // Remove the processed message from the queue
@@ -74,7 +83,14 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
       const assistantMessage = await sendMessage(input);
       
       if (assistantMessage) {
-        addAssistantMessage(assistantMessage);
+        const content = typeof assistantMessage === 'string' 
+          ? assistantMessage 
+          : assistantMessage.content;
+          
+        addAssistantMessage({
+          role: "assistant",
+          content: content
+        });
       }
     } catch (error) {
       console.error('Failed to handle message:', error);
