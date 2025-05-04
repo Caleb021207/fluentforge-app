@@ -9,7 +9,6 @@ export const useChatMessages = () => {
   const { t, currentLanguage } = useLocalization();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { sendMessage } = useChatApi();
   const { needsTranslation } = useTranslationHandler();
   
@@ -25,7 +24,6 @@ export const useChatMessages = () => {
     const prompt = t("practicePrompt", { targetLanguage: targetLanguage === "english" ? "anglè" : targetLanguage });
     
     try {
-      setIsLoading(true);
       const assistantMessage = await sendMessage(prompt);
       setMessages(prev => [
         ...prev,
@@ -34,8 +32,6 @@ export const useChatMessages = () => {
       ]);
     } catch (error) {
       console.error("Error sending language learning prompt:", error);
-    } finally {
-      setIsLoading(false);
     }
   }, [t, sendMessage]);
   
@@ -49,7 +45,6 @@ export const useChatMessages = () => {
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     
     try {
-      setIsLoading(true);
       const assistantMessage = await sendMessage(userMessage);
       setMessages(prev => [...prev, { 
         role: "assistant", 
@@ -61,8 +56,6 @@ export const useChatMessages = () => {
         role: "assistant", 
         content: t("errorSendingMessage") 
       }]);
-    } finally {
-      setIsLoading(false);
     }
   }, [input, sendMessage, t]);
   
@@ -70,7 +63,7 @@ export const useChatMessages = () => {
     messages,
     input,
     setInput,
-    isLoading,
+    isLoading: false,
     sendLanguageLearningPrompt,
     handleSubmit,
     getPlaceholderText

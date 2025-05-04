@@ -1,120 +1,293 @@
 
-import React, { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useState, useEffect } from "react";
+import { Loader2, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { useToast } from "@/hooks/use-toast";
+import { determineLevel } from "@/components/certifications/utils/scoreUtils";
+import LevelRoadmap from "@/components/profile/LevelRoadmap";
+import LearningGoals from "@/components/profile/LearningGoals";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ensureUserProfile, getUserProfile, updateUserProfile } from "@/utils/profileUtils";
+import { useLocalization } from "@/context/LocalizationContext";
+import { UserProfile } from "@/types/supabase";
 
-const Profile = () => {
+interface ProfileData {
+  currentLevel: string;
+  learningGoal: string;
+  targetLevel: string;
+  targetDate: string;
+}
+
+interface TestScores {
+  reading?: number;
+  writing?: number;
+  speaking?: number;
+  listening?: number;
+}
+
+const DashboardPage = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [authError, setAuthError] = useState(false);
+  const [profileData, setProfileData] = useState<ProfileData>({
+    currentLevel: "",
+    learningGoal: "",
+    targetLevel: "B2",
+    targetDate: "",
+  });
+  const [testScores, setTestScores] = useState<TestScores>({});
+  const [isExampleProfile, setIsExampleProfile] = useState(false);
   const { toast } = useToast();
-  const { t } = useLocalization();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const navigate = useNavigate();
+  const { t, currentLanguage } = useLocalization();
 
-  const handleDeleteAccount = async () => {
-    setIsLoading(true);
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        
+        if (error) {
+          console.error('Auth error:', error);
+          setAuthError(true);
+          setIsLoading(false);
+          return;
+        }
+        
+        setUser(user);
+        
+        if (user?.email === "Example@gmail.com") {
+          setIsExampleProfile(true);
+        }
+        
+        if (user) {
+          try {
+            await ensureUserProfile(user.id);
+            await fetchProfileData(user.id);
+            await fetchLatestLevel(user.id);
+            await fetchTestScores(user.id);
+          } catch (error) {
+            console.error('Error in profile setup:', error);
+            toast({
+              title: "Error loading profile",
+              description: "There was a problem loading your profile data.",
+              variant: "destructive"
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error getting user:', error);
+        setAuthError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getCurrentUser();
+  }, [toast]);
+
+  useEffect(() => {
+    if (profileData.currentLevel) {
+      const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+      const currentLevelIndex = CEFR_LEVELS.indexOf(profileData.currentLevel);
+      const targetLevelIndex = CEFR_LEVELS.indexOf(profileData.targetLevel);
+      
+      if (profileData.currentLevel === 'C2') {
+        setProfileData(prev => ({
+          ...prev,
+          targetLevel: ''
+        }));
+        
+        if (user) {
+          updateTargetLevel(user.id, '');
+        }
+        return;
+      }
+      
+      if (currentLevelIndex !== -1 && 
+          currentLevelIndex < CEFR_LEVELS.length - 1 && 
+          (targetLevelIndex === -1 || targetLevelIndex <= currentLevelIndex)) {
+        
+        const nextLevel = CEFR_LEVELS[currentLevelIndex + 1];
+        console.log(`Updating target level from ${profileData.targetLevel} to ${nextLevel}`);
+        
+        setProfileData(prev => ({
+          ...prev,
+          targetLevel: nextLevel
+        }));
+        
+        if (user) {
+          updateTargetLevel(user.id, nextLevel);
+        }
+      }
+    }
+  }, [profileData.currentLevel, profileData.targetLevel, user]);
+
+  const updateTargetLevel = async (userId: string, targetLevel: string) => {
     try {
-      // Note: deleteUser is not available directly on auth client
-      // We need to call Supabase Edge Function to delete the user
-      const { error } = await supabase.functions.invoke('delete-user', {
-        body: { confirm: true }
-      });
-      
-      if (error) throw new Error(error.message);
-      
-      toast({
-        title: t("accountDeleted"),
-        description: t("accountDeletedSuccess"),
-      });
-      
-      // Sign out after account deletion
-      await supabase.auth.signOut();
-      window.location.href = "/";
-    } catch (error: any) {
-      console.error("Error deleting account:", error);
-      toast({
-        title: t("error"),
-        description: error.message || t("accountDeleteFailed"),
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-      setShowDeleteConfirmation(false);
+      await updateUserProfile(userId, { target_level: targetLevel });
+    } catch (error) {
+      console.error('Error updating target level:', error);
     }
   };
 
-  return (
-    <div className="container max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">{t("yourProfile")}</h1>
-      
-      <div className="space-y-6">
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">{t("accountSettings")}</h2>
+  const fetchProfileData = async (userId: string) => {
+    try {
+      const profile = await getUserProfile(userId) as UserProfile;
+
+      if (profile) {
+        setProfileData(prev => ({
+          ...prev,
+          learningGoal: profile.learning_goal || '',
+          targetLevel: profile.target_level || 'B2',
+          targetDate: profile.target_date || ''
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  const fetchLatestLevel = async (userId: string) => {
+    try {
+      const { data: attempts, error } = await supabase
+        .from('certification_attempts')
+        .select('*')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      if (attempts && attempts.length > 0) {
+        const highestScores: Record<string, any> = {
+          reading: 0,
+          writing: 0,
+          speaking: 0,
+          listening: 0,
+          count: 0
+        };
+
+        attempts.forEach(attempt => {
+          const type = attempt.certification_type;
+          if (!['reading', 'writing', 'speaking', 'listening'].includes(type)) {
+            return;
+          }
           
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-medium mb-2">{t("dangerZone")}</h3>
-              <p className="text-sm text-gray-500 mb-4">
-                {t("deleteAccountWarning")}
-              </p>
-              
-              <Button
-                variant="destructive"
-                onClick={() => setShowDeleteConfirmation(true)}
-              >
-                {t("deleteAccount")}
-              </Button>
-            </div>
-          </div>
-        </Card>
-      </div>
-      
-      <Dialog open={showDeleteConfirmation} onOpenChange={setShowDeleteConfirmation}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("confirmAccountDeletion")}</DialogTitle>
-            <DialogDescription>
-              {t("accountDeletionConfirmationText")}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <DialogFooter>
-            <Button
-              variant="default"
-              onClick={() => setShowDeleteConfirmation(false)}
-            >
-              {t("cancel")}
-            </Button>
+          if (attempt.score > highestScores[type]) {
+            highestScores[type] = attempt.score;
             
-            <Button
-              variant="destructive"
-              onClick={handleDeleteAccount}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("deleting")}
-                </>
-              ) : (
-                t("confirmDelete")
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            if (highestScores[type] === attempt.score && !highestScores[`${type}_counted`]) {
+              highestScores.count++;
+              highestScores[`${type}_counted`] = true;
+            }
+          }
+        });
+
+        if (highestScores.count > 0) {
+          const averageScore = (highestScores.reading + highestScores.writing + highestScores.speaking + highestScores.listening) / highestScores.count;
+          const level = determineLevel(averageScore);
+          console.log(`Determined current level: ${level}`);
+          setProfileData(prev => ({ ...prev, currentLevel: level }));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching level:', error);
+    }
+  };
+
+  const fetchTestScores = async (userId: string) => {
+    try {
+      const { data: attempts, error } = await supabase
+        .from('certification_attempts')
+        .select('*')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      if (attempts && attempts.length > 0) {
+        const highestScores: TestScores = {};
+        
+        attempts.forEach(attempt => {
+          const skill = attempt.certification_type;
+          if (!['reading', 'writing', 'speaking', 'listening'].includes(skill)) {
+            return;
+          }
+          
+          if (highestScores[skill] === undefined || attempt.score > highestScores[skill]) {
+            highestScores[skill] = attempt.score;
+          }
+        });
+        
+        setTestScores(highestScores);
+      }
+    } catch (error) {
+      console.error('Error fetching test scores:', error);
+    }
+  };
+
+  const handleSignIn = () => {
+    navigate("/");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-lingua-primary" />
+      </div>
+    );
+  }
+
+  if (!user || authError) {
+    return (
+      <div className="text-center py-8">
+        <h1 className="text-2xl font-bold mb-4">
+          {currentLanguage === "spanish" ? "Autenticación Requerida" : "Authentication Required"}
+        </h1>
+        <p className="mb-6">
+          {currentLanguage === "spanish" 
+            ? "Por favor inicia sesión para ver tu tablero y seguir tu progreso de aprendizaje de idiomas." 
+            : "Please sign in to view your dashboard and track your language learning progress."}
+        </p>
+        <Button 
+          onClick={handleSignIn} 
+          className="bg-lingua-primary hover:bg-lingua-primary/90"
+        >
+          {t("signIn")}
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-lingua-text mb-4 flex items-center gap-2">
+        <LayoutDashboard className="h-7 w-7" />
+        {currentLanguage === "spanish" ? "Tablero de Aprendizaje de Idiomas" : "Language Learning Dashboard"}
+      </h1>
+
+      <div className="grid gap-6">
+        <LearningGoals
+          user={user}
+          profileData={profileData}
+          setProfileData={setProfileData}
+          avatarUrl={null}
+        />
+
+        <LevelRoadmap
+          currentLevel={profileData.currentLevel}
+          targetLevel={profileData.targetLevel}
+          targetDate={profileData.targetDate}
+          testScores={testScores}
+        />
+      </div>
     </div>
   );
 };
 
-export default Profile;
+export default DashboardPage;

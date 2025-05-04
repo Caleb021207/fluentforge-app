@@ -1,56 +1,69 @@
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { useLocalization } from '@/context/LocalizationContext';
 
-export const useAuthGuard = (redirectTo = "/login") => {
+export const useAuthGuard = (redirectTo = '/auth') => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLocalization();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        setIsLoading(true);
-        const { data } = await supabase.auth.getUser();
-        const authenticated = !!data.user;
+        const { data: { session } } = await supabase.auth.getSession();
         
-        setIsAuthenticated(authenticated);
-        
-        if (!authenticated) {
+        if (!session) {
           toast({
-            title: t("authRequired"),
-            description: t("pleaseLoginToContinue"),
+            title: t("loginRequired"),
+            description: t("pleaseLoginToAccessFeature"),
+            variant: "destructive",
           });
           navigate(redirectTo);
+          return;
         }
+        
+        // Ensure the user has a role (should be handled by DB trigger, but double-check)
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', session.user.id)
+          .maybeSingle();
+        
+        // If no role found, we should ensure one exists (fallback only - the trigger should handle this)
+        if (!roleData) {
+          // Try to assign default student role
+          await supabase.rpc('assign_role', {
+            target_user_id: session.user.id,
+            role_name: 'student'
+          });
+        }
+        
+        setIsAuthenticated(true);
       } catch (error) {
-        console.error("Auth check failed:", error);
-        setIsAuthenticated(false);
+        console.error('Auth check error:', error);
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     checkAuth();
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
-        setIsAuthenticated(true);
-      } else if (event === 'SIGNED_OUT') {
-        setIsAuthenticated(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+      if (!session) {
         navigate(redirectTo);
       }
     });
-    
+
     return () => {
       subscription.unsubscribe();
     };
   }, [navigate, redirectTo, t, toast]);
 
-  return { isAuthenticated, isLoading };
+  return { isLoading, isAuthenticated };
 };

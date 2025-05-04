@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguagePair } from "@/utils/languageUtils";
-import type { ChatMessage } from "@/types/chat";
 
 export type VoiceMessage = {
   role: 'user' | 'assistant';
