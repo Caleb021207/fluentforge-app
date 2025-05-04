@@ -4,7 +4,6 @@ import translations from "@/translations";
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "@/translations/constants";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 import { getTranslation, isClassroomRoute } from "@/utils/localizationUtils";
-import { useLocalization } from "@/hooks/useLocalization"; // Import from the new location
 
 // Create context type
 export type LocalizationContextType = {
@@ -92,6 +91,3 @@ export const LocalizationProvider = ({ children }: LocalizationProviderProps) =>
 
 // Re-export from translations module for easy access
 export { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE };
-
-// Re-export the useLocalization hook so existing components don't break
-export { useLocalization };
