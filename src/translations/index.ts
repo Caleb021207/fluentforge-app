@@ -19,6 +19,7 @@ import russian from "./russian";
 import somali from "./somali";
 import spanish from "./spanish";
 import swahili from "./swahili";
+import tagalog from "./tagalog";
 import turkish from "./turkish";
 import ukrainian from "./ukrainian";
 import urdu from "./urdu";
@@ -57,7 +58,8 @@ const translations: Record<string, TranslationRecord> = {
   turkish,
   romanian,
   igbo,
-  haitian
+  haitian,
+  tagalog
 };
 
 export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };
