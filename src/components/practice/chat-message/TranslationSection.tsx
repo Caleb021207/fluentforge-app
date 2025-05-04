@@ -23,6 +23,8 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
 }) => {
   const { t } = useLocalization();
   
+  console.log(`TranslationSection rendering with translation: "${translation}" for language: ${currentLanguage}`);
+  
   return (
     <div className="border-t border-gray-300 mt-2 pt-2">
       <TranslationContent

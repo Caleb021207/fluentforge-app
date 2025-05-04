@@ -94,6 +94,21 @@ export const useTranslationHandler = () => {
     
     return translation;
   };
+  
+  /**
+   * Special case for Tagalog translations
+   */
+  const verifyTagalogTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'tagalog') return translation;
+    
+    // If no translation provided or translation is empty for Tagalog
+    if (!translation || translation.trim() === "") {
+      console.log('No Tagalog translation provided, requesting one now');
+      return await getTranslation(originalContent, 'tagalog');
+    }
+    
+    return translation;
+  };
 
   /**
    * Check if a translation is needed for the current language
@@ -115,6 +130,7 @@ export const useTranslationHandler = () => {
     verifyHindiTranslation,
     verifyFarsiTranslation,
     verifyBengaliTranslation,
+    verifyTagalogTranslation, // Added new function
     needsTranslation
   };
 };

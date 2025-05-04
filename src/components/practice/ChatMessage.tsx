@@ -30,12 +30,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const isContentSafe = isSafeContent(content);
   const isTranslationSafe = translation ? isSafeContent(translation) : true;
   
-  // Determine if translation should be shown - FIXED: explicitly add "tagalog" to check
+  // Determine if translation should be shown
+  // Explicitly log this check for Tagalog
+  console.log(`Current language is: ${currentLanguage}`);
+  console.log(`Checking if translation should be shown for ${currentLanguage}`);
+  console.log(`TRANSLATION_REQUIRED_LANGUAGES includes ${currentLanguage}: ${TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage.toLowerCase())}`);
+  
   const showTranslation = 
     TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage.toLowerCase()) || 
     currentLanguage.toLowerCase() === "tagalog" ||
     (translation && translation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
+  
+  console.log(`Show translation decision: ${showTranslation}`);
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;
   

@@ -57,7 +57,13 @@ const useMessageAudio = ({
   };
   
   const handlePlayTranslationAudio = () => {
-    if (!canPlayAudio || !translation) return;
+    if (!canPlayAudio || !translation) {
+      console.log("Cannot play translation audio:", !canPlayAudio ? "Not allowed" : "No translation");
+      return;
+    }
+    
+    // Log translation content
+    console.log(`Translation content for audio: "${translation}"`);
     
     // Set translation audio loading state
     setIsTranslationLoading(true);

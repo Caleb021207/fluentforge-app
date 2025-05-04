@@ -28,7 +28,13 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   currentLanguage,
   onPlayAudio
 }) => {
-  // Use our new custom hook to manage audio state and playback
+  // Log key variables for debugging
+  console.log(`ChatMessageBubble - role: ${role}, showTranslation: ${showTranslation}`);
+  console.log(`ChatMessageBubble - content: "${safeContent}"`);
+  console.log(`ChatMessageBubble - translation: "${safeTranslation}"`);
+  console.log(`ChatMessageBubble - currentLanguage: ${currentLanguage}`);
+  
+  // Use our custom hook to manage audio state and playback
   const {
     contentAudio,
     translationAudio,
