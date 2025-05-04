@@ -1,6 +1,6 @@
-
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { Button } from "@/components/ui/button";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const ProgressPageHeader = () => {
   const { t } = useLocalization();

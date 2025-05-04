@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Shield, BookOpen, Lock } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CIPATabContent from "./CIPATabContent";

@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface RecommendationProps {
   rec: {
@@ -420,7 +419,7 @@ const RecommendationCard = ({ rec }: RecommendationProps) => {
         "Can follow detailed instructions": "Pode seguir instruções detalhadas",
         "Can understand main points in listening": "Pode entender pontos principais ao ouvir",
         "Good comprehension of clear speech": "Boa compreensão de fala clara",
-        "Can follow simple instructions": "Pode seguir instruções simples",
+        "Can follow simple instructions": "Puede seguir instruções simples",
         "Can understand basic phrases": "Pode entender frases básicas",
         "Good comprehension of slow speech": "Boa compreensão de fala lenta",
         "Can follow simple directions": "Pode seguir direções simples",

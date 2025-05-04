@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Shield } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 

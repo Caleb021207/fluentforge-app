@@ -1,6 +1,5 @@
-
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Lock, Shield, Server, FileText } from "lucide-react";
 
 const PrivacyTabContent = () => {

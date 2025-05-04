@@ -1,66 +1,37 @@
-
 import { useState } from "react";
-import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguagePair } from "@/utils/languageUtils";
+import { Message } from "@/types/chat"; 
+import { useLocalization } from "@/hooks/useLocalization";
 
-export type VoiceMessage = {
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-};
+interface UseVoiceChatMessagesProps {
+  initialMessages?: Message[];
+}
 
-export const useVoiceChatMessages = () => {
-  const [messages, setMessages] = useState<VoiceMessage[]>([]);
-  const { currentLanguage } = useLocalization();
-  
+export const useVoiceChatMessages = ({ initialMessages = [] }: UseVoiceChatMessagesProps = {}) => {
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const { t } = useLocalization();
+
+  const addMessage = (message: Message) => {
+    setMessages(prevMessages => [...prevMessages, message]);
+  };
+
   const clearMessages = () => {
     setMessages([]);
   };
-  
-  const addInitialMessage = () => {
-    const { practice } = getLanguagePair(currentLanguage);
-    
-    let initialContent = "";
-    
-    if (currentLanguage === "english") {
-      initialContent = `Hello, I'd like to practice ${practice} with you.`;
-    } else if (currentLanguage === "mandarin") {
-      initialContent = "你好，我想和你练习英语。";
-    } else if (currentLanguage === "urdu") {
-      initialContent = "السلام علیکم، میں آپ کے ساتھ انگریزی کی مشق کرنا چاہتا ہوں۔";
-    } else if (currentLanguage === "pashto") {
-      initialContent = "سلام، زه غواړم چې ستاسو سره انګلیسي تمرین وکړم.";
-    } else if (currentLanguage === "swahili") {
-      initialContent = "Habari, ningependa kufanya mazoezi ya Kiingereza nawe.";
-    } else {
-      initialContent = `Hello, I'd like to practice ${practice} with you.`;
-    }
-    
-    const initialUserMessage: VoiceMessage = {
-      role: "user",
-      content: initialContent,
-      timestamp: new Date()
-    };
-    
-    setMessages(prev => [...prev, initialUserMessage]);
-    return initialUserMessage;
+
+  const generateErrorMessage = (error: string) => {
+    return {
+      role: "assistant",
+      content: t("errorMessage", { message: error }),
+      timestamp: new Date(),
+      isLoading: false,
+      isError: true,
+    } as Message;
   };
-  
-  const addMessage = (role: 'user' | 'assistant', content: string) => {
-    const newMessage: VoiceMessage = {
-      role,
-      content,
-      timestamp: new Date()
-    };
-    
-    setMessages(prev => [...prev, newMessage]);
-    return newMessage;
-  };
-  
+
   return {
     messages,
+    addMessage,
     clearMessages,
-    addInitialMessage,
-    addMessage
+    generateErrorMessage
   };
 };

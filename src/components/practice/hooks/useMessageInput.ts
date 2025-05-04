@@ -1,13 +1,12 @@
-
-import { useState } from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useState, useCallback } from "react";
+import { useLocalization } from "@/hooks/useLocalization";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 export const useMessageInput = () => {
   const [input, setInput] = useState("");
   const { t, currentLanguage } = useLocalization();
 
-  const getPlaceholderText = () => {
+  const getPlaceholderText = useCallback(() => {
     // For specific languages that need special handling
     if (currentLanguage === "swahili") {
       return t("chatPlaceholder", { targetLanguage: "English" });
@@ -34,7 +33,7 @@ export const useMessageInput = () => {
     
     // Use the translation system for the placeholder with proper language name
     return t("chatPlaceholder", { targetLanguage: displayLanguage });
-  };
+  }, [t, currentLanguage]);
 
   return {
     input,

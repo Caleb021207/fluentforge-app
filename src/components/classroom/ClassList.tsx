@@ -1,182 +1,152 @@
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import React, { useEffect, useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ClassStudentsList from './ClassStudentsList';
-import { useLocalization } from "@/context/LocalizationContext";
-import { CLASSROOM_TEXT } from "@/constants/classroomText";
-
-interface ClassItem {
-  id: string;
-  class_name: string;
-  code: string;
-  active: boolean;
-  created_at: string;
-  student_count?: number;
-}
+import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
+import { Trash2, UserPlus } from "lucide-react";
+import { ClassroomWithStudents } from './types/classroomTypes';
+import { AlertDialog } from '@radix-ui/react-alert-dialog';
+import { useLocalization } from "@/hooks/useLocalization";
 
 const ClassList = () => {
-  const { toast } = useToast();
   const { t } = useLocalization();
-  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const { toast } = useToast();
+  const [classes, setClasses] = useState<ClassroomWithStudents[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedClass, setSelectedClass] = useState<{id: string, name: string} | null>(null);
+  const [classToDelete, setClassToDelete] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('classroom_codes')
-          .select(`
-            id,
-            class_name,
-            code,
-            active,
-            created_at
-          `)
-          .eq('teacher_id', (await supabase.auth.getUser()).data.user?.id)
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        const classesWithCount = await Promise.all(
-          (data || []).map(async (classItem) => {
-            const { count, error: countError } = await supabase
-              .from('classroom_memberships')
-              .select('*', { count: 'exact', head: true })
-              .eq('classroom_id', classItem.id);
-
-            if (countError) {
-              console.error('Error fetching student count:', countError);
-              return classItem;
-            }
-
-            return {
-              ...classItem,
-              student_count: count || 0
-            };
-          })
-        );
-
-        setClasses(classesWithCount);
-      } catch (error: any) {
-        console.error('Error fetching classes:', error);
-        toast({
-          title: CLASSROOM_TEXT.ERROR,
-          description: error.message,
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchClasses();
-  }, [toast]);
-
-  const toggleClassStatus = async (id: string, currentStatus: boolean) => {
+  const fetchClasses = async () => {
+    setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from('classroom_codes')
-        .update({ active: !currentStatus })
-        .eq('id', id);
+      const { data, error } = await supabase
+        .from('classrooms_with_student_counts')
+        .select('*');
 
       if (error) throw error;
-
-      setClasses(classes.map(c => 
-        c.id === id ? { ...c, active: !currentStatus } : c
-      ));
-
-      toast({
-        title: CLASSROOM_TEXT.SUCCESS,
-        description: !currentStatus ? CLASSROOM_TEXT.CLASS_ACTIVATED : CLASSROOM_TEXT.CLASS_DEACTIVATED,
-      });
+      setClasses(data || []);
     } catch (error: any) {
       toast({
-        title: CLASSROOM_TEXT.ERROR,
+        title: t("error"),
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    fetchClasses();
+  }, [toast, t]);
 
-  if (classes.length === 0) {
-    return (
-      <Card>
-        <CardContent className="pt-6">
-          <p className="text-muted-foreground">{t("noClassesCreated")}</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const handleDeleteClass = async () => {
+    if (!classToDelete) return;
+
+    try {
+      const { error } = await supabase
+        .from('classrooms')
+        .delete()
+        .eq('id', classToDelete);
+
+      if (error) throw error;
+
+      toast({
+        title: t("success"),
+        description: t("classDeletedSuccessfully"),
+      });
+      fetchClasses();
+    } catch (error: any) {
+      toast({
+        title: t("error"),
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setClassToDelete(null);
+    }
+  };
 
   return (
-    <div className="space-y-4">
-      {classes.map((classItem) => (
-        <Card key={classItem.id}>
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{classItem.class_name}</CardTitle>
-              <Badge variant={classItem.active ? "default" : "outline"}>
-                {classItem.active ? "Active" : "Inactive"}
-              </Badge>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("myClasses")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="py-8 text-center">{t("loading")}</div>
+          ) : classes.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">
+              {t("noClassesCreated")}
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="text-sm space-y-2">
-              <div>
-                <span className="font-medium">{CLASSROOM_TEXT.CLASS_CODE}:</span> {classItem.code}
-              </div>
-              <div>
-                <span className="font-medium">{CLASSROOM_TEXT.STUDENTS}:</span> {classItem.student_count || 0}
-              </div>
-              <div>
-                <span className="font-medium">{t("created")}:</span> {new Date(classItem.created_at).toLocaleDateString()}
-              </div>
-            </div>
-            
-            <div className="flex justify-end gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setSelectedClass({ id: classItem.id, name: classItem.class_name })}
-              >
-                <Users className="mr-2 h-4 w-4" />
-                {CLASSROOM_TEXT.STUDENTS}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => toggleClassStatus(classItem.id, classItem.active)}
-              >
-                {classItem.active ? t("deactivate") : t("activate")}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("className")}</TableHead>
+                  <TableHead className="text-right">{t("students")}</TableHead>
+                  <TableHead className="w-[150px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {classes.map((classroom) => (
+                  <TableRow key={classroom.id}>
+                    <td>{classroom.class_name}</td>
+                    <td className="text-right">{classroom.student_count}</td>
+                    <td>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setClassToDelete(classroom.id);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                          variant="destructive"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          {t("delete")}
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => alert('Not yet implemented')}
+                        >
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          {t("add")}
+                        </Button>
+                      </div>
+                    </td>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
 
-      {selectedClass && (
-        <ClassStudentsList
-          classId={selectedClass.id}
-          className={selectedClass.name}
-          open={!!selectedClass}
-          onOpenChange={(open) => !open && setSelectedClass(null)}
-        />
-      )}
-    </div>
+      <AlertDialog.Root open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialog.Content className="sm:max-w-[425px]">
+          <AlertDialog.Header>
+            <AlertDialog.Title>{t("confirmDeletion")}</AlertDialog.Title>
+            <AlertDialog.Description>
+              {t("deletionWarning")}
+            </AlertDialog.Description>
+          </AlertDialog.Header>
+          <div className="flex justify-end gap-2">
+            <AlertDialog.Cancel asChild>
+              <Button variant="outline">{t("cancel")}</Button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action asChild>
+              <Button variant="destructive" onClick={handleDeleteClass}>
+                {t("delete")}
+              </Button>
+            </AlertDialog.Action>
+          </div>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+    </>
   );
 };
 

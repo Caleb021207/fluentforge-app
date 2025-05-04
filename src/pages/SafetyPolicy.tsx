@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import PolicyHeader from "@/components/compliance/policy/PolicyHeader";
 import PolicyTabs from "@/components/compliance/policy/PolicyTabs";
 import DistrictInfoSection from "@/components/compliance/district/DistrictInfoSection";

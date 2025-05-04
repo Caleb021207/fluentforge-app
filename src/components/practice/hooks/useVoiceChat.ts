@@ -1,160 +1,78 @@
-
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
-import { supabase } from "@/integrations/supabase/client";
-import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
-import { useConversationState } from "@/hooks/useConversationState";
-import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
-import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
-import { useSecureApiKeys } from "@/hooks/useSecureApiKeys";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
+import { useLocalization } from "@/hooks/useLocalization";
 
 export const useVoiceChat = () => {
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
   const { toast } = useToast();
-  const { t, currentLanguage } = useLocalization();
-  const { microphoneAccess, requestMicrophoneAccess } = useMicrophoneAccess();
-  const [onMessageCallback, setOnMessageCallback] = useState<(message: any) => void>(() => () => {});
-  const { fetchApiKey } = useSecureApiKeys();
-  const {
-    currentSessionId,
-    connectionAttempts,
-    setConnectionAttempts,
-    createConversationSession,
-    endConversationSession
-  } = useConversationState();
+  const { isLoggedIn } = useAuthStatus();
+  const { t } = useLocalization();
 
-  const [isActive, setIsActive] = useState(false);
-  
-  // Placeholder for ElevenLabs conversation
   const conversation = {
-    status: isActive ? "connected" : "disconnected",
-    isSpeaking: false,
-    startSession: async (opts: any) => {
-      console.log("[PLACEHOLDER] Would start conversation session with:", opts);
-      return `placeholder-conversation-${Date.now()}`;
+    startSession: async () => {
+      console.log("Starting voice conversation");
+      setIsVoiceActive(true);
+      return `voice-conversation-${Date.now()}`;
     },
     endSession: async () => {
-      console.log("[PLACEHOLDER] Would end conversation session");
+      console.log("Ending voice conversation");
+      setIsVoiceActive(false);
       return true;
     }
   };
 
-  const isConversationActive = () => isActive;
-
-  const startVoiceConversation = async () => {
-    setConnectionAttempts(0);
-    
-    if (!microphoneAccess) {
-      const hasAccess = await requestMicrophoneAccess();
-      if (!hasAccess) {
-        toast({
-          title: t("microphoneAccessRequired"),
-          description: t("allowMicAccess"),
-          variant: "destructive",
-        });
-        return { conversationId: null };
-      }
-    }
-
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: t("error"),
-          description: t("loginRequired"),
-          variant: "destructive",
-        });
-        return { conversationId: null };
-      }
-
-      await createConversationSession(user.id);
-      
-      // Placeholder for API key fetch
-      console.log("[PLACEHOLDER] Would fetch API key for", currentLanguage);
-      
-      // Placeholder for agent ID
-      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
-      console.log(`[PLACEHOLDER] Would start voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
-      
-      // Simulate session start
-      setIsActive(true);
-      const conversationId = `placeholder-conversation-${Date.now()}`;
-      
+  const startVoiceConversation = useCallback(async () => {
+    if (!isLoggedIn) {
       toast({
-        title: t("startVoiceChat"),
-        description: t("startChatting"),
-      });
-      
-      return { conversationId };
-      
-    } catch (error) {
-      console.error("Voice conversation error:", error);
-      if (currentSessionId) {
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            await endConversationSession(user.id);
-          }
-        } catch (closeErr) {
-          console.error("Failed to close session after error:", closeErr);
-        }
-      }
-      
-      toast({
-        title: t("error"),
-        description: t("networkConnectionIssue"),
+        title: t("loginRequired"),
+        description: t("loginToStartVoiceChat"),
         variant: "destructive",
       });
-      
-      throw error;
+      return;
     }
-  };
 
-  const endVoiceConversation = async () => {
     try {
-      if (isConversationActive()) {
-        console.log("[PLACEHOLDER] Would end conversation session");
-        setIsActive(false);
-      }
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user && currentSessionId) {
-        await endConversationSession(user.id);
-      }
-      
+      await conversation.startSession();
       toast({
-        title: t("stopVoiceChat"),
-        description: t("voiceChatEnded"),
+        title: t("voiceChatStarted"),
+        description: t("beginSpeaking"),
       });
-      
-      return true;
-    } catch (error) {
-      console.error("Error ending voice conversation:", error);
-      return false;
+    } catch (error: any) {
+      console.error("Error starting voice chat:", error);
+      toast({
+        title: t("errorStartingVoiceChat"),
+        description: error.message || t("unknownError"),
+        variant: "destructive",
+      });
     }
-  };
+  }, [isLoggedIn, toast, t, conversation]);
 
-  // Method to set a custom message handler
-  const setMessageHandler = (handler: (message: any) => void) => {
-    setOnMessageCallback(() => handler);
-  };
+  const endVoiceConversation = useCallback(async () => {
+    try {
+      await conversation.endSession();
+      toast({
+        title: t("voiceChatEnded"),
+        description: t("voiceChatSessionEnded"),
+      });
+    } catch (error: any) {
+      console.error("Error ending voice chat:", error);
+      toast({
+        title: t("errorEndingVoiceChat"),
+        description: error.message || t("unknownError"),
+        variant: "destructive",
+      });
+    }
+  }, [toast, t, conversation]);
 
-  // Cleanup effect
-  useEffect(() => {
-    return () => {
-      if (isConversationActive() && currentSessionId) {
-        endVoiceConversation().catch(err => {
-          console.error("Error cleaning up voice conversation on unmount:", err);
-        });
-      }
-    };
-  }, []);
+  const isConversationActive = useCallback(() => {
+    return isVoiceActive;
+  }, [isVoiceActive]);
 
   return {
-    microphoneAccess,
-    isConversationActive,
     startVoiceConversation,
     endVoiceConversation,
+    isConversationActive,
     conversation
   };
 };

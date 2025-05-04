@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { BookOpen } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import FerpaPrivacySettings from "../FerpaPrivacySettings";

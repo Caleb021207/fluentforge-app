@@ -1,8 +1,8 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useNavigate } from "react-router-dom";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface ClassData {
   class_name: string;
@@ -20,6 +20,7 @@ interface ClassData {
 export const useClassData = () => {
   const { toast } = useToast();
   const { t } = useLocalization();
+  const navigate = useNavigate();
   const [classData, setClassData] = useState<ClassData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

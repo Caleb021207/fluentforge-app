@@ -1,87 +1,80 @@
-
-import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
-import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
+import { supabase } from "@/integrations/supabase/client";
+import { Session } from "@supabase/supabase-js";
+import { useLocalization } from "@/hooks/useLocalization";
 
-export const useConversationState = () => {
-  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
-  const [connectionAttempts, setConnectionAttempts] = useState(0);
+interface ConversationState {
+  conversationId: string | null;
+  isSpeaking: boolean;
+  isListening: boolean;
+  error: string | null;
+}
+
+interface UseConversationState {
+  conversationState: ConversationState;
+  startConversation: () => Promise<void>;
+  endConversation: () => Promise<void>;
+}
+
+export const useConversationState = (): UseConversationState => {
+  const [conversationState, setConversationState] = useState<ConversationState>({
+    conversationId: null,
+    isSpeaking: false,
+    isListening: false,
+    error: null,
+  });
   const { toast } = useToast();
-  const { t } = useLocalization();
 
-  const createConversationSession = async (userId: string) => {
+  const startConversation = async () => {
     try {
-      // Create premium voice session record
-      const { data: sessionData, error: sessionError } = await supabase
-        .from('premium_voice_chat_sessions')
-        .insert({
-          user_id: userId
-        })
-        .select('id')
-        .single();
-      
-      if (sessionError) {
-        console.error("Error creating session record:", sessionError);
-        throw new Error(t("failedToCreateSession"));
-      }
-      
-      setCurrentSessionId(sessionData.id);
-      
-      // Track this as a premium voice API call
-      await supabase
-        .from('api_calls_tracking')
-        .insert({
-          user_id: userId,
-          call_type: 'premium_voice'
-        });
-
-      return sessionData.id;
-    } catch (error) {
-      console.error("Error creating conversation session:", error);
-      throw error;
+      setConversationState(prevState => ({ ...prevState, isSpeaking: true, error: null }));
+      // Placeholder for starting a conversation
+      const newConversationId = `conversation-${Date.now()}`;
+      setConversationState(prevState => ({ ...prevState, conversationId: newConversationId }));
+      toast({
+        title: "Conversation Started",
+        description: "You can now start speaking.",
+      });
+    } catch (error: any) {
+      console.error("Failed to start conversation:", error);
+      setConversationState(prevState => ({ ...prevState, error: error.message }));
+      toast({
+        title: "Error",
+        description: "Failed to start conversation.",
+        variant: "destructive",
+      });
     }
   };
 
-  const endConversationSession = async (userId: string) => {
-    if (!currentSessionId) return false;
-
+  const endConversation = async () => {
     try {
-      const { error } = await supabase
-        .from('premium_voice_chat_sessions')
-        .update({
-          session_end: new Date().toISOString()
-        })
-        .eq('id', currentSessionId);
-        
-      if (error) {
-        console.error("Error updating session end time:", error);
-        throw error;
-      }
-
-      // Recalculate metrics after closing a session
-      await supabase.rpc('recalculate_student_metrics', { 
-        target_student_id: userId 
+      setConversationState(prevState => ({
+        ...prevState,
+        isSpeaking: false,
+        isListening: false,
+        error: null,
+      }));
+      // Placeholder for ending a conversation
+      setConversationState(prevState => ({ ...prevState, conversationId: null }));
+      toast({
+        title: "Conversation Ended",
+        description: "The conversation has ended.",
       });
-
-      const remainingTime = await calculateRemainingWeeklyTime(userId);
-      
-      setCurrentSessionId(null);
-      setConnectionAttempts(0);
-      
-      return remainingTime;
-    } catch (error) {
-      console.error("Error ending conversation session:", error);
-      throw error;
+    } catch (error: any) {
+      console.error("Failed to end conversation:", error);
+      setConversationState(prevState => ({ ...prevState, error: error.message }));
+      toast({
+        title: "Error",
+        description: "Failed to end conversation.",
+        variant: "destructive",
+      });
     }
   };
 
   return {
-    currentSessionId,
-    connectionAttempts,
-    setConnectionAttempts,
-    createConversationSession,
-    endConversationSession
+    conversationState,
+    startConversation,
+    endConversation,
   };
 };

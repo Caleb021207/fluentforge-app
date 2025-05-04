@@ -1,8 +1,7 @@
-
 import React from "react";
 import WritingCertification from "@/components/certifications/WritingCertification";
 import TranslatedWritingCertification from "@/components/certifications/TranslatedWritingCertification";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const WritingCertificationPage = () => {
   const { currentLanguage } = useLocalization();

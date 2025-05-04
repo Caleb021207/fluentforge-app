@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import React from "react";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Check, InfoIcon } from "lucide-react";

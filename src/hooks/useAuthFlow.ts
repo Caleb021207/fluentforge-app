@@ -1,13 +1,14 @@
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { handleConnectionError } from "@/utils/authErrorHandler";
 
 export const useAuthFlow = (onAuthSuccess?: () => void) => {
   const { toast } = useToast();
   const { t } = useLocalization();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

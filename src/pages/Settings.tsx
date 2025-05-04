@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Shield, FileText } from "lucide-react";
 import ParentalControls from "@/components/compliance/ParentalControls";
 import { useNavigate } from "react-router-dom";

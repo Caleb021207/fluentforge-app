@@ -2,7 +2,7 @@
 import React from "react";
 import { getLevelDescription } from "@/components/certifications/utils/scoreUtils";
 import { rubricData } from "./CEFRLevelRubric";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const CEFRLevelDescriptions = () => {
   const { currentLanguage, t } = useLocalization();

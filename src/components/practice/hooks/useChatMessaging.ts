@@ -1,125 +1,88 @@
-
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
-import { logDataAccess } from "@/utils/contentSafetyUtils";
-import { useTranslationHandler } from "./useTranslationHandler";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
+import { useLocalization } from "@/hooks/useLocalization";
 
-export const useChatMessaging = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
+interface Props {
+  onReceive: (message: any) => void;
+}
+
+export const useChatMessaging = ({ onReceive }: Props) => {
+  const [channel, setChannel] = useState<any>(null);
   const { toast } = useToast();
-  const { t, currentLanguage } = useLocalization();
-  const { getTranslation, verifyHindiTranslation } = useTranslationHandler();
+  const { isLoggedIn } = useAuthStatus();
+  const { t } = useLocalization();
 
-  const sendChatMessage = async (message: string) => {
-    if (!message || message.trim() === "") {
-      toast({
-        title: t("error"),
-        description: t("emptyMessage"),
-        variant: "destructive",
-      });
-      return null;
+  const setupChannel = useCallback(async () => {
+    if (!isLoggedIn) {
+      console.log("User is not logged in, skipping channel setup.");
+      return;
     }
-    
-    setIsLoading(true);
-    setHasError(false);
 
-    try {
-      const userId = "anonymous-or-current-user-id";
-      logDataAccess(
-        userId,
-        "practice_session", 
-        "student",
-        "language_practice"
-      );
-      
-      // Get the targetLanguage from localStorage 
-      const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
-      
-      console.log('Sending message to AI tutor:', { 
-        message, 
-        userLanguage: currentLanguage, 
-        targetLanguage, 
-        requestTranslation: true 
-      });
-      
-      // Use chat-with-gpt endpoint
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
-        body: { 
-          message: message,
-          userLanguage: currentLanguage,
-          targetLanguage: targetLanguage,
-          requestTranslation: true
+    const newChannel = supabase.channel('language_practice');
+
+    newChannel
+      .on('broadcast', { event: 'new_message' }, (payload: any) => {
+        console.log('Received message:', payload);
+        onReceive(payload);
+      })
+      .subscribe(async (status: string) => {
+        console.log("Channel status:", status);
+        if (status === 'SUBSCRIBED') {
+          toast({
+            title: t("chatConnected"),
+            description: t("realtimeChatEnabled"),
+          });
+        } else if (status === 'CLOSED' || status === 'ERRORED') {
+          toast({
+            title: t("chatDisconnected"),
+            description: t("attemptingToReconnect"),
+            variant: "destructive",
+          });
+          // Attempt to re-establish the channel after a delay
+          setTimeout(setupChannel, 5000);
         }
       });
 
-      if (error) {
-        console.error('Supabase invoke error:', error);
-        throw error;
-      }
+    setChannel(newChannel);
+  }, [isLoggedIn, onReceive, t, toast]);
 
-      console.log('Response from AI tutor:', data);
-      
-      // Handle case where response is missing content
-      if (!data) {
-        console.error('Empty response from AI tutor');
-        throw new Error("Empty response from AI tutor");
+  useEffect(() => {
+    setupChannel();
+
+    return () => {
+      if (channel) {
+        console.log("Unsubscribing from channel");
+        channel.unsubscribe();
       }
-      
-      if (data.error) {
-        console.error('Error from AI tutor:', data.error);
-        throw new Error(data.error);
-      }
-      
-      if (!data.content) {
-        console.error('Invalid response from AI tutor - missing content:', data);
-        throw new Error("Response from AI tutor is missing content");
-      }
-      
-      let translation = data.translation || "";
-      
-      // Handle special translation cases
-      translation = await verifyHindiTranslation(translation, data.content, currentLanguage);
-      
-      if (!translation && currentLanguage !== "english") {
-        console.warn("Missing translation for", currentLanguage, "user");
-        translation = await getTranslation(data.content, currentLanguage);
-      }
-      
-      return {
-        content: data.content,
-        translation
-      };
-      
-    } catch (error) {
-      console.error('Error:', error);
-      setHasError(true);
+    };
+  }, [channel, setupChannel]);
+
+  const sendMessage = useCallback(async (message: any) => {
+    if (!channel) {
       toast({
-        title: t("error"),
-        description: t("networkConnectionIssue"),
+        title: t("notConnected"),
+        description: t("pleaseWaitConnection"),
         variant: "destructive",
       });
-      return null;
-    } finally {
-      setIsLoading(false);
+      return;
     }
-  };
 
-  const retryLastMessage = async (message: string) => {
-    if (hasError) {
-      setHasError(false);
-      return await sendChatMessage(message);
+    try {
+      await channel.send({
+        type: 'broadcast',
+        event: 'new_message',
+        payload: message,
+      });
+    } catch (error: any) {
+      toast({
+        title: t("sendMessageFailed"),
+        description: error.message,
+        variant: "destructive",
+      });
     }
-    return null;
-  };
+  }, [channel, t, toast]);
 
-  return {
-    isLoading,
-    hasError,
-    setIsLoading,
-    sendChatMessage,
-    retryLastMessage
-  };
+  return { sendMessage };
 };

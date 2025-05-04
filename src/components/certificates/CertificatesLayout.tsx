@@ -3,7 +3,7 @@ import { CertificationAttempt } from "@/types/supabase";
 import OverallCertificate from "@/components/certificates/OverallCertificate";
 import ScoreCards from "@/components/certificates/ScoreCards";
 import CertificationAttemptsList from "@/components/certificates/CertificationAttemptsList";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";

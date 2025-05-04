@@ -2,7 +2,7 @@
 import React from "react";
 import ReadingCertification from "@/components/certifications/ReadingCertification";
 import TranslatedReadingCertification from "@/components/certifications/TranslatedReadingCertification";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { useParams } from "react-router-dom";
 
 const ReadingCertificationPage = () => {
