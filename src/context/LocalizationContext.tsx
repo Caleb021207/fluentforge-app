@@ -56,17 +56,21 @@ export const LocalizationProvider = ({ children }: LocalizationProviderProps) =>
     // Debug - log available translations
     console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
     console.log("Available translations:", Object.keys(translations));
+    console.log("Current language set to:", currentLanguage);
   }, []);
 
   // Translation function that uses the utility
   const t = (key: string, replacements?: Record<string, string>): string => {
-    return getTranslation(
+    const translation = getTranslation(
       key, 
       currentLanguage, 
       currentPath, 
       replacements, 
       missingKeys
     );
+    
+    console.log(`Translation for key "${key}" in language "${currentLanguage}":`, translation);
+    return translation;
   };
 
   // Get native language name

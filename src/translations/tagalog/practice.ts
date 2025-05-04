@@ -59,7 +59,16 @@ const practiceTranslations: TranslationRecord = {
   askForClarification: "Humingi ng paglilinaw kung hindi mo naiintindihan ang isang bagay.",
   tryToUseVocabulary: "Subukang gamitin ang bokabularyo na kamakailan mong natutunan.",
   ourAIWillAdapt: "Ang aming AI ay mag-aayon sa iyong antas ng kasanayan at tutulungan kang unti-unting umunlad.",
-  startConversationIn: "Simulan ang Pag-uusap sa {language}"
+  startConversationIn: "Simulan ang Pag-uusap sa {language}",
+  
+  // Practice guide
+  practiceGuide: "Gabay sa Pagsasanay sa {language}",
+  practiceGuideDescription: "Narito ang ilang mga tip para makuha ang pinakamarami mula sa iyong pagsasanay sa {language}:",
+  practiceGuideItem1: "Subukang bumuo ng kumpletong pangungusap, kahit na simple lang ang mga ito.",
+  practiceGuideItem2: "Huwag mag-alala tungkol sa paggawa ng mga pagkakamali - bahagi sila ng pag-aaral!",
+  practiceGuideItem3: "Humingi ng paglilinaw kung hindi mo naiintindihan ang isang bagay.",
+  practiceGuideItem4: "Subukang gamitin ang bokabularyo na kamakailan mong natutunan.",
+  practiceDisclaimer: "Ang aming AI ay mag-aayon sa iyong antas ng kasanayan at tutulungan kang unti-unting umunlad."
 };
 
 export default practiceTranslations;

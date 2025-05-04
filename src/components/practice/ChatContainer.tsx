@@ -5,7 +5,7 @@ import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import EmptyChatState from "./EmptyChatState";
 import LoadingIndicator from "./LoadingIndicator";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -55,7 +55,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         setInput={setInput}
         handleSubmit={handleSubmit}
         isLoading={isLoading}
-        placeholder={getPlaceholderText() || "Type a message..."}
+        placeholder={getPlaceholderText() || t("typeMessage", { defaultValue: "Type a message..." })}
       />
     </Card>
   );

@@ -60,7 +60,7 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish
     );
   }
   
-  // For Tagalog users practicing English
+  // For Tagalog users practicing English - Adding specific case for Tagalog
   if (currentLanguage === "tagalog") {
     return (
       <Card>

@@ -93,6 +93,8 @@ export const getTranslation = (
     
     // Fallback to default language if not found or not a string
     if (translationValue === "" && defaultTranslations) {
+      console.log(`Missing translation for key "${key}" in language "${languageToUse}", trying default language`);
+      
       // Try to get from default translations
       if (key.includes('.')) {
         const [parentKey, childKey] = key.split('.');
