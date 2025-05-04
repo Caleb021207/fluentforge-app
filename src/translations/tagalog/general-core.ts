@@ -15,7 +15,10 @@ const generalCoreTranslations: TranslationRecord = {
   loginRequired: "Kailangan ng pag-login",
   failedToCreateSession: "Hindi makalikha ng session",
   cefrB1Description: "Intermediate - Makakapag-usap tungkol sa mga pamilyar na paksa",
-  speechSynthesisNotSupported: "Hindi suportado ng iyong browser ang speech synthesis"
+  speechSynthesisNotSupported: "Hindi suportado ng iyong browser ang speech synthesis",
+  
+  // Additional core translations needed for the practice page
+  practiceYourLanguage: "Magsanay ng iyong {language}"
 };
 
 export default generalCoreTranslations;
