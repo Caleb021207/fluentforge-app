@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { useGetPremiumAccess } from "@/hooks/useGetPremiumAccess";
-import { useGetConversationID } from "@/hooks/useGetConversationID";
-import { useAudioControl } from "@/hooks/useAudioControl";
-import { usePromptGenerator } from "@/components/practice/hooks/usePromptGenerator";
-import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
-import { Session } from "@supabase/supabase-js";
+
+import { useState, useEffect, useRef } from "react";
+import { Mic, MicOff, Volume2, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { 
   getLanguagePair, 
   getSpeechSynthesisLanguageCode, 

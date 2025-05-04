@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import GenerateCodeDialog from "@/components/classroom/GenerateCodeDialog";
 import ClassList from "@/components/classroom/ClassList";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 const TeacherClasses = () => {

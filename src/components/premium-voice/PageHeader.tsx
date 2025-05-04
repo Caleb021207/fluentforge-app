@@ -1,5 +1,5 @@
 
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguagePair } from "@/utils/languageUtils";
 
 interface PageHeaderProps {

@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
 import { updateUserProfile } from "@/utils/profileUtils";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface UserInfoProps {
   user: User | null;

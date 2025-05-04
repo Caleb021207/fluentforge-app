@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 

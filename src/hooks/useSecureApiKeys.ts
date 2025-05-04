@@ -1,64 +1,57 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useAuthStatus } from "@/hooks/useAuthStatus";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 
-interface ApiKeys {
-  ELEVENLABS_API_KEY: string | null;
-  OPENAI_API_KEY: string | null;
-}
-
-export const useSecureApiKeys = (): { apiKeys: ApiKeys; isLoading: boolean } => {
-  const [apiKeys, setApiKeys] = useState<ApiKeys>({
-    ELEVENLABS_API_KEY: null,
-    OPENAI_API_KEY: null,
-  });
+export const useSecureApiKeys = () => {
+  const [elevenLabsApiKey, setElevenLabsApiKey] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { isLoggedIn } = useAuthStatus();
-  const { t } = useLocalization();
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useLocalization();
 
-  useEffect(() => {
-    const fetchApiKeys = async () => {
-      setIsLoading(true);
-      try {
-        if (!isLoggedIn) {
-          console.warn("User is not logged in, API keys not fetched.");
-          return;
-        }
+  const fetchApiKey = async (language: string = 'english') => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('voice-chat-auth', {
+        body: { language }
+      });
 
-        const { data, error } = await supabase
-          .from("api_keys")
-          .select("ELEVENLABS_API_KEY, OPENAI_API_KEY")
-          .single();
-
-        if (error) {
-          throw new Error(error.message);
-        }
-
-        if (data) {
-          setApiKeys({
-            ELEVENLABS_API_KEY: data.ELEVENLABS_API_KEY || null,
-            OPENAI_API_KEY: data.OPENAI_API_KEY || null,
-          });
-        } else {
-          console.warn("No API keys found for the current user.");
-        }
-      } catch (error: any) {
-        console.error("Failed to fetch API keys:", error.message);
+      if (error) {
+        setError(error.message);
         toast({
-          title: t("errorFetchingApiKeys"),
+          title: t("error"),
           description: error.message,
           variant: "destructive",
         });
-      } finally {
-        setIsLoading(false);
+        return null;
       }
-    };
 
-    fetchApiKeys();
-  }, [isLoggedIn, toast, t]);
+      setElevenLabsApiKey(data.apiKey);
+      return data.apiKey;
+    } catch (err: any) {
+      console.error("Error fetching API key:", err);
+      setError(err.message || "Failed to fetch API key");
+      toast({
+        title: t("error"),
+        description: t("networkConnectionIssue"),
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  return { apiKeys, isLoading };
+  return {
+    elevenLabsApiKey,
+    fetchApiKey,
+    isLoading,
+    error
+  };
 };
+
+export default useSecureApiKeys;

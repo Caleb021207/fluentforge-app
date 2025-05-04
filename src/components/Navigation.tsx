@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import {

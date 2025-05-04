@@ -1,61 +1,87 @@
-import { useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+
+import { useState } from "react";
+import { useMessageState } from "./useMessageState";
+import { useChatApi } from "./useChatApi";
+import type { MessageCount } from "@/types/chat";
 import { useToast } from "@/hooks/use-toast";
-import { Message } from "@/types/chat";
-import { useTranslationHandler } from "@/components/practice/hooks/useTranslationHandler";
-import { useTextToSpeech } from "@/components/practice/hooks/useTextToSpeech";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 
-interface UseMessageHandlerProps {
-  targetLanguage: string;
-  nativeLanguage: string;
-  onAddMessage: (message: Message) => void;
-}
-
-export const useMessageHandler = ({
-  targetLanguage,
-  nativeLanguage,
-  onAddMessage,
-}: UseMessageHandlerProps) => {
-  const { t } = useLocalization();
-  const { translate } = useTranslationHandler();
-  const { speak } = useTextToSpeech();
+export const useMessageHandler = (setMessageCount: (count: MessageCount) => void) => {
+  const {
+    messages,
+    isLoading,
+    setIsLoading,
+    addUserMessage,
+    addAssistantMessage,
+  } = useMessageState(setMessageCount);
+  
+  const [messageQueue, setMessageQueue] = useState<string[]>([]);
+  const [isProcessingQueue, setIsProcessingQueue] = useState(false);
+  
+  const { sendMessage } = useChatApi();
   const { toast } = useToast();
+  const { t } = useLocalization();
 
-  const handleIncomingMessage = useCallback(
-    async (message: string, role: "user" | "assistant") => {
-      try {
-        // Translate the message
-        const translation = await translate(message, targetLanguage);
-
-        // Add the original message
-        onAddMessage({
-          content: message,
-          role: role,
-          createdAt: new Date(),
-        });
-
-        // Add the translated message
-        onAddMessage({
-          content: translation,
-          role: role,
-          isTranslation: true,
-          createdAt: new Date(),
-        });
-
-        // Speak the translated message
-        speak(translation, targetLanguage);
-      } catch (error: any) {
-        console.error("Error processing message:", error);
-        toast({
-          title: t("messageError"),
-          description: error.message || t("unknownError"),
-          variant: "destructive",
-        });
+  // Process the message queue
+  const processQueue = async () => {
+    if (isProcessingQueue || messageQueue.length === 0) return;
+    
+    setIsProcessingQueue(true);
+    
+    try {
+      const nextMessage = messageQueue[0];
+      setIsLoading(true);
+      
+      // Process the message
+      const assistantMessage = await sendMessage(nextMessage);
+      
+      if (assistantMessage) {
+        addAssistantMessage(assistantMessage);
       }
-    },
-    [translate, speak, onAddMessage, targetLanguage, t]
-  );
+      
+      // Remove the processed message from the queue
+      setMessageQueue(prev => prev.slice(1));
+    } catch (error) {
+      console.error('Error processing message queue:', error);
+      toast({
+        title: t("error") || "Error",
+        description: t("failedToSendMessage") || "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setIsProcessingQueue(false);
+    }
+  };
+  
+  // Watch the queue and process messages when available
+  useState(() => {
+    if (messageQueue.length > 0 && !isLoading && !isProcessingQueue) {
+      processQueue();
+    }
+  });
 
-  return { handleIncomingMessage };
+  const handleMessage = async (input: string) => {
+    if (!input.trim()) return;
+    
+    // Add user message immediately for better UX
+    addUserMessage(input);
+    
+    try {
+      setIsLoading(true);
+      
+      // Send message to API
+      const assistantMessage = await sendMessage(input);
+      
+      if (assistantMessage) {
+        addAssistantMessage(assistantMessage);
+      }
+    } catch (error) {
+      console.error('Failed to handle message:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { messages, isLoading, handleMessage };
 };

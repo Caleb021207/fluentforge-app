@@ -1,128 +1,144 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Mic, Pause, Play, RotateCcw, Check } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { useLocalization } from "@/hooks/useLocalization";
+
+import React, { useState, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Volume2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { useLocalization } from '@/context/LocalizationContext';
+import { getLanguagePair } from '@/utils/languageUtils';
+import { supabase } from "@/integrations/supabase/client";
 
 interface AudioTranscriptionExerciseProps {
-  audioSrc: string;
-  expectedText: string;
-  onComplete: () => void;
+  exercise: {
+    title: string;
+    description: string;
+    audio: {
+      url: string;
+      transcript: string;
+    }[];
+    points: number;
+  };
+  onAnswer: (isCorrect: boolean) => void;
+  timeLeft: number | null;
 }
 
 const AudioTranscriptionExercise: React.FC<AudioTranscriptionExerciseProps> = ({
-  audioSrc,
-  expectedText,
-  onComplete
+  exercise,
+  onAnswer,
 }) => {
-  const { t } = useLocalization();
-  const [isRecording, setIsRecording] = useState(false);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [transcription, setTranscription] = useState("");
-  const [progress, setProgress] = useState(0);
-  const [isCorrect, setIsCorrect] = useState(false);
+  const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [hasPlayed, setHasPlayed] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { currentLanguage } = useLocalization();
+  
+  const currentAudio = exercise.audio[currentAudioIndex];
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    // Start recording logic here
-  };
-
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    // Stop recording logic here
-  };
-
-  const handlePlayAudio = () => {
-    setIsAudioPlaying(true);
-    // Play audio logic here
-  };
-
-  const handlePauseAudio = () => {
-    setIsAudioPlaying(false);
-    // Pause audio logic here
-  };
-
-  const handleReset = () => {
-    setTranscription("");
-    setProgress(0);
-    setIsCorrect(false);
-  };
-
-  const handleSubmit = () => {
-    // Check transcription against expected text
-    if (transcription.toLowerCase() === expectedText.toLowerCase()) {
-      setIsCorrect(true);
-      onComplete();
-    } else {
-      setIsCorrect(false);
+  const playAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+      setHasPlayed(true);
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      // Get user's practice language based on their interface language
+      const languagePair = getLanguagePair(currentLanguage);
+      const practiceLanguage = languagePair.practice.toLowerCase();
+      
+      // Map languages to OpenAI Whisper's supported language codes
+      const languageCodeMap: Record<string, string> = {
+        'english': 'en',
+        'spanish': 'es',
+        'portuguese': 'pt',
+        'french': 'fr',
+        'mandarin': 'zh',
+        'arabic': 'ar',
+        'japanese': 'ja',
+        'korean': 'ko',
+        'russian': 'ru',
+        'ukrainian': 'uk',
+        'vietnamese': 'vi',
+        'indonesian': 'id',
+        'hindi': 'hi'
+      };
+      
+      // Default to English if language not in map
+      const languageCode = languageCodeMap[practiceLanguage] || 'en';
+      
+      // For now we'll still use the simple string comparison, but this prepares for future improvements
+      // In a real implementation, we might want to send the user input to the API for comparison
+      const isCorrect = compareAnswers(userInput, currentAudio.transcript);
+      
+      if (currentAudioIndex < exercise.audio.length - 1) {
+        setCurrentAudioIndex(currentAudioIndex + 1);
+        setUserInput('');
+        setHasPlayed(false);
+      } else {
+        // Last audio, complete exercise
+        onAnswer(isCorrect);
+      }
+    } catch (error) {
+      console.error("Error in audio transcription exercise:", error);
+      onAnswer(false);
+    }
+  };
+
+  // Simple string comparison (a more sophisticated implementation would use fuzzy matching)
+  const compareAnswers = (userAnswer: string, correctAnswer: string): boolean => {
+    return userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="flex justify-center space-x-4">
-        <Button
-          variant="outline"
-          onClick={handlePlayAudio}
-          disabled={isRecording || isAudioPlaying}
-        >
-          <Play className="h-4 w-4 mr-2" />
-          {t("play")}
-        </Button>
-        <Button
-          variant="outline"
-          onClick={handlePauseAudio}
-          disabled={isRecording || !isAudioPlaying}
-        >
-          <Pause className="h-4 w-4 mr-2" />
-          {t("pause")}
-        </Button>
-        <Button
-          variant={isRecording ? "destructive" : "outline"}
-          onClick={isRecording ? handleStopRecording : handleStartRecording}
-          disabled={isAudioPlaying}
-        >
-          <Mic className="h-4 w-4 mr-2" />
-          {isRecording ? t("stopRecording") : t("startRecording")}
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={handleReset}
-          disabled={isRecording || isAudioPlaying}
-        >
-          <RotateCcw className="h-4 w-4 mr-2" />
-          {t("reset")}
-        </Button>
-      </div>
-
-      <div>
-        <label htmlFor="transcription" className="block text-sm font-medium text-gray-700">
-          {t("yourTranscription")}
-        </label>
-        <textarea
-          id="transcription"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          value={transcription}
-          onChange={(e) => setTranscription(e.target.value)}
-          rows={4}
-        />
-      </div>
-
-      <div>
-        <Progress value={progress} />
-      </div>
-
-      <div className="flex justify-end">
-        <Button onClick={handleSubmit} disabled={isRecording || isAudioPlaying}>
-          <Check className="h-4 w-4 mr-2" />
-          {t("check")}
-        </Button>
-      </div>
-
-      {isCorrect !== null && (
-        <div className={isCorrect ? "text-green-500" : "text-red-500"}>
-          {isCorrect ? t("correctTranscription") : t("incorrectTranscription")}
+    <div className="space-y-6">
+      <div className="bg-slate-50 p-6 rounded-lg">
+        <h3 className="text-xl font-medium mb-3">{exercise.title}</h3>
+        <p className="text-slate-600 mb-4">{exercise.description}</p>
+        
+        <div className="border rounded-lg p-4 bg-white">
+          <Button 
+            onClick={playAudio} 
+            variant="outline"
+            className="flex items-center space-x-2 mb-4 mx-auto"
+          >
+            <Volume2 className="h-4 w-4" />
+            <span>Play Audio</span>
+          </Button>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="transcription" className="block text-sm font-medium mb-1">
+                What did you hear? Type the exact words:
+              </label>
+              <Input
+                id="transcription"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Type what you heard..."
+                disabled={!hasPlayed}
+                className="w-full"
+              />
+            </div>
+            
+            <Button 
+              type="submit" 
+              disabled={!hasPlayed || !userInput.trim()}
+              className="w-full"
+            >
+              Submit
+            </Button>
+          </form>
         </div>
+        
+        <div className="mt-4 text-sm text-slate-500">
+          <p>Progress: {currentAudioIndex + 1}/{exercise.audio.length}</p>
+        </div>
+      </div>
+      
+      {currentAudio?.url && (
+        <audio ref={audioRef} src={currentAudio.url} className="hidden" />
       )}
     </div>
   );

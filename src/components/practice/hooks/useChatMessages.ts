@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useLocalization } from "@/hooks/useLocalization";
+
+import { useState, useCallback } from "react";
+import { useLocalization } from "@/context/LocalizationContext";
 import { useChatApi } from "./useChatApi";
 import { useTranslationHandler } from "./useTranslationHandler";
 import type { ChatMessage } from "@/types/chat";

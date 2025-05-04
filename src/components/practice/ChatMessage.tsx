@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import EmptyMessageWarning from "./chat-message/EmptyMessageWarning";
 import ChatMessageBubble from "./chat-message/ChatMessageBubble";
@@ -31,18 +31,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const isTranslationSafe = translation ? isSafeContent(translation) : true;
   
   // Determine if translation should be shown
-  // Explicitly log this check for Tagalog
-  console.log(`Current language is: ${currentLanguage}`);
-  console.log(`Checking if translation should be shown for ${currentLanguage}`);
-  console.log(`TRANSLATION_REQUIRED_LANGUAGES includes ${currentLanguage}: ${TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage.toLowerCase())}`);
-  
   const showTranslation = 
-    TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage.toLowerCase()) || 
-    currentLanguage.toLowerCase() === "tagalog" ||
+    TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage) || 
     (translation && translation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
-  
-  console.log(`Show translation decision: ${showTranslation}`);
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;
   

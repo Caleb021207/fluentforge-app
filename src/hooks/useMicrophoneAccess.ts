@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 
 export const useMicrophoneAccess = () => {
   const [microphoneAccess, setMicrophoneAccess] = useState(false);

@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Clock } from "lucide-react";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import type { SessionStatus } from "@/types/chat";
 
 interface VoiceChatControlsProps {

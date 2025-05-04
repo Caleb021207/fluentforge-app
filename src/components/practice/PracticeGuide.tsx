@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { List, ListItem } from "@/components/ui/list";
 import { BrainCircuit, Globe, GraduationCap } from "lucide-react";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 interface PracticeGuideProps {
@@ -54,48 +54,6 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish
           
           <p className="text-sm text-gray-500 italic">
             The AI will help correct your grammar and vocabulary as you practice.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-  
-  // For Tagalog users practicing English - Adding specific case for Tagalog
-  if (currentLanguage === "tagalog") {
-    return (
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <BrainCircuit className="h-5 w-5 text-lingua-primary" />
-            {t("englishPracticeGuide")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-600 mb-4">
-            {t("hereAreSomeTips")}
-          </p>
-          
-          <List className="text-sm text-gray-600 mb-4">
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>{t("tryToFormCompleteSentences")}</span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>{t("dontWorryAboutMakingMistakes")}</span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>{t("askForClarification")}</span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>{t("tryToUseVocabulary")}</span>
-            </ListItem>
-          </List>
-          
-          <p className="text-sm text-gray-500 italic">
-            {t("ourAIWillAdapt")}
           </p>
         </CardContent>
       </Card>

@@ -1,3 +1,4 @@
+
 // Language utilities for the chat-with-tutor function
 
 // Get proper display name for a language
@@ -30,8 +31,7 @@ export function getLanguageDisplayName(language: string): string {
     'igbo': 'Igbo',
     'polish': 'Polish',
     'turkish': 'Turkish',
-    'romanian': 'Romanian',
-    'tagalog': 'Tagalog'
+    'romanian': 'Romanian'
   };
   
   return languageMap[language.toLowerCase()] || language;
@@ -67,8 +67,7 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'igbo': 'Igbo',
     'polish': 'Polish',
     'turkish': 'Turkish',
-    'romanian': 'Romanian',
-    'tagalog': 'Tagalog'
+    'romanian': 'Romanian'
   };
   
   return languageMap[userLanguage] || 'English';
@@ -145,12 +144,4 @@ export function containsMalayalamScript(text: string): boolean {
   // Malayalam Unicode range: U+0D00 to U+0D7F
   const malayalamRegex = /[\u0D00-\u0D7F]/;
   return malayalamRegex.test(text);
-}
-
-// Helper function to check if text contains Tagalog script
-export function containsTagalogScript(text: string): boolean {
-  // Tagalog uses Latin script with some special characters
-  // This is a simplified check for some common Filipino words and patterns
-  const tagalogPatterns = /\b(ang|ng|mga|na|sa|at|ay|ko|mo|niya|ito|iyon|po|opo)\b/i;
-  return tagalogPatterns.test(text);
 }

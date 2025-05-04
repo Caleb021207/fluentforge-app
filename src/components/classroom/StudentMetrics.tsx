@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 

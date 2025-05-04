@@ -1,6 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
 
@@ -17,7 +17,6 @@ export const useTranslationHandler = () => {
     }
     
     try {
-      console.log(`Getting translation for "${content}" to ${targetLanguage}`);
       const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
         body: { 
           message: content,
@@ -36,7 +35,6 @@ export const useTranslationHandler = () => {
         return "";
       }
 
-      console.log(`Received translation: "${data?.translation}"`);
       return data?.translation || "";
     } catch (error) {
       console.error('Failed to get translation:', error);
@@ -94,35 +92,12 @@ export const useTranslationHandler = () => {
     
     return translation;
   };
-  
-  /**
-   * Special case for Tagalog translations
-   */
-  const verifyTagalogTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'tagalog') return translation;
-    
-    // If no translation provided or translation is empty for Tagalog
-    if (!translation || translation.trim() === "") {
-      console.log('No Tagalog translation provided, requesting one now');
-      return await getTranslation(originalContent, 'tagalog');
-    }
-    
-    return translation;
-  };
 
   /**
    * Check if a translation is needed for the current language
    */
   const needsTranslation = (language: string): boolean => {
-    // Make explicit logging for Tagalog
-    if (language.toLowerCase() === "tagalog") {
-      console.log("Tagalog detected, translation should be shown");
-      return true;
-    }
-    
-    const result = TRANSLATION_REQUIRED_LANGUAGES.includes(language.toLowerCase());
-    console.log(`Translation needed for ${language}: ${result}`);
-    return result;
+    return TRANSLATION_REQUIRED_LANGUAGES.includes(language.toLowerCase());
   };
 
   return {
@@ -130,7 +105,6 @@ export const useTranslationHandler = () => {
     verifyHindiTranslation,
     verifyFarsiTranslation,
     verifyBengaliTranslation,
-    verifyTagalogTranslation, // Added new function
     needsTranslation
   };
 };

@@ -1,10 +1,11 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CertificationAttempt } from "@/types/supabase";
 import CEFRLevelRubric from "./CEFRLevelRubric";
 import CEFRLevelDescriptions from "./CEFRLevelDescriptions";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface OverallCertificateProps {
   compositeScore: {

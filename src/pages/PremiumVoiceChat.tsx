@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useSessionManagement } from "@/hooks/useSessionManagement";
 import { useVoiceChatTimer } from "@/hooks/useVoiceChatTimer";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import VoiceChatControls from "@/components/premium-voice/VoiceChatControls";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";

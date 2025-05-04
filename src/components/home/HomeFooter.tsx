@@ -1,6 +1,7 @@
+
 import { Link } from "react-router-dom";
 import { Shield, BookOpen } from "lucide-react";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 
 const HomeFooter = () => {
   const { t } = useLocalization();

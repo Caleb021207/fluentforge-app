@@ -1,152 +1,156 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useAuthStatus } from "@/hooks/useAuthStatus";
-import { useLocalization } from "@/hooks/useLocalization";
-
-interface SessionData {
-  session_id: string;
-  user_id: string;
-  start_time: string;
-  end_time: string | null;
-  minutes_used: number;
-  weekly_minutes_remaining: number;
-  status: 'active' | 'ended';
-}
+import { useLocalization } from "@/context/LocalizationContext";
+import type { MessageCount, SessionStatus } from "@/types/chat";
+import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
 
 export const useSessionManagement = () => {
-  const { t } = useLocalization();
-  const { isLoggedIn } = useAuthStatus();
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [messageCount, setMessageCount] = useState<MessageCount>({ inputs: 0, outputs: 0 });
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [sessionStatus, setSessionStatus] = useState<SessionStatus>('available');
+  const [weeklyTimeRemaining, setWeeklyTimeRemaining] = useState<number | null>(null);
+  const [cooldownTimeRemaining, setCooldownTimeRemaining] = useState<number | null>(null);
+  
   const { toast } = useToast();
-  const [weeklyTimeRemaining, setWeeklyTimeRemaining] = useState<number>(0);
-  const [sessionStatus, setSessionStatus] = useState<'active' | 'ended'>('ended');
-  const [isLoading, setIsLoading] = useState(true);
+  const { t } = useLocalization();
 
-  const loadSessionData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        setWeeklyTimeRemaining(0);
-        setSessionStatus('ended');
-        return;
+  // Check auth and calculate remaining time on mount
+  useEffect(() => {
+    const checkAuthAndTime = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsLoggedIn(!!user);
+        
+        if (user) {
+          const remainingTime = await calculateRemainingWeeklyTime(user.id);
+          setWeeklyTimeRemaining(remainingTime);
+          
+          try {
+            const { error: recalcError } = await supabase.rpc('recalculate_student_metrics', { 
+              target_student_id: user.id 
+            });
+            
+            if (recalcError) {
+              console.error('Error recalculating metrics:', recalcError);
+              toast({
+                title: t("error"),
+                description: t("metricsUpdateFailed"),
+                variant: "destructive",
+              });
+            }
+          } catch (recalcError) {
+            console.error('Exception recalculating metrics:', recalcError);
+          }
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      const { data: sessionData, error } = await supabase
-        .from('premium_voice_sessions')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('start_time', { ascending: false })
-        .limit(1)
-        .single();
+    checkAuthAndTime();
 
-      if (error) {
-        console.error("Error fetching session data:", error);
-        setWeeklyTimeRemaining(0);
-        setSessionStatus('ended');
-        return;
-      }
-
-      if (sessionData) {
-        setWeeklyTimeRemaining(sessionData.weekly_minutes_remaining);
-        setSessionStatus(sessionData.status);
+    // Set up auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setIsLoggedIn(!!session?.user);
+      if (session?.user) {
+        const remainingTime = await calculateRemainingWeeklyTime(session.user.id);
+        setWeeklyTimeRemaining(remainingTime);
       } else {
-        setWeeklyTimeRemaining(10);
-        setSessionStatus('ended');
+        setWeeklyTimeRemaining(null);
       }
-    } catch (error: any) {
-      console.error("Unexpected error loading session data:", error);
-      toast({
-        title: t("error"),
-        description: t("couldNotLoadSessionData"),
-        variant: "destructive",
-      });
-      setWeeklyTimeRemaining(0);
-      setSessionStatus('ended');
-    } finally {
-      setIsLoading(false);
-    }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [toast, t]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      loadSessionData();
-    } else {
-      setIsLoading(false);
-      setWeeklyTimeRemaining(0);
-      setSessionStatus('ended');
-    }
-  }, [isLoggedIn, loadSessionData]);
-
   const createSession = async () => {
-    setIsLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      if (!user) return;
 
-      const { data, error } = await supabase
-        .rpc('start_premium_voice_session', { user_id: user.id });
+      // Create the session
+      await supabase
+        .from('api_calls_tracking')
+        .insert({
+          user_id: user.id,
+          call_type: 'premium_voice'
+        });
 
-      if (error) throw error;
-
-      const session = data as unknown as SessionData;
-
-      setWeeklyTimeRemaining(session.weekly_minutes_remaining);
       setSessionStatus('active');
-      toast({
-        title: t("sessionStarted"),
-        description: t("enjoyYourVoicePractice"),
-      });
+      console.log('Created premium voice session for:', user.id);
+      
+      // Update the remaining time immediately after creating a session
+      const remainingTime = await calculateRemainingWeeklyTime(user.id);
+      setWeeklyTimeRemaining(remainingTime);
+
     } catch (error: any) {
-      console.error("Error starting session:", error);
+      console.error('Error creating voice session:', error);
       toast({
         title: t("error"),
-        description: error.message || t("couldNotStartSession"),
-        variant: "destructive",
+        description: t("failedToCreateSession"),
+        variant: "warning",
       });
-    } finally {
-      setIsLoading(false);
+      setSessionStatus('available');
     }
   };
 
-  const endSession = async () => {
-    setIsLoading(true);
+  const endSession = async (): Promise<boolean> => {
     try {
+      setSessionStatus('available');
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      if (!user) return false;
 
-      const { data, error } = await supabase
-        .rpc('end_premium_voice_session', { user_id: user.id });
-
-      if (error) throw error;
-
-      const session = data as unknown as SessionData;
-
-      setWeeklyTimeRemaining(session.weekly_minutes_remaining);
-      setSessionStatus('ended');
-      toast({
-        title: t("sessionEnded"),
-        description: t("minutesUpdated"),
+      const { error } = await supabase.rpc('recalculate_student_metrics', { 
+        target_student_id: user.id 
       });
+
+      if (error) {
+        console.error('Error recalculating metrics:', error);
+        return false;
+      }
+
+      // Update remaining time after ending session
+      const remainingTime = await calculateRemainingWeeklyTime(user.id);
+      setWeeklyTimeRemaining(remainingTime);
+
+      return true;
     } catch (error: any) {
-      console.error("Error ending session:", error);
+      console.error('Error ending session:', error);
       toast({
         title: t("error"),
-        description: error.message || t("couldNotEndSession"),
-        variant: "destructive",
+        description: t("failedToEndSession"),
+        variant: "warning",
       });
-    } finally {
-      setIsLoading(false);
+      return false;
     }
   };
 
+  const formatCooldownTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+  };
+  
   return {
-    weeklyTimeRemaining,
-    isLoading,
+    messageCount,
+    setMessageCount,
     isLoggedIn,
+    isLoading,
     sessionStatus,
+    weeklyTimeRemaining,
+    cooldownTimeRemaining,
+    setWeeklyTimeRemaining,
     createSession,
-    endSession
+    endSession,
+    formatCooldownTime
   };
 };

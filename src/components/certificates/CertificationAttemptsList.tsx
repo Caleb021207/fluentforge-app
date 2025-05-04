@@ -1,3 +1,4 @@
+
 import React from "react";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,7 @@ import { determineLevel, ensureValidScore } from "@/components/certifications/ut
 import { CertificationAttempt } from "@/types/supabase";
 import { Award, MessageSquare, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useLocalization } from "@/hooks/useLocalization";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface CertificationAttemptsListProps {
   attempts: CertificationAttempt[] | undefined;

@@ -1,64 +1,184 @@
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { useLocalization } from "@/hooks/useLocalization";
-import AuthDialog from "@/components/home/AuthDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { useLocalization } from "@/context/LocalizationContext";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
+import AuthDialog from "@/components/home/AuthDialog";
+import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog";
+import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
+import { useToast } from "@/hooks/use-toast";
+import { needsAgeVerification, getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
+import { hasStudyMaterials } from "@/utils/languageUtils";
+import { useAuthFlow } from "@/hooks/useAuthFlow";
+import HomeActions from "@/components/home/HomeActions";
+import HomeFooter from "@/components/home/HomeFooter";
 
 const Index = () => {
-  const { t, currentLanguage, setCurrentLanguage, getNativeLanguageName } = useLocalization();
-  const navigate = useNavigate();
-  const [openAuthDialog, setOpenAuthDialog] = useState(false);
-  const { isLoading, isAuthenticated } = useAuthGuard();
+  const { t, setCurrentLanguage } = useLocalization();
+  const { toast } = useToast();
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const [isAgeVerificationOpen, setIsAgeVerificationOpen] = useState(false);
+  const [isFerpaConsentOpen, setIsFerpaConsentOpen] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [nativeLanguage, setNativeLanguage] = useState("");
+  const [targetLanguage, setTargetLanguage] = useState("");
+  const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
+  
+  const {
+    isLogin,
+    setIsLogin,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    isLoading,
+    handleEmailAuth,
+    authError,
+    retryCount
+  } = useAuthFlow(() => setIsAuthDialogOpen(false));
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("nativeLanguage");
-    if (savedLanguage) {
-      setCurrentLanguage(savedLanguage);
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setIsSignedIn(!!data.user);
+      
+      if (data.user && !getFerpaConsentStatus()) {
+        setIsFerpaConsentOpen(true);
+      }
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkUser();
+    });
+
+    const savedNativeLanguage = localStorage.getItem("nativeLanguage");
+    const savedTargetLanguage = localStorage.getItem("targetLanguage");
+    
+    if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
+    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
+    
+    const needsVerification = needsAgeVerification();
+    if (needsVerification) {
+      setIsAgeVerificationOpen(true);
     }
-  }, [setCurrentLanguage]);
 
-  const handleLanguageChange = (language: string) => {
-    setCurrentLanguage(language);
-    localStorage.setItem("nativeLanguage", language);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (nativeLanguage && targetLanguage) {
+      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
+      setStudyMaterialsAvailable(materialsAvailable);
+      
+      sessionStorage.setItem("languagePair", `${nativeLanguage}-${targetLanguage}`);
+      sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
+    }
+  }, [nativeLanguage, targetLanguage]);
+
+  const handleLanguageSelection = () => {
+    if (nativeLanguage && targetLanguage) {
+      localStorage.setItem("nativeLanguage", nativeLanguage);
+      localStorage.setItem("targetLanguage", targetLanguage);
+      
+      const languagePair = `${nativeLanguage}-${targetLanguage}`;
+      sessionStorage.setItem("languagePair", languagePair);
+      
+      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
+      sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
+      
+      setCurrentLanguage(nativeLanguage);
+      
+      toast({
+        title: t("languagePreferencesSaved"),
+        description: t("learningLanguageFromNative", {
+          targetLanguage: t(`languages.${targetLanguage}`),
+          nativeLanguage: t(`languages.${nativeLanguage}`)
+        }),
+      });
+      
+      window.location.reload();
+    } else {
+      toast({
+        title: t("pleaseSelectBothLanguages"),
+        description: t("youNeedToSelectBoth"),
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleAuthAction = (action: "login" | "signup") => {
-    setOpenAuthDialog(true);
+  const handleFerpaConsentComplete = () => {
+    setIsFerpaConsentOpen(false);
+    
+    toast({
+      title: t("privacyPreferencesSaved") || "Privacy Preferences Saved",
+      description: t("ferpaPreferencesSaved") || "Your FERPA privacy preferences have been saved. You can change them anytime in your settings.",
+    });
   };
-
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-lingua-primary"></div>
-    </div>;
-  }
 
   return (
-    <div className="container max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">{t("welcome")}</h1>
-      <p className="text-gray-600 mb-6">{t("indexPageDescription")}</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <LanguageSelectionCard
-          currentLanguage={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-          getNativeLanguageName={getNativeLanguageName}
-        />
-
-        <div className="space-y-4">
-          <Button onClick={() => navigate("/practice")} className="w-full">
-            {t("startPracticing")}
-          </Button>
-          {!isAuthenticated && (
-            <Button variant="secondary" onClick={() => setOpenAuthDialog(true)} className="w-full">
-              {t("loginOrSignup")}
-            </Button>
-          )}
-        </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-8 max-w-2xl mx-auto p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-4xl md:text-6xl font-bold text-lingua-text mb-4">
+            {t("welcomeToLanguageLearning")}
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 mb-8">
+            {t("yourPersonalAICompanion")}
+          </p>
+          
+          <LanguageSelectionCard
+            nativeLanguage={nativeLanguage}
+            targetLanguage={targetLanguage}
+            setNativeLanguage={setNativeLanguage}
+            setTargetLanguage={setTargetLanguage}
+            hasStudyMaterials={studyMaterialsAvailable}
+            handleLanguageSelection={handleLanguageSelection}
+          />
+          
+          <HomeActions 
+            isSignedIn={isSignedIn}
+            onLoginClick={() => {
+              setIsLogin(true);
+              setIsAuthDialogOpen(true);
+            }}
+          />
+          
+          <HomeFooter />
+        </motion.div>
       </div>
 
-      <AuthDialog open={openAuthDialog} onOpenChange={setOpenAuthDialog} />
+      <AuthDialog
+        isOpen={isAuthDialogOpen}
+        onOpenChange={setIsAuthDialogOpen}
+        isLogin={isLogin}
+        setIsLogin={setIsLogin}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        handleEmailAuth={handleEmailAuth}
+        isLoading={isLoading}
+        authError={authError}
+        retryCount={retryCount}
+      />
+      
+      <AgeVerificationDialog 
+        isOpen={isAgeVerificationOpen}
+        onOpenChange={setIsAgeVerificationOpen}
+      />
+      
+      <FerpaConsentForm
+        isOpen={isFerpaConsentOpen}
+        onOpenChange={setIsFerpaConsentOpen}
+        onComplete={handleFerpaConsentComplete}
+      />
     </div>
   );
 };

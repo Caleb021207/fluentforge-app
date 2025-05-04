@@ -25,8 +25,7 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "malayalam",
   "polish",
   "turkish",
-  "romanian",
-  "tagalog"  // Ensuring tagalog is explicitly included here
+  "romanian"
 ];
 
 /**
@@ -35,11 +34,6 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
  * @returns The target language for learning
  */
 export const getTargetLanguage = (currentLanguage: string): string => {
-  // Special case for Tagalog
-  if (currentLanguage.toLowerCase() === "tagalog") {
-    console.log("Tagalog user detected, setting target language to English");
-    return "english";
-  }
   return currentLanguage === "english" ? "spanish" : "english";
 };
 
