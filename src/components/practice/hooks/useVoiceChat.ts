@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
@@ -27,7 +28,7 @@ export const useVoiceChat = () => {
       toast({
         title: t("loginRequired"),
         description: t("loginToStartVoiceChat"),
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
@@ -36,14 +37,14 @@ export const useVoiceChat = () => {
       await conversation.startSession();
       toast({
         title: t("voiceChatStarted"),
-        description: t("beginSpeaking"),
+        description: t("beginSpeaking")
       });
     } catch (error: any) {
       console.error("Error starting voice chat:", error);
       toast({
         title: t("errorStartingVoiceChat"),
         description: error.message || t("unknownError"),
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   }, [isLoggedIn, toast, t, conversation]);
@@ -53,14 +54,14 @@ export const useVoiceChat = () => {
       await conversation.endSession();
       toast({
         title: t("voiceChatEnded"),
-        description: t("voiceChatSessionEnded"),
+        description: t("voiceChatSessionEnded")
       });
     } catch (error: any) {
       console.error("Error ending voice chat:", error);
       toast({
         title: t("errorEndingVoiceChat"),
         description: error.message || t("unknownError"),
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   }, [toast, t, conversation]);
