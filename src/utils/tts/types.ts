@@ -8,3 +8,8 @@ export interface TTSOptions {
   onEnd?: () => void;
   onError?: (error: string) => void;
 }
+
+export interface TTSCacheEntry {
+  audioContent: string;
+  timestamp: number;
+}

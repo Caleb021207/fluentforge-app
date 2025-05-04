@@ -3,13 +3,7 @@ import { useState, useCallback } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useChatApi } from "./useChatApi";
 import { useTranslationHandler } from "./useTranslationHandler";
-
-// Define the ChatMessage type
-interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  translation?: string;
-}
+import type { ChatMessage } from "@/types/chat";
 
 export const useChatMessages = () => {
   const { t, currentLanguage } = useLocalization();
