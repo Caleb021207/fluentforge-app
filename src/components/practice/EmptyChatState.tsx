@@ -1,6 +1,5 @@
-
 import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const EmptyChatState = () => {
   const { t } = useLocalization();

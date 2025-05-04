@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { List, ListItem } from "@/components/ui/list";
 import { BrainCircuit, Globe, GraduationCap } from "lucide-react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { useLocalization } from "@/hooks/useLocalization";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 interface PracticeGuideProps {
