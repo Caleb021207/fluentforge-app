@@ -36,7 +36,10 @@ export interface RecentAttemptsCardProps {
 }
 
 export interface LanguageSelectionCardProps {
-  currentLanguage: string;
-  onLanguageChange: (language: string) => void;
-  getNativeLanguageName: (language: string) => string;
+  nativeLanguage: string;
+  targetLanguage: string;
+  setNativeLanguage: (language: string) => void;
+  setTargetLanguage: (language: string) => void;
+  hasStudyMaterials: boolean;
+  handleLanguageSelection: () => void;
 }
