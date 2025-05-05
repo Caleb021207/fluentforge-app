@@ -9,11 +9,13 @@ const languageSelectionTranslations: TranslationRecord = {
   "selectLanguageToLearn": "Piliin ang wikang gusto mong matutunan",
   "saveLanguagePreferences": "I-save ang Mga Preference sa Wika",
   "languagePreferencesSaved": "Na-save ang Mga Preference sa Wika",
-  "learningLanguageFromNative": "Natuto ng {targetLanguage} mula sa {nativeLanguage}",
+  "youreNowLearning": "Ikaw ay nagaaral na ng",
+  "from": "mula sa",
   "pleaseSelectBothLanguages": "Mangyaring Piliin ang Parehong Wika",
   "youNeedToSelectBoth": "Kailangan mong piliin pareho ang iyong katutubong wika at ang wika na gusto mong matutunan",
   "studyMaterialsComingSoon": "Malapit na ang mga materyal sa pag-aaral para matuto ng {targetLanguage} mula sa {nativeLanguage}!",
-  "someFeaturesLimited": "Maaaring limitado o hindi available ang ilang feature."
+  "someFeaturesLimited": "Maaaring limitado o hindi available ang ilang feature.",
+  "learningLanguageFromNative": "Natuto ng {targetLanguage} mula sa {nativeLanguage}"
 };
 
 export default languageSelectionTranslations;
