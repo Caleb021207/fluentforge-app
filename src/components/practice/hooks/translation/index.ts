@@ -32,3 +32,5 @@ export const useTranslationHandler = () => {
 
 export type { TranslationType };
 export { extractStringFromTranslation };
+// Export the verification functions and getTranslation so they can be imported directly
+export { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, getTranslation };
