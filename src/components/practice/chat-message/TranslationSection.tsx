@@ -7,7 +7,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 interface TranslationSectionProps {
   showTranslation: boolean;
   role: "user" | "assistant";
-  translation: string;
+  translation: string | Record<string, unknown>;
   currentLanguage: string;
   isTranslationPlaying: boolean;
   isTranslationLoading: boolean;
@@ -32,7 +32,7 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
     if (currentLanguage === 'tagalog') {
       console.log('TranslationSection Tagalog debug:', { 
         originalTranslation: translation,
-        translationLength: translation ? translation.length : 0,
+        translationLength: typeof translation === 'string' ? translation.length : 0,
         translationType: typeof translation
       });
     }
