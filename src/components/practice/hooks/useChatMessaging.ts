@@ -66,7 +66,15 @@ export const useChatMessaging = () => {
         throw error;
       }
 
-      console.log('Response from AI tutor:', data);
+      if (currentLanguage === 'tagalog') {
+        console.log('Response from AI tutor for Tagalog:', {
+          hasData: !!data,
+          hasTranslation: data && 'translation' in data,
+          translationType: data?.translation ? typeof data.translation : 'none'
+        });
+      } else {
+        console.log('Response from AI tutor:', data);
+      }
       
       // Handle case where response is missing content
       if (!data) {
@@ -85,83 +93,50 @@ export const useChatMessaging = () => {
       }
       
       // Process translation - ensure it's a string
-      let translation = "";
+      let translation: string | Record<string, unknown> = "";
       
       if (data.translation) {
-        // Direct string assignment if it's already a string
-        if (typeof data.translation === 'string') {
-          translation = data.translation;
-        } 
-        // Handle object format
-        else if (typeof data.translation === 'object' && data.translation !== null) {
-          console.warn('Translation returned as object:', data.translation);
-          
-          // Try to extract from potential object structures
-          const translationObj = data.translation as Record<string, unknown>;
-          
-          if ('value' in translationObj && typeof translationObj.value === 'string') {
-            translation = translationObj.value;
-          } else if ('text' in translationObj && typeof translationObj.text === 'string') {
-            translation = translationObj.text;
-          } else if ('content' in translationObj && typeof translationObj.content === 'string') {
-            translation = translationObj.content;
-          } else {
-            // Try JSON stringify as last resort
-            try {
-              translation = JSON.stringify(translationObj);
-            } catch (e) {
-              console.error('Failed to stringify translation object:', e);
-              translation = "";
-            }
-          }
-        }
-        // For any other type, attempt string conversion
-        else {
-          try {
-            translation = String(data.translation);
-          } catch (e) {
-            console.error('Error converting translation to string:', e);
-            translation = "";
-          }
+        translation = data.translation;
+        
+        // Enhanced logging for Tagalog translations
+        if (currentLanguage === 'tagalog') {
+          console.log('Raw Tagalog translation from API:', {
+            translation,
+            translationType: typeof translation,
+            isString: typeof translation === 'string',
+            isObject: typeof translation === 'object',
+            translationValue: typeof translation === 'string' ? 
+              translation.substring(0, 30) + '...' : 
+              JSON.stringify(translation).substring(0, 30) + '...'
+          });
         }
       }
       
-      // Enhanced logging for Tagalog translations
-      if (currentLanguage === 'tagalog') {
-        console.log('Tagalog translation debug:', {
-          originalTranslation: data.translation,
-          processedTranslation: translation,
-          translationLength: translation ? translation.length : 0,
-          translationType: typeof translation,
-          hasTranslation: !!translation,
-          dataContent: data.content.substring(0, 50) + '...' // Log just the start of content
-        });
-      }
-      
-      // Detect invalid translations
-      if (translation === 'undefined' || translation === '[object Object]') {
-        console.warn(`Invalid translation value detected: "${translation}"`);
-        translation = "";
-      }
-      
-      // Handle special translation cases
-      translation = await verifyHindiTranslation(translation, data.content, currentLanguage);
-      translation = await verifyFarsiTranslation(translation, data.content, currentLanguage);
-      translation = await verifyBengaliTranslation(translation, data.content, currentLanguage);
-      translation = await verifyTagalogTranslation(translation, data.content, currentLanguage);
-      
-      // Enhanced logging after special verification
-      if (currentLanguage === 'tagalog') {
-        console.log('After verifyTagalogTranslation:', {
-          finalTranslation: translation,
-          finalType: typeof translation,
-          translationLength: translation ? translation.length : 0,
-          wasProcessed: translation !== data.translation
-        });
+      // Handle special translation cases - pass the translation as-is to the verification methods
+      // They will handle object vs string properly
+      if (translation) {
+        if (currentLanguage === 'hindi') {
+          translation = await verifyHindiTranslation(translation, data.content, currentLanguage);
+        } else if (currentLanguage === 'farsi') {
+          translation = await verifyFarsiTranslation(translation, data.content, currentLanguage);
+        } else if (currentLanguage === 'bengali') {
+          translation = await verifyBengaliTranslation(translation, data.content, currentLanguage);
+        } else if (currentLanguage === 'tagalog') {
+          translation = await verifyTagalogTranslation(translation, data.content, currentLanguage);
+          console.log('After verifyTagalogTranslation:', {
+            translationType: typeof translation,
+            translationSample: typeof translation === 'string' ? 
+              translation.substring(0, 30) + '...' :
+              JSON.stringify(translation).substring(0, 30) + '...'
+          });
+        }
       }
       
       // Handle missing translations - force getting a new one
-      if ((!translation || translation.length < 5) && currentLanguage !== "english") {
+      // Don't convert to string here - let the components handle it
+      if ((!translation || 
+           (typeof translation === 'string' && translation.length < 5)) && 
+          currentLanguage !== "english") {
         console.warn("Missing or invalid translation for", currentLanguage, "user");
         
         // Force getting a translation specifically for Tagalog if it's missing
@@ -170,27 +145,29 @@ export const useChatMessaging = () => {
           
           // Try up to 3 times to get a valid translation
           let retryCount = 0;
+          let validTranslation = false;
           
-          while (retryCount < 3 && (!translation || translation.length < 5)) {
+          while (retryCount < 3 && !validTranslation) {
             retryCount++;
             console.log(`Forced Tagalog translation attempt ${retryCount}`);
             
-            translation = await getTranslation(data.content, 'tagalog');
+            const newTranslation = await getTranslation(data.content, 'tagalog');
             
-            if (translation && translation.length > 10) {
-              console.log('Forced Tagalog translation result:', {
-                gotTranslation: !!translation,
-                translationLength: translation.length,
-                sample: translation.substring(0, 30) + '...'
+            if (newTranslation && typeof newTranslation === 'string' && newTranslation.length > 10) {
+              translation = newTranslation;
+              validTranslation = true;
+              console.log('Successfully got forced Tagalog translation:', {
+                length: newTranslation.length,
+                sample: newTranslation.substring(0, 30) + '...'
               });
               break;
             }
           }
           
-          // Last resort fallback for Tagalog
-          if (!translation || translation.length < 5) {
+          // Fallback for Tagalog if all retries failed
+          if (!validTranslation) {
             translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-            console.log('Using last resort Tagalog fallback message');
+            console.log('Using fallback Tagalog message after failed retries');
           }
         } else {
           translation = await getTranslation(data.content, currentLanguage);

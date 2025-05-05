@@ -17,93 +17,95 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
   
-  // Ensure translation is a string with better type checking
-  const processedTranslation = (() => {
-    if (!translation) return "";
-    
-    // Handle string translations (normal case)
-    if (typeof translation === 'string') {
-      // Check for invalid string values
-      if (translation === 'undefined' || translation === '[object Object]') {
-        console.warn(`Invalid string translation value for ${currentLanguage}:`, translation);
-        return "";
-      }
-      return translation;
-    }
-    
-    // If it's an object (seen in logs), try to extract meaningful content
-    if (typeof translation === 'object' && translation !== null) {
-      console.warn('Translation was received as an object instead of string:', translation);
-      
-      // Use a safe type assertion with Record
-      const translationObj = translation as Record<string, unknown>;
-      
-      // Check properties with proper type guards
-      if ('value' in translationObj && typeof translationObj.value === 'string') {
-        return translationObj.value;
-      } 
-      
-      if ('text' in translationObj && typeof translationObj.text === 'string') {
-        return translationObj.text;
-      } 
-      
-      if ('content' in translationObj && typeof translationObj.content === 'string') {
-        return translationObj.content;
-      }
-      
-      // Last resort: try to stringify the object
-      try {
-        const stringified = JSON.stringify(translationObj);
-        if (stringified !== '{}' && stringified !== '[]') {
-          return stringified;
-        }
-      } catch (e) {
-        console.error('Failed to stringify translation object:', e);
-      }
-      
-      return "";
-    }
-    
-    // Unknown format, convert to string or empty
-    console.warn('Unexpected translation format:', translation);
-    try {
-      return String(translation) || "";
-    } catch (e) {
-      console.error('Error converting translation to string:', e);
-      return "";
-    }
-  })();
-  
   // Enhanced logging for Tagalog translations
   if (currentLanguage === 'tagalog') {
     console.log('ChatMessage Tagalog debug:', { 
       role, 
       content, 
       originalTranslation: translation,
-      processedTranslation,
-      translationLength: processedTranslation ? processedTranslation.length : 0,
       translationType: typeof translation,
       currentLanguage
     });
   }
   
   // Handle case where content is undefined or empty
-  if (!content && !processedTranslation) {
+  if (!content && !translation) {
     return <EmptyMessageWarning />;
   }
   
   // Filter content for safety if needed
   const safeContent = content ? filterContent(content) : "";
-  const safeTranslation = processedTranslation ? filterContent(processedTranslation) : "";
+  
+  // Always pass translation as a string, never as an object
+  let safeTranslation = "";
+  
+  // Ensure translation is a string
+  if (translation) {
+    // Handle string translations (normal case)
+    if (typeof translation === 'string') {
+      safeTranslation = filterContent(translation);
+    } 
+    // Handle object translations (seen in Tagalog)
+    else if (typeof translation === 'object' && translation !== null) {
+      try {
+        const translationObj = translation as Record<string, unknown>;
+        
+        // Extract string from object using common patterns
+        if ('value' in translationObj && translationObj.value) {
+          safeTranslation = filterContent(String(translationObj.value));
+        } 
+        else if ('text' in translationObj && translationObj.text) {
+          safeTranslation = filterContent(String(translationObj.text));
+        } 
+        else if ('content' in translationObj && translationObj.content) {
+          safeTranslation = filterContent(String(translationObj.content));
+        }
+        else {
+          // Try to stringify the whole object
+          const stringified = JSON.stringify(translationObj);
+          if (stringified && stringified !== '{}' && stringified !== '[]') {
+            safeTranslation = filterContent(stringified);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to parse object translation in ChatMessage:', e);
+        if (currentLanguage === 'tagalog') {
+          safeTranslation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+        } else {
+          safeTranslation = `Translation not available for ${currentLanguage}`;
+        }
+      }
+    }
+    // Try to convert any other type to string
+    else {
+      try {
+        safeTranslation = filterContent(String(translation));
+      } catch (e) {
+        console.error('Error converting translation to string in ChatMessage:', e);
+        if (currentLanguage === 'tagalog') {
+          safeTranslation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+        } else {
+          safeTranslation = `Translation not available for ${currentLanguage}`;
+        }
+      }
+    }
+  }
+  
+  if (currentLanguage === 'tagalog') {
+    console.log('ChatMessage after processing:', {
+      safeTranslation,
+      translationLength: safeTranslation.length
+    });
+  }
   
   // Check for potentially unsafe content
   const isContentSafe = isSafeContent(content);
-  const isTranslationSafe = processedTranslation ? isSafeContent(processedTranslation) : true;
+  const isTranslationSafe = safeTranslation ? isSafeContent(safeTranslation) : true;
   
   // Determine if translation should be shown
   const showTranslation = 
     TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage) || 
-    (processedTranslation && processedTranslation.trim() !== "") ||
+    (safeTranslation && safeTranslation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;

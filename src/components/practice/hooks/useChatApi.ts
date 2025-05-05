@@ -49,6 +49,14 @@ export const useChatApi = () => {
               call_type: 'text_practice'
             });
         }
+
+        // Enhanced logging for Tagalog translations
+        if (currentLanguage === 'tagalog') {
+          console.log('useChatApi Tagalog response:', {
+            responseTranslation: retryResponse.data.translation,
+            translationType: typeof retryResponse.data.translation
+          });
+        }
         
         return {
           role: "assistant",
@@ -70,6 +78,17 @@ export const useChatApi = () => {
             user_id: user.id,
             call_type: 'text_practice'
           });
+      }
+
+      // Enhanced logging for Tagalog translations
+      if (currentLanguage === 'tagalog') {
+        console.log('useChatApi Tagalog response:', {
+          responseTranslation: data.translation,
+          translationType: typeof data.translation,
+          translationSample: typeof data.translation === 'string' ? 
+            data.translation.substring(0, 30) + '...' : 
+            JSON.stringify(data.translation).substring(0, 30) + '...'
+        });
       }
 
       return {

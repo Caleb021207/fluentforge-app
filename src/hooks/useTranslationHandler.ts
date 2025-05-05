@@ -50,11 +50,11 @@ export const useTranslationHandler = () => {
           // Try to extract string from common object patterns
           const translationObj = data.translation as Record<string, unknown>;
           
-          if (translationObj.value && typeof translationObj.value === 'string') {
+          if ('value' in translationObj && typeof translationObj.value === 'string') {
             translation = translationObj.value;
-          } else if (translationObj.text && typeof translationObj.text === 'string') {
+          } else if ('text' in translationObj && typeof translationObj.text === 'string') {
             translation = translationObj.text;
-          } else if (translationObj.content && typeof translationObj.content === 'string') {
+          } else if ('content' in translationObj && typeof translationObj.content === 'string') {
             translation = translationObj.content;
           } else {
             // Last resort - try to convert the entire object to a string
@@ -68,18 +68,51 @@ export const useTranslationHandler = () => {
               console.error('Failed to stringify translation object:', e);
             }
           }
+        } else {
+          // Try to convert any non-string, non-object value to string
+          try {
+            translation = String(data.translation);
+          } catch (e) {
+            console.error('Error converting translation to string:', e);
+          }
         }
       }
 
-      console.log(`Got ${targetLanguage} translation:`, {
-        success: !!translation,
-        length: translation.length,
-        sample: translation.substring(0, 50) + '...'
-      });
+      // Special validation for Tagalog
+      if (targetLanguage === 'tagalog') {
+        console.log(`Got Tagalog translation:`, {
+          success: !!translation,
+          length: translation.length,
+          sample: translation.substring(0, 50) + '...',
+          type: typeof translation
+        });
+        
+        // Ensure Tagalog translation is valid
+        if (!translation || 
+            translation === 'undefined' || 
+            translation === '[object Object]' ||
+            translation.length < 10) {
+          
+          translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+          console.log('Using fallback Tagalog message due to invalid translation');
+        }
+      } else {
+        console.log(`Got ${targetLanguage} translation:`, {
+          success: !!translation,
+          length: translation.length,
+          sample: translation.substring(0, 50) + '...'
+        });
+      }
       
       return translation;
     } catch (error) {
       console.error('Failed to get translation:', error);
+      
+      // Special fallback for Tagalog
+      if (targetLanguage === 'tagalog') {
+        return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+      }
+      
       return "";
     }
   };
@@ -87,109 +120,210 @@ export const useTranslationHandler = () => {
   /**
    * Special case for Hindi translations to ensure they use Devanagari script
    */
-  const verifyHindiTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'hindi') return translation;
+  const verifyHindiTranslation = async (translation: string | Record<string, unknown>, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'hindi') return typeof translation === 'string' ? translation : "";
+    
+    // Convert object to string if needed
+    let translationText = "";
+    if (typeof translation === 'object' && translation !== null) {
+      const translationObj = translation as Record<string, unknown>;
+      if ('value' in translationObj && translationObj.value) {
+        translationText = String(translationObj.value);
+      } else if ('text' in translationObj && translationObj.text) {
+        translationText = String(translationObj.text);
+      } else if ('content' in translationObj && translationObj.content) {
+        translationText = String(translationObj.content);
+      } else {
+        translationText = "";
+      }
+    } else if (typeof translation === 'string') {
+      translationText = translation;
+    }
     
     // Check if the translation contains Devanagari script (used in Hindi)
-    const containsDevanagari = /[\u0900-\u097F]/.test(translation);
+    const containsDevanagari = /[\u0900-\u097F]/.test(translationText);
     
     if (!containsDevanagari && userLanguage === 'hindi') {
       console.log('Getting proper Hindi translation with Devanagari script');
       return await getTranslation(originalContent, 'hindi');
     }
     
-    return translation;
+    return translationText;
   };
   
   /**
    * Special case for Farsi translations to ensure they use proper Farsi script
    */
-  const verifyFarsiTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'farsi') return translation;
+  const verifyFarsiTranslation = async (translation: string | Record<string, unknown>, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'farsi') return typeof translation === 'string' ? translation : "";
+    
+    // Convert object to string if needed
+    let translationText = "";
+    if (typeof translation === 'object' && translation !== null) {
+      const translationObj = translation as Record<string, unknown>;
+      if ('value' in translationObj && translationObj.value) {
+        translationText = String(translationObj.value);
+      } else if ('text' in translationObj && translationObj.text) {
+        translationText = String(translationObj.text);
+      } else if ('content' in translationObj && translationObj.content) {
+        translationText = String(translationObj.content);
+      } else {
+        translationText = "";
+      }
+    } else if (typeof translation === 'string') {
+      translationText = translation;
+    }
     
     // Check if the translation contains Arabic script (used in Farsi)
-    const containsFarsi = /[\u0600-\u06FF]/.test(translation);
+    const containsFarsi = /[\u0600-\u06FF]/.test(translationText);
     
     if (!containsFarsi && userLanguage === 'farsi') {
       console.log('Getting proper Farsi translation with Persian script');
       return await getTranslation(originalContent, 'farsi');
     }
     
-    return translation;
+    return translationText;
   };
 
   /**
    * Special case for Bengali translations to ensure they use proper Bengali script
    */
-  const verifyBengaliTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'bengali') return translation;
+  const verifyBengaliTranslation = async (translation: string | Record<string, unknown>, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'bengali') return typeof translation === 'string' ? translation : "";
+    
+    // Convert object to string if needed
+    let translationText = "";
+    if (typeof translation === 'object' && translation !== null) {
+      const translationObj = translation as Record<string, unknown>;
+      if ('value' in translationObj && translationObj.value) {
+        translationText = String(translationObj.value);
+      } else if ('text' in translationObj && translationObj.text) {
+        translationText = String(translationObj.text);
+      } else if ('content' in translationObj && translationObj.content) {
+        translationText = String(translationObj.content);
+      } else {
+        translationText = "";
+      }
+    } else if (typeof translation === 'string') {
+      translationText = translation;
+    }
     
     // Check if the translation contains Bengali script
-    const containsBengali = /[\u0980-\u09FF]/.test(translation);
+    const containsBengali = /[\u0980-\u09FF]/.test(translationText);
     
     if (!containsBengali && userLanguage === 'bengali') {
       console.log('Getting proper Bengali translation with Bengali script');
       return await getTranslation(originalContent, 'bengali');
     }
     
-    return translation;
+    return translationText;
   };
   
   /**
    * Enhanced special case handling for Tagalog translations
    */
-  const verifyTagalogTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
-    if (userLanguage !== 'tagalog') return translation;
+  const verifyTagalogTranslation = async (translation: string | Record<string, unknown>, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'tagalog') return typeof translation === 'string' ? translation : "";
     
     console.log('Verifying Tagalog translation:', {
       hasTranslation: !!translation,
-      translationLength: translation ? translation.length : 0,
       translationType: typeof translation,
+      isObject: typeof translation === 'object',
+      isString: typeof translation === 'string',
+      translationPreview: typeof translation === 'string' ? 
+        translation.substring(0, 30) + '...' : 
+        JSON.stringify(translation).substring(0, 30) + '...',
       shortContentPreview: originalContent.substring(0, 30) + '...'
     });
     
+    // Extract string from object if needed
+    let translationText = "";
+    if (typeof translation === 'object' && translation !== null) {
+      const translationObj = translation as Record<string, unknown>;
+      
+      if ('value' in translationObj && translationObj.value) {
+        translationText = String(translationObj.value);
+      } else if ('text' in translationObj && translationObj.text) {
+        translationText = String(translationObj.text);
+      } else if ('content' in translationObj && translationObj.content) {
+        translationText = String(translationObj.content);
+      } else {
+        // Try JSON stringify as last resort
+        try {
+          translationText = JSON.stringify(translationObj);
+          // Clean up the stringified output
+          if (translationText.startsWith('{') && translationText.endsWith('}')) {
+            translationText = translationText.replace(/[{}'"]/g, '').replace(/:/g, ': ');
+          }
+        } catch (e) {
+          console.error('Failed to stringify Tagalog translation object:', e);
+          translationText = "";
+        }
+      }
+    } else if (typeof translation === 'string') {
+      translationText = translation;
+    } else {
+      // Try to convert any other type to string
+      try {
+        translationText = String(translation);
+      } catch (e) {
+        console.error('Error converting Tagalog translation to string:', e);
+        translationText = "";
+      }
+    }
+    
+    console.log('Extracted Tagalog translation text:', {
+      text: translationText,
+      length: translationText.length,
+      isValid: translationText && 
+               translationText !== 'undefined' && 
+               translationText !== '[object Object]' &&
+               translationText.length > 10
+    });
+    
     // More aggressive checks for Tagalog to ensure we get a translation
-    if (!translation || 
-        translation.length < 10 || 
-        translation.includes('Translation not available') ||
-        translation === 'undefined' ||
-        translation === '[object Object]') {
+    if (!translationText || 
+        translationText === 'undefined' || 
+        translationText === '[object Object]' ||
+        translationText.length < 10 || 
+        translationText.includes('Translation not available')) {
       
       console.log('Getting proper Tagalog translation - inadequate translation detected');
       
       // Try up to 3 times to get a valid translation
       let retryCount = 0;
-      let newTranslation = "";
+      let validTranslation = false;
       
-      while (retryCount < 3 && (!newTranslation || newTranslation.length < 10)) {
+      while (retryCount < 3 && !validTranslation) {
         retryCount++;
         console.log(`Tagalog translation retry attempt ${retryCount}`);
         
-        newTranslation = await getTranslation(originalContent, 'tagalog');
+        const newTranslation = await getTranslation(originalContent, 'tagalog');
         
         // Extra validation - ensure it's not an object/undefined
-        if (newTranslation === 'undefined' || newTranslation === '[object Object]') {
-          newTranslation = "";
-        }
-        
-        // If we get a good translation, use it
-        if (newTranslation && newTranslation.length > 10) {
+        if (newTranslation && 
+            newTranslation !== 'undefined' && 
+            newTranslation !== '[object Object]' &&
+            newTranslation.length > 10) {
+          
+          translationText = newTranslation;
+          validTranslation = true;
           console.log('Successfully obtained new Tagalog translation:', {
             length: newTranslation.length,
             preview: newTranslation.substring(0, 30) + '...'
           });
-          return newTranslation;
+          break;
         }
       }
       
-      if (!newTranslation || newTranslation.length < 10) {
+      // Final fallback for Tagalog
+      if (!validTranslation) {
         console.log('Failed to get proper Tagalog translation after multiple retries');
-        // Last resort - return a manual placeholder in Tagalog if all else fails
-        return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."; // "Translation not available at the moment. Sorry for the inconvenience." in Tagalog
+        translationText = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
       }
     }
     
-    return translation;
+    return translationText;
   };
 
   /**

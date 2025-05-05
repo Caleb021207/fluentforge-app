@@ -31,57 +31,99 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   useEffect(() => {
     if (currentLanguage === 'tagalog') {
       console.log('TranslationSection Tagalog debug:', { 
-        translation, 
+        originalTranslation: translation,
         translationLength: translation ? translation.length : 0,
-        hasDefaultMessage: translation?.includes('Translation not available') || false,
-        translationType: typeof translation,
-        currentLanguage
+        translationType: typeof translation
       });
     }
     
     // Sanitize and validate the translation
     const sanitizeTranslation = (): string => {
-      // Handle undefined, null, empty strings
-      if (!translation) {
+      // First check for null or undefined
+      if (translation === null || translation === undefined) {
         return t("translationNotAvailable", { language: currentLanguage }) || 
-                `Translation not available for ${currentLanguage}`;
+               `Translation not available for ${currentLanguage}`;
       }
       
-      // Handle possible object formats (common error for Tagalog)
-      if (typeof translation === 'object' && translation !== null) {
-        console.warn(`Received object instead of string for ${currentLanguage} translation:`, translation);
+      // Handle string translations
+      if (typeof translation === 'string') {
+        // Check for empty or invalid string values
+        if (!translation.trim() || 
+            translation === 'undefined' || 
+            translation === '[object Object]') {
+          return t("translationNotAvailable", { language: currentLanguage }) || 
+                 `Translation not available for ${currentLanguage}`;
+        }
         
-        // Try to extract string from common object patterns
+        // Return valid string translation
+        return translation;
+      }
+      
+      // Handle object format translations (seen in Tagalog translations)
+      if (typeof translation === 'object' && translation !== null) {
+        if (currentLanguage === 'tagalog') {
+          console.log('Handling object translation for Tagalog:', translation);
+        }
+        
+        // Safety type conversion for processing
         const translationObj = translation as Record<string, unknown>;
         
+        // Try all common object patterns
         if ('value' in translationObj && translationObj.value) {
-          return String(translationObj.value);
+          const value = String(translationObj.value);
+          if (value !== 'undefined' && value !== '[object Object]') {
+            return value;
+          }
         } 
         
         if ('text' in translationObj && translationObj.text) {
-          return String(translationObj.text);
+          const text = String(translationObj.text);
+          if (text !== 'undefined' && text !== '[object Object]') {
+            return text;
+          }
         } 
         
         if ('content' in translationObj && translationObj.content) {
-          return String(translationObj.content);
-        } 
+          const content = String(translationObj.content);
+          if (content !== 'undefined' && content !== '[object Object]') {
+            return content;
+          }
+        }
+        
+        // Tagalog fallback for object that couldn't be parsed
+        if (currentLanguage === 'tagalog') {
+          return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+        }
         
         return t("translationNotAvailable", { language: currentLanguage }) || 
                `Translation not available for ${currentLanguage}`;
       }
       
-      // Handle invalid string values like 'undefined', '[object Object]'
-      if (translation === 'undefined' || translation === '[object Object]') {
-        return t("translationNotAvailable", { language: currentLanguage }) || 
-               `Translation not available for ${currentLanguage}`;
+      // Fallback for any other case
+      try {
+        const stringValue = String(translation);
+        if (stringValue && stringValue !== 'undefined' && stringValue !== '[object Object]') {
+          return stringValue;
+        }
+      } catch (e) {
+        console.error('Error converting translation to string:', e);
       }
       
-      // If it's a valid string and not a default message, return it
-      return translation;
+      return t("translationNotAvailable", { language: currentLanguage }) || 
+             `Translation not available for ${currentLanguage}`;
     };
     
     // Set the cleaned up translation text
-    setTranslationText(sanitizeTranslation());
+    const sanitizedText = sanitizeTranslation();
+    setTranslationText(sanitizedText);
+    
+    if (currentLanguage === 'tagalog') {
+      console.log('Sanitized Tagalog translation:', {
+        original: translation,
+        sanitized: sanitizedText,
+        sanitizedLength: sanitizedText.length
+      });
+    }
     
   }, [translation, currentLanguage, t]);
   
