@@ -94,6 +94,21 @@ export const useTranslationHandler = () => {
   };
 
   /**
+   * Special case for Tagalog translations
+   */
+  const verifyTagalogTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
+    if (userLanguage !== 'tagalog') return translation;
+    
+    // If no translation or very short translation, request a new one
+    if (!translation || translation.length < 5) {
+      console.log('Getting proper Tagalog translation');
+      return await getTranslation(originalContent, 'tagalog');
+    }
+    
+    return translation;
+  };
+
+  /**
    * Check if a translation is needed for the current language
    */
   const needsTranslation = (language: string): boolean => {
@@ -105,6 +120,7 @@ export const useTranslationHandler = () => {
     verifyHindiTranslation,
     verifyFarsiTranslation,
     verifyBengaliTranslation,
+    verifyTagalogTranslation,
     needsTranslation
   };
 };

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { logDataAccess } from "@/utils/contentSafetyUtils";
-import { useTranslationHandler } from "./useTranslationHandler";
+import { useTranslationHandler } from "@/components/practice/hooks/useTranslationHandler";
 
 export const useChatMessaging = () => {
   const [isLoading, setIsLoading] = useState(false);
