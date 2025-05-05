@@ -9,6 +9,43 @@ export const useChatApi = () => {
   const { currentLanguage, t } = useLocalization();
   const { toast } = useToast();
 
+  // Helper function to extract string from object-like translations
+  const processTranslation = (translation: any): string => {
+    if (!translation) return "";
+    
+    if (typeof translation === 'string') {
+      return translation;
+    }
+    
+    if (typeof translation === 'object' && translation !== null) {
+      // Try to extract from common object patterns
+      if ('value' in translation && translation.value) {
+        return String(translation.value);
+      } 
+      if ('text' in translation && translation.text) {
+        return String(translation.text);
+      } 
+      if ('content' in translation && translation.content) {
+        return String(translation.content);
+      }
+      
+      // Try to stringify the object
+      try {
+        return JSON.stringify(translation);
+      } catch (e) {
+        console.error('Error stringifying translation object:', e);
+      }
+    }
+    
+    // Last resort - try to convert to string
+    try {
+      return String(translation);
+    } catch (e) {
+      console.error('Error converting translation to string:', e);
+      return "";
+    }
+  };
+
   const sendMessage = async (input: string): Promise<ChatMessage | null> => {
     if (!input.trim()) {
       return null;
@@ -58,10 +95,13 @@ export const useChatApi = () => {
           });
         }
         
+        // Process the translation to ensure it's a string
+        const processedTranslation = processTranslation(retryResponse.data.translation);
+        
         return {
           role: "assistant",
           content: retryResponse.data.content,
-          translation: retryResponse.data.translation
+          translation: processedTranslation
         };
       }
 
@@ -90,11 +130,14 @@ export const useChatApi = () => {
             JSON.stringify(data.translation).substring(0, 30) + '...'
         });
       }
-
+      
+      // Process the translation to ensure it's a string
+      const processedTranslation = processTranslation(data.translation);
+      
       return {
         role: "assistant",
         content: data.content,
-        translation: data.translation
+        translation: processedTranslation
       };
     } catch (error: any) {
       console.error('Chat error:', error);
