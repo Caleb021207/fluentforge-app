@@ -19,7 +19,12 @@ const authTranslations: TranslationRecord = {
   "loginFailed": "Nabigo ang pag-login. Pakitingnan ang iyong mga kredensyal.",
   "signupFailed": "Nabigo ang pag-sign up. Pakisubukang muli.",
   "authRequired": "Kailangan ang Authentication",
-  "pleaseLoginToAccess": "Pakiusap mag-login upang ma-access ang feature na ito"
+  "pleaseLoginToAccess": "Pakiusap mag-login upang ma-access ang feature na ito",
+  "ageVerificationTitle": "Pag-verify ng Edad",
+  "ageVerificationDescription": "Mangyaring i-verify ang iyong edad para magpatuloy",
+  "birthYear": "Taon ng Kapanganakan",
+  "continue": "Magpatuloy",
+  "privacyPolicyNote": "Sa pagpapatuloy, sumasang-ayon ka sa aming Patakaran sa Privacy at Mga Tuntunin ng Serbisyo."
 };
 
 export default authTranslations;

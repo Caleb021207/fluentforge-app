@@ -32,6 +32,8 @@ export const useVoiceChatMessages = () => {
       initialContent = "سلام، زه غواړم چې ستاسو سره انګلیسي تمرین وکړم.";
     } else if (currentLanguage === "swahili") {
       initialContent = "Habari, ningependa kufanya mazoezi ya Kiingereza nawe.";
+    } else if (currentLanguage === "tagalog") {
+      initialContent = "Kamusta, gusto kong magsanay ng Ingles kasama ka.";
     } else {
       initialContent = `Hello, I'd like to practice ${practice} with you.`;
     }

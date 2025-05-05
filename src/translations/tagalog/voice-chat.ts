@@ -34,7 +34,15 @@ const voiceChatTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "Hindi suportado ng browser mo ang speech recognition",
   "microphoneAccessRequired": "Kailangan ng access sa mikropono",
   "failedToGenerateSpeech": "Hindi makabuo ng speech audio",
-  "browserBasedTTS": "Tandaan: Gumagamit kami ng nakabatay sa browser na text-to-speech na maaaring may limitasyon sa ilang mga wika"
+  "browserBasedTTS": "Tandaan: Gumagamit kami ng nakabatay sa browser na text-to-speech na maaaring may limitasyon sa ilang mga wika",
+  "startConversationIn": "Magsimula ng pag-uusap sa {language}",
+  "youSaid": "Sinabi mo",
+  "aiResponse": "Tugon ng AI", 
+  "speaking": "Nagsasalita",
+  "playAgain": "I-play muli",
+  "translation": "Pagsasalin",
+  "conversationHistoryCleared": "Na-clear na ang kasaysayan ng pag-uusap",
+  "success": "Tagumpay"
 };
 
 export default voiceChatTranslations;
