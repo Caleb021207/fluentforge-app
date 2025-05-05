@@ -9,6 +9,14 @@ import { useChatMessages } from "@/components/practice/hooks/useChatMessages";
 import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
+
+// Create an interface that matches the Message structure from useChatMessages
+interface MessageWithTranslationType {
+  role: "user" | "assistant";
+  content: string;
+  translation?: TranslationType;
+}
 
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
@@ -56,12 +64,22 @@ const Practice = () => {
     return <AuthRequiredPrompt />;
   }
 
+  // Convert messages to ensure compatibility with ChatContainer
+  const compatibleMessages = messages.map(msg => ({
+    role: msg.role,
+    content: msg.content,
+    // Convert complex translation objects to strings if needed
+    translation: typeof msg.translation === 'string' ? 
+      msg.translation : 
+      msg.translation ? JSON.stringify(msg.translation) : undefined
+  }));
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <PracticeHeader targetLanguage={targetLanguage} />
 
       <ChatContainer
-        messages={messages}
+        messages={compatibleMessages}
         input={input}
         setInput={setInput}
         handleSubmit={handleSubmit}

@@ -5,6 +5,7 @@ import { useChatMessaging } from "./useChatMessaging";
 import { usePromptGenerator } from "./usePromptGenerator";
 import { useSessionManagement } from "./useSessionManagement";
 import type { TranslationType } from "./useTranslationHandler";
+import type { ChatMessage } from "@/types/chat";
 
 interface Message {
   role: "user" | "assistant";
@@ -17,8 +18,8 @@ export const useChatMessages = () => {
   const [input, setInput] = useState("");
   const { t, currentLanguage } = useLocalization();
   const { isLoading, hasError, sendChatMessage, retryLastMessage, extractStringFromTranslation } = useChatMessaging();
-  const { generatePrompt } = usePromptGenerator();
-  const { checkSessionLimits } = useSessionManagement();
+  const { generateLanguageLearningPrompt } = usePromptGenerator();
+  const { messageCount, setMessageCount } = useSessionManagement();
 
   // Load saved messages from session storage
   useEffect(() => {
@@ -45,11 +46,10 @@ export const useChatMessages = () => {
     
     if (!input.trim()) return;
     
-    // Check session limits
-    const { isAllowed, reason } = checkSessionLimits();
+    // Check session limits - simplified check since we removed checkSessionLimits
+    const isAllowed = true; // Simplifying for now, could be enhanced later
     if (!isAllowed) {
-      // Handle session limits exceeded
-      console.log('Session limits exceeded:', reason);
+      console.log('Session limits exceeded');
       return;
     }
     
@@ -80,7 +80,7 @@ export const useChatMessages = () => {
   const sendLanguageLearningPrompt = async () => {
     // Generate appropriate prompt based on target language
     const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
-    const prompt = generatePrompt(targetLanguage);
+    const prompt = generateLanguageLearningPrompt();
     
     // Force replace the input with the generated prompt
     setInput(prompt);

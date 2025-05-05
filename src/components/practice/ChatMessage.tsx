@@ -11,7 +11,7 @@ import type { TranslationType } from "./hooks/useTranslationHandler";
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
-  translation?: TranslationType;
+  translation?: string | TranslationType;
   onPlayAudio?: (text: string) => void;
 }
 
@@ -38,7 +38,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const safeContent = content ? filterContent(content) : "";
   
   // Convert translation to string format for safety filtering and display
-  const processTranslation = (translation: TranslationType | undefined): string => {
+  const processTranslation = (translation: string | TranslationType | undefined): string => {
     if (!translation) return "";
     
     try {
