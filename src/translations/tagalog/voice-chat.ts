@@ -4,7 +4,7 @@ import { TranslationRecord } from "../types";
 const voiceChatTranslations: TranslationRecord = {
   // Voice chat page
   "practiceDescription": "Magsanay magsalita ng Ingles gamit ang aming voice chat. I-click ang button ng mikropono at magsimulang magsalita sa Ingles.",
-  "aiModelInfo": "Modelong AI: Gumagamit kami ng OpenAI GPT-4o-mini na may naka-integrate na speech synthesis sa browser.",
+  "aiModelInfo": "Modelong AI: Gumagamit kami ng OpenAI GPT-4o-mini na may Meta MMS para sa TTS.",
   "practiceLevel": "Antas ng Pagsasanay: B1 – Gitnang Antas – Kayang makipag-usap sa mga pamilyar na paksa",
   "cefrB1Description": "Gitnang Antas – Kayang makipag-usap sa mga pamilyar na paksa",
   
@@ -34,7 +34,7 @@ const voiceChatTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "Hindi suportado ng browser mo ang speech recognition",
   "microphoneAccessRequired": "Kailangan ng access sa mikropono",
   "failedToGenerateSpeech": "Hindi makabuo ng speech audio",
-  "browserBasedTTS": "Tandaan: Gumagamit kami ng nakabatay sa browser na text-to-speech na maaaring may limitasyon sa ilang mga wika",
+  "browserBasedTTS": "Tandaan: Gumagamit kami ng Meta MMS at Azure para sa serbisyo ng tekst-to-speech.",
   "startConversationIn": "Magsimula ng pag-uusap sa {language}",
   "youSaid": "Sinabi mo",
   "aiResponse": "Tugon ng AI", 

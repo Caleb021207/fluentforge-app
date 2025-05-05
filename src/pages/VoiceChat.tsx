@@ -373,20 +373,35 @@ const VoiceChat = () => {
           <strong>{currentLanguage === "haitian" ? "Modèl IA:" : currentLanguage === "tagalog" ? "Modelong AI:" : "AI Model:"}</strong> {currentLanguage === "haitian" 
             ? "Itilize GPT-4o-mini OpenAI a avèk Meta MMS pou TTS."
             : currentLanguage === "tagalog"
-            ? "Gumagamit kami ng OpenAI GPT-4o-mini na may naka-integrate na speech synthesis sa browser."
+            ? "Gumagamit kami ng OpenAI GPT-4o-mini na may Meta MMS para sa TTS."
             : `Using OpenAI's GPT-4o-mini with Meta MMS for TTS.`
           }
         </p>
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-          <p className="text-amber-800 text-sm">
-            {currentLanguage === "haitian"
-              ? "Note: Sa a ap itilize Meta MMS pou sèvis tekst-a-diskou."
-              : currentLanguage === "tagalog"
-              ? "Tandaan: Gumagamit kami ng nakabatay sa browser na text-to-speech na maaaring may limitasyon sa ilang mga wika."
-              : t("browserBasedTTS")
-            }
-          </p>
-        </div>
+        {/* Show appropriate TTS info message based on language */}
+        {currentLanguage === "haitian" && (
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+            <p className="text-amber-800 text-sm">
+              Note: Sa a ap itilize Meta MMS pou sèvis tekst-a-diskou.
+            </p>
+          </div>
+        )}
+        {/* Removed misleading browser TTS warning for Tagalog */}
+        {/* Instead, we'll show a more accurate message for Tagalog users */}
+        {currentLanguage === "tagalog" && (
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+            <p className="text-amber-800 text-sm">
+              Tandaan: Gumagamit kami ng Meta MMS at Azure para sa serbisyo ng tekst-to-speech.
+            </p>
+          </div>
+        )}
+        {/* Keep browser TTS warning for other languages */}
+        {currentLanguage !== "haitian" && currentLanguage !== "tagalog" && (
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+            <p className="text-amber-800 text-sm">
+              {t("browserBasedTTS")}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-6">
