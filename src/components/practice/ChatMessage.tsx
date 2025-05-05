@@ -22,8 +22,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     if (!translation) return "";
     if (typeof translation === 'string') return translation;
     
-    // If it's an object with value property (seen in logs)
-    if (typeof translation === 'object' && translation._type === 'undefined') {
+    // If it's an object (seen in logs), try to convert it safely
+    if (typeof translation === 'object') {
       console.warn('Translation was received as an object instead of string:', translation);
       return "";
     }

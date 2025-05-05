@@ -15,6 +15,7 @@ interface TranslationSectionProps {
 }
 
 const TranslationSection: React.FC<TranslationSectionProps> = ({
+  showTranslation,
   role,
   translation,
   currentLanguage,
