@@ -1,4 +1,3 @@
-
 /**
  * Returns display name for a language code
  * @param language The language code
