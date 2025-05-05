@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -365,12 +364,16 @@ const VoiceChat = () => {
         <p className="text-gray-600 mb-4">
           {currentLanguage === "haitian" 
             ? "Pratike konpetans anglè w yo avèk tchat vwa nou. Klike sou bouton mikwofòn lan epi kòmanse pale an anglè."
+            : currentLanguage === "tagalog"
+            ? "Magsanay magsalita ng Ingles gamit ang aming voice chat. I-click ang button ng mikropono at magsimulang magsalita sa Ingles."
             : `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}.`
           }
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "haitian" ? "Modèl IA:" : "AI Model:"}</strong> {currentLanguage === "haitian" 
+          <strong>{currentLanguage === "haitian" ? "Modèl IA:" : currentLanguage === "tagalog" ? "Modelong AI:" : "AI Model:"}</strong> {currentLanguage === "haitian" 
             ? "Itilize GPT-4o-mini OpenAI a avèk Meta MMS pou TTS."
+            : currentLanguage === "tagalog"
+            ? "Gumagamit kami ng OpenAI GPT-4o-mini na may naka-integrate na speech synthesis sa browser."
             : `Using OpenAI's GPT-4o-mini with Meta MMS for TTS.`
           }
         </p>
@@ -378,6 +381,8 @@ const VoiceChat = () => {
           <p className="text-amber-800 text-sm">
             {currentLanguage === "haitian"
               ? "Note: Sa a ap itilize Meta MMS pou sèvis tekst-a-diskou."
+              : currentLanguage === "tagalog"
+              ? "Tandaan: Gumagamit kami ng nakabatay sa browser na text-to-speech na maaaring may limitasyon sa ilang mga wika."
               : t("browserBasedTTS")
             }
           </p>
@@ -389,7 +394,20 @@ const VoiceChat = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
-                <span className="font-medium">{currentLanguage === "haitian" ? "Nivo Pratik: B1" : `${t("practiceLevel")}: B1`}</span> - {currentLanguage === "haitian" ? "Entèmedyè - kapab diskite sou sijè familye" : t("cefrB1Description")}
+                <span className="font-medium">
+                  {currentLanguage === "haitian" 
+                    ? "Nivo Pratik: B1" 
+                    : currentLanguage === "tagalog"
+                    ? "Antas ng Pagsasanay: B1"
+                    : `${t("practiceLevel")}: B1`
+                  }
+                </span> - 
+                {currentLanguage === "haitian" 
+                  ? "Entèmedyè - kapab diskite sou sijè familye" 
+                  : currentLanguage === "tagalog"
+                  ? "Gitnang Antas – Kayang makipag-usap sa mga pamilyar na paksa"
+                  : t("cefrB1Description")
+                }
               </p>
             </div>
 
@@ -403,12 +421,16 @@ const VoiceChat = () => {
                 {isListening ? (
                   <>
                     <MicOff className="h-5 w-5 mr-2" />
-                    {currentLanguage === "haitian" ? "Sispann Koute" : t("stopListening")}
+                    {currentLanguage === "haitian" ? "Sispann Koute" : 
+                     currentLanguage === "tagalog" ? "Itigil ang Pakikinig" : 
+                     t("stopListening")}
                   </>
                 ) : (
                   <>
                     <Mic className="h-5 w-5 mr-2" />
-                    {currentLanguage === "haitian" ? "Kòmanse Pale" : t("startSpeaking")}
+                    {currentLanguage === "haitian" ? "Kòmanse Pale" : 
+                     currentLanguage === "tagalog" ? "Magsimulang Magsalita" : 
+                     t("startSpeaking")}
                   </>
                 )}
               </Button>
@@ -421,7 +443,9 @@ const VoiceChat = () => {
                   disabled={isLoading || isSpeaking || !transcript.trim()}
                 >
                   <Send className="h-5 w-5 mr-2" />
-                  {currentLanguage === "haitian" ? "Voye" : t("send")}
+                  {currentLanguage === "haitian" ? "Voye" : 
+                   currentLanguage === "tagalog" ? "Ipadala" : 
+                   t("send")}
                 </Button>
               )}
             </div>
@@ -429,13 +453,19 @@ const VoiceChat = () => {
           
           {isListening && (
             <div className="text-sm text-gray-500 animate-pulse mb-4">
-              {currentLanguage === "haitian" ? "Ap koute kounye a..." : `${t("listeningNow")}...`}
+              {currentLanguage === "haitian" ? "Ap koute kounye a..." : 
+               currentLanguage === "tagalog" ? "Nakikinig ngayon..." : 
+               `${t("listeningNow")}...`}
             </div>
           )}
 
           {transcript && (
             <div className="mb-6">
-              <h3 className="font-medium mb-2">{currentLanguage === "haitian" ? "Ou te di:" : `${t("youSaid")}:`}</h3>
+              <h3 className="font-medium mb-2">
+                {currentLanguage === "haitian" ? "Ou te di:" : 
+                 currentLanguage === "tagalog" ? "Sinabi mo:" : 
+                 `${t("youSaid")}:`}
+              </h3>
               <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
                 {transcript}
               </div>
@@ -455,7 +485,11 @@ const VoiceChat = () => {
           {gptResponse && (
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="font-medium">{currentLanguage === "haitian" ? "Repons IA:" : `${t("aiResponse")}:`}</h3>
+                <h3 className="font-medium">
+                  {currentLanguage === "haitian" ? "Repons IA:" : 
+                   currentLanguage === "tagalog" ? "Tugon ng AI:" : 
+                   `${t("aiResponse")}:`}
+                </h3>
                 <Button 
                   onClick={playAgain} 
                   variant="outline" 
@@ -465,19 +499,32 @@ const VoiceChat = () => {
                 >
                   <Volume2 className="h-4 w-4" />
                   {isSpeaking 
-                    ? (currentLanguage === "haitian" ? "Ap pale" : t("speaking")) 
-                    : (currentLanguage === "haitian" ? "Jwe ankò" : t("playAgain"))}
+                    ? (currentLanguage === "haitian" ? "Ap pale" : 
+                       currentLanguage === "tagalog" ? "Nagsasalita" : 
+                       t("speaking")) 
+                    : (currentLanguage === "haitian" ? "Jwe ankò" : 
+                       currentLanguage === "tagalog" ? "I-play muli" : 
+                       t("playAgain"))}
                 </Button>
               </div>
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {/* Always show translation for Haitian users or if translation exists */}
-                {((translation && translation.trim() !== "") || currentLanguage === "haitian") && (
+                {/* Always show translation for Haitian and Tagalog users or if translation exists */}
+                {((translation && translation.trim() !== "") || 
+                  currentLanguage === "haitian" || 
+                  currentLanguage === "tagalog") && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
                     <div className="text-sm text-gray-600">
-                      <strong>{currentLanguage === "haitian" ? "Tradiksyon:" : t("translation")}:</strong> {translation || "Tradiksyon pa disponib"}
+                      <strong>
+                        {currentLanguage === "haitian" ? "Tradiksyon:" : 
+                         currentLanguage === "tagalog" ? "Pagsasalin:" : 
+                         t("translation")}:
+                      </strong> {translation || 
+                                (currentLanguage === "haitian" ? "Tradiksyon pa disponib" : 
+                                 currentLanguage === "tagalog" ? "Hindi magagamit ang pagsasalin" : 
+                                 "Translation not available")}
                     </div>
                   </>
                 )}
@@ -490,14 +537,18 @@ const VoiceChat = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-medium">
-                {currentLanguage === "haitian" ? "Istwa Konvèsasyon" : t("conversationHistory")}
+                {currentLanguage === "haitian" ? "Istwa Konvèsasyon" : 
+                 currentLanguage === "tagalog" ? "Kasaysayan ng Pag-uusap" : 
+                 t("conversationHistory")}
               </h3>
               <Button 
                 onClick={clearConversation}
                 variant="outline" 
                 size="sm"
               >
-                {currentLanguage === "haitian" ? "Efase Konvèsasyon" : t("clearConversation")}
+                {currentLanguage === "haitian" ? "Efase Konvèsasyon" : 
+                 currentLanguage === "tagalog" ? "Burahin ang Pag-uusap" : 
+                 t("clearConversation")}
               </Button>
             </div>
             
@@ -519,9 +570,15 @@ const VoiceChat = () => {
         )}
         
         <Card className="p-6">
-          <h3 className="font-medium mb-4">{currentLanguage === "haitian" ? "Konvèsasyon Demaraj" : t("conversationStarters")}</h3>
+          <h3 className="font-medium mb-4">
+            {currentLanguage === "haitian" ? "Konvèsasyon Demaraj" : 
+             currentLanguage === "tagalog" ? "Mga Panimula ng Pag-uusap" : 
+             t("conversationStarters")}
+          </h3>
           <p className="text-sm text-gray-600 mb-4">
-            {currentLanguage === "haitian" ? "Eseye fraz sa yo" : t("tryThesePhrases")}
+            {currentLanguage === "haitian" ? "Eseye fraz sa yo" : 
+             currentLanguage === "tagalog" ? "Subukang gamitin ang mga pariralang ito" : 
+             t("tryThesePhrases")}
           </p>
           
           <div className="space-y-6">
