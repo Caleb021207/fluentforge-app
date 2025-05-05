@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
@@ -42,21 +43,23 @@ export const useTranslationHandler = () => {
       if (data?.translation) {
         if (typeof data.translation === 'string') {
           translation = data.translation;
-        } else if (typeof data.translation === 'object') {
+        } else if (typeof data.translation === 'object' && data.translation !== null) {
           // Log the unexpected object format
           console.warn('Translation returned as object instead of string:', data.translation);
           
           // Try to extract string from common object patterns
-          if (data.translation.value) {
-            translation = String(data.translation.value);
-          } else if (data.translation.text) {
-            translation = String(data.translation.text);
-          } else if (data.translation.content) {
-            translation = String(data.translation.content);
+          const translationObj = data.translation as Record<string, unknown>;
+          
+          if (translationObj.value && typeof translationObj.value === 'string') {
+            translation = translationObj.value;
+          } else if (translationObj.text && typeof translationObj.text === 'string') {
+            translation = translationObj.text;
+          } else if (translationObj.content && typeof translationObj.content === 'string') {
+            translation = translationObj.content;
           } else {
             // Last resort - try to convert the entire object to a string
             try {
-              translation = JSON.stringify(data.translation);
+              translation = JSON.stringify(translationObj);
               // Remove quotes and curly braces if it looks like a stringified simple object
               if (translation.startsWith('{') && translation.endsWith('}')) {
                 translation = translation.replace(/[{}'"]/g, '').replace(/:/g, ': ');

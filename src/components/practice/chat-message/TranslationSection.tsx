@@ -41,14 +41,14 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
     
     // Sanitize and validate the translation
     const sanitizeTranslation = (): string => {
-      // Handle undefined, null, empty strings, or object translations
+      // Handle undefined, null, empty strings
       if (!translation) {
         return t("translationNotAvailable", { language: currentLanguage }) || 
                 `Translation not available for ${currentLanguage}`;
       }
       
       // Handle possible object formats (common error for Tagalog)
-      if (typeof translation === 'object') {
+      if (typeof translation === 'object' && translation !== null) {
         console.warn(`Received object instead of string for ${currentLanguage} translation:`, translation);
         
         // Try to extract string from common object patterns
@@ -56,14 +56,18 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
         
         if ('value' in translationObj && translationObj.value) {
           return String(translationObj.value);
-        } else if ('text' in translationObj && translationObj.text) {
+        } 
+        
+        if ('text' in translationObj && translationObj.text) {
           return String(translationObj.text);
-        } else if ('content' in translationObj && translationObj.content) {
+        } 
+        
+        if ('content' in translationObj && translationObj.content) {
           return String(translationObj.content);
-        } else {
-          return t("translationNotAvailable", { language: currentLanguage }) || 
-                 `Translation not available for ${currentLanguage}`;
-        }
+        } 
+        
+        return t("translationNotAvailable", { language: currentLanguage }) || 
+               `Translation not available for ${currentLanguage}`;
       }
       
       // Handle invalid string values like 'undefined', '[object Object]'

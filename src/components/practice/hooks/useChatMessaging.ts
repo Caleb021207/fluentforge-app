@@ -84,34 +84,64 @@ export const useChatMessaging = () => {
         throw new Error("Response from AI tutor is missing content");
       }
       
-      let translation = data.translation || "";
+      // Process translation - ensure it's a string
+      let translation = "";
+      
+      if (data.translation) {
+        // Direct string assignment if it's already a string
+        if (typeof data.translation === 'string') {
+          translation = data.translation;
+        } 
+        // Handle object format
+        else if (typeof data.translation === 'object' && data.translation !== null) {
+          console.warn('Translation returned as object:', data.translation);
+          
+          // Try to extract from potential object structures
+          const translationObj = data.translation as Record<string, unknown>;
+          
+          if ('value' in translationObj && typeof translationObj.value === 'string') {
+            translation = translationObj.value;
+          } else if ('text' in translationObj && typeof translationObj.text === 'string') {
+            translation = translationObj.text;
+          } else if ('content' in translationObj && typeof translationObj.content === 'string') {
+            translation = translationObj.content;
+          } else {
+            // Try JSON stringify as last resort
+            try {
+              translation = JSON.stringify(translationObj);
+            } catch (e) {
+              console.error('Failed to stringify translation object:', e);
+              translation = "";
+            }
+          }
+        }
+        // For any other type, attempt string conversion
+        else {
+          try {
+            translation = String(data.translation);
+          } catch (e) {
+            console.error('Error converting translation to string:', e);
+            translation = "";
+          }
+        }
+      }
       
       // Enhanced logging for Tagalog translations
       if (currentLanguage === 'tagalog') {
         console.log('Tagalog translation debug:', {
-          originalTranslation: translation,
+          originalTranslation: data.translation,
+          processedTranslation: translation,
           translationLength: translation ? translation.length : 0,
           translationType: typeof translation,
           hasTranslation: !!translation,
           dataContent: data.content.substring(0, 50) + '...' // Log just the start of content
         });
-        
-        // Extra safeguard for Tagalog object responses
-        if (typeof translation === 'object') {
-          console.warn('Tagalog translation returned as object:', translation);
-          
-          // Try to extract from potential object structures
-          if (translation && 'value' in translation && translation.value) {
-            translation = String(translation.value);
-          } else if (translation && 'text' in translation && translation.text) {
-            translation = String(translation.text);
-          } else if (translation && 'content' in translation && translation.content) {
-            translation = String(translation.content);
-          } else {
-            // Reset to empty string if we can't extract a good value
-            translation = "";
-          }
-        }
+      }
+      
+      // Detect invalid translations
+      if (translation === 'undefined' || translation === '[object Object]') {
+        console.warn(`Invalid translation value detected: "${translation}"`);
+        translation = "";
       }
       
       // Handle special translation cases
@@ -130,7 +160,8 @@ export const useChatMessaging = () => {
         });
       }
       
-      if ((!translation || translation === 'undefined' || translation === '[object Object]') && currentLanguage !== "english") {
+      // Handle missing translations - force getting a new one
+      if ((!translation || translation.length < 5) && currentLanguage !== "english") {
         console.warn("Missing or invalid translation for", currentLanguage, "user");
         
         // Force getting a translation specifically for Tagalog if it's missing
@@ -140,13 +171,13 @@ export const useChatMessaging = () => {
           // Try up to 3 times to get a valid translation
           let retryCount = 0;
           
-          while (retryCount < 3 && (!translation || translation.length < 5 || translation === 'undefined' || translation === '[object Object]')) {
+          while (retryCount < 3 && (!translation || translation.length < 5)) {
             retryCount++;
             console.log(`Forced Tagalog translation attempt ${retryCount}`);
             
             translation = await getTranslation(data.content, 'tagalog');
             
-            if (translation && translation.length > 10 && translation !== 'undefined' && translation !== '[object Object]') {
+            if (translation && translation.length > 10) {
               console.log('Forced Tagalog translation result:', {
                 gotTranslation: !!translation,
                 translationLength: translation.length,
@@ -157,7 +188,7 @@ export const useChatMessaging = () => {
           }
           
           // Last resort fallback for Tagalog
-          if (!translation || translation.length < 5 || translation === 'undefined' || translation === '[object Object]') {
+          if (!translation || translation.length < 5) {
             translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
             console.log('Using last resort Tagalog fallback message');
           }

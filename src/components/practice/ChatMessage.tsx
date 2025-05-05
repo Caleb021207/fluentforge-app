@@ -35,16 +35,30 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     if (typeof translation === 'object' && translation !== null) {
       console.warn('Translation was received as an object instead of string:', translation);
       
-      // Try to extract from known potential object structures
-      // Use type assertion to handle the object properties
+      // Use a safe type assertion with Record
       const translationObj = translation as Record<string, unknown>;
       
-      if (translationObj && 'value' in translationObj && typeof translationObj.value === 'string') {
+      // Check properties with proper type guards
+      if ('value' in translationObj && typeof translationObj.value === 'string') {
         return translationObj.value;
-      } else if (translationObj && 'text' in translationObj && typeof translationObj.text === 'string') {
+      } 
+      
+      if ('text' in translationObj && typeof translationObj.text === 'string') {
         return translationObj.text;
-      } else if (translationObj && 'content' in translationObj && typeof translationObj.content === 'string') {
+      } 
+      
+      if ('content' in translationObj && typeof translationObj.content === 'string') {
         return translationObj.content;
+      }
+      
+      // Last resort: try to stringify the object
+      try {
+        const stringified = JSON.stringify(translationObj);
+        if (stringified !== '{}' && stringified !== '[]') {
+          return stringified;
+        }
+      } catch (e) {
+        console.error('Failed to stringify translation object:', e);
       }
       
       return "";
