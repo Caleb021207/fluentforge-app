@@ -23,7 +23,9 @@ const practiceTranslations: TranslationRecord = {
   "send": "Ipadala",
   "error": "Error",
   "failedToGetTranslation": "Hindi makuha ang pagsasalin. Pakisubukang muli.",
-  "translationError": "Error sa Pagsasalin"
+  "translationError": "Error sa Pagsasalin",
+  "startTextChatting": "Magsimula ng pakikipag-chat",
+  "typeMessageBelow": "Mag-type ng mensahe sa ibaba"
 };
 
 export default practiceTranslations;

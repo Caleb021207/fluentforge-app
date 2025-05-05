@@ -17,34 +17,52 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
   
-  // Log to debug Tagalog translation issues
+  // Ensure translation is a string (handle object cases which can happen sometimes)
+  const processedTranslation = (() => {
+    if (!translation) return "";
+    if (typeof translation === 'string') return translation;
+    
+    // If it's an object with value property (seen in logs)
+    if (typeof translation === 'object' && translation._type === 'undefined') {
+      console.warn('Translation was received as an object instead of string:', translation);
+      return "";
+    }
+    
+    // Unknown format, convert to string or empty
+    console.warn('Unexpected translation format:', translation);
+    return String(translation) || "";
+  })();
+  
+  // Enhanced logging for Tagalog translations
   if (currentLanguage === 'tagalog') {
     console.log('ChatMessage Tagalog debug:', { 
       role, 
       content, 
-      translation,
-      translationLength: translation ? translation.length : 0,
+      originalTranslation: translation,
+      processedTranslation,
+      translationLength: processedTranslation ? processedTranslation.length : 0,
+      translationType: typeof translation,
       currentLanguage
     });
   }
   
   // Handle case where content is undefined or empty
-  if (!content && !translation) {
+  if (!content && !processedTranslation) {
     return <EmptyMessageWarning />;
   }
   
   // Filter content for safety if needed
   const safeContent = content ? filterContent(content) : "";
-  const safeTranslation = translation ? filterContent(translation) : "";
+  const safeTranslation = processedTranslation ? filterContent(processedTranslation) : "";
   
   // Check for potentially unsafe content
   const isContentSafe = isSafeContent(content);
-  const isTranslationSafe = translation ? isSafeContent(translation) : true;
+  const isTranslationSafe = processedTranslation ? isSafeContent(processedTranslation) : true;
   
   // Determine if translation should be shown
   const showTranslation = 
     TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage) || 
-    (translation && translation.trim() !== "") ||
+    (processedTranslation && processedTranslation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;
