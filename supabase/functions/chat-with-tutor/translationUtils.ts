@@ -1,4 +1,3 @@
-
 // Translation utilities
 
 // Simple in-memory cache for translations

@@ -11,7 +11,13 @@ export const useChatMessaging = () => {
   const [hasError, setHasError] = useState(false);
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
-  const { getTranslation, verifyHindiTranslation } = useTranslationHandler();
+  const { 
+    getTranslation, 
+    verifyHindiTranslation, 
+    verifyFarsiTranslation, 
+    verifyBengaliTranslation,
+    verifyTagalogTranslation 
+  } = useTranslationHandler();
 
   const sendChatMessage = async (message: string) => {
     if (!message || message.trim() === "") {
@@ -82,6 +88,9 @@ export const useChatMessaging = () => {
       
       // Handle special translation cases
       translation = await verifyHindiTranslation(translation, data.content, currentLanguage);
+      translation = await verifyFarsiTranslation(translation, data.content, currentLanguage);
+      translation = await verifyBengaliTranslation(translation, data.content, currentLanguage);
+      translation = await verifyTagalogTranslation(translation, data.content, currentLanguage);
       
       if (!translation && currentLanguage !== "english") {
         console.warn("Missing translation for", currentLanguage, "user");

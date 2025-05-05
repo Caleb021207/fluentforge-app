@@ -31,7 +31,8 @@ export function getLanguageDisplayName(language: string): string {
     'igbo': 'Igbo',
     'polish': 'Polish',
     'turkish': 'Turkish',
-    'romanian': 'Romanian'
+    'romanian': 'Romanian',
+    'tagalog': 'Filipino/Tagalog' // Added Tagalog with proper display name
   };
   
   return languageMap[language.toLowerCase()] || language;
@@ -67,7 +68,8 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'igbo': 'Igbo',
     'polish': 'Polish',
     'turkish': 'Turkish',
-    'romanian': 'Romanian'
+    'romanian': 'Romanian',
+    'tagalog': 'Filipino/Tagalog' // Added Tagalog with proper display name
   };
   
   return languageMap[userLanguage] || 'English';

@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
@@ -51,6 +50,27 @@ async function handleTranslationRequest(message: string, userLanguage: string) {
         );
       } catch (error) {
         console.error('Error in Hindi translation request:', error);
+        throw error;
+      }
+    }
+    
+    // Special handling for Tagalog translations
+    if (userLanguage === 'tagalog') {
+      try {
+        const tagalogTranslation = await getSpecificLanguageTranslation(
+          message, 
+          'Filipino/Tagalog', 
+          'Latin', 
+          openAIApiKey,
+          filterCipaProhibitedContent,
+          containsProhibitedContent
+        );
+        return new Response(
+          JSON.stringify({ translation: tagalogTranslation }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        console.error('Error in Tagalog translation request:', error);
         throw error;
       }
     }
