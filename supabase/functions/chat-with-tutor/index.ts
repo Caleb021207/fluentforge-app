@@ -47,6 +47,13 @@ async function handleTranslationRequest(message: string, userLanguage: string) {
           filterCipaProhibitedContent,
           containsProhibitedContent
         );
+        
+        // Validate the translation
+        if (!hindiTranslation || typeof hindiTranslation !== 'string') {
+          console.error('Invalid Hindi translation result:', hindiTranslation);
+          throw new Error('Failed to get valid Hindi translation');
+        }
+        
         return new Response(
           JSON.stringify({ translation: hindiTranslation }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -70,45 +77,80 @@ async function handleTranslationRequest(message: string, userLanguage: string) {
           containsProhibitedContent
         );
         
+        // Validate the translation - ensure it's a proper string
+        if (!tagalogTranslation || typeof tagalogTranslation !== 'string') {
+          console.error('Invalid Tagalog translation result:', tagalogTranslation);
+          throw new Error('Failed to get valid Tagalog translation');
+        }
+        
         console.log(`Tagalog translation result (${tagalogTranslation.length} chars): "${tagalogTranslation.substring(0, 50)}..."`);
         
-        return new Response(
-          JSON.stringify({ translation: tagalogTranslation }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        // Wrap in try-catch to ensure we always return a valid response
+        try {
+          return new Response(
+            JSON.stringify({ translation: tagalogTranslation }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        } catch (jsonError) {
+          console.error('Error stringifying Tagalog translation response:', jsonError);
+          // Fallback to a simpler response if JSON stringification fails
+          return new Response(
+            `{"translation": "May problema sa pagsasalin. Paumanhin sa abala."}`,
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
       } catch (error) {
         console.error('Error in Tagalog translation request:', error);
-        throw error;
+        // Return a fallback translation instead of throwing
+        return new Response(
+          JSON.stringify({ 
+            translation: "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.",
+            error: error.message 
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
     }
     
     // Regular translation flow for other languages
-    const translationResponse = await getTranslation(
-      message, 
-      userLanguage, 
-      openAIApiKey,
-      filterCipaProhibitedContent,
-      containsProhibitedContent,
-      getUserNativeLanguage
-    );
-    
-    if (!translationResponse.ok) {
-      throw new Error('Failed to get translation from OpenAI');
+    try {
+      const translationResponse = await getTranslation(
+        message, 
+        userLanguage, 
+        openAIApiKey,
+        filterCipaProhibitedContent,
+        containsProhibitedContent,
+        getUserNativeLanguage
+      );
+      
+      if (!translationResponse.ok) {
+        throw new Error('Failed to get translation from OpenAI');
+      }
+      
+      const translationData = await translationResponse.json();
+      let translation = translationData.choices?.[0]?.message?.content || '';
+      
+      // CIPA Compliance: Filter translation before returning
+      if (containsProhibitedContent(translation)) {
+        console.log('Translation contains prohibited content, filtering');
+        translation = filterCipaProhibitedContent(translation);
+      }
+      
+      return new Response(
+        JSON.stringify({ translation }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } catch (error) {
+      console.error('Error in regular translation request:', error);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Failed to translate text', 
+          details: error.message,
+          translation: `Translation not available for ${userLanguage}` 
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
-    
-    const translationData = await translationResponse.json();
-    let translation = translationData.choices?.[0]?.message?.content || '';
-    
-    // CIPA Compliance: Filter translation before returning
-    if (containsProhibitedContent(translation)) {
-      console.log('Translation contains prohibited content, filtering');
-      translation = filterCipaProhibitedContent(translation);
-    }
-    
-    return new Response(
-      JSON.stringify({ translation }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
   } catch (error) {
     console.error('Error in translation request:', error);
     return new Response(
@@ -221,7 +263,8 @@ You MUST strictly follow these rules:
 
 VERY IMPORTANT FOR TAGALOG USERS: ALWAYS provide a translation of your response in Tagalog. 
 Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
-The Tagalog translation should use everyday conversational Filipino that would be easily understood.`;
+The Tagalog translation should use everyday conversational Filipino that would be easily understood.
+Make sure the translation is provided as plain text, not as an object or JSON.`;
       } else {
         systemMessageContent += `
 
@@ -335,9 +378,9 @@ You should ask questions to continue the conversation if it ever seems to stall.
         translation = filterCipaProhibitedContent(translation);
       }
 
-      // If no translation was provided, make a second API call to translate the response
-      if (!translation || translation === '') {
-        console.log('No translation provided, getting one now...');
+      // If no translation was provided or if it doesn't seem valid, make a second API call to translate the response
+      if (!translation || translation === '' || translation === 'undefined' || translation === '[object Object]') {
+        console.log('No valid translation provided, getting one now...');
         
         // Check if we have this translation cached
         const cacheKey = `${content}:${userLanguage}`;
@@ -351,19 +394,49 @@ You should ask questions to continue the conversation if it ever seems to stall.
             // Enhanced for Tagalog
             if (userLanguage === 'tagalog') {
               console.log('Using enhanced Tagalog translation flow');
-              translation = await getSpecificLanguageTranslation(
-                content,
-                'Filipino/Tagalog',
-                'Latin',
-                openAIApiKey,
-                filterCipaProhibitedContent,
-                containsProhibitedContent
-              );
               
-              // Cache the Tagalog translation
-              if (translation) {
+              // Try up to 3 times to get a valid translation
+              let retryCount = 0;
+              let validTranslation = false;
+              
+              while (retryCount < 3 && !validTranslation) {
+                retryCount++;
+                console.log(`Tagalog translation attempt ${retryCount}`);
+                
+                try {
+                  translation = await getSpecificLanguageTranslation(
+                    content,
+                    'Filipino/Tagalog',
+                    'Latin',
+                    openAIApiKey,
+                    filterCipaProhibitedContent,
+                    containsProhibitedContent
+                  );
+                  
+                  // Validate the translation
+                  if (translation && 
+                      typeof translation === 'string' && 
+                      translation.length > 10 &&
+                      translation !== 'undefined' &&
+                      translation !== '[object Object]') {
+                    validTranslation = true;
+                    console.log(`Valid Tagalog translation obtained on attempt ${retryCount}`);
+                  } else {
+                    console.log(`Invalid Tagalog translation on attempt ${retryCount}:`, translation);
+                  }
+                } catch (translationError) {
+                  console.error(`Error in Tagalog translation attempt ${retryCount}:`, translationError);
+                }
+              }
+              
+              // Cache the Tagalog translation if valid
+              if (validTranslation && translation) {
                 translationCache.set(cacheKey, translation);
                 console.log(`Cached Tagalog translation (${translation.length} chars)`);
+              } else {
+                // Last resort fallback
+                translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+                console.log('Using fallback Tagalog message after failed attempts');
               }
             } else {
               // Regular translation process for non-Tagalog languages
@@ -395,6 +468,11 @@ You should ask questions to continue the conversation if it ever seems to stall.
           } catch (error) {
             console.error('Error getting translation:', error);
             // Continue even if translation fails
+            if (userLanguage === 'tagalog') {
+              translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+            } else {
+              translation = `Translation not available for ${userLanguage}`;
+            }
           }
         }
       }
@@ -438,28 +516,47 @@ You should ask questions to continue the conversation if it ever seems to stall.
       }
 
       // Final verification for Tagalog - ensure we have a valid translation
-      if (userLanguage === 'tagalog' && (!translation || translation.length < 10)) {
-        console.log('Final verification: Tagalog translation is missing or too short, trying one more time');
+      if (userLanguage === 'tagalog' && (!translation || 
+                                        translation.length < 10 || 
+                                        translation === 'undefined' || 
+                                        translation === '[object Object]')) {
+        console.log('Final verification: Tagalog translation is missing or too short, using fallback');
+        translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+      }
+
+      // Apply a final type safety check before sending the response
+      if (typeof translation !== 'string') {
+        console.error('Translation is not a string before response:', translation);
+        
+        // Convert to string if possible, or use fallback
         try {
-          translation = await getSpecificLanguageTranslation(
-            content,
-            'Filipino/Tagalog',
-            'Latin',
-            openAIApiKey,
-            filterCipaProhibitedContent,
-            containsProhibitedContent
-          );
-          console.log(`Final Tagalog translation attempt result (${translation.length} chars): "${translation.substring(0, 50)}..."`);
-        } catch (error) {
-          console.error('Error in final Tagalog translation attempt:', error);
-          // Continue with what we have
+          if (translation === null || translation === undefined) {
+            translation = userLanguage === 'tagalog' 
+              ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
+              : `Translation not available for ${userLanguage}`;
+          } else if (typeof translation === 'object') {
+            translation = JSON.stringify(translation);
+          } else {
+            translation = String(translation);
+          }
+        } catch (e) {
+          console.error('Error converting translation to string:', e);
+          translation = userLanguage === 'tagalog' 
+            ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
+            : `Translation not available for ${userLanguage}`;
         }
       }
 
       console.log('Formatted response:', { content, translation });
 
+      // Ensure our response object is well-formed before stringifying
+      const responseObject = { 
+        content: content || "",
+        translation: translation || ""
+      };
+
       return new Response(
-        JSON.stringify({ content, translation }),
+        JSON.stringify(responseObject),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } finally {

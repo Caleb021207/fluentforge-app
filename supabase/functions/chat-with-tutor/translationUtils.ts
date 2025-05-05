@@ -78,7 +78,8 @@ export async function getTranslation(
               - Include only the translation itself, no other text, explanations or disclaimers.
               - Never output the original English text.
               - Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.
-              - Always return the full text translated, not a shorter version.` 
+              - Always return the full text translated, not a shorter version.
+              - ONLY RETURN THE TRANSLATED TEXT AS A PLAIN STRING, NOT AS AN OBJECT OR JSON.` 
             },
             { role: 'user', content: safeMessage }
           ],
@@ -156,7 +157,9 @@ export async function getSpecificLanguageTranslation(
               - ONLY return the translation, no explanations or additional text.
               - Never output the original English text.
               - Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.
-              - Always translate the full content, not a summary.` 
+              - Always translate the full content, not a summary.
+              - ONLY RETURN THE TRANSLATION TEXT AS A PLAIN STRING, NOT AS AN OBJECT OR JSON.
+              - DO NOT WRAP your response in quotes, backticks, or any other characters.` 
             },
             { role: 'user', content: safeMessage }
           ],
@@ -170,7 +173,21 @@ export async function getSpecificLanguageTranslation(
       }
       
       const data = await response.json();
-      const translation = data.choices?.[0]?.message?.content || '';
+      let translation = data.choices?.[0]?.message?.content || '';
+      
+      // Validate the translation format and structure
+      if (!translation || typeof translation !== 'string' || translation.trim() === '') {
+        console.error('Received empty or invalid Tagalog translation format:', translation);
+        throw new Error('Tagalog translation came back in an invalid format');
+      }
+      
+      // Normalize the translation - strip quotes if the API wrapped it
+      translation = translation.trim();
+      if ((translation.startsWith('"') && translation.endsWith('"')) || 
+          (translation.startsWith("'") && translation.endsWith("'"))) {
+        translation = translation.substring(1, translation.length - 1).trim();
+      }
+      
       console.log(`Got Tagalog translation (${translation.length} chars): "${translation.substring(0, 50)}..."`);
       
       // CIPA Compliance: Filter translation before returning

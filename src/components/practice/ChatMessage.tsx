@@ -17,20 +17,44 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
   
-  // Ensure translation is a string (handle object cases which can happen sometimes)
+  // Ensure translation is a string with better type checking
   const processedTranslation = (() => {
     if (!translation) return "";
-    if (typeof translation === 'string') return translation;
     
-    // If it's an object (seen in logs), try to convert it safely
+    // Handle string translations (normal case)
+    if (typeof translation === 'string') {
+      // Check for invalid string values
+      if (translation === 'undefined' || translation === '[object Object]') {
+        console.warn(`Invalid string translation value for ${currentLanguage}:`, translation);
+        return "";
+      }
+      return translation;
+    }
+    
+    // If it's an object (seen in logs), try to extract meaningful content
     if (typeof translation === 'object') {
       console.warn('Translation was received as an object instead of string:', translation);
+      
+      // Try to extract from known potential object structures
+      if (translation && 'value' in translation && translation.value) {
+        return String(translation.value);
+      } else if (translation && 'text' in translation && translation.text) {
+        return String(translation.text);
+      } else if (translation && 'content' in translation && translation.content) {
+        return String(translation.content);
+      }
+      
       return "";
     }
     
     // Unknown format, convert to string or empty
     console.warn('Unexpected translation format:', translation);
-    return String(translation) || "";
+    try {
+      return String(translation) || "";
+    } catch (e) {
+      console.error('Error converting translation to string:', e);
+      return "";
+    }
   })();
   
   // Enhanced logging for Tagalog translations

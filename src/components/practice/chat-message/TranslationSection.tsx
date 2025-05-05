@@ -39,21 +39,44 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
       });
     }
     
-    // Handle undefined, null, or object translations (common error patterns)
-    if (!translation || typeof translation === 'object') {
-      // Get the appropriate message from translations if available
-      const fallbackMsg = t("translationNotAvailable", { language: currentLanguage }) || 
-                         `Translation not available for ${currentLanguage}`;
-      setTranslationText(fallbackMsg);
-      
-      // For Tagalog, show a toast to help debug when in development
-      if (currentLanguage === 'tagalog' && process.env.NODE_ENV === 'development') {
-        console.error('Invalid Tagalog translation received:', translation);
+    // Sanitize and validate the translation
+    const sanitizeTranslation = (): string => {
+      // Handle undefined, null, empty strings, or object translations
+      if (!translation) {
+        return t("translationNotAvailable", { language: currentLanguage }) || 
+                `Translation not available for ${currentLanguage}`;
       }
-    } else {
-      // Valid translation string
-      setTranslationText(translation);
-    }
+      
+      // Handle possible object formats (common error for Tagalog)
+      if (typeof translation === 'object') {
+        console.warn(`Received object instead of string for ${currentLanguage} translation:`, translation);
+        
+        // Try to extract string from common object patterns
+        if ('value' in translation && translation.value) {
+          return String(translation.value);
+        } else if ('text' in translation && translation.text) {
+          return String(translation.text);
+        } else if ('content' in translation && translation.content) {
+          return String(translation.content);
+        } else {
+          return t("translationNotAvailable", { language: currentLanguage }) || 
+                 `Translation not available for ${currentLanguage}`;
+        }
+      }
+      
+      // Handle invalid string values like 'undefined', '[object Object]'
+      if (translation === 'undefined' || translation === '[object Object]') {
+        return t("translationNotAvailable", { language: currentLanguage }) || 
+               `Translation not available for ${currentLanguage}`;
+      }
+      
+      // If it's a valid string and not a default message, return it
+      return translation;
+    };
+    
+    // Set the cleaned up translation text
+    setTranslationText(sanitizeTranslation());
+    
   }, [translation, currentLanguage, t]);
   
   if (!showTranslation) {

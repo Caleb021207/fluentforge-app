@@ -51,7 +51,7 @@ export const useChatMessaging = () => {
         requestTranslation: true 
       });
       
-      // Use chat-with-gpt endpoint
+      // Use chat-with-tutor endpoint
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: message,
@@ -91,9 +91,27 @@ export const useChatMessaging = () => {
         console.log('Tagalog translation debug:', {
           originalTranslation: translation,
           translationLength: translation ? translation.length : 0,
+          translationType: typeof translation,
           hasTranslation: !!translation,
           dataContent: data.content.substring(0, 50) + '...' // Log just the start of content
         });
+        
+        // Extra safeguard for Tagalog object responses
+        if (typeof translation === 'object') {
+          console.warn('Tagalog translation returned as object:', translation);
+          
+          // Try to extract from potential object structures
+          if (translation && 'value' in translation && translation.value) {
+            translation = String(translation.value);
+          } else if (translation && 'text' in translation && translation.text) {
+            translation = String(translation.text);
+          } else if (translation && 'content' in translation && translation.content) {
+            translation = String(translation.content);
+          } else {
+            // Reset to empty string if we can't extract a good value
+            translation = "";
+          }
+        }
       }
       
       // Handle special translation cases
@@ -106,22 +124,43 @@ export const useChatMessaging = () => {
       if (currentLanguage === 'tagalog') {
         console.log('After verifyTagalogTranslation:', {
           finalTranslation: translation,
+          finalType: typeof translation,
           translationLength: translation ? translation.length : 0,
           wasProcessed: translation !== data.translation
         });
       }
       
-      if (!translation && currentLanguage !== "english") {
-        console.warn("Missing translation for", currentLanguage, "user");
+      if ((!translation || translation === 'undefined' || translation === '[object Object]') && currentLanguage !== "english") {
+        console.warn("Missing or invalid translation for", currentLanguage, "user");
         
         // Force getting a translation specifically for Tagalog if it's missing
         if (currentLanguage === 'tagalog') {
           console.log('Forcibly requesting Tagalog translation for missing translation');
-          translation = await getTranslation(data.content, 'tagalog');
-          console.log('Forced Tagalog translation result:', {
-            gotTranslation: !!translation,
-            translationLength: translation ? translation.length : 0
-          });
+          
+          // Try up to 3 times to get a valid translation
+          let retryCount = 0;
+          
+          while (retryCount < 3 && (!translation || translation.length < 5 || translation === 'undefined' || translation === '[object Object]')) {
+            retryCount++;
+            console.log(`Forced Tagalog translation attempt ${retryCount}`);
+            
+            translation = await getTranslation(data.content, 'tagalog');
+            
+            if (translation && translation.length > 10 && translation !== 'undefined' && translation !== '[object Object]') {
+              console.log('Forced Tagalog translation result:', {
+                gotTranslation: !!translation,
+                translationLength: translation.length,
+                sample: translation.substring(0, 30) + '...'
+              });
+              break;
+            }
+          }
+          
+          // Last resort fallback for Tagalog
+          if (!translation || translation.length < 5 || translation === 'undefined' || translation === '[object Object]') {
+            translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+            console.log('Using last resort Tagalog fallback message');
+          }
         } else {
           translation = await getTranslation(data.content, currentLanguage);
         }
