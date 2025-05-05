@@ -30,5 +30,6 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   turkish: "Türkçe",
   romanian: "Română",
   haitian: "Kreyòl Ayisyen",
-  igbo: "Igbo"
+  igbo: "Igbo",
+  tagalog: "Tagalog" // Added Tagalog language
 };

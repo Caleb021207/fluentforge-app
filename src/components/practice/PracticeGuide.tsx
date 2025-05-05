@@ -1,102 +1,46 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { List, ListItem } from "@/components/ui/list";
-import { BrainCircuit, Globe, GraduationCap } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 interface PracticeGuideProps {
-  targetLanguage?: string;
+  targetLanguage: string;
 }
 
-const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage = "spanish" }) => {
-  const { t, currentLanguage } = useLocalization();
+const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
+  const { currentLanguage, t } = useLocalization();
   
-  // Determine which language is being practiced
-  const displayLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(targetLanguage)
+  // Get localized target language name
+  const learningLanguage = currentLanguage === "english" 
+    ? getLanguageDisplayName(targetLanguage) 
     : "English";
   
-  // French-specific guide for English speakers
-  if (currentLanguage === "english" && targetLanguage === "french") {
-    return (
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <BrainCircuit className="h-5 w-5 text-lingua-primary" />
-            French Practice Guide
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-600 mb-4">
-            Practice your French conversation skills with our AI tutor. Here are some suggestions:
-          </p>
-          
-          <List className="text-sm text-gray-600 mb-4">
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Practice French greetings and introductions: <i>"Bonjour, comment allez-vous?"</i></span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Ask about French grammar rules, like when to use <i>"tu"</i> vs <i>"vous"</i></span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Practice ordering food or asking for directions in French</span>
-            </ListItem>
-            <ListItem className="flex items-start gap-2">
-              <Globe className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-              <span>Discuss French culture, cuisine, or travel destinations</span>
-            </ListItem>
-          </List>
-          
-          <p className="text-sm text-gray-500 italic">
-            The AI will help correct your grammar and vocabulary as you practice.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Special case for Tagalog to use specific Tagalog translations
+  const isTagalog = currentLanguage === "tagalog";
   
-  // Default guide for other language combinations
+  const practiceTips = [
+    isTagalog ? "Subukang bumuo ng kumpletong mga pangungusap, kahit na simple lang." : t("practiceTip1"),
+    isTagalog ? "Huwag mag-alala sa pagkakamali — bahagi iyan ng pagkatuto!" : t("practiceTip2"),
+    isTagalog ? "Humingi ng paliwanag kung may bagay kang hindi naiintindihan." : t("practiceTip3"),
+    isTagalog ? "Gamitin ang mga salitang bagong natutunan mo." : t("practiceTip4"),
+    isTagalog ? "Aangkop ang aming AI sa iyong antas ng kasanayan at unti-unting tutulong sa iyo na umunlad." : t("practiceTip5")
+  ];
+  
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <BrainCircuit className="h-5 w-5 text-lingua-primary" />
-          {t("practiceGuide", { language: displayLanguage })}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-600 mb-4">
-          {t("practiceGuideDescription", { language: displayLanguage })}
-        </p>
-        
-        <List className="text-sm text-gray-600 mb-4">
-          <ListItem className="flex items-start gap-2">
-            <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-            <span>{t("practiceGuideItem1")}</span>
-          </ListItem>
-          <ListItem className="flex items-start gap-2">
-            <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-            <span>{t("practiceGuideItem2")}</span>
-          </ListItem>
-          <ListItem className="flex items-start gap-2">
-            <GraduationCap className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-            <span>{t("practiceGuideItem3")}</span>
-          </ListItem>
-          <ListItem className="flex items-start gap-2">
-            <Globe className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-            <span>{t("practiceGuideItem4")}</span>
-          </ListItem>
-        </List>
-        
-        <p className="text-sm text-gray-500 italic">
-          {t("practiceDisclaimer")}
-        </p>
-      </CardContent>
+    <Card className="p-6">
+      <h2 className="text-xl font-semibold mb-4">
+        {isTagalog ? "Gabay sa Pagsasanay sa Ingles" : `${learningLanguage} ${t("practiceGuide")}`}
+      </h2>
+      
+      <ul className="space-y-3">
+        {practiceTips.map((tip, index) => (
+          <li key={index} className="flex items-start">
+            <span className="text-lingua-primary mr-2">•</span>
+            <span>{tip}</span>
+          </li>
+        ))}
+      </ul>
     </Card>
   );
 };

@@ -27,7 +27,8 @@ export const languageCodeMap: Record<string, string> = {
   'malayalam': 'ml-IN',
   'polish': 'pl-PL',
   'turkish': 'tr-TR',
-  'romanian': 'ro-RO'
+  'romanian': 'ro-RO',
+  'tagalog': 'fil-PH' // Added Tagalog language code
 };
 
 // Meta MMS specific language codes (ISO 639-3)
@@ -39,6 +40,7 @@ export const metaMmsLanguageMap: Record<string, string> = {
   'bengali': 'ben',
   'amharic': 'amh',
   'malayalam': 'mal',
+  'tagalog': 'fil' // Added Tagalog Meta MMS language code
   // Add other languages supported by Meta MMS
 };
 
