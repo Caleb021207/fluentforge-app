@@ -17,7 +17,9 @@ export const useTranslationHandler = () => {
     }
     
     try {
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
+      console.log(`Requesting translation for ${targetLanguage}:`, content.substring(0, 50) + '...');
+      
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: content,
           userLanguage: targetLanguage,
@@ -35,7 +37,14 @@ export const useTranslationHandler = () => {
         return "";
       }
 
-      return data?.translation || "";
+      const translation = data?.translation || "";
+      console.log(`Got ${targetLanguage} translation:`, {
+        success: !!translation,
+        length: translation.length,
+        sample: translation.substring(0, 50) + '...'
+      });
+      
+      return translation;
     } catch (error) {
       console.error('Failed to get translation:', error);
       return "";
@@ -94,15 +103,31 @@ export const useTranslationHandler = () => {
   };
 
   /**
-   * Special case for Tagalog translations
+   * Enhanced special case handling for Tagalog translations
    */
   const verifyTagalogTranslation = async (translation: string, originalContent: string, userLanguage: string): Promise<string> => {
     if (userLanguage !== 'tagalog') return translation;
     
-    // If no translation or very short translation, request a new one
-    if (!translation || translation.length < 5) {
-      console.log('Getting proper Tagalog translation');
-      return await getTranslation(originalContent, 'tagalog');
+    console.log('Verifying Tagalog translation:', {
+      hasTranslation: !!translation,
+      translationLength: translation ? translation.length : 0,
+      shortContentPreview: originalContent.substring(0, 30) + '...'
+    });
+    
+    // More aggressive checks for Tagalog to ensure we get a translation
+    if (!translation || translation.length < 10 || translation.includes('Translation not available')) {
+      console.log('Getting proper Tagalog translation - inadequate translation detected');
+      const newTranslation = await getTranslation(originalContent, 'tagalog');
+      
+      if (newTranslation && newTranslation.length > 5) {
+        console.log('Successfully obtained new Tagalog translation:', {
+          length: newTranslation.length,
+          preview: newTranslation.substring(0, 30) + '...'
+        });
+        return newTranslation;
+      } else {
+        console.log('Failed to get proper Tagalog translation on retry');
+      }
     }
     
     return translation;

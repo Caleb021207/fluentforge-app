@@ -1,3 +1,4 @@
+
 // Translation utilities
 
 // Simple in-memory cache for translations
@@ -56,6 +57,38 @@ export async function getTranslation(
       safeMessage = filterContentCallback(message);
     }
     
+    // Special case for Tagalog translations to ensure more reliability
+    if (userLanguage.toLowerCase() === 'tagalog') {
+      console.log('Using enhanced Tagalog translation request');
+      return await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { 
+              role: 'system', 
+              content: `You are a professional Filipino/Tagalog translator. Translate the following text from English to Tagalog using common Filipino expressions.
+              
+              IMPORTANT RULES:
+              - Be direct and conversational in your translation.
+              - Include only the translation itself, no other text, explanations or disclaimers.
+              - Never output the original English text.
+              - Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.
+              - Always return the full text translated, not a shorter version.` 
+            },
+            { role: 'user', content: safeMessage }
+          ],
+          temperature: 0.3,
+          max_tokens: 800,
+        }),
+      });
+    }
+    
+    // Regular translation for other languages
     return await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -102,6 +135,54 @@ export async function getSpecificLanguageTranslation(
       safeMessage = filterContentCallback(message);
     }
     
+    // Special enhanced handling for Tagalog
+    if (language.toLowerCase() === 'filipino/tagalog' || language.toLowerCase() === 'tagalog') {
+      console.log('Using enhanced Tagalog-specific translation');
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { 
+              role: 'system', 
+              content: `You are a professional Filipino/Tagalog translator. Translate the following text from English to Tagalog/Filipino.
+              
+              IMPORTANT RULES:
+              - Use colloquial, everyday Filipino that would be easily understood.
+              - ONLY return the translation, no explanations or additional text.
+              - Never output the original English text.
+              - Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.
+              - Always translate the full content, not a summary.` 
+            },
+            { role: 'user', content: safeMessage }
+          ],
+          temperature: 0.3,
+          max_tokens: 800,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Tagalog translation API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      const translation = data.choices?.[0]?.message?.content || '';
+      console.log(`Got Tagalog translation (${translation.length} chars): "${translation.substring(0, 50)}..."`);
+      
+      // CIPA Compliance: Filter translation before returning
+      if (containsProhibitedCallback(translation)) {
+        console.log(`Tagalog translation contains prohibited content, filtering`);
+        return filterContentCallback(translation);
+      }
+      
+      return translation;
+    }
+    
+    // Regular specific language translation for other languages
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {

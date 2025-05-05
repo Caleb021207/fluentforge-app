@@ -18,7 +18,12 @@ const practiceTranslations: TranslationRecord = {
   "startConversationIn": "Magsimula ng pag-uusap sa {language}",
   "typeMessageIn": "Mag-type ng mensahe sa {language}...",
   "translationNotAvailable": "Hindi available ang pagsasalin para sa {language}",
-  "contentFiltered": "Ang nilalaman ay na-filter para sa kaligtasan"
+  "contentFiltered": "Ang nilalaman ay na-filter para sa kaligtasan",
+  "networkConnectionIssue": "May problema sa koneksyon sa network. Pakisubukang muli.",
+  "send": "Ipadala",
+  "error": "Error",
+  "failedToGetTranslation": "Hindi makuha ang pagsasalin. Pakisubukang muli.",
+  "translationError": "Error sa Pagsasalin"
 };
 
 export default practiceTranslations;

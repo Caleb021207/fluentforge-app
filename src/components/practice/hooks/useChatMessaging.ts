@@ -52,7 +52,7 @@ export const useChatMessaging = () => {
       });
       
       // Use chat-with-gpt endpoint
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: message,
           userLanguage: currentLanguage,
@@ -86,15 +86,45 @@ export const useChatMessaging = () => {
       
       let translation = data.translation || "";
       
+      // Enhanced logging for Tagalog translations
+      if (currentLanguage === 'tagalog') {
+        console.log('Tagalog translation debug:', {
+          originalTranslation: translation,
+          translationLength: translation ? translation.length : 0,
+          hasTranslation: !!translation,
+          dataContent: data.content.substring(0, 50) + '...' // Log just the start of content
+        });
+      }
+      
       // Handle special translation cases
       translation = await verifyHindiTranslation(translation, data.content, currentLanguage);
       translation = await verifyFarsiTranslation(translation, data.content, currentLanguage);
       translation = await verifyBengaliTranslation(translation, data.content, currentLanguage);
       translation = await verifyTagalogTranslation(translation, data.content, currentLanguage);
       
+      // Enhanced logging after special verification
+      if (currentLanguage === 'tagalog') {
+        console.log('After verifyTagalogTranslation:', {
+          finalTranslation: translation,
+          translationLength: translation ? translation.length : 0,
+          wasProcessed: translation !== data.translation
+        });
+      }
+      
       if (!translation && currentLanguage !== "english") {
         console.warn("Missing translation for", currentLanguage, "user");
-        translation = await getTranslation(data.content, currentLanguage);
+        
+        // Force getting a translation specifically for Tagalog if it's missing
+        if (currentLanguage === 'tagalog') {
+          console.log('Forcibly requesting Tagalog translation for missing translation');
+          translation = await getTranslation(data.content, 'tagalog');
+          console.log('Forced Tagalog translation result:', {
+            gotTranslation: !!translation,
+            translationLength: translation ? translation.length : 0
+          });
+        } else {
+          translation = await getTranslation(data.content, currentLanguage);
+        }
       }
       
       return {

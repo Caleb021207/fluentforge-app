@@ -17,6 +17,17 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
   
+  // Log to debug Tagalog translation issues
+  if (currentLanguage === 'tagalog') {
+    console.log('ChatMessage Tagalog debug:', { 
+      role, 
+      content, 
+      translation,
+      translationLength: translation ? translation.length : 0,
+      currentLanguage
+    });
+  }
+  
   // Handle case where content is undefined or empty
   if (!content && !translation) {
     return <EmptyMessageWarning />;

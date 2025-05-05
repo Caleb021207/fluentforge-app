@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
@@ -33,6 +34,8 @@ const translationCache = new TranslationCache();
 // Handler for translation-only requests
 async function handleTranslationRequest(message: string, userLanguage: string) {
   try {
+    console.log(`Processing translation-only request for language: ${userLanguage}`);
+    
     // Special handling for Hindi to ensure proper Devanagari script
     if (userLanguage === 'hindi') {
       try {
@@ -54,9 +57,10 @@ async function handleTranslationRequest(message: string, userLanguage: string) {
       }
     }
     
-    // Special handling for Tagalog translations
+    // Enhanced special handling for Tagalog translations
     if (userLanguage === 'tagalog') {
       try {
+        console.log('Processing dedicated Tagalog translation request');
         const tagalogTranslation = await getSpecificLanguageTranslation(
           message, 
           'Filipino/Tagalog', 
@@ -65,6 +69,9 @@ async function handleTranslationRequest(message: string, userLanguage: string) {
           filterCipaProhibitedContent,
           containsProhibitedContent
         );
+        
+        console.log(`Tagalog translation result (${tagalogTranslation.length} chars): "${tagalogTranslation.substring(0, 50)}..."`);
+        
         return new Response(
           JSON.stringify({ translation: tagalogTranslation }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -193,8 +200,8 @@ serve(async (req) => {
       // Add CIPA/FERPA compliance instructions to tutor
       const cipaFerpaCompliance = getCipaFerpaInstructions();
       
-      // Universal tutor instructions for all language combinations
-      const tutorInstructions = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
+      // Enhanced system message for Tagalog support
+      let systemMessageContent = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
 
 PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
 
@@ -206,10 +213,23 @@ You MUST strictly follow these rules:
 2. **Do not correct the user unless they specifically ask.**
 3. **Prioritize keeping the conversation flowing.** Ask questions, be friendly, and respond naturally.
 4. **Stay in the target language (${langToLearn}) unless the user asks for clarification in their native language (${nativeLanguage}).**
-5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
+5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.`;
+
+      // Add enhanced translation instruction especially for Tagalog
+      if (nativeLanguage.toLowerCase() === 'filipino/tagalog' || userLanguage === 'tagalog') {
+        systemMessageContent += `
+
+VERY IMPORTANT FOR TAGALOG USERS: ALWAYS provide a translation of your response in Tagalog. 
+Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
+The Tagalog translation should use everyday conversational Filipino that would be easily understood.`;
+      } else {
+        systemMessageContent += `
 
 IMPORTANT: ALWAYS provide a translation of your response in the user's native language (${nativeLanguage}).
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
+Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.`;
+      }
+
+      systemMessageContent += `
 
 Keep responses friendly but concise, focused on language learning.
 Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
@@ -229,7 +249,7 @@ You should ask questions to continue the conversation if it ever seems to stall.
            Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.
            
            ${cipaFerpaCompliance}`
-        : tutorInstructions;
+        : systemMessageContent;
 
       // Add the hidden prompt and response only for regular conversations, not assessments
       let messages = [];
@@ -247,6 +267,9 @@ You should ask questions to continue the conversation if it ever seems to stall.
         ];
       }
 
+      // Use more tokens for Tagalog conversations to ensure complete translations
+      const maxTokens = userLanguage === 'tagalog' ? 800 : 500;
+
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -257,7 +280,7 @@ You should ask questions to continue the conversation if it ever seems to stall.
           model: 'gpt-4o-mini',
           messages: messages,
           temperature: 0.7,
-          max_tokens: 500,
+          max_tokens: maxTokens,
         }),
       });
 
@@ -297,6 +320,8 @@ You should ask questions to continue the conversation if it ever seems to stall.
         [content, translation] = content.split('\nTranslation:');
         content = content.trim();
         translation = translation.trim();
+        
+        console.log(`Successfully extracted translation (${translation.length} chars): "${translation.substring(0, 50)}..."`);
       }
 
       // CIPA Compliance: Filter response content if needed
@@ -323,27 +348,47 @@ You should ask questions to continue the conversation if it ever seems to stall.
           translation = cachedTranslation;
         } else {
           try {
-            const translationResponse = await getTranslation(
-              content, 
-              userLanguage, 
-              openAIApiKey,
-              filterCipaProhibitedContent,
-              containsProhibitedContent,
-              getUserNativeLanguage
-            );
-            
-            if (translationResponse.ok) {
-              const translationData = await translationResponse.json();
-              if (translationData.choices?.[0]?.message?.content) {
-                translation = translationData.choices[0].message.content.trim();
-                
-                // Cache the translation for future use
+            // Enhanced for Tagalog
+            if (userLanguage === 'tagalog') {
+              console.log('Using enhanced Tagalog translation flow');
+              translation = await getSpecificLanguageTranslation(
+                content,
+                'Filipino/Tagalog',
+                'Latin',
+                openAIApiKey,
+                filterCipaProhibitedContent,
+                containsProhibitedContent
+              );
+              
+              // Cache the Tagalog translation
+              if (translation) {
                 translationCache.set(cacheKey, translation);
-                
-                // CIPA Compliance: Filter translation if needed
-                if (containsProhibitedContent(translation)) {
-                  console.log('Generated translation contains prohibited content, filtering');
-                  translation = filterCipaProhibitedContent(translation);
+                console.log(`Cached Tagalog translation (${translation.length} chars)`);
+              }
+            } else {
+              // Regular translation process for non-Tagalog languages
+              const translationResponse = await getTranslation(
+                content, 
+                userLanguage, 
+                openAIApiKey,
+                filterCipaProhibitedContent,
+                containsProhibitedContent,
+                getUserNativeLanguage
+              );
+              
+              if (translationResponse.ok) {
+                const translationData = await translationResponse.json();
+                if (translationData.choices?.[0]?.message?.content) {
+                  translation = translationData.choices[0].message.content.trim();
+                  
+                  // Cache the translation for future use
+                  translationCache.set(cacheKey, translation);
+                  
+                  // CIPA Compliance: Filter translation if needed
+                  if (containsProhibitedContent(translation)) {
+                    console.log('Generated translation contains prohibited content, filtering');
+                    translation = filterCipaProhibitedContent(translation);
+                  }
                 }
               }
             }
@@ -389,6 +434,25 @@ You should ask questions to continue the conversation if it ever seems to stall.
             console.error('Error getting Hindi translation:', error);
             // Continue even if Hindi translation fails
           }
+        }
+      }
+
+      // Final verification for Tagalog - ensure we have a valid translation
+      if (userLanguage === 'tagalog' && (!translation || translation.length < 10)) {
+        console.log('Final verification: Tagalog translation is missing or too short, trying one more time');
+        try {
+          translation = await getSpecificLanguageTranslation(
+            content,
+            'Filipino/Tagalog',
+            'Latin',
+            openAIApiKey,
+            filterCipaProhibitedContent,
+            containsProhibitedContent
+          );
+          console.log(`Final Tagalog translation attempt result (${translation.length} chars): "${translation.substring(0, 50)}..."`);
+        } catch (error) {
+          console.error('Error in final Tagalog translation attempt:', error);
+          // Continue with what we have
         }
       }
 
