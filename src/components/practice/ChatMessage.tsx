@@ -32,16 +32,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     }
     
     // If it's an object (seen in logs), try to extract meaningful content
-    if (typeof translation === 'object') {
+    if (typeof translation === 'object' && translation !== null) {
       console.warn('Translation was received as an object instead of string:', translation);
       
       // Try to extract from known potential object structures
-      if (translation && 'value' in translation && translation.value) {
-        return String(translation.value);
-      } else if (translation && 'text' in translation && translation.text) {
-        return String(translation.text);
-      } else if (translation && 'content' in translation && translation.content) {
-        return String(translation.content);
+      // Use type assertion to handle the object properties
+      const translationObj = translation as Record<string, unknown>;
+      
+      if (translationObj && 'value' in translationObj && typeof translationObj.value === 'string') {
+        return translationObj.value;
+      } else if (translationObj && 'text' in translationObj && typeof translationObj.text === 'string') {
+        return translationObj.text;
+      } else if (translationObj && 'content' in translationObj && typeof translationObj.content === 'string') {
+        return translationObj.content;
       }
       
       return "";

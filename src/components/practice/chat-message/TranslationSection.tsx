@@ -52,12 +52,14 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
         console.warn(`Received object instead of string for ${currentLanguage} translation:`, translation);
         
         // Try to extract string from common object patterns
-        if ('value' in translation && translation.value) {
-          return String(translation.value);
-        } else if ('text' in translation && translation.text) {
-          return String(translation.text);
-        } else if ('content' in translation && translation.content) {
-          return String(translation.content);
+        const translationObj = translation as Record<string, unknown>;
+        
+        if ('value' in translationObj && translationObj.value) {
+          return String(translationObj.value);
+        } else if ('text' in translationObj && translationObj.text) {
+          return String(translationObj.text);
+        } else if ('content' in translationObj && translationObj.content) {
+          return String(translationObj.content);
         } else {
           return t("translationNotAvailable", { language: currentLanguage }) || 
                  `Translation not available for ${currentLanguage}`;
