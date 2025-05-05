@@ -116,13 +116,13 @@ export const useChatMessaging = () => {
       // The verification methods will handle both string and object translations
       if (translation) {
         if (currentLanguage === 'hindi') {
-          translation = await verifyHindiTranslation(translation, data.content);
+          translation = await verifyHindiTranslation(translation, data.content, currentLanguage);
         } else if (currentLanguage === 'farsi') {
-          translation = await verifyFarsiTranslation(translation, data.content);
+          translation = await verifyFarsiTranslation(translation, data.content, currentLanguage);
         } else if (currentLanguage === 'bengali') {
-          translation = await verifyBengaliTranslation(translation, data.content);
+          translation = await verifyBengaliTranslation(translation, data.content, currentLanguage);
         } else if (currentLanguage === 'tagalog') {
-          translation = await verifyTagalogTranslation(translation, data.content);
+          translation = await verifyTagalogTranslation(translation, data.content, currentLanguage);
           console.log('After verifyTagalogTranslation:', {
             translationType: typeof translation,
             translationSample: typeof translation === 'string' ? 

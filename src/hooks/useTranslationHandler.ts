@@ -169,9 +169,10 @@ export const useTranslationHandler = () => {
    */
   const verifyHindiTranslation = async (
     translation: string | Record<string, unknown>, 
-    originalContent: string
+    originalContent: string,
+    userLanguage: string
   ): Promise<string> => {
-    if (currentLanguage !== 'hindi') return extractStringFromTranslation(translation);
+    if (userLanguage !== 'hindi') return extractStringFromTranslation(translation);
     
     // Extract string if needed
     const translationText = extractStringFromTranslation(translation);
@@ -192,9 +193,10 @@ export const useTranslationHandler = () => {
    */
   const verifyFarsiTranslation = async (
     translation: string | Record<string, unknown>, 
-    originalContent: string
+    originalContent: string,
+    userLanguage: string
   ): Promise<string> => {
-    if (currentLanguage !== 'farsi') return extractStringFromTranslation(translation);
+    if (userLanguage !== 'farsi') return extractStringFromTranslation(translation);
     
     // Extract string if needed
     const translationText = extractStringFromTranslation(translation);
@@ -215,9 +217,10 @@ export const useTranslationHandler = () => {
    */
   const verifyBengaliTranslation = async (
     translation: string | Record<string, unknown>, 
-    originalContent: string
+    originalContent: string,
+    userLanguage: string
   ): Promise<string> => {
-    if (currentLanguage !== 'bengali') return extractStringFromTranslation(translation);
+    if (userLanguage !== 'bengali') return extractStringFromTranslation(translation);
     
     // Extract string if needed
     const translationText = extractStringFromTranslation(translation);
@@ -238,9 +241,10 @@ export const useTranslationHandler = () => {
    */
   const verifyTagalogTranslation = async (
     translation: string | Record<string, unknown>, 
-    originalContent: string
+    originalContent: string,
+    userLanguage: string
   ): Promise<string> => {
-    if (currentLanguage !== 'tagalog') return extractStringFromTranslation(translation);
+    if (userLanguage !== 'tagalog') return extractStringFromTranslation(translation);
     
     // First, extract a string value from whatever format we received
     const translationText = extractStringFromTranslation(translation);
