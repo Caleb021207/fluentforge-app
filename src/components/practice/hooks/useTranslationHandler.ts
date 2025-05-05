@@ -4,6 +4,8 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { TRANSLATION_REQUIRED_LANGUAGES } from "@/utils/languageConstants";
 
+export type TranslationType = string | Record<string, unknown>;
+
 export const useTranslationHandler = () => {
   const { currentLanguage, t } = useLocalization();
   const { toast } = useToast();
@@ -41,41 +43,7 @@ export const useTranslationHandler = () => {
       let translation = "";
       
       if (data?.translation) {
-        if (typeof data.translation === 'string') {
-          translation = data.translation;
-        } else if (typeof data.translation === 'object' && data.translation !== null) {
-          // Log the unexpected object format
-          console.warn('Translation returned as object instead of string:', data.translation);
-          
-          // Try to extract string from common object patterns
-          const translationObj = data.translation as Record<string, unknown>;
-          
-          if ('value' in translationObj && typeof translationObj.value === 'string') {
-            translation = translationObj.value;
-          } else if ('text' in translationObj && typeof translationObj.text === 'string') {
-            translation = translationObj.text;
-          } else if ('content' in translationObj && typeof translationObj.content === 'string') {
-            translation = translationObj.content;
-          } else {
-            // Last resort - try to convert the entire object to a string
-            try {
-              translation = JSON.stringify(translationObj);
-              // Remove quotes and curly braces if it looks like a stringified simple object
-              if (translation.startsWith('{') && translation.endsWith('}')) {
-                translation = translation.replace(/[{}'"]/g, '').replace(/:/g, ': ');
-              }
-            } catch (e) {
-              console.error('Failed to stringify translation object:', e);
-            }
-          }
-        } else {
-          // Try to convert any non-string, non-object value to string
-          try {
-            translation = String(data.translation);
-          } catch (e) {
-            console.error('Error converting translation to string:', e);
-          }
-        }
+        translation = extractStringFromTranslation(data.translation);
       }
 
       // Special validation for Tagalog
@@ -120,7 +88,7 @@ export const useTranslationHandler = () => {
   /**
    * Convert any translation format to string
    */
-  const extractStringFromTranslation = (translation: string | Record<string, unknown>): string => {
+  const extractStringFromTranslation = (translation: TranslationType): string => {
     if (typeof translation === 'string') {
       return translation;
     }
@@ -168,7 +136,7 @@ export const useTranslationHandler = () => {
    * Special case for Hindi translations to ensure they use Devanagari script
    */
   const verifyHindiTranslation = async (
-    translation: string | Record<string, unknown>, 
+    translation: TranslationType, 
     originalContent: string,
     userLanguage: string
   ): Promise<string> => {
@@ -192,7 +160,7 @@ export const useTranslationHandler = () => {
    * Special case for Farsi translations to ensure they use proper Farsi script
    */
   const verifyFarsiTranslation = async (
-    translation: string | Record<string, unknown>, 
+    translation: TranslationType, 
     originalContent: string,
     userLanguage: string
   ): Promise<string> => {
@@ -216,7 +184,7 @@ export const useTranslationHandler = () => {
    * Special case for Bengali translations to ensure they use proper Bengali script
    */
   const verifyBengaliTranslation = async (
-    translation: string | Record<string, unknown>, 
+    translation: TranslationType, 
     originalContent: string,
     userLanguage: string
   ): Promise<string> => {
@@ -240,7 +208,7 @@ export const useTranslationHandler = () => {
    * Enhanced special case handling for Tagalog translations
    */
   const verifyTagalogTranslation = async (
-    translation: string | Record<string, unknown>, 
+    translation: TranslationType, 
     originalContent: string,
     userLanguage: string
   ): Promise<string> => {
@@ -316,6 +284,7 @@ export const useTranslationHandler = () => {
     verifyFarsiTranslation,
     verifyBengaliTranslation,
     verifyTagalogTranslation,
-    needsTranslation
+    needsTranslation,
+    extractStringFromTranslation
   };
 };

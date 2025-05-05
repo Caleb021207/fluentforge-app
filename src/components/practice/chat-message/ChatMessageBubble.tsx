@@ -28,7 +28,7 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   currentLanguage,
   onPlayAudio
 }) => {
-  // Use our new custom hook to manage audio state and playback
+  // Use our custom hook to manage audio state and playback
   const {
     contentAudio,
     translationAudio,

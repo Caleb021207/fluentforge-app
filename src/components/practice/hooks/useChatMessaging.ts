@@ -6,6 +6,8 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { logDataAccess } from "@/utils/contentSafetyUtils";
 import { useTranslationHandler } from "@/components/practice/hooks/useTranslationHandler";
 
+export type TranslationType = string | Record<string, unknown>;
+
 export const useChatMessaging = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -16,7 +18,8 @@ export const useChatMessaging = () => {
     verifyHindiTranslation, 
     verifyFarsiTranslation, 
     verifyBengaliTranslation,
-    verifyTagalogTranslation 
+    verifyTagalogTranslation,
+    extractStringFromTranslation
   } = useTranslationHandler();
 
   const sendChatMessage = async (message: string) => {
@@ -92,8 +95,8 @@ export const useChatMessaging = () => {
         throw new Error("Response from AI tutor is missing content");
       }
       
-      // Process translation - ensure it's a string
-      let translation: string | Record<string, unknown> = "";
+      // Process translation - maintain original type until verification
+      let translation: TranslationType = "";
       
       if (data.translation) {
         translation = data.translation;
@@ -112,8 +115,7 @@ export const useChatMessaging = () => {
         }
       }
       
-      // Handle special translation cases - passing the translation to the proper verification methods
-      // The verification methods will handle both string and object translations
+      // Handle special translation cases by passing the translation to the proper verification methods
       if (translation) {
         if (currentLanguage === 'hindi') {
           translation = await verifyHindiTranslation(translation, data.content, currentLanguage);
@@ -133,9 +135,9 @@ export const useChatMessaging = () => {
       }
       
       // Handle missing translations - force getting a new one
-      // Don't convert to string here - let the components handle it
       if ((!translation || 
-           (typeof translation === 'string' && translation.length < 5)) && 
+           (typeof translation === 'string' && translation.length < 5) ||
+           (typeof translation === 'object' && Object.keys(translation).length === 0)) && 
           currentLanguage !== "english") {
         console.warn("Missing or invalid translation for", currentLanguage, "user");
         
@@ -153,7 +155,7 @@ export const useChatMessaging = () => {
             
             const newTranslation = await getTranslation(data.content, 'tagalog');
             
-            if (newTranslation && typeof newTranslation === 'string' && newTranslation.length > 10) {
+            if (newTranslation && newTranslation.length > 10) {
               translation = newTranslation;
               validTranslation = true;
               console.log('Successfully got forced Tagalog translation:', {
@@ -174,6 +176,7 @@ export const useChatMessaging = () => {
         }
       }
       
+      // Return the data with original translation (string or object)
       return {
         content: data.content,
         translation
@@ -206,6 +209,7 @@ export const useChatMessaging = () => {
     hasError,
     setIsLoading,
     sendChatMessage,
-    retryLastMessage
+    retryLastMessage,
+    extractStringFromTranslation
   };
 };

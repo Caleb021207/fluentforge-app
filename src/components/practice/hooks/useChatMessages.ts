@@ -1,71 +1,108 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useChatApi } from "./useChatApi";
-import { useTranslationHandler } from "./useTranslationHandler";
-import type { ChatMessage } from "@/types/chat";
+import { useChatMessaging } from "./useChatMessaging";
+import { usePromptGenerator } from "./usePromptGenerator";
+import { useSessionManagement } from "./useSessionManagement";
+import type { TranslationType } from "./useTranslationHandler";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  translation?: TranslationType;
+}
 
 export const useChatMessages = () => {
-  const { t, currentLanguage } = useLocalization();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const { sendMessage } = useChatApi();
-  const { needsTranslation } = useTranslationHandler();
-  
-  // Get placeholder text for the chat input
-  const getPlaceholderText = useCallback(() => {
-    const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
-    return t("chatPlaceholder", { targetLanguage: targetLanguage === "english" ? "anglè" : targetLanguage });
-  }, [t]);
-  
-  // Send a language learning prompt to start the conversation
-  const sendLanguageLearningPrompt = useCallback(async () => {
-    const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
-    const prompt = t("practicePrompt", { targetLanguage: targetLanguage === "english" ? "anglè" : targetLanguage });
-    
-    try {
-      const assistantMessage = await sendMessage(prompt);
-      setMessages(prev => [
-        ...prev,
-        { role: "user", content: prompt },
-        { role: "assistant", content: typeof assistantMessage === 'string' ? assistantMessage : assistantMessage.content }
-      ]);
-    } catch (error) {
-      console.error("Error sending language learning prompt:", error);
+  const { t, currentLanguage } = useLocalization();
+  const { isLoading, hasError, sendChatMessage, retryLastMessage, extractStringFromTranslation } = useChatMessaging();
+  const { generatePrompt } = usePromptGenerator();
+  const { checkSessionLimits } = useSessionManagement();
+
+  // Load saved messages from session storage
+  useEffect(() => {
+    const savedMessages = sessionStorage.getItem('chatMessages');
+    if (savedMessages) {
+      try {
+        const parsedMessages = JSON.parse(savedMessages);
+        setMessages(parsedMessages);
+      } catch (e) {
+        console.error('Failed to parse saved messages:', e);
+      }
     }
-  }, [t, sendMessage]);
-  
-  // Handle chat form submission
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+  }, []);
+
+  // Save messages to session storage when they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      sessionStorage.setItem('chatMessages', JSON.stringify(messages));
+    }
+  }, [messages]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!input.trim()) return;
     
-    const userMessage = input;
-    setInput("");
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
-    
-    try {
-      const assistantMessage = await sendMessage(userMessage);
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: typeof assistantMessage === 'string' ? assistantMessage : assistantMessage.content 
-      }]);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: t("errorSendingMessage") 
-      }]);
+    // Check session limits
+    const { isAllowed, reason } = checkSessionLimits();
+    if (!isAllowed) {
+      // Handle session limits exceeded
+      console.log('Session limits exceeded:', reason);
+      return;
     }
-  }, [input, sendMessage, t]);
+    
+    // Add user message to the chat
+    const userMessage: Message = {
+      role: "user",
+      content: input
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    
+    // Send message to API
+    const response = await sendChatMessage(input);
+    
+    if (response) {
+      // Add assistant response to the chat
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: response.content,
+        translation: response.translation
+      };
+      
+      setMessages(prev => [...prev, assistantMessage]);
+    }
+  };
+  
+  const sendLanguageLearningPrompt = async () => {
+    // Generate appropriate prompt based on target language
+    const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
+    const prompt = generatePrompt(targetLanguage);
+    
+    // Force replace the input with the generated prompt
+    setInput(prompt);
+    
+    // Simulate form submission
+    const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
+    await handleSubmit(fakeEvent);
+  };
+  
+  const getPlaceholderText = useCallback(() => {
+    const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
+    return t("chatPlaceholder", { targetLanguage }) || `Type your message to practice ${targetLanguage}...`;
+  }, [t]);
   
   return {
     messages,
     input,
     setInput,
-    isLoading: false,
-    sendLanguageLearningPrompt,
+    isLoading,
+    hasError,
     handleSubmit,
+    sendLanguageLearningPrompt,
     getPlaceholderText
   };
 };
