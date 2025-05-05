@@ -54,7 +54,8 @@ const LanguageSelectionCard = ({
     turkish: "🇹🇷 Türkçe",
     romanian: "🇷🇴 Română",
     haitian: "🇭🇹 Kreyòl Ayisyen",
-    igbo: "🇳🇬 Igbo"
+    igbo: "🇳🇬 Igbo",
+    tagalog: "🇵🇭 Filipino" // Added Tagalog with Filipino name and flag
   };
 
   // Available target languages based on native language
@@ -88,7 +89,8 @@ const LanguageSelectionCard = ({
     turkish: "🇹🇷 Turkish",
     romanian: "🇷🇴 Romanian",
     haitian: "🇭🇹 Haitian Creole",
-    igbo: "🇳🇬 Igbo"
+    igbo: "🇳🇬 Igbo",
+    tagalog: "🇵🇭 Filipino" // Added Tagalog with Filipino name and flag
   };
   
   // Determine disabled options based on native language
