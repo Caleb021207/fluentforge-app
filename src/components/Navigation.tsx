@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, BookOpen, Lock as LockIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -55,7 +56,7 @@ const Navigation = () => {
 
     if (isLoggedIn && !teacherStatusLoading) {
       items.splice(2, 0, {
-        icon: BookUser,
+        icon: BookOpen,
         label: isTeacher ? "myClasses" : "myClass",
         path: isTeacher ? "/teacher/classes" : "/student/class",
         requiresAuth: true
@@ -76,14 +77,14 @@ const Navigation = () => {
       <Button
         variant={isActive ? "default" : "ghost"}
         className={`w-full justify-start ${
-          isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
+          isActive ? "bg-palavox-primary hover:bg-palavox-primary/90" : ""
         }`}
         disabled={item.requiresAuth && !isLoggedIn}
       >
         <Icon className="h-5 w-5 md:mr-2" />
         <span className="hidden md:inline">{t(item.label)}</span>
         {item.requiresAuth && !isLoggedIn && (
-          <Lock className="h-4 w-4 ml-2 opacity-50" />
+          <LockIcon className="h-4 w-4 ml-2 opacity-50" />
         )}
       </Button>
     );
