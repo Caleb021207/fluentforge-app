@@ -98,7 +98,7 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   }
   
   return (
-    <div className="border-t border-gray-300 mt-2 pt-2">
+    <div className="border-t border-border mt-2 pt-2">
       <TranslationContent
         role={role}
         translation={translationText}
