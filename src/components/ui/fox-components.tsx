@@ -30,43 +30,60 @@ export const FoxLogo: React.FC<{
       variants={animated ? hoverAnimation : undefined}
     >
       <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        {/* Stylized fox face based on the logo */}
+        {/* Improved fox face with pointier features */}
         <path 
-          d="M50 10C30 10 15 30 15 50C15 70 30 90 50 90C70 90 85 70 85 50C85 30 70 10 50 10Z" 
-          fill="#A3D5FF" 
+          d="M50 15C30 15 15 30 15 60C15 75 30 85 50 85C70 85 85 75 85 60C85 30 70 15 50 15Z" 
+          fill="#FF9D5C" 
           stroke="#0B1C36" 
           strokeWidth="2"
         />
+        {/* White face area */}
         <path 
-          d="M30 40L40 50L30 60" 
-          fill="#FFFFFF" 
-          stroke="#0B1C36" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+          d="M30 45C30 35 45 30 50 30C55 30 70 35 70 45C70 60 60 70 50 70C40 70 30 60 30 45Z" 
+          fill="white" 
         />
-        <path 
-          d="M70 40L60 50L70 60" 
-          fill="#FFFFFF" 
-          stroke="#0B1C36" 
-          strokeWidth="2" 
-          strokeLinecap="round"
-        />
+        {/* Eyes */}
+        <circle cx="38" cy="48" r="3" fill="#0B1C36" />
+        <circle cx="62" cy="48" r="3" fill="#0B1C36" />
+        
+        {/* Snout/nose */}
         <path 
           d="M50 55C45 55 43 58 43 60C43 62 45 65 50 65C55 65 57 62 57 60C57 58 55 55 50 55Z" 
           fill="#0B1C36" 
         />
-        {/* Ears */}
         <path 
-          d="M20 30L30 40L25 25Z" 
-          fill="#A3D5FF" 
+          d="M45 60Q50 62 55 60" 
+          stroke="#0B1C36" 
+          strokeWidth="1.5" 
+          strokeLinecap="round" 
+        />
+        
+        {/* Pointier ears */}
+        <path 
+          d="M20 20L35 40L25 15Z" 
+          fill="#FF9D5C" 
           stroke="#0B1C36" 
           strokeWidth="2"
         />
         <path 
-          d="M80 30L70 40L75 25Z" 
-          fill="#A3D5FF" 
+          d="M80 20L65 40L75 15Z" 
+          fill="#FF9D5C" 
           stroke="#0B1C36" 
           strokeWidth="2"
+        />
+
+        {/* Inner ear detail */}
+        <path 
+          d="M24 20L35 35" 
+          stroke="#0B1C36" 
+          strokeWidth="1" 
+          strokeLinecap="round"
+        />
+        <path 
+          d="M76 20L65 35" 
+          stroke="#0B1C36" 
+          strokeWidth="1" 
+          strokeLinecap="round"
         />
       </svg>
     </motion.div>
@@ -127,30 +144,30 @@ export const FoxMascot: React.FC<{
       {...(animated ? animations[mood] : {})}
     >
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        {/* Fox body */}
+        {/* Fox body - more fox-like shape */}
         <path 
           d="M50 15C30 15 20 35 20 55C20 75 35 85 50 85C65 85 80 75 80 55C80 35 70 15 50 15Z" 
-          fill="#FF9D5C" 
+          fill="#FF7A2F" 
           stroke="#0B1C36" 
           strokeWidth="2"
         />
-        {/* White face area */}
+        {/* White chest/throat area */}
         <path 
           d="M35 45C35 35 45 35 50 35C55 35 65 35 65 45C65 60 55 70 50 70C45 70 35 60 35 45Z" 
           fill="white" 
         />
-        {/* Eyes */}
+        {/* Eyes based on mood */}
         {mood === "happy" && (
           <>
-            <circle cx="40" cy="50" r="3" fill="#0B1C36" />
-            <circle cx="60" cy="50" r="3" fill="#0B1C36" />
+            <circle cx="40" cy="48" r="3" fill="#0B1C36" />
+            <circle cx="60" cy="48" r="3" fill="#0B1C36" />
             <path d="M45 60C46.6667 61.3333 53.3333 61.3333 55 60" stroke="#0B1C36" strokeWidth="2" strokeLinecap="round" />
           </>
         )}
         {mood === "thinking" && (
           <>
-            <circle cx="40" cy="50" r="3" fill="#0B1C36" />
-            <circle cx="60" cy="50" r="3" fill="#0B1C36" />
+            <circle cx="40" cy="48" r="3" fill="#0B1C36" />
+            <circle cx="60" cy="48" r="3" fill="#0B1C36" />
             <path d="M45 60Q50 58 55 60" stroke="#0B1C36" strokeWidth="2" strokeLinecap="round" />
           </>
         )}
@@ -161,25 +178,59 @@ export const FoxMascot: React.FC<{
             <path d="M45 58C46.6667 62 53.3333 62 55 58" stroke="#0B1C36" strokeWidth="2" strokeLinecap="round" />
           </>
         )}
-        {/* Ears */}
+        
+        {/* Pointier Fox ears */}
         <path 
-          d="M30 30L40 40L25 25Z" 
-          fill="#FF9D5C" 
+          d="M25 20L40 40L20 15Z" 
+          fill="#FF7A2F" 
           stroke="#0B1C36" 
           strokeWidth="2"
         />
         <path 
-          d="M70 30L60 40L75 25Z" 
-          fill="#FF9D5C" 
+          d="M75 20L60 40L80 15Z" 
+          fill="#FF7A2F" 
           stroke="#0B1C36" 
           strokeWidth="2"
         />
-        {/* Fox tail */}
+        
+        {/* Inner ear detail */}
         <path 
-          d="M80 55C90 45 85 40 82 43C79 46 82 50 80 55Z"
-          fill="#FF9D5C"
+          d="M27 22L37 35" 
+          stroke="#0B1C36" 
+          strokeWidth="1" 
+          strokeLinecap="round" 
+          opacity="0.5"
+        />
+        <path 
+          d="M73 22L63 35" 
+          stroke="#0B1C36" 
+          strokeWidth="1" 
+          strokeLinecap="round" 
+          opacity="0.5"
+        />
+        
+        {/* Fox tail - bushier and more fox-like */}
+        <path 
+          d="M80 55C95 45 90 35 87 38C84 41 85 46 80 55Z"
+          fill="#FF7A2F"
           stroke="#0B1C36"
           strokeWidth="2"
+        />
+        <path 
+          d="M85 45C90 42 92 40 93 38"
+          stroke="#0B1C36" 
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          fill="none"
+        />
+        
+        {/* White tail tip */}
+        <path 
+          d="M90 40C93 37 94 36 95 34"
+          stroke="white" 
+          strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
         />
       </svg>
     </motion.div>
@@ -193,7 +244,7 @@ export const FoxDecoration: React.FC<{
   size?: "sm" | "md" | "lg";
   color?: string;
   animated?: boolean;
-}> = ({ className, type = "paw", size = "md", color = "#A3D5FF", animated = true }) => {
+}> = ({ className, type = "paw", size = "md", color = "#FF7A2F", animated = true }) => {
   // Size classes
   const sizeClasses = {
     sm: "w-6 h-6",
@@ -243,26 +294,59 @@ export const FoxDecoration: React.FC<{
         );
       case "tail":
         return (
-          <path 
-            d="M20 50C10 40 15 20 30 15C45 10 60 30 50 50C40 70 30 60 20 50Z"
-            fill={color}
-            stroke="#0B1C36"
-            strokeWidth="2"
-          />
+          <>
+            <path 
+              d="M20 50C10 40 15 20 30 15C45 10 60 30 50 50C40 70 30 60 20 50Z"
+              fill={color}
+              stroke="#0B1C36"
+              strokeWidth="2"
+            />
+            {/* White tail tip */}
+            <path 
+              d="M12 42C8 38 7 35 5 32"
+              stroke="white" 
+              strokeWidth="3"
+              strokeLinecap="round"
+              fill="none"
+            />
+          </>
         );
       case "ear":
         return (
-          <path 
-            d="M50 10L30 40L40 30L50 50L60 30L70 40L50 10Z"
-            fill={color}
-            stroke="#0B1C36"
-            strokeWidth="2"
-          />
+          <>
+            <path 
+              d="M50 10L30 40L20 5L50 10Z"
+              fill={color}
+              stroke="#0B1C36"
+              strokeWidth="2"
+            />
+            <path 
+              d="M50 10L70 40L80 5L50 10Z"
+              fill={color}
+              stroke="#0B1C36"
+              strokeWidth="2"
+            />
+            {/* Inner ear details */}
+            <path 
+              d="M40 30L30 15"
+              stroke="#0B1C36"
+              strokeWidth="1"
+              opacity="0.5"
+              strokeLinecap="round"
+            />
+            <path 
+              d="M60 30L70 15"
+              stroke="#0B1C36"
+              strokeWidth="1"
+              opacity="0.5"
+              strokeLinecap="round"
+            />
+          </>
         );
       case "silhouette":
         return (
           <path 
-            d="M50 10C30 10 15 30 15 50C15 70 30 90 50 90C70 90 85 70 85 50C85 30 70 10 50 10Z M30 40L25 25L30 40Z M70 40L75 25L70 40Z M40 50L35 55L45 60L55 60L65 55L60 50L60 45L50 40L40 45L40 50Z"
+            d="M50 10C30 10 15 30 15 50C15 70 30 90 50 90C70 90 85 70 85 50C85 30 70 10 50 10Z M25 20L35 40L20 15Z M75 20L65 40L80 15Z M40 50L35 55L45 60L55 60L65 55L60 50L60 45L50 40L40 45L40 50Z"
             fill={color}
             stroke="#0B1C36"
             strokeWidth="2"
