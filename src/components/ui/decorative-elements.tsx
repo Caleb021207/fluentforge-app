@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { floatAnimation, pulseAnimation } from "@/lib/animations";
+import { FoxDecoration } from "./fox-components";
 
 export const GradientBlob: React.FC<{
   className?: string;
@@ -97,5 +98,57 @@ export const WavyLine: React.FC<{
         className={cn("stroke-2", color)}
       />
     </svg>
+  );
+};
+
+// New Fox-themed decorative elements
+export const FoxPawTrail: React.FC<{
+  className?: string;
+  count?: number;
+  size?: "sm" | "md";
+  color?: string;
+}> = ({ className, count = 5, size = "sm", color = "#A3D5FF" }) => {
+  return (
+    <div className={cn("relative", className)}>
+      {Array.from({ length: count }).map((_, index) => (
+        <motion.div
+          key={index}
+          className={`absolute`}
+          style={{
+            top: `${Math.floor(Math.random() * 80)}%`,
+            left: `${(index * 100) / count}%`,
+            opacity: 0.7 - (index * 0.1),
+            transform: `rotate(${Math.floor(Math.random() * 40) - 20}deg)`
+          }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.7 - (index * 0.1), scale: 1 }}
+          transition={{ delay: index * 0.2 }}
+        >
+          <FoxDecoration type="paw" size={size} color={color} animated={false} />
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+export const FoxTailWag: React.FC<{
+  className?: string;
+  size?: "sm" | "md" | "lg";
+  color?: string;
+}> = ({ className, size = "md", color = "#FF9D5C" }) => {
+  return (
+    <motion.div
+      className={cn("relative", className)}
+      initial={{ rotate: -10 }}
+      animate={{ rotate: [0, 10, -5, 10, 0] }}
+      transition={{ 
+        duration: 2, 
+        repeat: Infinity,
+        repeatType: "reverse",
+        ease: "easeInOut" 
+      }}
+    >
+      <FoxDecoration type="tail" size={size} color={color} animated={false} />
+    </motion.div>
   );
 };
