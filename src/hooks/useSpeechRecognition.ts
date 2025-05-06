@@ -93,8 +93,9 @@ export const useSpeechRecognition = ({
         const delay = Math.min(1500 + (retryCountRef.current * 500), 4000);
         
         restartTimerRef.current = window.setTimeout(() => {
-          // Fix: Use strict equality check for each state separately
-          if (state === RecognitionState.PROCESSING || state === RecognitionState.LISTENING) {
+          // Fix: Check if current state is either PROCESSING or LISTENING
+          const currentState = state;
+          if (currentState === RecognitionState.PROCESSING || currentState === RecognitionState.LISTENING) {
             try {
               recognition.start();
               retryCountRef.current++;
