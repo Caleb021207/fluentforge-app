@@ -12,6 +12,7 @@ interface TranslationSectionProps {
   currentLanguage: string;
   isTranslationPlaying: boolean;
   isTranslationLoading: boolean;
+  originalContent: string; // Add original content prop to compare with translation
   onPlayTranslationAudio?: () => void;
 }
 
@@ -22,11 +23,13 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   currentLanguage,
   isTranslationPlaying,
   isTranslationLoading,
+  originalContent,
   onPlayTranslationAudio
 }) => {
   const { t } = useLocalization();
   const { toast } = useToast();
   const [translationText, setTranslationText] = useState<string>("");
+  const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
   
   // Process translation on component mount and when translation prop changes
   useEffect(() => {
@@ -37,6 +40,10 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
         translationType: typeof translation
       });
     }
+    
+    // Check if we should display this translation (avoid duplicating English text)
+    const isTranslationSameAsContent = translation.trim() === originalContent.trim();
+    setShouldDisplay(!isTranslationSameAsContent);
     
     // Translation should already be a string by this point due to changes in parent components
     if (typeof translation === 'string' && translation.trim() !== '') {
@@ -59,9 +66,9 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
         length: translationText.length
       });
     }
-  }, [translation, currentLanguage, t]);
+  }, [translation, currentLanguage, t, originalContent]);
   
-  if (!showTranslation) {
+  if (!showTranslation || !shouldDisplay) {
     return null;
   }
   

@@ -68,6 +68,7 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
           currentLanguage={currentLanguage}
           isTranslationPlaying={translationAudio.isPlaying}
           isTranslationLoading={translationAudio.isLoading}
+          originalContent={safeContent}
           onPlayTranslationAudio={role === "assistant" && safeTranslation ? translationAudio.playAudio : undefined}
         />
       )}
