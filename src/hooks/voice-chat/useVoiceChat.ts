@@ -157,13 +157,13 @@ export const useVoiceChat = (): VoiceChatReturn => {
 
   return {
     isActive,        
-    isSpeaking,      
+    isSpeaking,
+    setIsSpeaking,    
     microphoneAccess,
     isConversationActive,
     startVoiceConversation,
     endVoiceConversation,
     conversation,
-    setMessageHandler,
-    setIsSpeaking
+    setMessageHandler
   };
 };

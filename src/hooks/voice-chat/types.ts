@@ -24,6 +24,7 @@ export interface VoiceChatSession {
 export interface VoiceChatReturn {
   isActive: boolean;
   isSpeaking: boolean;
+  setIsSpeaking: (isSpeaking: boolean) => void;
   startVoiceConversation: () => Promise<{ conversationId: string | null }>;
   endVoiceConversation: () => Promise<boolean>;
   conversation: {
