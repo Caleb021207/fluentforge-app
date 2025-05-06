@@ -31,7 +31,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent bg-background text-foreground"
         disabled={isLoading}
       />
-      <Button type="submit" disabled={isLoading}>
+      <Button type="submit" disabled={isLoading} variant="success">
         <Send className="h-4 w-4 mr-2" />
         {t("send")}
       </Button>

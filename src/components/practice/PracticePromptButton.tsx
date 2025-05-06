@@ -32,6 +32,7 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
         disabled={isLoading || disabled}
         className="gap-2"
         size="lg"
+        variant="success"
       >
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />

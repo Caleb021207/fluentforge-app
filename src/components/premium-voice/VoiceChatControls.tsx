@@ -50,9 +50,8 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
         onClick={startConversation}
         disabled={sessionStatus === 'loading' || weeklyTimeRemaining === 0}
         size="lg"
-        className={`flex items-center justify-center px-8 py-3 rounded-full text-lg ${
-          isActive ? "bg-red-500 hover:bg-red-600" : "bg-lingua-primary hover:bg-lingua-primary-dark"
-        }`}
+        variant={isActive ? "destructive" : "success"}
+        className="flex items-center justify-center px-8 py-3 rounded-full text-lg"
       >
         {isActive ? (
           <MicOff className="h-6 w-6 mr-2" />
