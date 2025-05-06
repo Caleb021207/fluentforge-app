@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,12 +45,17 @@ const VoiceChat = () => {
   // Get proper language code for speech recognition
   const recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
   
-  // Use speech recognition hook
+  // Debug log to help with troubleshooting
+  console.log("Recognition language set to:", recognitionLanguage);
+  
+  // Use speech recognition hook with more debugging
   const {
     isListening,
     startListening,
     stopListening,
-    transcript: recognizedTranscript
+    transcript: recognizedTranscript,
+    isSupported,
+    error: speechError
   } = useSpeechRecognition({
     language: recognitionLanguage,
     continuous: true,
@@ -57,9 +63,18 @@ const VoiceChat = () => {
     silenceTimeout: 30000,
     disableAutoStop: true,
     onTranscript: (text, isFinal) => {
+      console.log("Transcript update:", text, "isFinal:", isFinal);
       setTranscript(text);
     }
   });
+
+  // Debug information for speech recognition
+  useEffect(() => {
+    console.log("Speech recognition supported:", isSupported);
+    if (speechError) {
+      console.error("Speech recognition error:", speechError);
+    }
+  }, [isSupported, speechError]);
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -67,14 +82,32 @@ const VoiceChat = () => {
     }
   }, [conversationHistory]);
 
-  const toggleListening = () => {
+  // Update transcript when speech recognition provides a new one
+  useEffect(() => {
+    if (recognizedTranscript) {
+      setTranscript(recognizedTranscript);
+    }
+  }, [recognizedTranscript]);
+
+  const toggleListening = async () => {
+    console.log("Toggling listening state, current state:", isListening);
     if (isListening) {
       stopListening();
     } else {
       setTranscript("");
       setGptResponse("");
       setTranslation("");
-      startListening();
+      try {
+        await startListening();
+        console.log("Speech recognition started successfully");
+      } catch (err) {
+        console.error("Failed to start speech recognition:", err);
+        toast({
+          title: t("error"),
+          description: t("microphoneAccessRequired"),
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -263,8 +296,8 @@ const VoiceChat = () => {
 
   // Add debug information for better troubleshooting
   useEffect(() => {
-    console.log(`Setting speech recognition to target language: ${practice} (${recognitionLanguage})`);
-  }, [practice, recognitionLanguage]);
+    console.log(`Speech recognition setup: Language=${practice}, Code=${recognitionLanguage}, Supported=${isSupported}`);
+  }, [practice, recognitionLanguage, isSupported]);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -332,6 +365,22 @@ const VoiceChat = () => {
             <div className="flex items-center text-sm text-green-600 dark:text-green-400 mb-4">
               <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
               {t("listeningNow")}...
+            </div>
+          )}
+
+          {!isSupported && (
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+              <p>
+                {t("speechRecognitionNotSupported")}
+              </p>
+            </div>
+          )}
+
+          {speechError && (
+            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+              <p>
+                Speech recognition error: {speechError}
+              </p>
             </div>
           )}
 

@@ -45,9 +45,11 @@ export const useVoiceChat = (): VoiceChatReturn => {
   const isConversationActive = useCallback(() => isActive, [isActive]);
 
   const startVoiceConversation = async () => {
+    console.log("Starting voice conversation...");
     setConnectionAttempts(0);
     
     if (!microphoneAccess) {
+      console.log("Requesting microphone access...");
       const hasAccess = await requestMicrophoneAccess();
       if (!hasAccess) {
         toast({
