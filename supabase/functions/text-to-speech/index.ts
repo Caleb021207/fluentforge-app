@@ -31,12 +31,12 @@ serve(async (req) => {
       console.log(`Split text into ${textChunks.length} chunks`);
     }
     
-    // Determine TTS service to use based on language support and explicit flag
+    // ALWAYS try Azure first for ALL languages
     let audioBuffer;
     const languageLower = language?.toLowerCase();
     
     try {
-      // Try Azure first as it's more reliable
+      // Try Azure first as primary TTS provider
       console.log(`Using Azure TTS with voice: ${voiceSettings.voiceName}`);
       audioBuffer = await textToSpeechAzure(
         text, 
@@ -46,7 +46,7 @@ serve(async (req) => {
     } catch (azureError) {
       console.error('Azure TTS failed:', azureError);
       
-      // Check if Meta MMS supports this language and if it was explicitly requested
+      // Try Meta MMS as second option if supported or explicitly requested
       if (metaMmsLanguageMap[languageLower] || useMetaMms === true) {
         try {
           const metaMmsLangCode = metaMmsLanguageMap[languageLower] || "eng"; // fallback to English
@@ -55,33 +55,25 @@ serve(async (req) => {
         } catch (metaError) {
           console.error('Meta MMS failed:', metaError);
           
-          // Fall back to Polly if both Azure and Meta MMS fail
-          if (isTargetLanguage === true) {
-            try {
-              const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
-              console.log(`Azure and Meta MMS failed, trying AWS Polly with voice: ${pollyVoice}`);
-              audioBuffer = await textToSpeechPolly(text, pollyVoice);
-            } catch (pollyError) {
-              console.error(`All TTS services failed: ${azureError}, ${metaError}, ${pollyError}`);
-              throw new Error('All TTS services failed');
-            }
-          } else {
-            throw new Error('Both Azure and Meta MMS failed');
+          // Fall back to Polly as last resort
+          try {
+            const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
+            console.log(`Azure and Meta MMS failed, trying AWS Polly with voice: ${pollyVoice}`);
+            audioBuffer = await textToSpeechPolly(text, pollyVoice);
+          } catch (pollyError) {
+            console.error(`All TTS services failed: ${azureError}, ${metaError}, ${pollyError}`);
+            throw new Error('All TTS services failed');
           }
         }
       } else {
-        // Only fall back to Polly if explicitly requested AND Azure fails
-        if (isTargetLanguage === true) {
-          try {
-            const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
-            console.log(`Azure failed, trying AWS Polly with voice: ${pollyVoice}`);
-            audioBuffer = await textToSpeechPolly(text, pollyVoice);
-          } catch (pollyError) {
-            console.error(`Both TTS services failed: ${azureError}, ${pollyError}`);
-            throw new Error('All TTS services failed');
-          }
-        } else {
-          throw azureError;
+        // If Meta MMS is not supported, try Polly directly
+        try {
+          const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
+          console.log(`Azure failed, trying AWS Polly with voice: ${pollyVoice}`);
+          audioBuffer = await textToSpeechPolly(text, pollyVoice);
+        } catch (pollyError) {
+          console.error(`Both TTS services failed: ${azureError}, ${pollyError}`);
+          throw new Error('All TTS services failed');
         }
       }
     }

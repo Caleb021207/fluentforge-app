@@ -34,11 +34,12 @@ export const playTTS = async ({
   }
 
   try {
-    // Determine if this language is supported by Meta MMS
-    const usesMetaMms = useMetaMms || metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
+    // Pass the Meta MMS flag but don't prioritize it
+    // The Edge Function will always try Azure first
+    const usesMetaMms = useMetaMms || !!metaMmsLanguageMap[language?.toLowerCase()];
     
     if (usesMetaMms) {
-      console.log(`Using Meta MMS for ${language} text-to-speech`);
+      console.log(`Meta MMS available as fallback for ${language} text-to-speech`);
     }
 
     // Call the Supabase Edge Function
@@ -92,8 +93,9 @@ export const preloadTTS = async (text: string, language: string, isTargetLanguag
   }
 
   try {
-    // Determine if this language is supported by Meta MMS
-    const usesMetaMms = useMetaMms || metaMmsLanguageMap.hasOwnProperty(language?.toLowerCase());
+    // Note that we're still passing the Meta MMS flag,
+    // but the Edge Function will always try Azure first
+    const usesMetaMms = useMetaMms || !!metaMmsLanguageMap[language?.toLowerCase()];
 
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: {
