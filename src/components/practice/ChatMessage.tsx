@@ -18,9 +18,9 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
   const { currentLanguage } = useLocalization();
   
-  // Enhanced logging for Tagalog translations
-  if (currentLanguage === 'tagalog') {
-    console.log('ChatMessage Tagalog debug:', { 
+  // Enhanced logging for specific translations
+  if (['tagalog', 'thai'].includes(currentLanguage)) {
+    console.log(`ChatMessage ${currentLanguage} debug:`, { 
       role, 
       content, 
       originalTranslation: translation,
@@ -76,6 +76,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
       
       if (currentLanguage === 'tagalog') {
         return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+      } else if (currentLanguage === 'thai') {
+        return "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
       } else {
         return `Translation not available for ${currentLanguage}`;
       }
@@ -84,8 +86,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   
   const safeTranslation = processTranslation(translation);
   
-  if (currentLanguage === 'tagalog') {
-    console.log('ChatMessage after processing:', {
+  if (['tagalog', 'thai'].includes(currentLanguage)) {
+    console.log(`ChatMessage after processing ${currentLanguage}:`, {
       safeTranslation,
       translationLength: safeTranslation.length
     });

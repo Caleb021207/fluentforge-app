@@ -38,6 +38,14 @@ const Practice = () => {
         setTargetLanguage("english");
       }
     }
+    
+    // Debug for Thai language
+    if (currentLanguage === 'thai') {
+      console.log('Practice component initialized with Thai language:', {
+        currentLanguage,
+        targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english")
+      });
+    }
   }, [currentLanguage]);
   
   const {
@@ -76,6 +84,15 @@ const Practice = () => {
       msg.translation : 
       msg.translation ? JSON.stringify(msg.translation) : undefined
   }));
+
+  // Additional debug for Thai messages
+  if (currentLanguage === 'thai') {
+    console.log('Practice component rendering with Thai:', {
+      messageCount: messages.length,
+      hasTranslations: messages.filter(m => m.translation).length,
+      currentLanguage
+    });
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-4">

@@ -66,23 +66,27 @@ export const getTranslation = async (content: string, targetLanguage: string): P
       }
     }
 
-    // Special validation for Tagalog
-    if (targetLanguage === 'tagalog') {
-      console.log(`Got Tagalog translation:`, {
+    // Special validation for specific languages
+    if (['tagalog', 'thai'].includes(targetLanguage)) {
+      console.log(`Got ${targetLanguage} translation:`, {
         success: !!translation,
         length: translation.length,
         sample: translation.substring(0, 50) + '...',
         type: typeof translation
       });
       
-      // Ensure Tagalog translation is valid
+      // Ensure translation is valid
       if (!translation || 
           translation === 'undefined' || 
           translation === '[object Object]' ||
           translation.length < 10) {
         
-        translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-        console.log('Using fallback Tagalog message due to invalid translation');
+        if (targetLanguage === 'tagalog') {
+          translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+        } else if (targetLanguage === 'thai') {
+          translation = "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
+        }
+        console.log(`Using fallback ${targetLanguage} message due to invalid translation`);
       }
     } else {
       console.log(`Got ${targetLanguage} translation:`, {
@@ -96,9 +100,11 @@ export const getTranslation = async (content: string, targetLanguage: string): P
   } catch (error) {
     console.error('Failed to get translation:', error);
     
-    // Special fallback for Tagalog
+    // Special fallbacks for specific languages
     if (targetLanguage === 'tagalog') {
       return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+    } else if (targetLanguage === 'thai') {
+      return "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
     }
     
     return "";
