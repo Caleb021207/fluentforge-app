@@ -14,6 +14,7 @@ interface UseSpeechRecognitionOptions {
   autoRestart?: boolean;
   audioDevice?: string; // Optional device ID for input
   silenceTimeout?: number; // Time in ms to wait before considering silence
+  disableAutoStop?: boolean; // New option to disable auto-stopping
 }
 
 export const useSpeechRecognition = ({
@@ -24,7 +25,8 @@ export const useSpeechRecognition = ({
   onEnd,
   autoRestart = true,
   audioDevice,
-  silenceTimeout = 30000 // Default to 30 seconds, up from previous implicit 10s
+  silenceTimeout = 30000, // Default to 30 seconds, up from previous implicit 10s
+  disableAutoStop = true  // Default to disabling auto-stop
 }: UseSpeechRecognitionOptions) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -49,9 +51,11 @@ export const useSpeechRecognition = ({
       }
       
       // Reset silence detection when we get new transcript
-      resetSilenceDetection(text);
+      if (!disableAutoStop) {
+        resetSilenceDetection(text);
+      }
     }, 300),
-    [onTranscript]
+    [onTranscript, disableAutoStop]
   );
   
   // Check available audio devices
@@ -87,6 +91,11 @@ export const useSpeechRecognition = ({
   
   // Reset silence detection timer
   const resetSilenceDetection = useCallback((text?: string) => {
+    // If auto-stopping is disabled, don't set up silence detection
+    if (disableAutoStop) {
+      return;
+    }
+    
     if (silenceTimeoutRef.current !== null) {
       window.clearTimeout(silenceTimeoutRef.current);
       silenceTimeoutRef.current = null;
@@ -118,7 +127,7 @@ export const useSpeechRecognition = ({
         }
       }, silenceTimeout);
     }
-  }, [isListening, silenceTimeout, onEnd]);
+  }, [isListening, silenceTimeout, onEnd, disableAutoStop]);
   
   // Check if speech recognition is supported
   useEffect(() => {
@@ -302,8 +311,10 @@ export const useSpeechRecognition = ({
         }
       };
       
-      // Start the silence detection when we start listening
-      resetSilenceDetection();
+      // Only set up silence detection if auto-stop is not disabled
+      if (!disableAutoStop) {
+        resetSilenceDetection();
+      }
       
       try {
         recognitionRef.current.start();
@@ -336,7 +347,7 @@ export const useSpeechRecognition = ({
         }
       }
     }
-  }, [isListening, isSupported, autoRestart, debouncedTranscriptHandler, onEnd, toast, t, resetSilenceDetection, isRestarting]);
+  }, [isListening, isSupported, autoRestart, debouncedTranscriptHandler, onEnd, toast, t, resetSilenceDetection, isRestarting, disableAutoStop]);
   
   // Function to request microphone access explicitly
   const requestMicrophoneAccess = useCallback(async () => {

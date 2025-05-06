@@ -56,16 +56,10 @@ const VoiceChat = () => {
     language: recognitionLanguage,
     continuous: true,
     interimResults: true,
-    silenceTimeout: 30000, // 30 seconds silence timeout - much higher than before
+    silenceTimeout: 30000,
+    disableAutoStop: true, // Disable auto-stopping based on silence
     onTranscript: (text, isFinal) => {
       setTranscript(text);
-    },
-    onEnd: () => {
-      // Auto-send message when silence is detected for too long
-      if (transcript && transcript.trim() !== "") {
-        console.log("Auto-sending message after silence timeout");
-        handleSendTranscript(transcript);
-      }
     }
   });
 
