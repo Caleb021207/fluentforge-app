@@ -59,6 +59,18 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Add text-specific color variables
+        text: {
+          primary: "hsl(var(--text-primary))",
+          secondary: "hsl(var(--text-secondary))",
+          muted: "hsl(var(--text-muted))",
+          accent: "hsl(var(--text-accent))",
+          inverse: "hsl(var(--text-inverse))",
+          "on-accent": "hsl(var(--text-on-accent))",
+          "on-primary": "hsl(var(--text-on-primary))",
+          disabled: "hsl(var(--text-disabled))",
+          placeholder: "hsl(var(--text-placeholder))",
+        }
       },
       keyframes: {
         overlayShow: {
