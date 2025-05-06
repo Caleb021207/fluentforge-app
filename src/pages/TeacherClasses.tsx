@@ -8,6 +8,7 @@ import ClassList from "@/components/classroom/ClassList";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import { useLocalization } from "@/context/LocalizationContext";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
+import AnimatedLoader from "@/components/ui/animated-loader";
 
 const TeacherClasses = () => {
   const navigate = useNavigate();
@@ -28,7 +29,15 @@ const TeacherClasses = () => {
   }, [isTeacher, isLoading, navigate, toast, t]);
 
   if (isLoading) {
-    return <div className="p-8">{t("loading")}</div>;
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <AnimatedLoader 
+          size="lg" 
+          color="text-palavox-primary"
+          message={t("loading")}
+        />
+      </div>
+    );
   }
 
   return (

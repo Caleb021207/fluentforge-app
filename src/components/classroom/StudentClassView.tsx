@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import ClassInfo from './ClassInfo';
 import StudentMetrics from './StudentMetrics';
 import { useClassData } from '@/hooks/useClassData';
+import AnimatedLoader from '@/components/ui/animated-loader';
 
 const StudentClassView = () => {
   const { t } = useLocalization();
@@ -63,7 +64,10 @@ const StudentClassView = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <AnimatedLoader 
+          size="md"
+          message={t("loading")} 
+        />
       </div>
     );
   }

@@ -14,11 +14,14 @@ export const useTeacherStatus = () => {
         if (!session.session) {
           console.log('No authenticated session found');
           setIsTeacher(false);
+          setIsLoading(false);
           return;
         }
 
-        console.log('Checking teacher status for user:', session.session.user.id);
+        console.log('Checking teacher role for user:', session.session.user.id);
         
+        // Using the safe_is_teacher RPC function which is SECURITY DEFINER
+        // and therefore doesn't have RLS issues
         const { data, error } = await supabase.rpc('safe_is_teacher');
         
         if (error) {
