@@ -47,12 +47,12 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-lingua-secondary to-white dark:from-gray-900 dark:to-gray-800 overflow-x-hidden w-full">
       {user && (
-        <div className="w-full bg-white dark:bg-gray-900 border-b dark:border-gray-700 py-2 px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+        <div className="w-full bg-white dark:bg-gray-900 border-b dark:border-gray-700/70 py-2 px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <div className="flex items-center">
             <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mr-1 sm:mr-2">
               {t("signedInAs")}
             </span>
-            <span className="font-medium text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">{user.email}</span>
+            <span className="font-medium text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none dark:text-gray-100">{user.email}</span>
           </div>
           <LogoutButton />
         </div>

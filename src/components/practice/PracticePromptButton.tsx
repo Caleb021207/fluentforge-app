@@ -30,7 +30,7 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
       <Button
         onClick={onClick}
         disabled={isLoading || disabled}
-        className="gap-2"
+        className="gap-2 dark:bg-lingua-primary/90 dark:hover:bg-lingua-primary/80 dark:text-white dark:font-medium"
         size="lg"
       >
         {isLoading ? (

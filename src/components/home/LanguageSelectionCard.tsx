@@ -124,9 +124,9 @@ const LanguageSelectionCard = ({
   );
 
   return (
-    <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur shadow-lg mb-8">
+    <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur shadow-lg mb-8 dark:shadow-lg dark:shadow-black/20">
       <CardContent className="pt-6">
-        <h2 className="text-xl font-semibold mb-4 dark:text-gray-200">{t("selectYourLanguagePreferences")}</h2>
+        <h2 className="text-xl font-semibold mb-4 dark:text-gray-100 dark:text-shadow-sm">{t("selectYourLanguagePreferences")}</h2>
         <div className="grid grid-cols-1 gap-4 mb-4">
           <LanguageSelectField
             id="nativeLanguage"
@@ -164,7 +164,7 @@ const LanguageSelectionCard = ({
         
         <Button 
           onClick={handleLanguageSelection} 
-          className="w-full"
+          className="w-full dark:hover:bg-lingua-primary/80"
           disabled={!nativeLanguage || !targetLanguage}
         >
           {t("saveLanguagePreferences")}

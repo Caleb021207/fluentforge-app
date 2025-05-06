@@ -28,10 +28,14 @@ const ChatInput: React.FC<ChatInputProps> = ({
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary"
+        className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:ring-blue-500"
         disabled={isLoading}
       />
-      <Button type="submit" disabled={isLoading}>
+      <Button 
+        type="submit" 
+        disabled={isLoading}
+        className="dark:bg-lingua-primary/90 dark:hover:bg-lingua-primary/70"
+      >
         <Send className="h-4 w-4 mr-2" />
         {t("send")}
       </Button>

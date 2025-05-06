@@ -34,21 +34,21 @@ const CertificatesLayout = ({
   
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">{t("certificationProgress")}</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-shadow-sm">{t("certificationProgress")}</h1>
       
       <OverallCertificate compositeScore={compositeScore} />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Reading Tests Card */}
-        <Card>
+        <Card className="dark:border-gray-700/50">
           <CardHeader>
-            <CardTitle className="flex items-center">
+            <CardTitle className="flex items-center dark:text-gray-200">
               <BookOpen className="mr-2 h-5 w-5" />
               {currentLanguage === "english" ? "Spanish Reading Tests" : "English Reading Tests"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-sm dark:text-gray-400">
               {currentLanguage === "english" 
                 ? "Assess your Spanish reading comprehension skills." 
                 : "Assess your English reading comprehension skills."}
@@ -60,47 +60,54 @@ const CertificatesLayout = ({
                   variant="outline" 
                   size="sm"
                   onClick={() => navigate(`/certificates/reading/${level.toLowerCase()}`)}
+                  className="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                 >
                   {level}
                 </Button>
               ))}
             </div>
-            <Button className="w-full" onClick={() => navigate('/certificates/reading')}>
+            <Button 
+              className="w-full dark:bg-lingua-primary/90 dark:hover:bg-lingua-primary/80 dark:text-white" 
+              onClick={() => navigate('/certificates/reading')}
+            >
               {t("startTest")}
             </Button>
           </CardContent>
         </Card>
         
         {/* Writing Tests Card */}
-        <Card>
+        <Card className="dark:border-gray-700/50">
           <CardHeader>
-            <CardTitle className="flex items-center">
+            <CardTitle className="flex items-center dark:text-gray-200">
               <FileText className="mr-2 h-5 w-5" />
               {currentLanguage === "english" ? "Spanish Writing Tests" : "English Writing Tests"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-sm dark:text-gray-400">
               {currentLanguage === "english" 
                 ? "Test your Spanish writing skills with prompts at various levels." 
                 : "Test your English writing skills with prompts at various levels."}
             </p>
-            <Button className="w-full" onClick={() => navigate('/certificates/writing')}>
+            <Button 
+              className="w-full dark:bg-lingua-primary/90 dark:hover:bg-lingua-primary/80 dark:text-white" 
+              onClick={() => navigate('/certificates/writing')}
+            >
               {t("startTest")}
             </Button>
           </CardContent>
         </Card>
         
         {/* Speaking Card */}
-        <Card>
+        <Card className="dark:border-gray-700/50">
           <CardHeader>
-            <CardTitle className="flex items-center">
+            <CardTitle className="flex items-center dark:text-gray-200">
               <MessageCircle className="mr-2 h-5 w-5" />
               {currentLanguage === "english" ? "Spanish Speaking Test" : "English Speaking Test"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-sm dark:text-gray-400">
               {currentLanguage === "english" 
                 ? "Test your Spanish speaking fluency through a conversation." 
                 : "Test your English speaking fluency through a conversation."}

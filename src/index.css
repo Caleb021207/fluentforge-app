@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,6 +42,17 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* New text-specific variables for better dark mode control */
+    --text-primary: 222.2 84% 4.9%;
+    --text-secondary: 215.4 16.3% 46.9%;
+    --text-muted: 215.4 16.3% 46.9%;
+    --text-accent: 222.2 47.4% 11.2%;
+    --text-inverse: 210 40% 98%;
+    --text-on-accent: 210 40% 98%;
+    --text-on-primary: 210 40% 98%;
+    --text-disabled: 215 20.2% 65.1%;
+    --text-placeholder: 215.4 16.3% 46.9%;
   }
 
   .dark {
@@ -82,6 +92,17 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Enhanced dark mode text variables with improved contrast */
+    --text-primary: 210 40% 98%;
+    --text-secondary: 217.2 32.6% 80%;
+    --text-muted: 215 20.2% 70%;
+    --text-accent: 210 40% 98%;
+    --text-inverse: 222.2 47.4% 11.2%;
+    --text-on-accent: 222.2 47.4% 11.2%;
+    --text-on-primary: 222.2 47.4% 11.2%;
+    --text-disabled: 215 20.2% 45%;
+    --text-placeholder: 215 20.2% 60%;
   }
 }
 
@@ -101,6 +122,25 @@
     width: 100%;
     max-width: 100vw;
   }
+  
+  /* Enhanced typography for dark mode */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    @apply text-text-primary font-medium;
+  }
+  
+  .dark p, .dark span, .dark div {
+    @apply text-text-primary transition-colors duration-200;
+  }
+  
+  /* Improved form element text in dark mode */
+  .dark input, .dark select, .dark textarea {
+    @apply text-text-primary placeholder:text-text-placeholder;
+  }
+  
+  /* Better text contrast for disabled elements */
+  .dark [disabled] {
+    @apply text-text-disabled;
+  }
 }
 
 @layer utilities {
@@ -110,6 +150,35 @@
   
   .dark .glass {
     @apply bg-gray-900/40 backdrop-blur-lg border border-gray-800/30 rounded-lg;
+  }
+  
+  /* New text utility classes for dark mode */
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark .text-shadow-sm {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+  
+  .text-shadow-md {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  .dark .text-shadow-md {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .text-readable {
+    @apply tracking-wide;
+  }
+  
+  .dark .text-readable {
+    @apply tracking-wide font-medium;
+  }
+  
+  .dark .enhanced-text-contrast {
+    @apply font-medium;
   }
 }
 

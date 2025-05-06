@@ -77,12 +77,13 @@ const Navigation = () => {
       <Button
         variant={isActive ? "default" : "ghost"}
         className={`w-full justify-start ${
-          isActive ? "bg-lingua-primary hover:bg-lingua-primary/90" : ""
+          isActive ? "bg-lingua-primary hover:bg-lingua-primary/90 dark:bg-lingua-primary/90 dark:hover:bg-lingua-primary/70" : 
+          "dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800/50"
         }`}
         disabled={item.requiresAuth && !isLoggedIn}
       >
         <Icon className="h-5 w-5 md:mr-2" />
-        <span className="hidden md:inline">{t(item.label)}</span>
+        <span className="hidden md:inline dark:font-medium">{t(item.label)}</span>
         {item.requiresAuth && !isLoggedIn && (
           <Lock className="h-4 w-4 ml-2 opacity-50" />
         )}
@@ -98,7 +99,7 @@ const Navigation = () => {
                 {button}
               </div>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="dark:bg-gray-800 dark:text-gray-100">
               <p>{t("loginRequiredForFeature")}</p>
             </TooltipContent>
           </Tooltip>
@@ -121,7 +122,7 @@ const Navigation = () => {
           variant="ghost" 
           size="icon" 
           onClick={() => setIsOpen(!isOpen)}
-          className="text-gray-700 dark:text-gray-300"
+          className="text-gray-700 dark:text-gray-200"
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -136,8 +137,9 @@ const Navigation = () => {
 
       <nav className={`
         fixed bottom-0 left-0 w-full md:relative md:w-64 
-        bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg 
+        bg-white/90 dark:bg-gray-900/95 backdrop-blur-lg 
         border-t md:border-r md:border-t-0 md:h-screen 
+        border-gray-200 dark:border-gray-700/70
         z-40 transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-y-0' : 'md:translate-y-0 translate-y-[calc(100%-4rem)]'}
       `}>
@@ -148,7 +150,7 @@ const Navigation = () => {
               className="flex items-center space-x-2"
               onClick={() => setIsOpen(false)}
             >
-              <span className="font-bold text-2xl text-lingua-primary dark:text-blue-400">Palavox</span>
+              <span className="font-bold text-2xl text-lingua-primary dark:text-blue-400 dark:text-shadow-sm">Palavox</span>
             </Link>
             <ThemeToggle />
           </div>
@@ -157,14 +159,14 @@ const Navigation = () => {
             {getNavItems().map(item => renderNavButton(item))}
             
             {isLoggedIn && isOpen && (
-              <div className="md:hidden mt-4 pt-4 border-t">
+              <div className="md:hidden mt-4 pt-4 border-t border-gray-200 dark:border-gray-700/50">
                 <LogoutButton iconOnly={true} onClose={() => setIsOpen(false)} />
               </div>
             )}
           </div>
           
           {isLoggedIn && (
-            <div className="hidden md:block mt-auto pt-4 border-t mt-8">
+            <div className="hidden md:block mt-auto pt-4 border-t border-gray-200 dark:border-gray-700/50 mt-8">
               <LogoutButton />
             </div>
           )}
