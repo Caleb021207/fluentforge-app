@@ -39,6 +39,7 @@ export const useVoiceChatConnection = () => {
     try {
       console.log("[PLACEHOLDER] Would end conversation session");
       setIsActive(false);
+      setIsSpeaking(false);
       
       toast({
         title: t("stopVoiceChat"),

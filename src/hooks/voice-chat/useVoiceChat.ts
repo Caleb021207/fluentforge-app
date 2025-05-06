@@ -145,6 +145,8 @@ export const useVoiceChat = (): VoiceChatReturn => {
   }, [isConversationActive, currentSessionId]);
 
   return {
+    isActive,         // Added missing property
+    isSpeaking,       // Added missing property
     microphoneAccess,
     isConversationActive,
     startVoiceConversation,
