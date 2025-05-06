@@ -11,7 +11,8 @@ interface AudioButtonProps {
   ariaLabel: string;
 }
 
-const AudioButton: React.FC<AudioButtonProps> = ({ 
+// Memoize the component to prevent unnecessary re-renders
+const AudioButton: React.FC<AudioButtonProps> = React.memo(({ 
   isLoading, 
   isPlaying, 
   onClick, 
@@ -34,6 +35,8 @@ const AudioButton: React.FC<AudioButtonProps> = ({
       )}
     </Button>
   );
-};
+});
+
+AudioButton.displayName = 'AudioButton';
 
 export default AudioButton;

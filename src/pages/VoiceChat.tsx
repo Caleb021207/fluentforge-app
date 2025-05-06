@@ -32,6 +32,7 @@ const VoiceChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
+  const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState(true);
   const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -40,6 +41,7 @@ const VoiceChat = () => {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const silenceTimeoutRef = useRef<number | null>(null);
+  const microphoneAccessGranted = useRef<boolean>(false);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
@@ -52,61 +54,82 @@ const VoiceChat = () => {
   }, [conversationHistory]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && 
-        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
+    // Check for speech recognition support
+    const hasSpeechRecognition = typeof window !== "undefined" && 
+      ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+    
+    setSpeechRecognitionSupported(hasSpeechRecognition);
+    
+    if (!hasSpeechRecognition) {
+      console.warn("Speech Recognition is not supported in this browser");
+      toast({
+        title: t("error"),
+        description: t("speechRecognitionNotSupported"),
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionRef.current = new SpeechRecognitionAPI();
+    
+    // Get the target language the user is practicing (not their UI language)
+    const { practice } = getLanguagePair(currentLanguage);
+    
+    // Use the practice/target language for speech recognition
+    const recognitionLanguage = getSpeechSynthesisLanguageCode(practice.toLowerCase());
+    
+    console.log(`Setting speech recognition to target language: ${practice} (${recognitionLanguage})`);
+    
+    recognitionRef.current.lang = recognitionLanguage;
+    recognitionRef.current.interimResults = true;
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.maxAlternatives = 1;
+    
+    recognitionRef.current.onresult = (event: any) => {
+      const lastResultIndex = event.results.length - 1;
+      const latestTranscript = event.results[lastResultIndex][0].transcript;
       
-      // Get the target language the user is practicing (not their UI language)
-      const { practice } = getLanguagePair(currentLanguage);
+      resetSilenceDetection();
       
-      // Use the practice/target language for speech recognition
-      let recognitionLanguage = getSpeechSynthesisLanguageCode(practice.toLowerCase());
+      setTranscript(latestTranscript);
+    };
+    
+    recognitionRef.current.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+      if (event.error === 'not-allowed') {
+        microphoneAccessGranted.current = false;
+      }
       
-      console.log(`Setting speech recognition to target language: ${practice} (${recognitionLanguage})`);
-      
-      recognitionRef.current.lang = recognitionLanguage;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.maxAlternatives = 1;
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const lastResultIndex = event.results.length - 1;
-        const latestTranscript = event.results[lastResultIndex][0].transcript;
-        
-        resetSilenceDetection();
-        
-        setTranscript(latestTranscript);
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
+      // Don't stop listening on all errors - only on critical ones
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
         setIsListening(false);
         toast({
           title: t("error"),
           description: `${t("speechRecognitionError")}: ${event.error}`,
           variant: "destructive",
         });
-      };
-      
-      recognitionRef.current.onend = () => {
-        if (isListening) {
-          try {
-            recognitionRef.current.start();
-          } catch (e) {
-            console.error("Failed to restart speech recognition:", e);
-          }
-        } else {
+      }
+    };
+    
+    recognitionRef.current.onend = () => {
+      // Only restart if we intend to keep listening and no permission errors occurred
+      if (isListening && microphoneAccessGranted.current) {
+        try {
+          // Small delay to prevent rapid restarts
+          setTimeout(() => {
+            if (isListening) {
+              recognitionRef.current.start();
+            }
+          }, 300);
+        } catch (e) {
+          console.error("Failed to restart speech recognition:", e);
           setIsListening(false);
         }
-      };
-    } else {
-      toast({
-        title: t("error"),
-        description: t("speechRecognitionNotSupported"),
-        variant: "destructive",
-      });
-    }
+      } else {
+        setIsListening(false);
+      }
+    };
 
     if (typeof window !== "undefined" && 'speechSynthesis' in window) {
       synthRef.current = window.speechSynthesis;
@@ -126,10 +149,18 @@ const VoiceChat = () => {
     
     return () => {
       if (recognitionRef.current) {
-        recognitionRef.current.abort();
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {
+          console.error("Error aborting recognition on cleanup:", e);
+        }
       }
       if (synthRef.current && utteranceRef.current) {
-        synthRef.current.cancel();
+        try {
+          synthRef.current.cancel();
+        } catch (e) {
+          console.error("Error canceling synthesis on cleanup:", e);
+        }
       }
       clearSilenceDetection();
     };
@@ -144,7 +175,11 @@ const VoiceChat = () => {
         handleSendTranscript(transcript);
         
         if (recognitionRef.current) {
-          recognitionRef.current.abort();
+          try {
+            recognitionRef.current.abort();
+          } catch (e) {
+            console.error("Error aborting recognition on silence detection:", e);
+          }
         }
         setIsListening(false);
       }
@@ -158,16 +193,54 @@ const VoiceChat = () => {
     }
   };
 
-  const toggleListening = () => {
+  const requestMicrophoneAccess = async (): Promise<boolean> => {
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      microphoneAccessGranted.current = true;
+      return true;
+    } catch (error) {
+      console.error("Microphone access error:", error);
+      microphoneAccessGranted.current = false;
+      toast({
+        title: t("microphoneAccessRequired"),
+        description: t("allowMicAccess"),
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
+  const toggleListening = async () => {
     if (isListening) {
       if (recognitionRef.current) {
-        recognitionRef.current.abort();
+        try {
+          recognitionRef.current.abort();
+          clearSilenceDetection();
+          setIsListening(false);
+        } catch (error) {
+          console.error("Error stopping speech recognition:", error);
+        }
       }
-      clearSilenceDetection();
-      setIsListening(false);
     } else {
+      // Check for speech recognition support again
+      if (!speechRecognitionSupported) {
+        toast({
+          title: t("error"),
+          description: t("speechRecognitionNotSupported"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Request microphone access if not already granted
+      if (!microphoneAccessGranted.current) {
+        const hasAccess = await requestMicrophoneAccess();
+        if (!hasAccess) return;
+      }
+
       if (recognitionRef.current) {
         try {
+          console.log("Starting speech recognition");
           recognitionRef.current.start();
           setIsListening(true);
           setTranscript("");
@@ -374,6 +447,14 @@ const VoiceChat = () => {
             {t("browserBasedTTS")}
           </p>
         </div>
+        
+        {!speechRecognitionSupported && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
+            <p className="text-red-800 text-sm">
+              {t("speechRecognitionNotSupported")} {t("useChrome")}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-6">
@@ -393,7 +474,7 @@ const VoiceChat = () => {
                 onClick={toggleListening}
                 variant={isListening ? "destructive" : "default"}
                 size="lg"
-                disabled={isLoading || isSpeaking}
+                disabled={isLoading || isSpeaking || !speechRecognitionSupported}
               >
                 {isListening ? (
                   <>

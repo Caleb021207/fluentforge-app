@@ -10,7 +10,8 @@ interface TranslationContentProps {
   onPlayTranslationAudio?: () => void;
 }
 
-const TranslationContent: React.FC<TranslationContentProps> = ({
+// Memoize the component to prevent unnecessary re-renders
+const TranslationContent: React.FC<TranslationContentProps> = React.memo(({
   role,
   translation,
   isTranslationPlaying,
@@ -34,6 +35,8 @@ const TranslationContent: React.FC<TranslationContentProps> = ({
       )}
     </div>
   );
-};
+});
+
+TranslationContent.displayName = 'TranslationContent';
 
 export default TranslationContent;
