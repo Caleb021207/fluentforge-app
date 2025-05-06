@@ -23,6 +23,13 @@ const AnimatedElement = ({
   animateOnMount = true,
   animateOnceOnly = false,
 }: AnimatedElementProps) => {
+  // Extract transition duration from animation if provided, or use default
+  const transitionDuration = duration !== undefined 
+    ? duration 
+    : (typeof animation.visible === 'object' && 'transition' in animation.visible && typeof animation.visible.transition === 'object' && 'duration' in animation.visible.transition)
+      ? animation.visible.transition.duration
+      : 0.3;
+  
   return (
     <AnimatePresence>
       {isVisible && (
@@ -35,8 +42,7 @@ const AnimatedElement = ({
           viewport={animateOnceOnly ? { once: true } : undefined}
           transition={{
             delay,
-            // Use optional chaining to safely access the duration
-            duration: duration || animation.visible?.transition?.duration || 0.3,
+            duration: transitionDuration,
           }}
         >
           {children}
