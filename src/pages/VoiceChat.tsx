@@ -346,7 +346,7 @@ const VoiceChat = () => {
                 )}
               </Button>
               
-              {isListening && transcript && (
+              {transcript && (
                 <Button
                   onClick={() => handleSendTranscript(transcript)}
                   variant="default"

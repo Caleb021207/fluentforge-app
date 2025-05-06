@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -20,10 +20,19 @@ const ChatInput: React.FC<ChatInputProps> = ({
   placeholder,
 }) => {
   const { t } = useLocalization();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus the input field when it's available
+  useEffect(() => {
+    if (inputRef.current && !isLoading) {
+      inputRef.current.focus();
+    }
+  }, [isLoading]);
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-3">
       <input
+        ref={inputRef}
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -34,7 +43,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       />
       <Button 
         type="submit" 
-        disabled={isLoading}
+        disabled={isLoading || !input.trim()} // Only disabled if loading or empty input
         className="bg-lingua-accent hover:bg-lingua-accent-hover text-lingua-primary font-medium transition-colors duration-200
                  dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
       >
