@@ -73,7 +73,7 @@ const StudentClassView = () => {
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-red-500">{error}</p>
+          <p className="text-destructive">{error}</p>
           <Button 
             variant="outline" 
             size="sm" 
@@ -104,7 +104,7 @@ const StudentClassView = () => {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{classData.class_name}</CardTitle>
+        <CardTitle className="text-foreground">{classData.class_name}</CardTitle>
         <Button 
           variant="outline" 
           size="sm" 
@@ -132,7 +132,7 @@ const StudentClassView = () => {
         {classData.metrics ? (
           <StudentMetrics metrics={classData.metrics} />
         ) : (
-          <p>{t("loadingMetrics")}</p>
+          <p className="text-foreground">{t("loadingMetrics")}</p>
         )}
       </CardContent>
     </Card>

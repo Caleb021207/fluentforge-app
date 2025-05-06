@@ -28,14 +28,14 @@ const StudentClass = () => {
     return (
       <div className="flex justify-center items-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-        <span className="ml-3">Loading...</span>
+        <span className="ml-3 text-foreground">Loading...</span>
       </div>
     );
   }
 
   return (
     <div className="container max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-8">{CLASSROOM_TEXT.MY_CLASS}</h1>
+      <h1 className="text-2xl font-bold mb-8 text-foreground">{CLASSROOM_TEXT.MY_CLASS}</h1>
       <StudentClassView />
       <JoinClassForm />
     </div>

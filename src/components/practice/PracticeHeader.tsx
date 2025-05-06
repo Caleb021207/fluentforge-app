@@ -17,10 +17,10 @@ const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage }) => {
   
   return (
     <div className="mb-8 text-center">
-      <h1 className="text-3xl font-bold mb-2">
+      <h1 className="text-3xl font-bold mb-2 text-foreground">
         {learningLanguage} {t("practice")}
       </h1>
-      <p className="text-gray-600">
+      <p className="text-muted-foreground">
         {currentLanguage === "tagalog" 
           ? "Simulan ang pakikipag-usap sa iyong AI na guro sa wika!" // Tagalog text for practice description
           : t("startChatting")}
