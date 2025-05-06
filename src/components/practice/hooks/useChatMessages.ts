@@ -4,6 +4,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { useChatMessaging } from "./useChatMessaging";
 import { usePromptGenerator } from "./usePromptGenerator";
 import { useSessionManagement } from "./useSessionManagement";
+import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "./useTranslationHandler";
 import type { ChatMessage } from "@/types/chat";
 
@@ -20,6 +21,7 @@ export const useChatMessages = () => {
   const { isLoading, hasError, sendChatMessage, retryLastMessage, extractStringFromTranslation } = useChatMessaging();
   const { generateLanguageLearningPrompt } = usePromptGenerator();
   const { messageCount, setMessageCount } = useSessionManagement();
+  const { toast } = useToast();
 
   // Load saved messages from session storage
   useEffect(() => {
@@ -90,6 +92,21 @@ export const useChatMessages = () => {
     await handleSubmit(fakeEvent);
   };
   
+  const clearConversation = () => {
+    setMessages([]);
+    sessionStorage.removeItem('chatMessages');
+    
+    // Reset message count
+    setMessageCount({ inputs: 0, outputs: 0 });
+    
+    // Show toast notification
+    toast({
+      title: t("success"),
+      description: t("conversationCleared"),
+      variant: "default",
+    });
+  };
+  
   const getPlaceholderText = useCallback(() => {
     const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
     return t("chatPlaceholder", { targetLanguage }) || `Type your message to practice ${targetLanguage}...`;
@@ -103,6 +120,7 @@ export const useChatMessages = () => {
     hasError,
     handleSubmit,
     sendLanguageLearningPrompt,
+    clearConversation,
     getPlaceholderText
   };
 };

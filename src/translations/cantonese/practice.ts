@@ -58,6 +58,14 @@ const practiceTranslations: TranslationRecord = {
   "practicePrompt": "你好！我想同你練習{{targetLanguage}}對話。請幫我糾正{{targetLanguage}}嘅語法、詞彙同用法。我哋可以從基本對話開始嗎？",
   "chatPlaceholder": "輸入你嘅信息練習{{targetLanguage}}...",
   "unlimitedVoicePractice": "無限制語音練習",
+  // Adding the clear conversation translation
+  "clearConversation": "清除對話",
+  "conversationCleared": "對話已清除",
+  "practiceTip1": "嘗試組成完整嘅句子，即使係簡單嘅都可以。",
+  "practiceTip2": "唔使擔心錯誤 — 犯錯係學習嘅一部分！",
+  "practiceTip3": "如果有唔明白嘅地方，記得問清楚。",
+  "practiceTip4": "嘗試使用你最近學到嘅詞彙。",
+  "practiceTip5": "我哋嘅AI會適應你嘅水平，並逐步幫助你進步。"
 };
 
 export default practiceTranslations;
