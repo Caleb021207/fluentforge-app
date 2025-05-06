@@ -52,7 +52,7 @@ const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
       <Button 
         onClick={handleLogout} 
         variant="ghost" 
-        className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+        className="w-full justify-start text-lingua-primary hover:text-lingua-primary/80 hover:bg-lingua-primary/10"
         disabled={isLoading}
       >
         <LogOut className="h-5 w-5 mr-2" />
@@ -67,7 +67,7 @@ const LogoutButton = ({ iconOnly = false, onClose }: LogoutButtonProps) => {
       variant="outline" 
       size="sm"
       disabled={isLoading}
-      className="flex items-center gap-2"
+      className="flex items-center gap-2 border-lingua-accent/20 text-lingua-accent"
     >
       <LogOut className="h-4 w-4" />
       <span>{t("logout")}</span>

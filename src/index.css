@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 60 33% 98%;
     --foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 100%;
+    --card: 60 33% 98%;
     --card-foreground: 222.2 84% 4.9%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 100% 25%;
+    --primary-foreground: 60 100% 97%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 60 100% 97%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 60 33% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 60 100% 97%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -30,11 +30,11 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 0 100% 25%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 60 33% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -43,14 +43,14 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
     
-    /* New text-specific variables for better dark mode control */
-    --text-primary: 222.2 84% 4.9%;
+    /* Text-specific variables */
+    --text-primary: 0 0% 20%;
     --text-secondary: 215.4 16.3% 46.9%;
     --text-muted: 215.4 16.3% 46.9%;
-    --text-accent: 222.2 47.4% 11.2%;
-    --text-inverse: 210 40% 98%;
-    --text-on-accent: 210 40% 98%;
-    --text-on-primary: 210 40% 98%;
+    --text-accent: 0 100% 25%;
+    --text-inverse: 60 100% 97%;
+    --text-on-accent: 60 100% 97%;
+    --text-on-primary: 60 100% 97%;
     --text-disabled: 215 20.2% 65.1%;
     --text-placeholder: 215.4 16.3% 46.9%;
   }
@@ -197,10 +197,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #800020aa);  /* Updated to maroon */
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #FFD700aa);  /* Updated to gold */
 }
 
 @keyframes logo-spin {
@@ -223,7 +223,7 @@
 }
 
 .read-the-docs {
-  color: #888;
+  color: #333333;  /* Updated to charcoal */
 }
 
 /* Dark mode transitions */

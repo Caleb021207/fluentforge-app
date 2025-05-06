@@ -34,7 +34,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       <Button 
         type="submit" 
         disabled={isLoading}
-        className="bg-lingua-primary hover:bg-lingua-primary/90 dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
+        className="bg-lingua-primary hover:bg-lingua-primary/90 text-white dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
       >
         <Send className="h-4 w-4 mr-2" />
         {t("send")}

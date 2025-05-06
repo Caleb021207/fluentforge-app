@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -26,11 +25,12 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         lingua: {
-          primary: "#6B9080",
-          secondary: "#F4F1DE",
-          accent: "#3D5A80",
-          text: "#2F3E46",
-          // Add light blue colors for dark mode
+          primary: "#800020", // Maroon instead of green
+          secondary: "#FFFFF0", // Ivory instead of beige
+          accent: "#333333", // Charcoal instead of blue
+          text: "#333333", // Charcoal text
+          gold: "#FFD700", // Gold instead of orange
+          // Keep the blue colors for dark mode
           "blue-light": "#D3E4FD",
           "blue-primary": "#33C3F0",
           "blue-dark": "#1EAEDB",
