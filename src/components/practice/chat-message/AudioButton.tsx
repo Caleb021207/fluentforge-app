@@ -1,39 +1,40 @@
 
 import React from "react";
-import { Volume2, Loader2 } from "lucide-react";
+import { Loader2, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AudioButtonProps {
-  isLoading: boolean;
   isPlaying: boolean;
+  isLoading: boolean;
   onClick: () => void;
-  isTranslation?: boolean;
-  ariaLabel: string;
+  ariaLabel?: string;
+  size?: "default" | "sm" | "lg" | "icon";
+  variant?: "ghost" | "outline" | "default" | "link";
 }
 
-const AudioButton: React.FC<AudioButtonProps> = ({ 
-  isLoading, 
-  isPlaying, 
-  onClick, 
-  isTranslation = false,
-  ariaLabel 
+const AudioButton: React.FC<AudioButtonProps> = ({
+  isPlaying,
+  isLoading,
+  onClick,
+  ariaLabel = "Play audio",
+  size = "icon",
+  variant = "ghost"
 }) => {
   return (
-    <Button 
-      onClick={onClick} 
-      variant="ghost" 
-      size="sm"
-      disabled={isLoading || isPlaying}
-      className={`
-        ml-2 -mt-1 p-1 h-auto rounded-full transition-colors duration-200
-        ${isTranslation ? 'hover:bg-gray-200/20 dark:hover:bg-gray-700/50' : 'hover:bg-lingua-accent/30 dark:hover:bg-lingua-blue-primary/30'}
-      `}
+    <Button
+      variant={variant}
+      size={size}
+      className="flex-shrink-0 group hover:bg-lingua-primary/20 dark:hover:bg-lingua-blue-light/20"
+      onClick={onClick}
       aria-label={ariaLabel}
+      disabled={isPlaying || isLoading}
     >
-      {isLoading || isPlaying ? (
+      {isLoading ? (
         <Loader2 className="h-4 w-4 animate-spin" />
       ) : (
-        <Volume2 className={`h-4 w-4 ${isTranslation ? "text-gray-400 dark:text-gray-500" : "text-white dark:text-gray-200"}`} />
+        <Volume2 
+          className={`h-4 w-4 ${isPlaying ? 'text-lingua-accent animate-pulse' : 'group-hover:text-lingua-accent'}`} 
+        />
       )}
     </Button>
   );
