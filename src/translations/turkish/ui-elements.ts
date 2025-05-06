@@ -19,7 +19,16 @@ const uiElementsTranslations: TranslationRecord = {
   next: "İleri",
   previous: "Geri",
   submit: "Gönder",
-  reset: "Sıfırla"
+  reset: "Sıfırla",
+  
+  // New additions for directory information
+  yourName: "Adınız",
+  yourEmail: "E-posta Adresiniz",
+  languagesStudied: "Öğrenilen Diller",
+  learningProgress: "Öğrenme İlerlemesi",
+  achievements: "Başarılar",
+  directoryInformation: "Dizin Bilgileri",
+  directoryInfoDescription: "Hangi bilgilerin kamuya açık dizinlerde veya diğer kullanıcılarla paylaşılabileceğini kontrol edin"
 };
 
 export default uiElementsTranslations;

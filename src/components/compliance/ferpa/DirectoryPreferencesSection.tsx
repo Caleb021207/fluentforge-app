@@ -38,8 +38,8 @@ const DirectoryPreferencesSection = ({ preferences, onPreferenceChange }: Direct
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
         {preferenceItems.map(item => (
-          <div key={item.id} className="flex items-center justify-between space-x-2 bg-gray-50 p-2 rounded">
-            <Label htmlFor={`share-${item.id}`} className="text-sm cursor-pointer flex-grow">
+          <div key={item.id} className="flex items-center justify-between space-x-2 bg-gray-50 dark:bg-gray-700 p-2 rounded">
+            <Label htmlFor={`share-${item.id}`} className="text-sm cursor-pointer flex-grow text-gray-800 dark:text-white">
               {item.label}
             </Label>
             <Switch 
