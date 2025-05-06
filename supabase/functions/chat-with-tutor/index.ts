@@ -300,7 +300,7 @@ serve(async (req) => {
       // Add CIPA/FERPA compliance instructions to tutor
       const cipaFerpaCompliance = getCipaFerpaInstructions();
       
-      // Enhanced system message to ensure proper response format
+      // Enhanced system message with explicit emphasis on response format
       let systemMessageContent = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
 
 PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
@@ -320,8 +320,22 @@ VERY IMPORTANT RESPONSE FORMAT:
 - Then add a line break
 - Then add "Translation:" followed by the translation in the user's native language (${nativeLanguage})`;
 
-      // Add enhanced translation instruction for various languages
-      if (nativeLanguage.toLowerCase() === 'filipino/tagalog' || userLanguage === 'tagalog') {
+      // Add language specific instructions
+      if (userLanguage === 'german') {
+        systemMessageContent += `
+
+VERY IMPORTANT FOR GERMAN USERS: ALWAYS provide a translation of your response in German. 
+Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
+The German translation should use everyday conversational German that would be easily understood.
+Make sure the translation is provided as plain text, not as an object or JSON.`;
+      } else if (userLanguage === 'italian') {
+        systemMessageContent += `
+
+VERY IMPORTANT FOR ITALIAN USERS: ALWAYS provide a translation of your response in Italian. 
+Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
+The Italian translation should use everyday conversational Italian that would be easily understood.
+Make sure the translation is provided as plain text, not as an object or JSON.`;
+      } else if (nativeLanguage.toLowerCase() === 'filipino/tagalog' || userLanguage === 'tagalog') {
         systemMessageContent += `
 
 VERY IMPORTANT FOR TAGALOG USERS: ALWAYS provide a translation of your response in Tagalog. 
@@ -383,7 +397,8 @@ You should ask questions to continue the conversation if it ever seems to stall.
       }
 
       // Use more tokens for special languages to ensure complete translations
-      const maxTokens = userLanguage === 'tagalog' || userLanguage === 'cantonese' ? 800 : 500;
+      const maxTokens = userLanguage === 'tagalog' || userLanguage === 'cantonese' || 
+                        userLanguage === 'german' || userLanguage === 'italian' ? 800 : 500;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -463,8 +478,106 @@ You should ask questions to continue the conversation if it ever seems to stall.
           translation = cachedTranslation;
         } else {
           try {
+            // Special handling for German and Italian translations
+            if (userLanguage === 'german') {
+              console.log('Using enhanced German translation flow');
+              
+              // Try to get a valid German translation
+              try {
+                const germanTranslation = await getSpecificLanguageTranslation(
+                  content,
+                  'German',
+                  'Latin',
+                  openAIApiKey,
+                  filterCipaProhibitedContent,
+                  containsProhibitedContent
+                );
+                
+                if (germanTranslation && 
+                    typeof germanTranslation === 'string' && 
+                    germanTranslation.length > 10) {
+                  translation = germanTranslation;
+                  translationCache.set(cacheKey, translation);
+                  console.log(`Cached German translation (${translation.length} chars)`);
+                } else {
+                  console.log('Invalid German translation, will use fallback');
+                }
+              } catch (error) {
+                console.error('Error getting German translation:', error);
+              }
+              
+              // Fallback for German if translation failed
+              if (!translation || translation.length < 10) {
+                console.log('Using regular translation flow for German as fallback');
+                const translationResponse = await getTranslation(
+                  content, 
+                  'german', 
+                  openAIApiKey,
+                  filterCipaProhibitedContent,
+                  containsProhibitedContent,
+                  getUserNativeLanguage
+                );
+                
+                if (translationResponse.ok) {
+                  const translationData = await translationResponse.json();
+                  if (translationData.choices?.[0]?.message?.content) {
+                    translation = translationData.choices[0].message.content.trim();
+                    translationCache.set(cacheKey, translation);
+                  }
+                }
+              }
+            }
+            // Special handling for Italian translations
+            else if (userLanguage === 'italian') {
+              console.log('Using enhanced Italian translation flow');
+              
+              // Try to get a valid Italian translation
+              try {
+                const italianTranslation = await getSpecificLanguageTranslation(
+                  content,
+                  'Italian',
+                  'Latin',
+                  openAIApiKey,
+                  filterCipaProhibitedContent,
+                  containsProhibitedContent
+                );
+                
+                if (italianTranslation && 
+                    typeof italianTranslation === 'string' && 
+                    italianTranslation.length > 10) {
+                  translation = italianTranslation;
+                  translationCache.set(cacheKey, translation);
+                  console.log(`Cached Italian translation (${translation.length} chars)`);
+                } else {
+                  console.log('Invalid Italian translation, will use fallback');
+                }
+              } catch (error) {
+                console.error('Error getting Italian translation:', error);
+              }
+              
+              // Fallback for Italian if translation failed
+              if (!translation || translation.length < 10) {
+                console.log('Using regular translation flow for Italian as fallback');
+                const translationResponse = await getTranslation(
+                  content, 
+                  'italian', 
+                  openAIApiKey,
+                  filterCipaProhibitedContent,
+                  containsProhibitedContent,
+                  getUserNativeLanguage
+                );
+                
+                if (translationResponse.ok) {
+                  const translationData = await translationResponse.json();
+                  if (translationData.choices?.[0]?.message?.content) {
+                    translation = translationData.choices[0].message.content.trim();
+                    translationCache.set(cacheKey, translation);
+                  }
+                }
+              }
+            } 
             // Enhanced for Tagalog
-            if (userLanguage === 'tagalog') {
+            else if (userLanguage === 'tagalog') {
               console.log('Using enhanced Tagalog translation flow');
               
               // Try up to 3 times to get a valid translation
@@ -600,6 +713,10 @@ You should ask questions to continue the conversation if it ever seems to stall.
               translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
             } else if (userLanguage === 'cantonese') {
               translation = "翻譯暫時不可用。請諒解不便之處。";
+            } else if (userLanguage === 'german') {
+              translation = "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten.";
+            } else if (userLanguage === 'italian') {
+              translation = "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente.";
             } else {
               translation = `Translation not available for ${userLanguage}`;
             }
@@ -693,6 +810,57 @@ You should ask questions to continue the conversation if it ever seems to stall.
         console.log('Final verification: Tagalog translation is missing or too short, using fallback');
         translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
       }
+      
+      // German and Italian verification - make sure it's not returning Chinese characters
+      if (userLanguage === 'german' && /[\u4E00-\u9FFF]/.test(translation)) {
+        console.log('German translation contains Chinese characters, getting proper German translation...');
+        translation = "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten.";
+        
+        try {
+          const germanTranslation = await getSpecificLanguageTranslation(
+            content,
+            'German',
+            'Latin',
+            openAIApiKey,
+            filterCipaProhibitedContent,
+            containsProhibitedContent
+          );
+          
+          if (germanTranslation && 
+              typeof germanTranslation === 'string' && 
+              germanTranslation.length > 10 &&
+              !/[\u4E00-\u9FFF]/.test(germanTranslation)) {
+            translation = germanTranslation;
+          }
+        } catch (error) {
+          console.error('Error getting German translation during verification:', error);
+        }
+      }
+      
+      if (userLanguage === 'italian' && /[\u4E00-\u9FFF]/.test(translation)) {
+        console.log('Italian translation contains Chinese characters, getting proper Italian translation...');
+        translation = "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente.";
+        
+        try {
+          const italianTranslation = await getSpecificLanguageTranslation(
+            content,
+            'Italian',
+            'Latin',
+            openAIApiKey,
+            filterCipaProhibitedContent,
+            containsProhibitedContent
+          );
+          
+          if (italianTranslation && 
+              typeof italianTranslation === 'string' && 
+              italianTranslation.length > 10 &&
+              !/[\u4E00-\u9FFF]/.test(italianTranslation)) {
+            translation = italianTranslation;
+          }
+        } catch (error) {
+          console.error('Error getting Italian translation during verification:', error);
+        }
+      }
 
       // Apply a final type safety check before sending the response
       if (typeof translation !== 'string') {
@@ -705,7 +873,11 @@ You should ask questions to continue the conversation if it ever seems to stall.
               ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
               : userLanguage === 'cantonese'
                 ? "翻譯暫時不可用。請諒解不便之處。"
-                : `Translation not available for ${userLanguage}`;
+                : userLanguage === 'german'
+                  ? "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten."
+                  : userLanguage === 'italian'
+                    ? "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente."
+                    : `Translation not available for ${userLanguage}`;
           } else if (typeof translation === 'object') {
             translation = JSON.stringify(translation);
           } else {
@@ -717,7 +889,11 @@ You should ask questions to continue the conversation if it ever seems to stall.
             ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
             : userLanguage === 'cantonese'
               ? "翻譯暫時不可用。請諒解不便之處。"
-              : `Translation not available for ${userLanguage}`;
+              : userLanguage === 'german'
+                ? "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten."
+                : userLanguage === 'italian'
+                  ? "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente."
+                  : `Translation not available for ${userLanguage}`;
         }
       }
 

@@ -39,17 +39,20 @@ export const useChatService = () => {
       console.log('Sending message to AI tutor:', { 
         message, 
         userLanguage, 
-        targetLanguage, 
+        targetLanguage,
+        requestType: 'conversation',
         requestTranslation: true 
       });
       
-      // Make sure the userLanguage and targetLanguage are correctly set
-      // This ensures we get responses in the correct language format
+      // Explicitly define language roles to avoid confusion
+      // userLanguage = native language of the user (e.g., German, Italian)
+      // targetLanguage = language the user is learning (e.g., English, Spanish)
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: message,
           userLanguage: userLanguage,  // Native language of the user
           targetLanguage: targetLanguage, // Language the user is learning
+          requestType: 'conversation',
           requestTranslation: true
         }
       });
@@ -64,7 +67,13 @@ export const useChatService = () => {
         hasTranslation: data && 'translation' in data,
         translationType: data?.translation ? typeof data.translation : 'none',
         userLanguage,
-        targetLanguage
+        targetLanguage,
+        sampleContent: data?.content ? data.content.substring(0, 50) + '...' : 'none',
+        sampleTranslation: data?.translation ? 
+          (typeof data.translation === 'string' ? 
+            data.translation.substring(0, 50) + '...' : 
+            JSON.stringify(data.translation).substring(0, 50) + '...'
+          ) : 'none'
       });
       
       // Handle case where response is missing content
