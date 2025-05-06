@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
@@ -67,7 +66,7 @@ const Practice = () => {
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-lingua-primary dark:border-blue-400"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-lingua-primary dark:border-lingua-blue-primary"></div>
     </div>;
   }
 

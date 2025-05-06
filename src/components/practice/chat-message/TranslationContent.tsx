@@ -19,7 +19,11 @@ const TranslationContent: React.FC<TranslationContentProps> = ({
 }) => {
   return (
     <div className="flex justify-between items-start">
-      <p className={`text-sm ${role === "user" ? "text-gray-200" : "text-gray-500"}`}>
+      <p className={`text-sm ${
+        role === "user" 
+          ? "text-gray-200" 
+          : "text-gray-500 dark:text-gray-300"
+      }`}>
         {translation}
       </p>
       

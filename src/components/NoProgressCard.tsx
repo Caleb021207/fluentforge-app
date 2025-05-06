@@ -15,7 +15,7 @@ const NoProgressCard = () => {
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">{t("noProgressData")}</p>
         <Button 
           onClick={() => navigate('/certificates')} 
-          className="bg-lingua-primary hover:bg-lingua-primary/90 dark:bg-lingua-primary/90 dark:hover:bg-lingua-primary/80 dark:text-white"
+          className="bg-lingua-primary hover:bg-lingua-primary/90 dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
         >
           {t("completeTestsToSeeProgress")}
         </Button>

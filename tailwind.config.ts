@@ -30,6 +30,10 @@ export default {
           secondary: "#F4F1DE",
           accent: "#3D5A80",
           text: "#2F3E46",
+          // Add light blue colors for dark mode
+          "blue-light": "#D3E4FD",
+          "blue-primary": "#33C3F0",
+          "blue-dark": "#1EAEDB",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
