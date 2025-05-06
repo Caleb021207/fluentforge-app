@@ -63,7 +63,8 @@ const practiceTranslations: TranslationRecord = {
   "practiceTip2": "Mach dir keine Sorgen über Fehler — sie sind Teil des Lernens!",
   "practiceTip3": "Bitte um Erklärung, wenn du etwas nicht verstehst.",
   "practiceTip4": "Versuche, kürzlich gelernten Wortschatz zu verwenden.",
-  "practiceTip5": "Unsere KI passt sich deinem Niveau an und hilft dir, schrittweise Fortschritte zu machen."
+  "practiceTip5": "Unsere KI passt sich deinem Niveau an und hilft dir, schrittweise Fortschritte zu machen.",
+  "practiceGuide": "{language} Übungsleitfaden"
 };
 
 export default practiceTranslations;

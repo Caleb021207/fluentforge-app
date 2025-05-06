@@ -12,9 +12,7 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
   const { currentLanguage, t } = useLocalization();
   
   // Get localized target language name
-  const learningLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(targetLanguage) 
-    : "English";
+  const learningLanguage = getLanguageDisplayName(targetLanguage);
   
   // Use localized practice tips instead of hardcoded ones
   const practiceTips = [
@@ -28,7 +26,7 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4">
-        {`${learningLanguage} ${t("practiceGuide")}`}
+        {t("practiceGuide", { language: learningLanguage })}
       </h2>
       
       <ul className="space-y-3">
