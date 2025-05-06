@@ -14,15 +14,6 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
   // Get localized target language name
   const learningLanguage = getLanguageDisplayName(targetLanguage);
   
-  // Use localized practice tips instead of hardcoded ones
-  const practiceTips = [
-    t("practiceTip1"),
-    t("practiceTip2"),
-    t("practiceTip3"),
-    t("practiceTip4"),
-    t("practiceTip5")
-  ];
-  
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4">
@@ -30,12 +21,26 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
       </h2>
       
       <ul className="space-y-3">
-        {practiceTips.map((tip, index) => (
-          <li key={index} className="flex items-start">
-            <span className="text-lingua-primary mr-2">•</span>
-            <span>{tip}</span>
-          </li>
-        ))}
+        <li className="flex items-start">
+          <span className="text-lingua-primary mr-2">•</span>
+          <span>{t("practiceGuideItem1")}</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-lingua-primary mr-2">•</span>
+          <span>{t("practiceGuideItem2")}</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-lingua-primary mr-2">•</span>
+          <span>{t("practiceGuideItem3")}</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-lingua-primary mr-2">•</span>
+          <span>{t("practiceGuideItem4")}</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-lingua-primary mr-2">•</span>
+          <span>{t("practiceDisclaimer")}</span>
+        </li>
       </ul>
     </Card>
   );
