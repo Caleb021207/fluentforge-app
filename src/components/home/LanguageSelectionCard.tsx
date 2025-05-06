@@ -34,6 +34,7 @@ const LanguageSelectionCard = ({
     korean: "🇰🇷 한국어",
     arabic: "🇸🇦 العربية",
     mandarin: "🇨🇳 中文",
+    cantonese: "🇭🇰 廣東話", // Added Cantonese with Hong Kong flag
     vietnamese: "🇻🇳 Tiếng Việt",
     french: "🇫🇷 Français",
     japanese: "🇯🇵 日本語",
