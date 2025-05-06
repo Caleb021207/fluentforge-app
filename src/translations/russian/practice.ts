@@ -45,7 +45,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Practice guide translations
   practiceGuide: "Руководство по практике {{language}}",
-  practiceDescription: "Вот несколько советов, чтобы максимально эффективно использовать вашу практику {{language}}:",
+  practiceGuideDescription: "Вот несколько советов, чтобы максимально эффективно использовать вашу практику {{language}}:",
   practiceTip1: "Старайтесь составлять полные предложения, даже если они простые.",
   practiceTip2: "Не беспокойтесь об ошибках - они часть процесса обучения!",
   practiceTip3: "Просите разъяснений, если вы что-то не понимаете.",

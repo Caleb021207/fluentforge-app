@@ -22,7 +22,7 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
       
       {/* Add the description text */}
       <p className="mb-4">
-        {t("practiceDescription", { language: learningLanguage })}
+        {t("practiceGuideDescription", { language: learningLanguage })}
       </p>
       
       <ul className="space-y-3">
