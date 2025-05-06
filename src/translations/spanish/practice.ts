@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -29,8 +30,16 @@ const practiceTranslations: TranslationRecord = {
   practiceConversationsDifferentSituations: "Practicar conversaciones en diferentes situaciones",
   learnNewVocabulary: "Aprender nuevo vocabulario",
   discussCulturalTopics: "Discutir temas culturales",
-  practicePrompt: "¡Hola! Me gustaría practicar conversación en {{targetLanguage}}. Por favor, ayúdame corregiendo mi gramática, vocabulario y uso del {{targetLanguage}}. ¿Podemos empezar con una conversación básica?",
-  chatPlaceholder: "Escribe tu mensaje para practicar {{targetLanguage}}..."
+  practicePrompt: "¡Hola! Me gustaría practicar conversación en {{targetLanguage}}. Por favor, ayúdame corrigiendo mi gramática, vocabulario y uso del {{targetLanguage}}. ¿Podemos empezar con una conversación básica?",
+  chatPlaceholder: "Escribe tu mensaje para practicar {{targetLanguage}}...",
+  
+  // Practice guide translations - adding these to fix the placeholders
+  practiceGuide: "Guía de práctica para {{language}}",
+  practiceTip1: "Intenta formar oraciones completas, incluso si son sencillas.",
+  practiceTip2: "No te preocupes por los errores, son parte del proceso de aprendizaje.",
+  practiceTip3: "Pide aclaraciones si no entiendes algo.",
+  practiceTip4: "Intenta usar el vocabulario que has aprendido recientemente.",
+  practiceTip5: "Practica con frecuencia para mejorar tu fluidez."
 };
 
 export default practiceTranslations;

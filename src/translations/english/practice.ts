@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -33,7 +34,15 @@ const practiceTranslations: TranslationRecord = {
   discussCulturalTopics: "Discuss cultural topics",
   
   practicePrompt: "Hi! I'd like to practice {{targetLanguage}} conversation with you. Please help me by correcting my {{targetLanguage}} grammar, vocabulary, and usage. Can we start with some basic conversation?",
-  chatPlaceholder: "Type your message to practice {{targetLanguage}}..."
+  chatPlaceholder: "Type your message to practice {{targetLanguage}}...",
+  
+  // Practice guide translations
+  practiceGuide: "Practice Guide for {{language}}",
+  practiceTip1: "Try to form complete sentences, even if they're simple.",
+  practiceTip2: "Don't worry about mistakes – they're part of the learning process!",
+  practiceTip3: "Ask for clarification if you don't understand something.",
+  practiceTip4: "Try to use vocabulary you've recently learned.",
+  practiceTip5: "Practice regularly to improve your fluency."
 };
 
 export default practiceTranslations;
