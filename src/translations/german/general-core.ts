@@ -1,0 +1,53 @@
+
+import { TranslationRecord } from "../types";
+
+const generalCoreTranslations: TranslationRecord = {
+  // Core translations
+  welcomeToLanguageLearning: "Willkommen bei Palavox",
+  yourPersonalAICompanion: "Dein persönlicher KI-Lernbegleiter",
+  welcomeMessage: "Willkommen bei LinguaLite",
+  pageNotFound: "Seite nicht gefunden",
+  networkConnectionIssue: "Netzwerkverbindungsproblem",
+  pleaseWait: "Bitte warten",
+  sessionExpired: "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+  cooldownActive: "Abklingzeit aktiv",
+  dailyLimitReached: "Tageslimit erreicht",
+  loginRequired: "Anmeldung erforderlich",
+  failedToCreateSession: "Sitzung konnte nicht erstellt werden",
+  cefrB1Description: "Mittelstufe - Kann über vertraute Themen diskutieren",
+  speechSynthesisNotSupported: "Sprachsynthese wird in deinem Browser nicht unterstützt",
+  "appName": "LinguaLite",
+  "tagline": "Sprachen einfach und kostenlos lernen",
+  "getStarted": "Loslegen",
+  "learnEnglish": "Englisch lernen",
+  "practiceEnglish": "Englisch üben",
+  "translationNotAvailable": "Übersetzung momentan nicht verfügbar",
+  "unknownError": "Ein unbekannter Fehler ist aufgetreten",
+  "tryAgain": "Bitte versuche es erneut",
+  "loading": "Wird geladen...",
+  "saving": "Wird gespeichert...",
+  "readMore": "Mehr lesen",
+  "showLess": "Weniger anzeigen",
+  "viewAll": "Alle anzeigen",
+  "hide": "Ausblenden",
+  "show": "Anzeigen",
+  "learnMore": "Mehr erfahren",
+  "startPracticing": "Mit Üben beginnen",
+  "startLearning": "Mit Lernen beginnen",
+  "signIn": "Anmelden",
+  "signUp": "Registrieren",
+  "helpCenter": "Hilfezentrum",
+  "support": "Support",
+  "legal": "Rechtliche Informationen",
+  "privacyPolicy": "Datenschutzrichtlinie",
+  "termsOfService": "Nutzungsbedingungen",
+  "feedback": "Feedback",
+  "contactUs": "Kontaktiere uns",
+  "settings": "Einstellungen",
+  "account": "Konto",
+  "preferences": "Präferenzen",
+  "notifications": "Benachrichtigungen",
+  "accessibility": "Barrierefreiheit"
+};
+
+export default generalCoreTranslations;

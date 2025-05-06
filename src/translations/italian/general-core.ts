@@ -1,0 +1,53 @@
+
+import { TranslationRecord } from "../types";
+
+const generalCoreTranslations: TranslationRecord = {
+  // Core translations
+  welcomeToLanguageLearning: "Benvenuto su Palavox",
+  yourPersonalAICompanion: "Il tuo compagno AI personale per l'apprendimento",
+  welcomeMessage: "Benvenuto all'app LinguaLite!",
+  pageNotFound: "Pagina non trovata",
+  networkConnectionIssue: "Problema di connessione di rete",
+  pleaseWait: "Attendere prego",
+  sessionExpired: "La tua sessione è scaduta. Effettua nuovamente l'accesso.",
+  cooldownActive: "Raffreddamento attivo",
+  dailyLimitReached: "Limite giornaliero raggiunto",
+  loginRequired: "Accesso richiesto",
+  failedToCreateSession: "Impossibile creare sessione",
+  cefrB1Description: "Intermedio - Può discutere di argomenti familiari",
+  speechSynthesisNotSupported: "La sintesi vocale non è supportata nel tuo browser",
+  "appName": "LinguaLite",
+  "tagline": "Impara le lingue facilmente e gratuitamente",
+  "getStarted": "Inizia",
+  "learnEnglish": "Impara l'inglese",
+  "practiceEnglish": "Esercitati in inglese",
+  "translationNotAvailable": "Traduzione non disponibile al momento",
+  "unknownError": "Si è verificato un errore sconosciuto",
+  "tryAgain": "Riprova",
+  "loading": "Caricamento...",
+  "saving": "Salvataggio...",
+  "readMore": "Leggi di più",
+  "showLess": "Mostra meno",
+  "viewAll": "Vedi tutto",
+  "hide": "Nascondi",
+  "show": "Mostra",
+  "learnMore": "Scopri di più",
+  "startPracticing": "Inizia a esercitarti",
+  "startLearning": "Inizia a imparare",
+  "signIn": "Accedi",
+  "signUp": "Registrati",
+  "helpCenter": "Centro assistenza",
+  "support": "Supporto",
+  "legal": "Informazioni legali",
+  "privacyPolicy": "Informativa sulla privacy",
+  "termsOfService": "Termini di servizio",
+  "feedback": "Feedback",
+  "contactUs": "Contattaci",
+  "settings": "Impostazioni",
+  "account": "Account",
+  "preferences": "Preferenze",
+  "notifications": "Notifiche",
+  "accessibility": "Accessibilità"
+};
+
+export default generalCoreTranslations;

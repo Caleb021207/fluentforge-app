@@ -13,7 +13,7 @@ export const getLanguageDisplayName = (language: string): string => {
     'japanese': 'Japanese',
     'korean': 'Korean',
     'mandarin': 'Mandarin Chinese',
-    'cantonese': 'Cantonese', // Added Cantonese
+    'cantonese': 'Cantonese',
     'russian': 'Russian',
     'arabic': 'Arabic',
     'hindi': 'Hindi',
@@ -24,7 +24,6 @@ export const getLanguageDisplayName = (language: string): string => {
     'urdu': 'Urdu',
     'pashto': 'Pashto',
     'swahili': 'Swahili',
-    // Adding new languages
     'bengali': 'Bengali',
     'somali': 'Somali',
     'yoruba': 'Yoruba',
@@ -35,7 +34,19 @@ export const getLanguageDisplayName = (language: string): string => {
     'polish': 'Polish',
     'turkish': 'Turkish',
     'romanian': 'Romanian',
-    'tagalog': 'Filipino/Tagalog'
+    'tagalog': 'Filipino/Tagalog',
+    // Adding new languages
+    'german': 'German',
+    'italian': 'Italian',
+    'thai': 'Thai',
+    'burmese': 'Burmese',
+    'karen': 'Karen (S\'gaw)',
+    'nepali': 'Nepali',
+    'tigrinya': 'Tigrinya',
+    'punjabi': 'Punjabi',
+    'marathi': 'Marathi',
+    'gujarati': 'Gujarati',
+    'sinhala': 'Sinhala'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -72,7 +83,7 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'japanese': '日本語',
     'korean': '한국어',
     'mandarin': '中文',
-    'cantonese': '廣東話', // Added Cantonese in native script
+    'cantonese': '廣東話',
     'russian': 'Русский',
     'arabic': 'العربية',
     'hindi': 'हिन्दी',
@@ -83,7 +94,6 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'urdu': 'اردو',
     'pashto': 'پښتو',
     'swahili': 'Kiswahili',
-    // Adding new languages in their native scripts
     'bengali': 'বাংলা',
     'somali': 'Soomaali',
     'yoruba': 'Yorùbá',
@@ -94,7 +104,19 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'polish': 'Polski',
     'turkish': 'Türkçe',
     'romanian': 'Română',
-    'tagalog': 'Tagalog'
+    'tagalog': 'Tagalog',
+    // Adding new languages in native script
+    'german': 'Deutsch',
+    'italian': 'Italiano',
+    'thai': 'ภาษาไทย',
+    'burmese': 'မြန်မာဘာသာ',
+    'karen': 'ကညီကျိာ်',
+    'nepali': 'नेपाली',
+    'tigrinya': 'ትግርኛ',
+    'punjabi': 'ਪੰਜਾਬੀ',
+    'marathi': 'मराठी',
+    'gujarati': 'ગુજરાતી',
+    'sinhala': 'සිංහල'
   };
   
   return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
@@ -126,37 +148,48 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
   const supportedPairs = [
     'english-spanish',
     'english-french',
-    'english-portuguese', // Added Portuguese support for English speakers
+    'english-portuguese',
     'spanish-english',
     'portuguese-english',
     'french-english',
     'japanese-english',
     'korean-english',
     'mandarin-english',
-    'cantonese-english', // Added Cantonese speakers learning English
+    'cantonese-english',
     'russian-english',
     'arabic-english',
-    'hindi-english',      // Adding Hindi
-    'vietnamese-english', // Adding Vietnamese
-    'ukrainian-english',  // Adding Ukrainian
-    'indonesian-english', // Adding Indonesian
-    'farsi-english',      // Adding Farsi/Dari
-    'english-farsi',      // English speakers learning Farsi
-    'urdu-english',       // Urdu speakers learning English
-    'pashto-english',     // Pashto speakers learning English
-    'swahili-english',    // Swahili speakers learning English
+    'hindi-english',
+    'vietnamese-english',
+    'ukrainian-english',
+    'indonesian-english',
+    'farsi-english',
+    'english-farsi',
+    'urdu-english',
+    'pashto-english',
+    'swahili-english',
+    'bengali-english',
+    'somali-english',
+    'yoruba-english',
+    'amharic-english',
+    'haitian-english',
+    'malayalam-english',
+    'igbo-english',
+    'polish-english',
+    'turkish-english',
+    'romanian-english',
+    'tagalog-english',
     // Adding new language pairs
-    'bengali-english',    // Bengali speakers learning English
-    'somali-english',     // Somali speakers learning English
-    'yoruba-english',     // Yoruba speakers learning English
-    'amharic-english',    // Amharic speakers learning English
-    'haitian-english',    // Haitian Creole speakers learning English
-    'malayalam-english',  // Malayalam speakers learning English
-    'igbo-english',       // Igbo speakers learning English
-    'polish-english',     // Polish speakers learning English
-    'turkish-english',    // Turkish speakers learning English
-    'romanian-english',   // Romanian speakers learning English
-    'tagalog-english'     // Added Tagalog speakers learning English
+    'german-english',
+    'italian-english',
+    'thai-english',
+    'burmese-english',
+    'karen-english',
+    'nepali-english',
+    'tigrinya-english',
+    'punjabi-english',
+    'marathi-english',
+    'gujarati-english',
+    'sinhala-english'
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;

@@ -1,4 +1,3 @@
-
 // Language code mappings for speech synthesis
 export const languageCodeMap: Record<string, string> = {
   'english': 'en-US',
@@ -8,7 +7,7 @@ export const languageCodeMap: Record<string, string> = {
   'japanese': 'ja-JP',
   'korean': 'ko-KR',
   'mandarin': 'zh-CN',
-  'cantonese': 'zh-HK', // Added Cantonese language code
+  'cantonese': 'zh-HK',
   'russian': 'ru-RU',
   'arabic': 'ar-SA',
   'hindi': 'hi-IN',
@@ -29,7 +28,18 @@ export const languageCodeMap: Record<string, string> = {
   'polish': 'pl-PL',
   'turkish': 'tr-TR',
   'romanian': 'ro-RO',
-  'tagalog': 'fil-PH'
+  'tagalog': 'fil-PH',
+  'german': 'de-DE',
+  'italian': 'it-IT',
+  'thai': 'th-TH',
+  'burmese': 'my-MM',
+  'karen': 'ksw-MM',
+  'nepali': 'ne-NP',
+  'tigrinya': 'ti-ER',
+  'punjabi': 'pa-IN',
+  'marathi': 'mr-IN',
+  'gujarati': 'gu-IN',
+  'sinhala': 'si-LK'
 };
 
 // Meta MMS specific language codes (ISO 639-3)
@@ -42,8 +52,18 @@ export const metaMmsLanguageMap: Record<string, string> = {
   'amharic': 'amh',
   'malayalam': 'mal',
   'tagalog': 'fil',
-  'cantonese': 'yue' // Added Cantonese Meta MMS language code (ISO 639-3)
-  // Add other languages supported by Meta MMS
+  'cantonese': 'yue',
+  'german': 'deu',
+  'italian': 'ita',
+  'thai': 'tha',
+  'burmese': 'mya',
+  'karen': 'ksw',
+  'nepali': 'nep',
+  'tigrinya': 'tir',
+  'punjabi': 'pan',
+  'marathi': 'mar',
+  'gujarati': 'guj',
+  'sinhala': 'sin'
 };
 
 // TTS cache constants

@@ -27,7 +27,19 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "turkish",
   "romanian",
   "tagalog",
-  "cantonese" // Added Cantonese to translation required languages
+  "cantonese",
+  // Adding new languages
+  "german",
+  "italian",
+  "thai",
+  "burmese",
+  "karen",
+  "nepali",
+  "tigrinya",
+  "punjabi",
+  "marathi",
+  "gujarati",
+  "sinhala"
 ];
 
 /**

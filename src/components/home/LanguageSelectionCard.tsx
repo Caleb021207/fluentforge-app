@@ -34,7 +34,7 @@ const LanguageSelectionCard = ({
     korean: "🇰🇷 한국어",
     arabic: "🇸🇦 العربية",
     mandarin: "🇨🇳 中文",
-    cantonese: "🇭🇰 廣東話", // Added Cantonese with Hong Kong flag
+    cantonese: "🇭🇰 廣東話",
     vietnamese: "🇻🇳 Tiếng Việt",
     french: "🇫🇷 Français",
     japanese: "🇯🇵 日本語",
@@ -56,7 +56,19 @@ const LanguageSelectionCard = ({
     romanian: "🇷🇴 Română",
     haitian: "🇭🇹 Kreyòl Ayisyen",
     igbo: "🇳🇬 Igbo",
-    tagalog: "🇵🇭 Tagalog" // Added Tagalog with Philippines flag
+    tagalog: "🇵🇭 Tagalog",
+    // Adding new languages with flags
+    german: "🇩🇪 Deutsch",
+    italian: "🇮🇹 Italiano",
+    thai: "🇹🇭 ภาษาไทย",
+    burmese: "🇲🇲 မြန်မာဘာသာ",
+    karen: "🇲🇲 ကညီကျိာ်",
+    nepali: "🇳🇵 नेपाली",
+    tigrinya: "🇪🇷 ትግርኛ",
+    punjabi: "🇮🇳 ਪੰਜਾਬੀ",
+    marathi: "🇮🇳 मराठी",
+    gujarati: "🇮🇳 ગુજરાતી",
+    sinhala: "🇱🇰 සිංහල"
   };
 
   // Available target languages based on native language
@@ -91,7 +103,19 @@ const LanguageSelectionCard = ({
     romanian: "🇷🇴 Romanian",
     haitian: "🇭🇹 Haitian Creole",
     igbo: "🇳🇬 Igbo",
-    tagalog: "🇵🇭 Filipino/Tagalog" // Added Filipino/Tagalog with Philippines flag
+    tagalog: "🇵🇭 Filipino/Tagalog",
+    // Adding new languages with flags
+    german: "🇩🇪 German",
+    italian: "🇮🇹 Italian",
+    thai: "🇹🇭 Thai",
+    burmese: "🇲🇲 Burmese",
+    karen: "🇲🇲 Karen (S'gaw)",
+    nepali: "🇳🇵 Nepali",
+    tigrinya: "🇪🇷 Tigrinya",
+    punjabi: "🇮🇳 Punjabi",
+    marathi: "🇮🇳 Marathi",
+    gujarati: "🇮🇳 Gujarati",
+    sinhala: "🇱🇰 Sinhala"
   };
   
   // Determine disabled options based on native language

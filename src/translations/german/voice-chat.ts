@@ -1,0 +1,48 @@
+
+import { TranslationRecord } from "../types";
+
+const voiceChatTranslations: TranslationRecord = {
+  // Voice chat page
+  "practiceDescription": "Übe dein Englisch-Sprechen mit unserem Sprachdialog. Klicke auf den Mikrofonbutton und beginne, Englisch zu sprechen.",
+  "aiModelInfo": "KI-Modell: Wir verwenden OpenAI GPT-4o-mini mit Meta MMS für TTS.",
+  "practiceLevel": "Übungsniveau: B1 – Mittelstufe – Kann über vertraute Themen diskutieren",
+  "cefrB1Description": "Mittelstufe – Kann über vertraute Themen diskutieren",
+  
+  // Voice chat controls
+  "startSpeaking": "Beginne zu sprechen",
+  "stopListening": "Höre auf zu hören",
+  "listeningNow": "Höre jetzt zu",
+  
+  // Conversation features
+  "conversationStarters": "Gesprächsanfänge",
+  "tryThesePhrases": "Versuche diese Phrasen, um ein Gespräch zu beginnen",
+  "conversationHistory": "Gesprächsverlauf",
+  "clearConversation": "Gespräch löschen",
+  
+  // Phrases for conversation
+  "phrase1": "Hallo, wie geht es dir heute?",
+  "phrase2": "Wie ist das Wetter bei dir?",
+  "phrase3": "Kannst du ein gutes Restaurant empfehlen?",
+  "phrase4": "Was sind deine Hobbys und Interessen?",
+  "phrase5": "Erzähl mir von deinem Lieblingsbuch oder -film.",
+  "phrase6": "Was hast du letztes Wochenende gemacht?",
+  "phrase7": "Was sind deine Pläne für morgen?",
+  "phrase8": "Wie sagt man ... auf Englisch/Spanisch?",
+  
+  // Error messages
+  "speechRecognitionError": "Spracherkennungsfehler",
+  "speechRecognitionNotSupported": "Dein Browser unterstützt keine Spracherkennung",
+  "microphoneAccessRequired": "Mikrofonzugriff erforderlich",
+  "failedToGenerateSpeech": "Konnte keine Sprachaudio generieren",
+  "browserBasedTTS": "Hinweis: Wir verwenden Meta MMS und Azure für Text-zu-Sprache-Services.",
+  "startConversationIn": "Starte Gespräch auf {language}",
+  "youSaid": "Du sagtest",
+  "aiResponse": "KI-Antwort",
+  "speaking": "Spricht",
+  "playAgain": "Noch einmal abspielen",
+  "translation": "Übersetzung",
+  "conversationHistoryCleared": "Gesprächsverlauf gelöscht",
+  "success": "Erfolg"
+};
+
+export default voiceChatTranslations;

@@ -2,7 +2,7 @@
 import { TranslationRecord } from "./types";
 import arabic from "./arabic";
 import bengali from "./bengali";
-import cantonese from "./cantonese"; // Import Cantonese translations
+import cantonese from "./cantonese";
 import english from "./english";
 import farsi from "./farsi";
 import french from "./french";
@@ -29,6 +29,20 @@ import yoruba from "./yoruba";
 import amharic from "./amharic";
 import igbo from "./igbo";
 import haitian from "./haitian";
+
+// Import new languages
+import german from "./german";
+import italian from "./italian";
+import thai from "./thai";
+import burmese from "./burmese";
+import karen from "./karen";
+import nepali from "./nepali";
+import tigrinya from "./tigrinya";
+import punjabi from "./punjabi";
+import marathi from "./marathi";
+import gujarati from "./gujarati";
+import sinhala from "./sinhala";
+
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "./constants";
 
 // Map of all translations by language code
@@ -40,7 +54,7 @@ const translations: Record<string, TranslationRecord> = {
   japanese,
   korean,
   mandarin,
-  cantonese, // Added Cantonese translations
+  cantonese,
   russian,
   arabic,
   hindi,
@@ -61,7 +75,19 @@ const translations: Record<string, TranslationRecord> = {
   romanian,
   igbo,
   haitian,
-  tagalog
+  tagalog,
+  // Add new languages
+  german,
+  italian,
+  thai,
+  burmese,
+  karen,
+  nepali,
+  tigrinya,
+  punjabi,
+  marathi,
+  gujarati,
+  sinhala
 };
 
 export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };

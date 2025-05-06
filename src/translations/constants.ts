@@ -32,5 +32,17 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   haitian: "Kreyòl Ayisyen",
   igbo: "Igbo",
   tagalog: "Tagalog",
-  cantonese: "廣東話" // Added Cantonese language
+  cantonese: "廣東話",
+  // Adding new languages
+  german: "Deutsch",
+  italian: "Italiano",
+  thai: "ภาษาไทย",
+  burmese: "မြန်မာဘာသာ",
+  karen: "ကညီကျိာ်",
+  nepali: "नेपाली",
+  tigrinya: "ትግርኛ",
+  punjabi: "ਪੰਜਾਬੀ",
+  marathi: "मराठी",
+  gujarati: "ગુજરાતી",
+  sinhala: "සිංහල"
 };

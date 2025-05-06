@@ -4,7 +4,22 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { TranslationType } from "./types";
 import { extractStringFromTranslation } from "./translationUtils";
-import { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, verifyChineseTranslation } from "./languageVerifiers";
+import { 
+  verifyHindiTranslation, 
+  verifyFarsiTranslation, 
+  verifyBengaliTranslation, 
+  verifyTagalogTranslation, 
+  verifyChineseTranslation,
+  verifyThaiTranslation,
+  verifyBurmeseTranslation,
+  verifyKarenTranslation,
+  verifyNepaliTranslation,
+  verifyTigrinyaTranslation,
+  verifyPunjabiTranslation,
+  verifyMarathiTranslation,
+  verifyGujaratiTranslation,
+  verifySinhalaTranslation
+} from "./languageVerifiers";
 import { getTranslation, useTranslationService } from "./useTranslationService";
 
 export const useTranslationHandler = () => {
@@ -26,6 +41,15 @@ export const useTranslationHandler = () => {
     verifyBengaliTranslation,
     verifyTagalogTranslation,
     verifyChineseTranslation,
+    verifyThaiTranslation,
+    verifyBurmeseTranslation,
+    verifyKarenTranslation,
+    verifyNepaliTranslation,
+    verifyTigrinyaTranslation,
+    verifyPunjabiTranslation,
+    verifyMarathiTranslation,
+    verifyGujaratiTranslation,
+    verifySinhalaTranslation,
     needsTranslation,
     extractStringFromTranslation
   };
@@ -39,6 +63,15 @@ export {
   verifyFarsiTranslation, 
   verifyBengaliTranslation, 
   verifyTagalogTranslation, 
-  verifyChineseTranslation, 
+  verifyChineseTranslation,
+  verifyThaiTranslation,
+  verifyBurmeseTranslation,
+  verifyKarenTranslation,
+  verifyNepaliTranslation,
+  verifyTigrinyaTranslation,
+  verifyPunjabiTranslation,
+  verifyMarathiTranslation,
+  verifyGujaratiTranslation,
+  verifySinhalaTranslation,
   getTranslation 
 };
