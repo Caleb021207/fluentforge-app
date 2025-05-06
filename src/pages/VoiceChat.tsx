@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,6 @@ import haitianTranslations from "@/translations/haitian";
 import spanishTranslations from "@/translations/spanish";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
-import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -26,6 +24,7 @@ type ConversationMessage = {
 };
 
 const VoiceChat = () => {
+  const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
@@ -36,45 +35,15 @@ const VoiceChat = () => {
   const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
+  const silenceTimeoutRef = useRef<number | null>(null);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   const { practice: targetLanguage } = getLanguagePair(currentLanguage);
-
-  // Get proper language code for speech recognition
-  const recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
-  
-  // Debug log to help with troubleshooting
-  console.log("Recognition language set to:", recognitionLanguage);
-  
-  // Use speech recognition hook with more debugging
-  const {
-    isListening,
-    startListening,
-    stopListening,
-    transcript: recognizedTranscript,
-    isSupported,
-    error: speechError
-  } = useSpeechRecognition({
-    language: recognitionLanguage,
-    continuous: true,
-    interimResults: true,
-    silenceTimeout: 30000,
-    disableAutoStop: true,
-    onTranscript: (text, isFinal) => {
-      console.log("Transcript update:", text, "isFinal:", isFinal);
-      setTranscript(text);
-    }
-  });
-
-  // Debug information for speech recognition
-  useEffect(() => {
-    console.log("Speech recognition supported:", isSupported);
-    if (speechError) {
-      console.error("Speech recognition error:", speechError);
-    }
-  }, [isSupported, speechError]);
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -82,31 +51,137 @@ const VoiceChat = () => {
     }
   }, [conversationHistory]);
 
-  // Update transcript when speech recognition provides a new one
   useEffect(() => {
-    if (recognizedTranscript) {
-      setTranscript(recognizedTranscript);
-    }
-  }, [recognizedTranscript]);
-
-  const toggleListening = async () => {
-    console.log("Toggling listening state, current state:", isListening);
-    if (isListening) {
-      stopListening();
-    } else {
-      setTranscript("");
-      setGptResponse("");
-      setTranslation("");
-      try {
-        await startListening();
-        console.log("Speech recognition started successfully");
-      } catch (err) {
-        console.error("Failed to start speech recognition:", err);
+    if (typeof window !== "undefined" && 
+        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognitionAPI();
+      
+      // Get the target language the user is practicing (not their UI language)
+      const { practice } = getLanguagePair(currentLanguage);
+      
+      // Use the practice/target language for speech recognition
+      let recognitionLanguage = getSpeechSynthesisLanguageCode(practice.toLowerCase());
+      
+      console.log(`Setting speech recognition to target language: ${practice} (${recognitionLanguage})`);
+      
+      recognitionRef.current.lang = recognitionLanguage;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.maxAlternatives = 1;
+      
+      recognitionRef.current.onresult = (event: any) => {
+        const lastResultIndex = event.results.length - 1;
+        const latestTranscript = event.results[lastResultIndex][0].transcript;
+        
+        resetSilenceDetection();
+        
+        setTranscript(latestTranscript);
+      };
+      
+      recognitionRef.current.onerror = (event: any) => {
+        console.error("Speech recognition error:", event.error);
+        setIsListening(false);
         toast({
           title: t("error"),
-          description: t("microphoneAccessRequired"),
+          description: `${t("speechRecognitionError")}: ${event.error}`,
           variant: "destructive",
         });
+      };
+      
+      recognitionRef.current.onend = () => {
+        if (isListening) {
+          try {
+            recognitionRef.current.start();
+          } catch (e) {
+            console.error("Failed to restart speech recognition:", e);
+          }
+        } else {
+          setIsListening(false);
+        }
+      };
+    } else {
+      toast({
+        title: t("error"),
+        description: t("speechRecognitionNotSupported"),
+        variant: "destructive",
+      });
+    }
+
+    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+      
+      const handleVoicesChanged = () => {
+        console.log("Voices available:", synthRef.current?.getVoices().length);
+      };
+      
+      synthRef.current.onvoiceschanged = handleVoicesChanged;
+      
+      if (synthRef.current.getVoices().length > 0) {
+        handleVoicesChanged();
+      }
+    } else {
+      console.warn("Speech synthesis not supported in this browser");
+    }
+    
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
+      if (synthRef.current && utteranceRef.current) {
+        synthRef.current.cancel();
+      }
+      clearSilenceDetection();
+    };
+  }, [currentLanguage, toast, t]);
+
+  const resetSilenceDetection = () => {
+    clearSilenceDetection();
+    
+    silenceTimeoutRef.current = window.setTimeout(() => {
+      if (transcript && isListening) {
+        console.log("10 seconds of silence detected, automatically sending message");
+        handleSendTranscript(transcript);
+        
+        if (recognitionRef.current) {
+          recognitionRef.current.abort();
+        }
+        setIsListening(false);
+      }
+    }, 10000);
+  };
+
+  const clearSilenceDetection = () => {
+    if (silenceTimeoutRef.current !== null) {
+      clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
+  };
+
+  const toggleListening = () => {
+    if (isListening) {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
+      clearSilenceDetection();
+      setIsListening(false);
+    } else {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+          setTranscript("");
+          setGptResponse("");
+          setTranslation("");
+          resetSilenceDetection();
+        } catch (error) {
+          console.error("Error starting speech recognition:", error);
+          toast({
+            title: t("error"),
+            description: t("microphoneAccessRequired"),
+            variant: "destructive",
+          });
+        }
       }
     }
   };
@@ -114,11 +189,7 @@ const VoiceChat = () => {
   const handleSendTranscript = async (text: string) => {
     if (!text.trim()) return;
     
-    // Stop listening when sending
-    if (isListening) {
-      stopListening();
-    }
-    
+    clearSilenceDetection();
     setIsLoading(true);
     
     const userMessage: ConversationMessage = {
@@ -136,7 +207,7 @@ const VoiceChat = () => {
           userLanguage: currentLanguage,
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
-          requestTranslation: true
+          requestTranslation: true // Explicitly request translation
         }
       });
 
@@ -223,15 +294,6 @@ const VoiceChat = () => {
       onEnd: () => {
         console.log("TTS ended");
         setIsSpeaking(false);
-        
-        // Restart listening automatically after speech is done
-        if (!isListening && !isLoading) {
-          console.log("Auto-restarting listening after TTS completion");
-          // Add a small delay before starting listening again
-          setTimeout(() => {
-            startListening();
-          }, 500);
-        }
       },
       onError: (error) => {
         console.error("TTS error:", error);
@@ -252,7 +314,6 @@ const VoiceChat = () => {
   };
 
   const getConversationStarters = () => {
-    // ... keep existing code (conversation starters implementation)
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
     let nativeLanguagePhrases;
@@ -294,11 +355,6 @@ const VoiceChat = () => {
   const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
-  // Add debug information for better troubleshooting
-  useEffect(() => {
-    console.log(`Speech recognition setup: Language=${practice}, Code=${recognitionLanguage}, Supported=${isSupported}`);
-  }, [practice, recognitionLanguage, isSupported]);
-
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
@@ -311,6 +367,8 @@ const VoiceChat = () => {
         <p className="text-sm text-gray-500 mb-2">
           <strong>{t("aiModelInfo")}</strong>
         </p>
+        
+        {/* Removed the beige notification box about browser-based TTS */}
       </div>
 
       <div className="flex flex-col gap-6">
@@ -331,13 +389,11 @@ const VoiceChat = () => {
                 variant={isListening ? "destructive" : "default"}
                 size="lg"
                 disabled={isLoading || isSpeaking}
-                className="relative"
               >
                 {isListening ? (
                   <>
                     <MicOff className="h-5 w-5 mr-2" />
                     {t("stopListening")}
-                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
                   </>
                 ) : (
                   <>
@@ -347,7 +403,7 @@ const VoiceChat = () => {
                 )}
               </Button>
               
-              {transcript && (
+              {isListening && transcript && (
                 <Button
                   onClick={() => handleSendTranscript(transcript)}
                   variant="default"
@@ -362,25 +418,8 @@ const VoiceChat = () => {
           </div>
           
           {isListening && (
-            <div className="flex items-center text-sm text-green-600 dark:text-green-400 mb-4">
-              <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+            <div className="text-sm text-gray-500 animate-pulse mb-4">
               {t("listeningNow")}...
-            </div>
-          )}
-
-          {!isSupported && (
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-              <p>
-                {t("speechRecognitionNotSupported")}
-              </p>
-            </div>
-          )}
-
-          {speechError && (
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-              <p>
-                Speech recognition error: {speechError}
-              </p>
             </div>
           )}
 
@@ -418,7 +457,7 @@ const VoiceChat = () => {
                   className="flex items-center gap-2"
                   disabled={isSpeaking}
                 >
-                  <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse text-green-500' : ''}`} />
+                  <Volume2 className="h-4 w-4" />
                   {isSpeaking 
                     ? t("speaking") 
                     : t("playAgain")}

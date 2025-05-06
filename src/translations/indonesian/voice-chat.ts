@@ -53,10 +53,7 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecificTopics: "Latih kosakata untuk topik tertentu seperti perjalanan atau makanan",
   voiceChatEnded: "Obrolan suara berakhir",
   timeLimit5MinReached: "Batas waktu 5 menit telah tercapai",
-  aiModelInfo: "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara.",
-  
-  // Add the missing practiceDescription key
-  practiceDescription: "Latih kemampuan berbicara Anda menggunakan obrolan suara kami. Klik tombol mikrofon dan mulai berbicara dalam bahasa target Anda.",
+  aiModelInfo: "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara."
 };
 
 export default voiceChatTranslations;

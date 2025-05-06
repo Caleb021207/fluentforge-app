@@ -1,53 +1,39 @@
 
 import React from "react";
-import { Loader2, Volume2, VolumeX } from "lucide-react";
+import { Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AudioButtonProps {
-  isPlaying: boolean;
   isLoading: boolean;
+  isPlaying: boolean;
   onClick: () => void;
-  ariaLabel?: string;
-  size?: "default" | "sm" | "lg" | "icon";
-  variant?: "ghost" | "outline" | "default" | "link";
-  isTranslation?: boolean;  // Keep this prop
-  hasError?: boolean;       // New prop to indicate audio errors
+  isTranslation?: boolean;
+  ariaLabel: string;
 }
 
-const AudioButton: React.FC<AudioButtonProps> = ({
-  isPlaying,
-  isLoading,
-  onClick,
-  ariaLabel = "Play audio",
-  size = "icon",
-  variant = "ghost",
-  isTranslation = false,  // Keep default value
-  hasError = false        // New default value
+const AudioButton: React.FC<AudioButtonProps> = ({ 
+  isLoading, 
+  isPlaying, 
+  onClick, 
+  isTranslation = false,
+  ariaLabel 
 }) => {
   return (
-    <Button
-      variant={variant}
-      size={size}
-      className={`flex-shrink-0 group hover:bg-lingua-primary/20 dark:hover:bg-lingua-blue-light/20 ${
-        isTranslation ? 'text-lingua-secondary' : ''
-      }`}
-      onClick={onClick}
+    <Button 
+      onClick={onClick} 
+      variant="ghost" 
+      size="sm"
+      disabled={isLoading || isPlaying}
+      className={`
+        ml-2 -mt-1 p-1 h-auto rounded-full transition-colors duration-200
+        ${isTranslation ? 'hover:bg-gray-200/20 dark:hover:bg-gray-700/50' : 'hover:bg-lingua-accent/30 dark:hover:bg-lingua-blue-primary/30'}
+      `}
       aria-label={ariaLabel}
-      disabled={isPlaying || isLoading}
-      title={hasError ? `${ariaLabel} (Audio unavailable)` : ariaLabel}
     >
-      {isLoading ? (
+      {isLoading || isPlaying ? (
         <Loader2 className="h-4 w-4 animate-spin" />
-      ) : hasError ? (
-        <VolumeX 
-          className="h-4 w-4 text-red-500"
-          aria-hidden="true"
-        />
       ) : (
-        <Volume2 
-          className={`h-4 w-4 ${isPlaying ? 'text-lingua-accent animate-pulse' : 'group-hover:text-lingua-accent'}`}
-          aria-hidden="true"
-        />
+        <Volume2 className={`h-4 w-4 ${isTranslation ? "text-gray-400 dark:text-gray-500" : "text-white dark:text-gray-200"}`} />
       )}
     </Button>
   );
