@@ -3,15 +3,15 @@ import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
   // Core translations
-  welcomeToLanguageLearning: "Palavox वर आपले स्वागत आहे",
+  welcomeToLanguageLearning: "Palavox मध्ये आपले स्वागत आहे",
   yourPersonalAICompanion: "प्रभावी शिक्षणासाठी तुमचा वैयक्तिक AI साथीदार",
-  welcomeMessage: "Lingua भाषा शिकण्याच्या अॅपवर आपले स्वागत आहे!",
+  welcomeMessage: "Lingua भाषा शिक्षण अॅपमध्ये आपले स्वागत आहे!",
   pageNotFound: "पृष्ठ सापडले नाही",
   networkConnectionIssue: "नेटवर्क कनेक्शन समस्या",
   pleaseWait: "कृपया थांबा",
-  sessionExpired: "तुमचे सत्र कालबाह्य झाले आहे. कृपया पुन्हा साइन इन करा.",
+  sessionExpired: "तुमचे सेशन कालबाह्य झाले आहे. कृपया पुन्हा लॉगिन करा.",
   "appName": "LinguaLite",
-  "tagline": "भाषा सहजपणे आणि मोफत शिका"
+  "tagline": "भाषा सहज आणि मोफत शिका"
 };
 
 export default generalCoreTranslations;

@@ -1,7 +1,7 @@
 
+import { getTranslation } from "./useTranslationService";
 import { TranslationType } from "./types";
 import { extractStringFromTranslation } from "./translationUtils";
-import { getTranslation } from "./useTranslationService";
 
 /**
  * Special case for Hindi translations to ensure they use Devanagari script
@@ -76,7 +76,7 @@ export const verifyBengaliTranslation = async (
 };
 
 /**
- * Enhanced special case handling for Tagalog translations
+ * Special case for Tagalog translations
  */
 export const verifyTagalogTranslation = async (
   translation: TranslationType, 
@@ -85,10 +85,10 @@ export const verifyTagalogTranslation = async (
 ): Promise<string> => {
   if (userLanguage !== 'tagalog') return extractStringFromTranslation(translation);
   
-  // First, extract a string value from whatever format we received
+  // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check for valid Tagalog translation
+  // Ensure Tagalog translation is valid
   if (!translationText || 
       translationText === 'undefined' || 
       translationText === '[object Object]' ||
@@ -96,14 +96,14 @@ export const verifyTagalogTranslation = async (
       translationText.includes('Translation not available')) {
     
     console.log('Getting proper Tagalog translation - inadequate translation detected');
-    return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+    return await getTranslation(originalContent, 'tagalog');
   }
   
   return translationText;
 };
 
 /**
- * Special case for Mandarin/Cantonese translations to ensure proper Chinese script
+ * Special case for Chinese translations (both Mandarin and Cantonese)
  */
 export const verifyChineseTranslation = async (
   translation: TranslationType, 
@@ -128,7 +128,7 @@ export const verifyChineseTranslation = async (
 };
 
 /**
- * Special case for Thai translations to ensure proper Thai script
+ * Special case for Thai translations to ensure they use proper Thai script
  */
 export const verifyThaiTranslation = async (
   translation: TranslationType, 
@@ -152,7 +152,7 @@ export const verifyThaiTranslation = async (
 };
 
 /**
- * Special case for Burmese translations to ensure proper Burmese script
+ * Special case for Burmese translations to ensure they use proper Burmese script
  */
 export const verifyBurmeseTranslation = async (
   translation: TranslationType, 
@@ -176,7 +176,7 @@ export const verifyBurmeseTranslation = async (
 };
 
 /**
- * Special case for Karen translations to ensure proper Karen script
+ * Special case for Karen translations to ensure they use proper Karen script
  */
 export const verifyKarenTranslation = async (
   translation: TranslationType, 
@@ -188,7 +188,7 @@ export const verifyKarenTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Karen script (uses Myanmar Unicode range)
+  // Karen often uses Burmese script
   const containsKaren = /[\u1000-\u109F]/.test(translationText);
   
   if (!containsKaren) {
@@ -200,7 +200,7 @@ export const verifyKarenTranslation = async (
 };
 
 /**
- * Special case for Nepali translations to ensure proper Nepali script
+ * Special case for Nepali translations to ensure they use proper Devanagari script
  */
 export const verifyNepaliTranslation = async (
   translation: TranslationType, 
@@ -212,7 +212,7 @@ export const verifyNepaliTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Devanagari script (used in Nepali)
+  // Nepali uses Devanagari script
   const containsDevanagari = /[\u0900-\u097F]/.test(translationText);
   
   if (!containsDevanagari) {
@@ -224,7 +224,7 @@ export const verifyNepaliTranslation = async (
 };
 
 /**
- * Special case for Tigrinya translations to ensure proper Tigrinya script
+ * Special case for Tigrinya translations to ensure they use proper Ge'ez script
  */
 export const verifyTigrinyaTranslation = async (
   translation: TranslationType, 
@@ -236,11 +236,11 @@ export const verifyTigrinyaTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Ethiopic script (used in Tigrinya)
-  const containsEthiopic = /[\u1200-\u137F]/.test(translationText);
+  // Tigrinya uses Ge'ez script
+  const containsGeez = /[\u1200-\u137F]/.test(translationText);
   
-  if (!containsEthiopic) {
-    console.log('Getting proper Tigrinya translation with Ethiopic script');
+  if (!containsGeez) {
+    console.log('Getting proper Tigrinya translation with Ge\'ez script');
     return await getTranslation(originalContent, 'tigrinya');
   }
   
@@ -248,7 +248,7 @@ export const verifyTigrinyaTranslation = async (
 };
 
 /**
- * Special case for Punjabi translations to ensure proper Punjabi script
+ * Special case for Punjabi translations to ensure they use proper Gurmukhi script
  */
 export const verifyPunjabiTranslation = async (
   translation: TranslationType, 
@@ -260,7 +260,7 @@ export const verifyPunjabiTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Gurmukhi script (used in Punjabi)
+  // Punjabi uses Gurmukhi script
   const containsGurmukhi = /[\u0A00-\u0A7F]/.test(translationText);
   
   if (!containsGurmukhi) {
@@ -272,7 +272,7 @@ export const verifyPunjabiTranslation = async (
 };
 
 /**
- * Special case for Marathi translations to ensure proper Marathi script
+ * Special case for Marathi translations to ensure they use proper Devanagari script
  */
 export const verifyMarathiTranslation = async (
   translation: TranslationType, 
@@ -284,7 +284,7 @@ export const verifyMarathiTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Devanagari script (used in Marathi)
+  // Marathi uses Devanagari script
   const containsDevanagari = /[\u0900-\u097F]/.test(translationText);
   
   if (!containsDevanagari) {
@@ -296,7 +296,7 @@ export const verifyMarathiTranslation = async (
 };
 
 /**
- * Special case for Gujarati translations to ensure proper Gujarati script
+ * Special case for Gujarati translations to ensure they use proper Gujarati script
  */
 export const verifyGujaratiTranslation = async (
   translation: TranslationType, 
@@ -308,7 +308,7 @@ export const verifyGujaratiTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Gujarati script
+  // Gujarati uses Gujarati script
   const containsGujarati = /[\u0A80-\u0AFF]/.test(translationText);
   
   if (!containsGujarati) {
@@ -320,7 +320,7 @@ export const verifyGujaratiTranslation = async (
 };
 
 /**
- * Special case for Sinhala translations to ensure proper Sinhala script
+ * Special case for Sinhala translations to ensure they use proper Sinhala script
  */
 export const verifySinhalaTranslation = async (
   translation: TranslationType, 
@@ -332,7 +332,7 @@ export const verifySinhalaTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Sinhala script
+  // Sinhala uses Sinhala script
   const containsSinhala = /[\u0D80-\u0DFF]/.test(translationText);
   
   if (!containsSinhala) {

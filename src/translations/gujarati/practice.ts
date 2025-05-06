@@ -1,0 +1,36 @@
+
+import { TranslationRecord } from "../types";
+
+const practiceTranslations: TranslationRecord = {
+  "textPractice": "ટેક્સ્ટ પ્રેક્ટિસ",
+  "practiceWithAITutor": "AI ભાષા ટ્યુટર સાથે પ્રેક્ટિસ કરો",
+  "chatWithAITutor": "તમારી અંગ્રેજી પ્રેક્ટિસ કરવા માટે અમારા AI ટ્યુટર સાથે વાત કરો! AI તમારી વ્યાકરણ, શબ્દભંડોળ અને ઉચ્ચારણમાં સુધારો કરવામાં મદદ કરશે. ભાષા અથવા સંસ્કૃતિ વિશે પ્રશ્નો પૂછવામાં અચકાશો નહીં.",
+  "startVoiceChat": "વૉઇસ ચેટ શરૂ કરો",
+  "stopVoiceChat": "વૉઇસ ચેટ બંધ કરો",
+  "getSkillsAssessment": "કૌશલ્ય મૂલ્યાંકન મેળવો",
+  "reading": "વાંચન",
+  "writing": "લેખન",
+  "speaking": "બોલવું",
+  "listening": "સાંભળવું",
+  "overallLevel": "સમગ્ર સ્તર",
+  "startChatting": "તમારા AI ભાષા ટ્યુટર સાથે વાતચીત શરૂ કરો!",
+  "clickToStartVoice": "ટ્યુટર સાથે વાત કરવા માટે 'વૉઇસ ચેટ શરૂ કરો' પર ક્લિક કરો",
+  "allowMicAccess": "વૉઇસ સુવિધાઓનો ઉપયોગ કરવા માટે કૃપા કરીને માઇક્રોફોન એક્સેસની મંજૂરી આપો",
+  "typeMessage": "તમારો સંદેશ ગુજરાતી અથવા અંગ્રેજીમાં ટાઇપ કરો...",
+  "practiceWithTextChat": "ટેક્સ્ટ ચેટ સાથે પ્રેક્ટિસ કરો",
+  "textConversationPractice": "ટેક્સ્ટ વાતચીત પ્રેક્ટિસ",
+  "startTextChatting": "AI ટ્યુટર સાથે ટેક્સ્ટ ચેટ શરૂ કરો",
+  "typeMessageBelow": "શરૂ કરવા માટે નીચે સંદેશ ટાઇપ કરો",
+  "send": "મોકલો",
+  "sendEnglishPracticePrompt": "અંગ્રેજી પ્રેક્ટિસ પ્રોમ્પ્ટ મોકલો",
+  "noticeTextBasedPractice": "નોંધ: આ ટેક્સ્ટ-આધારિત પ્રેક્ટિસ સુવિધા છે. વૉઇસ પ્રેક્ટિસ માટે, અમારી અનલિમિટેડ વૉઇસ ચેટ અથવા પ્રીમિયમ વૉઇસ ચેટ સુવિધાઓ અજમાવો.",
+  "askAboutGrammarRules": "વ્યાકરણ નિયમો વિશે પૂછો",
+  "practiceConversationsDifferentSituations": "વિવિધ પરિસ્થિતિઓમાં વાતચીત પ્રેક્ટિસ કરો",
+  "learnNewVocabulary": "નવા શબ્દભંડોળ શીખો",
+  "discussCulturalTopics": "સાંસ્કૃતિક વિષયો પર ચર્ચા કરો",
+  "startConversationIn": "{{language}}માં વાતચીત શરૂ કરો",
+  "practicePrompt": "નમસ્તે! હું {{targetLanguage}} વાતચીતની પ્રેક્ટિસ કરવા માંગું છું. કૃપા કરીને મારા {{targetLanguage}} વ્યાકરણ, શબ્દભંડોળ અને ઉપયોગમાં સુધારો કરવામાં મદદ કરો. શું આપણે પાયાની વાતચીતથી શરૂઆત કરી શકીએ?",
+  "chatPlaceholder": "{{targetLanguage}}ની પ્રેક્ટિસ કરવા માટે તમારો સંદેશ ટાઇપ કરો..."
+};
+
+export default practiceTranslations;
