@@ -120,9 +120,9 @@ const LanguageSelectionCard = ({
   );
 
   return (
-    <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
+    <Card className="backdrop-blur shadow-lg mb-8">
       <CardContent className="pt-6">
-        <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguagePreferences")}</h2>
+        <h2 className="text-xl font-semibold mb-4 text-foreground">{t("selectYourLanguagePreferences")}</h2>
         <div className="grid grid-cols-1 gap-4 mb-4">
           <LanguageSelectField
             id="nativeLanguage"

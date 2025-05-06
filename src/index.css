@@ -159,7 +159,17 @@
 }
 
 .radix-select-content {
-  background-color: white !important;
   z-index: 9999 !important;
 }
 
+/* Ensure dark mode dropdown content has proper background and text color */
+.dark [data-radix-popper-content-wrapper] * {
+  background-color: hsl(var(--popover)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+}
+
+/* Fix for select item highlighting in dark mode */
+.dark .radix-select-content [data-radix-select-item][data-highlighted] {
+  background-color: hsl(var(--accent)) !important;
+  color: hsl(var(--accent-foreground)) !important;
+}
