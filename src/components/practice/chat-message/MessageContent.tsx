@@ -23,7 +23,7 @@ const MessageContent: React.FC<MessageContentProps> = ({
         flex-1 leading-relaxed transition-colors duration-200
         ${role === "user" 
           ? "text-white font-medium" 
-          : "text-white dark:text-gray-100"}
+          : "text-white font-normal"}
       `}>
         {content}
       </p>
