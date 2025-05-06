@@ -44,7 +44,7 @@ const AudioButton: React.FC<AudioButtonProps> = ({
       )}
     </Button>
   );
-});
+};
 
 AudioButton.displayName = "AudioButton";
 
