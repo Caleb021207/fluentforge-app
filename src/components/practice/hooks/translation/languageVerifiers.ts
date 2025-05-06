@@ -1,3 +1,4 @@
+
 import { TranslationType } from "./types";
 import { extractStringFromTranslation } from "./translationUtils";
 import { getTranslation } from "./useTranslationService";
@@ -9,7 +10,7 @@ export const verifyHindiTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'hindi') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -33,7 +34,7 @@ export const verifyFarsiTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'farsi') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -57,7 +58,7 @@ export const verifyBengaliTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'bengali') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -81,17 +82,11 @@ export const verifyTagalogTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'tagalog') return extractStringFromTranslation(translation);
   
   // First, extract a string value from whatever format we received
   const translationText = extractStringFromTranslation(translation);
-  
-  console.log('Verifying Tagalog translation:', {
-    hasTranslation: !!translationText,
-    translationLength: translationText ? translationText.length : 0,
-    shortContentPreview: originalContent.substring(0, 30) + '...'
-  });
   
   // Check for valid Tagalog translation
   if (!translationText || 
@@ -101,124 +96,32 @@ export const verifyTagalogTranslation = async (
       translationText.includes('Translation not available')) {
     
     console.log('Getting proper Tagalog translation - inadequate translation detected');
-    
-    // Try up to 3 times to get a valid translation
-    let retryCount = 0;
-    let validTranslation = false;
-    let bestTranslation = translationText;
-    
-    while (retryCount < 3 && !validTranslation) {
-      retryCount++;
-      console.log(`Tagalog translation retry attempt ${retryCount}`);
-      
-      const newTranslation = await getTranslation(originalContent, 'tagalog');
-      
-      // Extra validation - ensure it's not an object/undefined
-      if (newTranslation && 
-          newTranslation !== 'undefined' && 
-          newTranslation !== '[object Object]' &&
-          newTranslation.length > 10) {
-        
-        bestTranslation = newTranslation;
-        validTranslation = true;
-        console.log('Successfully obtained new Tagalog translation:', {
-          length: newTranslation.length,
-          preview: newTranslation.substring(0, 30) + '...'
-        });
-        break;
-      }
-    }
-    
-    // Final fallback for Tagalog
-    if (!validTranslation && bestTranslation.length < 10) {
-      console.log('Failed to get proper Tagalog translation after multiple retries');
-      return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-    }
-    
-    return bestTranslation;
+    return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
   }
   
   return translationText;
 };
 
 /**
- * Special case handling for Chinese (Cantonese/Mandarin) translations
+ * Special case for Mandarin/Cantonese translations to ensure proper Chinese script
  */
 export const verifyChineseTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
-  if (userLanguage !== 'cantonese' && userLanguage !== 'mandarin') {
+): Promise<string> => {
+  if (userLanguage !== 'mandarin' && userLanguage !== 'cantonese') 
     return extractStringFromTranslation(translation);
-  }
   
-  // First, extract a string value from whatever format we received
+  // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  console.log(`Verifying ${userLanguage} translation:`, {
-    hasTranslation: !!translationText,
-    translationLength: translationText ? translationText.length : 0,
-    shortContentPreview: originalContent.substring(0, 30) + '...'
-  });
-  
   // Check if the translation contains Chinese characters
-  const containsChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(translationText);
+  const containsChinese = /[\u4E00-\u9FFF]/.test(translationText);
   
-  // Check if there are non-Chinese characters that suggest mixed language
-  // This regex looks for substantial Latin script (likely indicating other languages)
-  const containsSubstantialLatinScript = /[a-zA-Z]{4,}/.test(translationText);
-  
-  if (!translationText || 
-      translationText === 'undefined' || 
-      translationText === '[object Object]' ||
-      translationText.length < 10 || 
-      !containsChineseChars ||
-      containsSubstantialLatinScript) {
-    
-    console.log(`Getting proper ${userLanguage} translation - inadequate translation detected`);
-    
-    // Try up to 3 times to get a valid translation
-    let retryCount = 0;
-    let validTranslation = false;
-    let bestTranslation = translationText;
-    
-    while (retryCount < 3 && !validTranslation) {
-      retryCount++;
-      console.log(`${userLanguage} translation retry attempt ${retryCount}`);
-      
-      const newTranslation = await getTranslation(originalContent, userLanguage);
-      
-      // Validate the new translation
-      const hasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(newTranslation);
-      const hasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(newTranslation);
-      
-      if (newTranslation && 
-          newTranslation !== 'undefined' && 
-          newTranslation !== '[object Object]' &&
-          newTranslation.length > 10 &&
-          hasChineseChars &&
-          !hasSubstantialLatinScript) {
-        
-        bestTranslation = newTranslation;
-        validTranslation = true;
-        console.log(`Successfully obtained new ${userLanguage} translation:`, {
-          length: newTranslation.length,
-          preview: newTranslation.substring(0, 30) + '...'
-        });
-        break;
-      }
-    }
-    
-    // Final fallback for Chinese translations
-    if (!validTranslation || bestTranslation.length < 10) {
-      console.log(`Failed to get proper ${userLanguage} translation after multiple retries`);
-      return userLanguage === 'cantonese' 
-        ? "翻譯暫時不可用。請諒解不便之處。" 
-        : "翻译暂时不可用。请谅解不便之处。";
-    }
-    
-    return bestTranslation;
+  if (!containsChinese) {
+    console.log(`Getting proper ${userLanguage} translation with Chinese characters`);
+    return await getTranslation(originalContent, userLanguage);
   }
   
   return translationText;
@@ -231,7 +134,7 @@ export const verifyThaiTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'thai') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -249,23 +152,23 @@ export const verifyThaiTranslation = async (
 };
 
 /**
- * Special case for Burmese translations to ensure proper Myanmar script
+ * Special case for Burmese translations to ensure proper Burmese script
  */
 export const verifyBurmeseTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'burmese') return extractStringFromTranslation(translation);
   
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Myanmar script
-  const containsMyanmar = /[\u1000-\u109F]/.test(translationText);
+  // Check if the translation contains Burmese script
+  const containsBurmese = /[\u1000-\u109F]/.test(translationText);
   
-  if (!containsMyanmar) {
-    console.log('Getting proper Burmese translation with Myanmar script');
+  if (!containsBurmese) {
+    console.log('Getting proper Burmese translation with Burmese script');
     return await getTranslation(originalContent, 'burmese');
   }
   
@@ -273,22 +176,22 @@ export const verifyBurmeseTranslation = async (
 };
 
 /**
- * Special case for Karen (S'gaw) translations to ensure proper Karen script
+ * Special case for Karen translations to ensure proper Karen script
  */
 export const verifyKarenTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'karen') return extractStringFromTranslation(translation);
   
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Myanmar script (Karen uses Myanmar script)
-  const containsMyanmar = /[\u1000-\u109F]/.test(translationText);
+  // Check if the translation contains Karen script (uses Myanmar Unicode range)
+  const containsKaren = /[\u1000-\u109F]/.test(translationText);
   
-  if (!containsMyanmar) {
+  if (!containsKaren) {
     console.log('Getting proper Karen translation with Karen script');
     return await getTranslation(originalContent, 'karen');
   }
@@ -297,13 +200,13 @@ export const verifyKarenTranslation = async (
 };
 
 /**
- * Special case for Nepali translations to ensure they use Devanagari script
+ * Special case for Nepali translations to ensure proper Nepali script
  */
 export const verifyNepaliTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'nepali') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -321,23 +224,23 @@ export const verifyNepaliTranslation = async (
 };
 
 /**
- * Special case for Tigrinya translations to ensure proper Ge'ez script
+ * Special case for Tigrinya translations to ensure proper Tigrinya script
  */
 export const verifyTigrinyaTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'tigrinya') return extractStringFromTranslation(translation);
   
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Ge'ez script (used in Tigrinya)
-  const containsGeez = /[\u1200-\u137F]/.test(translationText);
+  // Check if the translation contains Ethiopic script (used in Tigrinya)
+  const containsEthiopic = /[\u1200-\u137F]/.test(translationText);
   
-  if (!containsGeez) {
-    console.log('Getting proper Tigrinya translation with Ge\'ez script');
+  if (!containsEthiopic) {
+    console.log('Getting proper Tigrinya translation with Ethiopic script');
     return await getTranslation(originalContent, 'tigrinya');
   }
   
@@ -345,13 +248,13 @@ export const verifyTigrinyaTranslation = async (
 };
 
 /**
- * Special case for Punjabi translations to ensure proper Gurmukhi script
+ * Special case for Punjabi translations to ensure proper Punjabi script
  */
 export const verifyPunjabiTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'punjabi') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -369,13 +272,13 @@ export const verifyPunjabiTranslation = async (
 };
 
 /**
- * Special case for Marathi translations to ensure they use Devanagari script
+ * Special case for Marathi translations to ensure proper Marathi script
  */
 export const verifyMarathiTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'marathi') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -399,7 +302,7 @@ export const verifyGujaratiTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'gujarati') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -423,7 +326,7 @@ export const verifySinhalaTranslation = async (
   translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<TranslationType> => {
+): Promise<string> => {
   if (userLanguage !== 'sinhala') return extractStringFromTranslation(translation);
   
   // Extract string if needed

@@ -1,0 +1,38 @@
+
+import { TranslationRecord } from "../types";
+
+const authTranslations: TranslationRecord = {
+  "signInWithEmail": "Accedi con email",
+  "createAccount": "Crea account",
+  "forgotPassword": "Password dimenticata?",
+  "resetPassword": "Reimposta password",
+  "sendResetLink": "Invia link di reimpostazione",
+  "backToLogin": "Torna al login",
+  "passwordResetEmailSent": "Email di reimpostazione password inviata",
+  "checkYourEmail": "Controlla la tua email per il link di reimpostazione",
+  "emailAlreadyInUse": "Email già in uso",
+  "invalidEmail": "Email non valida",
+  "weakPassword": "Password troppo debole",
+  "wrongCredentials": "Credenziali errate",
+  "loginSuccessful": "Accesso effettuato con successo",
+  "registerSuccessful": "Registrazione effettuata con successo",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Conferma password",
+  "passwordsDoNotMatch": "Le password non corrispondono",
+  "createNewAccount": "Crea nuovo account",
+  "alreadyHaveAccount": "Hai già un account?",
+  "dontHaveAccount": "Non hai un account?",
+  "byCreatingAccount": "Creando un account accetti i nostri",
+  "termsAndConditions": "Termini e condizioni",
+  "privacyPolicy": "Politica sulla privacy",
+  "and": "e",
+  "to": "a",
+  "passwordRequirements": "La password deve contenere almeno 8 caratteri",
+  "loggedOut": "Disconnesso",
+  "loginRequired": "Accesso richiesto",
+  "wrongPassword": "Password errata",
+  "userNotFound": "Utente non trovato"
+};
+
+export default authTranslations;
