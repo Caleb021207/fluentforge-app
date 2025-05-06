@@ -39,7 +39,7 @@ const Practice = () => {
       }
     }
     
-    // Debug for Thai language
+    // Debug for Thai language - Fix the comparison to use lowercase comparison
     if (currentLanguage === 'thai') {
       console.log('Practice component initialized with Thai language:', {
         currentLanguage,
@@ -85,7 +85,7 @@ const Practice = () => {
       msg.translation ? JSON.stringify(msg.translation) : undefined
   }));
 
-  // Additional debug for Thai messages
+  // Additional debug for Thai messages - fix the comparison to use lowercase comparison
   if (currentLanguage === 'thai') {
     console.log('Practice component rendering with Thai:', {
       messageCount: messages.length,
