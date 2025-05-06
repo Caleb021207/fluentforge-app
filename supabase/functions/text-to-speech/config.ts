@@ -21,8 +21,9 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "urdu": { languageCode: "ur-PK", voiceName: "ur-PK-AsadNeural" },
   "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" },
   "swahili": { languageCode: "sw-KE", voiceName: "sw-KE-RafikiNeural" },
-  // Add German language support
   "german": { languageCode: "de-DE", voiceName: "de-DE-KatjaNeural" },
+  // Add Italian language support with Azure voice
+  "italian": { languageCode: "it-IT", voiceName: "it-IT-DiegoNeural" },
   // Re-adding previously removed languages
   "haitian": { languageCode: "ht-HT", voiceName: "ht-HT-DefaultNeural" },
   "igbo": { languageCode: "ig-NG", voiceName: "ig-NG-DefaultNeural" },
@@ -57,8 +58,9 @@ export const pollyVoiceMap: Record<string, string> = {
   "urdu": "Kajal", // Use Hindi voice as fallback
   "pashto": "Kajal", // Use Hindi voice as fallback
   "swahili": "Joanna", // Use English voice as fallback
-  // Add German voice for Polly
   "german": "Marlene",
+  // Add Italian voice for Polly
+  "italian": "Bianca",
   // Re-adding previously removed languages
   "haitian": "Joanna", // Use English voice as fallback
   "igbo": "Joanna", // Use English voice as fallback
@@ -85,6 +87,7 @@ export const metaMmsLanguageMap: Record<string, string> = {
   "tagalog": "fil", // Added Tagalog ISO 639-3 code
   "cantonese": "yue", // Added Cantonese ISO 639-3 code
   "german": "deu",    // Added German ISO 639-3 code
+  "italian": "ita",   // Added Italian ISO 639-3 code
   // Add other languages supported by Meta MMS
 };
 

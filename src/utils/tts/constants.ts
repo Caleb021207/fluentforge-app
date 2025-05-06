@@ -1,3 +1,4 @@
+
 // Language code mappings for speech synthesis
 export const languageCodeMap: Record<string, string> = {
   'english': 'en-US',
