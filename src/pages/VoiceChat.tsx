@@ -32,6 +32,7 @@ const VoiceChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
+  const [recognitionRunning, setRecognitionRunning] = useState(false);
   const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -40,6 +41,7 @@ const VoiceChat = () => {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const silenceTimeoutRef = useRef<number | null>(null);
+  const restartTimeoutRef = useRef<number | null>(null);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
@@ -81,7 +83,10 @@ const VoiceChat = () => {
       
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
-        setIsListening(false);
+        
+        // Don't immediately change isListening state on error
+        // Just log the error and let onend handle the state change
+        
         toast({
           title: t("error"),
           description: `${t("speechRecognitionError")}: ${event.error}`,
@@ -90,15 +95,27 @@ const VoiceChat = () => {
       };
       
       recognitionRef.current.onend = () => {
-        if (isListening) {
-          try {
-            recognitionRef.current.start();
-          } catch (e) {
-            console.error("Failed to restart speech recognition:", e);
-          }
-        } else {
-          setIsListening(false);
+        setRecognitionRunning(false);
+        
+        if (isListening && !restartTimeoutRef.current) {
+          // Add a delay before restarting to prevent rapid cycling
+          restartTimeoutRef.current = window.setTimeout(() => {
+            // Only restart if we're still supposed to be listening
+            if (isListening && !recognitionRunning) {
+              try {
+                recognitionRef.current.start();
+                setRecognitionRunning(true);
+                restartTimeoutRef.current = null;
+              } catch (e) {
+                console.error("Failed to restart speech recognition:", e);
+              }
+            }
+          }, 1000); // 1 second delay to stabilize
         }
+      };
+      
+      recognitionRef.current.onstart = () => {
+        setRecognitionRunning(true);
       };
     } else {
       toast({
@@ -132,6 +149,7 @@ const VoiceChat = () => {
         synthRef.current.cancel();
       }
       clearSilenceDetection();
+      clearRestartTimeout();
     };
   }, [currentLanguage, toast, t]);
 
@@ -158,22 +176,35 @@ const VoiceChat = () => {
     }
   };
 
+  const clearRestartTimeout = () => {
+    if (restartTimeoutRef.current !== null) {
+      clearTimeout(restartTimeoutRef.current);
+      restartTimeoutRef.current = null;
+    }
+  };
+
   const toggleListening = () => {
     if (isListening) {
+      // Stop listening
+      setIsListening(false);
+      
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
       clearSilenceDetection();
-      setIsListening(false);
+      clearRestartTimeout();
     } else {
+      // Start listening
+      setIsListening(true);
+      
       if (recognitionRef.current) {
         try {
           recognitionRef.current.start();
-          setIsListening(true);
-          setTranscript("");
+          setRecognitionRunning(true);
           setGptResponse("");
           setTranslation("");
           resetSilenceDetection();
+          // Don't clear transcript here - let users see what they've said
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({
@@ -181,6 +212,7 @@ const VoiceChat = () => {
             description: t("microphoneAccessRequired"),
             variant: "destructive",
           });
+          setIsListening(false);
         }
       }
     }
@@ -253,7 +285,7 @@ const VoiceChat = () => {
       ]);
       
       speakWithMetaMMS(content);
-      setTranscript("");
+      setTranscript(""); // Only clear transcript after successfully sending
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -367,8 +399,6 @@ const VoiceChat = () => {
         <p className="text-sm text-gray-500 mb-2">
           <strong>{t("aiModelInfo")}</strong>
         </p>
-        
-        {/* Removed the beige notification box about browser-based TTS */}
       </div>
 
       <div className="flex flex-col gap-6">
@@ -403,7 +433,7 @@ const VoiceChat = () => {
                 )}
               </Button>
               
-              {isListening && transcript && (
+              {transcript && transcript.trim() && (
                 <Button
                   onClick={() => handleSendTranscript(transcript)}
                   variant="default"
