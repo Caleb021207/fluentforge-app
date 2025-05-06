@@ -1,4 +1,3 @@
-
 // Default language for the application
 export const DEFAULT_LANGUAGE = "english";
 
@@ -33,16 +32,9 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   igbo: "Igbo",
   tagalog: "Tagalog",
   cantonese: "廣東話",
-  // Adding new languages
+  // Adding new languages (only keeping those up to Thai)
   german: "Deutsch",
   italian: "Italiano",
-  thai: "ภาษาไทย",
-  burmese: "မြန်မာဘာသာ",
-  karen: "ကညီကျိာ်",
-  nepali: "नेपाली",
-  tigrinya: "ትግርኛ",
-  punjabi: "ਪੰਜਾਬੀ",
-  marathi: "मराठी",
-  gujarati: "ગુજરાતી",
-  sinhala: "සිංහල"
+  thai: "ภาษาไทย"
+  // Removed: burmese, karen, nepali, tigrinya, punjabi, marathi, gujarati, sinhala
 };

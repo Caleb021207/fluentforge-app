@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,18 +56,11 @@ const LanguageSelectionCard = ({
     haitian: "🇭🇹 Kreyòl Ayisyen",
     igbo: "🇳🇬 Igbo",
     tagalog: "🇵🇭 Tagalog",
-    // Adding new languages with flags
+    // Adding new languages with flags (only keeping German, Italian, and Thai)
     german: "🇩🇪 Deutsch",
     italian: "🇮🇹 Italiano",
-    thai: "🇹🇭 ภาษาไทย",
-    burmese: "🇲🇲 မြန်မာဘာသာ",
-    karen: "🇲🇲 ကညီကျိာ်",
-    nepali: "🇳🇵 नेपाली",
-    tigrinya: "🇪🇷 ትግርኛ",
-    punjabi: "🇮🇳 ਪੰਜਾਬੀ",
-    marathi: "🇮🇳 मराठी",
-    gujarati: "🇮🇳 ગુજરાતી",
-    sinhala: "🇱🇰 සිංහල"
+    thai: "🇹🇭 ภาษาไทย"
+    // Removed: burmese, karen, nepali, tigrinya, punjabi, marathi, gujarati, sinhala
   };
 
   // Available target languages based on native language
@@ -104,18 +96,11 @@ const LanguageSelectionCard = ({
     haitian: "🇭🇹 Haitian Creole",
     igbo: "🇳🇬 Igbo",
     tagalog: "🇵🇭 Filipino/Tagalog",
-    // Adding new languages with flags
+    // Adding new languages with flags (only keeping German, Italian, and Thai)
     german: "🇩🇪 German",
     italian: "🇮🇹 Italian",
-    thai: "🇹🇭 Thai",
-    burmese: "🇲🇲 Burmese",
-    karen: "🇲🇲 Karen (S'gaw)",
-    nepali: "🇳🇵 Nepali",
-    tigrinya: "🇪🇷 Tigrinya",
-    punjabi: "🇮🇳 Punjabi",
-    marathi: "🇮🇳 Marathi",
-    gujarati: "🇮🇳 Gujarati",
-    sinhala: "🇱🇰 Sinhala"
+    thai: "🇹🇭 Thai"
+    // Removed: burmese, karen, nepali, tigrinya, punjabi, marathi, gujarati, sinhala
   };
   
   // Determine disabled options based on native language

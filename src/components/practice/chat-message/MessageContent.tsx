@@ -10,8 +10,7 @@ interface MessageContentProps {
   onPlayAudio?: () => void;
 }
 
-// Memoize the component to prevent unnecessary re-renders
-const MessageContent: React.FC<MessageContentProps> = React.memo(({ 
+const MessageContent: React.FC<MessageContentProps> = ({ 
   role, 
   content, 
   isPlaying, 
@@ -32,8 +31,6 @@ const MessageContent: React.FC<MessageContentProps> = React.memo(({
       )}
     </div>
   );
-});
-
-MessageContent.displayName = 'MessageContent';
+};
 
 export default MessageContent;

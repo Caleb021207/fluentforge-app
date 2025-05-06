@@ -50,7 +50,7 @@ serve(async (req) => {
       throw new Error('OpenAI API key is not configured');
     }
 
-    const { audio, language, format } = await req.json();
+    const { audio, language } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
@@ -58,16 +58,14 @@ serve(async (req) => {
 
     console.log("Received audio data, processing...");
     console.log(`Language specified: ${language || 'none, will use default'}`);
-    console.log(`Format specified: ${format || 'audio/webm'}`); 
     
     // Process audio in chunks
     const binaryAudio = processBase64Chunks(audio);
     
     // Prepare form data
     const formData = new FormData();
-    const mimeType = format || 'audio/webm';
-    const blob = new Blob([binaryAudio], { type: mimeType });
-    formData.append('file', blob, `audio.${mimeType.split('/')[1] || 'webm'}`);
+    const blob = new Blob([binaryAudio], { type: 'audio/webm' });
+    formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
     
     // Use the provided language or default to 'es' for backward compatibility
