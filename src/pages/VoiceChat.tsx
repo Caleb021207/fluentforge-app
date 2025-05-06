@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -24,6 +24,7 @@ type ConversationMessage = {
 };
 
 const VoiceChat = () => {
+  // Core state
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [gptResponse, setGptResponse] = useState("");
@@ -32,9 +33,13 @@ const VoiceChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
+
+  // State to track actual recognition status separately from UI listening state
   const [recognitionRunning, setRecognitionRunning] = useState(false);
+  const [recognitionAttempts, setRecognitionAttempts] = useState(0);
   const cefrLevel = 'B1';
   
+  // Refs
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
@@ -42,17 +47,20 @@ const VoiceChat = () => {
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const silenceTimeoutRef = useRef<number | null>(null);
   const restartTimeoutRef = useRef<number | null>(null);
+  const lastTranscriptRef = useRef<string>("");
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   const { practice: targetLanguage } = getLanguagePair(currentLanguage);
 
+  // Scroll to bottom when conversation history updates
   useEffect(() => {
     if (conversationEndRef.current) {
       conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [conversationHistory]);
 
+  // Initialize speech recognition
   useEffect(() => {
     if (typeof window !== "undefined" && 
         ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -76,46 +84,79 @@ const VoiceChat = () => {
         const lastResultIndex = event.results.length - 1;
         const latestTranscript = event.results[lastResultIndex][0].transcript;
         
-        resetSilenceDetection();
-        
+        // Save the latest transcript to both state and ref
         setTranscript(latestTranscript);
+        lastTranscriptRef.current = latestTranscript;
+        
+        // Reset silence detection on new speech
+        resetSilenceDetection();
       };
       
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
         
-        // Don't immediately change isListening state on error
-        // Just log the error and let onend handle the state change
-        
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
-        });
+        if (event.error === 'network') {
+          toast({
+            title: t("error"),
+            description: t("networkConnectionIssue"),
+            variant: "destructive",
+          });
+          
+          // Network errors should stop the listening process
+          stopListeningCompletely();
+        } else {
+          toast({
+            title: t("error"),
+            description: `${t("speechRecognitionError")}: ${event.error}`,
+            variant: "destructive",
+          });
+        }
       };
       
       recognitionRef.current.onend = () => {
+        console.log("Speech recognition ended naturally");
         setRecognitionRunning(false);
         
+        // Only try to restart if we're still supposed to be listening
+        // and we don't already have a restart timer running
         if (isListening && !restartTimeoutRef.current) {
-          // Add a delay before restarting to prevent rapid cycling
+          console.log("Setting up restart timeout");
+          
+          // Add a longer delay before restarting to prevent rapid cycling
           restartTimeoutRef.current = window.setTimeout(() => {
-            // Only restart if we're still supposed to be listening
-            if (isListening && !recognitionRunning) {
+            if (isListening) {
+              console.log("Attempting to restart speech recognition after timeout");
+              setRecognitionAttempts(prev => prev + 1);
+              
               try {
                 recognitionRef.current.start();
+                console.log("Speech recognition restarted successfully");
                 setRecognitionRunning(true);
-                restartTimeoutRef.current = null;
               } catch (e) {
                 console.error("Failed to restart speech recognition:", e);
+                // If we can't restart after 3 attempts, give up
+                if (recognitionAttempts > 3) {
+                  stopListeningCompletely();
+                  toast({
+                    title: t("error"),
+                    description: t("speechRecognitionError"),
+                    variant: "destructive",
+                  });
+                }
+              } finally {
+                restartTimeoutRef.current = null;
               }
+            } else {
+              console.log("Not restarting, listening mode disabled");
             }
-          }, 1000); // 1 second delay to stabilize
+          }, 1500); // Use a longer delay of 1.5 seconds
         }
       };
       
       recognitionRef.current.onstart = () => {
+        console.log("Speech recognition started");
         setRecognitionRunning(true);
+        setRecognitionAttempts(0);
       };
     } else {
       toast({
@@ -142,29 +183,43 @@ const VoiceChat = () => {
     }
     
     return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      if (synthRef.current && utteranceRef.current) {
-        synthRef.current.cancel();
-      }
-      clearSilenceDetection();
-      clearRestartTimeout();
+      stopListeningCompletely();
     };
   }, [currentLanguage, toast, t]);
+
+  // Stable function to completely stop listening
+  const stopListeningCompletely = useCallback(() => {
+    console.log("Completely stopping listening");
+    setIsListening(false);
+    
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {
+        console.error("Error aborting recognition:", e);
+      }
+    }
+    
+    if (synthRef.current && utteranceRef.current) {
+      try {
+        synthRef.current.cancel();
+      } catch (e) {
+        console.error("Error canceling synthesis:", e);
+      }
+    }
+    
+    clearSilenceDetection();
+    clearRestartTimeout();
+  }, []);
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
     
     silenceTimeoutRef.current = window.setTimeout(() => {
-      if (transcript && isListening) {
+      if (lastTranscriptRef.current && isListening) {
         console.log("10 seconds of silence detected, automatically sending message");
-        handleSendTranscript(transcript);
-        
-        if (recognitionRef.current) {
-          recognitionRef.current.abort();
-        }
-        setIsListening(false);
+        handleSendTranscript(lastTranscriptRef.current);
+        stopListeningCompletely();
       }
     }, 10000);
   };
@@ -186,25 +241,19 @@ const VoiceChat = () => {
   const toggleListening = () => {
     if (isListening) {
       // Stop listening
-      setIsListening(false);
-      
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      clearSilenceDetection();
-      clearRestartTimeout();
+      stopListeningCompletely();
     } else {
       // Start listening
       setIsListening(true);
       
       if (recognitionRef.current) {
         try {
+          console.log("Starting speech recognition");
           recognitionRef.current.start();
           setRecognitionRunning(true);
           setGptResponse("");
           setTranslation("");
           resetSilenceDetection();
-          // Don't clear transcript here - let users see what they've said
         } catch (error) {
           console.error("Error starting speech recognition:", error);
           toast({
@@ -285,7 +334,8 @@ const VoiceChat = () => {
       ]);
       
       speakWithMetaMMS(content);
-      setTranscript(""); // Only clear transcript after successfully sending
+      setTranscript(""); // Clear transcript after successfully sending
+      lastTranscriptRef.current = ""; // Also clear the ref
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -376,6 +426,7 @@ const VoiceChat = () => {
     setConversationHistory([]);
     setApiConversationHistory([]);
     setTranscript("");
+    lastTranscriptRef.current = "";
     setGptResponse("");
     setTranslation("");
     toast({
@@ -386,6 +437,15 @@ const VoiceChat = () => {
 
   const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
+
+  // Stable class names for elements that shouldn't flicker
+  const listeningStatusClass = isListening 
+    ? "text-sm text-gray-500 animate-pulse mb-4" 
+    : "hidden";
+  
+  const transcriptWrapperClass = transcript.trim() 
+    ? "mb-6" 
+    : "hidden";
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -433,12 +493,12 @@ const VoiceChat = () => {
                 )}
               </Button>
               
-              {transcript && transcript.trim() && (
+              {transcript.trim() && (
                 <Button
                   onClick={() => handleSendTranscript(transcript)}
                   variant="default"
                   size="lg"
-                  disabled={isLoading || isSpeaking || !transcript.trim()}
+                  disabled={isLoading || isSpeaking}
                 >
                   <Send className="h-5 w-5 mr-2" />
                   {t("send")}
@@ -447,22 +507,18 @@ const VoiceChat = () => {
             </div>
           </div>
           
-          {isListening && (
-            <div className="text-sm text-gray-500 animate-pulse mb-4">
-              {t("listeningNow")}...
-            </div>
-          )}
+          <div className={listeningStatusClass}>
+            {t("listeningNow")}...
+          </div>
 
-          {transcript && (
-            <div className="mb-6">
-              <h3 className="font-medium mb-2">
-                {t("youSaid")}:
-              </h3>
-              <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
-                {transcript}
-              </div>
+          <div className={transcriptWrapperClass}>
+            <h3 className="font-medium mb-2">
+              {t("youSaid")}:
+            </h3>
+            <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
+              {transcript}
             </div>
-          )}
+          </div>
 
           {isLoading && (
             <div className="flex justify-center my-6">
@@ -510,6 +566,13 @@ const VoiceChat = () => {
               </div>
             </div>
           )}
+          
+          {/* Debug section (can be removed in production) */}
+          {/* 
+          <div className="mt-4 border-t pt-4 text-xs text-gray-400">
+            <p>Debug: isListening={isListening.toString()}, recognitionRunning={recognitionRunning.toString()}, attempts={recognitionAttempts}</p>
+          </div>
+          */}
         </Card>
         
         {conversationHistory.length > 0 && (

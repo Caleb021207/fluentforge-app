@@ -17,27 +17,36 @@ const MessageContent: React.FC<MessageContentProps> = ({
   isLoading, 
   onPlayAudio 
 }) => {
+  // Using memo to prevent unnecessary re-renders
+  const contentElement = React.useMemo(() => (
+    <p className={`
+      flex-1 leading-relaxed transition-colors duration-200
+      ${role === "user" 
+        ? "text-white font-medium" 
+        : "text-white dark:text-gray-100"}
+    `}>
+      {content}
+    </p>
+  ), [content, role]);
+
+  // Use memo to stabilize the audio button as well
+  const audioButtonElement = React.useMemo(() => (
+    role === "assistant" && onPlayAudio ? (
+      <AudioButton 
+        isLoading={isLoading} 
+        isPlaying={isPlaying} 
+        onClick={onPlayAudio}
+        ariaLabel="Play target language audio"
+      />
+    ) : null
+  ), [role, isLoading, isPlaying, onPlayAudio]);
+
   return (
     <div className="flex justify-between items-start gap-2">
-      <p className={`
-        flex-1 leading-relaxed transition-colors duration-200
-        ${role === "user" 
-          ? "text-white font-medium" 
-          : "text-white dark:text-gray-100"}
-      `}>
-        {content}
-      </p>
-      
-      {role === "assistant" && onPlayAudio && (
-        <AudioButton 
-          isLoading={isLoading} 
-          isPlaying={isPlaying} 
-          onClick={onPlayAudio}
-          ariaLabel="Play target language audio"
-        />
-      )}
+      {contentElement}
+      {audioButtonElement}
     </div>
   );
 };
 
-export default MessageContent;
+export default React.memo(MessageContent);
