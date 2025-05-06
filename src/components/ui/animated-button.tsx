@@ -1,11 +1,10 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 
 // Create a properly typed motion component
-// Using forwardRef to properly handle the component typing
-const MotionButton = motion(Button, { forwardRef: true });
+const MotionButton = motion(Button);
 
 interface AnimatedButtonProps extends React.ComponentProps<typeof Button> {
   children: React.ReactNode;

@@ -26,7 +26,11 @@ const AnimatedElement = ({
   // Extract transition duration from animation if provided, or use default
   const transitionDuration = duration !== undefined 
     ? duration 
-    : (typeof animation.visible === 'object' && 'transition' in animation.visible && typeof animation.visible.transition === 'object' && 'duration' in animation.visible.transition)
+    : (animation.visible && 
+       typeof animation.visible === 'object' && 
+       'transition' in animation.visible && 
+       typeof animation.visible.transition === 'object' && 
+       'duration' in animation.visible.transition)
       ? animation.visible.transition.duration
       : 0.3;
   
