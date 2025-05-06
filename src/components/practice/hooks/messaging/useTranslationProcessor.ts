@@ -1,5 +1,5 @@
 
-import { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, getTranslation, TranslationType, extractStringFromTranslation } from "../translation";
+import { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, verifyChineseTranslation, getTranslation, TranslationType, extractStringFromTranslation } from "../translation";
 
 export const useTranslationProcessor = () => {
   const processTranslation = async (
@@ -13,9 +13,9 @@ export const useTranslationProcessor = () => {
     
     let processedTranslation: TranslationType = translation;
     
-    // Enhanced logging for Tagalog translations
-    if (language === 'tagalog') {
-      console.log('Raw Tagalog translation from API:', {
+    // Enhanced logging for Tagalog and Cantonese translations
+    if (language === 'tagalog' || language === 'cantonese') {
+      console.log(`Raw ${language} translation from API:`, {
         translation,
         translationType: typeof translation,
         isString: typeof translation === 'string',
@@ -42,6 +42,14 @@ export const useTranslationProcessor = () => {
             processedTranslation.substring(0, 30) + '...' :
             JSON.stringify(processedTranslation).substring(0, 30) + '...'
         });
+      } else if (language === 'cantonese' || language === 'mandarin') {
+        processedTranslation = await verifyChineseTranslation(translation, content, language);
+        console.log(`After verify${language === 'cantonese' ? 'Cantonese' : 'Mandarin'}Translation:`, {
+          translationType: typeof processedTranslation,
+          translationSample: typeof processedTranslation === 'string' ? 
+            processedTranslation.substring(0, 30) + '...' :
+            JSON.stringify(processedTranslation).substring(0, 30) + '...'
+        });
       }
     }
     
@@ -52,7 +60,7 @@ export const useTranslationProcessor = () => {
         language !== "english") {
       console.warn("Missing or invalid translation for", language, "user");
       
-      // Force getting a translation specifically for Tagalog if it's missing
+      // Force getting a translation specifically for Tagalog or Cantonese if it's missing
       if (language === 'tagalog') {
         console.log('Forcibly requesting Tagalog translation for missing translation');
         
@@ -81,6 +89,35 @@ export const useTranslationProcessor = () => {
         if (!validTranslation) {
           processedTranslation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
           console.log('Using fallback Tagalog message after failed retries');
+        }
+      } else if (language === 'cantonese') {
+        console.log('Forcibly requesting Cantonese translation for missing translation');
+        
+        // Try up to 3 times to get a valid translation
+        let retryCount = 0;
+        let validTranslation = false;
+        
+        while (retryCount < 3 && !validTranslation) {
+          retryCount++;
+          console.log(`Forced Cantonese translation attempt ${retryCount}`);
+          
+          const newTranslation = await getTranslation(content, 'cantonese');
+          
+          if (newTranslation && newTranslation.length > 10) {
+            processedTranslation = newTranslation;
+            validTranslation = true;
+            console.log('Successfully got forced Cantonese translation:', {
+              length: newTranslation.length,
+              sample: newTranslation.substring(0, 30) + '...'
+            });
+            break;
+          }
+        }
+        
+        // Fallback for Cantonese if all retries failed
+        if (!validTranslation) {
+          processedTranslation = "翻譯暫時不可用。請諒解不便之處。";
+          console.log('Using fallback Cantonese message after failed retries');
         }
       } else {
         processedTranslation = await getTranslation(content, language);
