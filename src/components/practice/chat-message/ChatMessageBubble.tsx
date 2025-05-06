@@ -46,8 +46,8 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
     <div
       className={`max-w-[80%] rounded-lg p-4 ${
         role === "user"
-          ? "bg-palavox-primary text-white"
-          : "bg-card"
+          ? "bg-primary text-primary-foreground"
+          : "bg-accent text-accent-foreground dark:bg-accent/80"
       }`}
     >
       <SafetyWarning wasContentFiltered={wasContentFiltered} />
