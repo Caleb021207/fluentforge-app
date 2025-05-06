@@ -19,7 +19,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const { currentLanguage } = useLocalization();
   
   // Enhanced logging for specific translations
-  if (['tagalog', 'thai'].includes(currentLanguage)) {
+  if (['tagalog', 'thai'].includes(currentLanguage.toLowerCase())) {
     console.log(`ChatMessage ${currentLanguage} debug:`, { 
       role, 
       content, 
@@ -74,9 +74,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     } catch (e) {
       console.error('Failed to process translation in ChatMessage:', e);
       
-      if (currentLanguage === 'tagalog') {
+      if (currentLanguage.toLowerCase() === 'tagalog') {
         return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-      } else if (currentLanguage === 'thai') {
+      } else if (currentLanguage.toLowerCase() === 'thai') {
         return "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
       } else {
         return `Translation not available for ${currentLanguage}`;
@@ -86,7 +86,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   
   const safeTranslation = processTranslation(translation);
   
-  if (['tagalog', 'thai'].includes(currentLanguage)) {
+  if (['tagalog', 'thai'].includes(currentLanguage.toLowerCase())) {
     console.log(`ChatMessage after processing ${currentLanguage}:`, {
       safeTranslation,
       translationLength: safeTranslation.length
@@ -99,7 +99,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   
   // Determine if translation should be shown
   const showTranslation = 
-    TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage) || 
+    TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage.toLowerCase()) || 
     (safeTranslation && safeTranslation.trim() !== "") ||
     !isContentSafe || !isTranslationSafe;
   

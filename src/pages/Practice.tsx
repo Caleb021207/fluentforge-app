@@ -40,7 +40,7 @@ const Practice = () => {
     }
     
     // Debug for Thai language - Fix the comparison to use lowercase comparison
-    if (currentLanguage === 'thai') {
+    if (currentLanguage.toLowerCase() === 'thai') {
       console.log('Practice component initialized with Thai language:', {
         currentLanguage,
         targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english")
@@ -86,7 +86,7 @@ const Practice = () => {
   }));
 
   // Additional debug for Thai messages - fix the comparison to use lowercase comparison
-  if (currentLanguage === 'thai') {
+  if (currentLanguage.toLowerCase() === 'thai') {
     console.log('Practice component rendering with Thai:', {
       messageCount: messages.length,
       hasTranslations: messages.filter(m => m.translation).length,

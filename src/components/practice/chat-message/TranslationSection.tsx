@@ -30,7 +30,7 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   
   // Process translation on component mount and when translation prop changes
   useEffect(() => {
-    if (currentLanguage === 'tagalog' || currentLanguage === 'thai') {
+    if (currentLanguage.toLowerCase() === 'tagalog' || currentLanguage.toLowerCase() === 'thai') {
       console.log(`TranslationSection ${currentLanguage} debug:`, { 
         originalTranslation: translation,
         translationLength: typeof translation === 'string' ? translation.length : 0,
@@ -39,13 +39,13 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
     }
     
     // Translation should already be a string by this point due to changes in parent components
-    if (typeof translation === 'string') {
+    if (typeof translation === 'string' && translation.trim() !== '') {
       setTranslationText(translation);
     } else {
       // Fallback for specific languages
-      if (currentLanguage === 'tagalog') {
+      if (currentLanguage.toLowerCase() === 'tagalog') {
         setTranslationText("Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.");
-      } else if (currentLanguage === 'thai') {
+      } else if (currentLanguage.toLowerCase() === 'thai') {
         setTranslationText("ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก");
       } else {
         setTranslationText(t("translationNotAvailable", { language: currentLanguage }) || 
@@ -53,7 +53,7 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
       }
     }
     
-    if (currentLanguage === 'tagalog' || currentLanguage === 'thai') {
+    if (currentLanguage.toLowerCase() === 'tagalog' || currentLanguage.toLowerCase() === 'thai') {
       console.log(`Processed ${currentLanguage} translation:`, {
         translationText,
         length: translationText.length

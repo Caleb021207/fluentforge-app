@@ -12,9 +12,10 @@ export const useTranslationProcessor = () => {
     }
     
     let processedTranslation: TranslationType = translation;
+    const lowercaseLanguage = language.toLowerCase();
     
     // Enhanced logging for Tagalog and Cantonese translations
-    if (language === 'tagalog' || language === 'cantonese' || language === 'thai') {
+    if (lowercaseLanguage === 'tagalog' || lowercaseLanguage === 'cantonese' || lowercaseLanguage === 'thai') {
       console.log(`Raw ${language} translation from API:`, {
         translation,
         translationType: typeof translation,
@@ -28,13 +29,13 @@ export const useTranslationProcessor = () => {
     
     // Handle special translation cases by passing the translation to the proper verification methods
     if (translation) {
-      if (language === 'hindi') {
+      if (lowercaseLanguage === 'hindi') {
         processedTranslation = await verifyHindiTranslation(translation, content, language);
-      } else if (language === 'farsi') {
+      } else if (lowercaseLanguage === 'farsi') {
         processedTranslation = await verifyFarsiTranslation(translation, content, language);
-      } else if (language === 'bengali') {
+      } else if (lowercaseLanguage === 'bengali') {
         processedTranslation = await verifyBengaliTranslation(translation, content, language);
-      } else if (language === 'tagalog') {
+      } else if (lowercaseLanguage === 'tagalog') {
         processedTranslation = await verifyTagalogTranslation(translation, content, language);
         console.log('After verifyTagalogTranslation:', {
           translationType: typeof processedTranslation,
@@ -42,15 +43,15 @@ export const useTranslationProcessor = () => {
             processedTranslation.substring(0, 30) + '...' :
             JSON.stringify(processedTranslation).substring(0, 30) + '...'
         });
-      } else if (language === 'cantonese' || language === 'mandarin') {
+      } else if (lowercaseLanguage === 'cantonese' || lowercaseLanguage === 'mandarin') {
         processedTranslation = await verifyChineseTranslation(translation, content, language);
-        console.log(`After verify${language === 'cantonese' ? 'Cantonese' : 'Mandarin'}Translation:`, {
+        console.log(`After verify${lowercaseLanguage === 'cantonese' ? 'Cantonese' : 'Mandarin'}Translation:`, {
           translationType: typeof processedTranslation,
           translationSample: typeof processedTranslation === 'string' ? 
             processedTranslation.substring(0, 30) + '...' :
             JSON.stringify(processedTranslation).substring(0, 30) + '...'
         });
-      } else if (language === 'thai') {
+      } else if (lowercaseLanguage === 'thai') {
         processedTranslation = await verifyThaiTranslation(translation, content, language);
         console.log('After verifyThaiTranslation:', {
           translationType: typeof processedTranslation,
@@ -65,11 +66,11 @@ export const useTranslationProcessor = () => {
     if ((!processedTranslation || 
          (typeof processedTranslation === 'string' && processedTranslation.length < 5) ||
          (typeof processedTranslation === 'object' && Object.keys(processedTranslation).length === 0)) && 
-        language !== "english") {
+        lowercaseLanguage !== "english") {
       console.warn("Missing or invalid translation for", language, "user");
       
       // Force getting a translation specifically for Tagalog, Cantonese or Thai if it's missing
-      if (language === 'tagalog') {
+      if (lowercaseLanguage === 'tagalog') {
         console.log('Forcibly requesting Tagalog translation for missing translation');
         
         // Try up to 3 times to get a valid translation
@@ -98,7 +99,7 @@ export const useTranslationProcessor = () => {
           processedTranslation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
           console.log('Using fallback Tagalog message after failed retries');
         }
-      } else if (language === 'cantonese') {
+      } else if (lowercaseLanguage === 'cantonese') {
         console.log('Forcibly requesting Cantonese translation for missing translation');
         
         // Try up to 3 times to get a valid translation
@@ -127,7 +128,7 @@ export const useTranslationProcessor = () => {
           processedTranslation = "翻譯暫時不可用。請諒解不便之處。";
           console.log('Using fallback Cantonese message after failed retries');
         }
-      } else if (language === 'thai') {
+      } else if (lowercaseLanguage === 'thai') {
         console.log('Forcibly requesting Thai translation for missing translation');
         
         // Try up to 3 times to get a valid translation

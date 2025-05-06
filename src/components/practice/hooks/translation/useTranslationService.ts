@@ -67,7 +67,7 @@ export const getTranslation = async (content: string, targetLanguage: string): P
     }
 
     // Special validation for specific languages
-    if (['tagalog', 'thai'].includes(targetLanguage)) {
+    if (['tagalog', 'thai'].includes(targetLanguage.toLowerCase())) {
       console.log(`Got ${targetLanguage} translation:`, {
         success: !!translation,
         length: translation.length,
@@ -81,9 +81,9 @@ export const getTranslation = async (content: string, targetLanguage: string): P
           translation === '[object Object]' ||
           translation.length < 10) {
         
-        if (targetLanguage === 'tagalog') {
+        if (targetLanguage.toLowerCase() === 'tagalog') {
           translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-        } else if (targetLanguage === 'thai') {
+        } else if (targetLanguage.toLowerCase() === 'thai') {
           translation = "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
         }
         console.log(`Using fallback ${targetLanguage} message due to invalid translation`);
@@ -101,9 +101,9 @@ export const getTranslation = async (content: string, targetLanguage: string): P
     console.error('Failed to get translation:', error);
     
     // Special fallbacks for specific languages
-    if (targetLanguage === 'tagalog') {
+    if (targetLanguage.toLowerCase() === 'tagalog') {
       return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-    } else if (targetLanguage === 'thai') {
+    } else if (targetLanguage.toLowerCase() === 'thai') {
       return "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
     }
     
