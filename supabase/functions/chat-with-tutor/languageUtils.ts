@@ -156,3 +156,32 @@ export function containsMalayalamScript(text: string): boolean {
   const malayalamRegex = /[\u0D00-\u0D7F]/;
   return malayalamRegex.test(text);
 }
+
+// Helper function to check if text contains substantial Latin script (to detect mixed language)
+export function containsSubstantialLatinScript(text: string): boolean {
+  // This regex looks for sequences of 4 or more Latin characters, which would indicate
+  // significant Latin script content that would be inappropriate for Chinese languages
+  const substantialLatinRegex = /[a-zA-Z]{4,}/;
+  return substantialLatinRegex.test(text);
+}
+
+// Helper function to verify if text is proper Cantonese with Traditional Chinese characters
+export function isProperCantonese(text: string): boolean {
+  // Must contain Chinese characters
+  if (!containsChineseScript(text)) {
+    return false;
+  }
+  
+  // Must not contain substantial Latin text (which would indicate mixed language)
+  if (containsSubstantialLatinScript(text)) {
+    return false;
+  }
+  
+  // Check for minimum length to be considered valid
+  if (text.length < 10) {
+    return false;
+  }
+  
+  return true;
+}
+

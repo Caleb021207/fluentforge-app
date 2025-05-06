@@ -10,6 +10,13 @@ import profileTranslations from "./profile";
 import premiumVoiceTranslations from "./premium-voice";
 import languagesTranslations from "./languages";
 import classroomTranslations from "./classroom";
+import certificatesTranslations from "./certificates";
+import progressTranslations from "./progress";
+import languageFrameworksTranslations from "./language-frameworks";
+import dataPrivacyTranslations from "./data-privacy";
+import ferpaTranslations from "./ferpa";
+import safetyTranslations from "./safety";
+import uiElementsTranslations from "./ui-elements";
 
 const translations: TranslationRecord = {
   ...authTranslations,
@@ -22,6 +29,13 @@ const translations: TranslationRecord = {
   ...premiumVoiceTranslations,
   ...languagesTranslations,
   ...classroomTranslations,
+  ...certificatesTranslations,
+  ...progressTranslations,
+  ...languageFrameworksTranslations,
+  ...dataPrivacyTranslations,
+  ...ferpaTranslations,
+  ...safetyTranslations,
+  ...uiElementsTranslations
 };
 
 export default translations;
