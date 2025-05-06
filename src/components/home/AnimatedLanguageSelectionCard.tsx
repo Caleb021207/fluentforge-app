@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { DecorativeCircle } from "../ui/decorative-elements";
 import { useLocalization } from "@/context/LocalizationContext";
-import { FoxDecoration } from "../ui/fox-components";
 
 const MotionCard = motion(Card);
 
@@ -43,20 +42,11 @@ const AnimatedLanguageSelectionCard: React.FC<AnimatedLanguageSelectionCardProps
       <CardContent className="p-6 flex flex-col items-center">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 opacity-30">
-          {isSelected ? (
-            <FoxDecoration 
-              type="ear" 
-              size="md" 
-              className="-right-10 -top-10"
-              color="#A3D5FF" 
-            />
-          ) : (
-            <DecorativeCircle 
-              size="w-20 h-20" 
-              color="bg-palavox-accent/20" 
-              className="-right-10 -top-10"
-            />
-          )}
+          <DecorativeCircle 
+            size="w-20 h-20" 
+            color="bg-palavox-accent/20" 
+            className="-right-10 -top-10"
+          />
         </div>
         
         {icon && <div className="text-3xl mb-3">{icon}</div>}
@@ -66,22 +56,12 @@ const AnimatedLanguageSelectionCard: React.FC<AnimatedLanguageSelectionCardProps
         {children}
         
         {isSelected && (
-          <>
-            <motion.div 
-              className="absolute bottom-0 left-0 w-full h-1 bg-palavox-accent"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.3 }}
-            />
-            <motion.div
-              className="absolute bottom-2 right-2"
-              initial={{ scale: 0, rotate: -90 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-            >
-              <FoxDecoration type="paw" size="sm" animated={true} />
-            </motion.div>
-          </>
+          <motion.div 
+            className="absolute bottom-0 left-0 w-full h-1 bg-palavox-accent"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.3 }}
+          />
         )}
       </CardContent>
     </MotionCard>

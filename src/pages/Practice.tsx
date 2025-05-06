@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
@@ -10,7 +11,6 @@ import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { FoxLoading } from "@/components/ui/fox-components";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
 
 // Create an interface that matches the Message structure from useChatMessages
@@ -66,11 +66,9 @@ const Practice = () => {
   } = useVoiceChat();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <FoxLoading size="lg" message={t("loading")} />
-      </div>
-    );
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+    </div>;
   }
 
   if (!isAuthenticated) {
