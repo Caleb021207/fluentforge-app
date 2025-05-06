@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Loader2, Volume2 } from "lucide-react";
+import { Loader2, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AudioButtonProps {
@@ -11,6 +11,7 @@ interface AudioButtonProps {
   size?: "default" | "sm" | "lg" | "icon";
   variant?: "ghost" | "outline" | "default" | "link";
   isTranslation?: boolean;  // Keep this prop
+  hasError?: boolean;       // New prop to indicate audio errors
 }
 
 const AudioButton: React.FC<AudioButtonProps> = ({
@@ -20,7 +21,8 @@ const AudioButton: React.FC<AudioButtonProps> = ({
   ariaLabel = "Play audio",
   size = "icon",
   variant = "ghost",
-  isTranslation = false  // Keep default value
+  isTranslation = false,  // Keep default value
+  hasError = false        // New default value
 }) => {
   return (
     <Button
@@ -32,10 +34,15 @@ const AudioButton: React.FC<AudioButtonProps> = ({
       onClick={onClick}
       aria-label={ariaLabel}
       disabled={isPlaying || isLoading}
-      title={ariaLabel}
+      title={hasError ? `${ariaLabel} (Audio unavailable)` : ariaLabel}
     >
       {isLoading ? (
         <Loader2 className="h-4 w-4 animate-spin" />
+      ) : hasError ? (
+        <VolumeX 
+          className="h-4 w-4 text-red-500"
+          aria-hidden="true"
+        />
       ) : (
         <Volume2 
           className={`h-4 w-4 ${isPlaying ? 'text-lingua-accent animate-pulse' : 'group-hover:text-lingua-accent'}`}

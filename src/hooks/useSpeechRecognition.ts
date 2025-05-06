@@ -11,6 +11,7 @@ interface UseSpeechRecognitionOptions {
   onTranscript?: (transcript: string, isFinal: boolean) => void;
   onEnd?: () => void;
   autoRestart?: boolean;
+  audioDevice?: string; // Optional device ID for input
 }
 
 export const useSpeechRecognition = ({
@@ -19,17 +20,50 @@ export const useSpeechRecognition = ({
   interimResults = true,
   onTranscript,
   onEnd,
-  autoRestart = true
+  autoRestart = true,
+  audioDevice
 }: UseSpeechRecognitionOptions) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSupported, setIsSupported] = useState(true);
+  const [availableDevices, setAvailableDevices] = useState<MediaDeviceInfo[]>([]);
   
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const restartTimeoutRef = useRef<number | null>(null);
   const { toast } = useToast();
   const { t } = useLocalization();
+  
+  // Check available audio devices
+  useEffect(() => {
+    const checkDevices = async () => {
+      try {
+        // First request permission
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // Get all audio input devices
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const audioInputDevices = devices.filter(device => device.kind === 'audioinput');
+        
+        console.log("Available audio input devices:", audioInputDevices);
+        setAvailableDevices(audioInputDevices);
+        
+        // Release the stream
+        stream.getTracks().forEach(track => track.stop());
+      } catch (err) {
+        console.error("Error checking audio devices:", err);
+      }
+    };
+    
+    checkDevices();
+    
+    // Setup device change listener
+    navigator.mediaDevices.addEventListener('devicechange', checkDevices);
+    
+    return () => {
+      navigator.mediaDevices.removeEventListener('devicechange', checkDevices);
+    };
+  }, []);
   
   // Check if speech recognition is supported
   useEffect(() => {
@@ -92,7 +126,14 @@ export const useSpeechRecognition = ({
           recognitionRef.current.interimResults = interimResults;
           recognitionRef.current.maxAlternatives = 1;
           
+          // Log device info for debugging
           console.log(`Speech recognition initialized with language: ${language}`);
+          console.log("Current audio context:", document.defaultView?.audioContext || "No audio context found");
+          
+          // Additional debugging for Mac devices
+          if (navigator.userAgent.includes("Mac")) {
+            console.log("Mac device detected, checking audio routing...");
+          }
         }
       }
     } catch (err) {
@@ -103,7 +144,7 @@ export const useSpeechRecognition = ({
     
     // Cleanup function
     return cleanupRecognition;
-  }, [isSupported, language, continuous, interimResults, cleanupRecognition]);
+  }, [isSupported, language, continuous, interimResults, cleanupRecognition, audioDevice]);
   
   // Set up event handlers when listening state changes
   useEffect(() => {
@@ -173,7 +214,7 @@ export const useSpeechRecognition = ({
                 }
               }
             }
-          }, 500); // Increased delay from 100ms to 500ms
+          }, 800); // Increased delay from 500ms to 800ms
         } else {
           setIsListening(false);
           
@@ -216,9 +257,32 @@ export const useSpeechRecognition = ({
     }
   }, [isListening, isSupported, autoRestart, onTranscript, onEnd, toast, t]);
   
-  const startListening = () => {
+  // Function to request microphone access explicitly
+  const requestMicrophoneAccess = useCallback(async () => {
+    try {
+      console.log("Explicitly requesting microphone access...");
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log("Microphone access granted");
+      return true;
+    } catch (err) {
+      console.error("Error requesting microphone access:", err);
+      setError("Failed to access microphone");
+      toast({
+        title: t("error"),
+        description: t("microphoneAccessRequired"),
+        variant: "destructive",
+      });
+      return false;
+    }
+  }, [toast, t]);
+  
+  const startListening = async () => {
     if (isSupported) {
       console.log("Starting speech recognition");
+      // Explicitly request microphone access before starting
+      const hasAccess = await requestMicrophoneAccess();
+      if (!hasAccess) return;
+      
       setError(null);
       setTranscript("");
       setIsListening(true);
@@ -248,6 +312,8 @@ export const useSpeechRecognition = ({
     stopListening,
     transcript,
     error,
-    isSupported
+    isSupported,
+    requestMicrophoneAccess,
+    availableDevices
   };
 };
