@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
