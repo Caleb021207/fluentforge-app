@@ -31,6 +31,7 @@ export const useSpeechRecognition = ({
   const silenceTimerRef = useRef<number | null>(null);
   const restartTimerRef = useRef<number | null>(null);
   const retryCountRef = useRef<number>(0);
+  const desiredStateRef = useRef<RecognitionState>(RecognitionState.IDLE);
   const { toast } = useToast();
 
   // Initialize speech recognition
@@ -79,8 +80,10 @@ export const useSpeechRecognition = ({
     
     recognition.onend = () => {
       // Recognition service has disconnected
+      console.log("Speech recognition ended. Current state:", state);
+      console.log("Desired state:", desiredStateRef.current);
       
-      if (state === RecognitionState.LISTENING) {
+      if (desiredStateRef.current === RecognitionState.LISTENING) {
         // Only attempt restart if we're supposed to be listening
         setState(RecognitionState.PROCESSING);
         
@@ -93,10 +96,9 @@ export const useSpeechRecognition = ({
         const delay = Math.min(1500 + (retryCountRef.current * 500), 4000);
         
         restartTimerRef.current = window.setTimeout(() => {
-          // Fix: Check if current state is either PROCESSING or LISTENING
-          const currentState = state;
-          if (currentState === RecognitionState.PROCESSING || currentState === RecognitionState.LISTENING) {
+          if (desiredStateRef.current === RecognitionState.LISTENING) {
             try {
+              console.log("Attempting to restart speech recognition");
               recognition.start();
               retryCountRef.current++;
               setState(RecognitionState.LISTENING);
@@ -105,13 +107,18 @@ export const useSpeechRecognition = ({
               setState(RecognitionState.ERROR);
               onError("Failed to restart speech recognition");
             }
+          } else {
+            console.log("Not restarting recognition because desired state is:", desiredStateRef.current);
           }
           restartTimerRef.current = null;
         }, delay);
+      } else {
+        console.log("Not attempting to restart recognition because desired state is:", desiredStateRef.current);
       }
     };
     
     recognition.onstart = () => {
+      console.log("Speech recognition started");
       setState(RecognitionState.LISTENING);
     };
     
@@ -157,7 +164,15 @@ export const useSpeechRecognition = ({
   const startRecognition = useCallback(() => {
     if (!recognitionRef.current) return false;
     
+    console.log("Starting speech recognition");
+    desiredStateRef.current = RecognitionState.LISTENING;
+    
     try {
+      if (state === RecognitionState.LISTENING) {
+        console.log("Recognition is already active, not starting again");
+        return true;
+      }
+      
       recognitionRef.current.start();
       setState(RecognitionState.LISTENING);
       resetSilenceDetection();
@@ -169,10 +184,12 @@ export const useSpeechRecognition = ({
       onError("Failed to start microphone");
       return false;
     }
-  }, [resetSilenceDetection, onError]);
+  }, [state, resetSilenceDetection, onError]);
 
   // Stop recognition
   const stopRecognition = useCallback(() => {
+    console.log("Stopping speech recognition");
+    desiredStateRef.current = RecognitionState.IDLE;
     clearSilenceDetection();
     clearRestartTimer();
     
@@ -181,6 +198,7 @@ export const useSpeechRecognition = ({
         recognitionRef.current.stop();
       } catch (e) {
         // Ignore errors on stop
+        console.log("Error when stopping recognition (can be ignored):", e);
       }
     }
     
