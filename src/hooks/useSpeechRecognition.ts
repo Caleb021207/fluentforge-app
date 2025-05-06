@@ -128,7 +128,7 @@ export const useSpeechRecognition = ({
           
           // Log device info for debugging
           console.log(`Speech recognition initialized with language: ${language}`);
-          console.log("Current audio context:", document.defaultView?.audioContext || "No audio context found");
+          console.log("Current audio context:", typeof window.AudioContext !== 'undefined' ? "Available" : "Not available");
           
           // Additional debugging for Mac devices
           if (navigator.userAgent.includes("Mac")) {
