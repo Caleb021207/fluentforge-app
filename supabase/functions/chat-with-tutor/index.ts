@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
@@ -301,7 +300,7 @@ serve(async (req) => {
       // Add CIPA/FERPA compliance instructions to tutor
       const cipaFerpaCompliance = getCipaFerpaInstructions();
       
-      // Enhanced system message for Tagalog and Cantonese support
+      // Enhanced system message to ensure proper response format
       let systemMessageContent = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
 
 PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
@@ -314,7 +313,12 @@ You MUST strictly follow these rules:
 2. **Do not correct the user unless they specifically ask.**
 3. **Prioritize keeping the conversation flowing.** Ask questions, be friendly, and respond naturally.
 4. **Stay in the target language (${langToLearn}) unless the user asks for clarification in their native language (${nativeLanguage}).**
-5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.`;
+5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
+
+VERY IMPORTANT RESPONSE FORMAT:
+- First, provide your response in the target language (${langToLearn})
+- Then add a line break
+- Then add "Translation:" followed by the translation in the user's native language (${nativeLanguage})`;
 
       // Add enhanced translation instruction for various languages
       if (nativeLanguage.toLowerCase() === 'filipino/tagalog' || userLanguage === 'tagalog') {
@@ -331,7 +335,7 @@ VERY IMPORTANT FOR CANTONESE USERS: ALWAYS provide a translation of your respons
 Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
 The Cantonese translation should be 100% in Cantonese with Traditional Chinese characters.
 DO NOT use Mandarin or any other language in the translation - it must be purely Cantonese.
-Use Cantonese-specific particles like 嘅, 啦, 喎, 囉 where appropriate to sound natural.
+Use Cantonese-specific particles like 嘅, 啦, 喀, 囉 where appropriate to sound natural.
 Make sure the translation is provided as plain text, not as an object or JSON.`;
       } else {
         systemMessageContent += `

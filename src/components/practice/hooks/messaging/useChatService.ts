@@ -43,12 +43,13 @@ export const useChatService = () => {
         requestTranslation: true 
       });
       
-      // Use chat-with-tutor endpoint with explicit language parameters
+      // Make sure the userLanguage and targetLanguage are correctly set
+      // This ensures we get responses in the correct language format
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: message,
-          userLanguage: userLanguage,
-          targetLanguage: targetLanguage,
+          userLanguage: userLanguage,  // Native language of the user
+          targetLanguage: targetLanguage, // Language the user is learning
           requestTranslation: true
         }
       });
@@ -62,7 +63,8 @@ export const useChatService = () => {
         hasData: !!data,
         hasTranslation: data && 'translation' in data,
         translationType: data?.translation ? typeof data.translation : 'none',
-        userLanguage
+        userLanguage,
+        targetLanguage
       });
       
       // Handle case where response is missing content
