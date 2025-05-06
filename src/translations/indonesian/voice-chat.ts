@@ -23,7 +23,6 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "Jelaskan apa yang Anda lihat di sekitar Anda",
   practiceVocabularyForSpecific: "Latih kosakata untuk topik tertentu",
   useThisTool: "Gunakan alat ini untuk meningkatkan keterampilan bicara dan mendengarkan Anda. Berikut beberapa tips:",
-  browserBasedTTS: "Catatan: Ini menggunakan text-to-speech berbasis browser. Untuk kualitas suara premium dengan ElevenLabs, coba Obrolan Suara Premium kami.",
   practiceLevel: "Tingkat Latihan",
   translation: "Terjemahan",
   unlimitedVoicePractice: "Latihan Suara Tanpa Batas",

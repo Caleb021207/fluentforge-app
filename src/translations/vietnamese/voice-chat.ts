@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -50,7 +51,6 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat timers
   voiceChatEnded: "Trò chuyện giọng nói đã kết thúc",
   timeLimit5MinReached: "Đã đạt đến giới hạn thời gian 5 phút",
-  browserBasedTTS: "Lưu ý: Tính năng này sử dụng chuyển văn bản thành giọng nói dựa trên trình duyệt. Để có chất lượng giọng nói cao cấp với ElevenLabs, hãy thử Trò chuyện bằng giọng nói cao cấp của chúng tôi.",
   practiceLevel: "Cấp độ thực hành",
   cefrB1Description: "Trung cấp - Có thể thảo luận về các chủ đề quen thuộc",
   conversationHistoryCleared: "Lịch sử hội thoại đã được xóa",

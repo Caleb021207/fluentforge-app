@@ -23,7 +23,6 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "อธิบายสิ่งที่คุณเห็นรอบตัว",
   practiceVocabularyForSpecific: "ฝึกคำศัพท์สำหรับหัวข้อเฉพาะ",
   useThisTool: "ใช้เครื่องมือนี้เพื่อพัฒนาทักษะการพูดและการฟังของคุณ นี่คือเคล็ดลับบางประการ:",
-  browserBasedTTS: "หมายเหตุ: ที่นี่ใช้การแปลงข้อความเป็นเสียงพูดแบบบราวเซอร์ สำหรับเสียงพูดคุณภาพพรีเมียมกับ ElevenLabs ลองใช้แชทเสียงพรีเมียมของเรา",
   practiceLevel: "ระดับการฝึก",
   translation: "คำแปล",
   unlimitedVoicePractice: "การฝึกด้วยเสียงไม่จำกัด",

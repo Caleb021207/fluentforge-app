@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -368,12 +369,7 @@ const VoiceChat = () => {
           <strong>{t("aiModelInfo")}</strong>
         </p>
         
-        {/* Show appropriate TTS info message based on language */}
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/30 rounded-md p-3 mb-4">
-          <p className="text-amber-800 dark:text-amber-300 text-sm">
-            {t("browserBasedTTS")}
-          </p>
-        </div>
+        {/* TTS info message box removed */}
       </div>
 
       <div className="flex flex-col gap-6">

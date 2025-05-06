@@ -34,7 +34,6 @@ const voiceChatTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "你的瀏覽器不支持語音識別",
   "microphoneAccessRequired": "需要麥克風訪問權限",
   "failedToGenerateSpeech": "無法生成語音音頻",
-  "browserBasedTTS": "請注意：我們使用Meta MMS和Azure提供文字轉語音服務。",
   "startConversationIn": "用{language}開始對話",
   "youSaid": "你講咗",
   "aiResponse": "AI回應",

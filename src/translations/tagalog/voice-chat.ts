@@ -34,7 +34,6 @@ const voiceChatTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "Hindi suportado ng browser mo ang speech recognition",
   "microphoneAccessRequired": "Kailangan ng access sa mikropono",
   "failedToGenerateSpeech": "Hindi makabuo ng speech audio",
-  "browserBasedTTS": "Tandaan: Gumagamit kami ng Meta MMS at Azure para sa serbisyo ng tekst-to-speech.",
   "startConversationIn": "Magsimula ng pag-uusap sa {language}",
   "youSaid": "Sinabi mo",
   "aiResponse": "Tugon ng AI", 
