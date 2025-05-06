@@ -11,6 +11,7 @@ export function getLanguageDisplayName(language: string): string {
     'japanese': 'Japanese',
     'korean': 'Korean',
     'mandarin': 'Mandarin Chinese',
+    'cantonese': 'Cantonese', // Added Cantonese
     'russian': 'Russian',
     'arabic': 'Arabic',
     'hindi': 'Hindi',
@@ -47,6 +48,7 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'korean': 'Korean',
     'arabic': 'Arabic',
     'mandarin': 'Mandarin Chinese',
+    'cantonese': 'Cantonese', 
     'vietnamese': 'Vietnamese',
     'french': 'French',
     'japanese': 'Japanese',
@@ -132,6 +134,13 @@ export function containsBengaliScript(text: string): boolean {
   // Bengali Unicode range: U+0980 to U+09FF
   const bengaliRegex = /[\u0980-\u09FF]/;
   return bengaliRegex.test(text);
+}
+
+// Helper function to check if text contains Chinese script (used by both Mandarin and Cantonese)
+export function containsChineseScript(text: string): boolean {
+  // Chinese characters Unicode ranges
+  const chineseRegex = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/;
+  return chineseRegex.test(text);
 }
 
 // Helper function to check if text contains Amharic script

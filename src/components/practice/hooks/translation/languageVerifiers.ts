@@ -1,19 +1,16 @@
 
-/**
- * Special case verifiers for different languages to ensure they use the correct script
- */
-
-import { getTranslation } from "./useTranslationService";
+import { TranslationType } from "./types";
 import { extractStringFromTranslation } from "./translationUtils";
+import { getTranslation } from "./useTranslationService";
 
 /**
  * Special case for Hindi translations to ensure they use Devanagari script
  */
 export const verifyHindiTranslation = async (
-  translation: string | Record<string, unknown>, 
+  translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<string> => {
+): Promise<TranslationType> => {
   if (userLanguage !== 'hindi') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -34,10 +31,10 @@ export const verifyHindiTranslation = async (
  * Special case for Farsi translations to ensure they use proper Farsi script
  */
 export const verifyFarsiTranslation = async (
-  translation: string | Record<string, unknown>, 
+  translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<string> => {
+): Promise<TranslationType> => {
   if (userLanguage !== 'farsi') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -58,10 +55,10 @@ export const verifyFarsiTranslation = async (
  * Special case for Bengali translations to ensure they use proper Bengali script
  */
 export const verifyBengaliTranslation = async (
-  translation: string | Record<string, unknown>, 
+  translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<string> => {
+): Promise<TranslationType> => {
   if (userLanguage !== 'bengali') return extractStringFromTranslation(translation);
   
   // Extract string if needed
@@ -79,13 +76,13 @@ export const verifyBengaliTranslation = async (
 };
 
 /**
- * Special case handling for Tagalog translations
+ * Enhanced special case handling for Tagalog translations
  */
 export const verifyTagalogTranslation = async (
-  translation: string | Record<string, unknown>, 
+  translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<string> => {
+): Promise<TranslationType> => {
   if (userLanguage !== 'tagalog') return extractStringFromTranslation(translation);
   
   // First, extract a string value from whatever format we received
@@ -146,18 +143,18 @@ export const verifyTagalogTranslation = async (
 };
 
 /**
- * Special case for Chinese translations (both Mandarin and Cantonese)
- * to ensure they use proper Chinese characters
+ * Special case handling for Chinese (Cantonese/Mandarin) translations
  */
 export const verifyChineseTranslation = async (
-  translation: string | Record<string, unknown>, 
+  translation: TranslationType, 
   originalContent: string,
   userLanguage: string
-): Promise<string> => {
-  if (userLanguage !== 'mandarin' && userLanguage !== 'cantonese') 
+): Promise<TranslationType> => {
+  if (userLanguage !== 'cantonese' && userLanguage !== 'mandarin') {
     return extractStringFromTranslation(translation);
+  }
   
-  // Extract string if needed
+  // First, extract a string value from whatever format we received
   const translationText = extractStringFromTranslation(translation);
   
   console.log(`Verifying ${userLanguage} translation:`, {
@@ -167,14 +164,20 @@ export const verifyChineseTranslation = async (
   });
   
   // Check if the translation contains Chinese characters
-  const containsChinese = /[\u4E00-\u9FFF]/.test(translationText);
+  const containsChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(translationText);
   
-  if (!containsChinese || 
+  // Check if there are non-Chinese characters that suggest mixed language
+  // This regex looks for substantial Latin script (likely indicating other languages)
+  const containsSubstantialLatinScript = /[a-zA-Z]{4,}/.test(translationText);
+  
+  if (!translationText || 
       translationText === 'undefined' || 
       translationText === '[object Object]' ||
-      translationText.length < 10) {
+      translationText.length < 10 || 
+      !containsChineseChars ||
+      containsSubstantialLatinScript) {
     
-    console.log(`Getting proper ${userLanguage} translation with Chinese characters`);
+    console.log(`Getting proper ${userLanguage} translation - inadequate translation detected`);
     
     // Try up to 3 times to get a valid translation
     let retryCount = 0;
@@ -187,12 +190,16 @@ export const verifyChineseTranslation = async (
       
       const newTranslation = await getTranslation(originalContent, userLanguage);
       
-      // Check if contains Chinese characters and is long enough
+      // Validate the new translation
+      const hasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(newTranslation);
+      const hasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(newTranslation);
+      
       if (newTranslation && 
-          /[\u4E00-\u9FFF]/.test(newTranslation) &&
           newTranslation !== 'undefined' && 
           newTranslation !== '[object Object]' &&
-          newTranslation.length > 10) {
+          newTranslation.length > 10 &&
+          hasChineseChars &&
+          !hasSubstantialLatinScript) {
         
         bestTranslation = newTranslation;
         validTranslation = true;
@@ -204,8 +211,8 @@ export const verifyChineseTranslation = async (
       }
     }
     
-    // Final fallback
-    if (!validTranslation && bestTranslation.length < 10) {
+    // Final fallback for Chinese translations
+    if (!validTranslation || bestTranslation.length < 10) {
       console.log(`Failed to get proper ${userLanguage} translation after multiple retries`);
       return userLanguage === 'cantonese' 
         ? "翻譯暫時不可用。請諒解不便之處。" 

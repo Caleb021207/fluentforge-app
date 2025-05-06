@@ -1,167 +1,124 @@
 
-// Translation utilities
+// Translation utility functions for chat-with-tutor
 
-// Simple in-memory cache for translations
+// Create a simple in-memory cache for translations
 export class TranslationCache {
-  private cache: Map<string, { content: string, timestamp: number }> = new Map();
-  private ttl = 3600000; // 1 hour cache TTL
+  private cache = new Map<string, string>();
+  private readonly MAX_ENTRIES = 100;
   
-  get(key: string): string | null {
-    const entry = this.cache.get(key);
-    if (!entry) return null;
-    
-    // Check if entry is expired
-    if (Date.now() - entry.timestamp > this.ttl) {
-      this.cache.delete(key);
-      return null;
-    }
-    
-    return entry.content;
+  get(key: string): string | undefined {
+    return this.cache.get(key);
   }
   
-  set(key: string, content: string): void {
-    this.cache.set(key, { content, timestamp: Date.now() });
-    
-    // Clear old entries periodically to avoid memory leaks
-    if (this.cache.size > 1000) {
-      this.pruneExpiredEntries();
+  set(key: string, value: string): void {
+    // Implement simple LRU by clearing oldest entries when exceeding size
+    if (this.cache.size >= this.MAX_ENTRIES) {
+      const oldestKey = this.cache.keys().next().value;
+      this.cache.delete(oldestKey);
     }
-  }
-  
-  private pruneExpiredEntries(): void {
-    const now = Date.now();
-    this.cache.forEach((entry, key) => {
-      if (now - entry.timestamp > this.ttl) {
-        this.cache.delete(key);
-      }
-    });
+    
+    this.cache.set(key, value);
   }
 }
 
-// Helper function to get translation for a message
+// Function to get translation with proper error handling
 export async function getTranslation(
-  message: string, 
-  userLanguage: string, 
-  openAIApiKey: string,
-  filterContentCallback: (text: string) => string,
-  containsProhibitedCallback: (text: string) => boolean,
-  getLanguageNameCallback: (lang: string) => string
-) {
+  content: string, 
+  targetLanguage: string, 
+  apiKey: string,
+  filterContentFn: (content: string) => string,
+  containsProhibitedFn: (content: string) => boolean,
+  getLangNameFn: (lang: string) => string
+): Promise<Response> {
+  const nativeLanguage = getLangNameFn(targetLanguage);
+  
+  // Create system message for translation
+  const systemMessage = `You are a professional translator. Translate the following text into ${nativeLanguage}. 
+  Maintain the original meaning and tone. Provide ONLY the translation, with no explanations, notes, or additional text.
+  DO NOT include phrases like "Translation:" or "Here's the translation:" in your response.`;
+  
+  // Check for prohibited content and filter if needed
+  let safeContent = content;
+  if (containsProhibitedFn(content)) {
+    safeContent = filterContentFn(content);
+  }
+  
   try {
-    const targetLanguage = getLanguageNameCallback(userLanguage);
-    
-    // CIPA Compliance: Filter message before translation 
-    let safeMessage = message;
-    if (containsProhibitedCallback(message)) {
-      console.log('Message contains prohibited content, filtering before translation');
-      safeMessage = filterContentCallback(message);
-    }
-    
-    // Special case for Tagalog translations to ensure more reliability
-    if (userLanguage.toLowerCase() === 'tagalog') {
-      console.log('Using enhanced Tagalog translation request');
-      return await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openAIApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { 
-              role: 'system', 
-              content: `You are a professional Filipino/Tagalog translator. Translate the following text from English to Tagalog using common Filipino expressions.
-              
-              IMPORTANT RULES:
-              - Be direct and conversational in your translation.
-              - Include only the translation itself, no other text, explanations or disclaimers.
-              - Never output the original English text.
-              - Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.
-              - Always return the full text translated, not a shorter version.
-              - ONLY RETURN THE TRANSLATED TEXT AS A PLAIN STRING, NOT AS AN OBJECT OR JSON.` 
-            },
-            { role: 'user', content: safeMessage }
-          ],
-          temperature: 0.3,
-          max_tokens: 800,
-        }),
-      });
-    }
-    
-    // Regular translation for other languages
     return await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { 
-            role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${targetLanguage}. Just return the translation, no explanations. For Hindi translations, ensure you use Devanagari script.
-            
-            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
-          },
-          { role: 'user', content: safeMessage }
+          { role: 'system', content: systemMessage },
+          { role: 'user', content: safeContent }
         ],
         temperature: 0.3,
         max_tokens: 500,
       }),
     });
   } catch (error) {
-    console.error('Error in getTranslation:', error);
-    throw error;
+    console.error('Translation API call failed:', error);
+    throw new Error(`Failed to call translation API: ${error.message}`);
   }
 }
 
-// Helper function to get special translation for specific languages like Hindi
+// Specialized function for specific language translations
 export async function getSpecificLanguageTranslation(
-  message: string, 
-  language: string, 
-  script: string, 
-  openAIApiKey: string,
-  filterContentCallback: (text: string) => string,
-  containsProhibitedCallback: (text: string) => boolean
+  content: string,
+  languageName: string,
+  scriptName: string,
+  apiKey: string,
+  filterContentFn: (content: string) => string,
+  containsProhibitedFn: (content: string) => boolean
 ): Promise<string> {
-  try {
-    console.log(`Getting ${language} translation with ${script} script for: "${message}"`);
+  // Enhanced system message with explicit script instructions
+  const systemMessage = `You are a professional translator specializing in ${languageName}. 
+  Translate the following text into ${languageName} using ${scriptName} script.
+  
+  VERY IMPORTANT:
+  - Provide ONLY the translation, no explanations or any other text
+  - DO NOT include phrases like "Translation:" in your response
+  - Ensure your translation uses proper ${scriptName} script only
+  - DO NOT mix in words from other languages
+  - Make sure the translation flows naturally in ${languageName}
+  `;
+  
+  // Special handling for Cantonese
+  if (languageName === 'Cantonese') {
+    // Enhanced system message specifically for Cantonese
+    const cantoneseSystemMessage = `You are a professional translator specializing in Cantonese (廣東話).
+    Translate the following text into CANTONESE ONLY, using Traditional Chinese characters.
     
-    // CIPA Compliance: Filter message before translation
-    let safeMessage = message;
-    if (containsProhibitedCallback(message)) {
-      console.log('Message contains prohibited content, filtering before translation');
-      safeMessage = filterContentCallback(message);
-    }
+    EXTREMELY IMPORTANT INSTRUCTIONS:
+    - Your output must be 100% in Cantonese using Traditional Chinese characters (NOT Simplified Chinese)
+    - DO NOT use Mandarin phrases or grammar - strictly use Cantonese expressions
+    - You MUST use Cantonese-specific particles like 嘅, 啦, 喎, 囉 where appropriate
+    - DO NOT include any Latin/Roman alphabet text at all
+    - NEVER use any language other than Cantonese in your translation
+    - Provide ONLY the translation, with no additional text or explanations
+    - If you're not 100% sure about the Cantonese translation, provide the closest Cantonese equivalent
     
-    // Special enhanced handling for Tagalog
-    if (language.toLowerCase() === 'filipino/tagalog' || language.toLowerCase() === 'tagalog') {
-      console.log('Using enhanced Tagalog-specific translation');
+    EXAMPLE OF CORRECT CANTONESE (not Mandarin):
+    English: "How are you today?"
+    Good Cantonese: "你今日點呀?" (uses 今日 not 今天, uses 點 not 怎麼樣)
+    `;
+    
+    try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${openAIApiKey}`,
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           model: 'gpt-4o-mini',
           messages: [
-            { 
-              role: 'system', 
-              content: `You are a professional Filipino/Tagalog translator. Translate the following text from English to Tagalog/Filipino.
-              
-              IMPORTANT RULES:
-              - Use colloquial, everyday Filipino that would be easily understood.
-              - ONLY return the translation, no explanations or additional text.
-              - Never output the original English text.
-              - Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.
-              - Always translate the full content, not a summary.
-              - ONLY RETURN THE TRANSLATION TEXT AS A PLAIN STRING, NOT AS AN OBJECT OR JSON.
-              - DO NOT WRAP your response in quotes, backticks, or any other characters.` 
-            },
-            { role: 'user', content: safeMessage }
+            { role: 'system', content: cantoneseSystemMessage },
+            { role: 'user', content: content }
           ],
           temperature: 0.3,
           max_tokens: 800,
@@ -169,53 +126,35 @@ export async function getSpecificLanguageTranslation(
       });
       
       if (!response.ok) {
-        throw new Error(`Tagalog translation API error: ${response.status}`);
+        throw new Error(`API error: ${response.status}`);
       }
       
       const data = await response.json();
-      let translation = data.choices?.[0]?.message?.content || '';
-      
-      // Validate the translation format and structure
-      if (!translation || typeof translation !== 'string' || translation.trim() === '') {
-        console.error('Received empty or invalid Tagalog translation format:', translation);
-        throw new Error('Tagalog translation came back in an invalid format');
-      }
-      
-      // Normalize the translation - strip quotes if the API wrapped it
-      translation = translation.trim();
-      if ((translation.startsWith('"') && translation.endsWith('"')) || 
-          (translation.startsWith("'") && translation.endsWith("'"))) {
-        translation = translation.substring(1, translation.length - 1).trim();
-      }
-      
-      console.log(`Got Tagalog translation (${translation.length} chars): "${translation.substring(0, 50)}..."`);
-      
-      // CIPA Compliance: Filter translation before returning
-      if (containsProhibitedCallback(translation)) {
-        console.log(`Tagalog translation contains prohibited content, filtering`);
-        return filterContentCallback(translation);
-      }
-      
-      return translation;
+      return data.choices[0].message.content.trim();
+    } catch (error) {
+      console.error(`Cantonese translation error:`, error);
+      return "翻譯暫時不可用。請諒解不便之處。";
     }
-    
-    // Regular specific language translation for other languages
+  }
+  
+  // Check for prohibited content and filter if needed
+  let safeContent = content;
+  if (containsProhibitedFn(content)) {
+    safeContent = filterContentFn(content);
+  }
+  
+  try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { 
-            role: 'system', 
-            content: `You are a professional translator. Translate the following text from English to ${language} using ${script} script. ONLY return the translation, no explanations or additional text. Ensure the translation is accurate and natural-sounding.
-            
-            IMPORTANT: Never translate inappropriate content. All translations must be suitable for K-12 classroom settings.` 
-          },
-          { role: 'user', content: safeMessage }
+          { role: 'system', content: systemMessage },
+          { role: 'user', content: safeContent }
         ],
         temperature: 0.3,
         max_tokens: 500,
@@ -223,22 +162,13 @@ export async function getSpecificLanguageTranslation(
     });
     
     if (!response.ok) {
-      throw new Error(`Translation API error: ${response.status}`);
+      throw new Error(`API error: ${response.status}`);
     }
     
     const data = await response.json();
-    const translation = data.choices?.[0]?.message?.content || '';
-    console.log(`Got ${language} translation: "${translation}"`);
-    
-    // CIPA Compliance: Filter translation before returning
-    if (containsProhibitedCallback(translation)) {
-      console.log(`${language} translation contains prohibited content, filtering`);
-      return filterContentCallback(translation);
-    }
-    
-    return translation;
+    return data.choices[0].message.content.trim();
   } catch (error) {
-    console.error(`Error getting ${language} translation:`, error);
-    throw error;
+    console.error(`Translation error for ${languageName}:`, error);
+    throw new Error(`Failed to get ${languageName} translation: ${error.message}`);
   }
 }

@@ -112,6 +112,65 @@ async function handleTranslationRequest(message: string, userLanguage: string) {
       }
     }
     
+    // Enhanced special handling for Cantonese translations
+    if (userLanguage === 'cantonese') {
+      try {
+        console.log('Processing dedicated Cantonese translation request');
+        const cantoneseTranslation = await getSpecificLanguageTranslation(
+          message, 
+          'Cantonese', 
+          'Traditional Chinese', 
+          openAIApiKey,
+          filterCipaProhibitedContent,
+          containsProhibitedContent
+        );
+        
+        // Validate the translation - ensure it's a proper string with Chinese characters
+        if (!cantoneseTranslation || typeof cantoneseTranslation !== 'string') {
+          console.error('Invalid Cantonese translation result:', cantoneseTranslation);
+          throw new Error('Failed to get valid Cantonese translation');
+        }
+        
+        // Verify that the translation contains Chinese characters
+        const containsChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(cantoneseTranslation);
+        
+        // Check for substantial Latin text which would indicate mixed language
+        const containsSubstantialLatinScript = /[a-zA-Z]{4,}/.test(cantoneseTranslation);
+        
+        if (!containsChineseChars || containsSubstantialLatinScript) {
+          console.error('Cantonese translation does not contain valid Chinese characters or contains other languages:', cantoneseTranslation);
+          throw new Error('Failed to get valid Cantonese translation');
+        }
+        
+        console.log(`Cantonese translation result (${cantoneseTranslation.length} chars): "${cantoneseTranslation.substring(0, 50)}..."`);
+        
+        // Wrap in try-catch to ensure we always return a valid response
+        try {
+          return new Response(
+            JSON.stringify({ translation: cantoneseTranslation }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        } catch (jsonError) {
+          console.error('Error stringifying Cantonese translation response:', jsonError);
+          // Fallback to a simpler response if JSON stringification fails
+          return new Response(
+            `{"translation": "翻譯暫時不可用。請諒解不便之處。"}`,
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+      } catch (error) {
+        console.error('Error in Cantonese translation request:', error);
+        // Return a fallback translation instead of throwing
+        return new Response(
+          JSON.stringify({ 
+            translation: "翻譯暫時不可用。請諒解不便之處。",
+            error: error.message 
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+    
     // Regular translation flow for other languages
     try {
       const translationResponse = await getTranslation(
@@ -242,7 +301,7 @@ serve(async (req) => {
       // Add CIPA/FERPA compliance instructions to tutor
       const cipaFerpaCompliance = getCipaFerpaInstructions();
       
-      // Enhanced system message for Tagalog support
+      // Enhanced system message for Tagalog and Cantonese support
       let systemMessageContent = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
 
 PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
@@ -257,13 +316,22 @@ You MUST strictly follow these rules:
 4. **Stay in the target language (${langToLearn}) unless the user asks for clarification in their native language (${nativeLanguage}).**
 5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.`;
 
-      // Add enhanced translation instruction especially for Tagalog
+      // Add enhanced translation instruction for various languages
       if (nativeLanguage.toLowerCase() === 'filipino/tagalog' || userLanguage === 'tagalog') {
         systemMessageContent += `
 
 VERY IMPORTANT FOR TAGALOG USERS: ALWAYS provide a translation of your response in Tagalog. 
 Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
 The Tagalog translation should use everyday conversational Filipino that would be easily understood.
+Make sure the translation is provided as plain text, not as an object or JSON.`;
+      } else if (nativeLanguage.toLowerCase() === 'cantonese' || userLanguage === 'cantonese') {
+        systemMessageContent += `
+
+VERY IMPORTANT FOR CANTONESE USERS: ALWAYS provide a translation of your response in Cantonese using Traditional Chinese characters.
+Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
+The Cantonese translation should be 100% in Cantonese with Traditional Chinese characters.
+DO NOT use Mandarin or any other language in the translation - it must be purely Cantonese.
+Use Cantonese-specific particles like 嘅, 啦, 喎, 囉 where appropriate to sound natural.
 Make sure the translation is provided as plain text, not as an object or JSON.`;
       } else {
         systemMessageContent += `
@@ -310,8 +378,8 @@ You should ask questions to continue the conversation if it ever seems to stall.
         ];
       }
 
-      // Use more tokens for Tagalog conversations to ensure complete translations
-      const maxTokens = userLanguage === 'tagalog' ? 800 : 500;
+      // Use more tokens for special languages to ensure complete translations
+      const maxTokens = userLanguage === 'tagalog' || userLanguage === 'cantonese' ? 800 : 500;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -438,8 +506,64 @@ You should ask questions to continue the conversation if it ever seems to stall.
                 translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
                 console.log('Using fallback Tagalog message after failed attempts');
               }
+            } 
+            // Enhanced for Cantonese
+            else if (userLanguage === 'cantonese') {
+              console.log('Using enhanced Cantonese translation flow');
+              
+              // Try up to 3 times to get a valid translation
+              let retryCount = 0;
+              let validTranslation = false;
+              
+              while (retryCount < 3 && !validTranslation) {
+                retryCount++;
+                console.log(`Cantonese translation attempt ${retryCount}`);
+                
+                try {
+                  translation = await getSpecificLanguageTranslation(
+                    content,
+                    'Cantonese',
+                    'Traditional Chinese',
+                    openAIApiKey,
+                    filterCipaProhibitedContent,
+                    containsProhibitedContent
+                  );
+                  
+                  // Validate the translation - ensure it has Chinese characters and no substantial Latin text
+                  const hasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(translation);
+                  const hasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(translation);
+                  
+                  if (translation && 
+                      typeof translation === 'string' && 
+                      translation.length > 10 &&
+                      translation !== 'undefined' &&
+                      translation !== '[object Object]' &&
+                      hasChineseChars &&
+                      !hasSubstantialLatinScript) {
+                    validTranslation = true;
+                    console.log(`Valid Cantonese translation obtained on attempt ${retryCount}:`, {
+                      length: translation.length,
+                      sample: translation.substring(0, 30) + '...'
+                    });
+                  } else {
+                    console.log(`Invalid Cantonese translation on attempt ${retryCount}:`, translation);
+                  }
+                } catch (translationError) {
+                  console.error(`Error in Cantonese translation attempt ${retryCount}:`, translationError);
+                }
+              }
+              
+              // Cache the Cantonese translation if valid
+              if (validTranslation && translation) {
+                translationCache.set(cacheKey, translation);
+                console.log(`Cached Cantonese translation (${translation.length} chars)`);
+              } else {
+                // Last resort fallback
+                translation = "翻譯暫時不可用。請諒解不便之處。";
+                console.log('Using fallback Cantonese message after failed attempts');
+              }
             } else {
-              // Regular translation process for non-Tagalog languages
+              // Regular translation process for non-Tagalog/Cantonese languages
               const translationResponse = await getTranslation(
                 content, 
                 userLanguage, 
@@ -470,6 +594,8 @@ You should ask questions to continue the conversation if it ever seems to stall.
             // Continue even if translation fails
             if (userLanguage === 'tagalog') {
               translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+            } else if (userLanguage === 'cantonese') {
+              translation = "翻譯暫時不可用。請諒解不便之處。";
             } else {
               translation = `Translation not available for ${userLanguage}`;
             }
@@ -514,6 +640,46 @@ You should ask questions to continue the conversation if it ever seems to stall.
           }
         }
       }
+      
+      // For Cantonese, verify it doesn't contain substantial Latin characters (which would indicate mixed language)
+      if (userLanguage === 'cantonese') {
+        // Check if it contains Chinese characters
+        const hasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(translation);
+        
+        // Check for substantial Latin text which would indicate mixed language
+        const hasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(translation);
+        
+        if (!hasChineseChars || hasSubstantialLatinScript) {
+          console.log('Cantonese translation contains non-Chinese characters or appears to be in mixed language, getting proper Cantonese translation...');
+          
+          // Try to get a new, valid Cantonese translation
+          try {
+            const cantoneseTranslation = await getSpecificLanguageTranslation(
+              content,
+              'Cantonese',
+              'Traditional Chinese',
+              openAIApiKey,
+              filterCipaProhibitedContent,
+              containsProhibitedContent
+            );
+            
+            // Verify the new translation
+            const newHasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(cantoneseTranslation);
+            const newHasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(cantoneseTranslation);
+            
+            if (newHasChineseChars && !newHasSubstantialLatinScript) {
+              translation = cantoneseTranslation;
+              console.log('Successfully obtained valid Cantonese translation');
+            } else {
+              console.log('Failed to get valid Cantonese translation, using fallback');
+              translation = "翻譯暫時不可用。請諒解不便之處。";
+            }
+          } catch (error) {
+            console.error('Error getting Cantonese translation:', error);
+            translation = "翻譯暫時不可用。請諒解不便之處。";
+          }
+        }
+      }
 
       // Final verification for Tagalog - ensure we have a valid translation
       if (userLanguage === 'tagalog' && (!translation || 
@@ -533,7 +699,9 @@ You should ask questions to continue the conversation if it ever seems to stall.
           if (translation === null || translation === undefined) {
             translation = userLanguage === 'tagalog' 
               ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
-              : `Translation not available for ${userLanguage}`;
+              : userLanguage === 'cantonese'
+                ? "翻譯暫時不可用。請諒解不便之處。"
+                : `Translation not available for ${userLanguage}`;
           } else if (typeof translation === 'object') {
             translation = JSON.stringify(translation);
           } else {
@@ -543,7 +711,9 @@ You should ask questions to continue the conversation if it ever seems to stall.
           console.error('Error converting translation to string:', e);
           translation = userLanguage === 'tagalog' 
             ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
-            : `Translation not available for ${userLanguage}`;
+            : userLanguage === 'cantonese'
+              ? "翻譯暫時不可用。請諒解不便之處。"
+              : `Translation not available for ${userLanguage}`;
         }
       }
 
