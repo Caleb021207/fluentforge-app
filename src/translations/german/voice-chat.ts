@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
   // Voice chat page
-  "practiceDescription": "Übe dein Englisch-Sprechen mit unserem Sprachdialog. Klicke auf den Mikrofonbutton und beginne, Englisch zu sprechen.",
+  "practiceDescription": "Übe deine Englisch-Sprechfähigkeiten mit unserem Sprachdialog. Klicke auf den Mikrofonbutton und beginne, Englisch zu sprechen.",
   "aiModelInfo": "KI-Modell: Wir verwenden OpenAI GPT-4o-mini mit Meta MMS für TTS.",
   "practiceLevel": "Übungsniveau: B1 – Mittelstufe – Kann über vertraute Themen diskutieren",
   "cefrB1Description": "Mittelstufe – Kann über vertraute Themen diskutieren",
@@ -42,7 +42,9 @@ const voiceChatTranslations: TranslationRecord = {
   "playAgain": "Noch einmal abspielen",
   "translation": "Übersetzung",
   "conversationHistoryCleared": "Gesprächsverlauf gelöscht",
-  "success": "Erfolg"
+  "success": "Erfolg",
+  "unlimitedVoicePractice": "Unbegrenzte Sprachübung",
+  "voiceChatEnded": "Sprachunterhaltung beendet"
 };
 
 export default voiceChatTranslations;
