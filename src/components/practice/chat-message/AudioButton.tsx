@@ -10,6 +10,7 @@ interface AudioButtonProps {
   ariaLabel?: string;
   size?: "default" | "sm" | "lg" | "icon";
   variant?: "ghost" | "outline" | "default" | "link";
+  isTranslation?: boolean;  // Added the missing prop
 }
 
 const AudioButton: React.FC<AudioButtonProps> = ({
@@ -18,7 +19,8 @@ const AudioButton: React.FC<AudioButtonProps> = ({
   onClick,
   ariaLabel = "Play audio",
   size = "icon",
-  variant = "ghost"
+  variant = "ghost",
+  isTranslation = false  // Added with a default value
 }) => {
   return (
     <Button

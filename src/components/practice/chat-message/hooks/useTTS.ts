@@ -47,7 +47,7 @@ export const useTTS = ({ text, language, isTargetLanguage }: UseTTSOptions) => {
           
           toast({
             title: t("speechSynthesisError"),
-            description: error.message || t("failedToGenerateSpeech"),
+            description: typeof error === 'string' ? error : t("failedToGenerateSpeech"),
             variant: "destructive",
           });
         }
@@ -60,7 +60,7 @@ export const useTTS = ({ text, language, isTargetLanguage }: UseTTSOptions) => {
       
       toast({
         title: t("speechSynthesisError"),
-        description: error.message || t("failedToGenerateSpeech"),
+        description: error?.message || t("failedToGenerateSpeech"),
         variant: "destructive",
       });
     }
