@@ -28,7 +28,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-primary"
+        className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent bg-background text-foreground"
         disabled={isLoading}
       />
       <Button type="submit" disabled={isLoading}>

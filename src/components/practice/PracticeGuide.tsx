@@ -15,13 +15,13 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
   const learningLanguage = getLanguageDisplayName(targetLanguage);
   
   return (
-    <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-4">
+    <Card className="p-6 border border-border">
+      <h2 className="text-xl font-semibold mb-4 text-foreground">
         {t("practiceGuide", { language: learningLanguage })}
       </h2>
       
       {/* Add the description text */}
-      <p className="mb-4">
+      <p className="mb-4 text-foreground">
         {t("practiceGuideDescription", { language: learningLanguage })}
       </p>
       
@@ -34,8 +34,8 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
           t("practiceTip5")
         ].map((tip, index) => (
           <li key={index} className="flex items-start">
-            <span className="text-lingua-primary mr-2">•</span>
-            <span>{tip}</span>
+            <span className="text-accent mr-2">•</span>
+            <span className="text-foreground">{tip}</span>
           </li>
         ))}
       </ul>

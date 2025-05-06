@@ -33,7 +33,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const { t } = useLocalization();
   
   return (
-    <Card className="mb-4 p-6">
+    <Card className="mb-4 p-6 border border-border">
       <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
         {messages.length === 0 ? (
           <EmptyChatState />

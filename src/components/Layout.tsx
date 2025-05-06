@@ -45,11 +45,11 @@ const Layout = ({ children }: LayoutProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lingua-secondary to-white overflow-x-hidden w-full">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden w-full">
       {user && (
-        <div className="w-full bg-white border-b py-2 px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+        <div className="w-full bg-card border-b py-2 px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <div className="flex items-center">
-            <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">
+            <span className="text-xs sm:text-sm text-muted-foreground mr-1 sm:mr-2">
               {t("signedInAs")}
             </span>
             <span className="font-medium text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none">{user.email}</span>

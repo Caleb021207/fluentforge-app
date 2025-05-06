@@ -25,11 +25,15 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        lingua: {
-          primary: "#6B9080",
-          secondary: "#F4F1DE",
-          accent: "#3D5A80",
-          text: "#2F3E46",
+        palavox: {
+          primary: '#0B1C36',     // Deep navy
+          accent: '#A3D5FF',      // Sky blue
+          secondary: '#3A4E68',   // Slate blue
+          teal: '#57D8A1',        // Teal variant
+          white: '#FFFFFF',       // White
+          black: '#000000',       // Black
+          lightBg: '#F7F9FC',     // Soft gray for cards/sections in light mode
+          darkBg: '#1D2B40',      // Dark navy for cards in dark mode
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",

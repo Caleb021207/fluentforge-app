@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones, Lock, BookUser } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +8,7 @@ import { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   Tooltip,
   TooltipContent,
@@ -119,7 +119,7 @@ const Navigation = () => {
           variant="ghost" 
           size="icon" 
           onClick={() => setIsOpen(!isOpen)}
-          className="text-gray-700"
+          className="text-foreground"
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -134,25 +134,31 @@ const Navigation = () => {
 
       <nav className={`
         fixed bottom-0 left-0 w-full md:relative md:w-64 
-        bg-white/90 backdrop-blur-lg border-t md:border-r md:border-t-0 md:h-screen 
-        z-40 transition-transform duration-300 ease-in-out
+        bg-sidebar-background/90 backdrop-blur-lg border-t md:border-r md:border-t-0 md:h-screen 
+        z-40 transition-transform duration-300 ease-in-out text-sidebar-foreground
         ${isOpen ? 'translate-y-0' : 'md:translate-y-0 translate-y-[calc(100%-4rem)]'}
       `}>
         <div className="p-4">
-          <Link 
-            to="/" 
-            className="hidden md:flex items-center space-x-2 mb-8"
-            onClick={() => setIsOpen(false)}
-          >
-            <span className="font-bold text-2xl text-lingua-primary">Palavox</span>
-          </Link>
+          <div className="hidden md:flex items-center justify-between mb-8">
+            <Link 
+              to="/" 
+              className="font-bold text-2xl text-primary"
+              onClick={() => setIsOpen(false)}
+            >
+              Palavox
+            </Link>
+            <ThemeToggle />
+          </div>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
             {getNavItems().map(item => renderNavButton(item))}
             
             {isLoggedIn && isOpen && (
               <div className="md:hidden mt-4 pt-4 border-t">
-                <LogoutButton iconOnly={true} onClose={() => setIsOpen(false)} />
+                <div className="flex items-center justify-between">
+                  <ThemeToggle />
+                  <LogoutButton iconOnly={true} onClose={() => setIsOpen(false)} />
+                </div>
               </div>
             )}
           </div>
