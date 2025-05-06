@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -55,6 +56,9 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecific: "Practice vocabulary for specific topics like travel or food",
   useThisTool: "Use this tool to improve your speaking and listening skills. Here are some tips:",
   speaking: "Speaking",
+  
+  // Add the missing practiceDescription key
+  practiceDescription: "Practice your speaking skills using our voice chat. Click the microphone button and start speaking in your target language.",
 };
 
 export default voiceChatTranslations;
