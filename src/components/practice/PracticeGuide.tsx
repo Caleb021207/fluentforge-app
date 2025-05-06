@@ -22,23 +22,23 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
       
       <ul className="space-y-3">
         <li className="flex items-start">
-          <span className="text-lingua-primary mr-2">•</span>
+          <span className="text-lingua-accent mr-2">•</span>
           <span>{t("practiceGuideItem1")}</span>
         </li>
         <li className="flex items-start">
-          <span className="text-lingua-primary mr-2">•</span>
+          <span className="text-lingua-accent mr-2">•</span>
           <span>{t("practiceGuideItem2")}</span>
         </li>
         <li className="flex items-start">
-          <span className="text-lingua-primary mr-2">•</span>
+          <span className="text-lingua-accent mr-2">•</span>
           <span>{t("practiceGuideItem3")}</span>
         </li>
         <li className="flex items-start">
-          <span className="text-lingua-primary mr-2">•</span>
+          <span className="text-lingua-accent mr-2">•</span>
           <span>{t("practiceGuideItem4")}</span>
         </li>
         <li className="flex items-start">
-          <span className="text-lingua-primary mr-2">•</span>
+          <span className="text-lingua-accent mr-2">•</span>
           <span>{t("practiceDisclaimer")}</span>
         </li>
       </ul>

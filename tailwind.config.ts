@@ -25,11 +25,11 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         lingua: {
-          primary: "#800020", // Maroon instead of green
-          secondary: "#FFFFF0", // Ivory instead of beige
-          accent: "#333333", // Charcoal instead of blue
-          text: "#333333", // Charcoal text
-          gold: "#FFD700", // Gold instead of orange
+          primary: "#0B1C36", // Deep Navy instead of maroon
+          secondary: "#3A4E68", // Slate/Steel Blue instead of ivory
+          accent: "#A3D5FF", // Light Cyan/Sky Blue instead of charcoal
+          text: "#E0E0E0", // Soft Gray for text
+          highlight: "#57D8A1", // Soft Teal/Mint for highlighting
           // Keep the blue colors for dark mode
           "blue-light": "#D3E4FD",
           "blue-primary": "#33C3F0",

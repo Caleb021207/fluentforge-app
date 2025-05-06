@@ -22,7 +22,7 @@ const MessageContent: React.FC<MessageContentProps> = ({
       <p className={`
         ${role === "user" 
           ? "text-white" 
-          : "text-lingua-accent dark:text-gray-100"}
+          : "text-white dark:text-gray-100"}
       `}>
         {content}
       </p>

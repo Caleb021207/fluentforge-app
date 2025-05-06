@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import TranslationContent from "./TranslationContent";
 import { useToast } from "@/hooks/use-toast";
@@ -98,7 +97,7 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   }
   
   return (
-    <div className="border-t border-lingua-accent/20 dark:border-gray-600/50 mt-2 pt-2">
+    <div className="border-t border-white/20 dark:border-gray-600/50 mt-2 pt-2">
       <TranslationContent
         role={role}
         translation={translationText}

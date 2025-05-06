@@ -22,7 +22,7 @@ const TranslationContent: React.FC<TranslationContentProps> = ({
       <p className={`text-sm ${
         role === "user" 
           ? "text-gray-200" 
-          : "text-gray-500 dark:text-gray-300"
+          : "text-gray-300 dark:text-gray-300"
       }`}>
         {translation}
       </p>

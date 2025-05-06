@@ -4,53 +4,53 @@
 
 @layer base {
   :root {
-    --background: 60 33% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 212 60% 98%;
+    --foreground: 215 30% 12%;
 
-    --card: 60 33% 98%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 212 60% 98%;
+    --card-foreground: 215 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 30% 12%;
 
-    --primary: 0 100% 25%;
-    --primary-foreground: 60 100% 97%;
+    --primary: 215 64% 13%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 60 100% 97%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 218 30% 32%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 60 33% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 212 30% 96%;
+    --muted-foreground: 215 16.3% 46.9%;
 
-    --accent: 60 100% 97%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 100% 82%;
+    --accent-foreground: 215 64% 13%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 0 100% 25%;
+    --ring: 215 64% 13%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 60 33% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-background: 212 60% 98%;
+    --sidebar-foreground: 215 30% 12%;
+    --sidebar-primary: 215 64% 13%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-accent: 218 30% 32%;
+    --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 210 100% 82%;
     
     /* Text-specific variables */
-    --text-primary: 0 0% 20%;
-    --text-secondary: 215.4 16.3% 46.9%;
-    --text-muted: 215.4 16.3% 46.9%;
-    --text-accent: 0 100% 25%;
-    --text-inverse: 60 100% 97%;
-    --text-on-accent: 60 100% 97%;
-    --text-on-primary: 60 100% 97%;
+    --text-primary: 215 30% 12%;
+    --text-secondary: 215 16.3% 46.9%;
+    --text-muted: 215 16.3% 46.9%;
+    --text-accent: 210 100% 82%;
+    --text-inverse: 0 0% 100%;
+    --text-on-accent: 215 64% 13%;
+    --text-on-primary: 0 0% 100%;
     --text-disabled: 215 20.2% 65.1%;
     --text-placeholder: 215.4 16.3% 46.9%;
   }
