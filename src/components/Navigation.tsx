@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   Tooltip,
   TooltipContent,
@@ -114,12 +115,13 @@ const Navigation = () => {
 
   return (
     <>
-      <div className="fixed top-0 right-0 z-50 md:hidden p-2">
+      <div className="fixed top-0 right-0 z-50 md:hidden p-2 flex items-center gap-2">
+        <ThemeToggle />
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={() => setIsOpen(!isOpen)}
-          className="text-gray-700"
+          className="text-gray-700 dark:text-gray-300"
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -134,18 +136,22 @@ const Navigation = () => {
 
       <nav className={`
         fixed bottom-0 left-0 w-full md:relative md:w-64 
-        bg-white/90 backdrop-blur-lg border-t md:border-r md:border-t-0 md:h-screen 
+        bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg 
+        border-t md:border-r md:border-t-0 md:h-screen 
         z-40 transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-y-0' : 'md:translate-y-0 translate-y-[calc(100%-4rem)]'}
       `}>
         <div className="p-4">
-          <Link 
-            to="/" 
-            className="hidden md:flex items-center space-x-2 mb-8"
-            onClick={() => setIsOpen(false)}
-          >
-            <span className="font-bold text-2xl text-lingua-primary">Palavox</span>
-          </Link>
+          <div className="hidden md:flex items-center justify-between mb-8">
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2"
+              onClick={() => setIsOpen(false)}
+            >
+              <span className="font-bold text-2xl text-lingua-primary dark:text-blue-400">Palavox</span>
+            </Link>
+            <ThemeToggle />
+          </div>
           
           <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
             {getNavItems().map(item => renderNavButton(item))}

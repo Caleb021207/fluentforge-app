@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -123,9 +124,9 @@ const LanguageSelectionCard = ({
   );
 
   return (
-    <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
+    <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur shadow-lg mb-8">
       <CardContent className="pt-6">
-        <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguagePreferences")}</h2>
+        <h2 className="text-xl font-semibold mb-4 dark:text-gray-200">{t("selectYourLanguagePreferences")}</h2>
         <div className="grid grid-cols-1 gap-4 mb-4">
           <LanguageSelectField
             id="nativeLanguage"
