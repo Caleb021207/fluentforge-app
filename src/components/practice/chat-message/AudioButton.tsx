@@ -11,7 +11,7 @@ interface AudioButtonProps {
   ariaLabel: string;
 }
 
-const AudioButton: React.FC<AudioButtonProps> = React.memo(({ 
+const AudioButton: React.FC<AudioButtonProps> = ({ 
   isLoading, 
   isPlaying, 
   onClick, 
@@ -20,7 +20,7 @@ const AudioButton: React.FC<AudioButtonProps> = React.memo(({
 }) => {
   // Use a stable class string that doesn't change between renders
   const buttonClassNames = React.useMemo(() => `
-    ml-2 -mt-1 p-1 h-auto rounded-full transition-colors duration-200
+    ml-2 -mt-1 p-1 h-auto rounded-full transition-all duration-300
     ${isTranslation ? 'hover:bg-gray-200/20 dark:hover:bg-gray-700/50' : 'hover:bg-lingua-accent/30 dark:hover:bg-lingua-blue-primary/30'}
   `, [isTranslation]);
 
@@ -48,4 +48,4 @@ const AudioButton: React.FC<AudioButtonProps> = React.memo(({
 
 AudioButton.displayName = "AudioButton";
 
-export default AudioButton;
+export default React.memo(AudioButton);

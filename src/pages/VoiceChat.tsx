@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Mic, MicOff, Volume2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,15 +7,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
-import { 
-  getLanguagePair, 
-  getSpeechSynthesisLanguageCode, 
-} from "@/utils/languageUtils";
-import englishTranslations from "@/translations/english";
-import haitianTranslations from "@/translations/haitian";
-import spanishTranslations from "@/translations/spanish";
+import { getLanguagePair, getSpeechSynthesisLanguageCode } from "@/utils/languageUtils";
+import { playTTS } from "@/utils/ttsUtils";
 import ChatMessage from "@/components/practice/ChatMessage";
-import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
+import { useSpeechRecognition, RecognitionState } from "@/hooks/useSpeechRecognition";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -25,7 +21,6 @@ type ConversationMessage = {
 
 const VoiceChat = () => {
   // Core state
-  const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
@@ -33,25 +28,46 @@ const VoiceChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
-
-  // State to track actual recognition status separately from UI listening state
-  const [recognitionRunning, setRecognitionRunning] = useState(false);
-  const [recognitionAttempts, setRecognitionAttempts] = useState(0);
   const cefrLevel = 'B1';
   
   // Refs
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const recognitionRef = useRef<any>(null);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
-  const silenceTimeoutRef = useRef<number | null>(null);
-  const restartTimeoutRef = useRef<number | null>(null);
-  const lastTranscriptRef = useRef<string>("");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   const { practice: targetLanguage } = getLanguagePair(currentLanguage);
+  const targetLanguageCode = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
+
+  // Initialize speech recognition with our new custom hook
+  const {
+    isAvailable,
+    state: recognitionState,
+    startRecognition,
+    stopRecognition,
+    getTranscript,
+    clearTranscript
+  } = useSpeechRecognition({
+    language: targetLanguageCode,
+    onResult: (newTranscript) => {
+      setTranscript(newTranscript);
+    },
+    onError: (error) => {
+      toast({
+        title: t("speechRecognitionError"),
+        description: error,
+        variant: "destructive",
+      });
+    },
+    onSilence: () => {
+      const currentTranscript = getTranscript();
+      if (currentTranscript.trim()) {
+        handleSendTranscript(currentTranscript);
+        stopRecognition();
+      }
+    },
+    silenceTimeout: 10000 // 10 seconds
+  });
 
   // Scroll to bottom when conversation history updates
   useEffect(() => {
@@ -60,209 +76,33 @@ const VoiceChat = () => {
     }
   }, [conversationHistory]);
 
-  // Initialize speech recognition
+  // Check for speech recognition availability on mount
   useEffect(() => {
-    if (typeof window !== "undefined" && 
-        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-      
-      // Get the target language the user is practicing (not their UI language)
-      const { practice } = getLanguagePair(currentLanguage);
-      
-      // Use the practice/target language for speech recognition
-      let recognitionLanguage = getSpeechSynthesisLanguageCode(practice.toLowerCase());
-      
-      console.log(`Setting speech recognition to target language: ${practice} (${recognitionLanguage})`);
-      
-      recognitionRef.current.lang = recognitionLanguage;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.maxAlternatives = 1;
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const lastResultIndex = event.results.length - 1;
-        const latestTranscript = event.results[lastResultIndex][0].transcript;
-        
-        // Save the latest transcript to both state and ref
-        setTranscript(latestTranscript);
-        lastTranscriptRef.current = latestTranscript;
-        
-        // Reset silence detection on new speech
-        resetSilenceDetection();
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        
-        if (event.error === 'network') {
-          toast({
-            title: t("error"),
-            description: t("networkConnectionIssue"),
-            variant: "destructive",
-          });
-          
-          // Network errors should stop the listening process
-          stopListeningCompletely();
-        } else {
-          toast({
-            title: t("error"),
-            description: `${t("speechRecognitionError")}: ${event.error}`,
-            variant: "destructive",
-          });
-        }
-      };
-      
-      recognitionRef.current.onend = () => {
-        console.log("Speech recognition ended naturally");
-        setRecognitionRunning(false);
-        
-        // Only try to restart if we're still supposed to be listening
-        // and we don't already have a restart timer running
-        if (isListening && !restartTimeoutRef.current) {
-          console.log("Setting up restart timeout");
-          
-          // Add a longer delay before restarting to prevent rapid cycling
-          restartTimeoutRef.current = window.setTimeout(() => {
-            if (isListening) {
-              console.log("Attempting to restart speech recognition after timeout");
-              setRecognitionAttempts(prev => prev + 1);
-              
-              try {
-                recognitionRef.current.start();
-                console.log("Speech recognition restarted successfully");
-                setRecognitionRunning(true);
-              } catch (e) {
-                console.error("Failed to restart speech recognition:", e);
-                // If we can't restart after 3 attempts, give up
-                if (recognitionAttempts > 3) {
-                  stopListeningCompletely();
-                  toast({
-                    title: t("error"),
-                    description: t("speechRecognitionError"),
-                    variant: "destructive",
-                  });
-                }
-              } finally {
-                restartTimeoutRef.current = null;
-              }
-            } else {
-              console.log("Not restarting, listening mode disabled");
-            }
-          }, 1500); // Use a longer delay of 1.5 seconds
-        }
-      };
-      
-      recognitionRef.current.onstart = () => {
-        console.log("Speech recognition started");
-        setRecognitionRunning(true);
-        setRecognitionAttempts(0);
-      };
-    } else {
+    if (!isAvailable) {
       toast({
         title: t("error"),
         description: t("speechRecognitionNotSupported"),
         variant: "destructive",
       });
     }
-
-    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
-      synthRef.current = window.speechSynthesis;
-      
-      const handleVoicesChanged = () => {
-        console.log("Voices available:", synthRef.current?.getVoices().length);
-      };
-      
-      synthRef.current.onvoiceschanged = handleVoicesChanged;
-      
-      if (synthRef.current.getVoices().length > 0) {
-        handleVoicesChanged();
-      }
-    } else {
-      console.warn("Speech synthesis not supported in this browser");
-    }
-    
-    return () => {
-      stopListeningCompletely();
-    };
-  }, [currentLanguage, toast, t]);
-
-  // Stable function to completely stop listening
-  const stopListeningCompletely = useCallback(() => {
-    console.log("Completely stopping listening");
-    setIsListening(false);
-    
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.abort();
-      } catch (e) {
-        console.error("Error aborting recognition:", e);
-      }
-    }
-    
-    if (synthRef.current && utteranceRef.current) {
-      try {
-        synthRef.current.cancel();
-      } catch (e) {
-        console.error("Error canceling synthesis:", e);
-      }
-    }
-    
-    clearSilenceDetection();
-    clearRestartTimeout();
-  }, []);
-
-  const resetSilenceDetection = () => {
-    clearSilenceDetection();
-    
-    silenceTimeoutRef.current = window.setTimeout(() => {
-      if (lastTranscriptRef.current && isListening) {
-        console.log("10 seconds of silence detected, automatically sending message");
-        handleSendTranscript(lastTranscriptRef.current);
-        stopListeningCompletely();
-      }
-    }, 10000);
-  };
-
-  const clearSilenceDetection = () => {
-    if (silenceTimeoutRef.current !== null) {
-      clearTimeout(silenceTimeoutRef.current);
-      silenceTimeoutRef.current = null;
-    }
-  };
-
-  const clearRestartTimeout = () => {
-    if (restartTimeoutRef.current !== null) {
-      clearTimeout(restartTimeoutRef.current);
-      restartTimeoutRef.current = null;
-    }
-  };
+  }, [isAvailable, toast, t]);
 
   const toggleListening = () => {
-    if (isListening) {
-      // Stop listening
-      stopListeningCompletely();
+    if (recognitionState === RecognitionState.LISTENING || 
+        recognitionState === RecognitionState.PROCESSING) {
+      stopRecognition();
     } else {
-      // Start listening
-      setIsListening(true);
+      // Clear previous responses when starting new recording
+      setGptResponse("");
+      setTranslation("");
       
-      if (recognitionRef.current) {
-        try {
-          console.log("Starting speech recognition");
-          recognitionRef.current.start();
-          setRecognitionRunning(true);
-          setGptResponse("");
-          setTranslation("");
-          resetSilenceDetection();
-        } catch (error) {
-          console.error("Error starting speech recognition:", error);
-          toast({
-            title: t("error"),
-            description: t("microphoneAccessRequired"),
-            variant: "destructive",
-          });
-          setIsListening(false);
-        }
+      const success = startRecognition();
+      if (!success) {
+        toast({
+          title: t("error"),
+          description: t("microphoneAccessRequired"),
+          variant: "destructive",
+        });
       }
     }
   };
@@ -270,7 +110,7 @@ const VoiceChat = () => {
   const handleSendTranscript = async (text: string) => {
     if (!text.trim()) return;
     
-    clearSilenceDetection();
+    stopRecognition();
     setIsLoading(true);
     
     const userMessage: ConversationMessage = {
@@ -288,7 +128,7 @@ const VoiceChat = () => {
           userLanguage: currentLanguage,
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
-          requestTranslation: true // Explicitly request translation
+          requestTranslation: true
         }
       });
 
@@ -334,8 +174,8 @@ const VoiceChat = () => {
       ]);
       
       speakWithMetaMMS(content);
-      setTranscript(""); // Clear transcript after successfully sending
-      lastTranscriptRef.current = ""; // Also clear the ref
+      clearTranscript();
+      setTranscript("");
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -348,7 +188,7 @@ const VoiceChat = () => {
     }
   };
 
-  const speakWithMetaMMS = (text: string) => {
+  const speakWithMetaMMS = useCallback((text: string) => {
     if (!text || text.trim() === '') {
       console.warn('Empty text provided to speakWithMetaMMS');
       return;
@@ -361,7 +201,7 @@ const VoiceChat = () => {
     
     setIsSpeaking(true);
     
-    // Force the use of Meta MMS for Haitian and Igbo
+    // Force the use of Meta MMS for supported languages
     const useMetaMms = true;
     
     playTTS({
@@ -387,33 +227,24 @@ const VoiceChat = () => {
         });
       }
     });
-  };
+  }, [currentLanguage, toast, t]);
 
-  const playAgain = () => {
+  const playAgain = useCallback(() => {
     if (gptResponse) {
       speakWithMetaMMS(gptResponse);
     }
-  };
+  }, [gptResponse, speakWithMetaMMS]);
 
   const getConversationStarters = () => {
-    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
+    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", 
+                        "phrase5", "phrase6", "phrase7", "phrase8"];
     
-    let nativeLanguagePhrases;
-    let targetLanguagePhrases;
-    
-    if (currentLanguage === "haitian") {
-      nativeLanguagePhrases = phraseKeys.map(key => haitianTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-    } else if (currentLanguage === "english") {
-      nativeLanguagePhrases = phraseKeys.map(key => englishTranslations[key]);
-      targetLanguagePhrases = phraseKeys.map(key => spanishTranslations[key]);
-    } else {
-      nativeLanguagePhrases = phraseKeys.map(key => t(key));
-      targetLanguagePhrases = phraseKeys.map(key => {
-        const englishPhrase = englishTranslations[key];
-        return englishPhrase || key;
-      });
-    }
+    const nativeLanguagePhrases = phraseKeys.map(key => t(key));
+    const targetLanguagePhrases = phraseKeys.map(key => {
+      // For target language phrases, we use English versions by default
+      // or try to get from translations
+      return t(key, { lng: 'english' }) || key;
+    });
     
     return { nativeLanguagePhrases, targetLanguagePhrases };
   };
@@ -426,7 +257,7 @@ const VoiceChat = () => {
     setConversationHistory([]);
     setApiConversationHistory([]);
     setTranscript("");
-    lastTranscriptRef.current = "";
+    clearTranscript();
     setGptResponse("");
     setTranslation("");
     toast({
@@ -438,14 +269,25 @@ const VoiceChat = () => {
   const { practice, native } = getLanguagePair(currentLanguage);
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
-  // Stable class names for elements that shouldn't flicker
-  const listeningStatusClass = isListening 
-    ? "text-sm text-gray-500 animate-pulse mb-4" 
-    : "hidden";
+  // Calculate stable class names based on state rather than dynamic conditions
+  const isActivelyListening = recognitionState === RecognitionState.LISTENING;
+  
+  // Stable class names
+  const listeningStatusClass = isActivelyListening 
+    ? "text-sm text-lingua-accent animate-pulse mb-4 transition-opacity duration-300" 
+    : "text-sm text-lingua-accent mb-4 opacity-0 transition-opacity duration-300 hidden";
   
   const transcriptWrapperClass = transcript.trim() 
-    ? "mb-6" 
-    : "hidden";
+    ? "mb-6 transition-opacity duration-300" 
+    : "mb-6 opacity-0 pointer-events-none h-0";
+  
+  const sendButtonClass = transcript.trim() 
+    ? "opacity-100 transition-opacity duration-300" 
+    : "opacity-0 transition-opacity duration-300";
+
+  // Button states
+  const isButtonDisabled = isLoading || isSpeaking;
+  const showSendButton = transcript.trim().length > 0;
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -476,11 +318,12 @@ const VoiceChat = () => {
             <div className="flex gap-2">
               <Button
                 onClick={toggleListening}
-                variant={isListening ? "destructive" : "default"}
+                variant={isActivelyListening ? "destructive" : "default"}
                 size="lg"
-                disabled={isLoading || isSpeaking}
+                disabled={isButtonDisabled}
+                className="transition-colors duration-300"
               >
-                {isListening ? (
+                {isActivelyListening ? (
                   <>
                     <MicOff className="h-5 w-5 mr-2" />
                     {t("stopListening")}
@@ -493,12 +336,13 @@ const VoiceChat = () => {
                 )}
               </Button>
               
-              {transcript.trim() && (
+              {showSendButton && (
                 <Button
                   onClick={() => handleSendTranscript(transcript)}
                   variant="default"
                   size="lg"
-                  disabled={isLoading || isSpeaking}
+                  disabled={isButtonDisabled}
+                  className={sendButtonClass}
                 >
                   <Send className="h-5 w-5 mr-2" />
                   {t("send")}
@@ -540,7 +384,7 @@ const VoiceChat = () => {
                   onClick={playAgain} 
                   variant="outline" 
                   size="sm"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 transition-colors duration-300"
                   disabled={isSpeaking}
                 >
                   <Volume2 className="h-4 w-4" />
@@ -566,13 +410,6 @@ const VoiceChat = () => {
               </div>
             </div>
           )}
-          
-          {/* Debug section (can be removed in production) */}
-          {/* 
-          <div className="mt-4 border-t pt-4 text-xs text-gray-400">
-            <p>Debug: isListening={isListening.toString()}, recognitionRunning={recognitionRunning.toString()}, attempts={recognitionAttempts}</p>
-          </div>
-          */}
         </Card>
         
         {conversationHistory.length > 0 && (
@@ -585,6 +422,7 @@ const VoiceChat = () => {
                 onClick={clearConversation}
                 variant="outline" 
                 size="sm"
+                className="transition-colors duration-300"
               >
                 {t("clearConversation")}
               </Button>
@@ -598,7 +436,7 @@ const VoiceChat = () => {
                     role={message.role}
                     content={message.content}
                     translation={message.translation}
-                    onPlayAudio={(text) => speakWithMetaMMS(text)}
+                    onPlayAudio={() => speakWithMetaMMS(message.content)}
                   />
                 ))}
                 <div ref={conversationEndRef} />
@@ -626,7 +464,7 @@ const VoiceChat = () => {
                   <Button 
                     key={index}
                     variant="outline"
-                    className="justify-start text-left h-auto py-2 px-3"
+                    className="justify-start text-left h-auto py-2 px-3 transition-colors duration-300"
                     onClick={() => handlePhraseClick(phrase)}
                   >
                     {phrase}
@@ -645,7 +483,7 @@ const VoiceChat = () => {
                   <Button 
                     key={index}
                     variant="outline"
-                    className="justify-start text-left h-auto py-2 px-3 font-normal"
+                    className="justify-start text-left h-auto py-2 px-3 font-normal transition-colors duration-300"
                     onClick={() => handlePhraseClick(phrase)}
                   >
                     {phrase}

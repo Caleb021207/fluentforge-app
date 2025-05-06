@@ -8,6 +8,7 @@ interface MessageContentProps {
   isPlaying: boolean;
   isLoading: boolean;
   onPlayAudio?: () => void;
+  translation?: string;
 }
 
 const MessageContent: React.FC<MessageContentProps> = ({ 
@@ -15,7 +16,8 @@ const MessageContent: React.FC<MessageContentProps> = ({
   content, 
   isPlaying, 
   isLoading, 
-  onPlayAudio 
+  onPlayAudio,
+  translation
 }) => {
   // Using memo to prevent unnecessary re-renders
   const contentElement = React.useMemo(() => (
@@ -41,10 +43,23 @@ const MessageContent: React.FC<MessageContentProps> = ({
     ) : null
   ), [role, isLoading, isPlaying, onPlayAudio]);
 
+  // If translation exists, render it
+  const translationElement = React.useMemo(() => (
+    translation ? (
+      <div className="mt-2 border-t pt-2 text-sm text-gray-300/90">
+        <span className="font-medium">Translation: </span>
+        {translation}
+      </div>
+    ) : null
+  ), [translation]);
+
   return (
-    <div className="flex justify-between items-start gap-2">
-      {contentElement}
-      {audioButtonElement}
+    <div className="flex flex-col w-full">
+      <div className="flex justify-between items-start gap-2">
+        {contentElement}
+        {audioButtonElement}
+      </div>
+      {translationElement}
     </div>
   );
 };
