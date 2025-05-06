@@ -18,7 +18,7 @@ const UnauthenticatedProgress = () => {
       <p className="mb-6">{t("pleaseSignInDashboard")}</p>
       <Button 
         onClick={handleSignIn} 
-        className="bg-lingua-primary hover:bg-lingua-primary/90"
+        variant="accent"
       >
         {t("signIn")}
       </Button>

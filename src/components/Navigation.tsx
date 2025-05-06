@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, BookOpen, Lock as LockIcon } from "lucide-react";
@@ -75,10 +74,8 @@ const Navigation = () => {
     const isActive = location.pathname === item.path;
     const button = (
       <Button
-        variant={isActive ? "default" : "ghost"}
-        className={`w-full justify-start ${
-          isActive ? "bg-palavox-primary hover:bg-palavox-primary/90" : ""
-        }`}
+        variant={isActive ? "accent" : "ghost"}
+        className={`w-full justify-start`}
         disabled={item.requiresAuth && !isLoggedIn}
       >
         <Icon className="h-5 w-5 md:mr-2" />

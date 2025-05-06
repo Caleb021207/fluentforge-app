@@ -30,7 +30,7 @@ const AuthRequiredPrompt = () => {
           <p className="text-amber-700">
             {t("loginRequiredDescription")}
           </p>
-          <Button onClick={redirectToAuth} className="bg-lingua-primary hover:bg-lingua-primary/90">
+          <Button onClick={redirectToAuth} variant="accent">
             {t("signIn")}
           </Button>
         </div>
