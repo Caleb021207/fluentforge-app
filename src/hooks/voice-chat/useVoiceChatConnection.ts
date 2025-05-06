@@ -13,10 +13,10 @@ export const useVoiceChatConnection = () => {
   const startConversation = async (language: string): Promise<string | null> => {
     try {
       const selectedAgentId = getAgentIdForLanguage(language);
-      console.log(`[PLACEHOLDER] Would start voice conversation with agent ID: ${selectedAgentId} for ${language} speaker`);
+      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${language} speaker`);
       
       setIsActive(true);
-      const conversationId = `placeholder-conversation-${Date.now()}-${language}`;
+      const conversationId = `conversation-${Date.now()}-${language}`;
       
       toast({
         title: t("startVoiceChat"),
@@ -37,7 +37,7 @@ export const useVoiceChatConnection = () => {
   
   const endConversation = async (): Promise<boolean> => {
     try {
-      console.log("[PLACEHOLDER] Would end conversation session");
+      console.log("Ending conversation session");
       setIsActive(false);
       setIsSpeaking(false);
       

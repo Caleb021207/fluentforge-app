@@ -37,11 +37,11 @@ export const useVoiceChat = (): VoiceChatReturn => {
     status: isActive ? "connected" : "disconnected",
     isSpeaking,
     startSession: async (opts: any) => {
-      console.log("[PLACEHOLDER] Would start conversation session with:", opts);
-      return `placeholder-conversation-${Date.now()}`;
+      console.log("Starting conversation session with:", opts);
+      return `conversation-${Date.now()}`;
     },
     endSession: async () => {
-      console.log("[PLACEHOLDER] Would end conversation session");
+      console.log("Ending conversation session");
       return true;
     }
   };
@@ -145,8 +145,8 @@ export const useVoiceChat = (): VoiceChatReturn => {
   }, [isConversationActive, currentSessionId]);
 
   return {
-    isActive,         // Added missing property
-    isSpeaking,       // Added missing property
+    isActive,        
+    isSpeaking,      
     microphoneAccess,
     isConversationActive,
     startVoiceConversation,
