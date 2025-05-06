@@ -1,5 +1,5 @@
 
-import { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, verifyChineseTranslation, getTranslation, TranslationType, extractStringFromTranslation } from "../translation";
+import { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, verifyChineseTranslation, verifyThaiTranslation, getTranslation, TranslationType, extractStringFromTranslation } from "../translation";
 
 export const useTranslationProcessor = () => {
   const processTranslation = async (
@@ -14,7 +14,7 @@ export const useTranslationProcessor = () => {
     let processedTranslation: TranslationType = translation;
     
     // Enhanced logging for Tagalog and Cantonese translations
-    if (language === 'tagalog' || language === 'cantonese') {
+    if (language === 'tagalog' || language === 'cantonese' || language === 'thai') {
       console.log(`Raw ${language} translation from API:`, {
         translation,
         translationType: typeof translation,
@@ -50,6 +50,14 @@ export const useTranslationProcessor = () => {
             processedTranslation.substring(0, 30) + '...' :
             JSON.stringify(processedTranslation).substring(0, 30) + '...'
         });
+      } else if (language === 'thai') {
+        processedTranslation = await verifyThaiTranslation(translation, content, language);
+        console.log('After verifyThaiTranslation:', {
+          translationType: typeof processedTranslation,
+          translationSample: typeof processedTranslation === 'string' ? 
+            processedTranslation.substring(0, 30) + '...' :
+            JSON.stringify(processedTranslation).substring(0, 30) + '...'
+        });
       }
     }
     
@@ -60,7 +68,7 @@ export const useTranslationProcessor = () => {
         language !== "english") {
       console.warn("Missing or invalid translation for", language, "user");
       
-      // Force getting a translation specifically for Tagalog or Cantonese if it's missing
+      // Force getting a translation specifically for Tagalog, Cantonese or Thai if it's missing
       if (language === 'tagalog') {
         console.log('Forcibly requesting Tagalog translation for missing translation');
         
@@ -118,6 +126,35 @@ export const useTranslationProcessor = () => {
         if (!validTranslation) {
           processedTranslation = "翻譯暫時不可用。請諒解不便之處。";
           console.log('Using fallback Cantonese message after failed retries');
+        }
+      } else if (language === 'thai') {
+        console.log('Forcibly requesting Thai translation for missing translation');
+        
+        // Try up to 3 times to get a valid translation
+        let retryCount = 0;
+        let validTranslation = false;
+        
+        while (retryCount < 3 && !validTranslation) {
+          retryCount++;
+          console.log(`Forced Thai translation attempt ${retryCount}`);
+          
+          const newTranslation = await getTranslation(content, 'thai');
+          
+          if (newTranslation && newTranslation.length > 10) {
+            processedTranslation = newTranslation;
+            validTranslation = true;
+            console.log('Successfully got forced Thai translation:', {
+              length: newTranslation.length,
+              sample: newTranslation.substring(0, 30) + '...'
+            });
+            break;
+          }
+        }
+        
+        // Fallback for Thai if all retries failed
+        if (!validTranslation) {
+          processedTranslation = "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
+          console.log('Using fallback Thai message after failed retries');
         }
       } else {
         processedTranslation = await getTranslation(content, language);

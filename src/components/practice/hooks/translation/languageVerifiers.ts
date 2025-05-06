@@ -148,6 +148,17 @@ export const verifyThaiTranslation = async (
     return await getTranslation(originalContent, 'thai');
   }
   
+  // Ensure Thai translation is valid
+  if (!translationText || 
+      translationText === 'undefined' || 
+      translationText === '[object Object]' ||
+      translationText.length < 10 || 
+      translationText.includes('Translation not available')) {
+    
+    console.log('Getting proper Thai translation - inadequate translation detected');
+    return await getTranslation(originalContent, 'thai');
+  }
+  
   return translationText;
 };
 
