@@ -1,12 +1,13 @@
 
 import React from "react";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-// Create a properly typed motion button component
-const MotionButton = motion(Button);
+// Create a properly typed motion component
+// Using forwardRef to properly handle the component typing
+const MotionButton = motion(Button, { forwardRef: true });
 
-interface AnimatedButtonProps extends ButtonProps {
+interface AnimatedButtonProps extends React.ComponentProps<typeof Button> {
   children: React.ReactNode;
   animationType?: "scale" | "lift" | "pulse" | "none";
 }
@@ -18,7 +19,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   ...props
 }) => {
   // Define animation variants for each type
-  let animationProps = {};
+  let animationProps: any = {};
   
   switch (animationType) {
     case "scale":
@@ -52,9 +53,9 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   return (
     <MotionButton
       className={className}
+      transition={{ duration: 0.2 }}
       {...props}
       {...animationProps}
-      transition={{ duration: 0.2 }}
     >
       {children}
     </MotionButton>
