@@ -22,19 +22,21 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const { t } = useLocalization();
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex gap-3">
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lingua-accent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:ring-lingua-blue-primary"
+        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lingua-accent transition-all duration-200
+                  dark:bg-gray-800/80 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:ring-lingua-blue-primary"
         disabled={isLoading}
       />
       <Button 
         type="submit" 
         disabled={isLoading}
-        className="bg-lingua-accent hover:bg-lingua-accent/90 text-lingua-primary dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
+        className="bg-lingua-accent hover:bg-lingua-accent-hover text-lingua-primary font-medium transition-colors duration-200
+                 dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
       >
         <Send className="h-4 w-4 mr-2" />
         {t("send")}

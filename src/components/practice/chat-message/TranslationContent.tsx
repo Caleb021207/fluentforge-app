@@ -18,12 +18,13 @@ const TranslationContent: React.FC<TranslationContentProps> = ({
   onPlayTranslationAudio,
 }) => {
   return (
-    <div className="flex justify-between items-start">
-      <p className={`text-sm ${
-        role === "user" 
-          ? "text-gray-200" 
-          : "text-gray-300 dark:text-gray-300"
-      }`}>
+    <div className="flex justify-between items-start gap-2">
+      <p className={`
+        flex-1 leading-relaxed text-sm transition-colors duration-200
+        ${role === "user" 
+          ? "text-gray-200 font-normal" 
+          : "text-gray-300 dark:text-gray-300"}
+      `}>
         {translation}
       </p>
       

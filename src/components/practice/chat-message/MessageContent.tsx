@@ -18,10 +18,11 @@ const MessageContent: React.FC<MessageContentProps> = ({
   onPlayAudio 
 }) => {
   return (
-    <div className="flex justify-between items-start">
+    <div className="flex justify-between items-start gap-2">
       <p className={`
+        flex-1 leading-relaxed transition-colors duration-200
         ${role === "user" 
-          ? "text-white" 
+          ? "text-white font-medium" 
           : "text-white dark:text-gray-100"}
       `}>
         {content}

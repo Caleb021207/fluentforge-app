@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -28,6 +29,7 @@ export default {
           primary: "#0B1C36", // Deep Navy instead of maroon
           secondary: "#3A4E68", // Slate/Steel Blue instead of ivory
           accent: "#A3D5FF", // Light Cyan/Sky Blue instead of charcoal
+          "accent-hover": "#8BC8FF", // Lighter Cyan for hover states
           text: "#E0E0E0", // Soft Gray for text
           highlight: "#57D8A1", // Soft Teal/Mint for highlighting
           // Keep the blue colors for dark mode
@@ -99,12 +101,22 @@ export default {
           from: { opacity: "0", transform: "translateX(-2px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        fadeOut: {
+          from: { opacity: "1" },
+          to: { opacity: "0" },
+        },
       },
       animation: {
         overlayShow: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideRightAndFade: "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        fadeIn: "fadeIn 200ms ease-in-out",
+        fadeOut: "fadeOut 200ms ease-in-out",
       },
     },
   },

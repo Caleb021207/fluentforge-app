@@ -10,12 +10,15 @@ const NoProgressCard = () => {
   const navigate = useNavigate();
   
   return (
-    <Card className="border border-dashed border-gray-300 dark:border-gray-700/50 bg-lingua-primary/10 dark:bg-gray-900/50">
+    <Card className="border border-dashed border-gray-300 dark:border-gray-700/50 bg-lingua-accent/10 dark:bg-gray-900/50 transition-all duration-300">
       <CardContent className="text-center py-12">
-        <p className="text-lg text-lingua-secondary dark:text-gray-300 mb-4">{t("noProgressData")}</p>
+        <p className="text-lg text-lingua-secondary dark:text-gray-300 mb-5 transition-colors duration-200">
+          {t("noProgressData")}
+        </p>
         <Button 
           onClick={() => navigate('/certificates')} 
-          className="bg-lingua-accent hover:bg-lingua-accent/90 text-lingua-primary dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
+          className="bg-lingua-accent hover:bg-lingua-accent-hover text-lingua-primary font-medium shadow-sm hover:shadow transition-all duration-200
+                   dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark dark:text-white"
         >
           {t("completeTestsToSeeProgress")}
         </Button>

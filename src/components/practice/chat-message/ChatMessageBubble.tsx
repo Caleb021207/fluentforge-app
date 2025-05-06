@@ -44,11 +44,13 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   
   return (
     <div
-      className={`max-w-[80%] rounded-lg p-4 ${
-        role === "user"
+      className={`
+        max-w-[80%] rounded-lg p-4 shadow-sm transition-all duration-200
+        ${role === "user"
           ? "bg-lingua-primary text-white dark:bg-lingua-blue-dark dark:text-white"
-          : "bg-lingua-secondary text-white dark:bg-gray-700"
-      }`}
+          : "bg-lingua-secondary text-white dark:bg-gray-700/90 dark:shadow-md"
+        }
+      `}
     >
       <SafetyWarning wasContentFiltered={wasContentFiltered} />
       
