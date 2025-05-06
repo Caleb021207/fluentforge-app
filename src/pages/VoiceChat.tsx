@@ -35,8 +35,6 @@ const VoiceChat = () => {
   const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   
   const { toast } = useToast();
@@ -46,7 +44,7 @@ const VoiceChat = () => {
   // Get proper language code for speech recognition
   const recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
   
-  // Use our custom speech recognition hook with increased silence timeout
+  // Use speech recognition hook
   const {
     isListening,
     startListening,
@@ -57,7 +55,7 @@ const VoiceChat = () => {
     continuous: true,
     interimResults: true,
     silenceTimeout: 30000,
-    disableAutoStop: true, // Disable auto-stopping based on silence
+    disableAutoStop: true,
     onTranscript: (text, isFinal) => {
       setTranscript(text);
     }
@@ -68,30 +66,6 @@ const VoiceChat = () => {
       conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [conversationHistory]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
-      synthRef.current = window.speechSynthesis;
-      
-      const handleVoicesChanged = () => {
-        console.log("Voices available:", synthRef.current?.getVoices().length);
-      };
-      
-      synthRef.current.onvoiceschanged = handleVoicesChanged;
-      
-      if (synthRef.current.getVoices().length > 0) {
-        handleVoicesChanged();
-      }
-    } else {
-      console.warn("Speech synthesis not supported in this browser");
-    }
-    
-    return () => {
-      if (synthRef.current && utteranceRef.current) {
-        synthRef.current.cancel();
-      }
-    };
-  }, []);
 
   const toggleListening = () => {
     if (isListening) {
@@ -129,7 +103,7 @@ const VoiceChat = () => {
           userLanguage: currentLanguage,
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
-          requestTranslation: true // Explicitly request translation
+          requestTranslation: true
         }
       });
 

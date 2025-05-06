@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -8,34 +9,19 @@ export const useMicrophoneAccess = () => {
   const { t } = useLocalization();
 
   useEffect(() => {
-    const checkMicrophoneAccess = async () => {
-      try {
-        // Check if permission is already granted
-        const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-        
+    // Check silently if permission is already granted
+    navigator.permissions.query({ name: 'microphone' as PermissionName })
+      .then(permissionStatus => {
         if (permissionStatus.state === 'granted') {
           setMicrophoneAccess(true);
-          return;
+          console.log("Microphone permission already granted");
+        } else {
+          console.log("Microphone permission status:", permissionStatus.state);
         }
-        
-        // Don't automatically request on page load - let user action trigger it
-        console.log("Microphone permission status:", permissionStatus.state);
-      } catch (error) {
-        console.error("Error checking microphone permission:", error);
-        // Fall back to old method if permissions API not supported
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          setMicrophoneAccess(true);
-          // Release the stream immediately
-          stream.getTracks().forEach(track => track.stop());
-        } catch (err) {
-          console.warn("Microphone access not granted");
-          setMicrophoneAccess(false);
-        }
-      }
-    };
-
-    checkMicrophoneAccess();
+      })
+      .catch(err => {
+        console.log("Permission API not supported, will check on demand");
+      });
   }, []);
 
   const requestMicrophoneAccess = async (): Promise<boolean> => {
@@ -43,8 +29,7 @@ export const useMicrophoneAccess = () => {
       console.log("Requesting microphone access...");
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       
-      // We got access, but we don't need to keep the stream open
-      // Release it immediately
+      // Release the stream immediately
       stream.getTracks().forEach(track => track.stop());
       
       setMicrophoneAccess(true);

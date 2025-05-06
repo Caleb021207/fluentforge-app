@@ -1,19 +1,21 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
 import { useVoiceChatSession } from "./useVoiceChatSession";
 import { useVoiceChatApiKeys } from "./useVoiceChatApiKeys";
-import { useVoiceChatConnection } from "./useVoiceChatConnection";
 import { VoiceChatReturn } from "./types";
+import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 
 export const useVoiceChat = (): VoiceChatReturn => {
   const { t, currentLanguage } = useLocalization();
   const { toast } = useToast();
   const { microphoneAccess, requestMicrophoneAccess } = useMicrophoneAccess();
   const [onMessageCallback, setOnMessageCallback] = useState<(message: any) => void>(() => () => {});
+  const [isActive, setIsActive] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   
   const {
     currentSessionId,
@@ -24,15 +26,8 @@ export const useVoiceChat = (): VoiceChatReturn => {
   } = useVoiceChatSession();
   
   const { getElevenLabsApiKey } = useVoiceChatApiKeys();
-  
-  const {
-    isActive,
-    isSpeaking,
-    startConversation,
-    endConversation
-  } = useVoiceChatConnection();
 
-  // Create a simpler interface for the conversation object
+  // Simple conversation object
   const conversation = {
     status: isActive ? "connected" : "disconnected",
     isSpeaking,
@@ -42,11 +37,12 @@ export const useVoiceChat = (): VoiceChatReturn => {
     },
     endSession: async () => {
       console.log("Ending conversation session");
+      setIsSpeaking(false);
       return true;
     }
   };
 
-  const isConversationActive = () => isActive;
+  const isConversationActive = useCallback(() => isActive, [isActive]);
 
   const startVoiceConversation = async () => {
     setConnectionAttempts(0);
@@ -79,11 +75,20 @@ export const useVoiceChat = (): VoiceChatReturn => {
       // Fetch API key
       const apiKey = await getElevenLabsApiKey(currentLanguage);
       if (!apiKey) {
-        console.warn("No API key available for ElevenLabs");
+        console.log("No API key available for ElevenLabs");
       }
       
       // Start the conversation
-      const conversationId = await startConversation(currentLanguage);
+      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
+      console.log(`Starting voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
+      
+      setIsActive(true);
+      const conversationId = `conversation-${Date.now()}-${currentLanguage}`;
+      
+      toast({
+        title: t("startVoiceChat"),
+        description: t("startChatting"),
+      });
       
       return { conversationId };
       
@@ -112,8 +117,14 @@ export const useVoiceChat = (): VoiceChatReturn => {
 
   const endVoiceConversation = async () => {
     try {
-      if (isConversationActive()) {
-        await endConversation();
+      if (isActive) {
+        setIsActive(false);
+        setIsSpeaking(false);
+        
+        toast({
+          title: t("stopVoiceChat"),
+          description: t("voiceChatEnded"),
+        });
       }
       
       const { data: { user } } = await supabase.auth.getUser();
@@ -136,13 +147,13 @@ export const useVoiceChat = (): VoiceChatReturn => {
   // Cleanup effect
   useEffect(() => {
     return () => {
-      if (isConversationActive() && currentSessionId) {
+      if (isActive && currentSessionId) {
         endVoiceConversation().catch(err => {
           console.error("Error cleaning up voice conversation on unmount:", err);
         });
       }
     };
-  }, [isConversationActive, currentSessionId]);
+  }, [isActive, currentSessionId]);
 
   return {
     isActive,        
@@ -152,6 +163,7 @@ export const useVoiceChat = (): VoiceChatReturn => {
     startVoiceConversation,
     endVoiceConversation,
     conversation,
-    setMessageHandler
+    setMessageHandler,
+    setIsSpeaking
   };
 };
