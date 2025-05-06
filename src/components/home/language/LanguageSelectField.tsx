@@ -27,10 +27,10 @@ const LanguageSelectField = ({
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
       <Select value={value} onValueChange={onChange} disabled={disabled}>
-        <SelectTrigger id={id} className="w-full">
+        <SelectTrigger id={id} className="w-full bg-white">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white z-50">
           {Object.entries(options).map(([value, label]) => (
             <SelectItem 
               key={value} 

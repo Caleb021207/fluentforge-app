@@ -152,3 +152,14 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Fix for dropdown menus */
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
+
+.radix-select-content {
+  background-color: white !important;
+  z-index: 9999 !important;
+}
+
