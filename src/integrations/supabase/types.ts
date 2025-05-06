@@ -194,20 +194,6 @@ export type Database = {
             referencedRelation: "classroom_codes"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "student_usage_metrics"
-            referencedColumns: ["classroom_id"]
-          },
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_students"
-            referencedColumns: ["classroom_id"]
-          },
         ]
       }
       district_settings: {
@@ -567,20 +553,6 @@ export type Database = {
             referencedRelation: "classroom_codes"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "student_usage_metrics"
-            referencedColumns: ["classroom_id"]
-          },
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_students"
-            referencedColumns: ["classroom_id"]
-          },
         ]
       }
       student_usage_metrics: {
@@ -599,32 +571,6 @@ export type Database = {
           voice_chat_minutes: number | null
           voice_chat_sessions: number | null
         }
-        Relationships: []
-      }
-      teacher_students: {
-        Row: {
-          class_code: string | null
-          class_name: string | null
-          classroom_id: string | null
-          joined_at: string | null
-          student_email: string | null
-          student_id: string | null
-          student_name: string | null
-          teacher_id: string | null
-        }
-        Relationships: []
-      }
-      teacher_students_secure: {
-        Row: {
-          class_name: string | null
-          classroom_id: string | null
-          code: string | null
-          joined_at: string | null
-          student_email: string | null
-          student_id: string | null
-          student_name: string | null
-          teacher_id: string | null
-        }
         Relationships: [
           {
             foreignKeyName: "classroom_memberships_classroom_id_fkey"
@@ -632,20 +578,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "classroom_codes"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "student_usage_metrics"
-            referencedColumns: ["classroom_id"]
-          },
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_students"
-            referencedColumns: ["classroom_id"]
           },
         ]
       }

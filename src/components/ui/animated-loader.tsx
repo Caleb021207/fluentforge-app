@@ -26,11 +26,21 @@ const AnimatedLoader: React.FC<AnimatedLoaderProps> = ({
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
       <motion.div
-        animate={{ rotate: 360 }}
+        animate={{ 
+          rotate: 360,
+          scale: [1, 1.05, 1]
+        }}
         transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: "linear"
+          rotate: {
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "linear"
+          },
+          scale: {
+            duration: 1,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }
         }}
         className={cn("text-palavox-primary", color)}
       >
