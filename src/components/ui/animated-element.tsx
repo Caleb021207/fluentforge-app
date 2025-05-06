@@ -35,7 +35,8 @@ const AnimatedElement = ({
           viewport={animateOnceOnly ? { once: true } : undefined}
           transition={{
             delay,
-            duration: duration || animation.visible?.transition?.duration,
+            // Use optional chaining to safely access the duration
+            duration: duration || animation.visible?.transition?.duration || 0.3,
           }}
         >
           {children}
