@@ -14,8 +14,8 @@ export const useTranslationProcessor = () => {
     let processedTranslation: TranslationType = translation;
     const lowercaseLanguage = language.toLowerCase();
     
-    // Enhanced logging for Tagalog and Cantonese translations
-    if (lowercaseLanguage === 'tagalog' || lowercaseLanguage === 'cantonese' || lowercaseLanguage === 'thai') {
+    // Enhanced logging for specific languages
+    if (['tagalog', 'cantonese', 'thai'].includes(lowercaseLanguage)) {
       console.log(`Raw ${language} translation from API:`, {
         translation,
         translationType: typeof translation,
@@ -23,7 +23,9 @@ export const useTranslationProcessor = () => {
         isObject: typeof translation === 'object',
         translationValue: typeof translation === 'string' ? 
           translation.substring(0, 30) + '...' : 
-          JSON.stringify(translation).substring(0, 30) + '...'
+          JSON.stringify(translation).substring(0, 30) + '...',
+        containsScript: typeof translation === 'string' ? 
+          (lowercaseLanguage === 'thai' ? /[\u0E00-\u0E7F]/.test(translation) : 'N/A') : 'N/A'
       });
     }
     
@@ -57,7 +59,11 @@ export const useTranslationProcessor = () => {
           translationType: typeof processedTranslation,
           translationSample: typeof processedTranslation === 'string' ? 
             processedTranslation.substring(0, 30) + '...' :
-            JSON.stringify(processedTranslation).substring(0, 30) + '...'
+            JSON.stringify(processedTranslation).substring(0, 30) + '...',
+          containsThaiScript: typeof processedTranslation === 'string' ? 
+            /[\u0E00-\u0E7F]/.test(processedTranslation) : false,
+          isSameAsContent: typeof processedTranslation === 'string' ? 
+            processedTranslation.trim() === content.trim() : false
         });
       }
     }
@@ -69,7 +75,7 @@ export const useTranslationProcessor = () => {
         lowercaseLanguage !== "english") {
       console.warn("Missing or invalid translation for", language, "user");
       
-      // Force getting a translation specifically for Tagalog, Cantonese or Thai if it's missing
+      // Force getting a translation for specific languages if it's missing
       if (lowercaseLanguage === 'tagalog') {
         console.log('Forcibly requesting Tagalog translation for missing translation');
         
@@ -141,12 +147,18 @@ export const useTranslationProcessor = () => {
           
           const newTranslation = await getTranslation(content, 'thai');
           
-          if (newTranslation && newTranslation.length > 10) {
+          // Special checks for Thai - must contain Thai script
+          if (newTranslation && 
+              newTranslation.length > 10 && 
+              /[\u0E00-\u0E7F]/.test(newTranslation) &&
+              newTranslation.trim() !== content.trim()) {
+            
             processedTranslation = newTranslation;
             validTranslation = true;
-            console.log('Successfully got forced Thai translation:', {
+            console.log('Successfully got forced Thai translation with Thai script:', {
               length: newTranslation.length,
-              sample: newTranslation.substring(0, 30) + '...'
+              sample: newTranslation.substring(0, 30) + '...',
+              containsThaiScript: /[\u0E00-\u0E7F]/.test(newTranslation)
             });
             break;
           }

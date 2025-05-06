@@ -68,25 +68,40 @@ export const getTranslation = async (content: string, targetLanguage: string): P
 
     // Special validation for specific languages
     if (['tagalog', 'thai'].includes(targetLanguage.toLowerCase())) {
-      console.log(`Got ${targetLanguage} translation:`, {
+      console.log(`Got ${targetLanguage} translation from API:`, {
         success: !!translation,
         length: translation.length,
         sample: translation.substring(0, 50) + '...',
-        type: typeof translation
+        type: typeof translation,
+        containsScript: targetLanguage.toLowerCase() === 'thai' ? 
+          /[\u0E00-\u0E7F]/.test(translation) : 'N/A',
+        isSameAsContent: translation.trim() === content.trim()
       });
       
-      // Ensure translation is valid
-      if (!translation || 
-          translation === 'undefined' || 
-          translation === '[object Object]' ||
-          translation.length < 10) {
-        
-        if (targetLanguage.toLowerCase() === 'tagalog') {
-          translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-        } else if (targetLanguage.toLowerCase() === 'thai') {
+      // Special check for Thai - must contain Thai script and not be identical to content
+      if (targetLanguage.toLowerCase() === 'thai') {
+        if (!translation || 
+            translation === 'undefined' || 
+            translation === '[object Object]' ||
+            translation.length < 10 ||
+            !/[\u0E00-\u0E7F]/.test(translation) ||
+            translation.trim() === content.trim()) {
+          
           translation = "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
+          console.log('Using fallback Thai message due to invalid translation or lack of Thai script');
         }
-        console.log(`Using fallback ${targetLanguage} message due to invalid translation`);
+      }
+      // Check for valid Tagalog translation
+      else if (targetLanguage.toLowerCase() === 'tagalog') {
+        if (!translation || 
+            translation === 'undefined' || 
+            translation === '[object Object]' ||
+            translation.length < 10 ||
+            translation.trim() === content.trim()) {
+          
+          translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+          console.log('Using fallback Tagalog message due to invalid translation');
+        }
       }
     } else {
       console.log(`Got ${targetLanguage} translation:`, {

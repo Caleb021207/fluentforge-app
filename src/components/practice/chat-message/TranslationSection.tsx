@@ -12,7 +12,7 @@ interface TranslationSectionProps {
   currentLanguage: string;
   isTranslationPlaying: boolean;
   isTranslationLoading: boolean;
-  originalContent: string; // Add original content prop to compare with translation
+  originalContent: string; // Original content to compare with translation
   onPlayTranslationAudio?: () => void;
 }
 
@@ -36,14 +36,38 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
     if (currentLanguage.toLowerCase() === 'tagalog' || currentLanguage.toLowerCase() === 'thai') {
       console.log(`TranslationSection ${currentLanguage} debug:`, { 
         originalTranslation: translation,
+        originalContent,
         translationLength: typeof translation === 'string' ? translation.length : 0,
-        translationType: typeof translation
+        translationType: typeof translation,
+        areEqual: translation.trim() === originalContent.trim()
       });
     }
     
-    // Check if we should display this translation (avoid duplicating English text)
-    const isTranslationSameAsContent = translation.trim() === originalContent.trim();
-    setShouldDisplay(!isTranslationSameAsContent);
+    // More robust comparison - normalize text by removing extra spaces and making lowercase
+    const normalizedTranslation = translation.trim().toLowerCase().replace(/\s+/g, ' ');
+    const normalizedContent = originalContent.trim().toLowerCase().replace(/\s+/g, ' ');
+    
+    // Check if we should display this translation (avoid duplicating content)
+    const isTranslationSameAsContent = normalizedTranslation === normalizedContent || normalizedTranslation === '';
+    
+    // Special debug for Thai
+    if (currentLanguage.toLowerCase() === 'thai') {
+      console.log('Thai translation comparison:', {
+        normalizedTranslation,
+        normalizedContent,
+        isTranslationSameAsContent,
+        containsThaiScript: /[\u0E00-\u0E7F]/.test(translation)
+      });
+      
+      // Force display for Thai if it contains Thai script
+      if (/[\u0E00-\u0E7F]/.test(translation)) {
+        setShouldDisplay(true);
+      } else {
+        setShouldDisplay(!isTranslationSameAsContent);
+      }
+    } else {
+      setShouldDisplay(!isTranslationSameAsContent);
+    }
     
     // Translation should already be a string by this point due to changes in parent components
     if (typeof translation === 'string' && translation.trim() !== '') {
@@ -63,6 +87,7 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
     if (currentLanguage.toLowerCase() === 'tagalog' || currentLanguage.toLowerCase() === 'thai') {
       console.log(`Processed ${currentLanguage} translation:`, {
         translationText,
+        shouldDisplay,
         length: translationText.length
       });
     }

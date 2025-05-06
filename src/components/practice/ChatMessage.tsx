@@ -25,7 +25,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
       content, 
       originalTranslation: translation,
       translationType: typeof translation,
-      currentLanguage
+      currentLanguage,
+      hasThaiScript: typeof translation === 'string' ? /[\u0E00-\u0E7F]/.test(translation) : false
     });
   }
   
@@ -44,6 +45,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
     try {
       // Handle string translations
       if (typeof translation === 'string') {
+        // For Thai language, check if it actually contains Thai script
+        if (currentLanguage.toLowerCase() === 'thai' && !/[\u0E00-\u0E7F]/.test(translation)) {
+          console.log('Thai translation missing Thai script:', translation);
+          return "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
+        }
+        
+        // For Tagalog, ensure we have a valid translation
+        if (currentLanguage.toLowerCase() === 'tagalog' && 
+            (translation.trim() === content.trim() || translation.length < 10)) {
+          console.log('Tagalog translation is same as content or too short:', translation);
+          return "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
+        }
+        
         return filterContent(translation);
       } 
       // Handle object translations
@@ -89,7 +103,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   if (['tagalog', 'thai'].includes(currentLanguage.toLowerCase())) {
     console.log(`ChatMessage after processing ${currentLanguage}:`, {
       safeTranslation,
-      translationLength: safeTranslation.length
+      translationLength: safeTranslation.length,
+      hasThaiScript: /[\u0E00-\u0E7F]/.test(safeTranslation),
+      isSameAsContent: safeTranslation.trim() === safeContent.trim()
     });
   }
   
@@ -100,7 +116,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   // Determine if translation should be shown
   const showTranslation = 
     TRANSLATION_REQUIRED_LANGUAGES.includes(currentLanguage.toLowerCase()) || 
-    (safeTranslation && safeTranslation.trim() !== "") ||
+    (safeTranslation && safeTranslation.trim() !== "" && safeTranslation.trim() !== safeContent.trim()) ||
     !isContentSafe || !isTranslationSafe;
   
   const wasContentFiltered = !isContentSafe || !isTranslationSafe;

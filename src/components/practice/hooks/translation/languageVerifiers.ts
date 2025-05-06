@@ -1,4 +1,3 @@
-
 import { getTranslation } from "./useTranslationService";
 import { TranslationType } from "./types";
 import { extractStringFromTranslation } from "./translationUtils";
@@ -140,23 +139,50 @@ export const verifyThaiTranslation = async (
   // Extract string if needed
   const translationText = extractStringFromTranslation(translation);
   
-  // Check if the translation contains Thai script
+  console.log('Verifying Thai translation:', {
+    translationText: translationText.substring(0, 30) + '...',
+    originalContent: originalContent.substring(0, 30) + '...',
+    translationLength: translationText.length,
+    containsThai: /[\u0E00-\u0E7F]/.test(translationText),
+    isSameAsContent: translationText.trim() === originalContent.trim()
+  });
+  
+  // First check if translation contains Thai script
   const containsThai = /[\u0E00-\u0E7F]/.test(translationText);
   
-  if (!containsThai) {
-    console.log('Getting proper Thai translation with Thai script');
-    return await getTranslation(originalContent, 'thai');
-  }
+  // Also check if the translation is the same as the original content
+  const isSameAsContent = translationText.trim() === originalContent.trim();
   
-  // Ensure Thai translation is valid
-  if (!translationText || 
-      translationText === 'undefined' || 
-      translationText === '[object Object]' ||
-      translationText.length < 10 || 
-      translationText.includes('Translation not available')) {
-    
+  if (!containsThai || isSameAsContent) {
     console.log('Getting proper Thai translation - inadequate translation detected');
-    return await getTranslation(originalContent, 'thai');
+    
+    // Try up to 3 times to get a valid translation
+    let retryCount = 0;
+    let validTranslation = false;
+    let bestTranslation = "ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก";
+    
+    while (retryCount < 3 && !validTranslation) {
+      retryCount++;
+      console.log(`Thai translation retry attempt ${retryCount}`);
+      
+      const newTranslation = await getTranslation(originalContent, 'thai');
+      
+      // Check if it contains Thai script
+      if (newTranslation && 
+          /[\u0E00-\u0E7F]/.test(newTranslation) && 
+          newTranslation.trim() !== originalContent.trim()) {
+        
+        bestTranslation = newTranslation;
+        validTranslation = true;
+        console.log('Successfully obtained new Thai translation with Thai script:', {
+          length: newTranslation.length,
+          preview: newTranslation.substring(0, 30) + '...'
+        });
+        break;
+      }
+    }
+    
+    return bestTranslation;
   }
   
   return translationText;
