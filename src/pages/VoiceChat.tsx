@@ -362,57 +362,18 @@ const VoiceChat = () => {
           {t("unlimitedVoicePractice")}
         </h1>
         <p className="text-gray-600 mb-4">
-          {currentLanguage === "haitian" 
-            ? "Pratike konpetans anglè w yo avèk tchat vwa nou. Klike sou bouton mikwofòn lan epi kòmanse pale an anglè."
-            : currentLanguage === "tagalog"
-            ? "Magsanay magsalita ng Ingles gamit ang aming voice chat. I-click ang button ng mikropono at magsimulang magsalita sa Ingles."
-            : currentLanguage === "cantonese"
-            ? "使用我們的語音聊天練習說英語。點擊麥克風按鈕並開始用英語說話。"
-            : `Practice your ${practice} speaking skills with our voice chat. Click the microphone button and start speaking in ${practice}.`
-          }
+          {t("practiceDescription")}
         </p>
         <p className="text-sm text-gray-500 mb-2">
-          <strong>{currentLanguage === "haitian" ? "Modèl IA:" : currentLanguage === "tagalog" ? "Modelong AI:" : currentLanguage === "cantonese" ? "AI模型:" : "AI Model:"}</strong> {currentLanguage === "haitian" 
-            ? "Itilize GPT-4o-mini OpenAI a avèk Meta MMS pou TTS."
-            : currentLanguage === "tagalog"
-            ? "Gumagamit kami ng OpenAI GPT-4o-mini na may Meta MMS para sa TTS."
-            : currentLanguage === "cantonese"
-            ? "我們使用OpenAI GPT-4o-mini，配合Meta MMS進行TTS。"
-            : `Using OpenAI's GPT-4o-mini with Meta MMS for TTS.`
-          }
+          <strong>{t("aiModelInfo")}</strong>
         </p>
+        
         {/* Show appropriate TTS info message based on language */}
-        {currentLanguage === "haitian" && (
-          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-            <p className="text-amber-800 text-sm">
-              Note: Sa a ap itilize Meta MMS pou sèvis tekst-a-diskou.
-            </p>
-          </div>
-        )}
-        {/* Message for Tagalog users */}
-        {currentLanguage === "tagalog" && (
-          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-            <p className="text-amber-800 text-sm">
-              Tandaan: Gumagamit kami ng Meta MMS at Azure para sa serbisyo ng tekst-to-speech.
-            </p>
-          </div>
-        )}
-        {/* Add similar message for Cantonese users */}
-        {currentLanguage === "cantonese" && (
-          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-            <p className="text-amber-800 text-sm">
-              請注意：我們使用Meta MMS和Azure提供文字轉語音服務。
-            </p>
-          </div>
-        )}
-        {/* Keep browser TTS warning for other languages */}
-        {currentLanguage !== "haitian" && currentLanguage !== "tagalog" && currentLanguage !== "cantonese" && (
-          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-            <p className="text-amber-800 text-sm">
-              {t("browserBasedTTS")}
-            </p>
-          </div>
-        )}
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+          <p className="text-amber-800 text-sm">
+            {t("browserBasedTTS")}
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6">
@@ -421,23 +382,9 @@ const VoiceChat = () => {
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500">
                 <span className="font-medium">
-                  {currentLanguage === "haitian" 
-                    ? "Nivo Pratik: B1" 
-                    : currentLanguage === "tagalog"
-                    ? "Antas ng Pagsasanay: B1"
-                    : currentLanguage === "cantonese"
-                    ? "練習水平：B1"
-                    : `${t("practiceLevel")}: B1`
-                  }
+                  {t("practiceLevel")}
                 </span> - 
-                {currentLanguage === "haitian" 
-                  ? "Entèmedyè - kapab diskite sou sijè familye" 
-                  : currentLanguage === "tagalog"
-                  ? "Gitnang Antas – Kayang makipag-usap sa mga pamilyar na paksa"
-                  : currentLanguage === "cantonese"
-                  ? "中級 – 能夠討論熟悉的話題"
-                  : t("cefrB1Description")
-                }
+                {t("cefrB1Description")}
               </p>
             </div>
 
@@ -451,18 +398,12 @@ const VoiceChat = () => {
                 {isListening ? (
                   <>
                     <MicOff className="h-5 w-5 mr-2" />
-                    {currentLanguage === "haitian" ? "Sispann Koute" : 
-                     currentLanguage === "tagalog" ? "Itigil ang Pakikinig" : 
-                     currentLanguage === "cantonese" ? "停止聆聽" :
-                     t("stopListening")}
+                    {t("stopListening")}
                   </>
                 ) : (
                   <>
                     <Mic className="h-5 w-5 mr-2" />
-                    {currentLanguage === "haitian" ? "Kòmanse Pale" : 
-                     currentLanguage === "tagalog" ? "Magsimulang Magsalita" : 
-                     currentLanguage === "cantonese" ? "開始說話" :
-                     t("startSpeaking")}
+                    {t("startSpeaking")}
                   </>
                 )}
               </Button>
@@ -475,10 +416,7 @@ const VoiceChat = () => {
                   disabled={isLoading || isSpeaking || !transcript.trim()}
                 >
                   <Send className="h-5 w-5 mr-2" />
-                  {currentLanguage === "haitian" ? "Voye" : 
-                   currentLanguage === "tagalog" ? "Ipadala" : 
-                   currentLanguage === "cantonese" ? "發送" :
-                   t("send")}
+                  {t("send")}
                 </Button>
               )}
             </div>
@@ -486,20 +424,14 @@ const VoiceChat = () => {
           
           {isListening && (
             <div className="text-sm text-gray-500 animate-pulse mb-4">
-              {currentLanguage === "haitian" ? "Ap koute kounye a..." : 
-               currentLanguage === "tagalog" ? "Nakikinig ngayon..." : 
-               currentLanguage === "cantonese" ? "正在聆聽..." :
-               `${t("listeningNow")}...`}
+              {t("listeningNow")}...
             </div>
           )}
 
           {transcript && (
             <div className="mb-6">
               <h3 className="font-medium mb-2">
-                {currentLanguage === "haitian" ? "Ou te di:" : 
-                 currentLanguage === "tagalog" ? "Sinabi mo:" : 
-                 currentLanguage === "cantonese" ? "你說:" :
-                 `${t("youSaid")}:`}
+                {t("youSaid")}:
               </h3>
               <div className="bg-gray-100 rounded-lg p-4 text-gray-800">
                 {transcript}
@@ -521,10 +453,7 @@ const VoiceChat = () => {
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-medium">
-                  {currentLanguage === "haitian" ? "Repons IA:" : 
-                   currentLanguage === "tagalog" ? "Tugon ng AI:" : 
-                   currentLanguage === "cantonese" ? "AI回應:" :
-                   `${t("aiResponse")}:`}
+                  {t("aiResponse")}:
                 </h3>
                 <Button 
                   onClick={playAgain} 
@@ -535,37 +464,21 @@ const VoiceChat = () => {
                 >
                   <Volume2 className="h-4 w-4" />
                   {isSpeaking 
-                    ? (currentLanguage === "haitian" ? "Ap pale" : 
-                       currentLanguage === "tagalog" ? "Nagsasalita" : 
-                       currentLanguage === "cantonese" ? "正在說話" :
-                       t("speaking")) 
-                    : (currentLanguage === "haitian" ? "Jwe ankò" : 
-                       currentLanguage === "tagalog" ? "I-play muli" : 
-                       currentLanguage === "cantonese" ? "再次播放" :
-                       t("playAgain"))}
+                    ? t("speaking") 
+                    : t("playAgain")}
                 </Button>
               </div>
               <div className="bg-lingua-primary/10 rounded-lg p-4 text-gray-800">
                 {gptResponse}
                 
-                {/* Always show translation for Haitian, Tagalog, and Cantonese users or if translation exists */}
-                {((translation && translation.trim() !== "") || 
-                  currentLanguage === "haitian" || 
-                  currentLanguage === "tagalog" || 
-                  currentLanguage === "cantonese") && (
+                {/* Always show translation if translation exists */}
+                {((translation && translation.trim() !== "")) && (
                   <>
                     <div className="border-t border-gray-300 my-3"></div>
                     <div className="text-sm text-gray-600">
                       <strong>
-                        {currentLanguage === "haitian" ? "Tradiksyon:" : 
-                         currentLanguage === "tagalog" ? "Pagsasalin:" : 
-                         currentLanguage === "cantonese" ? "翻譯:" :
-                         t("translation")}:
-                      </strong> {translation || 
-                                (currentLanguage === "haitian" ? "Tradiksyon pa disponib" : 
-                                 currentLanguage === "tagalog" ? "Hindi magagamit ang pagsasalin" : 
-                                 currentLanguage === "cantonese" ? "翻譯暫時不可用" :
-                                 "Translation not available")}
+                        {t("translation")}:
+                      </strong> {translation || t("translationNotAvailable")}
                     </div>
                   </>
                 )}
@@ -578,20 +491,14 @@ const VoiceChat = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-medium">
-                {currentLanguage === "haitian" ? "Istwa Konvèsasyon" : 
-                 currentLanguage === "tagalog" ? "Kasaysayan ng Pag-uusap" :
-                 currentLanguage === "cantonese" ? "對話歷史" :
-                 t("conversationHistory")}
+                {t("conversationHistory")}
               </h3>
               <Button 
                 onClick={clearConversation}
                 variant="outline" 
                 size="sm"
               >
-                {currentLanguage === "haitian" ? "Efase Konvèsasyon" : 
-                 currentLanguage === "tagalog" ? "Burahin ang Pag-uusap" : 
-                 currentLanguage === "cantonese" ? "清除對話" :
-                 t("clearConversation")}
+                {t("clearConversation")}
               </Button>
             </div>
             
@@ -614,16 +521,10 @@ const VoiceChat = () => {
         
         <Card className="p-6">
           <h3 className="font-medium mb-4">
-            {currentLanguage === "haitian" ? "Konvèsasyon Demaraj" : 
-             currentLanguage === "tagalog" ? "Mga Panimula ng Pag-uusap" : 
-             currentLanguage === "cantonese" ? "對話開始語" :
-             t("conversationStarters")}
+            {t("conversationStarters")}
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            {currentLanguage === "haitian" ? "Eseye fraz sa yo" : 
-             currentLanguage === "tagalog" ? "Subukang gamitin ang mga pariralang ito" : 
-             currentLanguage === "cantonese" ? "嘗試使用這些短語" :
-             t("tryThesePhrases")}
+            {t("tryThesePhrases")}
           </p>
           
           <div className="space-y-6">

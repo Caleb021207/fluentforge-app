@@ -4,8 +4,8 @@ import { TranslationRecord } from "../types";
 const voiceChatTranslations: TranslationRecord = {
   // Voice chat page
   "practiceDescription": "Übe deine Englisch-Sprechfähigkeiten mit unserem Sprachdialog. Klicke auf den Mikrofonbutton und beginne, Englisch zu sprechen.",
-  "aiModelInfo": "KI-Modell: Wir verwenden OpenAI GPT-4o-mini mit Meta MMS für TTS.",
-  "practiceLevel": "Übungsniveau: B1 – Mittelstufe – Kann über vertraute Themen diskutieren",
+  "aiModelInfo": "Wir verwenden OpenAIs GPT-4o-mini mit Meta MMS für TTS.",
+  "practiceLevel": "Übungsniveau: B1",
   "cefrB1Description": "Mittelstufe – Kann über vertraute Themen diskutieren",
   
   // Voice chat controls
@@ -45,6 +45,7 @@ const voiceChatTranslations: TranslationRecord = {
   "success": "Erfolg",
   "unlimitedVoicePractice": "Unbegrenzte Sprachübung",
   "voiceChatEnded": "Sprachunterhaltung beendet",
+  "translationNotAvailable": "Übersetzung nicht verfügbar",
   
   // Additional translations needed
   "freePracticeWithVoice": "Kostenlose Sprachübung",
