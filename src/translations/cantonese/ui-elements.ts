@@ -115,6 +115,19 @@ const uiElementsTranslations: TranslationRecord = {
   voiceChatSessions: "語音聊天會話",
   lastActivity: "最近活動",
   unnamed: "未命名",
+  // Added missing translations
+  signedInAs: "登入為",
+  textPractice: "文字練習",
+  unlimitedVoicePractice: "無限制語音練習",
+  welcomeToLanguageLearning: "歡迎來到Palavox",
+  yourPersonalAICompanion: "你嘅個人AI學習夥伴",
+  selectYourLanguagePreferences: "選擇你嘅語言偏好",
+  iSpeak: "我講:",
+  iWantToLearn: "我想學:",
+  saveLanguagePreferences: "保存語言偏好",
+  parentalControls: "家長控制",
+  safetyPolicy: "安全政策",
+  ferpaPrivacy: "FERPA私隱",
 };
 
 export default uiElementsTranslations;

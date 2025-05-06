@@ -18,7 +18,21 @@ const languageSelectionTranslations: TranslationRecord = {
   "automaticTranslation": "自動翻譯",
   "manualTranslation": "手動翻譯",
   "translationPreferences": "翻譯偏好",
-  "defaultToEnglish": "默認為英語"
+  "defaultToEnglish": "默認為英語",
+  // Added missing translations
+  "iSpeak": "我講:",
+  "iWantToLearn": "我想學:",
+  "selectYourNativeLanguage": "選擇你嘅母語",
+  "selectLanguageToLearn": "選擇你想學嘅語言",
+  "saveLanguagePreferences": "保存語言偏好",
+  "languagePreferencesSaved": "語言偏好已保存",
+  "youreNowLearning": "你而家學緊",
+  "from": "從",
+  "pleaseSelectBothLanguages": "請選擇兩種語言",
+  "youNeedToSelectBoth": "你需要選擇你嘅母語同埋你想學嘅語言",
+  "studyMaterialsComingSoon": "學習{{targetLanguage}}從{{nativeLanguage}}嘅教材即將推出！",
+  "someFeaturesLimited": "部分功能可能有限制或者未能使用。",
+  "selectYourLanguagePreferences": "選擇你嘅語言偏好",
 };
 
 export default languageSelectionTranslations;

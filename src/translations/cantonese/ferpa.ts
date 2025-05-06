@@ -34,7 +34,9 @@ const ferpaTranslations: TranslationRecord = {
   ferpaConsentCheckbox: "我同意如上所述收集同使用我嘅教育數據。我明白我可以隨時通過我嘅個人資料設置撤銷呢個同意。",
   consentRequired: "使用呢個應用程式嘅所有功能都需要同意。冇同意嘅話，某啲功能會受到限制。",
   ferpaCompliance: "FERPA合規",
-  ferpaComplianceShortDesc: "我哋嘅平台遵守FERPA規定保護學生數據同私隱"
+  ferpaComplianceShortDesc: "我哋嘅平台遵守FERPA規定保護學生數據同私隱",
+  // Add new missing translation
+  ferpaPrivacy: "FERPA私隱",
 };
 
 export default ferpaTranslations;

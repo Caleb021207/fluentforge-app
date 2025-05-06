@@ -1,10 +1,22 @@
-
 import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
+  // Core translations
+  welcomeToLanguageLearning: "歡迎來到Palavox",
+  yourPersonalAICompanion: "你嘅個人AI學習夥伴",
+  welcomeMessage: "歡迎來到LinguaLite",
+  pageNotFound: "找唔到頁面",
+  networkConnectionIssue: "網絡連接問題",
+  pleaseWait: "請等等",
+  sessionExpired: "你嘅會話已經過期。請重新登入。",
+  cooldownActive: "冷卻時間生效中",
+  dailyLimitReached: "已達到每日限制",
+  loginRequired: "需要登入",
+  failedToCreateSession: "未能創建會話",
+  cefrB1Description: "中級 - 可以討論熟悉嘅話題",
+  speechSynthesisNotSupported: "你嘅瀏覽器唔支持語音合成",
   "appName": "LinguaLite",
   "tagline": "輕鬆免費學習語言",
-  "welcomeMessage": "歡迎來到LinguaLite",
   "getStarted": "開始使用",
   "learnEnglish": "學習英語",
   "practiceEnglish": "練習英語",
