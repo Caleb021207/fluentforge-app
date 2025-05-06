@@ -1,3 +1,4 @@
+
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -12,6 +13,7 @@ export const getLanguageDisplayName = (language: string): string => {
     'japanese': 'Japanese',
     'korean': 'Korean',
     'mandarin': 'Mandarin Chinese',
+    'cantonese': 'Cantonese', // Added Cantonese
     'russian': 'Russian',
     'arabic': 'Arabic',
     'hindi': 'Hindi',
@@ -33,7 +35,7 @@ export const getLanguageDisplayName = (language: string): string => {
     'polish': 'Polish',
     'turkish': 'Turkish',
     'romanian': 'Romanian',
-    'tagalog': 'Filipino/Tagalog' // Added Filipino/Tagalog
+    'tagalog': 'Filipino/Tagalog'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -70,6 +72,7 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'japanese': '日本語',
     'korean': '한국어',
     'mandarin': '中文',
+    'cantonese': '廣東話', // Added Cantonese in native script
     'russian': 'Русский',
     'arabic': 'العربية',
     'hindi': 'हिन्दी',
@@ -91,7 +94,7 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'polish': 'Polski',
     'turkish': 'Türkçe',
     'romanian': 'Română',
-    'tagalog': 'Tagalog' // Added Tagalog in native script
+    'tagalog': 'Tagalog'
   };
   
   return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
@@ -130,6 +133,7 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'japanese-english',
     'korean-english',
     'mandarin-english',
+    'cantonese-english', // Added Cantonese speakers learning English
     'russian-english',
     'arabic-english',
     'hindi-english',      // Adding Hindi
@@ -173,6 +177,7 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'japanese': 'ja-JP',
     'korean': 'ko-KR',
     'mandarin': 'zh-CN',
+    'cantonese': 'zh-HK', // Added Cantonese language code
     'russian': 'ru-RU',
     'arabic': 'ar-SA',
     'hindi': 'hi-IN',
@@ -194,7 +199,7 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'polish': 'pl-PL',
     'turkish': 'tr-TR',
     'romanian': 'ro-RO',
-    'tagalog': 'fil-PH' // Added Tagalog language code
+    'tagalog': 'fil-PH'
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';

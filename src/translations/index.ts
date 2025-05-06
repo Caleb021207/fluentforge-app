@@ -2,6 +2,7 @@
 import { TranslationRecord } from "./types";
 import arabic from "./arabic";
 import bengali from "./bengali";
+import cantonese from "./cantonese"; // Import Cantonese translations
 import english from "./english";
 import farsi from "./farsi";
 import french from "./french";
@@ -19,7 +20,7 @@ import russian from "./russian";
 import somali from "./somali";
 import spanish from "./spanish";
 import swahili from "./swahili";
-import tagalog from "./tagalog"; // Import Tagalog translations
+import tagalog from "./tagalog";
 import turkish from "./turkish";
 import ukrainian from "./ukrainian";
 import urdu from "./urdu";
@@ -39,6 +40,7 @@ const translations: Record<string, TranslationRecord> = {
   japanese,
   korean,
   mandarin,
+  cantonese, // Added Cantonese translations
   russian,
   arabic,
   hindi,
@@ -59,7 +61,7 @@ const translations: Record<string, TranslationRecord> = {
   romanian,
   igbo,
   haitian,
-  tagalog // Added Tagalog translations
+  tagalog
 };
 
 export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };

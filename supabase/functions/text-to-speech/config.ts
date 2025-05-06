@@ -10,6 +10,7 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "french": { languageCode: "fr-FR", voiceName: "fr-FR-HenriNeural" },
   "japanese": { languageCode: "ja-JP", voiceName: "ja-JP-KeitaNeural" },
   "mandarin": { languageCode: "zh-CN", voiceName: "zh-CN-YunxiNeural" }, 
+  "cantonese": { languageCode: "zh-HK", voiceName: "zh-HK-WanLungNeural" }, // Added Cantonese with Azure voice
   "hindi": { languageCode: "hi-IN", voiceName: "hi-IN-MadhurNeural" },
   "indonesian": { languageCode: "id-ID", voiceName: "id-ID-ArdiNeural" },
   "farsi": { languageCode: "fa-IR", voiceName: "fa-IR-FaridNeural" },
@@ -31,7 +32,7 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "polish": { languageCode: "pl-PL", voiceName: "pl-PL-MarekNeural" },
   "turkish": { languageCode: "tr-TR", voiceName: "tr-TR-EmelNeural" },
   "romanian": { languageCode: "ro-RO", voiceName: "ro-RO-EmilNeural" },
-  "tagalog": { languageCode: "fil-PH", voiceName: "fil-PH-AngeloNeural" } // Added Tagalog with Azure voice
+  "tagalog": { languageCode: "fil-PH", voiceName: "fil-PH-AngeloNeural" }
 };
 
 // Polly voice mapping
@@ -43,6 +44,7 @@ export const pollyVoiceMap: Record<string, string> = {
   "japanese": "Takumi",
   "korean": "Seoyeon",
   "mandarin": "Zhiyu",
+  "cantonese": "Zhiyu", // Use Mandarin voice as fallback for Cantonese
   "hindi": "Kajal",
   "indonesian": "Danendra", // Fictional - may need to use another language if this doesn't exist
   "farsi": "Lupe", // Use Spanish voice as fallback (might not be ideal)
@@ -77,6 +79,7 @@ export const metaMmsLanguageMap: Record<string, string> = {
   "amharic": "amh", // Amharic ISO 639-3 code
   "malayalam": "mal", // Malayalam ISO 639-3 code
   "tagalog": "fil", // Added Tagalog ISO 639-3 code
+  "cantonese": "yue", // Added Cantonese ISO 639-3 code
   // Add other languages supported by Meta MMS
 };
 

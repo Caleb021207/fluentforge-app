@@ -1,12 +1,16 @@
 
-import { TranslationType } from "./types";
+/**
+ * Special case verifiers for different languages to ensure they use the correct script
+ */
+
 import { getTranslation } from "./useTranslationService";
+import { extractStringFromTranslation } from "./translationUtils";
 
 /**
  * Special case for Hindi translations to ensure they use Devanagari script
  */
 export const verifyHindiTranslation = async (
-  translation: TranslationType, 
+  translation: string | Record<string, unknown>, 
   originalContent: string,
   userLanguage: string
 ): Promise<string> => {
@@ -30,7 +34,7 @@ export const verifyHindiTranslation = async (
  * Special case for Farsi translations to ensure they use proper Farsi script
  */
 export const verifyFarsiTranslation = async (
-  translation: TranslationType, 
+  translation: string | Record<string, unknown>, 
   originalContent: string,
   userLanguage: string
 ): Promise<string> => {
@@ -54,7 +58,7 @@ export const verifyFarsiTranslation = async (
  * Special case for Bengali translations to ensure they use proper Bengali script
  */
 export const verifyBengaliTranslation = async (
-  translation: TranslationType, 
+  translation: string | Record<string, unknown>, 
   originalContent: string,
   userLanguage: string
 ): Promise<string> => {
@@ -75,10 +79,10 @@ export const verifyBengaliTranslation = async (
 };
 
 /**
- * Enhanced special case handling for Tagalog translations
+ * Special case handling for Tagalog translations
  */
 export const verifyTagalogTranslation = async (
-  translation: TranslationType, 
+  translation: string | Record<string, unknown>, 
   originalContent: string,
   userLanguage: string
 ): Promise<string> => {
@@ -141,44 +145,75 @@ export const verifyTagalogTranslation = async (
   return translationText;
 };
 
-// Helper function to make the circular dependency work
-const extractStringFromTranslation = (translation: TranslationType): string => {
-  if (typeof translation === 'string') {
-    return translation;
-  }
+/**
+ * Special case for Chinese translations (both Mandarin and Cantonese)
+ * to ensure they use proper Chinese characters
+ */
+export const verifyChineseTranslation = async (
+  translation: string | Record<string, unknown>, 
+  originalContent: string,
+  userLanguage: string
+): Promise<string> => {
+  if (userLanguage !== 'mandarin' && userLanguage !== 'cantonese') 
+    return extractStringFromTranslation(translation);
   
-  if (typeof translation === 'object' && translation !== null) {
-    const translationObj = translation as Record<string, unknown>;
+  // Extract string if needed
+  const translationText = extractStringFromTranslation(translation);
+  
+  console.log(`Verifying ${userLanguage} translation:`, {
+    hasTranslation: !!translationText,
+    translationLength: translationText ? translationText.length : 0,
+    shortContentPreview: originalContent.substring(0, 30) + '...'
+  });
+  
+  // Check if the translation contains Chinese characters
+  const containsChinese = /[\u4E00-\u9FFF]/.test(translationText);
+  
+  if (!containsChinese || 
+      translationText === 'undefined' || 
+      translationText === '[object Object]' ||
+      translationText.length < 10) {
     
-    if ('value' in translationObj && translationObj.value) {
-      return String(translationObj.value);
-    } 
+    console.log(`Getting proper ${userLanguage} translation with Chinese characters`);
     
-    if ('text' in translationObj && translationObj.text) {
-      return String(translationObj.text);
-    } 
+    // Try up to 3 times to get a valid translation
+    let retryCount = 0;
+    let validTranslation = false;
+    let bestTranslation = translationText;
     
-    if ('content' in translationObj && translationObj.content) {
-      return String(translationObj.content);
-    }
-    
-    try {
-      const stringified = JSON.stringify(translationObj);
-      if (stringified && stringified !== '{}' && stringified !== '[]') {
-        if (stringified.startsWith('{') && stringified.endsWith('}')) {
-          return stringified.replace(/[{}'"]/g, '').replace(/:/g, ': ');
-        }
-        return stringified;
+    while (retryCount < 3 && !validTranslation) {
+      retryCount++;
+      console.log(`${userLanguage} translation retry attempt ${retryCount}`);
+      
+      const newTranslation = await getTranslation(originalContent, userLanguage);
+      
+      // Check if contains Chinese characters and is long enough
+      if (newTranslation && 
+          /[\u4E00-\u9FFF]/.test(newTranslation) &&
+          newTranslation !== 'undefined' && 
+          newTranslation !== '[object Object]' &&
+          newTranslation.length > 10) {
+        
+        bestTranslation = newTranslation;
+        validTranslation = true;
+        console.log(`Successfully obtained new ${userLanguage} translation:`, {
+          length: newTranslation.length,
+          preview: newTranslation.substring(0, 30) + '...'
+        });
+        break;
       }
-    } catch (e) {
-      console.error('Failed to stringify translation object:', e);
     }
+    
+    // Final fallback
+    if (!validTranslation && bestTranslation.length < 10) {
+      console.log(`Failed to get proper ${userLanguage} translation after multiple retries`);
+      return userLanguage === 'cantonese' 
+        ? "翻譯暫時不可用。請諒解不便之處。" 
+        : "翻译暂时不可用。请谅解不便之处。";
+    }
+    
+    return bestTranslation;
   }
   
-  try {
-    return String(translation);
-  } catch (e) {
-    console.error('Error converting translation to string:', e);
-    return "";
-  }
+  return translationText;
 };

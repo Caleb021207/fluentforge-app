@@ -8,6 +8,7 @@ export const languageCodeMap: Record<string, string> = {
   'japanese': 'ja-JP',
   'korean': 'ko-KR',
   'mandarin': 'zh-CN',
+  'cantonese': 'zh-HK', // Added Cantonese language code
   'russian': 'ru-RU',
   'arabic': 'ar-SA',
   'hindi': 'hi-IN',
@@ -28,7 +29,7 @@ export const languageCodeMap: Record<string, string> = {
   'polish': 'pl-PL',
   'turkish': 'tr-TR',
   'romanian': 'ro-RO',
-  'tagalog': 'fil-PH' // Added Tagalog language code
+  'tagalog': 'fil-PH'
 };
 
 // Meta MMS specific language codes (ISO 639-3)
@@ -40,7 +41,8 @@ export const metaMmsLanguageMap: Record<string, string> = {
   'bengali': 'ben',
   'amharic': 'amh',
   'malayalam': 'mal',
-  'tagalog': 'fil' // Added Tagalog Meta MMS language code
+  'tagalog': 'fil',
+  'cantonese': 'yue' // Added Cantonese Meta MMS language code (ISO 639-3)
   // Add other languages supported by Meta MMS
 };
 

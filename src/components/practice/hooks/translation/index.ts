@@ -4,7 +4,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { TranslationType } from "./types";
 import { extractStringFromTranslation } from "./translationUtils";
-import { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation } from "./languageVerifiers";
+import { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, verifyChineseTranslation } from "./languageVerifiers";
 import { getTranslation, useTranslationService } from "./useTranslationService";
 
 export const useTranslationHandler = () => {
@@ -25,6 +25,7 @@ export const useTranslationHandler = () => {
     verifyFarsiTranslation,
     verifyBengaliTranslation,
     verifyTagalogTranslation,
+    verifyChineseTranslation,
     needsTranslation,
     extractStringFromTranslation
   };
@@ -33,4 +34,11 @@ export const useTranslationHandler = () => {
 export type { TranslationType };
 export { extractStringFromTranslation };
 // Export the verification functions and getTranslation so they can be imported directly
-export { verifyHindiTranslation, verifyFarsiTranslation, verifyBengaliTranslation, verifyTagalogTranslation, getTranslation };
+export { 
+  verifyHindiTranslation, 
+  verifyFarsiTranslation, 
+  verifyBengaliTranslation, 
+  verifyTagalogTranslation, 
+  verifyChineseTranslation, 
+  getTranslation 
+};
