@@ -1,8 +1,6 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocalization } from "@/context/LocalizationContext";
 
 interface TestStartPromptProps {
@@ -18,35 +16,18 @@ const TestStartPrompt = ({
   microphoneAccess,
   onStart
 }: TestStartPromptProps) => {
-  const [hasStudyMaterials, setHasStudyMaterials] = useState(true);
   const { t } = useLocalization();
   
-  useEffect(() => {
-    const hasStudyMaterials = sessionStorage.getItem("hasStudyMaterials") === "true";
-    setHasStudyMaterials(hasStudyMaterials);
-  }, []);
-
   return (
-    <div className="bg-lingua-secondary/30 rounded-lg p-6 text-center">
-      <p className="text-lingua-accent mb-4">{t("readyToTest")}</p>
-      
-      {!hasStudyMaterials && (
-        <Alert variant="warning" className="mb-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="text-sm">
-            {t("thisTestNotAvailable")}
-          </AlertDescription>
-        </Alert>
-      )}
-      
+    <div className="bg-gray-50 rounded-lg p-6 text-center">
+      <p className="text-gray-500 mb-4">{t("readyToTest")}</p>
       <Button 
         onClick={onStart} 
-        disabled={isLoading || !isLoggedIn || !microphoneAccess || !hasStudyMaterials}
-        className="bg-lingua-primary hover:bg-lingua-primary/90 text-white"
+        disabled={isLoading || !isLoggedIn || !microphoneAccess}
+        className="bg-blue-500 hover:bg-blue-600"
       >
         {isLoading ? t("processing") : t("startTest")}
       </Button>
-      
       {!isLoggedIn && (
         <p className="text-sm text-red-400 mt-3">{t("pleaseLoginToTakeTest")}</p>
       )}

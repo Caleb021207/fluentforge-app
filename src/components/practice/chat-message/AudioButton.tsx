@@ -18,34 +18,22 @@ const AudioButton: React.FC<AudioButtonProps> = ({
   isTranslation = false,
   ariaLabel 
 }) => {
-  // Use a stable class string that doesn't change between renders
-  const buttonClassNames = React.useMemo(() => `
-    ml-2 -mt-1 p-1 h-auto rounded-full transition-all duration-300
-    ${isTranslation ? 'hover:bg-gray-200/20 dark:hover:bg-gray-700/50' : 'hover:bg-lingua-accent/30 dark:hover:bg-lingua-blue-primary/30'}
-  `, [isTranslation]);
-
-  const iconClassNames = React.useMemo(() => `h-4 w-4 ${
-    isTranslation ? "text-gray-400 dark:text-gray-500" : "text-white dark:text-gray-200"
-  }`, [isTranslation]);
-
   return (
     <Button 
       onClick={onClick} 
       variant="ghost" 
       size="sm"
       disabled={isLoading || isPlaying}
-      className={buttonClassNames}
+      className="ml-2 -mt-1 p-1 h-auto"
       aria-label={ariaLabel}
     >
       {isLoading || isPlaying ? (
         <Loader2 className="h-4 w-4 animate-spin" />
       ) : (
-        <Volume2 className={iconClassNames} />
+        <Volume2 className={`h-4 w-4 ${isTranslation ? "text-gray-500" : ""}`} />
       )}
     </Button>
   );
 };
 
-AudioButton.displayName = "AudioButton";
-
-export default React.memo(AudioButton);
+export default AudioButton;

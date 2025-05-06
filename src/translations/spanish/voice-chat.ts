@@ -47,9 +47,6 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "Describe lo que ves a tu alrededor",
   practiceVocabularyForSpecific: "Practica vocabulario para temas específicos como viajes o comida",
   useThisTool: "Usa esta herramienta para mejorar tus habilidades de habla y escucha. Aquí hay algunos consejos:",
-  
-  // Add the missing practiceDescription key
-  practiceDescription: "Practica tus habilidades de habla usando nuestro chat de voz. Haz clic en el botón del micrófono y comienza a hablar en tu idioma objetivo.",
 };
 
 export default voiceChatTranslations;

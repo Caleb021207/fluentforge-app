@@ -51,7 +51,7 @@ const HomeActions = ({ isSignedIn, onLoginClick }: HomeActionsProps) => {
       {!isSignedIn ? (
         <Button 
           size="lg" 
-          className="bg-lingua-accent hover:bg-lingua-accent/90 text-lingua-primary"
+          className="bg-lingua-primary hover:bg-lingua-primary/90"
           onClick={onLoginClick}
         >
           {t("signIn")}

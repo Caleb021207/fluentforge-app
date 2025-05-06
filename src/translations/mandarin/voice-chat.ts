@@ -48,9 +48,6 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "描述您周围所看到的",
   practiceVocabularyForSpecific: "针对特定主题练习词汇，如旅行或食物",
   useThisTool: "使用此工具提高口语和听力技能。以下是一些提示：",
-  
-  // Add the missing practiceDescription key
-  practiceDescription: "使用我们的语音聊天练习口语技能。点击麦克风按钮，开始用您的目标语言说话。",
 };
 
 export default voiceChatTranslations;

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
@@ -66,7 +67,7 @@ const Practice = () => {
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-lingua-primary dark:border-lingua-blue-primary"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-lingua-primary"></div>
     </div>;
   }
 
@@ -107,7 +108,7 @@ const Practice = () => {
         <Button 
           variant="outline" 
           onClick={clearConversation}
-          className="flex items-center gap-2 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800 dark:text-gray-300"
+          className="flex items-center gap-2"
         >
           <Trash className="h-4 w-4" />
           {t("clearConversation")}

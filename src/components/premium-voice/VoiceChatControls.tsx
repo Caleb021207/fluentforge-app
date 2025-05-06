@@ -51,7 +51,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
         disabled={sessionStatus === 'loading' || weeklyTimeRemaining === 0}
         size="lg"
         className={`flex items-center justify-center px-8 py-3 rounded-full text-lg ${
-          isActive ? "bg-red-500 hover:bg-red-600 text-white" : "bg-lingua-primary hover:bg-lingua-primary/90 text-white dark:bg-lingua-blue-primary dark:hover:bg-lingua-blue-dark"
+          isActive ? "bg-red-500 hover:bg-red-600" : "bg-lingua-primary hover:bg-lingua-primary-dark"
         }`}
       >
         {isActive ? (

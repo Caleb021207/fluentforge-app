@@ -57,11 +57,18 @@ const LanguageSelectionCard = ({
     haitian: "🇭🇹 Kreyòl Ayisyen",
     igbo: "🇳🇬 Igbo",
     tagalog: "🇵🇭 Tagalog",
-    // Adding new languages with flags (only keeping German, Italian, and Thai)
+    // Adding new languages with flags
     german: "🇩🇪 Deutsch",
     italian: "🇮🇹 Italiano",
-    thai: "🇹🇭 ภาษาไทย"
-    // Removed: burmese, karen, nepali, tigrinya, punjabi, marathi, gujarati, sinhala
+    thai: "🇹🇭 ภาษาไทย",
+    burmese: "🇲🇲 မြန်မာဘာသာ",
+    karen: "🇲🇲 ကညီကျိာ်",
+    nepali: "🇳🇵 नेपाली",
+    tigrinya: "🇪🇷 ትግርኛ",
+    punjabi: "🇮🇳 ਪੰਜਾਬੀ",
+    marathi: "🇮🇳 मराठी",
+    gujarati: "🇮🇳 ગુજરાતી",
+    sinhala: "🇱🇰 සිංහල"
   };
 
   // Available target languages based on native language
@@ -97,11 +104,18 @@ const LanguageSelectionCard = ({
     haitian: "🇭🇹 Haitian Creole",
     igbo: "🇳🇬 Igbo",
     tagalog: "🇵🇭 Filipino/Tagalog",
-    // Adding new languages with flags (only keeping German, Italian, and Thai)
+    // Adding new languages with flags
     german: "🇩🇪 German",
     italian: "🇮🇹 Italian",
-    thai: "🇹🇭 Thai"
-    // Removed: burmese, karen, nepali, tigrinya, punjabi, marathi, gujarati, sinhala
+    thai: "🇹🇭 Thai",
+    burmese: "🇲🇲 Burmese",
+    karen: "🇲🇲 Karen (S'gaw)",
+    nepali: "🇳🇵 Nepali",
+    tigrinya: "🇪🇷 Tigrinya",
+    punjabi: "🇮🇳 Punjabi",
+    marathi: "🇮🇳 Marathi",
+    gujarati: "🇮🇳 Gujarati",
+    sinhala: "🇱🇰 Sinhala"
   };
   
   // Determine disabled options based on native language
@@ -124,9 +138,9 @@ const LanguageSelectionCard = ({
   );
 
   return (
-    <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur shadow-lg mb-8 dark:shadow-lg dark:shadow-black/20">
+    <Card className="bg-white/90 backdrop-blur shadow-lg mb-8">
       <CardContent className="pt-6">
-        <h2 className="text-xl font-semibold mb-4 dark:text-gray-100 dark:text-shadow-sm">{t("selectYourLanguagePreferences")}</h2>
+        <h2 className="text-xl font-semibold mb-4">{t("selectYourLanguagePreferences")}</h2>
         <div className="grid grid-cols-1 gap-4 mb-4">
           <LanguageSelectField
             id="nativeLanguage"
@@ -164,7 +178,7 @@ const LanguageSelectionCard = ({
         
         <Button 
           onClick={handleLanguageSelection} 
-          className="w-full dark:hover:bg-lingua-primary/80"
+          className="w-full"
           disabled={!nativeLanguage || !targetLanguage}
         >
           {t("saveLanguagePreferences")}

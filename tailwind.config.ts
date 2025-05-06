@@ -26,16 +26,10 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         lingua: {
-          primary: "#0B1C36", // Deep Navy instead of maroon
-          secondary: "#3A4E68", // Slate/Steel Blue instead of ivory
-          accent: "#A3D5FF", // Light Cyan/Sky Blue instead of charcoal
-          "accent-hover": "#8BC8FF", // Lighter Cyan for hover states
-          text: "#E0E0E0", // Soft Gray for text
-          highlight: "#57D8A1", // Soft Teal/Mint for highlighting
-          // Keep the blue colors for dark mode
-          "blue-light": "#D3E4FD",
-          "blue-primary": "#33C3F0",
-          "blue-dark": "#1EAEDB",
+          primary: "#6B9080",
+          secondary: "#F4F1DE",
+          accent: "#3D5A80",
+          text: "#2F3E46",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -65,18 +59,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Add text-specific color variables
-        text: {
-          primary: "hsl(var(--text-primary))",
-          secondary: "hsl(var(--text-secondary))",
-          muted: "hsl(var(--text-muted))",
-          accent: "hsl(var(--text-accent))",
-          inverse: "hsl(var(--text-inverse))",
-          "on-accent": "hsl(var(--text-on-accent))",
-          "on-primary": "hsl(var(--text-on-primary))",
-          disabled: "hsl(var(--text-disabled))",
-          placeholder: "hsl(var(--text-placeholder))",
-        }
       },
       keyframes: {
         overlayShow: {
@@ -101,22 +83,12 @@ export default {
           from: { opacity: "0", transform: "translateX(-2px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
-        fadeIn: {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        fadeOut: {
-          from: { opacity: "1" },
-          to: { opacity: "0" },
-        },
       },
       animation: {
         overlayShow: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideRightAndFade: "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-        fadeIn: "fadeIn 200ms ease-in-out",
-        fadeOut: "fadeOut 200ms ease-in-out",
       },
     },
   },

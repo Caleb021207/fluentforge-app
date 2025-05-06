@@ -33,8 +33,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const { t } = useLocalization();
   
   return (
-    <Card className="mb-4 p-6 bg-white/95 dark:bg-gray-800/95 border-lingua-accent/30 shadow-md transition-all duration-300">
-      <div className="space-y-4 mb-5 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-lingua-accent/20 hover:scrollbar-thumb-lingua-accent/40 dark:scrollbar-thumb-gray-600">
+    <Card className="mb-4 p-6">
+      <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
         {messages.length === 0 ? (
           <EmptyChatState />
         ) : (
@@ -55,7 +55,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         setInput={setInput}
         handleSubmit={handleSubmit}
         isLoading={isLoading}
-        placeholder={getPlaceholderText() || t("typeMessage") || "Type a message..."}
+        placeholder={getPlaceholderText() || "Type a message..."}
       />
     </Card>
   );
