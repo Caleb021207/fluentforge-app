@@ -44,7 +44,28 @@ const voiceChatTranslations: TranslationRecord = {
   "conversationHistoryCleared": "Gesprächsverlauf gelöscht",
   "success": "Erfolg",
   "unlimitedVoicePractice": "Unbegrenzte Sprachübung",
-  "voiceChatEnded": "Sprachunterhaltung beendet"
+  "voiceChatEnded": "Sprachunterhaltung beendet",
+  
+  // Additional translations needed
+  "freePracticeWithVoice": "Kostenlose Sprachübung",
+  "practiceWithVoiceChat": "Übe mit Sprachunterhaltung",
+  "practiceLanguageTips": "Nutze dieses Tool, um deine Sprech- und Hörfähigkeiten zu verbessern. Hier sind einige Tipps:",
+  "askQuestionsAboutTopics": "Stelle Fragen zu alltäglichen Themen",
+  "practiceEverydayPhrases": "Übe gängige Ausdrücke und Redewendungen",
+  "describeImagesOrScenes": "Beschreibe, was du um dich herum siehst",
+  "practiceVocabularyForSpecificTopics": "Übe Vokabeln für bestimmte Themen wie Reisen oder Essen",
+  "failedToGetResponse": "Konnte keine Antwort vom KI erhalten. Bitte versuche es erneut.",
+  "audioPlaybackError": "Fehler bei der Audiowiedergabe. Bitte versuche es erneut.",
+  "inYourTargetLanguage": "In deiner Zielsprache:",
+  "inYourNativeLanguage": "In deiner Muttersprache:",
+  "timeLimit10MinReached": "Die 10-Minuten-Zeitbegrenzung wurde erreicht",
+  "askQuestions": "Stelle Fragen zu alltäglichen Themen",
+  "practiceCommonPhrases": "Übe gängige Ausdrücke und Redewendungen",
+  "describeWhatYouSee": "Beschreibe, was du um dich herum siehst",
+  "practiceVocabularyForSpecific": "Übe Vokabeln für bestimmte Themen wie Reisen oder Essen",
+  "useThisTool": "Nutze dieses Tool, um deine Sprech- und Hörfähigkeiten zu verbessern. Hier sind einige Tipps:",
+  "remaining": "verbleibend",
+  "send": "Senden"
 };
 
 export default voiceChatTranslations;
