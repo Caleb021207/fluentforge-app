@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getSpeechRecognitionErrorMessage } from "@/utils/speechRecognitionUtils";
+import { debounce } from "lodash";
 
 interface UseSpeechRecognitionOptions {
   language: string;
@@ -12,6 +13,7 @@ interface UseSpeechRecognitionOptions {
   onEnd?: () => void;
   autoRestart?: boolean;
   audioDevice?: string; // Optional device ID for input
+  silenceTimeout?: number; // Time in ms to wait before considering silence
 }
 
 export const useSpeechRecognition = ({
@@ -21,18 +23,36 @@ export const useSpeechRecognition = ({
   onTranscript,
   onEnd,
   autoRestart = true,
-  audioDevice
+  audioDevice,
+  silenceTimeout = 30000 // Default to 30 seconds, up from previous implicit 10s
 }: UseSpeechRecognitionOptions) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSupported, setIsSupported] = useState(true);
   const [availableDevices, setAvailableDevices] = useState<MediaDeviceInfo[]>([]);
+  const [isRestarting, setIsRestarting] = useState(false);
   
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const restartTimeoutRef = useRef<number | null>(null);
+  const silenceTimeoutRef = useRef<number | null>(null);
+  const hasTranscriptRef = useRef<boolean>(false);
   const { toast } = useToast();
   const { t } = useLocalization();
+  
+  // Debounced transcript handler to prevent rapid updates
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedTranscriptHandler = useCallback(
+    debounce((text: string, isFinal: boolean) => {
+      if (onTranscript) {
+        onTranscript(text, isFinal);
+      }
+      
+      // Reset silence detection when we get new transcript
+      resetSilenceDetection(text);
+    }, 300),
+    [onTranscript]
+  );
   
   // Check available audio devices
   useEffect(() => {
@@ -65,6 +85,41 @@ export const useSpeechRecognition = ({
     };
   }, []);
   
+  // Reset silence detection timer
+  const resetSilenceDetection = useCallback((text?: string) => {
+    if (silenceTimeoutRef.current !== null) {
+      window.clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
+    
+    // Only set up silence detection if we're listening and have a silence timeout
+    if (isListening && silenceTimeout && silenceTimeout > 0) {
+      console.log("Setting up silence detection timeout for", silenceTimeout, "ms");
+      
+      // If we have text, update the hasTranscriptRef state
+      if (text && text.trim() !== "") {
+        hasTranscriptRef.current = true;
+      }
+      
+      silenceTimeoutRef.current = window.setTimeout(() => {
+        console.log("Silence timeout reached after", silenceTimeout, "ms");
+        
+        // Only auto-submit if we actually have a transcript
+        if (hasTranscriptRef.current) {
+          console.log("We have a transcript, calling onEnd");
+          if (onEnd) {
+            onEnd();
+          }
+          setIsListening(false);
+        } else {
+          console.log("No transcript detected, continuing to listen");
+          // If no speech detected, just reset the timeout and continue listening
+          resetSilenceDetection();
+        }
+      }, silenceTimeout);
+    }
+  }, [isListening, silenceTimeout, onEnd]);
+  
   // Check if speech recognition is supported
   useEffect(() => {
     const isAPISupported = 
@@ -86,8 +141,17 @@ export const useSpeechRecognition = ({
   // Cleanup function to properly dispose of speech recognition
   const cleanupRecognition = useCallback(() => {
     console.log("Cleaning up speech recognition");
+    
+    // Clear any silence detection timeout
+    if (silenceTimeoutRef.current !== null) {
+      window.clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+      console.log("Cleared silence detection timeout");
+    }
+    
     if (recognitionRef.current) {
       try {
+        // Remove event listeners first
         recognitionRef.current.onend = null;
         recognitionRef.current.onerror = null;
         recognitionRef.current.onresult = null;
@@ -104,6 +168,12 @@ export const useSpeechRecognition = ({
       restartTimeoutRef.current = null;
       console.log("Cleared pending restart timeout");
     }
+    
+    // Reset the restarting flag
+    setIsRestarting(false);
+    
+    // Reset transcript reference
+    hasTranscriptRef.current = false;
   }, []);
   
   // Initialize speech recognition
@@ -150,7 +220,7 @@ export const useSpeechRecognition = ({
   useEffect(() => {
     if (!isSupported || !recognitionRef.current) return;
     
-    if (isListening) {
+    if (isListening && !isRestarting) {
       recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         const lastResultIndex = event.results.length - 1;
         const transcriptText = event.results[lastResultIndex][0].transcript;
@@ -159,9 +229,8 @@ export const useSpeechRecognition = ({
         setTranscript(transcriptText);
         console.log(`Speech recognized: "${transcriptText}" (isFinal: ${isFinal})`);
         
-        if (onTranscript) {
-          onTranscript(transcriptText, isFinal);
-        }
+        // Use debounced handler to prevent too many updates
+        debouncedTranscriptHandler(transcriptText, isFinal);
       };
       
       recognitionRef.current.onerror = (event: any) => {
@@ -171,6 +240,7 @@ export const useSpeechRecognition = ({
         
         const errorMessage = getSpeechRecognitionErrorMessage(errorCode);
         
+        // Don't show errors for no-speech as they're common and annoying
         if (errorCode !== 'no-speech') {
           toast({
             title: t("speechRecognitionError"),
@@ -189,9 +259,12 @@ export const useSpeechRecognition = ({
       recognitionRef.current.onend = () => {
         console.log("Speech recognition ended");
         
-        // If we're still in listening mode, try to restart
-        if (isListening && autoRestart) {
+        // If we're still in listening mode and not already restarting, try to restart
+        if (isListening && autoRestart && !isRestarting) {
           console.log("Attempting to restart speech recognition after delay...");
+          
+          // Mark as restarting to prevent multiple restarts
+          setIsRestarting(true);
           
           // Clear any existing timeout
           if (restartTimeoutRef.current !== null) {
@@ -199,22 +272,27 @@ export const useSpeechRecognition = ({
           }
           
           // Set a timeout to restart after a delay to avoid race conditions
+          // Increased from 800ms to 1500ms to give more time for cleanup
           restartTimeoutRef.current = window.setTimeout(() => {
             if (recognitionRef.current && isListening) {
               try {
                 recognitionRef.current.start();
                 console.log("Restarted speech recognition after delay");
+                setIsRestarting(false);
               } catch (err) {
                 console.error("Failed to restart speech recognition:", err);
                 setIsListening(false);
+                setIsRestarting(false);
                 setError("Failed to restart recognition");
                 
                 if (onEnd) {
                   onEnd();
                 }
               }
+            } else {
+              setIsRestarting(false);
             }
-          }, 800); // Increased delay from 500ms to 800ms
+          }, 1500); // Increased delay from 800ms to 1500ms
         } else {
           setIsListening(false);
           
@@ -223,6 +301,9 @@ export const useSpeechRecognition = ({
           }
         }
       };
+      
+      // Start the silence detection when we start listening
+      resetSilenceDetection();
       
       try {
         recognitionRef.current.start();
@@ -238,7 +319,7 @@ export const useSpeechRecognition = ({
           variant: "destructive",
         });
       }
-    } else if (recognitionRef.current) {
+    } else if (recognitionRef.current && !isRestarting) {
       // Make sure we stop listening if the state is set to false
       try {
         console.log("Stopping speech recognition");
@@ -255,7 +336,7 @@ export const useSpeechRecognition = ({
         }
       }
     }
-  }, [isListening, isSupported, autoRestart, onTranscript, onEnd, toast, t]);
+  }, [isListening, isSupported, autoRestart, debouncedTranscriptHandler, onEnd, toast, t, resetSilenceDetection, isRestarting]);
   
   // Function to request microphone access explicitly
   const requestMicrophoneAccess = useCallback(async () => {
@@ -279,13 +360,24 @@ export const useSpeechRecognition = ({
   const startListening = async () => {
     if (isSupported) {
       console.log("Starting speech recognition");
+      
+      // If we're already listening or restarting, don't try to start again
+      if (isListening || isRestarting) {
+        console.log("Already listening or in process of restarting, not starting again");
+        return;
+      }
+      
       // Explicitly request microphone access before starting
       const hasAccess = await requestMicrophoneAccess();
       if (!hasAccess) return;
       
+      // Clean up any existing recognition instance
+      cleanupRecognition();
+      
       setError(null);
       setTranscript("");
       setIsListening(true);
+      hasTranscriptRef.current = false;
     } else {
       toast({
         title: t("error"),
@@ -299,11 +391,23 @@ export const useSpeechRecognition = ({
     console.log("Requesting to stop speech recognition");
     setIsListening(false);
     
+    // Reset transcript reference
+    hasTranscriptRef.current = false;
+    
+    // Clear any silence detection timeout
+    if (silenceTimeoutRef.current !== null) {
+      window.clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
+    
     // Clear any pending restart timeout when explicitly stopping
     if (restartTimeoutRef.current !== null) {
       window.clearTimeout(restartTimeoutRef.current);
       restartTimeoutRef.current = null;
     }
+    
+    // Clean up recognition
+    cleanupRecognition();
   };
   
   return {

@@ -38,7 +38,6 @@ const VoiceChat = () => {
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
-  const silenceTimeoutRef = useRef<number | null>(null);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
@@ -47,7 +46,7 @@ const VoiceChat = () => {
   // Get proper language code for speech recognition
   const recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
   
-  // Use our custom speech recognition hook
+  // Use our custom speech recognition hook with increased silence timeout
   const {
     isListening,
     startListening,
@@ -57,9 +56,16 @@ const VoiceChat = () => {
     language: recognitionLanguage,
     continuous: true,
     interimResults: true,
+    silenceTimeout: 30000, // 30 seconds silence timeout - much higher than before
     onTranscript: (text, isFinal) => {
       setTranscript(text);
-      resetSilenceDetection();
+    },
+    onEnd: () => {
+      // Auto-send message when silence is detected for too long
+      if (transcript && transcript.trim() !== "") {
+        console.log("Auto-sending message after silence timeout");
+        handleSendTranscript(transcript);
+      }
     }
   });
 
@@ -90,46 +96,28 @@ const VoiceChat = () => {
       if (synthRef.current && utteranceRef.current) {
         synthRef.current.cancel();
       }
-      clearSilenceDetection();
     };
   }, []);
 
-  const resetSilenceDetection = () => {
-    clearSilenceDetection();
-    
-    silenceTimeoutRef.current = window.setTimeout(() => {
-      if (transcript && isListening) {
-        console.log("10 seconds of silence detected, automatically sending message");
-        handleSendTranscript(transcript);
-        stopListening();
-      }
-    }, 10000);
-  };
-
-  const clearSilenceDetection = () => {
-    if (silenceTimeoutRef.current !== null) {
-      clearTimeout(silenceTimeoutRef.current);
-      silenceTimeoutRef.current = null;
-    }
-  };
-
   const toggleListening = () => {
     if (isListening) {
-      clearSilenceDetection();
       stopListening();
     } else {
       setTranscript("");
       setGptResponse("");
       setTranslation("");
       startListening();
-      resetSilenceDetection();
     }
   };
 
   const handleSendTranscript = async (text: string) => {
     if (!text.trim()) return;
     
-    clearSilenceDetection();
+    // Stop listening when sending
+    if (isListening) {
+      stopListening();
+    }
+    
     setIsLoading(true);
     
     const userMessage: ConversationMessage = {
@@ -234,6 +222,15 @@ const VoiceChat = () => {
       onEnd: () => {
         console.log("TTS ended");
         setIsSpeaking(false);
+        
+        // Restart listening automatically after speech is done
+        if (!isListening && !isLoading) {
+          console.log("Auto-restarting listening after TTS completion");
+          // Add a small delay before starting listening again
+          setTimeout(() => {
+            startListening();
+          }, 500);
+        }
       },
       onError: (error) => {
         console.error("TTS error:", error);
@@ -254,6 +251,7 @@ const VoiceChat = () => {
   };
 
   const getConversationStarters = () => {
+    // ... keep existing code (conversation starters implementation)
     const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
     
     let nativeLanguagePhrases;
@@ -332,11 +330,13 @@ const VoiceChat = () => {
                 variant={isListening ? "destructive" : "default"}
                 size="lg"
                 disabled={isLoading || isSpeaking}
+                className="relative"
               >
                 {isListening ? (
                   <>
                     <MicOff className="h-5 w-5 mr-2" />
                     {t("stopListening")}
+                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
                   </>
                 ) : (
                   <>
@@ -361,7 +361,8 @@ const VoiceChat = () => {
           </div>
           
           {isListening && (
-            <div className="text-sm text-gray-500 animate-pulse mb-4">
+            <div className="flex items-center text-sm text-green-600 dark:text-green-400 mb-4">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
               {t("listeningNow")}...
             </div>
           )}
@@ -400,7 +401,7 @@ const VoiceChat = () => {
                   className="flex items-center gap-2"
                   disabled={isSpeaking}
                 >
-                  <Volume2 className="h-4 w-4" />
+                  <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse text-green-500' : ''}`} />
                   {isSpeaking 
                     ? t("speaking") 
                     : t("playAgain")}
