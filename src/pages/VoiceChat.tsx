@@ -368,12 +368,7 @@ const VoiceChat = () => {
           <strong>{t("aiModelInfo")}</strong>
         </p>
         
-        {/* Show appropriate TTS info message based on language */}
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
-          <p className="text-amber-800 text-sm">
-            {t("browserBasedTTS")}
-          </p>
-        </div>
+        {/* Removed the beige notification box about browser-based TTS */}
       </div>
 
       <div className="flex flex-col gap-6">
