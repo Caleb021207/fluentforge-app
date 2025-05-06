@@ -10,7 +10,7 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "french": { languageCode: "fr-FR", voiceName: "fr-FR-HenriNeural" },
   "japanese": { languageCode: "ja-JP", voiceName: "ja-JP-KeitaNeural" },
   "mandarin": { languageCode: "zh-CN", voiceName: "zh-CN-YunxiNeural" }, 
-  "cantonese": { languageCode: "zh-HK", voiceName: "zh-HK-WanLungNeural" }, // Added Cantonese with Azure voice
+  "cantonese": { languageCode: "zh-HK", voiceName: "zh-HK-WanLungNeural" }, 
   "hindi": { languageCode: "hi-IN", voiceName: "hi-IN-MadhurNeural" },
   "indonesian": { languageCode: "id-ID", voiceName: "id-ID-ArdiNeural" },
   "farsi": { languageCode: "fa-IR", voiceName: "fa-IR-FaridNeural" },
@@ -22,8 +22,25 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "pashto": { languageCode: "ps-AF", voiceName: "ps-AF-GulNawazNeural" },
   "swahili": { languageCode: "sw-KE", voiceName: "sw-KE-RafikiNeural" },
   "german": { languageCode: "de-DE", voiceName: "de-DE-KatjaNeural" },
-  // Add Italian language support with Azure voice
   "italian": { languageCode: "it-IT", voiceName: "it-IT-DiegoNeural" },
+  // Add Thai language support with Azure voice
+  "thai": { languageCode: "th-TH", voiceName: "th-TH-PremwadeeNeural" },
+  // Add Burmese language support with Azure voice
+  "burmese": { languageCode: "my-MM", voiceName: "my-MM-NilarNeural" },
+  // Add Karen language support with Azure voice (using Myanmar as base)
+  "karen": { languageCode: "my-MM", voiceName: "my-MM-ThihaNeural" },
+  // Add Nepali language support with Azure voice
+  "nepali": { languageCode: "ne-NP", voiceName: "ne-NP-HemkalaNeural" },
+  // Add Tigrinya language support with Azure voice (using Amharic as closest available)
+  "tigrinya": { languageCode: "am-ET", voiceName: "am-ET-MekdesNeural" },
+  // Add Punjabi language support with Azure voice
+  "punjabi": { languageCode: "pa-IN", voiceName: "pa-IN-GurdeepNeural" },
+  // Add Marathi language support with Azure voice
+  "marathi": { languageCode: "mr-IN", voiceName: "mr-IN-AarohiNeural" },
+  // Add Gujarati language support with Azure voice
+  "gujarati": { languageCode: "gu-IN", voiceName: "gu-IN-DhwaniNeural" },
+  // Add Sinhala language support with Azure voice
+  "sinhala": { languageCode: "si-LK", voiceName: "si-LK-SameeraNeural" },
   // Re-adding previously removed languages
   "haitian": { languageCode: "ht-HT", voiceName: "ht-HT-DefaultNeural" },
   "igbo": { languageCode: "ig-NG", voiceName: "ig-NG-DefaultNeural" },
@@ -59,8 +76,25 @@ export const pollyVoiceMap: Record<string, string> = {
   "pashto": "Kajal", // Use Hindi voice as fallback
   "swahili": "Joanna", // Use English voice as fallback
   "german": "Marlene",
-  // Add Italian voice for Polly
   "italian": "Bianca",
+  // Add Thai voice for Polly (using fallback)
+  "thai": "Aditi", // Use closest available voice as fallback
+  // Add Burmese voice for Polly (using fallback)
+  "burmese": "Aditi", // Use closest available voice as fallback
+  // Add Karen voice for Polly (using fallback)
+  "karen": "Aditi", // Use closest available voice as fallback
+  // Add Nepali voice for Polly (using fallback)
+  "nepali": "Aditi", // Use closest available voice as fallback
+  // Add Tigrinya voice for Polly (using fallback)
+  "tigrinya": "Aditi", // Use closest available voice as fallback
+  // Add Punjabi voice for Polly (using fallback)
+  "punjabi": "Aditi", // Use closest available voice as fallback
+  // Add Marathi voice for Polly (using fallback)
+  "marathi": "Aditi", // Use closest available voice as fallback
+  // Add Gujarati voice for Polly (using fallback)
+  "gujarati": "Aditi", // Use closest available voice as fallback
+  // Add Sinhala voice for Polly (using fallback)
+  "sinhala": "Aditi", // Use closest available voice as fallback
   // Re-adding previously removed languages
   "haitian": "Joanna", // Use English voice as fallback
   "igbo": "Joanna", // Use English voice as fallback
@@ -88,7 +122,15 @@ export const metaMmsLanguageMap: Record<string, string> = {
   "cantonese": "yue", // Added Cantonese ISO 639-3 code
   "german": "deu",    // Added German ISO 639-3 code
   "italian": "ita",   // Added Italian ISO 639-3 code
-  // Add other languages supported by Meta MMS
+  "thai": "tha",      // Added Thai ISO 639-3 code
+  "burmese": "mya",   // Added Burmese ISO 639-3 code
+  "karen": "ksw",     // Added Karen ISO 639-3 code
+  "nepali": "nep",    // Added Nepali ISO 639-3 code
+  "tigrinya": "tir",  // Added Tigrinya ISO 639-3 code
+  "punjabi": "pan",   // Added Punjabi ISO 639-3 code
+  "marathi": "mar",   // Added Marathi ISO 639-3 code
+  "gujarati": "guj",  // Added Gujarati ISO 639-3 code
+  "sinhala": "sin"    // Added Sinhala ISO 639-3 code
 };
 
 // Constants
