@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -38,7 +39,16 @@ const practiceTranslations: TranslationRecord = {
   sendEnglishPracticePrompt: "Отправить задание для практики английского",
   
   practicePrompt: "Здравствуйте! Я хотел(а) бы попрактиковаться в разговоре на {{targetLanguage}}. Пожалуйста, помогите мне исправить грамматику, словарный запас и использование {{targetLanguage}}. Можем ли мы начать с базовой беседы?",
-  chatPlaceholder: "Введите сообщение, чтобы практиковать {{targetLanguage}}..."
+  chatPlaceholder: "Введите сообщение, чтобы практиковать {{targetLanguage}}...",
+  
+  // Practice guide translations
+  practiceGuide: "Руководство по практике {{language}}",
+  practiceDescription: "Вот несколько советов, чтобы максимально эффективно использовать вашу практику {{language}}:",
+  practiceTip1: "Старайтесь составлять полные предложения, даже если они простые.",
+  practiceTip2: "Не беспокойтесь об ошибках - они часть процесса обучения!",
+  practiceTip3: "Просите разъяснений, если вы что-то не понимаете.",
+  practiceTip4: "Старайтесь использовать словарный запас, который вы недавно изучили.",
+  practiceTip5: "Практикуйтесь регулярно для улучшения беглости речи."
 };
 
 export default practiceTranslations;

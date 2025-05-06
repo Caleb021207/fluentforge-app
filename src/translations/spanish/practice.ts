@@ -35,6 +35,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Practice guide translations - adding these to fix the placeholders
   practiceGuide: "Guía de práctica para {{language}}",
+  practiceDescription: "Aquí hay algunos consejos para aprovechar al máximo tu práctica de {{language}}:",
   practiceTip1: "Intenta formar oraciones completas, incluso si son sencillas.",
   practiceTip2: "No te preocupes por los errores, son parte del proceso de aprendizaje.",
   practiceTip3: "Pide aclaraciones si no entiendes algo.",

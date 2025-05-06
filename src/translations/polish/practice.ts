@@ -49,6 +49,15 @@ const practiceTranslations: TranslationRecord = {
   discussCulturalTopics: "Dyskutuj o tematach kulturowych",
   practicePrompt: "Cześć! Chciałbym poćwiczyć konwersację w języku {{targetLanguage}}. Proszę pomóż mi, poprawiając moją gramatykę, słownictwo i użycie języka {{targetLanguage}}. Czy możemy zacząć od podstawowej rozmowy?",
   chatPlaceholder: "Wpisz swoją wiadomość, aby ćwiczyć język {{targetLanguage}}...",
+  
+  // Practice guide translations
+  practiceGuide: "Przewodnik ćwiczeń dla {{language}}",
+  practiceDescription: "Oto kilka wskazówek, jak najlepiej wykorzystać ćwiczenia {{language}}:",
+  practiceTip1: "Staraj się tworzyć pełne zdania, nawet jeśli są proste.",
+  practiceTip2: "Nie przejmuj się błędami - są częścią procesu uczenia się!",
+  practiceTip3: "Poproś o wyjaśnienie, jeśli czegoś nie rozumiesz.",
+  practiceTip4: "Staraj się używać słownictwa, którego niedawno się nauczyłeś.",
+  practiceTip5: "Ćwicz regularnie, aby poprawić płynność."
 };
 
 export default practiceTranslations;

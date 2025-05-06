@@ -38,6 +38,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Practice guide translations
   practiceGuide: "Practice Guide for {{language}}",
+  practiceDescription: "Here are some tips to get the most out of your {{language}} practice:",
   practiceTip1: "Try to form complete sentences, even if they're simple.",
   practiceTip2: "Don't worry about mistakes – they're part of the learning process!",
   practiceTip3: "Ask for clarification if you don't understand something.",
