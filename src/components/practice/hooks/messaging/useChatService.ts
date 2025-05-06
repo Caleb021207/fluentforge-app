@@ -43,7 +43,7 @@ export const useChatService = () => {
         requestTranslation: true 
       });
       
-      // Use chat-with-tutor endpoint
+      // Use chat-with-tutor endpoint with explicit language parameters
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: message,
@@ -58,15 +58,12 @@ export const useChatService = () => {
         throw error;
       }
 
-      if (userLanguage === 'tagalog') {
-        console.log('Response from AI tutor for Tagalog:', {
-          hasData: !!data,
-          hasTranslation: data && 'translation' in data,
-          translationType: data?.translation ? typeof data.translation : 'none'
-        });
-      } else {
-        console.log('Response from AI tutor:', data);
-      }
+      console.log('Response from AI tutor:', {
+        hasData: !!data,
+        hasTranslation: data && 'translation' in data,
+        translationType: data?.translation ? typeof data.translation : 'none',
+        userLanguage
+      });
       
       // Handle case where response is missing content
       if (!data) {

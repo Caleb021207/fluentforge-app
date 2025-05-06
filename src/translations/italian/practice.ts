@@ -37,7 +37,14 @@ const practiceTranslations: TranslationRecord = {
   "practiceTip3": "Chiedi chiarimenti se non capisci qualcosa.",
   "practiceTip4": "Cerca di usare il vocabolario che hai imparato di recente.",
   "practiceTip5": "La nostra AI si adatterà al tuo livello di competenza e ti aiuterà a migliorare gradualmente.",
-  "practiceGuide": "Guida alla pratica di {language}"
+  "practiceGuide": "Guida alla pratica di {language}",
+  "success": "Successo",
+  "error": "Errore",
+  "emptyMessage": "Per favore, inserisci un messaggio",
+  "failedToSendMessage": "Impossibile inviare il messaggio. Per favore riprova.",
+  "translationError": "Errore di traduzione",
+  "failedToGetTranslation": "Impossibile ottenere la traduzione",
+  "networkConnectionIssue": "Problema di connessione di rete. Per favore riprova."
 };
 
 export default practiceTranslations;
