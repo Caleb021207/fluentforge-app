@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
-import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
+import { useElevenLabsAgent, getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { useConversationState } from "@/hooks/useConversationState";
 import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
@@ -14,7 +14,9 @@ export const useVoiceChat = () => {
   const { t, currentLanguage } = useLocalization();
   const { microphoneAccess, requestMicrophoneAccess } = useMicrophoneAccess();
   const [onMessageCallback, setOnMessageCallback] = useState<(message: any) => void>(() => () => {});
-  const { fetchApiKey } = useSecureApiKeys();
+  const { fetchApiKey, elevenLabsApiKey } = useSecureApiKeys();
+  const [apiKeyLoaded, setApiKeyLoaded] = useState(false);
+  
   const {
     currentSessionId,
     connectionAttempts,
@@ -23,27 +25,45 @@ export const useVoiceChat = () => {
     endConversationSession
   } = useConversationState();
 
-  const [isActive, setIsActive] = useState(false);
+  // Language that will be used for the conversation
+  const [activeLanguage, setActiveLanguage] = useState<string>(currentLanguage);
   
-  // Placeholder for ElevenLabs conversation
-  const conversation = {
-    status: isActive ? "connected" : "disconnected",
-    isSpeaking: false,
-    startSession: async (opts: any) => {
-      console.log("[PLACEHOLDER] Would start conversation session with:", opts);
-      return `placeholder-conversation-${Date.now()}`;
-    },
-    endSession: async () => {
-      console.log("[PLACEHOLDER] Would end conversation session");
-      return true;
-    }
-  };
+  // Use the ElevenLabs hook
+  const {
+    startAgent,
+    stopAgent,
+    isConnected,
+    isSpeaking,
+    conversation
+  } = useElevenLabsAgent(activeLanguage);
 
-  const isConversationActive = () => isActive;
+  // Function to check if conversation is active
+  const isConversationActive = () => isConnected;
+
+  // Effect to fetch API key on component mount
+  useEffect(() => {
+    const loadApiKey = async () => {
+      try {
+        const key = await fetchApiKey(activeLanguage);
+        setApiKeyLoaded(!!key);
+      } catch (error) {
+        console.error("Failed to load ElevenLabs API key:", error);
+        setApiKeyLoaded(false);
+      }
+    };
+    
+    loadApiKey();
+  }, [activeLanguage]);
 
   const startVoiceConversation = async (overrideLanguage?: string) => {
-    setConnectionAttempts(0);
+    setConnectionAttempts(prev => prev + 1);
     
+    // Set the active language
+    if (overrideLanguage) {
+      setActiveLanguage(overrideLanguage);
+    }
+    
+    // Check for microphone access
     if (!microphoneAccess) {
       const hasAccess = await requestMicrophoneAccess();
       if (!hasAccess) {
@@ -57,6 +77,7 @@ export const useVoiceChat = () => {
     }
 
     try {
+      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
@@ -67,18 +88,20 @@ export const useVoiceChat = () => {
         return { conversationId: null };
       }
 
+      // Create a conversation session in our database
       await createConversationSession(user.id);
       
-      // Placeholder for API key fetch
-      console.log("[PLACEHOLDER] Would fetch API key for", overrideLanguage || currentLanguage);
+      // Fetch API key if not already loaded
+      if (!elevenLabsApiKey && !apiKeyLoaded) {
+        const key = await fetchApiKey(overrideLanguage || currentLanguage);
+        if (!key) {
+          throw new Error("Failed to fetch ElevenLabs API key");
+        }
+        setApiKeyLoaded(true);
+      }
       
-      // Placeholder for agent ID, using override language if provided
-      const selectedAgentId = getAgentIdForLanguage(overrideLanguage || currentLanguage);
-      console.log(`[PLACEHOLDER] Would start voice conversation with agent ID: ${selectedAgentId} for ${overrideLanguage || currentLanguage} speaker`);
-      
-      // Simulate session start
-      setIsActive(true);
-      const conversationId = `placeholder-conversation-${Date.now()}`;
+      // Start the conversation agent
+      const conversationId = await startAgent(elevenLabsApiKey || "");
       
       toast({
         title: t("startVoiceChat"),
@@ -113,8 +136,7 @@ export const useVoiceChat = () => {
   const endVoiceConversation = async () => {
     try {
       if (isConversationActive()) {
-        console.log("[PLACEHOLDER] Would end conversation session");
-        setIsActive(false);
+        await stopAgent();
       }
       
       const { data: { user } } = await supabase.auth.getUser();
@@ -155,6 +177,8 @@ export const useVoiceChat = () => {
     isConversationActive,
     startVoiceConversation,
     endVoiceConversation,
-    conversation
+    conversation,
+    setMessageHandler,
+    apiKeyLoaded
   };
 };

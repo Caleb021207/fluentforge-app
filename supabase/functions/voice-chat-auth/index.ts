@@ -45,7 +45,6 @@ serve(async (req) => {
       throw new Error('Invalid user token');
     }
 
-    // Check user permissions (could add more checks here)
     // Log API access for monitoring
     await supabaseClient
       .from('api_calls_tracking')
@@ -54,7 +53,7 @@ serve(async (req) => {
         call_type: 'voice_chat_auth'
       });
 
-    // Generate signed URL for ElevenLabs (simplified for example - you would implement proper URL generation)
+    // Return the API key
     return new Response(
       JSON.stringify({
         apiKey: ELEVEN_LABS_API_KEY,

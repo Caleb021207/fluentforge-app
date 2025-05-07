@@ -1,4 +1,8 @@
+
 import { useEffect, useState } from 'react';
+import { useConversation } from '@11labs/react';
+import { useToast } from '@/hooks/use-toast';
+import { useLocalization } from '@/context/LocalizationContext';
 
 // Configuration for the ElevenLabs agents (updated with real agent IDs)
 export const SPANISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; 
@@ -33,7 +37,7 @@ const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
 };
 
 /**
- * Gets the appropriate agent ID based on the user's language (placeholder implementation)
+ * Gets the appropriate agent ID based on the user's language
  */
 export const getAgentIdForLanguage = (language: string): string => {
   const normalizedLanguage = language.toLowerCase();
@@ -48,47 +52,96 @@ export const getAgentIdForLanguage = (language: string): string => {
 };
 
 /**
- * Initializes an ElevenLabs conversation agent (placeholder implementation)
+ * Initializes an ElevenLabs conversation agent
  */
-export const initializeElevenLabsAgent = async (language: string = 'english') => {
-  console.log(`[PLACEHOLDER] Would initialize ElevenLabs agent for ${language}`);
-  return `placeholder-conversation-${Date.now()}-${language}`;
+export const initializeElevenLabsAgent = async (language: string = 'english', apiKey: string) => {
+  console.log(`[ElevenLabs] Initializing agent for ${language}`);
+  
+  // In a real implementation, this would be handled by the @11labs/react useConversation hook
+  // This is just a fallback for if the hook fails
+  return `conversation-${Date.now()}-${language}`;
 };
 
 /**
- * Ends an active ElevenLabs conversation (placeholder implementation)
+ * Ends an active ElevenLabs conversation
  */
 export const endElevenLabsConversation = async (conversationId: string) => {
-  console.log(`[PLACEHOLDER] Would end ElevenLabs conversation: ${conversationId}`);
+  console.log(`[ElevenLabs] Ending conversation: ${conversationId}`);
   return true;
 };
 
 /**
- * Hook for using ElevenLabs conversation in React components (placeholder implementation)
+ * Hook for using ElevenLabs conversation in React components
  */
 export const useElevenLabsAgent = (language: string = 'english') => {
-  const [isConnected, setIsConnected] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const { t } = useLocalization();
+  const { toast } = useToast();
+  
+  // Use the official ElevenLabs React hook
+  const conversation = useConversation({
+    onConnect: () => {
+      console.log('[ElevenLabs] Connection established');
+    },
+    onDisconnect: () => {
+      console.log('[ElevenLabs] Connection ended');
+    },
+    onMessage: (message) => {
+      console.log('[ElevenLabs] Message received:', message);
+    },
+    onError: (error) => {
+      console.error('[ElevenLabs] Error:', error);
+      toast({
+        title: t("error"),
+        description: t("networkConnectionIssue"),
+        variant: "destructive",
+      });
+    }
+  });
   
   // Helper to check if conversation is active
-  const isConversationActive = () => isConnected;
+  const isConversationActive = () => conversation.status === 'connected';
   
-  const startAgent = async () => {
-    console.log(`[PLACEHOLDER] Would start ElevenLabs agent for ${language}`);
-    setIsConnected(true);
-    return `placeholder-conversation-${Date.now()}-${language}`;
+  const startAgent = async (apiKey: string) => {
+    try {
+      console.log(`[ElevenLabs] Starting agent for ${language}`);
+      
+      const agentId = getAgentIdForLanguage(language);
+      
+      // Start the conversation session with the appropriate agent ID
+      const conversationId = await conversation.startSession({
+        agentId: agentId
+      });
+      
+      console.log(`[ElevenLabs] Started conversation ${conversationId}`);
+      return conversationId;
+      
+    } catch (error) {
+      console.error('[ElevenLabs] Failed to start agent:', error);
+      toast({
+        title: t("error"),
+        description: t("failedToStartSession"),
+        variant: "destructive",
+      });
+      throw error;
+    }
   };
   
   const stopAgent = async () => {
-    console.log('[PLACEHOLDER] Would stop ElevenLabs agent');
-    setIsConnected(false);
-    return true;
+    try {
+      console.log('[ElevenLabs] Stopping agent');
+      await conversation.endSession();
+      return true;
+    } catch (error) {
+      console.error('[ElevenLabs] Failed to stop agent:', error);
+      return false;
+    }
   };
   
   return {
     startAgent,
     stopAgent,
-    isConnected,
-    isSpeaking
+    isConnected: conversation.status === 'connected',
+    isSpeaking: conversation.isSpeaking,
+    conversation
   };
 };

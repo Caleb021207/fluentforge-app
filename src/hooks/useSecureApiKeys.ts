@@ -16,6 +16,8 @@ export const useSecureApiKeys = () => {
     setError(null);
     
     try {
+      console.log(`[API] Fetching API key for language: ${language}`);
+      
       const { data, error } = await supabase.functions.invoke('voice-chat-auth', {
         body: { language }
       });
@@ -30,6 +32,7 @@ export const useSecureApiKeys = () => {
         return null;
       }
 
+      console.log(`[API] Successfully retrieved API key`);
       setElevenLabsApiKey(data.apiKey);
       return data.apiKey;
     } catch (err: any) {
