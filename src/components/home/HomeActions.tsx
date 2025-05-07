@@ -24,13 +24,13 @@ const HomeActions = ({ isSignedIn, onLoginClick }: HomeActionsProps) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button size="lg" variant="outline" disabled className="opacity-60">
+              <Button size="lg" variant="outline" disabled className="opacity-60 text-foreground dark:text-white">
                 <Lock className="w-4 h-4 mr-2" />
                 {t("practiceWithAI")}
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("loginRequiredForFeature")}</p>
+              <p className="dark:text-white">{t("loginRequiredForFeature")}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -39,7 +39,7 @@ const HomeActions = ({ isSignedIn, onLoginClick }: HomeActionsProps) => {
 
     return (
       <Link to="/practice">
-        <Button size="lg" variant="outline">
+        <Button size="lg" variant="outline" className="text-foreground dark:text-white">
           {t("practiceWithAI")}
         </Button>
       </Link>
@@ -53,6 +53,7 @@ const HomeActions = ({ isSignedIn, onLoginClick }: HomeActionsProps) => {
           size="lg" 
           variant="accent"
           onClick={onLoginClick}
+          className="text-foreground dark:text-white"
         >
           {t("signIn")}
         </Button>

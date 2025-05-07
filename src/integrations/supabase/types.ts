@@ -606,6 +606,24 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_student_usage_metrics: {
+        Args: { teacher_id_param?: string }
+        Returns: {
+          avg_certification_score: number | null
+          certification_attempts: number | null
+          class_name: string | null
+          classroom_id: string | null
+          completed_lessons: number | null
+          last_certification: string | null
+          last_lesson_progress: string | null
+          last_voice_chat: string | null
+          student_id: string | null
+          teacher_id: string | null
+          total_lessons: number | null
+          voice_chat_minutes: number | null
+          voice_chat_sessions: number | null
+        }[]
+      }
       is_class_member: {
         Args: { classroom_id: string }
         Returns: boolean

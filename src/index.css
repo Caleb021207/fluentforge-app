@@ -48,25 +48,25 @@
 
   .dark {
     --background: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    --foreground: 0 0% 100%;  /* White */
+    --foreground: 0 0% 100%;  /* WHITE instead of muted - for better contrast */
 
     --card: 217 37% 18%;  /* #1D2B40 - Darker navy */
-    --card-foreground: 0 0% 100%;  /* White */
+    --card-foreground: 0 0% 100%;  /* WHITE - for better contrast */
 
     --popover: 217 37% 18%;  /* #1D2B40 - Darker navy */
-    --popover-foreground: 0 0% 100%;  /* White */
+    --popover-foreground: 0 0% 100%;  /* WHITE - for better contrast */
 
     --primary: 209 100% 82%;  /* #A3D5FF - Sky blue */
     --primary-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
 
     --secondary: 217 30% 32%;  /* #3A4E68 - Slate blue */
-    --secondary-foreground: 0 0% 100%;  /* White */
+    --secondary-foreground: 0 0% 100%;  /* WHITE - for better contrast */
 
     --muted: 217 30% 22%;  /* Darker muted background */
-    --muted-foreground: 0 0% 75%;  /* Muted text in dark mode */
+    --muted-foreground: 0 0% 95%;  /* LIGHTER gray for muted text - better contrast */
 
     --accent: 158 58% 59%;  /* #57D8A1 - Teal variant */
-    --accent-foreground: 0 0% 100%;  /* White */
+    --accent-foreground: 0 0% 100%;  /* WHITE - for better contrast */
 
     --destructive: 0 62.8% 30.6%;  /* Keep existing */
     --destructive-foreground: 0 0% 98%;  /* Keep existing */
@@ -76,11 +76,11 @@
     --ring: 209 100% 82%;  /* #A3D5FF - Sky blue */
     
     --sidebar-background: 217 37% 18%;  /* #1D2B40 - Darker navy */
-    --sidebar-foreground: 0 0% 100%;  /* White */
+    --sidebar-foreground: 0 0% 100%;  /* WHITE - for better contrast */
     --sidebar-primary: 209 100% 82%;  /* #A3D5FF - Sky blue */
     --sidebar-primary-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
     --sidebar-accent: 158 58% 59%;  /* #57D8A1 - Teal variant */
-    --sidebar-accent-foreground: 0 0% 100%;  /* White */
+    --sidebar-accent-foreground: 0 0% 100%;  /* WHITE - for better contrast */
     --sidebar-border: 217 30% 26%;  /* Darker border */
     --sidebar-ring: 209 100% 82%;  /* #A3D5FF - Sky blue */
   }

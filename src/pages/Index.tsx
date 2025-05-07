@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -126,10 +127,10 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold text-lingua-text mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             {t("welcomeToLanguageLearning")}
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-8">
+          <p className="text-lg md:text-xl text-foreground dark:text-white mb-8">
             {t("yourPersonalAICompanion")}
           </p>
           
