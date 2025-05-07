@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from 'react';
 
-// Configuration for the ElevenLabs agents (placeholders)
-export const SPANISH_TUTOR_AGENT_ID = 'placeholder_spanish_agent_id'; 
+// Configuration for the ElevenLabs agents (updated with real agent IDs)
+export const SPANISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; 
 export const ENGLISH_TUTOR_AGENT_ID = 'placeholder_english_agent_id';
-export const PORTUGUESE_TUTOR_AGENT_ID = 'placeholder_portuguese_agent_id';
+export const PORTUGUESE_TUTOR_AGENT_ID = 'WuaaV0Pu1tinWfjSk9CY';
 export const KOREAN_TUTOR_AGENT_ID = 'placeholder_korean_agent_id';
 export const ARABIC_TUTOR_AGENT_ID = 'placeholder_arabic_agent_id';
 export const MANDARIN_TUTOR_AGENT_ID = 'placeholder_mandarin_agent_id';
@@ -16,7 +15,7 @@ export const UKRAINIAN_TUTOR_AGENT_ID = 'placeholder_ukrainian_agent_id';
 export const HINDI_TUTOR_AGENT_ID = 'placeholder_hindi_agent_id';
 export const INDONESIAN_TUTOR_AGENT_ID = 'placeholder_indonesian_agent_id';
 
-// Language to agent ID mapping (placeholders)
+// Language to agent ID mapping (updated Spanish and Portuguese with real IDs)
 const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
   "english": SPANISH_TUTOR_AGENT_ID,
   "spanish": ENGLISH_TUTOR_AGENT_ID,
@@ -40,11 +39,11 @@ export const getAgentIdForLanguage = (language: string): string => {
   const normalizedLanguage = language.toLowerCase();
   
   if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
-    console.log(`[PLACEHOLDER] Would use tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
+    console.log(`[ElevenLabs] Using tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
     return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
   }
   
-  console.log("[PLACEHOLDER] Language not found, would use default Spanish tutor for English speakers");
+  console.log("[ElevenLabs] Language not found, using default Spanish tutor for English speakers");
   return SPANISH_TUTOR_AGENT_ID;
 };
 
