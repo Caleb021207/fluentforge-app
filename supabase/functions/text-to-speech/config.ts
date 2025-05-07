@@ -1,4 +1,3 @@
-
 // Language and voice mapping configurations
 
 // Language code mapping with information about which TTS service to use
@@ -57,7 +56,7 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
 
 // Polly voice mapping
 export const pollyVoiceMap: Record<string, string> = {
-  "english": "Joanna",
+  "english": "Matthew", // Changed from Joanna to Matthew for better quality
   "spanish": "Lupe",
   "portuguese": "Camila",
   "french": "Léa",
