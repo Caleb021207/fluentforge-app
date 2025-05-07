@@ -45,6 +45,13 @@ const premiumVoiceTranslations: TranslationRecord = {
   benefitAccentPronunciation: "Accurate accent and pronunciation for immersive learning",
   benefitRegularPractice: "10 minutes of practice time weekly, resetting each Monday at 6:00 AM Central Time",
   timeLimit10MinReached: "10-minute time limit reached",
+  
+  // Language-specific advanced voice pages
+  spanishAdvancedVoice: "Spanish Advanced Voice",
+  spanishAdvancedVoiceChat: "Spanish Advanced Voice Chat",
+  portugueseAdvancedVoice: "Portuguese Advanced Voice",
+  portugueseAdvancedVoiceChat: "Portuguese Advanced Voice Chat",
+  advancedVoiceDescription: "Practice with advanced voice technology specifically optimized for {{language}} speakers",
 };
 
 export default premiumVoiceTranslations;

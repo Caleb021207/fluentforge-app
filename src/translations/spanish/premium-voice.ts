@@ -38,7 +38,14 @@ const premiumVoiceTranslations: TranslationRecord = {
   timeLimit10MinReached: "Límite de tiempo de 10 minutos alcanzado",
   
   // Added missing key
-  premiumSessionLimitReached: "Límite de Sesión Premium Alcanzado"
+  premiumSessionLimitReached: "Límite de Sesión Premium Alcanzado",
+  
+  // Language-specific advanced voice pages
+  spanishAdvancedVoice: "Voz Avanzada en Español",
+  spanishAdvancedVoiceChat: "Chat de Voz Avanzada en Español",
+  portugueseAdvancedVoice: "Voz Avanzada en Portugués",
+  portugueseAdvancedVoiceChat: "Chat de Voz Avanzada en Portugués",
+  advancedVoiceDescription: "Practica con tecnología de voz avanzada específicamente optimizada para hablantes de {{language}}"
 };
 
 export default premiumVoiceTranslations;

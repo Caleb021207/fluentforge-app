@@ -45,7 +45,14 @@ const premiumVoiceTranslations: TranslationRecord = {
   startChatting: "Começar a conversar",
   
   // Added missing key
-  premiumSessionLimitReached: "Limite de Sessão Premium Atingido"
+  premiumSessionLimitReached: "Limite de Sessão Premium Atingido",
+  
+  // Language-specific advanced voice pages
+  spanishAdvancedVoice: "Voz Avançada em Espanhol",
+  spanishAdvancedVoiceChat: "Chat de Voz Avançada em Espanhol",
+  portugueseAdvancedVoice: "Voz Avançada em Português",
+  portugueseAdvancedVoiceChat: "Chat de Voz Avançada em Português",
+  advancedVoiceDescription: "Pratique com tecnologia de voz avançada especificamente otimizada para falantes de {{language}}"
 };
 
 export default premiumVoiceTranslations;

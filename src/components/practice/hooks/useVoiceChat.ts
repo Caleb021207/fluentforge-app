@@ -41,7 +41,7 @@ export const useVoiceChat = () => {
 
   const isConversationActive = () => isActive;
 
-  const startVoiceConversation = async () => {
+  const startVoiceConversation = async (overrideLanguage?: string) => {
     setConnectionAttempts(0);
     
     if (!microphoneAccess) {
@@ -70,11 +70,11 @@ export const useVoiceChat = () => {
       await createConversationSession(user.id);
       
       // Placeholder for API key fetch
-      console.log("[PLACEHOLDER] Would fetch API key for", currentLanguage);
+      console.log("[PLACEHOLDER] Would fetch API key for", overrideLanguage || currentLanguage);
       
-      // Placeholder for agent ID
-      const selectedAgentId = getAgentIdForLanguage(currentLanguage);
-      console.log(`[PLACEHOLDER] Would start voice conversation with agent ID: ${selectedAgentId} for ${currentLanguage} speaker`);
+      // Placeholder for agent ID, using override language if provided
+      const selectedAgentId = getAgentIdForLanguage(overrideLanguage || currentLanguage);
+      console.log(`[PLACEHOLDER] Would start voice conversation with agent ID: ${selectedAgentId} for ${overrideLanguage || currentLanguage} speaker`);
       
       // Simulate session start
       setIsActive(true);

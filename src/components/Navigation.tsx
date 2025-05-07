@@ -50,11 +50,31 @@ const Navigation = () => {
     const items = [
       { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
       { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
-      // Premium Voice Chat button removed
     ];
 
-    if (isLoggedIn && !teacherStatusLoading) {
+    // Add language-specific advanced voice options for Spanish and Portuguese
+    if (currentLanguage === "spanish") {
       items.splice(2, 0, {
+        icon: Headphones,
+        label: "spanishAdvancedVoice",
+        path: "/spanish-advanced-voice",
+        requiresAuth: true
+      });
+    }
+
+    if (currentLanguage === "portuguese") {
+      items.splice(2, 0, {
+        icon: Headphones,
+        label: "portugueseAdvancedVoice",
+        path: "/portuguese-advanced-voice",
+        requiresAuth: true
+      });
+    }
+
+    if (isLoggedIn && !teacherStatusLoading) {
+      // Add the class menu item after voice chat items
+      const insertIndex = items.length;
+      items.splice(insertIndex, 0, {
         icon: BookOpen,
         label: isTeacher ? "myClasses" : "myClass",
         path: isTeacher ? "/teacher/classes" : "/student/class",
