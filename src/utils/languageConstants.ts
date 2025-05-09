@@ -1,4 +1,5 @@
 
+
 /**
  * Languages that should always display translations
  */
@@ -32,14 +33,10 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "german",
   "italian",
   "thai",
-  "burmese",
-  "karen",
-  "nepali",
-  "tigrinya",
-  "punjabi",
-  "marathi",
+  // Re-adding previously removed languages
   "gujarati",
-  "sinhala"
+  "punjabi",
+  "nepali"
 ];
 
 /**
@@ -59,3 +56,4 @@ export const getTargetLanguage = (currentLanguage: string): string => {
 export const getNativeLanguage = (currentLanguage: string): string => {
   return currentLanguage;
 };
+

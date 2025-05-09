@@ -1,0 +1,40 @@
+
+import { TranslationRecord } from "../types";
+
+const premiumVoiceTranslations: TranslationRecord = {
+  premiumVoiceChat: "ਪ੍ਰੀਮੀਅਮ ਵੌਇਸ ਚੈਟ",
+  premiumVoiceChatDescription: "ElevenLabs ਦੇ ਨਾਲ {{practice}} ਬੋਲਣ ਵਾਲੇ ਨਾਲ ਮੁਲਾਕਾਤ ਕਰੋ, ਜੋ ਇਸ ਵੇਲੇ ਦੁਨੀਆ ਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਟੈਕਸਟ-ਟੂ-ਸਪੀਚ ਇੰਜਣ ਹੈ",
+  premiumVoiceNoteWithReset: "ਤੁਹਾਡੇ ਕੋਲ ਹਫ਼ਤਾਵਾਰੀ 60 ਮਿੰਟ 'ਤੇ ਰੀਸੈੱਟ ਹੋਣ ਵਾਲੇ ਅਸੀਮਿਤ ਸੈਸ਼ਨ ਹਨ।",
+  startPremiumVoiceSession: "ਪ੍ਰੀਮੀਅਮ ਵੌਇਸ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ",
+  endPremiumVoiceSession: "ਪ੍ਰੀਮੀਅਮ ਵੌਇਸ ਸੈਸ਼ਨ ਖਤਮ ਕਰੋ",
+  youHaveRemaining: "ਤੁਹਾਡੇ ਕੋਲ ਹਫ਼ਤੇ ਲਈ {{minutes}} ਮਿੰਟ ਬਾਕੀ ਹਨ।",
+  youHaveUsed: "ਤੁਸੀਂ ਕੁੱਲ {{minutes}} ਮਿੰਟ ਦੀ ਵਰਤੋਂ ਕੀਤੀ ਹੈ।",
+  youHaveUnlimited: "ਤੁਹਾਡੇ ਹਫ਼ਤੇ ਵਿੱਚ 60 ਮਿੰਟ ਰੀਸੈੱਟ ਹੁੰਦੇ ਹਨ! ਤੁਸੀਂ ਇਸ ਹਫ਼ਤੇ {{minutes}} ਮਿੰਟਾਂ ਦੀ ਵਰਤੋਂ ਕੀਤੀ ਹੈ।",
+  weeklyLimitReached: "ਹਫ਼ਤਾਵਾਰੀ ਸਮਾਂ ਸੀਮਾ 'ਤੇ ਪਹੁੰਚ ਗਿਆ",
+  upgradeToGetMore: "ਹੋਰ ਸੈਸ਼ਨ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਅੱਪਗ੍ਰੇਡ ਕਰੋ",
+  subscriptionRequired: "ਪ੍ਰੀਮੀਅਮ ਵੌਇਸ ਚੈਟ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ ਸਬਸਕ੍ਰਿਪਸ਼ਨ ਦੀ ਲੋੜ ਹੈ",
+  chatWithNativeSpeaker: "ਮੂਲ {{language}} ਬੋਲਣ ਵਾਲੇ ਨਾਲ ਚੈਟ ਕਰੋ",
+  elevenLabsInfo: "ਅਸੀਂ ElevenLabs AI ਵੌਇਸ ਏਜੰਟਾਂ ਦੀ ਵਰਤੋਂ ਕਰਦੇ ਹਾਂ",
+  usingNaturalVoice: "ਜੀਵਨ ਵਰਗੀ AI ਵੌਇਸ ਨਾਲ ਅਭਿਆਸ ਕਰੋ",
+  voiceRealism: "ਬੋਲਣ ਦੀ ਸਮਝ ਅਤੇ ਉਚਾਰਨ ਦੇ ਹੁਨਰਾਂ ਦਾ ਅਭਿਆਸ ਕਰੋ",
+  personalizedTutoring: "ਵਿਅਕਤੀਗਤ AI ਭਾਸ਼ਾ ਟਿਊਸ਼ਨ",
+  noWeeklyTimeLimit: "ਕੋਈ ਹਫ਼ਤਾਵਾਰੀ ਸਮਾਂ ਸੀਮਾ ਨਹੀਂ",
+  timeRemainingThisWeek: "ਇਸ ਹਫ਼ਤੇ ਬਾਕੀ ਸਮਾਂ:",
+  timeUsedThisWeek: "ਇਸ ਹਫ਼ਤੇ ਵਰਤਿਆ ਗਿਆ ਸਮਾਂ:",
+  sessionLength: "ਸੈਸ਼ਨ ਦੀ ਲੰਬਾਈ: {{minutes}} ਮਿੰਟ",
+  voiceChatEndedTitle: "ਵੌਇਸ ਚੈਟ ਖਤਮ ਹੋ ਗਈ",
+  voiceChatEndedDescription: "ਤੁਹਾਡਾ ਵੌਇਸ ਚੈਟ ਸੈਸ਼ਨ ਖਤਮ ਹੋ ਗਿਆ ਹੈ।",
+  startNewSession: "ਨਵਾਂ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ",
+  startSessionWithLanguage: "{{language}} ਵੌਇਸ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ",
+  dailyCooldownActive: "ਰੋਜ਼ਾਨਾ ਕੂਲਡਾਊਨ ਸਰਗਰਮ",
+  pleaseWaitHours: "ਕਿਰਪਾ ਕਰਕੇ {{hours}} ਘੰਟੇ ਉਡੀਕ ਕਰੋ",
+  pleaseWaitMinutes: "ਕਿਰਪਾ ਕਰਕੇ {{minutes}} ਮਿੰਟ ਉਡੀਕ ਕਰੋ",
+  waitTimeBeforeNextSession: "ਹਾਲੇ {{timeRemaining}} ਬਾਕੀ ਹੈ",
+  sessionExceeded: "ਸੈਸ਼ਨ ਤੀਹ ਮਿੰਟ ਦੀ ਸੀਮਾ ਤੋਂ ਵੱਧ ਗਿਆ। ਜਲਦੀ ਮਿਲਾਂਗੇ!",
+  cooldownMessage: "ਤੁਸੀਂ ਆਪਣਾ ਰੋਜ਼ਾਨਾ ਪ੍ਰੀਮੀਅਮ ਸਮਾਂ ਵਰਤ ਲਿਆ ਹੈ।",
+  returningTomorrow: "ਕੱਲ੍ਹ ਦੁਬਾਰਾ ਚੈੱਕ ਕਰੋ!",
+  upgradeForUnlimited: "ਅਸੀਮਿਤ ਪਹੁੰਚ ਲਈ ਅੱਪਗ੍ਰੇਡ ਕਰੋ",
+  failedToStartSession: "ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+};
+
+export default premiumVoiceTranslations;

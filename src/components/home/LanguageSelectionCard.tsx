@@ -59,7 +59,11 @@ const LanguageSelectionCard = ({
     tagalog: "🇵🇭 Tagalog",
     german: "🇩🇪 Deutsch",
     italian: "🇮🇹 Italiano",
-    thai: "🇹🇭 ภาษาไทย"
+    thai: "🇹🇭 ภาษาไทย",
+    // Re-adding the previously removed languages
+    gujarati: "🇮🇳 ગુજરાતી",
+    punjabi: "🇮🇳 ਪੰਜਾਬੀ",
+    nepali: "🇳🇵 नेपाली"
   };
 
   // Available target languages based on native language
@@ -97,7 +101,11 @@ const LanguageSelectionCard = ({
     tagalog: "🇵🇭 Filipino/Tagalog",
     german: "🇩🇪 German",
     italian: "🇮🇹 Italian",
-    thai: "🇹🇭 Thai"
+    thai: "🇹🇭 Thai",
+    // Re-adding the previously removed languages
+    gujarati: "🇮🇳 Gujarati",
+    punjabi: "🇮🇳 Punjabi",
+    nepali: "🇳🇵 Nepali"
   };
   
   // Determine disabled options based on native language

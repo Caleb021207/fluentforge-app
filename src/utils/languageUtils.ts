@@ -1,4 +1,3 @@
-
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -39,14 +38,10 @@ export const getLanguageDisplayName = (language: string): string => {
     'german': 'German',
     'italian': 'Italian',
     'thai': 'Thai',
-    'burmese': 'Burmese',
-    'karen': 'Karen (S\'gaw)',
-    'nepali': 'Nepali',
-    'tigrinya': 'Tigrinya',
-    'punjabi': 'Punjabi',
-    'marathi': 'Marathi',
+    // Re-adding previously removed languages
     'gujarati': 'Gujarati',
-    'sinhala': 'Sinhala'
+    'punjabi': 'Punjabi',
+    'nepali': 'Nepali'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -109,14 +104,10 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'german': 'Deutsch',
     'italian': 'Italiano',
     'thai': 'ภาษาไทย',
-    'burmese': 'မြန်မာဘာသာ',
-    'karen': 'ကညီကျိာ်',
-    'nepali': 'नेपाली',
-    'tigrinya': 'ትግርኛ',
-    'punjabi': 'ਪੰਜਾਬੀ',
-    'marathi': 'मराठी',
+    // Re-adding previously removed languages in native script
     'gujarati': 'ગુજરાતી',
-    'sinhala': 'සිංහල'
+    'punjabi': 'ਪੰਜਾਬੀ',
+    'nepali': 'नेपाली'
   };
   
   return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
@@ -182,14 +173,10 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'german-english',
     'italian-english',
     'thai-english',
-    'burmese-english',
-    'karen-english',
-    'nepali-english',
-    'tigrinya-english',
-    'punjabi-english',
-    'marathi-english',
+    // Re-adding previously removed language pairs
     'gujarati-english',
-    'sinhala-english'
+    'punjabi-english',
+    'nepali-english'
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;

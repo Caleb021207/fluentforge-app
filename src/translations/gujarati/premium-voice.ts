@@ -1,0 +1,40 @@
+
+import { TranslationRecord } from "../types";
+
+const premiumVoiceTranslations: TranslationRecord = {
+  premiumVoiceChat: "પ્રીમિયમ વૉઇસ ચેટ",
+  premiumVoiceChatDescription: "ElevenLabs સાથે {{practice}} સ્પીકર સાથે મુલાકાત કરો, જે અત્યારે દુનિયાનું સૌથી ટેક્સ્ટ ટુ સ્પીચ એન્જિન છે",
+  premiumVoiceNoteWithReset: "તમારી પાસે દર અઠવાડિયે 60 મિનિટ સુધી રીસેટ થતા અમર્યાદિત સત્રો છે.",
+  startPremiumVoiceSession: "પ્રીમિયમ વૉઇસ સેશન શરૂ કરો",
+  endPremiumVoiceSession: "પ્રીમિયમ વૉઇસ સેશન સમાપ્ત કરો",
+  youHaveRemaining: "અઠવાડિયા માટે તમારી પાસે {{minutes}} મિનિટ બાકી છે.",
+  youHaveUsed: "તમે એકંદરે {{minutes}} મિનિટનો ઉપયોગ કર્યો છે.",
+  youHaveUnlimited: "તમારા અઠવાડિયે 60 મિનિટ રીસેટ થાય છે! આ અઠવાડિયે તમે {{minutes}} મિનિટનો ઉપયોગ કર્યો છે.",
+  weeklyLimitReached: "અઠવાડિક સમય મર્યાદા પર પહોંચી ગયું",
+  upgradeToGetMore: "વધુ સેશન મેળવવા અપગ્રેડ કરો",
+  subscriptionRequired: "પ્રીમિયમ વૉઇસ ચેટનો ઉપયોગ કરવા માટે સબ્સ્ક્રિપ્શન જરૂરી છે",
+  chatWithNativeSpeaker: "નેટિવ {{language}} સ્પીકર સાથે ચેટ કરો",
+  elevenLabsInfo: "અમે ElevenLabs AI વૉઇસ એજન્ટનો ઉપયોગ કરીએ છીએ",
+  usingNaturalVoice: "લાઇફલાઇક AI વૉઇસ સાથે પ્રેક્ટિસ કરો",
+  voiceRealism: "બોલવાની સમજણ અને ઉચ્ચારણ કૌશલ્યોનો અભ્યાસ કરો",
+  personalizedTutoring: "વ્યક્તિગત AI ભાષા ટ્યુટરિંગ",
+  noWeeklyTimeLimit: "અઠવાડિક સમય મર્યાદા નથી",
+  timeRemainingThisWeek: "આ અઠવાડિયે બાકી સમય:",
+  timeUsedThisWeek: "આ અઠવાડિયે વપરાયેલ સમય:",
+  sessionLength: "સેશન લંબાઈ: {{minutes}} મિનિટ",
+  voiceChatEndedTitle: "વૉઇસ ચેટ સમાપ્ત થઈ",
+  voiceChatEndedDescription: "તમારો વૉઇસ ચેટ સેશન સમાપ્ત થઈ ગયો છે.",
+  startNewSession: "નવો સેશન શરૂ કરો",
+  startSessionWithLanguage: "{{language}} વૉઇસ સેશન શરૂ કરો",
+  dailyCooldownActive: "દૈનિક કૂલડાઉન સક્રિય",
+  pleaseWaitHours: "કૃપા કરીને {{hours}} કલાક રાહ જુઓ",
+  pleaseWaitMinutes: "કૃપા કરીને {{minutes}} મિનિટ રાહ જુઓ",
+  waitTimeBeforeNextSession: "હજુ {{timeRemaining}} બાકી છે",
+  sessionExceeded: "સેશન ત્રીસ મિનિટની મર્યાદાથી વધી ગયું. જલ્દી ફરી મળીશું!",
+  cooldownMessage: "તમે તમારો દૈનિક પ્રીમિયમ સમય વાપરી લીધો છે.",
+  returningTomorrow: "કાલે ફરીથી તપાસો!",
+  upgradeForUnlimited: "અમર્યાદિત ઍક્સેસ માટે અપગ્રેડ કરો",
+  failedToStartSession: "સેશન શરૂ કરવામાં નિષ્ફળ",
+};
+
+export default premiumVoiceTranslations;

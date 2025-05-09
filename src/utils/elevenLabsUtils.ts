@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useConversation } from '@11labs/react';
 import { useToast } from '@/hooks/use-toast';
@@ -18,6 +17,9 @@ export const RUSSIAN_TUTOR_AGENT_ID = 'placeholder_russian_agent_id';
 export const UKRAINIAN_TUTOR_AGENT_ID = 'placeholder_ukrainian_agent_id';
 export const HINDI_TUTOR_AGENT_ID = 'placeholder_hindi_agent_id';
 export const INDONESIAN_TUTOR_AGENT_ID = 'placeholder_indonesian_agent_id';
+export const GUJARATI_TUTOR_AGENT_ID = 'placeholder_gujarati_agent_id';
+export const PUNJABI_TUTOR_AGENT_ID = 'placeholder_punjabi_agent_id';
+export const NEPALI_TUTOR_AGENT_ID = 'placeholder_nepali_agent_id';
 
 // Language to agent ID mapping (updated Spanish and Portuguese with real IDs)
 const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
@@ -33,7 +35,10 @@ const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
   "russian": RUSSIAN_TUTOR_AGENT_ID,
   "ukrainian": UKRAINIAN_TUTOR_AGENT_ID,
   "hindi": HINDI_TUTOR_AGENT_ID,
-  "indonesian": INDONESIAN_TUTOR_AGENT_ID
+  "indonesian": INDONESIAN_TUTOR_AGENT_ID,
+  "gujarati": GUJARATI_TUTOR_AGENT_ID,
+  "punjabi": PUNJABI_TUTOR_AGENT_ID,
+  "nepali": NEPALI_TUTOR_AGENT_ID
 };
 
 /**
