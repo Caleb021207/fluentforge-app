@@ -30,7 +30,17 @@ const practiceTranslations: TranslationRecord = {
   "discussCulturalTopics": "સાંસ્કૃતિક વિષયો પર ચર્ચા કરો",
   "startConversationIn": "{{language}}માં વાતચીત શરૂ કરો",
   "practicePrompt": "નમસ્તે! હું {{targetLanguage}} વાતચીતની પ્રેક્ટિસ કરવા માંગું છું. કૃપા કરીને મારા {{targetLanguage}} વ્યાકરણ, શબ્દભંડોળ અને ઉપયોગમાં સુધારો કરવામાં મદદ કરો. શું આપણે પાયાની વાતચીતથી શરૂઆત કરી શકીએ?",
-  "chatPlaceholder": "{{targetLanguage}}ની પ્રેક્ટિસ કરવા માટે તમારો સંદેશ ટાઇપ કરો..."
+  "chatPlaceholder": "{{targetLanguage}}ની પ્રેક્ટિસ કરવા માટે તમારો સંદેશ ટાઇપ કરો...",
+  
+  // Adding missing practice guide translations
+  "practiceGuide": "{{language}} માટે પ્રેક્ટિસ ગાઇડ",
+  "practiceDescription": "AI ટ્યુટર સાથે ટેક્સ્ટ ચેટમાં અંગ્રેજી પ્રેક્ટિસ કરો! AI તમારા વ્યાકરણ, શબ્દભંડોળ અને ઉપયોગમાં સુધારો કરવામાં મદદ કરશે. ભાષા અથવા સંસ્કૃતિ વિશે પ્રશ્નો પૂછવામાં અચકાશો નહીં.",
+  "practiceGuideDescription": "તમારી {{language}} પ્રેક્ટિસમાંથી મહત્તમ લાભ મેળવવા માટે અહીં કેટલીક ટિપ્સ છે:",
+  "practiceTip1": "તે સરળ હોય તો પણ, સંપૂર્ણ વાક્યો બનાવવાનો પ્રયાસ કરો.",
+  "practiceTip2": "ભૂલોની ચિંતા ન કરો - તે શીખવાની પ્રક્રિયાનો એક ભાગ છે!",
+  "practiceTip3": "જો તમે કંઈક સમજતા ન હોવ તો સ્પષ્ટતા માંગો.",
+  "practiceTip4": "તાજેતરમાં શીખેલા શબ્દભંડોળનો ઉપયોગ કરવાનો પ્રયાસ કરો.",
+  "practiceTip5": "તમારી ફ્લુએન્સી સુધારવા માટે નિયમિત રૂપે પ્રેક્ટિસ કરો."
 };
 
 export default practiceTranslations;
