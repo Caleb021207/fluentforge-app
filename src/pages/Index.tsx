@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useTheme } from "next-themes";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
 import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
@@ -16,6 +17,7 @@ import HomeFooter from "@/components/home/HomeFooter";
 const Index = () => {
   const { t, setCurrentLanguage } = useLocalization();
   const { toast } = useToast();
+  const { theme } = useTheme();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [isFerpaConsentOpen, setIsFerpaConsentOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -120,13 +122,21 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Fox Logo */}
+          {/* Conditional Logo based on theme */}
           <div className="flex justify-center mb-8">
-            <img 
-              src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
-              alt="Palavox Logo" 
-              className="w-48 h-48 object-contain"
-            />
+            {theme === "dark" ? (
+              <img 
+                src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
+                alt="Palavox Logo" 
+                className="w-48 h-48 object-contain"
+              />
+            ) : (
+              <img 
+                src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
+                alt="Palavox Logo" 
+                className="w-48 h-48 object-contain"
+              />
+            )}
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
