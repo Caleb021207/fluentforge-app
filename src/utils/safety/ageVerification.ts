@@ -5,9 +5,10 @@
 
 /**
  * Checks if the user needs to complete age verification
+ * Now always returns false since we've removed age verification
  */
 export const needsAgeVerification = (): boolean => {
-  return localStorage.getItem("ageVerified") !== "true";
+  return false;
 };
 
 /**

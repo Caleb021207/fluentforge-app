@@ -5,10 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
 import AuthDialog from "@/components/home/AuthDialog";
-import AgeVerificationDialog from "@/components/compliance/AgeVerificationDialog";
 import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
 import { useToast } from "@/hooks/use-toast";
-import { needsAgeVerification, getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
+import { getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
 import { hasStudyMaterials } from "@/utils/languageUtils";
 import { useAuthFlow } from "@/hooks/useAuthFlow";
 import HomeActions from "@/components/home/HomeActions";
@@ -18,7 +17,6 @@ const Index = () => {
   const { t, setCurrentLanguage } = useLocalization();
   const { toast } = useToast();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
-  const [isAgeVerificationOpen, setIsAgeVerificationOpen] = useState(false);
   const [isFerpaConsentOpen, setIsFerpaConsentOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
@@ -58,11 +56,6 @@ const Index = () => {
     
     if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
     if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
-    
-    const needsVerification = needsAgeVerification();
-    if (needsVerification) {
-      setIsAgeVerificationOpen(true);
-    }
 
     return () => {
       subscription.unsubscribe();
@@ -127,6 +120,15 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
+          {/* Fox Logo */}
+          <div className="flex justify-center mb-8">
+            <img 
+              src="/lovable-uploads/b99163cf-dd36-4ff2-8793-3f33919b0fa8.png" 
+              alt="Fox Logo" 
+              className="w-48 h-48 object-contain"
+            />
+          </div>
+          
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             {t("welcomeToLanguageLearning")}
           </h1>
@@ -168,11 +170,6 @@ const Index = () => {
         isLoading={isLoading}
         authError={authError}
         retryCount={retryCount}
-      />
-      
-      <AgeVerificationDialog 
-        isOpen={isAgeVerificationOpen}
-        onOpenChange={setIsAgeVerificationOpen}
       />
       
       <FerpaConsentForm
