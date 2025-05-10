@@ -123,7 +123,7 @@ const Index = () => {
           {/* Fox Logo */}
           <div className="flex justify-center mb-8">
             <img 
-              src="/lovable-uploads/27012de7-f750-43a0-9ca9-77e785cd2fd6.png" 
+              src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
               alt="Palavox Logo" 
               className="w-48 h-48 object-contain"
             />
