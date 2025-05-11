@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import HintButton from "@/components/practice/HintButton";
 import { useLocalization } from "@/context/LocalizationContext";
 import ChatMessage from "@/components/practice/ChatMessage";
-import type { Message } from "@/types/chat";
+import type { Message, TranslationType } from "@/types/chat";
 
 interface VoiceChatContainerProps {
   messages: Message[];
@@ -44,15 +44,31 @@ export default function VoiceChatContainer({
           </div>
         ) : (
           <div className="space-y-4">
-            {messages.map((message, index) => (
-              <ChatMessage
-                key={index}
-                role={message.role}
-                content={message.content}
-                translation={message.translation}
-                onPlayAudio={onPlayAudio}
-              />
-            ))}
+            {messages.map((message, index) => {
+              // Filter out system messages or convert them to assistant messages
+              if (message.role === "system") {
+                // Skip system messages or convert them to assistant messages
+                return (
+                  <ChatMessage
+                    key={index}
+                    role="assistant"
+                    content={message.content}
+                    translation={message.translation as TranslationType}
+                    onPlayAudio={onPlayAudio}
+                  />
+                );
+              }
+              
+              return (
+                <ChatMessage
+                  key={index}
+                  role={message.role as "user" | "assistant"}
+                  content={message.content}
+                  translation={message.translation as TranslationType}
+                  onPlayAudio={onPlayAudio}
+                />
+              );
+            })}
             
             {isLoading && (
               <div className="flex justify-center my-4">

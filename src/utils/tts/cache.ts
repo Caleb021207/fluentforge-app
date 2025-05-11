@@ -1,129 +1,41 @@
 
-import { TTL_DURATION, CACHE_CLEANUP_INTERVAL } from './constants';
-import type { TTSCacheEntry } from './types';
-
 /**
- * Optimized TTS Cache implementation with memory efficiency
+ * Creates a TTSCache for storing audio elements
  */
-class TTSCache {
-  private cache = new Map<string, TTSCacheEntry>();
-  private cleanupTimer: number | null = null;
-
-  constructor() {
-    if (typeof window !== 'undefined') {
-      // Only start cleanup timer if it doesn't exist
-      if (!this.cleanupTimer) {
-        this.cleanupTimer = window.setInterval(() => this.cleanup(), CACHE_CLEANUP_INTERVAL);
-      }
-    }
-  }
-
-  /**
-   * Get cached audio content if it exists
-   */
-  get(key: string): string | null {
-    const entry = this.cache.get(key);
-    if (!entry) return null;
-    
-    // Check if the entry has expired
-    if (Date.now() - entry.timestamp > TTL_DURATION) {
-      this.cache.delete(key);
-      return null;
-    }
-    
-    return entry.audioContent;
-  }
-
-  /**
-   * Check if the key exists in the cache
-   */
-  has(key: string): boolean {
-    const entry = this.cache.get(key);
-    if (!entry) return false;
-    
-    // Check if the entry has expired
-    if (Date.now() - entry.timestamp > TTL_DURATION) {
-      this.cache.delete(key);
-      return false;
-    }
-    
-    return true;
-  }
-
-  /**
-   * Store audio content in the cache
-   */
-  set(key: string, audioContent: string): void {
-    // Don't cache extremely large strings to avoid memory issues
-    if (audioContent.length > 1000000) {
-      console.warn('Audio content too large for caching');
-      return;
-    }
-    
-    this.cache.set(key, {
-      audioContent,
-      timestamp: Date.now()
-    });
-  }
-
-  /**
-   * Create a cache key based on text, language, and target flag
-   */
-  createKey(text: string, language: string, isTargetLanguage: boolean): string {
-    // Use hash function for long texts to avoid very long keys
-    const textPart = text.length > 50 
-      ? `${text.substring(0, 50)}_${this.hashString(text)}`
-      : text;
-      
-    return `${language}_${isTargetLanguage ? 'target' : 'native'}_${textPart}`;
-  }
-
-  /**
-   * Simple hash function for strings
-   */
-  private hashString(str: string): string {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash.toString(36); // Convert to base36 for shorter string
-  }
-
-  /**
-   * Cleanup expired cache entries
-   */
-  private cleanup(): void {
+export function createTTSCache() {
+  const cache = new Map<string, HTMLAudioElement>();
+  
+  const TTL_DURATION = 5 * 60 * 1000; // 5 minutes
+  const expirationTimes = new Map<string, number>();
+  
+  // Clean up expired cache entries every minute
+  const CLEANUP_INTERVAL = 60 * 1000; // 1 minute
+  const intervalId = setInterval(() => {
     const now = Date.now();
-    let deletedCount = 0;
-    
-    for (const [key, entry] of this.cache.entries()) {
-      if (now - entry.timestamp > TTL_DURATION) {
-        this.cache.delete(key);
-        deletedCount++;
+    for (const [key, expiration] of expirationTimes.entries()) {
+      if (now > expiration) {
+        cache.delete(key);
+        expirationTimes.delete(key);
       }
     }
+  }, CLEANUP_INTERVAL);
+  
+  return {
+    get: (text: string, language: string): HTMLAudioElement | undefined => {
+      const key = `${language}:${text}`;
+      return cache.get(key);
+    },
     
-    // Log cleanup only if something was actually deleted
-    if (deletedCount > 0) {
-      console.log(`TTS cache cleanup: removed ${deletedCount} entries, remaining: ${this.cache.size}`);
-    }
+    set: (text: string, language: string, audio: HTMLAudioElement): void => {
+      const key = `${language}:${text}`;
+      cache.set(key, audio);
+      expirationTimes.set(key, Date.now() + TTL_DURATION);
+    },
     
-    // If cache grows too big, remove oldest entries regardless of TTL
-    if (this.cache.size > 100) {
-      const entries = [...this.cache.entries()];
-      entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-      
-      // Remove oldest 30% of entries
-      const removeCount = Math.floor(entries.length * 0.3);
-      for (let i = 0; i < removeCount; i++) {
-        this.cache.delete(entries[i][0]);
-      }
-      
-      console.log(`TTS cache size limit reached: removed ${removeCount} oldest entries`);
+    clear: (): void => {
+      cache.clear();
+      expirationTimes.clear();
+      clearInterval(intervalId);
     }
-  }
+  };
 }
-
-// Create a single instance of the cache
-export const ttsCache = new TTSCache();

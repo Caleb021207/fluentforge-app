@@ -9,6 +9,14 @@ export interface Message {
   timestamp?: Date;
 }
 
+// Add the ChatMessage interface that was missing
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  translation?: string | object;
+  timestamp?: Date;
+}
+
 export interface ChatSession {
   id: string;
   userId: string;
@@ -33,3 +41,6 @@ export interface ConversationHint {
   categories: SuggestionCategory[];
   loading: boolean;
 }
+
+// Define TranslationType to fix the type errors
+export type TranslationType = string | { [key: string]: any };
