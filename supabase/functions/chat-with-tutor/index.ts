@@ -3,6 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import OpenAI from "https://esm.sh/openai@4.20.1";
 import { corsHeaders, filterProhibitedContent } from "./config.ts";
 import { generateHints } from "./hints.ts";
+import { getLanguageDisplayName, determineLanguagePair, getUserNativeLanguage } from "./languageUtils.ts";
 
 const openai = new OpenAI({
   apiKey: Deno.env.get("OPENAI_API_KEY") || "",
@@ -13,6 +14,30 @@ function logDataAccess(userId: string, dataType: string, purpose: string) {
   // Log to console for now, in production this could be a database entry
   const timestamp = new Date().toISOString();
   console.log(`FERPA Access Log: User ${userId} accessed ${dataType} for ${purpose} at ${timestamp}`);
+}
+
+// Helper function to validate language parameter
+function validateLanguage(lang: string | undefined): string {
+  if (!lang) return "english"; // Default to English if undefined
+  
+  // Normalize language name to lowercase for comparison
+  const normalizedLang = lang.toLowerCase();
+  
+  // List of supported languages
+  const supportedLanguages = [
+    "english", "spanish", "portuguese", "french", "japanese", 
+    "korean", "mandarin", "cantonese", "russian", "arabic", 
+    "hindi", "vietnamese", "ukrainian", "indonesian", "farsi", 
+    "urdu", "pashto", "swahili", "bengali", "somali", 
+    "yoruba", "amharic", "haitian", "malayalam", "igbo", 
+    "polish", "turkish", "romanian", "tagalog", "german",
+    "italian", "thai", "gujarati", "punjabi", "nepali"
+  ];
+  
+  // Return normalized language if supported, otherwise default to English
+  return supportedLanguages.includes(normalizedLang) 
+    ? normalizedLang 
+    : "english";
 }
 
 serve(async (req) => {
@@ -27,10 +52,24 @@ serve(async (req) => {
     const { 
       message, 
       requestType, 
-      userLanguage, 
-      targetLanguage, 
-      conversationHistory = []
+      userLanguage: rawUserLanguage, 
+      targetLanguage: rawTargetLanguage, 
+      conversationHistory = [],
+      cefrLevel = "B1"
     } = requestData;
+
+    // Validate language parameters
+    const userLanguage = validateLanguage(rawUserLanguage);
+    let targetLanguage = validateLanguage(rawTargetLanguage);
+    
+    // Safety check: if userLanguage === targetLanguage, make one of them different
+    if (userLanguage === targetLanguage && userLanguage !== 'english') {
+      targetLanguage = 'english'; // Default target language for non-English speakers
+    } else if (userLanguage === targetLanguage) {
+      targetLanguage = 'spanish'; // Default for English speakers
+    }
+    
+    console.log(`Validated languages: User language: ${userLanguage}, Target language: ${targetLanguage}`);
 
     // Log the access for FERPA compliance
     logDataAccess("anonymous", "language_practice", "language_learning");
@@ -41,7 +80,7 @@ serve(async (req) => {
     if (requestType === 'hint') {
       const suggestions = await generateHints(
         conversationHistory,
-        targetLanguage || "spanish",
+        targetLanguage || "spanish", // Default if still undefined
         userLanguage || "english"
       );
       
@@ -95,17 +134,20 @@ serve(async (req) => {
       );
     }
 
+    // Get user and target language display names for better prompting
+    const userLangDisplay = getLanguageDisplayName(userLanguage);
+    const targetLangDisplay = getLanguageDisplayName(targetLanguage);
+
     // Step 2: Generate Reply from OpenAI
-    const systemMessage = `You are a patient and encouraging AI language tutor. Your goal is to help the user practice ${
-      targetLanguage || "Spanish"
-    }. Keep your responses concise and helpful.
-    The user is at a CEFR level of B1.
+    const systemMessage = `You are a patient and encouraging AI language tutor. Your goal is to help the user practice ${targetLangDisplay}.
+    The user's native language is ${userLangDisplay}.
+    The user is at a CEFR level of ${cefrLevel}.
     If the user asks you to translate something, please provide the translation.
     If the user makes grammatical errors, gently correct them and explain the correction.
     If the user asks a question about grammar or vocabulary, provide a clear and concise answer.
     If the user is struggling, offer encouragement and suggest simpler ways to express themselves.
     If the user is doing well, offer praise and suggest more advanced vocabulary or grammar.
-    You should always respond in ${targetLanguage || "Spanish"}.`;
+    You should always respond in ${targetLangDisplay}.`;
 
     // Call OpenAI for conversation response
     const chatResponse = await openai.chat.completions.create({
@@ -122,14 +164,14 @@ serve(async (req) => {
     let translation = "";
 
     // Generate translation if needed
-    if (userLanguage && userLanguage !== "english" && userLanguage !== targetLanguage) {
+    if (userLanguage && userLanguage !== targetLanguage) {
       try {
         const translationResponse = await openai.chat.completions.create({
           model: "gpt-4o-mini",
           messages: [
             {
               role: "system",
-              content: `You are a highly accurate translator. Translate the following ${targetLanguage} text to ${userLanguage}. Only provide the translation, nothing else.`,
+              content: `You are a highly accurate translator. Translate the following ${targetLangDisplay} text to ${userLangDisplay}. Only provide the translation, nothing else.`,
             },
             { role: "user", content },
           ],
@@ -137,6 +179,7 @@ serve(async (req) => {
         });
         
         translation = translationResponse.choices[0].message.content;
+        console.log(`Generated translation from ${targetLanguage} to ${userLanguage}: ${translation.substring(0, 50)}...`);
       } catch (translationError) {
         console.error("Translation error:", translationError);
       }

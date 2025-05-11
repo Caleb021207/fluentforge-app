@@ -16,7 +16,7 @@ import haitianTranslations from "@/translations/haitian";
 import spanishTranslations from "@/translations/spanish";
 import VoiceChatContainer from "@/components/voice-chat/VoiceChatContainer";
 import ChatMessage from "@/components/practice/ChatMessage";
-import { playTTS, isTTSSupported } from "@/utils/tts";
+import { playTTS } from "@/utils/tts";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -240,6 +240,15 @@ const VoiceChat = () => {
           console.error("Failed to get translation:", translationError);
         }
       }
+
+      // Verify the response is in the correct language
+      const responseLanguageMismatch = await verifyResponseLanguage(content, practice);
+      if (responseLanguageMismatch) {
+        console.warn("Response language mismatch detected. Expected:", practice, "Response:", content.substring(0, 100));
+        
+        // Log the error but still use the response, as automatic detection is not 100% reliable
+        // In the future, this could be used to request a new response
+      }
       
       const aiMessage: ConversationMessage = {
         role: 'assistant',
@@ -270,6 +279,38 @@ const VoiceChat = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Helper function to try to verify if the response language matches what was requested
+  const verifyResponseLanguage = async (text: string, expectedLanguage: string): Promise<boolean> => {
+    try {
+      // Simple verification using language scripts for certain languages
+      switch (expectedLanguage.toLowerCase()) {
+        case 'hindi':
+          return !/[\u0900-\u097F]/.test(text); // Check for Devanagari script
+        case 'arabic':
+          return !/[\u0600-\u06FF]/.test(text); // Check for Arabic script
+        case 'japanese':
+          return !/[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF]/.test(text); // Check for Japanese scripts
+        case 'korean':
+          return !/[\uAC00-\uD7AF\u1100-\u11FF]/.test(text); // Check for Hangul
+        case 'russian':
+        case 'ukrainian':
+          return !/[\u0400-\u04FF]/.test(text); // Check for Cyrillic script
+        case 'thai':
+          return !/[\u0E00-\u0E7F]/.test(text); // Check for Thai script
+        case 'mandarin':
+        case 'cantonese':
+          return !/[\u4E00-\u9FFF]/.test(text); // Check for Chinese characters
+        default:
+          // For other languages, we'd need a more complex solution
+          // but for now, just return false (no mismatch detected)
+          return false;
+      }
+    } catch (e) {
+      console.error("Error verifying response language:", e);
+      return false; // Assume no mismatch if verification fails
     }
   };
 
@@ -376,6 +417,14 @@ const VoiceChat = () => {
                   {t("practiceLevel")}
                 </span> - 
                 {t("cefrB1Description")}
+              </p>
+              <p className="text-sm mt-1">
+                <span className="font-medium">
+                  {t("currentLanguage")}: {native}
+                </span> | 
+                <span className="font-medium ml-2">
+                  {t("practiceLanguage")}: {practice}
+                </span>
               </p>
             </div>
 

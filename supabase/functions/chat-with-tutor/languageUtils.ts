@@ -33,7 +33,13 @@ export function getLanguageDisplayName(language: string): string {
     'polish': 'Polish',
     'turkish': 'Turkish',
     'romanian': 'Romanian',
-    'tagalog': 'Filipino/Tagalog' // Added Tagalog with proper display name
+    'tagalog': 'Filipino/Tagalog',
+    'german': 'German',
+    'italian': 'Italian',
+    'thai': 'Thai',
+    'gujarati': 'Gujarati',
+    'punjabi': 'Punjabi',
+    'nepali': 'Nepali'
   };
   
   return languageMap[language.toLowerCase()] || language;
@@ -60,7 +66,6 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'urdu': 'Urdu',
     'pashto': 'Pashto',
     'swahili': 'Swahili',
-    // Adding new languages
     'bengali': 'Bengali',
     'somali': 'Somali',
     'yoruba': 'Yoruba',
@@ -71,10 +76,16 @@ export function getUserNativeLanguage(userLanguage: string): string {
     'polish': 'Polish',
     'turkish': 'Turkish',
     'romanian': 'Romanian',
-    'tagalog': 'Filipino/Tagalog' // Added Tagalog with proper display name
+    'tagalog': 'Filipino/Tagalog',
+    'german': 'German',
+    'italian': 'Italian',
+    'thai': 'Thai',
+    'gujarati': 'Gujarati',
+    'punjabi': 'Punjabi',
+    'nepali': 'Nepali'
   };
   
-  return languageMap[userLanguage] || 'English';
+  return languageMap[userLanguage.toLowerCase()] || 'English';
 }
 
 // Determine language pair
@@ -184,4 +195,3 @@ export function isProperCantonese(text: string): boolean {
   
   return true;
 }
-

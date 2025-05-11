@@ -5,7 +5,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { HelpCircle, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
-import { playTTS } from "@/utils/tts/supabaseTTS";
+import { playTTS } from "@/utils/tts";
 import { supabase } from "@/integrations/supabase/client";
 import type { Message, SuggestionCategory } from "@/types/chat";
 import { Separator } from "@/components/ui/separator";
@@ -22,7 +22,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
   const [hints, setHints] = useState<SuggestionCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
   const { toast } = useToast();
   
   const fetchSuggestions = async () => {
@@ -33,18 +33,27 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
       // Get the last few messages from the conversation (max 5)
       const recentMessages = messages.slice(-5);
       
+      console.log("Fetching hints with params:", {
+        targetLanguage,
+        userLanguage: currentLanguage || 'english',
+        messageCount: recentMessages.length
+      });
+      
       const { data, error } = await supabase.functions.invoke("chat-with-tutor", {
         body: {
           conversationHistory: recentMessages,
           requestType: 'hint',
           targetLanguage,
-          userLanguage: 'english', // Default fallback
+          userLanguage: currentLanguage || 'english', // Use current UI language
         }
       });
       
       if (error) {
+        console.error("Error fetching hints:", error);
         throw error;
       }
+      
+      console.log("Hint response:", data);
       
       if (data && data.suggestions) {
         setHints(data.suggestions);
@@ -68,12 +77,26 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
         description: t("couldNotGenerateHints"),
         variant: "destructive",
       });
+      
+      // Set fallback hints on error
+      setHints([
+        {
+          title: t("greetings"),
+          suggestions: ["Hola, ¿cómo estás?", "Buenos días", "Encantado de conocerte"]
+        },
+        {
+          title: t("questions"),
+          suggestions: ["¿Qué te gusta hacer?", "¿De dónde eres?", "¿Cuál es tu comida favorita?"]
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
   
   const playHintAudio = (text: string) => {
+    if (isPlaying) return; // Prevent multiple audio plays at once
+    
     setIsPlaying(text);
     
     playTTS({
