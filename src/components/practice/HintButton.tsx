@@ -55,10 +55,13 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
       
       console.log("Hint response:", data);
       
-      if (data && data.suggestions) {
+      // Updated structure handling - check if suggestions are in data.categories or data.suggestions
+      if (data?.categories && Array.isArray(data.categories)) {
+        setHints(data.categories);
+      } else if (data?.suggestions && Array.isArray(data.suggestions)) {
         setHints(data.suggestions);
       } else {
-        // Fallback hints if the API doesn't return suggestions
+        // Fallback hints if the API doesn't return suggestions in the expected format
         setHints([
           {
             title: t("greetings"),

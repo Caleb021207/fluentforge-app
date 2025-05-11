@@ -18,25 +18,23 @@ export async function generateHints(
   conversationHistory: { role: string; content: string }[],
   targetLanguage: string = "spanish",
   userLanguage: string = "english"
-): Promise<ConversationHints> {
+): Promise<SuggestionCategory[]> {
   try {
     // Default hints in case of failure
-    const defaultHints: ConversationHints = {
-      categories: [
-        {
-          title: "Greetings",
-          suggestions: getDefaultHints(targetLanguage, "greetings"),
-        },
-        {
-          title: "Questions",
-          suggestions: getDefaultHints(targetLanguage, "questions"),
-        },
-        {
-          title: "Responses",
-          suggestions: getDefaultHints(targetLanguage, "responses"),
-        },
-      ],
-    };
+    const defaultHints: SuggestionCategory[] = [
+      {
+        title: "Greetings",
+        suggestions: getDefaultHints(targetLanguage, "greetings"),
+      },
+      {
+        title: "Questions",
+        suggestions: getDefaultHints(targetLanguage, "questions"),
+      },
+      {
+        title: "Responses",
+        suggestions: getDefaultHints(targetLanguage, "responses"),
+      },
+    ];
 
     // If there's no conversation history, return default hints
     if (!conversationHistory || conversationHistory.length === 0) {
@@ -85,7 +83,7 @@ export async function generateHints(
         Array.isArray(parsedContent.categories) &&
         parsedContent.categories.length > 0
       ) {
-        return parsedContent;
+        return parsedContent.categories;
       }
     } catch (e) {
       console.error("Failed to parse hints response:", e);
@@ -97,22 +95,20 @@ export async function generateHints(
     console.error("Error generating hints:", error);
     
     // Fallback to default hints on error
-    return {
-      categories: [
-        {
-          title: "Greetings",
-          suggestions: getDefaultHints(targetLanguage, "greetings"),
-        },
-        {
-          title: "Questions",
-          suggestions: getDefaultHints(targetLanguage, "questions"),
-        },
-        {
-          title: "Responses",
-          suggestions: getDefaultHints(targetLanguage, "responses"),
-        },
-      ],
-    };
+    return [
+      {
+        title: "Greetings",
+        suggestions: getDefaultHints(targetLanguage, "greetings"),
+      },
+      {
+        title: "Questions",
+        suggestions: getDefaultHints(targetLanguage, "questions"),
+      },
+      {
+        title: "Responses",
+        suggestions: getDefaultHints(targetLanguage, "responses"),
+      },
+    ];
   }
 }
 
@@ -133,9 +129,16 @@ function getDefaultHints(language: string, category: string): string[] {
       questions: ["O que você fez hoje?", "Pode me ajudar?", "Como se diz...?", "O que significa...?"],
       responses: ["Sim, eu concordo", "Eu não entendo", "Pode ser", "Isso é interessante"],
     },
+    english: {
+      greetings: ["Hello!", "Good morning", "How are you?", "Nice to meet you"],
+      questions: ["What did you do today?", "Can you help me?", "How do you say...?", "What does...mean?"],
+      responses: ["Yes, I agree", "I don't understand", "It could be", "That's interesting"],
+    }
   };
   
-  // Default to Spanish if language not found
-  const languageHints = hints[language.toLowerCase() as keyof typeof hints] || hints.spanish;
+  // Default to Spanish or English if language not found
+  const languageHints = hints[language.toLowerCase() as keyof typeof hints] || 
+    (language.toLowerCase() === 'english' ? hints.english : hints.spanish);
+  
   return languageHints[category as keyof typeof languageHints] || [];
 }

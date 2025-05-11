@@ -16,6 +16,7 @@ import haitianTranslations from "@/translations/haitian";
 import spanishTranslations from "@/translations/spanish";
 import VoiceChatContainer from "@/components/voice-chat/VoiceChatContainer";
 import ChatMessage from "@/components/practice/ChatMessage";
+import ConversationStarters from "@/components/premium-voice/ConversationStarters";
 import { playTTS } from "@/utils/tts";
 
 type ConversationMessage = {
@@ -394,6 +395,8 @@ const VoiceChat = () => {
     });
   };
 
+  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
@@ -488,6 +491,39 @@ const VoiceChat = () => {
             />
           )}
         </Card>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ConversationStarters />
+          
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">{t("practiceWithVoiceChat")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                {t("useThisTool")}
+              </p>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>{t("askQuestions")}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>{t("practiceCommonPhrases")}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>{t("describeWhatYouSee")}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>{t("practiceVocabularyForSpecific")}</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

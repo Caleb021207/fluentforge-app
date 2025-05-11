@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import OpenAI from "https://esm.sh/openai@4.20.1";
 import { corsHeaders, filterProhibitedContent } from "./config.ts";
@@ -78,18 +77,40 @@ serve(async (req) => {
 
     // Handle hint requests
     if (requestType === 'hint') {
-      const suggestions = await generateHints(
-        conversationHistory,
-        targetLanguage || "spanish", // Default if still undefined
-        userLanguage || "english"
-      );
-      
-      return new Response(
-        JSON.stringify({ suggestions }),
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      try {
+        const suggestions = await generateHints(
+          conversationHistory,
+          targetLanguage || "spanish", // Default if still undefined
+          userLanguage || "english"
+        );
+        
+        return new Response(
+          JSON.stringify({ suggestions }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      } catch (hintError) {
+        console.error("Error generating hints:", hintError);
+        return new Response(
+          JSON.stringify({ 
+            error: "Failed to generate hints",
+            suggestions: [
+              {
+                title: "Greetings",
+                suggestions: ["Hola", "Buenos días", "¿Cómo estás?"]
+              },
+              {
+                title: "Questions",
+                suggestions: ["¿Qué haces?", "¿De dónde eres?", "¿Te gusta?"]
+              }
+            ] 
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
     }
 
     // Handle translation requests
