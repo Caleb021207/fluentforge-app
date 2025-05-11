@@ -1,42 +1,91 @@
 
-import React from "react";
+import React, { useState, useRef, KeyboardEvent, FormEvent, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
+import HintButton from "./HintButton";
+import type { Message } from "@/types/chat";
 
 interface ChatInputProps {
-  input: string;
-  setInput: (input: string) => void;
-  handleSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: (e: FormEvent) => void;
   placeholder: string;
+  messages: Message[];
+  targetLanguage: string;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({
-  input,
-  setInput,
-  handleSubmit,
+export default function ChatInput({
   isLoading,
+  value,
+  onChange,
+  onSubmit,
   placeholder,
-}) => {
+  messages,
+  targetLanguage
+}: ChatInputProps) {
   const { t } = useLocalization();
+  const [rows, setRows] = useState(1);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  useEffect(() => {
+    // Reset rows when value is empty
+    if (!value) {
+      setRows(1);
+    }
+  }, [value]);
 
+  // Handle textarea height adjustment
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = e.target;
+    onChange(textarea.value);
+    
+    // Adjust rows based on content
+    const lineCount = textarea.value.split('\n').length;
+    const newRows = Math.min(5, Math.max(1, lineCount));
+    setRows(newRows);
+  };
+  
+  // Handle keyboard shortcuts
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    // Submit on Enter (without Shift)
+    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
+      e.preventDefault();
+      onSubmit(e);
+    }
+  };
+  
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent bg-background text-foreground"
-        disabled={isLoading}
-      />
-      <Button type="submit" disabled={isLoading} variant="success">
-        <Send className="h-4 w-4 mr-2" />
-        {t("send")}
-      </Button>
+    <form onSubmit={onSubmit} className="relative">
+      <div className="relative">
+        <Textarea
+          ref={textareaRef}
+          value={value}
+          onChange={handleTextareaChange}
+          onKeyDown={handleKeyDown}
+          rows={rows}
+          placeholder={placeholder}
+          className="pr-24 resize-none py-3 min-h-[50px]"
+          disabled={isLoading}
+        />
+        <div className="absolute right-2 bottom-1.5 flex space-x-2">
+          <HintButton 
+            targetLanguage={targetLanguage}
+            messages={messages}
+          />
+          <Button 
+            size="sm" 
+            type="submit" 
+            disabled={isLoading || value.trim().length === 0}
+            className="h-8 w-8 p-0"
+          >
+            <Send className="h-4 w-4" />
+            <span className="sr-only">{t("send")}</span>
+          </Button>
+        </div>
+      </div>
     </form>
   );
-};
-
-export default ChatInput;
+}

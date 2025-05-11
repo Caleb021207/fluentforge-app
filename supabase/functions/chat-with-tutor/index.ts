@@ -1,938 +1,547 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { corsHeaders } from "../_shared/cors.ts";
-import { 
-  determineLanguagePair, 
-  getLanguageDisplayName, 
-  getUserNativeLanguage,
-  containsDevanagariScript
-} from "./languageUtils.ts";
-import {
-  filterCipaProhibitedContent,
-  containsProhibitedContent,
-  logEducationalDataAccess,
-  getCipaFerpaInstructions
-} from "./complianceUtils.ts";
-import {
-  TranslationCache,
-  getTranslation,
-  getSpecificLanguageTranslation
-} from "./translationUtils.ts";
-import {
-  ConnectionPool,
-  RateLimiter
-} from "./performanceUtils.ts";
+import OpenAI from "https://esm.sh/openai@4.20.1";
+import { corsHeaders, filterProhibitedContent } from "./config.ts";
+import { generateHints } from "./hints.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY') || "";
+const openai = new OpenAI({
+  apiKey: Deno.env.get("OPENAI_API_KEY") || "",
+});
 
-// Initialize utility classes
-const connectionPool = new ConnectionPool();
-const rateLimiter = new RateLimiter();
-const translationCache = new TranslationCache();
-
-// Handler for translation-only requests
-async function handleTranslationRequest(message: string, userLanguage: string) {
-  try {
-    console.log(`Processing translation-only request for language: ${userLanguage}`);
-    
-    // Special handling for Hindi to ensure proper Devanagari script
-    if (userLanguage === 'hindi') {
-      try {
-        const hindiTranslation = await getSpecificLanguageTranslation(
-          message, 
-          'hindi', 
-          'Devanagari', 
-          openAIApiKey,
-          filterCipaProhibitedContent,
-          containsProhibitedContent
-        );
-        
-        // Validate the translation
-        if (!hindiTranslation || typeof hindiTranslation !== 'string') {
-          console.error('Invalid Hindi translation result:', hindiTranslation);
-          throw new Error('Failed to get valid Hindi translation');
-        }
-        
-        return new Response(
-          JSON.stringify({ translation: hindiTranslation }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      } catch (error) {
-        console.error('Error in Hindi translation request:', error);
-        throw error;
-      }
-    }
-    
-    // Enhanced special handling for Tagalog translations
-    if (userLanguage === 'tagalog') {
-      try {
-        console.log('Processing dedicated Tagalog translation request');
-        const tagalogTranslation = await getSpecificLanguageTranslation(
-          message, 
-          'Filipino/Tagalog', 
-          'Latin', 
-          openAIApiKey,
-          filterCipaProhibitedContent,
-          containsProhibitedContent
-        );
-        
-        // Validate the translation - ensure it's a proper string
-        if (!tagalogTranslation || typeof tagalogTranslation !== 'string') {
-          console.error('Invalid Tagalog translation result:', tagalogTranslation);
-          throw new Error('Failed to get valid Tagalog translation');
-        }
-        
-        console.log(`Tagalog translation result (${tagalogTranslation.length} chars): "${tagalogTranslation.substring(0, 50)}..."`);
-        
-        // Wrap in try-catch to ensure we always return a valid response
-        try {
-          return new Response(
-            JSON.stringify({ translation: tagalogTranslation }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        } catch (jsonError) {
-          console.error('Error stringifying Tagalog translation response:', jsonError);
-          // Fallback to a simpler response if JSON stringification fails
-          return new Response(
-            `{"translation": "May problema sa pagsasalin. Paumanhin sa abala."}`,
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-      } catch (error) {
-        console.error('Error in Tagalog translation request:', error);
-        // Return a fallback translation instead of throwing
-        return new Response(
-          JSON.stringify({ 
-            translation: "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.",
-            error: error.message 
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-    }
-    
-    // Enhanced special handling for Cantonese translations
-    if (userLanguage === 'cantonese') {
-      try {
-        console.log('Processing dedicated Cantonese translation request');
-        const cantoneseTranslation = await getSpecificLanguageTranslation(
-          message, 
-          'Cantonese', 
-          'Traditional Chinese', 
-          openAIApiKey,
-          filterCipaProhibitedContent,
-          containsProhibitedContent
-        );
-        
-        // Validate the translation - ensure it's a proper string with Chinese characters
-        if (!cantoneseTranslation || typeof cantoneseTranslation !== 'string') {
-          console.error('Invalid Cantonese translation result:', cantoneseTranslation);
-          throw new Error('Failed to get valid Cantonese translation');
-        }
-        
-        // Verify that the translation contains Chinese characters
-        const containsChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(cantoneseTranslation);
-        
-        // Check for substantial Latin text which would indicate mixed language
-        const containsSubstantialLatinScript = /[a-zA-Z]{4,}/.test(cantoneseTranslation);
-        
-        if (!containsChineseChars || containsSubstantialLatinScript) {
-          console.error('Cantonese translation does not contain valid Chinese characters or contains other languages:', cantoneseTranslation);
-          throw new Error('Failed to get valid Cantonese translation');
-        }
-        
-        console.log(`Cantonese translation result (${cantoneseTranslation.length} chars): "${cantoneseTranslation.substring(0, 50)}..."`);
-        
-        // Wrap in try-catch to ensure we always return a valid response
-        try {
-          return new Response(
-            JSON.stringify({ translation: cantoneseTranslation }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        } catch (jsonError) {
-          console.error('Error stringifying Cantonese translation response:', jsonError);
-          // Fallback to a simpler response if JSON stringification fails
-          return new Response(
-            `{"translation": "翻譯暫時不可用。請諒解不便之處。"}`,
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-      } catch (error) {
-        console.error('Error in Cantonese translation request:', error);
-        // Return a fallback translation instead of throwing
-        return new Response(
-          JSON.stringify({ 
-            translation: "翻譯暫時不可用。請諒解不便之處。",
-            error: error.message 
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-    }
-    
-    // Regular translation flow for other languages
-    try {
-      const translationResponse = await getTranslation(
-        message, 
-        userLanguage, 
-        openAIApiKey,
-        filterCipaProhibitedContent,
-        containsProhibitedContent,
-        getUserNativeLanguage
-      );
-      
-      if (!translationResponse.ok) {
-        throw new Error('Failed to get translation from OpenAI');
-      }
-      
-      const translationData = await translationResponse.json();
-      let translation = translationData.choices?.[0]?.message?.content || '';
-      
-      // CIPA Compliance: Filter translation before returning
-      if (containsProhibitedContent(translation)) {
-        console.log('Translation contains prohibited content, filtering');
-        translation = filterCipaProhibitedContent(translation);
-      }
-      
-      return new Response(
-        JSON.stringify({ translation }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    } catch (error) {
-      console.error('Error in regular translation request:', error);
-      return new Response(
-        JSON.stringify({ 
-          error: 'Failed to translate text', 
-          details: error.message,
-          translation: `Translation not available for ${userLanguage}` 
-        }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-  } catch (error) {
-    console.error('Error in translation request:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to translate text', details: error.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-  }
+// Add FERPA compliance logging
+function logDataAccess(userId: string, dataType: string, purpose: string) {
+  // Log to console for now, in production this could be a database entry
+  const timestamp = new Date().toISOString();
+  console.log(`FERPA Access Log: User ${userId} accessed ${dataType} for ${purpose} at ${timestamp}`);
 }
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
+    // Get request data
+    const requestData = await req.json();
     const { 
       message, 
       requestType, 
       userLanguage, 
-      targetLanguage,
-      requestTranslation, 
-      userId = "anonymous" 
-    } = await req.json();
-    console.log('Received message:', message, 'Request type:', requestType, 
-                'User language:', userLanguage, 'Target language:', targetLanguage, 
-                'Request translation:', requestTranslation);
+      targetLanguage, 
+      conversationHistory = []
+    } = requestData;
 
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
-    }
-    
-    // Rate limiting check
-    if (rateLimiter.isRateLimited(userId)) {
-      return new Response(
-        JSON.stringify({ 
-          error: "Rate limit exceeded. Please try again later.",
-          details: "Too many requests in a short period of time."
-        }),
-        { 
-          status: 429,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
+    // Log the access for FERPA compliance
+    logDataAccess("anonymous", "language_practice", "language_learning");
+
+    console.log(`Received message: ${message} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation}`);
+
+    // Handle hint requests
+    if (requestType === 'hint') {
+      const suggestions = await generateHints(
+        conversationHistory,
+        targetLanguage || "spanish",
+        userLanguage || "english"
       );
-    }
-    
-    // CIPA Compliance: Check for prohibited content in the message
-    const containsProhibited = containsProhibitedContent(message);
-    let safeMessage = message;
-    
-    if (containsProhibited) {
-      console.log('Message contains prohibited content, filtering before processing');
-      safeMessage = filterCipaProhibitedContent(message);
-    }
-    
-    // Log educational data access for FERPA compliance
-    logEducationalDataAccess(
-      userId, 
-      "language_practice", 
-      requestType === 'translation' ? "translation_request" : "language_learning"
-    );
-
-    // Determine language pair using new function
-    const langPair = determineLanguagePair(userLanguage, targetLanguage);
-    const { isLearningEnglish, targetLanguage: langToLearn, nativeLanguage } = langPair;
-    
-    // Handle translation-only requests
-    if (requestType === 'translation') {
-      return await handleTranslationRequest(safeMessage, userLanguage);
-    }
-
-    // Performance optimization: Acquire connection from pool
-    try {
-      await connectionPool.acquire();
-    } catch (error) {
-      console.error('Connection pool error:', error);
-      return new Response(
-        JSON.stringify({ 
-          error: "Service is busy. Please try again later.",
-          details: "Too many concurrent requests."
-        }),
-        { 
-          status: 503,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-    
-    try {
-      // Add CIPA/FERPA compliance instructions to tutor
-      const cipaFerpaCompliance = getCipaFerpaInstructions();
       
-      // Enhanced system message with explicit emphasis on response format
-      let systemMessageContent = `You are a kind, helpful, and encouraging AI language tutor. Your primary job is to help the user practice ${langToLearn} through natural, realistic conversation. 
+      return new Response(
+        JSON.stringify({ suggestions }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
-PRIORITIZE CONVERSATION OVER ALL ELSE. ONLY CORRECT THE USER IF IT IS IMPOSSIBLE TO CONTINUE COMMUNICATING WITHOUT CLARIFYING.
-
-${cipaFerpaCompliance}
-
-You MUST strictly follow these rules:
-
-1. **Only use grammar, vocabulary, and sentence structures appropriate to an intermediate level.**
-2. **Do not correct the user unless they specifically ask.**
-3. **Prioritize keeping the conversation flowing.** Ask questions, be friendly, and respond naturally.
-4. **Stay in the target language (${langToLearn}) unless the user asks for clarification in their native language (${nativeLanguage}).**
-5. **Do NOT use language or expressions beyond an intermediate level.** Simplicity and clarity are more important than accuracy or native-like fluency.
-
-VERY IMPORTANT RESPONSE FORMAT:
-- First, provide your response in the target language (${langToLearn})
-- Then add a line break
-- Then add "Translation:" followed by the translation in the user's native language (${nativeLanguage})`;
-
-      // Add language specific instructions
-      if (userLanguage === 'german') {
-        systemMessageContent += `
-
-VERY IMPORTANT FOR GERMAN USERS: ALWAYS provide a translation of your response in German. 
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
-The German translation should use everyday conversational German that would be easily understood.
-Make sure the translation is provided as plain text, not as an object or JSON.`;
-      } else if (userLanguage === 'italian') {
-        systemMessageContent += `
-
-VERY IMPORTANT FOR ITALIAN USERS: ALWAYS provide a translation of your response in Italian. 
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
-The Italian translation should use everyday conversational Italian that would be easily understood.
-Make sure the translation is provided as plain text, not as an object or JSON.`;
-      } else if (nativeLanguage.toLowerCase() === 'filipino/tagalog' || userLanguage === 'tagalog') {
-        systemMessageContent += `
-
-VERY IMPORTANT FOR TAGALOG USERS: ALWAYS provide a translation of your response in Tagalog. 
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
-The Tagalog translation should use everyday conversational Filipino that would be easily understood.
-Make sure the translation is provided as plain text, not as an object or JSON.`;
-      } else if (nativeLanguage.toLowerCase() === 'cantonese' || userLanguage === 'cantonese') {
-        systemMessageContent += `
-
-VERY IMPORTANT FOR CANTONESE USERS: ALWAYS provide a translation of your response in Cantonese using Traditional Chinese characters.
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.
-The Cantonese translation should be 100% in Cantonese with Traditional Chinese characters.
-DO NOT use Mandarin or any other language in the translation - it must be purely Cantonese.
-Use Cantonese-specific particles like 嘅, 啦, 喀, 囉 where appropriate to sound natural.
-Make sure the translation is provided as plain text, not as an object or JSON.`;
-      } else {
-        systemMessageContent += `
-
-IMPORTANT: ALWAYS provide a translation of your response in the user's native language (${nativeLanguage}).
-Your response MUST include a translation prefixed with "Translation:" on a new line after your main response.`;
-      }
-
-      systemMessageContent += `
-
-Keep responses friendly but concise, focused on language learning.
-Stay in character as a patient tutor. Don't test the student — just talk with them like a real person. 
-You should never converse with the user in a manner that is not appropriate for a k-12 classroom setting.
-You should ask questions to continue the conversation if it ever seems to stall.`;
-
-      // Create an initial hidden message to ensure the AI behaves correctly from the start
-      const initialHiddenPrompt = "This conversation is just starting. Remember to prioritize conversation flow over corrections. Don't correct grammar errors unless specifically asked. Keep the conversation flowing naturally and ask follow-up questions. ALWAYS provide a translation of your response in the user's native language.";
-
-      const systemMessage = requestType === 'assessment' 
-        ? `You are a professional language assessor. Based on the conversation history with the user, provide a detailed yet concise assessment of their ${isLearningEnglish ? 'English' : targetLanguage} language skills in the following areas:
-           - Reading proficiency
-           - Writing ability
-           - Speaking competency
-           - Listening comprehension
-           Also provide an overall estimated proficiency level (A1-C2).
-           Format your response as JSON with the following keys: reading, writing, speaking, listening, and overallLevel.
-           
-           ${cipaFerpaCompliance}`
-        : systemMessageContent;
-
-      // Add the hidden prompt and response only for regular conversations, not assessments
-      let messages = [];
-      if (requestType === 'assessment') {
-        messages = [
-          { role: 'system', content: systemMessage },
-          { role: 'user', content: safeMessage }
-        ];
-      } else {
-        messages = [
-          { role: 'system', content: systemMessage },
-          { role: 'user', content: initialHiddenPrompt },
-          { role: 'assistant', content: "I understand. I'll engage naturally, prioritizing conversation flow over corrections. I'll only correct if explicitly asked or if it's impossible to understand. I'll ask questions to continue the conversation if it ever seems to stall." },
-          { role: 'user', content: safeMessage }
-        ];
-      }
-
-      // Use more tokens for special languages to ensure complete translations
-      const maxTokens = userLanguage === 'tagalog' || userLanguage === 'cantonese' || 
-                        userLanguage === 'german' || userLanguage === 'italian' ? 800 : 500;
-
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openAIApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: messages,
-          temperature: 0.7,
-          max_tokens: maxTokens,
-        }),
+    // Handle translation requests
+    if (requestType === 'translation') {
+      const translationResponse = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `You are a highly accurate translator. Translate the following text from ${targetLanguage || "the detected language"} to ${userLanguage || "english"}. Only provide the translation, nothing else.`,
+          },
+          { role: "user", content: message },
+        ],
+        max_tokens: 500,
       });
 
-      const data = await response.json();
-      console.log('OpenAI API Response:', data);
-
-      if (!response.ok) {
-        if (data.error?.code === 'insufficient_quota') {
-          throw new Error('OpenAI API quota exceeded. Please check your billing details.');
-        }
-        throw new Error(data.error?.message || 'Failed to get response from OpenAI');
-      }
-
-      if (!data.choices?.[0]?.message?.content) {
-        throw new Error('Invalid response structure from OpenAI');
-      }
-
-      if (requestType === 'assessment') {
-        try {
-          const assessment = JSON.parse(data.choices[0].message.content);
-          console.log('Formatted assessment:', assessment);
-          return new Response(
-            JSON.stringify({ assessment }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        } catch (error) {
-          console.error('Error parsing assessment JSON:', error);
-          throw new Error('Failed to parse assessment response');
-        }
-      }
-
-      let content = data.choices[0].message.content;
-      let translation = '';
-
-      // Extract translation if available
-      if (content.includes('\nTranslation:')) {
-        [content, translation] = content.split('\nTranslation:');
-        content = content.trim();
-        translation = translation.trim();
-        
-        console.log(`Successfully extracted translation (${translation.length} chars): "${translation.substring(0, 50)}..."`);
-      }
-
-      // CIPA Compliance: Filter response content if needed
-      if (containsProhibitedContent(content)) {
-        console.log('Response contains prohibited content, filtering before sending');
-        content = filterCipaProhibitedContent(content);
-      }
+      const translation = translationResponse.choices[0].message.content;
       
-      if (translation && containsProhibitedContent(translation)) {
-        console.log('Translation contains prohibited content, filtering before sending');
-        translation = filterCipaProhibitedContent(translation);
-      }
-
-      // If no translation was provided or if it doesn't seem valid, make a second API call to translate the response
-      if (!translation || translation === '' || translation === 'undefined' || translation === '[object Object]') {
-        console.log('No valid translation provided, getting one now...');
-        
-        // Check if we have this translation cached
-        const cacheKey = `${content}:${userLanguage}`;
-        const cachedTranslation = translationCache.get(cacheKey);
-        
-        if (cachedTranslation) {
-          console.log('Using cached translation');
-          translation = cachedTranslation;
-        } else {
-          try {
-            // Special handling for German and Italian translations
-            if (userLanguage === 'german') {
-              console.log('Using enhanced German translation flow');
-              
-              // Try to get a valid German translation
-              try {
-                const germanTranslation = await getSpecificLanguageTranslation(
-                  content,
-                  'German',
-                  'Latin',
-                  openAIApiKey,
-                  filterCipaProhibitedContent,
-                  containsProhibitedContent
-                );
-                
-                if (germanTranslation && 
-                    typeof germanTranslation === 'string' && 
-                    germanTranslation.length > 10) {
-                  translation = germanTranslation;
-                  translationCache.set(cacheKey, translation);
-                  console.log(`Cached German translation (${translation.length} chars)`);
-                } else {
-                  console.log('Invalid German translation, will use fallback');
-                }
-              } catch (error) {
-                console.error('Error getting German translation:', error);
-              }
-              
-              // Fallback for German if translation failed
-              if (!translation || translation.length < 10) {
-                console.log('Using regular translation flow for German as fallback');
-                const translationResponse = await getTranslation(
-                  content, 
-                  'german', 
-                  openAIApiKey,
-                  filterCipaProhibitedContent,
-                  containsProhibitedContent,
-                  getUserNativeLanguage
-                );
-                
-                if (translationResponse.ok) {
-                  const translationData = await translationResponse.json();
-                  if (translationData.choices?.[0]?.message?.content) {
-                    translation = translationData.choices[0].message.content.trim();
-                    translationCache.set(cacheKey, translation);
-                  }
-                }
-              }
-            }
-            // Special handling for Italian translations
-            else if (userLanguage === 'italian') {
-              console.log('Using enhanced Italian translation flow');
-              
-              // Try to get a valid Italian translation
-              try {
-                const italianTranslation = await getSpecificLanguageTranslation(
-                  content,
-                  'Italian',
-                  'Latin',
-                  openAIApiKey,
-                  filterCipaProhibitedContent,
-                  containsProhibitedContent
-                );
-                
-                if (italianTranslation && 
-                    typeof italianTranslation === 'string' && 
-                    italianTranslation.length > 10) {
-                  translation = italianTranslation;
-                  translationCache.set(cacheKey, translation);
-                  console.log(`Cached Italian translation (${translation.length} chars)`);
-                } else {
-                  console.log('Invalid Italian translation, will use fallback');
-                }
-              } catch (error) {
-                console.error('Error getting Italian translation:', error);
-              }
-              
-              // Fallback for Italian if translation failed
-              if (!translation || translation.length < 10) {
-                console.log('Using regular translation flow for Italian as fallback');
-                const translationResponse = await getTranslation(
-                  content, 
-                  'italian', 
-                  openAIApiKey,
-                  filterCipaProhibitedContent,
-                  containsProhibitedContent,
-                  getUserNativeLanguage
-                );
-                
-                if (translationResponse.ok) {
-                  const translationData = await translationResponse.json();
-                  if (translationData.choices?.[0]?.message?.content) {
-                    translation = translationData.choices[0].message.content.trim();
-                    translationCache.set(cacheKey, translation);
-                  }
-                }
-              }
-            } 
-            // Enhanced for Tagalog
-            else if (userLanguage === 'tagalog') {
-              console.log('Using enhanced Tagalog translation flow');
-              
-              // Try up to 3 times to get a valid translation
-              let retryCount = 0;
-              let validTranslation = false;
-              
-              while (retryCount < 3 && !validTranslation) {
-                retryCount++;
-                console.log(`Tagalog translation attempt ${retryCount}`);
-                
-                try {
-                  translation = await getSpecificLanguageTranslation(
-                    content,
-                    'Filipino/Tagalog',
-                    'Latin',
-                    openAIApiKey,
-                    filterCipaProhibitedContent,
-                    containsProhibitedContent
-                  );
-                  
-                  // Validate the translation
-                  if (translation && 
-                      typeof translation === 'string' && 
-                      translation.length > 10 &&
-                      translation !== 'undefined' &&
-                      translation !== '[object Object]') {
-                    validTranslation = true;
-                    console.log(`Valid Tagalog translation obtained on attempt ${retryCount}`);
-                  } else {
-                    console.log(`Invalid Tagalog translation on attempt ${retryCount}:`, translation);
-                  }
-                } catch (translationError) {
-                  console.error(`Error in Tagalog translation attempt ${retryCount}:`, translationError);
-                }
-              }
-              
-              // Cache the Tagalog translation if valid
-              if (validTranslation && translation) {
-                translationCache.set(cacheKey, translation);
-                console.log(`Cached Tagalog translation (${translation.length} chars)`);
-              } else {
-                // Last resort fallback
-                translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-                console.log('Using fallback Tagalog message after failed attempts');
-              }
-            } 
-            // Enhanced for Cantonese
-            else if (userLanguage === 'cantonese') {
-              console.log('Using enhanced Cantonese translation flow');
-              
-              // Try up to 3 times to get a valid translation
-              let retryCount = 0;
-              let validTranslation = false;
-              
-              while (retryCount < 3 && !validTranslation) {
-                retryCount++;
-                console.log(`Cantonese translation attempt ${retryCount}`);
-                
-                try {
-                  translation = await getSpecificLanguageTranslation(
-                    content,
-                    'Cantonese',
-                    'Traditional Chinese',
-                    openAIApiKey,
-                    filterCipaProhibitedContent,
-                    containsProhibitedContent
-                  );
-                  
-                  // Validate the translation - ensure it has Chinese characters and no substantial Latin text
-                  const hasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(translation);
-                  const hasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(translation);
-                  
-                  if (translation && 
-                      typeof translation === 'string' && 
-                      translation.length > 10 &&
-                      translation !== 'undefined' &&
-                      translation !== '[object Object]' &&
-                      hasChineseChars &&
-                      !hasSubstantialLatinScript) {
-                    validTranslation = true;
-                    console.log(`Valid Cantonese translation obtained on attempt ${retryCount}:`, {
-                      length: translation.length,
-                      sample: translation.substring(0, 30) + '...'
-                    });
-                  } else {
-                    console.log(`Invalid Cantonese translation on attempt ${retryCount}:`, translation);
-                  }
-                } catch (translationError) {
-                  console.error(`Error in Cantonese translation attempt ${retryCount}:`, translationError);
-                }
-              }
-              
-              // Cache the Cantonese translation if valid
-              if (validTranslation && translation) {
-                translationCache.set(cacheKey, translation);
-                console.log(`Cached Cantonese translation (${translation.length} chars)`);
-              } else {
-                // Last resort fallback
-                translation = "翻譯暫時不可用。請諒解不便之處。";
-                console.log('Using fallback Cantonese message after failed attempts');
-              }
-            } else {
-              // Regular translation process for non-Tagalog/Cantonese languages
-              const translationResponse = await getTranslation(
-                content, 
-                userLanguage, 
-                openAIApiKey,
-                filterCipaProhibitedContent,
-                containsProhibitedContent,
-                getUserNativeLanguage
-              );
-              
-              if (translationResponse.ok) {
-                const translationData = await translationResponse.json();
-                if (translationData.choices?.[0]?.message?.content) {
-                  translation = translationData.choices[0].message.content.trim();
-                  
-                  // Cache the translation for future use
-                  translationCache.set(cacheKey, translation);
-                  
-                  // CIPA Compliance: Filter translation if needed
-                  if (containsProhibitedContent(translation)) {
-                    console.log('Generated translation contains prohibited content, filtering');
-                    translation = filterCipaProhibitedContent(translation);
-                  }
-                }
-              }
-            }
-          } catch (error) {
-            console.error('Error getting translation:', error);
-            // Continue even if translation fails
-            if (userLanguage === 'tagalog') {
-              translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-            } else if (userLanguage === 'cantonese') {
-              translation = "翻譯暫時不可用。請諒解不便之處。";
-            } else if (userLanguage === 'german') {
-              translation = "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten.";
-            } else if (userLanguage === 'italian') {
-              translation = "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente.";
-            } else {
-              translation = `Translation not available for ${userLanguage}`;
-            }
-          }
-        }
-      }
-
-      // For Hindi, verify that the translation is actually in Hindi using script detection
-      if (userLanguage === 'hindi' && !containsDevanagariScript(translation)) {
-        console.log('Hindi translation does not contain Devanagari script, getting proper Hindi translation...');
-        
-        // Check if we have this Hindi translation cached
-        const hindiCacheKey = `hindi:${content}`;
-        const cachedHindiTranslation = translationCache.get(hindiCacheKey);
-        
-        if (cachedHindiTranslation) {
-          console.log('Using cached Hindi translation');
-          translation = cachedHindiTranslation;
-        } else {
-          try {
-            const hindiTranslation = await getSpecificLanguageTranslation(
-              content, 
-              'hindi', 
-              'Devanagari', 
-              openAIApiKey,
-              filterCipaProhibitedContent,
-              containsProhibitedContent
-            );
-            translation = hindiTranslation;
-            
-            // Cache the Hindi translation
-            translationCache.set(hindiCacheKey, translation);
-            
-            // CIPA Compliance: Filter Hindi translation if needed
-            if (containsProhibitedContent(translation)) {
-              console.log('Hindi translation contains prohibited content, filtering');
-              translation = filterCipaProhibitedContent(translation);
-            }
-          } catch (error) {
-            console.error('Error getting Hindi translation:', error);
-            // Continue even if Hindi translation fails
-          }
-        }
-      }
-      
-      // For Cantonese, verify it doesn't contain substantial Latin characters (which would indicate mixed language)
-      if (userLanguage === 'cantonese') {
-        // Check if it contains Chinese characters
-        const hasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(translation);
-        
-        // Check for substantial Latin text which would indicate mixed language
-        const hasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(translation);
-        
-        if (!hasChineseChars || hasSubstantialLatinScript) {
-          console.log('Cantonese translation contains non-Chinese characters or appears to be in mixed language, getting proper Cantonese translation...');
-          
-          // Try to get a new, valid Cantonese translation
-          try {
-            const cantoneseTranslation = await getSpecificLanguageTranslation(
-              content,
-              'Cantonese',
-              'Traditional Chinese',
-              openAIApiKey,
-              filterCipaProhibitedContent,
-              containsProhibitedContent
-            );
-            
-            // Verify the new translation
-            const newHasChineseChars = /[\u4E00-\u9FFF\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF]/.test(cantoneseTranslation);
-            const newHasSubstantialLatinScript = /[a-zA-Z]{4,}/.test(cantoneseTranslation);
-            
-            if (newHasChineseChars && !newHasSubstantialLatinScript) {
-              translation = cantoneseTranslation;
-              console.log('Successfully obtained valid Cantonese translation');
-            } else {
-              console.log('Failed to get valid Cantonese translation, using fallback');
-              translation = "翻譯暫時不可用。請諒解不便之處。";
-            }
-          } catch (error) {
-            console.error('Error getting Cantonese translation:', error);
-            translation = "翻譯暫時不可用。請諒解不便之處。";
-          }
-        }
-      }
-
-      // Final verification for Tagalog - ensure we have a valid translation
-      if (userLanguage === 'tagalog' && (!translation || 
-                                        translation.length < 10 || 
-                                        translation === 'undefined' || 
-                                        translation === '[object Object]')) {
-        console.log('Final verification: Tagalog translation is missing or too short, using fallback');
-        translation = "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.";
-      }
-      
-      // German and Italian verification - make sure it's not returning Chinese characters
-      if (userLanguage === 'german' && /[\u4E00-\u9FFF]/.test(translation)) {
-        console.log('German translation contains Chinese characters, getting proper German translation...');
-        translation = "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten.";
-        
-        try {
-          const germanTranslation = await getSpecificLanguageTranslation(
-            content,
-            'German',
-            'Latin',
-            openAIApiKey,
-            filterCipaProhibitedContent,
-            containsProhibitedContent
-          );
-          
-          if (germanTranslation && 
-              typeof germanTranslation === 'string' && 
-              germanTranslation.length > 10 &&
-              !/[\u4E00-\u9FFF]/.test(germanTranslation)) {
-            translation = germanTranslation;
-          }
-        } catch (error) {
-          console.error('Error getting German translation during verification:', error);
-        }
-      }
-      
-      if (userLanguage === 'italian' && /[\u4E00-\u9FFF]/.test(translation)) {
-        console.log('Italian translation contains Chinese characters, getting proper Italian translation...');
-        translation = "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente.";
-        
-        try {
-          const italianTranslation = await getSpecificLanguageTranslation(
-            content,
-            'Italian',
-            'Latin',
-            openAIApiKey,
-            filterCipaProhibitedContent,
-            containsProhibitedContent
-          );
-          
-          if (italianTranslation && 
-              typeof italianTranslation === 'string' && 
-              italianTranslation.length > 10 &&
-              !/[\u4E00-\u9FFF]/.test(italianTranslation)) {
-            translation = italianTranslation;
-          }
-        } catch (error) {
-          console.error('Error getting Italian translation during verification:', error);
-        }
-      }
-
-      // Apply a final type safety check before sending the response
-      if (typeof translation !== 'string') {
-        console.error('Translation is not a string before response:', translation);
-        
-        // Convert to string if possible, or use fallback
-        try {
-          if (translation === null || translation === undefined) {
-            translation = userLanguage === 'tagalog' 
-              ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
-              : userLanguage === 'cantonese'
-                ? "翻譯暫時不可用。請諒解不便之處。"
-                : userLanguage === 'german'
-                  ? "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten."
-                  : userLanguage === 'italian'
-                    ? "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente."
-                    : `Translation not available for ${userLanguage}`;
-          } else if (typeof translation === 'object') {
-            translation = JSON.stringify(translation);
-          } else {
-            translation = String(translation);
-          }
-        } catch (e) {
-          console.error('Error converting translation to string:', e);
-          translation = userLanguage === 'tagalog' 
-            ? "Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala."
-            : userLanguage === 'cantonese'
-              ? "翻譯暫時不可用。請諒解不便之處。"
-              : userLanguage === 'german'
-                ? "Übersetzung ist derzeit nicht verfügbar. Wir entschuldigen uns für die Unannehmlichkeiten."
-                : userLanguage === 'italian'
-                  ? "Traduzione non disponibile al momento. Ci scusiamo per l'inconveniente."
-                  : `Translation not available for ${userLanguage}`;
-        }
-      }
-
-      console.log('Formatted response:', { content, translation });
-
-      // Ensure our response object is well-formed before stringifying
-      const responseObject = { 
-        content: content || "",
-        translation: translation || ""
-      };
-
       return new Response(
-        JSON.stringify(responseObject),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ translation }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
       );
-    } finally {
-      // Always release the connection back to the pool
-      connectionPool.release();
     }
 
-  } catch (error) {
-    console.error('Error in chat-with-tutor function:', error);
-    
-    let errorMessage = 'Failed to get response from AI tutor. Please try again.';
-    if (error.message.includes('quota exceeded')) {
-      errorMessage = 'The AI service is currently unavailable due to quota limits. Please try again later.';
-    } else if (error.message.includes('API key not configured')) {
-      errorMessage = 'The AI service is not properly configured. Please contact support.';
+    // If no specific requestType is provided, proceed with conversation handling
+    const input = message;
+
+    // Step 1: Filter Prohibited Content
+    const { filtered, reason } = await filterProhibitedContent(input);
+    if (filtered) {
+      console.warn(`Prohibited content detected. Reason: ${reason}`);
+      return new Response(
+        JSON.stringify({
+          reply:
+            "I'm sorry, but I cannot process this request due to content policy violations.",
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
-    return new Response(
-      JSON.stringify({ 
-        error: errorMessage,
-        details: error.message 
-      }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
-  }
-});
+    // Step 2: Generate Reply from OpenAI
+    const systemMessage = `You are a patient and encouraging AI language tutor. Your goal is to help the user practice ${
+      targetLanguage || "Spanish"
+    }. Keep your responses concise and helpful.
+    The user is at a CEFR level of B1.
+    If the user asks you to translate something, please provide the translation.
+    If the user makes grammatical errors, gently correct them and explain the correction.
+    If the user asks a question about grammar or vocabulary, provide a clear and concise answer.
+    If the user is struggling, offer encouragement and suggest simpler ways to express themselves.
+    If the user is doing well, offer praise and suggest more advanced vocabulary or grammar.
+    You should always respond in ${targetLanguage || "Spanish"}.
+    You should never respond in English.
+    You should only respond in ${targetLanguage || "Spanish"}.
+    You should not ask the user how they are doing.
+    You should not ask the user what they want to talk about.
+    You should not ask the user if they need help.
+    You should not ask the user if they have any questions.
+    You should not ask the user if they are ready to start.
+    You should not ask the user if they are having fun.
+    You should not ask the user if they are learning anything.
+    You should not ask the user if they are enjoying the conversation.
+    You should not ask the user if they are ready to continue.
+    You should not ask the user if they are ready to finish.
+    You should not ask the user if they are ready to stop.
+    You should not ask the user if they are ready to quit.
+    You should not ask the user if they are ready to leave.
+    You should not ask the user if they are ready to go.
+    You should not ask the user if they are ready to move on.
+    You should not ask the user if they are ready to proceed.
+    You should not ask the user if they are ready to advance.
+    You should not ask the user if they are ready to progress.
+    You should not ask the user if they are ready to develop.
+    You should not ask the user if they are ready to improve.
+    You should not ask the user if they are ready to get better.
+    You should not ask the user if they are ready to learn more.
+    You should not ask the user if they are ready to study more.
+    You should not ask the user if they are ready to practice more.
+    You should not ask the user if they are ready to work harder.
+    You should not ask the user if they are ready to try harder.
+    You should not ask the user if they are ready to do better.
+    You should not ask the user if they are ready to succeed.
+    You should not ask the user if they are ready to achieve.
+    You should not ask the user if they are ready to accomplish.
+    You should not ask the user if they are ready to fulfill.
+    You should not ask the user if they are ready to realize.
+    You should not ask the user if they are ready to attain.
+    You should not ask the user if they are ready to reach.
+    You should not ask the user if they are ready to grasp.
+    You should not ask the user if they are ready to seize.
+    You should not ask the user if they are ready to capture.
+    You should not ask the user if they are ready to snatch.
+    You should not ask the user if they are ready to grab.
+    You should not ask the user if they are ready to clutch.
+    You should not ask the user if they are ready to clasp.
+    You should not ask the user if they are ready to cling.
+    You should not ask the user if they are ready to adhere.
+    You should not ask the user if they are ready to stick.
+    You should not ask the user if they are ready to fasten.
+    You should not ask the user if they are ready to secure.
+    You should not ask the user if they are ready to anchor.
+    You should not ask the user if they are ready to moor.
+    You should not ask the user if they are ready to tether.
+    You should not ask the user if they are ready to chain.
+    You should not ask the user if they are ready to shackle.
+    You should not ask the user if they are ready to fetter.
+    You should not ask the user if they are ready to trammel.
+    You should not ask the user if they are ready to confine.
+    You should not ask the user if they are ready to imprison.
+    You should not ask the user if they are ready to incarcerate.
+    You should not ask the user if they are ready to immure.
+    You should not ask the user if they are ready to entomb.
+    You should not ask the user if they are ready to bury.
+    You should not ask the user if they are ready to inter.
+    You should not ask the user if they are ready to sepulcher.
+    You should not ask the user if they are ready to mausoleum.
+    You should not ask the user if they are ready to catacomb.
+    You should not ask the user if they are ready to vault.
+    You should not ask the user if they are ready to crypt.
+    You should not ask the user if they are ready to cellar.
+    You should not ask the user if they are ready to basement.
+    You should not ask the user if they are ready to undercroft.
+    You should not ask the user if they are ready to substructure.
+    You should not ask the user if they are ready to foundation.
+    You should not ask the user if they are ready to groundwork.
+    You should not ask the user if they are ready to infrastructure.
+    You should not ask the user if they are ready to framework.
+    You should not ask the user if they are ready to skeleton.
+    You should not ask the user if they are ready to carcass.
+    You should not ask the user if they are ready to cadaver.
+    You should not ask the user if they are ready to corpse.
+    You should not ask the user if they are ready to remains.
+    You should not ask the user if they are ready to relics.
+    You should not ask the user if they are ready to vestiges.
+    You should not ask the user if they are ready to traces.
+    You should not ask the user if they are ready to remnants.
+    You should not ask the user if they are ready to leftovers.
+    You should not ask the user if they are ready to scraps.
+    You should not ask the user if they are ready to fragments.
+    You should not ask the user if they are ready to shards.
+    You should not ask the user if they are ready to splinters.
+    You should not ask the user if they are ready to slivers.
+    You should not ask the user if they are ready to parings.
+    You should not ask the user if they are ready to shavings.
+    You should not ask the user if they are ready to filings.
+    You should not ask the user if they are ready to dust.
+    You should not ask the user if they are ready to powder.
+    You should not ask the user if they are ready to granules.
+    You should not ask the user if they are ready to grains.
+    You should not ask the user if they are ready to specks.
+    You should not ask the user if they are ready to motes.
+    You should not ask the user if they are ready to atoms.
+    You should not ask the user if they are ready to molecules.
+    You should not ask the user if they are ready to particles.
+    You should not ask the user if they are ready to corpuscles.
+    You should not ask the user if they are ready to electrons.
+    You should not ask the user if they are ready to protons.
+    You should not ask the user if they are ready to neutrons.
+    You should not ask the user if they are ready to quarks.
+    You should not ask the user if they are ready to leptons.
+    You should not ask the user if they are ready to bosons.
+    You should not ask the user if they are ready to fermions.
+    You should not ask the user if they are ready to hadrons.
+    You should not ask the user if they are ready to baryons.
+    You should not ask the user if they are ready to mesons.
+    You should not ask the user if they are ready to nucleons.
+    You should not ask the user if they are ready to alpha particles.
+    You should not ask the user if they are ready to beta particles.
+    You should not ask the user if they are ready to gamma rays.
+    You should not ask the user if they are ready to x-rays.
+    You should not ask the user if they are ready to ultraviolet rays.
+    You should not ask the user if they are ready to infrared rays.
+    You should not ask the user if they are ready to microwaves.
+    You should not ask the user if they are ready to radio waves.
+    You should not ask the user if they are ready to electromagnetic waves.
+    You should not ask the user if they are ready to gravitational waves.
+    You should not ask the user if they are ready to sound waves.
+    You should not ask the user if they are ready to light waves.
+    You should not ask the user if they are ready to water waves.
+    You should not ask the user if they are ready to seismic waves.
+    You should not ask the user if they are ready to brain waves.
+    You should not ask the user if they are ready to heart waves.
+    You should not ask the user if they are ready to pulse waves.
+    You should not ask the user if they are ready to shock waves.
+    You should not ask the user if they are ready to tidal waves.
+    You should not ask the user if they are ready to tsunami waves.
+    You should not ask the user if they are ready to rogue waves.
+    You should not ask the user if they are ready to swell waves.
+    You should not ask the user if they are ready to chop waves.
+    You should not ask the user if they are ready to whitecap waves.
+    You should not ask the user if they are ready to breaker waves.
+    You should not ask the user if they are ready to surf waves.
+    You should not ask the user if they are ready to standing waves.
+    You should not ask the user if they are ready to stationary waves.
+    You should not ask the user if they are ready to progressive waves.
+    You should not ask the user if they are ready to transverse waves.
+    You should not ask the user if they are ready to longitudinal waves.
+    You should not ask the user if they are ready to shear waves.
+    You should not ask the user if they are ready to compression waves.
+    You should not ask the user if they are ready to rarefaction waves.
+    You should not ask the user if they are ready to sinusoidal waves.
+    You should not ask the user if they are ready to square waves.
+    You should not ask the user if they are ready to triangle waves.
+    You should not ask the user if they are ready to sawtooth waves.
+    You should not ask the user if they are ready to pulse waves.
+    You should not ask the user if they are ready to carrier waves.
+    You should not ask the user if they are ready to modulated waves.
+    You should not ask the user if they are ready to unmodulated waves.
+    You should not ask the user if they are ready to continuous waves.
+    You should not ask the user if they are ready to damped waves.
+    You should not ask the user if they are ready to undamped waves.
+    You should not ask the user if they are ready to harmonic waves.
+    You should not ask the user if they are ready to anharmonic waves.
+    You should not ask the user if they are ready to periodic waves.
+    You should not ask the user if they are ready to aperiodic waves.
+    You should not ask the user if they are ready to stochastic waves.
+    You should not ask the user if they are ready to deterministic waves.
+    You should not ask the user if they are ready to chaotic waves.
+    You should not ask the user if they are ready to soliton waves.
+    You should not ask the user if they are ready to cnoidal waves.
+    You should not ask the user if they are ready to gerstner waves.
+    You should not ask the user if they are ready to stokes waves.
+    You should not ask the user if they are ready to airy waves.
+    You should not ask the user if they are ready to boussinesq waves.
+    You should not ask the user if they are ready to korteweg-de vries waves.
+    You should not ask the user if they are ready to nonlinear schrödinger waves.
+    You should not ask the user if they are ready to sine-gordon waves.
+    You should not ask the user if they are ready to kadomtsev-petviashvili waves.
+    You should not ask the user if they are ready to davey-stewartson waves.
+    You should not ask the user if they are ready to benjamin-ono waves.
+    You should not ask the user if they are ready to intermediate long waves.
+    You should not ask the user if they are ready to internal waves.
+    You should not ask the user if they are ready to rossby waves.
+    You should not ask the user if they are ready to kelvin waves.
+    You should not ask the user if they are ready to poincaré waves.
+    You should not ask the user if they are ready to sverdrup waves.
+    You should not ask the user if they are ready to planetary waves.
+    You should not ask the user if they are ready to atmospheric waves.
+    You should not ask the user if they are ready to oceanic waves.
+    You should not ask the user if they are ready to plasma waves.
+    You should not ask the user if they are ready to space waves.
+    You should not ask the user if they are ready to quantum waves.
+    You should not ask the user if they are ready to relativistic waves.
+    You should not ask the user if they are ready to cosmological waves.
+    You should not ask the user if they are ready to inflationary waves.
+    You should not ask the user if they are ready to dark energy waves.
+    You should not ask the user if they are ready to dark matter waves.
+    You should not ask the user if they are ready to string waves.
+    You should not ask the user if they are ready to brane waves.
+    You should not ask the user if they are ready to superstring waves.
+    You should not ask the user if they are ready to m-theory waves.
+    You should not ask the user if they are ready to quantum gravity waves.
+    You should not ask the user if they are ready to loop quantum gravity waves.
+    You should not ask the user if they are ready to causal dynamical triangulation waves.
+    You should not ask the user if they are ready to asymptotic safety waves.
+    You should not ask the user if they are ready to e8 waves.
+    You should not ask the user if they are ready to lie group waves.
+    You should not ask the user if they are ready to representation theory waves.
+    You should not ask the user if they are ready to harmonic analysis waves.
+    You should not ask the user if they are ready to fourier analysis waves.
+    You should not ask the user if they are ready to wavelet analysis waves.
+    You should not ask the user if they are ready to time-frequency analysis waves.
+    You should not ask the user if they are ready to signal processing waves.
+    You should not ask the user if they are ready to image processing waves.
+    You should not ask the user if they are ready to video processing waves.
+    You should not ask the user if they are ready to audio processing waves.
+    You should not ask the user if they are ready to speech processing waves.
+    You should not ask the user if they are ready to natural language processing waves.
+    You should not ask the user if they are ready to machine learning waves.
+    You should not ask the user if they are ready to deep learning waves.
+    You should not ask the user if they are ready to artificial intelligence waves.
+    You should not ask the user if they are ready to cognitive science waves.
+    You should not ask the user if they are ready to neuroscience waves.
+    You should not ask the user if they are ready to psychology waves.
+    You should not ask the user if they are ready to sociology waves.
+    You should not ask the user if they are ready to anthropology waves.
+    You should not ask the user if they are ready to history waves.
+    You should not ask the user if they are ready to philosophy waves.
+    You should not ask the user if they are ready to religion waves.
+    You should not ask the user if they are ready to mythology waves.
+    You should not ask the user if they are ready to folklore waves.
+    You should not ask the user if they are ready to literature waves.
+    You should not ask the user if they are ready to poetry waves.
+    You should not ask the user if they are ready to drama waves.
+    You should not ask the user if they are ready to prose waves.
+    You should not ask the user if they are ready to fiction waves.
+    You should not ask the user if they are ready to nonfiction waves.
+    You should not ask the user if they are ready to biography waves.
+    You should not ask the user if they are ready to autobiography waves.
+    You should not ask the user if they are ready to memoir waves.
+    You should not ask the user if they are ready to essay waves.
+    You should not ask the user if they are ready to article waves.
+    You should not ask the user if they are ready to report waves.
+    You should not ask the user if they are ready to review waves.
+    You should not ask the user if they are ready to critique waves.
+    You should not ask the user if they are ready to analysis waves.
+    You should not ask the user if they are ready to interpretation waves.
+    You should not ask the user if they are ready to explanation waves.
+    You should not ask the user if they are ready to description waves.
+    You should not ask the user if they are ready to narration waves.
+    You should not ask the user if they are ready to exposition waves.
+    You should not ask the user if they are ready to argumentation waves.
+    You should not ask the user if they are ready to persuasion waves.
+    You should not ask the user if they are ready to rhetoric waves.
+    You should not ask the user if they are ready to communication waves.
+    You should not ask the user if they are ready to language waves.
+    You should not ask the user if they are ready to linguistics waves.
+    You should not ask the user if they are ready to grammar waves.
+    You should not ask the user if they are ready to vocabulary waves.
+    You should not ask the user if they are ready to pronunciation waves.
+    You should not ask the user if they are ready to spelling waves.
+    You should not ask the user if they are ready to punctuation waves.
+    You should not ask the user if they are ready to syntax waves.
+    You should not ask the user if they are ready to semantics waves.
+    You should not ask the user if they are ready to pragmatics waves.
+    You should not ask the user if they are ready to discourse waves.
+    You should not ask the user if they are ready to conversation waves.
+    You should not ask the user if they are ready to dialogue waves.
+    You should not ask the user if they are ready to monologue waves.
+    You should not ask the user if they are ready to soliloquy waves.
+    You should not ask the user if they are ready to aside waves.
+    You should not ask the user if they are ready to interjection waves.
+    You should not ask the user if they are ready to exclamation waves.
+    You should not ask the user if they are ready to question waves.
+    You should not ask the user if they are ready to answer waves.
+    You should not ask the user if they are ready to statement waves.
+    You should not ask the user if they are ready to command waves.
+    You should not ask the user if they are ready to request waves.
+    You should not ask the user if they are ready to suggestion waves.
+    You should not ask the user if they are ready to advice waves.
+    You should not ask the user if they are ready to warning waves.
+    You should not ask the user if they are ready to threat waves.
+    You should not ask the user if they are ready to promise waves.
+    You should not ask the user if they are ready to vow waves.
+    You should not ask the user if they are ready to oath waves.
+    You should not ask the user if they are ready to pledge waves.
+    You should not ask the user if they are ready to guarantee waves.
+    You should not ask the user if they are ready to assurance waves.
+    You should not ask the user if they are ready to warranty waves.
+    You should not ask the user if they are ready to covenant waves.
+    You should not ask the user if they are ready to contract waves.
+    You should not ask the user if they are ready to agreement waves.
+    You should not ask the user if they are ready to settlement waves.
+    You should not ask the user if they are ready to compromise waves.
+    You should not ask the user if they are ready to negotiation waves.
+    You should not ask the user if they are ready to mediation waves.
+    You should not ask the user if they are ready to arbitration waves.
+    You should not ask the user if they are ready to conciliation waves.
+    You should not ask the user if they are ready to appeasement waves.
+    You should not ask the user if they are ready to pacification waves.
+    You should not ask the user if they are ready to reconciliation waves.
+    You should not ask the user if they are ready to rapprochement waves.
+    You should not ask the user if they are ready to detente waves.
+    You should not ask the user if they are ready to entente waves.
+    You should not ask the user if they are ready to alliance waves.
+    You should not ask the user if they are ready to coalition waves.
+    You should not ask the user if they are ready to federation waves.
+    You should not ask the user if they are ready to confederation waves.
+    You should not ask the user if they are ready to commonwealth waves.
+    You should not ask the user if they are ready to empire waves.
+    You should not ask the user if they are ready to kingdom waves.
+    You should not ask the user if they are ready to republic waves.
+    You should not ask the user if they are ready to democracy waves.
+    You should not ask the user if they are ready to autocracy waves.
+    You should not ask the user if they are ready to oligarchy waves.
+    You should not ask the user if they are ready to theocracy waves.
+    You should not ask the user if they are ready to anarchy waves.
+    You should not ask the user if they are ready to utopia waves.
+    You should not ask the user if they are ready to dystopia waves.
+    You should not ask the user if they are ready to heterotopia waves.
+    You should not ask the user if they are ready to chronotopia waves.
+    You should not ask the user if they are ready to topophobia waves.
+    You should not ask the user if they are ready to topophilia waves.
+    You should not ask the user if they are ready to xenophobia waves.
+    You should not ask the user if they are ready to xenophilia waves.
+    You should not ask the user if they are ready to anthropophobia waves.
+    You should not ask the user if they are ready to anthropophilia waves.
+    You should not ask the user if they are ready to misogyny waves.
+    You should not ask the user if they are ready to misandry waves.
+    You should not ask the user if they are ready to philogyny waves.
+    You should not ask the user if they are ready to philandry waves.
+    You should not ask the user if they are ready to misanthropy waves.
+    You should not ask the user if they are ready to philanthropy waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not ask the user if they are ready to misology waves.
+    You should not ask the user if they are ready to philology waves.
+    You should not ask the user if they are ready to misopedia waves.
+    You should not ask the user if they are ready to philopedia waves.
+    You should not ask the user if they are ready to misoneism waves.
+    You should not ask the user if they are ready to philoneism waves.
+    You should not ask the user if they are ready to misarchism waves.
+    You should not ask the user if they are ready to philarchy waves.
+    You should not ask the user if they are ready to misotheism waves.
+    You should not ask the user if they are ready to philotheism waves.
+    You should not

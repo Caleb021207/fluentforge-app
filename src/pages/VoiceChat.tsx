@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Volume2, Send } from "lucide-react";
+import { Mic, MicOff, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -14,8 +14,9 @@ import {
 import englishTranslations from "@/translations/english";
 import haitianTranslations from "@/translations/haitian";
 import spanishTranslations from "@/translations/spanish";
+import VoiceChatContainer from "@/components/voice-chat/VoiceChatContainer";
 import ChatMessage from "@/components/practice/ChatMessage";
-import { playTTS, isTTSSupported } from "@/utils/ttsUtils";
+import { playTTS, isTTSSupported } from "@/utils/tts";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -253,7 +254,7 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
-      speakWithMetaMMS(content);
+      speakWithAzureTTS(content);
       setTranscript("");
     } catch (error) {
       console.error('Error getting GPT response:', error);
@@ -267,9 +268,9 @@ const VoiceChat = () => {
     }
   };
 
-  const speakWithMetaMMS = (text: string) => {
+  const speakWithAzureTTS = (text: string) => {
     if (!text || text.trim() === '') {
-      console.warn('Empty text provided to speakWithMetaMMS');
+      console.warn('Empty text provided to speakWithAzureTTS');
       return;
     }
 
@@ -280,16 +281,13 @@ const VoiceChat = () => {
     
     setIsSpeaking(true);
     
-    // Force the use of Meta MMS for Haitian and Igbo
-    const useMetaMms = true;
-    
     playTTS({
       text: text,
       language: practiceLanguage,
       isTargetLanguage: true,
-      useMetaMms: useMetaMms,
+      useMetaMms: false, // Use Azure as primary TTS provider
       onStart: () => {
-        console.log("TTS started with Meta MMS");
+        console.log("TTS started with Azure");
         setIsSpeaking(true);
       },
       onEnd: () => {
@@ -310,7 +308,7 @@ const VoiceChat = () => {
 
   const playAgain = () => {
     if (gptResponse) {
-      speakWithMetaMMS(gptResponse);
+      speakWithAzureTTS(gptResponse);
     }
   };
 
@@ -354,7 +352,6 @@ const VoiceChat = () => {
   };
 
   const { practice, native } = getLanguagePair(currentLanguage);
-  const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -368,8 +365,6 @@ const VoiceChat = () => {
         <p className="text-sm text-muted-foreground mb-2">
           <strong>{t("aiModelInfo")}</strong>
         </p>
-        
-        {/* TTS info message box removed */}
       </div>
 
       <div className="flex flex-col gap-6">
@@ -435,133 +430,16 @@ const VoiceChat = () => {
             </div>
           )}
 
-          {isLoading && (
-            <div className="flex justify-center my-6">
-              <div className="flex space-x-2">
-                <div className="w-3 h-3 bg-muted-foreground rounded-full animate-bounce" />
-                <div className="w-3 h-3 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.2s]" />
-                <div className="w-3 h-3 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.4s]" />
-              </div>
-            </div>
+          {(conversationHistory.length > 0 || isLoading) && (
+            <VoiceChatContainer 
+              messages={conversationHistory}
+              isLoading={isLoading}
+              targetLanguage={practice.toLowerCase()}
+              onPlayAudio={speakWithAzureTTS}
+            />
           )}
 
-          {gptResponse && (
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-medium text-foreground">
-                  {t("aiResponse")}:
-                </h3>
-                <Button 
-                  onClick={playAgain} 
-                  variant="outline" 
-                  size="sm"
-                  className="flex items-center gap-2"
-                  disabled={isSpeaking}
-                >
-                  <Volume2 className="h-4 w-4" />
-                  {isSpeaking 
-                    ? t("speaking") 
-                    : t("playAgain")}
-                </Button>
-              </div>
-              <div className="bg-palavox-primary/10 dark:bg-palavox-primary/20 rounded-lg p-4 text-foreground">
-                {gptResponse}
-                
-                {/* Always show translation if translation exists */}
-                {((translation && translation.trim() !== "")) && (
-                  <>
-                    <div className="border-t border-border my-3"></div>
-                    <div className="text-sm text-muted-foreground">
-                      <strong>
-                        {t("translation")}:
-                      </strong> {translation || t("translationNotAvailable")}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-        </Card>
-        
-        {conversationHistory.length > 0 && (
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium text-foreground">
-                {t("conversationHistory")}
-              </h3>
-              <Button 
-                onClick={clearConversation}
-                variant="outline" 
-                size="sm"
-              >
-                {t("clearConversation")}
-              </Button>
-            </div>
-            
-            <ScrollArea className="h-[300px] rounded-md border p-4">
-              <div className="space-y-4">
-                {conversationHistory.map((message, index) => (
-                  <ChatMessage
-                    key={index}
-                    role={message.role}
-                    content={message.content}
-                    translation={message.translation}
-                    onPlayAudio={(text) => speakWithMetaMMS(text)}
-                  />
-                ))}
-                <div ref={conversationEndRef} />
-              </div>
-            </ScrollArea>
-          </Card>
-        )}
-        
-        <Card className="p-6">
-          <h3 className="font-medium mb-4 text-foreground">
-            {t("conversationStarters")}
-          </h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            {t("tryThesePhrases")}
-          </p>
-          
-          <div className="space-y-6">
-            {/* Native language phrases */}
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-foreground">
-                {native}:
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {nativeLanguagePhrases.map((phrase, index) => (
-                  <Button 
-                    key={index}
-                    variant="outline"
-                    className="justify-start text-left h-auto py-2 px-3"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            {/* Target language phrases */}
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-foreground">
-                {practice}:
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {targetLanguagePhrases.map((phrase, index) => (
-                  <Button 
-                    key={index}
-                    variant="outline"
-                    className="justify-start text-left h-auto py-2 px-3 font-normal"
-                    onClick={() => handlePhraseClick(phrase)}
-                  >
-                    {phrase}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
+          {/* Add conversation starters component here if needed */}
         </Card>
       </div>
     </div>

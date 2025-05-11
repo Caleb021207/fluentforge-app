@@ -1,64 +1,82 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-import ChatMessage from "./ChatMessage";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import ChatInput from "./ChatInput";
+import ChatMessage from "./ChatMessage";
 import EmptyChatState from "./EmptyChatState";
 import LoadingIndicator from "./LoadingIndicator";
 import { useLocalization } from "@/context/LocalizationContext";
 
-interface ChatContainerMessage {
+interface Message {
   role: "user" | "assistant";
   content: string;
   translation?: string;
 }
 
 interface ChatContainerProps {
-  messages: ChatContainerMessage[];
+  messages: Message[];
   input: string;
-  setInput: (input: string) => void;
+  setInput: (value: string) => void;
   handleSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
   getPlaceholderText: () => string;
+  targetLanguage?: string;
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({
+export default function ChatContainer({
   messages,
   input,
   setInput,
   handleSubmit,
   isLoading,
   getPlaceholderText,
-}) => {
+  targetLanguage = "spanish"
+}: ChatContainerProps) {
   const { t } = useLocalization();
+  const scrollRef = useRef<HTMLDivElement>(null);
   
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
-    <Card className="mb-4 p-6 border border-border bg-card">
-      <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
+    <Card className="overflow-hidden mb-6">
+      <ScrollArea className="h-[500px] p-4">
         {messages.length === 0 ? (
           <EmptyChatState />
         ) : (
-          messages.map((message, index) => (
-            <ChatMessage
-              key={index}
-              role={message.role}
-              content={message.content}
-              translation={message.translation}
-            />
-          ))
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <ChatMessage
+                key={index}
+                role={message.role}
+                content={message.content}
+                translation={message.translation}
+              />
+            ))}
+            
+            {isLoading && <LoadingIndicator />}
+            
+            <div ref={scrollRef} />
+          </div>
         )}
-        {isLoading && <LoadingIndicator />}
+      </ScrollArea>
+      
+      <div className="border-t p-4">
+        <ChatInput
+          isLoading={isLoading}
+          value={input}
+          onChange={setInput}
+          onSubmit={handleSubmit}
+          placeholder={getPlaceholderText()}
+          messages={messages}
+          targetLanguage={targetLanguage}
+        />
       </div>
-
-      <ChatInput
-        input={input}
-        setInput={setInput}
-        handleSubmit={handleSubmit}
-        isLoading={isLoading}
-        placeholder={getPlaceholderText() || "Type a message..."}
-      />
     </Card>
   );
-};
-
-export default ChatContainer;
+}

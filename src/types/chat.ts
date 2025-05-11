@@ -1,22 +1,35 @@
 
-export type SessionStatus = 'available' | 'loading' | 'active' | 'cooldown';
+// Chat and message types
+export type MessageRole = 'user' | 'assistant' | 'system';
+
+export interface Message {
+  role: MessageRole;
+  content: string;
+  translation?: string | object;
+  timestamp?: Date;
+}
+
+export interface ChatSession {
+  id: string;
+  userId: string;
+  startTime: Date;
+  endTime?: Date;
+  messages: Message[];
+}
 
 export interface MessageCount {
   inputs: number;
   outputs: number;
 }
 
-export interface SessionManagementState {
-  messageCount: MessageCount;
-  isLoggedIn: boolean;
-  isLoading: boolean;
-  sessionStatus: SessionStatus;
-  weeklyTimeRemaining: number | null;
-  cooldownTimeRemaining: number | null;
+export type SessionStatus = 'available' | 'active' | 'loading' | 'cooldown';
+
+export interface SuggestionCategory {
+  title: string;
+  suggestions: string[];
 }
 
-export interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  translation?: string;
+export interface ConversationHint {
+  categories: SuggestionCategory[];
+  loading: boolean;
 }

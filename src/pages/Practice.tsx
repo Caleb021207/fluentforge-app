@@ -122,6 +122,7 @@ const Practice = () => {
         handleSubmit={handleSubmit}
         isLoading={chatLoading}
         getPlaceholderText={getPlaceholderText}
+        targetLanguage={targetLanguage}
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />
