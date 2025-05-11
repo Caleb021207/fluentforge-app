@@ -1,6 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { createTTSCache } from "./tts/cache";
+import { ttsCache } from "./tts/cache";
 
 export interface TTSOptions {
   text: string;
@@ -11,8 +11,6 @@ export interface TTSOptions {
   onEnd?: () => void;
   onError?: (error: Error) => void;
 }
-
-const ttsCache = createTTSCache();
 
 /**
  * Plays text-to-speech using the best available TTS provider
@@ -31,7 +29,8 @@ export async function playTTS(options: TTSOptions): Promise<boolean> {
     const cachedAudio = ttsCache.get(text, language);
     if (cachedAudio) {
       console.log("Using cached TTS audio");
-      playAudio(cachedAudio, onStart, onEnd);
+      const audio = createAudioFromBase64(cachedAudio);
+      playAudio(audio, onStart, onEnd);
       return true;
     }
     
@@ -56,11 +55,11 @@ export async function playTTS(options: TTSOptions): Promise<boolean> {
       throw new Error("No audio data received from TTS API");
     }
     
-    // Convert base64 to audio and play
-    const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+    // Cache the audio content (base64 string) for future use
+    ttsCache.set(text, language, data.audioContent);
     
-    // Cache the audio for future use
-    ttsCache.set(text, language, audio);
+    // Convert base64 to audio and play
+    const audio = createAudioFromBase64(data.audioContent);
     
     // Play the audio
     playAudio(audio, undefined, onEnd);
@@ -85,7 +84,7 @@ export async function preloadTTS(options: TTSOptions): Promise<boolean> {
   
   try {
     // Check if already cached
-    if (ttsCache.get(text, language)) {
+    if (ttsCache.has(text, language)) {
       return true;
     }
     
@@ -104,8 +103,8 @@ export async function preloadTTS(options: TTSOptions): Promise<boolean> {
       return false;
     }
     
-    const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
-    ttsCache.set(text, language, audio);
+    // Store the base64 string directly in the cache
+    ttsCache.set(text, language, data.audioContent);
     return true;
   } catch (error) {
     console.error("Preload TTS error:", error);
@@ -176,4 +175,4 @@ export function trackTTSUsage(userId: string, language: string): void {
 }
 
 // Re-export the cache implementation for consistency
-export { createTTSCache };
+export { ttsCache } from "./tts/cache";
