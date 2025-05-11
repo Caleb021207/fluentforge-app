@@ -45,7 +45,9 @@ const VoiceChat = () => {
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
-  const { practice: targetLanguage } = getLanguagePair(currentLanguage);
+  const { native, practice } = getLanguagePair(currentLanguage);
+
+  console.log("Language configuration:", { currentLanguage, native, practice });
 
   useEffect(() => {
     if (conversationEndRef.current) {
@@ -60,8 +62,6 @@ const VoiceChat = () => {
       recognitionRef.current = new SpeechRecognitionAPI();
       
       // Get the target language the user is practicing (not their UI language)
-      const { practice } = getLanguagePair(currentLanguage);
-      
       // Use the practice/target language for speech recognition
       let recognitionLanguage = getSpeechSynthesisLanguageCode(practice.toLowerCase());
       
@@ -135,7 +135,7 @@ const VoiceChat = () => {
       }
       clearSilenceDetection();
     };
-  }, [currentLanguage, toast, t]);
+  }, [currentLanguage, toast, t, practice]); // Added practice as dependency
 
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -203,17 +203,21 @@ const VoiceChat = () => {
     setConversationHistory(prev => [...prev, userMessage]);
     
     try {
-      const { data, error } = await supabase.functions.invoke('chat-with-gpt', {
+      // Make it clear which language we're practicing (the target language)
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: { 
           message: text,
-          userLanguage: currentLanguage,
+          userLanguage: native || currentLanguage,
+          targetLanguage: practice || 'english',
           conversationHistory: apiConversationHistory,
           cefrLevel: cefrLevel,
-          requestTranslation: true // Explicitly request translation
+          requestTranslation: true
         }
       });
 
       if (error) throw error;
+      
+      console.log("Chat response:", data);
       
       const content = data.content || data.reply || "";
       let translationText = data.translation || "";
@@ -230,10 +234,10 @@ const VoiceChat = () => {
           
           if (!translationError && translationData && translationData.translation) {
             translationText = translationData.translation;
-            console.log("Got Hindi translation:", translationText);
+            console.log("Got translation:", translationText);
           }
         } catch (translationError) {
-          console.error("Failed to get Hindi translation:", translationError);
+          console.error("Failed to get translation:", translationError);
         }
       }
       
@@ -254,6 +258,7 @@ const VoiceChat = () => {
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ]);
       
+      // Use target language for TTS (which is the practice language)
       speakWithAzureTTS(content);
       setTranscript("");
     } catch (error) {
@@ -274,16 +279,13 @@ const VoiceChat = () => {
       return;
     }
 
-    console.log(`Speaking text: "${text.substring(0, 50)}..."`);
-    
-    const { practice } = getLanguagePair(currentLanguage);
-    const practiceLanguage = practice.toLowerCase();
+    console.log(`Speaking text: "${text.substring(0, 50)}..." in language: ${practice.toLowerCase()}`);
     
     setIsSpeaking(true);
     
     playTTS({
       text: text,
-      language: practiceLanguage,
+      language: practice.toLowerCase(),
       isTargetLanguage: true,
       useMetaMms: false, // Use Azure as primary TTS provider
       onStart: () => {
@@ -350,8 +352,6 @@ const VoiceChat = () => {
       description: t("conversationHistoryCleared"),
     });
   };
-
-  const { practice, native } = getLanguagePair(currentLanguage);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -438,8 +438,6 @@ const VoiceChat = () => {
               onPlayAudio={speakWithAzureTTS}
             />
           )}
-
-          {/* Add conversation starters component here if needed */}
         </Card>
       </div>
     </div>
