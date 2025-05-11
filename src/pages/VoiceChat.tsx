@@ -1,8 +1,7 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +17,8 @@ import VoiceChatContainer from "@/components/voice-chat/VoiceChatContainer";
 import ChatMessage from "@/components/practice/ChatMessage";
 import ConversationStarters from "@/components/premium-voice/ConversationStarters";
 import { playTTS } from "@/utils/tts";
+import HintButton from "@/components/practice/HintButton";
+import { Separator } from "@/components/ui/separator";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -490,10 +491,29 @@ const VoiceChat = () => {
               onPlayAudio={speakWithAzureTTS}
             />
           )}
+
+          <div className="mt-4 flex items-center justify-end space-x-2">
+            <HintButton 
+              targetLanguage={practice}
+              messages={apiConversationHistory.map(msg => ({ role: msg.role as any, content: msg.content, translation: undefined }))} 
+              className="mr-2"
+            />
+            {conversationHistory.length > 0 && (
+              <Button
+                onClick={clearConversation}
+                variant="outline"
+                size="sm"
+              >
+                {t("clearConversation")}
+              </Button>
+            )}
+          </div>
         </Card>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ConversationStarters />
+          <ConversationStarters 
+            onPhraseClick={handlePhraseClick}
+          />
           
           <Card>
             <CardHeader className="pb-3">

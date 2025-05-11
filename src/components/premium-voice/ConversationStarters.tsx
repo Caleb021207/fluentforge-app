@@ -3,7 +3,11 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
 
-const ConversationStarters: React.FC = () => {
+interface ConversationStartersProps {
+  onPhraseClick?: (phrase: string) => void;
+}
+
+const ConversationStarters: React.FC<ConversationStartersProps> = ({ onPhraseClick }) => {
   const { t, currentLanguage } = useLocalization();
 
   const phrases = [
@@ -26,7 +30,11 @@ const ConversationStarters: React.FC = () => {
         </p>
         <ul className="space-y-2">
           {phrases.map((phrase) => (
-            <li key={phrase.id} className="bg-muted rounded p-3 text-sm">
+            <li 
+              key={phrase.id} 
+              className={`bg-muted rounded p-3 text-sm ${onPhraseClick ? 'cursor-pointer hover:bg-muted/80' : ''}`}
+              onClick={() => onPhraseClick && onPhraseClick(phrase.text)}
+            >
               {phrase.text}
             </li>
           ))}
