@@ -3,7 +3,7 @@
  * Creates a TTSCache for storing audio elements
  */
 export function createTTSCache() {
-  const cache = new Map<string, HTMLAudioElement>();
+  const cache = new Map<string, string>();
   
   const TTL_DURATION = 5 * 60 * 1000; // 5 minutes
   const expirationTimes = new Map<string, number>();
@@ -21,14 +21,14 @@ export function createTTSCache() {
   }, CLEANUP_INTERVAL);
   
   return {
-    get: (text: string, language: string): HTMLAudioElement | undefined => {
+    get: (text: string, language: string): string | undefined => {
       const key = `${language}:${text}`;
       return cache.get(key);
     },
     
-    set: (text: string, language: string, audio: HTMLAudioElement): void => {
+    set: (text: string, language: string, audioBase64: string): void => {
       const key = `${language}:${text}`;
-      cache.set(key, audio);
+      cache.set(key, audioBase64);
       expirationTimes.set(key, Date.now() + TTL_DURATION);
     },
     

@@ -25,7 +25,6 @@ export const playTTS = async ({
   }
 
   // Check for existing cached audio for this text and language
-  const cacheKey = `${language}:${text}`;
   const cachedAudio = ttsCache.get(text, language);
 
   if (cachedAudio) {
@@ -86,7 +85,6 @@ export const playTTS = async ({
 export const preloadTTS = async (text: string, language: string, isTargetLanguage = false, useMetaMms = false) => {
   if (!text || text.trim() === "") return;
 
-  const cacheKey = `${language}:${text}`;
   if (ttsCache.has(text, language)) {
     console.log("Audio already preloaded for", language, text.substring(0, 40) + "...");
     return;

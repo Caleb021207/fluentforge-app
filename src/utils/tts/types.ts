@@ -1,15 +1,10 @@
 
 export interface TTSOptions {
   text: string;
-  language: string; 
+  language: string;
   isTargetLanguage?: boolean;
   useMetaMms?: boolean;
   onStart?: () => void;
   onEnd?: () => void;
   onError?: (error: string) => void;
-}
-
-export interface TTSCacheEntry {
-  audioContent: string;
-  timestamp: number;
 }
