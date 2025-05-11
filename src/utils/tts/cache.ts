@@ -32,6 +32,11 @@ export function createTTSCache() {
       expirationTimes.set(key, Date.now() + TTL_DURATION);
     },
     
+    has: (text: string, language: string): boolean => {
+      const key = `${language}:${text}`;
+      return cache.has(key);
+    },
+    
     clear: (): void => {
       cache.clear();
       expirationTimes.clear();
@@ -39,3 +44,6 @@ export function createTTSCache() {
     }
   };
 }
+
+// Create a singleton instance of the TTSCache that can be used throughout the app
+export const ttsCache = createTTSCache();
