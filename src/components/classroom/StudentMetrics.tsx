@@ -37,8 +37,8 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
       case 'A2': return 'secondary';
       case 'B1': return 'default';
       case 'B2': return 'default';
-      case 'C1': return 'success';
-      case 'C2': return 'success';
+      case 'C1': return 'secondary';
+      case 'C2': return 'secondary';
       default: return 'outline';
     }
   };
@@ -103,7 +103,7 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
             </div>
             
             <div className="text-xs text-muted-foreground">
-              {t("basedOnConversations", { count: metrics.language_metrics_count })}
+              {t("basedOnConversations", { count: String(metrics.language_metrics_count) })}
             </div>
           </div>
         </div>

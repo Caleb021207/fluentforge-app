@@ -49,9 +49,11 @@ const StudentLanguageMetrics: React.FC<StudentLanguageMetricsProps> = ({ student
         if (error) throw error;
 
         const formattedData: MetricsDataPoint[] = (data || []).map(item => ({
+          // Convert to string for date formatting
           date: format(new Date(item.created_at), 'MM/dd'),
-          grammarAccuracy: parseFloat(item.grammar_accuracy),
-          conversationComplexity: parseFloat(item.conversation_complexity),
+          // Parse as floats to ensure they're numbers
+          grammarAccuracy: parseFloat(String(item.grammar_accuracy)),
+          conversationComplexity: parseFloat(String(item.conversation_complexity)),
           timestamp: item.created_at
         }));
 

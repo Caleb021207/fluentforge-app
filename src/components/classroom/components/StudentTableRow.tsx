@@ -35,8 +35,8 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student }) => 
       case 'A2': return 'secondary';
       case 'B1': return 'default';
       case 'B2': return 'default';
-      case 'C1': return 'success';
-      case 'C2': return 'success';
+      case 'C1': return 'secondary';
+      case 'C2': return 'secondary';
       default: return 'outline';
     }
   };
