@@ -15,3 +15,15 @@ export interface SuggestionCategory {
 }
 
 export type SessionStatus = 'idle' | 'loading' | 'active' | 'cooldown';
+
+export interface MessageCount {
+  inputs: number;
+  outputs: number;
+}
+
+export interface LanguageMetrics {
+  grammarAccuracy: number;
+  conversationComplexity: number;
+  messageCount: number;
+  vocabularyDiversity?: number;
+}

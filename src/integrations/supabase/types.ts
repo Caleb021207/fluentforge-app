@@ -416,12 +416,51 @@ export type Database = {
         }
         Relationships: []
       }
+      student_language_metrics: {
+        Row: {
+          classroom_id: string
+          conversation_complexity: number
+          created_at: string
+          grammar_accuracy: number
+          id: string
+          message_count: number
+          session_id: string | null
+          user_id: string
+          vocabulary_diversity: number | null
+        }
+        Insert: {
+          classroom_id: string
+          conversation_complexity: number
+          created_at?: string
+          grammar_accuracy: number
+          id?: string
+          message_count?: number
+          session_id?: string | null
+          user_id: string
+          vocabulary_diversity?: number | null
+        }
+        Update: {
+          classroom_id?: string
+          conversation_complexity?: number
+          created_at?: string
+          grammar_accuracy?: number
+          id?: string
+          message_count?: number
+          session_id?: string | null
+          user_id?: string
+          vocabulary_diversity?: number | null
+        }
+        Relationships: []
+      }
       student_metrics: {
         Row: {
+          avg_conversation_complexity: number | null
+          avg_grammar_accuracy: number | null
           certification_attempts: number | null
           classroom_id: string
           completed_lessons: number | null
           highest_certification_score: number | null
+          language_metrics_count: number | null
           last_activity: string | null
           premium_voice_calls: number | null
           premium_voice_minutes: number | null
@@ -435,10 +474,13 @@ export type Database = {
           total_lessons: number | null
         }
         Insert: {
+          avg_conversation_complexity?: number | null
+          avg_grammar_accuracy?: number | null
           certification_attempts?: number | null
           classroom_id: string
           completed_lessons?: number | null
           highest_certification_score?: number | null
+          language_metrics_count?: number | null
           last_activity?: string | null
           premium_voice_calls?: number | null
           premium_voice_minutes?: number | null
@@ -452,10 +494,13 @@ export type Database = {
           total_lessons?: number | null
         }
         Update: {
+          avg_conversation_complexity?: number | null
+          avg_grammar_accuracy?: number | null
           certification_attempts?: number | null
           classroom_id?: string
           completed_lessons?: number | null
           highest_certification_score?: number | null
+          language_metrics_count?: number | null
           last_activity?: string | null
           premium_voice_calls?: number | null
           premium_voice_minutes?: number | null

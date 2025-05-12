@@ -5,6 +5,7 @@ import { SortableTableHeader } from './SortableTableHeader';
 import { StudentTableRow } from './StudentTableRow';
 import { StudentMetrics, SortField, SortDirection } from '@/components/classroom/types/studentTypes';
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface StudentMetricsTableProps {
   students: StudentMetrics[];
@@ -19,6 +20,8 @@ export const StudentMetricsTable = ({
   sortDirection,
   onSort,
 }: StudentMetricsTableProps) => {
+  const { t } = useLocalization();
+  
   return (
     <div className="max-h-[600px] overflow-auto">
       <Table>
@@ -41,6 +44,20 @@ export const StudentMetricsTable = ({
             <SortableTableHeader
               field="premium_voice_calls"
               label={CLASSROOM_TEXT.VOICE_PRACTICE_CALLS}
+              currentSortField={sortField}
+              sortDirection={sortDirection}
+              onSort={onSort}
+            />
+            <SortableTableHeader
+              field="avg_grammar_accuracy"
+              label={t("grammarAccuracy")}
+              currentSortField={sortField}
+              sortDirection={sortDirection}
+              onSort={onSort}
+            />
+            <SortableTableHeader
+              field="avg_conversation_complexity"
+              label={t("conversationComplexity")}
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}

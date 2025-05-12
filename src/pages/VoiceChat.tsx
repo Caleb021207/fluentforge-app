@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import ConversationStarters from "@/components/premium-voice/ConversationStarter
 import { playTTS } from "@/utils/tts";
 import HintButton from "@/components/practice/HintButton";
 import { Separator } from "@/components/ui/separator";
+import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -44,10 +46,12 @@ const VoiceChat = () => {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const silenceTimeoutRef = useRef<number | null>(null);
+  const sessionIdRef = useRef<string | null>(null);
   
   const { toast } = useToast();
   const { currentLanguage, t } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
+  const { analyzeConversation } = useLanguageAnalysis();
 
   console.log("Language configuration:", { currentLanguage, native, practice });
 
@@ -56,6 +60,11 @@ const VoiceChat = () => {
       conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [conversationHistory]);
+
+  // Initialize the session ID
+  useEffect(() => {
+    sessionIdRef.current = crypto.randomUUID();
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && 
@@ -263,11 +272,13 @@ const VoiceChat = () => {
       setTranslation(translationText);
       setConversationHistory(prev => [...prev, aiMessage]);
       
-      setApiConversationHistory(data.updatedHistory || [
+      const updatedHistory = [
         ...apiConversationHistory,
         { role: 'user', content: text },
         { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
-      ]);
+      ];
+      
+      setApiConversationHistory(data.updatedHistory || updatedHistory);
       
       // Use target language for TTS (which is the practice language)
       speakWithAzureTTS(content);
@@ -395,6 +406,50 @@ const VoiceChat = () => {
       description: t("conversationHistoryCleared"),
     });
   };
+  
+  // Analyze conversation when it reaches a certain length or ends
+  const handleAnalyzeConversation = async () => {
+    if (conversationHistory.length < 4) {
+      toast({
+        description: t("notEnoughMessagesToAnalyze"),
+        variant: "warning"
+      });
+      return;
+    }
+    
+    // Format messages for analysis
+    const messagesToAnalyze = conversationHistory.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }));
+    
+    // Get classroom ID for current user
+    let classroomId = null;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data } = await supabase
+        .from('classroom_memberships')
+        .select('classroom_id')
+        .eq('student_id', user.id)
+        .limit(1);
+      
+      if (data && data.length > 0) {
+        classroomId = data[0].classroom_id;
+      }
+    }
+    
+    const results = await analyzeConversation(messagesToAnalyze, {
+      sessionId: sessionIdRef.current || undefined,
+      classroomId: classroomId || undefined
+    });
+    
+    if (results) {
+      toast({
+        title: t("conversationAnalysisComplete"),
+        description: `${t("grammarAccuracy")}: ${results.grammarAccuracy.toFixed(1)}, ${t("conversationComplexity")}: ${results.conversationComplexity.toFixed(1)}`,
+      });
+    }
+  };
 
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
@@ -493,6 +548,16 @@ const VoiceChat = () => {
           )}
 
           <div className="mt-4 flex items-center justify-end space-x-2">
+            {conversationHistory.length > 3 && (
+              <Button
+                onClick={handleAnalyzeConversation}
+                variant="outline"
+                size="sm"
+                className="mr-auto"
+              >
+                {t("analyzeConversation")}
+              </Button>
+            )}
             <HintButton 
               targetLanguage={practice}
               messages={apiConversationHistory.map(msg => ({ role: msg.role as any, content: msg.content, translation: undefined }))} 

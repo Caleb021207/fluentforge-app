@@ -13,6 +13,9 @@ export interface StudentMetrics {
   completed_lessons: number;
   total_lessons: number;
   last_activity: string | null;
+  avg_grammar_accuracy?: number;
+  avg_conversation_complexity?: number;
+  language_metrics_count?: number;
 }
 
 export type SortDirection = 'asc' | 'desc';
