@@ -27,3 +27,9 @@ export interface LanguageMetrics {
   messageCount: number;
   vocabularyDiversity?: number;
 }
+
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  translation?: TranslationType;
+}

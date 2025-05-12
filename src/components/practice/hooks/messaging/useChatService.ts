@@ -14,7 +14,8 @@ export const useChatService = () => {
   const sendChatRequest = async (
     message: string, 
     userLanguage: string, 
-    targetLanguage: string
+    targetLanguage: string,
+    correctGrammar: boolean = false
   ): Promise<ChatResponse | null> => {
     if (!message || message.trim() === "") {
       toast({
@@ -41,7 +42,8 @@ export const useChatService = () => {
         userLanguage, 
         targetLanguage,
         requestType: 'conversation',
-        requestTranslation: true 
+        requestTranslation: true,
+        correctGrammar
       });
       
       // Explicitly define language roles to avoid confusion
@@ -53,7 +55,8 @@ export const useChatService = () => {
           userLanguage: userLanguage,  // Native language of the user
           targetLanguage: targetLanguage, // Language the user is learning
           requestType: 'conversation',
-          requestTranslation: true
+          requestTranslation: true,
+          correctGrammar: correctGrammar  // New flag to control grammar correction
         }
       });
 

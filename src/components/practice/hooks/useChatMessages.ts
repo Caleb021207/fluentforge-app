@@ -17,6 +17,7 @@ interface Message {
 export const useChatMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [correctGrammar, setCorrectGrammar] = useState<boolean>(false);
   const { t, currentLanguage } = useLocalization();
   const { isLoading, hasError, sendChatMessage, retryLastMessage, extractStringFromTranslation } = useChatMessaging();
   const { generateLanguageLearningPrompt } = usePromptGenerator();
@@ -33,6 +34,12 @@ export const useChatMessages = () => {
       } catch (e) {
         console.error('Failed to parse saved messages:', e);
       }
+    }
+    
+    // Load grammar correction preference
+    const savedCorrectGrammar = localStorage.getItem('correctGrammar');
+    if (savedCorrectGrammar) {
+      setCorrectGrammar(savedCorrectGrammar === 'true');
     }
   }, []);
 
@@ -64,8 +71,8 @@ export const useChatMessages = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     
-    // Send message to API
-    const response = await sendChatMessage(input);
+    // Send message to API, passing the correctGrammar flag
+    const response = await sendChatMessageWithCorrection(input);
     
     if (response) {
       // Add assistant response to the chat
@@ -77,6 +84,30 @@ export const useChatMessages = () => {
       
       setMessages(prev => [...prev, assistantMessage]);
     }
+  };
+  
+  // Modified send function that includes grammar correction preference
+  const sendChatMessageWithCorrection = async (message: string) => {
+    // Get the current instance of sendChatMessage but add correctGrammar option
+    try {
+      // Pass the correctGrammar flag in the request
+      return await sendChatMessage(message, correctGrammar);
+    } catch (error) {
+      console.error("Error sending message with correction flag:", error);
+      return null;
+    }
+  };
+  
+  const toggleGrammarCorrection = () => {
+    const newValue = !correctGrammar;
+    setCorrectGrammar(newValue);
+    localStorage.setItem('correctGrammar', String(newValue));
+    
+    toast({
+      title: newValue ? t("grammarCorrectionEnabled") : t("grammarCorrectionDisabled"),
+      description: newValue ? t("tutor.willCorrectGrammar") : t("tutor.wontCorrectGrammar"),
+      variant: "default",
+    });
   };
   
   const sendLanguageLearningPrompt = async () => {
@@ -121,6 +152,8 @@ export const useChatMessages = () => {
     handleSubmit,
     sendLanguageLearningPrompt,
     clearConversation,
-    getPlaceholderText
+    getPlaceholderText,
+    correctGrammar,
+    toggleGrammarCorrection
   };
 };

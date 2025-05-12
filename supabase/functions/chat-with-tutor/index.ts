@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import OpenAI from "https://esm.sh/openai@4.20.1";
 import { corsHeaders, filterProhibitedContent } from "./config.ts";
@@ -54,7 +55,8 @@ serve(async (req) => {
       userLanguage: rawUserLanguage, 
       targetLanguage: rawTargetLanguage, 
       conversationHistory = [],
-      cefrLevel = "B1"
+      cefrLevel = "B1",
+      correctGrammar = false // New flag to control grammar correction
     } = requestData;
 
     // Validate language parameters
@@ -159,12 +161,18 @@ serve(async (req) => {
     const userLangDisplay = getLanguageDisplayName(userLanguage);
     const targetLangDisplay = getLanguageDisplayName(targetLanguage);
 
-    // Step 2: Generate Reply from OpenAI
+    // Step 2: Generate Reply from OpenAI with updated system message
+    // Modified to only correct grammar if explicitly requested
     const systemMessage = `You are a patient and encouraging AI language tutor. Your goal is to help the user practice ${targetLangDisplay}.
     The user's native language is ${userLangDisplay}.
     The user is at a CEFR level of ${cefrLevel}.
     If the user asks you to translate something, please provide the translation.
-    If the user makes grammatical errors, gently correct them and explain the correction.
+    
+    IMPORTANT: ${correctGrammar 
+      ? "If the user makes grammatical errors, gently correct them and explain the correction." 
+      : "DO NOT correct the user's grammar or point out errors unless they explicitly ask for help or correction."
+    }
+    
     If the user asks a question about grammar or vocabulary, provide a clear and concise answer.
     If the user is struggling, offer encouragement and suggest simpler ways to express themselves.
     If the user is doing well, offer praise and suggest more advanced vocabulary or grammar.

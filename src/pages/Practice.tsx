@@ -10,6 +10,8 @@ import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
 
@@ -56,7 +58,9 @@ const Practice = () => {
     sendLanguageLearningPrompt,
     handleSubmit,
     clearConversation,
-    getPlaceholderText
+    getPlaceholderText,
+    correctGrammar,
+    toggleGrammarCorrection
   } = useChatMessages();
   
   const {
@@ -99,11 +103,24 @@ const Practice = () => {
       <PracticeHeader targetLanguage={targetLanguage} />
       
       <div className="flex justify-between items-center mb-4">
-        <PracticePromptButton
-          onClick={sendLanguageLearningPrompt}
-          isLoading={chatLoading}
-          targetLanguage={targetLanguage}
-        />
+        <div className="flex space-x-4 items-center">
+          <PracticePromptButton
+            onClick={sendLanguageLearningPrompt}
+            isLoading={chatLoading}
+            targetLanguage={targetLanguage}
+          />
+          
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="grammar-correction"
+              checked={correctGrammar}
+              onCheckedChange={toggleGrammarCorrection}
+            />
+            <Label htmlFor="grammar-correction" className="text-sm">
+              {t("correctGrammar") || "Correct my grammar"}
+            </Label>
+          </div>
+        </div>
         
         <Button 
           variant="outline" 
