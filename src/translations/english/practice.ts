@@ -27,21 +27,14 @@ const practiceTranslations: TranslationRecord = {
   "startTextChatting": "Start text chatting",
   "typeMessageBelow": "Type a message below",
   
-  // New translations for language metrics
-  "viewLanguageMetrics": "View Language Metrics",
-  "hideMetrics": "Hide Metrics",
-  "languageMetrics": "Language Metrics",
-  "grammarAccuracy": "Grammar Accuracy",
-  "conversationComplexity": "Conversation Complexity",
-  "vocabularyDiversity": "Vocabulary Diversity",
-  "basedOnMessagesCount": "Based on {count} messages",
-  "analyzeConversation": "Analyze Conversation",
-  "analyzing": "Analyzing...",
-  "analyzingConversation": "Analyzing your conversation...",
-  "noLanguageDataYet": "No language data yet. Click the button below to analyze your conversation.",
-  "notEnoughMessages": "Not enough messages",
-  "needMoreMessagesToAnalyze": "You need at least 4 messages to analyze your conversation.",
-  "failedToAnalyzeConversation": "Failed to analyze conversation. Please try again.",
+  // Ensure text practice has proper translations
+  "textPractice": "Text Practice",
+  "practiceWithTextChat": "Practice with Text Chat",
+  "textConversationPractice": "Text Conversation Practice",
+  "practiceWithAITutor": "Practice with AI Language Tutor",
+  "chatWithAITutor": "Chat with our AI tutor to practice your language skills through text conversations! The AI will help correct your grammar, vocabulary, and usage. Feel free to ask questions about the language or culture.",
+  "noticeTextBasedPractice": "Note: This is a text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features.",
+  "unlimitedVoicePractice": "Unlimited Voice Practice",
   
   // Grammar correction toggle
   "correctGrammar": "Correct my grammar",
@@ -52,7 +45,10 @@ const practiceTranslations: TranslationRecord = {
   
   // Success messages
   "success": "Success",
-  "conversationCleared": "Conversation cleared"
+  "conversationCleared": "Conversation cleared",
+  
+  // Clear conversation translations
+  "clearConversation": "Clear conversation"
 };
 
 export default practiceTranslations;

@@ -16,14 +16,6 @@ import { Trash } from "lucide-react";
 import SpeechRateControl from "@/components/practice/SpeechRateControl";
 import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
 import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
-import type { TranslationType } from "@/components/practice/hooks/translation";
-
-// Create an interface that matches the Message structure from useChatMessages
-interface MessageWithTranslationType {
-  role: "user" | "assistant";
-  content: string;
-  translation?: TranslationType;
-}
 
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
@@ -50,13 +42,11 @@ const Practice = () => {
       setSpeechRate(parseFloat(savedSpeechRate));
     }
     
-    // Debug for Thai language - Fix the comparison to use lowercase comparison
-    if (currentLanguage.toLowerCase() === 'thai') {
-      console.log('Practice component initialized with Thai language:', {
-        currentLanguage,
-        targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english")
-      });
-    }
+    // Debug for language initialization
+    console.debug('Practice component initialized with language:', {
+      currentLanguage,
+      targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english")
+    });
   }, [currentLanguage]);
 
   // Save speech rate to localStorage when it changes
@@ -102,14 +92,12 @@ const Practice = () => {
     return <AuthRequiredPrompt />;
   }
 
-  // Additional debug for Thai messages - fix the comparison to use lowercase comparison
-  if (currentLanguage.toLowerCase() === 'thai') {
-    console.log('Practice component rendering with Thai:', {
-      messageCount: messages.length,
-      hasTranslations: messages.filter(m => m.translation).length,
-      currentLanguage
-    });
-  }
+  // Debug for message display
+  console.debug('Practice component rendering with language:', {
+    messageCount: messages.length,
+    hasTranslations: messages.filter(m => m.translation).length,
+    currentLanguage
+  });
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -141,7 +129,7 @@ const Practice = () => {
           className="flex items-center gap-2"
         >
           <Trash className="h-4 w-4" />
-          {t("clearConversation")}
+          {t("clearConversation") || "Clear conversation"}
         </Button>
       </div>
       
