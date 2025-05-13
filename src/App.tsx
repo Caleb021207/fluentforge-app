@@ -19,6 +19,7 @@ import NotFound from "@/pages/NotFound";
 import SafetyPolicy from "@/pages/SafetyPolicy";
 import TeacherClasses from "@/pages/TeacherClasses";
 import StudentClass from "@/pages/StudentClass";
+import ClassDetail from "@/pages/ClassDetail";
 import StudentLanguageProgress from "@/pages/StudentLanguageProgress";
 import Settings from "@/pages/Settings";
 import { LocalizationProvider } from "@/context/LocalizationContext";
@@ -46,6 +47,7 @@ function App() {
               { path: "teacher/classes", element: <TeacherClasses /> },
               { path: "teacher/student-language-progress", element: <StudentLanguageProgress /> },
               { path: "student/class", element: <StudentClass /> },
+              { path: "class/:id", element: <ClassDetail /> },
               { path: "settings", element: <Settings /> }
             ],
           },

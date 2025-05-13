@@ -23,6 +23,11 @@ const classroomTranslations: TranslationRecord = {
   noClasses: "You don't have any classes",
   noClassesJoined: "You haven't joined any classes",
   createOrJoinClass: "Create or Join a Class",
+  classNotFound: "Class not found or you don't have access",
+  backToClasses: "Back to Classes",
+  viewStudents: "View Students",
+  created: "Created",
+  unnamed: "Unnamed",
   
   // New language progress related translations
   studentLanguageProgress: "Student Language Progress",
@@ -38,6 +43,7 @@ const classroomTranslations: TranslationRecord = {
   viewLanguageProgress: "View Language Progress",
   selectedClass: "Selected Class",
   noClassroomSelected: "No classroom selected",
+  failedToLoadClassData: "Failed to load class data",
 };
 
 export default classroomTranslations;
