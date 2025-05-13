@@ -17,7 +17,8 @@ import LoadingIndicator from "./LoadingIndicator";
 const Practice = () => {
   const { 
     messages, 
-    isGenerating, 
+    isGenerating,
+    isLoading, 
     sendMessage, 
     startNewChat,
     error,
@@ -30,7 +31,7 @@ const Practice = () => {
     isExpanded, 
     togglePanel, 
     analyzeConversation 
-  } = useLanguageMetricsPanel();
+  } = useLanguageMetricsPanel(messages);
   
   const params = useParams<{ language?: string }>();
   const targetLanguage = params.language || "spanish";
@@ -85,9 +86,20 @@ const Practice = () => {
             </div>
             
             <div className="border-t p-4">
-              <HintButton hints={hints} targetLanguage={targetLanguage} />
+              <HintButton 
+                messages={messages} 
+                targetLanguage={targetLanguage} 
+              />
               <ChatInput
-                onSubmit={sendMessage}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formElement = e.target as HTMLFormElement;
+                  const textArea = formElement.querySelector('textarea');
+                  if (textArea && textArea.value.trim()) {
+                    sendMessage(textArea.value.trim());
+                    textArea.value = '';
+                  }
+                }}
                 isDisabled={isGenerating}
               />
             </div>
@@ -98,7 +110,7 @@ const Practice = () => {
             isLoading={isMetricsLoading}
             isExpanded={isExpanded}
             onToggle={togglePanel}
-            onAnalyze={analyzeConversation}
+            onAnalyze={() => analyzeConversation(messages)}
           />
         </div>
       )}

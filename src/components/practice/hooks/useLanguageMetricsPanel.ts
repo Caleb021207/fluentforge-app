@@ -1,11 +1,10 @@
-
 import { useState } from 'react';
 import { useLanguageAnalysis } from '@/hooks/useLanguageAnalysis';
 import { Message, LanguageMetrics } from '@/types/chat';
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 
-export const useLanguageMetricsPanel = (messages: Message[]) => {
+export const useLanguageMetricsPanel = (messages: Message[] = []) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [metrics, setMetrics] = useState<LanguageMetrics | null>(null);
   const { analyzeConversation, isAnalyzing } = useLanguageAnalysis();
@@ -51,6 +50,9 @@ export const useLanguageMetricsPanel = (messages: Message[]) => {
     isExpanded,
     togglePanel,
     metrics,
+    isMetricsLoading: isAnalyzing, // Rename for compatibility
+    analyzeConversation: analyzeCurrentConversation, // Rename for compatibility
+    // Keep the new name as well for future compatibility
     isAnalyzing,
     analyzeCurrentConversation
   };

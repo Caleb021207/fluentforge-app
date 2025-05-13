@@ -16,9 +16,15 @@ interface HintButtonProps {
   targetLanguage: string;
   messages: Message[];
   className?: string;
+  hints?: any; // Added for backward compatibility
 }
 
-export default function HintButton({ targetLanguage, messages, className }: HintButtonProps) {
+export default function HintButton({ 
+  targetLanguage, 
+  messages, 
+  className,
+  hints: preloadedHints // Not used directly but kept for compatibility
+}: HintButtonProps) {
   const [open, setOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState<string | null>(null);
   const [hints, setHints] = useState<SuggestionCategory[]>([]);
@@ -147,7 +153,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
           variant="outline" 
           size="icon"
           className={className}
-          title={getResponseSuggestionsText}
+          title={getTranslatedText("getResponseSuggestions")}
         >
           <HelpCircle className="h-4 w-4" />
         </Button>

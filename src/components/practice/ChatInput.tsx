@@ -8,23 +8,25 @@ import HintButton from "./HintButton";
 import type { Message } from "@/types/chat";
 
 interface ChatInputProps {
-  isLoading: boolean;
-  value: string;
-  onChange: (value: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
   onSubmit: (e: FormEvent) => void;
-  placeholder: string;
-  messages: Message[];
-  targetLanguage: string;
+  isLoading?: boolean;
+  isDisabled?: boolean; // Added for backwards compatibility
+  placeholder?: string;
+  messages?: Message[];
+  targetLanguage?: string;
 }
 
 export default function ChatInput({
-  isLoading,
-  value,
-  onChange,
+  value = "",
+  onChange = () => {},
   onSubmit,
-  placeholder,
-  messages,
-  targetLanguage
+  isLoading = false,
+  isDisabled = false, // Support both properties
+  placeholder = "Type your message...",
+  messages = [],
+  targetLanguage = "spanish"
 }: ChatInputProps) {
   const { t } = useLocalization();
   const [rows, setRows] = useState(1);
@@ -51,11 +53,14 @@ export default function ChatInput({
   // Handle keyboard shortcuts
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     // Submit on Enter (without Shift)
-    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
+    if (e.key === "Enter" && !e.shiftKey && !isLoading && !isDisabled) {
       e.preventDefault();
       onSubmit(e);
     }
   };
+  
+  // Determine if the button should be disabled
+  const buttonDisabled = isLoading || isDisabled || value.trim().length === 0;
   
   return (
     <form onSubmit={onSubmit} className="relative">
@@ -68,7 +73,7 @@ export default function ChatInput({
           rows={rows}
           placeholder={placeholder}
           className="pr-24 resize-none py-3 min-h-[50px]"
-          disabled={isLoading}
+          disabled={isLoading || isDisabled}
         />
         <div className="absolute right-2 bottom-1.5 flex space-x-2">
           <HintButton 
@@ -78,7 +83,7 @@ export default function ChatInput({
           <Button 
             size="sm" 
             type="submit" 
-            disabled={isLoading || value.trim().length === 0}
+            disabled={buttonDisabled}
             className="h-8 w-8 p-0"
           >
             <Send className="h-4 w-4" />

@@ -9,24 +9,26 @@ import { TranslationType } from "@/components/practice/hooks/translation";
 
 interface ChatContainerProps {
   messages: Message[];
-  input: string;
-  setInput: (input: string) => void;
-  handleSubmit: (e: React.FormEvent) => void;
+  input?: string;
+  setInput?: (input: string) => void;
+  handleSubmit?: (e: React.FormEvent) => void;
   isLoading: boolean;
-  getPlaceholderText: () => string;
-  targetLanguage: string;
+  getPlaceholderText?: () => string;
+  targetLanguage?: string;
   speechRate?: number;
+  error?: string | null; // Added for compatibility
 }
 
 const ChatContainer: React.FC<ChatContainerProps> = ({
   messages,
-  input,
-  setInput,
-  handleSubmit,
+  input = "",
+  setInput = () => {},
+  handleSubmit = () => {},
   isLoading,
-  getPlaceholderText,
-  targetLanguage,
-  speechRate = 1.0
+  getPlaceholderText = () => "Type your message...",
+  targetLanguage = "spanish",
+  speechRate = 1.0,
+  error // Support error prop
 }) => {
   return (
     <div className="bg-card dark:bg-card/80 border rounded-lg shadow-sm flex flex-col h-[60vh]">
@@ -44,6 +46,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         ))}
 
         {isLoading && <LoadingIndicator />}
+        
+        {/* Show error message if present */}
+        {error && (
+          <div className="px-4 py-2 bg-destructive/10 text-destructive rounded">
+            {error}
+          </div>
+        )}
       </div>
 
       <div className="border-t p-4">
