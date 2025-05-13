@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Lightbulb } from "lucide-react";
@@ -7,9 +8,10 @@ import { Message } from "@/types/chat";
 export interface HintButtonProps {
   messages: Message[];
   targetLanguage: string;
+  className?: string; // Add className prop
 }
 
-const HintButton = ({ messages, targetLanguage }: HintButtonProps) => {
+const HintButton = ({ messages, targetLanguage, className = "" }: HintButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useLocalization();
   
@@ -24,7 +26,7 @@ const HintButton = ({ messages, targetLanguage }: HintButtonProps) => {
   };
   
   return (
-    <div className="mb-2">
+    <div className={`mb-2 ${className}`}>
       {messages.length > 0 ? (
         <Button 
           variant="outline" 
@@ -34,11 +36,11 @@ const HintButton = ({ messages, targetLanguage }: HintButtonProps) => {
           disabled={isLoading || messages.length === 0}
         >
           <Lightbulb className="h-3 w-3 mr-1" />
-          {t("suggestedResponses")}
+          {t("suggestedResponses") || "Get suggestions"}
         </Button>
       ) : (
         <p className="text-xs text-muted-foreground">
-          {t("startConversationToSeeSuggestions")}
+          {t("startConversationToSeeSuggestions") || "Start a conversation to see suggestions"}
         </p>
       )}
     </div>

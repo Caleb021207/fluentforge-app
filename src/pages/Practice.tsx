@@ -127,15 +127,10 @@ const Practice = () => {
         />
       </div>
 
+      {/* Remove the input, setInput and other props that are not accepted by ChatContainer */}
       <ChatContainer
         messages={messages}
-        input={input}
-        setInput={setInput}
-        handleSubmit={handleSubmit}
         isLoading={chatLoading}
-        getPlaceholderText={getPlaceholderText}
-        targetLanguage={targetLanguage}
-        speechRate={speechRate}
       />
 
       {/* Add Language Metrics Panel */}
