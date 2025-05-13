@@ -33,6 +33,11 @@ export const useClassDetail = (
         const { data: sessionData } = await supabase.auth.getSession();
         if (!sessionData.session?.user?.id) {
           console.error("No authenticated session found");
+          toast({
+            title: t("loginRequired") || "Login Required",
+            description: t("pleaseLoginToAccessFeature") || "Please login to access this feature",
+            variant: "destructive",
+          });
           navigate('/');
           return;
         }
@@ -64,6 +69,9 @@ export const useClassDetail = (
         }
 
         console.log('Found class:', classInfo);
+        console.log('Class teacher ID:', classInfo.teacher_id);
+        console.log('Current user ID:', userId);
+        console.log('Is user a teacher?', isTeacher);
 
         // Second step: Verify access based on role
         let hasAccess = false;
@@ -121,6 +129,7 @@ export const useClassDetail = (
             description: t("classNotFound") || "Class not found or you don't have access",
             variant: "destructive",
           });
+          // Navigate to the appropriate route based on role
           navigate(isTeacher ? '/teacher/classes' : '/student/class');
           return;
         }
@@ -147,6 +156,7 @@ export const useClassDetail = (
           description: error.message || t("failedToLoadClassData") || "Failed to load class data",
           variant: "destructive",
         });
+        // Navigate to the appropriate route based on role
         navigate(isTeacher ? '/teacher/classes' : '/student/class');
       } finally {
         setIsLoading(false);
@@ -157,6 +167,7 @@ export const useClassDetail = (
   }, [id, navigate, toast, t, isTeacher]);
 
   const handleBackClick = () => {
+    // Navigate to the appropriate route based on role
     navigate(isTeacher ? '/teacher/classes' : '/student/class');
   };
 

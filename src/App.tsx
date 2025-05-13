@@ -45,6 +45,7 @@ function App() {
               { path: "certificates", element: <Certificates /> },
               { path: "safety-policy", element: <SafetyPolicy /> },
               { path: "teacher/classes", element: <TeacherClasses /> },
+              { path: "teacher/class/:id", element: <ClassDetail /> },
               { path: "teacher/student-language-progress", element: <StudentLanguageProgress /> },
               { path: "student/class", element: <StudentClass /> },
               { path: "class/:id", element: <ClassDetail /> },

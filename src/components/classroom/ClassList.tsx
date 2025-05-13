@@ -7,6 +7,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
+import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 
 interface ClassItem {
   id: string;
@@ -22,6 +23,7 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLocalization();
+  const { isTeacher } = useTeacherStatus();
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
@@ -81,7 +83,12 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
   }, [toast, t]);
 
   const handleViewClass = (classId: string) => {
-    navigate(`/class/${classId}`);
+    // Use the teacher-specific route when the user is a teacher
+    if (isTeacher) {
+      navigate(`/teacher/class/${classId}`);
+    } else {
+      navigate(`/class/${classId}`);
+    }
   };
 
   const handleClassSelect = (classId: string, className: string) => {
