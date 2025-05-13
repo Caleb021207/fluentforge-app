@@ -38,7 +38,6 @@ export const CLASSROOM_TEXT = {
   CREATING_CLASS: 'Creating class...',
   ERROR_CREATING_CLASS: 'Error creating class',
   SHARE_CODE_WITH_STUDENTS: 'Share this code with your students to let them join your class.',
-  VIEW_CLASS: 'View Class',
   // Adding the missing constants
   SUCCESS: 'Success',
   ERROR: 'Error',

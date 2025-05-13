@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const uiElementsTranslations: TranslationRecord = {
@@ -115,8 +114,6 @@ const uiElementsTranslations: TranslationRecord = {
   voiceChatSessions: "Voice Chat Sessions",
   lastActivity: "Last Activity",
   unnamed: "Unnamed",
-  failedToLoadClasses: "Failed to load classes",
-  unexpectedError: "An unexpected error occurred",
 };
 
 export default uiElementsTranslations;

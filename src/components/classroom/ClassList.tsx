@@ -1,75 +1,73 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from "@/integrations/supabase/client";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Loader2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import ClassStudentsList from './ClassStudentsList';
+import { useLocalization } from "@/context/LocalizationContext";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 
 interface ClassItem {
   id: string;
-  className: string;
-  studentCount: number;
+  class_name: string;
+  code: string;
+  active: boolean;
+  created_at: string;
+  student_count?: number;
 }
 
-interface ClassListProps {
-  onClassSelect?: (classId: string, className: string) => void;
-}
-
-const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
-  const navigate = useNavigate();
+const ClassList = () => {
   const { toast } = useToast();
   const { t } = useLocalization();
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+  const [selectedClass, setSelectedClass] = useState<{id: string, name: string} | null>(null);
 
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        setIsLoading(true);
-        const { data: sessionData } = await supabase.auth.getSession();
-        
-        if (!sessionData.session?.user?.id) {
-          console.error("No authenticated user found");
-          return;
-        }
-        
-        const userId = sessionData.session.user.id;
-        
         const { data, error } = await supabase
           .from('classroom_codes')
           .select(`
-            id, 
+            id,
             class_name,
-            classroom_memberships (count)
+            code,
+            active,
+            created_at
           `)
-          .eq('teacher_id', userId);
+          .eq('teacher_id', (await supabase.auth.getUser()).data.user?.id)
+          .order('created_at', { ascending: false });
 
-        if (error) {
-          console.error("Error fetching classes:", error);
-          toast({
-            title: t("error"),
-            description: t("failedToLoadClasses"),
-            variant: "destructive",
-          });
-          return;
-        }
+        if (error) throw error;
 
-        const classList: ClassItem[] = data.map(classroom => ({
-          id: classroom.id,
-          className: classroom.class_name,
-          studentCount: classroom.classroom_memberships ? classroom.classroom_memberships[0].count : 0,
-        }));
+        const classesWithCount = await Promise.all(
+          (data || []).map(async (classItem) => {
+            const { count, error: countError } = await supabase
+              .from('classroom_memberships')
+              .select('*', { count: 'exact', head: true })
+              .eq('classroom_id', classItem.id);
 
-        setClasses(classList);
+            if (countError) {
+              console.error('Error fetching student count:', countError);
+              return classItem;
+            }
+
+            return {
+              ...classItem,
+              student_count: count || 0
+            };
+          })
+        );
+
+        setClasses(classesWithCount);
       } catch (error: any) {
-        console.error("Unexpected error fetching classes:", error);
+        console.error('Error fetching classes:', error);
         toast({
-          title: t("error"),
-          description: t("unexpectedError"),
+          title: CLASSROOM_TEXT.ERROR,
+          description: error.message,
           variant: "destructive",
         });
       } finally {
@@ -78,65 +76,105 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
     };
 
     fetchClasses();
-  }, [toast, t]);
+  }, [toast]);
 
-  const handleViewClass = (classId: string) => {
-    // Simply navigate to the class detail view without checking roles
-    // This was the previous behavior that worked
-    navigate(`/class/${classId}`);
-  };
+  const toggleClassStatus = async (id: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('classroom_codes')
+        .update({ active: !currentStatus })
+        .eq('id', id);
 
-  const handleClassSelect = (classId: string, className: string) => {
-    setSelectedClassId(classId);
-    if (onClassSelect) {
-      onClassSelect(classId, className);
+      if (error) throw error;
+
+      setClasses(classes.map(c => 
+        c.id === id ? { ...c, active: !currentStatus } : c
+      ));
+
+      toast({
+        title: CLASSROOM_TEXT.SUCCESS,
+        description: !currentStatus ? CLASSROOM_TEXT.CLASS_ACTIVATED : CLASSROOM_TEXT.CLASS_DEACTIVATED,
+      });
+    } catch (error: any) {
+      toast({
+        title: CLASSROOM_TEXT.ERROR,
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
-  const EmptyState = () => (
-    <div className="text-center py-8">
-      <p className="text-muted-foreground">{t("noClasses")}</p>
-    </div>
-  );
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (classes.length === 0) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-muted-foreground">{t("noClassesCreated")}</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {isLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      ) : classes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {classes.map((classItem) => (
-            <Card 
-              key={classItem.id} 
-              className={`cursor-pointer hover:border-primary/50 transition-colors ${selectedClassId === classItem.id ? 'border-primary' : ''}`}
-              onClick={() => handleClassSelect(classItem.id, classItem.className)}
-            >
-              <CardHeader>
-                <CardTitle>{classItem.className}</CardTitle>
-                <CardDescription>
-                  {t("studentsEnrolled", { count: String(classItem.studentCount) })}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-between items-center">
-                  <Button
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent triggering the card onClick
-                      handleViewClass(classItem.id);
-                    }}
-                  >
-                    {t("viewClass")}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <EmptyState />
+    <div className="space-y-4">
+      {classes.map((classItem) => (
+        <Card key={classItem.id}>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">{classItem.class_name}</CardTitle>
+              <Badge variant={classItem.active ? "default" : "outline"}>
+                {classItem.active ? "Active" : "Inactive"}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-sm space-y-2">
+              <div>
+                <span className="font-medium">{CLASSROOM_TEXT.CLASS_CODE}:</span> {classItem.code}
+              </div>
+              <div>
+                <span className="font-medium">{CLASSROOM_TEXT.STUDENTS}:</span> {classItem.student_count || 0}
+              </div>
+              <div>
+                <span className="font-medium">{t("created")}:</span> {new Date(classItem.created_at).toLocaleDateString()}
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setSelectedClass({ id: classItem.id, name: classItem.class_name })}
+              >
+                <Users className="mr-2 h-4 w-4" />
+                {CLASSROOM_TEXT.STUDENTS}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => toggleClassStatus(classItem.id, classItem.active)}
+              >
+                {classItem.active ? t("deactivate") : t("activate")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      {selectedClass && (
+        <ClassStudentsList
+          classId={selectedClass.id}
+          className={selectedClass.name}
+          open={!!selectedClass}
+          onOpenChange={(open) => !open && setSelectedClass(null)}
+        />
       )}
     </div>
   );
