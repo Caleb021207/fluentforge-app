@@ -39,7 +39,6 @@ const classroomTranslations: TranslationRecord = {
   conversationComplexity: "Conversation Complexity",
   showControls: "Show Controls",
   hideControls: "Hide Controls",
-  backToClasses: "Back to Classes",
   viewLanguageProgress: "View Language Progress",
   selectedClass: "Selected Class",
   noClassroomSelected: "No classroom selected",

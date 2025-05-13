@@ -23,6 +23,11 @@ interface ClassData {
   code: string;
 }
 
+interface TeacherProfile {
+  display_name: string | null;
+  email: string | null;
+}
+
 const ClassDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -106,12 +111,15 @@ const ClassDetail: React.FC = () => {
             throw new Error("Class not found or you don't have access");
           }
           
+          // Type-check the profiles data
+          const teacherProfile = data.classroom_codes.profiles as TeacherProfile | null;
+          
           classInfo = {
             id: data.classroom_codes.id,
             class_name: data.classroom_codes.class_name,
             teacher_id: data.classroom_codes.teacher_id,
-            teacher_name: data.classroom_codes.profiles?.display_name,
-            teacher_email: data.classroom_codes.profiles?.email,
+            teacher_name: teacherProfile?.display_name || undefined,
+            teacher_email: teacherProfile?.email || undefined,
             student_count: 0, // Students can't see this
             created_at: new Date(data.classroom_codes.created_at).toLocaleDateString(),
             code: data.classroom_codes.code
