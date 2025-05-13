@@ -95,11 +95,7 @@ const ClassDetail: React.FC = () => {
                 class_name,
                 code,
                 created_at,
-                teacher_id,
-                profiles:teacher_id (
-                  display_name,
-                  email
-                )
+                teacher_id
               )
             `)
             .eq('classroom_id', id)
@@ -111,15 +107,29 @@ const ClassDetail: React.FC = () => {
             throw new Error("Class not found or you don't have access");
           }
           
-          // Type-check the profiles data
-          const teacherProfile = data.classroom_codes.profiles as TeacherProfile | null;
+          // Get teacher profile in a separate query if we have teacher_id
+          let teacherName;
+          let teacherEmail;
+          
+          if (data.classroom_codes.teacher_id) {
+            const { data: teacherData, error: teacherError } = await supabase
+              .from('profiles')
+              .select('display_name, email')
+              .eq('id', data.classroom_codes.teacher_id)
+              .maybeSingle();
+              
+            if (!teacherError && teacherData) {
+              teacherName = teacherData.display_name;
+              teacherEmail = teacherData.email;
+            }
+          }
           
           classInfo = {
             id: data.classroom_codes.id,
             class_name: data.classroom_codes.class_name,
             teacher_id: data.classroom_codes.teacher_id,
-            teacher_name: teacherProfile?.display_name || undefined,
-            teacher_email: teacherProfile?.email || undefined,
+            teacher_name: teacherName || undefined,
+            teacher_email: teacherEmail || undefined,
             student_count: 0, // Students can't see this
             created_at: new Date(data.classroom_codes.created_at).toLocaleDateString(),
             code: data.classroom_codes.code
