@@ -11,6 +11,12 @@ interface AnalysisMetrics {
   vocabularyDiversity?: number;
 }
 
+interface AnalysisOptions {
+  sessionId?: string;
+  classroomId?: string;
+  silent?: boolean;
+}
+
 export function useLanguageAnalysis() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [lastMetrics, setLastMetrics] = useState<AnalysisMetrics | null>(null);
@@ -18,11 +24,7 @@ export function useLanguageAnalysis() {
 
   const analyzeConversation = async (
     messages: Message[], 
-    options: { 
-      sessionId?: string, 
-      classroomId?: string,
-      silent?: boolean 
-    } = {}
+    options: AnalysisOptions = {}
   ) => {
     try {
       setIsAnalyzing(true);
@@ -57,7 +59,7 @@ export function useLanguageAnalysis() {
 
       setLastMetrics(data.metrics);
       
-      // Optionally show success toast
+      // Only show toast if not in silent mode
       if (!options.silent) {
         toast({
           title: "Analysis Complete",
@@ -69,6 +71,7 @@ export function useLanguageAnalysis() {
     } catch (error: any) {
       console.error("Language analysis error:", error);
       
+      // Only show error toast if not in silent mode
       if (!options.silent) {
         toast({
           title: "Analysis Failed",

@@ -96,21 +96,51 @@ serve(async (req) => {
       );
     }
 
-    // Store metrics in database (optional - only if user is authenticated and classroomId is provided)
+    // Try to store metrics in database
+    // Check if the user is authenticated and not anonymous
     if (userId !== "anonymous-or-current-user-id" && userId !== "anonymous") {
       try {
-        const { error } = await supabase.from("student_language_metrics").insert({
-          user_id: userId,
-          classroom_id: classroomId,
-          session_id: sessionId,
-          grammar_accuracy: metrics.grammarAccuracy,
-          conversation_complexity: metrics.conversationComplexity,
-          message_count: metrics.messageCount
-        });
+        // First try to get a classroom ID for this user if none was provided
+        let targetClassroomId = classroomId;
+        
+        if (!targetClassroomId) {
+          // Try to get the user's classroom if they're in one
+          const { data: memberships, error: membershipError } = await supabase
+            .from("classroom_memberships")
+            .select("classroom_id")
+            .eq("student_id", userId)
+            .limit(1)
+            .maybeSingle();
+            
+          if (!membershipError && memberships && memberships.classroom_id) {
+            targetClassroomId = memberships.classroom_id;
+            console.log("Found classroom ID for user:", targetClassroomId);
+          }
+        }
 
-        if (error) {
-          console.error("Error storing metrics:", error);
-          // Continue anyway, don't fail the response
+        if (targetClassroomId) {
+          const { error } = await supabase.from("student_language_metrics").insert({
+            user_id: userId,
+            classroom_id: targetClassroomId,
+            session_id: sessionId,
+            grammar_accuracy: metrics.grammarAccuracy,
+            conversation_complexity: metrics.conversationComplexity,
+            message_count: metrics.messageCount
+          });
+
+          if (error) {
+            console.error("Error storing metrics:", error);
+            // Continue anyway, don't fail the response
+          } else {
+            // If successful, update the aggregate metrics in student_metrics
+            await supabase.rpc("update_student_language_aggregate_metrics", {
+              target_student_id: userId
+            }).catch(err => {
+              console.error("Error updating aggregate metrics:", err);
+            });
+          }
+        } else {
+          console.log("No classroom ID available, skipping metrics storage");
         }
       } catch (dbError) {
         console.error("Database error:", dbError);

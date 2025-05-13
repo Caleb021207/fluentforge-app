@@ -5,6 +5,7 @@ import { useChatMessaging } from "./useChatMessaging";
 import { usePromptGenerator } from "./usePromptGenerator";
 import { useSessionManagement } from "./useSessionManagement";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import type { TranslationType } from "./useTranslationHandler";
 import type { ChatMessage } from "@/types/chat";
 
@@ -23,6 +24,7 @@ export const useChatMessages = () => {
   const { generateLanguageLearningPrompt } = usePromptGenerator();
   const { messageCount, setMessageCount } = useSessionManagement();
   const { toast } = useToast();
+  const { analyzeConversation } = useLanguageAnalysis();
 
   // Load saved messages from session storage
   useEffect(() => {
@@ -49,6 +51,32 @@ export const useChatMessages = () => {
       sessionStorage.setItem('chatMessages', JSON.stringify(messages));
     }
   }, [messages]);
+
+  // Automatically analyze conversation when user navigates away
+  useEffect(() => {
+    // Only run if we have enough messages to analyze
+    const analyzeBeforeUnload = () => {
+      if (messages.length >= 4) {
+        // Use the silent option to avoid showing toasts
+        analyzeConversation(messages, { silent: true })
+          .catch(err => console.error("Error in auto-analysis:", err));
+      }
+    };
+
+    // Add event listener for when user navigates away
+    window.addEventListener('beforeunload', analyzeBeforeUnload);
+    
+    // Cleanup function
+    return () => {
+      window.removeEventListener('beforeunload', analyzeBeforeUnload);
+      
+      // Also analyze when component unmounts (navigating to another page)
+      if (messages.length >= 4) {
+        analyzeConversation(messages, { silent: true })
+          .catch(err => console.error("Error in auto-analysis on unmount:", err));
+      }
+    };
+  }, [messages, analyzeConversation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,6 +152,12 @@ export const useChatMessages = () => {
   };
   
   const clearConversation = () => {
+    // If we have enough messages, analyze before clearing
+    if (messages.length >= 4) {
+      analyzeConversation(messages, { silent: true })
+        .catch(err => console.error("Error analyzing conversation before clearing:", err));
+    }
+    
     setMessages([]);
     sessionStorage.removeItem('chatMessages');
     
