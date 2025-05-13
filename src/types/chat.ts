@@ -1,18 +1,35 @@
-export interface Message {
-  role: "user" | "assistant" | "system";
+
+// Chat message types
+export type ChatMessage = {
+  id: string;
+  role: 'user' | 'assistant';
   content: string;
-  translation?: string | Record<string, unknown>;
-}
+  timestamp: Date;
+  translation?: string;
+  audioUrl?: string;
+  isTranslating?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
+};
 
-// Add the missing LanguageMetrics interface
-export interface LanguageMetrics {
-  grammarAccuracy: number;
-  conversationComplexity: number;
-  messageCount: number;
-  vocabularyDiversity?: number;
-}
+// Message count tracking
+export type MessageCount = {
+  inputs: number;
+  outputs: number;
+};
 
-// Import the TranslationType from the hooks to maintain consistency
-import { TranslationType } from "../components/practice/hooks/translation";
-// Use 'export type' to re-export a type with isolatedModules enabled
-export type { TranslationType };
+// Session status types
+export type SessionStatus = 'available' | 'active' | 'cooldown' | 'unavailable';
+
+// Suggestion categories for hints
+export type SuggestionCategory = 
+  | 'general' 
+  | 'vocabulary' 
+  | 'grammar' 
+  | 'conversation' 
+  | 'cultural' 
+  | 'practice'
+  | 'example';
+
+// TranslationType - reuse from practice/hooks/translation/types.ts
+export type { TranslationType } from '@/components/practice/hooks/translation/types';
