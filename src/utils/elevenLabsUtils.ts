@@ -1,152 +1,139 @@
-import { useEffect, useState } from 'react';
-import { useConversation } from '@11labs/react';
-import { useToast } from '@/hooks/use-toast';
-import { useLocalization } from '@/context/LocalizationContext';
+// This file contains utility functions for working with ElevenLabs API
 
-// Configuration for the ElevenLabs agents (updated with real agent IDs)
-export const SPANISH_TUTOR_AGENT_ID = 'LGA4iRGgLlVbWPluqq23'; 
-export const ENGLISH_TUTOR_AGENT_ID = 'placeholder_english_agent_id';
-export const PORTUGUESE_TUTOR_AGENT_ID = 'WuaaV0Pu1tinWfjSk9CY';
-export const KOREAN_TUTOR_AGENT_ID = 'placeholder_korean_agent_id';
-export const ARABIC_TUTOR_AGENT_ID = 'placeholder_arabic_agent_id';
-export const MANDARIN_TUTOR_AGENT_ID = 'placeholder_mandarin_agent_id';
-export const VIETNAMESE_TUTOR_AGENT_ID = 'placeholder_vietnamese_agent_id';
-export const FRENCH_TUTOR_AGENT_ID = 'placeholder_french_agent_id';
-export const JAPANESE_TUTOR_AGENT_ID = 'placeholder_japanese_agent_id';
-export const RUSSIAN_TUTOR_AGENT_ID = 'placeholder_russian_agent_id';
-export const UKRAINIAN_TUTOR_AGENT_ID = 'placeholder_ukrainian_agent_id';
-export const HINDI_TUTOR_AGENT_ID = 'placeholder_hindi_agent_id';
-export const INDONESIAN_TUTOR_AGENT_ID = 'placeholder_indonesian_agent_id';
-export const GUJARATI_TUTOR_AGENT_ID = 'placeholder_gujarati_agent_id';
-export const PUNJABI_TUTOR_AGENT_ID = 'placeholder_punjabi_agent_id';
-export const NEPALI_TUTOR_AGENT_ID = 'placeholder_nepali_agent_id';
+import { ELEVEN_LABS_AGENT_ID } from './constants';
 
-// Language to agent ID mapping (updated Spanish and Portuguese with real IDs)
-const LANGUAGE_TO_AGENT_ID: Record<string, string> = {
-  "english": SPANISH_TUTOR_AGENT_ID,
-  "spanish": ENGLISH_TUTOR_AGENT_ID,
-  "portuguese": PORTUGUESE_TUTOR_AGENT_ID,
-  "korean": KOREAN_TUTOR_AGENT_ID,
-  "arabic": ARABIC_TUTOR_AGENT_ID,
-  "mandarin": MANDARIN_TUTOR_AGENT_ID,
-  "vietnamese": VIETNAMESE_TUTOR_AGENT_ID,
-  "french": FRENCH_TUTOR_AGENT_ID,
-  "japanese": JAPANESE_TUTOR_AGENT_ID,
-  "russian": RUSSIAN_TUTOR_AGENT_ID,
-  "ukrainian": UKRAINIAN_TUTOR_AGENT_ID,
-  "hindi": HINDI_TUTOR_AGENT_ID,
-  "indonesian": INDONESIAN_TUTOR_AGENT_ID,
-  "gujarati": GUJARATI_TUTOR_AGENT_ID,
-  "punjabi": PUNJABI_TUTOR_AGENT_ID,
-  "nepali": NEPALI_TUTOR_AGENT_ID
+// Agent IDs for different language tutors
+export const AGENT_IDS = {
+  SPANISH_TUTOR: ELEVEN_LABS_AGENT_ID, // Default Spanish tutor for English speakers
+  ENGLISH_TUTOR: 'AOv9JDhkEdMmiU61vHg9', // English tutor for Spanish speakers
+  FRENCH_TUTOR: 'pNInz6obpgDQGcFmaJgB', // French tutor
+  GERMAN_TUTOR: 'eUnMwx9PYqpHXLtxYMHX', // German tutor
+  ITALIAN_TUTOR: 'kgG8CghCrnx3znzKdb4V', // Italian tutor
 };
 
-/**
- * Gets the appropriate agent ID based on the user's language
- */
-export const getAgentIdForLanguage = (language: string): string => {
-  const normalizedLanguage = language.toLowerCase();
+// Voice IDs for different languages
+export const VOICE_IDS = {
+  SPANISH_FEMALE: '29vD33N1CtxCmqQRPOHJ', // Spanish female voice
+  SPANISH_MALE: 'ZQe5CZNOzWyzPSCn5a3c', // Spanish male voice
+  ENGLISH_FEMALE: 'EXAVITQu4vr4xnSDxMaL', // English female voice
+  ENGLISH_MALE: 'pNInz6obpgDQGcFmaJgB', // English male voice
+  FRENCH_FEMALE: 'jBpfuIE2acCO8z3wKNLl', // French female voice
+  GERMAN_FEMALE: 'XB0fDUnXU5powFXDhCwa', // German female voice
+  ITALIAN_FEMALE: 'zcAOhNBS3c14rBihAFp1', // Italian female voice
+};
+
+// Get the appropriate agent ID based on target language
+export const getAgentIdForLanguage = (targetLanguage: string): string => {
+  const language = targetLanguage.toLowerCase();
   
-  if (LANGUAGE_TO_AGENT_ID[normalizedLanguage]) {
-    console.log(`[ElevenLabs] Using tutor for ${normalizedLanguage} speaker:`, LANGUAGE_TO_AGENT_ID[normalizedLanguage]);
-    return LANGUAGE_TO_AGENT_ID[normalizedLanguage];
+  switch (language) {
+    case 'spanish':
+      return AGENT_IDS.SPANISH_TUTOR;
+    case 'english':
+      return AGENT_IDS.ENGLISH_TUTOR;
+    case 'french':
+      return AGENT_IDS.FRENCH_TUTOR;
+    case 'german':
+      return AGENT_IDS.GERMAN_TUTOR;
+    case 'italian':
+      return AGENT_IDS.ITALIAN_TUTOR;
+    default:
+      console.warn(`No specific agent ID for language: ${targetLanguage}, using default`);
+      return ELEVEN_LABS_AGENT_ID;
+  }
+};
+
+// Get the appropriate voice ID based on target language and gender
+export const getVoiceIdForLanguage = (targetLanguage: string, gender: 'male' | 'female' = 'female'): string => {
+  const language = targetLanguage.toLowerCase();
+  
+  if (language === 'spanish') {
+    return gender === 'male' ? VOICE_IDS.SPANISH_MALE : VOICE_IDS.SPANISH_FEMALE;
+  } else if (language === 'english') {
+    return gender === 'male' ? VOICE_IDS.ENGLISH_MALE : VOICE_IDS.ENGLISH_FEMALE;
+  } else if (language === 'french') {
+    return VOICE_IDS.FRENCH_FEMALE;
+  } else if (language === 'german') {
+    return VOICE_IDS.GERMAN_FEMALE;
+  } else if (language === 'italian') {
+    return VOICE_IDS.ITALIAN_FEMALE;
   }
   
-  console.log("[ElevenLabs] Language not found, using default Spanish tutor for English speakers");
-  return SPANISH_TUTOR_AGENT_ID;
+  console.warn(`No specific voice ID for language: ${targetLanguage}, using default`);
+  return VOICE_IDS.SPANISH_FEMALE;
 };
 
-/**
- * Initializes an ElevenLabs conversation agent
- */
-export const initializeElevenLabsAgent = async (language: string = 'english', apiKey: string) => {
-  console.log(`[ElevenLabs] Initializing agent for ${language}`);
-  
-  // In a real implementation, this would be handled by the @11labs/react useConversation hook
-  // This is just a fallback for if the hook fails
-  return `conversation-${Date.now()}-${language}`;
+// Format conversation history for ElevenLabs API
+export const formatConversationHistory = (messages: any[]): any[] => {
+  return messages.map(msg => ({
+    role: msg.role === 'user' ? 'user' : 'assistant',
+    content: msg.content
+  }));
 };
 
-/**
- * Ends an active ElevenLabs conversation
- */
-export const endElevenLabsConversation = async (conversationId: string) => {
-  console.log(`[ElevenLabs] Ending conversation: ${conversationId}`);
-  return true;
-};
-
-/**
- * Hook for using ElevenLabs conversation in React components
- */
-export const useElevenLabsAgent = (language: string = 'english') => {
-  const { t } = useLocalization();
-  const { toast } = useToast();
-  
-  // Use the official ElevenLabs React hook
-  const conversation = useConversation({
-    onConnect: () => {
-      console.log('[ElevenLabs] Connection established');
-    },
-    onDisconnect: () => {
-      console.log('[ElevenLabs] Connection ended');
-    },
-    onMessage: (message) => {
-      console.log('[ElevenLabs] Message received:', message);
-    },
-    onError: (error) => {
-      console.error('[ElevenLabs] Error:', error);
-      toast({
-        title: t("error"),
-        description: t("networkConnectionIssue"),
-        variant: "destructive",
-      });
-    }
-  });
-  
-  // Helper to check if conversation is active
-  const isConversationActive = () => conversation.status === 'connected';
-  
-  const startAgent = async (apiKey: string) => {
-    try {
-      console.log(`[ElevenLabs] Starting agent for ${language}`);
-      
-      const agentId = getAgentIdForLanguage(language);
-      
-      // Start the conversation session with the appropriate agent ID
-      const conversationId = await conversation.startSession({
-        agentId: agentId
-      });
-      
-      console.log(`[ElevenLabs] Started conversation ${conversationId}`);
-      return conversationId;
-      
-    } catch (error) {
-      console.error('[ElevenLabs] Failed to start agent:', error);
-      toast({
-        title: t("error"),
-        description: t("failedToStartSession"),
-        variant: "destructive",
-      });
-      throw error;
-    }
-  };
-  
-  const stopAgent = async () => {
-    try {
-      console.log('[ElevenLabs] Stopping agent');
-      await conversation.endSession();
-      return true;
-    } catch (error) {
-      console.error('[ElevenLabs] Failed to stop agent:', error);
-      return false;
-    }
-  };
-  
+// Helper to create conversation parameters
+export const createConversationParams = (
+  targetLanguage: string,
+  initialPrompt?: string,
+  speechRate: number = 1.0
+) => {
   return {
-    startAgent,
-    stopAgent,
-    isConnected: conversation.status === 'connected',
-    isSpeaking: conversation.isSpeaking,
-    conversation
+    agentId: getAgentIdForLanguage(targetLanguage),
+    initialMessage: initialPrompt,
+    voiceSettings: {
+      stability: 0.5,
+      similarityBoost: 0.8,
+      style: 0.0,
+      speakerBoost: true,
+      speechRate: speechRate
+    }
   };
+};
+
+// Helper to check if browser supports speech synthesis
+export const isSpeechSynthesisSupported = (): boolean => {
+  return typeof window !== 'undefined' && 'speechSynthesis' in window;
+};
+
+// Helper to speak text using browser's speech synthesis
+export const speakText = (text: string, language: string, rate: number = 1.0): void => {
+  if (!isSpeechSynthesisSupported()) {
+    console.warn('Speech synthesis not supported in this browser');
+    return;
+  }
+  
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = getLanguageCode(language);
+  utterance.rate = rate;
+  
+  window.speechSynthesis.speak(utterance);
+};
+
+// Helper to get language code for speech synthesis
+export const getLanguageCode = (language: string): string => {
+  const languageCodes: Record<string, string> = {
+    'english': 'en-US',
+    'spanish': 'es-ES',
+    'french': 'fr-FR',
+    'german': 'de-DE',
+    'italian': 'it-IT',
+    'portuguese': 'pt-PT',
+    'russian': 'ru-RU',
+    'japanese': 'ja-JP',
+    'korean': 'ko-KR',
+    'chinese': 'zh-CN',
+    'arabic': 'ar-SA',
+    'hindi': 'hi-IN',
+    'turkish': 'tr-TR',
+    'dutch': 'nl-NL',
+    'polish': 'pl-PL',
+    'swedish': 'sv-SE',
+    'thai': 'th-TH',
+    'vietnamese': 'vi-VN'
+  };
+  
+  return languageCodes[language.toLowerCase()] || 'en-US';
 };

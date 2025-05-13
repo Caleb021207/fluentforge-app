@@ -30,7 +30,25 @@ const classroomTranslations: TranslationRecord = {
   slow: "Încet",
   normal: "Normal",
   fast: "Rapid",
-  veryFast: "Foarte rapid"
+  veryFast: "Foarte rapid",
+
+  // Language metrics translations
+  languageMetrics: "Metrici lingvistice",
+  grammarAccuracy: "Precizie gramaticală",
+  conversationComplexity: "Complexitate de conversație",
+  vocabularyDiversity: "Diversitate vocabular",
+  analyzeConversation: "Analizați conversația",
+  analyzing: "Se analizează...",
+  analyzingConversation: "Se analizează conversația...",
+  viewLanguageMetrics: "Vizualizați metricile lingvistice",
+  hideMetrics: "Ascundeți metricile",
+  noLanguageDataYet: "Nu există încă date de limbă",
+  basedOnMessagesCount: "Bazat pe {count} mesaje",
+  basedOnConversations: "Bazat pe {count} conversații",
+  yourProgress: "Progresul dvs.",
+  languageSkillsProgress: "Progresul abilităților lingvistice",
+  notEnoughMessages: "Mesaje insuficiente",
+  needMoreMessagesToAnalyze: "Aveți nevoie de cel puțin 4 mesaje pentru a analiza conversația",
 };
 
 export default classroomTranslations;

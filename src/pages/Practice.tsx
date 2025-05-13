@@ -14,7 +14,9 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
 import SpeechRateControl from "@/components/practice/SpeechRateControl";
-import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
+import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
+import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
+import type { TranslationType } from "@/components/practice/hooks/translation";
 
 // Create an interface that matches the Message structure from useChatMessages
 interface MessageWithTranslationType {
@@ -74,6 +76,15 @@ const Practice = () => {
     correctGrammar,
     toggleGrammarCorrection
   } = useChatMessages();
+  
+  // Add language metrics panel integration
+  const {
+    isExpanded,
+    togglePanel,
+    metrics,
+    isAnalyzing,
+    analyzeCurrentConversation
+  } = useLanguageMetricsPanel(messages);
   
   const {
     startVoiceConversation,
@@ -150,6 +161,15 @@ const Practice = () => {
         getPlaceholderText={getPlaceholderText}
         targetLanguage={targetLanguage}
         speechRate={speechRate}
+      />
+
+      {/* Add Language Metrics Panel */}
+      <LanguageMetricsPanel
+        metrics={metrics}
+        isLoading={isAnalyzing}
+        isExpanded={isExpanded}
+        onToggle={togglePanel}
+        onAnalyze={analyzeCurrentConversation}
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />
