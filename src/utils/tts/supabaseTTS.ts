@@ -26,7 +26,7 @@ export const playTTS = async ({
   }
 
   // For single word playback, we'll use a different cache key that includes the speech rate
-  const cacheKey = `${speech_rate_${speechRate}}:${text}`;
+  const cacheKey = `speech_rate_${speechRate}:${text}`;
   
   // Check for existing cached audio for this text, language, and speech rate
   const cachedAudio = ttsCache.get(cacheKey, language);
@@ -90,7 +90,7 @@ export const playTTS = async ({
 export const preloadTTS = async (text: string, language: string, isTargetLanguage = false, useMetaMms = false, speechRate = 1.0) => {
   if (!text || text.trim() === "") return;
 
-  const cacheKey = `${speech_rate_${speechRate}}:${text}`;
+  const cacheKey = `speech_rate_${speechRate}:${text}`;
   if (ttsCache.has(cacheKey, language)) {
     console.log("Audio already preloaded for", language, text.substring(0, 40) + "...");
     return;
