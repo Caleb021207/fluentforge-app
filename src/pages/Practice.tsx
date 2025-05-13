@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
@@ -19,7 +18,7 @@ import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguage
 import LocalizationDebug from "@/components/practice/LocalizationDebug";
 
 // For development use - set to false in production
-const SHOW_DEBUG_PANEL = true;
+const SHOW_DEBUG_PANEL = false;
 
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
@@ -166,7 +165,7 @@ const Practice = () => {
 
       <PracticeGuide targetLanguage={targetLanguage} />
       
-      {/* Display debug panel in development */}
+      {/* Display debug panel only in development */}
       {SHOW_DEBUG_PANEL && (
         <LocalizationDebug />
       )}

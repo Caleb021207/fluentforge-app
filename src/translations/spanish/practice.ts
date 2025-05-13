@@ -33,15 +33,42 @@ const practiceTranslations: TranslationRecord = {
   practicePrompt: "¡Hola! Me gustaría practicar conversación en {{targetLanguage}}. Por favor, ayúdame corrigiendo mi gramática, vocabulario y uso del {{targetLanguage}}. ¿Podemos empezar con una conversación básica?",
   chatPlaceholder: "Escribe tu mensaje para practicar {{targetLanguage}}...",
   
-  // Practice guide translations - adding these to fix the placeholders
+  // Practice guide translations - fixing the placeholders
   practiceGuide: "Guía de práctica para {{language}}",
-  practiceDescription: "Practica inglés en el chat de texto con el tutor de IA. El tutor te ayudará a corregir tu gramática, vocabulario y uso. Puedes hacer preguntas sobre el idioma o la cultura.",
+  practiceDescription: "Aquí hay algunos consejos para aprovechar al máximo tu práctica de {{language}}:",
   practiceGuideDescription: "Aquí hay algunos consejos para aprovechar al máximo tu práctica de {{language}}:",
   practiceTip1: "Intenta formar oraciones completas, incluso si son sencillas.",
   practiceTip2: "No te preocupes por los errores, son parte del proceso de aprendizaje.",
   practiceTip3: "Pide aclaraciones si no entiendes algo.",
   practiceTip4: "Intenta usar el vocabulario que has aprendido recientemente.",
-  practiceTip5: "Practica con frecuencia para mejorar tu fluidez."
+  practiceTip5: "Practica con frecuencia para mejorar tu fluidez.",
+  
+  // Language metrics panel translations
+  languageMetrics: "Métricas de Lenguaje",
+  hideMetrics: "Ocultar Métricas",
+  noLanguageDataYet: "Aún no hay datos de lenguaje",
+  analyzeConversation: "Analizar Conversación",
+  
+  // Grammar correction toggle
+  correctGrammar: "Corregir mi gramática",
+  grammarCorrectionEnabled: "Corrección gramatical habilitada",
+  grammarCorrectionDisabled: "Corrección gramatical deshabilitada",
+  tutor: {
+    willCorrectGrammar: "El tutor ahora corregirá suavemente tu gramática.",
+    wontCorrectGrammar: "El tutor se centrará en el flujo de la conversación sin correcciones gramaticales."
+  },
+  
+  // Speech rate translations
+  speechRate: "Velocidad de Habla",
+  verySlow: "Muy lento",
+  slow: "Lento",
+  normal: "Normal",
+  fast: "Rápido",
+  veryFast: "Muy rápido",
+  
+  // Clear conversation
+  clearConversation: "Limpiar Conversación",
+  conversationCleared: "Conversación limpiada"
 };
 
 export default practiceTranslations;
