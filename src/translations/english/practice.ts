@@ -7,7 +7,7 @@ const practiceTranslations: TranslationRecord = {
   typeMessageBelow: "Type a message below to start the conversation",
   practiceWithAI: "Practice with AI",
   noticeTextBasedPractice: "This is text-based practice. The tutor will help improve your writing and grammar in real-time.",
-  chatWithAITutor: "Chat with our AI tutor to practice your language skills through text conversations! The AI will help correct your grammar, vocabulary, and usage.",
+  chatWithAITutor: "Chat with our AI tutor to practice your language skills through text conversations. The AI will help correct your grammar, vocabulary, and usage.",
   isTyping: "is typing...",
   responseIsNotAvailableAtTheMoment: "Response is not available at the moment",
   responseContainsInappropriateContent: "Response contains inappropriate content",

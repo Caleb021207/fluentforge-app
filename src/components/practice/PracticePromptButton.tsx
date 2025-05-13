@@ -1,48 +1,40 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Loader2 } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 interface PracticePromptButtonProps {
   onClick: () => void;
   isLoading: boolean;
-  targetLanguage?: string;
-  disabled?: boolean;
+  targetLanguage: string;
 }
 
-const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({ 
-  onClick, 
+const PracticePromptButton = ({
+  onClick,
   isLoading,
-  targetLanguage = "spanish",
-  disabled = false
-}) => {
-  const { t, currentLanguage } = useLocalization();
+  targetLanguage
+}: PracticePromptButtonProps) => {
+  const { t } = useLocalization();
   
-  // Determine which language is being practiced
-  const displayLanguage = currentLanguage === "english" 
-    ? getLanguageDisplayName(targetLanguage)
-    : "English";
-  
-  const buttonText = t("startConversationIn").replace("{{language}}", displayLanguage);
+  // Language display name with proper capitalization
+  const displayLanguage = targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1);
   
   return (
-    <div className="flex justify-center mb-8">
-      <Button
-        onClick={onClick}
-        disabled={isLoading || disabled}
-        className="gap-2"
-        size="lg"
-        variant="success"
+    <div className="mt-8 text-center">
+      <Button 
+        onClick={onClick} 
+        disabled={isLoading} 
+        size="lg" 
+        className="bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600"
       >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <MessageSquare className="h-4 w-4" />
-        )}
-        {buttonText}
+        <Sparkles className="mr-2 h-4 w-4" />
+        {t("startConversationIn", { language: displayLanguage })}
       </Button>
+      
+      <p className="mt-4 text-muted-foreground">
+        {t("noticeTextBasedPractice")}
+      </p>
     </div>
   );
 };

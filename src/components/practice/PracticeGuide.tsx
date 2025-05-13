@@ -1,8 +1,8 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Book, Check, CircleHelp, MessageCircle, Pencil } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 interface PracticeGuideProps {
   targetLanguage: string;
@@ -11,26 +11,42 @@ interface PracticeGuideProps {
 const PracticeGuide = ({ targetLanguage }: PracticeGuideProps) => {
   const { t } = useLocalization();
   
-  // Get the proper display name for the target language
-  const displayLanguage = getLanguageDisplayName(targetLanguage);
+  // Language display name with proper capitalization
+  const displayLanguage = targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1);
   
   return (
-    <Card className="mt-8 bg-muted/40">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base">
-          {t("practiceGuide").replace("{{language}}", displayLanguage)}
+    <Card className="mt-6">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Book className="h-5 w-5 text-primary" />
+          {t("practiceGuide", { language: displayLanguage })}
         </CardTitle>
+        <CardDescription>
+          {t("practiceGuideDescription", { language: displayLanguage })}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground mb-2">
-          {t("practiceGuideDescription").replace("{{language}}", displayLanguage)}
-        </p>
-        <ul className="text-sm space-y-1 list-disc pl-5">
-          <li>{t("practiceTip1")}</li>
-          <li>{t("practiceTip2")}</li>
-          <li>{t("practiceTip3")}</li>
-          <li>{t("practiceTip4")}</li>
-          <li>{t("practiceTip5")}</li>
+        <ul className="space-y-3">
+          <li className="flex items-start gap-2">
+            <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+            <span>{t("practiceTip1")}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+            <span>{t("practiceTip2")}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CircleHelp className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+            <span>{t("practiceTip3")}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <Pencil className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
+            <span>{t("practiceTip4")}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <MessageCircle className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
+            <span>{t("practiceTip5")}</span>
+          </li>
         </ul>
       </CardContent>
     </Card>

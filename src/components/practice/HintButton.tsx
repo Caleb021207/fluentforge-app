@@ -1,217 +1,48 @@
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { HelpCircle, Volume2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Lightbulb } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { playTTS } from "@/utils/tts";
-import { supabase } from "@/integrations/supabase/client";
-import type { Message } from "@/types/chat";
-import { Separator } from "@/components/ui/separator";
-import { SuggestionCategory } from "./hooks/translation/types";
-import { getLanguageDisplayName } from "@/utils/languageUtils";
+import { Message } from "@/types/chat";
 
-interface HintButtonProps {
-  targetLanguage: string;
+export interface HintButtonProps {
   messages: Message[];
-  className?: string;
-  hints?: any; // Added for backward compatibility
+  targetLanguage: string;
 }
 
-export default function HintButton({ 
-  targetLanguage, 
-  messages, 
-  className,
-  hints: preloadedHints // Not used directly but kept for compatibility
-}: HintButtonProps) {
-  const [open, setOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState<string | null>(null);
-  const [hints, setHints] = useState<SuggestionCategory[]>([]);
+const HintButton = ({ messages, targetLanguage }: HintButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useLocalization();
   
-  const { t, currentLanguage } = useLocalization();
-  const { toast } = useToast();
-  
-  const fetchSuggestions = async () => {
-    if (messages.length === 0) return;
-    
+  // This is a placeholder for hint generation functionality
+  // In a real implementation, this would call an API to get hints
+  const handleGetHints = () => {
     setIsLoading(true);
-    try {
-      // Get the last few messages from the conversation (max 5)
-      const recentMessages = messages.slice(-5);
-      
-      console.log("Fetching hints with params:", {
-        targetLanguage,
-        userLanguage: currentLanguage || 'english',
-        messageCount: recentMessages.length
-      });
-      
-      const { data, error } = await supabase.functions.invoke("chat-with-tutor", {
-        body: {
-          conversationHistory: recentMessages,
-          requestType: 'hint',
-          targetLanguage,
-          userLanguage: currentLanguage || 'english', // Use current UI language
-        }
-      });
-      
-      if (error) {
-        console.error("Error fetching hints:", error);
-        throw error;
-      }
-      
-      console.log("Hint response:", data);
-      
-      // Updated structure handling - check if suggestions are in data.categories or data.suggestions
-      if (data?.categories && Array.isArray(data.categories)) {
-        setHints(data.categories);
-      } else if (data?.suggestions && Array.isArray(data.suggestions)) {
-        setHints(data.suggestions);
-      } else {
-        // Fallback hints if the API doesn't return suggestions in the expected format
-        setHints([
-          {
-            title: t("greetings") || "Greetings",
-            suggestions: ["Hola, ¿cómo estás?", "Buenos días", "Encantado de conocerte"]
-          },
-          {
-            title: t("questions") || "Questions",
-            suggestions: ["¿Qué te gusta hacer?", "¿De dónde eres?", "¿Cuál es tu comida favorita?"]
-          }
-        ]);
-      }
-    } catch (err) {
-      console.error("Error fetching hints:", err);
-      toast({
-        title: t("error") || "Error",
-        description: t("couldNotGenerateHints") || "Could not generate hints",
-        variant: "destructive",
-      });
-      
-      // Set fallback hints on error
-      setHints([
-        {
-          title: t("greetings") || "Greetings",
-          suggestions: ["Hola, ¿cómo estás?", "Buenos días", "Encantado de conocerte"]
-        },
-        {
-          title: t("questions") || "Questions",
-          suggestions: ["¿Qué te gusta hacer?", "¿De dónde eres?", "¿Cuál es tu comida favorita?"]
-        }
-      ]);
-    } finally {
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      // Here we would set hints based on API response
+    }, 1000);
   };
-  
-  const playHintAudio = (text: string) => {
-    if (isPlaying) return; // Prevent multiple audio plays at once
-    
-    setIsPlaying(text);
-    
-    playTTS({
-      text,
-      language: targetLanguage.toLowerCase(),
-      isTargetLanguage: true,
-      useMetaMms: false,
-      onStart: () => setIsPlaying(text),
-      onEnd: () => setIsPlaying(null),
-      onError: (err) => {
-        console.error("TTS error:", err);
-        setIsPlaying(null);
-        toast({
-          title: t("error") || "Error",
-          description: t("failedToPlayAudio") || "Failed to play audio",
-          variant: "destructive",
-        });
-      }
-    });
-  };
-  
-  // Get translated text, ensuring we don't show placeholder variables
-  const getTranslatedText = (key: string) => {
-    const translated = t(key);
-    return translated || key;
-  };
-  
-  const responseSuggestionsText = getTranslatedText("responseSuggestions");
-  const clickPlayText = getTranslatedText("clickPlayToHearPronunciation");
-  const startConversationText = getTranslatedText("startConversationForSuggestions");
-  const getResponseSuggestionsText = getTranslatedText("getResponseSuggestions");
-  const playText = getTranslatedText("play");
   
   return (
-    <Popover open={open} onOpenChange={(isOpen) => {
-      setOpen(isOpen);
-      if (isOpen) {
-        fetchSuggestions();
-      }
-    }}>
-      <PopoverTrigger asChild>
+    <div className="mb-2">
+      {messages.length > 0 ? (
         <Button 
           variant="outline" 
-          size="icon"
-          className={className}
-          title={getTranslatedText("getResponseSuggestions")}
+          size="sm"
+          className="text-xs"
+          onClick={handleGetHints}
+          disabled={isLoading || messages.length === 0}
         >
-          <HelpCircle className="h-4 w-4" />
+          <Lightbulb className="h-3 w-3 mr-1" />
+          {t("suggestedResponses")}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent 
-        className="w-80 p-0" 
-        align="end" 
-        alignOffset={-40}
-        sideOffset={8}
-      >
-        <div className="p-4 bg-muted/30 border-b">
-          <h4 className="font-medium text-sm">{responseSuggestionsText}</h4>
-          <p className="text-xs text-muted-foreground mt-1">
-            {clickPlayText}
-          </p>
-        </div>
-        
-        <div className="p-2 max-h-[300px] overflow-y-auto">
-          {isLoading ? (
-            <div className="flex items-center justify-center p-4">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-            </div>
-          ) : hints.length === 0 ? (
-            <div className="p-4 text-sm text-muted-foreground text-center">
-              {startConversationText}
-            </div>
-          ) : (
-            hints.map((category, idx) => (
-              <div key={idx} className="mb-4">
-                <h5 className="text-xs font-medium text-muted-foreground px-2 mb-1">
-                  {category.title}
-                </h5>
-                <div className="space-y-1">
-                  {category.suggestions.map((suggestion, i) => (
-                    <div 
-                      key={i}
-                      className="flex items-center justify-between p-2 text-sm rounded-md hover:bg-muted"
-                    >
-                      <span className="flex-1 mr-2">{suggestion}</span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className={`h-8 w-8 p-0 ${isPlaying === suggestion ? 'text-primary' : ''}`}
-                        disabled={isPlaying !== null}
-                        onClick={() => playHintAudio(suggestion)}
-                      >
-                        <Volume2 className="h-4 w-4" />
-                        <span className="sr-only">{playText}</span>
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-                {idx < hints.length - 1 && <Separator className="my-2" />}
-              </div>
-            ))
-          )}
-        </div>
-      </PopoverContent>
-    </Popover>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          {t("startConversationToSeeSuggestions")}
+        </p>
+      )}
+    </div>
   );
-}
+};
+
+export default HintButton;

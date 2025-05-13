@@ -79,7 +79,6 @@ const Practice = () => {
               <ChatContainer
                 messages={messages}
                 isLoading={isGenerating}
-                error={error}
               />
               {isGenerating && <LoadingIndicator />}
               <div ref={bottomRef} />
@@ -100,7 +99,7 @@ const Practice = () => {
                     textArea.value = '';
                   }
                 }}
-                isDisabled={isGenerating}
+                disabled={isGenerating}
               />
             </div>
           </div>

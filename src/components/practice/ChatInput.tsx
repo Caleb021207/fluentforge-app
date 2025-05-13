@@ -1,96 +1,46 @@
 
-import React, { useState, useRef, KeyboardEvent, FormEvent, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import HintButton from "./HintButton";
-import type { Message } from "@/types/chat";
 
 interface ChatInputProps {
-  value?: string;
-  onChange?: (value: string) => void;
-  onSubmit: (e: FormEvent) => void;
-  isLoading?: boolean;
-  isDisabled?: boolean; // Added for backwards compatibility
-  placeholder?: string;
-  messages?: Message[];
-  targetLanguage?: string;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  disabled?: boolean;
 }
 
-export default function ChatInput({
-  value = "",
-  onChange = () => {},
-  onSubmit,
-  isLoading = false,
-  isDisabled = false, // Support both properties
-  placeholder = "Type your message...",
-  messages = [],
-  targetLanguage = "spanish"
-}: ChatInputProps) {
+const ChatInput = ({ onSubmit, disabled }: ChatInputProps) => {
+  const [inputValue, setInputValue] = useState("");
   const { t } = useLocalization();
-  const [rows, setRows] = useState(1);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   
-  useEffect(() => {
-    // Reset rows when value is empty
-    if (!value) {
-      setRows(1);
-    }
-  }, [value]);
-
-  // Handle textarea height adjustment
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = e.target;
-    onChange(textarea.value);
-    
-    // Adjust rows based on content
-    const lineCount = textarea.value.split('\n').length;
-    const newRows = Math.min(5, Math.max(1, lineCount));
-    setRows(newRows);
-  };
-  
-  // Handle keyboard shortcuts
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    // Submit on Enter (without Shift)
-    if (e.key === "Enter" && !e.shiftKey && !isLoading && !isDisabled) {
-      e.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
       onSubmit(e);
+      setInputValue("");
     }
   };
-  
-  // Determine if the button should be disabled
-  const buttonDisabled = isLoading || isDisabled || value.trim().length === 0;
   
   return (
-    <form onSubmit={onSubmit} className="relative">
-      <div className="relative">
-        <Textarea
-          ref={textareaRef}
-          value={value}
-          onChange={handleTextareaChange}
-          onKeyDown={handleKeyDown}
-          rows={rows}
-          placeholder={placeholder}
-          className="pr-24 resize-none py-3 min-h-[50px]"
-          disabled={isLoading || isDisabled}
+    <form onSubmit={handleSubmit} className="mt-2">
+      <div className="relative flex items-center">
+        <textarea
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pr-12"
+          placeholder={t("typeMessage")}
+          rows={1}
+          disabled={disabled}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
         />
-        <div className="absolute right-2 bottom-1.5 flex space-x-2">
-          <HintButton 
-            targetLanguage={targetLanguage}
-            messages={messages}
-          />
-          <Button 
-            size="sm" 
-            type="submit" 
-            disabled={buttonDisabled}
-            className="h-8 w-8 p-0"
-          >
-            <Send className="h-4 w-4" />
-            <span className="sr-only">{t("send")}</span>
-          </Button>
-        </div>
+        <button 
+          type="submit" 
+          className="absolute right-2 h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!inputValue.trim() || disabled}
+        >
+          <Send className="h-4 w-4" />
+        </button>
       </div>
     </form>
   );
-}
+};
+
+export default ChatInput;
