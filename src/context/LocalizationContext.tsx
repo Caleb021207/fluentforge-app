@@ -27,6 +27,9 @@ const isClassroomRoute = (path: string): boolean => {
          path.includes("/student/class");
 };
 
+// Debug mode flag - set to true during development to see missing translations
+const DEBUG_TRANSLATIONS = true;
+
 // Provider component
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
@@ -55,9 +58,11 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     }
     
     // Debug - log available translations
-    console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
-    console.log("Available translations:", Object.keys(translations));
-    console.log("Current language set to:", currentLanguage);
+    if (DEBUG_TRANSLATIONS) {
+      console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
+      console.log("Available translations:", Object.keys(translations));
+      console.log("Current language set to:", currentLanguage);
+    }
   }, []);
 
   // Helper function to safely get a string value from a potentially nested structure
@@ -83,7 +88,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Check if translations exist
       if (!translations) {
-        console.error("No translations available");
+        if (DEBUG_TRANSLATIONS) console.error("No translations available");
         return key;
       }
       
@@ -92,21 +97,23 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       const languageToUse = isClassroom ? DEFAULT_LANGUAGE : currentLanguage;
       
       // Debug logging for translation issues
-      console.debug(`[Translation] Looking up key "${key}" in language "${languageToUse}"`);
+      if (DEBUG_TRANSLATIONS) {
+        console.debug(`[Translation] Looking up key "${key}" in language "${languageToUse}"`);
+      }
       
       // Check if selected language exists
       const selectedTranslations = translations[languageToUse];
       const defaultTranslations = translations[DEFAULT_LANGUAGE];
       
       if (!selectedTranslations) {
-        console.error(`No translations for language: ${languageToUse}`);
+        if (DEBUG_TRANSLATIONS) console.error(`No translations for language: ${languageToUse}`);
         return String(defaultTranslations?.[key]) || key;
       }
       
       // Get translation for selected language or fallback to default
       let translationValue: string = "";
       
-      // Handle nested objects in translations (e.g., suggestedTopics.introductions)
+      // Handle nested objects in translations (e.g., tutor.willCorrectGrammar)
       if (key.includes('.')) {
         const [parentKey, childKey] = key.split('.');
         const parentObject = selectedTranslations[parentKey];
@@ -120,13 +127,15 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         const value = selectedTranslations[key];
         // Ensure we return a string
         translationValue = typeof value === 'string' ? value : 
-                           (value !== undefined ? String(value) : "");
+                          (value !== undefined ? String(value) : "");
       }
       
       // Fallback to default language if not found or not a string
       if (translationValue === "" && defaultTranslations) {
         // Debug logging for missing translations
-        console.debug(`[Translation] Key "${key}" not found in "${languageToUse}", trying default language`);
+        if (DEBUG_TRANSLATIONS) {
+          console.debug(`[Translation] Key "${key}" not found in "${languageToUse}", trying default language`);
+        }
         
         // Try to get from default translations
         if (key.includes('.')) {
@@ -142,12 +151,12 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
           const value = defaultTranslations[key];
           // Ensure we return a string
           translationValue = typeof value === 'string' ? value : 
-                             (value !== undefined ? String(value) : key);
+                            (value !== undefined ? String(value) : key);
         }
         
         if (translationValue !== key) {
           // Only log each missing key once per session
-          if (!missingKeys.has(key)) {
+          if (!missingKeys.has(key) && DEBUG_TRANSLATIONS) {
             console.warn(`[Translation] Missing translation for key "${key}" in language "${languageToUse}"`);
             setMissingKeys(prev => new Set([...prev, key]));
           }
@@ -156,7 +165,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       // If translation is missing in both languages, return the key
       if (translationValue === "") {
-        if (!missingKeys.has(key)) {
+        if (!missingKeys.has(key) && DEBUG_TRANSLATIONS) {
           console.error(`[Translation] Key "${key}" not found in any language`);
           setMissingKeys(prev => new Set([...prev, key]));
         }
@@ -180,7 +189,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       return translationValue;
     } catch (error) {
-      console.error("[Translation] Error:", error);
+      if (DEBUG_TRANSLATIONS) console.error("[Translation] Error:", error);
       return key; // Return the key as fallback
     }
   };

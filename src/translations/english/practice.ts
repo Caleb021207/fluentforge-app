@@ -55,7 +55,23 @@ const practiceTranslations: TranslationRecord = {
   "clickPlayToHearPronunciation": "Click play to hear pronunciation",
   "startConversationForSuggestions": "Start a conversation to see suggestions",
   "getResponseSuggestions": "Get Response Suggestions",
-  "play": "Play"
+  "play": "Play",
+  
+  // Practice Guide Description
+  "practiceGuideDescription": "Tips for practicing your {language} effectively:",
+  
+  // Speech rate translations
+  "speechRate": "Speech Rate",
+  "verySlow": "Very slow",
+  "slow": "Slow",
+  "normal": "Normal",
+  "fast": "Fast",
+  "veryFast": "Very fast",
+  
+  // Additional keys for comprehensiveness
+  "practicePrompt": "Hello! I would like to practice conversational {{targetLanguage}}. Please help me correct my grammar, vocabulary, and {{targetLanguage}} usage. Can we start with a basic conversation?",
+  "couldNotGenerateHints": "Could not generate hints. Please try again later.",
+  "failedToPlayAudio": "Failed to play audio"
 };
 
 export default practiceTranslations;

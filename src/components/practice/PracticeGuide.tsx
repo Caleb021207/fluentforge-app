@@ -27,14 +27,15 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
           className="text-xl font-semibold mb-4 text-foreground"
           variants={slideInRight}
         >
-          {t("practiceGuide", { language: learningLanguage })}
+          {t("practiceGuide") || "Practice Guide"}
         </motion.h2>
         
         <motion.p 
           className="mb-4 text-foreground"
           variants={slideInRight}
         >
-          {t("practiceGuideDescription", { language: learningLanguage })}
+          {t("practiceGuideDescription", { language: learningLanguage }) || 
+           `Tips for practicing your ${learningLanguage} effectively:`}
         </motion.p>
         
         <motion.ul 
@@ -42,11 +43,11 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
           variants={staggeredContainer(0.05)}
         >
           {[
-            t("practiceTip1"),
-            t("practiceTip2"),
-            t("practiceTip3"),
-            t("practiceTip4"),
-            t("practiceTip5")
+            t("practiceTip1") || "Try to form complete sentences, even if they're simple.",
+            t("practiceTip2") || "Don't worry about mistakes — they're part of learning!",
+            t("practiceTip3") || "Ask for explanations if there's something you don't understand.",
+            t("practiceTip4") || "Use words you've recently learned.",
+            t("practiceTip5") || "Our AI will adapt to your skill level and gradually help you improve."
           ].map((tip, index) => (
             <motion.li 
               key={index} 

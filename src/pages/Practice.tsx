@@ -16,6 +16,10 @@ import { Trash } from "lucide-react";
 import SpeechRateControl from "@/components/practice/SpeechRateControl";
 import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
 import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
+import LocalizationDebug from "@/components/practice/LocalizationDebug";
+
+// For development use - set to false in production
+const SHOW_DEBUG_PANEL = true;
 
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
@@ -161,6 +165,11 @@ const Practice = () => {
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />
+      
+      {/* Display debug panel in development */}
+      {SHOW_DEBUG_PANEL && (
+        <LocalizationDebug />
+      )}
     </div>
   );
 };
