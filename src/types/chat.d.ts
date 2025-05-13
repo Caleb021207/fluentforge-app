@@ -1,13 +1,13 @@
 
 export type Role = 'user' | 'assistant' | 'system';
 
+import { TranslationType } from "../components/practice/hooks/translation/types";
+
 export interface Message {
   role: Role;
   content: string;
-  translation?: TranslationType | string;
+  translation?: TranslationType;
 }
-
-export type TranslationType = string | null | undefined;
 
 export interface SuggestionCategory {
   title: string;

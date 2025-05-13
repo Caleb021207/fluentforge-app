@@ -5,7 +5,7 @@ export type MessageRole = 'user' | 'assistant' | 'system';
 export interface Message {
   role: MessageRole;
   content: string;
-  translation?: string | object;
+  translation?: TranslationType;
   timestamp?: Date;
 }
 
@@ -13,7 +13,7 @@ export interface Message {
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
-  translation?: string | object;
+  translation?: TranslationType;
   timestamp?: Date;
 }
 
@@ -42,8 +42,9 @@ export interface ConversationHint {
   loading: boolean;
 }
 
-// Define TranslationType to fix the type errors
-export type TranslationType = string | { [key: string]: any };
+// Import the TranslationType from the hooks to maintain consistency
+import { TranslationType } from "../components/practice/hooks/translation";
+export { TranslationType };
 
 // Add the missing LanguageMetrics interface
 export interface LanguageMetrics {

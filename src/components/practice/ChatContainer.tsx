@@ -5,6 +5,7 @@ import ChatInput from "./ChatInput";
 import LoadingIndicator from "./LoadingIndicator";
 import EmptyChatState from "./EmptyChatState";
 import { Message } from "@/types/chat";
+import { TranslationType } from "@/components/practice/hooks/translation";
 
 interface ChatContainerProps {
   messages: Message[];
@@ -37,7 +38,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             key={index}
             role={message.role === 'system' ? 'assistant' : message.role}
             content={message.content}
-            translation={message.translation}
+            translation={message.translation as TranslationType}
             speechRate={speechRate}
           />
         ))}
