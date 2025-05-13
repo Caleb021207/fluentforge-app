@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 import generalTranslations from "./general";
 import languageSelectionTranslations from "./language-selection";
@@ -12,8 +11,8 @@ import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 
-// Combine all the translation categories
-const spanishTranslations: TranslationRecord = {
+// Add speech rate control translations if they don't exist
+export default {
   ...generalTranslations,
   ...languageSelectionTranslations,
   ...practiceTranslations,
@@ -25,6 +24,12 @@ const spanishTranslations: TranslationRecord = {
   ...languageFrameworksTranslations,
   ...authTranslations,
   ...languagesTranslations,
+  
+  // Speech rate translations
+  speechRate: "Velocidad de habla",
+  verySlow: "Muy lento",
+  slow: "Lento",
+  normal: "Normal",
+  fast: "Rápido",
+  veryFast: "Muy rápido",
 };
-
-export default spanishTranslations;
