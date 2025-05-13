@@ -44,3 +44,11 @@ export interface ConversationHint {
 
 // Define TranslationType to fix the type errors
 export type TranslationType = string | { [key: string]: any };
+
+// Add the missing LanguageMetrics interface
+export interface LanguageMetrics {
+  grammarAccuracy: number;
+  conversationComplexity: number;
+  messageCount: number;
+  vocabularyDiversity?: number;
+}

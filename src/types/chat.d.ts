@@ -21,6 +21,7 @@ export interface MessageCount {
   outputs: number;
 }
 
+// Export the LanguageMetrics interface here too to ensure backward compatibility
 export interface LanguageMetrics {
   grammarAccuracy: number;
   conversationComplexity: number;
