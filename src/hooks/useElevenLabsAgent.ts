@@ -1,5 +1,6 @@
+
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getAgentIdForLanguage, getVoiceIdForLanguage, formatConversationHistory } from "@/utils/elevenLabsUtils";
+import { getAgentIdForLanguage, getVoiceIdForLanguage } from "@/utils/elevenLabsUtils";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 

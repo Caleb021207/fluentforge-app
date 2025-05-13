@@ -2,7 +2,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { ELEVEN_LABS_AGENT_ID } from "@/utils/constants";
 import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
-import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { useElevenLabsAgent } from "@/hooks/useElevenLabsAgent";
 
 /**
@@ -45,8 +44,16 @@ export const getVoiceIdForLanguage = (language: string): string => {
   return voiceMap[language?.toLowerCase()] || voiceMap["english"];
 };
 
+/**
+ * Formats conversation history for the ElevenLabs agent
+ */
+export const formatConversationHistory = (messages: Array<{role: string, content: string}>): string => {
+  return messages.map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n');
+};
+
 export default {
   getAgentIdForLanguage,
   formatMessageForAgent,
-  getVoiceIdForLanguage
+  getVoiceIdForLanguage,
+  formatConversationHistory
 };
