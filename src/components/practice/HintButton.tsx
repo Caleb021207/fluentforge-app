@@ -64,11 +64,11 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
         // Fallback hints if the API doesn't return suggestions in the expected format
         setHints([
           {
-            title: t("greetings"),
+            title: t("greetings") || "Greetings",
             suggestions: ["Hola, ¿cómo estás?", "Buenos días", "Encantado de conocerte"]
           },
           {
-            title: t("questions"),
+            title: t("questions") || "Questions",
             suggestions: ["¿Qué te gusta hacer?", "¿De dónde eres?", "¿Cuál es tu comida favorita?"]
           }
         ]);
@@ -76,19 +76,19 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
     } catch (err) {
       console.error("Error fetching hints:", err);
       toast({
-        title: t("error"),
-        description: t("couldNotGenerateHints"),
+        title: t("error") || "Error",
+        description: t("couldNotGenerateHints") || "Could not generate hints",
         variant: "destructive",
       });
       
       // Set fallback hints on error
       setHints([
         {
-          title: t("greetings"),
+          title: t("greetings") || "Greetings",
           suggestions: ["Hola, ¿cómo estás?", "Buenos días", "Encantado de conocerte"]
         },
         {
-          title: t("questions"),
+          title: t("questions") || "Questions",
           suggestions: ["¿Qué te gusta hacer?", "¿De dónde eres?", "¿Cuál es tu comida favorita?"]
         }
       ]);
@@ -113,8 +113,8 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
         console.error("TTS error:", err);
         setIsPlaying(null);
         toast({
-          title: t("error"),
-          description: t("failedToPlayAudio"),
+          title: t("error") || "Error",
+          description: t("failedToPlayAudio") || "Failed to play audio",
           variant: "destructive",
         });
       }
@@ -133,7 +133,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
           variant="outline" 
           size="icon"
           className={className}
-          title={t("getResponseSuggestions")}
+          title={t("getResponseSuggestions") || "Get Response Suggestions"}
         >
           <HelpCircle className="h-4 w-4" />
         </Button>
@@ -145,9 +145,9 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
         sideOffset={8}
       >
         <div className="p-4 bg-muted/30 border-b">
-          <h4 className="font-medium text-sm">{t("responseSuggestions")}</h4>
+          <h4 className="font-medium text-sm">{t("responseSuggestions") || "Response Suggestions"}</h4>
           <p className="text-xs text-muted-foreground mt-1">
-            {t("clickPlayToHearPronunciation")}
+            {t("clickPlayToHearPronunciation") || "Click play to hear pronunciation"}
           </p>
         </div>
         
@@ -158,7 +158,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
             </div>
           ) : hints.length === 0 ? (
             <div className="p-4 text-sm text-muted-foreground text-center">
-              {t("startConversationForSuggestions")}
+              {t("startConversationForSuggestions") || "Start a conversation to see suggestions"}
             </div>
           ) : (
             hints.map((category, idx) => (
@@ -181,7 +181,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
                         onClick={() => playHintAudio(suggestion)}
                       >
                         <Volume2 className="h-4 w-4" />
-                        <span className="sr-only">{t("play")}</span>
+                        <span className="sr-only">{t("play") || "Play"}</span>
                       </Button>
                     </div>
                   ))}

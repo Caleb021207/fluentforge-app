@@ -48,7 +48,14 @@ const practiceTranslations: TranslationRecord = {
   "conversationCleared": "Conversation cleared",
   
   // Clear conversation translations
-  "clearConversation": "Clear conversation"
+  "clearConversation": "Clear conversation",
+  
+  // Response suggestions related keys
+  "responseSuggestions": "Response Suggestions",
+  "clickPlayToHearPronunciation": "Click play to hear pronunciation",
+  "startConversationForSuggestions": "Start a conversation to see suggestions",
+  "getResponseSuggestions": "Get Response Suggestions",
+  "play": "Play"
 };
 
 export default practiceTranslations;
