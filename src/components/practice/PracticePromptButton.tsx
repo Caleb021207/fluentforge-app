@@ -25,6 +25,8 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
     ? getLanguageDisplayName(targetLanguage)
     : "English";
   
+  const buttonText = t("startConversationIn").replace("{{language}}", displayLanguage);
+  
   return (
     <div className="flex justify-center mb-8">
       <Button
@@ -39,7 +41,7 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
         ) : (
           <MessageSquare className="h-4 w-4" />
         )}
-        {t("startConversationIn", { language: displayLanguage })}
+        {buttonText}
       </Button>
     </div>
   );

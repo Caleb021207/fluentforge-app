@@ -18,12 +18,12 @@ const PracticeGuide = ({ targetLanguage }: PracticeGuideProps) => {
     <Card className="mt-8 bg-muted/40">
       <CardHeader className="pb-2">
         <CardTitle className="text-base">
-          {t("practiceGuide", { language: displayLanguage })}
+          {t("practiceGuide").replace("{{language}}", displayLanguage)}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-2">
-          {t("practiceGuideDescription", { language: displayLanguage })}
+          {t("practiceGuideDescription").replace("{{language}}", displayLanguage)}
         </p>
         <ul className="text-sm space-y-1 list-disc pl-5">
           <li>{t("practiceTip1")}</li>

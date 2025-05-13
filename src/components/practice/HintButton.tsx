@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Message } from "@/types/chat";
 import { Separator } from "@/components/ui/separator";
 import { SuggestionCategory } from "./hooks/translation/types";
+import { getLanguageDisplayName } from "@/utils/languageUtils";
 
 interface HintButtonProps {
   targetLanguage: string;
@@ -122,11 +123,17 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
     });
   };
   
-  const responseSuggestionsText = t("responseSuggestions") || "Response Suggestions";
-  const clickPlayText = t("clickPlayToHearPronunciation") || "Click play to hear pronunciation";
-  const startConversationText = t("startConversationForSuggestions") || "Start a conversation to see suggestions";
-  const getResponseSuggestionsText = t("getResponseSuggestions") || "Get Response Suggestions";
-  const playText = t("play") || "Play";
+  // Get translated text, ensuring we don't show placeholder variables
+  const getTranslatedText = (key: string) => {
+    const translated = t(key);
+    return translated || key;
+  };
+  
+  const responseSuggestionsText = getTranslatedText("responseSuggestions");
+  const clickPlayText = getTranslatedText("clickPlayToHearPronunciation");
+  const startConversationText = getTranslatedText("startConversationForSuggestions");
+  const getResponseSuggestionsText = getTranslatedText("getResponseSuggestions");
+  const playText = getTranslatedText("play");
   
   return (
     <Popover open={open} onOpenChange={(isOpen) => {

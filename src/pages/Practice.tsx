@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
@@ -15,10 +16,6 @@ import { Trash } from "lucide-react";
 import SpeechRateControl from "@/components/practice/SpeechRateControl";
 import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
 import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
-import LocalizationDebug from "@/components/practice/LocalizationDebug";
-
-// For development use - set to false in production
-const SHOW_DEBUG_PANEL = false;
 
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
@@ -44,12 +41,6 @@ const Practice = () => {
     if (savedSpeechRate) {
       setSpeechRate(parseFloat(savedSpeechRate));
     }
-    
-    // Debug for language initialization
-    console.debug('Practice component initialized with language:', {
-      currentLanguage,
-      targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english")
-    });
   }, [currentLanguage]);
 
   // Save speech rate to localStorage when it changes
@@ -94,13 +85,6 @@ const Practice = () => {
   if (!isAuthenticated) {
     return <AuthRequiredPrompt />;
   }
-
-  // Debug for message display
-  console.debug('Practice component rendering with language:', {
-    messageCount: messages.length,
-    hasTranslations: messages.filter(m => m.translation).length,
-    currentLanguage
-  });
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -164,11 +148,6 @@ const Practice = () => {
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />
-      
-      {/* Display debug panel only in development */}
-      {SHOW_DEBUG_PANEL && (
-        <LocalizationDebug />
-      )}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -30,7 +29,18 @@ const practiceTranslations: TranslationRecord = {
   "discussCulturalTopics": "सांस्कृतिक विषयांवर चर्चा करा",
   "startConversationIn": "{{language}} मध्ये संभाषण सुरू करा",
   "practicePrompt": "नमस्कार! मला {{targetLanguage}} संभाषणाचा सराव करायचा आहे. कृपया माझे {{targetLanguage}} व्याकरण, शब्दसंग्रह आणि वापर सुधारण्यास मदत करा. आपण मूलभूत संभाषणापासून सुरुवात करू शकतो का?",
-  "chatPlaceholder": "{{targetLanguage}} चा सराव करण्यासाठी तुमचा संदेश टाइप करा..."
+  "chatPlaceholder": "{{targetLanguage}} चा सराव करण्यासाठी तुमचा संदेश टाइप करा...",
+  
+  // Response suggestions related keys
+  "responseSuggestions": "प्रतिसाद सूचना",
+  "clickPlayToHearPronunciation": "उच्चार ऐकण्यासाठी प्ले क्लिक करा",
+  "startConversationForSuggestions": "सूचना पाहण्यासाठी संभाषण सुरू करा",
+  "getResponseSuggestions": "प्रतिसाद सूचना मिळवा",
+  "play": "प्ले करा",
+  
+  // Practice guide translations
+  "practiceGuide": "{{language}} साठी सराव मार्गदर्शक",
+  "practiceGuideDescription": "तुमच्या {{language}} सरावातून सर्वाधिक लाभ घेण्यासाठी काही टिप्स येथे आहेत:",
 };
 
 export default practiceTranslations;
