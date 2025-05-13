@@ -42,5 +42,8 @@ export interface LanguageMetrics {
   vocabularyDiversity?: number;
 }
 
-// TranslationType - reuse from practice/hooks/translation/types.ts
-export type { TranslationType } from '@/components/practice/hooks/translation/types';
+// Import TranslationType directly from its source
+import { TranslationType } from '@/components/practice/hooks/translation/types';
+
+// Re-export TranslationType for backward compatibility
+export { TranslationType };
