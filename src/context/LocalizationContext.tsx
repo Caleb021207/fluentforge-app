@@ -27,8 +27,8 @@ const isClassroomRoute = (path: string): boolean => {
          path.includes("/student/class");
 };
 
-// Debug mode flag - set to true during development to see missing translations
-const DEBUG_TRANSLATIONS = true;
+// Debug mode flag - set to false in production to hide missing translation warnings
+const DEBUG_TRANSLATIONS = process.env.NODE_ENV === 'development';
 
 // Provider component
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
@@ -96,7 +96,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       const isClassroom = isClassroomRoute(currentPath);
       const languageToUse = isClassroom ? DEFAULT_LANGUAGE : currentLanguage;
       
-      // Debug logging for translation issues
+      // Debug logging for translation issues in development mode
       if (DEBUG_TRANSLATIONS) {
         console.debug(`[Translation] Looking up key "${key}" in language "${languageToUse}"`);
       }
@@ -155,7 +155,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         }
         
         if (translationValue !== key) {
-          // Only log each missing key once per session
+          // Only log each missing key once per session in development mode
           if (!missingKeys.has(key) && DEBUG_TRANSLATIONS) {
             console.warn(`[Translation] Missing translation for key "${key}" in language "${languageToUse}"`);
             setMissingKeys(prev => new Set([...prev, key]));
@@ -177,12 +177,12 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         let result = translationValue;
         Object.entries(replacements).forEach(([placeholder, replaceValue]) => {
           // Support {{placeholder}} format
-          const regex = new RegExp(`{{${placeholder}}}`, 'g');
-          result = result.replace(regex, replaceValue);
+          const doubleRegex = new RegExp(`{{${placeholder}}}`, 'g');
+          result = result.replace(doubleRegex, replaceValue);
           
           // Also support {placeholder} format
-          const simpleRegex = new RegExp(`{${placeholder}}`, 'g');
-          result = result.replace(simpleRegex, replaceValue);
+          const singleRegex = new RegExp(`{${placeholder}}`, 'g');
+          result = result.replace(singleRegex, replaceValue);
         });
         return result;
       }

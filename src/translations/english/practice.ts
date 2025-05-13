@@ -2,76 +2,65 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
-  "practice": "Practice",
-  "startConversation": "Start Conversation",
-  "startChatting": "Start chatting with your AI language tutor!",
-  "chatPlaceholder": "Type your message to practice {targetLanguage}...",
-  "errorSendingMessage": "Error sending message. Please try again.",
-  "emptyMessage": "Cannot send empty message",
-  "sendingMessage": "Sending message...",
-  "practiceGuide": "Practice Guide",
-  "practiceTip1": "Try to form complete sentences, even if they're simple.",
-  "practiceTip2": "Don't worry about mistakes — they're part of learning!",
-  "practiceTip3": "Ask for explanations if there's something you don't understand.",
-  "practiceTip4": "Use words you've recently learned.",
-  "practiceTip5": "Our AI will adapt to your skill level and gradually help you improve.",
-  "startConversationIn": "Start conversation in {language}",
-  "typeMessageIn": "Type message in {language}...",
-  "translationNotAvailable": "Translation not available for {language}",
-  "contentFiltered": "Content filtered for safety",
-  "networkConnectionIssue": "Network connection issue. Please try again.",
-  "send": "Send",
-  "error": "Error",
-  "failedToGetTranslation": "Failed to get translation. Please try again.",
-  "translationError": "Translation Error",
-  "startTextChatting": "Start text chatting",
-  "typeMessageBelow": "Type a message below",
+  textPractice: "Text Practice",
+  startTextChatting: "Start chatting with our AI tutor",
+  typeMessageBelow: "Type a message below to start the conversation",
+  practiceWithAI: "Practice with AI",
+  noticeTextBasedPractice: "This is text-based practice. The tutor will help improve your writing and grammar in real-time.",
+  chatWithAITutor: "Chat with our AI tutor to practice your language skills through text conversations! The AI will help correct your grammar, vocabulary, and usage.",
+  isTyping: "is typing...",
+  responseIsNotAvailableAtTheMoment: "Response is not available at the moment",
+  responseContainsInappropriateContent: "Response contains inappropriate content",
+  pleaseTryAgainLater: "Please try again later",
+  sendingFailedTryAgain: "Sending failed. Try again",
+  typeMessage: "Type a message...",
   
-  // Ensure text practice has proper translations
-  "textPractice": "Text Practice",
-  "practiceWithTextChat": "Practice with Text Chat",
-  "textConversationPractice": "Text Conversation Practice",
-  "practiceWithAITutor": "Practice with AI Language Tutor",
-  "chatWithAITutor": "Chat with our AI tutor to practice your language skills through text conversations! The AI will help correct your grammar, vocabulary, and usage. Feel free to ask questions about the language or culture.",
-  "noticeTextBasedPractice": "Note: This is a text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features.",
-  "unlimitedVoicePractice": "Unlimited Voice Practice",
+  // Practice guide
+  practiceGuide: "{{language}} Practice Guide",
+  practiceGuideDescription: "Here are some tips to get the most out of your {{language}} practice:",
+  practiceTip1: "Try to form complete sentences, even if they're simple",
+  practiceTip2: "Don't worry about making mistakes - they're part of learning!",
+  practiceTip3: "Ask for clarification if you don't understand something",
+  practiceTip4: "Try to use vocabulary you've recently learned",
+  practiceTip5: "Ask questions to keep the conversation going",
   
-  // Grammar correction toggle
-  "correctGrammar": "Correct my grammar",
-  "grammarCorrectionEnabled": "Grammar correction enabled",
-  "grammarCorrectionDisabled": "Grammar correction disabled",
-  "tutor.willCorrectGrammar": "The tutor will now provide gentle corrections to your grammar.",
-  "tutor.wontCorrectGrammar": "The tutor will focus on conversation flow without grammar corrections.",
+  // Message translations
+  translationUnavailable: "Translation unavailable",
+  translating: "Translating...",
+  showTranslation: "Show translation",
+  hideTranslation: "Hide translation",
+  usedCorrectly: "Used correctly",
+  translateMessageTo: "Translate message to {{language}}",
   
-  // Success messages
-  "success": "Success",
-  "conversationCleared": "Conversation cleared",
+  // Language metrics
+  languageMetrics: "Language Metrics",
+  hideMetrics: "Hide Metrics",
+  viewLanguageMetrics: "View Language Metrics",
+  noLanguageDataYet: "No language data yet",
+  analyzing: "Analyzing...",
+  analyzeConversation: "Analyze Conversation",
+  analyzingConversation: "Analyzing conversation...",
+  grammarAccuracy: "Grammar Accuracy",
+  conversationComplexity: "Conversation Complexity",
+  vocabularyDiversity: "Vocabulary Diversity",
+  basedOnMessagesCount: "Based on {{count}} messages",
   
-  // Clear conversation translations
-  "clearConversation": "Clear conversation",
+  // Hints
+  suggestedResponses: "Suggested Responses",
+  clickToHearPronunciation: "Click to hear pronunciation",
+  startConversationToSeeSuggestions: "Start a conversation to see suggestions",
   
-  // Response suggestions related keys
-  "responseSuggestions": "Response Suggestions",
-  "clickPlayToHearPronunciation": "Click play to hear pronunciation",
-  "startConversationForSuggestions": "Start a conversation to see suggestions",
-  "getResponseSuggestions": "Get Response Suggestions",
-  "play": "Play",
-  
-  // Practice Guide Description
-  "practiceGuideDescription": "Tips for practicing your {language} effectively:",
-  
-  // Speech rate translations
-  "speechRate": "Speech Rate",
-  "verySlow": "Very slow",
-  "slow": "Slow",
-  "normal": "Normal",
-  "fast": "Fast",
-  "veryFast": "Very fast",
-  
-  // Additional keys for comprehensiveness
-  "practicePrompt": "Hello! I would like to practice conversational {{targetLanguage}}. Please help me correct my grammar, vocabulary, and {{targetLanguage}} usage. Can we start with a basic conversation?",
-  "couldNotGenerateHints": "Could not generate hints. Please try again later.",
-  "failedToPlayAudio": "Failed to play audio"
+  // Network and API error messages
+  networkError: "Network Error",
+  couldNotConnect: "Could not connect to server",
+  pleaseCheckConnection: "Please check your internet connection",
+  couldNotGetResponse: "Could not get response from tutor",
+  requestTimeoutError: "Request timeout",
+  tutor: {
+    willCorrectGrammar: "The tutor will correct your grammar when needed",
+    willHelpWithVocabulary: "The tutor will help with new vocabulary",
+    willAdjustToYourLevel: "The tutor will adjust to your skill level"
+  }
 };
 
 export default practiceTranslations;

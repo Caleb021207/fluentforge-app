@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 import generalTranslations from "./general";
 import languageSelectionTranslations from "./language-selection";
@@ -10,8 +11,9 @@ import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
+import uiElementsTranslations from "./ui-elements";
 
-// Add speech rate control translations if they don't exist
+// Combine all translation categories
 export default {
   ...generalTranslations,
   ...languageSelectionTranslations,
@@ -24,6 +26,7 @@ export default {
   ...languageFrameworksTranslations,
   ...authTranslations,
   ...languagesTranslations,
+  ...uiElementsTranslations,
   
   // Speech rate translations
   speechRate: "Velocidad de habla",
