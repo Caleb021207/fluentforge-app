@@ -91,16 +91,6 @@ const Practice = () => {
     return <AuthRequiredPrompt />;
   }
 
-  // Convert messages to ensure compatibility with ChatContainer
-  const compatibleMessages = messages.map(msg => ({
-    role: msg.role,
-    content: msg.content,
-    // Convert complex translation objects to strings if needed
-    translation: typeof msg.translation === 'string' ? 
-      msg.translation : 
-      msg.translation ? JSON.stringify(msg.translation) : undefined
-  }));
-
   // Additional debug for Thai messages - fix the comparison to use lowercase comparison
   if (currentLanguage.toLowerCase() === 'thai') {
     console.log('Practice component rendering with Thai:', {
@@ -152,7 +142,7 @@ const Practice = () => {
       </div>
 
       <ChatContainer
-        messages={compatibleMessages}
+        messages={messages}
         input={input}
         setInput={setInput}
         handleSubmit={handleSubmit}

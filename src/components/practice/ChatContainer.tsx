@@ -30,12 +30,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   return (
     <div className="bg-card dark:bg-card/80 border rounded-lg shadow-sm flex flex-col h-[60vh]">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && <EmptyChatState targetLanguage={targetLanguage} />}
+        {messages.length === 0 && <EmptyChatState />}
 
         {messages.map((message, index) => (
           <ChatMessage
             key={index}
-            role={message.role}
+            role={message.role === 'system' ? 'assistant' : message.role}
             content={message.content}
             translation={message.translation}
             speechRate={speechRate}
@@ -47,11 +47,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
       <div className="border-t p-4">
         <ChatInput
-          input={input}
-          setInput={setInput}
-          handleSubmit={handleSubmit}
+          value={input}
+          onChange={setInput}
+          onSubmit={handleSubmit}
           isLoading={isLoading}
           placeholder={getPlaceholderText()}
+          messages={messages}
+          targetLanguage={targetLanguage}
         />
       </div>
     </div>
