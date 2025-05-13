@@ -10,8 +10,6 @@ import Index from "@/pages/Index";
 import Practice from "@/pages/Practice";
 import VoiceChat from "@/pages/VoiceChat";
 import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
-import SpanishAdvancedVoiceChat from "@/pages/SpanishAdvancedVoiceChat";
-import PortugueseAdvancedVoiceChat from "@/pages/PortugueseAdvancedVoiceChat";
 import Progress from "@/pages/Progress";
 import Profile from "@/pages/Profile";
 import Certificates from "@/pages/Certificates";
@@ -36,8 +34,6 @@ function App() {
               { path: "practice", element: <Practice /> },
               { path: "voice-chat", element: <VoiceChat /> },
               { path: "premium-voice-chat", element: <PremiumVoiceChat /> },
-              { path: "spanish-advanced-voice", element: <SpanishAdvancedVoiceChat /> },
-              { path: "portuguese-advanced-voice", element: <PortugueseAdvancedVoiceChat /> },
               { path: "progress", element: <Progress /> },
               { path: "profile", element: <Profile /> },
               { path: "certificates", element: <Certificates /> },

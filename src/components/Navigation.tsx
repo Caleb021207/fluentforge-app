@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones, BookOpen, Lock as LockIcon } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, BookOpen, Lock as LockIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,25 +52,6 @@ const Navigation = () => {
       { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
       { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
     ];
-
-    // Add language-specific advanced voice options for Spanish and Portuguese
-    if (currentLanguage === "spanish") {
-      items.splice(2, 0, {
-        icon: Headphones,
-        label: "spanishAdvancedVoice",
-        path: "/spanish-advanced-voice",
-        requiresAuth: true
-      });
-    }
-
-    if (currentLanguage === "portuguese") {
-      items.splice(2, 0, {
-        icon: Headphones,
-        label: "portugueseAdvancedVoice",
-        path: "/portuguese-advanced-voice",
-        requiresAuth: true
-      });
-    }
 
     if (isLoggedIn && !teacherStatusLoading) {
       // Add the class menu item after voice chat items
