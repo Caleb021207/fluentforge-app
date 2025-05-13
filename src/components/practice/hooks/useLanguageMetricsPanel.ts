@@ -50,8 +50,8 @@ export const useLanguageMetricsPanel = (messages: Message[] = []) => {
     isExpanded,
     togglePanel,
     metrics,
-    isMetricsLoading: isAnalyzing, // Rename for compatibility
-    analyzeConversation: analyzeCurrentConversation, // Rename for compatibility
+    isMetricsLoading: isAnalyzing, // Rename for backward compatibility
+    analyzeConversation: analyzeCurrentConversation, // For backward compatibility
     // Keep the new name as well for future compatibility
     isAnalyzing,
     analyzeCurrentConversation

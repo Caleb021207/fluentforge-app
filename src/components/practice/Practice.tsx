@@ -27,10 +27,10 @@ const Practice = () => {
   
   const { 
     metrics, 
-    isMetricsLoading, 
     isExpanded, 
     togglePanel, 
-    analyzeConversation 
+    isMetricsLoading, 
+    analyzeCurrentConversation 
   } = useLanguageMetricsPanel(messages);
   
   const params = useParams<{ language?: string }>();
@@ -110,7 +110,7 @@ const Practice = () => {
             isLoading={isMetricsLoading}
             isExpanded={isExpanded}
             onToggle={togglePanel}
-            onAnalyze={() => analyzeConversation(messages)}
+            onAnalyze={analyzeCurrentConversation}
           />
         </div>
       )}
