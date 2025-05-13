@@ -46,4 +46,5 @@ export interface LanguageMetrics {
 import { TranslationType } from '@/components/practice/hooks/translation/types';
 
 // Re-export TranslationType for backward compatibility
-export { TranslationType };
+// Using 'export type' instead of 'export' to fix the isolatedModules error
+export type { TranslationType };
