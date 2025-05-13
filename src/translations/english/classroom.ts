@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const classroomTranslations: TranslationRecord = {
@@ -31,7 +32,6 @@ const classroomTranslations: TranslationRecord = {
   metrics: "Metrics",
   grammarAccuracy: "Grammar Accuracy",
   conversationComplexity: "Conversation Complexity",
-  students: "Students",
   showControls: "Show Controls",
   hideControls: "Hide Controls",
   backToClasses: "Back to Classes",

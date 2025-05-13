@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -29,14 +30,23 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
     const fetchClasses = async () => {
       try {
         setIsLoading(true);
+        const { data: sessionData } = await supabase.auth.getSession();
+        
+        if (!sessionData.session?.user?.id) {
+          console.error("No authenticated user found");
+          return;
+        }
+        
+        const userId = sessionData.session.user.id;
+        
         const { data, error } = await supabase
-          .from('classrooms')
+          .from('classroom_codes')
           .select(`
             id, 
             className,
             classroom_memberships (count)
           `)
-          .eq('teacher_id', supabase.auth.currentUser?.id);
+          .eq('teacher_id', userId);
 
         if (error) {
           console.error("Error fetching classes:", error);
@@ -104,7 +114,7 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
               <CardHeader>
                 <CardTitle>{classItem.className}</CardTitle>
                 <CardDescription>
-                  {t("studentsEnrolled", { count: classItem.studentCount })}
+                  {t("studentsEnrolled", { count: String(classItem.studentCount) })}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -116,7 +126,7 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
                       handleViewClass(classItem.id);
                     }}
                   >
-                    {CLASSROOM_TEXT.VIEW_CLASS}
+                    {t("viewClass")}
                   </Button>
                 </div>
               </CardContent>
