@@ -34,6 +34,9 @@ const practiceTranslations: TranslationRecord = {
   practicePrompt: "Olá! Gostaria de praticar conversação em {{targetLanguage}}. Por favor, me ajude corrigindo minha gramática, vocabulário e uso do {{targetLanguage}}. Podemos começar com uma conversa básica?",
   chatPlaceholder: "Digite sua mensagem para praticar {{targetLanguage}}...",
   
+  // Adding loading translation that was missing
+  loading: "Carregando...",
+  
   // Adding new translations for Speech Rate
   speechRate: "Velocidade de Fala",
   verySlow: "Muito lento",
@@ -78,7 +81,10 @@ const practiceTranslations: TranslationRecord = {
   conversationCleared: "Conversa limpa",
   
   // Additional practice-related terms
-  unlimitedVoicePractice: "Prática de Voz Ilimitada"
+  unlimitedVoicePractice: "Prática de Voz Ilimitada",
+  
+  // Adding the missing practiceWithAI key
+  practiceWithAI: "Praticar com IA"
 };
 
 export default practiceTranslations;
