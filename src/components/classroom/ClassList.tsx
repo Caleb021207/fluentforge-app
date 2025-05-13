@@ -43,7 +43,7 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
           .from('classroom_codes')
           .select(`
             id, 
-            className,
+            class_name,
             classroom_memberships (count)
           `)
           .eq('teacher_id', userId);
@@ -60,7 +60,7 @@ const ClassList: React.FC<ClassListProps> = ({ onClassSelect }) => {
 
         const classList: ClassItem[] = data.map(classroom => ({
           id: classroom.id,
-          className: classroom.className,
+          className: classroom.class_name,
           studentCount: classroom.classroom_memberships ? classroom.classroom_memberships[0].count : 0,
         }));
 
