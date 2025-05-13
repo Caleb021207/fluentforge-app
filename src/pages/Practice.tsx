@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
+import SpeechRateControl from "@/components/practice/SpeechRateControl";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
 
 // Create an interface that matches the Message structure from useChatMessages
@@ -26,10 +27,12 @@ const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { currentLanguage, t } = useLocalization();
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
+  const [speechRate, setSpeechRate] = useState<number>(1.0);
   
   useEffect(() => {
     const savedTargetLanguage = localStorage.getItem("targetLanguage");
     const savedNativeLanguage = localStorage.getItem("nativeLanguage");
+    const savedSpeechRate = localStorage.getItem("speechRate");
     
     if (savedNativeLanguage && savedTargetLanguage) {
       setTargetLanguage(savedTargetLanguage);
@@ -41,6 +44,10 @@ const Practice = () => {
       }
     }
     
+    if (savedSpeechRate) {
+      setSpeechRate(parseFloat(savedSpeechRate));
+    }
+    
     // Debug for Thai language - Fix the comparison to use lowercase comparison
     if (currentLanguage.toLowerCase() === 'thai') {
       console.log('Practice component initialized with Thai language:', {
@@ -49,6 +56,11 @@ const Practice = () => {
       });
     }
   }, [currentLanguage]);
+
+  // Save speech rate to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem("speechRate", speechRate.toString());
+  }, [speechRate]);
   
   const {
     messages,
@@ -131,6 +143,13 @@ const Practice = () => {
           {t("clearConversation")}
         </Button>
       </div>
+      
+      <div className="mb-4">
+        <SpeechRateControl 
+          speechRate={speechRate} 
+          onChange={(value) => setSpeechRate(value)} 
+        />
+      </div>
 
       <ChatContainer
         messages={compatibleMessages}
@@ -140,6 +159,7 @@ const Practice = () => {
         isLoading={chatLoading}
         getPlaceholderText={getPlaceholderText}
         targetLanguage={targetLanguage}
+        speechRate={speechRate}
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />

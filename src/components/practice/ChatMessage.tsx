@@ -13,9 +13,10 @@ interface ChatMessageProps {
   content: string;
   translation?: string | TranslationType;
   onPlayAudio?: (text: string) => void;
+  speechRate?: number;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio, speechRate = 1.0 }) => {
   const { currentLanguage } = useLocalization();
   
   // Enhanced logging for specific translations
@@ -137,6 +138,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
         nativeLanguage={nativeLanguage}
         onPlayAudio={onPlayAudio}
         currentLanguage={currentLanguage}
+        speechRate={speechRate}
       />
     </div>
   );

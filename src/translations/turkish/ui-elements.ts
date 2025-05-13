@@ -28,7 +28,15 @@ const uiElementsTranslations: TranslationRecord = {
   learningProgress: "Öğrenme İlerlemesi",
   achievements: "Başarılar",
   directoryInformation: "Dizin Bilgileri",
-  directoryInfoDescription: "Hangi bilgilerin kamuya açık dizinlerde veya diğer kullanıcılarla paylaşılabileceğini kontrol edin"
+  directoryInfoDescription: "Hangi bilgilerin kamuya açık dizinlerde veya diğer kullanıcılarla paylaşılabileceğini kontrol edin",
+  
+  // Speech rate control translations
+  speechRate: "Konuşma Hızı",
+  verySlow: "Çok Yavaş",
+  slow: "Yavaş",
+  normal: "Normal",
+  fast: "Hızlı",
+  veryFast: "Çok Hızlı"
 };
 
 export default uiElementsTranslations;

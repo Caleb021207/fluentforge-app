@@ -22,7 +22,15 @@ const classroomTranslations: TranslationRecord = {
   lastActive: "Ultima activitate",
   noClasses: "Nu aveți clase",
   noClassesJoined: "Nu v-ați alăturat niciunei clase",
-  createOrJoinClass: "Creați sau alăturați-vă unei clase"
+  createOrJoinClass: "Creați sau alăturați-vă unei clase",
+  
+  // Speech rate control translations
+  speechRate: "Viteza vorbirii",
+  verySlow: "Foarte încet",
+  slow: "Încet",
+  normal: "Normal",
+  fast: "Rapid",
+  veryFast: "Foarte rapid"
 };
 
 export default classroomTranslations;

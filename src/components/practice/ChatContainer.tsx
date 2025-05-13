@@ -1,101 +1,61 @@
 
-import React, { useEffect, useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import ChatInput from "./ChatInput";
+import React from "react";
 import ChatMessage from "./ChatMessage";
-import EmptyChatState from "./EmptyChatState";
+import ChatInput from "./ChatInput";
 import LoadingIndicator from "./LoadingIndicator";
-import LanguageMetricsPanel from "./LanguageMetricsPanel";
-import { useLanguageMetricsPanel } from "./hooks/useLanguageMetricsPanel";
-import { useLocalization } from "@/context/LocalizationContext";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-  translation?: string;
-}
+import EmptyChatState from "./EmptyChatState";
+import { Message } from "@/types/chat";
 
 interface ChatContainerProps {
   messages: Message[];
   input: string;
-  setInput: (value: string) => void;
+  setInput: (input: string) => void;
   handleSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
   getPlaceholderText: () => string;
-  targetLanguage?: string;
+  targetLanguage: string;
+  speechRate?: number;
 }
 
-export default function ChatContainer({
+const ChatContainer: React.FC<ChatContainerProps> = ({
   messages,
   input,
   setInput,
   handleSubmit,
   isLoading,
   getPlaceholderText,
-  targetLanguage = "spanish"
-}: ChatContainerProps) {
-  const { t } = useLocalization();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { 
-    isExpanded, 
-    togglePanel, 
-    metrics, 
-    isAnalyzing, 
-    analyzeCurrentConversation 
-  } = useLanguageMetricsPanel(messages);
-  
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
-
+  targetLanguage,
+  speechRate = 1.0
+}) => {
   return (
-    <div className="space-y-2">
-      <Card className="overflow-hidden mb-2">
-        <ScrollArea className="h-[500px] p-4">
-          {messages.length === 0 ? (
-            <EmptyChatState />
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message, index) => (
-                <ChatMessage
-                  key={index}
-                  role={message.role}
-                  content={message.content}
-                  translation={message.translation}
-                />
-              ))}
-              
-              {isLoading && <LoadingIndicator />}
-              
-              <div ref={scrollRef} />
-            </div>
-          )}
-        </ScrollArea>
-        
-        <div className="border-t p-4">
-          <ChatInput
-            isLoading={isLoading}
-            value={input}
-            onChange={setInput}
-            onSubmit={handleSubmit}
-            placeholder={getPlaceholderText()}
-            messages={messages}
-            targetLanguage={targetLanguage}
-          />
-        </div>
-      </Card>
+    <div className="bg-card dark:bg-card/80 border rounded-lg shadow-sm flex flex-col h-[60vh]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.length === 0 && <EmptyChatState targetLanguage={targetLanguage} />}
 
-      <LanguageMetricsPanel 
-        metrics={metrics}
-        isLoading={isAnalyzing}
-        isExpanded={isExpanded}
-        onToggle={togglePanel}
-        onAnalyze={analyzeCurrentConversation}
-      />
+        {messages.map((message, index) => (
+          <ChatMessage
+            key={index}
+            role={message.role}
+            content={message.content}
+            translation={message.translation}
+            speechRate={speechRate}
+          />
+        ))}
+
+        {isLoading && <LoadingIndicator />}
+      </div>
+
+      <div className="border-t p-4">
+        <ChatInput
+          input={input}
+          setInput={setInput}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
+          placeholder={getPlaceholderText()}
+        />
+      </div>
     </div>
   );
-}
+};
+
+export default ChatContainer;

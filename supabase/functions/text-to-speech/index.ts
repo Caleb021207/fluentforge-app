@@ -13,13 +13,16 @@ serve(async (req) => {
   }
 
   try {
-    const { text, language, isTargetLanguage, useMetaMms } = await req.json();
+    const { text, language, isTargetLanguage, useMetaMms, speechRate } = await req.json();
     
     if (!text) {
       throw new Error('Text is required');
     }
 
-    console.log(`TTS request for language: ${language}, text length: ${text.length}, isTargetLanguage: ${isTargetLanguage}, useMetaMms: ${useMetaMms}`);
+    // Use the provided speech rate or default to 1.0
+    const rate = speechRate !== undefined ? parseFloat(speechRate) : 1.0;
+    
+    console.log(`TTS request for language: ${language}, text length: ${text.length}, isTargetLanguage: ${isTargetLanguage}, useMetaMms: ${useMetaMms}, speechRate: ${rate}`);
 
     // Get voice settings based on language
     const voiceSettings = languageVoiceMap[language?.toLowerCase()] || languageVoiceMap["english"];
@@ -38,18 +41,19 @@ serve(async (req) => {
     if (languageLower === 'english') {
       try {
         const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
-        console.log(`Using AWS Polly as primary TTS for English with voice: ${pollyVoice}`);
-        audioBuffer = await textToSpeechPolly(text, pollyVoice);
+        console.log(`Using AWS Polly as primary TTS for English with voice: ${pollyVoice}, rate: ${rate}`);
+        audioBuffer = await textToSpeechPolly(text, pollyVoice, rate);
       } catch (pollyError) {
         console.error('Polly TTS failed for English:', pollyError);
         
         // Fall back to Azure
         try {
-          console.log(`Polly failed, falling back to Azure TTS with voice: ${voiceSettings.voiceName}`);
+          console.log(`Polly failed, falling back to Azure TTS with voice: ${voiceSettings.voiceName}, rate: ${rate}`);
           audioBuffer = await textToSpeechAzure(
             text, 
             voiceSettings.voiceName,
-            voiceSettings.languageCode
+            voiceSettings.languageCode,
+            rate
           );
         } catch (azureError) {
           console.error('Azure TTS also failed:', azureError);
@@ -60,11 +64,12 @@ serve(async (req) => {
       // Standard flow for non-English languages (Azure → Meta MMS → Polly)
       try {
         // Try Azure first as primary TTS provider for non-English
-        console.log(`Using Azure TTS with voice: ${voiceSettings.voiceName}`);
+        console.log(`Using Azure TTS with voice: ${voiceSettings.voiceName}, rate: ${rate}`);
         audioBuffer = await textToSpeechAzure(
           text, 
           voiceSettings.voiceName,
-          voiceSettings.languageCode
+          voiceSettings.languageCode,
+          rate
         );
       } catch (azureError) {
         console.error('Azure TTS failed:', azureError);
@@ -73,16 +78,16 @@ serve(async (req) => {
         if (metaMmsLanguageMap[languageLower] || useMetaMms === true) {
           try {
             const metaMmsLangCode = metaMmsLanguageMap[languageLower] || "eng"; // fallback to English
-            console.log(`Azure failed, trying Meta MMS with language code: ${metaMmsLangCode}`);
-            audioBuffer = await textToSpeechMetaMms(text, metaMmsLangCode);
+            console.log(`Azure failed, trying Meta MMS with language code: ${metaMmsLangCode}, rate: ${rate}`);
+            audioBuffer = await textToSpeechMetaMms(text, metaMmsLangCode, rate);
           } catch (metaError) {
             console.error('Meta MMS failed:', metaError);
             
             // Fall back to Polly as last resort
             try {
               const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
-              console.log(`Azure and Meta MMS failed, trying AWS Polly with voice: ${pollyVoice}`);
-              audioBuffer = await textToSpeechPolly(text, pollyVoice);
+              console.log(`Azure and Meta MMS failed, trying AWS Polly with voice: ${pollyVoice}, rate: ${rate}`);
+              audioBuffer = await textToSpeechPolly(text, pollyVoice, rate);
             } catch (pollyError) {
               console.error(`All TTS services failed: ${azureError}, ${metaError}, ${pollyError}`);
               throw new Error('All TTS services failed');
@@ -92,8 +97,8 @@ serve(async (req) => {
           // If Meta MMS is not supported, try Polly directly
           try {
             const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
-            console.log(`Azure failed, trying AWS Polly with voice: ${pollyVoice}`);
-            audioBuffer = await textToSpeechPolly(text, pollyVoice);
+            console.log(`Azure failed, trying AWS Polly with voice: ${pollyVoice}, rate: ${rate}`);
+            audioBuffer = await textToSpeechPolly(text, pollyVoice, rate);
           } catch (pollyError) {
             console.error(`Both TTS services failed: ${azureError}, ${pollyError}`);
             throw new Error('All TTS services failed');

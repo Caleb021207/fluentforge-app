@@ -2,8 +2,8 @@
 import { corsHeaders } from "./config.ts";
 
 // Function to convert text to speech using Meta MMS
-export async function textToSpeechMetaMms(text: string, languageCode: string): Promise<Uint8Array> {
-  console.log(`Using Meta MMS TTS with language code: ${languageCode}`);
+export async function textToSpeechMetaMms(text: string, languageCode: string, rate: number = 1.0): Promise<Uint8Array> {
+  console.log(`Using Meta MMS TTS with language code: ${languageCode}, rate: ${rate}`);
   
   // Get Meta MMS server URL from environment variable, with a fallback
   const MMS_SERVER_URL = Deno.env.get('META_MMS_SERVER_URL') || 'http://localhost:8080/tts';
@@ -13,7 +13,8 @@ export async function textToSpeechMetaMms(text: string, languageCode: string): P
     text: text,
     language: languageCode,
     voice_id: "v2/en", // Default voice, adjust based on your Meta MMS setup
-    model_id: "mms" // Default model, adjust based on your Meta MMS setup
+    model_id: "mms", // Default model, adjust based on your Meta MMS setup
+    speed_rate: rate // Add speech rate parameter
   };
 
   try {

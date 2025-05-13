@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import useTTS from "./useTTS";
 
@@ -8,6 +9,7 @@ interface UseMessageAudioProps {
   targetLanguage: string;
   nativeLanguage: string;
   onPlayAudio?: (text: string) => void;
+  speechRate?: number;
 }
 
 const useMessageAudio = ({
@@ -16,19 +18,22 @@ const useMessageAudio = ({
   translation,
   targetLanguage,
   nativeLanguage,
-  onPlayAudio
+  onPlayAudio,
+  speechRate = 1.0
 }: UseMessageAudioProps) => {
   // Setup TTS hooks for both content and translation
   const contentAudio = useTTS({
     text: content,
     language: targetLanguage,
-    isTargetLanguage: true
+    isTargetLanguage: true,
+    speechRate
   });
   
   const translationAudio = useTTS({
     text: translation,
     language: nativeLanguage,
-    isTargetLanguage: false
+    isTargetLanguage: false,
+    speechRate
   });
   
   const handlePlayAudio = () => {

@@ -15,6 +15,7 @@ interface ChatMessageBubbleProps {
   nativeLanguage: string;
   currentLanguage: string;
   onPlayAudio?: (text: string) => void;
+  speechRate?: number;
 }
 
 const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
@@ -26,7 +27,8 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   targetLanguage,
   nativeLanguage,
   currentLanguage,
-  onPlayAudio
+  onPlayAudio,
+  speechRate = 1.0
 }) => {
   // Use our custom hook to manage audio state and playback
   const {
@@ -39,7 +41,8 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
     translation: safeTranslation,
     targetLanguage,
     nativeLanguage,
-    onPlayAudio
+    onPlayAudio,
+    speechRate
   });
   
   return (
@@ -58,6 +61,8 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
         isPlaying={contentAudio.isPlaying}
         isLoading={contentAudio.isLoading}
         onPlayAudio={role === "assistant" ? handlePlayAudio : undefined}
+        targetLanguage={targetLanguage}
+        speechRate={speechRate}
       />
       
       {showTranslation && (
@@ -70,6 +75,7 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
           isTranslationLoading={translationAudio.isLoading}
           originalContent={safeContent}
           onPlayTranslationAudio={role === "assistant" && safeTranslation ? translationAudio.playAudio : undefined}
+          speechRate={speechRate}
         />
       )}
     </div>
