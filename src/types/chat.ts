@@ -44,7 +44,8 @@ export interface ConversationHint {
 
 // Import the TranslationType from the hooks to maintain consistency
 import { TranslationType } from "../components/practice/hooks/translation";
-export { TranslationType };
+// Use 'export type' to re-export a type with isolatedModules enabled
+export type { TranslationType };
 
 // Add the missing LanguageMetrics interface
 export interface LanguageMetrics {
