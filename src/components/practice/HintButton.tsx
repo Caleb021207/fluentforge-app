@@ -7,8 +7,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { playTTS } from "@/utils/tts";
 import { supabase } from "@/integrations/supabase/client";
-import type { Message, SuggestionCategory } from "@/types/chat";
+import type { Message } from "@/types/chat";
 import { Separator } from "@/components/ui/separator";
+import { SuggestionCategory } from "./hooks/translation/types";
 
 interface HintButtonProps {
   targetLanguage: string;
@@ -121,6 +122,12 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
     });
   };
   
+  const responseSuggestionsText = t("responseSuggestions") || "Response Suggestions";
+  const clickPlayText = t("clickPlayToHearPronunciation") || "Click play to hear pronunciation";
+  const startConversationText = t("startConversationForSuggestions") || "Start a conversation to see suggestions";
+  const getResponseSuggestionsText = t("getResponseSuggestions") || "Get Response Suggestions";
+  const playText = t("play") || "Play";
+  
   return (
     <Popover open={open} onOpenChange={(isOpen) => {
       setOpen(isOpen);
@@ -133,7 +140,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
           variant="outline" 
           size="icon"
           className={className}
-          title={t("getResponseSuggestions") || "Get Response Suggestions"}
+          title={getResponseSuggestionsText}
         >
           <HelpCircle className="h-4 w-4" />
         </Button>
@@ -145,9 +152,9 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
         sideOffset={8}
       >
         <div className="p-4 bg-muted/30 border-b">
-          <h4 className="font-medium text-sm">{t("responseSuggestions") || "Response Suggestions"}</h4>
+          <h4 className="font-medium text-sm">{responseSuggestionsText}</h4>
           <p className="text-xs text-muted-foreground mt-1">
-            {t("clickPlayToHearPronunciation") || "Click play to hear pronunciation"}
+            {clickPlayText}
           </p>
         </div>
         
@@ -158,7 +165,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
             </div>
           ) : hints.length === 0 ? (
             <div className="p-4 text-sm text-muted-foreground text-center">
-              {t("startConversationForSuggestions") || "Start a conversation to see suggestions"}
+              {startConversationText}
             </div>
           ) : (
             hints.map((category, idx) => (
@@ -181,7 +188,7 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
                         onClick={() => playHintAudio(suggestion)}
                       >
                         <Volume2 className="h-4 w-4" />
-                        <span className="sr-only">{t("play") || "Play"}</span>
+                        <span className="sr-only">{playText}</span>
                       </Button>
                     </div>
                   ))}

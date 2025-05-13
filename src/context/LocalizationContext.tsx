@@ -57,6 +57,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     // Debug - log available translations
     console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
     console.log("Available translations:", Object.keys(translations));
+    console.log("Current language set to:", currentLanguage);
   }, []);
 
   // Helper function to safely get a string value from a potentially nested structure
@@ -90,6 +91,9 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       const isClassroom = isClassroomRoute(currentPath);
       const languageToUse = isClassroom ? DEFAULT_LANGUAGE : currentLanguage;
       
+      // Debug logging for translation issues
+      console.debug(`[Translation] Looking up key "${key}" in language "${languageToUse}"`);
+      
       // Check if selected language exists
       const selectedTranslations = translations[languageToUse];
       const defaultTranslations = translations[DEFAULT_LANGUAGE];
@@ -121,6 +125,9 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       // Fallback to default language if not found or not a string
       if (translationValue === "" && defaultTranslations) {
+        // Debug logging for missing translations
+        console.debug(`[Translation] Key "${key}" not found in "${languageToUse}", trying default language`);
+        
         // Try to get from default translations
         if (key.includes('.')) {
           const [parentKey, childKey] = key.split('.');
@@ -141,7 +148,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         if (translationValue !== key) {
           // Only log each missing key once per session
           if (!missingKeys.has(key)) {
-            console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
+            console.warn(`[Translation] Missing translation for key "${key}" in language "${languageToUse}"`);
             setMissingKeys(prev => new Set([...prev, key]));
           }
         }
@@ -150,7 +157,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       // If translation is missing in both languages, return the key
       if (translationValue === "") {
         if (!missingKeys.has(key)) {
-          console.error(`Translation key not found: "${key}" in any language`);
+          console.error(`[Translation] Key "${key}" not found in any language`);
           setMissingKeys(prev => new Set([...prev, key]));
         }
         return key;
@@ -173,7 +180,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       return translationValue;
     } catch (error) {
-      console.error("Translation error:", error);
+      console.error("[Translation] Error:", error);
       return key; // Return the key as fallback
     }
   };

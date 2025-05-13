@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, BookOpen, Lock as LockIcon } from "lucide-react";
@@ -92,6 +93,10 @@ const Navigation = () => {
   const renderNavButton = (item: any) => {
     const Icon = item.icon;
     const isActive = location.pathname === item.path;
+    
+    // Get label with fallback
+    const itemLabel = t(item.label) || item.label;
+    
     const button = (
       <Button
         variant={isActive ? "accent" : "ghost"}
@@ -99,12 +104,14 @@ const Navigation = () => {
         disabled={item.requiresAuth && !isLoggedIn}
       >
         <Icon className="h-5 w-5 md:mr-2" />
-        <span className="hidden md:inline">{t(item.label)}</span>
+        <span className="hidden md:inline">{itemLabel}</span>
         {item.requiresAuth && !isLoggedIn && (
           <LockIcon className="h-4 w-4 ml-2 opacity-50" />
         )}
       </Button>
     );
+
+    const loginRequiredText = t("loginRequiredForFeature") || "Login is required for this feature";
 
     if (item.requiresAuth && !isLoggedIn) {
       return (
@@ -116,7 +123,7 @@ const Navigation = () => {
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("loginRequiredForFeature")}</p>
+              <p>{loginRequiredText}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

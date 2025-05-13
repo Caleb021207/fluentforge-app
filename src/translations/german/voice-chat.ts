@@ -66,7 +66,15 @@ const voiceChatTranslations: TranslationRecord = {
   "practiceVocabularyForSpecific": "Übe Vokabeln für bestimmte Themen wie Reisen oder Essen",
   "useThisTool": "Nutze dieses Tool, um deine Sprech- und Hörfähigkeiten zu verbessern. Hier sind einige Tipps:",
   "remaining": "verbleibend",
-  "send": "Senden"
+  "send": "Senden",
+  
+  // Speech rate controls
+  "speechRate": "Sprechgeschwindigkeit",
+  "verySlow": "Sehr langsam",
+  "slow": "Langsam",
+  "normal": "Normal",
+  "fast": "Schnell",
+  "veryFast": "Sehr schnell",
 };
 
 export default voiceChatTranslations;

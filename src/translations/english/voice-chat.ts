@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -47,6 +48,14 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
   timeLimit10MinReached: "The 10-minute time limit has been reached",
+  
+  // Speech rate controls
+  speechRate: "Speech Rate",
+  verySlow: "Very slow",
+  slow: "Slow",
+  normal: "Normal",
+  fast: "Fast",
+  veryFast: "Very fast",
   
   // Additional keys needed for the practice tips box
   askQuestions: "Ask questions about everyday topics",
