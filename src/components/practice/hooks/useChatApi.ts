@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
@@ -99,9 +98,11 @@ export const useChatApi = () => {
         const processedTranslation = processTranslation(retryResponse.data.translation);
         
         return {
+          id: crypto.randomUUID(),
           role: "assistant",
           content: retryResponse.data.content,
-          translation: processedTranslation
+          translation: processedTranslation,
+          timestamp: new Date()
         };
       }
 
@@ -135,9 +136,11 @@ export const useChatApi = () => {
       const processedTranslation = processTranslation(data.translation);
       
       return {
+        id: crypto.randomUUID(),
         role: "assistant",
         content: data.content,
-        translation: processedTranslation
+        translation: processedTranslation,
+        timestamp: new Date()
       };
     } catch (error: any) {
       console.error('Chat error:', error);

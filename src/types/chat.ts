@@ -12,6 +12,13 @@ export type ChatMessage = {
   errorMessage?: string;
 };
 
+// Legacy Message type for backward compatibility
+export interface Message {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  translation?: TranslationType;
+}
+
 // Message count tracking
 export type MessageCount = {
   inputs: number;
@@ -19,17 +26,21 @@ export type MessageCount = {
 };
 
 // Session status types
-export type SessionStatus = 'available' | 'active' | 'cooldown' | 'unavailable';
+export type SessionStatus = 'available' | 'active' | 'cooldown' | 'unavailable' | 'loading' | 'idle';
 
 // Suggestion categories for hints
-export type SuggestionCategory = 
-  | 'general' 
-  | 'vocabulary' 
-  | 'grammar' 
-  | 'conversation' 
-  | 'cultural' 
-  | 'practice'
-  | 'example';
+export interface SuggestionCategory {
+  title: string;
+  suggestions: string[];
+}
+
+// Language metrics interface
+export interface LanguageMetrics {
+  grammarAccuracy: number;
+  conversationComplexity: number;
+  messageCount: number;
+  vocabularyDiversity?: number;
+}
 
 // TranslationType - reuse from practice/hooks/translation/types.ts
 export type { TranslationType } from '@/components/practice/hooks/translation/types';

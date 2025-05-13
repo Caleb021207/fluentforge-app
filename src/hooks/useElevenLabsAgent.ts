@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getAgentIdForLanguage, getVoiceIdForLanguage, formatConversationHistory } from "@/utils/elevenLabsUtils";
 import { useToast } from "@/hooks/use-toast";
@@ -231,10 +230,12 @@ export const useElevenLabsAgent = (targetLanguage: string) => {
       websocketRef.current.send(JSON.stringify({ text }));
       
       setConversation(prev => {
-        const updatedMessages = [...prev.messages, {
+        const userMessage: AgentMessage = {
           role: 'user',
           content: text
-        }];
+        };
+        
+        const updatedMessages = [...prev.messages, userMessage];
         
         return {
           ...prev,

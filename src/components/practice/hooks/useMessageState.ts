@@ -8,8 +8,10 @@ export const useMessageState = (setMessageCount: (count: MessageCount) => void) 
 
   const addUserMessage = (content: string) => {
     const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
       role: "user",
       content,
+      timestamp: new Date()
     };
     
     setMessages((prevMessages) => {

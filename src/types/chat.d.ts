@@ -14,14 +14,13 @@ export interface SuggestionCategory {
   suggestions: string[];
 }
 
-export type SessionStatus = 'idle' | 'loading' | 'active' | 'cooldown';
+export type SessionStatus = 'idle' | 'loading' | 'active' | 'cooldown' | 'available' | 'unavailable';
 
 export interface MessageCount {
   inputs: number;
   outputs: number;
 }
 
-// Export the LanguageMetrics interface here too to ensure backward compatibility
 export interface LanguageMetrics {
   grammarAccuracy: number;
   conversationComplexity: number;
@@ -30,7 +29,13 @@ export interface LanguageMetrics {
 }
 
 export interface ChatMessage {
+  id?: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+  timestamp?: Date;
   translation?: TranslationType;
+  audioUrl?: string;
+  isTranslating?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 }
