@@ -21,6 +21,7 @@ import SafetyPolicy from "@/pages/SafetyPolicy";
 import TeacherClasses from "@/pages/TeacherClasses";
 import StudentClass from "@/pages/StudentClass";
 import Settings from "@/pages/Settings";
+import PronunciationPractice from "@/pages/PronunciationPractice";
 import { LocalizationProvider } from "@/context/LocalizationContext";
 
 function App() {
@@ -46,7 +47,8 @@ function App() {
               { path: "safety-policy", element: <SafetyPolicy /> },
               { path: "teacher/classes", element: <TeacherClasses /> },
               { path: "student/class", element: <StudentClass /> },
-              { path: "settings", element: <Settings /> }
+              { path: "settings", element: <Settings /> },
+              { path: "pronunciation-practice", element: <PronunciationPractice /> }
             ],
           },
         ])}
