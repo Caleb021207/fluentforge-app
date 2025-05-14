@@ -56,6 +56,7 @@ const uiElementsTranslations: TranslationRecord = {
   // Navigation
   textPractice: "تمرین متنی",
   unlimitedVoicePractice: "تمرین صوتی نامحدود",
+  pronunciationPractice: "تمرین تلفظ",
   myClasses: "کلاس‌های من",
   myClass: "کلاس من",
   

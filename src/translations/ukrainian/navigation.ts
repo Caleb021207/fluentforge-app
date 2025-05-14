@@ -25,7 +25,8 @@ const navigationTranslations: TranslationRecord = {
   termsOfService: "Умови використання",
   privacyPolicy: "Політика конфіденційності",
   cookiePolicy: "Політика використання файлів cookie",
-  accessibilityStatement: "Заява про доступність"
+  accessibilityStatement: "Заява про доступність",
+  pronunciationPractice: "Практика вимови"
 };
 
 export default navigationTranslations;

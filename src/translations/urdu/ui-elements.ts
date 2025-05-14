@@ -56,6 +56,7 @@ const uiElementsTranslations: TranslationRecord = {
   // Navigation menu items
   textPractice: "متنی مشق",
   unlimitedVoicePractice: "لامحدود آواز کی مشق",
+  pronunciationPractice: "تلفظ کی مشق",
   myClasses: "میری کلاسز",
   myClass: "میری کلاس",
   loginRequiredForFeature: "اس خصوصیت کا استعمال کرنے کے لیے لاگ ان کریں",

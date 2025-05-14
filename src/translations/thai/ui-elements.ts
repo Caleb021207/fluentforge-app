@@ -53,6 +53,7 @@ const uiElementsTranslations: TranslationRecord = {
   none: "ไม่มี",
   textPractice: "การฝึกข้อความ",
   unlimitedVoicePractice: "การฝึกด้วยเสียงไม่จำกัด",
+  pronunciationPractice: "การฝึกการออกเสียง",
   startConversationIn: "เริ่มการสนทนาเป็น{{language}}",
   
   // Form related

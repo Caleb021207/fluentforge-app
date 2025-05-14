@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -8,6 +9,7 @@ const generalTranslations: TranslationRecord = {
   // Navigation items
   "textPractice": "Text na Pagsasanay",
   "unlimitedVoicePractice": "Walang Limitasyong Voice Practice",
+  "pronunciationPractice": "Pagsasanay sa Pagbigkas",
   "myClasses": "Aking mga Klase",
   "myClass": "Aking Klase",
   "signedInAs": "Naka-sign in bilang",
