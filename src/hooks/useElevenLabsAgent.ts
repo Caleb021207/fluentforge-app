@@ -47,217 +47,79 @@ export const useElevenLabsAgent = (targetLanguage: string) => {
     isProcessingAudioRef.current = false;
   }, []);
 
-  // Process audio queue
+  // Process audio queue - simplified to avoid actual audio processing
   const processAudioQueue = useCallback(async () => {
-    if (isProcessingAudioRef.current || audioQueueRef.current.length === 0 || !audioContextRef.current) {
-      return;
-    }
-    
-    isProcessingAudioRef.current = true;
-    setIsSpeaking(true);
-    
-    try {
-      const audioData = audioQueueRef.current.shift();
-      if (!audioData) {
-        isProcessingAudioRef.current = false;
-        setIsSpeaking(false);
-        return;
-      }
-      
-      const audioBuffer = await audioContextRef.current.decodeAudioData(audioData);
-      const source = audioContextRef.current.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioContextRef.current.destination);
-      
-      source.onended = () => {
-        isProcessingAudioRef.current = false;
-        if (audioQueueRef.current.length > 0) {
-          processAudioQueue();
-        } else {
-          setIsSpeaking(false);
-        }
-      };
-      
-      source.start();
-    } catch (error) {
-      console.error("Error processing audio:", error);
-      isProcessingAudioRef.current = false;
-      setIsSpeaking(false);
-      processAudioQueue(); // Try next in queue
-    }
+    console.log("Note: ElevenLabs functionality removed - processAudioQueue called");
+    setIsSpeaking(false);
+    isProcessingAudioRef.current = false;
   }, []);
 
-  // Handle WebSocket messages
-  const handleWebSocketMessage = useCallback((event: MessageEvent) => {
-    const message = JSON.parse(event.data);
-    
-    if (message.type === 'speech') {
-      // Handle audio data
-      const audioData = Uint8Array.from(atob(message.audio), c => c.charCodeAt(0)).buffer;
-      audioQueueRef.current.push(audioData);
-      
-      if (!isProcessingAudioRef.current) {
-        processAudioQueue();
-      }
-    } else if (message.type === 'message') {
-      // Handle text message from the agent
-      setConversation(prev => {
-        const updatedMessages = [...prev.messages];
-        const lastMessage = updatedMessages[updatedMessages.length - 1];
-        
-        if (lastMessage && lastMessage.role === 'assistant') {
-          // Update existing assistant message
-          lastMessage.content = message.text;
-        } else {
-          // Add new assistant message
-          updatedMessages.push({
-            role: 'assistant',
-            content: message.text
-          });
-        }
-        
-        return {
-          ...prev,
-          messages: updatedMessages,
-          lastAssistantMessage: message.text
-        };
-      });
-    } else if (message.type === 'error') {
-      console.error("ElevenLabs agent error:", message.error);
-      toast({
-        title: t("error"),
-        description: message.error || t("serviceUnavailable"),
-        variant: "destructive",
-      });
-    }
-  }, [processAudioQueue, toast, t]);
+  // Handle WebSocket messages - simplified to avoid actual WebSocket handling
+  const handleWebSocketMessage = useCallback((event: any) => {
+    console.log("Note: ElevenLabs functionality removed - handleWebSocketMessage called");
+  }, []);
 
-  // Start agent conversation
+  // Start agent conversation - returns a dummy conversation ID
   const startAgent = useCallback(async (apiKey: string): Promise<string> => {
-    try {
-      if (!apiKey) {
-        throw new Error("API key is required");
-      }
-      
-      cleanupConnection();
-      
-      // Initialize AudioContext
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
-      // Get agent ID for the target language
-      const agentId = getAgentIdForLanguage(targetLanguage);
-      const voiceId = getVoiceIdForLanguage(targetLanguage);
-      
-      // Create WebSocket connection
-      const wsUrl = `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_turbo_v2&output_format=mp3&optimize_streaming_latency=3&xi-api-key=${apiKey}`;
-      websocketRef.current = new WebSocket(wsUrl);
-      
-      return new Promise((resolve, reject) => {
-        if (!websocketRef.current) {
-          reject(new Error("Failed to create WebSocket connection"));
-          return;
-        }
-        
-        websocketRef.current.onopen = () => {
-          setIsConnected(true);
-          console.log("WebSocket connection established");
-          
-          // Initialize conversation with agent configuration
-          if (websocketRef.current) {
-            websocketRef.current.send(JSON.stringify({
-              text: `You are an AI language tutor for ${targetLanguage}. You will help the user practice ${targetLanguage} through conversation.`,
-              voice_settings: {
-                stability: 0.5,
-                similarity_boost: 0.75,
-                style: 0,
-                use_speaker_boost: true
-              },
-              generation_config: {
-                chunk_length_schedule: [120, 160, 250, 290]
-              },
-              xi_api_key: apiKey
-            }));
-            
-            // Send initial greeting
-            const greeting = `Hello! I'm your ${targetLanguage} language tutor. How can I help you practice today?`;
-            setConversation({
-              messages: [
-                { role: 'assistant', content: greeting }
-              ],
-              lastAssistantMessage: greeting,
-              id: Date.now().toString()
-            });
-            
-            resolve(Date.now().toString());
-          } else {
-            reject(new Error("WebSocket connection lost during initialization"));
-          }
-        };
-        
-        if (websocketRef.current) {
-          websocketRef.current.onmessage = handleWebSocketMessage;
-          
-          websocketRef.current.onerror = (error) => {
-            console.error("WebSocket error:", error);
-            reject(new Error("WebSocket connection error"));
-            cleanupConnection();
-          };
-          
-          websocketRef.current.onclose = () => {
-            console.log("WebSocket connection closed");
-            setIsConnected(false);
-          };
-        }
-      });
-    } catch (error) {
-      console.error("Error starting agent:", error);
-      cleanupConnection();
-      throw error;
-    }
-  }, [targetLanguage, cleanupConnection, handleWebSocketMessage]);
-
-  // Send message to the agent
-  const sendMessage = useCallback((text: string) => {
-    if (!isConnected || !websocketRef.current) {
-      toast({
-        title: t("error"),
-        description: t("notConnectedToAgent"),
-        variant: "destructive",
-      });
-      return false;
-    }
+    console.log("Note: ElevenLabs functionality removed - startAgent called");
     
-    try {
-      websocketRef.current.send(JSON.stringify({ text }));
+    // Create a simulated conversation for compatibility
+    const conversationId = Date.now().toString();
+    
+    setIsConnected(true);
+    
+    // Create an initial message to maintain compatibility
+    const greeting = `Hello! I'm your ${targetLanguage} language tutor. (Note: Voice functionality is disabled)`;
+    setConversation({
+      messages: [
+        { role: 'assistant', content: greeting }
+      ],
+      lastAssistantMessage: greeting,
+      id: conversationId
+    });
+    
+    return conversationId;
+  }, [targetLanguage]);
+
+  // Send message to the agent - simplified to update conversation state only
+  const sendMessage = useCallback((text: string) => {
+    console.log("Note: ElevenLabs functionality removed - sendMessage called with:", text);
+    
+    setConversation(prev => {
+      const userMessage: AgentMessage = {
+        role: 'user',
+        content: text
+      };
       
+      const updatedMessages = [...prev.messages, userMessage];
+      
+      return {
+        ...prev,
+        messages: updatedMessages,
+        lastUserMessage: text
+      };
+    });
+    
+    // Simulate a response after a delay
+    setTimeout(() => {
       setConversation(prev => {
-        const userMessage: AgentMessage = {
-          role: 'user',
-          content: text
+        const assistantMessage: AgentMessage = {
+          role: 'assistant',
+          content: "I'm sorry, voice chat functionality is currently unavailable."
         };
-        
-        const updatedMessages = [...prev.messages, userMessage];
         
         return {
           ...prev,
-          messages: updatedMessages,
-          lastUserMessage: text
+          messages: [...prev.messages, assistantMessage],
+          lastAssistantMessage: assistantMessage.content
         };
       });
-      
-      return true;
-    } catch (error) {
-      console.error("Error sending message:", error);
-      toast({
-        title: t("error"),
-        description: t("failedToSendMessage"),
-        variant: "destructive",
-      });
-      return false;
-    }
-  }, [isConnected, toast, t]);
+    }, 1000);
+    
+    return true;
+  }, []);
 
-  // Stop the agent
+  // Stop the agent - clean up resources
   const stopAgent = useCallback(async () => {
     cleanupConnection();
     return true;
