@@ -1,6 +1,6 @@
 
 import { useLocation } from "react-router-dom";
-import { Home, MessageSquare, Mic, BookOpen } from "lucide-react";
+import { Home, MessageSquare, Mic, BookOpen, BarChart } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 import NavButton from "./NavButton";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
@@ -30,6 +30,14 @@ export const NavItems = ({ isLoggedIn, onItemClick }: NavItemsProps) => {
         icon: BookOpen,
         label: isTeacher ? t("myClasses") : t("myClass"),
         path: isTeacher ? "/teacher/classes" : "/student/class",
+        requiresAuth: true
+      });
+      
+      // Add the metrics dashboard after the class item
+      items.splice(insertIndex + 1, 0, {
+        icon: BarChart,
+        label: t("metricsDashboard"),
+        path: "/metrics-dashboard",
         requiresAuth: true
       });
     }
