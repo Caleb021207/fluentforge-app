@@ -21,12 +21,12 @@ const PracticePromptButton = ({
   const displayLanguage = targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1);
   
   return (
-    <div className="mt-8 text-center">
+    <div className="my-8 text-center">
       <Button 
         onClick={onClick} 
         disabled={isLoading} 
         size="lg" 
-        className="bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600"
+        className="bg-primary hover:bg-primary/90"
       >
         <Sparkles className="mr-2 h-4 w-4" />
         {t("startConversationIn", { language: displayLanguage })}

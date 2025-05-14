@@ -86,6 +86,7 @@ const Practice = () => {
             
             <div className="border-t p-4">
               <HintButton 
+                hints={hints}
                 messages={messages} 
                 targetLanguage={targetLanguage} 
               />

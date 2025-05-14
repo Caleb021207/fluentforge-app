@@ -1,48 +1,31 @@
-
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Lightbulb } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Message } from "@/types/chat";
 
-export interface HintButtonProps {
+interface HintButtonProps {
   messages: Message[];
   targetLanguage: string;
-  className?: string; // Add className prop
+  hints?: any[];
 }
 
-const HintButton = ({ messages, targetLanguage, className = "" }: HintButtonProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+const HintButton = ({ messages, targetLanguage, hints }: HintButtonProps) => {
   const { t } = useLocalization();
   
-  // This is a placeholder for hint generation functionality
-  // In a real implementation, this would call an API to get hints
-  const handleGetHints = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Here we would set hints based on API response
-    }, 1000);
-  };
+  // This is a placeholder component that will be fully implemented later
+  // Currently it's just a button that doesn't do anything
   
   return (
-    <div className={`mb-2 ${className}`}>
-      {messages.length > 0 ? (
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="text-xs"
-          onClick={handleGetHints}
-          disabled={isLoading || messages.length === 0}
-        >
-          <Lightbulb className="h-3 w-3 mr-1" />
-          {t("suggestedResponses") || "Get suggestions"}
-        </Button>
-      ) : (
-        <p className="text-xs text-muted-foreground">
-          {t("startConversationToSeeSuggestions") || "Start a conversation to see suggestions"}
-        </p>
-      )}
+    <div className="mb-2">
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="flex items-center gap-2 w-full justify-start"
+      >
+        <Lightbulb className="h-4 w-4" />
+        {t("getResponseSuggestions") || "Get Response Suggestions"}
+      </Button>
     </div>
   );
 };
