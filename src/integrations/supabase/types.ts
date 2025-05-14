@@ -418,7 +418,7 @@ export type Database = {
       }
       student_language_metrics: {
         Row: {
-          classroom_id: string
+          classroom_id: string | null
           conversation_complexity: number
           created_at: string
           grammar_accuracy: number
@@ -430,7 +430,7 @@ export type Database = {
           vocabulary_diversity: number | null
         }
         Insert: {
-          classroom_id: string
+          classroom_id?: string | null
           conversation_complexity: number
           created_at?: string
           grammar_accuracy: number
@@ -442,7 +442,7 @@ export type Database = {
           vocabulary_diversity?: number | null
         }
         Update: {
-          classroom_id?: string
+          classroom_id?: string | null
           conversation_complexity?: number
           created_at?: string
           grammar_accuracy?: number

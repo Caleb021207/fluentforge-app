@@ -30,8 +30,11 @@ export default function ViewLanguageMetricsButton({ messages, sessionId }: ViewL
       // Only analyze if we don't have metrics yet or if we have new messages
       if (!metrics || (lastMetrics && messages.length > lastMetrics.messageCount)) {
         const result = await analyzeConversation(
-          messages.map(m => ({ role: m.role as any, content: m.content })), 
-          { sessionId, silent: true }
+          messages.map(m => ({ role: m.role, content: m.content })), 
+          { 
+            sessionId, 
+            silent: true 
+          }
         );
         
         if (result) {
@@ -57,7 +60,7 @@ export default function ViewLanguageMetricsButton({ messages, sessionId }: ViewL
         disabled={isAnalyzing || messages.length < 4}
       >
         <BarChart2 className="h-4 w-4" />
-        {t('viewMetrics')}
+        {isAnalyzing ? t('analyzing') : t('viewMetrics')}
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>

@@ -67,7 +67,7 @@ export function useLanguageAnalysis() {
       const { data, error } = await supabase.functions.invoke('analyze-conversation-quality', {
         body: {
           userId: user.id,
-          classroomId: options.classroomId,
+          classroomId: options.classroomId, // This can be null now that we've fixed the database
           sessionId: options.sessionId,
           messages: formattedMessages,
           includeVoiceMetrics: isVoiceSession
@@ -86,6 +86,16 @@ export function useLanguageAnalysis() {
         pronunciationAccuracy: pronunciationMetrics || data.metrics.pronunciationAccuracy,
         timestamp: Date.now()
       };
+
+      // Store metrics in student_metrics table by calling our updated function
+      try {
+        await supabase.rpc('update_student_language_aggregate_metrics', {
+          target_student_id: user.id
+        });
+      } catch (metricsError) {
+        console.error("Error updating aggregate metrics:", metricsError);
+        // Continue even if aggregation fails - the individual metrics are still stored
+      }
 
       setLastMetrics(combinedMetrics);
       

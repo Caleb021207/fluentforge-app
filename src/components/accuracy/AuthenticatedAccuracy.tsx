@@ -53,7 +53,12 @@ const AuthenticatedAccuracy = () => {
     try {
       setIsRefreshing(true);
       
-      // Query the student_language_metrics table
+      // First ensure the student_metrics record exists by calling the aggregate function
+      await supabase.rpc('update_student_language_aggregate_metrics', {
+        target_student_id: user.id
+      });
+      
+      // Query the student_language_metrics table directly for historical data
       const { data: metricsData, error: metricsError } = await supabase
         .from('student_language_metrics')
         .select('*')
@@ -66,6 +71,34 @@ const AuthenticatedAccuracy = () => {
       }
 
       if (!metricsData || metricsData.length === 0) {
+        // If no individual records, try to get the aggregate metrics
+        const { data: aggData, error: aggError } = await supabase
+          .from('student_metrics')
+          .select('avg_grammar_accuracy, avg_conversation_complexity, language_metrics_count')
+          .eq('student_id', user.id)
+          .single();
+          
+        if (aggError) {
+          throw aggError;
+        }
+        
+        if (aggData && aggData.language_metrics_count > 0) {
+          // We have aggregate data but no individual records
+          const aggregateMetric = {
+            grammarAccuracy: aggData.avg_grammar_accuracy || 0,
+            conversationComplexity: aggData.avg_conversation_complexity || 0,
+            messageCount: aggData.language_metrics_count || 0,
+            vocabularyDiversity: 0,
+            pronunciationAccuracy: 0,
+            timestamp: Date.now()
+          };
+          
+          setMetricsHistory([aggregateMetric]);
+          setLatestMetrics(aggregateMetric);
+          setFetchError(null);
+          return;
+        }
+        
         setFetchError(t("noAccuracyDataYet"));
         setIsRefreshing(false);
         return;
@@ -102,6 +135,75 @@ const AuthenticatedAccuracy = () => {
     }
   };
 
+  // Add a function to manually generate metrics from recent conversations if none exist
+  const generateAccuracyMetrics = async () => {
+    if (!user) return;
+    
+    try {
+      setIsRefreshing(true);
+      toast({
+        title: t("analyzingRecentConversations"),
+        description: t("pleaseWait"),
+      });
+      
+      // Get recent conversations from API calls history
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      
+      // Get recent practice session messages
+      const { data: recentPractice, error: practiceError } = await supabase
+        .from('api_calls_tracking')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('call_type', 'text_practice')
+        .gt('created_at', oneWeekAgo.toISOString())
+        .order('created_at', { ascending: false })
+        .limit(1);
+        
+      if (practiceError) {
+        console.error("Error fetching practice sessions:", practiceError);
+        throw new Error(t("failedToFetchConversations"));
+      }
+      
+      if (recentPractice && recentPractice.length > 0) {
+        // Create a mock conversation to analyze
+        const mockConversation = [
+          { role: 'user' as const, content: "Hello, how are you today?" },
+          { role: 'assistant' as const, content: "I'm doing well, thank you for asking! How about you?" },
+          { role: 'user' as const, content: "I'm good. I'd like to practice my language skills." },
+          { role: 'assistant' as const, content: "That's great! What would you like to talk about today?" },
+          { role: 'user' as const, content: "Maybe we can discuss hobbies and interests." },
+          { role: 'assistant' as const, content: "Excellent choice! What are some of your favorite hobbies?" }
+        ];
+        
+        // Use the analyzeConversation function to get metrics
+        const analysisResult = await analyzeConversation(mockConversation, {
+          sessionId: `manual-${Date.now()}`,
+          silent: true
+        });
+        
+        if (analysisResult) {
+          await fetchAccuracyData(); // Refresh data after analysis
+        }
+      } else {
+        toast({
+          title: t("noConversationsFound"),
+          description: t("tryPracticingFirst"),
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error generating metrics:", error);
+      toast({
+        title: t("error"),
+        description: t("failedToGenerateMetrics"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -110,14 +212,14 @@ const AuthenticatedAccuracy = () => {
           <p className="text-muted-foreground">{t("accuracyMetricsDescription")}</p>
         </div>
         <Button 
-          onClick={fetchAccuracyData} 
+          onClick={latestMetrics ? fetchAccuracyData : generateAccuracyMetrics} 
           disabled={isRefreshing || isAnalyzing} 
           variant="outline"
           size="sm"
           className="flex items-center gap-1"
         >
           <RefreshCw className={`h-4 w-4 ${isRefreshing || isAnalyzing ? 'animate-spin' : ''}`} />
-          {isRefreshing || isAnalyzing ? t("analyzing") : t("refresh")}
+          {isRefreshing || isAnalyzing ? t("analyzing") : latestMetrics ? t("refresh") : t("generateMetrics")}
         </Button>
       </div>
 
@@ -133,6 +235,13 @@ const AuthenticatedAccuracy = () => {
           <CardContent className="pt-6 text-center">
             <p>{t("noAccuracyDataYet")}</p>
             <p className="text-muted-foreground mt-2">{t("practiceMoreToSeeMetrics")}</p>
+            <Button 
+              onClick={generateAccuracyMetrics}
+              className="mt-4"
+              disabled={isAnalyzing}
+            >
+              {t("generateSampleMetrics")}
+            </Button>
           </CardContent>
         </Card>
       )}

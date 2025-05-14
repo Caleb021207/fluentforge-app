@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, BarChart } from "lucide-react";
+import { ChevronDown, ChevronUp, BarChart, RefreshCw } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { LanguageMetrics } from "@/types/chat";
 
@@ -73,7 +73,21 @@ const LanguageMetricsPanel: React.FC<LanguageMetricsPanelProps> = ({
     <Card className="mt-4">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-md">{t("languageMetrics")}</CardTitle>
-        {renderToggleButton()}
+        <div className="flex gap-2">
+          {metrics && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={onAnalyze} 
+              disabled={isLoading}
+              className="flex items-center gap-1"
+            >
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+              {isLoading ? t("analyzing") : t("refreshAnalysis")}
+            </Button>
+          )}
+          {renderToggleButton()}
+        </div>
       </CardHeader>
       <CardContent>
         {!metrics && !isLoading && (
@@ -126,7 +140,7 @@ const LanguageMetricsPanel: React.FC<LanguageMetricsPanelProps> = ({
               <Progress value={metrics.conversationComplexity} className="h-2" />
             </div>
             
-            {metrics.vocabularyDiversity && (
+            {metrics.vocabularyDiversity && metrics.vocabularyDiversity > 0 && (
               <div>
                 <div className="flex justify-between mb-1">
                   <span className="text-sm">{t("vocabularyDiversity")}</span>
@@ -136,8 +150,34 @@ const LanguageMetricsPanel: React.FC<LanguageMetricsPanelProps> = ({
               </div>
             )}
             
-            <div className="text-xs text-muted-foreground">
-              {t("basedOnMessagesCount", { count: String(metrics.messageCount) })}
+            {metrics.pronunciationAccuracy && metrics.pronunciationAccuracy > 0 && (
+              <div>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm">{t("pronunciationAccuracy")}</span>
+                  <div className="flex items-center">
+                    <span className="text-sm font-medium">{Math.round(metrics.pronunciationAccuracy)}%</span>
+                    <Badge 
+                      className="ml-2" 
+                      variant={getBadgeVariant(getCEFRLevel(metrics.pronunciationAccuracy))}
+                    >
+                      {getCEFRLevel(metrics.pronunciationAccuracy)}
+                    </Badge>
+                  </div>
+                </div>
+                <Progress value={metrics.pronunciationAccuracy} className="h-2" />
+              </div>
+            )}
+            
+            <div className="flex justify-between items-center text-xs text-muted-foreground">
+              <span>{t("basedOnMessagesCount", { count: String(metrics.messageCount) })}</span>
+              <Button 
+                variant="link" 
+                size="sm" 
+                className="p-0 h-auto text-xs"
+                onClick={() => window.location.href = '/accuracy'}
+              >
+                {t("viewDetailedMetrics")}
+              </Button>
             </div>
           </div>
         )}
