@@ -99,13 +99,13 @@ export const useSessionManagement = () => {
         description: t("failedToCreateSession"),
         variant: "warning",
       });
-      setSessionStatus('available');
+      setSessionStatus('available' as SessionStatus);
     }
   };
 
   const endSession = async (): Promise<boolean> => {
     try {
-      setSessionStatus('available');
+      setSessionStatus('available' as SessionStatus);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return false;
 

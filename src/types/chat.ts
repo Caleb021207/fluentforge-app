@@ -1,52 +1,47 @@
 
-export interface Message {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-  translation?: string | Record<string, unknown>;
-  messageId?: string;
-  audioUrl?: string;
-  pending?: boolean;
-  error?: boolean;
-}
-
-export interface LanguageMetrics {
-  grammarAccuracy: number;
-  conversationComplexity: number;
-  messageCount: number;
-  vocabularyDiversity?: number;
-  session_id?: string;
-  timestamp?: number;
-}
-
-export interface Rating {
-  difficulty: number;
-  helpful: number;
-  enjoyable: number;
-}
-
-export interface TopicSuggestion {
-  title: string;
-  description: string;
-  example: string;
-}
-
-// Add missing types from chat.d.ts to ensure compatibility
-export type Role = 'user' | 'assistant' | 'system';
-export type TranslationType = string | null | undefined | Record<string, unknown>;
-export type SessionStatus = 'idle' | 'loading' | 'active' | 'cooldown';
-
-export interface MessageCount {
-  inputs: number;
-  outputs: number;
-}
-
-export interface SuggestionCategory {
-  title: string;
-  suggestions: string[];
-}
+// Basic message types
+export type MessageRole = 'user' | 'assistant' | 'system';
 
 export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
+  id: string;
+  role: MessageRole;
   content: string;
-  translation?: TranslationType;
+  timestamp?: number;
+  translation?: string | null;
+  audioUrl?: string | null;
+  isLoading?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
+}
+
+export type MessageCount = {
+  inputs: number;
+  outputs: number;
+};
+
+// Speech recognition types
+export type TranscriptResult = {
+  transcript: string;
+  isFinal: boolean;
+  confidence?: number;
+};
+
+export type SpeechRecognitionState = 'inactive' | 'listening' | 'processing';
+export type VoiceChatMode = 'listening' | 'speaking';
+
+// Session status types
+export type SessionStatus = 'available' | 'active' | 'cooldown' | 'limit_reached' | 'loading' | 'error';
+
+// Language support type
+export type SupportLevel = 'full' | 'beta' | 'limited' | 'unavailable';
+
+// Translation types
+export type TranslationType = string | Record<string, unknown>;
+
+// Hint and suggestion types
+export type SuggestionCategory = 'general' | 'grammar' | 'vocabulary' | 'culture' | 'practice';
+
+export interface SuggestionItem {
+  text: string;
+  category: SuggestionCategory;
 }
