@@ -1,47 +1,57 @@
 
-import { ELEVEN_LABS_AGENT_ID } from "./constants";
+// This file contains utilities for working with the ElevenLabs API
 
-export const getElevenLabsVoiceId = (language: string) => {
-  // This function maps languages to voice IDs
-  const voiceMap: Record<string, string> = {
-    spanish: 'TxGEqnHWrfWFTfGW9XjX',
-    english: '21m00Tcm4TlvDq8ikWAM',
-    portuguese: 'D38z5RcWu1voky8WS1ja',
-    // Add more languages as needed
-  };
-  
-  return voiceMap[language.toLowerCase()] || voiceMap.english;
-};
+export const ELEVEN_LABS_API_URL = 'https://api.elevenlabs.io/v1';
 
-export const getElevenLabsModel = () => {
-  return 'eleven_multilingual_v2';
-};
+export interface TTSOptions {
+  text: string;
+  voice_id: string;
+  model_id?: string;
+  onStart?: () => void;
+  onComplete?: () => void;
+  onError?: (error: Error) => void;
+}
 
-export const getElevenLabsAgentId = (language: string) => {
-  return getAgentIdForLanguage(language);
-};
+export async function generateTTS({ 
+  text, 
+  voice_id,
+  model_id = 'eleven_multilingual_v2', 
+  onStart,
+  onComplete,
+  onError 
+}: TTSOptions): Promise<string> {
+  try {
+    if (onStart) onStart();
+    
+    const response = await fetch(`${ELEVEN_LABS_API_URL}/text-to-speech/${voice_id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'xi-api-key': process.env.ELEVEN_LABS_API_KEY || '',
+      },
+      body: JSON.stringify({
+        text,
+        model_id,
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.8,
+        }
+      }),
+    });
 
-export const getAgentIdForLanguage = (language: string) => {
-  // A mapping of languages to agent IDs could be added here
-  // For now, we return the default agent ID
-  return ELEVEN_LABS_AGENT_ID;
-};
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail?.message || 'Failed to generate speech');
+    }
 
-// Mock implementation for the useElevenLabsAgent hook to fix build errors
-export const useElevenLabsAgent = (language: string) => {
-  return {
-    startAgent: async (apiKey: string) => {
-      console.log(`Starting ElevenLabs agent for ${language} with API key`);
-      return "mock-conversation-id";
-    },
-    stopAgent: async () => {
-      console.log(`Stopping ElevenLabs agent for ${language}`);
-      return true;
-    },
-    isConnected: false,
-    isSpeaking: false,
-    conversation: []
-  };
-};
-
-// Add any other ElevenLabs related utility functions here
+    const audioBlob = await response.blob();
+    const audioUrl = URL.createObjectURL(audioBlob);
+    
+    if (onComplete) onComplete();
+    
+    return audioUrl;
+  } catch (error) {
+    if (onError) onError(error as Error);
+    throw error;
+  }
+}
