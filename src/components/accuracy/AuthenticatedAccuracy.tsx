@@ -19,7 +19,7 @@ import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 const AuthenticatedAccuracy = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [metricsHistory, setMetricsHistory] = useState<LanguageMetrics[]>([]);
+  const [metricsHistory, setMetricsHistory] = useState<(LanguageMetrics & { timestamp: number })[]>([]);
   const [latestMetrics, setLatestMetrics] = useState<LanguageMetrics | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -53,62 +53,37 @@ const AuthenticatedAccuracy = () => {
     try {
       setIsRefreshing(true);
       
-      // Fetch conversation sessions to analyze
-      const { data: sessions, error: sessionsError } = await supabase
-        .from('chat_sessions')
+      // Instead of trying to query chat_sessions directly, use the student_language_metrics table
+      const { data: metricsData, error: metricsError } = await supabase
+        .from('student_language_metrics')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(10);
 
-      if (sessionsError) {
-        throw sessionsError;
+      if (metricsError) {
+        throw metricsError;
       }
 
-      if (!sessions || sessions.length === 0) {
-        setFetchError(t("noConversationsFound"));
+      if (!metricsData || metricsData.length === 0) {
+        setFetchError(t("noAccuracyDataYet"));
+        setIsRefreshing(false);
         return;
       }
 
-      // Fetch messages for each session
-      const metricsResults = [];
-      for (const session of sessions) {
-        const { data: messages, error: messagesError } = await supabase
-          .from('chat_messages')
-          .select('*')
-          .eq('session_id', session.id)
-          .order('created_at', { ascending: true });
-        
-        if (messagesError) {
-          console.error("Error fetching messages:", messagesError);
-          continue;
-        }
+      // Process metrics data
+      const formattedMetrics = metricsData.map(metric => ({
+        grammarAccuracy: metric.grammar_accuracy || 0,
+        conversationComplexity: metric.conversation_complexity || 0,
+        messageCount: metric.message_count || 0,
+        vocabularyDiversity: metric.vocabulary_diversity,
+        timestamp: new Date(metric.created_at).getTime(),
+        session_id: metric.session_id
+      }));
 
-        if (messages && messages.length > 0) {
-          // Analyze this conversation if we have messages
-          const formattedMessages = messages.map(msg => ({
-            role: msg.role,
-            content: msg.content
-          }));
-          
-          const metrics = await analyzeConversation(formattedMessages, { 
-            sessionId: session.id, 
-            silent: true 
-          });
-          
-          if (metrics) {
-            metricsResults.push({
-              ...metrics,
-              timestamp: new Date(session.created_at).getTime(),
-              session_id: session.id
-            });
-          }
-        }
-      }
-
-      setMetricsHistory(metricsResults);
-      if (metricsResults.length > 0) {
-        setLatestMetrics(metricsResults[0]);
+      setMetricsHistory(formattedMetrics);
+      if (formattedMetrics.length > 0) {
+        setLatestMetrics(formattedMetrics[0]);
       }
       setFetchError(null);
 

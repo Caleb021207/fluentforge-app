@@ -1,30 +1,23 @@
+import practiceTranslations from './practice';
+import voiceChatTranslations from './voice-chat';
+import accuracyTranslations from './accuracy';
+import commonTranslations from './common';
+import authTranslations from './auth';
+import navigationTranslations from './navigation';
+import profileTranslations from './profile';
+import certificationsTranslations from './certifications';
+import settingsTranslations from './settings';
 
-import { TranslationRecord } from "../types";
-import authTranslations from "./auth";
-import certificatesTranslations from "./certificates";
-import generalTranslations from "./general";
-import languageFrameworksTranslations from "./language-frameworks";
-import languageSelectionTranslations from "./language-selection";
-import practiceTranslations from "./practice";
-import premiumVoiceTranslations from "./premium-voice";
-import profileTranslations from "./profile";
-import progressTranslations from "./progress";
-import voiceChatTranslations from "./voice-chat";
-import languagesTranslations from "./languages";
-
-// Combine all Ukrainian translations
-const ukrainianTranslations: TranslationRecord = {
-  ...authTranslations,
-  ...certificatesTranslations,
-  ...generalTranslations,
-  ...languageFrameworksTranslations,
-  ...languageSelectionTranslations,
+const ukrainianTranslations = {
   ...practiceTranslations,
-  ...premiumVoiceTranslations,
-  ...profileTranslations,
-  ...progressTranslations,
   ...voiceChatTranslations,
-  ...languagesTranslations
+  ...accuracyTranslations,
+  ...commonTranslations,
+  ...authTranslations,
+  ...navigationTranslations,
+  ...profileTranslations,
+  ...certificationsTranslations,
+  ...settingsTranslations,
 };
 
 export default ukrainianTranslations;

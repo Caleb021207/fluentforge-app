@@ -89,7 +89,7 @@ const AccuracyRecommendations: React.FC<AccuracyRecommendationsProps> = ({ metri
             {t("grammarRecommendations")}
           </CardTitle>
           <CardDescription>
-            {t("basedOnYourGrammarScore", { score: Math.round(metrics.grammarAccuracy) })}
+            {t("basedOnYourGrammarScore", { score: String(Math.round(metrics.grammarAccuracy)) })}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -108,7 +108,7 @@ const AccuracyRecommendations: React.FC<AccuracyRecommendationsProps> = ({ metri
             {t("complexityRecommendations")}
           </CardTitle>
           <CardDescription>
-            {t("basedOnYourComplexityScore", { score: Math.round(metrics.conversationComplexity) })}
+            {t("basedOnYourComplexityScore", { score: String(Math.round(metrics.conversationComplexity)) })}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -128,7 +128,7 @@ const AccuracyRecommendations: React.FC<AccuracyRecommendationsProps> = ({ metri
               {t("vocabularyRecommendations")}
             </CardTitle>
             <CardDescription>
-              {t("basedOnYourVocabularyScore", { score: Math.round(metrics.vocabularyDiversity) })}
+              {t("basedOnYourVocabularyScore", { score: String(Math.round(metrics.vocabularyDiversity)) })}
             </CardDescription>
           </CardHeader>
           <CardContent>

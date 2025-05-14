@@ -6,7 +6,7 @@ import AuthenticatedAccuracy from "@/components/accuracy/AuthenticatedAccuracy";
 import UnauthenticatedAccuracy from "@/components/accuracy/UnauthenticatedAccuracy";
 
 const Accuracy = () => {
-  const { isLoggedIn, isLoading } = useAuthGuard({ redirectIfNotAuthenticated: false });
+  const { isLoading, isAuthenticated } = useAuthGuard({ redirectIfNotAuthenticated: false });
 
   if (isLoading) {
     return (
@@ -20,8 +20,8 @@ const Accuracy = () => {
 
   return (
     <div className="container max-w-5xl mx-auto p-4 md:p-6">
-      {isLoggedIn ? <AuthenticatedAccuracy /> : <UnauthenticatedAccuracy />}
-      {!isLoggedIn && <AuthRequiredPrompt />}
+      {isAuthenticated ? <AuthenticatedAccuracy /> : <UnauthenticatedAccuracy />}
+      {!isAuthenticated && <AuthRequiredPrompt />}
     </div>
   );
 };
