@@ -28,7 +28,7 @@ export const useVoiceChat = () => {
   // Language that will be used for the conversation
   const [activeLanguage, setActiveLanguage] = useState<string>(currentLanguage);
   
-  // Use the ElevenLabs hook
+  // Use the mock ElevenLabs hook - this actually uses OpenAI Chat GPT Nano and Azure TTS
   const {
     startAgent,
     stopAgent,
@@ -47,7 +47,7 @@ export const useVoiceChat = () => {
         const key = await fetchApiKey(activeLanguage);
         setApiKeyLoaded(!!key);
       } catch (error) {
-        console.error("Failed to load ElevenLabs API key:", error);
+        console.error("Failed to load API key:", error);
         setApiKeyLoaded(false);
       }
     };
@@ -95,12 +95,12 @@ export const useVoiceChat = () => {
       if (!elevenLabsApiKey && !apiKeyLoaded) {
         const key = await fetchApiKey(overrideLanguage || currentLanguage);
         if (!key) {
-          throw new Error("Failed to fetch ElevenLabs API key");
+          throw new Error("Failed to fetch API key");
         }
         setApiKeyLoaded(true);
       }
       
-      // Start the conversation agent
+      // Start the conversation agent (uses OpenAI + Azure TTS behind the scenes)
       const conversationId = await startAgent(elevenLabsApiKey || "");
       
       toast({

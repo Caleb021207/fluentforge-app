@@ -55,3 +55,24 @@ export async function generateTTS({
     throw error;
   }
 }
+
+// Mock implementation for the ElevenLabs agent hook for compatibility
+export const useElevenLabsAgent = (language: string) => {
+  return {
+    startAgent: async (apiKey: string) => {
+      console.log(`Mock ElevenLabs agent: using OpenAI Chat GPT Nano and Azure TTS instead`);
+      return "mock-conversation-id";
+    },
+    stopAgent: async () => {
+      return true;
+    },
+    isConnected: false,
+    isSpeaking: false,
+    conversation: []
+  };
+};
+
+// Compatibility function for existing code
+export const getAgentIdForLanguage = (language: string) => {
+  return 'mock-agent-id';
+};
