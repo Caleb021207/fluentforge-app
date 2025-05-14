@@ -45,3 +45,13 @@ export interface SuggestionItem {
   text: string;
   category: SuggestionCategory;
 }
+
+// Language metrics type
+export interface LanguageMetrics {
+  grammarAccuracy: number;
+  conversationComplexity: number;
+  messageCount: number;
+  vocabularyDiversity?: number;
+  pronunciationAccuracy?: number;
+  timestamp?: number;
+}

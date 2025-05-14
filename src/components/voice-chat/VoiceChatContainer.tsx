@@ -6,19 +6,22 @@ import HintButton from "@/components/practice/HintButton";
 import { useLocalization } from "@/context/LocalizationContext";
 import ChatMessage from "@/components/practice/ChatMessage";
 import type { Message, TranslationType } from "@/types/chat";
+import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
 
 interface VoiceChatContainerProps {
   messages: Message[];
   isLoading: boolean;
   targetLanguage: string;
   onPlayAudio?: (text: string) => void;
+  sessionId?: string;
 }
 
 export default function VoiceChatContainer({
   messages,
   isLoading,
   targetLanguage,
-  onPlayAudio
+  onPlayAudio,
+  sessionId
 }: VoiceChatContainerProps) {
   const { t } = useLocalization();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -85,7 +88,12 @@ export default function VoiceChatContainer({
         )}
       </ScrollArea>
       
-      <div className="border-t p-4 flex justify-end">
+      <div className="border-t p-4 flex justify-between items-center">
+        <ViewLanguageMetricsButton 
+          messages={messages} 
+          sessionId={sessionId} 
+        />
+        
         <div className="flex space-x-2">
           <HintButton 
             targetLanguage={targetLanguage}

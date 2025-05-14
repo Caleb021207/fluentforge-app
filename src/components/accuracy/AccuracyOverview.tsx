@@ -100,6 +100,28 @@ const AccuracyOverview: React.FC<AccuracyOverviewProps> = ({ metrics }) => {
         </Card>
       )}
 
+      {metrics.pronunciationAccuracy !== undefined && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-md">{t("pronunciationAccuracy")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl font-bold">{Math.round(metrics.pronunciationAccuracy)}%</span>
+                <Badge variant={getBadgeVariant(getCEFRLevel(metrics.pronunciationAccuracy))}>
+                  {getCEFRLevel(metrics.pronunciationAccuracy)}
+                </Badge>
+              </div>
+              <Progress value={metrics.pronunciationAccuracy} className="h-2" />
+              <p className="text-sm text-muted-foreground">
+                {t("pronunciationAccuracyDescription")}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-md">{t("overallAccuracy")}</CardTitle>
@@ -111,7 +133,8 @@ const AccuracyOverview: React.FC<AccuracyOverviewProps> = ({ metrics }) => {
               const values = [
                 metrics.grammarAccuracy,
                 metrics.conversationComplexity,
-                ...(metrics.vocabularyDiversity !== undefined ? [metrics.vocabularyDiversity] : [])
+                ...(metrics.vocabularyDiversity !== undefined ? [metrics.vocabularyDiversity] : []),
+                ...(metrics.pronunciationAccuracy !== undefined ? [metrics.pronunciationAccuracy] : [])
               ];
               const overallScore = values.reduce((a, b) => a + b, 0) / values.length;
               return (

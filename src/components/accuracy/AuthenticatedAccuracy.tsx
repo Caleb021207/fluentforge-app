@@ -53,7 +53,7 @@ const AuthenticatedAccuracy = () => {
     try {
       setIsRefreshing(true);
       
-      // Instead of trying to query chat_sessions directly, use the student_language_metrics table
+      // Query the student_language_metrics table
       const { data: metricsData, error: metricsError } = await supabase
         .from('student_language_metrics')
         .select('*')
@@ -77,6 +77,7 @@ const AuthenticatedAccuracy = () => {
         conversationComplexity: metric.conversation_complexity || 0,
         messageCount: metric.message_count || 0,
         vocabularyDiversity: metric.vocabulary_diversity,
+        pronunciationAccuracy: metric.pronunciation_accuracy,
         timestamp: new Date(metric.created_at).getTime(),
         session_id: metric.session_id
       }));

@@ -22,6 +22,7 @@ const AccuracyChart: React.FC<AccuracyChartProps> = ({ metricsHistory }) => {
     grammarAccuracy: '#0ea5e9', // sky blue
     conversationComplexity: '#8b5cf6', // purple
     vocabularyDiversity: '#f59e0b', // amber
+    pronunciationAccuracy: '#10b981', // emerald
   };
 
   const textColor = isDark ? '#f1f5f9' : '#334155';
@@ -39,7 +40,8 @@ const AccuracyChart: React.FC<AccuracyChartProps> = ({ metricsHistory }) => {
         formattedDate: new Date(metric.timestamp).toLocaleDateString(),
         grammarAccuracy: Math.round(metric.grammarAccuracy),
         conversationComplexity: Math.round(metric.conversationComplexity),
-        vocabularyDiversity: metric.vocabularyDiversity !== undefined ? Math.round(metric.vocabularyDiversity) : undefined
+        vocabularyDiversity: metric.vocabularyDiversity !== undefined ? Math.round(metric.vocabularyDiversity) : undefined,
+        pronunciationAccuracy: metric.pronunciationAccuracy !== undefined ? Math.round(metric.pronunciationAccuracy) : undefined
       }));
   }, [metricsHistory]);
 
@@ -101,6 +103,17 @@ const AccuracyChart: React.FC<AccuracyChartProps> = ({ metricsHistory }) => {
               dataKey="vocabularyDiversity"
               name={t("vocabularyDiversity")}
               stroke={lineColors.vocabularyDiversity}
+              strokeWidth={2}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          )}
+          {chartData[0].pronunciationAccuracy !== undefined && (
+            <Line
+              type="monotone"
+              dataKey="pronunciationAccuracy"
+              name={t("pronunciationAccuracy")}
+              stroke={lineColors.pronunciationAccuracy}
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 6 }}
