@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Menu, X, Mic, Home, Headphones, BookOpen, Lock as LockIcon, BarChart } from "lucide-react";
@@ -53,25 +52,6 @@ const Navigation = () => {
       { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
       { icon: BarChart, label: "accuracy", path: "/accuracy", requiresAuth: true }
     ];
-
-    // Add language-specific advanced voice options for Spanish and Portuguese
-    if (currentLanguage === "spanish") {
-      items.splice(2, 0, {
-        icon: Headphones,
-        label: "spanishAdvancedVoice",
-        path: "/spanish-advanced-voice",
-        requiresAuth: true
-      });
-    }
-
-    if (currentLanguage === "portuguese") {
-      items.splice(2, 0, {
-        icon: Headphones,
-        label: "portugueseAdvancedVoice",
-        path: "/portuguese-advanced-voice",
-        requiresAuth: true
-      });
-    }
 
     if (isLoggedIn && !teacherStatusLoading) {
       // Add the class menu item after voice chat items

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,8 @@ import { playTTS } from "@/utils/tts";
 import HintButton from "@/components/practice/HintButton";
 import { Separator } from "@/components/ui/separator";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
+import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
+import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -52,6 +53,21 @@ const VoiceChat = () => {
   const { currentLanguage, t } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
   const { analyzeConversation } = useLanguageAnalysis();
+
+  // Language metrics panel hook
+  const { 
+    isExpanded,
+    togglePanel, 
+    metrics,
+    isAnalyzing,
+    analyzeCurrentConversation
+  } = useLanguageMetricsPanel(
+    conversationHistory.map(msg => ({ 
+      role: msg.role, 
+      content: msg.content,
+      translation: msg.translation
+    }))
+  );
 
   console.log("Language configuration:", { currentLanguage, native, practice });
 
@@ -550,7 +566,7 @@ const VoiceChat = () => {
           <div className="mt-4 flex items-center justify-end space-x-2">
             {conversationHistory.length > 3 && (
               <Button
-                onClick={handleAnalyzeConversation}
+                onClick={analyzeCurrentConversation}
                 variant="outline"
                 size="sm"
                 className="mr-auto"
@@ -574,6 +590,16 @@ const VoiceChat = () => {
             )}
           </div>
         </Card>
+
+        {/* Language Metrics Panel */}
+        {metrics && (
+          <LanguageMetricsPanel
+            metrics={metrics}
+            isExpanded={isExpanded}
+            togglePanel={togglePanel}
+            isLoading={isAnalyzing}
+          />
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ConversationStarters 
