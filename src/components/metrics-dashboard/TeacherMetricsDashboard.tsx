@@ -34,7 +34,7 @@ const TeacherMetricsDashboard = () => {
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [classroomId, setClassroomId] = useState<string>('');
-  const [classrooms, setClassrooms] = useState<{id: string, name: string}[]>([]);
+  const [classrooms, setClassrooms] = useState<{id: string; name: string}[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [studentMetrics, setStudentMetrics] = useState<MetricsData[]>([]);
   const [isLoadingStudents, setIsLoadingStudents] = useState(true);
@@ -86,11 +86,17 @@ const TeacherMetricsDashboard = () => {
 
       if (error) throw error;
 
-      setClassrooms(data || []);
+      // Map the data to match the expected format
+      const formattedClassrooms = (data || []).map(classroom => ({
+        id: classroom.id,
+        name: classroom.class_name
+      }));
+
+      setClassrooms(formattedClassrooms);
       
       // If there are classrooms, select the first one
-      if (data && data.length > 0) {
-        setClassroomId(data[0].id);
+      if (formattedClassrooms.length > 0) {
+        setClassroomId(formattedClassrooms[0].id);
       }
     } catch (err: any) {
       console.error("Error fetching classrooms:", err);

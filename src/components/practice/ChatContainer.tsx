@@ -31,6 +31,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoading }) =>
         } else if (message.role === "error") {
           return <ErrorMessage key={index} message={message.content} />;
         }
+        // Handle system messages or any other role types
         return null;
       })}
     </div>

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { useTeacherStatus } from '@/hooks/useTeacherStatus';
 import { Navigate } from 'react-router-dom';
@@ -7,10 +7,10 @@ import StudentMetricsDashboard from '@/components/metrics-dashboard/StudentMetri
 import TeacherMetricsDashboard from '@/components/metrics-dashboard/TeacherMetricsDashboard';
 
 const MetricsDashboard = () => {
-  const { isLoggedIn } = useAuthGuard();
+  const { isAuthenticated } = useAuthGuard();
   const { isTeacher, isLoading: teacherStatusLoading } = useTeacherStatus();
   
-  if (!isLoggedIn) {
+  if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
   
