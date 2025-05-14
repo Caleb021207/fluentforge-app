@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Lightbulb } from "lucide-react";
@@ -8,16 +9,17 @@ interface HintButtonProps {
   messages: Message[];
   targetLanguage: string;
   hints?: any[];
+  className?: string; // Add className prop
 }
 
-const HintButton = ({ messages, targetLanguage, hints }: HintButtonProps) => {
+const HintButton = ({ messages, targetLanguage, hints, className }: HintButtonProps) => {
   const { t } = useLocalization();
   
   // This is a placeholder component that will be fully implemented later
   // Currently it's just a button that doesn't do anything
   
   return (
-    <div className="mb-2">
+    <div className={`mb-2 ${className || ''}`}>
       <Button 
         variant="outline" 
         size="sm" 

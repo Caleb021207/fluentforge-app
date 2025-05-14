@@ -20,3 +20,10 @@ export interface Message {
   content: string;
   translation?: TranslationType;
 }
+
+export interface LanguageMetrics {
+  grammarAccuracy: number;
+  vocabularyDiversity: number;
+  conversationComplexity: number;
+  messageCount: number;
+}
