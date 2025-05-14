@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -54,7 +55,7 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
           <Progress 
             value={metrics.grammarAccuracy} 
             className="mt-2"
-            indicatorColor={getScoreColorClass(metrics.grammarAccuracy)}
+            indicatorClassName={getScoreColorClass(metrics.grammarAccuracy)}
           />
         </CardContent>
       </Card>
@@ -76,7 +77,7 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
           <Progress 
             value={metrics.conversationComplexity} 
             className="mt-2"
-            indicatorColor={getScoreColorClass(metrics.conversationComplexity)}
+            indicatorClassName={getScoreColorClass(metrics.conversationComplexity)}
           />
         </CardContent>
       </Card>
@@ -98,7 +99,7 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
           <Progress 
             value={metrics.pronunciationAccuracy || 0} 
             className="mt-2"
-            indicatorColor={getScoreColorClass(metrics.pronunciationAccuracy || 0)}
+            indicatorClassName={getScoreColorClass(metrics.pronunciationAccuracy || 0)}
           />
         </CardContent>
       </Card>
@@ -121,7 +122,7 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
             <Progress 
               value={metrics.vocabularyDiversity} 
               className="mt-2"
-              indicatorColor={getScoreColorClass(metrics.vocabularyDiversity)}
+              indicatorClassName={getScoreColorClass(metrics.vocabularyDiversity)}
             />
           </CardContent>
         </Card>
