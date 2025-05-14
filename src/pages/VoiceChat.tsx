@@ -22,6 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
 import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
+import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -574,6 +575,10 @@ const VoiceChat = () => {
                 {t("analyzeConversation")}
               </Button>
             )}
+            <ViewLanguageMetricsButton 
+              messages={apiConversationHistory.map(msg => ({ role: msg.role as any, content: msg.content }))} 
+              sessionId={sessionIdRef.current || undefined}
+            />
             <HintButton 
               targetLanguage={practice}
               messages={apiConversationHistory.map(msg => ({ role: msg.role as any, content: msg.content, translation: undefined }))} 
