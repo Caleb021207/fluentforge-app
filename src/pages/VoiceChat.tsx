@@ -596,8 +596,9 @@ const VoiceChat = () => {
           <LanguageMetricsPanel
             metrics={metrics}
             isExpanded={isExpanded}
-            togglePanel={togglePanel}
+            onToggle={togglePanel}
             isLoading={isAnalyzing}
+            onAnalyze={analyzeCurrentConversation}
           />
         )}
         
