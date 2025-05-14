@@ -14,7 +14,7 @@ export type ChatMessage = {
 
 // Legacy Message type for backward compatibility
 export interface Message {
-  role: 'user' | 'assistant' | 'system';
+  role: 'user' | 'assistant' | 'system' | 'error';
   content: string;
   translation?: TranslationType;
 }
