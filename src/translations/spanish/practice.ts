@@ -3,64 +3,45 @@ import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
   textPractice: "Práctica de Texto",
-  startTextChatting: "Comienza a chatear con nuestro tutor de IA",
-  typeMessageBelow: "Escribe un mensaje a continuación para comenzar la conversación",
-  practiceWithAI: "Practica con IA",
-  noticeTextBasedPractice: "Esta es una práctica basada en texto. El tutor te ayudará a mejorar tu escritura y gramática en tiempo real.",
-  chatWithAITutor: "Chatea con nuestro tutor de IA para practicar tus habilidades lingüísticas a través de conversaciones de texto. La IA te ayudará a corregir tu gramática, vocabulario y uso.",
-  isTyping: "está escribiendo...",
-  responseIsNotAvailableAtTheMoment: "La respuesta no está disponible en este momento",
-  responseContainsInappropriateContent: "La respuesta contiene contenido inapropiado",
-  pleaseTryAgainLater: "Por favor, inténtalo de nuevo más tarde",
-  sendingFailedTryAgain: "Error al enviar. Inténtalo de nuevo",
-  typeMessage: "Escribe un mensaje...",
+  practiceWithAITutor: "Practica con el Tutor de Idiomas IA",
+  chatWithAITutor: "Chatea con nuestro tutor de IA para practicar tu inglés. El tutor te ayudará a corregir tu gramática, vocabulario y pronunciación. Puedes hacer preguntas sobre el idioma o la cultura.",
+  startVoiceChat: "Iniciar Chat de Voz",
+  stopVoiceChat: "Detener Chat de Voz",
+  getSkillsAssessment: "Obtener Evaluación de Habilidades",
+  reading: "Lectura",
+  writing: "Escritura",
+  speaking: "Hablando...",
+  listening: "Comprensión Auditiva",
+  overallLevel: "Nivel General",
+  startChatting: "¡Comienza a chatear con tu tutor de idiomas con IA!",
+  clickToStartVoice: "Haz clic en 'Iniciar Chat de Voz' para comenzar a hablar con el tutor",
+  allowMicAccess: "Por favor permite el acceso al micrófono para utilizar las funciones de voz",
+  typeMessage: "Escribe tu mensaje en español o inglés...",
+  startTextChatting: "Comienza a chatear con el tutor de IA",
+  typeMessageBelow: "Escribe un mensaje abajo para comenzar",
+  practiceWithTextChat: "Practica con el Chat de Texto",
+  textConversationPractice: "Práctica de Conversación de Texto",
   
-  // Practice guide
-  practiceGuide: "Guía de práctica de {{language}}",
+  // Adding missing translations
+  send: "Enviar",
+  sendEnglishPracticePrompt: "Enviar Mensaje de Práctica en Inglés",
+  noticeTextBasedPractice: "Nota: Esta es la función de práctica basada en texto. Para la práctica de voz, prueba nuestras funciones de Chat de Voz Ilimitado o Chat de Voz Premium.",
+  askAboutGrammarRules: "Preguntar sobre reglas gramaticales",
+  practiceConversationsDifferentSituations: "Practicar conversaciones en diferentes situaciones",
+  learnNewVocabulary: "Aprender nuevo vocabulario",
+  discussCulturalTopics: "Discutir temas culturales",
+  practicePrompt: "¡Hola! Me gustaría practicar conversación en {{targetLanguage}}. Por favor, ayúdame corrigiendo mi gramática, vocabulario y uso del {{targetLanguage}}. ¿Podemos empezar con una conversación básica?",
+  chatPlaceholder: "Escribe tu mensaje para practicar {{targetLanguage}}...",
+  
+  // Practice guide translations - adding these to fix the placeholders
+  practiceGuide: "Guía de práctica para {{language}}",
+  practiceDescription: "Practica inglés en el chat de texto con el tutor de IA. El tutor te ayudará a corregir tu gramática, vocabulario y uso. Puedes hacer preguntas sobre el idioma o la cultura.",
   practiceGuideDescription: "Aquí hay algunos consejos para aprovechar al máximo tu práctica de {{language}}:",
-  practiceTip1: "Intenta formar oraciones completas, aunque sean simples",
-  practiceTip2: "No te preocupes por cometer errores - ¡son parte del aprendizaje!",
-  practiceTip3: "Pide aclaración si no entiendes algo",
-  practiceTip4: "Intenta usar vocabulario que hayas aprendido recientemente",
-  practiceTip5: "Haz preguntas para mantener la conversación",
-  
-  // Message translations
-  translationUnavailable: "Traducción no disponible",
-  translating: "Traduciendo...",
-  showTranslation: "Mostrar traducción",
-  hideTranslation: "Ocultar traducción",
-  usedCorrectly: "Usado correctamente",
-  translateMessageTo: "Traducir mensaje a {{language}}",
-  
-  // Language metrics
-  languageMetrics: "Métricas de Idioma",
-  hideMetrics: "Ocultar Métricas",
-  viewLanguageMetrics: "Ver Métricas de Idioma",
-  noLanguageDataYet: "Aún no hay datos de idioma",
-  analyzing: "Analizando...",
-  analyzeConversation: "Analizar Conversación",
-  analyzingConversation: "Analizando conversación...",
-  grammarAccuracy: "Precisión Gramatical",
-  conversationComplexity: "Complejidad de Conversación",
-  vocabularyDiversity: "Diversidad de Vocabulario",
-  basedOnMessagesCount: "Basado en {{count}} mensajes",
-  
-  // Hints
-  suggestedResponses: "Respuestas Sugeridas",
-  clickToHearPronunciation: "Clic para escuchar la pronunciación",
-  startConversationToSeeSuggestions: "Inicia una conversación para ver sugerencias",
-  
-  // Network and API error messages
-  networkError: "Error de red",
-  couldNotConnect: "No se pudo conectar al servidor",
-  pleaseCheckConnection: "Por favor, verifica tu conexión a internet",
-  couldNotGetResponse: "No se pudo obtener respuesta del tutor",
-  requestTimeoutError: "Tiempo de espera agotado",
-  tutor: {
-    willCorrectGrammar: "El tutor corregirá tu gramática cuando sea necesario",
-    willHelpWithVocabulary: "El tutor te ayudará con vocabulario nuevo",
-    willAdjustToYourLevel: "El tutor se ajustará a tu nivel de habilidad"
-  }
+  practiceTip1: "Intenta formar oraciones completas, incluso si son sencillas.",
+  practiceTip2: "No te preocupes por los errores, son parte del proceso de aprendizaje.",
+  practiceTip3: "Pide aclaraciones si no entiendes algo.",
+  practiceTip4: "Intenta usar el vocabulario que has aprendido recientemente.",
+  practiceTip5: "Practica con frecuencia para mejorar tu fluidez."
 };
 
 export default practiceTranslations;

@@ -40,14 +40,7 @@ const practiceTranslations: TranslationRecord = {
   "practiceTip2": "ਗਲਤੀਆਂ ਬਾਰੇ ਚਿੰਤਾ ਨਾ ਕਰੋ - ਉਹ ਸਿੱਖਣ ਦੀ ਪ੍ਰਕਿਰਿਆ ਦਾ ਹਿੱਸਾ ਹਨ!",
   "practiceTip3": "ਜੇ ਤੁਸੀਂ ਕੁਝ ਨਹੀਂ ਸਮਝਦੇ ਤਾਂ ਸਪੱਸ਼ਟੀਕਰਨ ਮੰਗੋ।",
   "practiceTip4": "ਹਾਲ ਹੀ ਵਿੱਚ ਸਿੱਖੇ ਸ਼ਬਦਾਵਲੀ ਦੀ ਵਰਤੋਂ ਕਰਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
-  "practiceTip5": "ਆਪਣੀ ਪ੍ਰਵਾਹਤਾ ਨੂੰ ਸੁਧਾਰਨ ਲਈ ਨਿਯਮਿਤ ਤੌਰ 'ਤੇ ਅਭਿਆਸ ਕਰੋ।",
-  
-  // Response suggestions related keys
-  "responseSuggestions": "ਜਵਾਬ ਸੁਝਾਅ",
-  "clickPlayToHearPronunciation": "ਉਚਾਰਨ ਸੁਣਨ ਲਈ ਪਲੇਅ 'ਤੇ ਕਲਿੱਕ ਕਰੋ",
-  "startConversationForSuggestions": "ਸੁਝਾਅ ਵੇਖਣ ਲਈ ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ",
-  "getResponseSuggestions": "ਜਵਾਬ ਸੁਝਾਅ ਪ੍ਰਾਪਤ ਕਰੋ",
-  "play": "ਚਲਾਓ"
+  "practiceTip5": "ਆਪਣੀ ਪ੍ਰਵਾਹਤਾ ਨੂੰ ਸੁਧਾਰਨ ਲਈ ਨਿਯਮਿਤ ਤੌਰ 'ਤੇ ਅਭਿਆਸ ਕਰੋ।"
 };
 
 export default practiceTranslations;

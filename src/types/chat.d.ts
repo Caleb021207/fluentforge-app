@@ -1,29 +1,36 @@
 
-import { TranslationType } from "@/components/practice/hooks/translation/types";
+export type Role = 'user' | 'assistant' | 'system';
 
-export interface ChatMessage {
-  id: string;
-  role: "user" | "assistant" | "system" | "error";
+export interface Message {
+  role: Role;
   content: string;
-  timestamp: Date;
-  translation?: TranslationType;
+  translation?: TranslationType | string;
 }
+
+export type TranslationType = string | null | undefined;
+
+export interface SuggestionCategory {
+  title: string;
+  suggestions: string[];
+}
+
+export type SessionStatus = 'idle' | 'loading' | 'active' | 'cooldown';
 
 export interface MessageCount {
   inputs: number;
   outputs: number;
 }
 
-// Legacy Message type for backward compatibility
-export interface Message {
-  role: "user" | "assistant" | "system" | "error";
-  content: string;
-  translation?: TranslationType;
-}
-
+// Export the LanguageMetrics interface here too to ensure backward compatibility
 export interface LanguageMetrics {
   grammarAccuracy: number;
-  vocabularyDiversity: number;
   conversationComplexity: number;
   messageCount: number;
+  vocabularyDiversity?: number;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  translation?: TranslationType;
 }

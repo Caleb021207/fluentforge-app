@@ -30,14 +30,7 @@ const practiceTranslations: TranslationRecord = {
   learnNewVocabulary: "学习新词汇",
   discussCulturalTopics: "讨论文化话题",
   practicePrompt: "你好！我想练习{{targetLanguage}}对话。请帮我纠正{{targetLanguage}}的语法、词汇和用法。我们可以从基本对话开始吗？",
-  chatPlaceholder: "输入消息练习{{targetLanguage}}...",
-  
-  // Response suggestions related keys
-  "responseSuggestions": "回应建议",
-  "clickPlayToHearPronunciation": "点击播放听发音",
-  "startConversationForSuggestions": "开始对话以查看建议",
-  "getResponseSuggestions": "获取回应建议",
-  "play": "播放",
+  chatPlaceholder: "输入消息练习{{targetLanguage}}..."
 };
 
 export default practiceTranslations;

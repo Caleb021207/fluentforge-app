@@ -27,9 +27,6 @@ const isClassroomRoute = (path: string): boolean => {
          path.includes("/student/class");
 };
 
-// Debug mode flag - set to false in production to hide missing translation warnings
-const DEBUG_TRANSLATIONS = process.env.NODE_ENV === 'development';
-
 // Provider component
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
@@ -58,11 +55,8 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     }
     
     // Debug - log available translations
-    if (DEBUG_TRANSLATIONS) {
-      console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
-      console.log("Available translations:", Object.keys(translations));
-      console.log("Current language set to:", currentLanguage);
-    }
+    console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
+    console.log("Available translations:", Object.keys(translations));
   }, []);
 
   // Helper function to safely get a string value from a potentially nested structure
@@ -88,7 +82,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Check if translations exist
       if (!translations) {
-        if (DEBUG_TRANSLATIONS) console.error("No translations available");
+        console.error("No translations available");
         return key;
       }
       
@@ -96,24 +90,19 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       const isClassroom = isClassroomRoute(currentPath);
       const languageToUse = isClassroom ? DEFAULT_LANGUAGE : currentLanguage;
       
-      // Debug logging for translation issues in development mode
-      if (DEBUG_TRANSLATIONS) {
-        console.debug(`[Translation] Looking up key "${key}" in language "${languageToUse}"`);
-      }
-      
       // Check if selected language exists
       const selectedTranslations = translations[languageToUse];
       const defaultTranslations = translations[DEFAULT_LANGUAGE];
       
       if (!selectedTranslations) {
-        if (DEBUG_TRANSLATIONS) console.error(`No translations for language: ${languageToUse}`);
+        console.error(`No translations for language: ${languageToUse}`);
         return String(defaultTranslations?.[key]) || key;
       }
       
       // Get translation for selected language or fallback to default
       let translationValue: string = "";
       
-      // Handle nested objects in translations (e.g., tutor.willCorrectGrammar)
+      // Handle nested objects in translations (e.g., suggestedTopics.introductions)
       if (key.includes('.')) {
         const [parentKey, childKey] = key.split('.');
         const parentObject = selectedTranslations[parentKey];
@@ -127,16 +116,11 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         const value = selectedTranslations[key];
         // Ensure we return a string
         translationValue = typeof value === 'string' ? value : 
-                          (value !== undefined ? String(value) : "");
+                           (value !== undefined ? String(value) : "");
       }
       
       // Fallback to default language if not found or not a string
       if (translationValue === "" && defaultTranslations) {
-        // Debug logging for missing translations
-        if (DEBUG_TRANSLATIONS) {
-          console.debug(`[Translation] Key "${key}" not found in "${languageToUse}", trying default language`);
-        }
-        
         // Try to get from default translations
         if (key.includes('.')) {
           const [parentKey, childKey] = key.split('.');
@@ -151,13 +135,13 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
           const value = defaultTranslations[key];
           // Ensure we return a string
           translationValue = typeof value === 'string' ? value : 
-                            (value !== undefined ? String(value) : key);
+                             (value !== undefined ? String(value) : key);
         }
         
         if (translationValue !== key) {
-          // Only log each missing key once per session in development mode
-          if (!missingKeys.has(key) && DEBUG_TRANSLATIONS) {
-            console.warn(`[Translation] Missing translation for key "${key}" in language "${languageToUse}"`);
+          // Only log each missing key once per session
+          if (!missingKeys.has(key)) {
+            console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
             setMissingKeys(prev => new Set([...prev, key]));
           }
         }
@@ -165,8 +149,8 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       // If translation is missing in both languages, return the key
       if (translationValue === "") {
-        if (!missingKeys.has(key) && DEBUG_TRANSLATIONS) {
-          console.error(`[Translation] Key "${key}" not found in any language`);
+        if (!missingKeys.has(key)) {
+          console.error(`Translation key not found: "${key}" in any language`);
           setMissingKeys(prev => new Set([...prev, key]));
         }
         return key;
@@ -177,19 +161,19 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         let result = translationValue;
         Object.entries(replacements).forEach(([placeholder, replaceValue]) => {
           // Support {{placeholder}} format
-          const doubleRegex = new RegExp(`{{${placeholder}}}`, 'g');
-          result = result.replace(doubleRegex, replaceValue);
+          const regex = new RegExp(`{{${placeholder}}}`, 'g');
+          result = result.replace(regex, replaceValue);
           
           // Also support {placeholder} format
-          const singleRegex = new RegExp(`{${placeholder}}`, 'g');
-          result = result.replace(singleRegex, replaceValue);
+          const simpleRegex = new RegExp(`{${placeholder}}`, 'g');
+          result = result.replace(simpleRegex, replaceValue);
         });
         return result;
       }
       
       return translationValue;
     } catch (error) {
-      if (DEBUG_TRANSLATIONS) console.error("[Translation] Error:", error);
+      console.error("Translation error:", error);
       return key; // Return the key as fallback
     }
   };

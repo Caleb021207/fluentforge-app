@@ -22,15 +22,7 @@ const classroomTranslations: TranslationRecord = {
   lastActive: "Ostatnio aktywny",
   noClasses: "Nie masz żadnych klas",
   noClassesJoined: "Nie dołączyłeś do żadnej klasy",
-  createOrJoinClass: "Utwórz lub dołącz do klasy",
-  
-  // Speech rate control translations
-  speechRate: "Szybkość mowy",
-  verySlow: "Bardzo wolno",
-  slow: "Wolno",
-  normal: "Normalnie",
-  fast: "Szybko",
-  veryFast: "Bardzo szybko"
+  createOrJoinClass: "Utwórz lub dołącz do klasy"
 };
 
 export default classroomTranslations;

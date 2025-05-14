@@ -18,13 +18,6 @@ const practiceTranslations: TranslationRecord = {
   writingCorrection: "作文の添削",
   languagePracticePrompt: "{{language}}の練習を手伝ってください。私の間違いを指摘して、より良い表現方法を提案してください。",
   
-  // Response suggestions related keys
-  "responseSuggestions": "返答の提案",
-  "clickPlayToHearPronunciation": "発音を聞くにはプレイボタンをクリック",
-  "startConversationForSuggestions": "提案を見るには会話を始めてください",
-  "getResponseSuggestions": "返答の提案を取得",
-  "play": "再生",
-  
   // Practice guide
   practiceGuideTitle: "効果的な練習のヒント",
   practiceGuideIntro: "AIと練習するときのヒント：",
@@ -83,7 +76,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Additional translations for the practice page
   chatWithAITutor: "AIチューターとのテキスト会話で英語を練習しましょう！AIが文法、語彙、使い方を修正するのを手伝います。言語や文化についての質問も自由にしてください。",
-  noticeTextBasedPractice: "注：これはテキストベースの練習機能です。音声練習には、無制限音声チャットまたはプレミアム音���チャット機能��お試しください。",
+  noticeTextBasedPractice: "注：これはテキストベースの練習機能です。音声練習には、無制限音声チャットまたはプレミアム音���チャット機能をお試しください。",
   sendEnglishPracticePrompt: "英語練習プロンプトを送信",
   askAboutGrammarRules: "文法ルールについて質問する",
   practiceConversationsDifferentSituations: "様々な状況での会話を練習する",

@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 import generalCoreTranslations from "./general-core";
 import uiElementsTranslations from "./ui-elements";
@@ -34,15 +35,4 @@ const englishTranslations: TranslationRecord = {
   ...languagesTranslations,
 };
 
-// Add speech rate control translations if they don't exist
-export default {
-  ...englishTranslations,
-  
-  // Speech rate translations
-  speechRate: "Speech Rate",
-  verySlow: "Very Slow",
-  slow: "Slow",
-  normal: "Normal",
-  fast: "Fast",
-  veryFast: "Very Fast",
-};
+export default englishTranslations;

@@ -77,20 +77,13 @@ const practiceTranslations: TranslationRecord = {
   chatPlaceholder: "Andika ujumbe wako kwa kufanya mazoezi ya {{targetLanguage}}...",
   
   // Practice guide translations
-  "practiceGuide": "Mwongozo wa Mazoezi ya {{language}}",
-  "practiceGuideDescription": "Hapa kuna vidokezo vya kupata faida zaidi kutoka kwa mazoezi yako ya {{language}}:",
-  "practiceGuideItem1": "Jaribu kuunda sentensi kamili, hata kama ni rahisi.",
-  "practiceGuideItem2": "Usiwe na wasiwasi kuhusu kufanya makosa - ni sehemu ya kujifunza!",
-  "practiceGuideItem3": "Omba ufafanuzi ikiwa hufahamu kitu.",
-  "practiceGuideItem4": "Jaribu kutumia msamiati ambao umejifunza hivi karibuni.",
-  "practiceDisclaimer": "AI yetu itajirekebisha kulingana na kiwango chako cha ujuzi na kukusaidia kuendelea hatua kwa hatua.",
-  
-  // Response suggestions related keys
-  "responseSuggestions": "Mapendekezo ya Majibu",
-  "clickPlayToHearPronunciation": "Bofya kucheza ili kusikiliza matamshi",
-  "startConversationForSuggestions": "Anza mazungumzo ili kuona mapendekezo",
-  "getResponseSuggestions": "Pata Mapendekezo ya Majibu",
-  "play": "Cheza"
+  practiceGuide: "Mwongozo wa Mazoezi ya {{language}}",
+  practiceGuideDescription: "Hapa kuna vidokezo vya kupata faida zaidi kutoka kwa mazoezi yako ya {{language}}:",
+  practiceGuideItem1: "Jaribu kuunda sentensi kamili, hata kama ni rahisi.",
+  practiceGuideItem2: "Usiwe na wasiwasi kuhusu kufanya makosa - ni sehemu ya kujifunza!",
+  practiceGuideItem3: "Omba ufafanuzi ikiwa hufahamu kitu.",
+  practiceGuideItem4: "Jaribu kutumia msamiati ambao umejifunza hivi karibuni.",
+  practiceDisclaimer: "AI yetu itajirekebisha kulingana na kiwango chako cha ujuzi na kukusaidia kuendelea hatua kwa hatua."
 };
 
 export default practiceTranslations;

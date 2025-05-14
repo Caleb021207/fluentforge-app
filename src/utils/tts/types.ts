@@ -4,7 +4,6 @@ export interface TTSOptions {
   language: string;
   isTargetLanguage?: boolean;
   useMetaMms?: boolean;
-  speechRate?: number;
   onStart?: () => void;
   onEnd?: () => void;
   onError?: (error: string) => void;

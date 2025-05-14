@@ -1,44 +1,101 @@
 
-import React from "react";
-import { Message } from "@/types/chat";
-import { UserMessage } from "./UserMessage";
-import { AssistantMessage } from "./AssistantMessage";
-import { ErrorMessage } from "./ErrorMessage";
+import React, { useEffect, useRef } from "react";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import ChatInput from "./ChatInput";
+import ChatMessage from "./ChatMessage";
+import EmptyChatState from "./EmptyChatState";
+import LoadingIndicator from "./LoadingIndicator";
+import LanguageMetricsPanel from "./LanguageMetricsPanel";
+import { useLanguageMetricsPanel } from "./hooks/useLanguageMetricsPanel";
+import { useLocalization } from "@/context/LocalizationContext";
 
-export interface ChatContainerProps {
-  messages: Message[];
-  isLoading: boolean;
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  translation?: string;
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoading }) => {
-  if (messages.length === 0) {
-    return null;
-  }
+interface ChatContainerProps {
+  messages: Message[];
+  input: string;
+  setInput: (value: string) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  isLoading: boolean;
+  getPlaceholderText: () => string;
+  targetLanguage?: string;
+}
+
+export default function ChatContainer({
+  messages,
+  input,
+  setInput,
+  handleSubmit,
+  isLoading,
+  getPlaceholderText,
+  targetLanguage = "spanish"
+}: ChatContainerProps) {
+  const { t } = useLocalization();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { 
+    isExpanded, 
+    togglePanel, 
+    metrics, 
+    isAnalyzing, 
+    analyzeCurrentConversation 
+  } = useLanguageMetricsPanel(messages);
+  
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
-    <div className="space-y-6">
-      {messages.map((message, index) => {
-        if (message.role === "user") {
-          return <UserMessage key={index} message={message.content} />;
-        } else if (message.role === "assistant") {
-          return (
-            <AssistantMessage
-              key={index}
-              message={message.content}
-              translation={message.translation}
-            />
-          );
-        } else if (message.role === "error") {
-          return <ErrorMessage key={index} message={message.content} />;
-        } else if (message.role === "system") {
-          // Handle system messages appropriately, perhaps show them differently or not at all
-          return null;
-        }
-        // Handle any other role types
-        return null;
-      })}
+    <div className="space-y-2">
+      <Card className="overflow-hidden mb-2">
+        <ScrollArea className="h-[500px] p-4">
+          {messages.length === 0 ? (
+            <EmptyChatState />
+          ) : (
+            <div className="space-y-4">
+              {messages.map((message, index) => (
+                <ChatMessage
+                  key={index}
+                  role={message.role}
+                  content={message.content}
+                  translation={message.translation}
+                />
+              ))}
+              
+              {isLoading && <LoadingIndicator />}
+              
+              <div ref={scrollRef} />
+            </div>
+          )}
+        </ScrollArea>
+        
+        <div className="border-t p-4">
+          <ChatInput
+            isLoading={isLoading}
+            value={input}
+            onChange={setInput}
+            onSubmit={handleSubmit}
+            placeholder={getPlaceholderText()}
+            messages={messages}
+            targetLanguage={targetLanguage}
+          />
+        </div>
+      </Card>
+
+      <LanguageMetricsPanel 
+        metrics={metrics}
+        isLoading={isAnalyzing}
+        isExpanded={isExpanded}
+        onToggle={togglePanel}
+        onAnalyze={analyzeCurrentConversation}
+      />
     </div>
   );
-};
-
-export default ChatContainer;
+}

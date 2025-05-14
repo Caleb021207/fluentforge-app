@@ -1,8 +1,8 @@
-
-import React from "react";
-import { useLocalization } from "@/context/LocalizationContext";
-import { Separator } from "@/components/ui/separator";
+import React, { useEffect, useState } from "react";
 import TranslationContent from "./TranslationContent";
+import { useToast } from "@/hooks/use-toast";
+import { useLocalization } from "@/context/LocalizationContext";
+import type { TranslationType } from "../hooks/useTranslationHandler";
 
 interface TranslationSectionProps {
   showTranslation: boolean;
@@ -11,9 +11,8 @@ interface TranslationSectionProps {
   currentLanguage: string;
   isTranslationPlaying: boolean;
   isTranslationLoading: boolean;
-  originalContent: string;
+  originalContent: string; // Original content to compare with translation
   onPlayTranslationAudio?: () => void;
-  speechRate?: number;
 }
 
 const TranslationSection: React.FC<TranslationSectionProps> = ({
@@ -24,32 +23,88 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   isTranslationPlaying,
   isTranslationLoading,
   originalContent,
-  onPlayTranslationAudio,
-  speechRate = 1.0
+  onPlayTranslationAudio
 }) => {
   const { t } = useLocalization();
+  const { toast } = useToast();
+  const [translationText, setTranslationText] = useState<string>("");
+  const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
   
-  if (!showTranslation || !translation) return null;
+  // Process translation on component mount and when translation prop changes
+  useEffect(() => {
+    if (currentLanguage.toLowerCase() === 'tagalog' || currentLanguage.toLowerCase() === 'thai') {
+      console.log(`TranslationSection ${currentLanguage} debug:`, { 
+        originalTranslation: translation,
+        originalContent,
+        translationLength: typeof translation === 'string' ? translation.length : 0,
+        translationType: typeof translation,
+        areEqual: translation.trim() === originalContent.trim()
+      });
+    }
+    
+    // More robust comparison - normalize text by removing extra spaces and making lowercase
+    const normalizedTranslation = translation.trim().toLowerCase().replace(/\s+/g, ' ');
+    const normalizedContent = originalContent.trim().toLowerCase().replace(/\s+/g, ' ');
+    
+    // Check if we should display this translation (avoid duplicating content)
+    const isTranslationSameAsContent = normalizedTranslation === normalizedContent || normalizedTranslation === '';
+    
+    // Special debug for Thai
+    if (currentLanguage.toLowerCase() === 'thai') {
+      console.log('Thai translation comparison:', {
+        normalizedTranslation,
+        normalizedContent,
+        isTranslationSameAsContent,
+        containsThaiScript: /[\u0E00-\u0E7F]/.test(translation)
+      });
+      
+      // Force display for Thai if it contains Thai script
+      if (/[\u0E00-\u0E7F]/.test(translation)) {
+        setShouldDisplay(true);
+      } else {
+        setShouldDisplay(!isTranslationSameAsContent);
+      }
+    } else {
+      setShouldDisplay(!isTranslationSameAsContent);
+    }
+    
+    // Translation should already be a string by this point due to changes in parent components
+    if (typeof translation === 'string' && translation.trim() !== '') {
+      setTranslationText(translation);
+    } else {
+      // Fallback for specific languages
+      if (currentLanguage.toLowerCase() === 'tagalog') {
+        setTranslationText("Hindi magagamit ang pagsasalin sa ngayon. Paumanhin sa abala.");
+      } else if (currentLanguage.toLowerCase() === 'thai') {
+        setTranslationText("ไม่สามารถแสดงคำแปลได้ในขณะนี้ ขออภัยในความไม่สะดวก");
+      } else {
+        setTranslationText(t("translationNotAvailable", { language: currentLanguage }) || 
+               `Translation not available for ${currentLanguage}`);
+      }
+    }
+    
+    if (currentLanguage.toLowerCase() === 'tagalog' || currentLanguage.toLowerCase() === 'thai') {
+      console.log(`Processed ${currentLanguage} translation:`, {
+        translationText,
+        shouldDisplay,
+        length: translationText.length
+      });
+    }
+  }, [translation, currentLanguage, t, originalContent]);
   
-  // Hide translation if it's identical to original content
-  if (translation.trim() === originalContent.trim()) return null;
+  if (!showTranslation || !shouldDisplay) {
+    return null;
+  }
   
   return (
-    <div className="mt-2 pt-2">
-      <Separator className="mb-2 opacity-30" />
-      <div className="flex flex-col">
-        <span className="text-xs mb-1 opacity-70">
-          {t("translation")}
-        </span>
-        <TranslationContent 
-          role={role}
-          translation={translation}
-          isTranslationPlaying={isTranslationPlaying}
-          isTranslationLoading={isTranslationLoading}
-          onPlayTranslationAudio={onPlayTranslationAudio}
-          speechRate={speechRate}
-        />
-      </div>
+    <div className="border-t border-border mt-2 pt-2">
+      <TranslationContent
+        role={role}
+        translation={translationText}
+        isTranslationPlaying={isTranslationPlaying}
+        isTranslationLoading={isTranslationLoading}
+        onPlayTranslationAudio={onPlayTranslationAudio}
+      />
     </div>
   );
 };

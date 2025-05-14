@@ -22,33 +22,7 @@ const classroomTranslations: TranslationRecord = {
   lastActive: "Ultima activitate",
   noClasses: "Nu aveți clase",
   noClassesJoined: "Nu v-ați alăturat niciunei clase",
-  createOrJoinClass: "Creați sau alăturați-vă unei clase",
-  
-  // Speech rate control translations
-  speechRate: "Viteza vorbirii",
-  verySlow: "Foarte încet",
-  slow: "Încet",
-  normal: "Normal",
-  fast: "Rapid",
-  veryFast: "Foarte rapid",
-
-  // Language metrics translations
-  languageMetrics: "Metrici lingvistice",
-  grammarAccuracy: "Precizie gramaticală",
-  conversationComplexity: "Complexitate de conversație",
-  vocabularyDiversity: "Diversitate vocabular",
-  analyzeConversation: "Analizați conversația",
-  analyzing: "Se analizează...",
-  analyzingConversation: "Se analizează conversația...",
-  viewLanguageMetrics: "Vizualizați metricile lingvistice",
-  hideMetrics: "Ascundeți metricile",
-  noLanguageDataYet: "Nu există încă date de limbă",
-  basedOnMessagesCount: "Bazat pe {count} mesaje",
-  basedOnConversations: "Bazat pe {count} conversații",
-  yourProgress: "Progresul dvs.",
-  languageSkillsProgress: "Progresul abilităților lingvistice",
-  notEnoughMessages: "Mesaje insuficiente",
-  needMoreMessagesToAnalyze: "Aveți nevoie de cel puțin 4 mesaje pentru a analiza conversația",
+  createOrJoinClass: "Creați sau alăturați-vă unei clase"
 };
 
 export default classroomTranslations;

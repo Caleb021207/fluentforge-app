@@ -2,7 +2,7 @@
 /**
  * AWS Polly TTS service implementation
  */
-export async function textToSpeechPolly(text: string, voiceName: string, rate: number = 1.0): Promise<ArrayBuffer> {
+export async function textToSpeechPolly(text: string, voiceName: string): Promise<ArrayBuffer> {
   const AWS_REGION = Deno.env.get('AWS_REGION') || 'us-east-1';
   const AWS_ACCESS_KEY_ID = Deno.env.get('AWS_ACCESS_KEY_ID');
   const AWS_SECRET_ACCESS_KEY = Deno.env.get('AWS_SECRET_ACCESS_KEY');
@@ -20,13 +20,9 @@ export async function textToSpeechPolly(text: string, voiceName: string, rate: n
   const timestamp = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
   const datestamp = timestamp.slice(0, 8);
 
-  // Format SSML with speech rate
-  const ssmlText = `<speak><prosody rate="${rate * 100}%">${text}</prosody></speak>`;
-
   // Request body
   const body = JSON.stringify({
-    Text: ssmlText,
-    TextType: 'ssml',
+    Text: text,
     OutputFormat: 'mp3',
     VoiceId: voiceName,
     Engine: 'neural'

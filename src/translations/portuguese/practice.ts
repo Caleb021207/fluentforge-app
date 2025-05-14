@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -32,59 +31,7 @@ const practiceTranslations: TranslationRecord = {
   discussCulturalTopics: "Discuta tópicos culturais",
   startConversationIn: "Iniciar Conversa em {language}",
   practicePrompt: "Olá! Gostaria de praticar conversação em {{targetLanguage}}. Por favor, me ajude corrigindo minha gramática, vocabulário e uso do {{targetLanguage}}. Podemos começar com uma conversa básica?",
-  chatPlaceholder: "Digite sua mensagem para praticar {{targetLanguage}}...",
-  
-  // Adding loading translation that was missing
-  loading: "Carregando...",
-  
-  // Adding new translations for Speech Rate
-  speechRate: "Velocidade de Fala",
-  verySlow: "Muito lento",
-  slow: "Lento",
-  normal: "Normal",
-  fast: "Rápido",
-  veryFast: "Muito rápido",
-  
-  // Adding response suggestions translations
-  responseSuggestions: "Sugestões de Resposta",
-  clickPlayToHearPronunciation: "Clique em reproduzir para ouvir a pronúncia",
-  startConversationForSuggestions: "Inicie uma conversa para ver sugestões",
-  getResponseSuggestions: "Obter Sugestões de Resposta",
-  play: "Reproduzir",
-  
-  // Adding practice guide translations
-  practiceGuide: "Guia de Prática",
-  practiceGuideDescription: "Dicas para praticar seu {language} de forma eficaz:",
-  practiceTip1: "Tente formar frases completas, mesmo que sejam simples.",
-  practiceTip2: "Não se preocupe com erros — eles fazem parte do aprendizado!",
-  practiceTip3: "Peça explicações se houver algo que você não entenda.",
-  practiceTip4: "Use palavras que você aprendeu recentemente.",
-  practiceTip5: "Nosso AI vai se adaptar ao seu nível e gradualmente ajudá-lo a melhorar.",
-  
-  // Adding error and success messages
-  error: "Erro",
-  success: "Sucesso",
-  translationError: "Erro de Tradução",
-  failedToGetTranslation: "Falha ao obter tradução. Por favor, tente novamente.",
-  
-  // Grammar correction toggle
-  correctGrammar: "Corrigir minha gramática",
-  grammarCorrectionEnabled: "Correção gramatical ativada",
-  grammarCorrectionDisabled: "Correção gramatical desativada",
-  tutor: {
-    willCorrectGrammar: "O tutor agora fornecerá correções suaves à sua gramática.",
-    wontCorrectGrammar: "O tutor se concentrará no fluxo da conversa sem correções gramaticais."
-  },
-  
-  // Clear conversation button
-  clearConversation: "Limpar Conversa",
-  conversationCleared: "Conversa limpa",
-  
-  // Additional practice-related terms
-  unlimitedVoicePractice: "Prática de Voz Ilimitada",
-  
-  // Adding the missing practiceWithAI key
-  practiceWithAI: "Praticar com IA"
+  chatPlaceholder: "Digite sua mensagem para praticar {{targetLanguage}}..."
 };
 
 export default practiceTranslations;

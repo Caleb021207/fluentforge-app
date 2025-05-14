@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,6 @@ import { playTTS } from "@/utils/tts";
 import HintButton from "@/components/practice/HintButton";
 import { Separator } from "@/components/ui/separator";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
-import SpeechRateControl from "@/components/practice/SpeechRateControl";
 
 type ConversationMessage = {
   role: 'user' | 'assistant';
@@ -38,7 +38,6 @@ const VoiceChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
-  const [speechRate, setSpeechRate] = useState(1.0);
   const cefrLevel = 'B1';
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -282,7 +281,6 @@ const VoiceChat = () => {
       setApiConversationHistory(data.updatedHistory || updatedHistory);
       
       // Use target language for TTS (which is the practice language)
-      // Pass the speech rate to the TTS function
       speakWithAzureTTS(content);
       setTranscript("");
     } catch (error) {
@@ -335,7 +333,7 @@ const VoiceChat = () => {
       return;
     }
 
-    console.log(`Speaking text: "${text.substring(0, 50)}..." in language: ${practice.toLowerCase()} with speech rate: ${speechRate}`);
+    console.log(`Speaking text: "${text.substring(0, 50)}..." in language: ${practice.toLowerCase()}`);
     
     setIsSpeaking(true);
     
@@ -344,7 +342,6 @@ const VoiceChat = () => {
       language: practice.toLowerCase(),
       isTargetLanguage: true,
       useMetaMms: false, // Use Azure as primary TTS provider
-      speechRate: speechRate, // Use the current speech rate
       onStart: () => {
         console.log("TTS started with Azure");
         setIsSpeaking(true);
@@ -454,11 +451,6 @@ const VoiceChat = () => {
     }
   };
 
-  const handleSpeechRateChange = (newRate: number) => {
-    console.log(`Speech rate changed to ${newRate}`);
-    setSpeechRate(newRate);
-  };
-
   const { nativeLanguagePhrases, targetLanguagePhrases } = getConversationStarters();
 
   return (
@@ -527,14 +519,6 @@ const VoiceChat = () => {
                 </Button>
               )}
             </div>
-          </div>
-          
-          {/* Speech Rate Control */}
-          <div className="mb-4">
-            <SpeechRateControl 
-              speechRate={speechRate}
-              onChange={handleSpeechRateChange}
-            />
           </div>
           
           {isListening && (

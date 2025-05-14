@@ -1,50 +1,54 @@
 
-// Chat message types
-export type ChatMessage = {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-  translation?: string;
-  audioUrl?: string;
-  isTranslating?: boolean;
-  isError?: boolean;
-  errorMessage?: string;
-};
+// Chat and message types
+export type MessageRole = 'user' | 'assistant' | 'system';
 
-// Legacy Message type for backward compatibility
 export interface Message {
-  role: 'user' | 'assistant' | 'system' | 'error';
+  role: MessageRole;
   content: string;
-  translation?: TranslationType;
+  translation?: string | object;
+  timestamp?: Date;
 }
 
-// Message count tracking
-export type MessageCount = {
+// Add the ChatMessage interface that was missing
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  translation?: string | object;
+  timestamp?: Date;
+}
+
+export interface ChatSession {
+  id: string;
+  userId: string;
+  startTime: Date;
+  endTime?: Date;
+  messages: Message[];
+}
+
+export interface MessageCount {
   inputs: number;
   outputs: number;
-};
+}
 
-// Session status types
-export type SessionStatus = 'available' | 'active' | 'cooldown' | 'unavailable' | 'loading' | 'idle';
+export type SessionStatus = 'available' | 'active' | 'loading' | 'cooldown';
 
-// Suggestion categories for hints
 export interface SuggestionCategory {
   title: string;
   suggestions: string[];
 }
 
-// Language metrics interface
+export interface ConversationHint {
+  categories: SuggestionCategory[];
+  loading: boolean;
+}
+
+// Define TranslationType to fix the type errors
+export type TranslationType = string | { [key: string]: any };
+
+// Add the missing LanguageMetrics interface
 export interface LanguageMetrics {
   grammarAccuracy: number;
   conversationComplexity: number;
   messageCount: number;
   vocabularyDiversity?: number;
 }
-
-// Import TranslationType directly from its source
-import { TranslationType } from '@/components/practice/hooks/translation/types';
-
-// Re-export TranslationType for backward compatibility
-// Using 'export type' instead of 'export' to fix the isolatedModules error
-export type { TranslationType };

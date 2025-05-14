@@ -36,25 +36,15 @@ export async function getAzureToken(): Promise<string> {
 /**
  * Convert text to speech with Azure
  */
-export async function textToSpeechAzure(text: string, voice: string, language: string, rate: number = 1.0): Promise<ArrayBuffer> {
+export async function textToSpeechAzure(text: string, voice: string, language: string): Promise<ArrayBuffer> {
   const AZURE_REGION = Deno.env.get('AZURE_REGION') || 'eastus';
   const token = await getAzureToken();
   
-  // Convert rate to Azure prosody rate value
-  let rateValue = "default";
-  if (rate <= 0.6) rateValue = "x-slow";
-  else if (rate <= 0.8) rateValue = "slow";
-  else if (rate >= 0.95 && rate <= 1.05) rateValue = "medium";
-  else if (rate <= 1.5) rateValue = "fast";
-  else rateValue = "x-fast";
-  
-  // Prepare SSML document with rate
+  // Prepare SSML document
   const ssml = `
     <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${language}">
       <voice name="${voice}">
-        <prosody rate="${rateValue}">
-          ${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')}
-        </prosody>
+        ${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')}
       </voice>
     </speak>
   `;

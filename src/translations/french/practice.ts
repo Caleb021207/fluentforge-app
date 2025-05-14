@@ -28,18 +28,7 @@ const practiceTranslations: TranslationRecord = {
   translateMessage: "Traduire le message",
   originalMessage: "Message original",
   practicePrompt: "Bonjour! J'aimerais pratiquer la conversation en {{targetLanguage}}. Aidez-moi à corriger ma grammaire, mon vocabulaire et mon utilisation du {{targetLanguage}}. Pouvons-nous commencer par une conversation de base?",
-  chatPlaceholder: "Tapez votre message pour pratiquer {{targetLanguage}}...",
-  
-  // Response suggestions related keys
-  "responseSuggestions": "Suggestions de réponse",
-  "clickPlayToHearPronunciation": "Cliquez sur lecture pour entendre la prononciation",
-  "startConversationForSuggestions": "Commencez une conversation pour voir les suggestions",
-  "getResponseSuggestions": "Obtenir des suggestions de réponse",
-  "play": "Lecture",
-  
-  // Practice guide translations
-  "practiceGuide": "Guide de pratique pour {{language}}",
-  "practiceGuideDescription": "Voici quelques conseils pour tirer le meilleur parti de votre pratique de {{language}} :",
+  chatPlaceholder: "Tapez votre message pour pratiquer {{targetLanguage}}..."
 };
 
 export default practiceTranslations;

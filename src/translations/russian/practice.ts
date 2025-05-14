@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -49,14 +50,7 @@ const practiceTranslations: TranslationRecord = {
   practiceTip2: "Не беспокойтесь об ошибках - они часть процесса обучения!",
   practiceTip3: "Просите разъяснений, если вы что-то не понимаете.",
   practiceTip4: "Старайтесь использовать словарный запас, который вы недавно изучили.",
-  practiceTip5: "Практикуйтесь регулярно для улучшения беглости речи.",
-  
-  // Response suggestions related keys
-  "responseSuggestions": "Предложения ответов",
-  "clickPlayToHearPronunciation": "Нажмите воспроизвести, чтобы услышать произношение",
-  "startConversationForSuggestions": "Начните разговор, чтобы увидеть предложения",
-  "getResponseSuggestions": "Получить предложения ответов",
-  "play": "Воспроизвести"
+  practiceTip5: "Практикуйтесь регулярно для улучшения беглости речи."
 };
 
 export default practiceTranslations;

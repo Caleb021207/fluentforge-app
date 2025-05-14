@@ -1,55 +1,65 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Book, Check, CircleHelp, MessageCircle, Pencil } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getLanguageDisplayName } from "@/utils/languageUtils";
+import { motion } from "framer-motion";
+import { staggeredContainer, slideInRight } from "@/lib/animations";
 
 interface PracticeGuideProps {
   targetLanguage: string;
 }
 
-const PracticeGuide = ({ targetLanguage }: PracticeGuideProps) => {
-  const { t } = useLocalization();
+const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
+  const { currentLanguage, t } = useLocalization();
   
-  // Language display name with proper capitalization
-  const displayLanguage = targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1);
+  // Get localized target language name
+  const learningLanguage = getLanguageDisplayName(targetLanguage);
   
   return (
-    <Card className="mt-6">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Book className="h-5 w-5 text-primary" />
-          {t("practiceGuide", { language: displayLanguage })}
-        </CardTitle>
-        <CardDescription>
-          {t("practiceGuideDescription", { language: displayLanguage })}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ul className="space-y-3">
-          <li className="flex items-start gap-2">
-            <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>{t("practiceTip1")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>{t("practiceTip2")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CircleHelp className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
-            <span>{t("practiceTip3")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Pencil className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
-            <span>{t("practiceTip4")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <MessageCircle className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
-            <span>{t("practiceTip5")}</span>
-          </li>
-        </ul>
-      </CardContent>
-    </Card>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={staggeredContainer(0.1, 0.2)}
+    >
+      <Card className="p-6 border border-border">
+        <motion.h2 
+          className="text-xl font-semibold mb-4 text-foreground"
+          variants={slideInRight}
+        >
+          {t("practiceGuide", { language: learningLanguage })}
+        </motion.h2>
+        
+        <motion.p 
+          className="mb-4 text-foreground"
+          variants={slideInRight}
+        >
+          {t("practiceGuideDescription", { language: learningLanguage })}
+        </motion.p>
+        
+        <motion.ul 
+          className="space-y-3"
+          variants={staggeredContainer(0.05)}
+        >
+          {[
+            t("practiceTip1"),
+            t("practiceTip2"),
+            t("practiceTip3"),
+            t("practiceTip4"),
+            t("practiceTip5")
+          ].map((tip, index) => (
+            <motion.li 
+              key={index} 
+              className="flex items-start"
+              variants={slideInRight}
+            >
+              <span className="text-accent mr-2">•</span>
+              <span className="text-foreground">{tip}</span>
+            </motion.li>
+          ))}
+        </motion.ul>
+      </Card>
+    </motion.div>
   );
 };
 

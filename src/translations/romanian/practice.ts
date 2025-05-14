@@ -1,9 +1,10 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
   // Practice page
-  "practiceYourLanguage": "Exersați {{language}}",
-  "chatWithAI": "Conversați cu tutorul nostru AI pentru a vă practica {{language}}! AI-ul vă va ajuta să corectați gramatica, vocabularul și vă va oferi sfaturi despre pronunție și cultură.",
+  practiceYourLanguage: "Exersați {{language}}",
+  chatWithAI: "Conversați cu tutorul nostru AI pentru a vă practica {{language}}! AI-ul vă va ajuta să corectați gramatica, vocabularul și vă va oferi sfaturi despre pronunție și cultură.",
   typeMessage: "Tastați un mesaj...",
   startConversationIn: "Începe o conversație în {{language}}",
   practiceWithAI: "Practică cu AI",
@@ -30,21 +31,14 @@ const practiceTranslations: TranslationRecord = {
   chatPlaceholder: "Scrie mesajul tău pentru a exersa {{language}}...",
   practicePrompt: "Bună! Aș dori să practic conversația în {{targetLanguage}} cu tine. Te rog să mă ajuți corectând gramatica, vocabularul și utilizarea {{targetLanguage}}. Putem începe cu o conversație de bază?",
   
-  // Response suggestions related keys
-  "responseSuggestions": "Sugestii de răspuns",
-  "clickPlayToHearPronunciation": "Apasă play pentru a auzi pronunția",
-  "startConversationForSuggestions": "Începe o conversație pentru a vedea sugestii",
-  "getResponseSuggestions": "Obține sugestii de răspuns",
-  "play": "Redă",
-  
-  // Practice guide translations
-  "practiceGuide": "Ghid de practică pentru limba {{language}}",
-  "practiceGuideDescription": "Iată câteva sfaturi pentru a profita la maximum de practica limbii {{language}}:",
-  "practiceGuideItem1": "Încearcă să formulezi propoziții complete, chiar dacă sunt simple.",
-  "practiceGuideItem2": "Nu-ți face griji pentru greșeli – ele fac parte din procesul de învățare!",
-  "practiceGuideItem3": "Cere lămuriri dacă nu înțelegi ceva.",
-  "practiceGuideItem4": "Încearcă să folosești vocabularul pe care l-ai învățat recent.",
-  "practiceDisclaimer": "AI-ul nostru se va adapta nivelului tău și te va ajuta să progresezi treptat."
+  // Practice guide
+  practiceGuide: "Ghid de practică pentru limba {{language}}",
+  practiceGuideDescription: "Iată câteva sfaturi pentru a profita la maximum de practica limbii {{language}}:",
+  practiceGuideItem1: "Încearcă să formulezi propoziții complete, chiar dacă sunt simple.",
+  practiceGuideItem2: "Nu-ți face griji pentru greșeli – ele fac parte din procesul de învățare!",
+  practiceGuideItem3: "Cere lămuriri dacă nu înțelegi ceva.",
+  practiceGuideItem4: "Încearcă să folosești vocabularul pe care l-ai învățat recent.",
+  practiceDisclaimer: "AI-ul nostru se va adapta nivelului tău și te va ajuta să progresezi treptat."
 };
 
 export default practiceTranslations;

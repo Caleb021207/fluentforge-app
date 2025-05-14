@@ -112,16 +112,6 @@ serve(async (req) => {
           console.error("Error storing metrics:", error);
           // Continue anyway, don't fail the response
         }
-        
-        // Call function to update aggregate metrics
-        const { error: rpcError } = await supabase.rpc('update_student_language_aggregate_metrics', {
-          target_student_id: userId
-        });
-        
-        if (rpcError) {
-          console.error("Error updating aggregate metrics:", rpcError);
-          // Continue anyway, don't fail the response
-        }
       } catch (dbError) {
         console.error("Database error:", dbError);
         // Continue anyway, don't fail the response

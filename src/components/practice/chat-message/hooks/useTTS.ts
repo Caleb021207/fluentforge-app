@@ -7,10 +7,9 @@ interface UseTTSOptions {
   text: string;
   language: string;
   isTargetLanguage: boolean;
-  speechRate?: number;
 }
 
-export const useTTS = ({ text, language, isTargetLanguage, speechRate = 1.0 }: UseTTSOptions) => {
+export const useTTS = ({ text, language, isTargetLanguage }: UseTTSOptions) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -23,7 +22,6 @@ export const useTTS = ({ text, language, isTargetLanguage, speechRate = 1.0 }: U
         text,
         language,
         isTargetLanguage,
-        speechRate,
         onStart: () => setIsLoading(false),
         onEnd: () => setIsPlaying(false),
         onError: (error) => {

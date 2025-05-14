@@ -52,14 +52,7 @@ const practiceTranslations: TranslationRecord = {
   discussCulturalTopics: "Обговорюйте культурні теми",
   
   practicePrompt: "Вітаю! Я хотів(ла) би попрактикуватися у розмові {{targetLanguage}}. Будь ласка, допоможіть мені виправити граматику, словниковий запас та використання {{targetLanguage}}. Можемо почати з базової розмови?",
-  chatPlaceholder: "Введіть повідомлення для практики {{targetLanguage}}...",
-  
-  // Response suggestions related keys
-  "responseSuggestions": "Пропозиції відповідей",
-  "clickPlayToHearPronunciation": "Натисніть відтворити, щоб почути вимову",
-  "startConversationForSuggestions": "Розпочніть розмову, щоб побачити пропозиції",
-  "getResponseSuggestions": "Отримати пропозиції відповідей",
-  "play": "Відтворити",
+  chatPlaceholder: "Введіть повідомлення для практики {{targetLanguage}}..."
 };
 
 export default practiceTranslations;

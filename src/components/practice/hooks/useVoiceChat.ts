@@ -1,10 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
-// Import the compatibility functions
-import { getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
-import { useElevenLabsAgent } from "@/hooks/useElevenLabsAgent";
+import { useElevenLabsAgent, getAgentIdForLanguage } from "@/utils/elevenLabsUtils";
 import { useConversationState } from "@/hooks/useConversationState";
 import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
 import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";

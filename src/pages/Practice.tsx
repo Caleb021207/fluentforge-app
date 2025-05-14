@@ -13,20 +13,23 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
-import SpeechRateControl from "@/components/practice/SpeechRateControl";
-import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
-import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
+import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
+
+// Create an interface that matches the Message structure from useChatMessages
+interface MessageWithTranslationType {
+  role: "user" | "assistant";
+  content: string;
+  translation?: TranslationType;
+}
 
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { currentLanguage, t } = useLocalization();
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
-  const [speechRate, setSpeechRate] = useState<number>(1.0);
   
   useEffect(() => {
     const savedTargetLanguage = localStorage.getItem("targetLanguage");
     const savedNativeLanguage = localStorage.getItem("nativeLanguage");
-    const savedSpeechRate = localStorage.getItem("speechRate");
     
     if (savedNativeLanguage && savedTargetLanguage) {
       setTargetLanguage(savedTargetLanguage);
@@ -38,15 +41,14 @@ const Practice = () => {
       }
     }
     
-    if (savedSpeechRate) {
-      setSpeechRate(parseFloat(savedSpeechRate));
+    // Debug for Thai language - Fix the comparison to use lowercase comparison
+    if (currentLanguage.toLowerCase() === 'thai') {
+      console.log('Practice component initialized with Thai language:', {
+        currentLanguage,
+        targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english")
+      });
     }
   }, [currentLanguage]);
-
-  // Save speech rate to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem("speechRate", speechRate.toString());
-  }, [speechRate]);
   
   const {
     messages,
@@ -60,15 +62,6 @@ const Practice = () => {
     correctGrammar,
     toggleGrammarCorrection
   } = useChatMessages();
-  
-  // Add language metrics panel integration
-  const {
-    isExpanded,
-    togglePanel,
-    metrics,
-    isAnalyzing,
-    analyzeCurrentConversation
-  } = useLanguageMetricsPanel(messages);
   
   const {
     startVoiceConversation,
@@ -84,6 +77,25 @@ const Practice = () => {
 
   if (!isAuthenticated) {
     return <AuthRequiredPrompt />;
+  }
+
+  // Convert messages to ensure compatibility with ChatContainer
+  const compatibleMessages = messages.map(msg => ({
+    role: msg.role,
+    content: msg.content,
+    // Convert complex translation objects to strings if needed
+    translation: typeof msg.translation === 'string' ? 
+      msg.translation : 
+      msg.translation ? JSON.stringify(msg.translation) : undefined
+  }));
+
+  // Additional debug for Thai messages - fix the comparison to use lowercase comparison
+  if (currentLanguage.toLowerCase() === 'thai') {
+    console.log('Practice component rendering with Thai:', {
+      messageCount: messages.length,
+      hasTranslations: messages.filter(m => m.translation).length,
+      currentLanguage
+    });
   }
 
   return (
@@ -116,30 +128,18 @@ const Practice = () => {
           className="flex items-center gap-2"
         >
           <Trash className="h-4 w-4" />
-          {t("clearConversation") || "Clear conversation"}
+          {t("clearConversation")}
         </Button>
       </div>
-      
-      <div className="mb-4">
-        <SpeechRateControl 
-          speechRate={speechRate} 
-          onChange={(value) => setSpeechRate(value)} 
-        />
-      </div>
 
-      {/* Remove the input, setInput and other props that are not accepted by ChatContainer */}
       <ChatContainer
-        messages={messages}
+        messages={compatibleMessages}
+        input={input}
+        setInput={setInput}
+        handleSubmit={handleSubmit}
         isLoading={chatLoading}
-      />
-
-      {/* Add Language Metrics Panel */}
-      <LanguageMetricsPanel
-        metrics={metrics}
-        isLoading={isAnalyzing}
-        isExpanded={isExpanded}
-        onToggle={togglePanel}
-        onAnalyze={analyzeCurrentConversation}
+        getPlaceholderText={getPlaceholderText}
+        targetLanguage={targetLanguage}
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />

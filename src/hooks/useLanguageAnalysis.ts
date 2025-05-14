@@ -2,11 +2,18 @@
 import { useState } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Message, LanguageMetrics } from "@/types/chat";
+import { Message } from "@/types/chat";
+
+interface AnalysisMetrics {
+  grammarAccuracy: number;
+  conversationComplexity: number;
+  messageCount: number;
+  vocabularyDiversity?: number;
+}
 
 export function useLanguageAnalysis() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [lastMetrics, setLastMetrics] = useState<LanguageMetrics | null>(null);
+  const [lastMetrics, setLastMetrics] = useState<AnalysisMetrics | null>(null);
   const { toast } = useToast();
 
   const analyzeConversation = async (

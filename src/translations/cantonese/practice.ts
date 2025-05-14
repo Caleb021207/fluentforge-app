@@ -65,33 +65,7 @@ const practiceTranslations: TranslationRecord = {
   "practiceTip2": "唔使擔心錯誤 — 犯錯係學習嘅一部分！",
   "practiceTip3": "如果有唔明白嘅地方，記得問清楚。",
   "practiceTip4": "嘗試使用你最近學到嘅詞彙。",
-  "practiceTip5": "我哋嘅AI會適應你嘅水平，並逐步幫助你進步。",
-  
-  // Adding response suggestions translations
-  "responseSuggestions": "回應建議",
-  "clickPlayToHearPronunciation": "點擊播放聽發音",
-  "startConversationForSuggestions": "開始對話以查看建議",
-  "getResponseSuggestions": "獲取回應建議",
-  "play": "播放",
-  
-  // Adding practice guide translations
-  "practiceGuide": "練習指南",
-  "practiceGuideDescription": "有效練習{language}嘅貼士:",
-  
-  // Grammar correction toggle
-  "correctGrammar": "糾正我嘅語法",
-  "grammarCorrectionEnabled": "語法糾正已啟用",
-  "grammarCorrectionDisabled": "語法糾正已停用",
-  "tutor.willCorrectGrammar": "導師而家會輕輕糾正你嘅語法。",
-  "tutor.wontCorrectGrammar": "導師會集中對話流程，唔會糾正語法。",
-  
-  // Speech rate translations
-  "speechRate": "語速",
-  "verySlow": "非常慢",
-  "slow": "慢",
-  "normal": "正常",
-  "fast": "快",
-  "veryFast": "非常快"
+  "practiceTip5": "我哋嘅AI會適應你嘅水平，並逐步幫助你進步。"
 };
 
 export default practiceTranslations;
