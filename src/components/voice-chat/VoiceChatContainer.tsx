@@ -83,14 +83,21 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
       
       <div className="border-t p-4 flex justify-between items-center">
         <ViewLanguageMetricsButton 
-          messages={messages} 
+          messages={messages.map(msg => ({ 
+            role: msg.role as "user" | "assistant" | "system", 
+            content: msg.content 
+          }))}
           sessionId={sessionId} 
         />
         
         <div className="flex space-x-2">
           <HintButton 
             targetLanguage={targetLanguage}
-            messages={messages}
+            messages={messages.map(msg => ({ 
+              role: msg.role as "user" | "assistant" | "system", 
+              content: msg.content, 
+              translation: undefined 
+            }))}
             className="h-10 w-10"
           />
         </div>

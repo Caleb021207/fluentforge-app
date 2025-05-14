@@ -15,7 +15,7 @@ import { LanguageMetrics } from '@/types/chat';
 import { useLanguageAnalysis } from '@/hooks/useLanguageAnalysis';
 
 interface ViewLanguageMetricsButtonProps {
-  messages: { role: string; content: string; }[];
+  messages: { role: "user" | "assistant" | "system"; content: string; }[];
   sessionId?: string;
 }
 

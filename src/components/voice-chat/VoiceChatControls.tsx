@@ -31,7 +31,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
       
       <ViewLanguageMetricsButton 
         messages={apiConversationHistory.map(msg => ({ 
-          role: msg.role as any, 
+          role: msg.role as "user" | "assistant" | "system", 
           content: msg.content 
         }))} 
         sessionId={sessionIdRef.current || undefined}
@@ -40,7 +40,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
       <HintButton 
         targetLanguage={practice}
         messages={apiConversationHistory.map(msg => ({ 
-          role: msg.role as any, 
+          role: msg.role as "user" | "assistant" | "system", 
           content: msg.content, 
           translation: undefined 
         }))} 
