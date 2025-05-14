@@ -1,2 +1,2 @@
 
-export type TranslationType = string | Record<string, unknown>;
+export type TranslationType = string | Record<string, unknown> | null | undefined;

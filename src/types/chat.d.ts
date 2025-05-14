@@ -7,14 +7,14 @@ export interface Message {
   translation?: TranslationType | string;
 }
 
-export type TranslationType = string | null | undefined;
+export type TranslationType = string | Record<string, unknown> | null | undefined;
 
 export interface SuggestionCategory {
   title: string;
   suggestions: string[];
 }
 
-export type SessionStatus = 'idle' | 'loading' | 'active' | 'cooldown';
+export type SessionStatus = 'idle' | 'loading' | 'active' | 'cooldown' | 'available';
 
 export interface MessageCount {
   inputs: number;
