@@ -3,15 +3,7 @@ import React from "react";
 import { Mic, MicOff, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
-
-interface VoiceRecognitionControlsProps {
-  isListening: boolean;
-  isLoading: boolean;
-  isSpeaking: boolean;
-  transcript: string;
-  toggleListening: () => void;
-  handleSendTranscript: (text: string) => void;
-}
+import { VoiceRecognitionControlsProps } from "@/types/voiceChat";
 
 const VoiceRecognitionControls: React.FC<VoiceRecognitionControlsProps> = ({
   isListening,

@@ -1,11 +1,7 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-
-interface TranscriptDisplayProps {
-  transcript: string;
-  isListening: boolean;
-}
+import { TranscriptDisplayProps } from "@/types/voiceChat";
 
 const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ transcript, isListening }) => {
   const { t } = useLocalization();

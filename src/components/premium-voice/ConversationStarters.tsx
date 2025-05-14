@@ -1,22 +1,26 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
+import { ConversationStartersProps } from "@/types/voiceChat";
 
-interface ConversationStartersProps {
-  onPhraseClick?: (phrase: string) => void;
-}
-
-const ConversationStarters: React.FC<ConversationStartersProps> = ({ onPhraseClick }) => {
+const ConversationStarters: React.FC<ConversationStartersProps> = ({ 
+  onPhraseClick,
+  phrases
+}) => {
   const { t, currentLanguage } = useLocalization();
-
-  const phrases = [
-    { id: 1, text: t("phrase1") },
-    { id: 2, text: t("phrase2") },
-    { id: 3, text: t("phrase3") },
-    { id: 4, text: t("phrase4") },
-    { id: 5, text: t("phrase5") },
-    { id: 6, text: t("phrase6") }
+  
+  // Get default phrases if none provided
+  const defaultPhrases = phrases || [
+    t("phrase1"),
+    t("phrase2"),
+    t("phrase3"),
+    t("phrase4"),
+    t("phrase5"),
+    t("phrase6"),
+    t("phrase7"),
+    t("phrase8")
   ];
 
   return (
@@ -26,19 +30,21 @@ const ConversationStarters: React.FC<ConversationStartersProps> = ({ onPhraseCli
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          {t("tryThesePhrases")}:
+          {t("tryThesePhrases")}
         </p>
-        <ul className="space-y-2">
-          {phrases.map((phrase) => (
-            <li 
-              key={phrase.id} 
-              className={`bg-muted rounded p-3 text-sm ${onPhraseClick ? 'cursor-pointer hover:bg-muted/80' : ''}`}
-              onClick={() => onPhraseClick && onPhraseClick(phrase.text)}
+        <div className="space-y-2">
+          {defaultPhrases.map((phrase, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              size="sm"
+              className="w-full justify-start text-left h-auto py-2 font-normal"
+              onClick={() => onPhraseClick(phrase)}
             >
-              {phrase.text}
-            </li>
+              {phrase}
+            </Button>
           ))}
-        </ul>
+        </div>
       </CardContent>
     </Card>
   );

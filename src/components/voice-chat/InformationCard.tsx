@@ -2,8 +2,9 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
+import { InformationCardProps } from "@/types/voiceChat";
 
-const InformationCard: React.FC = () => {
+const InformationCard: React.FC<InformationCardProps> = () => {
   const { t } = useLocalization();
 
   return (

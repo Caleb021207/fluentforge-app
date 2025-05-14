@@ -5,24 +5,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import HintButton from "@/components/practice/HintButton";
 import { useLocalization } from "@/context/LocalizationContext";
 import ChatMessage from "@/components/practice/ChatMessage";
-import type { Message, TranslationType } from "@/types/chat";
 import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
+import { VoiceChatContainerProps } from "@/types/voiceChat";
+import { TranslationType } from "@/types/chat";
 
-interface VoiceChatContainerProps {
-  messages: Message[];
-  isLoading: boolean;
-  targetLanguage: string;
-  onPlayAudio?: (text: string) => void;
-  sessionId?: string;
-}
-
-export default function VoiceChatContainer({
+const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
   messages,
   isLoading,
   targetLanguage,
   onPlayAudio,
   sessionId
-}: VoiceChatContainerProps) {
+}) => {
   const { t } = useLocalization();
   const scrollRef = useRef<HTMLDivElement>(null);
   
@@ -104,4 +97,6 @@ export default function VoiceChatContainer({
       </div>
     </Card>
   );
-}
+};
+
+export default VoiceChatContainer;

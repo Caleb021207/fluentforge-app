@@ -4,15 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
 import HintButton from "@/components/practice/HintButton";
-
-interface VoiceChatControlsProps {
-  conversationHistory: any[];
-  apiConversationHistory: any[];
-  sessionIdRef: React.MutableRefObject<string | null>;
-  clearConversation: () => void;
-  analyzeCurrentConversation: () => void;
-  practice: string;
-}
+import { VoiceChatControlsProps } from "@/types/voiceChat";
 
 const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
   conversationHistory,

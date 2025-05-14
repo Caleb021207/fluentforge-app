@@ -1,10 +1,7 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-
-interface ListeningIndicatorProps {
-  isListening: boolean;
-}
+import { ListeningIndicatorProps } from "@/types/voiceChat";
 
 const ListeningIndicator: React.FC<ListeningIndicatorProps> = ({ isListening }) => {
   const { t } = useLocalization();

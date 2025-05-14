@@ -21,8 +21,9 @@ import InformationCard from "@/components/voice-chat/InformationCard";
 import { useVoiceSpeechRecognition } from "@/hooks/useVoiceSpeechRecognition";
 import { useVoiceTTS } from "@/hooks/useVoiceTTS";
 import { useVoiceConversation } from "@/hooks/useVoiceConversation";
+import { VoiceChatProps } from "@/types/voiceChat";
 
-const VoiceChat = () => {
+const VoiceChat: React.FC<VoiceChatProps> = () => {
   const { currentLanguage, t } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
   
@@ -56,16 +57,6 @@ const VoiceChat = () => {
   const handlePhraseClick = (phrase: string) => {
     handleSendTranscript(phrase);
   };
-
-  // Get conversation starters phrases based on language
-  const getConversationStarters = () => {
-    const phraseKeys = ["phrase1", "phrase2", "phrase3", "phrase4", "phrase5", "phrase6", "phrase7", "phrase8"];
-    const nativeLanguagePhrases = phraseKeys.map(key => t(key));
-    
-    return { nativeLanguagePhrases };
-  };
-
-  const { nativeLanguagePhrases } = getConversationStarters();
 
   return (
     <div className="max-w-4xl mx-auto p-4">

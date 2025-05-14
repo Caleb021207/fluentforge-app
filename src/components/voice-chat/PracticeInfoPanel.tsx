@@ -2,8 +2,9 @@
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguagePair } from "@/utils/languageUtils";
+import { PracticeInfoPanelProps } from "@/types/voiceChat";
 
-const PracticeInfoPanel: React.FC = () => {
+const PracticeInfoPanel: React.FC<PracticeInfoPanelProps> = () => {
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
 

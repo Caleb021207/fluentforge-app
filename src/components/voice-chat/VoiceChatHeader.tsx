@@ -2,8 +2,9 @@
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguagePair } from "@/utils/languageUtils";
+import { VoiceChatHeaderProps } from "@/types/voiceChat";
 
-const VoiceChatHeader = () => {
+const VoiceChatHeader: React.FC<VoiceChatHeaderProps> = () => {
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
 
