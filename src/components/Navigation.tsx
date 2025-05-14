@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, Mic, Home, Headphones, BookOpen, Lock as LockIcon } from "lucide-react";
+import { MessageSquare, Menu, X, Mic, Home, Headphones, BookOpen, Lock as LockIcon, BarChart } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "./auth/LogoutButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -50,6 +51,7 @@ const Navigation = () => {
     const items = [
       { icon: MessageSquare, label: "textPractice", path: "/practice", requiresAuth: true },
       { icon: Mic, label: "unlimitedVoicePractice", path: "/voice-chat", requiresAuth: true },
+      { icon: BarChart, label: "accuracy", path: "/accuracy", requiresAuth: true }
     ];
 
     // Add language-specific advanced voice options for Spanish and Portuguese

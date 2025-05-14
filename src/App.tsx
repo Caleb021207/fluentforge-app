@@ -13,6 +13,7 @@ import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
 import SpanishAdvancedVoiceChat from "@/pages/SpanishAdvancedVoiceChat";
 import PortugueseAdvancedVoiceChat from "@/pages/PortugueseAdvancedVoiceChat";
 import Progress from "@/pages/Progress";
+import Accuracy from "@/pages/Accuracy";
 import Profile from "@/pages/Profile";
 import Certificates from "@/pages/Certificates";
 import NotFound from "@/pages/NotFound";
@@ -39,6 +40,7 @@ function App() {
               { path: "spanish-advanced-voice", element: <SpanishAdvancedVoiceChat /> },
               { path: "portuguese-advanced-voice", element: <PortugueseAdvancedVoiceChat /> },
               { path: "progress", element: <Progress /> },
+              { path: "accuracy", element: <Accuracy /> },
               { path: "profile", element: <Profile /> },
               { path: "certificates", element: <Certificates /> },
               { path: "safety-policy", element: <SafetyPolicy /> },
