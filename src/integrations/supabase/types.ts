@@ -424,6 +424,7 @@ export type Database = {
           grammar_accuracy: number
           id: string
           message_count: number
+          pronunciation_accuracy: number | null
           session_id: string | null
           user_id: string
           vocabulary_diversity: number | null
@@ -435,6 +436,7 @@ export type Database = {
           grammar_accuracy: number
           id?: string
           message_count?: number
+          pronunciation_accuracy?: number | null
           session_id?: string | null
           user_id: string
           vocabulary_diversity?: number | null
@@ -446,6 +448,7 @@ export type Database = {
           grammar_accuracy?: number
           id?: string
           message_count?: number
+          pronunciation_accuracy?: number | null
           session_id?: string | null
           user_id?: string
           vocabulary_diversity?: number | null
@@ -704,6 +707,10 @@ export type Database = {
       safe_is_teacher_of_class: {
         Args: { classroom_id: string }
         Returns: boolean
+      }
+      update_student_language_aggregate_metrics: {
+        Args: { target_student_id: string }
+        Returns: undefined
       }
     }
     Enums: {

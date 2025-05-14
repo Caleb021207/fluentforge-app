@@ -77,7 +77,7 @@ const AuthenticatedAccuracy = () => {
         conversationComplexity: metric.conversation_complexity || 0,
         messageCount: metric.message_count || 0,
         vocabularyDiversity: metric.vocabulary_diversity,
-        pronunciationAccuracy: metric.pronunciation_accuracy,
+        pronunciationAccuracy: metric.pronunciation_accuracy || 0,
         timestamp: new Date(metric.created_at).getTime(),
         session_id: metric.session_id
       }));

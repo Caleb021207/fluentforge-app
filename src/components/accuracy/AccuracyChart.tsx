@@ -1,127 +1,101 @@
+import React from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { useLocalization } from "@/context/LocalizationContext";
+import { LanguageMetrics } from "@/types/chat";
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
-import React, { useMemo } from 'react';
-import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer, Legend
-} from 'recharts';
-import { LanguageMetrics } from '@/types/chat';
-import { useLocalization } from '@/context/LocalizationContext';
-import { useTheme } from 'next-themes';
-
-interface AccuracyChartProps {
-  metricsHistory: (LanguageMetrics & { timestamp: number })[];
+interface MetricsDataPoint {
+  date: string;
+  grammarAccuracy: number;
+  conversationComplexity: number;
+  pronunciationAccuracy: number;
 }
 
-const AccuracyChart: React.FC<AccuracyChartProps> = ({ metricsHistory }) => {
+const formatDate = (date: Date): string => {
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'short' });
+  return `${month} ${day}`;
+};
+
+const AccuracyChart = ({ metricsHistory }: { metricsHistory: LanguageMetrics[] }) => {
   const { t } = useLocalization();
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
-
-  // Colors that work well in both light and dark themes
-  const lineColors = {
-    grammarAccuracy: '#0ea5e9', // sky blue
-    conversationComplexity: '#8b5cf6', // purple
-    vocabularyDiversity: '#f59e0b', // amber
-    pronunciationAccuracy: '#10b981', // emerald
-  };
-
-  const textColor = isDark ? '#f1f5f9' : '#334155';
-  const gridColor = isDark ? '#334155' : '#e2e8f0';
-
-  // Format data for the chart
-  const chartData = useMemo(() => {
-    if (!metricsHistory.length) return [];
-    
-    // Sort by timestamp
-    return [...metricsHistory]
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map(metric => ({
-        timestamp: metric.timestamp,
-        formattedDate: new Date(metric.timestamp).toLocaleDateString(),
-        grammarAccuracy: Math.round(metric.grammarAccuracy),
-        conversationComplexity: Math.round(metric.conversationComplexity),
-        vocabularyDiversity: metric.vocabularyDiversity !== undefined ? Math.round(metric.vocabularyDiversity) : undefined,
-        pronunciationAccuracy: metric.pronunciationAccuracy !== undefined ? Math.round(metric.pronunciationAccuracy) : undefined
-      }));
-  }, [metricsHistory]);
-
-  if (chartData.length < 2) {
+  
+  if (!metricsHistory || metricsHistory.length === 0) {
     return (
-      <div className="flex justify-center items-center h-64 text-muted-foreground">
-        {t("notEnoughDataForTrends")}
+      <div className="text-center py-4">
+        <p className="text-muted-foreground">{t("noDataAvailable")}</p>
       </div>
     );
   }
 
+  // Format data for chart
+  const chartData = metricsHistory.map(metric => ({
+    date: formatDate(new Date(metric.timestamp || Date.now())),
+    grammarAccuracy: metric.grammarAccuracy ? Number(metric.grammarAccuracy.toFixed(1)) : 0,
+    conversationComplexity: metric.conversationComplexity ? Number(metric.conversationComplexity.toFixed(1)) : 0,
+    pronunciationAccuracy: metric.pronunciationAccuracy ? Number(metric.pronunciationAccuracy.toFixed(1)) : 0
+  })).reverse();
+
   return (
-    <div className="h-80 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={chartData}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-          <XAxis 
-            dataKey="formattedDate" 
-            stroke={textColor}
-            tick={{ fill: textColor }}
-          />
-          <YAxis 
-            domain={[0, 100]} 
-            stroke={textColor}
-            tick={{ fill: textColor }}
-          />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: isDark ? '#1e293b' : '#ffffff',
-              borderColor: isDark ? '#475569' : '#e2e8f0',
-              color: textColor
-            }}
-          />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="grammarAccuracy"
-            name={t("grammarAccuracy")}
-            stroke={lineColors.grammarAccuracy}
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
-          />
-          <Line
-            type="monotone"
-            dataKey="conversationComplexity"
-            name={t("conversationComplexity")}
-            stroke={lineColors.conversationComplexity}
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
-          />
-          {chartData[0].vocabularyDiversity !== undefined && (
-            <Line
-              type="monotone"
-              dataKey="vocabularyDiversity"
-              name={t("vocabularyDiversity")}
-              stroke={lineColors.vocabularyDiversity}
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          )}
-          {chartData[0].pronunciationAccuracy !== undefined && (
-            <Line
-              type="monotone"
-              dataKey="pronunciationAccuracy"
-              name={t("pronunciationAccuracy")}
-              stroke={lineColors.pronunciationAccuracy}
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          )}
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <ChartContainer config={{
+      grammarAccuracy: { theme: { light: "#8884d8", dark: "#a78bfa" } },
+      conversationComplexity: { theme: { light: "#82ca9d", dark: "#4ade80" } },
+      pronunciationAccuracy: { theme: { light: "#ff8042", dark: "#fb923c" } }
+    }}>
+      <LineChart 
+        data={chartData} 
+        margin={{ top: 5, right: 30, left: 20, bottom: 25 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis 
+          dataKey="date" 
+          tick={{ fontSize: 12 }}
+          height={60}
+          tickMargin={10}
+        />
+        <YAxis 
+          domain={[0, 100]} 
+          tickCount={6} 
+          tick={{ fontSize: 12 }}
+          width={60}
+          tickMargin={10}
+          label={{ 
+            value: t("score"), 
+            angle: -90, 
+            position: 'insideLeft',
+            style: { textAnchor: 'middle' },
+            dy: 50,
+            dx: -30 
+          }}
+        />
+        <Tooltip content={<ChartTooltipContent />} />
+        <Legend verticalAlign="bottom" height={36} />
+        <Line
+          name={t("grammarAccuracy")}
+          type="monotone"
+          dataKey="grammarAccuracy"
+          strokeWidth={2}
+          dot={{ r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+        <Line
+          name={t("conversationComplexity")}
+          type="monotone"
+          dataKey="conversationComplexity"
+          strokeWidth={2}
+          dot={{ r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+        <Line
+          name={t("pronunciationAccuracy")}
+          type="monotone"
+          dataKey="pronunciationAccuracy"
+          strokeWidth={2}
+          dot={{ r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+      </LineChart>
+    </ChartContainer>
   );
 };
 

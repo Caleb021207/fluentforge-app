@@ -51,6 +51,7 @@ export interface LanguageMetrics {
   messageCount: number;
   vocabularyDiversity?: number;
   pronunciationAccuracy?: number;
+  session_id?: string;
   timestamp?: number;
 }
 
