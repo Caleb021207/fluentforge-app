@@ -39,11 +39,9 @@ export type SupportLevel = 'full' | 'beta' | 'limited' | 'unavailable';
 export type TranslationType = string | Record<string, unknown>;
 
 // Hint and suggestion types
-export type SuggestionCategory = 'general' | 'grammar' | 'vocabulary' | 'culture' | 'practice';
-
-export interface SuggestionItem {
-  text: string;
-  category: SuggestionCategory;
+export interface SuggestionCategory {
+  title: string;
+  suggestions: string[];
 }
 
 // Language metrics type
@@ -54,4 +52,11 @@ export interface LanguageMetrics {
   vocabularyDiversity?: number;
   pronunciationAccuracy?: number;
   timestamp?: number;
+}
+
+// Define Message type to be compatible with both usage patterns
+export interface Message {
+  role: MessageRole;
+  content: string;
+  translation?: TranslationType | string;
 }

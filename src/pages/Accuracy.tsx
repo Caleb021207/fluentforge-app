@@ -6,7 +6,7 @@ import AuthenticatedAccuracy from "@/components/accuracy/AuthenticatedAccuracy";
 import UnauthenticatedAccuracy from "@/components/accuracy/UnauthenticatedAccuracy";
 
 const Accuracy = () => {
-  const { isLoading, isAuthenticated } = useAuthGuard({ redirectUnauthorized: false });
+  const { isLoading, isAuthenticated } = useAuthGuard();
 
   if (isLoading) {
     return (

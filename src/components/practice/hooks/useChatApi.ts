@@ -1,9 +1,9 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useToast } from "@/hooks/use-toast";
 import { ChatMessage } from "@/types/chat";
 import { handleConnectionError } from "@/utils/authErrorHandler";
+import { v4 as uuidv4 } from 'uuid';
 
 export const useChatApi = () => {
   const { currentLanguage, t } = useLocalization();
@@ -98,11 +98,15 @@ export const useChatApi = () => {
         // Process the translation to ensure it's a string
         const processedTranslation = processTranslation(retryResponse.data.translation);
         
-        return {
+        // When creating an assistant message:
+        const assistantMessage: ChatMessage = {
+          id: uuidv4(),
           role: "assistant",
           content: retryResponse.data.content,
-          translation: processedTranslation
+          translation: processedTranslation,
         };
+        
+        return assistantMessage;
       }
 
       if (!data || !data.content) {
@@ -134,11 +138,15 @@ export const useChatApi = () => {
       // Process the translation to ensure it's a string
       const processedTranslation = processTranslation(data.translation);
       
-      return {
+      // When creating an assistant message:
+      const assistantMessage: ChatMessage = {
+        id: uuidv4(),
         role: "assistant",
         content: data.content,
-        translation: processedTranslation
+        translation: processedTranslation,
       };
+      
+      return assistantMessage;
     } catch (error: any) {
       console.error('Chat error:', error);
       toast({

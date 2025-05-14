@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { ChatMessage, MessageCount } from "@/types/chat";
+import { v4 as uuidv4 } from "uuid";
 
 export const useMessageState = (setMessageCount: (count: MessageCount) => void) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -8,6 +9,7 @@ export const useMessageState = (setMessageCount: (count: MessageCount) => void) 
 
   const addUserMessage = (content: string) => {
     const userMessage: ChatMessage = {
+      id: uuidv4(),
       role: "user",
       content,
     };

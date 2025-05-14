@@ -57,9 +57,9 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
       
       // Updated structure handling - check if suggestions are in data.categories or data.suggestions
       if (data?.categories && Array.isArray(data.categories)) {
-        setHints(data.categories);
+        setHints(data.categories as SuggestionCategory[]);
       } else if (data?.suggestions && Array.isArray(data.suggestions)) {
-        setHints(data.suggestions);
+        setHints(data.suggestions as SuggestionCategory[]);
       } else {
         // Fallback hints if the API doesn't return suggestions in the expected format
         setHints([
