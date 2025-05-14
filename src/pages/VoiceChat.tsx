@@ -22,6 +22,7 @@ import { useVoiceSpeechRecognition } from "@/hooks/useVoiceSpeechRecognition";
 import { useVoiceTTS } from "@/hooks/useVoiceTTS";
 import { useVoiceConversation } from "@/hooks/useVoiceConversation";
 import { VoiceChatProps } from "@/types/voiceChat";
+import { Message } from "@/types/chat";
 
 const VoiceChat: React.FC<VoiceChatProps> = () => {
   const { currentLanguage, t } = useLocalization();
@@ -47,7 +48,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
     analyzeCurrentConversation
   } = useLanguageMetricsPanel(
     conversationHistory.map(msg => ({ 
-      role: msg.role, 
+      role: msg.role as "user" | "assistant" | "system", 
       content: msg.content,
       translation: msg.translation
     }))

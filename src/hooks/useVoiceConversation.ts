@@ -5,9 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { getLanguagePair } from "@/utils/languageUtils";
+import { Message } from "@/types/chat";
 
 type ConversationMessage = {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
   translation?: string;
   timestamp: Date;
@@ -15,7 +16,7 @@ type ConversationMessage = {
 
 export const useVoiceConversation = () => {
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
-  const [apiConversationHistory, setApiConversationHistory] = useState<{role: string; content: string}[]>([]);
+  const [apiConversationHistory, setApiConversationHistory] = useState<{role: 'user' | 'assistant' | 'system'; content: string}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
@@ -95,8 +96,8 @@ export const useVoiceConversation = () => {
       
       const updatedHistory = [
         ...apiConversationHistory,
-        { role: 'user', content: text },
-        { role: 'assistant', content: content + (translationText ? "\nTranslation: " + translationText : "") }
+        { role: 'user' as const, content: text },
+        { role: 'assistant' as const, content: content + (translationText ? "\nTranslation: " + translationText : "") }
       ];
       
       setApiConversationHistory(data.updatedHistory || updatedHistory);

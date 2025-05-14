@@ -2,7 +2,7 @@
 export interface Message {
   role: 'user' | 'assistant' | 'system';
   content: string;
-  translation?: string | Record<string, unknown>;
+  translation?: TranslationType;
 }
 
 export interface LanguageMetrics {
@@ -15,7 +15,7 @@ export interface LanguageMetrics {
 }
 
 export interface TranslatedMessage {
-  role: string;
+  role: 'user' | 'assistant' | 'system';
   content: string;
   translation?: string;
 }
