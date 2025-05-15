@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -88,7 +89,7 @@ const practiceTranslations: TranslationRecord = {
   "topic": "Tema",
   "clickWordToHear": "Haz clic en una palabra para escucharla",
   
-  // Adding missing translation keys specifically mentioned by the user
+  // Recording-related translations
   "clickStartToRecord": "Haz clic en 'Comenzar Grabación' para empezar",
   "startRecording": "Comenzar Grabación",
   "stopRecording": "Detener Grabación",
@@ -101,7 +102,7 @@ const practiceTranslations: TranslationRecord = {
   "speechRecognitionError": "Error de Reconocimiento de Voz",
   "speechRecognitionNotSupported": "El reconocimiento de voz no es compatible con tu navegador",
   "noSpeechDetected": "No Se Detectó Voz",
-  "pleaseTryAgain": "Por favor, inténtalo de nuevo",
+  "pleaseTryAgain": "Por favor, inténtalo de nuevo"
 };
 
 export default practiceTranslations;

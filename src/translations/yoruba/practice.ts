@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -49,7 +50,6 @@ const practiceTranslations: TranslationRecord = {
   aiLabel: "Àwọn àwòrán AI:",
   aiModelLabel: "Àwọn àwòrán AI:",
   startChatting: "Ó ti lè bẹ̀rẹ̀ ìbárasọ̀rọ̀!",
-  allowMicAccess: "Jọwọ gba ààyè láti lo maikírófoonu rẹ",
   conversationHistoryCleared: "Ìtàn ìbáraẹnisọ̀rọ̀ ti paarẹ́",
   back: "Padà",
   
@@ -64,7 +64,7 @@ const practiceTranslations: TranslationRecord = {
   // Chat placeholder
   chatPlaceholder: "Tẹ ìránṣẹ́ rẹ láti ṣe ìdánrawó èdè Gẹ̀ẹ́sì...",
   
-  // Adding missing translations
+  // Recording-related translations
   "clickStartToRecord": "Tẹ 'Bẹrẹ Igbasilẹ' lati bẹrẹ",
   "startRecording": "Bẹrẹ Igbasilẹ",
   "stopRecording": "Duro Igbasilẹ",
@@ -72,7 +72,6 @@ const practiceTranslations: TranslationRecord = {
   "listeningToYou": "A n gbọ́ ẹ...",
   "loading": "Ń gbéjáde...",
   "microphoneAccessRequired": "Iwọle si Mikrofonu Nilo",
-  "allowMicAccess": "Jọwọ gba iwọle si mikrofonu lati lo ẹya yii",
   "microphoneAccessFailed": "Kuna lati wọle si mikrofonu",
   "speechRecognitionError": "Aṣiṣe Idanimo Oro",
   "speechRecognitionNotSupported": "Idanimo oro ko ni atilẹyin ninu aṣawakiri rẹ",

@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -54,7 +55,7 @@ const practiceTranslations: TranslationRecord = {
   practicePrompt: "Вітаю! Я хотів(ла) би попрактикуватися у розмові {{targetLanguage}}. Будь ласка, допоможіть мені виправити граматику, словниковий запас та використання {{targetLanguage}}. Можемо почати з базової розмови?",
   chatPlaceholder: "Введіть повідомлення для практики {{targetLanguage}}...",
   
-  // Adding missing translations
+  // Recording-related translations
   "clickStartToRecord": "Натисніть 'Почати запис', щоб розпочати",
   "startRecording": "Почати запис",
   "stopRecording": "Зупинити запис",
@@ -67,7 +68,7 @@ const practiceTranslations: TranslationRecord = {
   "speechRecognitionError": "Помилка розпізнавання мовлення",
   "speechRecognitionNotSupported": "Розпізнавання мовлення не підтримується у вашому браузері",
   "noSpeechDetected": "Мовлення не виявлено",
-  "pleaseTryAgain": "Будь ласка, спробуйте ще раз",
+  "pleaseTryAgain": "Будь ласка, спробуйте ще раз"
 };
 
 export default practiceTranslations;
