@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -78,12 +77,20 @@ const practiceTranslations: TranslationRecord = {
   "topic": "Chủ đề",
   "clickWordToHear": "Nhấp vào một từ để nghe",
   
-  // Missing translations specifically mentioned by the user
+  // Adding missing translations
   "clickStartToRecord": "Nhấp vào 'Bắt đầu ghi âm' để bắt đầu",
   "startRecording": "Bắt đầu ghi âm",
   "stopRecording": "Dừng ghi âm",
   "yourPronunciation": "Phát âm của bạn",
-  "listeningToYou": "Đang lắng nghe bạn..."
+  "listeningToYou": "Đang lắng nghe bạn...",
+  "loading": "Đang tải...",
+  "microphoneAccessRequired": "Cần Quyền Truy Cập Micrô",
+  "allowMicAccess": "Vui lòng cho phép truy cập micrô để sử dụng tính năng này",
+  "microphoneAccessFailed": "Không thể truy cập micrô",
+  "speechRecognitionError": "Lỗi Nhận Dạng Giọng Nói",
+  "speechRecognitionNotSupported": "Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói",
+  "noSpeechDetected": "Không Phát Hiện Giọng Nói",
+  "pleaseTryAgain": "Vui lòng thử lại",
 };
 
 export default practiceTranslations;

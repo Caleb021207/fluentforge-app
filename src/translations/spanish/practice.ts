@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -94,7 +93,15 @@ const practiceTranslations: TranslationRecord = {
   "startRecording": "Comenzar Grabación",
   "stopRecording": "Detener Grabación",
   "yourPronunciation": "Tu Pronunciación",
-  "listeningToYou": "Escuchándote..."
+  "listeningToYou": "Escuchándote...",
+  "loading": "Cargando...",
+  "microphoneAccessRequired": "Se Requiere Acceso al Micrófono",
+  "allowMicAccess": "Por favor, permite el acceso al micrófono para usar esta función",
+  "microphoneAccessFailed": "Error al acceder al micrófono",
+  "speechRecognitionError": "Error de Reconocimiento de Voz",
+  "speechRecognitionNotSupported": "El reconocimiento de voz no es compatible con tu navegador",
+  "noSpeechDetected": "No Se Detectó Voz",
+  "pleaseTryAgain": "Por favor, inténtalo de nuevo",
 };
 
 export default practiceTranslations;

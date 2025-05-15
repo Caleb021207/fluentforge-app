@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getSpeechSynthesisLanguageCode } from "@/utils/languageUtils";
@@ -17,75 +17,107 @@ export const useVoiceSpeechRecognition = ({
 }: UseVoiceSpeechRecognitionProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [isInitializing, setIsInitializing] = useState(false);
   const { toast } = useToast();
   const { t } = useLocalization();
   
   const recognitionRef = useRef<any>(null);
   const silenceTimeoutRef = useRef<number | null>(null);
+  const clickDebounceRef = useRef<number | null>(null);
   
-  useEffect(() => {
-    if (typeof window !== "undefined" && 
-        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-      
-      let recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
-      
-      console.log(`Setting speech recognition to target language: ${targetLanguage} (${recognitionLanguage})`);
-      
-      recognitionRef.current.lang = recognitionLanguage;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.maxAlternatives = 1;
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const lastResultIndex = event.results.length - 1;
-        const latestTranscript = event.results[lastResultIndex][0].transcript;
-        
-        resetSilenceDetection();
-        
-        setTranscript(latestTranscript);
-        if (onTranscriptChange) {
-          onTranscriptChange(latestTranscript);
-        }
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        setIsListening(false);
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
-        });
-      };
-      
-      recognitionRef.current.onend = () => {
-        if (isListening) {
-          try {
-            recognitionRef.current.start();
-          } catch (e) {
-            console.error("Failed to restart speech recognition:", e);
-          }
-        } else {
-          setIsListening(false);
-        }
-      };
-    } else {
+  // Initialize speech recognition
+  const initRecognition = useCallback(() => {
+    if (typeof window === "undefined") return null;
+    
+    if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+      console.error("Speech recognition not supported in this browser");
       toast({
         title: t("error"),
         description: t("speechRecognitionNotSupported"),
         variant: "destructive",
       });
+      return null;
     }
     
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognitionAPI();
+    
+    let recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
+    
+    console.log(`Setting speech recognition to target language: ${targetLanguage} (${recognitionLanguage})`);
+    
+    recognition.lang = recognitionLanguage;
+    recognition.interimResults = true;
+    recognition.continuous = true;
+    recognition.maxAlternatives = 1;
+    
+    recognition.onresult = (event: any) => {
+      const lastResultIndex = event.results.length - 1;
+      const latestTranscript = event.results[lastResultIndex][0].transcript;
+      
+      resetSilenceDetection();
+      
+      setTranscript(latestTranscript);
+      if (onTranscriptChange) {
+        onTranscriptChange(latestTranscript);
       }
-      clearSilenceDetection();
     };
+    
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+      setIsListening(false);
+      setIsInitializing(false);
+      
+      toast({
+        title: t("error"),
+        description: `${t("speechRecognitionError")}: ${event.error}`,
+        variant: "destructive",
+      });
+    };
+    
+    recognition.onend = () => {
+      if (isListening) {
+        try {
+          recognition.start();
+        } catch (e) {
+          console.error("Failed to restart speech recognition:", e);
+          setIsListening(false);
+          setIsInitializing(false);
+        }
+      } else {
+        setIsListening(false);
+        setIsInitializing(false);
+      }
+    };
+    
+    return recognition;
   }, [targetLanguage, toast, t, isListening]);
+  
+  // Clean up function to properly stop recognition and clear timeouts
+  const cleanUpRecognition = useCallback(() => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {
+        console.error("Error stopping recognition:", e);
+      }
+      recognitionRef.current = null;
+    }
+    
+    clearSilenceDetection();
+    
+    if (clickDebounceRef.current) {
+      window.clearTimeout(clickDebounceRef.current);
+      clickDebounceRef.current = null;
+    }
+  }, []);
+  
+  // Set up and clean up on mount/unmount
+  useEffect(() => {
+    return () => {
+      cleanUpRecognition();
+    };
+  }, [cleanUpRecognition]);
   
   const resetSilenceDetection = () => {
     clearSilenceDetection();
@@ -111,27 +143,49 @@ export const useVoiceSpeechRecognition = ({
   };
 
   const toggleListening = () => {
+    // Debounce to prevent rapid clicks
+    if (clickDebounceRef.current || isInitializing) {
+      console.log("Debouncing click or initialization in progress");
+      return;
+    }
+    
+    clickDebounceRef.current = window.setTimeout(() => {
+      clickDebounceRef.current = null;
+    }, 1000);
+    
     if (isListening) {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-      clearSilenceDetection();
+      console.log("Stopping recording");
+      cleanUpRecognition();
       setIsListening(false);
     } else {
-      if (recognitionRef.current) {
-        try {
+      console.log("Starting recording");
+      setIsInitializing(true);
+      
+      // Reset transcript when starting a new recording
+      setTranscript("");
+      
+      // Clean up any existing instances
+      cleanUpRecognition();
+      
+      // Initialize and start a new instance
+      try {
+        recognitionRef.current = initRecognition();
+        
+        if (recognitionRef.current) {
           recognitionRef.current.start();
           setIsListening(true);
-          setTranscript("");
           resetSilenceDetection();
-        } catch (error) {
-          console.error("Error starting speech recognition:", error);
-          toast({
-            title: t("error"),
-            description: t("microphoneAccessRequired"),
-            variant: "destructive",
-          });
+        } else {
+          setIsInitializing(false);
         }
+      } catch (error) {
+        console.error("Error starting speech recognition:", error);
+        setIsInitializing(false);
+        toast({
+          title: t("error"),
+          description: t("microphoneAccessRequired"),
+          variant: "destructive",
+        });
       }
     }
   };
@@ -148,6 +202,7 @@ export const useVoiceSpeechRecognition = ({
 
   return {
     isListening,
+    isInitializing,
     transcript,
     toggleListening,
     handleSendTranscript,

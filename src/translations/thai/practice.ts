@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -15,7 +14,19 @@ const practiceTranslations: TranslationRecord = {
   "overallLevel": "ระดับโดยรวม",
   "startChatting": "เริ่มพูดคุยกับผู้สอนภาษา AI ของคุณ!",
   "clickToStartVoice": "คลิก 'เริ่มการสนทนาด้วยเสียง' เพื่อเริ่มการพูดคุยกับผู้สอน",
-  "allowMicAccess": "โปรดอนุญาตการเข้าถึงไมโครโฟนเพื่อใช้ฟีเจอร์เสียง",
+  "clickStartToRecord": "คลิก 'เริ่มการบันทึก' เพื่อเริ่มต้น",
+  "startRecording": "เริ่มการบันทึก",
+  "stopRecording": "หยุดการบันทึก",
+  "yourPronunciation": "การออกเสียงของคุณ",
+  "listeningToYou": "กำลังฟังคุณ...",
+  "loading": "กำลังโหลด...",
+  "microphoneAccessRequired": "ต้องการการเข้าถึงไมโครโฟน",
+  "allowMicAccess": "โปรดอนุญาตการเข้าถึงไมโครโฟนเพื่อใช้คุณสมบัตินี้",
+  "microphoneAccessFailed": "ไม่สามารถเข้าถึงไมโครโฟน",
+  "speechRecognitionError": "ข้อผิดพลาดในการรู้จำเสียง",
+  "speechRecognitionNotSupported": "เบราว์เซอร์ของคุณไม่รองรับการรู้จำเสียง",
+  "noSpeechDetected": "ไม่พบเสียง",
+  "pleaseTryAgain": "โปรดลองอีกครั้ง",
   "typeMessage": "พิมพ์ข้อความของคุณเป็นภาษาไทยหรืออังกฤษ...",
   "typeMessageBelow": "พิมพ์ข้อความด้านล่างเพื่อเริ่ม",
   "practiceWithTextChat": "ฝึกด้วยการแชทข้อความ",

@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from "react";
 import { useVoiceSpeechRecognition } from "@/hooks/useVoiceSpeechRecognition";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
@@ -50,6 +49,7 @@ export const usePronunciationExercise = () => {
   
   const {
     isListening,
+    isInitializing,
     transcript,
     toggleListening,
     clearTranscript
@@ -155,7 +155,7 @@ export const usePronunciationExercise = () => {
 
   // Stop recording and analyze pronunciation
   const handleStopRecording = useCallback(async () => {
-    if (!currentExercise || !transcript) return;
+    if (!currentExercise) return;
     
     toggleListening();
     setIsLoading(true);
@@ -166,6 +166,16 @@ export const usePronunciationExercise = () => {
         role: "user",
         content: transcript
       };
+      
+      if (!transcript.trim()) {
+        toast({
+          title: t("noSpeechDetected"),
+          description: t("pleaseTryAgain"),
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
       
       setMessages(prev => [...prev, userMessage]);
       
@@ -274,6 +284,7 @@ export const usePronunciationExercise = () => {
     currentExercise,
     isLoading,
     isRecording: isListening,
+    isInitializing,
     transcript,
     speechRate,
     setSpeechRate,

@@ -3,11 +3,12 @@ import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mic, MicOff } from "lucide-react";
+import { Mic, MicOff, Loader2 } from "lucide-react";
 import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
 
 interface RecordingControlsProps {
   isRecording: boolean;
+  isInitializing?: boolean;
   transcript: string;
   onStartRecording: () => void;
   onStopRecording: () => void;
@@ -15,12 +16,13 @@ interface RecordingControlsProps {
 
 const RecordingControls: React.FC<RecordingControlsProps> = ({
   isRecording,
+  isInitializing = false,
   transcript,
   onStartRecording,
   onStopRecording
 }) => {
   const { t } = useLocalization();
-  const { microphoneAccess, requestMicrophoneAccess } = useMicrophoneAccess();
+  const { microphoneAccess, requestMicrophoneAccess, isChecking } = useMicrophoneAccess();
 
   const handleRecordingToggle = async () => {
     if (isRecording) {
@@ -37,6 +39,8 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
     }
   };
 
+  const isLoading = isInitializing || isChecking;
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -44,9 +48,15 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
         <Button
           variant={isRecording ? "destructive" : "default"}
           onClick={handleRecordingToggle}
+          disabled={isLoading}
           className="flex items-center gap-2"
         >
-          {isRecording ? (
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {t("loading")}
+            </>
+          ) : isRecording ? (
             <>
               <MicOff className="h-4 w-4" />
               {t("stopRecording")}

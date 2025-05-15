@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -50,7 +49,7 @@ const practiceTranslations: TranslationRecord = {
   aiLabel: "Àwọn àwòrán AI:",
   aiModelLabel: "Àwọn àwòrán AI:",
   startChatting: "Ó ti lè bẹ̀rẹ̀ ìbárasọ̀rọ̀!",
-  allowMicAccess: "Jọwọ́ gba ààyè láti lo maikírófoonu rẹ",
+  allowMicAccess: "Jọwọ gba ààyè láti lo maikírófoonu rẹ",
   conversationHistoryCleared: "Ìtàn ìbáraẹnisọ̀rọ̀ ti paarẹ́",
   back: "Padà",
   
@@ -63,7 +62,22 @@ const practiceTranslations: TranslationRecord = {
   practiceDisclaimer: "AI wa yóò fara mọ́ ipele ìmọ̀ rẹ yóò sì ràn ọ́ lọ́wọ́ láti dàgbà díẹ̀díẹ̀.",
   
   // Chat placeholder
-  chatPlaceholder: "Tẹ ìránṣẹ́ rẹ láti ṣe ìdánrawó èdè Gẹ̀ẹ́sì..."
+  chatPlaceholder: "Tẹ ìránṣẹ́ rẹ láti ṣe ìdánrawó èdè Gẹ̀ẹ́sì...",
+  
+  // Adding missing translations
+  "clickStartToRecord": "Tẹ 'Bẹrẹ Igbasilẹ' lati bẹrẹ",
+  "startRecording": "Bẹrẹ Igbasilẹ",
+  "stopRecording": "Duro Igbasilẹ",
+  "yourPronunciation": "Sísọ rẹ",
+  "listeningToYou": "A n gbọ́ ẹ...",
+  "loading": "Ń gbéjáde...",
+  "microphoneAccessRequired": "Iwọle si Mikrofonu Nilo",
+  "allowMicAccess": "Jọwọ gba iwọle si mikrofonu lati lo ẹya yii",
+  "microphoneAccessFailed": "Kuna lati wọle si mikrofonu",
+  "speechRecognitionError": "Aṣiṣe Idanimo Oro",
+  "speechRecognitionNotSupported": "Idanimo oro ko ni atilẹyin ninu aṣawakiri rẹ",
+  "noSpeechDetected": "Ko Si Oro Ti a Rii",
+  "pleaseTryAgain": "Jọwọ gbiyanju lẹẹkansi"
 };
 
 export default practiceTranslations;

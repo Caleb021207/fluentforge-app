@@ -21,6 +21,7 @@ const PronunciationPracticeContainer = () => {
     currentExercise,
     isLoading,
     isRecording,
+    isInitializing,
     transcript,
     speechRate,
     setSpeechRate,
@@ -129,6 +130,7 @@ const PronunciationPracticeContainer = () => {
 
             <RecordingControls
               isRecording={isRecording}
+              isInitializing={isInitializing}
               transcript={transcript}
               onStartRecording={handleStartRecording}
               onStopRecording={handleStopRecording}
@@ -142,13 +144,13 @@ const PronunciationPracticeContainer = () => {
               <Button 
                 variant="outline" 
                 onClick={handleTryAgain}
-                disabled={isRecording || isLoading}
+                disabled={isRecording || isLoading || isInitializing}
               >
                 {t("tryAgain")}
               </Button>
               <Button 
                 onClick={handleNextExercise}
-                disabled={isRecording || isLoading || isGenerating}
+                disabled={isRecording || isLoading || isGenerating || isInitializing}
                 className="flex items-center gap-2"
               >
                 <RefreshCw className="h-4 w-4" />

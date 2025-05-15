@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -25,7 +24,22 @@ const practiceTranslations: TranslationRecord = {
   "failedToGetTranslation": "Hindi makuha ang pagsasalin. Pakisubukang muli.",
   "translationError": "Error sa Pagsasalin",
   "startTextChatting": "Magsimula ng pakikipag-chat",
-  "typeMessageBelow": "Mag-type ng mensahe sa ibaba"
+  "typeMessageBelow": "Mag-type ng mensahe sa ibaba",
+  
+  // Adding missing translations
+  "clickStartToRecord": "I-click ang 'Magsimula ng Pagrekord' para magsimula",
+  "startRecording": "Magsimula ng Pagrekord",
+  "stopRecording": "Ihinto ang Pagrekord",
+  "yourPronunciation": "Ang Iyong Pagbigkas",
+  "listeningToYou": "Nakikinig sa iyo...",
+  "loading": "Naglo-load...",
+  "microphoneAccessRequired": "Kailangan ng Access sa Mikropono",
+  "allowMicAccess": "Mangyaring payagan ang access sa mikropono para gamitin ang feature na ito",
+  "microphoneAccessFailed": "Hindi ma-access ang mikropono",
+  "speechRecognitionError": "Error sa Pagkilala ng Pananalita",
+  "speechRecognitionNotSupported": "Hindi suportado ang pagkilala ng pananalita sa iyong browser",
+  "noSpeechDetected": "Walang Nadetektang Pananalita",
+  "pleaseTryAgain": "Pakisubukan muli"
 };
 
 export default practiceTranslations;

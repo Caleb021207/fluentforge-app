@@ -49,10 +49,25 @@ const practiceTranslations: TranslationRecord = {
   askAboutGrammarRules: "Запитайте про правила граматики",
   practiceConversationsDifferentSituations: "Практикуйте розмови в різних ситуаціях",
   learnNewVocabulary: "Вивчайте новий словниковий запас",
-  discussCulturalTopics: "Обговорюйте культурні теми",
+  discussCulturalTopics: "Обговорюйте культур��і теми",
   
   practicePrompt: "Вітаю! Я хотів(ла) би попрактикуватися у розмові {{targetLanguage}}. Будь ласка, допоможіть мені виправити граматику, словниковий запас та використання {{targetLanguage}}. Можемо почати з базової розмови?",
-  chatPlaceholder: "Введіть повідомлення для практики {{targetLanguage}}..."
+  chatPlaceholder: "Введіть повідомлення для практики {{targetLanguage}}...",
+  
+  // Adding missing translations
+  "clickStartToRecord": "Натисніть 'Почати запис', щоб розпочати",
+  "startRecording": "Почати запис",
+  "stopRecording": "Зупинити запис",
+  "yourPronunciation": "Ваша вимова",
+  "listeningToYou": "Слухаємо вас...",
+  "loading": "Завантаження...",
+  "microphoneAccessRequired": "Потрібен доступ до мікрофона",
+  "allowMicAccess": "Будь ласка, надайте доступ до мікрофона для використання цієї функції",
+  "microphoneAccessFailed": "Не вдалося отримати доступ до мікрофона",
+  "speechRecognitionError": "Помилка розпізнавання мовлення",
+  "speechRecognitionNotSupported": "Розпізнавання мовлення не підтримується у вашому браузері",
+  "noSpeechDetected": "Мовлення не виявлено",
+  "pleaseTryAgain": "Будь ласка, спробуйте ще раз",
 };
 
 export default practiceTranslations;
