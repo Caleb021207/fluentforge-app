@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import ComplexityDropdown from "./ComplexityDropdown";
 import SpeechRateControl from "./SpeechRateControl";
@@ -9,8 +9,8 @@ import PronunciationFeedback from "./PronunciationFeedback";
 import PronunciationInstructions from "./PronunciationInstructions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart2, RefreshCw } from "lucide-react";
-import { usePronunciationExercise } from "../pronunciation/hooks/usePronunciationExercise";
+import { RefreshCw, ChevronLeft } from "lucide-react";
+import { usePronunciationExercise } from "./hooks/usePronunciationExercise";
 import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
 
 const PronunciationPracticeContainer = () => {
@@ -26,10 +26,15 @@ const PronunciationPracticeContainer = () => {
     setSpeechRate,
     feedback,
     messages,
+    showExercise,
+    handleStartExercise,
     handleStartRecording,
     handleStopRecording,
     handleNextExercise,
-    handleTryAgain
+    handleTryAgain,
+    handleBackToLevels,
+    isGenerating,
+    levelDescriptions
   } = usePronunciationExercise();
 
   return (
@@ -37,7 +42,7 @@ const PronunciationPracticeContainer = () => {
       <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("pronunciationPractice")}</h1>
-          <p className="text-muted-foreground">{t("improvePronunciationSkills")}</p>
+          <p className="text-muted-foreground">{t("improvePronunciationSkillsWith", { language: "Spanish" })}</p>
         </div>
         <div className="flex items-center gap-2">
           <SpeechRateControl 
@@ -48,27 +53,79 @@ const PronunciationPracticeContainer = () => {
         </div>
       </div>
 
-      <ComplexityDropdown 
-        selectedComplexity={complexity} 
-        onSelect={setComplexity} 
-      />
-
-      {currentExercise && (
+      {!showExercise ? (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("selectComplexityLevel")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                {t("chooseDifficultyLevelBasedOn")}
+              </p>
+              
+              <ComplexityDropdown 
+                selectedComplexity={complexity} 
+                onSelect={setComplexity} 
+              />
+              
+              {complexity && (
+                <div className="mt-6">
+                  <div className="mb-6">
+                    <h3 className="text-lg font-medium mb-2">
+                      {levelDescriptions[complexity].title} - {levelDescriptions[complexity].actflLabel}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {t("levelDescription")}
+                    </p>
+                    <p>
+                      {levelDescriptions[complexity].description}
+                    </p>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleStartExercise}
+                    disabled={isGenerating}
+                    className="w-full"
+                  >
+                    {isGenerating ? t("generatingExercise") : t("startExercise")}
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          
+          <PronunciationInstructions />
+        </div>
+      ) : (
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex justify-between items-center">
-              <span>{t("practiceExercise")}</span>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={handleBackToLevels}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span>{t("practiceExercise")}</span>
+              </div>
               <span className="text-sm font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full">
                 {complexity}
               </span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <PhraseDisplay 
-              phrase={currentExercise.phrase}
-              translation={currentExercise.translation}
-              speechRate={speechRate}
-            />
+            {currentExercise && (
+              <PhraseDisplay 
+                phrase={currentExercise.phrase}
+                translation={currentExercise.translation}
+                speechRate={speechRate}
+                topic={currentExercise.topic}
+              />
+            )}
 
             <RecordingControls
               isRecording={isRecording}
@@ -91,19 +148,15 @@ const PronunciationPracticeContainer = () => {
               </Button>
               <Button 
                 onClick={handleNextExercise}
-                disabled={isRecording || isLoading}
+                disabled={isRecording || isLoading || isGenerating}
                 className="flex items-center gap-2"
               >
                 <RefreshCw className="h-4 w-4" />
-                {t("newPhrase")}
+                {isGenerating ? t("generatingNewPhrase") : t("newPhrase")}
               </Button>
             </div>
           </CardContent>
         </Card>
-      )}
-
-      {!currentExercise && !complexity && (
-        <PronunciationInstructions />
       )}
     </div>
   );

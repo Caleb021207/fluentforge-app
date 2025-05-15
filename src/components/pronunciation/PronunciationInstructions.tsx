@@ -2,46 +2,33 @@
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Check } from "lucide-react";
 
 const PronunciationInstructions = () => {
   const { t } = useLocalization();
 
   const tips = [
-    {
-      title: t("listenCarefully"),
-      content: t("listenCarefullyDescription")
-    },
-    {
-      title: t("startSlowly"),
-      content: t("startSlowlyDescription")
-    },
-    {
-      title: t("payAttentionToFeedback"),
-      content: t("payAttentionToFeedbackDescription")
-    },
-    {
-      title: t("practiceRegularly"),
-      content: t("practiceRegularlyDescription")
-    }
+    t("listenCarefullyTip"),
+    t("payAttentionToStressTip"),
+    t("practiceDifficultSoundsTip"),
+    t("recordYourselfTip"),
+    t("bePatientTip")
   ];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("pronunciationTips")}</CardTitle>
+        <CardTitle>{t("pronunciationPracticeTips")}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Accordion type="single" collapsible>
+        <ul className="space-y-3">
           {tips.map((tip, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger>{tip.title}</AccordionTrigger>
-              <AccordionContent>
-                {tip.content}
-              </AccordionContent>
-            </AccordionItem>
+            <li key={index} className="flex items-start">
+              <Check className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+              <span>{tip}</span>
+            </li>
           ))}
-        </Accordion>
+        </ul>
       </CardContent>
     </Card>
   );

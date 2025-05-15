@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useVoiceSpeechRecognition } from "@/hooks/useVoiceSpeechRecognition";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,8 +12,8 @@ type ComplexityLevel = "Novice" | "Intermediate" | "Advanced" | "Superior";
 interface Exercise {
   phrase: string;
   translation: string;
-  grammar?: string;
   topic?: string;
+  level?: string;
 }
 
 interface WordFeedback {
@@ -28,6 +28,12 @@ interface PronunciationFeedback {
   overallFeedback: string;
 }
 
+interface LevelDescription {
+  title: string;
+  description: string;
+  actflLabel: string;
+}
+
 export const usePronunciationExercise = () => {
   const [complexity, setComplexity] = useState<ComplexityLevel | null>(null);
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
@@ -35,6 +41,8 @@ export const usePronunciationExercise = () => {
   const [feedback, setFeedback] = useState<PronunciationFeedback | null>(null);
   const [speechRate, setSpeechRate] = useState(1.0);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [showExercise, setShowExercise] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const { t } = useLocalization();
   const { toast } = useToast();
@@ -44,7 +52,6 @@ export const usePronunciationExercise = () => {
     isListening,
     transcript,
     toggleListening,
-    handleSendTranscript,
     clearTranscript
   } = useVoiceSpeechRecognition({
     targetLanguage: "spanish",
@@ -52,57 +59,66 @@ export const usePronunciationExercise = () => {
     onSendTranscript: () => {}
   });
 
-  // Generate a phrase based on complexity
+  // Level descriptions mapping
+  const levelDescriptions: Record<ComplexityLevel, LevelDescription> = {
+    Novice: {
+      title: t("novice"),
+      description: t("noviceLevelDescription"),
+      actflLabel: "ACTFL Novice"
+    },
+    Intermediate: {
+      title: t("intermediate"),
+      description: t("intermediateLevelDescription"),
+      actflLabel: "ACTFL Intermediate"
+    },
+    Advanced: {
+      title: t("advanced"),
+      description: t("advancedLevelDescription"),
+      actflLabel: "ACTFL Advanced"
+    },
+    Superior: {
+      title: t("superior"),
+      description: t("superiorLevelDescription"),
+      actflLabel: "ACTFL Superior"
+    }
+  };
+
+  // Generate a phrase based on complexity using the edge function
   const generatePracticePhrase = useCallback(async (level: ComplexityLevel) => {
-    setIsLoading(true);
+    setIsGenerating(true);
     try {
-      // In a real implementation, we would call an API to generate phrases
-      // For now, we'll use some predefined phrases based on level
-      const phrases: Record<ComplexityLevel, Exercise[]> = {
-        Novice: [
-          { phrase: "Buenos días", translation: "Good morning" },
-          { phrase: "¿Cómo estás?", translation: "How are you?" },
-          { phrase: "Me llamo Juan", translation: "My name is Juan" },
-          { phrase: "Gracias por tu ayuda", translation: "Thank you for your help" }
-        ],
-        Intermediate: [
-          { phrase: "Me gustaría practicar mi español", translation: "I would like to practice my Spanish" },
-          { phrase: "¿Podrías hablar más despacio?", translation: "Could you speak more slowly?" },
-          { phrase: "Estoy aprendiendo un nuevo idioma", translation: "I am learning a new language" },
-          { phrase: "No entiendo esta palabra", translation: "I don't understand this word" }
-        ],
-        Advanced: [
-          { phrase: "La pronunciación es esencial para comunicarse eficazmente", translation: "Pronunciation is essential for effective communication" },
-          { phrase: "Deberíamos considerar todas las opciones disponibles", translation: "We should consider all available options" },
-          { phrase: "La práctica constante mejora la fluidez", translation: "Constant practice improves fluency" },
-          { phrase: "Es importante entender el contexto cultural", translation: "It's important to understand the cultural context" }
-        ],
-        Superior: [
-          { phrase: "La adquisición del lenguaje es un proceso cognitivo complejo que involucra múltiples regiones cerebrales", translation: "Language acquisition is a complex cognitive process involving multiple brain regions" },
-          { phrase: "Las diferencias fonéticas entre idiomas pueden presentar desafíos significativos para los estudiantes", translation: "Phonetic differences between languages can present significant challenges for students" },
-          { phrase: "El bilingüismo tiene efectos positivos en la plasticidad neuronal y las funciones ejecutivas", translation: "Bilingualism has positive effects on neuronal plasticity and executive functions" },
-          { phrase: "La inmersión lingüística es generalmente considerada el método más eficaz para alcanzar la fluidez", translation: "Linguistic immersion is generally considered the most effective method to achieve fluency" }
-        ]
-      };
-      
-      // Select a random phrase from the level
-      const phrasePool = phrases[level];
-      const randomPhrase = phrasePool[Math.floor(Math.random() * phrasePool.length)];
-      
+      // Call the edge function to generate a phrase
+      const { data, error } = await supabase.functions.invoke("generate-pronunciation-phrase", {
+        body: {
+          targetLanguage: "spanish", // This should come from user's language settings
+          level: level
+        }
+      });
+
+      if (error || !data) {
+        console.error("Error generating practice phrase:", error);
+        toast({
+          title: t("error"),
+          description: t("failedToGeneratePhrase"),
+          variant: "destructive",
+        });
+        return null;
+      }
+
       // Track this as a message for metrics
       const systemMessage: Message = {
         role: "system",
-        content: `Pronunciation exercise (${level}): ${randomPhrase.phrase}`
+        content: `Pronunciation exercise (${level}): ${data.phrase}`
       };
       
       const assistantMessage: Message = {
         role: "assistant",
-        content: randomPhrase.phrase
+        content: data.phrase
       };
       
       setMessages(prev => [...prev, systemMessage, assistantMessage]);
       
-      return randomPhrase;
+      return data as Exercise;
     } catch (error) {
       console.error("Error generating practice phrase:", error);
       toast({
@@ -112,21 +128,23 @@ export const usePronunciationExercise = () => {
       });
       return null;
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
     }
   }, [t, toast]);
 
-  // Set up a new exercise when complexity changes
-  useEffect(() => {
-    if (complexity) {
-      generatePracticePhrase(complexity).then(exercise => {
-        if (exercise) {
-          setCurrentExercise(exercise);
-          setFeedback(null);
-        }
-      });
+  // Start a new exercise
+  const handleStartExercise = useCallback(async () => {
+    if (!complexity) return;
+    
+    setShowExercise(true);
+    setFeedback(null);
+    clearTranscript();
+    
+    const exercise = await generatePracticePhrase(complexity);
+    if (exercise) {
+      setCurrentExercise(exercise);
     }
-  }, [complexity, generatePracticePhrase]);
+  }, [complexity, generatePracticePhrase, clearTranscript]);
 
   // Start recording user's pronunciation
   const handleStartRecording = useCallback(() => {
@@ -225,15 +243,15 @@ export const usePronunciationExercise = () => {
   }, [currentExercise, transcript, toggleListening, messages, t, toast, analyzeConversation]);
 
   // Get a new phrase at the same complexity level
-  const handleNextExercise = useCallback(() => {
-    if (complexity) {
-      setFeedback(null);
-      clearTranscript();
-      generatePracticePhrase(complexity).then(exercise => {
-        if (exercise) {
-          setCurrentExercise(exercise);
-        }
-      });
+  const handleNextExercise = useCallback(async () => {
+    if (!complexity) return;
+    
+    setFeedback(null);
+    clearTranscript();
+    
+    const exercise = await generatePracticePhrase(complexity);
+    if (exercise) {
+      setCurrentExercise(exercise);
     }
   }, [complexity, generatePracticePhrase, clearTranscript]);
 
@@ -242,6 +260,13 @@ export const usePronunciationExercise = () => {
     setFeedback(null);
     clearTranscript();
   }, [clearTranscript]);
+
+  // Reset to level selection
+  const handleBackToLevels = useCallback(() => {
+    setShowExercise(false);
+    setCurrentExercise(null);
+    setFeedback(null);
+  }, []);
 
   return {
     complexity,
@@ -254,9 +279,14 @@ export const usePronunciationExercise = () => {
     setSpeechRate,
     feedback,
     messages,
+    showExercise,
+    handleStartExercise,
     handleStartRecording,
     handleStopRecording,
     handleNextExercise,
-    handleTryAgain
+    handleTryAgain,
+    handleBackToLevels,
+    isGenerating,
+    levelDescriptions
   };
 };

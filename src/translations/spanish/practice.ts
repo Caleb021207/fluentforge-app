@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -45,6 +46,7 @@ const practiceTranslations: TranslationRecord = {
   // Pronunciation practice
   pronunciationPractice: "Práctica de Pronunciación",
   improvePronunciationSkills: "Mejora tus habilidades de pronunciación con práctica dirigida",
+  improvePronunciationSkillsWith: "Mejora tus habilidades de pronunciación con ejercicios específicos en {language}",
   practiceExercise: "Ejercicio de Práctica",
   selectComplexityLevel: "Seleccionar Nivel de Complejidad",
   novice: "Principiante",
@@ -64,6 +66,27 @@ const practiceTranslations: TranslationRecord = {
   needsImprovementPronunciationFeedback: "Necesita más práctica. Enfócate en las palabras resaltadas.",
   failedToGeneratePhrase: "Error al generar frase de práctica. Por favor, inténtalo de nuevo.",
   failedToAnalyzePronunciation: "Error al analizar la pronunciación. Por favor, inténtalo de nuevo.",
+  
+  // New translations for updated pronunciation practice page
+  chooseDifficultyLevelBasedOn: "Elige un nivel de dificultad según tu competencia lingüística",
+  startExercise: "Comenzar Ejercicio",
+  generatingExercise: "Generando ejercicio...",
+  generatingNewPhrase: "Generando nueva frase...",
+  levelDescription: "Descripción del Nivel",
+  difficultyLevel: "Nivel de Dificultad",
+  noviceLevelDescription: "Expresiones básicas con vocabulario simple. Perfecto para principiantes.",
+  intermediateLevelDescription: "Frases cotidianas con vocabulario moderado. Bueno para estudiantes de nivel intermedio.",
+  advancedLevelDescription: "Oraciones complejas con vocabulario avanzado. Adecuado para estudiantes competentes.",
+  superiorLevelDescription: "Contenido académico y profesional con vocabulario especializado.",
+  pronunciationPracticeTips: "Consejos para la Práctica de Pronunciación",
+  listenCarefullyTip: "Escucha atentamente el audio antes de intentar hablar",
+  payAttentionToStressTip: "Presta atención a los patrones de acentuación y entonación",
+  practiceDifficultSoundsTip: "Practica los sonidos difíciles varias veces",
+  recordYourselfTip: "Grábate a ti mismo y compara con hablantes nativos",
+  bePatientTip: "Sé paciente - la mejora de la pronunciación lleva tiempo",
+  listenToPhrase: "Escuchar frase",
+  playing: "Reproduciendo...",
+  topic: "Tema"
 };
 
 export default practiceTranslations;
