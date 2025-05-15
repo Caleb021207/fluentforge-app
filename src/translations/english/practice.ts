@@ -97,7 +97,8 @@ const practiceTranslations: TranslationRecord = {
   "bePatientTip": "Be patient - pronunciation improvement takes time",
   "listenToPhrase": "Listen to phrase",
   "playing": "Playing...",
-  "topic": "Topic"
+  "topic": "Topic",
+  "clickWordToHear": "Click on a word to hear it"
 };
 
 export default practiceTranslations;

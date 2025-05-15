@@ -3,6 +3,8 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Volume2 } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useVoiceTTS } from "@/hooks/useVoiceTTS";
+import WordByWordTTS from "./WordByWordTTS";
 
 interface PhraseDisplayProps {
   phrase: string;
@@ -19,27 +21,14 @@ const PhraseDisplay: React.FC<PhraseDisplayProps> = ({
 }) => {
   const { t } = useLocalization();
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const { speakWithAzureTTS, isSpeaking } = useVoiceTTS({ practiceLanguage: "spanish" });
 
   const handlePlayAudio = () => {
-    setIsPlaying(true);
-    
-    // Create SpeechSynthesis utterance
-    const utterance = new SpeechSynthesisUtterance(phrase);
-    utterance.lang = 'es-ES'; // Spanish language
-    utterance.rate = speechRate;
-    
-    // Add event listener for when speech ends
-    utterance.onend = () => {
-      setIsPlaying(false);
-    };
-    
-    // Add event listener for errors
-    utterance.onerror = () => {
-      setIsPlaying(false);
-    };
-    
-    // Speak the phrase
-    window.speechSynthesis.speak(utterance);
+    if (!isSpeaking) {
+      setIsPlaying(true);
+      speakWithAzureTTS(phrase)
+        .finally(() => setIsPlaying(false));
+    }
   };
 
   return (
@@ -55,16 +44,18 @@ const PhraseDisplay: React.FC<PhraseDisplayProps> = ({
         <div className="text-muted-foreground text-sm">{translation}</div>
       </div>
       
-      <div className="flex justify-start">
+      <div className="flex flex-col space-y-4">
         <Button
           onClick={handlePlayAudio}
-          disabled={isPlaying}
+          disabled={isSpeaking}
           variant="outline"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 w-fit"
         >
           <Volume2 className="h-4 w-4" />
           <span>{isPlaying ? t("playing") : t("listenToPhrase")}</span>
         </Button>
+        
+        <WordByWordTTS phrase={phrase} speechRate={speechRate} />
       </div>
     </div>
   );
