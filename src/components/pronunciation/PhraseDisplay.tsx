@@ -26,10 +26,19 @@ const PhraseDisplay: React.FC<PhraseDisplayProps> = ({
   const handlePlayAudio = () => {
     if (!isSpeaking) {
       setIsPlaying(true);
-      speakWithAzureTTS(phrase)
-        .finally(() => setIsPlaying(false));
+      speakWithAzureTTS(phrase);
+      // We can't use .finally() since the function returns void
+      // Instead, rely on the isSpeaking state from the hook
+      // The setIsPlaying(false) will happen when the TTS hook sets isSpeaking to false
     }
   };
+
+  React.useEffect(() => {
+    // Update isPlaying based on isSpeaking from the hook
+    if (!isSpeaking && isPlaying) {
+      setIsPlaying(false);
+    }
+  }, [isSpeaking, isPlaying]);
 
   return (
     <div className="space-y-4">

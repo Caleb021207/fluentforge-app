@@ -98,7 +98,14 @@ const practiceTranslations: TranslationRecord = {
   "listenToPhrase": "Listen to phrase",
   "playing": "Playing...",
   "topic": "Topic",
-  "clickWordToHear": "Click on a word to hear it"
+  "clickWordToHear": "Click on a word to hear it",
+  
+  // Adding missing translation keys specifically mentioned by the user
+  "clickStartToRecord": "Click 'Start Recording' to begin",
+  "startRecording": "Start Recording",
+  "stopRecording": "Stop Recording",
+  "yourPronunciation": "Your Pronunciation",
+  "listeningToYou": "Listening to you..."
 };
 
 export default practiceTranslations;

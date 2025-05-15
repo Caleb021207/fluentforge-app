@@ -4,6 +4,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mic, MicOff } from "lucide-react";
+import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
 
 interface RecordingControlsProps {
   isRecording: boolean;
@@ -19,6 +20,22 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
   onStopRecording
 }) => {
   const { t } = useLocalization();
+  const { microphoneAccess, requestMicrophoneAccess } = useMicrophoneAccess();
+
+  const handleRecordingToggle = async () => {
+    if (isRecording) {
+      onStopRecording();
+    } else {
+      // Check if we have mic access first
+      if (!microphoneAccess) {
+        const hasAccess = await requestMicrophoneAccess();
+        if (!hasAccess) {
+          return; // Don't proceed if no access
+        }
+      }
+      onStartRecording();
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -26,7 +43,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
         <h3 className="text-lg font-medium">{t("yourPronunciation")}</h3>
         <Button
           variant={isRecording ? "destructive" : "default"}
-          onClick={isRecording ? onStopRecording : onStartRecording}
+          onClick={handleRecordingToggle}
           className="flex items-center gap-2"
         >
           {isRecording ? (
