@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect } from "react";
 import { useVoiceSpeechRecognition } from "@/hooks/useVoiceSpeechRecognition";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
@@ -179,10 +180,7 @@ export const usePronunciationExercise = () => {
       
       setMessages(prev => [...prev, userMessage]);
       
-      // In a real implementation, we would call an API to analyze pronunciation
-      // For demonstration, we'll simulate feedback based on transcript similarity
-      
-      // Split both phrases into words and normalize
+      // Implement pronunciation analysis (simplified version)
       const expectedWords = currentExercise.phrase
         .toLowerCase()
         .replace(/[.,!?;:]/g, '')
@@ -193,7 +191,6 @@ export const usePronunciationExercise = () => {
         .replace(/[.,!?;:]/g, '')
         .split(/\s+/);
       
-      // Compare words
       const wordAnalysis: WordFeedback[] = expectedWords.map(expectedWord => {
         const isPresent = transcribedWords.some(word => 
           word === expectedWord || 
@@ -208,11 +205,9 @@ export const usePronunciationExercise = () => {
         };
       });
       
-      // Calculate accuracy score
       const correctWords = wordAnalysis.filter(w => w.isCorrect).length;
       const accuracyScore = (correctWords / expectedWords.length) * 100;
       
-      // Generate feedback based on score
       let overallFeedback = "";
       if (accuracyScore >= 80) {
         overallFeedback = t("excellentPronunciationFeedback");
@@ -232,7 +227,7 @@ export const usePronunciationExercise = () => {
       
       setFeedback(feedbackResult);
       
-      // If we have enough messages, analyze the conversation for metrics
+      // Analyze conversation for metrics if enough messages
       if (messages.length >= 4) {
         await analyzeConversation([...messages, userMessage], {
           sessionId: `pronunciation-${Date.now()}`,

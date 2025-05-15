@@ -21,11 +21,32 @@ export const useVoiceSpeechRecognition = ({
   const { toast } = useToast();
   const { t } = useLocalization();
   
+  // Use refs to prevent race conditions
   const recognitionRef = useRef<any>(null);
-  const silenceTimeoutRef = useRef<number | null>(null);
-  const clickDebounceRef = useRef<number | null>(null);
+  const isListeningRef = useRef<boolean>(false);
+  const autoSendTimeoutRef = useRef<number | null>(null);
   
-  // Initialize speech recognition
+  // Clean up function that properly stops recognition and clears timeouts
+  const cleanUpRecognition = useCallback(() => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+        recognitionRef.current = null;
+      } catch (e) {
+        console.error("Error stopping recognition:", e);
+      }
+    }
+    
+    if (autoSendTimeoutRef.current) {
+      window.clearTimeout(autoSendTimeoutRef.current);
+      autoSendTimeoutRef.current = null;
+    }
+
+    isListeningRef.current = false;
+    setIsListening(false);
+  }, []);
+  
+  // Initialize speech recognition with proper error handling
   const initRecognition = useCallback(() => {
     if (typeof window === "undefined") return null;
     
@@ -43,120 +64,101 @@ export const useVoiceSpeechRecognition = ({
     const recognition = new SpeechRecognitionAPI();
     
     let recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
-    
-    console.log(`Setting speech recognition to target language: ${targetLanguage} (${recognitionLanguage})`);
-    
     recognition.lang = recognitionLanguage;
     recognition.interimResults = true;
     recognition.continuous = true;
     recognition.maxAlternatives = 1;
     
     recognition.onresult = (event: any) => {
+      if (!isListeningRef.current) return; // Skip if we've already stopped listening
+      
       const lastResultIndex = event.results.length - 1;
-      const latestTranscript = event.results[lastResultIndex][0].transcript;
-      
-      resetSilenceDetection();
-      
-      setTranscript(latestTranscript);
-      if (onTranscriptChange) {
-        onTranscriptChange(latestTranscript);
+      if (lastResultIndex >= 0 && event.results[lastResultIndex]) {
+        const latestTranscript = event.results[lastResultIndex][0].transcript;
+        
+        // Reset silence detection timer
+        if (autoSendTimeoutRef.current) {
+          window.clearTimeout(autoSendTimeoutRef.current);
+        }
+        
+        autoSendTimeoutRef.current = window.setTimeout(() => {
+          if (isListeningRef.current && latestTranscript && onSendTranscript) {
+            onSendTranscript(latestTranscript);
+            cleanUpRecognition();
+          }
+        }, 10000);
+        
+        setTranscript(latestTranscript);
+        if (onTranscriptChange) {
+          onTranscriptChange(latestTranscript);
+        }
       }
     };
     
     recognition.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error);
-      setIsListening(false);
+      cleanUpRecognition();
       setIsInitializing(false);
       
-      toast({
-        title: t("error"),
-        description: `${t("speechRecognitionError")}: ${event.error}`,
-        variant: "destructive",
-      });
+      if (event.error === 'not-allowed') {
+        toast({
+          title: t("microphoneAccessRequired"),
+          description: t("allowMicAccess"),
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t("error"),
+          description: `${t("speechRecognitionError")}: ${event.error}`,
+          variant: "destructive",
+        });
+      }
     };
     
     recognition.onend = () => {
-      if (isListening) {
+      // Only attempt to restart if we're still supposed to be listening
+      if (isListeningRef.current) {
         try {
-          recognition.start();
+          // Add a small delay before restarting to prevent rapid cycling
+          setTimeout(() => {
+            if (isListeningRef.current) {
+              try {
+                recognition.start();
+              } catch (e) {
+                console.error("Failed to restart speech recognition after delay:", e);
+                cleanUpRecognition();
+              }
+            }
+          }, 300);
         } catch (e) {
-          console.error("Failed to restart speech recognition:", e);
-          setIsListening(false);
-          setIsInitializing(false);
+          console.error("Failed to handle recognition onend event:", e);
+          cleanUpRecognition();
         }
       } else {
-        setIsListening(false);
         setIsInitializing(false);
       }
     };
     
     return recognition;
-  }, [targetLanguage, toast, t, isListening]);
-  
-  // Clean up function to properly stop recognition and clear timeouts
-  const cleanUpRecognition = useCallback(() => {
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.abort();
-      } catch (e) {
-        console.error("Error stopping recognition:", e);
-      }
-      recognitionRef.current = null;
-    }
-    
-    clearSilenceDetection();
-    
-    if (clickDebounceRef.current) {
-      window.clearTimeout(clickDebounceRef.current);
-      clickDebounceRef.current = null;
-    }
-  }, []);
-  
+  }, [targetLanguage, toast, t, onTranscriptChange, onSendTranscript, cleanUpRecognition]);
+
   // Set up and clean up on mount/unmount
   useEffect(() => {
     return () => {
       cleanUpRecognition();
     };
   }, [cleanUpRecognition]);
-  
-  const resetSilenceDetection = () => {
-    clearSilenceDetection();
-    
-    silenceTimeoutRef.current = window.setTimeout(() => {
-      if (transcript && isListening && onSendTranscript) {
-        console.log("10 seconds of silence detected, automatically sending message");
-        onSendTranscript(transcript);
-        
-        if (recognitionRef.current) {
-          recognitionRef.current.abort();
-        }
-        setIsListening(false);
-      }
-    }, 10000);
-  };
-
-  const clearSilenceDetection = () => {
-    if (silenceTimeoutRef.current !== null) {
-      clearTimeout(silenceTimeoutRef.current);
-      silenceTimeoutRef.current = null;
-    }
-  };
 
   const toggleListening = () => {
-    // Debounce to prevent rapid clicks
-    if (clickDebounceRef.current || isInitializing) {
-      console.log("Debouncing click or initialization in progress");
+    // Prevent rapid re-toggling
+    if (isInitializing) {
+      console.log("Cannot toggle while initializing");
       return;
     }
-    
-    clickDebounceRef.current = window.setTimeout(() => {
-      clickDebounceRef.current = null;
-    }, 1000);
     
     if (isListening) {
       console.log("Stopping recording");
       cleanUpRecognition();
-      setIsListening(false);
     } else {
       console.log("Starting recording");
       setIsInitializing(true);
@@ -164,23 +166,46 @@ export const useVoiceSpeechRecognition = ({
       // Reset transcript when starting a new recording
       setTranscript("");
       
-      // Clean up any existing instances
-      cleanUpRecognition();
-      
-      // Initialize and start a new instance
       try {
+        // Clean up any existing instances first
+        cleanUpRecognition();
+        
+        // Initialize and start a new instance
         recognitionRef.current = initRecognition();
         
         if (recognitionRef.current) {
-          recognitionRef.current.start();
+          isListeningRef.current = true;
           setIsListening(true);
-          resetSilenceDetection();
+          
+          // Explicitly catch start errors
+          try {
+            recognitionRef.current.start();
+          } catch (error) {
+            console.error("Error starting speech recognition:", error);
+            cleanUpRecognition();
+            setIsInitializing(false);
+            
+            toast({
+              title: t("error"),
+              description: t("microphoneAccessFailed"),
+              variant: "destructive",
+            });
+            return;
+          }
+          
+          // Set a timeout to clear initializing state if it gets stuck
+          setTimeout(() => {
+            setIsInitializing(false);
+          }, 1000);
+          
         } else {
           setIsInitializing(false);
         }
       } catch (error) {
-        console.error("Error starting speech recognition:", error);
+        console.error("Error setting up speech recognition:", error);
+        cleanUpRecognition();
         setIsInitializing(false);
+        
         toast({
           title: t("error"),
           description: t("microphoneAccessRequired"),
@@ -193,7 +218,11 @@ export const useVoiceSpeechRecognition = ({
   const handleSendTranscript = (text: string) => {
     if (!text.trim()) return;
     
-    clearSilenceDetection();
+    if (autoSendTimeoutRef.current) {
+      window.clearTimeout(autoSendTimeoutRef.current);
+      autoSendTimeoutRef.current = null;
+    }
+    
     if (onSendTranscript) {
       onSendTranscript(text);
     }

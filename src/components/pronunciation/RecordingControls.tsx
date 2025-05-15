@@ -25,6 +25,11 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
   const { microphoneAccess, requestMicrophoneAccess, isChecking } = useMicrophoneAccess();
 
   const handleRecordingToggle = async () => {
+    // Prevent rapid re-toggling
+    if (isInitializing || isChecking) {
+      return;
+    }
+    
     if (isRecording) {
       onStopRecording();
     } else {
@@ -50,6 +55,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
           onClick={handleRecordingToggle}
           disabled={isLoading}
           className="flex items-center gap-2"
+          type="button"
         >
           {isLoading ? (
             <>

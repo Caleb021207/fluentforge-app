@@ -4,14 +4,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 
 export const useMicrophoneAccess = () => {
-  const [microphoneAccess, setMicrophoneAccess] = useState(false);
+  const [microphoneAccess, setMicrophoneAccess] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const { toast } = useToast();
   const { t } = useLocalization();
+  
+  // Added double-check protection to prevent race conditions
+  const isCheckingRef = useRef<boolean>(false);
 
   const checkMicrophoneAccess = useCallback(async () => {
-    if (isChecking) return false;
+    if (isCheckingRef.current) return false;
     
+    isCheckingRef.current = true;
     setIsChecking(true);
     
     try {
@@ -22,11 +26,13 @@ export const useMicrophoneAccess = () => {
       
       setMicrophoneAccess(true);
       setIsChecking(false);
+      isCheckingRef.current = false;
       return true;
     } catch (error) {
       console.error("Microphone access error:", error);
       setMicrophoneAccess(false);
       setIsChecking(false);
+      isCheckingRef.current = false;
       
       // Check for specific permission errors
       if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
@@ -46,12 +52,15 @@ export const useMicrophoneAccess = () => {
       
       return false;
     }
-  }, [toast, t, isChecking]);
+  }, [toast, t]);
 
-  // Check microphone access on component mount
+  // Check microphone access on component mount, but only once
   useEffect(() => {
-    checkMicrophoneAccess();
-  }, [checkMicrophoneAccess]);
+    // Only check if we haven't checked before
+    if (microphoneAccess === null) {
+      checkMicrophoneAccess();
+    }
+  }, [checkMicrophoneAccess, microphoneAccess]);
 
   const requestMicrophoneAccess = async () => {
     return await checkMicrophoneAccess();
@@ -63,3 +72,6 @@ export const useMicrophoneAccess = () => {
     isChecking
   };
 };
+
+// Add missing useRef import
+import { useRef } from "react";

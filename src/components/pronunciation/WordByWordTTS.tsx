@@ -1,45 +1,75 @@
 
-import React from "react";
-import { useVoiceTTS } from "@/hooks/useVoiceTTS";
+import React, { useState } from "react";
+import { useTTS } from "@/components/practice/chat-message/hooks/useTTS";
+import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
+import { Volume2, Loader2 } from "lucide-react";
 
 interface WordByWordTTSProps {
   phrase: string;
-  speechRate?: number;
+  speechRate: number;
 }
 
-const WordByWordTTS: React.FC<WordByWordTTSProps> = ({
-  phrase,
-  speechRate = 1
-}) => {
-  const { speakWithAzureTTS } = useVoiceTTS({ practiceLanguage: "spanish" });
-  const [activeWordIndex, setActiveWordIndex] = React.useState<number | null>(null);
+const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase, speechRate }) => {
   const { t } = useLocalization();
-  
-  // Split the phrase into words
+  const [activeWord, setActiveWord] = useState<string | null>(null);
   const words = phrase.split(/\s+/);
-
-  const handleWordClick = (word: string, index: number) => {
-    setActiveWordIndex(index);
-    speakWithAzureTTS(word);
-    // Reset active state after 1 second
-    setTimeout(() => setActiveWordIndex(null), 1000);
+  
+  const tts = useTTS({
+    text: activeWord || "",
+    language: "spanish",
+    isTargetLanguage: true
+  });
+  
+  const handleWordClick = (word: string) => {
+    if (tts.isPlaying) return;
+    
+    setActiveWord(word);
+    
+    // Remove punctuation for TTS
+    const cleanWord = word.replace(/[.,!?;:]/g, '');
+    
+    // Play the word with the given speech rate
+    const options = {
+      text: cleanWord,
+      language: "spanish",
+      isTargetLanguage: true,
+      speechRate: speechRate,
+      onEnd: () => setActiveWord(null)
+    };
+    
+    // Use our TTS hook to play the word
+    tts.playAudio();
   };
-
+  
   return (
-    <div className="mt-2">
-      <div className="text-sm text-muted-foreground mb-2">{t("clickWordToHear")}</div>
-      <div className="flex flex-wrap gap-1">
+    <div className="space-y-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="text-xs text-muted-foreground"
+        disabled={tts.isPlaying}
+      >
+        <span>{t("clickWordToHear")}</span>
+      </Button>
+      
+      <div className="flex flex-wrap gap-2">
         {words.map((word, index) => (
-          <button
+          <Button
             key={`${word}-${index}`}
-            onClick={() => handleWordClick(word, index)}
-            className={`px-1 py-0.5 rounded hover:bg-accent/30 transition-colors cursor-pointer border border-transparent
-              ${activeWordIndex === index ? "bg-accent text-accent-foreground" : "hover:border-accent/50"}`}
-            aria-label={`Pronounce word: ${word}`}
+            variant="outline"
+            size="sm"
+            disabled={tts.isPlaying}
+            onClick={() => handleWordClick(word)}
+            className={`${
+              activeWord === word ? "bg-primary/20" : ""
+            } relative`}
           >
             {word}
-          </button>
+            {activeWord === word && tts.isPlaying && (
+              <Loader2 className="h-3 w-3 absolute -top-1 -right-1 animate-spin" />
+            )}
+          </Button>
         ))}
       </div>
     </div>
