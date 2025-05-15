@@ -1,11 +1,12 @@
 
 import { useState, useCallback, useEffect } from "react";
-import { useVoiceSpeechRecognition } from "@/hooks/useVoiceSpeechRecognition";
-import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { Message } from "@/types/chat";
+import { useAudioRecording } from "@/hooks/useAudioRecording";
+import { transcribeAudio, analyzePronunciation, PronunciationAnalysisResult } from "@/utils/pronunciationUtils";
 
 type ComplexityLevel = "Novice" | "Intermediate" | "Advanced" | "Superior";
 
@@ -14,18 +15,6 @@ interface Exercise {
   translation: string;
   topic?: string;
   level?: string;
-}
-
-interface WordFeedback {
-  word: string;
-  isCorrect: boolean;
-  suggestion?: string;
-}
-
-interface PronunciationFeedback {
-  accuracyScore: number;
-  wordAnalysis: WordFeedback[];
-  overallFeedback: string;
 }
 
 interface LevelDescription {
@@ -38,26 +27,41 @@ export const usePronunciationExercise = () => {
   const [complexity, setComplexity] = useState<ComplexityLevel | null>(null);
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [feedback, setFeedback] = useState<PronunciationFeedback | null>(null);
+  const [feedback, setFeedback] = useState<PronunciationAnalysisResult | null>(null);
   const [speechRate, setSpeechRate] = useState(1.0);
   const [messages, setMessages] = useState<Message[]>([]);
   const [showExercise, setShowExercise] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [transcript, setTranscript] = useState("");
   
   const { t } = useLocalization();
   const { toast } = useToast();
   const { analyzeConversation } = useLanguageAnalysis();
   
-  const {
-    isListening,
-    isInitializing,
-    transcript,
-    toggleListening,
-    clearTranscript
-  } = useVoiceSpeechRecognition({
-    targetLanguage: "spanish",
-    onTranscriptChange: () => {},
-    onSendTranscript: () => {}
+  // Using our new audio recording hook
+  const { 
+    isRecording, 
+    isProcessing, 
+    base64Audio, 
+    startRecording, 
+    stopRecording 
+  } = useAudioRecording({
+    onRecordingComplete: async (audioData) => {
+      if (currentExercise) {
+        try {
+          const transcribed = await transcribeAudio(audioData);
+          setTranscript(transcribed);
+          await processPronunciationFeedback(transcribed);
+        } catch (error) {
+          console.error("Error processing audio:", error);
+          toast({
+            title: t("error"),
+            description: t("failedToProcessAudio"),
+            variant: "destructive",
+          });
+        }
+      }
+    }
   });
 
   // Level descriptions mapping
@@ -133,42 +137,20 @@ export const usePronunciationExercise = () => {
     }
   }, [t, toast]);
 
-  // Start a new exercise
-  const handleStartExercise = useCallback(async () => {
-    if (!complexity) return;
-    
-    setShowExercise(true);
-    setFeedback(null);
-    clearTranscript();
-    
-    const exercise = await generatePracticePhrase(complexity);
-    if (exercise) {
-      setCurrentExercise(exercise);
-    }
-  }, [complexity, generatePracticePhrase, clearTranscript]);
-
-  // Start recording user's pronunciation
-  const handleStartRecording = useCallback(() => {
-    setFeedback(null);
-    clearTranscript();
-    toggleListening();
-  }, [toggleListening, clearTranscript]);
-
-  // Stop recording and analyze pronunciation
-  const handleStopRecording = useCallback(async () => {
+  // Process the pronunciation feedback
+  const processPronunciationFeedback = async (transcribed: string) => {
     if (!currentExercise) return;
     
-    toggleListening();
     setIsLoading(true);
     
     try {
       // Add user's attempt to messages for metrics
       const userMessage: Message = {
         role: "user",
-        content: transcript
+        content: transcribed
       };
       
-      if (!transcript.trim()) {
+      if (!transcribed.trim()) {
         toast({
           title: t("noSpeechDetected"),
           description: t("pleaseTryAgain"),
@@ -180,52 +162,13 @@ export const usePronunciationExercise = () => {
       
       setMessages(prev => [...prev, userMessage]);
       
-      // Implement pronunciation analysis (simplified version)
-      const expectedWords = currentExercise.phrase
-        .toLowerCase()
-        .replace(/[.,!?;:]/g, '')
-        .split(/\s+/);
-        
-      const transcribedWords = transcript
-        .toLowerCase()
-        .replace(/[.,!?;:]/g, '')
-        .split(/\s+/);
+      // Get pronunciation analysis from our utility function
+      const analysisResult = await analyzePronunciation(
+        currentExercise.phrase,
+        transcribed
+      );
       
-      const wordAnalysis: WordFeedback[] = expectedWords.map(expectedWord => {
-        const isPresent = transcribedWords.some(word => 
-          word === expectedWord || 
-          word.includes(expectedWord) || 
-          expectedWord.includes(word)
-        );
-        
-        return {
-          word: expectedWord,
-          isCorrect: isPresent,
-          suggestion: isPresent ? undefined : expectedWord
-        };
-      });
-      
-      const correctWords = wordAnalysis.filter(w => w.isCorrect).length;
-      const accuracyScore = (correctWords / expectedWords.length) * 100;
-      
-      let overallFeedback = "";
-      if (accuracyScore >= 80) {
-        overallFeedback = t("excellentPronunciationFeedback");
-      } else if (accuracyScore >= 60) {
-        overallFeedback = t("goodPronunciationFeedback");
-      } else if (accuracyScore >= 40) {
-        overallFeedback = t("fairPronunciationFeedback");
-      } else {
-        overallFeedback = t("needsImprovementPronunciationFeedback");
-      }
-      
-      const feedbackResult: PronunciationFeedback = {
-        accuracyScore,
-        wordAnalysis,
-        overallFeedback
-      };
-      
-      setFeedback(feedbackResult);
+      setFeedback(analysisResult);
       
       // Analyze conversation for metrics if enough messages
       if (messages.length >= 4) {
@@ -245,26 +188,53 @@ export const usePronunciationExercise = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentExercise, transcript, toggleListening, messages, t, toast, analyzeConversation]);
+  };
+
+  // Start a new exercise
+  const handleStartExercise = useCallback(async () => {
+    if (!complexity) return;
+    
+    setShowExercise(true);
+    setFeedback(null);
+    setTranscript("");
+    
+    const exercise = await generatePracticePhrase(complexity);
+    if (exercise) {
+      setCurrentExercise(exercise);
+    }
+  }, [complexity, generatePracticePhrase]);
+
+  // Start recording user's pronunciation
+  const handleStartRecording = useCallback(() => {
+    setFeedback(null);
+    setTranscript("");
+    startRecording();
+  }, [startRecording]);
+
+  // Stop recording and get transcription/analysis
+  const handleStopRecording = useCallback(() => {
+    stopRecording();
+    // Transcription and analysis happens in the onRecordingComplete callback
+  }, [stopRecording]);
 
   // Get a new phrase at the same complexity level
   const handleNextExercise = useCallback(async () => {
     if (!complexity) return;
     
     setFeedback(null);
-    clearTranscript();
+    setTranscript("");
     
     const exercise = await generatePracticePhrase(complexity);
     if (exercise) {
       setCurrentExercise(exercise);
     }
-  }, [complexity, generatePracticePhrase, clearTranscript]);
+  }, [complexity, generatePracticePhrase]);
 
   // Try the same exercise again
   const handleTryAgain = useCallback(() => {
     setFeedback(null);
-    clearTranscript();
-  }, [clearTranscript]);
+    setTranscript("");
+  }, []);
 
   // Reset to level selection
   const handleBackToLevels = useCallback(() => {
@@ -278,8 +248,8 @@ export const usePronunciationExercise = () => {
     setComplexity,
     currentExercise,
     isLoading,
-    isRecording: isListening,
-    isInitializing,
+    isRecording,
+    isProcessing,
     transcript,
     speechRate,
     setSpeechRate,

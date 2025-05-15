@@ -4,11 +4,10 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mic, MicOff, Loader2 } from "lucide-react";
-import { useMicrophoneAccess } from "@/hooks/useMicrophoneAccess";
 
 interface RecordingControlsProps {
   isRecording: boolean;
-  isInitializing?: boolean;
+  isProcessing?: boolean;
   transcript: string;
   onStartRecording: () => void;
   onStopRecording: () => void;
@@ -16,35 +15,27 @@ interface RecordingControlsProps {
 
 const RecordingControls: React.FC<RecordingControlsProps> = ({
   isRecording,
-  isInitializing = false,
+  isProcessing = false,
   transcript,
   onStartRecording,
   onStopRecording
 }) => {
   const { t } = useLocalization();
-  const { microphoneAccess, requestMicrophoneAccess, isChecking } = useMicrophoneAccess();
 
   const handleRecordingToggle = async () => {
     // Prevent rapid re-toggling
-    if (isInitializing || isChecking) {
+    if (isProcessing) {
       return;
     }
     
     if (isRecording) {
       onStopRecording();
     } else {
-      // Check if we have mic access first
-      if (!microphoneAccess) {
-        const hasAccess = await requestMicrophoneAccess();
-        if (!hasAccess) {
-          return; // Don't proceed if no access
-        }
-      }
       onStartRecording();
     }
   };
 
-  const isLoading = isInitializing || isChecking;
+  const isLoading = isProcessing;
 
   return (
     <div className="space-y-4">
@@ -60,7 +51,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              {t("loading")}
+              {t("processing")}
             </>
           ) : isRecording ? (
             <>
@@ -86,8 +77,16 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
               </div>
               <p className="ml-3">{t("listeningToYou")}</p>
             </div>
+          ) : isProcessing ? (
+            <div className="flex items-center justify-center h-12">
+              <Loader2 className="h-6 w-6 mr-2 animate-spin" />
+              <p>{t("processingAudio")}</p>
+            </div>
           ) : transcript ? (
-            <p className="text-xl">{transcript}</p>
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">{t("yourTranscription")}:</p>
+              <p className="text-xl">{transcript}</p>
+            </div>
           ) : (
             <p className="text-muted-foreground text-center py-2">
               {t("clickStartToRecord")}

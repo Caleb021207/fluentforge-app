@@ -70,6 +70,10 @@ const practiceTranslations: TranslationRecord = {
   "selectLevelToStart": "Select a level to start practicing",
   "tryAgain": "Try Again",
   "newPhrase": "New Phrase",
+  "excellent": "Excellent",
+  "good": "Good",
+  "fair": "Fair",
+  "needsImprovement": "Needs Improvement",
   "excellentPronunciationFeedback": "Excellent! Your pronunciation is very accurate.",
   "goodPronunciationFeedback": "Good job! Your pronunciation is mostly accurate.",
   "fairPronunciationFeedback": "Fair. Keep practicing to improve your pronunciation.",
@@ -113,6 +117,7 @@ const practiceTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "Speech recognition is not supported in your browser",
   "noSpeechDetected": "No Speech Detected",
   "pleaseTryAgain": "Please try again",
+  "processing": "Processing...",
 };
 
 export default practiceTranslations;

@@ -3,21 +3,10 @@ import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-
-interface WordFeedback {
-  word: string;
-  isCorrect: boolean;
-  suggestion?: string;
-}
-
-interface PronunciationFeedbackData {
-  accuracyScore: number;
-  wordAnalysis: WordFeedback[];
-  overallFeedback: string;
-}
+import { PronunciationAnalysisResult } from "@/utils/pronunciationUtils";
 
 interface PronunciationFeedbackProps {
-  feedback: PronunciationFeedbackData;
+  feedback: PronunciationAnalysisResult;
 }
 
 const PronunciationFeedback: React.FC<PronunciationFeedbackProps> = ({ feedback }) => {
@@ -49,6 +38,7 @@ const PronunciationFeedback: React.FC<PronunciationFeedbackProps> = ({ feedback 
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Accuracy Score */}
         <div>
           <div className="flex justify-between mb-1">
             <span className="text-sm">{t("accuracyScore")}</span>
@@ -57,6 +47,40 @@ const PronunciationFeedback: React.FC<PronunciationFeedbackProps> = ({ feedback 
           <Progress value={feedback.accuracyScore} className="h-2" />
         </div>
         
+        {/* Intonation Score (if available) */}
+        {feedback.intonationScore !== undefined && (
+          <div>
+            <div className="flex justify-between mb-1">
+              <span className="text-sm">{t("intonationScore")}</span>
+              <span className="text-sm font-medium">{Math.round(feedback.intonationScore)}%</span>
+            </div>
+            <Progress value={feedback.intonationScore} className="h-2" />
+          </div>
+        )}
+        
+        {/* Fluency Score (if available) */}
+        {feedback.fluencyScore !== undefined && (
+          <div>
+            <div className="flex justify-between mb-1">
+              <span className="text-sm">{t("fluencyScore")}</span>
+              <span className="text-sm font-medium">{Math.round(feedback.fluencyScore)}%</span>
+            </div>
+            <Progress value={feedback.fluencyScore} className="h-2" />
+          </div>
+        )}
+        
+        {/* Complexity Score (if available) */}
+        {feedback.complexityScore !== undefined && (
+          <div>
+            <div className="flex justify-between mb-1">
+              <span className="text-sm">{t("complexityScore")}</span>
+              <span className="text-sm font-medium">{Math.round(feedback.complexityScore)}%</span>
+            </div>
+            <Progress value={feedback.complexityScore} className="h-2" />
+          </div>
+        )}
+        
+        {/* Word Analysis */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium">{t("wordAnalysis")}</h4>
           <div className="flex flex-wrap gap-2">
@@ -79,6 +103,32 @@ const PronunciationFeedback: React.FC<PronunciationFeedbackProps> = ({ feedback 
           </div>
         </div>
         
+        {/* Phoneme Analysis (if available) */}
+        {feedback.phonemeAnalysis && feedback.phonemeAnalysis.length > 0 && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium">{t("phonemeAnalysis")}</h4>
+            <div className="flex flex-wrap gap-2">
+              {feedback.phonemeAnalysis.map((item, index) => (
+                <div 
+                  key={`${item.phoneme}-${index}`}
+                  className={`px-3 py-1 rounded-full text-sm ${
+                    item.isCorrect 
+                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" 
+                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                  }`}
+                  title={item.suggestion || ""}
+                >
+                  {item.phoneme}
+                  {!item.isCorrect && item.suggestion && (
+                    <span className="ml-1 opacity-70">→ {item.suggestion}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Overall Feedback */}
         <div>
           <h4 className="text-sm font-medium mb-1">{t("overallFeedback")}</h4>
           <p className="text-sm">{feedback.overallFeedback}</p>
