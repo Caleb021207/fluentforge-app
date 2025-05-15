@@ -37,7 +37,6 @@ const practiceTranslations: TranslationRecord = {
   overallLevel: "Загальний рівень",
   startChatting: "Почніть спілкуватися з вашим ШІ-репетитором!",
   clickToStartVoice: "Натисніть 'Почати голосовий чат', щоб почати розмову з репетитором",
-  allowMicAccess: "Будь ласка, дозвольте доступ до мікрофона для використання голосових функцій",
   typeMessageBelow: "Введіть повідомлення нижче, щоб почати",
   
   // Text Practice Page additional translations
@@ -56,19 +55,18 @@ const practiceTranslations: TranslationRecord = {
   chatPlaceholder: "Введіть повідомлення для практики {{targetLanguage}}...",
   
   // Recording-related translations
-  "clickStartToRecord": "Натисніть 'Почати запис', щоб розпочати",
-  "startRecording": "Почати запис",
-  "stopRecording": "Зупинити запис",
-  "yourPronunciation": "Ваша вимова",
-  "listeningToYou": "Слухаємо вас...",
-  "loading": "Завантаження...",
-  "microphoneAccessRequired": "Потрібен доступ до мікрофона",
-  "allowMicAccess": "Будь ласка, надайте доступ до мікрофона для використання цієї функції",
-  "microphoneAccessFailed": "Не вдалося отримати доступ до мікрофона",
-  "speechRecognitionError": "Помилка розпізнавання мовлення",
-  "speechRecognitionNotSupported": "Розпізнавання мовлення не підтримується у вашому браузері",
-  "noSpeechDetected": "Мовлення не виявлено",
-  "pleaseTryAgain": "Будь ласка, спробуйте ще раз"
+  clickStartToRecord: "Натисніть 'Почати запис', щоб розпочати",
+  startRecording: "Почати запис",
+  stopRecording: "Зупинити запис",
+  yourPronunciation: "Ваша вимова",
+  listeningToYou: "Слухаємо вас...",
+  loading: "Завантаження...",
+  microphoneAccessRequired: "Потрібен доступ до мікрофона",
+  microphoneAccessFailed: "Не вдалося отримати доступ до мікрофона",
+  speechRecognitionError: "Помилка розпізнавання мовлення",
+  speechRecognitionNotSupported: "Розпізнавання мовлення не підтримується у вашому браузері",
+  noSpeechDetected: "Мовлення не виявлено",
+  pleaseTryAgain: "Будь ласка, спробуйте ще раз"
 };
 
 export default practiceTranslations;
