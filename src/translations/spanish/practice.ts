@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -41,7 +40,30 @@ const practiceTranslations: TranslationRecord = {
   practiceTip2: "No te preocupes por los errores, son parte del proceso de aprendizaje.",
   practiceTip3: "Pide aclaraciones si no entiendes algo.",
   practiceTip4: "Intenta usar el vocabulario que has aprendido recientemente.",
-  practiceTip5: "Practica con frecuencia para mejorar tu fluidez."
+  practiceTip5: "Practica con frecuencia para mejorar tu fluidez.",
+  
+  // Pronunciation practice
+  pronunciationPractice: "Práctica de Pronunciación",
+  improvePronunciationSkills: "Mejora tus habilidades de pronunciación con práctica dirigida",
+  practiceExercise: "Ejercicio de Práctica",
+  selectComplexityLevel: "Seleccionar Nivel de Complejidad",
+  novice: "Principiante",
+  intermediate: "Intermedio", 
+  advanced: "Avanzado",
+  superior: "Superior",
+  noviceLevelShortDescription: "Expresiones básicas y saludos",
+  intermediateLevelShortDescription: "Conversaciones y preguntas simples",
+  advancedLevelShortDescription: "Oraciones y conceptos complejos",
+  superiorLevelShortDescription: "Lenguaje académico y profesional",
+  selectLevelToStart: "Selecciona un nivel para comenzar a practicar",
+  tryAgain: "Intentar de nuevo",
+  newPhrase: "Nueva frase",
+  excellentPronunciationFeedback: "¡Excelente! Tu pronunciación es muy precisa.",
+  goodPronunciationFeedback: "¡Buen trabajo! Tu pronunciación es mayormente precisa.",
+  fairPronunciationFeedback: "Aceptable. Sigue practicando para mejorar tu pronunciación.",
+  needsImprovementPronunciationFeedback: "Necesita más práctica. Enfócate en las palabras resaltadas.",
+  failedToGeneratePhrase: "Error al generar frase de práctica. Por favor, inténtalo de nuevo.",
+  failedToAnalyzePronunciation: "Error al analizar la pronunciación. Por favor, inténtalo de nuevo.",
 };
 
 export default practiceTranslations;

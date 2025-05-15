@@ -31,7 +31,6 @@ interface PronunciationFeedback {
 export const usePronunciationExercise = () => {
   const [complexity, setComplexity] = useState<ComplexityLevel | null>(null);
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
-  const [practicedPhrases, setPracticedPhrases] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState<PronunciationFeedback | null>(null);
   const [speechRate, setSpeechRate] = useState(1.0);
@@ -85,20 +84,10 @@ export const usePronunciationExercise = () => {
           { phrase: "La inmersión lingüística es generalmente considerada el método más eficaz para alcanzar la fluidez", translation: "Linguistic immersion is generally considered the most effective method to achieve fluency" }
         ]
       };
-
-      // Filter out already practiced phrases
-      const availablePhrases = phrases[level].filter(
-        exercise => !practicedPhrases.includes(exercise.phrase)
-      );
-
-      // If all phrases have been practiced, reset and use all of them
-      const phrasePool = availablePhrases.length > 0 ? availablePhrases : phrases[level];
       
-      // Select a random phrase
+      // Select a random phrase from the level
+      const phrasePool = phrases[level];
       const randomPhrase = phrasePool[Math.floor(Math.random() * phrasePool.length)];
-      
-      // Add to practiced phrases
-      setPracticedPhrases(prev => [...prev, randomPhrase.phrase]);
       
       // Track this as a message for metrics
       const systemMessage: Message = {
@@ -125,7 +114,7 @@ export const usePronunciationExercise = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [t, toast, practicedPhrases]);
+  }, [t, toast]);
 
   // Set up a new exercise when complexity changes
   useEffect(() => {
@@ -235,7 +224,7 @@ export const usePronunciationExercise = () => {
     }
   }, [currentExercise, transcript, toggleListening, messages, t, toast, analyzeConversation]);
 
-  // Move to next exercise
+  // Get a new phrase at the same complexity level
   const handleNextExercise = useCallback(() => {
     if (complexity) {
       setFeedback(null);

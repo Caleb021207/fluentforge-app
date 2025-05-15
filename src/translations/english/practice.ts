@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -52,7 +51,30 @@ const practiceTranslations: TranslationRecord = {
   
   // Success messages
   "success": "Success",
-  "conversationCleared": "Conversation cleared"
+  "conversationCleared": "Conversation cleared",
+  
+  // Pronunciation practice
+  pronunciationPractice: "Pronunciation Practice",
+  improvePronunciationSkills: "Improve your pronunciation skills with targeted practice",
+  practiceExercise: "Practice Exercise",
+  selectComplexityLevel: "Select Complexity Level",
+  novice: "Novice",
+  intermediate: "Intermediate", 
+  advanced: "Advanced",
+  superior: "Superior",
+  noviceLevelShortDescription: "Basic expressions and greetings",
+  intermediateLevelShortDescription: "Simple conversations and questions",
+  advancedLevelShortDescription: "Complex sentences and concepts",
+  superiorLevelShortDescription: "Academic and professional language",
+  selectLevelToStart: "Select a level to start practicing",
+  tryAgain: "Try Again",
+  newPhrase: "New Phrase",
+  excellentPronunciationFeedback: "Excellent! Your pronunciation is very accurate.",
+  goodPronunciationFeedback: "Good job! Your pronunciation is mostly accurate.",
+  fairPronunciationFeedback: "Fair. Keep practicing to improve your pronunciation.",
+  needsImprovementPronunciationFeedback: "Needs more practice. Focus on the highlighted words.",
+  failedToGeneratePhrase: "Failed to generate a practice phrase. Please try again.",
+  failedToAnalyzePronunciation: "Failed to analyze pronunciation. Please try again.",
 };
 
 export default practiceTranslations;

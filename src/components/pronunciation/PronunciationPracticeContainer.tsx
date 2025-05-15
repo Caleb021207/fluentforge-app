@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import ComplexitySelector from "./ComplexitySelector";
+import ComplexityDropdown from "./ComplexityDropdown";
 import SpeechRateControl from "./SpeechRateControl";
 import PhraseDisplay from "./PhraseDisplay";
 import RecordingControls from "./RecordingControls";
@@ -9,7 +9,7 @@ import PronunciationFeedback from "./PronunciationFeedback";
 import PronunciationInstructions from "./PronunciationInstructions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart2 } from "lucide-react";
+import { BarChart2, RefreshCw } from "lucide-react";
 import { usePronunciationExercise } from "../pronunciation/hooks/usePronunciationExercise";
 import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
 
@@ -48,12 +48,10 @@ const PronunciationPracticeContainer = () => {
         </div>
       </div>
 
-      {!currentExercise && (
-        <ComplexitySelector 
-          selectedComplexity={complexity} 
-          onSelect={setComplexity} 
-        />
-      )}
+      <ComplexityDropdown 
+        selectedComplexity={complexity} 
+        onSelect={setComplexity} 
+      />
 
       {currentExercise && (
         <Card className="mb-6">
@@ -94,15 +92,19 @@ const PronunciationPracticeContainer = () => {
               <Button 
                 onClick={handleNextExercise}
                 disabled={isRecording || isLoading}
+                className="flex items-center gap-2"
               >
-                {t("nextPhrase")}
+                <RefreshCw className="h-4 w-4" />
+                {t("newPhrase")}
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      <PronunciationInstructions />
+      {!currentExercise && !complexity && (
+        <PronunciationInstructions />
+      )}
     </div>
   );
 };
