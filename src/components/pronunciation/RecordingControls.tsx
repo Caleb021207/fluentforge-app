@@ -8,6 +8,7 @@ import { Mic, MicOff, Loader2 } from "lucide-react";
 interface RecordingControlsProps {
   isRecording: boolean;
   isProcessing?: boolean;
+  isInitializing?: boolean;
   transcript: string;
   onStartRecording: () => void;
   onStopRecording: () => void;
@@ -16,6 +17,7 @@ interface RecordingControlsProps {
 const RecordingControls: React.FC<RecordingControlsProps> = ({
   isRecording,
   isProcessing = false,
+  isInitializing = false,
   transcript,
   onStartRecording,
   onStopRecording
@@ -24,7 +26,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
 
   const handleRecordingToggle = async () => {
     // Prevent rapid re-toggling
-    if (isProcessing) {
+    if (isProcessing || isInitializing) {
       return;
     }
     
@@ -35,7 +37,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
     }
   };
 
-  const isLoading = isProcessing;
+  const isLoading = isProcessing || isInitializing;
 
   return (
     <div className="space-y-4">
@@ -81,6 +83,11 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
             <div className="flex items-center justify-center h-12">
               <Loader2 className="h-6 w-6 mr-2 animate-spin" />
               <p>{t("processingAudio")}</p>
+            </div>
+          ) : isInitializing ? (
+            <div className="flex items-center justify-center h-12">
+              <Loader2 className="h-6 w-6 mr-2 animate-spin" />
+              <p>{t("initializingMicrophone")}</p>
             </div>
           ) : transcript ? (
             <div>

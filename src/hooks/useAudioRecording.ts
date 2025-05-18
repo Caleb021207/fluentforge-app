@@ -10,6 +10,7 @@ interface UseAudioRecordingProps {
 export const useAudioRecording = ({ onRecordingComplete }: UseAudioRecordingProps = {}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);  // Add this line
   const [audioBlobs, setAudioBlobs] = useState<Blob[]>([]);
   const [base64Audio, setBase64Audio] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -63,6 +64,7 @@ export const useAudioRecording = ({ onRecordingComplete }: UseAudioRecordingProp
       setIsRecording(false);
       setAudioBlobs([]);
       setBase64Audio(null);
+      setIsInitializing(true);  // Add this line to set initializing state
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
@@ -99,16 +101,19 @@ export const useAudioRecording = ({ onRecordingComplete }: UseAudioRecordingProp
           });
         } finally {
           setIsProcessing(false);
+          setIsInitializing(false);  // Make sure to reset initializing state
           cleanupMediaResources();
         }
       };
       
       mediaRecorder.start();
       setIsRecording(true);
+      setIsInitializing(false);  // Set initializing to false once recording starts
       
     } catch (err) {
       console.error("Error starting recording:", err);
       setError("Failed to access microphone");
+      setIsInitializing(false);  // Reset initializing on error
       toast({
         title: t("microphoneAccessRequired"),
         description: t("allowMicAccess"),
@@ -129,6 +134,7 @@ export const useAudioRecording = ({ onRecordingComplete }: UseAudioRecordingProp
   return {
     isRecording,
     isProcessing,
+    isInitializing,  // Add this to the returned object
     audioBlobs,
     base64Audio,
     error,

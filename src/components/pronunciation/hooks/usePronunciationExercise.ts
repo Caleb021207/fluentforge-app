@@ -42,6 +42,7 @@ export const usePronunciationExercise = () => {
   const { 
     isRecording, 
     isProcessing, 
+    isInitializing,  // Add this line to destructure isInitializing
     base64Audio, 
     startRecording, 
     stopRecording 
@@ -250,6 +251,7 @@ export const usePronunciationExercise = () => {
     isLoading,
     isRecording,
     isProcessing,
+    isInitializing,  // Add this to the returned object
     transcript,
     speechRate,
     setSpeechRate,
