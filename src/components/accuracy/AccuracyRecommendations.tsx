@@ -81,7 +81,7 @@ const AccuracyRecommendations: React.FC<AccuracyRecommendationsProps> = ({ metri
   };
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-md flex items-center">
@@ -141,7 +141,7 @@ const AccuracyRecommendations: React.FC<AccuracyRecommendationsProps> = ({ metri
         </Card>
       )}
 
-      <Card className="md:col-span-2 lg:col-span-3">
+      <Card className="md:col-span-2">
         <CardHeader className="pb-2">
           <CardTitle className="text-md">{t("generalImprovementTips")}</CardTitle>
         </CardHeader>

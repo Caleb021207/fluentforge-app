@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { useLocalization } from "@/context/LocalizationContext";
@@ -8,7 +9,6 @@ interface MetricsDataPoint {
   date: string;
   grammarAccuracy: number;
   conversationComplexity: number;
-  pronunciationAccuracy: number;
 }
 
 const formatDate = (date: Date): string => {
@@ -32,15 +32,13 @@ const AccuracyChart = ({ metricsHistory }: { metricsHistory: LanguageMetrics[] }
   const chartData = metricsHistory.map(metric => ({
     date: formatDate(new Date(metric.timestamp || Date.now())),
     grammarAccuracy: metric.grammarAccuracy ? Number(metric.grammarAccuracy.toFixed(1)) : 0,
-    conversationComplexity: metric.conversationComplexity ? Number(metric.conversationComplexity.toFixed(1)) : 0,
-    pronunciationAccuracy: metric.pronunciationAccuracy ? Number(metric.pronunciationAccuracy.toFixed(1)) : 0
+    conversationComplexity: metric.conversationComplexity ? Number(metric.conversationComplexity.toFixed(1)) : 0
   })).reverse();
 
   return (
     <ChartContainer config={{
       grammarAccuracy: { theme: { light: "#8884d8", dark: "#a78bfa" } },
-      conversationComplexity: { theme: { light: "#82ca9d", dark: "#4ade80" } },
-      pronunciationAccuracy: { theme: { light: "#ff8042", dark: "#fb923c" } }
+      conversationComplexity: { theme: { light: "#82ca9d", dark: "#4ade80" } }
     }}>
       <LineChart 
         data={chartData} 
@@ -82,14 +80,6 @@ const AccuracyChart = ({ metricsHistory }: { metricsHistory: LanguageMetrics[] }
           name={t("conversationComplexity")}
           type="monotone"
           dataKey="conversationComplexity"
-          strokeWidth={2}
-          dot={{ r: 4 }}
-          activeDot={{ r: 6 }}
-        />
-        <Line
-          name={t("pronunciationAccuracy")}
-          type="monotone"
-          dataKey="pronunciationAccuracy"
           strokeWidth={2}
           dot={{ r: 4 }}
           activeDot={{ r: 6 }}

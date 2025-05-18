@@ -427,7 +427,6 @@ export type Database = {
           pronunciation_accuracy: number | null
           session_id: string | null
           user_id: string
-          vocabulary_diversity: number | null
         }
         Insert: {
           classroom_id?: string | null
@@ -439,7 +438,6 @@ export type Database = {
           pronunciation_accuracy?: number | null
           session_id?: string | null
           user_id: string
-          vocabulary_diversity?: number | null
         }
         Update: {
           classroom_id?: string | null
@@ -451,7 +449,6 @@ export type Database = {
           pronunciation_accuracy?: number | null
           session_id?: string | null
           user_id?: string
-          vocabulary_diversity?: number | null
         }
         Relationships: []
       }

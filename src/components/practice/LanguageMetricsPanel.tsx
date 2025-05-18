@@ -150,24 +150,6 @@ const LanguageMetricsPanel: React.FC<LanguageMetricsPanelProps> = ({
               </div>
             )}
             
-            {metrics.pronunciationAccuracy && metrics.pronunciationAccuracy > 0 && (
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm">{t("pronunciationAccuracy")}</span>
-                  <div className="flex items-center">
-                    <span className="text-sm font-medium">{Math.round(metrics.pronunciationAccuracy)}%</span>
-                    <Badge 
-                      className="ml-2" 
-                      variant={getBadgeVariant(getCEFRLevel(metrics.pronunciationAccuracy))}
-                    >
-                      {getCEFRLevel(metrics.pronunciationAccuracy)}
-                    </Badge>
-                  </div>
-                </div>
-                <Progress value={metrics.pronunciationAccuracy} className="h-2" />
-              </div>
-            )}
-            
             <div className="flex justify-between items-center text-xs text-muted-foreground">
               <span>{t("basedOnMessagesCount", { count: String(metrics.messageCount) })}</span>
               <Button 
