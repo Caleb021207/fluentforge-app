@@ -88,7 +88,6 @@ const AuthenticatedAccuracy = () => {
             grammarAccuracy: aggData.avg_grammar_accuracy || 0,
             conversationComplexity: aggData.avg_conversation_complexity || 0,
             messageCount: aggData.language_metrics_count || 0,
-            vocabularyDiversity: 0,
             pronunciationAccuracy: 0,
             timestamp: Date.now()
           };
@@ -104,12 +103,11 @@ const AuthenticatedAccuracy = () => {
         return;
       }
 
-      // Process metrics data
+      // Process metrics data - removed vocabulary_diversity since it doesn't exist in the schema
       const formattedMetrics = metricsData.map(metric => ({
         grammarAccuracy: metric.grammar_accuracy || 0,
         conversationComplexity: metric.conversation_complexity || 0,
         messageCount: metric.message_count || 0,
-        vocabularyDiversity: metric.vocabulary_diversity,
         pronunciationAccuracy: metric.pronunciation_accuracy || 0,
         timestamp: new Date(metric.created_at).getTime(),
         session_id: metric.session_id
