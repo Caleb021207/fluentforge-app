@@ -62,37 +62,40 @@ export const TopNavigationDropdown = ({
               onClick={() => setIsOpen(false)}
             />
             
-            {/* Dropdown Panel */}
+            {/* Dropdown Panel - Full Width */}
             <motion.div
               initial={{ opacity: 0, y: -10, scaleY: 0.95 }}
               animate={{ opacity: 1, y: 0, scaleY: 1 }}
               exit={{ opacity: 0, y: -10, scaleY: 0.95 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="absolute top-full left-0 right-0 mt-2 bg-background border rounded-xl shadow-lg z-50 overflow-hidden"
+              className="fixed left-0 right-0 top-[120px] bg-background border-b shadow-lg z-50 overflow-hidden"
               style={{ transformOrigin: 'top' }}
             >
-              {/* Horizontal Scroll Container */}
-              <div className="overflow-x-auto">
-                <div className="flex min-w-max p-2 gap-1">
+              {/* Full Width Navigation Grid */}
+              <div className="w-full px-4 py-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 max-w-7xl mx-auto">
                   {items.map((item, index) => (
                     <motion.button
                       key={item.path}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={() => handleItemClick(item.path)}
                       className={cn(
-                        "flex items-center gap-2 px-4 py-3 rounded-lg transition-colors whitespace-nowrap",
+                        "flex flex-col items-center gap-2 p-4 rounded-xl transition-colors",
                         "hover:bg-accent hover:text-accent-foreground",
-                        currentPath === item.path && "bg-accent text-accent-foreground"
+                        "border border-transparent hover:border-accent",
+                        currentPath === item.path && "bg-accent text-accent-foreground border-accent"
                       )}
                     >
                       {item.icon && (
-                        <span className="w-4 h-4 flex-shrink-0">
+                        <span className="w-6 h-6 flex-shrink-0">
                           {item.icon}
                         </span>
                       )}
-                      <span className="font-medium">{item.label}</span>
+                      <span className="text-sm font-medium text-center leading-tight">
+                        {item.label}
+                      </span>
                     </motion.button>
                   ))}
                 </div>

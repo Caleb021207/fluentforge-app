@@ -53,7 +53,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Top Bar */}
-      <div className="bg-card border-b sticky top-0 z-40">
+      <div className="bg-card border-b sticky top-0 z-30">
         {/* User Info Bar */}
         {user && (
           <div className="px-4 py-2 bg-muted/30 flex justify-between items-center text-sm">
@@ -89,7 +89,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Add top margin to account for fixed dropdown */}
       <main className="container mx-auto px-4 py-6">
         {children}
       </main>
