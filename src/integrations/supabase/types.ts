@@ -9,39 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      access_codes: {
+      ai_coach_sessions: {
         Row: {
-          code: string
-          created_at: string | null
-          generated_by: string | null
+          coach_response: string
+          conversation_context: Json | null
+          created_at: string
           id: string
-          is_used: boolean | null
-          role_type: string
-          tier: number
-          used_at: string | null
-          used_by: string | null
+          prompt: string
+          response_time_ms: number | null
+          session_ts: string
+          user_id: string
         }
         Insert: {
-          code: string
-          created_at?: string | null
-          generated_by?: string | null
+          coach_response: string
+          conversation_context?: Json | null
+          created_at?: string
           id?: string
-          is_used?: boolean | null
-          role_type?: string
-          tier: number
-          used_at?: string | null
-          used_by?: string | null
+          prompt: string
+          response_time_ms?: number | null
+          session_ts?: string
+          user_id: string
         }
         Update: {
-          code?: string
-          created_at?: string | null
-          generated_by?: string | null
+          coach_response?: string
+          conversation_context?: Json | null
+          created_at?: string
           id?: string
-          is_used?: boolean | null
-          role_type?: string
-          tier?: number
-          used_at?: string | null
-          used_by?: string | null
+          prompt?: string
+          response_time_ms?: number | null
+          session_ts?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -50,18 +47,24 @@ export type Database = {
           call_type: string
           created_at: string
           id: string
+          language: string | null
+          text_length: number | null
           user_id: string
         }
         Insert: {
           call_type: string
           created_at?: string
           id?: string
+          language?: string | null
+          text_length?: number | null
           user_id: string
         }
         Update: {
           call_type?: string
           created_at?: string
           id?: string
+          language?: string | null
+          text_length?: number | null
           user_id?: string
         }
         Relationships: []
@@ -70,34 +73,28 @@ export type Database = {
         Row: {
           certification_type: string
           completed_at: string | null
-          created_at: string | null
+          created_at: string
           id: string
           level: string
           score: number
-          source_language: string | null
-          target_language: string | null
           user_id: string
         }
         Insert: {
           certification_type: string
           completed_at?: string | null
-          created_at?: string | null
+          created_at?: string
           id?: string
           level: string
           score: number
-          source_language?: string | null
-          target_language?: string | null
           user_id: string
         }
         Update: {
           certification_type?: string
           completed_at?: string | null
-          created_at?: string | null
+          created_at?: string
           id?: string
           level?: string
           score?: number
-          source_language?: string | null
-          target_language?: string | null
           user_id?: string
         }
         Relationships: []
@@ -142,28 +139,34 @@ export type Database = {
       }
       classroom_codes: {
         Row: {
-          active: boolean
+          active: boolean | null
           class_name: string
           code: string
           created_at: string
+          description: string | null
           id: string
           teacher_id: string
+          updated_at: string
         }
         Insert: {
-          active?: boolean
+          active?: boolean | null
           class_name: string
           code: string
           created_at?: string
+          description?: string | null
           id?: string
           teacher_id: string
+          updated_at?: string
         }
         Update: {
-          active?: boolean
+          active?: boolean | null
           class_name?: string
           code?: string
           created_at?: string
+          description?: string | null
           id?: string
           teacher_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -196,48 +199,229 @@ export type Database = {
           },
         ]
       }
+      coach_analytics: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_analytics_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "coach_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_insights: {
+        Row: {
+          created_at: string
+          id: string
+          insight_text: string
+          insight_type: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          insight_text: string
+          insight_type?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          insight_text?: string
+          insight_type?: string
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_insights_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "coach_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_score_reports: {
+        Row: {
+          cefr_level: string | null
+          created_at: string
+          id: string
+          is_first_score: boolean | null
+          overall_score: number | null
+          recommendations: Json | null
+          section_scores: Json | null
+          session_id: string | null
+          updated_at: string
+          upload_date: string
+          uploaded_file_data: Json
+          user_id: string
+        }
+        Insert: {
+          cefr_level?: string | null
+          created_at?: string
+          id?: string
+          is_first_score?: boolean | null
+          overall_score?: number | null
+          recommendations?: Json | null
+          section_scores?: Json | null
+          session_id?: string | null
+          updated_at?: string
+          upload_date?: string
+          uploaded_file_data?: Json
+          user_id: string
+        }
+        Update: {
+          cefr_level?: string | null
+          created_at?: string
+          id?: string
+          is_first_score?: boolean | null
+          overall_score?: number | null
+          recommendations?: Json | null
+          section_scores?: Json | null
+          session_id?: string | null
+          updated_at?: string
+          upload_date?: string
+          uploaded_file_data?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      coach_sessions: {
+        Row: {
+          coaching_style: Json | null
+          created_at: string
+          ended_at: string | null
+          id: string
+          messages: Json
+          native_language: string
+          session_summary: string | null
+          target_language: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          coaching_style?: Json | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          messages?: Json
+          native_language?: string
+          session_summary?: string | null
+          target_language?: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          coaching_style?: Json | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          messages?: Json
+          native_language?: string
+          session_summary?: string | null
+          target_language?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      conversation_ratings: {
+        Row: {
+          accuracy_score: number
+          analysis_data: Json | null
+          complexity_score: number
+          created_at: string
+          id: string
+          message_count: number
+          session_id: string
+          session_type: string
+          user_id: string
+        }
+        Insert: {
+          accuracy_score: number
+          analysis_data?: Json | null
+          complexity_score: number
+          created_at?: string
+          id?: string
+          message_count?: number
+          session_id: string
+          session_type: string
+          user_id: string
+        }
+        Update: {
+          accuracy_score?: number
+          analysis_data?: Json | null
+          complexity_score?: number
+          created_at?: string
+          id?: string
+          message_count?: number
+          session_id?: string
+          session_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       district_settings: {
         Row: {
-          consent_type:
-            | Database["public"]["Enums"]["district_consent_type"]
-            | null
           created_at: string | null
-          district_id: string | null
+          district_id: string
           id: string
           max_age: number | null
           min_age: number | null
-          require_parental_consent: boolean | null
           updated_at: string | null
         }
         Insert: {
-          consent_type?:
-            | Database["public"]["Enums"]["district_consent_type"]
-            | null
           created_at?: string | null
-          district_id?: string | null
+          district_id: string
           id?: string
           max_age?: number | null
           min_age?: number | null
-          require_parental_consent?: boolean | null
           updated_at?: string | null
         }
         Update: {
-          consent_type?:
-            | Database["public"]["Enums"]["district_consent_type"]
-            | null
           created_at?: string | null
-          district_id?: string | null
+          district_id?: string
           id?: string
           max_age?: number | null
           min_age?: number | null
-          require_parental_consent?: boolean | null
           updated_at?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "district_settings_district_id_fkey"
             columns: ["district_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "school_districts"
             referencedColumns: ["id"]
           },
@@ -247,41 +431,29 @@ export type Database = {
         Row: {
           consent_date: string | null
           consent_provided: boolean | null
-          consent_type:
-            | Database["public"]["Enums"]["district_consent_type"]
-            | null
+          consent_type: string | null
           created_at: string | null
-          district_id: string | null
+          district_id: string
           id: string
-          role: string | null
-          updated_at: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           consent_date?: string | null
           consent_provided?: boolean | null
-          consent_type?:
-            | Database["public"]["Enums"]["district_consent_type"]
-            | null
+          consent_type?: string | null
           created_at?: string | null
-          district_id?: string | null
+          district_id: string
           id?: string
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           consent_date?: string | null
           consent_provided?: boolean | null
-          consent_type?:
-            | Database["public"]["Enums"]["district_consent_type"]
-            | null
+          consent_type?: string | null
           created_at?: string | null
-          district_id?: string | null
+          district_id?: string
           id?: string
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -293,66 +465,84 @@ export type Database = {
           },
         ]
       }
+      learning_analytics: {
+        Row: {
+          accuracy_score: number | null
+          complexity_score: number | null
+          created_at: string
+          date: string
+          fluency_score: number | null
+          id: string
+          practice_minutes: number | null
+          total_conversations: number | null
+          updated_at: string
+          user_id: string
+          vocab_count: number | null
+        }
+        Insert: {
+          accuracy_score?: number | null
+          complexity_score?: number | null
+          created_at?: string
+          date: string
+          fluency_score?: number | null
+          id?: string
+          practice_minutes?: number | null
+          total_conversations?: number | null
+          updated_at?: string
+          user_id: string
+          vocab_count?: number | null
+        }
+        Update: {
+          accuracy_score?: number | null
+          complexity_score?: number | null
+          created_at?: string
+          date?: string
+          fluency_score?: number | null
+          id?: string
+          practice_minutes?: number | null
+          total_conversations?: number | null
+          updated_at?: string
+          user_id?: string
+          vocab_count?: number | null
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
-          completed: boolean
-          created_at: string
+          completed: boolean | null
+          created_at: string | null
           id: string
           last_accessed: string | null
           lesson_id: number
           level: string
-          progress: number
-          updated_at: string
-          user_id: string | null
-          xp_earned: number
+          progress: number | null
+          updated_at: string | null
+          user_id: string
+          xp_earned: number | null
         }
         Insert: {
-          completed?: boolean
-          created_at?: string
+          completed?: boolean | null
+          created_at?: string | null
           id?: string
           last_accessed?: string | null
           lesson_id: number
           level: string
-          progress?: number
-          updated_at?: string
-          user_id?: string | null
-          xp_earned?: number
+          progress?: number | null
+          updated_at?: string | null
+          user_id: string
+          xp_earned?: number | null
         }
         Update: {
-          completed?: boolean
-          created_at?: string
+          completed?: boolean | null
+          created_at?: string | null
           id?: string
           last_accessed?: string | null
           lesson_id?: number
           level?: string
-          progress?: number
-          updated_at?: string
-          user_id?: string | null
-          xp_earned?: number
-        }
-        Relationships: []
-      }
-      premium_voice_chat_sessions: {
-        Row: {
-          created_at: string
-          id: string
-          session_end: string | null
-          session_start: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          session_end?: string | null
-          session_start?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          session_end?: string | null
-          session_start?: string
+          progress?: number | null
+          updated_at?: string | null
           user_id?: string
+          xp_earned?: number | null
         }
         Relationships: []
       }
@@ -361,7 +551,6 @@ export type Database = {
           avatar_url: string | null
           created_at: string | null
           display_name: string | null
-          email: string | null
           id: string
           learning_goal: string | null
           target_date: string | null
@@ -372,7 +561,6 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
-          email?: string | null
           id: string
           learning_goal?: string | null
           target_date?: string | null
@@ -383,7 +571,6 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
-          email?: string | null
           id?: string
           learning_goal?: string | null
           target_date?: string | null
@@ -392,330 +579,238 @@ export type Database = {
         }
         Relationships: []
       }
-      school_districts: {
+      pronunciation_scores: {
         Row: {
-          code: string
-          created_at: string | null
-          id: string
-          name: string
-          updated_at: string | null
-        }
-        Insert: {
-          code: string
-          created_at?: string | null
-          id?: string
-          name: string
-          updated_at?: string | null
-        }
-        Update: {
-          code?: string
-          created_at?: string | null
-          id?: string
-          name?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      student_language_metrics: {
-        Row: {
-          classroom_id: string | null
-          conversation_complexity: number
+          completeness_score: number
           created_at: string
-          grammar_accuracy: number
+          fluency_score: number
           id: string
-          message_count: number
-          pronunciation_accuracy: number | null
+          phrase_text: string
+          pronunciation_score: number
           session_id: string | null
           user_id: string
         }
         Insert: {
-          classroom_id?: string | null
-          conversation_complexity: number
+          completeness_score: number
           created_at?: string
-          grammar_accuracy: number
+          fluency_score: number
           id?: string
-          message_count?: number
-          pronunciation_accuracy?: number | null
+          phrase_text: string
+          pronunciation_score: number
           session_id?: string | null
           user_id: string
         }
         Update: {
-          classroom_id?: string | null
-          conversation_complexity?: number
+          completeness_score?: number
           created_at?: string
-          grammar_accuracy?: number
+          fluency_score?: number
           id?: string
-          message_count?: number
-          pronunciation_accuracy?: number | null
+          phrase_text?: string
+          pronunciation_score?: number
           session_id?: string | null
           user_id?: string
         }
         Relationships: []
       }
+      school_districts: {
+        Row: {
+          active: boolean | null
+          code: string
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          active?: boolean | null
+          code: string
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          active?: boolean | null
+          code?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       student_metrics: {
         Row: {
-          avg_conversation_complexity: number | null
-          avg_grammar_accuracy: number | null
+          avg_accuracy_score: number | null
+          avg_complexity_score: number | null
           certification_attempts: number | null
-          classroom_id: string
           completed_lessons: number | null
+          created_at: string
           highest_certification_score: number | null
-          language_metrics_count: number | null
+          id: string
           last_activity: string | null
           premium_voice_calls: number | null
-          premium_voice_minutes: number | null
           premium_voice_minutes_remaining: number | null
           premium_voice_minutes_used: number | null
           premium_voice_sessions: number | null
-          student_email: string | null
           student_id: string
-          student_name: string | null
           text_practice_calls: number | null
           total_lessons: number | null
-        }
-        Insert: {
-          avg_conversation_complexity?: number | null
-          avg_grammar_accuracy?: number | null
-          certification_attempts?: number | null
-          classroom_id: string
-          completed_lessons?: number | null
-          highest_certification_score?: number | null
-          language_metrics_count?: number | null
-          last_activity?: string | null
-          premium_voice_calls?: number | null
-          premium_voice_minutes?: number | null
-          premium_voice_minutes_remaining?: number | null
-          premium_voice_minutes_used?: number | null
-          premium_voice_sessions?: number | null
-          student_email?: string | null
-          student_id: string
-          student_name?: string | null
-          text_practice_calls?: number | null
-          total_lessons?: number | null
-        }
-        Update: {
-          avg_conversation_complexity?: number | null
-          avg_grammar_accuracy?: number | null
-          certification_attempts?: number | null
-          classroom_id?: string
-          completed_lessons?: number | null
-          highest_certification_score?: number | null
-          language_metrics_count?: number | null
-          last_activity?: string | null
-          premium_voice_calls?: number | null
-          premium_voice_minutes?: number | null
-          premium_voice_minutes_remaining?: number | null
-          premium_voice_minutes_used?: number | null
-          premium_voice_sessions?: number | null
-          student_email?: string | null
-          student_id?: string
-          student_name?: string | null
-          text_practice_calls?: number | null
-          total_lessons?: number | null
-        }
-        Relationships: []
-      }
-      user_profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string
-          display_name: string | null
-          id: string
-          learning_goal: string | null
-          target_date: string | null
-          target_level: string | null
-          tier: number | null
           updated_at: string
         }
         Insert: {
-          avatar_url?: string | null
+          avg_accuracy_score?: number | null
+          avg_complexity_score?: number | null
+          certification_attempts?: number | null
+          completed_lessons?: number | null
           created_at?: string
-          display_name?: string | null
-          id: string
-          learning_goal?: string | null
-          target_date?: string | null
-          target_level?: string | null
-          tier?: number | null
+          highest_certification_score?: number | null
+          id?: string
+          last_activity?: string | null
+          premium_voice_calls?: number | null
+          premium_voice_minutes_remaining?: number | null
+          premium_voice_minutes_used?: number | null
+          premium_voice_sessions?: number | null
+          student_id: string
+          text_practice_calls?: number | null
+          total_lessons?: number | null
           updated_at?: string
         }
         Update: {
-          avatar_url?: string | null
+          avg_accuracy_score?: number | null
+          avg_complexity_score?: number | null
+          certification_attempts?: number | null
+          completed_lessons?: number | null
           created_at?: string
-          display_name?: string | null
+          highest_certification_score?: number | null
           id?: string
-          learning_goal?: string | null
-          target_date?: string | null
-          target_level?: string | null
-          tier?: number | null
+          last_activity?: string | null
+          premium_voice_calls?: number | null
+          premium_voice_minutes_remaining?: number | null
+          premium_voice_minutes_used?: number | null
+          premium_voice_sessions?: number | null
+          student_id?: string
+          text_practice_calls?: number | null
+          total_lessons?: number | null
           updated_at?: string
         }
         Relationships: []
       }
-      user_roles: {
+      subscribers: {
         Row: {
           created_at: string
+          email: string
           id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
+          last_pronunciation_session: string | null
+          last_voice_session: string | null
+          last_voice_timer_reset: string | null
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+          weekly_pronunciation_sessions_used: number | null
+          weekly_voice_minutes_remaining: number | null
+          weekly_voice_minutes_used: number | null
+          weekly_voice_sessions_used: number | null
         }
         Insert: {
           created_at?: string
+          email: string
           id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
+          last_pronunciation_session?: string | null
+          last_voice_session?: string | null
+          last_voice_timer_reset?: string | null
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+          weekly_pronunciation_sessions_used?: number | null
+          weekly_voice_minutes_remaining?: number | null
+          weekly_voice_minutes_used?: number | null
+          weekly_voice_sessions_used?: number | null
         }
         Update: {
           created_at?: string
+          email?: string
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          last_pronunciation_session?: string | null
+          last_voice_session?: string | null
+          last_voice_timer_reset?: string | null
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+          weekly_pronunciation_sessions_used?: number | null
+          weekly_voice_minutes_remaining?: number | null
+          weekly_voice_minutes_used?: number | null
+          weekly_voice_sessions_used?: number | null
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          accent: string | null
+          ai_coach_enabled: boolean | null
+          created_at: string
+          id: string
+          target_language: string | null
+          ui_language: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accent?: string | null
+          ai_coach_enabled?: boolean | null
+          created_at?: string
+          id?: string
+          target_language?: string | null
+          ui_language?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accent?: string | null
+          ai_coach_enabled?: boolean | null
+          created_at?: string
+          id?: string
+          target_language?: string | null
+          ui_language?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
       }
     }
     Views: {
-      class_student_metrics: {
-        Row: {
-          certification_attempts: number | null
-          classroom_id: string | null
-          completed_lessons: number | null
-          highest_certification_score: number | null
-          last_activity: string | null
-          premium_voice_calls: number | null
-          premium_voice_minutes: number | null
-          premium_voice_sessions: number | null
-          student_email: string | null
-          student_id: string | null
-          student_name: string | null
-          text_practice_calls: number | null
-          total_lessons: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classroom_codes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      student_usage_metrics: {
-        Row: {
-          avg_certification_score: number | null
-          certification_attempts: number | null
-          class_name: string | null
-          classroom_id: string | null
-          completed_lessons: number | null
-          last_certification: string | null
-          last_lesson_progress: string | null
-          last_voice_chat: string | null
-          student_id: string | null
-          teacher_id: string | null
-          total_lessons: number | null
-          voice_chat_minutes: number | null
-          voice_chat_sessions: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classroom_codes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
-      assign_role: {
-        Args: {
-          target_user_id: string
-          role_name: Database["public"]["Enums"]["app_role"]
-        }
-        Returns: boolean
-      }
       create_classroom: {
         Args: { class_name: string }
         Returns: Json
-      }
-      generate_class_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_student_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_teacher_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_student_usage_metrics: {
-        Args: { teacher_id_param?: string }
-        Returns: {
-          avg_certification_score: number | null
-          certification_attempts: number | null
-          class_name: string | null
-          classroom_id: string | null
-          completed_lessons: number | null
-          last_certification: string | null
-          last_lesson_progress: string | null
-          last_voice_chat: string | null
-          student_id: string | null
-          teacher_id: string | null
-          total_lessons: number | null
-          voice_chat_minutes: number | null
-          voice_chat_sessions: number | null
-        }[]
-      }
-      is_class_member: {
-        Args: { classroom_id: string }
-        Returns: boolean
-      }
-      is_teacher: {
-        Args: { user_id?: string }
-        Returns: boolean
-      }
-      is_teacher_of_class: {
-        Args: { classroom_id: string }
-        Returns: boolean
-      }
-      is_teacher_of_student: {
-        Args: { student_id: string }
-        Returns: boolean
       }
       join_classroom: {
         Args: { class_code: string }
         Returns: Json
       }
-      make_myself_teacher: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
       recalculate_student_metrics: {
         Args: { target_student_id: string }
         Returns: undefined
       }
-      safe_is_teacher: {
-        Args: { user_id?: string }
-        Returns: boolean
+      reset_weekly_usage: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
-      safe_is_teacher_of_class: {
-        Args: { classroom_id: string }
-        Returns: boolean
-      }
-      update_student_language_aggregate_metrics: {
-        Args: { target_student_id: string }
+      reset_weekly_voice_timer: {
+        Args: Record<PropertyKey, never>
         Returns: undefined
       }
     }
     Enums: {
-      app_role: "teacher" | "student"
-      district_consent_type:
-        | "individual"
-        | "code_of_conduct"
-        | "written_permission"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -830,13 +925,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["teacher", "student"],
-      district_consent_type: [
-        "individual",
-        "code_of_conduct",
-        "written_permission",
-      ],
-    },
+    Enums: {},
   },
 } as const
