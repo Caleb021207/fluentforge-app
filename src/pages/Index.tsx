@@ -1,192 +1,93 @@
 
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import NewLandingPage from "@/components/layout/NewLandingPage";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useTheme } from "next-themes";
-import LanguageSelectionCard from "@/components/home/LanguageSelectionCard";
-import AuthDialog from "@/components/home/AuthDialog";
-import FerpaConsentForm from "@/components/compliance/FerpaConsentForm";
-import { useToast } from "@/hooks/use-toast";
-import { getFerpaConsentStatus } from "@/utils/contentSafetyUtils";
-import { hasStudyMaterials } from "@/utils/languageUtils";
-import { useAuthFlow } from "@/hooks/useAuthFlow";
-import HomeActions from "@/components/home/HomeActions";
-import HomeFooter from "@/components/home/HomeFooter";
+import { motion } from "framer-motion";
 
 const Index = () => {
-  const { t, setCurrentLanguage } = useLocalization();
-  const { toast } = useToast();
-  const { theme } = useTheme();
-  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
-  const [isFerpaConsentOpen, setIsFerpaConsentOpen] = useState(false);
+  const { t } = useLocalization();
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [nativeLanguage, setNativeLanguage] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
-  const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
-  
-  const {
-    isLogin,
-    setIsLogin,
-    email,
-    setEmail,
-    password,
-    setPassword,
-    isLoading,
-    handleEmailAuth,
-    authError,
-    retryCount
-  } = useAuthFlow(() => setIsAuthDialogOpen(false));
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setIsSignedIn(!!data.user);
-      
-      if (data.user && !getFerpaConsentStatus()) {
-        setIsFerpaConsentOpen(true);
+      try {
+        const { data } = await supabase.auth.getUser();
+        setIsSignedIn(!!data.user);
+      } catch (error) {
+        console.error('Error checking user:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
+    
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      checkUser();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsSignedIn(!!session?.user);
     });
-
-    const savedNativeLanguage = localStorage.getItem("nativeLanguage");
-    const savedTargetLanguage = localStorage.getItem("targetLanguage");
-    
-    if (savedNativeLanguage) setNativeLanguage(savedNativeLanguage);
-    if (savedTargetLanguage) setTargetLanguage(savedTargetLanguage);
 
     return () => {
       subscription.unsubscribe();
     };
   }, []);
 
-  useEffect(() => {
-    if (nativeLanguage && targetLanguage) {
-      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
-      setStudyMaterialsAvailable(materialsAvailable);
-      
-      sessionStorage.setItem("languagePair", `${nativeLanguage}-${targetLanguage}`);
-      sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
-    }
-  }, [nativeLanguage, targetLanguage]);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  const handleLanguageSelection = () => {
-    if (nativeLanguage && targetLanguage) {
-      localStorage.setItem("nativeLanguage", nativeLanguage);
-      localStorage.setItem("targetLanguage", targetLanguage);
-      
-      const languagePair = `${nativeLanguage}-${targetLanguage}`;
-      sessionStorage.setItem("languagePair", languagePair);
-      
-      const materialsAvailable = hasStudyMaterials(nativeLanguage, targetLanguage);
-      sessionStorage.setItem("hasStudyMaterials", materialsAvailable.toString());
-      
-      setCurrentLanguage(nativeLanguage);
-      
-      toast({
-        title: t("languagePreferencesSaved"),
-        description: t("learningLanguageFromNative", {
-          targetLanguage: t(`languages.${targetLanguage}`),
-          nativeLanguage: t(`languages.${nativeLanguage}`)
-        }),
-      });
-      
-      window.location.reload();
-    } else {
-      toast({
-        title: t("pleaseSelectBothLanguages"),
-        description: t("youNeedToSelectBoth"),
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleFerpaConsentComplete = () => {
-    setIsFerpaConsentOpen(false);
-    
-    toast({
-      title: t("privacyPreferencesSaved") || "Privacy Preferences Saved",
-      description: t("ferpaPreferencesSaved") || "Your FERPA privacy preferences have been saved. You can change them anytime in your settings.",
-    });
-  };
+  if (!isSignedIn) {
+    return <NewLandingPage />;
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-8 max-w-2xl mx-auto p-6">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-8"
         >
-          {/* Conditional Logo based on theme */}
-          <div className="flex justify-center mb-8">
-            {theme === "dark" ? (
-              <img 
-                src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
-                alt="Palavox Logo" 
-                className="w-48 h-48 object-contain"
-              />
-            ) : (
-              <img 
-                src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
-                alt="Palavox Logo" 
-                className="w-48 h-48 object-contain"
-              />
-            )}
-          </div>
-          
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
-            {t("welcomeToLanguageLearning")}
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground">
+            {t("welcomeBack") || "Welcome Back!"}
           </h1>
-          <p className="text-lg md:text-xl text-foreground dark:text-white mb-8">
-            {t("yourPersonalAICompanion")}
+          <p className="text-lg md:text-xl text-muted-foreground">
+            {t("continueYourLearningJourney") || "Continue your language learning journey"}
           </p>
           
-          <LanguageSelectionCard
-            nativeLanguage={nativeLanguage}
-            targetLanguage={targetLanguage}
-            setNativeLanguage={setNativeLanguage}
-            setTargetLanguage={setTargetLanguage}
-            hasStudyMaterials={studyMaterialsAvailable}
-            handleLanguageSelection={handleLanguageSelection}
-          />
-          
-          <HomeActions 
-            isSignedIn={isSignedIn}
-            onLoginClick={() => {
-              setIsLogin(true);
-              setIsAuthDialogOpen(true);
-            }}
-          />
-          
-          <HomeFooter />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="p-6 bg-card rounded-xl border shadow-sm"
+            >
+              <h3 className="text-xl font-semibold mb-2">{t("textPractice") || "Text Practice"}</h3>
+              <p className="text-muted-foreground">{t("practiceConversations") || "Practice conversations with AI"}</p>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="p-6 bg-card rounded-xl border shadow-sm"
+            >
+              <h3 className="text-xl font-semibold mb-2">{t("voiceChat") || "Voice Chat"}</h3>
+              <p className="text-muted-foreground">{t("speakWithAI") || "Practice speaking with AI"}</p>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="p-6 bg-card rounded-xl border shadow-sm"
+            >
+              <h3 className="text-xl font-semibold mb-2">{t("trackProgress") || "Track Progress"}</h3>
+              <p className="text-muted-foreground">{t("seeYourImprovement") || "See your improvement over time"}</p>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
-
-      <AuthDialog
-        isOpen={isAuthDialogOpen}
-        onOpenChange={setIsAuthDialogOpen}
-        isLogin={isLogin}
-        setIsLogin={setIsLogin}
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-        handleEmailAuth={handleEmailAuth}
-        isLoading={isLoading}
-        authError={authError}
-        retryCount={retryCount}
-      />
-      
-      <FerpaConsentForm
-        isOpen={isFerpaConsentOpen}
-        onOpenChange={setIsFerpaConsentOpen}
-        onComplete={handleFerpaConsentComplete}
-      />
     </div>
   );
 };

@@ -1,162 +1,54 @@
-import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
-import { useToast } from "@/hooks/use-toast";
-import { ChatMessage } from "@/types/chat";
-import { handleConnectionError } from "@/utils/authErrorHandler";
-import { v4 as uuidv4 } from 'uuid';
+
+import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useChatApi = () => {
-  const { currentLanguage, t } = useLocalization();
-  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Helper function to extract string from object-like translations
-  const processTranslation = (translation: any): string => {
-    if (!translation) return "";
-    
-    if (typeof translation === 'string') {
-      return translation;
-    }
-    
-    if (typeof translation === 'object' && translation !== null) {
-      // Try to extract from common object patterns
-      if ('value' in translation && translation.value) {
-        return String(translation.value);
-      } 
-      if ('text' in translation && translation.text) {
-        return String(translation.text);
-      } 
-      if ('content' in translation && translation.content) {
-        return String(translation.content);
-      }
-      
-      // Try to stringify the object
-      try {
-        return JSON.stringify(translation);
-      } catch (e) {
-        console.error('Error stringifying translation object:', e);
-      }
-    }
-    
-    // Last resort - try to convert to string
+  const trackApiCall = async (endpoint: string, service: string) => {
     try {
-      return String(translation);
-    } catch (e) {
-      console.error('Error converting translation to string:', e);
-      return "";
-    }
-  };
-
-  const sendMessage = async (input: string): Promise<ChatMessage | null> => {
-    if (!input.trim()) {
-      return null;
-    }
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
-        body: {
-          message: input,
-          userLanguage: currentLanguage,
-        },
-      });
-
-      if (error) {
-        const reconnected = await handleConnectionError();
-        if (!reconnected) {
-          throw error;
-        }
-        
-        const retryResponse = await supabase.functions.invoke('chat-with-tutor', {
-          body: {
-            message: input,
-            userLanguage: currentLanguage,
-          },
-        });
-        
-        if (retryResponse.error) {
-          throw retryResponse.error;
-        }
-
-        // Track successful text practice call
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          await supabase
-            .from('api_calls_tracking')
-            .insert({
-              user_id: user.id,
-              call_type: 'text_practice'
-            });
-        }
-
-        // Enhanced logging for Tagalog translations
-        if (currentLanguage === 'tagalog') {
-          console.log('useChatApi Tagalog response:', {
-            responseTranslation: retryResponse.data.translation,
-            translationType: typeof retryResponse.data.translation
-          });
-        }
-        
-        // Process the translation to ensure it's a string
-        const processedTranslation = processTranslation(retryResponse.data.translation);
-        
-        // When creating an assistant message:
-        const assistantMessage: ChatMessage = {
-          id: uuidv4(),
-          role: "assistant",
-          content: retryResponse.data.content,
-          translation: processedTranslation,
-        };
-        
-        return assistantMessage;
-      }
-
-      if (!data || !data.content) {
-        throw new Error("Invalid response from tutor");
-      }
-
-      // Track successful text practice call
       const { data: { user } } = await supabase.auth.getUser();
+      
       if (user) {
         await supabase
           .from('api_calls_tracking')
           .insert({
-            user_id: user.id,
-            call_type: 'text_practice'
+            service,
+            endpoint,
+            user_id: user.id
           });
       }
-
-      // Enhanced logging for Tagalog translations
-      if (currentLanguage === 'tagalog') {
-        console.log('useChatApi Tagalog response:', {
-          responseTranslation: data.translation,
-          translationType: typeof data.translation,
-          translationSample: typeof data.translation === 'string' ? 
-            data.translation.substring(0, 30) + '...' : 
-            JSON.stringify(data.translation).substring(0, 30) + '...'
-        });
-      }
-      
-      // Process the translation to ensure it's a string
-      const processedTranslation = processTranslation(data.translation);
-      
-      // When creating an assistant message:
-      const assistantMessage: ChatMessage = {
-        id: uuidv4(),
-        role: "assistant",
-        content: data.content,
-        translation: processedTranslation,
-      };
-      
-      return assistantMessage;
-    } catch (error: any) {
-      console.error('Chat error:', error);
-      toast({
-        title: t("error") || "Error",
-        description: error.message || t("networkConnectionIssue") || "Network connection issue. Please try again.",
-        variant: "destructive",
-      });
-      return null;
+    } catch (error) {
+      console.error('Error tracking API call:', error);
     }
   };
 
-  return { sendMessage };
+  const sendChatMessage = async (message: string, targetLanguage: string, nativeLanguage: string) => {
+    setIsLoading(true);
+    try {
+      await trackApiCall('/chat-with-tutor', 'openai');
+      
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+        body: {
+          message,
+          targetLanguage,
+          nativeLanguage
+        }
+      });
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error sending chat message:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    sendChatMessage,
+    isLoading,
+    trackApiCall
+  };
 };
