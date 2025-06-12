@@ -21,7 +21,7 @@ const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { t } = useLocalization();
+  const { currentLanguage, t } = useLocalization();
   const isMobile = useIsMobile();
   const { isTeacher, isLoading: teacherStatusLoading } = useTeacherStatus();
 
@@ -79,13 +79,11 @@ const Navigation = () => {
     const button = (
       <Button
         variant={isActive ? "accent" : "ghost"}
-        className={`w-full justify-start text-left transition-all duration-200 ${
-          isActive ? 'shadow-modern scale-[1.02]' : 'hover:scale-[1.01]'
-        }`}
+        className={`w-full justify-start`}
         disabled={item.requiresAuth && !isLoggedIn}
       >
-        <Icon className="h-5 w-5 md:mr-3" />
-        <span className="hidden md:inline font-medium">{t(item.label)}</span>
+        <Icon className="h-5 w-5 md:mr-2" />
+        <span className="hidden md:inline">{t(item.label)}</span>
         {item.requiresAuth && !isLoggedIn && (
           <LockIcon className="h-4 w-4 ml-2 opacity-50" />
         )}
@@ -118,12 +116,12 @@ const Navigation = () => {
 
   return (
     <>
-      <div className="fixed top-0 right-0 z-50 md:hidden p-4">
+      <div className="fixed top-0 right-0 z-50 md:hidden p-2">
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={() => setIsOpen(!isOpen)}
-          className="text-foreground glass-effect rounded-full"
+          className="text-foreground"
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -131,22 +129,22 @@ const Navigation = () => {
 
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden animate-fade-in"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       <nav className={`
         fixed bottom-0 left-0 w-full md:relative md:w-64 
-        glass-effect border-t md:border-r md:border-t-0 md:h-screen 
-        z-40 transition-all duration-300 ease-in-out text-sidebar-foreground
+        bg-sidebar-background/90 backdrop-blur-lg border-t md:border-r md:border-t-0 md:h-screen 
+        z-40 transition-transform duration-300 ease-in-out text-sidebar-foreground
         ${isOpen ? 'translate-y-0' : 'md:translate-y-0 translate-y-[calc(100%-4rem)]'}
       `}>
-        <div className="p-4 md:p-6">
+        <div className="p-4">
           <div className="hidden md:flex items-center justify-between mb-8">
             <Link 
               to="/" 
-              className="font-bold text-2xl gradient-text hover:scale-105 transition-transform duration-200"
+              className="font-bold text-2xl text-primary"
               onClick={() => setIsOpen(false)}
             >
               Palavox
@@ -154,11 +152,11 @@ const Navigation = () => {
             <ThemeToggle />
           </div>
           
-          <div className="flex md:flex-col justify-around md:justify-start md:space-y-3">
+          <div className="flex md:flex-col justify-around md:justify-start md:space-y-2">
             {getNavItems().map(item => renderNavButton(item))}
             
             {isLoggedIn && isOpen && (
-              <div className="md:hidden mt-4 pt-4 border-t border-border">
+              <div className="md:hidden mt-4 pt-4 border-t">
                 <div className="flex items-center justify-between">
                   <ThemeToggle />
                   <LogoutButton iconOnly={true} onClose={() => setIsOpen(false)} />
@@ -168,7 +166,7 @@ const Navigation = () => {
           </div>
           
           {isLoggedIn && (
-            <div className="hidden md:block mt-auto pt-6 border-t border-border mt-8">
+            <div className="hidden md:block mt-auto pt-4 border-t mt-8">
               <LogoutButton />
             </div>
           )}

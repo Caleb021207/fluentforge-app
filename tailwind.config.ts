@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -26,14 +25,14 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         palavox: {
-          primary: '#3B82F6',     // Modern blue
-          accent: '#10B981',      // Modern green
-          secondary: '#6B7280',   // Modern gray
-          teal: '#14B8A6',        // Modern teal
+          primary: '#0B1C36',     // Deep navy
+          accent: '#A3D5FF',      // Sky blue
+          secondary: '#3A4E68',   // Slate blue
+          teal: '#57D8A1',        // Teal variant
           white: '#FFFFFF',       // White
           black: '#000000',       // Black
-          lightBg: '#F8FAFC',     // Very light gray for cards
-          darkBg: '#0F172A',      // Very dark blue for dark mode
+          lightBg: '#F7F9FC',     // Soft gray for cards/sections in light mode
+          darkBg: '#1D2B40',      // Dark navy for cards in dark mode
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -64,25 +63,6 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      fontFamily: {
-        sans: [
-          "Inter",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "sans-serif",
-        ],
-      },
-      spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-      },
       keyframes: {
         overlayShow: {
           from: { opacity: "0" },
@@ -106,49 +86,21 @@ export default {
           from: { opacity: "0", transform: "translateX(-2px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
-        slideDownAndFade: {
-          from: { opacity: "0", transform: "translateY(-2px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        slideLeftAndFade: {
-          from: { opacity: "0", transform: "translateX(2px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        accordionDown: {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        accordionUp: {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
         pulse: {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.5' },
         },
         bounce: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-25%)' },
+          '50%': { transform: 'translateY(-20%)' },
         },
         float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-20px)' },
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
-        },
-        fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        scaleIn: {
-          '0%': { opacity: '0', transform: 'scale(0.95)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
       animation: {
@@ -156,20 +108,10 @@ export default {
         contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideRightAndFade: "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-        slideDownAndFade: "slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-        slideLeftAndFade: "slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-        accordionDown: "accordionDown 300ms cubic-bezier(0.87, 0, 0.13, 1)",
-        accordionUp: "accordionUp 300ms cubic-bezier(0.87, 0, 0.13, 1)",
         "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "bounce": "bounce 1s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
-        "fade-in": "fadeIn 0.5s ease-out forwards",
-        "scale-in": "scaleIn 0.3s ease-out forwards",
-        "slide-up": "slideUp 0.4s ease-out forwards",
-      },
-      backdropBlur: {
-        xs: '2px',
       },
     },
   },
