@@ -53,25 +53,26 @@ const AuthenticatedAccuracy = () => {
     try {
       setIsRefreshing(true);
       
-      // First ensure the student_metrics record exists by calling the aggregate function
-      await supabase.rpc('update_student_language_aggregate_metrics', {
+      // Try to call the RPC function using raw SQL since types aren't updated yet
+      const { error: rpcError } = await supabase.rpc('update_student_language_aggregate_metrics', {
         target_student_id: user.id
       });
       
+      if (rpcError) {
+        console.warn("RPC call failed, continuing without aggregation:", rpcError);
+      }
+      
       // Query the student_language_metrics table directly for historical data
       const { data: metricsData, error: metricsError } = await supabase
-        .from('student_language_metrics')
+        .from('student_language_metrics' as any)
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(10);
 
       if (metricsError) {
-        throw metricsError;
-      }
-
-      if (!metricsData || metricsData.length === 0) {
-        // If no individual records, try to get the aggregate metrics
+        console.warn("Failed to fetch individual metrics:", metricsError);
+        // Fallback to aggregate data
         const { data: aggData, error: aggError } = await supabase
           .from('student_metrics')
           .select('avg_grammar_accuracy, avg_conversation_complexity, language_metrics_count')
@@ -83,7 +84,6 @@ const AuthenticatedAccuracy = () => {
         }
         
         if (aggData && aggData.language_metrics_count > 0) {
-          // We have aggregate data but no individual records
           const aggregateMetric = {
             grammarAccuracy: aggData.avg_grammar_accuracy || 0,
             conversationComplexity: aggData.avg_conversation_complexity || 0,
@@ -103,8 +103,14 @@ const AuthenticatedAccuracy = () => {
         return;
       }
 
-      // Process metrics data - removed vocabulary_diversity since it doesn't exist in the schema
-      const formattedMetrics = metricsData.map(metric => ({
+      if (!metricsData || metricsData.length === 0) {
+        setFetchError(t("noAccuracyDataYet"));
+        setIsRefreshing(false);
+        return;
+      }
+
+      // Process metrics data
+      const formattedMetrics = metricsData.map((metric: any) => ({
         grammarAccuracy: metric.grammar_accuracy || 0,
         conversationComplexity: metric.conversation_complexity || 0,
         messageCount: metric.message_count || 0,

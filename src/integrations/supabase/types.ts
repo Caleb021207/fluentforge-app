@@ -636,15 +636,51 @@ export type Database = {
         }
         Relationships: []
       }
+      student_language_metrics: {
+        Row: {
+          conversation_complexity: number | null
+          created_at: string
+          grammar_accuracy: number | null
+          id: string
+          message_count: number | null
+          pronunciation_accuracy: number | null
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          conversation_complexity?: number | null
+          created_at?: string
+          grammar_accuracy?: number | null
+          id?: string
+          message_count?: number | null
+          pronunciation_accuracy?: number | null
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          conversation_complexity?: number | null
+          created_at?: string
+          grammar_accuracy?: number | null
+          id?: string
+          message_count?: number | null
+          pronunciation_accuracy?: number | null
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       student_metrics: {
         Row: {
           avg_accuracy_score: number | null
           avg_complexity_score: number | null
+          avg_conversation_complexity: number | null
+          avg_grammar_accuracy: number | null
           certification_attempts: number | null
           completed_lessons: number | null
           created_at: string
           highest_certification_score: number | null
           id: string
+          language_metrics_count: number | null
           last_activity: string | null
           premium_voice_calls: number | null
           premium_voice_minutes_remaining: number | null
@@ -658,11 +694,14 @@ export type Database = {
         Insert: {
           avg_accuracy_score?: number | null
           avg_complexity_score?: number | null
+          avg_conversation_complexity?: number | null
+          avg_grammar_accuracy?: number | null
           certification_attempts?: number | null
           completed_lessons?: number | null
           created_at?: string
           highest_certification_score?: number | null
           id?: string
+          language_metrics_count?: number | null
           last_activity?: string | null
           premium_voice_calls?: number | null
           premium_voice_minutes_remaining?: number | null
@@ -676,11 +715,14 @@ export type Database = {
         Update: {
           avg_accuracy_score?: number | null
           avg_complexity_score?: number | null
+          avg_conversation_complexity?: number | null
+          avg_grammar_accuracy?: number | null
           certification_attempts?: number | null
           completed_lessons?: number | null
           created_at?: string
           highest_certification_score?: number | null
           id?: string
+          language_metrics_count?: number | null
           last_activity?: string | null
           premium_voice_calls?: number | null
           premium_voice_minutes_remaining?: number | null
@@ -785,7 +827,26 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      class_student_metrics: {
+        Row: {
+          classroom_id: string | null
+          last_activity: string | null
+          premium_voice_calls: number | null
+          student_email: string | null
+          student_id: string | null
+          student_name: string | null
+          text_practice_calls: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       create_classroom: {
@@ -806,6 +867,10 @@ export type Database = {
       }
       reset_weekly_voice_timer: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      update_student_language_aggregate_metrics: {
+        Args: { target_student_id: string }
         Returns: undefined
       }
     }

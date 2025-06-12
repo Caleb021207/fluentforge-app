@@ -28,30 +28,39 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase
-        .from('class_student_metrics')
-        .select('*')
-        .eq('classroom_id', classId);
+      // Query student_metrics joined with classroom_memberships and profiles
+      const { data: metricsData, error: metricsError } = await supabase
+        .from('student_metrics')
+        .select(`
+          *,
+          classroom_memberships!inner(classroom_id),
+          profiles(display_name)
+        `)
+        .eq('classroom_memberships.classroom_id', classId);
 
-      if (error) throw error;
-      
-      const transformedData: StudentMetrics[] = (data || []).map(student => {
+      if (metricsError) {
+        console.error("Error fetching student metrics:", metricsError);
+        throw metricsError;
+      }
+
+      // Get user emails separately since we can't access auth.users directly
+      const transformedData: StudentMetrics[] = (metricsData || []).map((student: any) => {
         return {
           student_id: student.student_id || null,
-          student_name: student.student_name || null,
-          student_email: student.student_email || null,
+          student_name: student.profiles?.display_name || 'Unknown Student',
+          student_email: null, // We'll need to fetch this separately or use a different approach
           text_practice_calls: student.text_practice_calls || 0,
           premium_voice_calls: student.premium_voice_calls || 0,
           last_activity: student.last_activity || null,
           
-          // Include these properties to satisfy TypeScript, but we won't display them
-          premium_voice_sessions: 0,
-          premium_voice_minutes_used: 0,
-          premium_voice_minutes_remaining: 0,
-          certification_attempts: 0,
-          highest_certification_score: 0,
-          completed_lessons: 0,
-          total_lessons: 0,
+          // Include these properties to satisfy TypeScript
+          premium_voice_sessions: student.premium_voice_sessions || 0,
+          premium_voice_minutes_used: student.premium_voice_minutes_used || 0,
+          premium_voice_minutes_remaining: student.premium_voice_minutes_remaining || 0,
+          certification_attempts: student.certification_attempts || 0,
+          highest_certification_score: student.highest_certification_score || 0,
+          completed_lessons: student.completed_lessons || 0,
+          total_lessons: student.total_lessons || 0,
         };
       });
 
