@@ -39,6 +39,7 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   // Re-adding the previously removed languages
   gujarati: "ગુજરાતી",
   punjabi: "ਪੰਜਾਬੀ",
-  nepali: "नेपाली"
+  nepali: "नेपाली",
+  // Adding Tok Pisin
+  tokpisin: "Tok Pisin"
 };
-

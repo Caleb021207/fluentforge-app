@@ -1,5 +1,4 @@
 
-
 /**
  * Languages that should always display translations
  */
@@ -36,7 +35,9 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   // Re-adding previously removed languages
   "gujarati",
   "punjabi",
-  "nepali"
+  "nepali",
+  // Adding Tok Pisin
+  "tokpisin"
 ];
 
 /**

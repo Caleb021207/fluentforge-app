@@ -63,7 +63,9 @@ const LanguageSelectionCard = ({
     // Re-adding the previously removed languages
     gujarati: "🇮🇳 ગુજરાતી",
     punjabi: "🇮🇳 ਪੰਜਾਬੀ",
-    nepali: "🇳🇵 नेपाली"
+    nepali: "🇳🇵 नेपाली",
+    // Adding Tok Pisin
+    tokpisin: "🇵🇬 Tok Pisin"
   };
 
   // Available target languages based on native language
@@ -105,7 +107,9 @@ const LanguageSelectionCard = ({
     // Re-adding the previously removed languages
     gujarati: "🇮🇳 Gujarati",
     punjabi: "🇮🇳 Punjabi",
-    nepali: "🇳🇵 Nepali"
+    nepali: "🇳🇵 Nepali",
+    // Adding Tok Pisin
+    tokpisin: "🇵🇬 Tok Pisin"
   };
   
   // Determine disabled options based on native language

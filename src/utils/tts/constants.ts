@@ -40,7 +40,8 @@ export const languageCodeMap: Record<string, string> = {
   'punjabi': 'pa-IN',
   'marathi': 'mr-IN',
   'gujarati': 'gu-IN',
-  'sinhala': 'si-LK'
+  'sinhala': 'si-LK',
+  'tokpisin': 'en-US' // Use English as fallback for Tok Pisin
 };
 
 // Meta MMS specific language codes (ISO 639-3)
@@ -64,7 +65,8 @@ export const metaMmsLanguageMap: Record<string, string> = {
   'punjabi': 'pan',
   'marathi': 'mar',
   'gujarati': 'guj',
-  'sinhala': 'sin'
+  'sinhala': 'sin',
+  'tokpisin': 'tpi'
 };
 
 // TTS cache constants

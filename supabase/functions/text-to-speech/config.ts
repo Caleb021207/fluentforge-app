@@ -40,6 +40,8 @@ export const languageVoiceMap: Record<string, { languageCode: string, voiceName:
   "gujarati": { languageCode: "gu-IN", voiceName: "gu-IN-DhwaniNeural" },
   // Add Sinhala language support with Azure voice
   "sinhala": { languageCode: "si-LK", voiceName: "si-LK-SameeraNeural" },
+  // Add Tok Pisin language support (using English voice as fallback)
+  "tokpisin": { languageCode: "en-US", voiceName: "en-US-JennyNeural" },
   // Re-adding previously removed languages
   "haitian": { languageCode: "ht-HT", voiceName: "ht-HT-DefaultNeural" },
   "igbo": { languageCode: "ig-NG", voiceName: "ig-NG-DefaultNeural" },
@@ -69,7 +71,7 @@ export const pollyVoiceMap: Record<string, string> = {
   "farsi": "Lupe", // Use Spanish voice as fallback (might not be ideal)
   "russian": "Tatyana",
   "arabic": "Hala",
-  "vietnamese": "Hiếu", // Fictional - may need to use another language if this doesn't exist
+  "vietnamese": "Hiieu", // Fictional - may need to use another language if this doesn't exist
   "ukrainian": "Tatyana", // Use Russian voice as fallback
   "urdu": "Kajal", // Use Hindi voice as fallback
   "pashto": "Kajal", // Use Hindi voice as fallback
@@ -94,6 +96,8 @@ export const pollyVoiceMap: Record<string, string> = {
   "gujarati": "Aditi", // Use closest available voice as fallback
   // Add Sinhala voice for Polly (using fallback)
   "sinhala": "Aditi", // Use closest available voice as fallback
+  // Add Tok Pisin voice for Polly (using English voice)
+  "tokpisin": "Matthew", // Use English voice as fallback
   // Re-adding previously removed languages
   "haitian": "Joanna", // Use English voice as fallback
   "igbo": "Joanna", // Use English voice as fallback
@@ -129,7 +133,8 @@ export const metaMmsLanguageMap: Record<string, string> = {
   "punjabi": "pan",   // Added Punjabi ISO 639-3 code
   "marathi": "mar",   // Added Marathi ISO 639-3 code
   "gujarati": "guj",  // Added Gujarati ISO 639-3 code
-  "sinhala": "sin"    // Added Sinhala ISO 639-3 code
+  "sinhala": "sin",   // Added Sinhala ISO 639-3 code
+  "tokpisin": "tpi"   // Added Tok Pisin ISO 639-3 code
 };
 
 // Constants

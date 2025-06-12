@@ -42,6 +42,7 @@ import punjabi from "./punjabi";
 import marathi from "./marathi";
 import gujarati from "./gujarati";
 import sinhala from "./sinhala";
+import tokpisin from "./tokpisin";
 
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "./constants";
 
@@ -87,7 +88,8 @@ const translations: Record<string, TranslationRecord> = {
   punjabi,
   marathi,
   gujarati,
-  sinhala
+  sinhala,
+  tokpisin
 };
 
 export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };
