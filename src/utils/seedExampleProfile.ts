@@ -16,8 +16,8 @@ export const createExampleProfile = async () => {
       throw new Error("Failed to create user");
     }
 
-    // Create user profile
-    const { error: profileError } = await supabase.from("user_profiles").insert({
+    // Create user profile using the correct table name
+    const { error: profileError } = await supabase.from("profiles").insert({
       id: userId,
       display_name: "Example User",
       learning_goal: "Travel to Spain",
@@ -66,54 +66,26 @@ export const createExampleProfile = async () => {
 
     if (certError) throw certError;
 
-    // Create lesson progress data - let's add more progress appropriate for B1 level
-    // We'll create progress for lessons in A1, A2 and B1 levels
-    const lessonProgressEntries = [];
+    // Create some student language metrics instead of lesson progress
+    const languageMetrics = [];
     
-    // Completed A1 lessons
-    for (let i = 1; i <= 10; i++) {
-      lessonProgressEntries.push({
+    // Create some sample language metrics over the past 30 days
+    for (let i = 0; i < 15; i++) {
+      languageMetrics.push({
         user_id: userId,
-        level: "A1",
-        lesson_id: i,
-        progress: 100,
-        completed: true,
-        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (90 - i * 2)).toISOString(),
-        xp_earned: Math.floor(Math.random() * 50) + 50, // 50-100 XP per lesson
-      });
-    }
-    
-    // Completed A2 lessons
-    for (let i = 1; i <= 10; i++) {
-      lessonProgressEntries.push({
-        user_id: userId,
-        level: "A2",
-        lesson_id: i,
-        progress: 100,
-        completed: true,
-        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (60 - i * 2)).toISOString(),
-        xp_earned: Math.floor(Math.random() * 50) + 50, // 50-100 XP per lesson
-      });
-    }
-    
-    // Partially completed B1 lessons
-    for (let i = 1; i <= 10; i++) {
-      lessonProgressEntries.push({
-        user_id: userId,
-        level: "B1",
-        lesson_id: i,
-        progress: i <= 5 ? 100 : Math.floor(Math.random() * 60) + 20, // First 5 lessons complete, others in progress
-        completed: i <= 5,
-        last_accessed: new Date(Date.now() - 1000 * 60 * 60 * 24 * (30 - i * 2)).toISOString(),
-        xp_earned: i <= 5 ? Math.floor(Math.random() * 50) + 50 : Math.floor(Math.random() * 30), // 50-100 XP for completed lessons, lower for incomplete
+        grammar_accuracy: Math.random() * 0.3 + 0.6, // 60-90% accuracy
+        conversation_complexity: Math.random() * 0.4 + 0.5, // 50-90% complexity
+        pronunciation_accuracy: Math.random() * 0.2 + 0.7, // 70-90% pronunciation
+        message_count: Math.floor(Math.random() * 10) + 5, // 5-15 messages
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * (30 - i * 2)).toISOString(),
       });
     }
 
-    const { error: progressError } = await supabase
-      .from("lesson_progress")
-      .insert(lessonProgressEntries);
+    const { error: metricsError } = await supabase
+      .from("student_language_metrics")
+      .insert(languageMetrics);
 
-    if (progressError) throw progressError;
+    if (metricsError) throw metricsError;
 
     return { success: true, userId };
   } catch (error) {

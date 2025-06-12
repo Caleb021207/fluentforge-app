@@ -153,15 +153,14 @@ export function trackTTSUsage(userId: string, language: string): void {
   if (!userId) return;
   
   try {
-    // Instead of trying to use a potentially non-existent table,
-    // log the usage to the api_calls_tracking table which does exist
+    // Use the correct table structure for api_calls_tracking
     supabase
       .from('api_calls_tracking')
       .insert([
         { 
           user_id: userId,
-          call_type: 'tts_usage',
-          metadata: { language }
+          service: 'tts',
+          endpoint: 'usage'
         }
       ])
       .then(({ error }) => {

@@ -22,12 +22,11 @@ export async function trackTTSUsage(language: string, textLength: number): Promi
 
     console.log(`Tracking voice practice for user ${user.id}`);
     
-    // Log the API call to the tracking table with voice_practice as the call type
+    // Log the API call to the tracking table using the correct column structure
     const { data, error } = await supabase.from('api_calls_tracking').insert({
       user_id: user.id,
-      call_type: 'voice_practice',
-      language: language,
-      text_length: textLength
+      service: 'tts',
+      endpoint: 'voice_practice'
     });
     
     if (error) {
