@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { DataCache } from "./cacheUtils";
@@ -13,7 +14,7 @@ export const ensureUserProfile = async (userId: string) => {
   try {
     // Check if profile exists
     const { data: profile, error: queryError } = await supabase
-      .from('user_profiles')
+      .from('profiles')
       .select('id')
       .eq('id', userId)
       .single();
@@ -21,7 +22,7 @@ export const ensureUserProfile = async (userId: string) => {
     if (queryError && queryError.code === 'PGRST116') {
       // Profile doesn't exist, create it
       const { error: insertError } = await supabase
-        .from('user_profiles')
+        .from('profiles')
         .insert({
           id: userId,
           display_name: '',
@@ -66,7 +67,7 @@ export const getUserProfile = async (userId: string) => {
     
     // Fetch the profile
     const { data, error } = await supabase
-      .from('user_profiles')
+      .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
@@ -96,7 +97,7 @@ export const updateUserProfile = async (userId: string, updates: any) => {
     await ensureUserProfile(userId);
     
     const { data, error } = await supabase
-      .from('user_profiles')
+      .from('profiles')
       .update(updates)
       .eq('id', userId)
       .select()
@@ -151,150 +152,46 @@ const withRetry = async <T>(
 };
 
 /**
- * Creates a lesson progress entry if it doesn't exist with retry logic
- */
-export const ensureLessonProgress = async (userId: string, level: string, lessonId: number) => {
-  return withRetry(async () => {
-    try {
-      // Check if progress entry exists
-      const { data: progress, error: queryError } = await supabase
-        .from('lesson_progress')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('level', level)
-        .eq('lesson_id', lessonId)
-        .single();
-
-      if (queryError && queryError.code === 'PGRST116') {
-        // Progress doesn't exist, create it
-        const { error: insertError } = await supabase
-          .from('lesson_progress')
-          .insert({
-            user_id: userId,
-            level: level,
-            lesson_id: lessonId,
-            progress: 0,
-            completed: false,
-            xp_earned: 0
-          });
-
-        if (insertError) {
-          console.error('Error creating lesson progress:', insertError);
-          throw new Error(`Failed to create lesson progress: ${insertError.message}`);
-        }
-      } else if (queryError) {
-        console.error('Error checking lesson progress:', queryError);
-        throw new Error(`Failed to check lesson progress: ${queryError.message}`);
-      }
-
-      return progress;
-    } catch (error) {
-      console.error('Error in ensureLessonProgress:', error);
-      throw error;
-    }
-  });
-};
-
-/**
- * Updates a lesson progress
- */
-export const updateLessonProgress = async (
-  userId: string, 
-  level: string, 
-  lessonId: number, 
-  updates: {
-    progress?: number,
-    completed?: boolean,
-    xp_earned?: number
-  }
-) => {
-  return withRetry(async () => {
-    try {
-      await ensureLessonProgress(userId, level, lessonId);
-      
-      const { data, error } = await supabase
-        .from('lesson_progress')
-        .update(updates)
-        .eq('user_id', userId)
-        .eq('level', level)
-        .eq('lesson_id', lessonId)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error updating lesson progress:', error);
-        throw new Error(`Failed to update lesson progress: ${error.message}`);
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error in updateLessonProgress:', error);
-      throw error;
-    }
-  });
-};
-
-/**
- * Gets all lesson progress for a user with caching
- */
-export const getAllLessonProgress = async (userId: string) => {
-  return withRetry(async () => {
-    try {
-      // Check cache first
-      const cacheKey = `lesson-progress-${userId}`;
-      const cachedProgress = cache.get<any[]>(cacheKey);
-      if (cachedProgress) {
-        return cachedProgress;
-      }
-      
-      const { data, error } = await supabase
-        .from('lesson_progress')
-        .select('*')
-        .eq('user_id', userId);
-
-      if (error) {
-        console.error('Error fetching lesson progress:', error);
-        throw new Error(`Failed to fetch lesson progress: ${error.message}`);
-      }
-
-      // Cache the result
-      const result = data || [];
-      cache.set(cacheKey, result, 60000); // 1 minute cache, as this data changes frequently
-      
-      return result;
-    } catch (error) {
-      console.error('Error in getAllLessonProgress:', error);
-      throw error;
-    }
-  });
-};
-
-/**
  * Clear all cache for a user
  */
 export const clearUserCache = (userId: string) => {
   cache.remove(`profile-${userId}`);
-  cache.remove(`lesson-progress-${userId}`);
 };
 
 /**
- * Checks if a user has a specific role
+ * Checks if a user has a specific role based on classroom ownership
  */
 export const checkUserRole = async (userId: string, role: 'student' | 'teacher'): Promise<boolean> => {
   try {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .eq('role', role)
-      .maybeSingle();
+    if (role === 'teacher') {
+      // Check if user has created any classrooms
+      const { data, error } = await supabase
+        .from('classroom_codes')
+        .select('id')
+        .eq('teacher_id', userId)
+        .limit(1);
+        
+      if (error) {
+        console.error('Error checking teacher role:', error);
+        return false;
+      }
       
-    if (error) {
-      console.error('Error checking user role:', error);
-      return false;
+      return !!data && data.length > 0;
+    } else {
+      // For students, check if they're in any classroom
+      const { data, error } = await supabase
+        .from('classroom_memberships')
+        .select('id')
+        .eq('student_id', userId)
+        .limit(1);
+        
+      if (error) {
+        console.error('Error checking student role:', error);
+        return false;
+      }
+      
+      return !!data && data.length > 0;
     }
-    
-    return !!data;
   } catch (error) {
     console.error('Error in checkUserRole:', error);
     return false;
@@ -302,13 +199,13 @@ export const checkUserRole = async (userId: string, role: 'student' | 'teacher')
 };
 
 /**
- * Creates a utility to easily promote a user to teacher role
+ * Creates a utility to easily promote a user to teacher role by creating a classroom
  */
 export const promoteToTeacher = async (userId: string): Promise<boolean> => {
   try {
-    const { data, error } = await supabase.rpc('assign_role', {
-      target_user_id: userId,
-      role_name: 'teacher'
+    // Create a default classroom to make the user a teacher
+    const { data, error } = await supabase.rpc('create_classroom', {
+      class_name: 'My First Class'
     });
     
     if (error) {
@@ -329,8 +226,10 @@ export const promoteToTeacher = async (userId: string): Promise<boolean> => {
  */
 export const makeMyselfTeacher = async (): Promise<boolean> => {
   try {
-    // Create a convenience RPC function for this
-    const { data, error } = await supabase.rpc('make_myself_teacher');
+    // Create a classroom to become a teacher
+    const { data, error } = await supabase.rpc('create_classroom', {
+      class_name: 'Test Classroom'
+    });
     
     if (error) {
       console.error('Error making self teacher:', error);

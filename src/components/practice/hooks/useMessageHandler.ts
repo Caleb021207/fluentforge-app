@@ -18,7 +18,7 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
   const [messageQueue, setMessageQueue] = useState<string[]>([]);
   const [isProcessingQueue, setIsProcessingQueue] = useState(false);
   
-  const { sendMessage } = useChatApi();
+  const { sendChatMessage } = useChatApi();
   const { toast } = useToast();
   const { t } = useLocalization();
 
@@ -32,8 +32,8 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
       const nextMessage = messageQueue[0];
       setIsLoading(true);
       
-      // Process the message
-      const assistantMessage = await sendMessage(nextMessage);
+      // Process the message with required arguments
+      const assistantMessage = await sendChatMessage(nextMessage, 'spanish', 'english');
       
       if (assistantMessage) {
         addAssistantMessage(assistantMessage);
@@ -70,8 +70,8 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
     try {
       setIsLoading(true);
       
-      // Send message to API
-      const assistantMessage = await sendMessage(input);
+      // Send message to API with required arguments
+      const assistantMessage = await sendChatMessage(input, 'spanish', 'english');
       
       if (assistantMessage) {
         addAssistantMessage(assistantMessage);
