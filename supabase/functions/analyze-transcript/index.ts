@@ -23,7 +23,8 @@ serve(async (req) => {
     
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
     if (!openaiApiKey) {
-      throw new Error('OpenAI API key not found')
+      console.error('OpenAI API key not found in environment variables')
+      throw new Error('OpenAI API key not configured. Please add OPENAI_API_KEY to your Supabase Edge Function secrets.')
     }
 
     console.log(`Analyzing transcript: ${fileName} (${fileType})`)
@@ -56,6 +57,8 @@ Please provide a detailed analysis in JSON format with these fields:
 
 Focus on actionable insights for language learning progress.`
 
+    console.log('Making request to OpenAI API...')
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -63,7 +66,7 @@ Focus on actionable insights for language learning progress.`
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4-vision-preview',
+        model: 'gpt-4o',
         messages: [
           {
             role: 'user',
@@ -89,7 +92,7 @@ Focus on actionable insights for language learning progress.`
     if (!response.ok) {
       const errorData = await response.text()
       console.error('OpenAI API error:', errorData)
-      throw new Error(`OpenAI API error: ${response.status}`)
+      throw new Error(`OpenAI API error: ${response.status} - ${errorData}`)
     }
 
     const data = await response.json()
@@ -99,7 +102,7 @@ Focus on actionable insights for language learning progress.`
       throw new Error('No analysis content received from OpenAI')
     }
 
-    console.log('Raw analysis:', analysisContent)
+    console.log('Raw analysis received from OpenAI:', analysisContent)
 
     // Parse the JSON response from GPT
     let parsedAnalysis
@@ -110,6 +113,7 @@ Focus on actionable insights for language learning progress.`
       parsedAnalysis = JSON.parse(jsonString)
     } catch (parseError) {
       console.error('Failed to parse analysis JSON:', parseError)
+      console.error('Original content:', analysisContent)
       // Fallback: create a basic analysis structure
       parsedAnalysis = {
         overall_score: null,
@@ -128,6 +132,8 @@ Focus on actionable insights for language learning progress.`
       }
     }
 
+    console.log('Successfully parsed analysis:', parsedAnalysis)
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -144,7 +150,7 @@ Focus on actionable insights for language learning progress.`
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message
+        error: error.message || 'Unknown error occurred during analysis'
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
