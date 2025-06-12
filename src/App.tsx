@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,7 +10,7 @@ import TranscriptAnalysis from "@/pages/TranscriptAnalysis";
 import Progress from "@/pages/Progress";
 import Accuracy from "@/pages/Accuracy";
 import Profile from "@/pages/Profile";
-import Pronunciation from "@/pages/Pronunciation";
+import PronunciationPractice from "@/pages/PronunciationPractice";
 import Vocabulary from "@/pages/Vocabulary";
 import Classroom from "@/pages/Classroom";
 import PremiumVoice from "@/pages/PremiumVoice";
@@ -27,7 +28,7 @@ function App() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/accuracy" element={<Accuracy />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/pronunciation" element={<Pronunciation />} />
+          <Route path="/pronunciation" element={<PronunciationPractice />} />
           <Route path="/vocabulary" element={<Vocabulary />} />
           <Route path="/classroom" element={<Classroom />} />
           <Route path="/premium-voice" element={<PremiumVoice />} />

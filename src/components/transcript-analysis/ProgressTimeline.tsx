@@ -76,14 +76,14 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
                 <div>
                   <div className="text-sm text-gray-600">First Test</div>
                   <div className="font-bold">{sortedAnalyses[0]?.overall_score || 'N/A'}%</div>
-                  <Badge className={getCEFRColor(sortedAnalyses[0]?.cefr_level)} size="sm">
+                  <Badge className={getCEFRColor(sortedAnalyses[0]?.cefr_level)}>
                     {sortedAnalyses[0]?.cefr_level || 'N/A'}
                   </Badge>
                 </div>
                 <div>
                   <div className="text-sm text-gray-600">Latest Test</div>
                   <div className="font-bold">{sortedAnalyses[sortedAnalyses.length - 1]?.overall_score || 'N/A'}%</div>
-                  <Badge className={getCEFRColor(sortedAnalyses[sortedAnalyses.length - 1]?.cefr_level)} size="sm">
+                  <Badge className={getCEFRColor(sortedAnalyses[sortedAnalyses.length - 1]?.cefr_level)}>
                     {sortedAnalyses[sortedAnalyses.length - 1]?.cefr_level || 'N/A'}
                   </Badge>
                 </div>
@@ -125,7 +125,7 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
                     <div className="text-right">
                       <div className="text-lg font-bold">{analysis.overall_score || 'N/A'}%</div>
                       {analysis.cefr_level && (
-                        <Badge className={getCEFRColor(analysis.cefr_level)} size="sm">
+                        <Badge className={getCEFRColor(analysis.cefr_level)}>
                           {analysis.cefr_level}
                         </Badge>
                       )}

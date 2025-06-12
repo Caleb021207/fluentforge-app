@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -116,11 +115,11 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
                       {recommendation.skill_area.replace('_', ' ')} Focus
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-1">
-                      <Badge className={getPriorityColor(recommendation.priority_level)} size="sm">
+                      <Badge className={getPriorityColor(recommendation.priority_level)}>
                         {getPriorityLabel(recommendation.priority_level)}
                       </Badge>
                       {recommendation.difficulty_level && (
-                        <Badge variant="outline" size="sm">
+                        <Badge variant="outline">
                           {recommendation.difficulty_level}
                         </Badge>
                       )}

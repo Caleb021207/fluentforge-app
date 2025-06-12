@@ -1,8 +1,8 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TopNavigationDropdown } from "@/components/ui/top-navigation-dropdown";
 import { 
   Home, 
   MessageSquare, 
@@ -81,7 +81,7 @@ const Navigation = () => {
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6">
-              <TopNavigationDropdown />
+              {/* User menu would go here */}
             </div>
           </div>
           <div className="-mr-2 flex md:hidden">
@@ -144,7 +144,7 @@ const Navigation = () => {
         </div>
         <div className="pt-4 pb-3 border-t border-gray-200">
           <div className="px-5">
-            <TopNavigationDropdown />
+            {/* User menu items would go here */}
           </div>
         </div>
       </div>
