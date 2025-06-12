@@ -115,55 +115,100 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-8 max-w-2xl mx-auto p-6">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+      
+      {/* Floating shapes for visual interest */}
+      <div className="absolute top-20 left-20 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-float" />
+      <div className="absolute bottom-20 right-20 w-24 h-24 bg-accent/10 rounded-full blur-xl animate-float [animation-delay:1s]" />
+      <div className="absolute top-1/2 left-10 w-16 h-16 bg-secondary/10 rounded-full blur-xl animate-float [animation-delay:2s]" />
+      
+      <div className="text-center space-y-8 max-w-2xl mx-auto p-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          {/* Conditional Logo based on theme */}
+          {/* Logo with enhanced styling */}
           <div className="flex justify-center mb-8">
-            {theme === "dark" ? (
-              <img 
-                src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
-                alt="Palavox Logo" 
-                className="w-48 h-48 object-contain"
-              />
-            ) : (
-              <img 
-                src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
-                alt="Palavox Logo" 
-                className="w-48 h-48 object-contain"
-              />
-            )}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="relative"
+            >
+              {theme === "dark" ? (
+                <img 
+                  src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
+                  alt="Palavox Logo" 
+                  className="w-48 h-48 object-contain drop-shadow-2xl"
+                />
+              ) : (
+                <img 
+                  src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
+                  alt="Palavox Logo" 
+                  className="w-48 h-48 object-contain drop-shadow-2xl"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl -z-10" />
+            </motion.div>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent mb-4"
+          >
             {t("welcomeToLanguageLearning")}
-          </h1>
-          <p className="text-lg md:text-xl text-foreground dark:text-white mb-8">
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
+          >
             {t("yourPersonalAICompanion")}
-          </p>
+          </motion.p>
           
-          <LanguageSelectionCard
-            nativeLanguage={nativeLanguage}
-            targetLanguage={targetLanguage}
-            setNativeLanguage={setNativeLanguage}
-            setTargetLanguage={setTargetLanguage}
-            hasStudyMaterials={studyMaterialsAvailable}
-            handleLanguageSelection={handleLanguageSelection}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <LanguageSelectionCard
+              nativeLanguage={nativeLanguage}
+              targetLanguage={targetLanguage}
+              setNativeLanguage={setNativeLanguage}
+              setTargetLanguage={setTargetLanguage}
+              hasStudyMaterials={studyMaterialsAvailable}
+              handleLanguageSelection={handleLanguageSelection}
+            />
+          </motion.div>
           
-          <HomeActions 
-            isSignedIn={isSignedIn}
-            onLoginClick={() => {
-              setIsLogin(true);
-              setIsAuthDialogOpen(true);
-            }}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <HomeActions 
+              isSignedIn={isSignedIn}
+              onLoginClick={() => {
+                setIsLogin(true);
+                setIsAuthDialogOpen(true);
+              }}
+            />
+          </motion.div>
           
-          <HomeFooter />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <HomeFooter />
+          </motion.div>
         </motion.div>
       </div>
 
