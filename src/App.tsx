@@ -11,10 +11,9 @@ import Progress from "@/pages/Progress";
 import Accuracy from "@/pages/Accuracy";
 import Profile from "@/pages/Profile";
 import PronunciationPractice from "@/pages/PronunciationPractice";
-import Vocabulary from "@/pages/Vocabulary";
-import Classroom from "@/pages/Classroom";
-import PremiumVoice from "@/pages/PremiumVoice";
-import Compliance from "@/pages/Compliance";
+import VoiceChat from "@/pages/VoiceChat";
+import Certificates from "@/pages/Certificates";
+import Settings from "@/pages/Settings";
 
 function App() {
   return (
@@ -23,16 +22,13 @@ function App() {
         <Routes>
           <Route path="/" element={<NewLandingPage />} />
           <Route path="/practice" element={<Practice />} />
-          <Route path="/lessons" element={<Lessons />} />
-          <Route path="/analysis" element={<TranscriptAnalysis />} />
-          <Route path="/progress" element={<Progress />} />
+          <Route path="/voice-chat" element={<VoiceChat />} />
+          <Route path="/pronunciation-practice" element={<PronunciationPractice />} />
           <Route path="/accuracy" element={<Accuracy />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/pronunciation" element={<PronunciationPractice />} />
-          <Route path="/vocabulary" element={<Vocabulary />} />
-          <Route path="/classroom" element={<Classroom />} />
-          <Route path="/premium-voice" element={<PremiumVoice />} />
-          <Route path="/compliance" element={<Compliance />} />
+          <Route path="/certificates" element={<Certificates />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/analysis" element={<TranscriptAnalysis />} />
         </Routes>
         <Toaster />
       </NewLayout>
