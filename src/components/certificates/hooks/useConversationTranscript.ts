@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, typedSupabase } from "@/integrations/supabase/client";
 
 interface TranscriptState {
   userMessages: any[];
@@ -31,7 +31,7 @@ export const useConversationTranscript = (attemptId: string | null) => {
     if (!attemptId) return null;
     
     try {
-      const { data: transcript, error } = await supabase
+      const { data: transcript, error } = await (typedSupabase as any)
         .from('certification_transcripts')
         .insert([{
           attempt_id: attemptId,

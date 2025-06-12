@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, typedSupabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { StudentMetricsTable } from './components/StudentMetricsTable';
@@ -29,7 +29,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
 
     try {
       // Query student_metrics joined with classroom_memberships and profiles
-      const { data: metricsData, error: metricsError } = await supabase
+      const { data: metricsData, error: metricsError } = await (typedSupabase as any)
         .from('student_metrics')
         .select(`
           *,

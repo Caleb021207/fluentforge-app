@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { LanguageMetrics } from "@/types/chat";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, typedSupabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 import { AlertCircle, RefreshCw } from "lucide-react";
@@ -54,7 +53,7 @@ const AuthenticatedAccuracy = () => {
       setIsRefreshing(true);
       
       // Try to call the RPC function using raw SQL since types aren't updated yet
-      const { error: rpcError } = await supabase.rpc('update_student_language_aggregate_metrics', {
+      const { error: rpcError } = await (typedSupabase as any).rpc('update_student_language_aggregate_metrics', {
         target_student_id: user.id
       });
       
@@ -63,8 +62,8 @@ const AuthenticatedAccuracy = () => {
       }
       
       // Query the student_language_metrics table directly for historical data
-      const { data: metricsData, error: metricsError } = await supabase
-        .from('student_language_metrics' as any)
+      const { data: metricsData, error: metricsError } = await (typedSupabase as any)
+        .from('student_language_metrics')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
@@ -73,7 +72,7 @@ const AuthenticatedAccuracy = () => {
       if (metricsError) {
         console.warn("Failed to fetch individual metrics:", metricsError);
         // Fallback to aggregate data
-        const { data: aggData, error: aggError } = await supabase
+        const { data: aggData, error: aggError } = await (typedSupabase as any)
           .from('student_metrics')
           .select('avg_grammar_accuracy, avg_conversation_complexity, language_metrics_count')
           .eq('student_id', user.id)
@@ -83,11 +82,11 @@ const AuthenticatedAccuracy = () => {
           throw aggError;
         }
         
-        if (aggData && aggData.language_metrics_count > 0) {
+        if (aggData && (aggData as any).language_metrics_count > 0) {
           const aggregateMetric = {
-            grammarAccuracy: aggData.avg_grammar_accuracy || 0,
-            conversationComplexity: aggData.avg_conversation_complexity || 0,
-            messageCount: aggData.language_metrics_count || 0,
+            grammarAccuracy: (aggData as any).avg_grammar_accuracy || 0,
+            conversationComplexity: (aggData as any).avg_conversation_complexity || 0,
+            messageCount: (aggData as any).language_metrics_count || 0,
             pronunciationAccuracy: 0,
             timestamp: Date.now()
           };
@@ -155,7 +154,7 @@ const AuthenticatedAccuracy = () => {
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       
       // Get recent practice session messages
-      const { data: recentPractice, error: practiceError } = await supabase
+      const { data: recentPractice, error: practiceError } = await (typedSupabase as any)
         .from('api_calls_tracking')
         .select('*')
         .eq('user_id', user.id)

@@ -9,13 +9,249 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      api_calls_tracking: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          service: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          service: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          service?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      certification_attempts: {
+        Row: {
+          certification_type: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          level: string
+          score: number
+          user_id: string
+        }
+        Insert: {
+          certification_type: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          level: string
+          score: number
+          user_id: string
+        }
+        Update: {
+          certification_type?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          level?: string
+          score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      classroom_memberships: {
+        Row: {
+          classroom_id: string
+          id: string
+          joined_at: string
+          student_id: string
+        }
+        Insert: {
+          classroom_id: string
+          id?: string
+          joined_at?: string
+          student_id: string
+        }
+        Update: {
+          classroom_id?: string
+          id?: string
+          joined_at?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classrooms: {
+        Row: {
+          created_at: string
+          id: string
+          join_code: string
+          name: string
+          teacher_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          join_code: string
+          name: string
+          teacher_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          join_code?: string
+          name?: string
+          teacher_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          learning_goal: string | null
+          target_date: string | null
+          target_level: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          learning_goal?: string | null
+          target_date?: string | null
+          target_level?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          learning_goal?: string | null
+          target_date?: string | null
+          target_level?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      student_language_metrics: {
+        Row: {
+          conversation_complexity: number | null
+          created_at: string
+          grammar_accuracy: number | null
+          id: string
+          message_count: number | null
+          pronunciation_accuracy: number | null
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          conversation_complexity?: number | null
+          created_at?: string
+          grammar_accuracy?: number | null
+          id?: string
+          message_count?: number | null
+          pronunciation_accuracy?: number | null
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          conversation_complexity?: number | null
+          created_at?: string
+          grammar_accuracy?: number | null
+          id?: string
+          message_count?: number | null
+          pronunciation_accuracy?: number | null
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_metrics: {
+        Row: {
+          avg_conversation_complexity: number | null
+          avg_grammar_accuracy: number | null
+          created_at: string
+          id: string
+          language_metrics_count: number | null
+          last_activity: string | null
+          premium_voice_calls: number | null
+          student_id: string
+          text_practice_calls: number | null
+          updated_at: string
+        }
+        Insert: {
+          avg_conversation_complexity?: number | null
+          avg_grammar_accuracy?: number | null
+          created_at?: string
+          id?: string
+          language_metrics_count?: number | null
+          last_activity?: string | null
+          premium_voice_calls?: number | null
+          student_id: string
+          text_practice_calls?: number | null
+          updated_at?: string
+        }
+        Update: {
+          avg_conversation_complexity?: number | null
+          avg_grammar_accuracy?: number | null
+          created_at?: string
+          id?: string
+          language_metrics_count?: number | null
+          last_activity?: string | null
+          premium_voice_calls?: number | null
+          student_id?: string
+          text_practice_calls?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      class_student_metrics: {
+        Row: {
+          classroom_id: string | null
+          last_activity: string | null
+          premium_voice_calls: number | null
+          student_email: string | null
+          student_id: string | null
+          student_name: string | null
+          text_practice_calls: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_memberships_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      update_student_language_aggregate_metrics: {
+        Args: { target_student_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

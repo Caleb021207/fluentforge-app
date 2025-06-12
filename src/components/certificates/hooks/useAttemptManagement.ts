@@ -1,13 +1,13 @@
 
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, typedSupabase } from "@/integrations/supabase/client";
 
 export const useAttemptManagement = () => {
   const [attemptId, setAttemptId] = useState<string | null>(null);
 
   const createAttempts = async (userId: string) => {
     try {
-      const { data: speakingAttempt, error: speakingError } = await supabase
+      const { data: speakingAttempt, error: speakingError } = await (typedSupabase as any)
         .from('certification_attempts')
         .insert([{
           certification_type: 'speaking',
@@ -20,7 +20,7 @@ export const useAttemptManagement = () => {
 
       if (speakingError) throw speakingError;
 
-      const { data: listeningAttempt, error: listeningError } = await supabase
+      const { data: listeningAttempt, error: listeningError } = await (typedSupabase as any)
         .from('certification_attempts')
         .insert([{
           certification_type: 'listening',
@@ -55,7 +55,7 @@ export const useAttemptManagement = () => {
     try {
       const updates = [];
       
-      updates.push(supabase
+      updates.push((typedSupabase as any)
         .from('certification_attempts')
         .update({
           score: speakingScore,
@@ -65,7 +65,7 @@ export const useAttemptManagement = () => {
         .eq('id', speakingAttemptId)
       );
       
-      updates.push(supabase
+      updates.push((typedSupabase as any)
         .from('certification_attempts')
         .update({
           score: listeningScore,
