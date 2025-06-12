@@ -273,6 +273,53 @@ export type Database = {
         }
         Relationships: []
       }
+      progress_milestones: {
+        Row: {
+          achievement_date: string
+          created_at: string
+          current_value: number | null
+          description: string | null
+          id: string
+          improvement_percentage: number | null
+          milestone_type: string
+          previous_value: number | null
+          transcript_id: string | null
+          user_id: string
+        }
+        Insert: {
+          achievement_date?: string
+          created_at?: string
+          current_value?: number | null
+          description?: string | null
+          id?: string
+          improvement_percentage?: number | null
+          milestone_type: string
+          previous_value?: number | null
+          transcript_id?: string | null
+          user_id: string
+        }
+        Update: {
+          achievement_date?: string
+          created_at?: string
+          current_value?: number | null
+          description?: string | null
+          id?: string
+          improvement_percentage?: number | null
+          milestone_type?: string
+          previous_value?: number | null
+          transcript_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progress_milestones_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "transcript_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       school_districts: {
         Row: {
           code: string
@@ -366,6 +413,137 @@ export type Database = {
           student_id?: string
           text_practice_calls?: number | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      study_recommendations: {
+        Row: {
+          created_at: string
+          difficulty_level: string | null
+          estimated_time_investment: string | null
+          id: string
+          priority_level: number
+          recommendation_text: string
+          resources: Json | null
+          skill_area: string
+          status: string
+          transcript_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty_level?: string | null
+          estimated_time_investment?: string | null
+          id?: string
+          priority_level?: number
+          recommendation_text: string
+          resources?: Json | null
+          skill_area: string
+          status?: string
+          transcript_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          difficulty_level?: string | null
+          estimated_time_investment?: string | null
+          id?: string
+          priority_level?: number
+          recommendation_text?: string
+          resources?: Json | null
+          skill_area?: string
+          status?: string
+          transcript_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_recommendations_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "transcript_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transcript_analyses: {
+        Row: {
+          analysis_status: string
+          cefr_level: string | null
+          created_at: string
+          detailed_feedback: string | null
+          file_name: string
+          file_type: string
+          file_url: string | null
+          id: string
+          listening_score: number | null
+          overall_score: number | null
+          progress_insights: string | null
+          raw_extracted_data: Json | null
+          reading_score: number | null
+          recommendations: string[] | null
+          speaking_score: number | null
+          strengths: string[] | null
+          test_date: string | null
+          test_provider: string | null
+          updated_at: string
+          upload_date: string
+          user_id: string
+          weaknesses: string[] | null
+          writing_score: number | null
+        }
+        Insert: {
+          analysis_status?: string
+          cefr_level?: string | null
+          created_at?: string
+          detailed_feedback?: string | null
+          file_name: string
+          file_type: string
+          file_url?: string | null
+          id?: string
+          listening_score?: number | null
+          overall_score?: number | null
+          progress_insights?: string | null
+          raw_extracted_data?: Json | null
+          reading_score?: number | null
+          recommendations?: string[] | null
+          speaking_score?: number | null
+          strengths?: string[] | null
+          test_date?: string | null
+          test_provider?: string | null
+          updated_at?: string
+          upload_date?: string
+          user_id: string
+          weaknesses?: string[] | null
+          writing_score?: number | null
+        }
+        Update: {
+          analysis_status?: string
+          cefr_level?: string | null
+          created_at?: string
+          detailed_feedback?: string | null
+          file_name?: string
+          file_type?: string
+          file_url?: string | null
+          id?: string
+          listening_score?: number | null
+          overall_score?: number | null
+          progress_insights?: string | null
+          raw_extracted_data?: Json | null
+          reading_score?: number | null
+          recommendations?: string[] | null
+          speaking_score?: number | null
+          strengths?: string[] | null
+          test_date?: string | null
+          test_provider?: string | null
+          updated_at?: string
+          upload_date?: string
+          user_id?: string
+          weaknesses?: string[] | null
+          writing_score?: number | null
         }
         Relationships: []
       }

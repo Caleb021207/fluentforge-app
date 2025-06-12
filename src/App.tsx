@@ -1,59 +1,41 @@
-
-import React from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet
-} from "react-router-dom";
-import Layout from "@/components/Layout";
-import Index from "@/pages/Index";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import NewLayout from "@/components/layout/NewLayout";
+import NewLandingPage from "@/components/layout/NewLandingPage";
 import Practice from "@/pages/Practice";
-import VoiceChat from "@/pages/VoiceChat";
-import PremiumVoiceChat from "@/pages/PremiumVoiceChat";
-import SpanishAdvancedVoiceChat from "@/pages/SpanishAdvancedVoiceChat";
-import PortugueseAdvancedVoiceChat from "@/pages/PortugueseAdvancedVoiceChat";
+import Lessons from "@/pages/Lessons";
+import TranscriptAnalysis from "@/pages/TranscriptAnalysis";
 import Progress from "@/pages/Progress";
 import Accuracy from "@/pages/Accuracy";
 import Profile from "@/pages/Profile";
-import Certificates from "@/pages/Certificates";
-import NotFound from "@/pages/NotFound";
-import SafetyPolicy from "@/pages/SafetyPolicy";
-import TeacherClasses from "@/pages/TeacherClasses";
-import StudentClass from "@/pages/StudentClass";
-import Settings from "@/pages/Settings";
-import PronunciationPractice from "@/pages/PronunciationPractice";
-import { LocalizationProvider } from "@/context/LocalizationContext";
+import Pronunciation from "@/pages/Pronunciation";
+import Vocabulary from "@/pages/Vocabulary";
+import Classroom from "@/pages/Classroom";
+import PremiumVoice from "@/pages/PremiumVoice";
+import Compliance from "@/pages/Compliance";
 
 function App() {
   return (
-    <LocalizationProvider>
-      <RouterProvider
-        router={createBrowserRouter([
-          {
-            path: "/",
-            element: <Layout><Outlet /></Layout>,
-            errorElement: <NotFound />,
-            children: [
-              { index: true, element: <Index /> },
-              { path: "practice", element: <Practice /> },
-              { path: "voice-chat", element: <VoiceChat /> },
-              { path: "premium-voice-chat", element: <PremiumVoiceChat /> },
-              { path: "spanish-advanced-voice", element: <SpanishAdvancedVoiceChat /> },
-              { path: "portuguese-advanced-voice", element: <PortugueseAdvancedVoiceChat /> },
-              { path: "progress", element: <Progress /> },
-              { path: "accuracy", element: <Accuracy /> },
-              { path: "profile", element: <Profile /> },
-              { path: "certificates", element: <Certificates /> },
-              { path: "safety-policy", element: <SafetyPolicy /> },
-              { path: "teacher/classes", element: <TeacherClasses /> },
-              { path: "student/class", element: <StudentClass /> },
-              { path: "settings", element: <Settings /> },
-              { path: "pronunciation-practice", element: <PronunciationPractice /> }
-            ],
-          },
-        ])}
-      />
-    </LocalizationProvider>
+    <Router>
+      <NewLayout>
+        <Routes>
+          <Route path="/" element={<NewLandingPage />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/lessons" element={<Lessons />} />
+          <Route path="/analysis" element={<TranscriptAnalysis />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/accuracy" element={<Accuracy />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/pronunciation" element={<Pronunciation />} />
+          <Route path="/vocabulary" element={<Vocabulary />} />
+          <Route path="/classroom" element={<Classroom />} />
+          <Route path="/premium-voice" element={<PremiumVoice />} />
+          <Route path="/compliance" element={<Compliance />} />
+        </Routes>
+        <Toaster />
+      </NewLayout>
+    </Router>
   );
 }
 
