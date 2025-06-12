@@ -43,8 +43,7 @@ export const useClassData = () => {
         .from('classroom_memberships')
         .select(`
           classroom_id,
-          joined_at,
-          classroom_codes(id, class_name, code, teacher_id)
+          joined_at
         `)
         .eq('student_id', session.session.user.id)
         .maybeSingle();
@@ -63,15 +62,39 @@ export const useClassData = () => {
 
       console.log("Found classroom membership:", membershipData);
 
+      // Get classroom details
+      const { data: classroomData, error: classroomError } = await supabase
+        .from('classroom_codes')
+        .select(`
+          id,
+          class_name,
+          code,
+          teacher_id
+        `)
+        .eq('id', membershipData.classroom_id)
+        .maybeSingle();
+
+      if (classroomError) {
+        console.error('Classroom lookup error:', classroomError);
+        throw classroomError;
+      }
+
+      if (!classroomData) {
+        console.log("No classroom found for membership");
+        setClassData(null);
+        setIsLoading(false);
+        return;
+      }
+
       // Get teacher profile if available
       let teacherName = undefined;
       let teacherEmail = undefined;
       
-      if (membershipData.classroom_codes?.teacher_id) {
+      if (classroomData.teacher_id) {
         const { data: teacherData } = await supabase
           .from('profiles')
           .select('display_name, email')
-          .eq('id', membershipData.classroom_codes.teacher_id)
+          .eq('id', classroomData.teacher_id)
           .maybeSingle();
           
         if (teacherData) {
@@ -88,7 +111,6 @@ export const useClassData = () => {
           premium_voice_calls,
           last_activity
         `)
-        .eq('classroom_id', membershipData.classroom_id)
         .eq('student_id', session.session.user.id)
         .maybeSingle();
 
@@ -97,11 +119,11 @@ export const useClassData = () => {
       }
 
       const classInfo: ClassData = {
-        class_name: membershipData.classroom_codes.class_name,
+        class_name: classroomData.class_name,
         teacher_name: teacherName,
         teacher_email: teacherEmail,
         joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-        code: membershipData.classroom_codes.code,
+        code: classroomData.code,
         metrics: metricsData || undefined
       };
 

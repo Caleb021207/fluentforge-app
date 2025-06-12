@@ -149,43 +149,10 @@ const AuthenticatedProgress = ({ user }: AuthenticatedProgressProps) => {
     }
   }, [isOnline, user, fetchProgressData, retryCount]);
 
+  // Remove the fetchTranscripts function since certification_transcripts table doesn't exist
   useEffect(() => {
-    const fetchTranscripts = async () => {
-      if (!rawAttempts || rawAttempts.length === 0 || isOffline) return;
-      
-      const transcriptMap: Record<string, boolean> = {};
-      
-      for (const attempt of rawAttempts) {
-        if (attempt.certification_type === 'speaking' || 
-            attempt.certification_type === 'listening' || 
-            attempt.certification_type === 'fluency') {
-          try {
-            const { data, error } = await supabase
-              .from('certification_transcripts')
-              .select('id')
-              .eq('attempt_id', attempt.id)
-              .maybeSingle();
-              
-            if (error) {
-              if (!error.message.includes("permission denied for table users")) {
-                console.error("Error checking transcript for attempt", attempt.id, error);
-              }
-            }
-            
-            transcriptMap[attempt.id] = !!data;
-          } catch (err) {
-            console.error("Error in fetchTranscripts for attempt", attempt.id, err);
-          }
-        }
-      }
-      
-      console.log("Transcript map:", transcriptMap);
-      setHasTranscript(transcriptMap);
-    };
-    
-    if (isOnline) {
-      fetchTranscripts();
-    }
+    // Simply set empty transcript map since the table doesn't exist
+    setHasTranscript({});
   }, [rawAttempts, isOffline, isOnline]);
 
   const handleViewAttempt = async (attemptId: string) => {

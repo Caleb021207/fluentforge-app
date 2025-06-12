@@ -46,8 +46,12 @@ export const useChatApi = () => {
     }
   };
 
+  // Add sendMessage as an alias for compatibility
+  const sendMessage = sendChatMessage;
+
   return {
     sendChatMessage,
+    sendMessage,
     isLoading,
     trackApiCall
   };

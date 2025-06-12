@@ -77,12 +77,13 @@ export const useSessionManagement = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Create the session
+      // Create the session using the correct api_calls_tracking table structure
       await supabase
         .from('api_calls_tracking')
         .insert({
           user_id: user.id,
-          call_type: 'premium_voice'
+          service: 'premium_voice',
+          endpoint: 'session_start'
         });
 
       setSessionStatus('active');

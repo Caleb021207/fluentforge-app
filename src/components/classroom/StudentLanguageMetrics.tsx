@@ -33,18 +33,11 @@ const StudentLanguageMetrics: React.FC<StudentLanguageMetricsProps> = ({ student
         setIsLoading(true);
         setError(null);
 
-        let query = supabase
+        const { data, error } = await supabase
           .from('student_language_metrics')
           .select('grammar_accuracy, conversation_complexity, created_at')
           .eq('user_id', studentId)
           .order('created_at', { ascending: true });
-
-        // Add classroom filter if provided
-        if (classroomId) {
-          query = query.eq('classroom_id', classroomId);
-        }
-
-        const { data, error } = await query;
 
         if (error) throw error;
 

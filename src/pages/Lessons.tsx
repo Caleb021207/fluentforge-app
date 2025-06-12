@@ -22,7 +22,10 @@ const Lessons = () => {
   const { toast } = useToast();
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
   
-  const { lessons, isLoading } = useUserProgress(level);
+  const { progress, isLoading } = useUserProgress();
+  
+  // Convert progress to lessons format for compatibility
+  const lessons = unitsByLevel[level]?.flatMap(unit => unit.lessons) || [];
   
   // We can now either use the utility functions directly with the lessons array
   // or use the calculateLessonStats function for a complete stats object

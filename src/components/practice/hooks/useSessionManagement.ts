@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const useSessionManagement = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [messageCount, setMessageCount] = useState({ inputs: 0, outputs: 0 });
 
   const trackSession = async (type: string) => {
     try {
@@ -36,6 +37,8 @@ export const useSessionManagement = () => {
 
   return {
     sessionId,
+    messageCount,
+    setMessageCount,
     startSession,
     endSession
   };

@@ -20,17 +20,20 @@ export const useTeacherStatus = () => {
 
         console.log('Checking teacher role for user:', session.session.user.id);
         
-        // Using the safe_is_teacher RPC function which is SECURITY DEFINER
-        // and therefore doesn't have RLS issues
-        const { data, error } = await supabase.rpc('safe_is_teacher');
+        // Since safe_is_teacher doesn't exist, we'll check if user has created any classrooms
+        const { data, error } = await supabase
+          .from('classroom_codes')
+          .select('id')
+          .eq('teacher_id', session.session.user.id)
+          .limit(1);
         
         if (error) {
           console.error('Error checking teacher status:', error);
           throw error;
         }
 
-        console.log('Teacher role check result:', data);
-        setIsTeacher(!!data);
+        console.log('Teacher role check result:', !!data && data.length > 0);
+        setIsTeacher(!!data && data.length > 0);
       } catch (error) {
         console.error('Error checking teacher status:', error);
         setIsTeacher(false);
