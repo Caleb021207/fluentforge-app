@@ -7,7 +7,7 @@ import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import LogoutButton from "@/components/auth/LogoutButton";
-import { MessageSquare, Mic, Home, BarChart, Volume2, User as UserIcon, Settings, Brain } from "lucide-react";
+import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain } from "lucide-react";
 
 interface NewLayoutProps {
   children: React.ReactNode;
@@ -40,7 +40,6 @@ const NewLayout = ({ children }: NewLayoutProps) => {
     { label: t("textPractice") || "Text Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
     { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" /> },
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
-    { label: t("accuracy") || "Accuracy", path: "/accuracy", icon: <BarChart className="w-4 h-4" /> },
     { label: "AI Analysis", path: "/analysis", icon: <Brain className="w-4 h-4" /> },
     { label: t("profile") || "Profile", path: "/profile", icon: <UserIcon className="w-4 h-4" /> },
     { label: t("settings") || "Settings", path: "/settings", icon: <Settings className="w-4 h-4" /> },

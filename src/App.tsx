@@ -8,7 +8,6 @@ import Practice from "@/pages/Practice";
 import Lessons from "@/pages/Lessons";
 import TranscriptAnalysis from "@/pages/TranscriptAnalysis";
 import Progress from "@/pages/Progress";
-import Accuracy from "@/pages/Accuracy";
 import Profile from "@/pages/Profile";
 import PronunciationPractice from "@/pages/PronunciationPractice";
 import VoiceChat from "@/pages/VoiceChat";
@@ -23,7 +22,6 @@ function App() {
           <Route path="/practice" element={<Practice />} />
           <Route path="/voice-chat" element={<VoiceChat />} />
           <Route path="/pronunciation-practice" element={<PronunciationPractice />} />
-          <Route path="/accuracy" element={<Accuracy />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/analysis" element={<TranscriptAnalysis />} />
