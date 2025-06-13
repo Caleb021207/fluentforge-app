@@ -142,7 +142,14 @@ Return as JSON array with this exact structure:
     }
 
     const openAIData = await openAIResponse.json();
-    const generatedContent = openAIData.choices[0].message.content;
+    let generatedContent = openAIData.choices[0].message.content;
+    
+    // Remove markdown code block wrapper if present
+    if (generatedContent.startsWith('```json') && generatedContent.endsWith('```')) {
+      generatedContent = generatedContent.slice(7, -3).trim();
+    } else if (generatedContent.startsWith('```') && generatedContent.endsWith('```')) {
+      generatedContent = generatedContent.slice(3, -3).trim();
+    }
     
     // Parse the JSON response
     let recommendations;
@@ -150,6 +157,7 @@ Return as JSON array with this exact structure:
       recommendations = JSON.parse(generatedContent);
     } catch (parseError) {
       console.error('Failed to parse AI response:', generatedContent);
+      console.error('Parse error:', parseError);
       throw new Error('Invalid AI response format');
     }
 
