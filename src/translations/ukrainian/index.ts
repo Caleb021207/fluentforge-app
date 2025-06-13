@@ -6,7 +6,6 @@ import practiceTranslations from "./practice";
 import languageSelectionTranslations from "./language-selection";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
-import uiElementsTranslations from "./ui-elements";
 import voiceChatTranslations from "./voice-chat";
 
 // Combine all the translation categories
@@ -17,7 +16,6 @@ const ukrainianTranslations: TranslationRecord = {
   ...languageSelectionTranslations,
   ...authTranslations,
   ...languagesTranslations,
-  ...uiElementsTranslations,
   ...voiceChatTranslations,
 };
 
