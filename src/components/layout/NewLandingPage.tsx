@@ -79,23 +79,27 @@ const NewLandingPage: React.FC<NewLandingPageProps> = ({ onPlayWelcomeAnimation 
     }
   };
 
+  console.log('NewLandingPage rendering with onPlayWelcomeAnimation:', !!onPlayWelcomeAnimation);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Triangle Button for Animation Replay */}
-      {onPlayWelcomeAnimation && (
-        <Button
-          variant="default"
-          size="sm"
-          onClick={() => {
-            console.log('Triangle button clicked');
+      {/* Triangle Button for Animation Replay - Always visible for debugging */}
+      <Button
+        variant="default"
+        size="lg"
+        onClick={() => {
+          console.log('Play Animation button clicked');
+          if (onPlayWelcomeAnimation) {
             onPlayWelcomeAnimation();
-          }}
-          className="absolute top-4 right-4 z-20 bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg"
-        >
-          <Triangle className="h-4 w-4 mr-2" />
-          Play Animation
-        </Button>
-      )}
+          } else {
+            console.log('No onPlayWelcomeAnimation function provided');
+          }
+        }}
+        className="fixed top-4 right-4 z-50 bg-red-500 hover:bg-red-600 text-white shadow-2xl border-4 border-white"
+      >
+        <Triangle className="h-6 w-6 mr-2" />
+        PLAY ANIMATION
+      </Button>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
