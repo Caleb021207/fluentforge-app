@@ -218,9 +218,9 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
           )}
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+        <div className="mt-6 p-4 bg-card text-card-foreground rounded-lg border border-border">
           <h4 className="font-medium mb-2">What our AI can analyze:</h4>
-          <ul className="text-sm text-gray-600 space-y-1">
+          <ul className="text-sm space-y-1">
             <li>• Overall scores and CEFR levels</li>
             <li>• Individual skill breakdowns (Reading, Writing, Speaking, Listening)</li>
             <li>• Strengths and areas for improvement</li>
