@@ -19,38 +19,11 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
   const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
   const [latestTestScore, setLatestTestScore] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [debugInfo, setDebugInfo] = useState<any>(null);
-
   useEffect(() => {
     const fetchStudentData = async () => {
       setIsLoading(true);
       try {
         console.log('Fetching student data for:', profile.id);
-
-        // Debug: Check raw student_enrollments table
-        const { data: rawEnrollments } = await supabase
-          .from('student_enrollments')
-          .select('*')
-          .eq('student_id', profile.id);
-
-        console.log('Raw enrollments:', rawEnrollments);
-
-        // Debug: Check what classes exist and their teacher assignments
-        const { data: allClasses } = await supabase
-          .from('classes')
-          .select(`
-            id, 
-            name, 
-            class_code, 
-            teacher_id,
-            teacher:profiles!classes_teacher_id_fkey (
-              display_name,
-              email
-            )
-          `)
-          .limit(10);
-
-        console.log('All classes in system:', allClasses);
 
         const [enrollmentData, gradeData, usageData] = await Promise.all([
           getStudentEnrollments(profile.id),
@@ -58,21 +31,15 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           getStudentUsageMetrics(profile.id)
         ]);
 
-        console.log('Processed enrollment data:', enrollmentData);
-        console.log('Grade data:', gradeData);
-        console.log('Usage data:', usageData);
-
-        setEnrollments(enrollmentData);
-        setGrades(gradeData);
-        setUsageMetrics(usageData);
-
-        setDebugInfo({
-          rawEnrollments: rawEnrollments?.length || 0,
-          processedEnrollments: enrollmentData?.length || 0,
-          allClassesCount: allClasses?.length || 0,
-          classesWithTeachers: allClasses?.filter(c => c.teacher_id)?.length || 0,
-          studentId: profile.id
+        console.log('Student data loaded:', {
+          enrollments: enrollmentData?.length || 0,
+          grades: gradeData?.length || 0,
+          usage: usageData?.length || 0
         });
+
+        setEnrollments(enrollmentData || []);
+        setGrades(gradeData || []);
+        setUsageMetrics(usageData || []);
 
         // Fetch most recent transcript analysis
         const { data: latestAnalysis } = await supabase
@@ -111,37 +78,6 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
     <div className="space-y-6">
       {/* Test Scores - Top Priority */}
       <TestScoreCard testScore={latestTestScore} />
-
-      {/* Debug Information for Enrollment Issues */}
-      {debugInfo && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-blue-600">
-              <AlertCircle className="h-5 w-5" />
-              Class Enrollment Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-sm space-y-2">
-              <p>Student ID: {debugInfo.studentId}</p>
-              <p>Raw enrollments found: {debugInfo.rawEnrollments}</p>
-              <p>Processed enrollments: {debugInfo.processedEnrollments}</p>
-              <p>Total classes in system: {debugInfo.allClassesCount}</p>
-              <p>Classes with assigned teachers: {debugInfo.classesWithTeachers}</p>
-              {enrollments.length > 0 ? (
-                <p className="text-green-700 font-medium">✅ Enrollment data found and processed successfully!</p>
-              ) : (
-                <p className="text-yellow-700">
-                  {debugInfo.rawEnrollments > 0 
-                    ? "Enrollments exist but there may be an issue with teacher assignments or data processing."
-                    : "No enrollments found. You may need to use a class code to join a class."
-                  }
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Student Overview */}
       <Card>
@@ -242,9 +178,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                 <div key={enrollment.id} className="border rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="space-y-2">
-                      <h4 className="font-medium">{enrollment.class_info?.name}</h4>
+                      <h4 className="font-medium">{enrollment.class_info?.name || 'Unnamed Class'}</h4>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{enrollment.class_info?.subject?.name || 'Subject not assigned'}</span>
+                        <span>{enrollment.class_info?.subject?.name || 'No Subject'}</span>
                         {enrollment.class_info?.period && (
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
@@ -264,8 +200,8 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                         </div>
                       )}
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">{enrollment.class_info?.class_code}</Badge>
-                        <Badge variant="secondary">{enrollment.class_info?.academic_year}</Badge>
+                        <Badge variant="outline">{enrollment.class_info?.class_code || 'No Code'}</Badge>
+                        <Badge variant="secondary">{enrollment.class_info?.academic_year || 'Current Year'}</Badge>
                       </div>
                     </div>
                     {enrollment.final_grade && (
@@ -277,10 +213,14 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">No classes enrolled</p>
-              <p className="text-sm text-muted-foreground mt-2">
-                Check the enrollment status above for more details.
-              </p>
+              <div className="space-y-3">
+                <BookOpen className="h-12 w-12 text-muted-foreground mx-auto" />
+                <h3 className="text-lg font-medium">No Classes Yet</h3>
+                <p className="text-muted-foreground">You haven't joined any classes yet.</p>
+                <p className="text-sm text-muted-foreground">
+                  Ask your teacher for a class code to get started.
+                </p>
+              </div>
             </div>
           )}
         </CardContent>

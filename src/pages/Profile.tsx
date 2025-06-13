@@ -14,6 +14,7 @@ import AdminProfile from "@/components/profile/AdminProfile";
 import DistrictProfile from "@/components/profile/DistrictProfile";
 import UserInfo from "@/components/profile/UserInfo";
 import NoProfileState from "@/components/profile/NoProfileState";
+import TestingRoleChanger from "@/components/profile/TestingRoleChanger";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -76,8 +77,16 @@ const ProfilePage = () => {
   const handleProfileUpdate = async () => {
     console.log('Profile update requested, refreshing data...');
     
-    // Simply refresh the profile data
+    // Add a small delay to ensure database changes are committed
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Refresh the profile data
     await fetchUserData(false);
+    
+    // Force a page refresh if profile still isn't showing correctly
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   if (isLoading) {
@@ -153,6 +162,11 @@ const ProfilePage = () => {
 
   return (
     <div className="space-y-6">
+      {/* Testing Role Changer - Only show in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <TestingRoleChanger onRoleChanged={handleProfileUpdate} />
+      )}
+      
       <div className="flex items-center gap-3 mb-6">
         <User className="h-8 w-8" />
         <div>
