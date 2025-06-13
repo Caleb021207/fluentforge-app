@@ -239,7 +239,7 @@ export const getStudentEnrollments = async (userId: string): Promise<StudentEnro
           *,
           subject:subjects(*),
           grade_level:grade_levels(*),
-          teacher:profiles!classes_teacher_id_fkey(display_name, email)
+          teacher:profiles!classes_teacher_id_fkey(id, display_name, email)
         )
       `)
       .eq('student_id', userId)

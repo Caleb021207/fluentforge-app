@@ -42,7 +42,11 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
           description: result.message,
         });
         setCode("");
-        onCodeProcessed();
+        
+        // Add a small delay to ensure the database has been updated
+        setTimeout(() => {
+          onCodeProcessed();
+        }, 1000);
       } else {
         toast({
           title: "Error",

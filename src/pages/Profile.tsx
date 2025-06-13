@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Loader2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,7 +24,9 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { t, currentLanguage } = useLocalization();
 
-  const fetchUserData = async () => {
+  const fetchUserData = async (showLoadingState = true) => {
+    if (showLoadingState) setIsLoading(true);
+    
     try {
       const { data: { user }, error } = await supabase.auth.getUser();
       
@@ -41,7 +42,8 @@ const ProfilePage = () => {
       if (user) {
         try {
           const extendedProfile = await getExtendedUserProfile(user.id);
-          setProfile(extendedProfile); // This can now be null without throwing an error
+          setProfile(extendedProfile);
+          console.log('Updated profile:', extendedProfile);
         } catch (error) {
           console.error('Error fetching extended profile:', error);
           toast({
@@ -55,7 +57,7 @@ const ProfilePage = () => {
       console.error('Error getting user:', error);
       setAuthError(true);
     } finally {
-      setIsLoading(false);
+      if (showLoadingState) setIsLoading(false);
     }
   };
 
@@ -67,9 +69,10 @@ const ProfilePage = () => {
     navigate("/");
   };
 
-  const handleProfileUpdate = () => {
+  const handleProfileUpdate = async () => {
     // Refresh profile data when access code is processed
-    fetchUserData();
+    console.log('Profile update requested, refreshing data...');
+    await fetchUserData(false); // Don't show loading state for refresh
   };
 
   if (isLoading) {
