@@ -87,7 +87,72 @@ const practiceTranslations: TranslationRecord = {
   practicePrompt: "こんにちは！{{targetLanguage}}の会話を練習したいと思います。{{targetLanguage}}の文法、語彙、使い方を修正してください。基本的な会話から始められますか？",
   
   // Chat placeholder
-  chatPlaceholder: "{{targetLanguage}}を練習するためのメッセージを入力してください..."
+  chatPlaceholder: "{{targetLanguage}}を練習するためのメッセージを入力してください...",
+  
+  // Pronunciation practice
+  pronunciationPractice: "発音練習",
+  improvePronunciationSkills: "的を絞った練習で発音スキルを向上させる",
+  improvePronunciationSkillsWith: "{language}での特定の練習で発音スキルを向上させる",
+  practiceExercise: "練習問題",
+  selectComplexityLevel: "複雑さレベルを選択",
+  novice: "初心者",
+  intermediate: "中級者", 
+  advanced: "上級者",
+  superior: "超上級者",
+  noviceLevelShortDescription: "基本的な表現と挨拶",
+  intermediateLevelShortDescription: "シンプルな会話と質問",
+  advancedLevelShortDescription: "複雑な文章と概念",
+  superiorLevelShortDescription: "学術的・専門的言語",
+  selectLevelToStart: "練習を始めるレベルを選択してください",
+  newPhrase: "新しいフレーズ",
+  excellent: "素晴らしい",
+  good: "良い",
+  fair: "まあまあ",
+  needsImprovement: "改善が必要",
+  excellentPronunciationFeedback: "素晴らしい！あなたの発音はとても正確です。",
+  goodPronunciationFeedback: "よくできました！あなたの発音はほぼ正確です。",
+  fairPronunciationFeedback: "まあまあです。発音を向上させるために練習を続けてください。",
+  needsImprovementPronunciationFeedback: "もっと練習が必要です。ハイライトされた単語に焦点を当ててください。",
+  failedToGeneratePhrase: "練習フレーズの生成に失敗しました。もう一度お試しください。",
+  failedToAnalyzePronunciation: "発音の分析に失敗しました。もう一度お試しください。",
+  
+  // New translations for updated pronunciation practice page
+  chooseDifficultyLevelBasedOn: "あなたの言語能力に基づいて難易度レベルを選択してください",
+  startExercise: "練習を開始",
+  generatingExercise: "練習を生成中...",
+  generatingNewPhrase: "新しいフレーズを生成中...",
+  levelDescription: "レベル説明",
+  difficultyLevel: "難易度レベル",
+  noviceLevelDescription: "シンプルな語彙での基本表現。初心者に最適です。",
+  intermediateLevelDescription: "適度な語彙での日常的なフレーズ。中級学習者に良いです。",
+  advancedLevelDescription: "高度な語彙での複雑な文章。熟練した学習者に適しています。",
+  superiorLevelDescription: "専門語彙での学術・専門的内容。",
+  pronunciationPracticeTips: "発音練習のコツ",
+  listenCarefullyTip: "話そうとする前に音声を注意深く聞く",
+  payAttentionToStressTip: "ストレスパターンとイントネーションに注意を払う",
+  practiceDifficultSoundsTip: "難しい音を何度も練習する",
+  recordYourselfTip: "自分を録音してネイティブスピーカーと比較する",
+  bePatientTip: "忍耐強く - 発音の改善には時間がかかります",
+  listenToPhrase: "フレーズを聞く",
+  playing: "再生中...",
+  topic: "トピック",
+  clickWordToHear: "単語をクリックして聞く",
+  
+  // Recording-related translations
+  clickStartToRecord: "'録音開始'をクリックして始める",
+  startRecording: "録音開始",
+  stopRecording: "録音停止",
+  yourPronunciation: "あなたの発音",
+  listeningToYou: "聞いています...",
+  loading: "読み込み中...",
+  microphoneAccessRequired: "マイクへのアクセスが必要",
+  allowMicAccess: "この機能を使用するにはマイクへのアクセスを許可してください",
+  microphoneAccessFailed: "マイクへのアクセスに失敗",
+  speechRecognitionError: "音声認識エラー",
+  speechRecognitionNotSupported: "お使いのブラウザでは音声認識がサポートされていません",
+  noSpeechDetected: "音声が検出されませんでした",
+  pleaseTryAgain: "もう一度お試しください",
+  processing: "処理中..."
 };
 
 export default practiceTranslations;
