@@ -14,6 +14,7 @@ import TeacherProfile from "@/components/profile/TeacherProfile";
 import AdminProfile from "@/components/profile/AdminProfile";
 import DistrictProfile from "@/components/profile/DistrictProfile";
 import UserInfo from "@/components/profile/UserInfo";
+import NoProfileState from "@/components/profile/NoProfileState";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -40,7 +41,7 @@ const ProfilePage = () => {
       if (user) {
         try {
           const extendedProfile = await getExtendedUserProfile(user.id);
-          setProfile(extendedProfile);
+          setProfile(extendedProfile); // This can now be null without throwing an error
         } catch (error) {
           console.error('Error fetching extended profile:', error);
           toast({
@@ -100,12 +101,13 @@ const ProfilePage = () => {
     );
   }
 
+  // Show NoProfileState when user exists but profile is null/undefined
   if (!profile) {
     return (
-      <div className="text-center py-8">
-        <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>
-        <p className="mb-6">Unable to load your profile information.</p>
-      </div>
+      <NoProfileState 
+        user={user} 
+        onProfileUpdate={handleProfileUpdate} 
+      />
     );
   }
 
