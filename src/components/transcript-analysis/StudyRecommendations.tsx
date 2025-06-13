@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Target, Clock, Star, CheckCircle, Book, Sparkles, ExternalLink, RefreshCw } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Target, Clock, Star, CheckCircle, Book, Sparkles, ExternalLink, RefreshCw, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -207,6 +208,43 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
     }
   };
 
+  const handleClearStudyPlan = async () => {
+    if (!analyses || analyses.length === 0) {
+      toast({
+        title: "No Analysis Found",
+        description: "No transcript analysis found to clear recommendations from.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const latestAnalysis = analyses[0];
+      
+      const { error } = await supabase
+        .from('study_recommendations')
+        .delete()
+        .eq('transcript_id', latestAnalysis.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Study Plan Cleared",
+        description: "All study recommendations have been deleted.",
+      });
+
+      // Refresh the page to show empty state
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error clearing study plan:', error);
+      toast({
+        title: "Clear Failed",
+        description: error.message || "Failed to clear study recommendations.",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (!recommendations || recommendations.length === 0) {
     const hasAnalyses = analyses && analyses.length > 0;
     
@@ -251,15 +289,43 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
                 AI-generated recommendations based on your transcript analysis
               </CardDescription>
             </div>
-            <Button
-              onClick={handleRegenerateStudyPlan}
-              disabled={isGenerating}
-              variant="outline"
-              size="sm"
-            >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              {isGenerating ? 'Regenerating...' : 'Regenerate Plan'}
-            </Button>
+            <div className="flex gap-2">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    disabled={isGenerating}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear Plan
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Clear Study Plan</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete all current study recommendations? This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleClearStudyPlan}>
+                      Clear Plan
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <Button
+                onClick={handleRegenerateStudyPlan}
+                disabled={isGenerating}
+                variant="outline"
+                size="sm"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                {isGenerating ? 'Regenerating...' : 'Regenerate Plan'}
+              </Button>
+            </div>
           </div>
         </CardHeader>
       </Card>
