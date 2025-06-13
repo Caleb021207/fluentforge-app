@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AnalysisCapabilitiesCard: React.FC = () => {
   return (
-    <Card>
+    <Card className="bg-card text-card-foreground">
       <CardHeader>
-        <CardTitle className="text-foreground dark:text-white">What our AI can analyze:</CardTitle>
+        <CardTitle>What our AI can analyze:</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul className="space-y-2 text-foreground dark:text-white">
+        <ul className="space-y-2">
           <li>• Overall scores and CEFR levels</li>
           <li>• Individual skill breakdowns (Reading, Writing, Speaking, Listening)</li>
           <li>• Strengths and areas for improvement</li>
