@@ -2,14 +2,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Copy, Plus, Calendar, Users, Eye, EyeOff } from "lucide-react";
+import { Plus, Users, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateAccessCode, getUserAccessCodes } from "@/utils/accessCodeUtils";
 import { useLocalization } from "@/context/LocalizationContext";
+import CodeGenerationForm from "./code-management/CodeGenerationForm";
+import CodeListDisplay from "./code-management/CodeListDisplay";
 
 interface AccessCode {
   id: string;
@@ -34,12 +32,6 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showCodes, setShowCodes] = useState(false);
-  
-  // Form state
-  const [codeType, setCodeType] = useState("");
-  const [targetName, setTargetName] = useState("");
-  const [expiresAt, setExpiresAt] = useState("");
-  const [maxUses, setMaxUses] = useState("");
   
   const { toast } = useToast();
   const { currentLanguage } = useLocalization();
@@ -81,7 +73,12 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
     }
   };
 
-  const handleGenerateCode = async () => {
+  const handleGenerateCode = async (
+    codeType: string,
+    targetName: string,
+    expiresAt: string,
+    maxUses: string
+  ) => {
     if (!codeType || !targetName) {
       toast({
         title: "Error",
@@ -95,7 +92,7 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
     try {
       const result = await generateAccessCode(
         codeType as any,
-        crypto.randomUUID(), // For now, using a random UUID as target_id
+        crypto.randomUUID(),
         targetName,
         expiresAt || undefined,
         maxUses ? parseInt(maxUses) : undefined
@@ -107,14 +104,7 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
           description: result.message,
         });
         
-        // Reset form
-        setCodeType("");
-        setTargetName("");
-        setExpiresAt("");
-        setMaxUses("");
         setShowForm(false);
-        
-        // Reload codes
         loadCodes();
       } else {
         toast({
@@ -141,20 +131,6 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
       title: "Copied",
       description: `Code ${code} copied to clipboard`,
     });
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
-  const getCodeTypeDisplay = (type: string) => {
-    switch (type) {
-      case 'district': return 'District Admin';
-      case 'school': return 'School Admin';
-      case 'teacher': return 'Teacher';
-      case 'class': return 'Class';
-      default: return type;
-    }
   };
 
   const availableTypes = getAvailableCodeTypes();
@@ -205,139 +181,22 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
         </div>
 
         {showForm && (
-          <div className="border rounded-lg p-4 space-y-4">
-            <h3 className="font-medium">Generate New Access Code</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="codeType">Code Type</Label>
-                <Select value={codeType} onValueChange={setCodeType}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select code type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="targetName">
-                  {codeType === 'district' ? 'District Name' :
-                   codeType === 'school' ? 'School Name' :
-                   codeType === 'teacher' ? 'School Name' :
-                   codeType === 'class' ? 'Class Name' : 'Name'}
-                </Label>
-                <Input
-                  id="targetName"
-                  value={targetName}
-                  onChange={(e) => setTargetName(e.target.value)}
-                  placeholder={`Enter ${codeType || 'target'} name`}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="expiresAt">Expiration Date (Optional)</Label>
-                <Input
-                  id="expiresAt"
-                  type="datetime-local"
-                  value={expiresAt}
-                  onChange={(e) => setExpiresAt(e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="maxUses">Max Uses (Optional)</Label>
-                <Input
-                  id="maxUses"
-                  type="number"
-                  value={maxUses}
-                  onChange={(e) => setMaxUses(e.target.value)}
-                  placeholder="Leave empty for unlimited"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleGenerateCode}
-                disabled={isGenerating || !codeType || !targetName}
-                className="flex items-center gap-2"
-              >
-                {isGenerating ? "Generating..." : "Generate Code"}
-              </Button>
-              <Button 
-                variant="outline"
-                onClick={() => setShowForm(false)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
+          <CodeGenerationForm
+            availableTypes={availableTypes}
+            onGenerateCode={handleGenerateCode}
+            isGenerating={isGenerating}
+            onCancel={() => setShowForm(false)}
+          />
         )}
 
         {showCodes && (
           <div className="space-y-4">
             <h3 className="font-medium">Your Generated Codes</h3>
-            {isLoading ? (
-              <p>Loading codes...</p>
-            ) : codes.length === 0 ? (
-              <p className="text-muted-foreground">No codes generated yet.</p>
-            ) : (
-              <div className="space-y-3">
-                {codes.map((code) => (
-                  <div key={code.id} className="border rounded-lg p-4 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <code className="font-mono text-lg font-bold">{code.code}</code>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyToClipboard(code.code)}
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <Badge variant={code.active ? "default" : "secondary"}>
-                        {code.active ? "Active" : "Inactive"}
-                      </Badge>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Type:</span>
-                        <p className="font-medium">{getCodeTypeDisplay(code.code_type)}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Target:</span>
-                        <p className="font-medium">{code.target_name}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Uses:</span>
-                        <p className="font-medium">
-                          {code.current_uses}{code.max_uses ? ` / ${code.max_uses}` : ' / ∞'}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Created:</span>
-                        <p className="font-medium">{formatDate(code.created_at)}</p>
-                      </div>
-                    </div>
-
-                    {code.expires_at && (
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Calendar className="h-3 w-3" />
-                        Expires: {formatDate(code.expires_at)}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            <CodeListDisplay
+              codes={codes}
+              isLoading={isLoading}
+              onCopyCode={copyToClipboard}
+            />
           </div>
         )}
       </CardContent>
