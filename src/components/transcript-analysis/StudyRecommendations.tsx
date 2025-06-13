@@ -210,18 +210,41 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
 
   const handleClearStudyPlan = async () => {
     try {
-      // Delete ALL active recommendations for the current user (not just for latest transcript)
-      const { error } = await supabase
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        console.error('User error:', userError);
+        toast({
+          title: "Authentication Error",
+          description: "Unable to get current user. Please try logging in again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log('Attempting to delete recommendations for user:', user.id);
+
+      // Delete ALL active recommendations for the current user
+      const { data: deletedData, error } = await supabase
         .from('study_recommendations')
         .delete()
+        .eq('user_id', user.id)
         .eq('status', 'active')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+        .select(); // Add select to see what was deleted
 
-      if (error) throw error;
+      console.log('Delete result:', { deletedData, error });
+
+      if (error) {
+        console.error('Delete error:', error);
+        throw error;
+      }
+
+      console.log('Successfully deleted', deletedData?.length, 'recommendations');
 
       toast({
         title: "Study Plan Cleared",
-        description: "All study recommendations have been deleted.",
+        description: `Deleted ${deletedData?.length || 0} study recommendations.`,
       });
 
       // Refresh the page to show empty state
