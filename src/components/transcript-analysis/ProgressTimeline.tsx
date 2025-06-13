@@ -41,7 +41,7 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
       case 'B1': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'A2': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       case 'A1': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
+      default: return 'bg-muted text-muted-foreground';
     }
   };
 
@@ -71,25 +71,25 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
         </CardHeader>
         <CardContent>
           {sortedAnalyses.length > 1 && (
-            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg">
+            <div className="mb-6 p-4 bg-muted/50 rounded-lg border">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-sm text-muted-foreground">First Test</div>
-                  <div className="font-bold text-foreground">{sortedAnalyses[0]?.overall_score || 'N/A'}%</div>
+                  <div className="text-sm text-muted-foreground mb-1">First Test</div>
+                  <div className="font-bold text-foreground text-lg">{sortedAnalyses[0]?.overall_score || 'N/A'}%</div>
                   <Badge className={getCEFRColor(sortedAnalyses[0]?.cefr_level)}>
                     {sortedAnalyses[0]?.cefr_level || 'N/A'}
                   </Badge>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Latest Test</div>
-                  <div className="font-bold text-foreground">{sortedAnalyses[sortedAnalyses.length - 1]?.overall_score || 'N/A'}%</div>
+                  <div className="text-sm text-muted-foreground mb-1">Latest Test</div>
+                  <div className="font-bold text-foreground text-lg">{sortedAnalyses[sortedAnalyses.length - 1]?.overall_score || 'N/A'}%</div>
                   <Badge className={getCEFRColor(sortedAnalyses[sortedAnalyses.length - 1]?.cefr_level)}>
                     {sortedAnalyses[sortedAnalyses.length - 1]?.cefr_level || 'N/A'}
                   </Badge>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Improvement</div>
-                  <div className="font-bold text-green-600 dark:text-green-400">
+                  <div className="text-sm text-muted-foreground mb-1">Improvement</div>
+                  <div className="font-bold text-primary text-lg">
                     {(() => {
                       const first = sortedAnalyses[0]?.overall_score;
                       const latest = sortedAnalyses[sortedAnalyses.length - 1]?.overall_score;
@@ -107,10 +107,10 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
 
           <div className="space-y-4">
             {sortedAnalyses.map((analysis, index) => (
-              <div key={analysis.id} className="flex items-center gap-4 p-4 border rounded-lg">
+              <div key={analysis.id} className="flex items-center gap-4 p-4 border rounded-lg bg-card">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                    <Award className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                    <Award className="h-5 w-5 text-primary" />
                   </div>
                 </div>
                 <div className="flex-grow">
@@ -146,8 +146,8 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
           <CardContent>
             <div className="space-y-3">
               {milestones.map((milestone) => (
-                <div key={milestone.id} className="flex items-center gap-4 p-3 bg-green-50 dark:bg-green-950 rounded-lg border-l-4 border-green-500">
-                  <Award className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <div key={milestone.id} className="flex items-center gap-4 p-3 bg-primary/5 rounded-lg border-l-4 border-primary">
+                  <Award className="h-5 w-5 text-primary" />
                   <div className="flex-grow">
                     <div className="font-medium text-foreground">{milestone.milestone_type.replace('_', ' ').toUpperCase()}</div>
                     {milestone.description && (
@@ -159,7 +159,7 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
                   </div>
                   {milestone.improvement_percentage && (
                     <div className="text-right">
-                      <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                      <div className="text-lg font-bold text-primary">
                         +{milestone.improvement_percentage}%
                       </div>
                     </div>
