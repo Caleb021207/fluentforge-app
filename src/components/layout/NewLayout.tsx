@@ -37,7 +37,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
 
   const navigationItems = [
     { label: t("home") || "Home", path: "/", icon: <Home className="w-4 h-4" /> },
-    { label: t("textPractice") || "Text Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
+    { label: t("practice") || "Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
     { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" /> },
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
     { label: "AI Analysis", path: "/analysis", icon: <Brain className="w-4 h-4" /> },
