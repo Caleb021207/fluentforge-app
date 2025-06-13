@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { useTTS } from "@/components/practice/chat-message/hooks/useTTS";
+import React from "react";
+import { useDynamicTTS } from "./hooks/useDynamicTTS";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Volume2, Loader2 } from "lucide-react";
@@ -12,27 +12,21 @@ interface WordByWordTTSProps {
 
 const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase, speechRate }) => {
   const { t } = useLocalization();
-  const [activeWord, setActiveWord] = useState<string | null>(null);
   const words = phrase.split(/\s+/);
   
-  const tts = useTTS({
-    text: activeWord || "",
-    language: "spanish"
+  const tts = useDynamicTTS({
+    language: "spanish",
+    speechRate
   });
   
   const handleWordClick = (word: string) => {
     if (tts.isPlaying) return;
     
-    setActiveWord(word);
-    
     // Remove punctuation for TTS
     const cleanWord = word.replace(/[.,!?;:]/g, '');
     
-    // Play the word with the given speech rate
-    // Note: This options object isn't used since we're calling tts.playAudio() directly
-    
-    // Use our TTS hook to play the word
-    tts.playAudio();
+    // Play the word immediately with the current speech rate
+    tts.playText(cleanWord);
   };
   
   return (
@@ -47,23 +41,28 @@ const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase, speechRate }) => 
       </Button>
       
       <div className="flex flex-wrap gap-2">
-        {words.map((word, index) => (
-          <Button
-            key={`${word}-${index}`}
-            variant="outline"
-            size="sm"
-            disabled={tts.isPlaying}
-            onClick={() => handleWordClick(word)}
-            className={`${
-              activeWord === word ? "bg-primary/20" : ""
-            } relative`}
-          >
-            {word}
-            {activeWord === word && tts.isPlaying && (
-              <Loader2 className="h-3 w-3 absolute -top-1 -right-1 animate-spin" />
-            )}
-          </Button>
-        ))}
+        {words.map((word, index) => {
+          const cleanWord = word.replace(/[.,!?;:]/g, '');
+          const isCurrentlyPlaying = tts.currentText === cleanWord && tts.isPlaying;
+          
+          return (
+            <Button
+              key={`${word}-${index}`}
+              variant="outline"
+              size="sm"
+              disabled={tts.isPlaying}
+              onClick={() => handleWordClick(word)}
+              className={`${
+                isCurrentlyPlaying ? "bg-primary/20" : ""
+              } relative`}
+            >
+              {word}
+              {isCurrentlyPlaying && (
+                <Loader2 className="h-3 w-3 absolute -top-1 -right-1 animate-spin" />
+              )}
+            </Button>
+          );
+        })}
       </div>
     </div>
   );

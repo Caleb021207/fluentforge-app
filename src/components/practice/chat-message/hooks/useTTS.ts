@@ -6,9 +6,10 @@ import type { TTSOptions } from "@/utils/tts/types";
 interface UseTTSOptions {
   text: string;
   language: string;
+  speechRate?: number;
 }
 
-export const useTTS = ({ text, language }: UseTTSOptions) => {
+export const useTTS = ({ text, language, speechRate = 1.0 }: UseTTSOptions) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -20,6 +21,7 @@ export const useTTS = ({ text, language }: UseTTSOptions) => {
       await playTTS({
         text,
         language,
+        speechRate,
         onStart: () => setIsLoading(false),
         onEnd: () => setIsPlaying(false),
         onError: (error) => {

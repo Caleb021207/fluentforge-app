@@ -6,9 +6,10 @@ import { playTTS } from "@/utils/tts";
 
 interface UseVoiceTTSProps {
   practiceLanguage: string;
+  speechRate?: number;
 }
 
-export const useVoiceTTS = ({ practiceLanguage }: UseVoiceTTSProps) => {
+export const useVoiceTTS = ({ practiceLanguage, speechRate = 1.0 }: UseVoiceTTSProps) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const { toast } = useToast();
   const { t } = useLocalization();
@@ -27,6 +28,7 @@ export const useVoiceTTS = ({ practiceLanguage }: UseVoiceTTSProps) => {
     playTTS({
       text: text,
       language: practiceLanguage.toLowerCase(),
+      speechRate: speechRate,
       useMetaMms: false, // Use Azure as primary TTS provider
       onStart: () => {
         console.log("TTS started with Azure");

@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, language, useMetaMms } = await req.json();
+    const { text, language, speechRate = 1.0, useMetaMms } = await req.json();
     
     if (!text) {
       throw new Error('Text is required');
@@ -49,7 +49,8 @@ serve(async (req) => {
           audioBuffer = await textToSpeechAzure(
             text, 
             voiceSettings.voiceName,
-            voiceSettings.languageCode
+            voiceSettings.languageCode,
+            speechRate
           );
         } catch (azureError) {
           console.error('Azure TTS also failed:', azureError);
@@ -64,7 +65,8 @@ serve(async (req) => {
         audioBuffer = await textToSpeechAzure(
           text, 
           voiceSettings.voiceName,
-          voiceSettings.languageCode
+          voiceSettings.languageCode,
+          speechRate
         );
       } catch (azureError) {
         console.error('Azure TTS failed:', azureError);

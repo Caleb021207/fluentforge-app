@@ -36,15 +36,21 @@ export async function getAzureToken(): Promise<string> {
 /**
  * Convert text to speech with Azure
  */
-export async function textToSpeechAzure(text: string, voice: string, language: string): Promise<ArrayBuffer> {
+export async function textToSpeechAzure(text: string, voice: string, language: string, speechRate: number = 1.0): Promise<ArrayBuffer> {
   const AZURE_REGION = Deno.env.get('AZURE_REGION') || 'eastus';
   const token = await getAzureToken();
   
-  // Prepare SSML document
+  // Convert speech rate to percentage for SSML
+  const ratePercentage = Math.round((speechRate - 1) * 100);
+  const rateString = ratePercentage >= 0 ? `+${ratePercentage}%` : `${ratePercentage}%`;
+  
+  // Prepare SSML document with speech rate
   const ssml = `
     <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${language}">
       <voice name="${voice}">
-        ${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')}
+        <prosody rate="${rateString}">
+          ${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')}
+        </prosody>
       </voice>
     </speak>
   `;

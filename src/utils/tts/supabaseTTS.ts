@@ -12,6 +12,7 @@ import type { TTSOptions } from "./types";
 export const playTTS = async ({
   text,
   language,
+  speechRate = 1.0,
   useMetaMms = false,
   onStart,
   onEnd,
@@ -45,6 +46,7 @@ export const playTTS = async ({
       body: {
         text,
         language,
+        speechRate,
         useMetaMms: usesMetaMms
       },
     });
@@ -80,7 +82,7 @@ export const playTTS = async ({
 /**
  * Preload TTS audio for future use
  */
-export const preloadTTS = async (text: string, language: string, useMetaMms = false) => {
+export const preloadTTS = async (text: string, language: string, speechRate = 1.0, useMetaMms = false) => {
   if (!text || text.trim() === "") return;
 
   if (ttsCache.has(text, language)) {
@@ -97,6 +99,7 @@ export const preloadTTS = async (text: string, language: string, useMetaMms = fa
       body: {
         text,
         language,
+        speechRate,
         useMetaMms: usesMetaMms
       },
     });

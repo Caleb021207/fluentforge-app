@@ -21,7 +21,10 @@ const PhraseDisplay: React.FC<PhraseDisplayProps> = ({
 }) => {
   const { t } = useLocalization();
   const [isPlaying, setIsPlaying] = React.useState(false);
-  const { speakWithAzureTTS, isSpeaking } = useVoiceTTS({ practiceLanguage: "spanish" });
+  const { speakWithAzureTTS, isSpeaking } = useVoiceTTS({ 
+    practiceLanguage: "spanish",
+    speechRate 
+  });
 
   const handlePlayAudio = () => {
     if (!isSpeaking) {
