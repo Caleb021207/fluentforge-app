@@ -7,10 +7,10 @@ const AnalysisCapabilitiesCard: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="!text-foreground">What our AI can analyze:</CardTitle>
+        <CardTitle className="text-palavox-primary">What our AI can analyze:</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul className="space-y-2 !text-foreground">
+        <ul className="space-y-2 text-palavox-primary">
           <li>• Overall scores and CEFR levels</li>
           <li>• Individual skill breakdowns (Reading, Writing, Speaking, Listening)</li>
           <li>• Strengths and areas for improvement</li>
