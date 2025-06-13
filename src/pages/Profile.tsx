@@ -14,7 +14,7 @@ import AdminProfile from "@/components/profile/AdminProfile";
 import DistrictProfile from "@/components/profile/DistrictProfile";
 import UserInfo from "@/components/profile/UserInfo";
 import NoProfileState from "@/components/profile/NoProfileState";
-import TestingRoleChanger from "@/components/profile/TestingRoleChanger";
+
 
 const ProfilePage = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -162,11 +162,6 @@ const ProfilePage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Testing Role Changer - Only show in development */}
-      {process.env.NODE_ENV === 'development' && (
-        <TestingRoleChanger onRoleChanged={handleProfileUpdate} />
-      )}
-      
       <div className="flex items-center gap-3 mb-6">
         <User className="h-8 w-8" />
         <div>
