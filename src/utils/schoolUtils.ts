@@ -264,6 +264,7 @@ export const getAdminSchoolData = async (userId: string): Promise<AdminSchoolDat
       total_classes: classes?.length || 0,
       total_teachers: teachers?.length || 0,
       total_students: totalEnrollments,
+      avg_certification_score: avgCertificationScore,
       certification_stats: certStats || []
     };
   } catch (error) {

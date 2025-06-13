@@ -58,10 +58,8 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
     );
   }
 
-  // Calculate average certification score from school certification stats
-  const averageCertScore = schoolData.certification_stats.length > 0
-    ? schoolData.certification_stats.reduce((sum, stat) => sum + (stat.avg_score || 0), 0) / schoolData.certification_stats.length
-    : 0;
+  // Use the calculated average certification score from transcript analyses
+  const averageCertScore = schoolData.avg_certification_score;
 
   const totalEnrollments = schoolData.total_students;
 

@@ -171,6 +171,7 @@ export interface AdminSchoolData {
   total_classes: number;
   total_teachers: number;
   total_students: number;
+  avg_certification_score: number;
   certification_stats: SchoolCertificationStats[];
 }
 
