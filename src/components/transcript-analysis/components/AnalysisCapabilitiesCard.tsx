@@ -7,7 +7,7 @@ const AnalysisCapabilitiesCard: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="!text-foreground">What our AI can analyze:</CardTitle>
+        <CardTitle className="text-foreground">What our AI can analyze:</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -16,7 +16,7 @@ const AnalysisCapabilitiesCard: React.FC = () => {
               <CheckCircle className="h-4 w-4 text-primary" />
               Strengths
             </h4>
-            <ul className="space-y-2 text-muted-foreground">
+            <ul className="space-y-2 text-foreground">
               <li>• Pronunciation</li>
               <li>• Oral Communication</li>
             </ul>
@@ -27,7 +27,7 @@ const AnalysisCapabilitiesCard: React.FC = () => {
               <TrendingUp className="h-4 w-4 text-primary" />
               Areas for Improvement
             </h4>
-            <ul className="space-y-2 text-muted-foreground">
+            <ul className="space-y-2 text-foreground">
               <li>• Reading Comprehension</li>
               <li>• Listening Comprehension</li>
               <li>• Written Expression</li>
