@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { ExtendedUserProfile, AdminSchoolData, DistrictSchoolData, StudentEnrollment, StudentGrade, StudentUsageMetrics, TeacherClassData } from "@/types/school";
 
@@ -7,7 +6,8 @@ import { ExtendedUserProfile, AdminSchoolData, DistrictSchoolData, StudentEnroll
  */
 export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUserProfile | null> => {
   try {
-    const { data: profile, error } = await supabase
+    // First get the basic profile
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select(`
         *,
@@ -22,8 +22,27 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
           principal_name,
           created_at,
           updated_at
-        ),
-        district_user:district_users(
+        )
+      `)
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Error fetching profile:', profileError);
+      return null;
+    }
+
+    if (!profile) {
+      console.log('No profile found for user:', userId);
+      return null;
+    }
+
+    // If the user has a district role, also fetch district information
+    let districtInfo = null;
+    if (profile.role === 'district') {
+      const { data: districtUser, error: districtError } = await supabase
+        .from('district_users')
+        .select(`
           district_id,
           role,
           district:school_districts(
@@ -31,17 +50,22 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
             name,
             code
           )
-        )
-      `)
-      .eq('id', userId)
-      .maybeSingle();
+        `)
+        .eq('user_id', userId)
+        .maybeSingle();
 
-    if (error) {
-      console.error('Error fetching extended profile:', error);
-      return null;
+      if (!districtError && districtUser) {
+        districtInfo = districtUser;
+      }
     }
 
-    return profile as ExtendedUserProfile;
+    // Combine the profile with district info if available
+    const extendedProfile = {
+      ...profile,
+      district_user: districtInfo ? [districtInfo] : null
+    } as ExtendedUserProfile;
+
+    return extendedProfile;
   } catch (error) {
     console.error('Error in getExtendedUserProfile:', error);
     return null;
