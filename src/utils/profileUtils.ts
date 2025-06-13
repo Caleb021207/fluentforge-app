@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { DataCache } from "./cacheUtils";
+import { ExtendedUserProfile } from "@/types/school";
 
 // Cache instance
 const cache = DataCache.getInstance();
@@ -29,6 +30,7 @@ export const ensureUserProfile = async (userId: string) => {
           learning_goal: '',
           target_level: 'B2',
           target_date: null,
+          role: 'student', // Default role
         });
 
       if (insertError) {
@@ -119,39 +121,6 @@ export const updateUserProfile = async (userId: string, updates: any) => {
 };
 
 /**
- * Retry wrapper for database operations
- */
-const withRetry = async <T>(
-  operation: () => Promise<T>, 
-  maxRetries = 3,
-  delay = 1000
-): Promise<T> => {
-  let lastError: Error | null = null;
-  
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await operation();
-    } catch (error) {
-      lastError = error as Error;
-      
-      // If this isn't a network error, don't retry
-      if (!(error instanceof Error) || !error.message.includes('network')) {
-        throw error;
-      }
-      
-      console.warn(`Retry attempt ${attempt + 1} after error:`, error);
-      
-      // Exponential backoff
-      if (attempt < maxRetries - 1) {
-        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt)));
-      }
-    }
-  }
-  
-  throw lastError;
-};
-
-/**
  * Clear all cache for a user
  */
 export const clearUserCache = (userId: string) => {
@@ -159,39 +128,22 @@ export const clearUserCache = (userId: string) => {
 };
 
 /**
- * Checks if a user has a specific role based on classroom ownership
+ * Checks if a user has a specific role
  */
-export const checkUserRole = async (userId: string, role: 'student' | 'teacher'): Promise<boolean> => {
+export const checkUserRole = async (userId: string, role: 'student' | 'teacher' | 'admin'): Promise<boolean> => {
   try {
-    if (role === 'teacher') {
-      // Check if user has created any classrooms
-      const { data, error } = await supabase
-        .from('classroom_codes')
-        .select('id')
-        .eq('teacher_id', userId)
-        .limit(1);
-        
-      if (error) {
-        console.error('Error checking teacher role:', error);
-        return false;
-      }
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
       
-      return !!data && data.length > 0;
-    } else {
-      // For students, check if they're in any classroom
-      const { data, error } = await supabase
-        .from('classroom_memberships')
-        .select('id')
-        .eq('student_id', userId)
-        .limit(1);
-        
-      if (error) {
-        console.error('Error checking student role:', error);
-        return false;
-      }
-      
-      return !!data && data.length > 0;
+    if (error) {
+      console.error('Error checking user role:', error);
+      return false;
     }
+    
+    return data?.role === role;
   } catch (error) {
     console.error('Error in checkUserRole:', error);
     return false;
@@ -199,46 +151,55 @@ export const checkUserRole = async (userId: string, role: 'student' | 'teacher')
 };
 
 /**
- * Creates a utility to easily promote a user to teacher role by creating a classroom
+ * Updates a user's role
  */
-export const promoteToTeacher = async (userId: string): Promise<boolean> => {
+export const updateUserRole = async (userId: string, role: 'student' | 'teacher' | 'admin'): Promise<boolean> => {
   try {
-    // Create a default classroom to make the user a teacher
-    const { data, error } = await supabase.rpc('create_classroom', {
-      class_name: 'My First Class'
-    });
+    const { error } = await supabase
+      .from('profiles')
+      .update({ role })
+      .eq('id', userId);
     
     if (error) {
-      console.error('Error promoting user to teacher:', error);
+      console.error('Error updating user role:', error);
       return false;
     }
     
-    return !!data;
+    // Clear cache
+    clearUserCache(userId);
+    return true;
   } catch (error) {
-    console.error('Error in promoteToTeacher:', error);
+    console.error('Error in updateUserRole:', error);
     return false;
   }
 };
 
 /**
  * Function to make the currently logged in user a teacher
- * (for development and testing purposes)
  */
 export const makeMyselfTeacher = async (): Promise<boolean> => {
   try {
-    // Create a classroom to become a teacher
-    const { data, error } = await supabase.rpc('create_classroom', {
-      class_name: 'Test Classroom'
-    });
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
     
-    if (error) {
-      console.error('Error making self teacher:', error);
-      return false;
-    }
-    
-    return !!data;
+    return await updateUserRole(user.id, 'teacher');
   } catch (error) {
     console.error('Error in makeMyselfTeacher:', error);
+    return false;
+  }
+};
+
+/**
+ * Function to make the currently logged in user a student
+ */
+export const makeMyselfStudent = async (): Promise<boolean> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+    
+    return await updateUserRole(user.id, 'student');
+  } catch (error) {
+    console.error('Error in makeMyselfStudent:', error);
     return false;
   }
 };
