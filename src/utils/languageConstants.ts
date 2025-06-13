@@ -36,8 +36,6 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "gujarati",
   "punjabi",
   "nepali",
-  // Adding Tok Pisin
-  "tokpisin"
 ];
 
 /**

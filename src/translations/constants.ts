@@ -40,6 +40,4 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   gujarati: "ગુજરાતી",
   punjabi: "ਪੰਜਾਬੀ",
   nepali: "नेपाली",
-  // Adding Tok Pisin
-  tokpisin: "Tok Pisin"
 };
