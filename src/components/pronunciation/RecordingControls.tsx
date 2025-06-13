@@ -74,12 +74,20 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
       <Card>
         <CardContent className="p-4">
           {isRecording ? (
-            <div className="flex items-center justify-center h-12">
-              <div className="relative flex items-center justify-center">
-                <div className="absolute w-8 h-8 bg-red-500 rounded-full opacity-75 animate-ping"></div>
-                <div className="w-6 h-6 bg-red-500 rounded-full"></div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-center">
+                <div className="relative flex items-center justify-center">
+                  <div className="absolute w-8 h-8 bg-red-500 rounded-full opacity-75 animate-ping"></div>
+                  <div className="w-6 h-6 bg-red-500 rounded-full"></div>
+                </div>
+                <p className="ml-3">{t("listeningToYou")}</p>
               </div>
-              <p className="ml-3">{t("listeningToYou")}</p>
+              {transcript && (
+                <div className="bg-muted/50 rounded-lg p-3 border-l-4 border-red-500">
+                  <p className="text-sm text-muted-foreground mb-1">{t("realTimeTranscription")}:</p>
+                  <p className="text-lg">{transcript}</p>
+                </div>
+              )}
             </div>
           ) : isProcessing ? (
             <div className="flex items-center justify-center h-12">

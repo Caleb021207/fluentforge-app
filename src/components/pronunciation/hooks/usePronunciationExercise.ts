@@ -5,8 +5,8 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { Message } from "@/types/chat";
-import { useAudioRecording } from "@/hooks/useAudioRecording";
-import { transcribeAudio, analyzePronunciation, PronunciationAnalysisResult } from "@/utils/pronunciationUtils";
+import { analyzePronunciation, PronunciationAnalysisResult } from "@/utils/pronunciationUtils";
+import { useRealTimeTranscription } from "./useRealTimeTranscription";
 import { getTargetLanguage } from "@/utils/languageConstants";
 
 type ComplexityLevel = "Novice" | "Intermediate" | "Advanced" | "Superior";
@@ -33,7 +33,6 @@ export const usePronunciationExercise = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [showExercise, setShowExercise] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [transcript, setTranscript] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   
   const { t, currentLanguage } = useLocalization();
@@ -62,36 +61,24 @@ export const usePronunciationExercise = () => {
     return codes[lang] || 'en';
   };
   
-  // Using our new audio recording hook
+  // Using real-time transcription for pronunciation practice
   const { 
-    isRecording, 
-    isProcessing, 
-    isInitializing,  // Add this line to destructure isInitializing
-    base64Audio, 
-    startRecording, 
-    stopRecording 
-  } = useAudioRecording({
-    onRecordingComplete: async (audioData) => {
-      if (currentExercise) {
-        try {
-          console.log("Audio recording completed, starting transcription...");
-          const languageCode = getLanguageCode(targetLanguage);
-          const transcribed = await transcribeAudio(audioData, languageCode);
-          console.log("Transcription result:", transcribed);
-          setTranscript(transcribed);
-          
-          // Wait a moment to show the transcription before analyzing
-          setTimeout(async () => {
-            await processPronunciationFeedback(transcribed);
-          }, 1500);
-        } catch (error) {
-          console.error("Error processing audio:", error);
-          toast({
-            title: t("error"),
-            description: t("failedToProcessAudio"),
-            variant: "destructive",
-          });
-        }
+    isListening: isRecording, 
+    isInitializing,
+    transcript,
+    startListening,
+    stopListening,
+    resetTranscript
+  } = useRealTimeTranscription({
+    targetLanguage,
+    onTranscriptComplete: async (finalTranscript) => {
+      if (currentExercise && finalTranscript.trim()) {
+        console.log("Real-time transcription completed:", finalTranscript);
+        
+        // Wait a moment to show the transcription before analyzing
+        setTimeout(async () => {
+          await processPronunciationFeedback(finalTranscript);
+        }, 1500);
       }
     }
   });
@@ -237,7 +224,7 @@ export const usePronunciationExercise = () => {
     
     setShowExercise(true);
     setFeedback(null);
-    setTranscript("");
+    resetTranscript();
     
     const exercise = await generatePracticePhrase(complexity);
     if (exercise) {
@@ -249,23 +236,24 @@ export const usePronunciationExercise = () => {
   const handleStartRecording = useCallback(() => {
     console.log("Starting pronunciation recording...");
     setFeedback(null);
-    setTranscript("");
+    resetTranscript();
     setIsAnalyzing(false);
-    startRecording();
-  }, [startRecording]);
+    startListening();
+  }, [startListening, resetTranscript]);
 
   // Stop recording and get transcription/analysis
   const handleStopRecording = useCallback(() => {
-    stopRecording();
-    // Transcription and analysis happens in the onRecordingComplete callback
-  }, [stopRecording]);
+    console.log("Stopping pronunciation recording...");
+    stopListening();
+    // Transcription and analysis happens in the onTranscriptComplete callback
+  }, [stopListening]);
 
   // Get a new phrase at the same complexity level
   const handleNextExercise = useCallback(async () => {
     if (!complexity) return;
     
     setFeedback(null);
-    setTranscript("");
+    resetTranscript();
     
     const exercise = await generatePracticePhrase(complexity);
     if (exercise) {
@@ -277,9 +265,9 @@ export const usePronunciationExercise = () => {
   const handleTryAgain = useCallback(() => {
     console.log("Trying pronunciation exercise again...");
     setFeedback(null);
-    setTranscript("");
+    resetTranscript();
     setIsAnalyzing(false);
-  }, []);
+  }, [resetTranscript]);
 
   // Reset to level selection
   const handleBackToLevels = useCallback(() => {
@@ -294,8 +282,8 @@ export const usePronunciationExercise = () => {
     currentExercise,
     isLoading: isAnalyzing, // Rename for clarity
     isRecording,
-    isProcessing,
-    isInitializing,  // Add this to the returned object
+    isProcessing: false, // No longer needed with real-time transcription
+    isInitializing,
     isAnalyzing,
     transcript,
     speechRate,

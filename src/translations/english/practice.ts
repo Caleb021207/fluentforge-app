@@ -25,6 +25,7 @@ const practiceTranslations: TranslationRecord = {
   "translationError": "Translation Error",
   "startTextChatting": "Start text chatting",
   "typeMessageBelow": "Type a message below",
+  "realTimeTranscription": "Real-time transcription",
   
   // New translations for language metrics
   "viewLanguageMetrics": "View Language Metrics",
