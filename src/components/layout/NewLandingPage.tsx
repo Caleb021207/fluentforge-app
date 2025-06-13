@@ -145,7 +145,7 @@ const NewLandingPage = () => {
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             className="flex flex-col items-center gap-4 p-6 rounded-2xl bg-card/50 backdrop-blur border hover:bg-card/70 transition-colors"
           >
-            <div className="text-2xl">👆</div>
+            
             <p className="text-sm font-medium text-muted-foreground">
               Swipe up to get started
             </p>
