@@ -25,7 +25,21 @@ export const processAccessCode = async (code: string): Promise<AccessCodeResult>
       };
     }
 
-    return data as AccessCodeResult;
+    // Safely parse the JSON response
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      const result = data as Record<string, any>;
+      return {
+        success: result.success || false,
+        message: result.message || 'Unknown response',
+        role: result.role,
+        assignment: result.assignment
+      };
+    }
+
+    return {
+      success: false,
+      message: 'Invalid response from server.'
+    };
   } catch (error) {
     console.error('Error in processAccessCode:', error);
     return {
