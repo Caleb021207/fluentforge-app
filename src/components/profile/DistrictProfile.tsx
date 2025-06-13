@@ -6,6 +6,7 @@ import { MapPin, Building2, Users, TrendingUp, Award } from "lucide-react";
 import { ExtendedUserProfile, DistrictSchoolData } from "@/types/school";
 import { getDistrictSchoolsData } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
+import CodeManagement from "@/components/admin/CodeManagement";
 
 interface DistrictProfileProps {
   profile: ExtendedUserProfile;
@@ -48,6 +49,9 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Access Code Management */}
+      <CodeManagement userRole="district" />
+
       {/* District Administrator Overview */}
       <Card>
         <CardHeader>

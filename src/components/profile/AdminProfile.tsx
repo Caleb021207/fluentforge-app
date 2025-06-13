@@ -6,6 +6,7 @@ import { Building, Users, BookOpen, GraduationCap, BarChart3, TrendingUp } from 
 import { ExtendedUserProfile, AdminSchoolData } from "@/types/school";
 import { getAdminSchoolData } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
+import CodeManagement from "@/components/admin/CodeManagement";
 
 interface AdminProfileProps {
   profile: ExtendedUserProfile;
@@ -57,6 +58,9 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Access Code Management */}
+      <CodeManagement userRole="admin" userSchool={schoolData.school.name} />
+
       {/* Administrator Overview */}
       <Card>
         <CardHeader>
