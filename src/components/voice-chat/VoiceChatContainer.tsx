@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import HintButton from "@/components/practice/HintButton";
 import { useLocalization } from "@/context/LocalizationContext";
 import ChatMessage from "@/components/practice/ChatMessage";
-import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
+
 import { VoiceChatContainerProps } from "@/types/voiceChat";
 import { TranslationType } from "@/types/chat";
 
@@ -81,15 +81,7 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
         )}
       </ScrollArea>
       
-      <div className="border-t p-4 flex justify-between items-center">
-        <ViewLanguageMetricsButton 
-          messages={messages.map(msg => ({ 
-            role: msg.role as "user" | "assistant" | "system", 
-            content: msg.content 
-          }))}
-          sessionId={sessionId} 
-        />
-        
+      <div className="border-t p-4 flex justify-end items-center">
         <div className="flex space-x-2">
           <HintButton 
             targetLanguage={targetLanguage}

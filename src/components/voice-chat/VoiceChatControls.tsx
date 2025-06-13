@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
-import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
+
 import HintButton from "@/components/practice/HintButton";
 import { VoiceChatControlsProps } from "@/types/voiceChat";
 
@@ -29,13 +29,6 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
         </Button>
       )}
       
-      <ViewLanguageMetricsButton 
-        messages={apiConversationHistory.map(msg => ({ 
-          role: msg.role as "user" | "assistant" | "system", 
-          content: msg.content 
-        }))} 
-        sessionId={sessionIdRef.current || undefined}
-      />
       
       <HintButton 
         targetLanguage={practice}

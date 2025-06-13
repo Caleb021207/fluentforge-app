@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, ChevronLeft } from "lucide-react";
 import { usePronunciationExercise } from "./hooks/usePronunciationExercise";
-import ViewLanguageMetricsButton from "@/components/voice-chat/ViewLanguageMetricsButton";
+
 
 const PronunciationPracticeContainer = () => {
   const { t } = useLocalization();
@@ -50,7 +50,6 @@ const PronunciationPracticeContainer = () => {
             speechRate={speechRate} 
             setSpeechRate={setSpeechRate} 
           />
-          {messages.length >= 4 && <ViewLanguageMetricsButton messages={messages} />}
         </div>
       </div>
 
