@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Loader2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,14 +46,16 @@ const ProfilePage = () => {
           const extendedProfile = await getExtendedUserProfile(user.id);
           console.log('Profile fetch result:', extendedProfile);
           setProfile(extendedProfile);
-          console.log('Updated profile state:', extendedProfile);
         } catch (error) {
           console.error('Error fetching extended profile:', error);
-          toast({
-            title: "Error loading profile",
-            description: "There was a problem loading your profile data.",
-            variant: "destructive"
-          });
+          // Don't show toast error on initial load if profile doesn't exist yet
+          if (showLoadingState) {
+            toast({
+              title: "Error loading profile",
+              description: "There was a problem loading your profile data.",
+              variant: "destructive"
+            });
+          }
         }
       }
     } catch (error) {
@@ -72,12 +75,47 @@ const ProfilePage = () => {
   };
 
   const handleProfileUpdate = async () => {
-    // Refresh profile data when access code is processed
     console.log('Profile update requested, refreshing data...');
-    // Wait a bit longer to ensure the database has been updated
-    setTimeout(async () => {
-      await fetchUserData(false); // Don't show loading state for refresh
-    }, 2000); // Increased delay from 1000ms to 2000ms
+    
+    // Add a longer delay and multiple retry attempts to ensure database update is complete
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    const tryFetchProfile = async () => {
+      if (!user) return;
+      
+      try {
+        const extendedProfile = await getExtendedUserProfile(user.id);
+        if (extendedProfile && extendedProfile.role) {
+          console.log('Profile successfully updated:', extendedProfile);
+          setProfile(extendedProfile);
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error('Retry fetch error:', error);
+        return false;
+      }
+    };
+    
+    const retryFetch = async () => {
+      const success = await tryFetchProfile();
+      if (success) {
+        return;
+      }
+      
+      retryCount++;
+      if (retryCount < maxRetries) {
+        console.log(`Retry ${retryCount}/${maxRetries} in 2 seconds...`);
+        setTimeout(retryFetch, 2000);
+      } else {
+        console.log('Max retries reached, forcing page reload...');
+        window.location.reload();
+      }
+    };
+    
+    // Initial delay then start retry logic
+    setTimeout(retryFetch, 1000);
   };
 
   if (isLoading) {
@@ -109,8 +147,8 @@ const ProfilePage = () => {
     );
   }
 
-  // Show NoProfileState when user exists but profile is null/undefined
-  if (!profile) {
+  // Show NoProfileState when user exists but profile is null/undefined or has no role
+  if (!profile || !profile.role) {
     return (
       <NoProfileState 
         user={user} 

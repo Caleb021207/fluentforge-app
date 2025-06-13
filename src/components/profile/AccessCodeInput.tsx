@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Key, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, Key, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { processAccessCode } from "@/utils/accessCodeUtils";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -34,7 +34,9 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
 
     setIsProcessing(true);
     try {
+      console.log('Processing access code:', code);
       const result = await processAccessCode(code);
+      console.log('Access code result:', result);
       
       if (result.success) {
         toast({
@@ -43,10 +45,9 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
         });
         setCode("");
         
-        // Add a small delay to ensure the database has been updated
-        setTimeout(() => {
-          onCodeProcessed();
-        }, 1000);
+        // Trigger the profile update immediately
+        console.log('Access code processed successfully, triggering profile update...');
+        onCodeProcessed();
       } else {
         toast({
           title: "Error",
