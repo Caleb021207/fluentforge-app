@@ -94,13 +94,13 @@ const NewLandingPage = () => {
             <img 
               src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
               alt="Palavox Logo" 
-              className="w-48 h-48 object-contain"
+              className="w-80 h-80 md:w-96 md:h-96 object-contain"
             />
           ) : (
             <img 
               src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
               alt="Palavox Logo" 
-              className="w-48 h-48 object-contain"
+              className="w-80 h-80 md:w-96 md:h-96 object-contain"
             />
           )}
         </motion.div>
