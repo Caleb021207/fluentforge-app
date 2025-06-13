@@ -7,6 +7,7 @@ import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { Message } from "@/types/chat";
 import { useAudioRecording } from "@/hooks/useAudioRecording";
 import { transcribeAudio, analyzePronunciation, PronunciationAnalysisResult } from "@/utils/pronunciationUtils";
+import { getTargetLanguage } from "@/utils/languageConstants";
 
 type ComplexityLevel = "Novice" | "Intermediate" | "Advanced" | "Superior";
 
@@ -34,9 +35,31 @@ export const usePronunciationExercise = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [transcript, setTranscript] = useState("");
   
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
   const { toast } = useToast();
   const { analyzeConversation } = useLanguageAnalysis();
+  
+  // Get the target language for practice
+  const targetLanguage = getTargetLanguage(currentLanguage);
+  
+  // Language code mapping for transcription
+  const getLanguageCode = (lang: string) => {
+    const codes = {
+      'spanish': 'es',
+      'english': 'en',
+      'french': 'fr',
+      'german': 'de',
+      'italian': 'it',
+      'portuguese': 'pt',
+      'japanese': 'ja',
+      'korean': 'ko',
+      'mandarin': 'zh',
+      'russian': 'ru',
+      'arabic': 'ar',
+      'hindi': 'hi'
+    };
+    return codes[lang] || 'en';
+  };
   
   // Using our new audio recording hook
   const { 
@@ -50,7 +73,8 @@ export const usePronunciationExercise = () => {
     onRecordingComplete: async (audioData) => {
       if (currentExercise) {
         try {
-          const transcribed = await transcribeAudio(audioData);
+          const languageCode = getLanguageCode(targetLanguage);
+          const transcribed = await transcribeAudio(audioData, languageCode);
           setTranscript(transcribed);
           await processPronunciationFeedback(transcribed);
         } catch (error) {
@@ -96,7 +120,7 @@ export const usePronunciationExercise = () => {
       // Call the edge function to generate a phrase
       const { data, error } = await supabase.functions.invoke("generate-pronunciation-phrase", {
         body: {
-          targetLanguage: "spanish", // This should come from user's language settings
+          targetLanguage: targetLanguage,
           level: level
         }
       });
@@ -136,7 +160,7 @@ export const usePronunciationExercise = () => {
     } finally {
       setIsGenerating(false);
     }
-  }, [t, toast]);
+  }, [t, toast, targetLanguage]);
 
   // Process the pronunciation feedback
   const processPronunciationFeedback = async (transcribed: string) => {
@@ -164,9 +188,11 @@ export const usePronunciationExercise = () => {
       setMessages(prev => [...prev, userMessage]);
       
       // Get pronunciation analysis from our utility function
+      const languageCode = getLanguageCode(targetLanguage);
       const analysisResult = await analyzePronunciation(
         currentExercise.phrase,
-        transcribed
+        transcribed,
+        languageCode
       );
       
       setFeedback(analysisResult);
@@ -265,6 +291,7 @@ export const usePronunciationExercise = () => {
     handleTryAgain,
     handleBackToLevels,
     isGenerating,
-    levelDescriptions
+    levelDescriptions,
+    targetLanguage
   };
 };

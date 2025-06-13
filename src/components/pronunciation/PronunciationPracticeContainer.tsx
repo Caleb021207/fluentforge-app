@@ -21,6 +21,7 @@ const PronunciationPracticeContainer = () => {
     currentExercise,
     isLoading,
     isRecording,
+    isProcessing,
     isInitializing,
     transcript,
     speechRate,
@@ -35,7 +36,8 @@ const PronunciationPracticeContainer = () => {
     handleTryAgain,
     handleBackToLevels,
     isGenerating,
-    levelDescriptions
+    levelDescriptions,
+    targetLanguage
   } = usePronunciationExercise();
 
   return (
@@ -43,7 +45,7 @@ const PronunciationPracticeContainer = () => {
       <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("pronunciationPractice")}</h1>
-          <p className="text-muted-foreground">{t("improvePronunciationSkillsWith", { language: "Spanish" })}</p>
+          <p className="text-muted-foreground">{t("improvePronunciationSkillsWith", { language: targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1) })}</p>
         </div>
         <div className="flex items-center gap-2">
           <SpeechRateControl 
