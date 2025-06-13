@@ -1,13 +1,11 @@
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import NewLandingPage from "@/components/layout/NewLandingPage";
-import { useLocalization } from "@/context/LocalizationContext";
-import { motion } from "framer-motion";
-import HomeNavigationGrid from "@/components/home/HomeNavigationGrid";
 
 const Index = () => {
-  const { t } = useLocalization();
+  const navigate = useNavigate();
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -34,6 +32,13 @@ const Index = () => {
     };
   }, []);
 
+  // Redirect to profile page when user signs in
+  useEffect(() => {
+    if (isSignedIn && !isLoading) {
+      navigate('/profile');
+    }
+  }, [isSignedIn, isLoading, navigate]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -46,25 +51,10 @@ const Index = () => {
     return <NewLandingPage />;
   }
 
+  // This return should not be reached due to the redirect, but kept as fallback
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center space-y-8"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground">
-            {t("welcomeBack") || "Welcome Back!"}
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-12">
-            {t("continueYourLearningJourney") || "Continue your language learning journey"}
-          </p>
-          
-          <HomeNavigationGrid />
-        </motion.div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
     </div>
   );
 };
