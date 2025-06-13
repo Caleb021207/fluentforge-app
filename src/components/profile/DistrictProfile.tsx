@@ -21,7 +21,9 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
     const fetchDistrictData = async () => {
       setIsLoading(true);
       try {
+        console.log('DistrictProfile: Fetching data for user:', profile.id, 'role:', profile.role);
         const data = await getDistrictSchoolsData(profile.id);
+        console.log('DistrictProfile: Received data:', data);
         setSchoolsData(data);
       } catch (error) {
         console.error('Error fetching district data:', error);

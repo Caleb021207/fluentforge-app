@@ -18,7 +18,9 @@ const SchoolTestAverages = ({ userId }: SchoolTestAveragesProps) => {
     const fetchSchoolAverages = async () => {
       setIsLoading(true);
       try {
+        console.log('SchoolTestAverages: Fetching data for user:', userId);
         const data = await getDistrictSchoolsData(userId);
+        console.log('SchoolTestAverages: Received data:', data);
         setSchoolsData(data);
       } catch (error) {
         console.error('Error fetching school averages:', error);
@@ -56,7 +58,12 @@ const SchoolTestAverages = ({ userId }: SchoolTestAveragesProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">No schools found in your district</p>
+          <p className="text-muted-foreground">
+            No schools found in your district (User ID: {userId})
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            Check console for debugging information
+          </p>
         </CardContent>
       </Card>
     );
