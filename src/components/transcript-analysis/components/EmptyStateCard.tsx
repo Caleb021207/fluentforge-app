@@ -1,0 +1,18 @@
+
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { FileText } from "lucide-react";
+
+const EmptyStateCard: React.FC = () => {
+  return (
+    <Card>
+      <CardContent className="pt-6 text-center">
+        <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <h3 className="text-lg font-medium mb-2 text-foreground">No analyses yet</h3>
+        <p className="text-muted-foreground">Upload a transcript to see your first AI analysis here.</p>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default EmptyStateCard;
