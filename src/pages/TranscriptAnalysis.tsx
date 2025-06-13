@@ -153,7 +153,7 @@ const TranscriptAnalysis = () => {
         </TabsContent>
 
         <TabsContent value="recommendations">
-          <StudyRecommendations recommendations={recommendations} />
+          <StudyRecommendations recommendations={recommendations} analyses={analyses} />
         </TabsContent>
       </Tabs>
     </div>

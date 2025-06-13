@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Target, Clock, Star, CheckCircle, Book } from "lucide-react";
+import { Target, Clock, Star, CheckCircle, Book, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,10 +19,12 @@ interface Recommendation {
 
 interface StudyRecommendationsProps {
   recommendations: Recommendation[] | undefined;
+  analyses?: any[] | undefined;
 }
 
-const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendations }) => {
+const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendations, analyses }) => {
   const { toast } = useToast();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const getPriorityColor = (level: number) => {
     if (level >= 4) return 'bg-red-100 text-red-800';
@@ -75,13 +77,68 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
     }
   };
 
+  const handleGenerateStudyPlan = async () => {
+    if (!analyses || analyses.length === 0) {
+      toast({
+        title: "No Analysis Found",
+        description: "Please upload and analyze a transcript first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const latestAnalysis = analyses[0]; // Use the most recent analysis
+      
+      const { data, error } = await supabase.functions.invoke('generate-study-recommendations', {
+        body: { transcriptId: latestAnalysis.id }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Study Plan Generated!",
+        description: "Your personalized study recommendations are ready.",
+      });
+
+      // Refresh the page to show new recommendations
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error generating study plan:', error);
+      toast({
+        title: "Generation Failed",
+        description: error.message || "Failed to generate study recommendations.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   if (!recommendations || recommendations.length === 0) {
+    const hasAnalyses = analyses && analyses.length > 0;
+    
     return (
       <Card>
         <CardContent className="pt-6 text-center">
           <Target className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium mb-2">No recommendations yet</h3>
-          <p className="text-gray-500">Upload and analyze your transcripts to get personalized study recommendations.</p>
+          {hasAnalyses ? (
+            <div className="space-y-4">
+              <p className="text-gray-500">Generate a personalized study plan from your transcript analysis.</p>
+              <Button 
+                onClick={handleGenerateStudyPlan}
+                disabled={isGenerating}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                {isGenerating ? 'Generating Study Plan...' : 'Generate Study Plan'}
+              </Button>
+            </div>
+          ) : (
+            <p className="text-gray-500">Upload and analyze your transcripts to get personalized study recommendations.</p>
+          )}
         </CardContent>
       </Card>
     );
