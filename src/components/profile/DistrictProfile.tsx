@@ -7,6 +7,7 @@ import { ExtendedUserProfile, DistrictSchoolData } from "@/types/school";
 import { getDistrictSchoolsData } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
+import SchoolTestAverages from "./SchoolTestAverages";
 
 interface DistrictProfileProps {
   profile: ExtendedUserProfile;
@@ -49,6 +50,9 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* School Test Averages - Top Priority */}
+      <SchoolTestAverages userId={profile.id} />
+
       {/* Access Code Management */}
       <CodeManagement userRole="district" />
 

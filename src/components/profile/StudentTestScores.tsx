@@ -1,0 +1,177 @@
+
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Users, TrendingUp, Calendar } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { getCEFRColor } from "@/components/transcript-analysis/utils/cefrUtils";
+import { Skeleton } from "@/components/ui/skeleton";
+
+interface StudentScore {
+  student_id: string;
+  student_name: string;
+  student_email: string;
+  overall_score: number | null;
+  cefr_level: string | null;
+  upload_date: string | null;
+  class_name: string;
+}
+
+interface StudentTestScoresProps {
+  teacherId: string;
+}
+
+const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
+  const [studentScores, setStudentScores] = useState<StudentScore[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [classAverage, setClassAverage] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchStudentScores = async () => {
+      setIsLoading(true);
+      try {
+        // Get all classes taught by this teacher
+        const { data: classes } = await supabase
+          .from('classes')
+          .select(`
+            id,
+            name,
+            student_enrollments!inner (
+              student_id,
+              profiles!inner (
+                id,
+                display_name,
+                email
+              )
+            )
+          `)
+          .eq('teacher_id', teacherId);
+
+        if (!classes) return;
+
+        const studentScorePromises = classes.flatMap(classData => 
+          classData.student_enrollments.map(async (enrollment) => {
+            // Get the most recent transcript analysis for each student
+            const { data: latestAnalysis } = await supabase
+              .from('transcript_analyses')
+              .select('overall_score, cefr_level, upload_date')
+              .eq('user_id', enrollment.student_id)
+              .order('upload_date', { ascending: false })
+              .limit(1)
+              .maybeSingle();
+
+            return {
+              student_id: enrollment.student_id,
+              student_name: enrollment.profiles.display_name || enrollment.profiles.email || 'Unknown',
+              student_email: enrollment.profiles.email || '',
+              overall_score: latestAnalysis?.overall_score || null,
+              cefr_level: latestAnalysis?.cefr_level || null,
+              upload_date: latestAnalysis?.upload_date || null,
+              class_name: classData.name
+            };
+          })
+        );
+
+        const scores = await Promise.all(studentScorePromises);
+        setStudentScores(scores);
+
+        // Calculate class average
+        const validScores = scores.filter(s => s.overall_score !== null);
+        if (validScores.length > 0) {
+          const average = validScores.reduce((sum, s) => sum + (s.overall_score || 0), 0) / validScores.length;
+          setClassAverage(Math.round(average));
+        }
+      } catch (error) {
+        console.error('Error fetching student scores:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStudentScores();
+  }, [teacherId]);
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'No test taken';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            Student Test Scores
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-32 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Users className="h-5 w-5" />
+          Student Test Scores
+        </CardTitle>
+        {classAverage !== null && (
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" />
+            <span className="text-sm text-muted-foreground">
+              Class Average: <span className="font-semibold text-primary">{classAverage}%</span>
+            </span>
+          </div>
+        )}
+      </CardHeader>
+      <CardContent>
+        {studentScores.length > 0 ? (
+          <div className="space-y-3">
+            {studentScores
+              .sort((a, b) => (b.overall_score || 0) - (a.overall_score || 0))
+              .map((student) => (
+              <div key={student.student_id} className="border rounded-lg p-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">{student.student_name}</h4>
+                    <p className="text-sm text-muted-foreground">{student.class_name}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center gap-2">
+                      <div className="text-lg font-bold">
+                        {student.overall_score ? `${Math.round(student.overall_score)}%` : 'No score'}
+                      </div>
+                      {student.cefr_level && (
+                        <Badge className={getCEFRColor(student.cefr_level)} variant="outline">
+                          {student.cefr_level}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(student.upload_date)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-center py-8">
+            No students with test scores found
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+export default StudentTestScores;

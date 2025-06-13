@@ -6,6 +6,7 @@ import { BookOpen, Users, BarChart3, GraduationCap } from "lucide-react";
 import { ExtendedUserProfile } from "@/types/school";
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
+import StudentTestScores from "./StudentTestScores";
 
 interface TeacherProfileProps {
   profile: ExtendedUserProfile;
@@ -16,6 +17,9 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Student Test Scores - Top Priority */}
+      <StudentTestScores teacherId={profile.id} />
+
       {/* Access Code Management */}
       <CodeManagement userRole="teacher" userSchool={profile.school?.name} />
 

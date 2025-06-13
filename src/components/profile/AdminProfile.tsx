@@ -7,6 +7,7 @@ import { ExtendedUserProfile, AdminSchoolData, TeacherClassData } from "@/types/
 import { getAdminSchoolData, getSchoolClassroomData } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
+import ClassTestAverages from "./ClassTestAverages";
 
 interface AdminProfileProps {
   profile: ExtendedUserProfile;
@@ -65,6 +66,9 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Class Test Averages - Top Priority */}
+      {profile.school_id && <ClassTestAverages schoolId={profile.school_id} />}
+
       {/* Access Code Management */}
       <CodeManagement userRole="admin" userSchool={schoolData.school.name} />
 

@@ -7,6 +7,7 @@ import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetri
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
+import TestScoreCard from "./TestScoreCard";
 
 interface StudentProfileProps {
   profile: ExtendedUserProfile;
@@ -16,7 +17,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
   const [grades, setGrades] = useState<StudentGrade[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
-  const [recentCertScore, setRecentCertScore] = useState<number | null>(null);
+  const [latestTestScore, setLatestTestScore] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -32,17 +33,16 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         setGrades(gradeData);
         setUsageMetrics(usageData);
 
-        // Fetch most recent certification attempt score
-        const { data: certAttempts } = await supabase
-          .from('certification_attempts')
-          .select('score')
+        // Fetch most recent transcript analysis
+        const { data: latestAnalysis } = await supabase
+          .from('transcript_analyses')
+          .select('id, overall_score, cefr_level, reading_score, writing_score, speaking_score, listening_score, upload_date')
           .eq('user_id', profile.id)
-          .order('completed_at', { ascending: false })
-          .limit(1);
+          .order('upload_date', { ascending: false })
+          .limit(1)
+          .maybeSingle();
 
-        if (certAttempts && certAttempts.length > 0) {
-          setRecentCertScore(certAttempts[0].score);
-        }
+        setLatestTestScore(latestAnalysis);
       } catch (error) {
         console.error('Error fetching student data:', error);
       } finally {
@@ -68,6 +68,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Test Scores - Top Priority */}
+      <TestScoreCard testScore={latestTestScore} />
+
       {/* Student Overview */}
       <Card>
         <CardHeader>
@@ -110,17 +113,11 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Star className="h-5 w-5" />
-            Academic Performance & Usage
+            Learning Activity
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">
-                {recentCertScore !== null ? `${recentCertScore}%` : 'N/A'}
-              </div>
-              <p className="text-sm text-muted-foreground">Latest Test Score</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{enrollments.length}</div>
               <p className="text-sm text-muted-foreground">Active Classes</p>
