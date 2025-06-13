@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Loader2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,46 +24,51 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { t, currentLanguage } = useLocalization();
 
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      try {
-        const { data: { user }, error } = await supabase.auth.getUser();
-        
-        if (error) {
-          console.error('Auth error:', error);
-          setAuthError(true);
-          setIsLoading(false);
-          return;
-        }
-        
-        setUser(user);
-        
-        if (user) {
-          try {
-            const extendedProfile = await getExtendedUserProfile(user.id);
-            setProfile(extendedProfile);
-          } catch (error) {
-            console.error('Error fetching extended profile:', error);
-            toast({
-              title: "Error loading profile",
-              description: "There was a problem loading your profile data.",
-              variant: "destructive"
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error getting user:', error);
+  const fetchUserData = async () => {
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      
+      if (error) {
+        console.error('Auth error:', error);
         setAuthError(true);
-      } finally {
         setIsLoading(false);
+        return;
       }
-    };
+      
+      setUser(user);
+      
+      if (user) {
+        try {
+          const extendedProfile = await getExtendedUserProfile(user.id);
+          setProfile(extendedProfile);
+        } catch (error) {
+          console.error('Error fetching extended profile:', error);
+          toast({
+            title: "Error loading profile",
+            description: "There was a problem loading your profile data.",
+            variant: "destructive"
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error getting user:', error);
+      setAuthError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    getCurrentUser();
+  useEffect(() => {
+    fetchUserData();
   }, [toast]);
 
   const handleSignIn = () => {
     navigate("/");
+  };
+
+  const handleProfileUpdate = () => {
+    // Refresh profile data when access code is processed
+    fetchUserData();
   };
 
   if (isLoading) {
@@ -128,7 +134,7 @@ const ProfilePage = () => {
           <div className="text-center py-12">
             <h3 className="text-lg font-medium mb-2">Role Not Assigned</h3>
             <p className="text-muted-foreground">
-              Please contact your administrator to assign your role in the system.
+              Please use an access code to assign your role in the system.
             </p>
           </div>
         );
@@ -164,6 +170,9 @@ const ProfilePage = () => {
             }}
             avatarUrl={profile.avatar_url}
             setAvatarUrl={(url) => setProfile(prev => prev ? { ...prev, avatar_url: url } : null)}
+            userRole={profile.role}
+            userSchool={profile.school?.name}
+            onProfileUpdate={handleProfileUpdate}
           />
         </div>
 

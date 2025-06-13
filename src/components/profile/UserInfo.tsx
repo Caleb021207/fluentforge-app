@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,6 +10,7 @@ import { User } from "@supabase/supabase-js";
 import { updateUserProfile } from "@/utils/profileUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
+import AccessCodeInput from "./AccessCodeInput";
 
 interface UserInfoProps {
   user: User | null;
@@ -16,6 +18,9 @@ interface UserInfoProps {
   setProfileData: (data: any) => void;
   avatarUrl: string | null;
   setAvatarUrl: (url: string | null) => void;
+  userRole?: string;
+  userSchool?: string;
+  onProfileUpdate?: () => void;
 }
 
 const UserInfo = ({ 
@@ -23,7 +28,10 @@ const UserInfo = ({
   displayName, 
   setProfileData, 
   avatarUrl, 
-  setAvatarUrl 
+  setAvatarUrl,
+  userRole,
+  userSchool,
+  onProfileUpdate
 }: UserInfoProps) => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -122,102 +130,119 @@ const UserInfo = ({
     }
   };
 
+  const handleCodeProcessed = () => {
+    // Trigger profile refresh
+    if (onProfileUpdate) {
+      onProfileUpdate();
+    }
+  };
+
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>
-          {currentLanguage === "spanish" ? "Información Personal" : "Personal Information"}
-        </CardTitle>
-        <Button
-          variant="outline" 
-          size="sm"
-          onClick={handleEditToggle}
-        >
-          {isEditing 
-            ? (currentLanguage === "spanish" ? "Cancelar" : "Cancel") 
-            : (currentLanguage === "spanish" ? "Editar" : "Edit")}
-        </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex flex-col items-center space-y-4 mb-6">
-          <div className="relative w-32 h-32 rounded-full overflow-hidden bg-gray-100">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                <span className="text-gray-500 text-4xl">
-                  {displayName.charAt(0).toUpperCase() || "U"}
-                </span>
-              </div>
-            )}
-          </div>
-          <div>
-            <Label htmlFor="avatar" className="cursor-pointer">
-              <div className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800">
-                <Upload className="w-4 h-4" />
-                <span>
-                  {currentLanguage === "spanish" ? "Subir Foto" : "Upload Photo"}
-                </span>
-              </div>
-              <Input
-                id="avatar"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileUpload}
-              />
-            </Label>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="displayName">
-            {currentLanguage === "spanish" ? "Nombre de Usuario" : "Display Name"}
-          </Label>
-          {isEditing ? (
-            <Input
-              id="displayName"
-              value={newDisplayName}
-              onChange={(e) => setNewDisplayName(e.target.value)}
-              placeholder={currentLanguage === "spanish" 
-                ? "Ingresa tu nombre de usuario" 
-                : "Enter your display name"}
-            />
-          ) : (
-            <Input
-              id="displayName"
-              value={displayName}
-              readOnly
-              className="bg-gray-50"
-            />
-          )}
-        </div>
-
-        {isEditing && (
-          <Button 
-            className="w-full mt-4" 
-            onClick={handleSaveProfile}
-            disabled={isSaving}
+    <div className="space-y-6">
+      {/* Personal Information Card */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>
+            {currentLanguage === "spanish" ? "Información Personal" : "Personal Information"}
+          </CardTitle>
+          <Button
+            variant="outline" 
+            size="sm"
+            onClick={handleEditToggle}
           >
-            {isSaving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {currentLanguage === "spanish" ? "Guardando..." : "Saving..."}
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                {currentLanguage === "spanish" ? "Guardar Cambios" : "Save Changes"}
-              </>
-            )}
+            {isEditing 
+              ? (currentLanguage === "spanish" ? "Cancelar" : "Cancel") 
+              : (currentLanguage === "spanish" ? "Editar" : "Edit")}
           </Button>
-        )}
-      </CardContent>
-    </Card>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-col items-center space-y-4 mb-6">
+            <div className="relative w-32 h-32 rounded-full overflow-hidden bg-gray-100">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                  <span className="text-gray-500 text-4xl">
+                    {displayName.charAt(0).toUpperCase() || "U"}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="avatar" className="cursor-pointer">
+                <div className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800">
+                  <Upload className="w-4 h-4" />
+                  <span>
+                    {currentLanguage === "spanish" ? "Subir Foto" : "Upload Photo"}
+                  </span>
+                </div>
+                <Input
+                  id="avatar"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+              </Label>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="displayName">
+              {currentLanguage === "spanish" ? "Nombre de Usuario" : "Display Name"}
+            </Label>
+            {isEditing ? (
+              <Input
+                id="displayName"
+                value={newDisplayName}
+                onChange={(e) => setNewDisplayName(e.target.value)}
+                placeholder={currentLanguage === "spanish" 
+                  ? "Ingresa tu nombre de usuario" 
+                  : "Enter your display name"}
+              />
+            ) : (
+              <Input
+                id="displayName"
+                value={displayName}
+                readOnly
+                className="bg-gray-50"
+              />
+            )}
+          </div>
+
+          {isEditing && (
+            <Button 
+              className="w-full mt-4" 
+              onClick={handleSaveProfile}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {currentLanguage === "spanish" ? "Guardando..." : "Saving..."}
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  {currentLanguage === "spanish" ? "Guardar Cambios" : "Save Changes"}
+                </>
+              )}
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Access Code Input */}
+      <AccessCodeInput 
+        onCodeProcessed={handleCodeProcessed}
+        currentRole={userRole}
+        currentAssignment={userSchool}
+      />
+    </div>
   );
 };
 

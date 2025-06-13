@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      access_codes: {
+        Row: {
+          active: boolean | null
+          code: string
+          code_type: Database["public"]["Enums"]["code_type"]
+          created_at: string
+          created_by: string | null
+          current_uses: number | null
+          expires_at: string | null
+          id: string
+          max_uses: number | null
+          metadata: Json | null
+          target_id: string | null
+          target_name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          code: string
+          code_type: Database["public"]["Enums"]["code_type"]
+          created_at?: string
+          created_by?: string | null
+          current_uses?: number | null
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          code?: string
+          code_type?: Database["public"]["Enums"]["code_type"]
+          created_at?: string
+          created_by?: string | null
+          current_uses?: number | null
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       api_calls_tracking: {
         Row: {
           created_at: string
@@ -1119,8 +1167,22 @@ export type Database = {
         Args: { class_name: string }
         Returns: Json
       }
+      generate_access_code: {
+        Args: {
+          p_code_type: Database["public"]["Enums"]["code_type"]
+          p_target_id: string
+          p_target_name: string
+          p_expires_at?: string
+          p_max_uses?: number
+        }
+        Returns: string
+      }
       join_classroom: {
         Args: { class_code: string }
+        Returns: Json
+      }
+      process_access_code: {
+        Args: { p_code: string }
         Returns: Json
       }
       recalculate_student_metrics: {
@@ -1133,6 +1195,7 @@ export type Database = {
       }
     }
     Enums: {
+      code_type: "district" | "school" | "teacher" | "class"
       district_consent_type:
         | "individual"
         | "code_of_conduct"
@@ -1252,6 +1315,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      code_type: ["district", "school", "teacher", "class"],
       district_consent_type: [
         "individual",
         "code_of_conduct",
