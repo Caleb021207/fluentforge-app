@@ -40,10 +40,12 @@ const ProfilePage = () => {
       setUser(user);
       
       if (user) {
+        console.log('Fetching profile for user:', user.id);
         try {
           const extendedProfile = await getExtendedUserProfile(user.id);
+          console.log('Profile fetch result:', extendedProfile);
           setProfile(extendedProfile);
-          console.log('Updated profile:', extendedProfile);
+          console.log('Updated profile state:', extendedProfile);
         } catch (error) {
           console.error('Error fetching extended profile:', error);
           toast({
@@ -72,7 +74,10 @@ const ProfilePage = () => {
   const handleProfileUpdate = async () => {
     // Refresh profile data when access code is processed
     console.log('Profile update requested, refreshing data...');
-    await fetchUserData(false); // Don't show loading state for refresh
+    // Wait a bit longer to ensure the database has been updated
+    setTimeout(async () => {
+      await fetchUserData(false); // Don't show loading state for refresh
+    }, 2000); // Increased delay from 1000ms to 2000ms
   };
 
   if (isLoading) {

@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { ExtendedUserProfile, AdminSchoolData, DistrictSchoolData, StudentEnrollment, StudentGrade, StudentUsageMetrics, TeacherClassData } from "@/types/school";
 
@@ -37,6 +38,8 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       return null;
     }
 
+    console.log('Fetched profile data:', profile);
+
     // If the user has a district role, also fetch district information
     let districtInfo = null;
     if (profile.role === 'district') {
@@ -56,6 +59,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
 
       if (!districtError && districtUser) {
         districtInfo = districtUser;
+        console.log('Fetched district info:', districtInfo);
       }
     }
 
@@ -65,6 +69,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       district_user: districtInfo ? [districtInfo] : null
     } as ExtendedUserProfile;
 
+    console.log('Final extended profile:', extendedProfile);
     return extendedProfile;
   } catch (error) {
     console.error('Error in getExtendedUserProfile:', error);
