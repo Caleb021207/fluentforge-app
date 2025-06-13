@@ -106,34 +106,65 @@ export const getStudentUsageMetrics = async (studentId: string): Promise<Student
 
 export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUserProfile | null> => {
   try {
-    const { data, error } = await supabase
+    console.log('Fetching extended profile for user:', userId);
+    
+    // First, get the basic profile without joins to avoid RLS issues
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select(`
-        *,
-        school:schools (
-          id,
-          name,
-          district,
-          address,
-          phone,
-          email,
-          principal_name
-        ),
-        grade_level:grade_levels (
-          id,
-          level_name,
-          level_number
-        )
-      `)
+      .select('*')
       .eq('id', userId)
       .single();
 
-    if (error) {
-      console.error('Error fetching extended profile:', error);
+    if (profileError) {
+      console.error('Error fetching basic profile:', profileError);
       return null;
     }
 
-    return data as ExtendedUserProfile;
+    if (!profile) {
+      console.log('No profile found for user:', userId);
+      return null;
+    }
+
+    console.log('Basic profile found:', profile);
+
+    // Now fetch related data separately if needed
+    let school = null;
+    let grade_level = null;
+
+    if (profile.school_id) {
+      try {
+        const { data: schoolData } = await supabase
+          .from('schools')
+          .select('*')
+          .eq('id', profile.school_id)
+          .single();
+        school = schoolData;
+      } catch (error) {
+        console.log('Could not fetch school data:', error);
+      }
+    }
+
+    if (profile.grade_level_id) {
+      try {
+        const { data: gradeLevelData } = await supabase
+          .from('grade_levels')
+          .select('*')
+          .eq('id', profile.grade_level_id)
+          .single();
+        grade_level = gradeLevelData;
+      } catch (error) {
+        console.log('Could not fetch grade level data:', error);
+      }
+    }
+
+    const extendedProfile: ExtendedUserProfile = {
+      ...profile,
+      school: school || undefined,
+      grade_level: grade_level || undefined
+    };
+
+    console.log('Extended profile created:', extendedProfile);
+    return extendedProfile;
   } catch (error) {
     console.error('Error in getExtendedUserProfile:', error);
     return null;
