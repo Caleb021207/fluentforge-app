@@ -1193,6 +1193,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_user_district_ids: {
+        Args: { target_user_id: string }
+        Returns: string[]
+      }
       is_student_in_admin_school: {
         Args: { student_user_id: string }
         Returns: boolean

@@ -332,11 +332,21 @@ export const getSchoolClassroomData = async (userId: string): Promise<TeacherCla
 
 export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSchoolData[]> => {
   try {
-    // Get district schools - for now, get all schools
-    // In a real implementation, you'd filter by district_id
+    // Get user's district assignments
+    const { data: userDistricts } = await supabase
+      .from('district_users')
+      .select('district_id')
+      .eq('user_id', userId);
+
+    if (!userDistricts || userDistricts.length === 0) return [];
+
+    const districtIds = userDistricts.map(d => d.district_id);
+
+    // Get schools in the user's districts
     const { data: schools } = await supabase
       .from('schools')
-      .select('*');
+      .select('*')
+      .in('district_id', districtIds);
 
     if (!schools) return [];
 
@@ -348,18 +358,65 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
         .select('id')
         .eq('school_id', school.id);
 
+      // Calculate total enrollments across all classes in the school
+      let totalEnrollments = 0;
+      if (classes && classes.length > 0) {
+        const classIds = classes.map(c => c.id);
+        const { data: enrollments } = await supabase
+          .from('student_enrollments')
+          .select('id')
+          .in('class_id', classIds)
+          .eq('status', 'active');
+        
+        totalEnrollments = enrollments?.length || 0;
+      }
+
+      // Calculate average certification score from transcript analyses
+      let avgCertificationScore = 0;
+      if (totalEnrollments > 0) {
+        // Get all students in the school through their class enrollments
+        const { data: schoolStudents } = await supabase
+          .from('student_enrollments')
+          .select('student_id')
+          .in('class_id', classes?.map(c => c.id) || [])
+          .eq('status', 'active');
+
+        if (schoolStudents && schoolStudents.length > 0) {
+          const studentIds = schoolStudents.map(s => s.student_id);
+          
+          // Get latest transcript analysis for each student
+          const { data: transcriptScores } = await supabase
+            .from('transcript_analyses')
+            .select('user_id, overall_score')
+            .in('user_id', studentIds)
+            .not('overall_score', 'is', null);
+
+          if (transcriptScores && transcriptScores.length > 0) {
+            // Get the latest score for each student
+            const latestScores = new Map();
+            for (const score of transcriptScores) {
+              if (!latestScores.has(score.user_id) || score.overall_score) {
+                latestScores.set(score.user_id, score.overall_score);
+              }
+            }
+            
+            const scores = Array.from(latestScores.values()).filter(score => score !== null);
+            if (scores.length > 0) {
+              avgCertificationScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+            }
+          }
+        }
+      }
+
       const { data: certStats } = await supabase
         .from('school_certification_stats')
         .select('*')
         .eq('school_id', school.id);
 
-      const avgScore = certStats?.length ? 
-        certStats.reduce((sum, stat) => sum + (stat.avg_score || 0), 0) / certStats.length : 0;
-
       districtData.push({
         school,
-        avg_certification_score: avgScore,
-        total_students: 0, // Would need to calculate from enrollments
+        avg_certification_score: avgCertificationScore,
+        total_students: totalEnrollments,
         total_classes: classes?.length || 0,
         certification_stats: certStats || []
       });
