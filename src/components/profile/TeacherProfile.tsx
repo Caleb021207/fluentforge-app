@@ -14,11 +14,19 @@ interface TeacherProfileProps {
 
 const TeacherProfile = ({ profile }: TeacherProfileProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [classAverage, setClassAverage] = useState<number | null>(null);
+  const [studentCount, setStudentCount] = useState<number>(0);
 
   return (
     <div className="space-y-6">
       {/* Student Test Scores - Top Priority */}
-      <StudentTestScores teacherId={profile.id} />
+      <StudentTestScores 
+        teacherId={profile.id} 
+        onDataUpdate={(average, count) => {
+          setClassAverage(average);
+          setStudentCount(count);
+        }}
+      />
 
       {/* Access Code Management */}
       <CodeManagement userRole="teacher" userSchool={profile.school?.name} />
@@ -58,10 +66,31 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8">
-            <p className="text-muted-foreground">
-              Your teaching statistics and class information will appear here.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-primary/5 rounded-lg">
+              <div className="text-2xl font-bold text-primary">
+                {studentCount}
+              </div>
+              <p className="text-sm text-muted-foreground">Total Students</p>
+            </div>
+            <div className="text-center p-4 bg-primary/5 rounded-lg">
+              <div className="text-2xl font-bold text-primary">
+                {classAverage !== null ? `${classAverage}%` : 'N/A'}
+              </div>
+              <p className="text-sm text-muted-foreground">Class Average Score</p>
+            </div>
+            <div className="text-center p-4 bg-primary/5 rounded-lg">
+              <div className="text-2xl font-bold text-primary">
+                {classAverage !== null && classAverage >= 70 ? '✅' : 
+                 classAverage !== null && classAverage >= 50 ? '⚠️' : 
+                 classAverage !== null ? '🔴' : '⏳'}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {classAverage !== null && classAverage >= 70 ? 'Excellent' : 
+                 classAverage !== null && classAverage >= 50 ? 'Good Progress' : 
+                 classAverage !== null ? 'Needs Improvement' : 'Awaiting Data'}
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>

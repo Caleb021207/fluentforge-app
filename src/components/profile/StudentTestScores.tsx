@@ -19,9 +19,10 @@ interface StudentScore {
 
 interface StudentTestScoresProps {
   teacherId: string;
+  onDataUpdate?: (average: number | null, studentCount: number) => void;
 }
 
-const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
+const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) => {
   const [studentScores, setStudentScores] = useState<StudentScore[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [classAverage, setClassAverage] = useState<number | null>(null);
@@ -145,9 +146,15 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
 
         // Calculate class average
         const validScores = allStudentScores.filter(s => s.overall_score !== null);
+        let average = null;
         if (validScores.length > 0) {
-          const average = validScores.reduce((sum, s) => sum + (s.overall_score || 0), 0) / validScores.length;
+          average = validScores.reduce((sum, s) => sum + (s.overall_score || 0), 0) / validScores.length;
           setClassAverage(Math.round(average));
+        }
+
+        // Call the callback to update parent component
+        if (onDataUpdate) {
+          onDataUpdate(average ? Math.round(average) : null, allStudentScores.length);
         }
 
       } catch (error) {
