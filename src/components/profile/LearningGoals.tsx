@@ -228,15 +228,15 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
             {currentLanguage === "spanish" ? "Objetivo Nivel CEFR: " : "Targeting CEFR Level: "}
             {profileData.targetLevel}
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             {currentLanguage === "spanish" ? "Logro estimado en " : "Estimated achievement in "}
-            <span className="font-semibold text-lingua-primary">
+            <span className="font-semibold text-primary">
               {estimatedWeeks} {currentLanguage === "spanish" ? "semanas" : "weeks"}
             </span>
             <br />
             ({currentLanguage === "spanish" ? "alrededor del " : "around "}{getEstimatedDate()})
           </p>
-          <p className="text-xs text-green-600">
+          <p className="text-xs text-emerald-600 dark:text-emerald-400">
             {currentLanguage === "spanish" 
               ? "Tu ritmo de aprendizaje actual: +" 
               : "Your current learning pace: +"}
@@ -245,10 +245,10 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           </p>
         </div>
         
-        <div className="border rounded-lg p-4 bg-gray-50 space-y-3">
+        <div className="border rounded-lg p-4 bg-muted space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-lingua-primary" />
+              <BookOpen className="h-4 w-4 text-primary" />
               <h4 className="font-medium">
                 {currentLanguage === "spanish" ? "Progreso de Lecciones" : "Lesson Progress"}
               </h4>
@@ -263,7 +263,7 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
             className="h-2" 
           />
           
-          <div className="flex justify-between text-sm text-gray-600">
+          <div className="flex justify-between text-sm text-muted-foreground">
             <span>
               {lessonProgress.percentComplete}% 
               {currentLanguage === "spanish" ? " Completado" : " Complete"}
@@ -277,7 +277,7 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           </div>
           
           {lessonProgress.streakDays && lessonProgress.streakDays > 0 && (
-            <div className="flex items-center gap-2 text-amber-600 font-medium text-sm">
+            <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-medium text-sm">
               <Award className="h-4 w-4" />
               <span>
                 {lessonProgress.streakDays} 
@@ -289,53 +289,53 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           )}
         </div>
 
-        <div className="border rounded-lg p-4 bg-gray-50 space-y-3">
+        <div className="border rounded-lg p-4 bg-muted space-y-3">
           <div className="flex items-center gap-2 mb-2">
-            <Award className="h-4 w-4 text-lingua-primary" />
+            <Award className="h-4 w-4 text-primary" />
             <h4 className="font-medium">
               {currentLanguage === "spanish" ? "Estado de Certificación" : "Certification Status"}
             </h4>
           </div>
           
           <div className="grid grid-cols-2 gap-2">
-            <div className={`p-2 rounded ${certificationsCompleted.reading ? 'bg-green-100' : 'bg-gray-100'}`}>
+            <div className={`p-2 rounded ${certificationsCompleted.reading ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-secondary'}`}>
               <span className="text-sm">
                 {currentLanguage === "spanish" ? "Lectura: " : "Reading: "}
               </span>
-              <span className={`text-sm font-medium ${certificationsCompleted.reading ? 'text-green-600' : 'text-gray-500'}`}>
+              <span className={`text-sm font-medium ${certificationsCompleted.reading ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}>
                 {certificationsCompleted.reading 
                   ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
                   : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
               </span>
             </div>
             
-            <div className={`p-2 rounded ${certificationsCompleted.writing ? 'bg-green-100' : 'bg-gray-100'}`}>
+            <div className={`p-2 rounded ${certificationsCompleted.writing ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-secondary'}`}>
               <span className="text-sm">
                 {currentLanguage === "spanish" ? "Escritura: " : "Writing: "}
               </span>
-              <span className={`text-sm font-medium ${certificationsCompleted.writing ? 'text-green-600' : 'text-gray-500'}`}>
+              <span className={`text-sm font-medium ${certificationsCompleted.writing ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}>
                 {certificationsCompleted.writing 
                   ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
                   : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
               </span>
             </div>
             
-            <div className={`p-2 rounded ${certificationsCompleted.speaking ? 'bg-green-100' : 'bg-gray-100'}`}>
+            <div className={`p-2 rounded ${certificationsCompleted.speaking ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-secondary'}`}>
               <span className="text-sm">
                 {currentLanguage === "spanish" ? "Habla: " : "Speaking: "}
               </span>
-              <span className={`text-sm font-medium ${certificationsCompleted.speaking ? 'text-green-600' : 'text-gray-500'}`}>
+              <span className={`text-sm font-medium ${certificationsCompleted.speaking ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}>
                 {certificationsCompleted.speaking 
                   ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
                   : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
               </span>
             </div>
             
-            <div className={`p-2 rounded ${certificationsCompleted.listening ? 'bg-green-100' : 'bg-gray-100'}`}>
+            <div className={`p-2 rounded ${certificationsCompleted.listening ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-secondary'}`}>
               <span className="text-sm">
                 {currentLanguage === "spanish" ? "Comprensión Auditiva: " : "Listening: "}
               </span>
-              <span className={`text-sm font-medium ${certificationsCompleted.listening ? 'text-green-600' : 'text-gray-500'}`}>
+              <span className={`text-sm font-medium ${certificationsCompleted.listening ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}>
                 {certificationsCompleted.listening 
                   ? (currentLanguage === "spanish" ? "Completado" : "Completed") 
                   : (currentLanguage === "spanish" ? "No realizado" : "Not taken")}
@@ -344,13 +344,13 @@ const LearningGoals = ({ user, profileData }: LearningGoalsProps) => {
           </div>
         </div>
 
-        <div className="border rounded-lg p-4 bg-gray-50">
+        <div className="border rounded-lg p-4 bg-muted">
           <h4 className="font-medium mb-2">
             {currentLanguage === "spanish" 
               ? "Consejos para alcanzar tu meta más rápido:" 
               : "Tips to reach your goal faster:"}
           </h4>
-          <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
+          <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
             <li>
               {currentLanguage === "spanish" 
                 ? "Practica constantemente todos los días" 

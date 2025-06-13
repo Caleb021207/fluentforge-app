@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, TrendingUp, BarChart } from "lucide-react";
@@ -60,11 +59,11 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
       <CardContent>
         <div className="space-y-6">
           {currentLevel === 'C2' ? (
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
-              <h3 className="font-medium text-green-800">
+            <div className="bg-emerald-50 dark:bg-emerald-900/30 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800 text-center">
+              <h3 className="font-medium text-emerald-800 dark:text-emerald-200">
                 {currentLanguage === "spanish" ? "¡Felicitaciones!" : "Congratulations!"}
               </h3>
-              <p className="text-green-700">
+              <p className="text-emerald-700 dark:text-emerald-300">
                 {currentLanguage === "spanish" 
                   ? "Has alcanzado C2, el nivel más alto de competencia. ¡Sigue practicando para mantener tus habilidades!" 
                   : "You've reached C2, the highest proficiency level. Keep practicing to maintain your skills!"}
@@ -72,7 +71,7 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
             </div>
           ) : (
             <div className="space-y-2">
-              <div className="flex justify-between text-sm text-gray-600">
+              <div className="flex justify-between text-sm text-muted-foreground">
                 <span>{currentLevel || (currentLanguage === "spanish" ? "No evaluado" : "Not assessed")}</span>
                 <span>{targetLevel}</span>
               </div>
@@ -81,15 +80,15 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
                 <span className="text-sm font-medium">
                   {currentLanguage === "spanish" ? "Progreso hacia la Meta" : "Progress to Goal"}
                 </span>
-                <span className="text-sm text-gray-600">{calculateProgressToNextLevel()}%</span>
+                <span className="text-sm text-muted-foreground">{calculateProgressToNextLevel()}%</span>
               </div>
             </div>
           )}
 
           {testScores && (
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+            <div className="bg-muted p-4 rounded-lg border border-border mt-4">
               <div className="flex items-center gap-2 mb-3">
-                <BarChart className="h-4 w-4 text-lingua-primary" />
+                <BarChart className="h-4 w-4 text-primary" />
                 <h3 className="font-medium">
                   {currentLanguage === "spanish" ? "Tus Puntajes de Prueba" : "Your Test Scores"}
                 </h3>
@@ -135,16 +134,16 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
             </div>
           )}
 
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
             <span>{getRemainingTime()}</span>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-4">
+          <div className="bg-muted p-3 rounded-lg border border-border mb-4">
             <h4 className="text-sm font-medium mb-2">
               {currentLanguage === "spanish" ? "Conversión de CEFR a ACTFL" : "CEFR to ACTFL Conversion"}
             </h4>
-            <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
               {Object.entries(CEFR_TO_ACTFL).map(([cefr, actfl]) => (
                 <div key={cefr} className="flex justify-between">
                   <span className="font-medium">{cefr}:</span>
@@ -167,12 +166,12 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
                   key={level}
                   className={`p-3 rounded-lg border ${
                     isCurrent
-                      ? 'bg-blue-50 border-blue-200'
+                      ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800'
                       : isCompleted
-                      ? 'bg-green-50 border-green-200'
+                      ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800'
                       : isTarget
-                      ? 'bg-yellow-50 border-yellow-200'
-                      : 'bg-gray-50 border-gray-200'
+                      ? 'bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800'
+                      : 'bg-muted border-border'
                   }`}
                 >
                   <div className="flex justify-between items-center">
@@ -182,7 +181,7 @@ const LevelRoadmap = ({ currentLevel, targetLevel, targetDate, testScores }: Lev
                       {isTarget && (currentLanguage === "spanish" ? '(Objetivo)' : '(Target)')}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {currentLanguage === "spanish" 
                       ? getSpanishLevelDescription(level) 
                       : getLevelDescription(level)}
