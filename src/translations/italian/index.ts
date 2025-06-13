@@ -6,6 +6,7 @@ import practiceTranslations from "./practice";
 import uiElementsTranslations from "./ui-elements";
 import languageSelectionTranslations from "./language-selection";
 import authTranslations from "./auth";
+import navigationTranslations from "./navigation";
 
 // Combine all the translation categories
 const italianTranslations: TranslationRecord = {
@@ -15,7 +16,7 @@ const italianTranslations: TranslationRecord = {
   ...uiElementsTranslations,
   ...languageSelectionTranslations,
   ...authTranslations,
-  // You would add more imports here as they are created
+  ...navigationTranslations,
 };
 
 export default italianTranslations;

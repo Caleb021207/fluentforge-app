@@ -13,6 +13,7 @@ import classroomTranslations from "./classroom";
 import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import languagesTranslations from "./languages";
+import navigationTranslations from "./navigation";
 
 // Combine all Polish translations
 const polishTranslations: TranslationRecord = {
@@ -28,7 +29,8 @@ const polishTranslations: TranslationRecord = {
   ...classroomTranslations,
   ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
-  ...languagesTranslations
+  ...languagesTranslations,
+  ...navigationTranslations
 };
 
 export default polishTranslations;

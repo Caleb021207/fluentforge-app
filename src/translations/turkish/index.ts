@@ -13,6 +13,7 @@ import classroomTranslations from "./classroom";
 import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import languagesTranslations from "./languages";
+import navigationTranslations from "./navigation";
 
 // Combine all Turkish translations
 const turkishTranslations: TranslationRecord = {
@@ -28,7 +29,8 @@ const turkishTranslations: TranslationRecord = {
   ...classroomTranslations,
   ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
-  ...languagesTranslations
+  ...languagesTranslations,
+  ...navigationTranslations
 };
 
 export default turkishTranslations;
