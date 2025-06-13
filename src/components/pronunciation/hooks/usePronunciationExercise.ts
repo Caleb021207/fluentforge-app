@@ -121,7 +121,8 @@ export const usePronunciationExercise = () => {
       const { data, error } = await supabase.functions.invoke("generate-pronunciation-phrase", {
         body: {
           targetLanguage: targetLanguage,
-          level: level
+          level: level,
+          nativeLanguage: currentLanguage
         }
       });
 

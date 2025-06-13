@@ -15,11 +15,11 @@ serve(async (req) => {
   }
 
   try {
-    const { targetLanguage, level } = await req.json();
+    const { targetLanguage, level, nativeLanguage } = await req.json();
     
-    if (!targetLanguage || !level) {
+    if (!targetLanguage || !level || !nativeLanguage) {
       return new Response(
-        JSON.stringify({ error: "Target language and level are required" }),
+        JSON.stringify({ error: "Target language, level, and native language are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -52,7 +52,7 @@ serve(async (req) => {
             role: "user",
             content: `Generate ONE ${targetLanguage} phrase (${instruction}). Reply with a JSON object having these properties:
             1. phrase: The ${targetLanguage} phrase to practice
-            2. translation: The English translation
+            2. translation: The translation of the phrase in ${nativeLanguage}
             3. topic: A short category/topic label
             4. level: "${level}"
             
