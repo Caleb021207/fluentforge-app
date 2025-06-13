@@ -9,6 +9,7 @@ interface RecordingControlsProps {
   isRecording: boolean;
   isProcessing?: boolean;
   isInitializing?: boolean;
+  isAnalyzing?: boolean;
   transcript: string;
   onStartRecording: () => void;
   onStopRecording: () => void;
@@ -18,6 +19,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
   isRecording,
   isProcessing = false,
   isInitializing = false,
+  isAnalyzing = false,
   transcript,
   onStartRecording,
   onStopRecording
@@ -26,7 +28,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
 
   const handleRecordingToggle = async () => {
     // Prevent rapid re-toggling
-    if (isProcessing || isInitializing) {
+    if (isProcessing || isInitializing || isAnalyzing) {
       return;
     }
     
@@ -37,7 +39,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
     }
   };
 
-  const isLoading = isProcessing || isInitializing;
+  const isLoading = isProcessing || isInitializing || isAnalyzing;
 
   return (
     <div className="space-y-4">
@@ -82,12 +84,25 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
           ) : isProcessing ? (
             <div className="flex items-center justify-center h-12">
               <Loader2 className="h-6 w-6 mr-2 animate-spin" />
-              <p>{t("processingAudio")}</p>
+              <p>{t("processing")}...</p>
+            </div>
+          ) : isAnalyzing ? (
+            <div className="space-y-2">
+              {transcript && (
+                <div className="mb-3">
+                  <p className="text-sm text-muted-foreground mb-1">{t("yourTranscription")}:</p>
+                  <p className="text-xl">{transcript}</p>
+                </div>
+              )}
+              <div className="flex items-center justify-center">
+                <Loader2 className="h-6 w-6 mr-2 animate-spin" />
+                <p>Analyzing pronunciation...</p>
+              </div>
             </div>
           ) : isInitializing ? (
             <div className="flex items-center justify-center h-12">
               <Loader2 className="h-6 w-6 mr-2 animate-spin" />
-              <p>{t("initializingMicrophone")}</p>
+              <p>Initializing microphone...</p>
             </div>
           ) : transcript ? (
             <div>

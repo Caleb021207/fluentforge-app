@@ -34,6 +34,7 @@ export const usePronunciationExercise = () => {
   const [showExercise, setShowExercise] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   
   const { t, currentLanguage } = useLocalization();
   const { toast } = useToast();
@@ -73,10 +74,16 @@ export const usePronunciationExercise = () => {
     onRecordingComplete: async (audioData) => {
       if (currentExercise) {
         try {
+          console.log("Audio recording completed, starting transcription...");
           const languageCode = getLanguageCode(targetLanguage);
           const transcribed = await transcribeAudio(audioData, languageCode);
+          console.log("Transcription result:", transcribed);
           setTranscript(transcribed);
-          await processPronunciationFeedback(transcribed);
+          
+          // Wait a moment to show the transcription before analyzing
+          setTimeout(async () => {
+            await processPronunciationFeedback(transcribed);
+          }, 1500);
         } catch (error) {
           console.error("Error processing audio:", error);
           toast({
@@ -117,12 +124,14 @@ export const usePronunciationExercise = () => {
   const generatePracticePhrase = useCallback(async (level: ComplexityLevel) => {
     setIsGenerating(true);
     try {
-      // Call the edge function to generate a phrase
+      console.log(`Generating new ${level} phrase in ${targetLanguage}...`);
+      // Call the edge function to generate a phrase with timestamp for uniqueness
       const { data, error } = await supabase.functions.invoke("generate-pronunciation-phrase", {
         body: {
           targetLanguage: targetLanguage,
           level: level,
-          nativeLanguage: currentLanguage
+          nativeLanguage: currentLanguage,
+          timestamp: Date.now() // Add timestamp for uniqueness
         }
       });
 
@@ -135,6 +144,8 @@ export const usePronunciationExercise = () => {
         });
         return null;
       }
+
+      console.log("Generated phrase:", data.phrase);
 
       // Track this as a message for metrics
       const systemMessage: Message = {
@@ -167,9 +178,10 @@ export const usePronunciationExercise = () => {
   const processPronunciationFeedback = async (transcribed: string) => {
     if (!currentExercise) return;
     
-    setIsLoading(true);
+    setIsAnalyzing(true);
     
     try {
+      console.log(`Analyzing pronunciation for "${currentExercise.phrase}" vs "${transcribed}"`);
       // Add user's attempt to messages for metrics
       const userMessage: Message = {
         role: "user",
@@ -182,7 +194,7 @@ export const usePronunciationExercise = () => {
           description: t("pleaseTryAgain"),
           variant: "destructive",
         });
-        setIsLoading(false);
+        setIsAnalyzing(false);
         return;
       }
       
@@ -196,6 +208,7 @@ export const usePronunciationExercise = () => {
         languageCode
       );
       
+      console.log("Pronunciation analysis result:", analysisResult);
       setFeedback(analysisResult);
       
       // Analyze conversation for metrics if enough messages
@@ -214,7 +227,7 @@ export const usePronunciationExercise = () => {
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setIsAnalyzing(false);
     }
   };
 
@@ -234,8 +247,10 @@ export const usePronunciationExercise = () => {
 
   // Start recording user's pronunciation
   const handleStartRecording = useCallback(() => {
+    console.log("Starting pronunciation recording...");
     setFeedback(null);
     setTranscript("");
+    setIsAnalyzing(false);
     startRecording();
   }, [startRecording]);
 
@@ -260,8 +275,10 @@ export const usePronunciationExercise = () => {
 
   // Try the same exercise again
   const handleTryAgain = useCallback(() => {
+    console.log("Trying pronunciation exercise again...");
     setFeedback(null);
     setTranscript("");
+    setIsAnalyzing(false);
   }, []);
 
   // Reset to level selection
@@ -275,10 +292,11 @@ export const usePronunciationExercise = () => {
     complexity,
     setComplexity,
     currentExercise,
-    isLoading,
+    isLoading: isAnalyzing, // Rename for clarity
     isRecording,
     isProcessing,
     isInitializing,  // Add this to the returned object
+    isAnalyzing,
     transcript,
     speechRate,
     setSpeechRate,

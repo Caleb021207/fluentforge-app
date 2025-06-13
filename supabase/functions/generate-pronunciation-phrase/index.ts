@@ -15,7 +15,8 @@ serve(async (req) => {
   }
 
   try {
-    const { targetLanguage, level, nativeLanguage } = await req.json();
+    const { targetLanguage, level, nativeLanguage, timestamp } = await req.json();
+    console.log(`Generating ${level} phrase for ${targetLanguage} at ${timestamp}`);
     
     if (!targetLanguage || !level || !nativeLanguage) {
       return new Response(
@@ -50,7 +51,7 @@ serve(async (req) => {
           },
           {
             role: "user",
-            content: `Generate ONE unique ${targetLanguage} phrase (${instruction}). Make sure it's different from previous phrases. Reply with a JSON object having these properties:
+            content: `Generate ONE unique ${targetLanguage} phrase (${instruction}). Make sure it's different from previous phrases. Current timestamp: ${timestamp || Date.now()}. Reply with a JSON object having these properties:
             1. phrase: The ${targetLanguage} phrase to practice
             2. translation: The translation of the phrase in ${nativeLanguage}
             3. topic: A short category/topic label
@@ -73,6 +74,8 @@ serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    console.log("OpenAI response received successfully");
 
     // Parse the content which should be JSON
     try {
