@@ -204,6 +204,56 @@ export const getAdminSchoolData = async (userId: string): Promise<AdminSchoolDat
       .eq('school_id', profile.school_id)
       .eq('role', 'teacher');
 
+    // Calculate total enrollments across all classes in the school
+    let totalEnrollments = 0;
+    if (classes && classes.length > 0) {
+      const classIds = classes.map(c => c.id);
+      const { data: enrollments } = await supabase
+        .from('student_enrollments')
+        .select('id')
+        .in('class_id', classIds)
+        .eq('status', 'active');
+      
+      totalEnrollments = enrollments?.length || 0;
+    }
+
+    // Get certification stats - calculate average from transcript analyses
+    let avgCertificationScore = 0;
+    if (totalEnrollments > 0) {
+      // Get all students in the school through their class enrollments
+      const { data: schoolStudents } = await supabase
+        .from('student_enrollments')
+        .select('student_id')
+        .in('class_id', classes?.map(c => c.id) || [])
+        .eq('status', 'active');
+
+      if (schoolStudents && schoolStudents.length > 0) {
+        const studentIds = schoolStudents.map(s => s.student_id);
+        
+        // Get latest transcript analysis for each student
+        const { data: transcriptScores } = await supabase
+          .from('transcript_analyses')
+          .select('user_id, overall_score')
+          .in('user_id', studentIds)
+          .not('overall_score', 'is', null);
+
+        if (transcriptScores && transcriptScores.length > 0) {
+          // Get the latest score for each student
+          const latestScores = new Map();
+          for (const score of transcriptScores) {
+            if (!latestScores.has(score.user_id) || score.overall_score) {
+              latestScores.set(score.user_id, score.overall_score);
+            }
+          }
+          
+          const scores = Array.from(latestScores.values()).filter(score => score !== null);
+          if (scores.length > 0) {
+            avgCertificationScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+          }
+        }
+      }
+    }
+
     const { data: certStats } = await supabase
       .from('school_certification_stats')
       .select('*')
@@ -213,7 +263,7 @@ export const getAdminSchoolData = async (userId: string): Promise<AdminSchoolDat
       school,
       total_classes: classes?.length || 0,
       total_teachers: teachers?.length || 0,
-      total_students: 0, // Would need to calculate from enrollments
+      total_students: totalEnrollments,
       certification_stats: certStats || []
     };
   } catch (error) {

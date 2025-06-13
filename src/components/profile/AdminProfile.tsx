@@ -58,11 +58,21 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
     );
   }
 
-  const averageCertScore = schoolData.certification_stats.length > 0
-    ? schoolData.certification_stats.reduce((sum, stat) => sum + (stat.avg_score || 0), 0) / schoolData.certification_stats.length
+  // Calculate average certification score from classroom data (actual transcript scores)
+  const classesWithScores = classroomData.filter(classroom => 
+    classroom.certification_stats.length > 0 && 
+    classroom.certification_stats.some(stat => stat.avg_score !== null)
+  );
+  
+  const averageCertScore = classesWithScores.length > 0
+    ? classesWithScores.reduce((sum, classroom) => {
+        const classAvg = classroom.certification_stats.reduce((statSum, stat) => 
+          statSum + (stat.avg_score || 0), 0) / classroom.certification_stats.length;
+        return sum + classAvg;
+      }, 0) / classesWithScores.length
     : 0;
 
-  const totalEnrollments = classroomData.reduce((sum, classroom) => sum + classroom.enrollment_count, 0);
+  const totalEnrollments = schoolData.total_students;
 
   return (
     <div className="space-y-6">
