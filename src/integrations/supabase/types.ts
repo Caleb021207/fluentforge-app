@@ -1177,6 +1177,18 @@ export type Database = {
         }
         Returns: string
       }
+      get_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      is_user_enrolled_in_class: {
+        Args: { class_id_param: string }
+        Returns: boolean
+      }
+      is_user_teacher_of_class: {
+        Args: { class_id_param: string }
+        Returns: boolean
+      }
       join_classroom: {
         Args: { class_code: string }
         Returns: Json

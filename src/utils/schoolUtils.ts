@@ -5,22 +5,6 @@ export const getStudentEnrollments = async (studentId: string): Promise<StudentE
   try {
     console.log('Fetching enrollments for student:', studentId);
     
-    // First, let's check if the student has any enrollments at all
-    const { data: rawEnrollments, error: rawError } = await supabase
-      .from('student_enrollments')
-      .select('*')
-      .eq('student_id', studentId);
-
-    console.log('Raw enrollments check:', rawEnrollments, 'Error:', rawError);
-
-    // Check if classes exist in the system
-    const { data: allClasses, error: classError } = await supabase
-      .from('classes')
-      .select('*');
-
-    console.log('All classes in system:', allClasses?.length || 0, 'Error:', classError);
-
-    // Now do the full query with joins
     const { data, error } = await supabase
       .from('student_enrollments')
       .select(`
@@ -53,37 +37,8 @@ export const getStudentEnrollments = async (studentId: string): Promise<StudentE
       throw error;
     }
 
-    console.log('Full enrollment data with joins:', data);
+    console.log('Enrollment data retrieved:', data?.length || 0, 'enrollments');
     
-    // If we have raw enrollments but no joined data, let's investigate each enrollment
-    if (rawEnrollments && rawEnrollments.length > 0 && (!data || data.length === 0)) {
-      console.log('Found raw enrollments but join failed. Investigating...');
-      
-      for (const enrollment of rawEnrollments) {
-        console.log('Checking enrollment:', enrollment);
-        
-        // Check if the class exists
-        const { data: classData, error: classErr } = await supabase
-          .from('classes')
-          .select('*')
-          .eq('id', enrollment.class_id)
-          .single();
-        
-        console.log('Class data for', enrollment.class_id, ':', classData, 'Error:', classErr);
-        
-        if (classData && classData.teacher_id) {
-          // Check if teacher profile exists
-          const { data: teacherData, error: teacherErr } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', classData.teacher_id)
-            .single();
-          
-          console.log('Teacher data for', classData.teacher_id, ':', teacherData, 'Error:', teacherErr);
-        }
-      }
-    }
-
     // Cast the data to match our interface, ensuring status is properly typed
     return (data || []).map(item => ({
       ...item,
