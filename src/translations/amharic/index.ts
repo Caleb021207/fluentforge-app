@@ -6,6 +6,7 @@ import practiceTranslations from "./practice";
 import voiceChatTranslations from "./voice-chat";
 import premiumVoiceTranslations from "./premium-voice";
 import generalTranslations from "./general";
+import navigationTranslations from "./navigation";
 
 // Simplified approach - only include available translations for now
 const amharicTranslations: TranslationRecord = {
@@ -14,7 +15,8 @@ const amharicTranslations: TranslationRecord = {
   ...practiceTranslations,
   ...voiceChatTranslations,
   ...premiumVoiceTranslations,
-  ...generalTranslations
+  ...generalTranslations,
+  ...navigationTranslations,
 };
 
 export default amharicTranslations;

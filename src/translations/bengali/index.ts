@@ -7,6 +7,7 @@ import generalTranslations from "./general";
 import languageSelectionTranslations from "./language-selection";
 import languagesTranslations from "./languages";
 import classroomTranslations from "./classroom";
+import navigationTranslations from "./navigation";
 
 const bengaliTranslations: TranslationRecord = {
   ...practiceTranslations,
@@ -15,7 +16,8 @@ const bengaliTranslations: TranslationRecord = {
   ...generalTranslations,
   ...languageSelectionTranslations,
   ...languagesTranslations,
-  ...classroomTranslations
+  ...classroomTranslations,
+  ...navigationTranslations,
 };
 
 export default bengaliTranslations;

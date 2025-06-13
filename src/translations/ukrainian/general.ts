@@ -2,49 +2,36 @@
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
-  appName: "LinguaTutor",
-  welcomeMessage: "Ласкаво просимо до LinguaTutor",
-  loading: "Завантаження...",
-  save: "Зберегти",
-  cancel: "Скасувати",
-  delete: "Видалити",
-  edit: "Редагувати",
-  back: "Назад",
-  next: "Далі",
-  home: "Головна",
-  lessons: "Уроки",
-  practice: "Практика",
-  voices: "Голоси",
-  certificates: "Сертифікати",
-  profile: "Профіль",
-  progress: "Прогрес",
-  settings: "Налаштування",
-  premium: "Преміум",
-  free: "Безкоштовно",
-  submit: "Надіслати",
-  yes: "Так",
-  no: "Ні",
-  ok: "OK",
+  welcomeToLanguageLearning: "Ласкаво просимо до Palavox",
+  yourPersonalAICompanion: "Ваш персональний ІІ-супутник для ефективного навчання",
+  signIn: "Увійти",
+  createAccount: "Створити обліковий запис",
+  goToDashboard: "Перейти до панелі",
+  practiceWithAI: "Практикуйтеся з ІІ",
+  processing: "Обробка...",
   error: "Помилка",
-  success: "Успішно",
-  warning: "Попередження",
-  info: "Інформація",
-  search: "Пошук",
-  filter: "Фільтр",
-  sort: "Сортування",
-  confirmation: "Підтвердження",
-  areYouSure: "Ви впевнені?",
-  thisActionCannot: "Цю дію не можна скасувати",
-  beta: "Бета",
-  new: "Новий",
-  comingSoon: "Незабаром",
+  send: "Відправити",
+  cancel: "Скасувати",
+  success: "Успіх",
   
-  // Home page specific translations
-  welcomeToLanguageLearning: "Ласкаво просимо до вивчення мов",
-  yourPersonalAICompanion: "Ваш персональний ШІ-компаньйон для вивчення мов",
-  practiceWithAI: "Практикуватися з ШІ",
-  selectLanguage: "Вибрати мову",
-  startLearning: "Почати навчання"
+  // Navigation translations
+  home: "Головна",
+  textPractice: "Текстова практика",
+  unlimitedVoicePractice: "Необмежена голосова практика",
+  myClass: "Мій клас",
+  myClasses: "Мої класи",
+  signedInAs: "Увійшли як",
+  logout: "Вийти",
+  loginRequiredForFeature: "Увійдіть, щоб використовувати цю функцію",
+  
+  // Additional translations
+  loading: "Завантаження...",
+  back: "Назад",
+  practice: "Практика",
+  remaining: "залишилося",
+  
+  // CEFR level descriptions
+  cefrB1Description: "Середній рівень - Може обговорювати знайомі теми"
 };
 
 export default generalTranslations;
