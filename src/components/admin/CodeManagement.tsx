@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { Copy, Plus, Calendar, Users, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateAccessCode, getUserAccessCodes } from "@/utils/accessCodeUtils";
 import { useLocalization } from "@/context/LocalizationContext";
+import DevCodeGenerator from "./DevCodeGenerator";
 
 interface AccessCode {
   id: string;
@@ -161,21 +161,30 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
 
   if (availableTypes.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Access Code Management</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">
-            You don't have permission to generate access codes.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="space-y-6">
+        {/* Dev Tool for generating district codes */}
+        <DevCodeGenerator />
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Access Code Management</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              You don't have permission to generate access codes.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {/* Dev Tool for generating district codes */}
+      <DevCodeGenerator />
+      
+      {/* Access Code Management */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
