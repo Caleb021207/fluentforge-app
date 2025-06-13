@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Target, Clock, Star, CheckCircle, Book, Sparkles, ExternalLink } from "lucide-react";
+import { Target, Clock, Star, CheckCircle, Book, Sparkles, ExternalLink, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -159,6 +159,54 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
     }
   };
 
+  const handleRegenerateStudyPlan = async () => {
+    if (!analyses || analyses.length === 0) {
+      toast({
+        title: "No Analysis Found",
+        description: "Please upload and analyze a transcript first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const latestAnalysis = analyses[0];
+      
+      // First, delete existing recommendations for this transcript
+      const { error: deleteError } = await supabase
+        .from('study_recommendations')
+        .delete()
+        .eq('transcript_id', latestAnalysis.id);
+
+      if (deleteError) throw deleteError;
+
+      // Then generate new recommendations
+      const { data, error } = await supabase.functions.invoke('generate-study-recommendations', {
+        body: { transcriptId: latestAnalysis.id }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Study Plan Regenerated!",
+        description: "Your new personalized study recommendations are ready.",
+      });
+
+      // Refresh the page to show new recommendations
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error regenerating study plan:', error);
+      toast({
+        title: "Regeneration Failed",
+        description: error.message || "Failed to regenerate study recommendations.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   if (!recommendations || recommendations.length === 0) {
     const hasAnalyses = analyses && analyses.length > 0;
     
@@ -193,13 +241,26 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5" />
-            Personalized Study Plan
-          </CardTitle>
-          <CardDescription>
-            AI-generated recommendations based on your transcript analysis
-          </CardDescription>
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Personalized Study Plan
+              </CardTitle>
+              <CardDescription>
+                AI-generated recommendations based on your transcript analysis
+              </CardDescription>
+            </div>
+            <Button
+              onClick={handleRegenerateStudyPlan}
+              disabled={isGenerating}
+              variant="outline"
+              size="sm"
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              {isGenerating ? 'Regenerating...' : 'Regenerate Plan'}
+            </Button>
+          </div>
         </CardHeader>
       </Card>
 
