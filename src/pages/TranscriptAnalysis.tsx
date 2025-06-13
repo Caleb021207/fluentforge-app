@@ -83,11 +83,11 @@ const TranscriptAnalysis = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
+        <h1 className="text-3xl font-bold mb-2 flex items-center gap-2 text-foreground">
           <Brain className="h-8 w-8 text-blue-600" />
           AI Progress Analysis
         </h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Upload your language test transcripts and get AI-powered insights to accelerate your learning progress.
         </p>
       </div>

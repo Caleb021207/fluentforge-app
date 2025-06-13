@@ -12,7 +12,6 @@ import Accuracy from "@/pages/Accuracy";
 import Profile from "@/pages/Profile";
 import PronunciationPractice from "@/pages/PronunciationPractice";
 import VoiceChat from "@/pages/VoiceChat";
-import Certificates from "@/pages/Certificates";
 import Settings from "@/pages/Settings";
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
           <Route path="/pronunciation-practice" element={<PronunciationPractice />} />
           <Route path="/accuracy" element={<Accuracy />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/certificates" element={<Certificates />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/analysis" element={<TranscriptAnalysis />} />
         </Routes>
