@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import { useNavigate } from 'react-router-dom';
 import { SwipeUpPanel } from '@/components/ui/swipe-up-panel';
 import AuthDialog from '@/components/home/AuthDialog';
 import LanguageSelectionCard from '@/components/home/LanguageSelectionCard';
@@ -14,11 +15,18 @@ const NewLandingPage = () => {
   const { theme } = useTheme();
   const { t, setCurrentLanguage } = useLocalization();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("");
   const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
+
+  const handleAuthSuccess = () => {
+    console.log('Auth success - navigating to profile');
+    setIsAuthDialogOpen(false);
+    navigate('/profile');
+  };
 
   const {
     isLogin,
@@ -31,7 +39,7 @@ const NewLandingPage = () => {
     handleEmailAuth,
     authError,
     retryCount
-  } = useAuthFlow(() => setIsAuthDialogOpen(false));
+  } = useAuthFlow(handleAuthSuccess);
 
   const handleLanguageSelection = () => {
     if (nativeLanguage && targetLanguage) {
