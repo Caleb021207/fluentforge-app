@@ -5,6 +5,8 @@ import practiceTranslations from "./practice";
 import voiceChatTranslations from "./voice-chat";
 import languageSelectionTranslations from "./language-selection";
 import uiElementsTranslations from "./ui-elements";
+import navigationTranslations from "./navigation";
+import authTranslations from "./auth";
 
 // Combine all the translation categories
 const sinhalaTranslations: TranslationRecord = {
@@ -13,7 +15,8 @@ const sinhalaTranslations: TranslationRecord = {
   ...voiceChatTranslations,
   ...languageSelectionTranslations,
   ...uiElementsTranslations,
-  // You would add more imports here as they are created
+  ...navigationTranslations,
+  ...authTranslations,
 };
 
 export default sinhalaTranslations;
