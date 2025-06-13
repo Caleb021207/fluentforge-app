@@ -1163,6 +1163,10 @@ export type Database = {
       }
     }
     Functions: {
+      change_user_role_for_testing: {
+        Args: { target_role: string }
+        Returns: Json
+      }
       create_classroom: {
         Args: { class_name: string }
         Returns: Json
