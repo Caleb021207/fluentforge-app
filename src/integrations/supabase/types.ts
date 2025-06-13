@@ -1163,6 +1163,10 @@ export type Database = {
       }
     }
     Functions: {
+      auth_user_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       change_user_role_for_testing: {
         Args: { target_role: string }
         Returns: Json
@@ -1179,10 +1183,6 @@ export type Database = {
           p_expires_at?: string
           p_max_uses?: number
         }
-        Returns: string
-      }
-      get_user_role: {
-        Args: Record<PropertyKey, never>
         Returns: string
       }
       is_user_enrolled_in_class: {
