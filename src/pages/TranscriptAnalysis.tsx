@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import TranscriptUpload from "@/components/transcript-analysis/TranscriptUpload";
 import AnalysisResults from "@/components/transcript-analysis/AnalysisResults";
 import ProgressTimeline from "@/components/transcript-analysis/ProgressTimeline";
-import StudyRecommendations from "@/components/transcript-analysis/StudyRecommendations";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Brain, TrendingUp, Target, FileText } from "lucide-react";
@@ -51,24 +51,6 @@ const TranscriptAnalysis = () => {
     },
   });
 
-  // Fetch study recommendations
-  const { data: recommendations } = useQuery({
-    queryKey: ['study-recommendations', refreshKey],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      const { data, error } = await supabase
-        .from('study_recommendations')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .order('priority_level', { ascending: false });
-
-      if (error) throw error;
-      return data;
-    },
-  });
 
   const handleUploadSuccess = () => {
     setRefreshKey(prev => prev + 1);
@@ -133,11 +115,10 @@ const TranscriptAnalysis = () => {
       </div>
 
       <Tabs defaultValue="upload" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="upload">Upload & Analyze</TabsTrigger>
           <TabsTrigger value="results">Analysis Results</TabsTrigger>
           <TabsTrigger value="progress">Progress Timeline</TabsTrigger>
-          <TabsTrigger value="recommendations">Study Plan</TabsTrigger>
         </TabsList>
 
         <TabsContent value="upload">
@@ -152,9 +133,6 @@ const TranscriptAnalysis = () => {
           <ProgressTimeline analyses={analyses} milestones={milestones} />
         </TabsContent>
 
-        <TabsContent value="recommendations">
-          <StudyRecommendations recommendations={recommendations} analyses={analyses} />
-        </TabsContent>
       </Tabs>
     </div>
   );

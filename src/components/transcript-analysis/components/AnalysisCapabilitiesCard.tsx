@@ -12,7 +12,7 @@ const AnalysisCapabilitiesCard: React.FC = () => {
           <li>• Overall scores and CEFR levels</li>
           <li>• Individual skill breakdowns (Reading, Writing, Speaking, Listening)</li>
           <li>• Strengths and areas for improvement</li>
-          <li>• Personalized study recommendations</li>
+          
           <li>• Progress tracking over time</li>
         </ul>
       </div>
