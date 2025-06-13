@@ -1,4 +1,3 @@
-
 export interface School {
   id: string;
   name: string;
@@ -46,6 +45,11 @@ export interface ClassInfo {
   // Joined data
   subject?: Subject;
   grade_level?: GradeLevel;
+  teacher?: {
+    id: string;
+    display_name: string;
+    email: string;
+  };
 }
 
 export interface StudentEnrollment {
