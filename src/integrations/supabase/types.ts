@@ -592,6 +592,30 @@ export type Database = {
           },
         ]
       }
+      recent_phrases: {
+        Row: {
+          created_at: string
+          id: string
+          language: string
+          level: string
+          phrase: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language: string
+          level: string
+          phrase: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language?: string
+          level?: string
+          phrase?: string
+        }
+        Relationships: []
+      }
       school_certification_stats: {
         Row: {
           academic_year: string
@@ -1170,6 +1194,10 @@ export type Database = {
       change_user_role_for_testing: {
         Args: { target_role: string }
         Returns: Json
+      }
+      cleanup_old_phrases: {
+        Args: { p_level: string; p_language: string }
+        Returns: undefined
       }
       create_classroom: {
         Args: { class_name: string }
