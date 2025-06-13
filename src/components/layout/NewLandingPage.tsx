@@ -84,12 +84,16 @@ const NewLandingPage: React.FC<NewLandingPageProps> = ({ onPlayWelcomeAnimation 
       {/* Triangle Button for Animation Replay */}
       {onPlayWelcomeAnimation && (
         <Button
-          variant="ghost"
-          size="icon"
-          onClick={onPlayWelcomeAnimation}
-          className="absolute top-4 right-4 z-20 w-10 h-10"
+          variant="default"
+          size="sm"
+          onClick={() => {
+            console.log('Triangle button clicked');
+            onPlayWelcomeAnimation();
+          }}
+          className="absolute top-4 right-4 z-20 bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg"
         >
-          <Triangle className="h-4 w-4" />
+          <Triangle className="h-4 w-4 mr-2" />
+          Play Animation
         </Button>
       )}
       {/* Background Pattern */}

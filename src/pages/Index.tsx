@@ -37,7 +37,9 @@ const Index = () => {
   // Check if this is the first visit
   useEffect(() => {
     const hasSeenWelcome = localStorage.getItem('palavox-welcome-seen');
+    console.log('Checking welcome animation:', { hasSeenWelcome, isLoading });
     if (!hasSeenWelcome && !isLoading) {
+      console.log('Setting showWelcomeAnimation to true');
       setShowWelcomeAnimation(true);
     }
   }, [isLoading]);
@@ -55,6 +57,7 @@ const Index = () => {
   };
 
   const handlePlayWelcomeAnimation = () => {
+    console.log('Playing welcome animation');
     setShowWelcomeAnimation(true);
   };
 
