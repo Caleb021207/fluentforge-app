@@ -107,6 +107,44 @@ export type Database = {
         }
         Relationships: []
       }
+      class_certification_stats: {
+        Row: {
+          academic_year: string
+          avg_score: number | null
+          certification_type: string
+          class_id: string | null
+          id: string
+          last_updated: string | null
+          student_count: number | null
+        }
+        Insert: {
+          academic_year: string
+          avg_score?: number | null
+          certification_type: string
+          class_id?: string | null
+          id?: string
+          last_updated?: string | null
+          student_count?: number | null
+        }
+        Update: {
+          academic_year?: string
+          avg_score?: number | null
+          certification_type?: string
+          class_id?: string | null
+          id?: string
+          last_updated?: string | null
+          student_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_certification_stats_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       classes: {
         Row: {
           academic_year: string
@@ -506,6 +544,47 @@ export type Database = {
           },
         ]
       }
+      school_certification_stats: {
+        Row: {
+          academic_year: string
+          avg_score: number | null
+          certification_type: string
+          class_count: number | null
+          id: string
+          last_updated: string | null
+          school_id: string | null
+          student_count: number | null
+        }
+        Insert: {
+          academic_year: string
+          avg_score?: number | null
+          certification_type: string
+          class_count?: number | null
+          id?: string
+          last_updated?: string | null
+          school_id?: string | null
+          student_count?: number | null
+        }
+        Update: {
+          academic_year?: string
+          avg_score?: number | null
+          certification_type?: string
+          class_count?: number | null
+          id?: string
+          last_updated?: string | null
+          school_id?: string | null
+          student_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_certification_stats_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       school_districts: {
         Row: {
           code: string
@@ -535,6 +614,7 @@ export type Database = {
           address: string | null
           created_at: string
           district: string | null
+          district_id: string | null
           email: string | null
           id: string
           name: string
@@ -546,6 +626,7 @@ export type Database = {
           address?: string | null
           created_at?: string
           district?: string | null
+          district_id?: string | null
           email?: string | null
           id?: string
           name: string
@@ -557,6 +638,7 @@ export type Database = {
           address?: string | null
           created_at?: string
           district?: string | null
+          district_id?: string | null
           email?: string | null
           id?: string
           name?: string
@@ -564,7 +646,15 @@ export type Database = {
           principal_name?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "schools_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "school_districts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       student_enrollments: {
         Row: {
@@ -742,6 +832,60 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      student_usage_metrics: {
+        Row: {
+          class_id: string | null
+          created_at: string
+          id: string
+          last_activity_date: string | null
+          lessons_completed: number | null
+          practice_sessions: number | null
+          student_id: string | null
+          updated_at: string
+          voice_chat_minutes: number | null
+          week_starting: string
+        }
+        Insert: {
+          class_id?: string | null
+          created_at?: string
+          id?: string
+          last_activity_date?: string | null
+          lessons_completed?: number | null
+          practice_sessions?: number | null
+          student_id?: string | null
+          updated_at?: string
+          voice_chat_minutes?: number | null
+          week_starting: string
+        }
+        Update: {
+          class_id?: string | null
+          created_at?: string
+          id?: string
+          last_activity_date?: string | null
+          lessons_completed?: number | null
+          practice_sessions?: number | null
+          student_id?: string | null
+          updated_at?: string
+          voice_chat_minutes?: number | null
+          week_starting?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_usage_metrics_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_usage_metrics_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       study_recommendations: {
         Row: {

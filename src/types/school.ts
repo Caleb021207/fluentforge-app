@@ -3,6 +3,7 @@ export interface School {
   id: string;
   name: string;
   district?: string;
+  district_id?: string;
   address?: string;
   phone?: string;
   email?: string;
@@ -88,7 +89,51 @@ export interface StudentGrade {
   assignment?: Assignment;
 }
 
-export type UserRole = 'student' | 'teacher' | 'admin';
+export interface StudentUsageMetrics {
+  id: string;
+  student_id: string;
+  class_id: string;
+  practice_sessions: number;
+  voice_chat_minutes: number;
+  lessons_completed: number;
+  last_activity_date?: string;
+  week_starting: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClassCertificationStats {
+  id: string;
+  class_id: string;
+  certification_type: string;
+  avg_score: number;
+  student_count: number;
+  last_updated: string;
+  academic_year: string;
+}
+
+export interface SchoolCertificationStats {
+  id: string;
+  school_id: string;
+  certification_type: string;
+  avg_score: number;
+  student_count: number;
+  class_count: number;
+  last_updated: string;
+  academic_year: string;
+}
+
+export interface DistrictUser {
+  id: string;
+  user_id: string;
+  district_id: string;
+  role: 'viewer' | 'manager' | 'admin';
+  permissions: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+export type UserRole = 'student' | 'teacher' | 'admin' | 'district';
 
 export interface ExtendedUserProfile {
   id: string;
@@ -108,4 +153,27 @@ export interface ExtendedUserProfile {
   // Joined data
   school?: School;
   grade_level?: GradeLevel;
+}
+
+export interface TeacherClassData {
+  class_info: ClassInfo;
+  enrollment_count: number;
+  usage_stats: StudentUsageMetrics[];
+  certification_stats: ClassCertificationStats[];
+}
+
+export interface AdminSchoolData {
+  school: School;
+  total_classes: number;
+  total_teachers: number;
+  total_students: number;
+  certification_stats: SchoolCertificationStats[];
+}
+
+export interface DistrictSchoolData {
+  school: School;
+  avg_certification_score: number;
+  total_students: number;
+  total_classes: number;
+  certification_stats: SchoolCertificationStats[];
 }

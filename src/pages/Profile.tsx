@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Loader2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +10,8 @@ import { ExtendedUserProfile } from "@/types/school";
 import { getExtendedUserProfile } from "@/utils/schoolUtils";
 import StudentProfile from "@/components/profile/StudentProfile";
 import TeacherProfile from "@/components/profile/TeacherProfile";
+import AdminProfile from "@/components/profile/AdminProfile";
+import DistrictProfile from "@/components/profile/DistrictProfile";
 import UserInfo from "@/components/profile/UserInfo";
 
 const ProfilePage = () => {
@@ -102,6 +103,38 @@ const ProfilePage = () => {
     );
   }
 
+  const getRoleDisplayName = (role: string) => {
+    switch (role) {
+      case 'student': return currentLanguage === "spanish" ? "Estudiante" : "Student";
+      case 'teacher': return currentLanguage === "spanish" ? "Profesor" : "Teacher";
+      case 'admin': return currentLanguage === "spanish" ? "Administrador" : "Administrator";
+      case 'district': return currentLanguage === "spanish" ? "Distrito" : "District Admin";
+      default: return role;
+    }
+  };
+
+  const renderRoleSpecificProfile = () => {
+    switch (profile.role) {
+      case 'teacher':
+        return <TeacherProfile profile={profile} />;
+      case 'student':
+        return <StudentProfile profile={profile} />;
+      case 'admin':
+        return <AdminProfile profile={profile} />;
+      case 'district':
+        return <DistrictProfile profile={profile} />;
+      default:
+        return (
+          <div className="text-center py-12">
+            <h3 className="text-lg font-medium mb-2">Role Not Assigned</h3>
+            <p className="text-muted-foreground">
+              Please contact your administrator to assign your role in the system.
+            </p>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -111,7 +144,7 @@ const ProfilePage = () => {
             {currentLanguage === "spanish" ? "Mi Perfil" : "My Profile"}
           </h1>
           <p className="text-muted-foreground">
-            {profile.display_name || user.email}
+            {profile.display_name || user.email} • {getRoleDisplayName(profile.role)}
           </p>
         </div>
       </div>
@@ -136,18 +169,7 @@ const ProfilePage = () => {
 
         {/* Role-specific content */}
         <div className="lg:col-span-2">
-          {profile.role === 'teacher' ? (
-            <TeacherProfile profile={profile} />
-          ) : profile.role === 'student' ? (
-            <StudentProfile profile={profile} />
-          ) : (
-            <div className="text-center py-12">
-              <h3 className="text-lg font-medium mb-2">Role Not Assigned</h3>
-              <p className="text-muted-foreground">
-                Please contact your administrator to assign your role in the system.
-              </p>
-            </div>
-          )}
+          {renderRoleSpecificProfile()}
         </div>
       </div>
     </div>

@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock } from "lucide-react";
-import { ExtendedUserProfile, StudentEnrollment, StudentGrade } from "@/types/school";
-import { getStudentEnrollments, getStudentGrades, calculateGPA } from "@/utils/schoolUtils";
+import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User } from "lucide-react";
+import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
+import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics, calculateGPA } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface StudentProfileProps {
@@ -14,18 +13,21 @@ interface StudentProfileProps {
 const StudentProfile = ({ profile }: StudentProfileProps) => {
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
   const [grades, setGrades] = useState<StudentGrade[]>([]);
+  const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchStudentData = async () => {
       setIsLoading(true);
       try {
-        const [enrollmentData, gradeData] = await Promise.all([
+        const [enrollmentData, gradeData, usageData] = await Promise.all([
           getStudentEnrollments(profile.id),
-          getStudentGrades(profile.id)
+          getStudentGrades(profile.id),
+          getStudentUsageMetrics(profile.id)
         ]);
         setEnrollments(enrollmentData);
         setGrades(gradeData);
+        setUsageMetrics(usageData);
       } catch (error) {
         console.error('Error fetching student data:', error);
       } finally {
@@ -37,6 +39,8 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
   }, [profile.id]);
 
   const gpa = calculateGPA(grades);
+  const totalPracticeSessions = usageMetrics.reduce((sum, metric) => sum + metric.practice_sessions, 0);
+  const totalVoiceChatMinutes = usageMetrics.reduce((sum, metric) => sum + metric.voice_chat_minutes, 0);
 
   if (isLoading) {
     return (
@@ -87,16 +91,16 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         </CardContent>
       </Card>
 
-      {/* Academic Performance */}
+      {/* Academic Performance & Usage */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Star className="h-5 w-5" />
-            Academic Performance
+            Academic Performance & Usage
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{gpa.toFixed(2)}</div>
               <p className="text-sm text-muted-foreground">Current GPA</p>
@@ -106,8 +110,12 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               <p className="text-sm text-muted-foreground">Active Classes</p>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{grades.length}</div>
-              <p className="text-sm text-muted-foreground">Recent Grades</p>
+              <div className="text-2xl font-bold text-primary">{totalPracticeSessions}</div>
+              <p className="text-sm text-muted-foreground">Practice Sessions</p>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-primary">{Math.round(totalVoiceChatMinutes)}</div>
+              <p className="text-sm text-muted-foreground">Voice Chat Minutes</p>
             </div>
           </div>
 
@@ -134,12 +142,12 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         </CardContent>
       </Card>
 
-      {/* Current Classes */}
+      {/* Current Classes with Teacher Info */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Current Classes
+            Current Classes & Teachers
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -162,6 +170,14 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                           <span>{enrollment.class_info.room_number}</span>
                         )}
                       </div>
+                      {(enrollment.class_info as any)?.teacher && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <User className="h-3 w-3" />
+                          <span className="font-medium">
+                            Teacher: {(enrollment.class_info as any).teacher.display_name || (enrollment.class_info as any).teacher.email}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex items-center gap-2">
                         <Badge variant="outline">{enrollment.class_info?.class_code}</Badge>
                         <Badge variant="secondary">{enrollment.class_info?.academic_year}</Badge>
