@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import NewLandingPage from "@/components/layout/NewLandingPage";
 import { useLocalization } from "@/context/LocalizationContext";
 import { motion } from "framer-motion";
+import HomeNavigationGrid from "@/components/home/HomeNavigationGrid";
 
 const Index = () => {
   const { t } = useLocalization();
@@ -57,35 +58,11 @@ const Index = () => {
           <h1 className="text-4xl md:text-6xl font-bold text-foreground">
             {t("welcomeBack") || "Welcome Back!"}
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground">
+          <p className="text-lg md:text-xl text-muted-foreground mb-12">
             {t("continueYourLearningJourney") || "Continue your language learning journey"}
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="p-6 bg-card rounded-xl border shadow-sm"
-            >
-              <h3 className="text-xl font-semibold mb-2">{t("textPractice") || "Text Practice"}</h3>
-              <p className="text-muted-foreground">{t("practiceConversations") || "Practice conversations with AI"}</p>
-            </motion.div>
-            
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="p-6 bg-card rounded-xl border shadow-sm"
-            >
-              <h3 className="text-xl font-semibold mb-2">{t("voiceChat") || "Voice Chat"}</h3>
-              <p className="text-muted-foreground">{t("speakWithAI") || "Practice speaking with AI"}</p>
-            </motion.div>
-            
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="p-6 bg-card rounded-xl border shadow-sm"
-            >
-              <h3 className="text-xl font-semibold mb-2">{t("trackProgress") || "Track Progress"}</h3>
-              <p className="text-muted-foreground">{t("seeYourImprovement") || "See your improvement over time"}</p>
-            </motion.div>
-          </div>
+          <HomeNavigationGrid />
         </motion.div>
       </div>
     </div>
