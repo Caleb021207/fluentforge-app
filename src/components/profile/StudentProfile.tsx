@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User } from "lucide-react";
+import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User, AlertCircle } from "lucide-react";
 import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,19 +19,50 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
   const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
   const [latestTestScore, setLatestTestScore] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
 
   useEffect(() => {
     const fetchStudentData = async () => {
       setIsLoading(true);
       try {
+        console.log('Fetching student data for:', profile.id);
+
+        // Debug: Check raw student_enrollments table
+        const { data: rawEnrollments } = await supabase
+          .from('student_enrollments')
+          .select('*')
+          .eq('student_id', profile.id);
+
+        console.log('Raw enrollments:', rawEnrollments);
+
+        // Debug: Check what classes exist
+        const { data: allClasses } = await supabase
+          .from('classes')
+          .select('id, name, class_code, teacher_id')
+          .limit(10);
+
+        console.log('All classes in system:', allClasses);
+
         const [enrollmentData, gradeData, usageData] = await Promise.all([
           getStudentEnrollments(profile.id),
           getStudentGrades(profile.id),
           getStudentUsageMetrics(profile.id)
         ]);
+
+        console.log('Processed enrollment data:', enrollmentData);
+        console.log('Grade data:', gradeData);
+        console.log('Usage data:', usageData);
+
         setEnrollments(enrollmentData);
         setGrades(gradeData);
         setUsageMetrics(usageData);
+
+        setDebugInfo({
+          rawEnrollments: rawEnrollments?.length || 0,
+          processedEnrollments: enrollmentData?.length || 0,
+          allClassesCount: allClasses?.length || 0,
+          studentId: profile.id
+        });
 
         // Fetch most recent transcript analysis
         const { data: latestAnalysis } = await supabase
@@ -70,6 +101,29 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
     <div className="space-y-6">
       {/* Test Scores - Top Priority */}
       <TestScoreCard testScore={latestTestScore} />
+
+      {/* Debug Information for Enrollment Issues */}
+      {debugInfo && enrollments.length === 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-yellow-600">
+              <AlertCircle className="h-5 w-5" />
+              Class Enrollment Debug Info
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm space-y-2">
+              <p>Student ID: {debugInfo.studentId}</p>
+              <p>Raw enrollments found: {debugInfo.rawEnrollments}</p>
+              <p>Processed enrollments: {debugInfo.processedEnrollments}</p>
+              <p>Total classes in system: {debugInfo.allClassesCount}</p>
+              <p className="text-yellow-700">
+                If you used a class code but don't see enrollments, there may be an issue with the enrollment process.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Student Overview */}
       <Card>
@@ -204,7 +258,14 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-center py-8">No classes enrolled</p>
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No classes enrolled</p>
+              {debugInfo && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Check the debug information above for enrollment issues.
+                </p>
+              )}
+            </div>
           )}
         </CardContent>
       </Card>
