@@ -55,13 +55,55 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
         console.log('Teacher classes with enrollments:', teacherClasses);
         console.log('Class fetch error:', classError);
 
+        let classesToProcess = teacherClasses || [];
+
+        // If no assigned classes found, check if this is a teacher in the same school
+        // and show all students from that school for testing purposes
+        if (!teacherClasses || teacherClasses.length === 0) {
+          console.log('No assigned classes found, checking for school-based access...');
+          
+          // Get the teacher's profile to find their school
+          const { data: teacherProfile } = await supabase
+            .from('profiles')
+            .select('school_id')
+            .eq('id', teacherId)
+            .single();
+
+          if (teacherProfile?.school_id) {
+            // Get all classes in the same school with students
+            const { data: schoolClasses } = await supabase
+              .from('classes')
+              .select(`
+                id,
+                name,
+                class_code,
+                academic_year,
+                student_enrollments!inner (
+                  student_id,
+                  profiles!inner (
+                    id,
+                    display_name,
+                    email
+                  )
+                )
+              `)
+              .eq('school_id', teacherProfile.school_id);
+
+            if (schoolClasses && schoolClasses.length > 0) {
+              classesToProcess = schoolClasses;
+              console.log('Found school classes for testing:', schoolClasses);
+            }
+          }
+        }
+
         setDebugInfo({
           teacherClasses: teacherClasses?.length || 0,
-          totalEnrollments: teacherClasses?.reduce((sum, cls) => sum + (cls.student_enrollments?.length || 0), 0) || 0,
-          classError: classError?.message || null
+          totalEnrollments: classesToProcess?.reduce((sum, cls) => sum + (cls.student_enrollments?.length || 0), 0) || 0,
+          classError: classError?.message || null,
+          usingSchoolAccess: (teacherClasses?.length || 0) === 0 && (classesToProcess?.length || 0) > 0
         });
 
-        if (!teacherClasses || teacherClasses.length === 0) {
+        if (!classesToProcess || classesToProcess.length === 0) {
           console.log('No classes found for teacher');
           setStudentScores([]);
           setIsLoading(false);
@@ -71,7 +113,7 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
         // Process each class and get student scores
         const allStudentScores: StudentScore[] = [];
         
-        for (const classData of teacherClasses) {
+        for (const classData of classesToProcess) {
           if (!classData.student_enrollments || classData.student_enrollments.length === 0) {
             continue;
           }
@@ -175,6 +217,9 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
               <p>Classes assigned: {debugInfo.teacherClasses}</p>
               <p>Total student enrollments: {debugInfo.totalEnrollments}</p>
               <p>Students with test scores: {studentScores.filter(s => s.overall_score !== null).length}</p>
+              {debugInfo.usingSchoolAccess && (
+                <p className="text-yellow-700">🔍 Showing school-wide data for testing (not assigned as teacher)</p>
+              )}
               {studentScores.length > 0 ? (
                 <p className="text-green-700 font-medium">✅ Successfully found and loaded student data!</p>
               ) : debugInfo.teacherClasses === 0 ? (
