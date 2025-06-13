@@ -1185,6 +1185,18 @@ export type Database = {
         }
         Returns: string
       }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_current_user_school_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      is_student_in_admin_school: {
+        Args: { student_user_id: string }
+        Returns: boolean
+      }
       is_user_enrolled_in_class: {
         Args: { class_id_param: string }
         Returns: boolean
