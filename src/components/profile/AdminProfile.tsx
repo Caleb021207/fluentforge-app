@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building, Users, BookOpen, GraduationCap, BarChart3, TrendingUp } from "lucide-react";
-import { ExtendedUserProfile, AdminSchoolData } from "@/types/school";
-import { getAdminSchoolData } from "@/utils/schoolUtils";
+import { Building, Users, BookOpen, GraduationCap, BarChart3, TrendingUp, Clock } from "lucide-react";
+import { ExtendedUserProfile, AdminSchoolData, TeacherClassData } from "@/types/school";
+import { getAdminSchoolData, getSchoolClassroomData } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
 
@@ -14,14 +14,19 @@ interface AdminProfileProps {
 
 const AdminProfile = ({ profile }: AdminProfileProps) => {
   const [schoolData, setSchoolData] = useState<AdminSchoolData | null>(null);
+  const [classroomData, setClassroomData] = useState<TeacherClassData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAdminData = async () => {
       setIsLoading(true);
       try {
-        const data = await getAdminSchoolData(profile.id);
-        setSchoolData(data);
+        const [schoolResult, classroomResult] = await Promise.all([
+          getAdminSchoolData(profile.id),
+          getSchoolClassroomData(profile.id)
+        ]);
+        setSchoolData(schoolResult);
+        setClassroomData(classroomResult);
       } catch (error) {
         console.error('Error fetching admin data:', error);
       } finally {
@@ -55,6 +60,8 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
   const averageCertScore = schoolData.certification_stats.length > 0
     ? schoolData.certification_stats.reduce((sum, stat) => sum + (stat.avg_score || 0), 0) / schoolData.certification_stats.length
     : 0;
+
+  const totalEnrollments = classroomData.reduce((sum, classroom) => sum + classroom.enrollment_count, 0);
 
   return (
     <div className="space-y-6">
@@ -98,7 +105,7 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
         </CardContent>
       </Card>
 
-      {/* School Statistics */}
+      {/* School Overview */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -117,8 +124,8 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
               <p className="text-sm text-muted-foreground">Teachers</p>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{schoolData.total_students}</div>
-              <p className="text-sm text-muted-foreground">Students</p>
+              <div className="text-2xl font-bold text-primary">{totalEnrollments}</div>
+              <p className="text-sm text-muted-foreground">Enrollments</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{averageCertScore.toFixed(1)}</div>
@@ -128,12 +135,78 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
         </CardContent>
       </Card>
 
+      {/* Classroom Management */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5" />
+            Classroom Management
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {classroomData.length > 0 ? (
+            <div className="space-y-4">
+              {classroomData.map((classroom) => (
+                <div key={classroom.class_info.id} className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <h4 className="font-medium">{classroom.class_info.name}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {classroom.class_info.subject?.name} • {classroom.class_info.period || 'No period assigned'}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-bold">{classroom.enrollment_count}</div>
+                      <p className="text-sm text-muted-foreground">Students</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        <span className="text-sm">Teacher: {classroom.class_info.teacher?.display_name || 'Not assigned'}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        <span className="text-sm">Room: {classroom.class_info.room_number || 'TBD'}</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Badge variant="outline">{classroom.class_info.academic_year}</Badge>
+                      {classroom.class_info.semester && (
+                        <Badge variant="outline">{classroom.class_info.semester}</Badge>
+                      )}
+                    </div>
+                  </div>
+                  {classroom.certification_stats.length > 0 && (
+                    <div className="mt-2 pt-2 border-t">
+                      <p className="text-sm font-medium">Certification Performance:</p>
+                      <div className="flex gap-2 mt-1">
+                        {classroom.certification_stats.map((stat) => (
+                          <Badge key={stat.id} variant="secondary" className="text-xs">
+                            {stat.certification_type}: {stat.avg_score?.toFixed(1) || 'N/A'}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground text-center py-8">
+              No classes found in your school
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Certification Performance */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <GraduationCap className="h-5 w-5" />
-            Certification Performance
+            School Certification Performance
           </CardTitle>
         </CardHeader>
         <CardContent>

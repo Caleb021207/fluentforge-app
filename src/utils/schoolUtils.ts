@@ -1,6 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { ExtendedUserProfile, AdminSchoolData, DistrictSchoolData, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
+import { ExtendedUserProfile, AdminSchoolData, DistrictSchoolData, StudentEnrollment, StudentGrade, StudentUsageMetrics, TeacherClassData } from "@/types/school";
 
 /**
  * Get extended user profile with school and district information
@@ -15,6 +15,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
           id,
           name,
           district,
+          district_id,
           address,
           phone,
           email,
@@ -48,7 +49,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
 };
 
 /**
- * Get admin school data including statistics
+ * Get admin school data including statistics and classroom information
  */
 export const getAdminSchoolData = async (userId: string): Promise<AdminSchoolData | null> => {
   try {
@@ -95,6 +96,70 @@ export const getAdminSchoolData = async (userId: string): Promise<AdminSchoolDat
   } catch (error) {
     console.error('Error fetching admin school data:', error);
     return null;
+  }
+};
+
+/**
+ * Get classroom data for school admins
+ */
+export const getSchoolClassroomData = async (userId: string): Promise<TeacherClassData[]> => {
+  try {
+    // Get user's school
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('school_id')
+      .eq('id', userId)
+      .single();
+
+    if (!profile?.school_id) return [];
+
+    // Get all classes in the school with teacher and enrollment info
+    const { data: classes } = await supabase
+      .from('classes')
+      .select(`
+        *,
+        subject:subjects(*),
+        grade_level:grade_levels(*),
+        teacher:profiles!classes_teacher_id_fkey(id, display_name, email),
+        student_enrollments(*)
+      `)
+      .eq('school_id', profile.school_id);
+
+    if (!classes) return [];
+
+    // Transform to TeacherClassData format
+    const classroomData: TeacherClassData[] = await Promise.all(
+      classes.map(async (classInfo) => {
+        // Get enrollment count
+        const enrollmentCount = classInfo.student_enrollments?.length || 0;
+
+        // Get usage stats for this class
+        const { data: usageStats } = await supabase
+          .from('student_usage_metrics')
+          .select('*')
+          .eq('class_id', classInfo.id)
+          .order('week_starting', { ascending: false })
+          .limit(4); // Last 4 weeks
+
+        // Get certification stats for this class
+        const { data: certStats } = await supabase
+          .from('class_certification_stats')
+          .select('*')
+          .eq('class_id', classInfo.id);
+
+        return {
+          class_info: classInfo,
+          enrollment_count: enrollmentCount,
+          usage_stats: usageStats || [],
+          certification_stats: certStats || []
+        };
+      })
+    );
+
+    return classroomData;
+  } catch (error) {
+    console.error('Error fetching school classroom data:', error);
+    return [];
   }
 };
 
@@ -180,7 +245,13 @@ export const getStudentEnrollments = async (userId: string): Promise<StudentEnro
       .eq('student_id', userId)
       .eq('status', 'active');
 
-    return enrollments || [];
+    // Transform the data to match the expected type
+    const transformedEnrollments: StudentEnrollment[] = (enrollments || []).map(enrollment => ({
+      ...enrollment,
+      status: enrollment.status as 'active' | 'dropped' | 'completed'
+    }));
+
+    return transformedEnrollments;
   } catch (error) {
     console.error('Error fetching student enrollments:', error);
     return [];
