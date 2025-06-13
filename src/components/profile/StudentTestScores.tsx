@@ -61,37 +61,53 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
             user_id,
             overall_score,
             cefr_level,
-            upload_date,
-            profiles!inner (
-              display_name,
-              email,
-              role
-            )
+            upload_date
           `)
-          .eq('profiles.role', 'student')
           .order('upload_date', { ascending: false });
 
         console.log('All student analyses:', allStudentAnalyses);
 
+        // Get profile information for users with analyses
+        let profilesWithAnalyses: any[] = [];
+        if (allStudentAnalyses && allStudentAnalyses.length > 0) {
+          const userIds = allStudentAnalyses.map(a => a.user_id);
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id, display_name, email, role')
+            .in('id', userIds)
+            .eq('role', 'student');
+          
+          profilesWithAnalyses = profiles || [];
+        }
+
         setDebugInfo({
           teacherClasses: teacherClasses?.length || 0,
           totalStudentAnalyses: allStudentAnalyses?.length || 0,
+          studentsWithProfiles: profilesWithAnalyses.length,
           classError,
           analysesError
         });
 
         if (!teacherClasses || teacherClasses.length === 0) {
           // If no classes, show all students with analyses for now (for debugging)
-          if (allStudentAnalyses && allStudentAnalyses.length > 0) {
-            const scores = allStudentAnalyses.map(analysis => ({
-              student_id: analysis.user_id,
-              student_name: analysis.profiles.display_name || analysis.profiles.email || 'Unknown',
-              student_email: analysis.profiles.email || '',
-              overall_score: analysis.overall_score,
-              cefr_level: analysis.cefr_level,
-              upload_date: analysis.upload_date,
-              class_name: 'No Class Assignment'
-            }));
+          if (allStudentAnalyses && allStudentAnalyses.length > 0 && profilesWithAnalyses.length > 0) {
+            const scores = allStudentAnalyses
+              .map(analysis => {
+                const profile = profilesWithAnalyses.find(p => p.id === analysis.user_id);
+                if (!profile) return null;
+                
+                return {
+                  student_id: analysis.user_id,
+                  student_name: profile.display_name || profile.email || 'Unknown',
+                  student_email: profile.email || '',
+                  overall_score: analysis.overall_score,
+                  cefr_level: analysis.cefr_level,
+                  upload_date: analysis.upload_date,
+                  class_name: 'No Class Assignment'
+                };
+              })
+              .filter(score => score !== null) as StudentScore[];
+            
             setStudentScores(scores);
           }
           return;
@@ -191,6 +207,7 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
             <div className="text-xs text-yellow-700 space-y-1">
               <p>Classes found: {debugInfo.teacherClasses}</p>
               <p>Total student analyses in system: {debugInfo.totalStudentAnalyses}</p>
+              <p>Students with profiles: {debugInfo.studentsWithProfiles}</p>
               <p>This suggests students may not be enrolled in your classes yet.</p>
             </div>
           </div>
