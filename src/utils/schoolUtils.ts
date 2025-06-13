@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { StudentEnrollment, StudentGrade, StudentUsageMetrics, ExtendedUserProfile, AdminSchoolData, TeacherClassData, DistrictSchoolData } from "@/types/school";
+import { StudentEnrollment, StudentGrade, StudentUsageMetrics, ExtendedUserProfile, AdminSchoolData, TeacherClassData, DistrictSchoolData, UserRole } from "@/types/school";
 
 export const getStudentEnrollments = async (studentId: string): Promise<StudentEnrollment[]> => {
   try {
@@ -159,6 +159,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
 
     const extendedProfile: ExtendedUserProfile = {
       ...profile,
+      role: profile.role as UserRole, // Cast to proper UserRole type
       school: school || undefined,
       grade_level: grade_level || undefined
     };
