@@ -83,7 +83,7 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
-    const prompt = `Based on this language assessment analysis, create 3-5 specific, actionable study recommendations:
+    const prompt = `Based on this language assessment analysis, create 3-5 specific, actionable study recommendations using our language learning application features:
 
 Analysis Data:
 - Overall Score: ${analysisData.overallScore}/10
@@ -96,22 +96,32 @@ Analysis Data:
 For each recommendation, provide:
 1. skill_area (one of: reading, writing, speaking, listening, grammar, vocabulary)
 2. priority_level (1-5, where 5 is highest priority)
-3. recommendation_text (specific, actionable advice)
+3. recommendation_text (specific, actionable advice using our app features)
 4. estimated_time_investment (e.g., "15-30 minutes daily", "2-3 hours weekly")
 5. difficulty_level (beginner, intermediate, advanced)
-6. resources (specific study materials, exercises, or techniques)
+6. resources (reference our app features only)
 
-Focus on the identified weaknesses while building on strengths. Prioritize areas that will have the most impact on overall improvement.
+Available app features to reference:
+- Voice Chat Practice for speaking and listening
+- Vocabulary Lessons with flashcards and exercises
+- Pronunciation Practice with AI feedback
+- Text Practice Chat for writing
+- Reading Certification tests
+- Writing Certification assessments
+- Lesson modules with interactive exercises
+- Progress tracking and analytics
 
-Return as JSON array with this exact structure:
+Focus on directing users to specific app features that address their weaknesses. Do NOT mention external websites, books, or third-party resources.
+
+Return ONLY a JSON array without markdown formatting:
 [
   {
-    "skill_area": "grammar",
+    "skill_area": "speaking",
     "priority_level": 4,
-    "recommendation_text": "Focus on improving verb tenses through targeted exercises",
+    "recommendation_text": "Use Voice Chat Practice sessions to improve conversational fluency",
     "estimated_time_investment": "20 minutes daily",
     "difficulty_level": "intermediate",
-    "resources": "Practice conditional sentences, complete online grammar exercises, use language apps with grammar focus"
+    "resources": "Access Voice Chat Practice from the main menu and practice with AI tutors at your level"
   }
 ]`;
 

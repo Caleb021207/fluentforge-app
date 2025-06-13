@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Target, Clock, Star, CheckCircle, Book, Sparkles } from "lucide-react";
+import { Target, Clock, Star, CheckCircle, Book, Sparkles, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface Recommendation {
   id: string;
@@ -24,13 +25,14 @@ interface StudyRecommendationsProps {
 
 const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendations, analyses }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isGenerating, setIsGenerating] = useState(false);
 
   const getPriorityColor = (level: number) => {
-    if (level >= 4) return 'bg-red-100 text-red-800';
-    if (level >= 3) return 'bg-orange-100 text-orange-800';
-    if (level >= 2) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-green-100 text-green-800';
+    if (level >= 4) return 'bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive-foreground';
+    if (level >= 3) return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
+    if (level >= 2) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+    return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
   };
 
   const getPriorityLabel = (level: number) => {
@@ -50,6 +52,47 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
       case 'vocabulary': return '📚';
       default: return '🎯';
     }
+  };
+
+  const getNavigationRoute = (skill: string) => {
+    switch (skill.toLowerCase()) {
+      case 'speaking':
+      case 'listening':
+        return '/voice-chat';
+      case 'writing':
+        return '/practice';
+      case 'reading':
+        return '/lessons';
+      case 'vocabulary':
+        return '/vocabulary';
+      case 'grammar':
+        return '/lessons';
+      default:
+        return '/practice';
+    }
+  };
+
+  const getActionButtonText = (skill: string) => {
+    switch (skill.toLowerCase()) {
+      case 'speaking':
+      case 'listening':
+        return 'Start Voice Chat';
+      case 'writing':
+        return 'Practice Writing';
+      case 'reading':
+        return 'Start Lessons';
+      case 'vocabulary':
+        return 'Study Vocabulary';
+      case 'grammar':
+        return 'Practice Grammar';
+      default:
+        return 'Start Practice';
+    }
+  };
+
+  const handleNavigateToFeature = (skill: string) => {
+    const route = getNavigationRoute(skill);
+    navigate(route);
   };
 
   const handleMarkCompleted = async (recommendationId: string) => {
@@ -122,22 +165,22 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
     return (
       <Card>
         <CardContent className="pt-6 text-center">
-          <Target className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium mb-2">No recommendations yet</h3>
           {hasAnalyses ? (
             <div className="space-y-4">
-              <p className="text-gray-500">Generate a personalized study plan from your transcript analysis.</p>
+              <p className="text-muted-foreground">Generate a personalized study plan from your transcript analysis.</p>
               <Button 
                 onClick={handleGenerateStudyPlan}
                 disabled={isGenerating}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-primary hover:bg-primary/90"
               >
                 <Sparkles className="h-4 w-4 mr-2" />
                 {isGenerating ? 'Generating Study Plan...' : 'Generate Study Plan'}
               </Button>
             </div>
           ) : (
-            <p className="text-gray-500">Upload and analyze your transcripts to get personalized study recommendations.</p>
+            <p className="text-muted-foreground">Upload and analyze your transcripts to get personalized study recommendations.</p>
           )}
         </CardContent>
       </Card>
@@ -181,7 +224,7 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
                         </Badge>
                       )}
                       {recommendation.estimated_time_investment && (
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <Clock className="h-3 w-3" />
                           {recommendation.estimated_time_investment}
                         </div>
@@ -202,21 +245,33 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 mb-4">{recommendation.recommendation_text}</p>
+              <p className="text-foreground mb-4">{recommendation.recommendation_text}</p>
               
-              {recommendation.resources && (
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <h4 className="font-medium text-sm mb-2 flex items-center gap-1">
-                    <Book className="h-4 w-4" />
-                    Recommended Resources
-                  </h4>
-                  <div className="text-sm text-gray-600">
-                    {typeof recommendation.resources === 'string' 
-                      ? recommendation.resources 
-                      : JSON.stringify(recommendation.resources)}
+              <div className="flex flex-col gap-3">
+                {recommendation.resources && (
+                  <div className="bg-primary/5 border border-primary/10 p-3 rounded-lg">
+                    <h4 className="font-medium text-sm mb-2 flex items-center gap-1 text-foreground">
+                      <Book className="h-4 w-4" />
+                      How to Practice in Our App
+                    </h4>
+                    <div className="text-sm text-muted-foreground">
+                      {typeof recommendation.resources === 'string' 
+                        ? recommendation.resources 
+                        : JSON.stringify(recommendation.resources)}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+                
+                <Button
+                  onClick={() => handleNavigateToFeature(recommendation.skill_area)}
+                  variant="default"
+                  size="sm"
+                  className="self-start"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  {getActionButtonText(recommendation.skill_area)}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
