@@ -105,7 +105,6 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
     playTTS({
       text,
       language: targetLanguage.toLowerCase(),
-      isTargetLanguage: true,
       useMetaMms: false,
       onStart: () => setIsPlaying(text),
       onEnd: () => setIsPlaying(null),

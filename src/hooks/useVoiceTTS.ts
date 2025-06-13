@@ -27,7 +27,6 @@ export const useVoiceTTS = ({ practiceLanguage }: UseVoiceTTSProps) => {
     playTTS({
       text: text,
       language: practiceLanguage.toLowerCase(),
-      isTargetLanguage: true,
       useMetaMms: false, // Use Azure as primary TTS provider
       onStart: () => {
         console.log("TTS started with Azure");

@@ -13,13 +13,13 @@ serve(async (req) => {
   }
 
   try {
-    const { text, language, isTargetLanguage, useMetaMms } = await req.json();
+    const { text, language, useMetaMms } = await req.json();
     
     if (!text) {
       throw new Error('Text is required');
     }
 
-    console.log(`TTS request for language: ${language}, text length: ${text.length}, isTargetLanguage: ${isTargetLanguage}, useMetaMms: ${useMetaMms}`);
+    console.log(`TTS request for language: ${language}, text length: ${text.length}, useMetaMms: ${useMetaMms}`);
 
     // Get voice settings based on language
     const voiceSettings = languageVoiceMap[language?.toLowerCase()] || languageVoiceMap["english"];

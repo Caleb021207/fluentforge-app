@@ -5,7 +5,6 @@ import { ttsCache } from "./tts/cache";
 export interface TTSOptions {
   text: string;
   language: string;
-  isTargetLanguage?: boolean;
   useMetaMms?: boolean;
   onStart?: () => void;
   onEnd?: () => void;
@@ -16,7 +15,7 @@ export interface TTSOptions {
  * Plays text-to-speech using the best available TTS provider
  */
 export async function playTTS(options: TTSOptions): Promise<boolean> {
-  const { text, language, isTargetLanguage = true, useMetaMms = false, onStart, onEnd, onError } = options;
+  const { text, language, useMetaMms = false, onStart, onEnd, onError } = options;
   
   if (!text || text.trim() === "") {
     console.warn("Empty text provided to playTTS");
@@ -42,7 +41,6 @@ export async function playTTS(options: TTSOptions): Promise<boolean> {
       body: { 
         text, 
         language, 
-        isTargetLanguage,
         useMetaMms
       }
     });
@@ -76,7 +74,7 @@ export async function playTTS(options: TTSOptions): Promise<boolean> {
  * Preloads TTS audio without playing it
  */
 export async function preloadTTS(options: TTSOptions): Promise<boolean> {
-  const { text, language, isTargetLanguage = true, useMetaMms = false } = options;
+  const { text, language, useMetaMms = false } = options;
   
   if (!text || text.trim() === "") {
     return false;
@@ -94,7 +92,6 @@ export async function preloadTTS(options: TTSOptions): Promise<boolean> {
       body: { 
         text, 
         language, 
-        isTargetLanguage,
         useMetaMms
       }
     });

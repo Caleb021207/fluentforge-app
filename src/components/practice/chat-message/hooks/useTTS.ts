@@ -6,10 +6,9 @@ import type { TTSOptions } from "@/utils/tts/types";
 interface UseTTSOptions {
   text: string;
   language: string;
-  isTargetLanguage: boolean;
 }
 
-export const useTTS = ({ text, language, isTargetLanguage }: UseTTSOptions) => {
+export const useTTS = ({ text, language }: UseTTSOptions) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -21,17 +20,16 @@ export const useTTS = ({ text, language, isTargetLanguage }: UseTTSOptions) => {
       await playTTS({
         text,
         language,
-        isTargetLanguage,
         onStart: () => setIsLoading(false),
         onEnd: () => setIsPlaying(false),
         onError: (error) => {
-          console.error(`TTS error (${isTargetLanguage ? 'target' : 'native'}):`, error);
+          console.error('TTS error:', error);
           setIsPlaying(false);
           setIsLoading(false);
         }
       });
     } catch (error: any) {
-      console.error(`Error playing ${isTargetLanguage ? 'target' : 'native'} audio:`, error);
+      console.error('Error playing audio:', error);
       setIsPlaying(false);
       setIsLoading(false);
     }

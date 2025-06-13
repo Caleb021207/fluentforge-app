@@ -31,14 +31,11 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   // Use our custom hook to manage audio state and playback
   const {
     contentAudio,
-    translationAudio,
     handlePlayAudio
   } = useMessageAudio({
     role,
     content: safeContent,
-    translation: safeTranslation,
     targetLanguage,
-    nativeLanguage,
     onPlayAudio
   });
   
@@ -66,10 +63,10 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
           role={role}
           translation={safeTranslation}
           currentLanguage={currentLanguage}
-          isTranslationPlaying={translationAudio.isPlaying}
-          isTranslationLoading={translationAudio.isLoading}
+          isTranslationPlaying={false}
+          isTranslationLoading={false}
           originalContent={safeContent}
-          onPlayTranslationAudio={role === "assistant" && safeTranslation ? translationAudio.playAudio : undefined}
+          onPlayTranslationAudio={undefined}
         />
       )}
     </div>

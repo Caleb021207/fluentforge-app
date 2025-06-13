@@ -17,8 +17,7 @@ const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase, speechRate }) => 
   
   const tts = useTTS({
     text: activeWord || "",
-    language: "spanish",
-    isTargetLanguage: true
+    language: "spanish"
   });
   
   const handleWordClick = (word: string) => {
@@ -30,13 +29,7 @@ const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase, speechRate }) => 
     const cleanWord = word.replace(/[.,!?;:]/g, '');
     
     // Play the word with the given speech rate
-    const options = {
-      text: cleanWord,
-      language: "spanish",
-      isTargetLanguage: true,
-      speechRate: speechRate,
-      onEnd: () => setActiveWord(null)
-    };
+    // Note: This options object isn't used since we're calling tts.playAudio() directly
     
     // Use our TTS hook to play the word
     tts.playAudio();

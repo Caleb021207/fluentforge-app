@@ -4,31 +4,20 @@ import useTTS from "./useTTS";
 interface UseMessageAudioProps {
   role: "user" | "assistant";
   content: string;
-  translation: string;
   targetLanguage: string;
-  nativeLanguage: string;
   onPlayAudio?: (text: string) => void;
 }
 
 const useMessageAudio = ({
   role,
   content,
-  translation,
   targetLanguage,
-  nativeLanguage,
   onPlayAudio
 }: UseMessageAudioProps) => {
-  // Setup TTS hooks for both content and translation
+  // Setup TTS hook for target language content only
   const contentAudio = useTTS({
     text: content,
-    language: targetLanguage,
-    isTargetLanguage: true
-  });
-  
-  const translationAudio = useTTS({
-    text: translation,
-    language: nativeLanguage,
-    isTargetLanguage: false
+    language: targetLanguage
   });
   
   const handlePlayAudio = () => {
@@ -46,7 +35,6 @@ const useMessageAudio = ({
   
   return {
     contentAudio,
-    translationAudio,
     handlePlayAudio
   };
 };
