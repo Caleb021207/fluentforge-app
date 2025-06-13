@@ -4,8 +4,6 @@ import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useNavigate } from 'react-router-dom';
 import { SwipeUpPanel } from '@/components/ui/swipe-up-panel';
-import { Button } from '@/components/ui/button';
-import { Triangle } from 'lucide-react';
 import AuthDialog from '@/components/home/AuthDialog';
 import LanguageSelectionCard from '@/components/home/LanguageSelectionCard';
 import { useLocalization } from '@/context/LocalizationContext';
@@ -13,11 +11,7 @@ import { useAuthFlow } from '@/hooks/useAuthFlow';
 import { useToast } from '@/hooks/use-toast';
 import { hasStudyMaterials } from '@/utils/languageUtils';
 
-interface NewLandingPageProps {
-  onPlayWelcomeAnimation?: () => void;
-}
-
-const NewLandingPage: React.FC<NewLandingPageProps> = ({ onPlayWelcomeAnimation }) => {
+const NewLandingPage = () => {
   const { theme } = useTheme();
   const { t, setCurrentLanguage } = useLocalization();
   const { toast } = useToast();
@@ -79,27 +73,8 @@ const NewLandingPage: React.FC<NewLandingPageProps> = ({ onPlayWelcomeAnimation 
     }
   };
 
-  console.log('NewLandingPage rendering with onPlayWelcomeAnimation:', !!onPlayWelcomeAnimation);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Triangle Button for Animation Replay - Always visible for debugging */}
-      <Button
-        variant="default"
-        size="lg"
-        onClick={() => {
-          console.log('Play Animation button clicked');
-          if (onPlayWelcomeAnimation) {
-            onPlayWelcomeAnimation();
-          } else {
-            console.log('No onPlayWelcomeAnimation function provided');
-          }
-        }}
-        className="fixed top-4 right-4 z-50 bg-red-500 hover:bg-red-600 text-white shadow-2xl border-4 border-white"
-      >
-        <Triangle className="h-6 w-6 mr-2" />
-        PLAY ANIMATION
-      </Button>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
