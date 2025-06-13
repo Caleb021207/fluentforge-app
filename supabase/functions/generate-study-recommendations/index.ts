@@ -83,7 +83,7 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
-    const prompt = `Based on this language assessment analysis, create 3-5 specific, actionable study recommendations using our language learning application features:
+    const prompt = `Based on this language assessment analysis, create 3-5 specific, actionable study recommendations using our comprehensive language learning platform features:
 
 Analysis Data:
 - Overall Score: ${analysisData.overallScore}/10
@@ -93,35 +93,95 @@ Analysis Data:
 - Existing Recommendations: ${analysisData.recommendations.join('; ')}
 - Detailed Feedback: ${analysisData.detailedFeedback}
 
+COMPREHENSIVE PLATFORM FEATURES AVAILABLE:
+
+**SPEAKING & LISTENING PRACTICE:**
+- Voice Chat Practice: Real-time AI conversation practice with different complexity levels
+- Premium Voice Chat: Enhanced voice practice with advanced AI tutors
+- Pronunciation Practice: AI-powered pronunciation feedback with phrase-by-phrase analysis
+- Conversation Starters: Guided conversation practice for different proficiency levels
+- Speech Rate Control: Adjustable speaking speed for comprehension practice
+- Real-time transcription and feedback during voice sessions
+
+**WRITING PRACTICE:**
+- Text Practice Chat: AI-powered writing practice with real-time feedback
+- Grammar correction and suggestions during text conversations
+- Writing exercises with instant AI feedback
+- Structured writing prompts and guided practice
+
+**READING COMPREHENSION:**
+- Interactive lesson modules with reading exercises
+- CEFR-leveled reading materials (A1-C2)
+- Reading comprehension quizzes and assessments
+- Reading Certification tests for skill validation
+
+**VOCABULARY BUILDING:**
+- Comprehensive vocabulary lessons organized by CEFR levels (A1-C2)
+- Interactive flashcard systems with spaced repetition
+- Vocabulary exercises with multiple exercise types:
+  * Audio Transcription Exercises
+  * Image Identification Exercises
+  * Word Ordering Exercises
+  * Sentence Correction Exercises
+  * Short Answer Exercises
+  * Timed Quiz Exercises
+- Topic-based vocabulary sets (food, clothing, professions, time, weather, etc.)
+- Advanced vocabulary for business, academic, and cultural contexts
+
+**GRAMMAR PRACTICE:**
+- Grammar rules and explanations integrated into lessons
+- Interactive grammar exercises within lesson modules
+- Real-time grammar feedback during practice sessions
+- Progressive grammar complexity based on CEFR levels
+
+**LESSON SYSTEM:**
+- Structured lesson modules with progressive difficulty
+- Multiple exercise types within each lesson
+- Progress tracking through lesson completion
+- Level-based progression system
+- Challenge lists for skill advancement
+
+**CERTIFICATION SYSTEM:**
+- Reading Certification tests with detailed scoring
+- Writing Certification assessments
+- Fluency tests with conversation analysis
+- CEFR-aligned certification levels
+- Performance tracking and score history
+
+**PROGRESS TRACKING & ANALYTICS:**
+- Detailed progress analytics and insights
+- Performance metrics across all skill areas
+- AI-powered progress analysis and milestone tracking
+- Session history and usage statistics
+- Improvement recommendations based on performance data
+
+**SPECIALIZED FEATURES:**
+- Multi-language support (Spanish, Portuguese, and other languages)
+- AI-powered transcript analysis for external test results
+- Personalized study plan generation
+- Pronunciation practice with complexity levels (beginner to advanced)
+- Voice recognition and speech analysis
+- Real-time translation assistance during practice
+
 For each recommendation, provide:
 1. skill_area (one of: reading, writing, speaking, listening, grammar, vocabulary)
 2. priority_level (1-5, where 5 is highest priority)
-3. recommendation_text (specific, actionable advice using our app features)
+3. recommendation_text (specific, actionable advice using our platform features)
 4. estimated_time_investment (e.g., "15-30 minutes daily", "2-3 hours weekly")
 5. difficulty_level (beginner, intermediate, advanced)
-6. resources (reference our app features only)
+6. resources (specific platform features and how to use them)
 
-Available app features to reference:
-- Voice Chat Practice for speaking and listening
-- Vocabulary Lessons with flashcards and exercises
-- Pronunciation Practice with AI feedback
-- Text Practice Chat for writing
-- Reading Certification tests
-- Writing Certification assessments
-- Lesson modules with interactive exercises
-- Progress tracking and analytics
-
-Focus on directing users to specific app features that address their weaknesses. Do NOT mention external websites, books, or third-party resources.
+Focus on directing users to the most appropriate platform features that address their specific weaknesses and build on their strengths. Be specific about which sections, exercise types, and difficulty levels to use.
 
 Return ONLY a JSON array without markdown formatting:
 [
   {
     "skill_area": "speaking",
     "priority_level": 4,
-    "recommendation_text": "Use Voice Chat Practice sessions to improve conversational fluency",
+    "recommendation_text": "Use Voice Chat Practice at intermediate level with pronunciation feedback enabled to improve conversational fluency and accuracy",
     "estimated_time_investment": "20 minutes daily",
     "difficulty_level": "intermediate",
-    "resources": "Access Voice Chat Practice from the main menu and practice with AI tutors at your level"
+    "resources": "Access Voice Chat Practice from the main menu, enable pronunciation feedback in settings, start with conversation starters, and use speech rate control for optimal learning pace"
   }
 ]`;
 
