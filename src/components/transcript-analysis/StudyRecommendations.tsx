@@ -209,22 +209,13 @@ const StudyRecommendations: React.FC<StudyRecommendationsProps> = ({ recommendat
   };
 
   const handleClearStudyPlan = async () => {
-    if (!analyses || analyses.length === 0) {
-      toast({
-        title: "No Analysis Found",
-        description: "No transcript analysis found to clear recommendations from.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
-      const latestAnalysis = analyses[0];
-      
+      // Delete ALL active recommendations for the current user (not just for latest transcript)
       const { error } = await supabase
         .from('study_recommendations')
         .delete()
-        .eq('transcript_id', latestAnalysis.id);
+        .eq('status', 'active')
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
 
       if (error) throw error;
 
