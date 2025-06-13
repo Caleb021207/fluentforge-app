@@ -272,25 +272,6 @@ export const getDistrictSchoolsData = async (districtUserId: string): Promise<Di
   }
 };
 
-export const calculateGPA = (grades: StudentGrade[]): number => {
-  const gradePoints: { [key: string]: number } = {
-    'A+': 4.0, 'A': 4.0, 'A-': 3.7,
-    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
-    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
-    'D+': 1.3, 'D': 1.0, 'D-': 0.7,
-    'F': 0.0
-  };
-
-  const validGrades = grades.filter(g => g.grade_letter && gradePoints[g.grade_letter] !== undefined);
-  if (validGrades.length === 0) return 0;
-
-  const totalPoints = validGrades.reduce((sum, grade) => {
-    return sum + (gradePoints[grade.grade_letter!] || 0);
-  }, 0);
-
-  return totalPoints / validGrades.length;
-};
-
 // Helper function to check user role and permissions
 export const checkUserRole = async (userId: string, requiredRole: string): Promise<boolean> => {
   try {
