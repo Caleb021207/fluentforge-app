@@ -332,96 +332,123 @@ export const getSchoolClassroomData = async (userId: string): Promise<TeacherCla
 
 export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSchoolData[]> => {
   try {
+    console.log('getDistrictSchoolsData: Starting fetch for user:', userId);
+    
     // Get user's district assignments
-    const { data: userDistricts } = await supabase
+    const { data: userDistricts, error: districtError } = await supabase
       .from('district_users')
       .select('district_id')
       .eq('user_id', userId);
 
-    if (!userDistricts || userDistricts.length === 0) return [];
+    console.log('getDistrictSchoolsData: District assignments:', userDistricts, 'Error:', districtError);
+
+    if (!userDistricts || userDistricts.length === 0) {
+      console.log('getDistrictSchoolsData: No district assignments found');
+      return [];
+    }
 
     const districtIds = userDistricts.map(d => d.district_id);
+    console.log('getDistrictSchoolsData: District IDs:', districtIds);
 
     // Get schools in the user's districts
-    const { data: schools } = await supabase
+    const { data: schools, error: schoolsError } = await supabase
       .from('schools')
       .select('*')
       .in('district_id', districtIds);
 
-    if (!schools) return [];
+    console.log('getDistrictSchoolsData: Schools found:', schools?.length || 0, 'Error:', schoolsError);
+
+    if (!schools || schools.length === 0) {
+      console.log('getDistrictSchoolsData: No schools found in districts');
+      return [];
+    }
 
     const districtData: DistrictSchoolData[] = [];
 
     for (const school of schools) {
-      const { data: classes } = await supabase
+      console.log('getDistrictSchoolsData: Processing school:', school.name, school.id);
+      
+      // Get classes for this school
+      const { data: classes, error: classesError } = await supabase
         .from('classes')
-        .select('id')
+        .select('id, name')
         .eq('school_id', school.id);
 
-      // Calculate total enrollments across all classes in the school
+      console.log('getDistrictSchoolsData: Classes in', school.name, ':', classes?.length || 0, 'Error:', classesError);
+
       let totalEnrollments = 0;
+      let studentIds: string[] = [];
+
       if (classes && classes.length > 0) {
         const classIds = classes.map(c => c.id);
-        const { data: enrollments } = await supabase
+        
+        // Get student enrollments
+        const { data: enrollments, error: enrollmentError } = await supabase
           .from('student_enrollments')
-          .select('id')
+          .select('student_id')
           .in('class_id', classIds)
           .eq('status', 'active');
         
+        console.log('getDistrictSchoolsData: Enrollments found:', enrollments?.length || 0, 'Error:', enrollmentError);
+        
         totalEnrollments = enrollments?.length || 0;
+        studentIds = enrollments?.map(e => e.student_id) || [];
       }
 
-      // Calculate average certification score from transcript analyses
+      // Calculate average score from transcript analyses
       let avgCertificationScore = 0;
-      if (totalEnrollments > 0) {
-        // Get all students in the school through their class enrollments
-        const { data: schoolStudents } = await supabase
-          .from('student_enrollments')
-          .select('student_id')
-          .in('class_id', classes?.map(c => c.id) || [])
-          .eq('status', 'active');
+      
+      if (studentIds.length > 0) {
+        console.log('getDistrictSchoolsData: Getting scores for students:', studentIds);
+        
+        // Get all transcript analyses for these students
+        const { data: transcriptScores, error: scoresError } = await supabase
+          .from('transcript_analyses')
+          .select('user_id, overall_score, created_at')
+          .in('user_id', studentIds)
+          .not('overall_score', 'is', null)
+          .order('created_at', { ascending: false });
 
-        if (schoolStudents && schoolStudents.length > 0) {
-          const studentIds = schoolStudents.map(s => s.student_id);
+        console.log('getDistrictSchoolsData: Transcript scores found:', transcriptScores?.length || 0, 'Error:', scoresError);
+
+        if (transcriptScores && transcriptScores.length > 0) {
+          // Get the latest score for each student
+          const latestScores = new Map<string, number>();
           
-          // Get latest transcript analysis for each student
-          const { data: transcriptScores } = await supabase
-            .from('transcript_analyses')
-            .select('user_id, overall_score')
-            .in('user_id', studentIds)
-            .not('overall_score', 'is', null);
-
-          if (transcriptScores && transcriptScores.length > 0) {
-            // Get the latest score for each student
-            const latestScores = new Map();
-            for (const score of transcriptScores) {
-              if (!latestScores.has(score.user_id) || score.overall_score) {
-                latestScores.set(score.user_id, score.overall_score);
-              }
+          for (const score of transcriptScores) {
+            if (!latestScores.has(score.user_id) && score.overall_score !== null) {
+              latestScores.set(score.user_id, score.overall_score);
             }
-            
-            const scores = Array.from(latestScores.values()).filter(score => score !== null);
-            if (scores.length > 0) {
-              avgCertificationScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-            }
+          }
+          
+          const scores = Array.from(latestScores.values());
+          console.log('getDistrictSchoolsData: Latest scores per student:', scores);
+          
+          if (scores.length > 0) {
+            avgCertificationScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
           }
         }
       }
 
+      // Get certification stats
       const { data: certStats } = await supabase
         .from('school_certification_stats')
         .select('*')
         .eq('school_id', school.id);
 
-      districtData.push({
+      const schoolData = {
         school,
         avg_certification_score: avgCertificationScore,
         total_students: totalEnrollments,
         total_classes: classes?.length || 0,
         certification_stats: certStats || []
-      });
+      };
+
+      console.log('getDistrictSchoolsData: Final school data:', schoolData);
+      districtData.push(schoolData);
     }
 
+    console.log('getDistrictSchoolsData: Final district data:', districtData);
     return districtData;
   } catch (error) {
     console.error('Error in getDistrictSchoolsData:', error);
