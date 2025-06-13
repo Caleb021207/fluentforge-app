@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useNavigate } from 'react-router-dom';
 import { SwipeUpPanel } from '@/components/ui/swipe-up-panel';
+import { Button } from '@/components/ui/button';
+import { Triangle } from 'lucide-react';
 import AuthDialog from '@/components/home/AuthDialog';
 import LanguageSelectionCard from '@/components/home/LanguageSelectionCard';
 import { useLocalization } from '@/context/LocalizationContext';
@@ -11,7 +13,11 @@ import { useAuthFlow } from '@/hooks/useAuthFlow';
 import { useToast } from '@/hooks/use-toast';
 import { hasStudyMaterials } from '@/utils/languageUtils';
 
-const NewLandingPage = () => {
+interface NewLandingPageProps {
+  onPlayWelcomeAnimation?: () => void;
+}
+
+const NewLandingPage: React.FC<NewLandingPageProps> = ({ onPlayWelcomeAnimation }) => {
   const { theme } = useTheme();
   const { t, setCurrentLanguage } = useLocalization();
   const { toast } = useToast();
@@ -75,6 +81,17 @@ const NewLandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Triangle Button for Animation Replay */}
+      {onPlayWelcomeAnimation && (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onPlayWelcomeAnimation}
+          className="absolute top-4 right-4 z-20 w-10 h-10"
+        >
+          <Triangle className="h-4 w-4" />
+        </Button>
+      )}
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{

@@ -54,6 +54,10 @@ const Index = () => {
     setShowWelcomeAnimation(false);
   };
 
+  const handlePlayWelcomeAnimation = () => {
+    setShowWelcomeAnimation(true);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -66,7 +70,7 @@ const Index = () => {
     if (showWelcomeAnimation) {
       return <WelcomeAnimation onComplete={handleWelcomeComplete} />;
     }
-    return <NewLandingPage />;
+    return <NewLandingPage onPlayWelcomeAnimation={handlePlayWelcomeAnimation} />;
   }
 
   // This return should not be reached due to the redirect, but kept as fallback
