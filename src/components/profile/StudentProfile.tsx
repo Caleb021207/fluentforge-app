@@ -35,10 +35,19 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
         console.log('Raw enrollments:', rawEnrollments);
 
-        // Debug: Check what classes exist
+        // Debug: Check what classes exist and their teacher assignments
         const { data: allClasses } = await supabase
           .from('classes')
-          .select('id, name, class_code, teacher_id')
+          .select(`
+            id, 
+            name, 
+            class_code, 
+            teacher_id,
+            teacher:profiles!classes_teacher_id_fkey (
+              display_name,
+              email
+            )
+          `)
           .limit(10);
 
         console.log('All classes in system:', allClasses);
@@ -61,6 +70,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           rawEnrollments: rawEnrollments?.length || 0,
           processedEnrollments: enrollmentData?.length || 0,
           allClassesCount: allClasses?.length || 0,
+          classesWithTeachers: allClasses?.filter(c => c.teacher_id)?.length || 0,
           studentId: profile.id
         });
 
@@ -103,12 +113,12 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
       <TestScoreCard testScore={latestTestScore} />
 
       {/* Debug Information for Enrollment Issues */}
-      {debugInfo && enrollments.length === 0 && (
+      {debugInfo && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-yellow-600">
+            <CardTitle className="flex items-center gap-2 text-blue-600">
               <AlertCircle className="h-5 w-5" />
-              Class Enrollment Debug Info
+              Class Enrollment Status
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -117,9 +127,17 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               <p>Raw enrollments found: {debugInfo.rawEnrollments}</p>
               <p>Processed enrollments: {debugInfo.processedEnrollments}</p>
               <p>Total classes in system: {debugInfo.allClassesCount}</p>
-              <p className="text-yellow-700">
-                If you used a class code but don't see enrollments, there may be an issue with the enrollment process.
-              </p>
+              <p>Classes with assigned teachers: {debugInfo.classesWithTeachers}</p>
+              {enrollments.length > 0 ? (
+                <p className="text-green-700 font-medium">✅ Enrollment data found and processed successfully!</p>
+              ) : (
+                <p className="text-yellow-700">
+                  {debugInfo.rawEnrollments > 0 
+                    ? "Enrollments exist but there may be an issue with teacher assignments or data processing."
+                    : "No enrollments found. You may need to use a class code to join a class."
+                  }
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -226,7 +244,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                     <div className="space-y-2">
                       <h4 className="font-medium">{enrollment.class_info?.name}</h4>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{enrollment.class_info?.subject?.name}</span>
+                        <span>{enrollment.class_info?.subject?.name || 'Subject not assigned'}</span>
                         {enrollment.class_info?.period && (
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
@@ -260,11 +278,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           ) : (
             <div className="text-center py-8">
               <p className="text-muted-foreground">No classes enrolled</p>
-              {debugInfo && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  Check the debug information above for enrollment issues.
-                </p>
-              )}
+              <p className="text-sm text-muted-foreground mt-2">
+                Check the enrollment status above for more details.
+              </p>
             </div>
           )}
         </CardContent>
