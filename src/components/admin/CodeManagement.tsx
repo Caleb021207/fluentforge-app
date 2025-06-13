@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,6 @@ import { Copy, Plus, Calendar, Users, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateAccessCode, getUserAccessCodes } from "@/utils/accessCodeUtils";
 import { useLocalization } from "@/context/LocalizationContext";
-import DevCodeGenerator from "./DevCodeGenerator";
 
 interface AccessCode {
   id: string;
@@ -161,198 +161,187 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
 
   if (availableTypes.length === 0) {
     return (
-      <div className="space-y-6">
-        {/* Dev Tool for generating district codes */}
-        <DevCodeGenerator />
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Access Code Management</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              You don't have permission to generate access codes.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Access Code Management</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">
+            You don't have permission to generate access codes.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Dev Tool for generating district codes */}
-      <DevCodeGenerator />
-      
-      {/* Access Code Management */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            Access Code Management
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Generate access codes to assign roles to users in your organization
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <Button 
-              onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Generate New Code
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={() => setShowCodes(!showCodes)}
-              className="flex items-center gap-2"
-            >
-              {showCodes ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              {showCodes ? 'Hide' : 'View'} My Codes
-            </Button>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Users className="h-5 w-5" />
+          Access Code Management
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Generate access codes to assign roles to users in your organization
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Generate New Code
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => setShowCodes(!showCodes)}
+            className="flex items-center gap-2"
+          >
+            {showCodes ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            {showCodes ? 'Hide' : 'View'} My Codes
+          </Button>
+        </div>
+
+        {showForm && (
+          <div className="border rounded-lg p-4 space-y-4">
+            <h3 className="font-medium">Generate New Access Code</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="codeType">Code Type</Label>
+                <Select value={codeType} onValueChange={setCodeType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select code type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="targetName">
+                  {codeType === 'district' ? 'District Name' :
+                   codeType === 'school' ? 'School Name' :
+                   codeType === 'teacher' ? 'School Name' :
+                   codeType === 'class' ? 'Class Name' : 'Name'}
+                </Label>
+                <Input
+                  id="targetName"
+                  value={targetName}
+                  onChange={(e) => setTargetName(e.target.value)}
+                  placeholder={`Enter ${codeType || 'target'} name`}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="expiresAt">Expiration Date (Optional)</Label>
+                <Input
+                  id="expiresAt"
+                  type="datetime-local"
+                  value={expiresAt}
+                  onChange={(e) => setExpiresAt(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="maxUses">Max Uses (Optional)</Label>
+                <Input
+                  id="maxUses"
+                  type="number"
+                  value={maxUses}
+                  onChange={(e) => setMaxUses(e.target.value)}
+                  placeholder="Leave empty for unlimited"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleGenerateCode}
+                disabled={isGenerating || !codeType || !targetName}
+                className="flex items-center gap-2"
+              >
+                {isGenerating ? "Generating..." : "Generate Code"}
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
+        )}
 
-          {showForm && (
-            <div className="border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium">Generate New Access Code</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="codeType">Code Type</Label>
-                  <Select value={codeType} onValueChange={setCodeType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select code type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="targetName">
-                    {codeType === 'district' ? 'District Name' :
-                     codeType === 'school' ? 'School Name' :
-                     codeType === 'teacher' ? 'School Name' :
-                     codeType === 'class' ? 'Class Name' : 'Name'}
-                  </Label>
-                  <Input
-                    id="targetName"
-                    value={targetName}
-                    onChange={(e) => setTargetName(e.target.value)}
-                    placeholder={`Enter ${codeType || 'target'} name`}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="expiresAt">Expiration Date (Optional)</Label>
-                  <Input
-                    id="expiresAt"
-                    type="datetime-local"
-                    value={expiresAt}
-                    onChange={(e) => setExpiresAt(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="maxUses">Max Uses (Optional)</Label>
-                  <Input
-                    id="maxUses"
-                    type="number"
-                    value={maxUses}
-                    onChange={(e) => setMaxUses(e.target.value)}
-                    placeholder="Leave empty for unlimited"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button 
-                  onClick={handleGenerateCode}
-                  disabled={isGenerating || !codeType || !targetName}
-                  className="flex items-center gap-2"
-                >
-                  {isGenerating ? "Generating..." : "Generate Code"}
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => setShowForm(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {showCodes && (
-            <div className="space-y-4">
-              <h3 className="font-medium">Your Generated Codes</h3>
-              {isLoading ? (
-                <p>Loading codes...</p>
-              ) : codes.length === 0 ? (
-                <p className="text-muted-foreground">No codes generated yet.</p>
-              ) : (
-                <div className="space-y-3">
-                  {codes.map((code) => (
-                    <div key={code.id} className="border rounded-lg p-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <code className="font-mono text-lg font-bold">{code.code}</code>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => copyToClipboard(code.code)}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <Badge variant={code.active ? "default" : "secondary"}>
-                          {code.active ? "Active" : "Inactive"}
-                        </Badge>
+        {showCodes && (
+          <div className="space-y-4">
+            <h3 className="font-medium">Your Generated Codes</h3>
+            {isLoading ? (
+              <p>Loading codes...</p>
+            ) : codes.length === 0 ? (
+              <p className="text-muted-foreground">No codes generated yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {codes.map((code) => (
+                  <div key={code.id} className="border rounded-lg p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <code className="font-mono text-lg font-bold">{code.code}</code>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(code.code)}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
                       </div>
-                      
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">Type:</span>
-                          <p className="font-medium">{getCodeTypeDisplay(code.code_type)}</p>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Target:</span>
-                          <p className="font-medium">{code.target_name}</p>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Uses:</span>
-                          <p className="font-medium">
-                            {code.current_uses}{code.max_uses ? ` / ${code.max_uses}` : ' / ∞'}
-                          </p>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Created:</span>
-                          <p className="font-medium">{formatDate(code.created_at)}</p>
-                        </div>
-                      </div>
-
-                      {code.expires_at && (
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Calendar className="h-3 w-3" />
-                          Expires: {formatDate(code.expires_at)}
-                        </div>
-                      )}
+                      <Badge variant={code.active ? "default" : "secondary"}>
+                        {code.active ? "Active" : "Inactive"}
+                      </Badge>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Type:</span>
+                        <p className="font-medium">{getCodeTypeDisplay(code.code_type)}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Target:</span>
+                        <p className="font-medium">{code.target_name}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Uses:</span>
+                        <p className="font-medium">
+                          {code.current_uses}{code.max_uses ? ` / ${code.max_uses}` : ' / ∞'}
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Created:</span>
+                        <p className="font-medium">{formatDate(code.created_at)}</p>
+                      </div>
+                    </div>
+
+                    {code.expires_at && (
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Calendar className="h-3 w-3" />
+                        Expires: {formatDate(code.expires_at)}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
