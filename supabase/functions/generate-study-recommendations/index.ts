@@ -83,7 +83,9 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
-    const prompt = `Based on this language assessment analysis, create 3-5 specific, actionable study recommendations using our comprehensive language learning platform features:
+    const prompt = `STRICT INSTRUCTIONS: You MUST only recommend features that exist within our language learning platform. NEVER mention external websites, apps, services, or resources outside our platform.
+
+Based on this language assessment analysis, create 3-5 specific study recommendations using ONLY our internal platform features:
 
 Analysis Data:
 - Overall Score: ${analysisData.overallScore}/10
@@ -93,95 +95,73 @@ Analysis Data:
 - Existing Recommendations: ${analysisData.recommendations.join('; ')}
 - Detailed Feedback: ${analysisData.detailedFeedback}
 
-COMPREHENSIVE PLATFORM FEATURES AVAILABLE:
+INTERNAL PLATFORM FEATURES ONLY:
 
-**SPEAKING & LISTENING PRACTICE:**
-- Voice Chat Practice: Real-time AI conversation practice with different complexity levels
-- Premium Voice Chat: Enhanced voice practice with advanced AI tutors
-- Pronunciation Practice: AI-powered pronunciation feedback with phrase-by-phrase analysis
-- Conversation Starters: Guided conversation practice for different proficiency levels
-- Speech Rate Control: Adjustable speaking speed for comprehension practice
-- Real-time transcription and feedback during voice sessions
+**SPEAKING & LISTENING (Routes: /voice-chat, /premium-voice)**
+- Voice Chat Practice: AI conversation practice with complexity levels
+- Premium Voice Chat: Advanced AI tutors for enhanced practice
+- Pronunciation Practice: Phrase-by-phrase pronunciation feedback
+- Conversation Starters: Guided practice for different proficiency levels
+- Speech Rate Control: Adjustable speed for comprehension
 
-**WRITING PRACTICE:**
-- Text Practice Chat: AI-powered writing practice with real-time feedback
-- Grammar correction and suggestions during text conversations
+**WRITING PRACTICE (Route: /practice)**
+- Text Practice Chat: AI-powered writing with real-time feedback
+- Grammar correction during text conversations
 - Writing exercises with instant AI feedback
-- Structured writing prompts and guided practice
 
-**READING COMPREHENSION:**
+**READING & LESSONS (Route: /lessons)**
 - Interactive lesson modules with reading exercises
-- CEFR-leveled reading materials (A1-C2)
-- Reading comprehension quizzes and assessments
-- Reading Certification tests for skill validation
+- CEFR-leveled materials (A1-C2)
+- Reading comprehension quizzes
+- Multiple exercise types within lessons
 
-**VOCABULARY BUILDING:**
-- Comprehensive vocabulary lessons organized by CEFR levels (A1-C2)
-- Interactive flashcard systems with spaced repetition
-- Vocabulary exercises with multiple exercise types:
-  * Audio Transcription Exercises
-  * Image Identification Exercises
-  * Word Ordering Exercises
-  * Sentence Correction Exercises
-  * Short Answer Exercises
-  * Timed Quiz Exercises
-- Topic-based vocabulary sets (food, clothing, professions, time, weather, etc.)
-- Advanced vocabulary for business, academic, and cultural contexts
+**VOCABULARY BUILDING (Route: /vocabulary)**
+- CEFR-organized vocabulary lessons (A1-C2)
+- Interactive flashcard systems
+- Audio Transcription Exercises
+- Image Identification Exercises
+- Word Ordering Exercises
+- Sentence Correction Exercises
+- Short Answer Exercises
+- Timed Quiz Exercises
 
-**GRAMMAR PRACTICE:**
-- Grammar rules and explanations integrated into lessons
-- Interactive grammar exercises within lesson modules
-- Real-time grammar feedback during practice sessions
-- Progressive grammar complexity based on CEFR levels
-
-**LESSON SYSTEM:**
-- Structured lesson modules with progressive difficulty
-- Multiple exercise types within each lesson
-- Progress tracking through lesson completion
-- Level-based progression system
-- Challenge lists for skill advancement
-
-**CERTIFICATION SYSTEM:**
-- Reading Certification tests with detailed scoring
+**CERTIFICATION TESTING (Route: /certificates)**
+- Reading Certification tests
 - Writing Certification assessments
 - Fluency tests with conversation analysis
-- CEFR-aligned certification levels
-- Performance tracking and score history
 
-**PROGRESS TRACKING & ANALYTICS:**
-- Detailed progress analytics and insights
-- Performance metrics across all skill areas
-- AI-powered progress analysis and milestone tracking
-- Session history and usage statistics
-- Improvement recommendations based on performance data
+**PROGRESS TRACKING (Route: /progress)**
+- Progress analytics and insights
+- Performance metrics tracking
+- AI-powered progress analysis
 
-**SPECIALIZED FEATURES:**
-- Multi-language support (Spanish, Portuguese, and other languages)
-- AI-powered transcript analysis for external test results
-- Personalized study plan generation
-- Pronunciation practice with complexity levels (beginner to advanced)
-- Voice recognition and speech analysis
-- Real-time translation assistance during practice
+SKILL AREA MAPPING (USE THESE EXACT ROUTES):
+- speaking/listening → "Navigate to Voice Chat (/voice-chat) or Premium Voice (/premium-voice)"
+- writing → "Navigate to Practice Chat (/practice) for text-based writing practice"
+- reading → "Navigate to Lessons (/lessons) for reading exercises and comprehension"
+- vocabulary → "Navigate to Vocabulary (/vocabulary) for flashcards and word exercises"
+- grammar → "Navigate to Lessons (/lessons) for grammar modules and exercises"
 
-For each recommendation, provide:
-1. skill_area (one of: reading, writing, speaking, listening, grammar, vocabulary)
-2. priority_level (1-5, where 5 is highest priority)
-3. recommendation_text (specific, actionable advice using our platform features)
-4. estimated_time_investment (e.g., "15-30 minutes daily", "2-3 hours weekly")
-5. difficulty_level (beginner, intermediate, advanced)
-6. resources (specific platform features and how to use them)
+EXAMPLE RESOURCES FORMAT (ONLY REFERENCE INTERNAL FEATURES):
+- "Access Voice Chat from the main navigation menu, select your proficiency level, and practice with AI tutors"
+- "Go to Vocabulary section, choose your CEFR level, and complete flashcard exercises"
+- "Visit Lessons page, select grammar modules, and complete interactive exercises"
 
-Focus on directing users to the most appropriate platform features that address their specific weaknesses and build on their strengths. Be specific about which sections, exercise types, and difficulty levels to use.
+VALIDATION CHECKLIST:
+✓ NO external websites mentioned (no BBC, IELTS, Grammarly, etc.)
+✓ Only internal navigation routes used (/voice-chat, /practice, /lessons, /vocabulary, /certificates)
+✓ Resources describe actual platform features
+✓ Navigation instructions use our app's menu structure
 
-Return ONLY a JSON array without markdown formatting:
+Return ONLY a JSON array:
 [
   {
     "skill_area": "speaking",
     "priority_level": 4,
-    "recommendation_text": "Use Voice Chat Practice at intermediate level with pronunciation feedback enabled to improve conversational fluency and accuracy",
+    "recommendation_text": "Practice daily conversations using Voice Chat to improve fluency and pronunciation accuracy",
     "estimated_time_investment": "20 minutes daily",
     "difficulty_level": "intermediate",
-    "resources": "Access Voice Chat Practice from the main menu, enable pronunciation feedback in settings, start with conversation starters, and use speech rate control for optimal learning pace"
+    "resources": "Navigate to Voice Chat from the main menu, select intermediate level, enable pronunciation feedback, and practice with conversation starters"
   }
 ]`;
 
