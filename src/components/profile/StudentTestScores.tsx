@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, TrendingUp, Calendar } from "lucide-react";
+import { Users, TrendingUp, Calendar, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getCEFRColor } from "@/components/transcript-analysis/utils/cefrUtils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,13 +25,16 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
   const [studentScores, setStudentScores] = useState<StudentScore[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [classAverage, setClassAverage] = useState<number | null>(null);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
 
   useEffect(() => {
     const fetchStudentScores = async () => {
       setIsLoading(true);
       try {
-        // Get all classes taught by this teacher
-        const { data: classes } = await supabase
+        console.log('Fetching data for teacher:', teacherId);
+
+        // First, let's check what classes this teacher has
+        const { data: teacherClasses, error: classError } = await supabase
           .from('classes')
           .select(`
             id,
@@ -47,9 +50,54 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
           `)
           .eq('teacher_id', teacherId);
 
-        if (!classes) return;
+        console.log('Teacher classes:', teacherClasses);
+        console.log('Class fetch error:', classError);
 
-        const studentScorePromises = classes.flatMap(classData => 
+        // If no classes found, let's check if there are any students with transcript analyses
+        // that might not be properly enrolled
+        const { data: allStudentAnalyses, error: analysesError } = await supabase
+          .from('transcript_analyses')
+          .select(`
+            user_id,
+            overall_score,
+            cefr_level,
+            upload_date,
+            profiles!inner (
+              display_name,
+              email,
+              role
+            )
+          `)
+          .eq('profiles.role', 'student')
+          .order('upload_date', { ascending: false });
+
+        console.log('All student analyses:', allStudentAnalyses);
+
+        setDebugInfo({
+          teacherClasses: teacherClasses?.length || 0,
+          totalStudentAnalyses: allStudentAnalyses?.length || 0,
+          classError,
+          analysesError
+        });
+
+        if (!teacherClasses || teacherClasses.length === 0) {
+          // If no classes, show all students with analyses for now (for debugging)
+          if (allStudentAnalyses && allStudentAnalyses.length > 0) {
+            const scores = allStudentAnalyses.map(analysis => ({
+              student_id: analysis.user_id,
+              student_name: analysis.profiles.display_name || analysis.profiles.email || 'Unknown',
+              student_email: analysis.profiles.email || '',
+              overall_score: analysis.overall_score,
+              cefr_level: analysis.cefr_level,
+              upload_date: analysis.upload_date,
+              class_name: 'No Class Assignment'
+            }));
+            setStudentScores(scores);
+          }
+          return;
+        }
+
+        const studentScorePromises = teacherClasses.flatMap(classData => 
           classData.student_enrollments.map(async (enrollment) => {
             // Get the most recent transcript analysis for each student
             const { data: latestAnalysis } = await supabase
@@ -133,6 +181,21 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
         )}
       </CardHeader>
       <CardContent>
+        {/* Debug Information */}
+        {debugInfo && studentScores.length === 0 && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="h-4 w-4 text-yellow-600" />
+              <span className="text-sm font-medium text-yellow-800">Debug Information</span>
+            </div>
+            <div className="text-xs text-yellow-700 space-y-1">
+              <p>Classes found: {debugInfo.teacherClasses}</p>
+              <p>Total student analyses in system: {debugInfo.totalStudentAnalyses}</p>
+              <p>This suggests students may not be enrolled in your classes yet.</p>
+            </div>
+          </div>
+        )}
+
         {studentScores.length > 0 ? (
           <div className="space-y-3">
             {studentScores
@@ -142,7 +205,8 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium">{student.student_name}</h4>
-                    <p className="text-sm text-muted-foreground">{student.class_name}</p>
+                    <p className="text-sm text-muted-foreground">{student.student_email}</p>
+                    <p className="text-xs text-muted-foreground">{student.class_name}</p>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center gap-2">
@@ -165,9 +229,14 @@ const StudentTestScores = ({ teacherId }: StudentTestScoresProps) => {
             ))}
           </div>
         ) : (
-          <p className="text-muted-foreground text-center py-8">
-            No students with test scores found
-          </p>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground mb-2">
+              No students with test scores found in your classes
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Students need to join your classes using class access codes and upload transcripts for AI analysis.
+            </p>
+          </div>
         )}
       </CardContent>
     </Card>
