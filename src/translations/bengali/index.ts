@@ -8,6 +8,7 @@ import languageSelectionTranslations from "./language-selection";
 import languagesTranslations from "./languages";
 import classroomTranslations from "./classroom";
 import navigationTranslations from "./navigation";
+import authTranslations from "./auth";
 
 const bengaliTranslations: TranslationRecord = {
   ...practiceTranslations,
@@ -18,6 +19,7 @@ const bengaliTranslations: TranslationRecord = {
   ...languagesTranslations,
   ...classroomTranslations,
   ...navigationTranslations,
+  ...authTranslations,
 };
 
 export default bengaliTranslations;
