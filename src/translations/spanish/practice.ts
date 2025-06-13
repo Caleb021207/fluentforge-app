@@ -66,6 +66,7 @@ const practiceTranslations: TranslationRecord = {
   needsImprovementPronunciationFeedback: "Necesita más práctica. Enfócate en las palabras resaltadas.",
   failedToGeneratePhrase: "Error al generar frase de práctica. Por favor, inténtalo de nuevo.",
   failedToAnalyzePronunciation: "Error al analizar la pronunciación. Por favor, inténtalo de nuevo.",
+  failedToProcessAudio: "Error al procesar el audio. Por favor, inténtalo de nuevo.",
   
   // New translations for updated pronunciation practice page
   chooseDifficultyLevelBasedOn: "Elige un nivel de dificultad según tu competencia lingüística",
@@ -101,7 +102,25 @@ const practiceTranslations: TranslationRecord = {
   speechRecognitionError: "Error de Reconocimiento de Voz",
   speechRecognitionNotSupported: "El reconocimiento de voz no es compatible con tu navegador",
   noSpeechDetected: "No Se Detectó Voz",
-  pleaseTryAgain: "Por favor, inténtalo de nuevo"
+  pleaseTryAgain: "Por favor, inténtalo de nuevo",
+  processing: "Procesando...",
+  error: "Error",
+  
+  // Additional feedback translations
+  excellent: "Excelente",
+  good: "Bueno",
+  fair: "Aceptable",
+  needsImprovement: "Necesita Mejora",
+  
+  // Pronunciation feedback translations
+  pronunciationFeedback: "Retroalimentación de Pronunciación",
+  accuracyScore: "Puntuación de Precisión",
+  intonationScore: "Puntuación de Entonación",
+  fluencyScore: "Puntuación de Fluidez", 
+  complexityScore: "Puntuación de Complejidad",
+  wordAnalysis: "Análisis de Palabras",
+  phonemeAnalysis: "Análisis de Fonemas",
+  overallFeedback: "Retroalimentación General"
 };
 
 export default practiceTranslations;

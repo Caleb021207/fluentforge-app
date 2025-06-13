@@ -94,9 +94,13 @@ const PronunciationFeedback: React.FC<PronunciationFeedbackProps> = ({ feedback 
                 }`}
                 title={item.suggestion || ""}
               >
-                {item.word}
-                {!item.isCorrect && item.suggestion && (
-                  <span className="ml-1 opacity-70">→ {item.suggestion}</span>
+                {item.isCorrect ? (
+                  item.word
+                ) : (
+                  <span>
+                    <span className="line-through opacity-60">{item.word}</span>
+                    <span className="ml-1 text-xs">({item.suggestion})</span>
+                  </span>
                 )}
               </div>
             ))}

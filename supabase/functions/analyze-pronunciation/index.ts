@@ -60,7 +60,7 @@ serve(async (req) => {
     
     // Word-level analysis
     const wordAnalysis = expectedWords.map(expectedWord => {
-      // Check if the word or a close match appears in the actual phrase
+      // Check if the word appears in the actual phrase
       const matchFound = actualWords.some(actualWord => 
         actualWord === expectedWord || 
         (actualWord.length > 2 && expectedWord.includes(actualWord)) ||
@@ -70,7 +70,7 @@ serve(async (req) => {
       return {
         word: expectedWord,
         isCorrect: matchFound,
-        suggestion: matchFound ? undefined : expectedWord
+        suggestion: matchFound ? undefined : `Missing: ${expectedWord}`
       };
     });
     

@@ -161,7 +161,7 @@ export const usePronunciationExercise = () => {
     } finally {
       setIsGenerating(false);
     }
-  }, [t, toast, targetLanguage]);
+  }, [t, toast, targetLanguage, currentLanguage]);
 
   // Process the pronunciation feedback
   const processPronunciationFeedback = async (transcribed: string) => {

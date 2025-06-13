@@ -46,11 +46,11 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a language learning assistant that generates pronunciation practice phrases.`
+            content: `You are a language learning assistant that generates pronunciation practice phrases. Always generate different, varied phrases each time you are called.`
           },
           {
             role: "user",
-            content: `Generate ONE ${targetLanguage} phrase (${instruction}). Reply with a JSON object having these properties:
+            content: `Generate ONE unique ${targetLanguage} phrase (${instruction}). Make sure it's different from previous phrases. Reply with a JSON object having these properties:
             1. phrase: The ${targetLanguage} phrase to practice
             2. translation: The translation of the phrase in ${nativeLanguage}
             3. topic: A short category/topic label
@@ -59,7 +59,8 @@ serve(async (req) => {
             ONLY respond with the JSON. No explanations or additional text.`
           }
         ],
-        temperature: 0.7,
+        temperature: 0.8,
+        max_tokens: 200,
       }),
     });
 
