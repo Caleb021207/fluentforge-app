@@ -37,6 +37,7 @@ const authTranslations: TranslationRecord = {
   incorrectPasscode: "Incorrect passcode, please try again.",
   pleaseWait: "Please wait...",
   processing: "Processing...",
+  retrying: "Retrying",
   
   // Additional auth translations
   authRequired: "Authentication Required",

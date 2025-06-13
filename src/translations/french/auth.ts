@@ -51,7 +51,8 @@ const authTranslations: TranslationRecord = {
   youHaveBeenSignedOut: "Vous avez été déconnecté de votre compte",
   errorSigningOut: "Erreur lors de la déconnexion",
   errorOccurredWhileSigningOut: "Une erreur s'est produite lors de la déconnexion",
-  signOut: "Déconnexion"
+  signOut: "Déconnexion",
+  retrying: "Nouvelle tentative"
 };
 
 export default authTranslations;

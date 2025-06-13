@@ -5,6 +5,8 @@ import uiElementsTranslations from "./ui-elements";
 import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
 import voiceChatTranslations from "./voice-chat";
+import authTranslations from "./auth";
+import navigationTranslations from "./navigation";
 
 // Combine all the translation categories
 const thaiTranslations: TranslationRecord = {
@@ -13,7 +15,8 @@ const thaiTranslations: TranslationRecord = {
   ...languageSelectionTranslations,
   ...practiceTranslations,
   ...voiceChatTranslations,
-  // You would add more imports here as they are created
+  ...authTranslations,
+  ...navigationTranslations,
 };
 
 export default thaiTranslations;

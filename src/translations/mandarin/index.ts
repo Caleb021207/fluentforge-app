@@ -11,6 +11,7 @@ import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
+import navigationTranslations from "./navigation";
 
 // Combine all the translation categories
 const mandarinTranslations: TranslationRecord = {
@@ -25,6 +26,7 @@ const mandarinTranslations: TranslationRecord = {
   ...languageFrameworksTranslations,
   ...authTranslations,
   ...languagesTranslations,
+  ...navigationTranslations,
 };
 
 export default mandarinTranslations;
