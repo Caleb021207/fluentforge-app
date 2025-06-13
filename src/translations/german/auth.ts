@@ -2,6 +2,7 @@
 import { TranslationRecord } from "../types";
 
 const authTranslations: TranslationRecord = {
+  // Existing translations
   "signInWithEmail": "Mit E-Mail anmelden",
   "createAccount": "Konto erstellen",
   "forgotPassword": "Passwort vergessen?",
@@ -32,7 +33,25 @@ const authTranslations: TranslationRecord = {
   "loggedOut": "Abgemeldet",
   "loginRequired": "Anmeldung erforderlich",
   "wrongPassword": "Falsches Passwort",
-  "userNotFound": "Benutzer nicht gefunden"
+  "userNotFound": "Benutzer nicht gefunden",
+  
+  // Additional auth dialog translations
+  signIn: "Anmelden",
+  signUp: "Registrieren",
+  signOut: "Abmelden",
+  signInToContinue: "Melden Sie sich in Ihrem Konto an, um fortzufahren",
+  createAccountToGetStarted: "Erstellen Sie ein neues Konto, um zu beginnen",
+  accessPasscode: "Zugangscode",
+  incorrectPasscode: "Falscher Zugangscode, bitte versuchen Sie es erneut.",
+  pleaseWait: "Bitte warten...",
+  processing: "Wird verarbeitet...",
+  retrying: "Wiederholung",
+  logout: "Abmelden",
+  authRequired: "Authentifizierung erforderlich",
+  pleaseSignInDashboard: "Bitte melden Sie sich an, um auf das Dashboard zuzugreifen",
+  continueWithGoogle: "Mit Google fortfahren",
+  loginRequiredDescription: "Bitte melden Sie sich an, um auf diese Funktion zuzugreifen",
+  pleaseLoginToAccessFeature: "Bitte melden Sie sich an, um auf diese Funktion zuzugreifen"
 };
 
 export default authTranslations;

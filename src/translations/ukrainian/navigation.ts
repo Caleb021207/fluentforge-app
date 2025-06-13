@@ -3,6 +3,8 @@ import { TranslationRecord } from "../types";
 
 const navigationTranslations: TranslationRecord = {
   home: "Головна",
+  textPractice: "Текстова практика",
+  unlimitedVoicePractice: "Необмежена голосова практика",
   practice: "Практика",
   voiceChat: "Голосовий чат",
   accuracy: "Точність",
@@ -26,7 +28,8 @@ const navigationTranslations: TranslationRecord = {
   privacyPolicy: "Політика конфіденційності",
   cookiePolicy: "Політика використання файлів cookie",
   accessibilityStatement: "Заява про доступність",
-  pronunciationPractice: "Практика вимови"
+  pronunciationPractice: "Практика вимови",
+  aiAnalysis: "ШІ аналіз"
 };
 
 export default navigationTranslations;
