@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Analysis } from "./types";
+import { useLocalization } from "@/context/LocalizationContext";
 import LoadingStateCard from "./components/LoadingStateCard";
 import EmptyStateCard from "./components/EmptyStateCard";
 import LatestAnalysisCard from "./components/LatestAnalysisCard";
@@ -16,6 +17,8 @@ interface AnalysisResultsProps {
 }
 
 const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analyses, isLoading }) => {
+  const { t } = useLocalization();
+
   if (isLoading) {
     return <LoadingStateCard />;
   }

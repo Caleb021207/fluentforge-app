@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Award, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface Analysis {
   id: string;
@@ -29,6 +30,7 @@ interface ProgressTimelineProps {
 }
 
 const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestones }) => {
+  const { t } = useLocalization();
   const sortedAnalyses = analyses?.sort((a, b) => 
     new Date(a.upload_date).getTime() - new Date(b.upload_date).getTime()
   ) || [];
@@ -50,8 +52,8 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
       <Card>
         <CardContent className="pt-6 text-center">
           <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2 text-foreground">No progress data yet</h3>
-          <p className="text-muted-foreground">Upload multiple transcripts to see your progress timeline.</p>
+          <h3 className="text-lg font-medium mb-2 text-foreground">{t("noProgressDataYet") || "No progress data yet"}</h3>
+          <p className="text-muted-foreground">{t("uploadMultipleTranscripts") || "Upload multiple transcripts to see your progress timeline."}</p>
         </CardContent>
       </Card>
     );
@@ -63,10 +65,10 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            Progress Overview
+            {t("progressOverview")}
           </CardTitle>
           <CardDescription>
-            Track your language learning journey over time
+            {t("trackLanguageLearningJourney")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -74,21 +76,21 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
             <div className="mb-6 p-4 bg-muted/50 rounded-lg border">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">First Test</div>
+                  <div className="text-sm text-muted-foreground mb-1">{t("firstTest")}</div>
                   <div className="font-bold text-foreground text-lg">{sortedAnalyses[0]?.overall_score || 'N/A'}%</div>
                   <Badge className={getCEFRColor(sortedAnalyses[0]?.cefr_level)}>
                     {sortedAnalyses[0]?.cefr_level || 'N/A'}
                   </Badge>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">Latest Test</div>
+                  <div className="text-sm text-muted-foreground mb-1">{t("latestTest")}</div>
                   <div className="font-bold text-foreground text-lg">{sortedAnalyses[sortedAnalyses.length - 1]?.overall_score || 'N/A'}%</div>
                   <Badge className={getCEFRColor(sortedAnalyses[sortedAnalyses.length - 1]?.cefr_level)}>
                     {sortedAnalyses[sortedAnalyses.length - 1]?.cefr_level || 'N/A'}
                   </Badge>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">Improvement</div>
+                  <div className="text-sm text-muted-foreground mb-1">{t("improvement")}</div>
                   <div className="font-bold text-primary text-lg">
                     {(() => {
                       const first = sortedAnalyses[0]?.overall_score;
@@ -141,7 +143,7 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ analyses, milestone
       {milestones && milestones.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Achievements & Milestones</CardTitle>
+            <CardTitle>{t("achievementsAndMilestones") || "Achievements & Milestones"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">

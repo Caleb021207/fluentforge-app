@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLocalization } from "@/context/LocalizationContext";
 import { Upload, FileImage, FileText, File } from "lucide-react";
 
 interface TranscriptUploadProps {
@@ -16,6 +17,7 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { toast } = useToast();
+  const { t } = useLocalization();
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -27,8 +29,8 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
     
     if (file.size > maxSize) {
       toast({
-        title: "File too large",
-        description: "Please upload a file smaller than 10MB.",
+        title: t("fileTooLarge") || "File too large",
+        description: t("fileMaxSize") || "Please upload a file smaller than 10MB.",
         variant: "destructive",
       });
       return;
@@ -36,8 +38,8 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
 
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: "Invalid file type",
-        description: "Please upload a JPEG, PNG, WebP, or PDF file.",
+        title: t("invalidFileType") || "Invalid file type",
+        description: t("supportedFileTypes") || "Please upload a JPEG, PNG, WebP, or PDF file.",
         variant: "destructive",
       });
       return;
@@ -130,8 +132,8 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
         } catch (error: any) {
           console.error('Analysis error:', error);
           toast({
-            title: "Analysis failed",
-            description: error.message || "Failed to analyze transcript. Please try again.",
+            title: t("analysisFailed") || "Analysis failed",
+            description: error.message || t("failedToAnalyzeTranscript") || "Failed to analyze transcript. Please try again.",
             variant: "destructive",
           });
         } finally {
@@ -145,14 +147,14 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
     } catch (error: any) {
       console.error('Upload error:', error);
       toast({
-        title: "Upload failed",
-        description: error.message || "Failed to upload file. Please try again.",
+        title: t("uploadFailed") || "Upload failed",
+        description: error.message || t("failedToUploadFile") || "Failed to upload file. Please try again.",
         variant: "destructive",
       });
       setIsUploading(false);
       setUploadProgress(0);
     }
-  }, [toast, onUploadSuccess]);
+  }, [toast, onUploadSuccess, t]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -173,9 +175,9 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upload Test Transcript</CardTitle>
+        <CardTitle>{t("uploadTestTranscript")}</CardTitle>
         <CardDescription>
-          Upload your language test score report (JPEG, PNG, WebP, or PDF) for AI analysis
+          {t("uploadLanguageTestScoreReport")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -193,39 +195,38 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
           
           {isUploading ? (
             <div className="space-y-4">
-              <p className="text-lg font-medium">Processing your transcript...</p>
+              <p className="text-lg font-medium">{t("processingTranscript") || "Processing your transcript..."}</p>
               <Progress value={uploadProgress} className="w-full" />
               <p className="text-sm text-gray-500">
-                {uploadProgress < 25 && "Uploading file..."}
-                {uploadProgress >= 25 && uploadProgress < 50 && "File uploaded, preparing analysis..."}
-                {uploadProgress >= 50 && uploadProgress < 75 && "Analyzing with AI..."}
-                {uploadProgress >= 75 && uploadProgress < 90 && "Extracting insights..."}
-                {uploadProgress >= 90 && "Saving results..."}
+                {uploadProgress < 25 && (t("uploadingFile") || "Uploading file...")}
+                {uploadProgress >= 25 && uploadProgress < 50 && (t("fileUploadedPreparing") || "File uploaded, preparing analysis...")}
+                {uploadProgress >= 50 && uploadProgress < 75 && (t("analyzingWithAI") || "Analyzing with AI...")}
+                {uploadProgress >= 75 && uploadProgress < 90 && (t("extractingInsights") || "Extracting insights...")}
+                {uploadProgress >= 90 && (t("savingResults") || "Saving results...")}
               </p>
             </div>
           ) : (
             <div>
               <p className="text-lg font-medium mb-2">
-                {isDragActive ? 'Drop your transcript here' : 'Drag & drop or click to upload'}
+                {isDragActive ? (t("dropTranscriptHere") || 'Drop your transcript here') : (t("dragDropOrClickToUpload") || 'Drag & drop or click to upload')}
               </p>
               <p className="text-sm text-gray-500 mb-4">
-                Supports JPEG, PNG, WebP, and PDF files up to 10MB
+                {t("supportsFileFormats")}
               </p>
               <Button variant="outline">
-                Select File
+                {t("selectFile")}
               </Button>
             </div>
           )}
         </div>
 
         <div className="mt-6 p-4 bg-card text-card-foreground rounded-lg border border-border">
-          <h4 className="font-medium mb-2">What our AI can analyze:</h4>
+          <h4 className="font-medium mb-2">{t("whatOurAiCanAnalyze")}</h4>
           <ul className="text-sm space-y-1">
-            <li>• Overall scores and CEFR levels</li>
-            <li>• Individual skill breakdowns (Reading, Writing, Speaking, Listening)</li>
-            <li>• Strengths and areas for improvement</li>
-            
-            <li>• Progress tracking over time</li>
+            <li>{t("overallScoresAndCefrLevels")}</li>
+            <li>{t("individualSkillBreakdowns")}</li>
+            <li>{t("strengthsAndAreasForImprovement")}</li>
+            <li>{t("progressTrackingOverTime")}</li>
           </ul>
         </div>
       </CardContent>

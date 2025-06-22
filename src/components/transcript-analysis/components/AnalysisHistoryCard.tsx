@@ -1,40 +1,52 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLocalization } from "@/context/LocalizationContext";
 import { format } from "date-fns";
 import { Analysis } from "../types";
-import { getCEFRColor } from "../utils/cefrUtils";
 
 interface AnalysisHistoryCardProps {
   analyses: Analysis[];
 }
 
 const AnalysisHistoryCard: React.FC<AnalysisHistoryCardProps> = ({ analyses }) => {
-  const historicalAnalyses = analyses.slice(1);
+  const { t } = useLocalization();
+
+  const getCEFRColor = (level: string | null) => {
+    switch (level) {
+      case 'C2': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+      case 'C1': return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200';
+      case 'B2': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'B1': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'A2': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'A1': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+      default: return 'bg-muted text-muted-foreground';
+    }
+  };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Analysis History</CardTitle>
-        <CardDescription>
-          Your previous {historicalAnalyses.length} analysis results
-        </CardDescription>
+        <CardTitle>{t("analysisHistory")}</CardTitle>
+        <p className="text-sm text-muted-foreground">
+          {t("yourPreviousAnalysisResults", { count: (analyses.length - 1).toString() })}
+        </p>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {historicalAnalyses.map((analysis) => (
-            <div key={analysis.id} className="flex items-center justify-between p-3 border rounded-lg bg-card">
+          {analyses.slice(1).map((analysis) => (
+            <div key={analysis.id} className="flex justify-between items-center p-3 border rounded-lg">
               <div>
-                <div className="font-medium text-foreground">{analysis.file_name}</div>
+                <div className="font-medium">{analysis.file_name}</div>
                 <div className="text-sm text-muted-foreground">
                   {format(new Date(analysis.upload_date), 'MMM d, yyyy')}
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-foreground">{analysis.overall_score || 'N/A'}%</div>
+                <div className="font-bold">{analysis.overall_score || 'N/A'}%</div>
                 {analysis.cefr_level && (
-                  <Badge className={getCEFRColor(analysis.cefr_level)} variant="outline">
+                  <Badge className={getCEFRColor(analysis.cefr_level)}>
                     {analysis.cefr_level}
                   </Badge>
                 )}
