@@ -1,10 +1,11 @@
+
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { LanguageMetrics } from "@/types/chat";
 import { useToast } from "@/hooks/use-toast";
-import { supabase, typedSupabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 import { AlertCircle, RefreshCw } from "lucide-react";
@@ -53,7 +54,7 @@ const AuthenticatedAccuracy = () => {
       setIsRefreshing(true);
       
       // Try to call the RPC function using raw SQL since types aren't updated yet
-      const { error: rpcError } = await (typedSupabase as any).rpc('update_student_language_aggregate_metrics', {
+      const { error: rpcError } = await (supabase as any).rpc('update_student_language_aggregate_metrics', {
         target_student_id: user.id
       });
       
@@ -62,7 +63,7 @@ const AuthenticatedAccuracy = () => {
       }
       
       // Query the student_language_metrics table directly for historical data
-      const { data: metricsData, error: metricsError } = await (typedSupabase as any)
+      const { data: metricsData, error: metricsError } = await (supabase as any)
         .from('student_language_metrics')
         .select('*')
         .eq('user_id', user.id)
@@ -72,7 +73,7 @@ const AuthenticatedAccuracy = () => {
       if (metricsError) {
         console.warn("Failed to fetch individual metrics:", metricsError);
         // Fallback to aggregate data
-        const { data: aggData, error: aggError } = await (typedSupabase as any)
+        const { data: aggData, error: aggError } = await (supabase as any)
           .from('student_metrics')
           .select('avg_grammar_accuracy, avg_conversation_complexity, language_metrics_count')
           .eq('student_id', user.id)
@@ -154,7 +155,7 @@ const AuthenticatedAccuracy = () => {
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       
       // Get recent practice session messages
-      const { data: recentPractice, error: practiceError } = await (typedSupabase as any)
+      const { data: recentPractice, error: practiceError } = await (supabase as any)
         .from('api_calls_tracking')
         .select('*')
         .eq('user_id', user.id)

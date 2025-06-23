@@ -6,12 +6,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useLocalization } from "@/context/LocalizationContext";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import PronunciationPracticeContainer from "@/components/pronunciation/PronunciationPracticeContainer";
 
 const PronunciationPractice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
   const [selectedLevel, setSelectedLevel] = useState<string>("");
   const [speechRate, setSpeechRate] = useState(1.5);
+  const [showPractice, setShowPractice] = useState(false);
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">
@@ -23,12 +25,16 @@ const PronunciationPractice = () => {
     return <AuthRequiredPrompt />;
   }
 
+  if (showPractice) {
+    return <PronunciationPracticeContainer />;
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">{t("pronunciationPractice")}</h1>
         <p className="text-muted-foreground">
-          {t("improvePronunciationSkillsWith")} English
+          {t("improvePronunciationSkillsWith")}
         </p>
       </div>
 
@@ -37,7 +43,7 @@ const PronunciationPractice = () => {
           <CardHeader>
             <CardTitle>{t("selectComplexityLevel")}</CardTitle>
             <p className="text-sm text-muted-foreground">
-              {t("chooseADifficultyLevel")}
+              {t("chooseDifficultyLevelBasedOn")}
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -46,14 +52,15 @@ const PronunciationPractice = () => {
                 <SelectValue placeholder={t("selectComplexityLevel")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="beginner">{t("beginner")}</SelectItem>
+                <SelectItem value="novice">{t("novice")}</SelectItem>
                 <SelectItem value="intermediate">{t("intermediate")}</SelectItem>
                 <SelectItem value="advanced">{t("advanced")}</SelectItem>
+                <SelectItem value="superior">{t("superior")}</SelectItem>
               </SelectContent>
             </Select>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">speechRate: {speechRate}x</label>
+              <label className="text-sm font-medium">{t("speechRate")}: {speechRate}x</label>
               <input
                 type="range"
                 min="0.5"
@@ -65,9 +72,18 @@ const PronunciationPractice = () => {
               />
             </div>
 
+            {selectedLevel && (
+              <Button 
+                onClick={() => setShowPractice(true)}
+                className="w-full"
+              >
+                {t("startExercise")}
+              </Button>
+            )}
+
             {!selectedLevel && (
               <p className="text-center text-muted-foreground py-8">
-                {t("selectALevelToStartPracticing")}
+                {t("selectLevelToStart")}
               </p>
             )}
           </CardContent>
@@ -79,11 +95,11 @@ const PronunciationPractice = () => {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
-              <li>• Listen carefully to the audio before attempting to speak</li>
-              <li>• Pay attention to stress patterns and intonation</li>
-              <li>• Practice difficult sounds multiple times</li>
-              <li>• Record yourself and compare with native speakers</li>
-              <li>• Be patient - pronunciation improvement takes time</li>
+              <li>• {t("listenCarefullyTip")}</li>
+              <li>• {t("payAttentionToStressTip")}</li>
+              <li>• {t("practiceDifficultSoundsTip")}</li>
+              <li>• {t("recordYourselfTip")}</li>
+              <li>• {t("bePatientTip")}</li>
             </ul>
           </CardContent>
         </Card>

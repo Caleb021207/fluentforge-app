@@ -23,8 +23,41 @@ const practiceTranslations: TranslationRecord = {
   improvePronunciationSkillsWith: "लक्षित अभ्यासहरूका साथ आफ्नो उच्चारण सीप सुधार गर्नुहोस्",
   selectComplexityLevel: "जटिलता स्तर छान्नुहोस्",
   chooseADifficultyLevel: "तपाईंको भाषा दक्षताका आधारमा कठिनाई स्तर छान्नुहोस्",
+  chooseDifficultyLevelBasedOn: "तपाईंको भाषा दक्षताका आधारमा कठिनाई स्तर छान्नुहोस्",
   selectALevelToStartPracticing: "अभ्यास सुरु गर्न स्तर छान्नुहोस्",
+  selectLevelToStart: "अभ्यास सुरु गर्न स्तर छान्नुहोस्",
   pronunciationPracticeTips: "उच्चारण अभ्यास सुझावहरू",
+  speechRate: "बोली दर",
+  
+  // Pronunciation tips
+  listenCarefullyTip: "बोल्ने प्रयास गर्नु अघि ध्यानपूर्वक सुन्नुहोस्",
+  payAttentionToStressTip: "तनाव ढाँचा र स्वरमा ध्यान दिनुहोस्",
+  practiceDifficultSoundsTip: "कठिन आवाजहरू धेरै पटक अभ्यास गर्नुहोस्",
+  recordYourselfTip: "आफूलाई रेकर्ड गर्नुहोस् र मूल भाषीहरूसँग तुलना गर्नुहोस्",
+  bePatientTip: "धैर्य राख्नुहोस् - उच्चारण सुधार गर्न समय लाग्छ",
+  
+  // Pronunciation exercise interface
+  practiceExercise: "अभ्यास अभ्यास",
+  topic: "विषय",
+  listenToPhrase: "वाक्यांश सुन्नुहोस्",
+  playing: "बजाउँदै",
+  clickWordToHear: "सुन्न शब्दमा क्लिक गर्नुहोस्",
+  tryAgain: "फेरि प्रयास गर्नुहोस्",
+  newPhrase: "नयाँ वाक्यांश",
+  generatingNewPhrase: "नयाँ वाक्यांश उत्पन्न गर्दै",
+  startExercise: "अभ्यास सुरु गर्नुहोस्",
+  generatingExercise: "अभ्यास उत्पन्न गर्दै",
+  levelDescription: "स्तर विवरण",
+  
+  // Complexity levels
+  novice: "नयाँ",
+  intermediate: "मध्यम",
+  advanced: "उन्नत",
+  superior: "उत्कृष्ट",
+  noviceLevelShortDescription: "आधारभूत शब्दहरू र वाक्यांशहरू",
+  intermediateLevelShortDescription: "सरल वाक्यहरू र कुराकानी",
+  advancedLevelShortDescription: "जटिल अभिव्यक्ति र विचारहरू",
+  superiorLevelShortDescription: "परिष्कृत भाषा प्रयोग",
   
   // Voice chat
   startVoiceConversation: "आवाज कुराकानी सुरु गर्नुहोस्",

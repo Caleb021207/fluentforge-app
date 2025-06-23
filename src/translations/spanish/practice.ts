@@ -23,8 +23,41 @@ const practiceTranslations: TranslationRecord = {
   improvePronunciationSkillsWith: "Mejora tus habilidades de pronunciación con ejercicios dirigidos",
   selectComplexityLevel: "Seleccionar nivel de complejidad",
   chooseADifficultyLevel: "Elige un nivel de dificultad basado en tu competencia lingüística",
+  chooseDifficultyLevelBasedOn: "Elige un nivel de dificultad basado en tu competencia lingüística",
   selectALevelToStartPracticing: "Selecciona un nivel para comenzar a practicar",
+  selectLevelToStart: "Selecciona un nivel para comenzar a practicar",
   pronunciationPracticeTips: "Consejos de práctica de pronunciación",
+  speechRate: "Velocidad del habla",
+  
+  // Pronunciation tips
+  listenCarefullyTip: "Escucha atentamente el audio antes de intentar hablar",
+  payAttentionToStressTip: "Presta atención a los patrones de acentuación y entonación",
+  practiceDifficultSoundsTip: "Practica sonidos difíciles múltiples veces",
+  recordYourselfTip: "Grábate y compara con hablantes nativos",
+  bePatientTip: "Ten paciencia - la mejora de la pronunciación toma tiempo",
+  
+  // Pronunciation exercise interface
+  practiceExercise: "Ejercicio de práctica",
+  topic: "Tema",
+  listenToPhrase: "Escuchar frase",
+  playing: "Reproduciendo",
+  clickWordToHear: "Haz clic en la palabra para escuchar",
+  tryAgain: "Intentar de nuevo",
+  newPhrase: "Nueva frase",
+  generatingNewPhrase: "Generando nueva frase",
+  startExercise: "Comenzar ejercicio",
+  generatingExercise: "Generando ejercicio",
+  levelDescription: "Descripción del nivel",
+  
+  // Complexity levels
+  novice: "Principiante",
+  intermediate: "Intermedio",
+  advanced: "Avanzado",
+  superior: "Superior",
+  noviceLevelShortDescription: "Palabras y frases básicas",
+  intermediateLevelShortDescription: "Oraciones simples y conversaciones",
+  advancedLevelShortDescription: "Expresiones e ideas complejas",
+  superiorLevelShortDescription: "Uso sofisticado del idioma",
   
   // Voice chat
   startVoiceConversation: "Iniciar conversación de voz",

@@ -6,6 +6,8 @@ const landingAuthTranslations: TranslationRecord = {
   getStarted: "Get Started",
   swipeUpToGetStarted: "Swipe up to get started",
   signUp: "Sign Up",
+  welcomeToLanguageLearning: "Welcome to Language Learning",
+  yourPersonalAICompanion: "Your Personal AI Companion for Language Mastery",
   
   // Auth Flow
   signInToContinue: "Sign in to continue",
