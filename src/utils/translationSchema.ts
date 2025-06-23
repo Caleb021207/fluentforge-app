@@ -241,7 +241,14 @@ export const TRANSLATION_SCHEMA = {
   "phrase5": "string",
   "phrase6": "string",
   "phrase7": "string",
-  "phrase8": "string"
+  "phrase8": "string",
+  
+  // Practice guide fallback keys
+  "Try to form complete sentences, even if they're simple.": "string",
+  "Don't worry about mistakes — they're part of learning!": "string",
+  "Ask for explanations if there's something you don't understand.": "string",
+  "Use words you've learned recently.": "string",
+  "Our AI will adapt to your skill level and gradually help you improve.": "string"
 } as const;
 
 export type TranslationKey = keyof typeof TRANSLATION_SCHEMA;

@@ -2,100 +2,72 @@
 import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
-  // Basic UI elements
-  welcome: "Karibu",
-  hello: "Habari",
-  goodbye: "Kwaheri",
-  yes: "Ndio",
-  no: "Hapana",
-  ok: "Sawa",
-  cancel: "Ghairi",
-  save: "Hifadhi",
-  delete: "Futa",
-  edit: "Hariri",
-  view: "Ona",
-  add: "Ongeza",
-  remove: "Ondoa",
-  update: "Sasisha",
-  create: "Unda",
-  submit: "Wasilisha",
-  confirm: "Thibitisha",
-  retry: "Jaribu Tena",
-  loading: "Inapakia...",
-  error: "Hitilafu",
-  success: "Mafanikio",
-  warning: "Onyo",
-  info: "Taarifa",
+  // Home page
+  "swipeUpToGetStarted": "Sogeza juu ili kuanza",
+  "getStarted": "Anza",
   
-  // Navigation and actions
-  continue: "Endelea",
-  skip: "Ruka",
-  finish: "Maliza",
-  start: "Anza",
-  stop: "Simama",
-  pause: "Sitanisha",
-  resume: "Endelea Tena",
-  reset: "Weka Upya",
-  refresh: "Onyesha Upya",
-  search: "Tafuta",
-  filter: "Chuja",
-  sort: "Panga",
+  // Pronunciation practice page
+  "improvePronunciationSkillsWith": "Boresha ustadi wako wa matamshi kwa mazoezi maalum",
+  "selectComplexityLevel": "Chagua Kiwango cha Ugumu",
+  "chooseDifficultyLevelBasedOn": "Chagua kiwango cha ugumu kulingana na uwezo wako wa lugha",
+  "selectLevelToStart": "Chagua kiwango ili kuanza kufanya mazoezi",
+  "pronunciationPracticeTips": "Vidokezo vya Mazoezi ya Matamshi",
+  "listenCarefullyTip": "Sikiliza kwa makini sauti kabla ya kujaribu kusema",
+  "payAttentionToStressTip": "Zingatia mifumo ya msisitizo na sauti",
+  "practiceDifficultSoundsTip": "Fanya mazoezi ya sauti ngumu mara nyingi",
+  "recordYourselfTip": "Jirekodi na ulinganishe na wazungumzaji wa asili",
+  "bePatientTip": "Kuwa na subira - kuboresha matamshi kunahitaji muda",
   
-  // Status and feedback
-  complete: "Kamili",
-  incomplete: "Haijamalizika",
-  pending: "Inasubiri",
-  active: "Amilifu",
-  inactive: "Haimo Amilifu",
-  enabled: "Imewezeshwa",
-  disabled: "Imelemazwa",
-  available: "Inapatikana",
-  unavailable: "Haipatikani",
+  // ACTFL levels
+  "novice": "Mwanzo",
+  "intermediate": "Kati", 
+  "advanced": "Juu",
+  "superior": "Bora",
   
-  // Common phrases
-  pleaseWait: "Tafadhali subiri",
-  tryAgain: "Jaribu tena",
-  somethingWentWrong: "Kuna kitu kimekwenda vibaya",
-  noDataAvailable: "Hakuna data inayopatikana",
-  comingSoon: "Inakuja hivi karibuni",
-  underConstruction: "Inajenguliwa",
-  maintenance: "Matengenezo",
+  // Level descriptions
+  "noviceLevelShortDescription": "Anaweza kusema maneno mafupi na misemo",
+  "intermediateLevelShortDescription": "Anaweza kushiriki katika mazungumzo ya kijamii",
+  "advancedLevelShortDescription": "Anaweza kujadili mada tofauti kwa kina",
+  "superiorLevelShortDescription": "Anaweza kuongea kwa ufasaha kuhusu mada nyingi",
   
-  // Time-related
-  today: "Leo",
-  yesterday: "Jana",
-  tomorrow: "Kesho",
-  now: "Sasa",
-  later: "Baadaye",
-  soon: "Hivi karibuni",
-  recent: "Hivi karibuni",
+  // Exercise controls
+  "startExercise": "Anza Zoezi",
+  "generatingExercise": "Inaunda zoezi...",
+  "practiceExercise": "Zoezi la Mazoezi",
+  "levelDescription": "Maelezo ya Kiwango",
   
-  // Learning-specific
-  lesson: "Somo",
-  exercise: "Zoezi",
-  quiz: "Jaribio",
-  test: "Mtihani",
-  score: "Alama",
-  level: "Kiwango",
-  beginner: "Mwanzo",
-  elementary: "Msingi",
-  intermediate: "Kati",
-  advanced: "Juu",
-  expert: "Mtaalamu",
+  // Recording and feedback
+  "yourPronunciation": "Matamshi Yako",
+  "startRecording": "Anza Kurekodi",
+  "stopRecording": "Acha Kurekodi", 
+  "listeningToYou": "Ninakusikiliza...",
+  "realTimeTranscription": "Nakala ya Wakati Halisi",
+  "yourTranscription": "Nakala Yako",
+  "clickStartToRecord": "Bofya 'Anza Kurekodi' ili kuanza",
   
-  // Core app translations
-  welcomeToLanguageLearning: "Karibu kwenye Kujifunza Lugha",
-  yourPersonalAICompanion: "Msaidizi wako binafsi wa AI wa kujifunza lugha",
-  welcomeMessage: "Karibu kwenye programu ya kujifunza lugha ya Palavox!",
-  pageNotFound: "Ukurasa haujapatikana",
-  networkConnectionIssue: "Tatizo la muunganisho wa mtandao",
-  sessionExpired: "Kipindi chako kimeisha. Tafadhali ingia tena.",
-  cooldownActive: "Kipindi cha kupumzika kimewashwa",
-  dailyLimitReached: "Kikomo cha kila siku kimefikiwa",
-  loginRequired: "Kuingia kunahitajika",
-  failedToCreateSession: "Imeshindwa kuunda kipindi",
-  cefrB1Description: "Kati - Anaweza kujadili mada zinazojulikana",
-  speechSynthesisNotSupported: "Ujenzi wa usemi hautumiki kwenye kivinjari chako"
+  // Feedback scores
+  "pronunciationFeedback": "Maoni ya Matamshi",
+  "accuracyScore": "Alama za Usahihi",
+  "intonationScore": "Alama za Sauti",
+  "fluencyScore": "Alama za Ufasaha",
+  "complexityScore": "Alama za Ugumu",
+  "wordAnalysis": "Uchanganuzi wa Maneno",
+  "phonemeAnalysis": "Uchanganuzi wa Sauti",
+  "overallFeedback": "Maoni ya Jumla",
+  
+  // Phrase display
+  "topic": "Mada",
+  "listenToPhrase": "Sikiliza Sentensi",
+  "playing": "Inacheza",
+  "clickWordToHear": "Bofya neno ili kusikiliza",
+  
+  // Exercise navigation
+  "tryAgain": "Jaribu Tena",
+  "newPhrase": "Sentensi Mpya",
+  "generatingNewPhrase": "Inaunda sentensi mpya...",
+  
+  // Speech rate
+  "speechRate": "Kasi ya Usemi"
 };
 
 export default generalCoreTranslations;
