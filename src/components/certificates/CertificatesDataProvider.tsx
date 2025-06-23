@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { supabase, typedSupabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { CertificationAttempt } from "@/types/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { fetchTranscripts, normalizeAttempts, calculateHighestScores, calculateCompositeScore } from "./utils/certificateUtils";
@@ -42,7 +42,7 @@ const CertificatesDataProvider = ({ children }: CertificatesDataProviderProps) =
           return [];
         }
 
-        const { data, error } = await (typedSupabase as any)
+        const { data, error } = await supabase
           .from('certification_attempts')
           .select('*')
           .eq('user_id', user.id)

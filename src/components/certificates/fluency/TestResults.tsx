@@ -1,7 +1,8 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { supabase, typedSupabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
@@ -44,7 +45,7 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       const speakingScore = testResult?.speaking?.overallScore || 0;
       if (speakingScore > 0) {
         const speakingLevel = determineLevel(speakingScore);
-        await (typedSupabase as any).from('certification_attempts').insert({
+        await supabase.from('certification_attempts').insert({
           user_id: user.id,
           certification_type: 'speaking',
           score: speakingScore,
@@ -57,7 +58,7 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       const listeningScore = testResult?.listening?.overallScore || 0;
       if (listeningScore > 0) {
         const listeningLevel = determineLevel(listeningScore);
-        await (typedSupabase as any).from('certification_attempts').insert({
+        await supabase.from('certification_attempts').insert({
           user_id: user.id,
           certification_type: 'listening',
           score: listeningScore,
@@ -71,7 +72,7 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
       const fluencyScore = Math.round((speakingScore * 0.6 + listeningScore * 0.4));
       if (fluencyScore > 0) {
         const fluencyLevel = determineLevel(fluencyScore);
-        await (typedSupabase as any).from('certification_attempts').insert({
+        await supabase.from('certification_attempts').insert({
           user_id: user.id,
           certification_type: 'fluency',
           score: fluencyScore,
