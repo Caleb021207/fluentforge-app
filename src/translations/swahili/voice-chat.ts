@@ -74,18 +74,23 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Technical information
   browserBasedTTS: "Kumbuka: Hii inatumia teknolojia ya kivinjari ya kubadilisha maandishi kuwa sauti. Kwa ubora bora wa sauti na ElevenLabs, jaribu mazungumzo yetu ya sauti ya premium.",
-  aiModelInfo: "Modeli ya AI: Tunatumia GPT-4o-mini ya OpenAI kwa ufahamu na uzalishaji wa lugha asilia, pamoja na Synthesis ya Usemi iliyojengwa ndani ya kivinjari kwa majibu ya sauti.",
+  aiModelInfo: "Modeli ya AI: Tunatumia GPT-4o-mini ya OpenAI kwa ufahamu na uzalishaji wa lugha asilia, pamoja na ElevenLabs kwa ubora wa hali ya juu wa sauti.",
   aiModelLabel: "Modeli ya AI:",
-  aiModelInfoText: "Tunatumia GPT-4o-mini ya OpenAI kwa ufahamu na uzalishaji wa lugha asilia, pamoja na Synthesis ya Usemi iliyojengwa ndani ya kivinjari kwa majibu ya sauti.",
+  aiModelInfoText: "Tunatumia GPT-4o-mini ya OpenAI kwa ufahamu na uzalishaji wa lugha asilia, pamoja na ElevenLabs kwa ubora wa hali ya juu wa sauti.",
   
   // Practice level information
   practiceLevel: "Kiwango cha Mazoezi",
-  cefrB1Description: "Kiwango cha Kati - Inaweza kuzungumza kuhusu mada zinazojulikana",
+  cefrB1Description: "Kiwango cha Kati - Anaweza kujadili mada zinazojulikana",
   practiceDescription: "Fanya mazoezi ya ujuzi wako wa kuzungumza Kiingereza na mazungumzo yetu ya sauti. Bofya kitufe cha maikrofoni na uanze kuzungumza kwa Kiingereza. AI itakujibu kwa Kiingereza na kukusaidia kufanya mazoezi.",
   
   // Additional response suggestions
-  "Click play to hear pronunciation": "Bofya kucheza ili kusikiliza matamshi",
-  "Start a conversation to see suggestions": "Anza mazungumzo ili kuona mapendekezo"
+  "Click play to hear pronunciation": "Bofya kucheza ili kusikilizia matamshi",
+  "Start a conversation to see suggestions": "Anza mazungumzo ili kuona mapendekezo",
+  
+  // Response suggestions
+  responseSuggestions: "Mapendekezo ya Majibu",
+  clickPlayToHear: "Bofya kucheza ili kusikilizia",
+  startConversationToSee: "Anza mazungumzo ili kuona mapendekezo"
 };
 
 export default voiceChatTranslations;

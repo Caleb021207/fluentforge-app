@@ -37,7 +37,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Response suggestions
   "responseSuggestions": "Mapendekezo ya Majibu",
-  "clickPlayToHear": "Bofya kucheza ili kusikiliza",
+  "clickPlayToHear": "Bofya kucheza ili kusikilizia matamshi",
   "startConversationToSee": "Anza mazungumzo ili kuona mapendekezo",
   
   // Error messages

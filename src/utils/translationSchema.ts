@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "@/translations/types";
 
 // Master schema defining all required translation keys
@@ -248,7 +247,17 @@ export const TRANSLATION_SCHEMA = {
   "Don't worry about mistakes — they're part of learning!": "string",
   "Ask for explanations if there's something you don't understand.": "string",
   "Use words you've learned recently.": "string",
-  "Our AI will adapt to your skill level and gradually help you improve.": "string"
+  "Our AI will adapt to your skill level and gradually help you improve.": "string",
+  
+  // Voice chat tips
+  "Ask questions about everyday topics": "string",
+  "Practice common phrases and expressions": "string",
+  "Describe what you see around you": "string",
+  "Practice vocabulary for specific topics like travel or food": "string",
+  
+  // Response suggestions
+  "Click play to hear pronunciation": "string",
+  "Start a conversation to see suggestions": "string"
 } as const;
 
 export type TranslationKey = keyof typeof TRANSLATION_SCHEMA;
