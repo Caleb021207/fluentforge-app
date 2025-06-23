@@ -192,7 +192,6 @@ const practiceTranslations: TranslationRecord = {
   "voiceChatActive": "Voice chat active",
   "voiceChatInactive": "Voice chat inactive",
   "clickToStartVoice": "Click 'Start Voice Chat' to begin speaking with the tutor",
-  "allowMicAccess": "Please allow microphone access to use voice features",
   "voiceChatNotSupported": "Voice chat is not supported in your browser",
   "voiceRecognitionError": "Voice recognition error",
   

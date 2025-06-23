@@ -192,7 +192,6 @@ const practiceTranslations: TranslationRecord = {
   "voiceChatActive": "Chat de voz activo",
   "voiceChatInactive": "Chat de voz inactivo",
   "clickToStartVoice": "Haz clic en 'Iniciar Chat de Voz' para comenzar a hablar con el tutor",
-  "allowMicAccess": "Por favor permite el acceso al micrófono para usar las funciones de voz",
   "voiceChatNotSupported": "El chat de voz no es compatible con tu navegador",
   "voiceRecognitionError": "Error de reconocimiento de voz",
   
