@@ -1,6 +1,6 @@
 
 /**
- * Languages that should always display translations
+ * Languages that should always display translations (updated to only include well-supported languages)
  */
 export const TRANSLATION_REQUIRED_LANGUAGES = [
   "hindi", 
@@ -13,29 +13,14 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "arabic",
   "vietnamese",
   "mandarin",
-  "urdu",
-  "pashto",
-  "swahili",
-  "haitian",
-  "igbo",
   "bengali",
-  "somali",
-  "yoruba",
-  "amharic",
-  "malayalam",
   "polish",
   "turkish",
-  "romanian",
   "tagalog",
-  "cantonese",
-  // Adding new languages
   "german",
   "italian",
   "thai",
-  // Re-adding previously removed languages
-  "gujarati",
-  "punjabi",
-  "nepali",
+  "farsi"
 ];
 
 /**
@@ -55,4 +40,3 @@ export const getTargetLanguage = (currentLanguage: string): string => {
 export const getNativeLanguage = (currentLanguage: string): string => {
   return currentLanguage;
 };
-

@@ -1,13 +1,11 @@
-
 import { TranslationRecord } from "@/translations/types";
 import { CORE_TRANSLATION_SCHEMA } from "./coreTranslationSchema";
 
-// List of all 37 supported languages
+// List of only the 21 well-supported languages
 export const ALL_SUPPORTED_LANGUAGES = [
-  'english', 'spanish', 'portuguese', 'french', 'german', 'italian', 'russian', 'arabic', 'japanese', 'korean',
-  'mandarin', 'hindi', 'vietnamese', 'ukrainian', 'indonesian', 'farsi', 'bengali', 'tagalog', 'pashto', 'swahili',
-  'turkish', 'dutch', 'polish', 'czech', 'greek', 'hebrew', 'thai', 'burmese', 'amharic', 'somali',
-  'urdu', 'nepali', 'mongolian', 'karen', 'cantonese', 'tigrinya', 'oromo'
+  'english', 'spanish', 'portuguese', 'french', 'german', 'italian', 'russian', 'arabic', 
+  'japanese', 'korean', 'mandarin', 'hindi', 'vietnamese', 'ukrainian', 'indonesian', 
+  'farsi', 'bengali', 'tagalog', 'turkish', 'polish', 'thai'
 ] as const;
 
 export const MASTER_TRANSLATION_KEYS = Object.keys(CORE_TRANSLATION_SCHEMA);

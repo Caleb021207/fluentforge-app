@@ -1,14 +1,11 @@
-
 import { TranslationRecord } from "@/translations/types";
 import { validateLanguageCompleteness, REQUIRED_TRANSLATION_KEYS } from "./standardTranslationTemplate";
 
-// All 38 supported languages
+// Only the 21 well-supported languages
 export const ALL_LANGUAGES = [
   'english', 'spanish', 'portuguese', 'french', 'german', 'italian', 'russian', 'arabic', 
-  'japanese', 'korean', 'mandarin', 'chinese', 'hindi', 'vietnamese', 'ukrainian', 'indonesian', 
-  'farsi', 'bengali', 'tagalog', 'pashto', 'swahili', 'turkish', 'dutch', 'polish', 'czech', 
-  'greek', 'hebrew', 'thai', 'burmese', 'amharic', 'somali', 'urdu', 'nepali', 'mongolian', 
-  'karen', 'cantonese', 'tigrinya', 'oromo'
+  'japanese', 'korean', 'mandarin', 'hindi', 'vietnamese', 'ukrainian', 'indonesian', 
+  'farsi', 'bengali', 'tagalog', 'turkish', 'polish', 'thai'
 ] as const;
 
 export interface LanguageAuditResult {
