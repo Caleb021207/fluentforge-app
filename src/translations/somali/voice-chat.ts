@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -34,22 +35,6 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "Sharax waxa aad ku wareegsan tahay",
   practiceVocabularyForSpecific: "Ku celceli ereyada mawduucyo gaar ah sida safarka ama cuntada",
   
-  // Core voice chat functionality
-  voicePractice: "Idánrawó Ohùn",
-  startVoiceChat: "Bẹ̀rẹ̀ Ìbáraẹnisọ̀rọ̀ Ohùn",
-  stopVoiceChat: "Dúró Ìbáraẹnisọ̀rọ̀ Ohùn",
-  voiceChatEnded: "Ìbáraẹnisọ̀rọ̀ ohùn ti parí",
-  remaining: "tó kù",
-  failedToGetResponse: "Kò le gba ìdáhùn",
-  speechRecognitionError: "Àṣìṣe ìdámọ̀ ọ̀rọ̀",
-  speechRecognitionNotSupported: "Ìdámọ̀ ọ̀rọ̀ kò ní àtìlẹ́yìn lórí aṣàwákiri yìí",
-  microphoneAccessRequired: "Ìgbàláyè sí maikírófoonu pọndandan",
-  failedToGenerateSpeech: "Kò le ṣẹ̀dá ọ̀rọ̀",
-  networkConnectionIssue: "Ìṣòro ìsopọ̀ nẹ́tíwọ́ọ̀kì",
-  startChatting: "Ó ti lè bẹ̀rẹ̀ ìbárasọ̀rọ̀ báyìí!",
-  allowMicAccess: "Jọwọ́ gba ààyè láti lo maikírófoonu rẹ",
-  aiModelLabel: "Àwọn àwòrán AI:",
-  
   // Additional voice functionality
   microphonePermissionRequired: "Ruqsad microphone oo loo baahan yahay",
   microphonePermissionDenied: "Ruqsad microphone waa la diiday",
@@ -57,7 +42,18 @@ const voiceChatTranslations: TranslationRecord = {
   voiceChatInactive: "Sheekada codka ma shaqeyso",
   speakNow: "Hadda hadal",
   listeningForResponse: "Dhageysanaya jawaab...",
-  voiceInputDisabled: "Gelinta codka ma shaqeyso"
+  voiceInputDisabled: "Gelinta codka ma shaqeyso",
+  voiceChatEnded: "Sheekada codka waa la joojiyay",
+  remaining: "haray",
+  failedToGetResponse: "Lama helin jawaab",
+  speechRecognitionError: "Qalad ku yimid aqoonsiga hadalka",
+  speechRecognitionNotSupported: "Aqoonsiga hadalka lama taageero browser-kan",
+  microphoneAccessRequired: "Galitaanka microphone-ka ayaa loo baahan yahay",
+  failedToGenerateSpeech: "Lama sameeyn karin hadal",
+  networkConnectionIssue: "Mushkilad xiriirka network-ga",
+  startChatting: "Waxaad bilaabi kartaa sheekada hadda!",
+  allowMicAccess: "Fadlan ogolow isticmaalka microphone-kaaga",
+  aiModelLabel: "Noocyada AI:"
 };
 
 export default voiceChatTranslations;
