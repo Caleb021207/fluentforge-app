@@ -15,6 +15,8 @@ const landingAuthTranslations: TranslationRecord = {
   accessPasscode: "Código de Acceso",
   incorrectPasscode: "Código de acceso incorrecto",
   retrying: "Reintentando",
+  processing: "Procesando",
+  createAccount: "Crear Cuenta",
   
   // Profile Auth
   authenticationRequired: "Autenticación Requerida",
