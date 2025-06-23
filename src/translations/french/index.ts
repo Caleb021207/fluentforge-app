@@ -1,6 +1,7 @@
 
 import { TranslationRecord } from "../types";
 import frenchCoreTranslations from "./core";
+import frenchPracticeTranslations from "./practice";
 
 // Create voice chat translations for French
 const frenchVoiceChatTranslations: TranslationRecord = {
@@ -46,10 +47,11 @@ const frenchVoiceChatTranslations: TranslationRecord = {
   "stopListening": "Arrêter d'écouter"
 };
 
-// Complete French translations with voice chat integration
+// Complete French translations with voice chat and practice integration
 const frenchTranslations: TranslationRecord = {
   ...frenchCoreTranslations,
-  ...frenchVoiceChatTranslations
+  ...frenchVoiceChatTranslations,
+  ...frenchPracticeTranslations
 };
 
 export default frenchTranslations;

@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import hindiCoreTranslations from "./core";
+import hindiPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Hindi
+// Complete Hindi translations with practice integration
 const hindiTranslations: TranslationRecord = {
-  ...hindiCoreTranslations
+  ...hindiCoreTranslations,
+  ...hindiPracticeTranslations
 };
 
 export default hindiTranslations;

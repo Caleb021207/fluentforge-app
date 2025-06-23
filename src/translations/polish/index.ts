@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import polishCoreTranslations from "./core";
+import polishPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Polish
+// Complete Polish translations with practice integration
 const polishTranslations: TranslationRecord = {
-  ...polishCoreTranslations
+  ...polishCoreTranslations,
+  ...polishPracticeTranslations
 };
 
 export default polishTranslations;

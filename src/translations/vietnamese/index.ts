@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import vietnameseCoreTranslations from "./core";
+import vietnamesePracticeTranslations from "./practice";
 
-// Use only the clean core translations for Vietnamese
+// Complete Vietnamese translations with practice integration
 const vietnameseTranslations: TranslationRecord = {
-  ...vietnameseCoreTranslations
+  ...vietnameseCoreTranslations,
+  ...vietnamesePracticeTranslations
 };
 
 export default vietnameseTranslations;

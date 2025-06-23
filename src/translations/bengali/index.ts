@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import bengaliCoreTranslations from "./core";
+import bengaliPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Bengali
+// Complete Bengali translations with practice integration
 const bengaliTranslations: TranslationRecord = {
-  ...bengaliCoreTranslations
+  ...bengaliCoreTranslations,
+  ...bengaliPracticeTranslations
 };
 
 export default bengaliTranslations;

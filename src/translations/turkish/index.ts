@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import turkishCoreTranslations from "./core";
+import turkishPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Turkish
+// Complete Turkish translations with practice integration
 const turkishTranslations: TranslationRecord = {
-  ...turkishCoreTranslations
+  ...turkishCoreTranslations,
+  ...turkishPracticeTranslations
 };
 
 export default turkishTranslations;
