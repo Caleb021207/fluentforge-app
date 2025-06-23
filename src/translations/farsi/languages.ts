@@ -9,7 +9,7 @@ const languagesTranslations: TranslationRecord = {
   languagePreferencesSaved: "ترجیحات زبان ذخیره شد",
   learningLanguageFromNative: "یادگیری {{targetLanguage}} از {{nativeLanguage}}",
   pleaseSelectBothLanguages: "لطفاً هر دو زبان را انتخاب کنید",
-  youNeedToSelectBoth: "شما باید زبان مادری و زبان هدف را انتخاب کنید",
+  youNeedToSelectBoth: "شما باید زبان مادری و هدف را انتخاب کنید",
   
   // Language names in Farsi
   "languages.english": "انگلیسی",
@@ -28,17 +28,18 @@ const languagesTranslations: TranslationRecord = {
   "languages.farsi": "فارسی",
   "languages.bengali": "بنگالی",
   "languages.tagalog": "تاگالوگ",
+  "languages.pashto": "پشتو",
   
   // Practice related
-  practiceYourLanguage: "تمرین {{language}}",
-  chatWithAI: "با مربی هوش مصنوعی گفتگو کنید تا مهارت {{language}} خود را بهبود بخشید",
-  startConversationIn: "شروع گفتگو به {{language}}",
+  practiceYourLanguage: "{{language}} خود را تمرین کنید",
+  chatWithAI: "با مربی هوش مصنوعی ما برای بهبود {{language}} خود گفتگو کنید",
+  startConversationIn: "مکالمه را به {{language}} شروع کنید",
   practiceGuide: "راهنمای تمرین {{language}}",
   practiceGuideDescription: "در اینجا چند نکته برای بیشینه کردن تمرین {{language}} شما آورده شده:",
   practiceGuideItem1: "سعی کنید جملات کامل بسازید، حتی اگر ساده باشند.",
-  practiceGuideItem2: "نگران اشتباهات نباشید — آنها بخشی از یادگیری هستند!",
+  practiceGuideItem2: "نگران اشتباهات نباشید - آنها بخشی از یادگیری هستند!",
   practiceGuideItem3: "اگر چیزی را نمی‌فهمید توضیح بخواهید.",
-  practiceGuideItem4: "از واژگانی که اخیراً یاد گرفته‌اید استفاده کنید.",
+  practiceGuideItem4: "از کلماتی که اخیراً یاد گرفته‌اید استفاده کنید.",
   practiceDisclaimer: "هوش مصنوعی ما با سطح مهارت شما تطبیق پیدا کرده و تدریجاً به بهبود شما کمک می‌کند."
 };
 
