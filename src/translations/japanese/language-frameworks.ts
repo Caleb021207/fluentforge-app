@@ -2,19 +2,22 @@
 import { TranslationRecord } from "../types";
 
 const languageFrameworksTranslations: TranslationRecord = {
-  languageFramework: "言語フレームワーク",
-  cefrLevels: "CEFRレベル",
-  speechRecognition: "音声認識",
-  grammarCheck: "文法チェック",
-  vocabularyAnalysis: "語彙分析",
-  pronunciationScore: "発音スコア",
-  fluencyScore: "流暢さスコア",
-  comprehensionScore: "理解度スコア",
-  overallScore: "総合スコア",
-  improvementAreas: "向上すべき分野",
-  strengths: "強み",
-  weaknesses: "弱み",
-  recommendations: "推薦"
+  beginner: "初心者（A1）",
+  elementary: "基礎（A2）",
+  intermediate: "中級（B1）",
+  upperIntermediate: "中上級（B2）",
+  advanced: "上級（C1）",
+  proficiency: "熟練（C2）",
+  a1Level: "A1レベル",
+  a2Level: "A2レベル",
+  b1Level: "B1レベル",
+  b2Level: "B2レベル",
+  c1Level: "C1レベル",
+  c2Level: "C2レベル",
+  cefrFramework: "ヨーロッパ言語共通参照枠（CEFR）",
+  selectLevel: "レベルを選択",
+  currentLevel: "現在のレベル",
+  targetLevel: "目標レベル"
 };
 
 export default languageFrameworksTranslations;

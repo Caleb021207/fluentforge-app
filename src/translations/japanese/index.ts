@@ -1,32 +1,35 @@
 
 import { TranslationRecord } from "../types";
-import generalTranslations from "./general";
-import languageSelectionTranslations from "./language-selection";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
+import authTranslations from "./auth";
+import navigationTranslations from "./navigation";
+import landingAuthTranslations from "./landing-auth";
 import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
+import profileTranslations from "./profile";
+import premiumVoiceTranslations from "./premium-voice";
+import languagesTranslations from "./languages";
 import certificatesTranslations from "./certificates";
 import progressTranslations from "./progress";
-import profileTranslations from "./profile";
-import voiceChatTranslations from "./voice-chat";
-import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
-import authTranslations from "./auth";
-import languagesTranslations from "./languages";
-import navigationTranslations from "./navigation";
+import languageSelectionTranslations from "./language-selection";
 
-// Combine all the translation categories
-const japaneseTranslations: TranslationRecord = {
-  ...generalTranslations,
-  ...languageSelectionTranslations,
+const translations: TranslationRecord = {
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
+  ...authTranslations,
+  ...navigationTranslations,
+  ...landingAuthTranslations,
   ...practiceTranslations,
+  ...voiceChatTranslations,
+  ...profileTranslations,
+  ...premiumVoiceTranslations,
+  ...languagesTranslations,
   ...certificatesTranslations,
   ...progressTranslations,
-  ...profileTranslations,
-  ...voiceChatTranslations,
-  ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
-  ...authTranslations,
-  ...languagesTranslations,
-  ...navigationTranslations,
+  ...languageSelectionTranslations
 };
 
-export default japaneseTranslations;
+export default translations;

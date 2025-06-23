@@ -3,27 +3,20 @@ import { TranslationRecord } from "../types";
 
 const profileTranslations: TranslationRecord = {
   profile: "プロフィール",
-  userProfile: "ユーザープロフィール",
-  accountSettings: "アカウント設定",
-  personalInformation: "個人情報",
-  learningPreferences: "学習設定",
-  subscriptionDetails: "サブスクリプション詳細",
+  yourProfile: "あなたのプロフィール",
   editProfile: "プロフィールを編集",
   saveChanges: "変更を保存",
-  discardChanges: "変更を破棄",
-  firstName: "名",
+  personalInformation: "個人情報",
+  firstName: "名前",
   lastName: "姓",
+  emailAddress: "メールアドレス",
   displayName: "表示名",
-  bio: "自己紹介",
-  country: "国",
-  timezone: "タイムゾーン",
-  preferredLanguage: "好みの言語",
-  learningGoal: "学習目標",
-  dailyGoal: "日々の目標",
-  weeklyGoal: "週間目標",
-  learningReminders: "学習リマインダー",
-  emailNotifications: "メール通知",
-  pushNotifications: "プッシュ通知"
+  username: "ユーザー名",
+  password: "パスワード",
+  changePassword: "パスワードを変更",
+  accountSettings: "アカウント設定",
+  language: "言語",
+  deleteAccount: "アカウントを削除"
 };
 
 export default profileTranslations;
