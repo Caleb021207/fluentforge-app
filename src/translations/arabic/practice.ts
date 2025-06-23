@@ -37,7 +37,33 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "لا تقلق من الأخطاء — فهي جزء من التعلم!",
   practiceGuideItem3: "اطلب التوضيح إذا كان هناك شيء لا تفهمه.",
   practiceGuideItem4: "حاول استخدام المفردات التي تعلمتها مؤخراً.",
-  practiceDisclaimer: "سيتكيف الذكاء الاصطناعي مع مستوى مهارتك ويساعدك على التحسن تدريجياً."
+  practiceDisclaimer: "سيتكيف الذكاء الاصطناعي مع مستوى مهارتك ويساعدك على التحسن تدريجياً.",
+  
+  // Additional practice translations
+  practice: "ممارسة",
+  practiceWithAI: "ممارسة مع الذكاء الاصطناعي",
+  clearConversation: "مسح المحادثة",
+  correctGrammar: "تصحيح القواعد",
+  practiceTip1: "حاول تكوين جمل كاملة، حتى لو كانت بسيطة.",
+  practiceTip2: "لا تقلق من الأخطاء — فهي جزء من التعلم!",
+  practiceTip3: "اطلب التوضيح إذا كان هناك شيء لا تفهمه.",
+  practiceTip4: "حاول استخدام المفردات التي تعلمتها مؤخراً.",
+  practiceTip5: "سيتكيف الذكاء الاصطناعي مع مستوى مهارتك ويساعدك على التحسن تدريجياً.",
+  
+  // Chat interface translations
+  responseSuggestions: "اقتراحات الاستجابة",
+  clickPlayToHear: "اضغط على تشغيل لسماع النطق",
+  startConversationToSee: "ابدأ محادثة لرؤية الاقتراحات",
+  
+  // Hint button translations
+  getResponseSuggestions: "الحصول على اقتراحات الاستجابة",
+  greetings: "التحيات",
+  questions: "الأسئلة",
+  error: "خطأ",
+  couldNotGenerateHints: "لم يتمكن من إنشاء اقتراحات",
+  failedToPlayAudio: "فشل في تشغيل الصوت",
+  play: "تشغيل",
+  startConversationForSuggestions: "ابدأ محادثة لرؤية الاقتراحات"
 };
 
 export default practiceTranslations;
