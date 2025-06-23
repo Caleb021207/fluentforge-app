@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import translations from "@/translations";
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "@/translations/constants";
-import { LanguageTranslations } from "@/translations/types";
+import { TranslationRecord } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 import { useLocation } from "react-router-dom";
 
@@ -98,7 +98,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       
       // Apply replacements if provided
       if (replacements) {
-        let result = translationValue;
+        let result: string = translationValue;
         Object.entries(replacements).forEach(([placeholder, replaceValue]) => {
           // Support {{placeholder}} format (primary)
           const regex = new RegExp(`{{${placeholder}}}`, 'g');

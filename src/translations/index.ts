@@ -1,4 +1,5 @@
-import { LanguageTranslations } from "./types";
+
+import { TranslationRecord } from "./types";
 
 // Import all language translations
 import englishTranslations from "./english";
@@ -38,9 +39,10 @@ import karenTranslations from "./karen";
 import cantoneseTranslations from "./cantonese";
 import tigrinyaTranslations from "./tigrinya";
 import oromoTranslations from "./oromo";
+import chineseTranslations from "./chinese";
 
 // Main translations object containing all 37 languages with consistent core translations
-const translations: Record<string, LanguageTranslations> = {
+const translations: Record<string, TranslationRecord> = {
   english: englishTranslations,
   spanish: spanishTranslations,
   portuguese: portugueseTranslations,
@@ -52,6 +54,7 @@ const translations: Record<string, LanguageTranslations> = {
   japanese: japaneseTranslations,
   korean: koreanTranslations,
   mandarin: mandarinTranslations,
+  chinese: chineseTranslations,
   hindi: hindiTranslations,
   vietnamese: vietnameseTranslations,
   ukrainian: ukrainianTranslations,
