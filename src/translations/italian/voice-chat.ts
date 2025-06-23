@@ -3,23 +3,26 @@ import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
   // Voice chat page
+  "unlimitedVoicePractice": "Pratica Vocale Illimitata",
   "practiceDescription": "Esercita il tuo inglese parlato usando la nostra chat vocale. Clicca sul pulsante del microfono e inizia a parlare in inglese.",
-  "aiModelInfo": "Modello AI: Utilizziamo OpenAI GPT-4o-mini con Meta MMS per TTS.",
+  "aiModelInfo": "Modello AI: Utilizziamo OpenAI GPT-4o-mini per la comprensione e generazione del linguaggio naturale, con sintesi vocale integrata del browser per le risposte vocali.",
   "practiceLevel": "Livello di pratica: B1 – Intermedio – Può discutere argomenti familiari",
   "cefrB1Description": "Intermedio – Può discutere argomenti familiari",
+  "currentLanguage": "Lingua corrente",
+  "practiceLanguage": "Lingua di pratica",
   
   // Voice chat controls
-  "startSpeaking": "Inizia a parlare",
+  "startSpeaking": "Inizia a Parlare",
   "stopListening": "Smetti di ascoltare",
   "listeningNow": "In ascolto",
   
   // Conversation features
-  "conversationStarters": "Iniziatori di conversazione",
-  "tryThesePhrases": "Prova queste frasi per iniziare una conversazione",
+  "conversationStarters": "Avviatori di Conversazione",
+  "tryThesePhrases": "Prova queste frasi per iniziare una conversazione:",
   "conversationHistory": "Cronologia conversazione",
   "clearConversation": "Cancella conversazione",
   
-  // Phrases for conversation - ADDED MISSING PHRASES
+  // Phrases for conversation
   "phrase1": "Ciao, come stai oggi?",
   "phrase2": "Com'è il tempo dove ti trovi?",
   "phrase3": "Puoi consigliare un buon ristorante?",
@@ -29,9 +32,9 @@ const voiceChatTranslations: TranslationRecord = {
   "phrase7": "Quali sono i tuoi piani per domani?",
   "phrase8": "Come si dice... in inglese/spagnolo?",
   
-  // Practice tips - ADDED MISSING KEYS
-  "practiceWithVoiceChat": "Pratica con chat vocale",
-  "useThisTool": "Usa questo strumento per migliorare le tue capacità di parlare e ascoltare. Ecco alcuni suggerimenti:",
+  // Practice tips
+  "practiceWithVoiceChat": "Pratica con Chat Vocale",
+  "useThisTool": "Usa questo strumento per migliorare le tue abilità di parlato e ascolto. Ecco alcuni consigli:",
   "askQuestions": "Fai domande su argomenti quotidiani",
   "practiceCommonPhrases": "Pratica frasi ed espressioni comuni",
   "describeWhatYouSee": "Descrivi quello che vedi intorno a te",
@@ -42,7 +45,7 @@ const voiceChatTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "Il tuo browser non supporta il riconoscimento vocale",
   "microphoneAccessRequired": "Accesso al microfono richiesto",
   "failedToGenerateSpeech": "Impossibile generare l'audio vocale",
-  "browserBasedTTS": "Nota: Utilizziamo Meta MMS e Azure per i servizi di sintesi vocale.",
+  "browserBasedTTS": "Nota: Utilizziamo sintesi vocale integrata del browser per le risposte audio.",
   "startConversationIn": "Inizia conversazione in {language}",
   "youSaid": "Hai detto",
   "aiResponse": "Risposta AI",
