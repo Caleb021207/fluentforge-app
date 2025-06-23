@@ -51,7 +51,7 @@ const uiElementsTranslations: TranslationRecord = {
   sort: "مرتب‌سازی",
   all: "همه",
   none: "هیچ",
-  startConversationIn: "شروع مکالمه به زبان {{language}}",
+  startConversationIn: "شروع مکالمه به {{language}}",
   
   // Navigation
   textPractice: "تمرین متنی",

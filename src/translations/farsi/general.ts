@@ -44,7 +44,7 @@ const generalTranslations: TranslationRecord = {
   practiceTip1: "سعی کنید جملات کامل بسازید، حتی اگر ساده باشند",
   practiceTip2: "نگران اشتباهات نباشید - آنها بخشی از یادگیری هستند!",
   practiceTip3: "اگر چیزی را نمی‌فهمید توضیح بخواهید",
-  practiceTip4: "از کلماتی که اخیراً یاد گرفته‌اید استفاده کنید",
+  practiceTip4: "از کلماتی که اخیراً یاد گرفته‌اید استعمال کنید",
   practiceTip5: "هوش مصنوعی ما با سطح مهارت شما تطبیق پیدا کرده و تدریجاً به بهبود شما کمک می‌کند",
   
   // Chat actions
@@ -65,7 +65,37 @@ const generalTranslations: TranslationRecord = {
   payAttentionStressPatterns: "به الگوهای تاکید و لحن توجه کنید",
   practiceDifficultSounds: "صداهای سخت را چندین بار تمرین کنید",
   recordAndCompare: "خودتان را ضبط کنید و با گویندگان بومی مقایسه کنید",
-  bePatiencePronunciation: "صبور باشید - بهبود تلفظ زمان می‌برد"
+  bePatiencePronunciation: "صبور باشید - بهبود تلفظ زمان می‌برد",
+  
+  // Pronunciation practice page specific
+  improvePronunciationSkillsWith: "مهارت‌های تلفظ خود را با تمرینات هدفمند بهبود بخشید",
+  chooseDifficultyLevelBasedOn: "سطح دشواری را بر اساس مهارت زبانی خود انتخاب کنید",
+  novice: "مبتدی",
+  intermediate: "متوسط",
+  advanced: "پیشرفته",
+  superior: "عالی",
+  startExercise: "شروع تمرین",
+  listenCarefullyTip: "قبل از تلاش برای صحبت، با دقت به صدا گوش کنید",
+  payAttentionToStressTip: "به الگوهای تاکید و لحن توجه کنید",
+  practiceDifficultSoundsTip: "صداهای سخت را چندین بار تمرین کنید",
+  recordYourselfTip: "خودتان را ضبط کنید و با گویندگان بومی مقایسه کنید",
+  bePatientTip: "صبور باشید - بهبود تلفظ زمان می‌برد",
+  
+  // Landing page
+  welcomeToLanguageLearning: "به یادگیری زبان خوش آمدید",
+  yourPersonalAICompanion: "همراه شخصی هوش مصنوعی شما برای تسلط بر زبان",
+  swipeUpToGetStarted: "برای شروع به بالا بکشید",
+  getStarted: "شروع کنید",
+  
+  // Auth
+  email: "ایمیل",
+  password: "رمز عبور",
+  dontHaveAccount: "حساب کاربری ندارید؟",
+  
+  // Practice page
+  startTextChatting: "شروع چت متنی",
+  typeMessageBelow: "برای شروع پیامی در زیر بنویسید",
+  typeMessageToPractice: "پیام خود را برای تمرین {{language}} بنویسید..."
 };
 
 export default generalTranslations;
