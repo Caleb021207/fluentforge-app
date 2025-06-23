@@ -31,8 +31,6 @@ const languagesTranslations: TranslationRecord = {
   "haitian": "海地克里奧爾語",
   "igbo": "伊博語",
   "tagalog": "他加祿語",
-  
-  // Practice guide translations
   "practiceGuide": "練習指南",
   "practiceGuideDescription": "以下是一些讓你嘅{{language}}練習達到最好效果嘅技巧：",
   "practiceGuideItem1": "嘗試組成完整嘅句子，即使係簡單嘅都可以。",
