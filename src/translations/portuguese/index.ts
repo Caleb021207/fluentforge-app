@@ -1,5 +1,6 @@
 
 import { TranslationRecord } from "../types";
+import generalCoreTranslations from "./general-core";
 import generalTranslations from "./general";
 import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
@@ -11,9 +12,11 @@ import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
+import navigationTranslations from "./navigation";
 
 // Combine all the translation categories
 const portugueseTranslations: TranslationRecord = {
+  ...generalCoreTranslations,
   ...generalTranslations,
   ...languageSelectionTranslations,
   ...practiceTranslations,
@@ -25,6 +28,7 @@ const portugueseTranslations: TranslationRecord = {
   ...languageFrameworksTranslations,
   ...authTranslations,
   ...languagesTranslations,
+  ...navigationTranslations,
 };
 
 export default portugueseTranslations;
