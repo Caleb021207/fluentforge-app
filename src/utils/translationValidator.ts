@@ -1,4 +1,3 @@
-
 import translations from "@/translations";
 import { AVAILABLE_LANGUAGES } from "@/translations/constants";
 
@@ -538,6 +537,239 @@ export const MASTER_TRANSLATION_KEYS = [
   "ferpaPrivacy",
   "remaining",
   "signedInAs",
+  
+  // Practice module keys (150+ keys)
+  "practice",
+  "startConversation", 
+  "startChatting",
+  "chatPlaceholder",
+  "errorSendingMessage",
+  "emptyMessage", 
+  "sendingMessage",
+  "practiceGuide",
+  "practiceTip1",
+  "practiceTip2", 
+  "practiceTip3",
+  "practiceTip4",
+  "practiceTip5",
+  "startConversationIn",
+  "typeMessageIn",
+  "translationNotAvailable",
+  "contentFiltered",
+  "networkConnectionIssue",
+  "send",
+  "error",
+  "failedToGetTranslation",
+  "translationError", 
+  "startTextChatting",
+  "typeMessageBelow",
+  "realTimeTranscription",
+  
+  // Language metrics and analysis
+  "viewLanguageMetrics",
+  "hideMetrics",
+  "languageMetrics", 
+  "grammarAccuracy",
+  "conversationComplexity",
+  "vocabularyDiversity",
+  "basedOnMessagesCount",
+  "analyzeConversation",
+  "analyzing",
+  "analyzingConversation",
+  "noLanguageDataYet",
+  "notEnoughMessages",
+  "needMoreMessagesToAnalyze", 
+  "failedToAnalyzeConversation",
+  
+  // Grammar correction toggle
+  "correctGrammar",
+  "grammarCorrectionEnabled",
+  "grammarCorrectionDisabled",
+  "tutor.willCorrectGrammar",
+  "tutor.wontCorrectGrammar",
+  
+  // Chat management
+  "clearConversation",
+  "conversationCleared",
+  "success",
+  
+  // Empty states and warnings
+  "emptyMessageReceived",
+  "someContentWasFiltered",
+  
+  // Loading and status indicators
+  "processing",
+  "retrying", 
+  "connecting",
+  "thinking",
+  "generating",
+  
+  // Audio and TTS functionality
+  "play",
+  "playAudio",
+  "playTargetLanguageAudio",
+  "playNativeLanguageAudio", 
+  "failedToPlayAudio",
+  "audioNotSupported",
+  "ttsError",
+  
+  // Hint and suggestion system
+  "getResponseSuggestions",
+  "responseSuggestions",
+  "clickPlayToHearPronunciation",
+  "startConversationForSuggestions",
+  "greetings",
+  "questions",
+  "responses",
+  "topics",
+  "couldNotGenerateHints",
+  "hintGenerationFailed",
+  
+  // Practice prompts and starters
+  "practicePrompt",
+  "sendPracticePrompt",
+  "languageLearningPrompt",
+  "conversationStarters",
+  "topicSuggestions",
+  
+  // Pronunciation practice
+  "pronunciationPractice",
+  "improvePronunciationSkills",
+  "improvePronunciationSkillsWith",
+  "practiceExercise",
+  "selectComplexityLevel",
+  "novice",
+  "intermediate",
+  "advanced", 
+  "superior",
+  "noviceLevelShortDescription",
+  "intermediateLevelShortDescription",
+  "advancedLevelShortDescription", 
+  "superiorLevelShortDescription",
+  "selectLevelToStart",
+  "tryAgain",
+  "newPhrase",
+  "excellent",
+  "good",
+  "fair",
+  "needsImprovement",
+  "excellentPronunciationFeedback",
+  "goodPronunciationFeedback",
+  "fairPronunciationFeedback",
+  "needsImprovementPronunciationFeedback",
+  "failedToGeneratePhrase",
+  "failedToAnalyzePronunciation",
+  
+  // Pronunciation practice interface
+  "chooseDifficultyLevelBasedOn",
+  "startExercise",
+  "generatingExercise",
+  "generatingNewPhrase",
+  "levelDescription",
+  "difficultyLevel",
+  "noviceLevelDescription",
+  "intermediateLevelDescription",
+  "advancedLevelDescription",
+  "superiorLevelDescription",
+  "pronunciationPracticeTips",
+  "listenCarefullyTip",
+  "payAttentionToStressTip",
+  "practiceDifficultSoundsTip",
+  "recordYourselfTip",
+  "bePatientTip",
+  "listenToPhrase",
+  "playing",
+  "topic",
+  "clickWordToHear",
+  
+  // Recording functionality
+  "clickStartToRecord",
+  "startRecording",
+  "stopRecording",
+  "yourPronunciation",
+  "listeningToYou",
+  "loading",
+  "microphoneAccessRequired",
+  "allowMicAccess",
+  "microphoneAccessFailed",
+  "speechRecognitionError",
+  "speechRecognitionNotSupported",
+  "noSpeechDetected",
+  "pleaseTryAgain",
+  
+  // Chat interface
+  "messageCouldNotBeSent",
+  "pleaseTypeMessage",
+  "typeYourMessage",
+  "messageIsBeingSent",
+  "chatInputPlaceholder",
+  "enterToSend",
+  "shiftEnterNewLine",
+  
+  // Message content and translation
+  "originalMessage",
+  "translatedMessage",
+  "showTranslation",
+  "hideTranslation",
+  "translationUnavailable",
+  "translationFailed",
+  
+  // Practice guide and tips
+  "practiceGuideDescription",
+  "practiceGuideItem1",
+  "practiceGuideItem2",
+  "practiceGuideItem3",
+  "practiceGuideItem4",
+  "practiceDisclaimer",
+  
+  // Voice chat functionality
+  "startVoiceChat",
+  "stopVoiceChat",
+  "voiceChatActive",
+  "voiceChatInactive",
+  "clickToStartVoice",
+  "voiceChatNotSupported",
+  "voiceRecognitionError",
+  
+  // Practice session management
+  "practiceSession",
+  "practiceComplete",
+  "practiceScore",
+  "practiceTime",
+  "practiceProgress",
+  "sessionSaved",
+  "sessionEnded",
+  
+  // Skills assessment
+  "getSkillsAssessment",
+  "skillsAssessment",
+  "reading",
+  "writing",
+  "speaking",
+  "listening",
+  "overallLevel",
+  "assessmentComplete",
+  "assessmentInProgress",
+  
+  // Additional practice features
+  "practiceWithTextChat",
+  "textConversationPractice",
+  "noticeTextBasedPractice",
+  "sendEnglishPracticePrompt",
+  "askAboutGrammarRules",
+  "practiceConversationsDifferentSituations",
+  "learnNewVocabulary",
+  "discussCulturalTopics",
+  "practiceConversation",
+  
+  // Error handling
+  "somethingWentWrong",
+  "tryRefreshing",
+  "connectionLost",
+  "reconnecting",
+  "requestTimeout",
+  "serverError",
+  "unknownError"
 ] as const;
 
 // Enhanced categories for better organization

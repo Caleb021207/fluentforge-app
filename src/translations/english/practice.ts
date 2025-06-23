@@ -1,6 +1,8 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
+  // Core practice functionality
   "practice": "Practice",
   "startConversation": "Start Conversation",
   "startChatting": "Start chatting with your AI language tutor!",
@@ -27,7 +29,7 @@ const practiceTranslations: TranslationRecord = {
   "typeMessageBelow": "Type a message below",
   "realTimeTranscription": "Real-time transcription",
   
-  // New translations for language metrics
+  // Language metrics and analysis
   "viewLanguageMetrics": "View Language Metrics",
   "hideMetrics": "Hide Metrics",
   "languageMetrics": "Language Metrics",
@@ -50,9 +52,49 @@ const practiceTranslations: TranslationRecord = {
   "tutor.willCorrectGrammar": "The tutor will now provide gentle corrections to your grammar.",
   "tutor.wontCorrectGrammar": "The tutor will focus on conversation flow without grammar corrections.",
   
-  // Success messages
-  "success": "Success",
+  // Chat management
+  "clearConversation": "Clear Conversation",
   "conversationCleared": "Conversation cleared",
+  "success": "Success",
+  
+  // Empty states and warnings
+  "emptyMessageReceived": "Empty message received",
+  "someContentWasFiltered": "Some content was filtered for safety",
+  
+  // Loading and status indicators
+  "processing": "Processing...",
+  "retrying": "Retrying...",
+  "connecting": "Connecting...",
+  "thinking": "Thinking...",
+  "generating": "Generating...",
+  
+  // Audio and TTS functionality
+  "play": "Play",
+  "playAudio": "Play Audio",
+  "playTargetLanguageAudio": "Play target language audio",
+  "playNativeLanguageAudio": "Play native language audio",
+  "failedToPlayAudio": "Failed to play audio",
+  "audioNotSupported": "Audio not supported",
+  "ttsError": "Text-to-speech error",
+  
+  // Hint and suggestion system
+  "getResponseSuggestions": "Get response suggestions",
+  "responseSuggestions": "Response Suggestions",
+  "clickPlayToHearPronunciation": "Click play to hear pronunciation",
+  "startConversationForSuggestions": "Start a conversation to get suggestions",
+  "greetings": "Greetings",
+  "questions": "Questions",
+  "responses": "Responses",
+  "topics": "Topics",
+  "couldNotGenerateHints": "Could not generate hints",
+  "hintGenerationFailed": "Hint generation failed",
+  
+  // Practice prompts and starters
+  "practicePrompt": "Hello! I'd like to practice {{targetLanguage}} conversation with you. Please help me by correcting my grammar, vocabulary, and {{targetLanguage}} usage. Can we start with some basic conversation?",
+  "sendPracticePrompt": "Send Practice Prompt",
+  "languageLearningPrompt": "Language Learning Prompt",
+  "conversationStarters": "Conversation Starters",
+  "topicSuggestions": "Topic Suggestions",
   
   // Pronunciation practice
   "pronunciationPractice": "Pronunciation Practice",
@@ -82,7 +124,7 @@ const practiceTranslations: TranslationRecord = {
   "failedToGeneratePhrase": "Failed to generate a practice phrase. Please try again.",
   "failedToAnalyzePronunciation": "Failed to analyze pronunciation. Please try again.",
   
-  // New translations for updated pronunciation practice page
+  // Pronunciation practice interface
   "chooseDifficultyLevelBasedOn": "Choose a difficulty level based on your language proficiency",
   "startExercise": "Start Exercise",
   "generatingExercise": "Generating exercise...",
@@ -104,7 +146,7 @@ const practiceTranslations: TranslationRecord = {
   "topic": "Topic",
   "clickWordToHear": "Click on a word to hear it",
   
-  // Adding missing translation keys specifically mentioned by the user
+  // Recording functionality
   "clickStartToRecord": "Click 'Start Recording' to begin",
   "startRecording": "Start Recording",
   "stopRecording": "Stop Recording",
@@ -118,7 +160,81 @@ const practiceTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "Speech recognition is not supported in your browser",
   "noSpeechDetected": "No Speech Detected",
   "pleaseTryAgain": "Please try again",
-  "processing": "Processing...",
+  
+  // Chat interface
+  "messageCouldNotBeSent": "Message could not be sent",
+  "pleaseTypeMessage": "Please type a message",
+  "typeYourMessage": "Type your message...",
+  "messageIsBeingSent": "Message is being sent...",
+  "chatInputPlaceholder": "Type your practice message here...",
+  "enterToSend": "Press Enter to send",
+  "shiftEnterNewLine": "Shift+Enter for new line",
+  
+  // Message content and translation
+  "originalMessage": "Original Message",
+  "translatedMessage": "Translated Message",
+  "showTranslation": "Show Translation",
+  "hideTranslation": "Hide Translation",
+  "translationUnavailable": "Translation unavailable",
+  "translationFailed": "Translation failed",
+  
+  // Practice guide and tips
+  "practiceGuideDescription": "Here are some tips to make the most of your {language} practice:",
+  "practiceGuideItem1": "Try to form complete sentences, even if they're simple.",
+  "practiceGuideItem2": "Don't worry about making mistakes — they're part of learning!",
+  "practiceGuideItem3": "Ask for clarifications if you don't understand something.",
+  "practiceGuideItem4": "Try to use vocabulary you've recently learned.",
+  "practiceDisclaimer": "Our AI will adapt to your skill level and help you improve gradually.",
+  
+  // Voice chat functionality
+  "startVoiceChat": "Start Voice Chat",
+  "stopVoiceChat": "Stop Voice Chat",
+  "voiceChatActive": "Voice chat active",
+  "voiceChatInactive": "Voice chat inactive",
+  "clickToStartVoice": "Click 'Start Voice Chat' to begin speaking with the tutor",
+  "allowMicAccess": "Please allow microphone access to use voice features",
+  "voiceChatNotSupported": "Voice chat is not supported in your browser",
+  "voiceRecognitionError": "Voice recognition error",
+  
+  // Practice session management
+  "practiceSession": "Practice Session",
+  "practiceComplete": "Practice Complete",
+  "practiceScore": "Practice Score",
+  "practiceTime": "Practice Time",
+  "practiceProgress": "Practice Progress",
+  "sessionSaved": "Session saved",
+  "sessionEnded": "Session ended",
+  
+  // Skills assessment
+  "getSkillsAssessment": "Get Skills Assessment",
+  "skillsAssessment": "Skills Assessment",
+  "reading": "Reading",
+  "writing": "Writing",
+  "speaking": "Speaking",
+  "listening": "Listening",
+  "overallLevel": "Overall Level",
+  "assessmentComplete": "Assessment Complete",
+  "assessmentInProgress": "Assessment in progress",
+  
+  // Additional practice features
+  "practiceWithTextChat": "Practice With Text Chat",
+  "textConversationPractice": "Text Conversation Practice",
+  "noticeTextBasedPractice": "Notice: This is a text-based practice feature. For voice practice, try our Unlimited Voice Chat or Premium Voice Chat features.",
+  "sendEnglishPracticePrompt": "Send English Practice Prompt",
+  "askAboutGrammarRules": "Ask about grammar rules",
+  "practiceConversationsDifferentSituations": "Practice conversations in different situations",
+  "learnNewVocabulary": "Learn new vocabulary",
+  "discussCulturalTopics": "Discuss cultural topics",
+  "practiceConversation": "Practice Conversation",
+  
+  // Error handling
+  "somethingWentWrong": "Something went wrong",
+  "tryRefreshing": "Try refreshing the page",
+  "connectionLost": "Connection lost",
+  "reconnecting": "Reconnecting...",
+  "requestTimeout": "Request timeout",
+  "serverError": "Server error",
+  "unknownError": "Unknown error occurred"
 };
 
 export default practiceTranslations;
