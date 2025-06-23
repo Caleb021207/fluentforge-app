@@ -42,7 +42,29 @@ const practiceTranslations: TranslationRecord = {
   practiceTip2: "Non preoccuparti degli errori — fanno parte dell'apprendimento!",
   practiceTip3: "Chiedi spiegazioni se non capisci qualcosa.",
   practiceTip4: "Cerca di usare il vocabolario che hai imparato di recente.",
-  practiceTip5: "La nostra AI si adatterà al tuo livello di competenza e ti aiuterà a migliorare gradualmente."
+  practiceTip5: "La nostra AI si adatterà al tuo livello di competenza e ti aiuterà a migliorare gradualmente.",
+  
+  // Chat interface translations
+  responseSuggestions: "Suggerimenti di risposta",
+  clickPlayToHear: "Clicca su play per sentire la pronuncia",
+  startConversationToSee: "Inizia una conversazione per vedere i suggerimenti",
+  
+  // Hint button translations
+  getResponseSuggestions: "Ottieni suggerimenti di risposta",
+  greetings: "Saluti",
+  questions: "Domande",
+  error: "Errore",
+  couldNotGenerateHints: "Non è stato possibile generare suggerimenti",
+  failedToPlayAudio: "Riproduzione audio fallita",
+  play: "Riproduci",
+  startConversationForSuggestions: "Inizia una conversazione per vedere i suggerimenti",
+  
+  // Fallback keys for practice guide items
+  "Try to form complete sentences, even if they're simple.": "Cerca di formare frasi complete, anche se semplici.",
+  "Don't worry about mistakes — they're part of learning!": "Non preoccuparti degli errori — fanno parte dell'apprendimento!",
+  "Ask for explanations if there's something you don't understand.": "Chiedi spiegazioni se non capisci qualcosa.",
+  "Use words you've learned recently.": "Cerca di usare il vocabolario che hai imparato di recente.",
+  "Our AI will adapt to your skill level and gradually help you improve.": "La nostra AI si adatterà al tuo livello di competenza e ti aiuterà a migliorare gradualmente."
 };
 
 export default practiceTranslations;

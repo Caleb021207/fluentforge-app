@@ -37,7 +37,40 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "אל תדאגו לגבי טעויות — הן חלק מהלמידה!",
   practiceGuideItem3: "בקשו הסברים אם יש משהו שאתם לא מבינים.",
   practiceGuideItem4: "נסו להשתמש באוצר מילים שלמדתם לאחרונה.",
-  practiceDisclaimer: "ה-AI שלנו יתאים עצמו לרמת הכישורים שלכם ויעזור לכם להשתפר בהדרגה."
+  practiceDisclaimer: "ה-AI שלנו יתאים עצמו לרמת הכישורים שלכם ויעזור לכם להשתפר בהדרגה.",
+  
+  // Additional practice translations
+  practice: "תרגול",
+  practiceWithAI: "תרגול עם AI",
+  clearConversation: "נקה שיחה",
+  correctGrammar: "תקן דקדוק",
+  practiceTip1: "נסו ליצור משפטים שלמים, גם אם הם פשוטים.",
+  practiceTip2: "אל תדאגו לגבי טעויות — הן חלק מהלמידה!",
+  practiceTip3: "בקשו הסברים אם יש משהו שאתם לא מבינים.",
+  practiceTip4: "נסו להשתמש באוצר מילים שלמדתם לאחרונה.",
+  practiceTip5: "ה-AI שלנו יתאים עצמו לרמת הכישורים שלכם ויעזור לכם להשתפר בהדרגה.",
+  
+  // Chat interface translations
+  responseSuggestions: "הצעות תגובה",
+  clickPlayToHear: "לחצו על נגן כדי לשמוע הגייה",
+  startConversationToSee: "התחילו שיחה כדי לראות הצעות",
+  
+  // Hint button translations
+  getResponseSuggestions: "קבלו הצעות תגובה",
+  greetings: "ברכות",
+  questions: "שאלות",
+  error: "שגיאה",
+  couldNotGenerateHints: "לא ניתן היה ליצור הצעות",
+  failedToPlayAudio: "נגינת שמע נכשלה",
+  play: "נגן",
+  startConversationForSuggestions: "התחילו שיחה כדי לראות הצעות",
+  
+  // Fallback keys for practice guide items
+  "Try to form complete sentences, even if they're simple.": "נסו ליצור משפטים שלמים, גם אם הם פשוטים.",
+  "Don't worry about mistakes — they're part of learning!": "אל תדאגו לגבי טעויות — הן חלק מהלמידה!",
+  "Ask for explanations if there's something you don't understand.": "בקשו הסברים אם יש משהו שאתם לא מבינים.",
+  "Use words you've learned recently.": "נסו להשתמש באוצר מילים שלמדתם לאחרונה.",
+  "Our AI will adapt to your skill level and gradually help you improve.": "ה-AI שלנו יתאים עצמו לרמת הכישורים שלכם ויעזור לכם להשתפר בהדרגה."
 };
 
 export default practiceTranslations;

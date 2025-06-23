@@ -37,7 +37,40 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "Đừng lo lắng về lỗi sai — chúng là một phần của việc học!",
   practiceGuideItem3: "Yêu cầu giải thích nếu có điều gì bạn không hiểu.",
   practiceGuideItem4: "Cố gắng sử dụng từ vựng mà bạn đã học gần đây.",
-  practiceDisclaimer: "AI của chúng tôi sẽ thích ứng với trình độ kỹ năng của bạn và giúp bạn cải thiện dần dần."
+  practiceDisclaimer: "AI của chúng tôi sẽ thích ứng với trình độ kỹ năng của bạn và giúp bạn cải thiện dần dần.",
+  
+  // Additional practice translations
+  practice: "Luyện tập",
+  practiceWithAI: "Luyện tập với AI",
+  clearConversation: "Xóa cuộc trò chuyện",
+  correctGrammar: "Sửa ngữ pháp",
+  practiceTip1: "Cố gắng tạo thành các câu hoàn chỉnh, ngay cả khi chúng đơn giản.",
+  practiceTip2: "Đừng lo lắng về lỗi sai — chúng là một phần của việc học!",
+  practiceTip3: "Yêu cầu giải thích nếu có điều gì bạn không hiểu.",
+  practiceTip4: "Cố gắng sử dụng từ vựng mà bạn đã học gần đây.",
+  practiceTip5: "AI của chúng tôi sẽ thích ứng với trình độ kỹ năng của bạn và giúp bạn cải thiện dần dần.",
+  
+  // Chat interface translations
+  responseSuggestions: "Gợi ý phản hồi",
+  clickPlayToHear: "Nhấp vào phát để nghe cách phát âm",
+  startConversationToSee: "Bắt đầu cuộc trò chuyện để xem gợi ý",
+  
+  // Hint button translations
+  getResponseSuggestions: "Nhận gợi ý phản hồi",
+  greetings: "Lời chào",
+  questions: "Câu hỏi",
+  error: "Lỗi",
+  couldNotGenerateHints: "Không thể tạo gợi ý",
+  failedToPlayAudio: "Phát âm thanh thất bại",
+  play: "Phát",
+  startConversationForSuggestions: "Bắt đầu cuộc trò chuyện để xem gợi ý",
+  
+  // Fallback keys for practice guide items
+  "Try to form complete sentences, even if they're simple.": "Cố gắng tạo thành các câu hoàn chỉnh, ngay cả khi chúng đơn giản.",
+  "Don't worry about mistakes — they're part of learning!": "Đừng lo lắng về lỗi sai — chúng là một phần của việc học!",
+  "Ask for explanations if there's something you don't understand.": "Yêu cầu giải thích nếu có điều gì bạn không hiểu.",
+  "Use words you've learned recently.": "Cố gắng sử dụng từ vựng mà bạn đã học gần đây.",
+  "Our AI will adapt to your skill level and gradually help you improve.": "AI của chúng tôi sẽ thích ứng với trình độ kỹ năng của bạn và giúp bạn cải thi Interception dần dần."
 };
 
 export default practiceTranslations;

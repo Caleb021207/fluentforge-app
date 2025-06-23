@@ -37,7 +37,40 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "गलतियों की चिंता न करें — वे सीखने का हिस्सा हैं!",
   practiceGuideItem3: "यदि आप कुछ नहीं समझते हैं तो स्पष्टीकरण मांगें।",
   practiceGuideItem4: "हाल ही में सीखी गई शब्दावली का उपयोग करने की कोशिश करें।",
-  practiceDisclaimer: "हमारा AI आपके कौशल स्तर के अनुकूल होगा और धीरे-धीरे आपको सुधारने में मदद करेगा।"
+  practiceDisclaimer: "हमारा AI आपके कौशल स्तर के अनुकूल होगा और धीरे-धीरे आपको सुधारने में मदद करेगा।",
+  
+  // Additional practice translations
+  practice: "अभ्यास",
+  practiceWithAI: "AI के साथ अभ्यास करें",
+  clearConversation: "बातचीत साफ़ करें",
+  correctGrammar: "व्याकरण सुधारें",
+  practiceTip1: "पूरे वाक्य बनाने की कोशिश करें, भले ही वे सरल हों।",
+  practiceTip2: "गलतियों की चिंता न करें — वे सीखने का हिस्सा हैं!",
+  practiceTip3: "यदि आप कुछ नहीं समझते हैं तो स्पष्टीकरण मांगें।",
+  practiceTip4: "हाल ही में सीखी गई शब्दावली का उपयोग करने की कोशिश करें।",
+  practiceTip5: "हमारा AI आपके कौशल स्तर के अनुकूल होगा और धीरे-धीरे आपको सुधारने में मदद करेगा।",
+  
+  // Chat interface translations
+  responseSuggestions: "प्रतिक्रिया सुझाव",
+  clickPlayToHear: "उच्चारण सुनने के लिए प्ले पर क्लिक करें",
+  startConversationToSee: "सुझाव देखने के लिए बातचीत शुरू करें",
+  
+  // Hint button translations
+  getResponseSuggestions: "प्रतिक्रिया सुझाव प्राप्त करें",
+  greetings: "अभिवादन",
+  questions: "प्रश्न",
+  error: "त्रुटि",
+  couldNotGenerateHints: "सुझाव उत्पन्न नहीं कर सके",
+  failedToPlayAudio: "ऑडियो चलाने में विफल",
+  play: "चलाएं",
+  startConversationForSuggestions: "सुझाव देखने के लिए बातचीत शुरू करें",
+  
+  // Fallback keys for practice guide items
+  "Try to form complete sentences, even if they're simple.": "पूरे वाक्य बनाने की कोशिश करें, भले ही वे सरल हों।",
+  "Don't worry about mistakes — they're part of learning!": "गलतियों की चिंता न करें — वे सीखने का हिस्सा हैं!",
+  "Ask for explanations if there's something you don't understand.": "यदि आप कुछ नहीं समझते हैं तो स्पष्टीकरण मांगें।",
+  "Use words you've learned recently.": "हाल ही में सीखी गई शब्दावली का उपयोग करने की कोशिश करें।",
+  "Our AI will adapt to your skill level and gradually help you improve.": "हमारा AI आपके कौशल स्तर के अनुकूल होगा और धीरे-धीरे आपको सुधारने में मदद करेगा।"
 };
 
 export default practiceTranslations;
