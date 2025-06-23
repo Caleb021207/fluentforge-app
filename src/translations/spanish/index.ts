@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 import generalCoreTranslations from "./general-core";
 import languageSelectionTranslations from "./language-selection";
@@ -10,6 +9,7 @@ import safetyTranslations from "./safety";
 import dataPrivacyTranslations from "./data-privacy";
 import languageFrameworksTranslations from "./language-frameworks";
 import landingAuthTranslations from "./landing-auth";
+import classroomTranslations from "./classroom";
 
 // Create a minimal UI elements translation for Spanish to cover basic needs
 const uiElementsTranslations: TranslationRecord = {
@@ -82,6 +82,7 @@ const spanishTranslations: TranslationRecord = {
   ...languageFrameworksTranslations,
   ...landingAuthTranslations,
   ...languagesTranslations,
+  ...classroomTranslations,
 };
 
 export default spanishTranslations;

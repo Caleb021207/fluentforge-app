@@ -7,7 +7,6 @@ import GenerateCodeDialog from "@/components/classroom/GenerateCodeDialog";
 import ClassList from "@/components/classroom/ClassList";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import { useLocalization } from "@/context/LocalizationContext";
-import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import AnimatedLoader from "@/components/ui/animated-loader";
 
 const TeacherClasses = () => {
@@ -22,7 +21,7 @@ const TeacherClasses = () => {
       navigate('/');
       toast({
         title: t("unauthorized"),
-        description: CLASSROOM_TEXT.TEACHER_ACCESS_REQUIRED,
+        description: t("teacherAccessRequired"),
         variant: "destructive",
       });
     }
@@ -43,9 +42,9 @@ const TeacherClasses = () => {
   return (
     <div className="container max-w-4xl mx-auto p-6">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">{CLASSROOM_TEXT.MY_CLASSES}</h1>
+        <h1 className="text-2xl font-bold">{t("myClasses")}</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          {CLASSROOM_TEXT.GENERATE_CODE}
+          {t("generateCode")}
         </Button>
       </div>
       

@@ -1,0 +1,159 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Core classroom functionality
+  "classroom": "Classroom",
+  "classrooms": "Classrooms",
+  "myClasses": "My Classes",
+  "myClass": "My Class",
+  "joinClass": "Join Class",
+  "createClass": "Create Class",
+  "generateCode": "Generate Code",
+  "classCode": "Class Code",
+  "className": "Class Name",
+  "classDescription": "Class Description",
+  "teacher": "Teacher",
+  "student": "Student",
+  "students": "Students",
+  "teacherAccessRequired": "Teacher access required to view this page",
+  "unauthorized": "Unauthorized",
+  
+  // Class creation and management
+  "createNewClass": "Create New Class",
+  "creatingClass": "Creating class...",
+  "creating": "Creating...",
+  "classNameRequired": "Class name is required",
+  "errorCreatingClass": "Error creating class",
+  "classCreated": "Class created successfully",
+  "classActivated": "Class activated successfully",
+  "classDeactivated": "Class deactivated successfully",
+  "generateClassCode": "Generate Class Code",
+  "copyCode": "Copy Code",
+  "copyInviteLink": "Copy Invite Link",
+  "copied": "Copied to clipboard!",
+  "shareCodeWithStudents": "Share this code with your students so they can join your class.",
+  
+  // Class joining
+  "enterClassCode": "Enter class code",
+  "enterValidCode": "Please enter a valid class code",
+  "join": "Join",
+  "joining": "Joining...",
+  "joinedClass": "Joined class",
+  "successJoining": "Successfully joined class",
+  "errorJoining": "Error joining class",
+  "invalidClassCode": "Invalid class code",
+  "pleaseCheckCode": "Please check the code and try again",
+  "classJoinCode": "Class Join Code",
+  
+  // Student management
+  "studentsEnrolled": "Students Enrolled",
+  "noStudentsInClass": "No students have joined this class yet.",
+  "unnamed": "Unnamed Student",
+  "studentName": "Student Name",
+  "name": "Name",
+  "lastActivity": "Last Activity",
+  "joinedOn": "Joined On",
+  "joined": "Joined",
+  "viewStudents": "View Students",
+  "noStudentsEnrolled": "No students enrolled",
+  
+  // Class metrics and analytics
+  "practiceTime": "Practice Time",
+  "practiceCalls": "Text Practice Calls",
+  "practiceCallsShort": "Text",
+  "voicePracticeCalls": "Voice Practice Calls",
+  "voicePracticeCallsShort": "Voice",
+  "premiumVoiceSessions": "Premium Voice Sessions",
+  "premiumVoiceMinutes": "Premium Voice Minutes",
+  "certificationAttempts": "Certification Attempts",
+  "highScore": "High Score",
+  "avgScore": "Average Score",
+  "completedLessons": "Completed Lessons",
+  "voiceChatSessions": "Voice Chat Sessions",
+  "voiceChatMinutes": "Voice Chat Minutes",
+  "refreshMetrics": "Refresh Metrics",
+  "refreshingMetrics": "Refreshing...",
+  "refreshing": "Refreshing...",
+  "studentMetricsRefreshed": "Student metrics refreshed successfully",
+  "allMetricsRefreshed": "All metrics refreshed successfully",
+  "failedToRefreshMetrics": "Failed to refresh metrics",
+  
+  // Class status and management
+  "active": "Active",
+  "inactive": "Inactive",
+  "activate": "Activate",
+  "deactivate": "Deactivate",
+  "created": "Created",
+  "code": "Code",
+  "room": "Room",
+  "period": "Period",
+  "noPeriodAssigned": "No period assigned",
+  "tbd": "TBD",
+  
+  // Empty states
+  "noClassesCreated": "You haven't created any classes yet",
+  "noClassJoined": "You haven't joined any class yet",
+  "noClassesFound": "No classes found",
+  "createOrJoinClass": "Create or join a class to get started",
+  
+  // General actions
+  "success": "Success",
+  "error": "Error",
+  "loading": "Loading...",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "view": "View",
+  "manage": "Manage",
+  "invite": "Invite",
+  "share": "Share",
+  
+  // Navigation and labels
+  "classManagement": "Class Management",
+  "studentManagement": "Student Management",
+  "classOverview": "Class Overview",
+  "classDetails": "Class Details",
+  "classDashboard": "Class Dashboard",
+  "studentProgress": "Student Progress",
+  "viewProgress": "View Progress",
+  "classMetrics": "Class Metrics",
+  "teachingOverview": "Teaching Overview",
+  "totalStudents": "Total Students",
+  "classAverageScore": "Class Average Score",
+  
+  // Classroom settings
+  "classSettings": "Class Settings",
+  "editClass": "Edit Class",
+  "deleteClass": "Delete Class",
+  "archiveClass": "Archive Class",
+  "restoreClass": "Restore Class",
+  "classArchived": "Class archived successfully",
+  "classRestored": "Class restored successfully",
+  "classDeleted": "Class deleted successfully",
+  "confirmDeleteClass": "Are you sure you want to delete this class? This action cannot be undone.",
+  "confirmArchiveClass": "Are you sure you want to archive this class?",
+  
+  // Advanced features
+  "exportData": "Export Data",
+  "importStudents": "Import Students",
+  "bulkActions": "Bulk Actions",
+  "selectAll": "Select All",
+  "deselectAll": "Deselect All",
+  "selectedStudents": "Selected Students",
+  "generateReport": "Generate Report",
+  "classReport": "Class Report",
+  "progressReport": "Progress Report",
+  "attendanceReport": "Attendance Report",
+  
+  // Error states
+  "errorLoadingClasses": "Error loading classes",
+  "errorLoadingStudents": "Error loading students",
+  "errorUpdatingClass": "Error updating class",
+  "errorDeletingClass": "Error deleting class",
+  "connectionError": "Connection error. Please try again.",
+  "tryAgain": "Try Again"
+};
+
+export default classroomTranslations;

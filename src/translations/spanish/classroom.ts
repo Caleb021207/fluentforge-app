@@ -1,0 +1,159 @@
+
+import { TranslationRecord } from "../types";
+
+const classroomTranslations: TranslationRecord = {
+  // Core classroom functionality
+  "classroom": "Aula",
+  "classrooms": "Aulas",
+  "myClasses": "Mis Clases",
+  "myClass": "Mi Clase",
+  "joinClass": "Unirse a Clase",
+  "createClass": "Crear Clase",
+  "generateCode": "Generar Código",
+  "classCode": "Código de Clase",
+  "className": "Nombre de Clase",
+  "classDescription": "Descripción de Clase",
+  "teacher": "Profesor",
+  "student": "Estudiante",
+  "students": "Estudiantes",
+  "teacherAccessRequired": "Se requiere acceso de profesor para ver esta página",
+  "unauthorized": "No autorizado",
+  
+  // Class creation and management
+  "createNewClass": "Crear Nueva Clase",
+  "creatingClass": "Creando clase...",
+  "creating": "Creando...",
+  "classNameRequired": "Se requiere nombre de clase",
+  "errorCreatingClass": "Error al crear clase",
+  "classCreated": "Clase creada exitosamente",
+  "classActivated": "Clase activada exitosamente",
+  "classDeactivated": "Clase desactivada exitosamente",
+  "generateClassCode": "Generar Código de Clase",
+  "copyCode": "Copiar Código",
+  "copyInviteLink": "Copiar Enlace de Invitación",
+  "copied": "¡Copiado al portapapeles!",
+  "shareCodeWithStudents": "Comparte este código con tus estudiantes para que puedan unirse a tu clase.",
+  
+  // Class joining
+  "enterClassCode": "Ingresa código de clase",
+  "enterValidCode": "Por favor ingresa un código de clase válido",
+  "join": "Unirse",
+  "joining": "Uniéndose...",
+  "joinedClass": "Se unió a la clase",
+  "successJoining": "Se unió exitosamente a la clase",
+  "errorJoining": "Error al unirse a la clase",
+  "invalidClassCode": "Código de clase inválido",
+  "pleaseCheckCode": "Por favor verifica el código e inténtalo de nuevo",
+  "classJoinCode": "Código para Unirse a la Clase",
+  
+  // Student management
+  "studentsEnrolled": "Estudiantes Inscritos",
+  "noStudentsInClass": "Ningún estudiante se ha unido a esta clase aún.",
+  "unnamed": "Estudiante Sin Nombre",
+  "studentName": "Nombre del Estudiante",
+  "name": "Nombre",
+  "lastActivity": "Última Actividad",
+  "joinedOn": "Se Unió El",
+  "joined": "Se Unió",
+  "viewStudents": "Ver Estudiantes",
+  "noStudentsEnrolled": "No hay estudiantes inscritos",
+  
+  // Class metrics and analytics
+  "practiceTime": "Tiempo de Práctica",
+  "practiceCalls": "Llamadas de Práctica de Texto",
+  "practiceCallsShort": "Texto",
+  "voicePracticeCalls": "Llamadas de Práctica de Voz",
+  "voicePracticeCallsShort": "Voz",
+  "premiumVoiceSessions": "Sesiones de Voz Premium",
+  "premiumVoiceMinutes": "Minutos de Voz Premium",
+  "certificationAttempts": "Intentos de Certificación",
+  "highScore": "Puntuación Más Alta",
+  "avgScore": "Puntuación Promedio",
+  "completedLessons": "Lecciones Completadas",
+  "voiceChatSessions": "Sesiones de Chat de Voz",
+  "voiceChatMinutes": "Minutos de Chat de Voz",
+  "refreshMetrics": "Actualizar Métricas",
+  "refreshingMetrics": "Actualizando...",
+  "refreshing": "Actualizando...",
+  "studentMetricsRefreshed": "Métricas de estudiante actualizadas exitosamente",
+  "allMetricsRefreshed": "Todas las métricas actualizadas exitosamente",
+  "failedToRefreshMetrics": "Error al actualizar métricas",
+  
+  // Class status and management
+  "active": "Activo",
+  "inactive": "Inactivo",
+  "activate": "Activar",
+  "deactivate": "Desactivar",
+  "created": "Creado",
+  "code": "Código",
+  "room": "Aula",
+  "period": "Período",
+  "noPeriodAssigned": "Sin período asignado",
+  "tbd": "Por Definir",
+  
+  // Empty states
+  "noClassesCreated": "No has creado ninguna clase aún",
+  "noClassJoined": "No te has unido a ninguna clase aún",
+  "noClassesFound": "No se encontraron clases",
+  "createOrJoinClass": "Crea o únete a una clase para empezar",
+  
+  // General actions
+  "success": "Éxito",
+  "error": "Error",
+  "loading": "Cargando...",
+  "save": "Guardar",
+  "cancel": "Cancelar",
+  "delete": "Eliminar",
+  "edit": "Editar",
+  "view": "Ver",
+  "manage": "Gestionar",
+  "invite": "Invitar",
+  "share": "Compartir",
+  
+  // Navigation and labels
+  "classManagement": "Gestión de Clases",
+  "studentManagement": "Gestión de Estudiantes",
+  "classOverview": "Resumen de Clase",
+  "classDetails": "Detalles de Clase",
+  "classDashboard": "Panel de Clase",
+  "studentProgress": "Progreso del Estudiante",
+  "viewProgress": "Ver Progreso",
+  "classMetrics": "Métricas de Clase",
+  "teachingOverview": "Resumen de Enseñanza",
+  "totalStudents": "Total de Estudiantes",
+  "classAverageScore": "Puntuación Promedio de la Clase",
+  
+  // Classroom settings
+  "classSettings": "Configuración de Clase",
+  "editClass": "Editar Clase",
+  "deleteClass": "Eliminar Clase",
+  "archiveClass": "Archivar Clase",
+  "restoreClass": "Restaurar Clase",
+  "classArchived": "Clase archivada exitosamente",
+  "classRestored": "Clase restaurada exitosamente",
+  "classDeleted": "Clase eliminada exitosamente",
+  "confirmDeleteClass": "¿Estás seguro de que quieres eliminar esta clase? Esta acción no se puede deshacer.",
+  "confirmArchiveClass": "¿Estás seguro de que quieres archivar esta clase?",
+  
+  // Advanced features
+  "exportData": "Exportar Datos",
+  "importStudents": "Importar Estudiantes",
+  "bulkActions": "Acciones en Lote",
+  "selectAll": "Seleccionar Todo",
+  "deselectAll": "Deseleccionar Todo",
+  "selectedStudents": "Estudiantes Seleccionados",
+  "generateReport": "Generar Reporte",
+  "classReport": "Reporte de Clase",
+  "progressReport": "Reporte de Progreso",
+  "attendanceReport": "Reporte de Asistencia",
+  
+  // Error states
+  "errorLoadingClasses": "Error al cargar clases",
+  "errorLoadingStudents": "Error al cargar estudiantes",
+  "errorUpdatingClass": "Error al actualizar clase",
+  "errorDeletingClass": "Error al eliminar clase",
+  "connectionError": "Error de conexión. Por favor inténtalo de nuevo.",
+  "tryAgain": "Intentar de Nuevo"
+};
+
+export default classroomTranslations;
