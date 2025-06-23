@@ -1,9 +1,10 @@
+
 import { TranslationRecord } from "../types";
 
 const navigationTranslations: TranslationRecord = {
   home: "Главная",
   textPractice: "Текстовая практика",
-  unlimitedVoicePractice: "Неограниченная голосовая практика",
+  unlimitedVoicePractice: "Безлимитная голосовая практика",
   practice: "Практика",
   voiceChat: "Голосовой чат",
   accuracy: "Точность",
@@ -23,9 +24,9 @@ const navigationTranslations: TranslationRecord = {
   help: "Помощь",
   about: "О нас",
   contact: "Контакты",
-  termsOfService: "Условия обслуживания",
+  termsOfService: "Условия использования",
   privacyPolicy: "Политика конфиденциальности",
-  cookiePolicy: "Политика файлов cookie",
+  cookiePolicy: "Политика использования файлов cookie",
   accessibilityStatement: "Заявление о доступности",
   pronunciationPractice: "Практика произношения",
   aiAnalysis: "ИИ анализ"

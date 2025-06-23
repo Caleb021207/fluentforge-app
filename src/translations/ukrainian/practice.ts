@@ -39,20 +39,25 @@ const practiceTranslations: TranslationRecord = {
   clickToStartVoice: "Натисніть 'Почати голосовий чат', щоб почати розмову з репетитором",
   typeMessageBelow: "Введіть повідомлення нижче, щоб почати",
   
-  // Text Practice Page additional translations
-  sendEnglishPracticePrompt: "Надіслати підказку для практики англійської",
-  practiceWithTextChat: "Практика з текстовим чатом",
-  textConversationPractice: "Практика текстових розмов",
-  startTextChatting: "Почніть текстовий чат з ШІ-репетитором",
-  noticeTextBasedPractice: "Примітка: Це функція текстової практики. Для голосової практики спробуйте наші функції Необмеженого голосового чату або Преміум голосового чату.",
-  send: "Надіслати",
-  askAboutGrammarRules: "Запитайте про правила граматики",
-  practiceConversationsDifferentSituations: "Практикуйте розмови в різних ситуаціях",
-  learnNewVocabulary: "Вивчайте новий словниковий запас",
-  discussCulturalTopics: "Обговорюйте культур��і теми",
-  
-  practicePrompt: "Вітаю! Я хотів(ла) би попрактикуватися у розмові {{targetLanguage}}. Будь ласка, допоможіть мені виправити граматику, словниковий запас та використання {{targetLanguage}}. Можемо почати з базової розмови?",
+  // Additional practice translations
+  practice: "Практика",
+  practiceWithAI: "Практика з ШІ",
+  startTextChatting: "Почати текстовий чат",
+  clearConversation: "Очистити розмову",
+  correctGrammar: "Виправити граматику",
+  startConversationIn: "Почати розмову {{language}}",
+  practiceGuide: "Посібник з практики {{language}}",
+  practiceGuideDescription: "Дотримуйтесь цих порад, щоб максимально ефективно вивчати {{language}}:",
+  practiceTip1: "Намагайтеся складати повні речення, навіть якщо вони прості.",
+  practiceTip2: "Не хвилюйтеся через помилки — вони є частиною навчання!",
+  practiceTip3: "Просіть пояснення, якщо щось незрозуміло.",
+  practiceTip4: "Спробуйте використовувати нещодавно вивчені слова.",
+  practiceTip5: "Наш ШІ адаптується до вашого рівня навичок і поступово допоможе вам покращитися.",
+  typeYourMessageHere: "Введіть ваше повідомлення тут...",
   chatPlaceholder: "Введіть повідомлення для практики {{targetLanguage}}...",
+  practicePrompt: "Привіт! Я хотів би попрактикуватися в розмові {{targetLanguage}}. Будь ласка, допоможіть мені виправити граматику, словниковий запас та використання {{targetLanguage}}. Давайте почнемо з базової розмови?",
+  responseSuggestions: "Пропозиції відповідей",
+  clickPlayToHearPronunciation: "Натисніть відтворення, щоб почути вимову",
   
   // Recording-related translations
   clickStartToRecord: "Натисніть 'Почати запис', щоб розпочати",
@@ -66,7 +71,8 @@ const practiceTranslations: TranslationRecord = {
   speechRecognitionError: "Помилка розпізнавання мовлення",
   speechRecognitionNotSupported: "Розпізнавання мовлення не підтримується у вашому браузері",
   noSpeechDetected: "Мовлення не виявлено",
-  pleaseTryAgain: "Будь ласка, спробуйте ще раз"
+  pleaseTryAgain: "Будь ласка, спробуйте ще раз",
+  send: "Надіслати"
 };
 
 export default practiceTranslations;

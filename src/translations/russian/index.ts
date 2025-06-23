@@ -1,7 +1,11 @@
 
 import { TranslationRecord } from "../types";
-import authTranslations from "./auth";
 import generalTranslations from "./general";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
+import navigationTranslations from "./navigation";
+import landingAuthTranslations from "./landing-auth";
+import authTranslations from "./auth";
 import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
 import voiceChatTranslations from "./voice-chat";
@@ -11,10 +15,15 @@ import progressTranslations from "./progress";
 import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import languagesTranslations from "./languages";
+import pronunciationTranslations from "./pronunciation";
 
 const translations: TranslationRecord = {
-  ...authTranslations,
   ...generalTranslations,
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
+  ...navigationTranslations,
+  ...landingAuthTranslations,
+  ...authTranslations,
   ...languageSelectionTranslations,
   ...practiceTranslations,
   ...voiceChatTranslations,
@@ -24,6 +33,7 @@ const translations: TranslationRecord = {
   ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
   ...languagesTranslations,
+  ...pronunciationTranslations,
 };
 
 export default translations;
