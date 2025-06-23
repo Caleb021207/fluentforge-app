@@ -34,9 +34,7 @@ const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage }) => {
         className="text-muted-foreground"
         variants={fadeIn}
       >
-        {currentLanguage === "tagalog" 
-          ? "Simulan ang pakikipag-usap sa iyong AI na guro sa wika!" // Tagalog text for practice description
-          : t("startChatting")}
+        {t("startChatting")}
       </motion.p>
     </motion.div>
   );

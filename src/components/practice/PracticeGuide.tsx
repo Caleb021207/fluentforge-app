@@ -14,7 +14,9 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
   const { currentLanguage, t } = useLocalization();
   
   // Get localized target language name
-  const learningLanguage = getLanguageDisplayName(targetLanguage);
+  const learningLanguage = currentLanguage === "english" 
+    ? getLanguageDisplayName(targetLanguage) 
+    : "English";
   
   return (
     <motion.div

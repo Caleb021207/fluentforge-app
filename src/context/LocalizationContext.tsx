@@ -31,7 +31,6 @@ const isClassroomRoute = (path: string): boolean => {
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
   const [missingKeys, setMissingKeys] = useState<Set<string>>(new Set());
-  // We need to get the location in a different way since we're outside the router context
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   
   // Update path when it changes
@@ -59,25 +58,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     console.log("Available translations:", Object.keys(translations));
   }, []);
 
-  // Helper function to safely get a string value from a potentially nested structure
-  const getStringValueFromTranslation = (obj: any, path: string): string => {
-    if (typeof obj === 'string') {
-      return obj;
-    }
-    
-    if (path.includes('.') && typeof obj === 'object' && obj !== null) {
-      const [firstKey, ...rest] = path.split('.');
-      const nestedObj = obj[firstKey];
-      if (nestedObj) {
-        return getStringValueFromTranslation(nestedObj, rest.join('.'));
-      }
-    }
-    
-    // Always return a string, even for complex objects
-    return String(path);
-  };
-
-  // Translation function with enhanced fallback and logging
+  // Enhanced translation function with proper interpolation support
   const t = (key: string, replacements?: Record<string, string>): string => {
     try {
       // Check if translations exist
@@ -109,37 +90,31 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         
         if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
           const nestedValue = (parentObject as Record<string, any>)[childKey];
-          // Ensure we return a string
           translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
         }
       } else {
         const value = selectedTranslations[key];
-        // Ensure we return a string
         translationValue = typeof value === 'string' ? value : 
                            (value !== undefined ? String(value) : "");
       }
       
       // Fallback to default language if not found or not a string
       if (translationValue === "" && defaultTranslations) {
-        // Try to get from default translations
         if (key.includes('.')) {
           const [parentKey, childKey] = key.split('.');
           const parentObject = defaultTranslations[parentKey];
           
           if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
             const nestedValue = (parentObject as Record<string, any>)[childKey];
-            // Ensure we return a string
             translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
           }
         } else {
           const value = defaultTranslations[key];
-          // Ensure we return a string
           translationValue = typeof value === 'string' ? value : 
                              (value !== undefined ? String(value) : key);
         }
         
         if (translationValue !== key) {
-          // Only log each missing key once per session
           if (!missingKeys.has(key)) {
             console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
             setMissingKeys(prev => new Set([...prev, key]));
@@ -156,15 +131,15 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
         return key;
       }
       
-      // Apply replacements if any
+      // Enhanced replacement logic with proper interpolation support
       if (replacements && translationValue) {
         let result = translationValue;
         Object.entries(replacements).forEach(([placeholder, replaceValue]) => {
-          // Support {{placeholder}} format
+          // Support {{placeholder}} format (primary)
           const regex = new RegExp(`{{${placeholder}}}`, 'g');
           result = result.replace(regex, replaceValue);
           
-          // Also support {placeholder} format
+          // Also support {placeholder} format (fallback)
           const simpleRegex = new RegExp(`{${placeholder}}`, 'g');
           result = result.replace(simpleRegex, replaceValue);
         });
@@ -174,7 +149,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
       return translationValue;
     } catch (error) {
       console.error("Translation error:", error);
-      return key; // Return the key as fallback
+      return key;
     }
   };
 
