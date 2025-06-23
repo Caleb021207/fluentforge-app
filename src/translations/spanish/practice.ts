@@ -57,6 +57,28 @@ const practiceTranslations: TranslationRecord = {
   generatingExercise: "Generando ejercicio",
   levelDescription: "Descripción del nivel",
   
+  // Pronunciation recording and feedback
+  yourPronunciation: "Tu pronunciación",
+  startRecording: "Comenzar grabación",
+  clickStartToRecord: "Haz clic para comenzar a grabar",
+  listeningToYou: "Escuchándote",
+  processing: "Procesando",
+  realTimeTranscription: "Transcripción en tiempo real",
+  yourTranscription: "Tu transcripción",
+  
+  // Pronunciation feedback scores
+  excellent: "Excelente",
+  good: "Bueno",
+  fair: "Regular",
+  needsImprovement: "Necesita mejorar",
+  accuracyScore: "Puntuación de precisión",
+  intonationScore: "Puntuación de entonación",
+  fluencyScore: "Puntuación de fluidez",
+  complexityScore: "Puntuación de complejidad",
+  wordAnalysis: "Análisis de palabras",
+  phonemeAnalysis: "Análisis de fonemas",
+  overallFeedback: "Comentarios generales",
+  
   // Complexity levels
   novice: "Principiante",
   intermediate: "Intermedio",

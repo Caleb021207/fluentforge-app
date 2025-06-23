@@ -57,6 +57,28 @@ const practiceTranslations: TranslationRecord = {
   generatingExercise: "अभ्यास उत्पन्न गर्दै",
   levelDescription: "स्तर विवरण",
   
+  // Pronunciation recording and feedback
+  yourPronunciation: "तपाईंको उच्चारण",
+  startRecording: "रेकर्डिङ सुरु गर्नुहोस्",
+  clickStartToRecord: "रेकर्ड गर्न सुरु गर्न क्लिक गर्नुहोस्",
+  listeningToYou: "तपाईंलाई सुन्दै",
+  processing: "प्रक्रिया गर्दै",
+  realTimeTranscription: "वास्तविक समय ट्रान्सक्रिप्शन",
+  yourTranscription: "तपाईंको ट्रान्सक्रिप्शन",
+  
+  // Pronunciation feedback scores
+  excellent: "उत्कृष्ट",
+  good: "राम्रो",
+  fair: "ठीक",
+  needsImprovement: "सुधार आवश्यक",
+  accuracyScore: "शुद्धता स्कोर",
+  intonationScore: "स्वर स्कोर",
+  fluencyScore: "प्रवाहता स्कोर",
+  complexityScore: "जटिलता स्कोर",
+  wordAnalysis: "शब्द विश्लेषण",
+  phonemeAnalysis: "ध्वनि विश्लेषण",
+  overallFeedback: "समग्र प्रतिक्रिया",
+  
   // Complexity levels
   novice: "नयाँ",
   intermediate: "मध्यम",
