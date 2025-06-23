@@ -1,6 +1,11 @@
 
 // Translation types for the internationalization system
-export type TranslationRecord = Record<string, string | TranslationRecord>;
+export type TranslationRecord = Record<string, string | Record<string, unknown>>;
+
+// Language translations type
+export type LanguageTranslations = {
+  [key: string]: TranslationRecord;
+};
 
 // Language codes supported by the application
 export type LanguageCode = 
