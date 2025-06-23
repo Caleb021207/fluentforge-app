@@ -1,6 +1,45 @@
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
+  // Core voice chat functionality
+  voiceChatTitle: "Chat de Voz",
+  voiceChatSubtitle: "Pratique falando com nosso tutor de IA",
+  startVoiceChat: "Iniciar Chat de Voz",
+  endVoiceChat: "Finalizar Chat de Voz",
+  listening: "Ouvindo...",
+  recording: "Gravando...",
+  processing: "Processando...",
+  microphonePermissionRequired: "Permissão do microfone necessária",
+  microphonePermissionDenied: "Permissão do microfone negada",
+  voiceChatActive: "Chat de Voz Ativo",
+  voiceChatInactive: "Chat de Voz Inativo",
+  speakNow: "Fale agora",
+  listeningForResponse: "Ouvindo resposta...",
+  voiceInputDisabled: "Entrada de voz desabilitada",
+  
+  // Practice descriptions and AI info
+  practiceDescription: "Melhore suas habilidades de fala e audição tendo conversas em tempo real com IA.",
+  aiModelInfo: "Usamos GPT-4o-mini da OpenAI para compreensão e geração de linguagem natural, com Síntese de Fala integrada do navegador para respostas de voz.",
+  
+  // Conversation starters
+  conversationStarters: "Iniciadores de Conversa",
+  tryThesePhrases: "Experimente essas frases para iniciar uma conversa:",
+  phrase1: "Olá, como você está hoje?",
+  phrase2: "Como está o tempo onde você está?",
+  phrase3: "Você pode recomendar um bom restaurante?",
+  phrase4: "Quais são seus hobbies e interesses?",
+  phrase5: "Conte-me sobre seu livro ou filme favorito.",
+  phrase6: "O que você fez no fim de semana passado?",
+  phrase7: "Quais são seus planos para amanhã?",
+  phrase8: "Como se diz... em espanhol/inglês?",
+  
+  // Practice with voice chat info
+  practiceWithVoiceChat: "Pratique com Chat de Voz",
+  useThisTool: "Use esta ferramenta para melhorar suas habilidades de fala e audição. Aqui estão algumas dicas:",
+  askQuestions: "Faça perguntas sobre tópicos cotidianos",
+  practiceCommonPhrases: "Pratique frases e expressões comuns",
+  describeWhatYouSee: "Descreva o que você vê ao seu redor",
+  practiceVocabularyForSpecific: "Pratique vocabulário para tópicos específicos como viagens ou comida",
   freePracticeWithVoice: "Prática de Voz Gratuita",
   unlimitedVoicePractice: "Prática de Voz Ilimitada",
   startSpeaking: "Começar a Falar",
@@ -9,7 +48,6 @@ const voiceChatTranslations: TranslationRecord = {
   youSaid: "Você disse",
   aiResponse: "Resposta da IA",
   playAgain: "Reproduzir Novamente",
-  practiceWithVoiceChat: "Pratique com o Chat de Voz",
   practiceLanguageTips: "Use esta ferramenta para melhorar suas habilidades de fala e audição. Aqui estão algumas dicas:",
   askQuestionsAboutTopics: "Faça perguntas sobre tópicos cotidianos",
   practiceEverydayPhrases: "Pratique frases e expressões comuns",
@@ -19,35 +57,18 @@ const voiceChatTranslations: TranslationRecord = {
   speechRecognitionNotSupported: "O reconhecimento de voz não é compatível com seu navegador",
   speechSynthesisNotSupported: "A síntese de fala não é suportada no seu navegador",
   speechSynthesisError: "Erro na síntese de fala. Por favor, tente novamente.",
-  microphoneAccessRequired: "O acesso ao microfone é necessário para este recurso",
   failedToGetResponse: "Não foi possível obter resposta da IA. Por favor, tente novamente.",
   failedToGenerateSpeech: "Não foi possível gerar a fala. Por favor, tente novamente.",
   audioPlaybackError: "Erro ao reproduzir o áudio. Por favor, tente novamente.",
-  conversationStarters: "Iniciadores de Conversa",
-  tryThesePhrases: "Experimente estas frases para iniciar uma conversa:",
   inYourTargetLanguage: "No seu idioma alvo:",
   inYourNativeLanguage: "No seu idioma nativo:",
-  phrase1: "Olá, como você está hoje?",
-  phrase2: "Como está o tempo onde você está?",
-  phrase3: "Você pode me recomendar um bom restaurante?",
-  phrase4: "Quais são seus hobbies e interesses?",
-  phrase5: "Fale-me sobre seu livro ou filme favorito.",
-  phrase6: "O que você fez no fim de semana passado?",
-  phrase7: "Quais são seus planos para amanhã?",
-  phrase8: "Como se diz... em inglês/espanhol?",
   translation: "Tradução",
   conversationHistory: "Histórico de Conversa",
   clearConversation: "Limpar Conversa",
   voiceChatEnded: "Chat de voz encerrado",
   timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
   speaking: "Falando",
-  
-  // Additional keys needed for the practice tips box
-  askQuestions: "Faça perguntas sobre tópicos cotidianos",
-  practiceCommonPhrases: "Pratique frases e expressões comuns",
-  describeWhatYouSee: "Descreva o que você vê ao seu redor",
-  practiceVocabularyForSpecific: "Pratique vocabulário para tópicos específicos como viagens ou comida",
-  useThisTool: "Use esta ferramenta para melhorar suas habilidades de fala e audição. Aqui estão algumas dicas:",
+  microphoneAccessRequired: "O acesso ao microfone é necessário para este recurso"
 };
 
 export default voiceChatTranslations;
