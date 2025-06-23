@@ -43,7 +43,6 @@ import marathi from "./marathi";
 import gujarati from "./gujarati";
 import sinhala from "./sinhala";
 
-
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "./constants";
 
 // Map of all translations by language code

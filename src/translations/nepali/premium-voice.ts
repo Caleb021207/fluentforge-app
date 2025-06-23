@@ -2,39 +2,38 @@
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
-  premiumVoiceChat: "प्रिमियम भ्वाइस च्याट",
-  premiumVoiceChatDescription: "ElevenLabs सँग {{practice}} भाषिकसँग भेट्नुहोस्, जुन हाल संसारको सर्वोत्कृष्ट टेक्स्ट-टू-स्पीच इन्जिन हो",
-  premiumVoiceNoteWithReset: "तपाईंसँग साप्ताहिक 60 मिनेटमा रिसेट हुने अनन्त सत्रहरू छन्।",
-  startPremiumVoiceSession: "प्रिमियम भ्वाइस सत्र सुरु गर्नुहोस्",
-  endPremiumVoiceSession: "प्रिमियम भ्वाइस सत्र समाप्त गर्नुहोस्",
-  youHaveRemaining: "तपाईंसँग हप्ताको लागि {{minutes}} मिनेट बाँकी छ।",
-  youHaveUsed: "तपाईंले कुल {{minutes}} मिनेट प्रयोग गर्नुभएको छ।",
-  youHaveUnlimited: "तपाईंको साप्ताहिक 60 मिनेट रिसेट हुन्छ! यो हप्ता तपाईंले {{minutes}} मिनेट प्रयोग गर्नुभएको छ।",
-  weeklyLimitReached: "साप्ताहिक समय सीमा पुग्यो",
-  upgradeToGetMore: "थप सत्रहरू प्राप्त गर्न अपग्रेड गर्नुहोस्",
-  subscriptionRequired: "प्रिमियम भ्वाइस च्याट प्रयोग गर्न सदस्यता आवश्यक छ",
-  chatWithNativeSpeaker: "मूल {{language}} भाषिकसँग च्याट गर्नुहोस्",
-  elevenLabsInfo: "हामी ElevenLabs AI भ्वाइस एजेन्टहरू प्रयोग गर्छौं",
-  usingNaturalVoice: "जीवन जस्तो AI आवाजसँग अभ्यास गर्नुहोस्",
-  voiceRealism: "बोली बुझाइ र उच्चारण सीपहरूको अभ्यास गर्नुहोस्",
-  personalizedTutoring: "व्यक्तिगत AI भाषा ट्युटरिङ",
-  noWeeklyTimeLimit: "साप्ताहिक समय सीमा छैन",
-  timeRemainingThisWeek: "यो हप्ता बाँकी समय:",
-  timeUsedThisWeek: "यो हप्ता प्रयोग भएको समय:",
-  sessionLength: "सत्र अवधि: {{minutes}} मिनेट",
-  voiceChatEndedTitle: "भ्वाइस च्याट समाप्त भयो",
-  voiceChatEndedDescription: "तपाईंको भ्वाइस च्याट सत्र समाप्त भएको छ।",
-  startNewSession: "नयाँ सत्र सुरु गर्नुहोस्",
-  startSessionWithLanguage: "{{language}} भ्वाइस सत्र सुरु गर्नुहोस्",
-  dailyCooldownActive: "दैनिक कुलडाउन सक्रिय",
-  pleaseWaitHours: "कृपया {{hours}} घण्टा पर्खनुहोस्",
-  pleaseWaitMinutes: "कृपया {{minutes}} मिनेट पर्खनुहोस्",
-  waitTimeBeforeNextSession: "अझै {{timeRemaining}} बाँकी छ",
-  sessionExceeded: "सत्र तीस मिनेट सीमा नाघ्यो। चाँडै भेटौंला!",
-  cooldownMessage: "तपाईंले आफ्नो दैनिक प्रिमियम समय प्रयोग गरिसक्नुभएको छ।",
-  returningTomorrow: "भोलि फेरि जाँच गर्नुहोस्!",
-  upgradeForUnlimited: "असीमित पहुँचको लागि अपग्रेड गर्नुहोस्",
-  failedToStartSession: "सत्र सुरु गर्न असफल",
+  // Premium voice features
+  unlimitedVoicePractice: "असीमित आवाज अभ्यास",
+  premiumVoiceFeatures: "प्रिमियम आवाज सुविधाहरू",
+  upgradeForUnlimitedAccess: "असीमित पहुँचका लागि अपग्रेड गर्नुहोस्",
+  
+  // Premium voice chat
+  premiumVoiceChat: "प्रिमियम आवाज च्याट",
+  unlimitedVoiceChat: "असीमित आवाज च्याट",
+  upgradeForVoiceFeatures: "आवाज सुविधाहरूका लागि अपग्रेड गर्नुहोस्",
+  voiceChatLimitReached: "आवाज च्याट सीमा पुग्यो",
+  
+  // Premium sessions and usage
+  premiumVoiceSessions: "प्रिमियम आवाज सत्रहरू",
+  premiumVoiceMinutes: "प्रिमियम आवाज मिनेटहरू",
+  unlimitedSessions: "असीमित सत्रहरू",
+  unlimitedMinutes: "असीमित मिनेटहरू",
+  
+  // Premium benefits
+  enhancedVoiceQuality: "उन्नत आवाज गुणस्तर",
+  advancedVoiceAnalysis: "उन्नत आवाज विश्लेषण",
+  personalizedVoiceFeedback: "व्यक्तिगत आवाज प्रतिक्रिया",
+  priorityVoiceSupport: "प्राथमिकता आवाज सहयोग",
+  
+  // Upgrade prompts
+  upgradeNow: "अहिले अपग्रेड गर्नुहोस्",
+  unlockPremiumVoice: "प्रिमियम आवाज अनलक गर्नुहोस्",
+  getUnlimitedVoice: "असीमित आवाज प्राप्त गर्नुहोस्",
+  
+  // Premium voice status
+  premiumVoiceActive: "प्रिमियम आवाज सक्रिय",
+  premiumVoiceExpired: "प्रिमियम आवाज समाप्त भयो",
+  renewPremiumVoice: "प्रिमियम आवाज नवीकरण गर्नुहोस्"
 };
 
 export default premiumVoiceTranslations;

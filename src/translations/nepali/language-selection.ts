@@ -2,19 +2,31 @@
 import { TranslationRecord } from "../types";
 
 const languageSelectionTranslations: TranslationRecord = {
-  iSpeak: "म बोल्छु:",
-  iWantToLearn: "म सिक्न चाहन्छु:",
-  selectYourNativeLanguage: "तपाईंको मातृभाषा चयन गर्नुहोस्",
-  selectLanguageToLearn: "सिक्न चाहने भाषा चयन गर्नुहोस्",
-  saveLanguagePreferences: "भाषा प्राथमिकताहरू सुरक्षित गर्नुहोस्",
-  languagePreferencesSaved: "भाषा प्राथमिकताहरू सुरक्षित गरियो",
+  // Language selection interface
+  iSpeak: "म बोल्छु",
+  iWantToLearn: "म सिक्न चाहन्छु",
+  selectYourNativeLanguage: "आफ्नो मातृभाषा छान्नुहोस्",
+  selectLanguageToLearn: "सिक्ने भाषा छान्नुहोस्",
+  saveLanguagePreferences: "भाषा प्राथमिकताहरू सेभ गर्नुहोस्",
   youreNowLearning: "तपाईं अहिले सिक्दै हुनुहुन्छ",
   from: "बाट",
-  pleaseSelectBothLanguages: "कृपया दुवै भाषाहरू चयन गर्नुहोस्",
-  youNeedToSelectBoth: "तपाईंले आफ्नो मातृभाषा र तपाईंले सिक्न चाहने भाषा दुवै चयन गर्नु पर्छ",
-  studyMaterialsComingSoon: "{{nativeLanguage}} बाट {{targetLanguage}} सिक्नका लागि अध्ययन सामग्री चाँडै आउँदैछ!",
-  someFeaturesLimited: "केही सुविधाहरू सीमित वा उपलब्ध नहुन सक्छन्।",
-  selectYourLanguagePreferences: "तपाईंको भाषा प्राथमिकताहरू चयन गर्नुहोस्",
+  studyMaterialsComingSoon: "अध्ययन सामग्री छिट्टै आउँदैछ",
+  someFeaturesLimited: "केही सुविधाहरू सीमित छन्",
+  selectYourLanguagePreferences: "आफ्ना भाषा प्राथमिकताहरू छान्नुहोस्",
+  
+  // Language preference management
+  languagePreferencesSaved: "भाषा प्राथमिकताहरू सेभ गरियो",
+  learningLanguageFromNative: "{{target}} भाषा {{native}} बाट सिक्दै",
+  pleaseSelectBothLanguages: "कृपया दुवै भाषाहरू छान्नुहोस्",
+  youNeedToSelectBoth: "तपाईंले दुवै भाषाहरू छान्नु पर्छ",
+  
+  // Language interface
+  switchLanguage: "भाषा बदल्नुहोस्",
+  changeLanguage: "भाषा परिवर्तन गर्नुहोस्",
+  languageSettings: "भाषा सेटिङहरू",
+  interfaceLanguage: "इन्टरफेस भाषा",
+  nativeLanguage: "मातृभाषा",
+  targetLanguage: "लक्ष्य भाषा"
 };
 
 export default languageSelectionTranslations;
