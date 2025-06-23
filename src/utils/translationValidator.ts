@@ -1,4 +1,5 @@
 
+
 import translations from "@/translations";
 import { AVAILABLE_LANGUAGES } from "@/translations/constants";
 
@@ -517,10 +518,10 @@ export function getMissingKeysForCategory(
   const validation = validateLanguageTranslations(languageCode);
   const categoryKeys = TRANSLATION_CATEGORIES[category];
   
-  // Convert the readonly array to a regular array for type compatibility
-  const keysArray = [...categoryKeys];
+  // Create a Set for efficient lookup of category keys
+  const categoryKeySet = new Set(categoryKeys);
   
   return validation.missingKeys.filter(key => 
-    keysArray.includes(key)
+    categoryKeySet.has(key as any)
   );
 }
