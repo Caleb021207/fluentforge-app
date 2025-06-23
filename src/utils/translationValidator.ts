@@ -128,7 +128,9 @@ export const MASTER_TRANSLATION_KEYS = [
   "pleaseLoginToAccessThisFeature",
 
   // Settings
+  "parentalControls",
   "parentalControlsDescription",
+  "safetyPolicy",
 
   // Profile Setup & Components
   "setUpProfile",
@@ -143,6 +145,22 @@ export const MASTER_TRANSLATION_KEYS = [
   "teachingOverview",
   "totalStudents",
   "classAverageScore",
+
+  // Language Selection
+  "languagePreferencesSaved",
+  "learningLanguageFromNative",
+  "pleaseSelectBothLanguages",
+  "youNeedToSelectBoth",
+
+  // Auth Dialog
+  "emailPlaceholder",
+  "passwordPlaceholder",
+  "accessCodePlaceholder",
+  "signInButton",
+  "createAccountButton",
+  "switchToSignUp",
+  "switchToSignIn",
+  "authError",
 
   // AI Analysis
   "aiProgressAnalysis",
@@ -198,11 +216,8 @@ export const MASTER_TRANSLATION_KEYS = [
   "selectYourNativeLanguage",
   "selectLanguageToLearn",
   "saveLanguagePreferences",
-  "languagePreferencesSaved",
   "youreNowLearning",
   "from",
-  "pleaseSelectBothLanguages",
-  "youNeedToSelectBoth",
   "studyMaterialsComingSoon",
   "someFeaturesLimited",
   "selectYourLanguagePreferences",
@@ -210,7 +225,6 @@ export const MASTER_TRANSLATION_KEYS = [
   // Practice
   "practiceYourLanguage",
   "chatWithAI",
-  "startConversationIn",
   "practiceGuide",
   "practiceGuideDescription",
   "practiceGuideItem1",
@@ -218,7 +232,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "practiceGuideItem3",
   "practiceGuideItem4",
   "practiceDisclaimer",
-  "learningLanguageFromNative",
 
   // Voice Chat
   "voiceChatTitle",
@@ -227,7 +240,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "endVoiceChat",
   "listening",
   "recording",
-  "processing",
   "microphonePermissionRequired",
   "microphonePermissionDenied",
 
@@ -271,7 +283,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "takeTestToSeeProgress",
   "completeTestsToSeeProgress",
   "offlineDataMayNotBeUpToDate",
-  "networkConnectionIssue",
   "problemLoadingProgressData",
   "failedToLoadProgressData",
   "viewingDetails",
@@ -307,13 +318,10 @@ export const MASTER_TRANSLATION_KEYS = [
   "signInToAccount",
   "createNewAccount",
   "emailAddress",
-  "password",
   "confirmPassword",
   "firstName",
   "lastName",
   "forgotPassword",
-  "alreadyHaveAccount",
-  "dontHaveAccount",
   "signingIn",
   "creatingAccount",
   "checkEmail",
@@ -356,7 +364,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "deactivate",
   "noClassesCreated",
   "noClassJoined",
-  "teacher",
   "joined",
   "classCode",
   "viewStudents",
@@ -446,8 +453,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "salesContactInfo",
   "safetyPolicyContactInfo",
   "loginRequiredForFeature",
-  "parentalControls",
-  "safetyPolicy",
   "ferpaPrivacy",
   "remaining",
   "signedInAs",

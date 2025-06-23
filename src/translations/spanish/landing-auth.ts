@@ -46,7 +46,10 @@ const landingAuthTranslations: TranslationRecord = {
   myClass: "Mi Clase",
   
   // Settings
+  settings: "Configuración",
+  parentalControls: "Controles Parentales",
   parentalControlsDescription: "Configurar controles parentales y ajustes de seguridad",
+  safetyPolicy: "Política de Seguridad",
   
   // Auth Dialog Navigation
   dontHaveAccount: "¿No tienes una cuenta?",
@@ -77,6 +80,12 @@ const landingAuthTranslations: TranslationRecord = {
   switchToSignUp: "Registrarse",
   switchToSignIn: "Iniciar Sesión",
   authError: "Falló la autenticación. Por favor inténtalo de nuevo.",
+  
+  // Language Selection
+  languagePreferencesSaved: "Preferencias de Idioma Guardadas",
+  learningLanguageFromNative: "Ahora estás aprendiendo {{targetLanguage}} desde {{nativeLanguage}}",
+  pleaseSelectBothLanguages: "Por favor selecciona ambos idiomas",
+  youNeedToSelectBoth: "Necesitas seleccionar tanto el idioma nativo como el objetivo",
   
   // Profile Page
   error: "Error",
