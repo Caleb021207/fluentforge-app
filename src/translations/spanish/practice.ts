@@ -48,7 +48,17 @@ const practiceTranslations: TranslationRecord = {
   // Chat interface translations
   responseSuggestions: "Sugerencias de respuesta",
   clickPlayToHear: "Haz clic en reproducir para escuchar la pronunciación",
-  startConversationToSee: "Inicia una conversación para ver sugerencias"
+  startConversationToSee: "Inicia una conversación para ver sugerencias",
+  
+  // Hint button translations
+  getResponseSuggestions: "Obtener sugerencias de respuesta",
+  greetings: "Saludos",
+  questions: "Preguntas",
+  error: "Error",
+  couldNotGenerateHints: "No se pudieron generar sugerencias",
+  failedToPlayAudio: "Error al reproducir audio",
+  play: "Reproducir",
+  startConversationForSuggestions: "Inicia una conversación para ver sugerencias"
 };
 
 export default practiceTranslations;
