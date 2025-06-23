@@ -1,4 +1,4 @@
-import { TranslationRecord } from "../types";
+import { TranslationRecord } from "../translations/types";
 import { analyzeComponentFile, PRIORITY_COMPONENTS, ComponentAnalysis } from "./textExtractor";
 
 // Master list of ALL translation keys used across the application

@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 import generalCoreTranslations from "./general-core";
 import languageSelectionTranslations from "./language-selection";
@@ -37,16 +38,6 @@ const uiElementsTranslations: TranslationRecord = {
   about: "Acerca de",
   signedInAs: "Conectado como",
   loginRequiredForFeature: "Se requiere iniciar sesión para esta función",
-};
-
-// Basic practice translations for Spanish
-const practiceTranslations: TranslationRecord = {
-  practiceYourLanguage: "Practica tu idioma",
-  chatWithAI: "Chatear con IA",
-  startConversationIn: "Iniciar conversación en {{language}}",
-  practiceGuide: "Guía de Práctica",
-  practiceGuideDescription: "Cómo usar efectivamente la práctica de idiomas",
-  learningLanguageFromNative: "Aprendiendo {{targetLanguage}} desde {{nativeLanguage}}",
 };
 
 // Basic languages translations for Spanish
