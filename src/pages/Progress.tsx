@@ -1,212 +1,161 @@
 
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
-import LoadingProgress from "@/components/progress/LoadingProgress";
-import UnauthenticatedProgress from "@/components/progress/UnauthenticatedProgress";
-import AuthenticatedProgress from "@/components/progress/AuthenticatedProgress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useConnectionStatus } from "@/hooks/useConnectionStatus";
-import { ConnectionStatusIndicator } from "@/components/ui/ConnectionStatusIndicator";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Upload, FileText, BarChart3, TrendingUp } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { getUserProfile, clearUserCache } from "@/utils/profileUtils";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 
-const ProgressPage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
-  const [authError, setAuthError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [lastFetchTime, setLastFetchTime] = useState<number>(0);
-  const { toast } = useToast();
-  const { isOffline, isReconnecting, setReconnecting, setOnline } = useConnectionStatus();
+const Progress = () => {
+  const { isLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
-  
-  // Rate limit fetching to avoid hammering the API
-  const FETCH_INTERVAL = 5000; // 5 seconds
-  
-  const getCurrentUser = useCallback(async (force = false) => {
-    try {
-      // Rate limit checks to avoid excessive API calls
-      const now = Date.now();
-      if (!force && now - lastFetchTime < FETCH_INTERVAL) {
-        return;
-      }
-      
-      setLastFetchTime(now);
-      
-      // If we're offline, don't try to fetch the user
-      if (isOffline) {
-        setErrorMessage(t("offlineDataMayNotBeUpToDate"));
-        setIsLoading(false);
-        return;
-      }
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-      const { data: { user }, error } = await supabase.auth.getUser();
-      
-      if (error) {
-        console.error('Auth error:', error);
-        
-        // Check if this is a network error
-        if (error.message.includes("Failed to fetch")) {
-          setReconnecting(); // Set status to reconnecting
-          setErrorMessage(t("networkConnectionIssue"));
-        } else {
-          setAuthError(true);
-          setErrorMessage(t("authRequired"));
-          toast({
-            title: t("error"),
-            description: t("authRequired"),
-            variant: "destructive"
-          });
-        }
-      } else {
-        setUser(user);
-        setErrorMessage(null);
-        setOnline(); // We successfully made a network request, so we're online
-        
-        // If we have a user, prefetch profile data for better performance
-        if (user) {
-          try {
-            await getUserProfile(user.id);
-          } catch (error) {
-            console.error('Error prefetching profile:', error);
-            // Non-blocking error, don't need to show to user
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error getting user:', error);
-      
-      // Check if this is a network error
-      if (error instanceof Error && error.message.includes("Failed to fetch")) {
-        setReconnecting(); // Set status to reconnecting
-        setErrorMessage(t("networkConnectionIssue"));
-      } else {
-        setAuthError(true);
-        setErrorMessage(t("failedToLoadProgressData"));
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isOffline, lastFetchTime, setReconnecting, setOnline, t, toast]);
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+    </div>;
+  }
 
-  useEffect(() => {
-    // Initial data fetch
-    getCurrentUser(true);
-    
-    // Handle reconnection attempts if we're offline or if we're trying to reconnect
-    let intervalId: number | null = null;
-    
-    // When network conditions change, immediately try to fetch data
-    if (!isOffline && isReconnecting) {
-      // Clear the cache on network change to ensure fresh data
-      if (user) {
-        clearUserCache(user.id);
-      }
-      getCurrentUser(true);
-    }
-    
-    // Set up polling interval for reconnection attempts
-    if (isReconnecting || (isOffline === false && !user && !authError)) {
-      intervalId = window.setInterval(() => {
-        getCurrentUser();
-      }, FETCH_INTERVAL);
-    }
-    
-    return () => {
-      if (intervalId !== null) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [isOffline, isReconnecting, user, authError, getCurrentUser]);
+  if (!isAuthenticated) {
+    return <AuthRequiredPrompt />;
+  }
 
-  // Handle refresh request from the user
-  const handleRefresh = () => {
-    if (user) {
-      // Clear cache for current user
-      clearUserCache(user.id);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
     }
-    
-    // Force a refresh of user data
-    setIsLoading(true);
-    getCurrentUser(true);
-    
-    toast({
-      title: t("refreshing"),
-      description: t("refreshingProgressData"),
-    });
   };
 
-  // Show loading state
-  if (isLoading) {
-    return <LoadingProgress />;
-  }
-
-  // Show the connection status indicator if we're offline or reconnecting
-  const showConnectionStatus = isOffline || isReconnecting;
-
-  // Show error message if any
-  if (errorMessage) {
-    return (
-      <div className="space-y-4">
-        {showConnectionStatus && (
-          <div className="flex justify-between mb-4 items-center">
-            <button
-              onClick={handleRefresh}
-              className="text-sm text-lingua-primary hover:underline"
-              disabled={isOffline}
-            >
-              {t("refresh")}
-            </button>
-            <ConnectionStatusIndicator />
-          </div>
-        )}
-        
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{errorMessage}</AlertDescription>
-        </Alert>
-        
-        <UnauthenticatedProgress />
-      </div>
-    );
-  }
-
-  // If user is not authenticated or there was an auth error
-  if (!user || authError) {
-    return (
-      <div className="space-y-4">
-        {showConnectionStatus && (
-          <div className="flex justify-end mb-4">
-            <ConnectionStatusIndicator />
-          </div>
-        )}
-        
-        <UnauthenticatedProgress />
-      </div>
-    );
-  }
-
-  // User is authenticated and no errors
   return (
-    <div className="space-y-4">
-      {showConnectionStatus && (
-        <div className="flex justify-between mb-4 items-center">
-          <button
-            onClick={handleRefresh}
-            className="text-sm text-lingua-primary hover:underline"
-          >
-            {t("refresh")}
-          </button>
-          <ConnectionStatusIndicator />
-        </div>
-      )}
-      
-      <AuthenticatedProgress user={user} />
+    <div className="max-w-6xl mx-auto p-4">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold mb-2">{t("aiProgressAnalysis")}</h1>
+        <p className="text-muted-foreground">
+          {t("uploadLanguageTestTranscripts")}
+        </p>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3 mb-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">{t("totalAnalyses")}</p>
+                <p className="text-2xl font-bold">3</p>
+              </div>
+              <BarChart3 className="h-8 w-8 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">{t("currentLevel")}</p>
+                <p className="text-2xl font-bold">B2</p>
+              </div>
+              <TrendingUp className="h-8 w-8 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">{t("latestScore")}</p>
+                <p className="text-2xl font-bold">57%</p>
+              </div>
+              <FileText className="h-8 w-8 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("uploadTestTranscript")}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {t("uploadLanguageTestScoreReport")}
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
+              <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground mb-2">
+                {selectedFile ? selectedFile.name : t("noFileChosen")}
+              </p>
+              <p className="text-sm text-muted-foreground mb-4">
+                {t("dragDropOrClickToUpload")}
+              </p>
+              <p className="text-xs text-muted-foreground mb-4">
+                {t("supportsFileFormats")}
+              </p>
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.webp,.pdf"
+                onChange={handleFileSelect}
+                className="hidden"
+                id="file-upload"
+              />
+              <Button asChild>
+                <label htmlFor="file-upload" className="cursor-pointer">
+                  {t("selectFile")}
+                </label>
+              </Button>
+            </div>
+            
+            <Button className="w-full" disabled={!selectedFile}>
+              {t("uploadAndAnalyze")}
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("whatOurAiCanAnalyze")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm">
+              <li>{t("overallScoresAndCefrLevels")}</li>
+              <li>{t("individualSkillBreakdowns")}</li>
+              <li>{t("strengthsAndAreasForImprovement")}</li>
+              <li>{t("progressTrackingOverTime")}</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("analysisResults")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-center text-muted-foreground py-8">
+              No analysis results yet. Upload a test transcript to get started.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("progressTimeline")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-center text-muted-foreground py-8">
+              Progress timeline will appear here after analysis.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
 
-export default ProgressPage;
+export default Progress;

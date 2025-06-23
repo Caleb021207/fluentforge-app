@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
@@ -117,7 +116,7 @@ const Practice = () => {
               onCheckedChange={toggleGrammarCorrection}
             />
             <Label htmlFor="grammar-correction" className="text-sm">
-              {t("correctGrammar") || "Correct my grammar"}
+              {t("correctGrammar")}
             </Label>
           </div>
         </div>

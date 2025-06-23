@@ -78,10 +78,10 @@ export default function ChatContainer({
         
         <div className="border-t p-4">
           <ChatInput
-            isLoading={isLoading}
             value={input}
             onChange={setInput}
             onSubmit={handleSubmit}
+            isLoading={isLoading}
             placeholder={getPlaceholderText()}
             messages={messages}
             targetLanguage={targetLanguage}

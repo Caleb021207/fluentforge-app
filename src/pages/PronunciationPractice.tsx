@@ -1,40 +1,93 @@
 
-import React, { useState } from "react";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { Card } from "@/components/ui/card";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocalization } from "@/context/LocalizationContext";
-import PronunciationPracticeContainer from "@/components/pronunciation/PronunciationPracticeContainer";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 
 const PronunciationPractice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
+  const [selectedLevel, setSelectedLevel] = useState<string>("");
+  const [speechRate, setSpeechRate] = useState(1.5);
 
   if (isLoading) {
-    return (
-      <div className="container max-w-5xl mx-auto p-4 md:p-6">
-        <div className="flex justify-center items-center min-h-[50vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+    </div>;
   }
 
   if (!isAuthenticated) {
-    return (
-      <div className="container max-w-5xl mx-auto p-4 md:p-6">
-        <Card className="p-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">{t("authRequired")}</h1>
-            <p>{t("pleaseLoginToAccessThisFeature")}</p>
-          </div>
-        </Card>
-      </div>
-    );
+    return <AuthRequiredPrompt />;
   }
 
   return (
-    <div className="container max-w-5xl mx-auto p-4 md:p-6">
-      <PronunciationPracticeContainer />
+    <div className="max-w-4xl mx-auto p-4">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold mb-2">{t("pronunciationPractice")}</h1>
+        <p className="text-muted-foreground">
+          {t("improvePronunciationSkillsWith")} English
+        </p>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("selectComplexityLevel")}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {t("chooseADifficultyLevel")}
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+              <SelectTrigger>
+                <SelectValue placeholder={t("selectComplexityLevel")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="beginner">{t("beginner")}</SelectItem>
+                <SelectItem value="intermediate">{t("intermediate")}</SelectItem>
+                <SelectItem value="advanced">{t("advanced")}</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">speechRate: {speechRate}x</label>
+              <input
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value={speechRate}
+                onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+                className="w-full"
+              />
+            </div>
+
+            {!selectedLevel && (
+              <p className="text-center text-muted-foreground py-8">
+                {t("selectALevelToStartPracticing")}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("pronunciationPracticeTips")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm">
+              <li>• Listen carefully to the audio before attempting to speak</li>
+              <li>• Pay attention to stress patterns and intonation</li>
+              <li>• Practice difficult sounds multiple times</li>
+              <li>• Record yourself and compare with native speakers</li>
+              <li>• Be patient - pronunciation improvement takes time</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
