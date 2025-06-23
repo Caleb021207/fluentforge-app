@@ -28,7 +28,8 @@ const navigationTranslations: TranslationRecord = {
   privacyPolicy: "سياسة الخصوصية",
   cookiePolicy: "سياسة ملفات تعريف الارتباط",
   accessibilityStatement: "بيان إمكانية الوصول",
-  pronunciationPractice: "ممارسة النطق"
+  pronunciationPractice: "ممارسة النطق",
+  aiAnalysis: "تحليل الذكاء الاصطناعي"
 };
 
 export default navigationTranslations;

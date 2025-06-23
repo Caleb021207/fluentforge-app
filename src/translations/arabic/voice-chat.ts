@@ -17,6 +17,8 @@ const voiceChatTranslations: TranslationRecord = {
   speakNow: "تحدث الآن",
   listeningForResponse: "يستمع للاستجابة...",
   voiceInputDisabled: "إدخال الصوت معطل",
+  startSpeaking: "بدء التحدث",
+  stopListening: "إيقاف الاستماع",
   
   // Practice descriptions and AI info
   practiceDescription: "حسن مهارات التحدث والاستماع من خلال إجراء محادثات في الوقت الفعلي مع الذكاء الاصطناعي.",
