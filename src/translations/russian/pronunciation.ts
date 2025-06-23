@@ -13,7 +13,14 @@ const pronunciationTranslations: TranslationRecord = {
   payAttentionToStressTip: "Обращайте внимание на ударения и интонацию",
   practiceDifficultSoundsTip: "Практикуйте сложные звуки несколько раз",
   recordYourselfTip: "Записывайте себя и сравнивайте с носителями языка",
-  bePatientTip: "Будьте терпеливы - улучшение произношения требует времени"
+  bePatientTip: "Будьте терпеливы - улучшение произношения требует времени",
+  
+  // New missing translations
+  yourPronunciation: "Ваше произношение",
+  startRecording: "Начать запись",
+  clickStartToRecord: "Нажмите «Начать», чтобы записать",
+  tryAgain: "Попробуйте снова",
+  newPhrase: "Новая фраза"
 };
 
 export default pronunciationTranslations;
