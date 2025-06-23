@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import thaiCoreTranslations from "./core";
 
-// Basic Thai translations - needs full core implementation
+// Use only the clean core translations for Thai
 const thaiTranslations: TranslationRecord = {
-  "home": "หน้าแรก",
-  "practice": "ฝึกฝน",
-  "loading": "กำลังโหลด...",
-  "error": "ข้อผิดพลาด",
-  "send": "ส่ง",
-  "continue": "ดำเนินการต่อ"
+  ...thaiCoreTranslations
 };
 
 export default thaiTranslations;

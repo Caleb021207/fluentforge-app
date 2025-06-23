@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import oromoCoreTranslations from "./core";
 
-// Basic Oromo translations - needs full core implementation
+// Use only the clean core translations for Oromo
 const oromoTranslations: TranslationRecord = {
-  "home": "Mana",
-  "practice": "Shaakala",
-  "loading": "Fe'aa jira...",
-  "error": "Dogoggora",
-  "send": "Ergii",
-  "continue": "Itti fufi"
+  ...oromoCoreTranslations
 };
 
 export default oromoTranslations;

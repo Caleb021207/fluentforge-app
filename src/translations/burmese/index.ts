@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import burmeseCoreTranslations from "./core";
 
-// Basic Burmese translations - needs full core implementation
+// Use only the clean core translations for Burmese
 const burmeseTranslations: TranslationRecord = {
-  "home": "အိမ်",
-  "practice": "လေ့ကျင့်ခန်း",
-  "loading": "ရနေသည်...",
-  "error": "အမှား",
-  "send": "ပို့",
-  "continue": "ဆက်လက်"
+  ...burmeseCoreTranslations
 };
 
 export default burmeseTranslations;

@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import amharicCoreTranslations from "./core";
 
-// Basic Amharic translations - needs full core implementation
+// Use only the clean core translations for Amharic
 const amharicTranslations: TranslationRecord = {
-  "home": "ቤት",
-  "practice": "ልምምድ",
-  "loading": "በመጫን ላይ...",
-  "error": "ስህተት",
-  "send": "ላክ",
-  "continue": "ቀጥል"
+  ...amharicCoreTranslations
 };
 
 export default amharicTranslations;

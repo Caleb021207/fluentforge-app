@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import nepaliCoreTranslations from "./core";
 
-// Basic Nepali translations - needs full core implementation
+// Use only the clean core translations for Nepali
 const nepaliTranslations: TranslationRecord = {
-  "home": "घर",
-  "practice": "अभ्यास",
-  "loading": "लोड हुँदै...",
-  "error": "त्रुटि",
-  "send": "पठाउनुहोस्",
-  "continue": "जारी राख्नुहोस्"
+  ...nepaliCoreTranslations
 };
 
 export default nepaliTranslations;

@@ -40,7 +40,7 @@ import cantoneseTranslations from "./cantonese";
 import tigrinyaTranslations from "./tigrinya";
 import oromoTranslations from "./oromo";
 
-// Main translations object containing all 37 languages
+// Main translations object containing all 37 languages with consistent core translations
 const translations: LanguageTranslations = {
   english: englishTranslations,
   spanish: spanishTranslations,

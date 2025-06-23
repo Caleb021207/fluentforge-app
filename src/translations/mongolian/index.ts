@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import mongolianCoreTranslations from "./core";
 
-// Basic Mongolian translations - needs full core implementation
+// Use only the clean core translations for Mongolian
 const mongolianTranslations: TranslationRecord = {
-  "home": "Гэр",
-  "practice": "Дадлага",
-  "loading": "Ачаалж байна...",
-  "error": "Алдаа",
-  "send": "Илгээх",
-  "continue": "Үргэлжлүүлэх"
+  ...mongolianCoreTranslations
 };
 
 export default mongolianTranslations;

@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import urduCoreTranslations from "./core";
 
-// Basic Urdu translations - needs full core implementation
+// Use only the clean core translations for Urdu
 const urduTranslations: TranslationRecord = {
-  "home": "گھر",
-  "practice": "مشق",
-  "loading": "لوڈ ہو رہا ہے...",
-  "error": "خرابی",
-  "send": "بھیجیں",
-  "continue": "جاری رکھیں"
+  ...urduCoreTranslations
 };
 
 export default urduTranslations;

@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import hebrewCoreTranslations from "./core";
 
-// Basic Hebrew translations - needs full core implementation
+// Use only the clean core translations for Hebrew
 const hebrewTranslations: TranslationRecord = {
-  "home": "בית",
-  "practice": "תרגול",
-  "loading": "טוען...",
-  "error": "שגיאה",
-  "send": "שלח",
-  "continue": "המשך"
+  ...hebrewCoreTranslations
 };
 
 export default hebrewTranslations;

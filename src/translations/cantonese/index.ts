@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import cantoneseCoreTranslations from "./core";
 
-// Basic Cantonese translations - needs full core implementation  
+// Use only the clean core translations for Cantonese
 const cantoneseTranslations: TranslationRecord = {
-  "home": "主頁",
-  "practice": "練習",
-  "loading": "載入中...",
-  "error": "錯誤",
-  "send": "傳送",
-  "continue": "繼續"
+  ...cantoneseCoreTranslations
 };
 
 export default cantoneseTranslations;

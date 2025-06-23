@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import tigrinyaCoreTranslations from "./core";
 
-// Basic Tigrinya translations - needs full core implementation
+// Use only the clean core translations for Tigrinya
 const tigrinyaTranslations: TranslationRecord = {
-  "home": "ቤት",
-  "practice": "ልምምድ",
-  "loading": "ተጻሒፍዎ ኣሎ...",
-  "error": "ጌጋ",
-  "send": "ላእክ",
-  "continue": "ቀጽል"
+  ...tigrinyaCoreTranslations
 };
 
 export default tigrinyaTranslations;

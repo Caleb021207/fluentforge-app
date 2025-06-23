@@ -1,14 +1,10 @@
 
 import { TranslationRecord } from "../types";
+import somaliCoreTranslations from "./core";
 
-// Basic Somali translations - needs full core implementation
+// Use only the clean core translations for Somali
 const somaliTranslations: TranslationRecord = {
-  "home": "Guriga",
-  "practice": "Tababar",
-  "loading": "Ku rartaa...",
-  "error": "Khalad",
-  "send": "Dir",
-  "continue": "Sii wad"
+  ...somaliCoreTranslations
 };
 
 export default somaliTranslations;
