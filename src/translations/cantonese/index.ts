@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 import authTranslations from "./auth";
 import generalTranslations from "./general";
@@ -18,6 +17,7 @@ import ferpaTranslations from "./ferpa";
 import safetyTranslations from "./safety";
 import uiElementsTranslations from "./ui-elements";
 import navigationTranslations from "./navigation";
+import landingAuthTranslations from "./landing-auth";
 
 const translations: TranslationRecord = {
   ...authTranslations,
@@ -37,7 +37,8 @@ const translations: TranslationRecord = {
   ...ferpaTranslations,
   ...safetyTranslations,
   ...uiElementsTranslations,
-  ...navigationTranslations
+  ...navigationTranslations,
+  ...landingAuthTranslations
 };
 
 export default translations;
