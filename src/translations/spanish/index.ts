@@ -1,6 +1,7 @@
 
 import { TranslationRecord } from "../types";
 import spanishCoreTranslations from "./core";
+import spanishPracticeTranslations from "./practice";
 
 // Create voice chat translations for Spanish
 const spanishVoiceChatTranslations: TranslationRecord = {
@@ -46,9 +47,10 @@ const spanishVoiceChatTranslations: TranslationRecord = {
   "stopListening": "Dejar de escuchar"
 };
 
-// Complete Spanish translations with voice chat integration
+// Complete Spanish translations with practice and voice chat integration
 const spanishTranslations: TranslationRecord = {
   ...spanishCoreTranslations,
+  ...spanishPracticeTranslations,
   ...spanishVoiceChatTranslations
 };
 
