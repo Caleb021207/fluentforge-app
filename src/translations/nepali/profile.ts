@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const profileTranslations: TranslationRecord = {
@@ -13,7 +14,7 @@ const profileTranslations: TranslationRecord = {
   removePhoto: "फोटो हटाउनुहोस्",
   firstName: "पहिलो नाम",
   lastName: "थर",
-  displayName: "प्रदर्शन नाम",
+  displayName: "देखाउने नाम",
   bio: "परिचय",
   phone: "फोन",
   birthday: "जन्मदिन",
@@ -36,59 +37,6 @@ const profileTranslations: TranslationRecord = {
   passwordChanged: "पासवर्ड परिवर्तन गरियो",
   passwordMismatch: "पासवर्डहरू मिलेनन्",
   incorrectPassword: "गलत पासवर्ड",
-
-  // Language learning specific (keeping these English as per requirement)
-  languageLearningDashboard: "Language Learning Dashboard",
-  learningProgress: "Learning Progress",
-  lessonProgress: "Lesson Progress",
-  certificationStatus: "Certification Status",
-  completed: "Completed",
-  notTaken: "Not taken",
-  tipsToReachGoal: "Tips to reach your goal faster:",
-  practiceConsistently: "Practice consistently every day",
-  completeAllCertifications: "Complete all certification attempts",
-  focusOnWeakAreas: "Focus on areas where you score lowest",
-  useAIConversation: "Use AI conversation practice regularly",
-  cefrLevelRoadmap: "CEFR Level Roadmap",
-  cefrToActflConversion: "CEFR to ACTFL Conversion",
-  progressToGoal: "Progress to Goal",
-  yourTestScores: "Your Test Scores",
-  authRequired: "Authentication Required",
-  pleaseSignInDashboard: "Please sign in to view your dashboard and track your language learning progress.",
-  targetingLevel: "Targeting CEFR Level:",
-  estimatedAchievement: "Estimated achievement in",
-  weeks: "weeks",
-  around: "around",
-  learningPace: "Your current learning pace:",
-  pointsPerWeek: "points per week",
-  complete: "Complete",
-  lastActivity: "Last activity:",
-  daysStreak: "day streak! Keep it up!",
-  noTargetDate: "No target date set",
-  maximumLevelAchieved: "Maximum level achieved",
-  targetDatePassed: "Target date has passed",
-  todayIsTargetDate: "Today is the target date",
-  daysRemaining: "days remaining",
-  congratulations: "Congratulations!",
-  reachedHighestLevel: "You've reached C2, the highest proficiency level. Keep practicing to maintain your skills!",
-  current: "Current",
-  target: "Target",
-  addCertificationScore: "Add Certification Score",
-  certificationScoreAdded: "Certification score added successfully",
-  invalidScore: "Invalid Score",
-  scoreMustBeNumber: "Score must be a number between 0 and 100",
-  selectCertificationType: "Select certification type",
-  selectLevel: "Select level",
-  addingScore: "Adding Score...",
-  addScore: "Add Score",
-  strengths: "Strengths",
-  areasForImprovement: "Areas for Improvement",
-  recommendations: "Recommendations",
-
-  // Keep profile picture related in UI translations
-  profilePicture: "प्रोफाइल तस्बिर",
-  enterYourDisplayName: "आफ्नो प्रदर्शन नाम प्रविष्ट गर्नुहोस्",
-  saving: "सेभ गर्दै..."
 };
 
 export default profileTranslations;

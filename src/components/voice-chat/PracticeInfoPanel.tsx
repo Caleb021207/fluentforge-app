@@ -1,20 +1,28 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getLanguagePair } from "@/utils/languageUtils";
+import { PracticeInfoPanelProps } from "@/types/voiceChat";
 
-const PracticeInfoPanel = () => {
-  const { t } = useLocalization();
+const PracticeInfoPanel: React.FC<PracticeInfoPanelProps> = () => {
+  const { t, currentLanguage } = useLocalization();
+  const { native, practice } = getLanguagePair(currentLanguage);
 
   return (
-    <div className="space-y-2">
-      <h2 className="text-lg font-semibold">{t("voiceChat")}</h2>
-      <p className="text-sm text-muted-foreground max-w-md">
-        Practice speaking and listening by having real-time conversations with AI. 
-        Improve your pronunciation and comprehension skills naturally.
+    <div>
+      <p className="text-sm text-muted-foreground">
+        <span className="font-medium">
+          {t("practiceLevel")}
+        </span> - 
+        {t("cefrB1Description")}
       </p>
-      <p className="text-xs text-muted-foreground max-w-md">
-        We use OpenAI's GPT-4o-mini for natural language understanding and generation, 
-        and your browser's built-in speech synthesis for voice responses.
+      <p className="text-sm mt-1">
+        <span className="font-medium">
+          {t("currentLanguage")}: {native}
+        </span> | 
+        <span className="font-medium ml-2">
+          {t("practiceLanguage")}: {practice}
+        </span>
       </p>
     </div>
   );

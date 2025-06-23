@@ -1,48 +1,45 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
+import { ConversationStartersProps } from "@/types/voiceChat";
 
-interface ConversationStartersProps {
-  onPhraseClick?: (phrase: string) => void;
-}
-
-const ConversationStarters = ({ onPhraseClick }: ConversationStartersProps) => {
-  const { t } = useLocalization();
-
-  const phrases = [
-    "Hello, how are you today?",
-    "What's the weather like where you are?", 
-    "Can you recommend a good restaurant?",
-    "What are your hobbies and interests?",
-    "Tell me about your favorite book or movie.",
-    "What did you do last weekend?",
-    "What are your plans for tomorrow?",
-    "How do you say... in Spanish/English?"
+const ConversationStarters: React.FC<ConversationStartersProps> = ({ 
+  onPhraseClick,
+  phrases
+}) => {
+  const { t, currentLanguage } = useLocalization();
+  
+  // Get default phrases if none provided
+  const defaultPhrases = phrases || [
+    t("phrase1"),
+    t("phrase2"),
+    t("phrase3"),
+    t("phrase4"),
+    t("phrase5"),
+    t("phrase6"),
+    t("phrase7"),
+    t("phrase8")
   ];
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MessageCircle className="h-5 w-5" />
-          {t("conversationStarters")}
-        </CardTitle>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg">{t("conversationStarters")}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          Try these phrases to start a conversation:
+          {t("tryThesePhrases")}
         </p>
         <div className="space-y-2">
-          {phrases.map((phrase, index) => (
+          {defaultPhrases.map((phrase, index) => (
             <Button
               key={index}
               variant="outline"
               size="sm"
-              className="w-full text-left justify-start h-auto py-2 px-3 text-wrap"
-              onClick={() => onPhraseClick?.(phrase)}
+              className="w-full justify-start text-left h-auto py-2 font-normal"
+              onClick={() => onPhraseClick(phrase)}
             >
               {phrase}
             </Button>

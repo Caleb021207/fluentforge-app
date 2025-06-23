@@ -117,7 +117,7 @@ const Practice = () => {
               onCheckedChange={toggleGrammarCorrection}
             />
             <Label htmlFor="grammar-correction" className="text-sm">
-              {t("correctGrammar")}
+              {t("correctGrammar") || "Correct my grammar"}
             </Label>
           </div>
         </div>
