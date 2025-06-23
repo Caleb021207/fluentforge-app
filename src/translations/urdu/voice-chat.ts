@@ -56,7 +56,7 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "اپنے آس پاس جو کچھ دیکھتے ہیں اس کا بیان کریں",
   practiceVocabularyForSpecific: "مخصوص موضوعات جیسے سفر یا کھانے کے لیے الفاظ کی مشق کریں",
   
-  // Indonesian conversation starter phrases
+  // Conversation starter phrases
   phrase1: "آداب، آج آپ کیسے ہیں؟",
   phrase2: "آپ کے علاقے میں موسم کیسا ہے؟",
   phrase3: "کیا آپ کوئی اچھا ریستوراں تجویز کر سکتے ہیں؟",
@@ -65,6 +65,27 @@ const voiceChatTranslations: TranslationRecord = {
   phrase6: "پچھلے ہفتے آپ نے کیا کیا؟",
   phrase7: "کل کے لیے آپ کے کیا منصوبے ہیں؟",
   phrase8: "... کو ہسپانوی/انگریزی میں کیا کہتے ہیں؟",
+  
+  // Missing conversation starter translations
+  "Hello, how are you today?": "آداب، آج آپ کیسے ہیں؟",
+  "What's the weather like where you are?": "آپ کے علاقے میں موسم کیسا ہے؟",
+  "Can you recommend a good restaurant?": "کیا آپ کوئی اچھا ریستوراں تجویز کر سکتے ہیں؟",
+  "What are your hobbies and interests?": "آپ کے مشغلے اور دلچسپیاں کیا ہیں؟",
+  "Tell me about your favorite book or movie.": "اپنی پسندیدہ کتاب یا فلم کے بارے میں بتائیں۔",
+  "What did you do last weekend?": "پچھلے ہفتے آپ نے کیا کیا؟",
+  "What are your plans for tomorrow?": "کل کے لیے آپ کے کیا منصوبے ہیں؟",
+  "How do you say... in Spanish/English?": "... کو ہسپانوی/انگریزی میں کیا کہتے ہیں؟",
+  
+  // Tips translations
+  "Ask questions about everyday topics": "روزمرہ کے موضوعات کے بارے میں سوالات پوچھیں",
+  "Practice common phrases and expressions": "عام جملے اور اظہارات کی مشق کریں",
+  "Describe what you see around you": "اپنے آس پاس جو کچھ دیکھتے ہیں اس کا بیان کریں",
+  "Practice vocabulary for specific topics like travel or food": "مخصوص موضوعات جیسے سفر یا کھانے کے لیے الفاظ کی مشق کریں",
+  
+  // Additional missing keys
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "اپنے بولنے اور سننے کے کوشل کو بہتر بنانے کے لیے اس ٹول کا استعمال کریں۔ یہاں کچھ ٹپس ہیں:",
+  "Click play to hear pronunciation": "تلفظ سننے کے لیے پلے کلیک کریں",
+  "Start a conversation to see suggestions": "تجاویز دیکھنے کے لیے بات چیت شروع کریں",
   
   // Page specific translations
   freePracticeWithVoice: "مفت آواز کے ساتھ مشق",

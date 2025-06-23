@@ -22,6 +22,13 @@ const practiceTranslations: TranslationRecord = {
   clearConversation: "خبرې پاکې کړئ",
   correctGrammar: "سمه ګرامر",
   
+  // Missing translations for practice guide items in English
+  tryToFormCompleteSentences: "د بشپړو جملو جوړولو هڅه وکړئ، حتی که ساده وي.",
+  dontWorryAboutMistakes: "د تېروتنو په اړه اندېښنه مه کوئ — دا د زده کړې برخه ده!",
+  askForExplanations: "که چېرې داسې څه وي چې نه پوهېږئ نو د تشرېح غوښتنه وکړئ.",
+  useWordsYouveLearnedRecently: "هغه کلمې وکاروئ چې دمخه مو زده کړي دي.",
+  aiWillAdaptToYourLevel: "زموږ AI ستاسو د مهارت کچې سره سم کیږي او ورو ورو ستاسو د ښه کېدو سره مرسته کوي.",
+  
   // Response suggestions
   responseSuggestions: "د ځواب وړاندیزونه",
   clickPlayToHear: "د اورېدو لپاره پلے کلیک کړئ",
@@ -32,11 +39,8 @@ const practiceTranslations: TranslationRecord = {
   pleaseTypeMessage: "مهرباني وکړئ پیغام ولیکئ",
   
   // General practice content
-  tryToFormCompleteSentences: "د بشپړو جملو جوړولو هڅه وکړئ، حتی که ساده وي.",
-  dontWorryAboutMistakes: "د تېروتنو په اړه اندېښنه مه کوئ — دا د زده کړې برخه ده!",
-  askForExplanations: "که چېرې داسې څه وي چې نه پوهېږئ نو د تشرېح غوښتنه وکړئ.",
-  useWordsYouveLearnedRecently: "هغه کلمې وکاروئ چې دمخه مو زده کړي دي.",
-  aiWillAdaptToYourLevel: "زموږ AI ستاسو د مهارت کچې سره سم کیږي او ورو ورو ستاسو د ښه کېدو سره مرسته کوي."
+  aiIsTyping: "AI ټایپ کوي...",
+  startChatting: "د خپل AI ژبې استاد سره خبرې پیل کړئ!"
 };
 
 export default practiceTranslations;

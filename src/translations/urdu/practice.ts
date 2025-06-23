@@ -29,6 +29,13 @@ const practiceTranslations: TranslationRecord = {
   typeMessageBelow: "شروع کرنے کے لیے نیچے پیغام لکھیں",
   chatPlaceholder: "انگریزی کی مشق کرنے کے لیے اپنا پیغام لکھیں...",
   
+  // Missing translations for practice guide items in English
+  "Try to form complete sentences, even if they're simple.": "مکمل جملے بنانے کی کوشش کریں، چاہے وہ سادہ ہوں۔",
+  "Don't worry about mistakes — they're part of learning!": "غلطیوں کی فکر نہ کریں - وہ سیکھنے کا حصہ ہیں!",
+  "Ask for explanations if there's something you don't understand.": "اگر آپ کو کچھ سمجھ نہیں آتا تو وضاحت طلب کریں۔",
+  "Use words you've learned recently.": "حال ہی میں سیکھے گئے الفاظ کا استعمال کریں۔",
+  "Our AI will adapt to your skill level and gradually help you improve.": "ہماری اے آئی آپ کی مہارت کی سطح کے مطابق ہوگی اور آپ کو آہستہ آہستہ بہتر بنانے میں مدد کرے گی۔",
+  
   // Sample conversation phrases
   phrase1: "آداب، آج آپ کیسے ہیں؟",
   phrase2: "آپ کے علاقے میں موسم کیسا ہے؟",
@@ -43,7 +50,24 @@ const practiceTranslations: TranslationRecord = {
   
   // Add missing practice-related translations
   send: "بھیجیں",
-  practicePrompt: "السلام علیکم! میں انگریزی کی مشق کرنا چاہتا/چاہتی ہوں۔ کیا آپ میری انگریزی گرامر، لفظ اور استعمال میں بہتری لانے میں میری مدد کر سکتے ہیں؟"
+  practicePrompt: "السلام علیکم! میں انگریزی کی مشق کرنا چاہتا/چاہتی ہوں۔ کیا آپ میری انگریزی گرامر، لفظ اور استعمال میں بہتری لانے میں میری مدد کر سکتے ہیں؟",
+  
+  // Chat interface
+  textPractice: "متنی مشق",
+  startTextChatting: "متنی چیٹ شروع کریں",
+  typeMessageToStart: "شروع کرنے کے لیے نیچے پیغام لکھیں",
+  typeMessageToPractice: "{{language}} کی مشق کے لیے اپنا پیغام لکھیں...",
+  clearConversation: "بات چیت صاف کریں",
+  correctGrammar: "گرامر درست کریں",
+  
+  // Response suggestions
+  responseSuggestions: "جواب کی تجاویز",
+  clickPlayToHear: "سننے کے لیے پلے کلیک کریں",
+  startConversationToSee: "تجاویز دیکھنے کے لیے بات چیت شروع کریں",
+  
+  // Error messages
+  messageCouldNotBeSent: "پیغام نہیں بھیجا جا سکا",
+  pleaseTypeMessage: "برائے کرم پیغام ٹائپ کریں"
 };
 
 export default practiceTranslations;

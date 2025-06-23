@@ -37,7 +37,28 @@ const voiceChatTranslations: TranslationRecord = {
   tellMeAboutYourFavoriteBookOrMovie: "ماته خپل د خوښې کتاب یا فلم په اړه ووایاست.",
   whatDidYouDoLastWeek: "تېره اونۍ مو څه وکړل؟",
   whatAreYourPlansForTomorrow: "د سبا لپاره مو څه پلانونه دي؟",
-  howDoYouSayInSpanishEnglish: "... په هسپانوي/انګلیسي کې څنګه وایي؟"
+  howDoYouSayInSpanishEnglish: "... په هسپانوي/انګلیسي کې څنګه وایي؟",
+  
+  // Missing conversation starter translations
+  "Hello, how are you today?": "سلام، نن څنګه یاست؟",
+  "What's the weather like where you are?": "ستاسو په سیمه کې هوا څنګه ده؟",
+  "Can you recommend a good restaurant?": "آیا تاسو یو ښه رستوران وړاندیز کولی شئ؟",
+  "What are your hobbies and interests?": "ستاسو شوقونه او علایق څه دي؟",
+  "Tell me about your favorite book or movie.": "ماته خپل د خوښې کتاب یا فلم په اړه ووایاست.",
+  "What did you do last weekend?": "تېره اونۍ مو څه وکړل؟",
+  "What are your plans for tomorrow?": "د سبا لپاره مو څه پلانونه دي؟",
+  "How do you say... in Spanish/English?": "... په هسپانوي/انګلیسي کې څنګه وایي؟",
+  
+  // Tips translations
+  "Ask questions about everyday topics": "د ورځني ژوند موضوعاتو په اړه پوښتنې وکړئ",
+  "Practice common phrases and expressions": "عام جملې او بیانات تمرین وکړئ",
+  "Describe what you see around you": "هغه څه چې ستاسو شاوخوا یې ګورئ بیان یې کړئ",
+  "Practice vocabulary for specific topics like travel or food": "د ځانګړو موضوعاتو لکه سفر یا خواړو لپاره لغتونه تمرین وکړئ",
+  
+  // Additional missing keys
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "د خپلو خبرو او اورېدلو مهارتونو د ښه کولو لپاره دا وسیله وکاروئ. دلته ځینې نکتې دي:",
+  "Click play to hear pronunciation": "د تلفظ د اورېدلو لپاره پلے کلیک کړئ",
+  "Start a conversation to see suggestions": "وړاندیزونه د لیدو لپاره خبرې پیل کړئ"
 };
 
 export default voiceChatTranslations;

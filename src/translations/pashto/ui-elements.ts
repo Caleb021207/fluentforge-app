@@ -69,6 +69,14 @@ const uiElementsTranslations: TranslationRecord = {
   myClasses: "زما ټولګي",
   myClass: "زما ټولګی",
   
+  // Missing translations that were showing in English
+  signedInAs: "د دې په نوم ننوتی:",
+  startChatting: "د خبرو پیل",
+  typeMessageBelow: "د پیل لپاره لاندې پیغام ولیکئ",
+  typeMessageToPractice: "د {{language}} تمرین لپاره خپل پیغام ولیکئ...",
+  currentLanguage: "اوسنۍ ژبه",
+  practiceLanguage: "د تمرین ژبه",
+  
   // Class management
   createNewClass: "نوی ټولګی جوړ کړئ",
   className: "د ټولګي نوم",
