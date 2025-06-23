@@ -95,7 +95,12 @@ const generalTranslations: TranslationRecord = {
   // Practice page
   startTextChatting: "شروع چت متنی",
   typeMessageBelow: "برای شروع پیامی در زیر بنویسید",
-  typeMessageToPractice: "پیام خود را برای تمرین {{language}} بنویسید..."
+  typeMessageToPractice: "پیام خود را برای تمرین {{language}} بنویسید...",
+  
+  // Language and Practice specific
+  currentLanguage: "زبان فعلی",
+  practiceLanguage: "زبان تمرین",
+  languageAndPractice: "{{currentLanguage}} | زبان تمرین: {{practiceLanguage}}"
 };
 
 export default generalTranslations;
