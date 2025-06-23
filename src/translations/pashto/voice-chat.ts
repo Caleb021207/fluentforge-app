@@ -20,7 +20,24 @@ const voiceChatTranslations: TranslationRecord = {
   failedToGetResponse: "د ځواب اخیستل ناکام شو",
   failedToGenerateSpeech: "د خبرو جوړول ناکام شو",
   voiceChatEnded: "غږیز چت پای ته ورسید",
-  browserBasedTTS: "د براوزر پر بنسټ TTS"
+  browserBasedTTS: "د براوزر پر بنسټ TTS",
+  
+  // Voice chat practice guide
+  practiceWithVoiceChatDescription: "د خپلو خبرو او اورېدلو مهارتونو د ښه کولو لپاره دا وسیله وکاروئ. دلته ځینې نکتې دي:",
+  askQuestionsAboutEverydayTopics: "د ورځني ژوند موضوعاتو په اړه پوښتنې وکړئ",
+  practiceCommonPhrasesAndExpressions: "عام جملې او بیانات تمرین وکړئ",
+  describeWhatYouSeeAroundYou: "هغه څه چې ستاسو شاوخوا یې ګورئ بیان یې کړئ",
+  practiceVocabularyForSpecificTopics: "د ځانګړو موضوعاتو لکه سفر یا خواړو لپاره لغتونه تمرین وکړئ",
+  
+  // Sample conversation starters  
+  helloHowAreYouToday: "سلام، نن څنګه یاست؟",
+  howIsTheWeatherInYourArea: "ستاسو په سیمه کې هوا څنګه ده؟",
+  canYouRecommendAGoodRestaurant: "آیا تاسو یو ښه رستوران وړاندیز کولی شئ؟",
+  whatAreYourHobbiesAndInterests: "ستاسو شوقونه او علایق څه دي؟",
+  tellMeAboutYourFavoriteBookOrMovie: "ماته خپل د خوښې کتاب یا فلم په اړه ووایاست.",
+  whatDidYouDoLastWeek: "تېره اونۍ مو څه وکړل؟",
+  whatAreYourPlansForTomorrow: "د سبا لپاره مو څه پلانونه دي؟",
+  howDoYouSayInSpanishEnglish: "... په هسپانوي/انګلیسي کې څنګه وایي؟"
 };
 
 export default voiceChatTranslations;

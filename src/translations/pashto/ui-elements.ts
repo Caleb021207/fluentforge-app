@@ -97,7 +97,11 @@ const uiElementsTranslations: TranslationRecord = {
   joined: "ګډون کړی",
   classCode: "د ټولګي کوډ",
   viewStudents: "زده کوونکي وګورئ",
-  noStudentsInClass: "په دې ټولګي کې لا هیڅ زده کوونکی نشته"
+  noStudentsInClass: "په دې ټولګي کې لا هیڅ زده کوونکی نشته",
+  
+  // Light/Dark mode
+  lightMode: "رڼا حالت",
+  darkMode: "تیاره حالت"
 };
 
 export default uiElementsTranslations;

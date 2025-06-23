@@ -2,51 +2,38 @@
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
-  welcome: "ښه راغلاست",
-  home: "کور",
-  practice: "تمرین",
-  lessons: "درسونه",
-  progress: "پرمختګ",
-  certificates: "سندونه",
-  voiceChat: "غږیز چت",
-  settings: "تنظیمات",
-  profile: "پروفایل",
-  login: "ننوتل",
-  signup: "ثبتول",
-  logout: "وتل",
-  loading: "بارېدونکی...",
-  error: "تېروتنه",
-  save: "ساتل",
-  cancel: "لغوه کول",
-  submit: "سپارل",
-  delete: "حذف کول",
-  edit: "سمول",
-  continue: "ادامه ورکول",
-  back: "شاته",
+  // Theme and modes
+  lightMode: "رڼا حالت",
+  darkMode: "تیاره حالت",
   
-  // Landing and Welcome
-  welcomeToLanguageLearning: "د ژبې زده کړې ته ښه راغلاست",
-  yourPersonalAICompanion: "ستاسو د ژبې زده کړې لپاره شخصي AI ملګری",
-  languageMastery: "د ژبې مهارت",
-  swipeUpToGetStarted: "د پیل لپاره پورته سویپ وکړئ",
-  getStarted: "پیل وکړئ",
+  // General app info
+  appName: "Palavox",
+  appDescription: "د AI پاړتر ژبې زده کړې پلیټفارم",
   
-  // Additional navigation items
-  textPractice: "لیکلی تمرین",
-  unlimitedVoicePractice: "نامحدود غږیز تمرین",
-  loginRequiredForFeature: "د دې ځانګړتیا کارولو لپاره باید ننوتل وکړی",
-  parentalControls: "د والدینو کنټرولونه",
-  safetyPolicy: "د خوندیتوب تګلاره",
-  ferpaPrivacy: "د FERPA محرمیت",
-  chatWithAI: "د {{language}} تمرین لپاره زموږ د AI استاد سره خبرې وکړئ",
-  practiceYourLanguage: "خپل {{language}} تمرین کړئ",
+  // Common status messages  
+  pageNotFound: "پاڼه ونه موندل شوه",
+  networkConnectionIssue: "د شبکې اړیکې ستونزه",
+  pleaseWait: "مهرباني وکړئ انتظار وکړئ",
+  sessionExpired: "د غونډې وخت پای ته ورسید",
+  dailyLimitReached: "ورځنی حد ته ورسید",
+  failedToCreateSession: "د غونډې جوړول ناکام شو",
+  speechSynthesisNotSupported: "د خبرو جوړول د دې ویب براوزر لخوا نه ملاتړیږي",
   
-  // Practice related
-  correctGrammar: "سمه ګرامر",
-  startTextChatting: "د متن چټ پیل کړئ",
-  responseSuggestions: "د ځواب وړاندیزونه",
-  clickPlayToHear: "د اورېدو لپاره پلے کلیک وکړئ",
-  startConversationToSee: "وړاندیزونه د لیدو لپاره خبرې پیل کړئ"
+  // Practice modes
+  practiceMode: "د تمرین حالت",
+  freeMode: "وړیا حالت",
+  premiumMode: "ممتاز حالت",
+  
+  // Time and dates
+  today: "نن",
+  yesterday: "پرون",
+  tomorrow: "سبا",
+  thisWeek: "دا اونۍ",
+  lastWeek: "تېره اونۍ",
+  nextWeek: "راتلونکې اونۍ",
+  thisMonth: "دا میاشت",
+  lastMonth: "تېره میاشت",
+  nextMonth: "راتلونکې میاشت"
 };
 
 export default generalTranslations;
