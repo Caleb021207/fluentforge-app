@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 import generalCoreTranslations from "./general-core";
 import uiElementsTranslations from "./ui-elements";
@@ -17,6 +18,7 @@ import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
 import landingAuthTranslations from "./landing-auth";
 import classroomTranslations from "./classroom";
+import settingsTranslations from "./settings";
 
 // Combine all the translation categories
 const englishTranslations: TranslationRecord = {
@@ -38,6 +40,7 @@ const englishTranslations: TranslationRecord = {
   ...navigationTranslations,
   ...landingAuthTranslations,
   ...classroomTranslations,
+  ...settingsTranslations,
 };
 
 export default englishTranslations;

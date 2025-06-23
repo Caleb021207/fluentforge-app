@@ -10,6 +10,9 @@ import dataPrivacyTranslations from "./data-privacy";
 import languageFrameworksTranslations from "./language-frameworks";
 import landingAuthTranslations from "./landing-auth";
 import classroomTranslations from "./classroom";
+import practiceTranslations from "./practice";
+import certificatesTranslations from "./certificates";
+import settingsTranslations from "./settings";
 
 // Create a minimal UI elements translation for Spanish to cover basic needs
 const uiElementsTranslations: TranslationRecord = {
@@ -83,6 +86,8 @@ const spanishTranslations: TranslationRecord = {
   ...landingAuthTranslations,
   ...languagesTranslations,
   ...classroomTranslations,
+  ...certificatesTranslations,
+  ...settingsTranslations,
 };
 
 export default spanishTranslations;

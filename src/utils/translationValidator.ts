@@ -1,5 +1,5 @@
-import translations from "@/translations";
-import { AVAILABLE_LANGUAGES } from "@/translations/constants";
+import { TranslationRecord } from "../types";
+import { analyzeComponentFile, PRIORITY_COMPONENTS, ComponentAnalysis } from "./textExtractor";
 
 // Master list of ALL translation keys used across the application
 export const MASTER_TRANSLATION_KEYS = [
@@ -858,27 +858,36 @@ export const MASTER_TRANSLATION_KEYS = [
   "reconnecting",
   "requestTimeout",
   "serverError",
-  "unknownError"
-] as const;
+  "unknownError",
 
-// Enhanced categories for better organization
-export const TRANSLATION_CATEGORIES = {
-  core: ["welcomeToLanguageLearning", "yourPersonalAICompanion", "welcomeMessage", "getStarted", "swipeUpToGetStarted"],
-  ui: ["signIn", "createAccount", "loading", "error", "success", "submit", "save", "cancel", "yes", "no", "ok"],
-  navigation: ["home", "practice", "progress", "certificates", "profile", "settings", "help", "about"],
-  landingAuth: ["signInToContinue", "createAccountToGetStarted", "email", "password", "accessPasscode", "incorrectPasscode", "retrying"],
-  profile: ["authenticationRequired", "pleaseSignInToViewProfile", "myProfile", "student", "teacher", "administrator", "roleNotAssigned"],
-  practiceInterface: ["correctGrammar", "clearConversation", "authRequired", "pleaseLoginToAccessThisFeature"],
-  aiAnalysis: ["aiProgressAnalysis", "uploadLanguageTestTranscripts", "totalAnalyses", "analysisResults", "progressTimeline"],
-  languageSelection: ["iSpeak", "iWantToLearn", "selectYourNativeLanguage", "selectLanguageToLearn"],
-  practice: ["practiceYourLanguage", "chatWithAI", "startConversationIn", "practiceGuide"],
-  voiceChat: ["voiceChatTitle", "startVoiceChat", "endVoiceChat", "listening", "recording"],
-  certificates: ["certificationProgress", "readingTest", "writingTest", "conversationalFluency"],
-  progress: ["yourProgress", "lessonsCompleted", "scoreTrends", "noProgressData"],
-  auth: ["signInToAccount", "createNewAccount", "emailAddress", "forgotPassword"],
-  classroom: ["classroom", "classrooms", "myClasses", "myClass", "joinClass", "createClass", "generateCode", "classCode", "className", "classDescription", "teacher", "student", "students", "teacherAccessRequired", "unauthorized", "createNewClass", "creatingClass", "creating", "classNameRequired", "errorCreatingClass", "classCreated", "classActivated", "classDeactivated", "generateClassCode", "copyCode", "copyInviteLink", "copied", "shareCodeWithStudents", "enterClassCode", "enterValidCode", "join", "joining", "joinedClass", "successJoining", "errorJoining", "invalidClassCode", "pleaseCheckCode", "classJoinCode", "studentsEnrolled", "noStudentsInClass", "unnamed", "studentName", "name", "lastActivity", "joinedOn", "joined", "viewStudents", "noStudentsEnrolled", "practiceTime", "practiceCalls", "practiceCallsShort", "voicePracticeCalls", "voicePracticeCallsShort", "premiumVoiceSessions", "premiumVoiceMinutes", "certificationAttempts", "highScore", "avgScore", "completedLessons", "voiceChatSessions", "voiceChatMinutes", "refreshMetrics", "refreshingMetrics", "refreshing", "studentMetricsRefreshed", "allMetricsRefreshed", "failedToRefreshMetrics", "active", "inactive", "activate", "deactivate", "created", "code", "room", "period", "noPeriodAssigned", "tbd", "noClassesCreated", "noClassJoined", "noClassesFound", "createOrJoinClass", "classManagement", "studentManagement", "classOverview", "classDetails", "classDashboard", "studentProgress", "viewProgress", "classMetrics", "teachingOverview", "totalStudents", "classAverageScore", "classSettings", "editClass", "deleteClass", "archiveClass", "restoreClass", "classArchived", "classRestored", "classDeleted", "confirmDeleteClass", "confirmArchiveClass", "exportData", "importStudents", "bulkActions", "selectAll", "deselectAll", "selectedStudents", "generateReport", "classReport", "progressReport", "attendanceReport", "errorLoadingClasses", "errorLoadingStudents", "errorUpdatingClass", "errorDeletingClass", "connectionError", "tryAgain", "classroomFeatures", "createAndManageVirtualClassrooms", "manageClassesAndTrackProgress", "classroomFeaturesComingSoon"],
-  accuracy: ["accuracyMetrics", "grammarAccuracy", "vocabularyDiversity", "overallAccuracy"],
-} as const;
+  // Assessment/Certification keys (50 new keys)
+  "testInstructions", "readInstructions", "timeLimit", "minutes", "questions", "difficulty",
+  "beginTest", "nextQuestion", "previousQuestion", "submitTest", "confirmSubmission",
+  "areYouSureSubmit", "cannotChangeAfterSubmit", "testResults", "yourScore", "passingScore",
+  "congratulations", "youPassed", "keepPracticing", "retakeTest", "viewCertificate",
+  "downloadCertificate", "shareResults", "cefrLevel", "a1Beginner", "a2Elementary",
+  "b1Intermediate", "b2UpperIntermediate", "c1Advanced", "c2Proficient",
+  "a1Description", "a2Description", "b1Description", "b2Description", "c1Description", "c2Description",
+  "readingSkill", "writingSkill", "speakingSkill", "listeningSkill", "grammarSkill",
+  "vocabularySkill", "pronunciationSkill", "fluencySkill", "excellentWork", "goodJob",
+  "needsImprovement", "keepTrying", "almostThere", "greatProgress", "placementTest",
+  "progressTest", "finalTest", "practiceTest", "mockTest",
+
+  // Navigation keys (25 new keys)
+  "dashboard", "overview", "details", "results", "menu", "search", "filter", "sort",
+  "changeLanguage", "languageSettings", "support", "transcriptAnalysis",
+
+  // Settings/Compliance keys (50 new keys)
+  "generalSettings", "accountSettings", "privacySettings", "notificationSettings",
+  "languageSettings", "accountInformation", "changePassword", "currentPassword",
+  "newPassword", "privacyControls", "dataSettings", "safetySettings", "contentFilter",
+  "ageVerification", "ferpaSettings", "ferpaCompliance", "dataConsent", "directoryInformation",
+  "educationalRecords", "privacyNotice", "emailNotifications", "pushNotifications",
+  "practiceReminders", "progressUpdates", "certificateNotifications", "classroomNotifications",
+  "interfaceLanguage", "nativeLanguage", "targetLanguage", "translationSettings",
+  "audioSettings", "voiceSettings", "reset", "apply", "update", "settingsSaved",
+  "settingsError", "passwordChanged", "passwordError", "profileUpdated", "profileError"
+] as const;
 
 /**
  * Validates translation completeness for a specific language
@@ -890,6 +899,7 @@ export function validateLanguageTranslations(languageCode: string): {
   foundKeys: number;
   completionPercentage: number;
 } {
+  const translations = require("@/translations").default;
   const languageTranslations = translations[languageCode];
   const missingKeys: string[] = [];
   let foundKeys = 0;
@@ -945,9 +955,10 @@ export function validateLanguageTranslations(languageCode: string): {
  * Validates all languages and returns a comprehensive report
  */
 export function validateAllLanguageTranslations(): Record<string, ReturnType<typeof validateLanguageTranslations>> {
+  const translations = require("@/translations").default;
   const report: Record<string, ReturnType<typeof validateLanguageTranslations>> = {};
   
-  Object.keys(AVAILABLE_LANGUAGES).forEach((languageCode) => {
+  Object.keys(translations).forEach((languageCode) => {
     report[languageCode] = validateLanguageTranslations(languageCode);
   });
 
@@ -964,6 +975,7 @@ export function getLanguagesByCompleteness(): Array<{
   missingKeys: number;
 }> {
   const report = validateAllLanguageTranslations();
+  const AVAILABLE_LANGUAGES = require("@/translations/constants").AVAILABLE_LANGUAGES;
   
   return Object.entries(report)
     .map(([language, data]) => ({
@@ -992,3 +1004,22 @@ export function getMissingKeysForCategory(
     categoryKeySet.has(key)
   );
 }
+
+// Enhanced categories for better organization
+export const TRANSLATION_CATEGORIES = {
+  core: ["welcomeToLanguageLearning", "yourPersonalAICompanion", "welcomeMessage", "getStarted", "swipeUpToGetStarted"],
+  ui: ["signIn", "createAccount", "loading", "error", "success", "submit", "save", "cancel", "yes", "no", "ok"],
+  navigation: ["home", "practice", "progress", "certificates", "profile", "settings", "help", "about"],
+  landingAuth: ["signInToContinue", "createAccountToGetStarted", "email", "password", "accessPasscode", "incorrectPasscode", "retrying"],
+  profile: ["authenticationRequired", "pleaseSignInToViewProfile", "myProfile", "student", "teacher", "administrator", "roleNotAssigned"],
+  practiceInterface: ["correctGrammar", "clearConversation", "authRequired", "pleaseLoginToAccessThisFeature"],
+  aiAnalysis: ["aiProgressAnalysis", "uploadLanguageTestTranscripts", "totalAnalyses", "analysisResults", "progressTimeline"],
+  languageSelection: ["iSpeak", "iWantToLearn", "selectYourNativeLanguage", "selectLanguageToLearn"],
+  practice: ["practiceYourLanguage", "chatWithAI", "startConversationIn", "practiceGuide"],
+  voiceChat: ["voiceChatTitle", "startVoiceChat", "endVoiceChat", "listening", "recording"],
+  certificates: ["certificationProgress", "readingTest", "writingTest", "conversationalFluency"],
+  progress: ["yourProgress", "lessonsCompleted", "scoreTrends", "noProgressData"],
+  auth: ["signInToAccount", "createNewAccount", "emailAddress", "forgotPassword"],
+  classroom: ["classroom", "classrooms", "myClasses", "myClass", "joinClass", "createClass", "generateCode", "classCode", "className", "classDescription", "teacher", "student", "students", "teacherAccessRequired", "unauthorized", "createNewClass", "creatingClass", "creating", "classNameRequired", "errorCreatingClass", "classCreated", "classActivated", "classDeactivated", "generateClassCode", "copyCode", "copyInviteLink", "copied", "shareCodeWithStudents", "enterClassCode", "enterValidCode", "join", "joining", "joinedClass", "successJoining", "errorJoining", "invalidClassCode", "pleaseCheckCode", "classJoinCode", "studentsEnrolled", "noStudentsInClass", "unnamed", "studentName", "name", "lastActivity", "joinedOn", "joined", "viewStudents", "noStudentsEnrolled", "practiceTime", "practiceCalls", "practiceCallsShort", "voicePracticeCalls", "voicePracticeCallsShort", "premiumVoiceSessions", "premiumVoiceMinutes", "certificationAttempts", "highScore", "avgScore", "completedLessons", "voiceChatSessions", "voiceChatMinutes", "refreshMetrics", "refreshingMetrics", "refreshing", "studentMetricsRefreshed", "allMetricsRefreshed", "failedToRefreshMetrics", "active", "inactive", "activate", "deactivate", "created", "code", "room", "period", "noPeriodAssigned", "tbd", "noClassesCreated", "noClassJoined", "noClassesFound", "createOrJoinClass", "classManagement", "studentManagement", "classOverview", "classDetails", "classDashboard", "studentProgress", "viewProgress", "classMetrics", "teachingOverview", "totalStudents", "classAverageScore", "classSettings", "editClass", "deleteClass", "archiveClass", "restoreClass", "classArchived", "classRestored", "classDeleted", "confirmDeleteClass", "confirmArchiveClass", "exportData", "importStudents", "bulkActions", "selectAll", "deselectAll", "selectedStudents", "generateReport", "classReport", "progressReport", "attendanceReport", "errorLoadingClasses", "errorLoadingStudents", "errorUpdatingClass", "errorDeletingClass", "connectionError", "tryAgain", "classroomFeatures", "createAndManageVirtualClassrooms", "manageClassesAndTrackProgress", "classroomFeaturesComingSoon"],
+  accuracy: ["accuracyMetrics", "grammarAccuracy", "vocabularyDiversity", "overallAccuracy"],
+} as const;
