@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -21,8 +22,22 @@ const practiceTranslations: TranslationRecord = {
   practiceWithTextChat: "텍스트 채팅으로 연습하기",
   textConversationPractice: "텍스트 대화 연습",
   
-  // Adding missing translations
+  // Core UI elements for practice page
+  practice: "연습",
   send: "보내기",
+  correctGrammar: "문법 교정",
+  clearConversation: "대화 내용 지우기",
+  
+  // Practice guide and tips
+  practiceGuide: "{{language}} 연습 가이드",
+  practiceGuideDescription: "{{language}} 연습을 최대한 활용하기 위한 몇 가지 팁:",
+  practiceTip1: "간단하더라도 완전한 문장을 만들어보세요.",
+  practiceTip2: "실수를 걱정하지 마세요 — 실수는 학습의 일부입니다!",
+  practiceTip3: "이해하지 못하는 것이 있으면 설명을 요청하세요.",
+  practiceTip4: "최근에 배운 단어들을 사용해보세요.",
+  practiceTip5: "AI가 여러분의 실력 수준에 맞춰 점진적으로 향상을 도와드릴 것입니다.",
+  
+  // Prompt and placeholder text
   sendEnglishPracticePrompt: "영어 연습 메시지 보내기",
   noticeTextBasedPractice: "참고: 이것은 텍스트 기반 연습 기능입니다. 음성 연습은 무제한 음성 채팅 또는 프리미엄 음성 채팅 기능을 사용해보세요.",
   askAboutGrammarRules: "문법 규칙에 대해 질문하기",
@@ -31,6 +46,9 @@ const practiceTranslations: TranslationRecord = {
   discussCulturalTopics: "문화적 주제 토론하기",
   practicePrompt: "안녕하세요! {{targetLanguage}} 대화를 연습하고 싶습니다. {{targetLanguage}}의 문법, 어휘, 사용법을 교정해주세요. 기본적인 대화부터 시작할 수 있을까요?",
   chatPlaceholder: "{{targetLanguage}} 연습을 위한 메시지를 입력하세요...",
+  
+  // Template strings for dynamic content
+  startConversationIn: "{{language}}로 대화 시작하기",
   
   // Pronunciation practice
   pronunciationPractice: "발음 연습",
