@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -80,6 +79,35 @@ const generalTranslations: TranslationRecord = {
   practiceDifficultSoundsTip: "صداهای سخت را چندین بار تمرین کنید",
   recordYourselfTip: "خودتان را ضبط کنید و با گویندگان بومی مقایسه کنید",
   bePatientTip: "صبور باشید - بهبود تلفظ زمان می‌برد",
+  
+  // Pronunciation exercise specific
+  practiceExercise: "تمرین عملی",
+  topic: "موضوع",
+  listenToPhrase: "گوش دادن به عبارت",
+  playing: "در حال پخش",
+  clickWordToHear: "برای شنیدن روی کلمه کلیک کنید",
+  yourPronunciation: "تلفظ شما",
+  startRecording: "شروع ضبط",
+  stopRecording: "توقف ضبط",
+  clickStartToRecord: "برای شروع ضبط 'شروع ضبط' را کلیک کنید",
+  listeningToYou: "در حال گوش کردن به شما...",
+  realTimeTranscription: "رونوشت زنده",
+  yourTranscription: "رونوشت شما",
+  processing: "در حال پردازش...",
+  tryAgain: "دوباره امتحان کنید",
+  newPhrase: "عبارت جدید",
+  generatingNewPhrase: "در حال تولید عبارت جدید...",
+  generatingExercise: "در حال تولید تمرین...",
+  
+  // Level descriptions
+  noviceLevelDescription: "سطح مبتدی - عبارات پایه و بیان‌های ساده",
+  intermediateLevelDescription: "سطح متوسط - می‌تواند درباره موضوعات آشنا بحث کند",
+  advancedLevelDescription: "سطح پیشرفته - می‌تواند به راحتی تعامل کند",
+  superiorLevelDescription: "سطح عالی - مهارت بالا در استفاده از زبان",
+  noviceLevelShortDescription: "عبارات پایه",
+  intermediateLevelShortDescription: "موضوعات آشنا",
+  advancedLevelShortDescription: "تعامل راحت",
+  superiorLevelShortDescription: "مهارت بالا",
   
   // Landing page
   welcomeToLanguageLearning: "به یادگیری زبان خوش آمدید",
