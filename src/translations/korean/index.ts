@@ -14,6 +14,10 @@ import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
+import landingAuthTranslations from "./landing-auth";
+import pronunciationTranslations from "./pronunciation";
+import classroomTranslations from "./classroom";
+import settingsTranslations from "./settings";
 
 // Combine all the translation categories
 const koreanTranslations: TranslationRecord = {
@@ -31,6 +35,10 @@ const koreanTranslations: TranslationRecord = {
   ...languageFrameworksTranslations,
   ...languagesTranslations,
   ...navigationTranslations,
+  ...landingAuthTranslations,
+  ...pronunciationTranslations,
+  ...classroomTranslations,
+  ...settingsTranslations,
 };
 
 export default koreanTranslations;
