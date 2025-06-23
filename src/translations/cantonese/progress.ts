@@ -1,7 +1,48 @@
-
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
+  // Progress page translations
+  aiProgressAnalysis: "AI進度分析",
+  uploadLanguageTestTranscripts: "上傳語言測試成績單",
+  totalAnalyses: "總分析",
+  currentLevel: "當前級別",
+  latestScore: "最新分數",
+  uploadAndAnalyze: "上傳並分析",
+  analysisResults: "分析結果",
+  progressTimeline: "進度時間線",
+  progressOverview: "進度概覽",
+  trackLanguageLearningJourney: "跟踪你嘅語言學習之旅",
+  
+  // Test comparison translations
+  firstTest: "首次測試",
+  latestTest: "最新測試",
+  improvement: "提升",
+  
+  // Upload related
+  uploadTestTranscript: "上傳測試成績單",
+  uploadLanguageTestScoreReport: "上傳語言測試分數報告",
+  noFileChosen: "未選擇文件",
+  dragDropOrClickToUpload: "拖放或點擊上傳",
+  supportsFileFormats: "支持文件格式：JPG、PNG、PDF",
+  selectFile: "選擇文件",
+  
+  // Analysis capabilities
+  whatOurAiCanAnalyze: "我哋嘅AI可以分析啲咩",
+  overallScoresAndCefrLevels: "總分同CEFR級別",
+  individualSkillBreakdowns: "個人技能細分",
+  strengthsAndAreasForImprovement: "優勢同需要改進嘅領域",
+  progressTrackingOverTime: "隨時間跟踪進度",
+  
+  // Additional progress terms
+  noProgressDataYet: "暫時冇進度數據",
+  uploadMultipleTranscripts: "上傳多個成績單睇你嘅進度時間線",
+  achievementsAndMilestones: "成就同里程碑",
+  
+  // Analysis related
+  analysisComplete: "分析完成",
+  transcriptAnalyzedSuccessfully: "成績單分析成功",
+  
+  // Existing progress translations
   yourProgress: "你嘅進度",
   lessonsCompleted: "已完成嘅課程",
   throughCurriculum: "通過課程",

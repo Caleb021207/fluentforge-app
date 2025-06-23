@@ -17,6 +17,7 @@ import dataPrivacyTranslations from "./data-privacy";
 import ferpaTranslations from "./ferpa";
 import safetyTranslations from "./safety";
 import uiElementsTranslations from "./ui-elements";
+import navigationTranslations from "./navigation";
 
 const translations: TranslationRecord = {
   ...authTranslations,
@@ -35,7 +36,8 @@ const translations: TranslationRecord = {
   ...dataPrivacyTranslations,
   ...ferpaTranslations,
   ...safetyTranslations,
-  ...uiElementsTranslations
+  ...uiElementsTranslations,
+  ...navigationTranslations
 };
 
 export default translations;

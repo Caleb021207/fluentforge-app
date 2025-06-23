@@ -115,6 +115,90 @@ const uiElementsTranslations: TranslationRecord = {
   voiceChatSessions: "語音聊天會話",
   lastActivity: "最近活動",
   unnamed: "未命名",
+  
+  // Common UI components
+  button: "按鈕",
+  menu: "菜單",
+  dropdown: "下拉菜單",
+  checkbox: "複選框",
+  radioButton: "單選按鈕",
+  textInput: "文字輸入",
+  textarea: "文字區域",
+  selectOption: "選擇選項",
+  slider: "滑塊",
+  toggle: "開關",
+  tab: "標籤頁",
+  modal: "模態框",
+  dialog: "對話框",
+  tooltip: "提示",
+  notification: "通知",
+  alert: "警告",
+  badge: "徽章",
+  card: "卡片",
+  panel: "面板",
+  sidebar: "側邊欄",
+  header: "頁頭",
+  footer: "頁腳",
+  
+  // Form elements
+  form: "表單",
+  field: "字段",
+  label: "標籤",
+  placeholder: "佔位符",
+  required: "必填",
+  optional: "可選",
+  validation: "驗證",
+  errorMessage: "錯誤訊息",
+  helpText: "幫助文字",
+  
+  // Navigation elements
+  navigation: "導航",
+  breadcrumb: "麵包屑",
+  pagination: "分頁",
+  first: "第一頁",
+  last: "最後一頁",
+  
+  // Data display
+  table: "表格",
+  row: "行",
+  column: "列",
+  cell: "單元格",
+  list: "清單",
+  item: "項目",
+  grid: "網格",
+  chart: "圖表",
+  graph: "圖形",
+  
+  // Actions and states
+  clickHere: "點擊呢度",
+  selectAll: "全選",
+  deselectAll: "取消全選",
+  expand: "展開",
+  collapse: "收起",
+  maximize: "最大化",
+  minimize: "最小化",
+  close: "關閉",
+  open: "打開",
+  
+  // Status indicators
+  online: "在線",
+  offline: "離線",
+  connected: "已連接",
+  disconnected: "已斷開",
+  synced: "已同步",
+  syncing: "同步緊",
+  failed: "失敗",
+  successful: "成功",
+  
+  // File operations
+  upload: "上傳",
+  download: "下載",
+  file: "文件",
+  folder: "文件夾",
+  image: "圖片",
+  document: "文檔",
+  attachment: "附件",
+  
   // Added missing translations
   signedInAs: "登入為",
   textPractice: "文字練習",
@@ -127,7 +211,7 @@ const uiElementsTranslations: TranslationRecord = {
   saveLanguagePreferences: "保存語言偏好",
   parentalControls: "家長控制",
   safetyPolicy: "安全政策",
-  ferpaPrivacy: "FERPA私隱",
+  ferpaPrivacy: "FERPA私隱"
 };
 
 export default uiElementsTranslations;
