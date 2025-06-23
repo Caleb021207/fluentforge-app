@@ -1,5 +1,7 @@
 
 import { TranslationRecord } from "../types";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
 import generalTranslations from "./general";
 import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
@@ -12,9 +14,12 @@ import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
+import settingsTranslations from "./settings";
 
 // Combine all the translation categories
 const mandarinTranslations: TranslationRecord = {
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
   ...generalTranslations,
   ...languageSelectionTranslations,
   ...practiceTranslations,
@@ -27,6 +32,7 @@ const mandarinTranslations: TranslationRecord = {
   ...authTranslations,
   ...languagesTranslations,
   ...navigationTranslations,
+  ...settingsTranslations,
 };
 
 export default mandarinTranslations;

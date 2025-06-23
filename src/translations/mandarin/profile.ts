@@ -2,7 +2,7 @@
 import { TranslationRecord } from "../types";
 
 const profileTranslations: TranslationRecord = {
-  languageLearningDashboard: "语言学习控制面板",
+  languageLearningDashboard: "语言学习控制台",
   personalInformation: "个人信息",
   uploadPhoto: "上传照片",
   displayName: "显示名称",
@@ -24,15 +24,15 @@ const profileTranslations: TranslationRecord = {
   progressToGoal: "目标进度",
   yourTestScores: "您的测试分数",
   authRequired: "需要认证",
-  pleaseSignInDashboard: "请登录以查看您的控制面板并跟踪您的语言学习进度。",
+  pleaseSignInDashboard: "请登录以查看您的控制台并跟踪您的语言学习进度。",
   targetingLevel: "目标CEFR级别：",
-  estimatedAchievement: "预计达成时间",
+  estimatedAchievement: "预计实现时间",
   weeks: "周",
   around: "大约",
-  learningPace: "您当前的学习速度：",
-  pointsPerWeek: "点/周",
+  learningPace: "您当前的学习节奏：",
+  pointsPerWeek: "分/周",
   complete: "完成",
-  lastActivity: "最近活动：",
+  lastActivity: "最后活动：",
   daysStreak: "天连续！继续保持！",
   noTargetDate: "未设定目标日期",
   maximumLevelAchieved: "已达到最高级别",
@@ -52,8 +52,8 @@ const profileTranslations: TranslationRecord = {
   addingScore: "添加分数中...",
   addScore: "添加分数",
   strengths: "优势",
-  areasForImprovement: "需改进的领域",
-  recommendations: "建议",
+  areasForImprovement: "需要改进的领域",
+  recommendations: "建议"
 };
 
 export default profileTranslations;
