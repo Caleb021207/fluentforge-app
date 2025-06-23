@@ -1,19 +1,12 @@
 
 import { TranslationRecord } from "../types";
-import languageSelectionTranslations from "./language-selection";
-import classroomTranslations from "./classroom";
-import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
-import premiumVoiceTranslations from "./premium-voice";
-import generalTranslations from "./general";
+import haitianCoreTranslations from "./core";
+import haitianPracticeTranslations from "./practice";
 
+// Complete Haitian translations with practice integration
 const haitianTranslations: TranslationRecord = {
-  ...languageSelectionTranslations,
-  ...classroomTranslations,
-  ...practiceTranslations,
-  ...voiceChatTranslations,
-  ...premiumVoiceTranslations,
-  ...generalTranslations
+  ...haitianCoreTranslations,
+  ...haitianPracticeTranslations
 };
 
 export default haitianTranslations;

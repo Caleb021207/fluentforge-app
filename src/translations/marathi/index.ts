@@ -1,22 +1,12 @@
 
 import { TranslationRecord } from "../types";
-import generalCoreTranslations from "./general-core";
-import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
-import languageSelectionTranslations from "./language-selection";
-import uiElementsTranslations from "./ui-elements";
-import navigationTranslations from "./navigation";
-import authTranslations from "./auth";
+import marathiCoreTranslations from "./core";
+import marathiPracticeTranslations from "./practice";
 
-// Combine all the translation categories
+// Complete Marathi translations with practice integration
 const marathiTranslations: TranslationRecord = {
-  ...generalCoreTranslations,
-  ...practiceTranslations,
-  ...voiceChatTranslations,
-  ...languageSelectionTranslations,
-  ...uiElementsTranslations,
-  ...navigationTranslations,
-  ...authTranslations,
+  ...marathiCoreTranslations,
+  ...marathiPracticeTranslations
 };
 
 export default marathiTranslations;

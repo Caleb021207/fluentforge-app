@@ -2,62 +2,36 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
-  // Practice page
-  practiceYourLanguage: "Ćwicz swój {{language}}",
-  chatWithAI: "Rozmawiaj z naszym tutorem AI, aby ćwiczyć swój {{language}}! AI pomoże ci poprawić gramatykę, słownictwo i dostarczy wskazówek dotyczących wymowy i kultury {{language}}.",
-  typeMessage: "Wpisz wiadomość...",
-  startConversationIn: "Rozpocznij rozmowę w {{language}}",
-  practiceWithAI: "Ćwicz z AI",
-  startTextChatting: "Rozpocznij czat tekstowy",
-  noticeTextBasedPractice: "Uwaga: To jest praktyka oparta na tekście. Otrzymasz odpowiedzi tekstowe od AI.",
-  aiResponding: "AI odpowiada...",
   textPractice: "Praktyka tekstowa",
-  voicePractice: "Praktyka głosowa",
-  translationShown: "Pokazano tłumaczenie",
-  hideTranslation: "Ukryj tłumaczenie",
-  showTranslation: "Pokaż tłumaczenie",
-  translationError: "Błąd tłumaczenia",
-  failedToGetTranslation: "Nie udało się uzyskać tłumaczenia",
-  trySimpleWords: "Spróbuj prostszych słów",
-  useBuiltInPhrases: "Użyj wbudowanych zwrotów",
-  startNewConversation: "Rozpocznij nową rozmowę",
-  sentenceStarters: "Początkowe zdania",
-  
-  // New translations for Practice page
   practiceWithAITutor: "Ćwicz z tutorem AI",
-  chatWithAITutor: "Rozmawiaj z naszym tutorem AI, aby ćwiczyć język! AI pomoże ci poprawić gramatykę, słownictwo i wymowę. Możesz swobodnie zadawać pytania dotyczące języka lub kultury.",
+  chatWithAITutor: "Rozmawiaj z naszym tutorem AI, aby ćwiczyć angielski! AI pomoże ci poprawić gramatykę, słownictwo i wymowę. Nie wahaj się zadawać pytań o język lub kulturę.",
   startVoiceChat: "Rozpocznij czat głosowy",
   stopVoiceChat: "Zatrzymaj czat głosowy",
   getSkillsAssessment: "Uzyskaj ocenę umiejętności",
   reading: "Czytanie",
-  writing: "Pisanie", 
+  writing: "Pisanie",
   speaking: "Mówienie",
   listening: "Słuchanie",
-  overallLevel: "Ogólny poziom",
+  overallLevel: "Poziom ogólny",
   startChatting: "Rozpocznij rozmowę z tutorem AI!",
-  clickToStartVoice: "Kliknij 'Rozpocznij czat głosowy', aby zacząć mówić z tutorem",
-  allowMicAccess: "Prosimy o zezwolenie na dostęp do mikrofonu, aby korzystać z funkcji głosowych",
-  
-  // Additional Practice page translations
+  clickToStartVoice: "Kliknij 'Rozpocznij czat głosowy', aby rozmawiać z tutorem",
+  typeMessage: "Wpisz swoją wiadomość po polsku lub angielsku...",
   practiceWithTextChat: "Ćwicz z czatem tekstowym",
-  textConversationPractice: "Praktyka konwersacji tekstowych",
+  textConversationPractice: "Praktyka konwersacji tekstowej",
+  startTextChatting: "Rozpocznij czat tekstowy z tutorem AI",
   typeMessageBelow: "Wpisz wiadomość poniżej, aby rozpocząć",
-  sendEnglishPracticePrompt: "Wyślij pomocne zdanie po angielsku",
-  askAboutGrammarRules: "Zapytaj o zasady gramatyczne",
-  practiceConversationsDifferentSituations: "Ćwicz rozmowy w różnych sytuacjach",
-  learnNewVocabulary: "Ucz się nowego słownictwa",
-  discussCulturalTopics: "Dyskutuj o tematach kulturowych",
-  practicePrompt: "Cześć! Chciałbym poćwiczyć konwersację w języku {{targetLanguage}}. Proszę pomóż mi, poprawiając moją gramatykę, słownictwo i użycie języka {{targetLanguage}}. Czy możemy zacząć od podstawowej rozmowy?",
-  chatPlaceholder: "Wpisz swoją wiadomość, aby ćwiczyć język {{targetLanguage}}...",
-  
-  // Practice guide translations
-  practiceGuide: "Przewodnik ćwiczeń dla {{language}}",
-  practiceDescription: "Oto kilka wskazówek, jak najlepiej wykorzystać ćwiczenia {{language}}:",
-  practiceTip1: "Staraj się tworzyć pełne zdania, nawet jeśli są proste.",
-  practiceTip2: "Nie przejmuj się błędami - są częścią procesu uczenia się!",
-  practiceTip3: "Poproś o wyjaśnienie, jeśli czegoś nie rozumiesz.",
-  practiceTip4: "Staraj się używać słownictwa, którego niedawno się nauczyłeś.",
-  practiceTip5: "Ćwicz regularnie, aby poprawić płynność."
+  send: "Wyślij",
+  sendEnglishPracticePrompt: "Wyślij zachętę do praktyki angielskiego",
+  practicePrompt: "Cześć! Chciałbym poćwiczyć konwersację w {{targetLanguage}}. Proszę pomóż mi, poprawiając moją gramatykę, słownictwo i użycie {{targetLanguage}}. Czy możemy zacząć od podstawowej rozmowy?",
+  chatPlaceholder: "Wpisz swoją wiadomość, aby ćwiczyć {{targetLanguage}}...",
+  startConversationIn: "Rozpocznij rozmowę w {{language}}",
+  practiceGuide: "Przewodnik praktyki {{language}}",
+  practiceGuideDescription: "Oto kilka wskazówek, jak maksymalnie wykorzystać praktykę {{language}}:",
+  practiceGuideItem1: "Staraj się tworzyć pełne zdania, nawet jeśli są proste.",
+  practiceGuideItem2: "Nie martw się błędami — są częścią nauki!",
+  practiceGuideItem3: "Poproś o wyjaśnienia, jeśli czegoś nie rozumiesz.",
+  practiceGuideItem4: "Spróbuj używać słownictwa, którego niedawno się nauczyłeś.",
+  practiceDisclaimer: "Nasza AI dostosuje się do Twojego poziomu umiejętności i pomoże Ci stopniowo się poprawiać."
 };
 
 export default practiceTranslations;

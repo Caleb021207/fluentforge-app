@@ -1,22 +1,12 @@
 
 import { TranslationRecord } from "../types";
-import generalCoreTranslations from "./general-core";
-import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
-import languageSelectionTranslations from "./language-selection";
-import uiElementsTranslations from "./ui-elements";
-import navigationTranslations from "./navigation";
-import authTranslations from "./auth";
+import punjabiCoreTranslations from "./core";
+import punjabiPracticeTranslations from "./practice";
 
-// Combine all the translation categories
-const punjabiTranslations: TranslationRecord = {
-  ...generalCoreTranslations,
-  ...practiceTranslations,
-  ...voiceChatTranslations,
-  ...languageSelectionTranslations,
-  ...uiElementsTranslations,
-  ...navigationTranslations,
-  ...authTranslations,
+// Complete Punjabi translations with practice integration
+const punjabiFTranslations: TranslationRecord = {
+  ...punjabiCoreTranslations,
+  ...punjabiPracticeTranslations
 };
 
-export default punjabiTranslations;
+export default punjabiFTranslations;

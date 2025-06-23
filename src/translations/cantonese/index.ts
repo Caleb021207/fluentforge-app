@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import cantoneseCoreTranslations from "./core";
+import cantonesePracticeTranslations from "./practice";
 
-// Use only the clean core translations for Cantonese
+// Complete Cantonese translations with practice integration
 const cantoneseTranslations: TranslationRecord = {
-  ...cantoneseCoreTranslations
+  ...cantoneseCoreTranslations,
+  ...cantonesePracticeTranslations
 };
 
 export default cantoneseTranslations;

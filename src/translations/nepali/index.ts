@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import nepaliCoreTranslations from "./core";
+import nepaliPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Nepali
+// Complete Nepali translations with practice integration
 const nepaliTranslations: TranslationRecord = {
-  ...nepaliCoreTranslations
+  ...nepaliCoreTranslations,
+  ...nepaliPracticeTranslations
 };
 
 export default nepaliTranslations;
