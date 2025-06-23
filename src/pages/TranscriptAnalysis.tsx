@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -57,8 +56,8 @@ const TranscriptAnalysis = () => {
   const handleUploadSuccess = () => {
     setRefreshKey(prev => prev + 1);
     toast({
-      title: t("analysisComplete") || "Analysis Complete",
-      description: t("transcriptAnalyzedSuccessfully") || "Your transcript has been analyzed successfully!",
+      title: t("analysisComplete"),
+      description: t("transcriptAnalyzedSuccessfully"),
     });
   };
 

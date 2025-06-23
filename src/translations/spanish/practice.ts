@@ -9,7 +9,7 @@ const practiceTranslations: TranslationRecord = {
   clearConversation: "Limpiar conversación",
   correctGrammar: "Corregir gramática",
   
-  // NEW: Missing key for starting conversation
+  // Chat interface with proper interpolation
   startConversationIn: "Iniciar conversación en {{language}}",
   startTextChatting: "Comenzar a chatear por texto",
   
@@ -91,7 +91,26 @@ const practiceTranslations: TranslationRecord = {
   overallScoresAndCefrLevels: "• Puntuaciones generales y niveles CEFR",
   individualSkillBreakdowns: "• Desglose de habilidades individuales",
   strengthsAndAreasForImprovement: "• Fortalezas y áreas de mejora",
-  progressTrackingOverTime: "• Seguimiento del progreso a lo largo del tiempo"
+  progressTrackingOverTime: "• Seguimiento del progreso a lo largo del tiempo",
+  
+  // NEW: Analysis page specific translations
+  latestAnalysisResults: "Resultados del Análisis Más Reciente",
+  detailedAnalysis: "Análisis Detallado",
+  analysisBreakdown: "Desglose del Análisis",
+  strengths: "Fortalezas",
+  areasForImprovement: "Áreas de Mejora",
+  aiRecommendations: "Recomendaciones de IA",
+  analysisHistory: "Historial de Análisis",
+  yourPreviousAnalysisResults: "Tus Resultados de Análisis Anteriores",
+  analysisComplete: "Análisis Completado",
+  transcriptAnalyzedSuccessfully: "¡Tu transcripción ha sido analizada exitosamente!",
+  
+  // Skill names (standardized)
+  reading: "Lectura",
+  writing: "Escritura",
+  speaking: "Habla",
+  listening: "Escucha",
+  overallLevel: "Nivel General"
 };
 
 export default practiceTranslations;

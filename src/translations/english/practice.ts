@@ -67,6 +67,10 @@ const practiceTranslations: TranslationRecord = {
   // Chat interface
   typeYourMessageHere: "Type your message here...",
   typeMessageBelow: "Type a message below",
+  startConversationIn: "Start conversation in {{language}}",
+  startTextChatting: "Start text chatting",
+  chatPlaceholder: "Type your message to practice {{targetLanguage}}...",
+  practicePrompt: "Hello! I would like to practice {{targetLanguage}} conversation. Please help me by correcting my {{targetLanguage}} grammar, vocabulary, and usage. Can we start with a basic conversation?",
   
   // Progress and analysis
   aiProgressAnalysis: "AI Progress Analysis",
@@ -87,7 +91,26 @@ const practiceTranslations: TranslationRecord = {
   overallScoresAndCefrLevels: "• Overall scores and CEFR levels",
   individualSkillBreakdowns: "• Individual skill breakdowns",
   strengthsAndAreasForImprovement: "• Strengths and areas for improvement",
-  progressTrackingOverTime: "• Progress tracking over time"
+  progressTrackingOverTime: "• Progress tracking over time",
+  
+  // NEW: Analysis page specific translations
+  latestAnalysisResults: "Latest Analysis Results",
+  detailedAnalysis: "Detailed Analysis",
+  analysisBreakdown: "Analysis Breakdown",
+  strengths: "Strengths",
+  areasForImprovement: "Areas for Improvement",
+  aiRecommendations: "AI Recommendations",
+  analysisHistory: "Analysis History",
+  yourPreviousAnalysisResults: "Your Previous Analysis Results",
+  analysisComplete: "Analysis Complete",
+  transcriptAnalyzedSuccessfully: "Your transcript has been analyzed successfully!",
+  
+  // Skill names (standardized)
+  reading: "Reading",
+  writing: "Writing",
+  speaking: "Speaking",
+  listening: "Listening",
+  overallLevel: "Overall Level"
 };
 
 export default practiceTranslations;

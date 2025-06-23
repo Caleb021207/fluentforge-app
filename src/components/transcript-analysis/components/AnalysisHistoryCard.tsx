@@ -30,7 +30,7 @@ const AnalysisHistoryCard: React.FC<AnalysisHistoryCardProps> = ({ analyses }) =
       <CardHeader>
         <CardTitle>{t("analysisHistory")}</CardTitle>
         <p className="text-sm text-muted-foreground">
-          {t("yourPreviousAnalysisResults", { count: (analyses.length - 1).toString() })}
+          {t("yourPreviousAnalysisResults")}
         </p>
       </CardHeader>
       <CardContent>

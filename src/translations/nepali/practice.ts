@@ -9,7 +9,7 @@ const practiceTranslations: TranslationRecord = {
   clearConversation: "कुराकानी सफा गर्नुहोस्",
   correctGrammar: "व्याकरण सुधार गर्नुहोस्",
   
-  // NEW: Missing key for starting conversation
+  // Chat interface with proper interpolation
   startConversationIn: "{{language}} मा कुराकानी सुरु गर्नुहोस्",
   startTextChatting: "पाठ च्याट सुरु गर्नुहोस्",
   
@@ -91,7 +91,26 @@ const practiceTranslations: TranslationRecord = {
   overallScoresAndCefrLevels: "• समग्र स्कोर र CEFR स्तरहरू",
   individualSkillBreakdowns: "• व्यक्तिगत सीप विभाजन",
   strengthsAndAreasForImprovement: "• बलियो क्षेत्र र सुधारका क्षेत्रहरू",
-  progressTrackingOverTime: "• समयसँगै प्रगति ट्र्याकिङ"
+  progressTrackingOverTime: "• समयसँगै प्रगति ट्र्याकिङ",
+  
+  // NEW: Analysis page specific translations
+  latestAnalysisResults: "भर्खरको विश्लेषण परिणामहरू",
+  detailedAnalysis: "विस्तृत विश्लेषण",
+  analysisBreakdown: "विश्लेषण विभाजन",
+  strengths: "शक्तिहरू",
+  areasForImprovement: "सुधारका क्षेत्रहरू",
+  aiRecommendations: "AI सुझावहरू",
+  analysisHistory: "विश्लेषण इतिहास",
+  yourPreviousAnalysisResults: "तपाईंका अघिल्ला विश्लेषण परिणामहरू",
+  analysisComplete: "विश्लेषण पूरा भयो",
+  transcriptAnalyzedSuccessfully: "तपाईंको ट्रान्सक्रिप्ट सफलतापूर्वक विश्लेषण गरिएको छ!",
+  
+  // Skill names (standardized)
+  reading: "पढाइ",
+  writing: "लेखाइ",
+  speaking: "बोलाइ",
+  listening: "सुनाइ",
+  overallLevel: "समग्र स्तर"
 };
 
 export default practiceTranslations;
