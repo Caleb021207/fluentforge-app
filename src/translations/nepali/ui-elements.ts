@@ -101,7 +101,6 @@ const uiElementsTranslations: TranslationRecord = {
   
   // Loading states
   pleaseWait: "कृपया पर्खनुहोस्",
-  processing: "प्रक्रिया गर्दै",
   saving: "सेभ गर्दै",
   uploading: "अपलोड गर्दै",
   downloading: "डाउनलोड गर्दै",
@@ -130,7 +129,12 @@ const uiElementsTranslations: TranslationRecord = {
   
   // Specific to our app
   signedInAs: "रूपमा साइन इन गरिएको",
-  loginRequiredForFeature: "यो सुविधाका लागि लगइन आवश्यक"
+  loginRequiredForFeature: "यो सुविधाका लागि लगइन आवश्यक",
+  
+  // Theme related
+  lightMode: "उज्यालो मोड",
+  darkMode: "अँध्यारो मोड",
+  theme: "विषयवस्तु"
 };
 
 export default uiElementsTranslations;

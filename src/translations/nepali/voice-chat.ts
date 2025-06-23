@@ -10,6 +10,36 @@ const voiceChatTranslations: TranslationRecord = {
   listening: "सुन्दै",
   recording: "रेकर्ड गर्दै",
   
+  // Practice descriptions and AI info
+  practiceDescription: "AI सँग वास्तविक समयमा कुराकानी गरेर आफ्नो बोली र सुनाइ कौशल सुधार गर्नुहोस्।",
+  aiModelInfo: "हामी प्राकृतिक भाषा बुझाइ र उत्पादनका लागि OpenAI को GPT-4o-mini प्रयोग गर्छौं, र आवाज प्रतिक्रियाका लागि ब्राउजरको अन्तर्निहित स्पीच सिन्थेसिस प्रयोग गर्छौं।",
+  
+  // Conversation starters
+  conversationStarters: "कुराकानी सुरुकर्ताहरू",
+  tryThesePhrases: "कुराकानी सुरु गर्न यी वाक्यहरू प्रयोग गर्नुहोस्:",
+  phrase1: "नमस्ते, आज तपाईं कस्तो हुनुहुन्छ?",
+  phrase2: "तपाईंको ठाउँमा मौसम कस्तो छ?",
+  phrase3: "के तपाईं राम्रो रेस्टुरेन्ट सिफारिस गर्न सक्नुहुन्छ?",
+  phrase4: "तपाईंका शौक र रुचिहरू के हुन्?",
+  phrase5: "मलाई तपाईंको मनपर्ने पुस्तक वा चलचित्रको बारेमा भन्नुहोस्।",
+  phrase6: "तपाईंले गत सप्ताहन्तमा के गर्नुभयो?",
+  phrase7: "भोलि तपाईंका योजनाहरू के छन्?",
+  phrase8: "स्पेनिश/अंग्रेजीमा यो कसरी भनिन्छ...?",
+  
+  // Practice with voice chat info
+  practiceWithVoiceChat: "आवाज च्याटसँग अभ्यास गर्नुहोस्",
+  useThisTool: "आफ्नो बोली र सुनाइ कौशल सुधार गर्न यो उपकरण प्रयोग गर्नुहोस्। यहाँ केही सुझावहरू छन्:",
+  askQuestions: "दैनिक विषयहरूको बारेमा प्रश्नहरू सोध्नुहोस्",
+  practiceCommonPhrases: "सामान्य वाक्य र अभिव्यक्तिहरूको अभ्यास गर्नुहोस्",
+  describeWhatYouSee: "तपाईंको वरिपरि देखेका कुराहरूको वर्णन गर्नुहोस्",
+  practiceVocabularyForSpecific: "यात्रा वा खानाजस्ता विशिष्ट विषयहरूका लागि शब्दकोशको अभ्यास गर्नुहोस्",
+  
+  // Speaking controls
+  startSpeaking: "बोल्न सुरु गर्नुहोस्",
+  stopListening: "सुन्न बन्द गर्नुहोस्",
+  startSpeakingToSeeTranscript: "ट्रान्सक्रिप्ट हेर्न बोल्न सुरु गर्नुहोस्",
+  clickMicrophoneToStartRecording: "रेकर्डिङ सुरु गर्न माइक्रोफोनमा क्लिक गर्नुहोस्",
+  
   // Permissions and access
   microphonePermissionRequired: "माइक्रोफोन अनुमति आवश्यक",
   microphonePermissionDenied: "माइक्रोफोन अनुमति अस्वीकार गरियो",
@@ -93,7 +123,14 @@ const voiceChatTranslations: TranslationRecord = {
   voiceSettings: "आवाज सेटिङहरू",
   voiceSpeed: "आवाज गति",
   voiceVolume: "आवाज भोल्युम",
-  voiceLanguage: "आवाज भाषा"
+  voiceLanguage: "आवाज भाषा",
+  
+  // Conversation management
+  clearConversation: "कुराकानी सफा गर्नुहोस्",
+  analyzeConversation: "कुराकानी विश्लेषण गर्नुहोस्",
+  startChatting: "च्याट सुरु गर्नुहोस्",
+  stopVoiceChat: "आवाज च्याट रोक्नुहोस्",
+  voiceChatEnded: "आवाज च्याट समाप्त भयो"
 };
 
 export default voiceChatTranslations;
