@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
@@ -137,7 +136,13 @@ const generalTranslations: TranslationRecord = {
   askQuestions: "روزمرہ کے موضوعات کے بارے میں سوالات پوچھیں",
   practiceCommonPhrases: "عام جملے اور اظہارات کی مشق کریں",
   describeWhatYouSee: "اپنے آس پاس جو کچھ دیکھتے ہیں اس کا بیان کریں",
-  practiceVocabularyForSpecific: "مخصوص موضوعات جیسے سفر یا کھانے کے لیے الفاظ کی مشق کریں"
+  practiceVocabularyForSpecific: "مخصوص موضوعات جیسے سفر یا کھانے کے لیے الفاظ کی مشق کریں",
+  
+  // Language selection specific translations
+  selectYourLanguagePreferences: "اپنی زبان کی ترجیحات منتخب کریں",
+  iSpeak: "میں بولتا/بولتی ہوں:",
+  iWantToLearn: "میں سیکھنا چاہتا/چاہتی ہوں:",
+  saveLanguagePreferences: "زبان کی ترجیحات محفوظ کریں",
 };
 
 export default generalTranslations;

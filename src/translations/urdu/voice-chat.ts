@@ -73,9 +73,8 @@ const voiceChatTranslations: TranslationRecord = {
   practiceEverydayPhrases: "عام جملے اور اظہارات کی مشق کریں",
   describeImagesOrScenes: "اپنے آس پاس جو کچھ دیکھتے ہیں اس کا بیان کریں",
   practiceVocabularyForSpecificTopics: "مخصوص موضوعات جیسے سفر یا کھانے کے لیے الفاظ کی مشق کریں",
-  voiceChatEnded: "وائس چیٹ ختم ہو گئی",
   timeLimit5MinReached: "5 منٹ کی حد پہنچ گئی",
-  aiModelInfo: "اے آئی ماڈل: ہم قدرتی زبان کی سمجھ اور تخلیق کے لیے OpenAI کا GPT-4o-mini استعمال کرتے ہیں، آواز کے جوابات کے لیے براؤزر کے بلٹ ان سپیچ سنتھیسس کے ساتھ۔"
+  voiceChatFinalInfo: "اے آئی ماڈل: ہم قدرتی زبان کی سمجھ اور تخلیق کے لیے OpenAI کا GPT-4o-mini استعمال کرتے ہیں، آواز کے جوابات کے لیے براؤزر کے بلٹ ان سپیچ سنتھیسس کے ساتھ۔"
 };
 
 export default voiceChatTranslations;
