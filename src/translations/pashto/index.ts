@@ -1,5 +1,6 @@
 
 import { TranslationRecord } from "../types";
+import generalCoreTranslations from "./general-core";
 import generalTranslations from "./general";
 import uiElementsTranslations from "./ui-elements";
 import languageSelectionTranslations from "./language-selection";
@@ -14,9 +15,11 @@ import progressTranslations from "./progress";
 import profileTranslations from "./profile";
 import pronunciationTranslations from "./pronunciation";
 import landingAuthTranslations from "./landing-auth";
+import settingsTranslations from "./settings";
 
 // Combine all the translation categories
 const pashtoTranslations: TranslationRecord = {
+  ...generalCoreTranslations,
   ...generalTranslations,
   ...uiElementsTranslations,
   ...languageSelectionTranslations,
@@ -31,6 +34,7 @@ const pashtoTranslations: TranslationRecord = {
   ...profileTranslations,
   ...pronunciationTranslations,
   ...landingAuthTranslations,
+  ...settingsTranslations,
 };
 
 export default pashtoTranslations;

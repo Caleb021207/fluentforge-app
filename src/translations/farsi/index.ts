@@ -1,5 +1,6 @@
 
 import { TranslationRecord } from "../types";
+import generalCoreTranslations from "./general-core";
 import generalTranslations from "./general";
 import uiElementsTranslations from "./ui-elements";
 import languageSelectionTranslations from "./language-selection";
@@ -13,9 +14,11 @@ import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
+import settingsTranslations from "./settings";
 
 // Combine all the translation categories
 const farsiTranslations: TranslationRecord = {
+  ...generalCoreTranslations,
   ...generalTranslations,
   ...uiElementsTranslations,
   ...languageSelectionTranslations,
@@ -29,6 +32,7 @@ const farsiTranslations: TranslationRecord = {
   ...authTranslations,
   ...languagesTranslations,
   ...navigationTranslations,
+  ...settingsTranslations,
 };
 
 export default farsiTranslations;

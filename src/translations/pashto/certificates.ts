@@ -2,45 +2,24 @@
 import { TranslationRecord } from "../types";
 
 const certificatesTranslations: TranslationRecord = {
-  certificates: "سندونه",
-  myCertificates: "زما سندونه",
-  earnCertificate: "سند واخلئ",
-  certificateEarned: "سند واخیستل شو",
+  certificationProgress: "د سند ورکولو پرمختګ",
+  readingTest: "د لوستلو ازموینه",
+  writingTest: "د لیکلو ازموینه",
+  conversationalFluency: "د خبرو کولو روانتیا",
   overallCertificate: "ټولیز سند",
-  conversationalFluency: "د خبرو روانتیا",
-  readingComprehension: "د لوستلو پوهاوی",
-  writingProficiency: "د لیکلو وړتیا",
-  listeningSkills: "د اورېدلو مهارتونه",
-  speakingAbility: "د خبرو کولو وړتیا",
-  grammarAccuracy: "د ګرامر سمون",
-  vocabularyKnowledge: "د لغتونو پوهه",
-  pronunciationClarity: "د تلفظ روښانتیا",
-  
-  // Certificate levels
-  beginner: "پیلونکی",
-  elementary: "ابتدايي",
-  intermediate: "منځنی",
-  upperIntermediate: "پورته منځنی",
-  advanced: "پرمختللی",
-  proficient: "ماهر",
-  
-  // Test related
+  skillAssessments: "د مهارتونو ارزونه",
+  certificationHistory: "د سند ورکولو تاریخ",
+  viewDetails: "تفصیلات وګورئ",
+  attemptDate: "د هڅې نیټه",
+  testType: "د ازموینې ډول",
+  score: "ګولونه",
+  level: "کچه",
+  noAttempts: "لا تر اوسه د سند لپاره هڅه نده شوې",
+  takeATest: "ازموینه ورکړئ ترڅو دلته پایلې وګورئ",
+  thisTestNotAvailable: "دا ازموینه دا مهال ستاسو د غوره شوي ژبې جوړه لپاره نشته.",
+  readyToTest: "د خبرو کولو وړتیا ازموینه ورکولو لپاره چمتو یاست؟",
   startTest: "ازموینه پیل کړئ",
-  takeTest: "ازموینه ورکړئ",
-  retakeTest: "ازموینه بیا ورکړئ",
-  testCompleted: "ازموینه بشپړه شوه",
-  testInProgress: "ازموینه روانه ده",
-  testScore: "د ازموینې سکور",
-  passingScore: "د بریا سکور",
-  yourScore: "ستاسو سکور",
-  congratulations: "مبارک شه",
-  tryAgain: "بیا هڅه وکړئ",
-  
-  // Certificate actions
-  downloadCertificate: "سند ډاون لوډ کړئ",
-  shareCertificate: "سند شریک کړئ",
-  printCertificate: "سند پرنټ کړئ",
-  viewCertificate: "سند وګورئ"
+  pleaseLoginToTakeTest: "مهرباني وکړئ د ازموینې ورکولو لپاره ننوتل وکړئ",
 };
 
 export default certificatesTranslations;
