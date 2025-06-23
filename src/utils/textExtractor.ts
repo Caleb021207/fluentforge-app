@@ -9,8 +9,8 @@ const TEXT_PATTERNS = {
   // JSX text content: <div>Hello World</div>
   jsxText: />([^<>{}\n]+)</g,
   
-  // String literals in quotes
-  quotedStrings: /(['"`])([^'"`\n\\]|\\.)++?\1/g,
+  // String literals in quotes - fixed the regex pattern
+  quotedStrings: /(['"`])([^'"`\n\\]|\\.)*?\1/g,
   
   // Template literals
   templateLiterals: /`([^`\n\\]|\\.)*`/g,
