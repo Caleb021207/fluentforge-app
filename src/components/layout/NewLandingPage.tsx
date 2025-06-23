@@ -147,7 +147,7 @@ const NewLandingPage = () => {
           >
             
             <p className="text-sm font-medium text-muted-foreground">
-              Swipe up to get started
+              {t("swipeUpToGetStarted")}
             </p>
           </motion.div>
         </motion.div>
@@ -159,7 +159,7 @@ const NewLandingPage = () => {
         onOpenChange={setIsPanelOpen}
       >
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-center mb-6">Get Started</h2>
+          <h2 className="text-2xl font-bold text-center mb-6">{t("getStarted")}</h2>
           
           <LanguageSelectionCard
             nativeLanguage={nativeLanguage}
@@ -180,7 +180,7 @@ const NewLandingPage = () => {
               }}
               className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium"
             >
-              Sign In
+              {t("signIn")}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -191,7 +191,7 @@ const NewLandingPage = () => {
               }}
               className="px-6 py-3 bg-accent text-accent-foreground rounded-lg font-medium"
             >
-              Sign Up
+              {t("signUp")}
             </motion.button>
           </div>
         </div>

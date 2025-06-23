@@ -5,6 +5,7 @@ const landingAuthTranslations: TranslationRecord = {
   // Landing Page
   getStarted: "Get Started",
   swipeUpToGetStarted: "Swipe up to get started",
+  signUp: "Sign Up",
   
   // Auth Flow
   signInToContinue: "Sign in to continue",
@@ -41,6 +42,10 @@ const landingAuthTranslations: TranslationRecord = {
   
   // Settings
   parentalControlsDescription: "Configure parental controls and safety settings",
+  
+  // Auth Dialog Navigation
+  dontHaveAccount: "Don't have an account?",
+  alreadyHaveAccount: "Already have an account?",
 };
 
 export default landingAuthTranslations;

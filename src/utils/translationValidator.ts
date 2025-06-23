@@ -21,6 +21,7 @@ export const MASTER_TRANSLATION_KEYS = [
 
   // UI Elements - Core Actions
   "signIn",
+  "signUp",
   "createAccount",
   "goToDashboard",
   "practiceWithAI",
@@ -105,6 +106,8 @@ export const MASTER_TRANSLATION_KEYS = [
   "myProfile",
   "roleNotAssigned",
   "pleaseUseAccessCode",
+  "dontHaveAccount",
+  "alreadyHaveAccount",
 
   // Profile & User Management
   "student",
