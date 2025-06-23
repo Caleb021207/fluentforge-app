@@ -1,11 +1,11 @@
 
 import { TranslationRecord } from "../types";
-import romanianCoreTranslations from "./core";
+import romanianGeneralTranslations from "./general";
 import romanianPracticeTranslations from "./practice";
 
 // Complete Romanian translations with practice integration
 const romanianTranslations: TranslationRecord = {
-  ...romanianCoreTranslations,
+  ...romanianGeneralTranslations,
   ...romanianPracticeTranslations
 };
 

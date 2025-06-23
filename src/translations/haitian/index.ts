@@ -1,11 +1,11 @@
 
 import { TranslationRecord } from "../types";
-import haitianCoreTranslations from "./core";
+import haitianGeneralTranslations from "./general";
 import haitianPracticeTranslations from "./practice";
 
 // Complete Haitian translations with practice integration
 const haitianTranslations: TranslationRecord = {
-  ...haitianCoreTranslations,
+  ...haitianGeneralTranslations,
   ...haitianPracticeTranslations
 };
 

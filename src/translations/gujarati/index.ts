@@ -1,11 +1,11 @@
 
 import { TranslationRecord } from "../types";
-import gujaratiCoreTranslations from "./core";
+import gujaratiGeneralTranslations from "./general-core";
 import gujaratiPracticeTranslations from "./practice";
 
 // Complete Gujarati translations with practice integration
 const gujaratiTranslations: TranslationRecord = {
-  ...gujaratiCoreTranslations,
+  ...gujaratiGeneralTranslations,
   ...gujaratiPracticeTranslations
 };
 
