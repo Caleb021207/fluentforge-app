@@ -157,15 +157,12 @@ export const TRANSLATION_SCHEMA = {
   "generateCode": "string",
   
   // Navigation
-  "unlimitedVoicePractice": "string",
   "pronunciationPractice": "string",
-  "premiumVoiceChat": "string",
   "vocabulary": "string",
   "help": "string",
   "about": "string",
   "contact": "string",
   "admin": "string",
-  "goToDashboard": "string",
   "returnToHome": "string",
   "backToMenu": "string",
   

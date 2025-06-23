@@ -11,6 +11,15 @@ export interface LanguageValidationReport {
   criticalMissing: string[];
 }
 
+export interface LanguageCompletenessReport {
+  language: string;
+  displayName: string;
+  completionPercentage: number;
+  missingKeys: number;
+  foundKeys: number;
+  totalKeys: number;
+}
+
 const CRITICAL_KEYS = [
   "welcome",
   "home",
@@ -27,6 +36,24 @@ const CRITICAL_KEYS = [
   "startSpeaking",
   "microphoneAccessRequired",
   "speechRecognitionNotSupported"
+];
+
+export const MASTER_TRANSLATION_KEYS = Object.keys(TRANSLATION_SCHEMA);
+
+export const TRANSLATION_CATEGORIES = [
+  "general-core",
+  "ui-elements", 
+  "auth",
+  "navigation",
+  "practice",
+  "certificates",
+  "progress",
+  "profile",
+  "voice-chat",
+  "premium-voice",
+  "language-frameworks",
+  "languages",
+  "settings"
 ];
 
 export function validateAllLanguages(): LanguageValidationReport[] {
@@ -46,6 +73,66 @@ export function validateAllLanguages(): LanguageValidationReport[] {
       criticalMissing
     };
   });
+}
+
+export function validateAllLanguageTranslations(): Record<string, TranslationValidationResult> {
+  const languages = {
+    "english": englishTranslations,
+    "farsi": farsiTranslations,
+    "pashto": pashtoTranslations
+  };
+
+  const results: Record<string, TranslationValidationResult> = {};
+  
+  Object.entries(languages).forEach(([language, translations]) => {
+    results[language] = validateTranslations(translations);
+  });
+
+  return results;
+}
+
+export function validateLanguageTranslations(languageCode: string): TranslationValidationResult {
+  const languages = {
+    "english": englishTranslations,
+    "farsi": farsiTranslations,
+    "pashto": pashtoTranslations
+  };
+
+  const translations = languages[languageCode as keyof typeof languages];
+  if (!translations) {
+    return {
+      isComplete: false,
+      missingKeys: MASTER_TRANSLATION_KEYS,
+      totalKeys: MASTER_TRANSLATION_KEYS.length,
+      foundKeys: 0,
+      completionPercentage: 0
+    };
+  }
+
+  return validateTranslations(translations);
+}
+
+export function getLanguagesByCompleteness(): LanguageCompletenessReport[] {
+  const languages = {
+    "english": { translations: englishTranslations, displayName: "English" },
+    "farsi": { translations: farsiTranslations, displayName: "Farsi (Persian)" },
+    "pashto": { translations: pashtoTranslations, displayName: "Pashto" }
+  };
+
+  const reports = Object.entries(languages).map(([language, { translations, displayName }]) => {
+    const validation = validateTranslations(translations);
+    
+    return {
+      language,
+      displayName,
+      completionPercentage: validation.completionPercentage,
+      missingKeys: validation.missingKeys.length,
+      foundKeys: validation.foundKeys,
+      totalKeys: validation.totalKeys
+    };
+  });
+
+  return reports.sort((a, b) => b.completionPercentage - a.completionPercentage);
 }
 
 export function logTranslationReport(): void {
