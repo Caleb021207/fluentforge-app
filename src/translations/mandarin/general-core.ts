@@ -89,7 +89,6 @@ const generalCoreTranslations: TranslationRecord = {
   welcomeMessage: "欢迎来到Lingua语言学习应用！",
   pageNotFound: "页面未找到",
   networkConnectionIssue: "网络连接问题",
-  pleaseWait: "请稍候",
   sessionExpired: "您的会话已过期。请重新登录。",
   cooldownActive: "冷却时间激活",
   dailyLimitReached: "已达到每日限制",
