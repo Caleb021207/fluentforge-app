@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import ukrainianCoreTranslations from "./core";
+import ukrainianVoiceChatTranslations from "./voice-chat";
 
-// Use only the clean core translations for Ukrainian
+// Complete Ukrainian translations with voice chat integration
 const ukrainianTranslations: TranslationRecord = {
-  ...ukrainianCoreTranslations
+  ...ukrainianCoreTranslations,
+  ...ukrainianVoiceChatTranslations
 };
 
 export default ukrainianTranslations;

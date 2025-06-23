@@ -19,7 +19,7 @@ const voiceChatTranslations: TranslationRecord = {
   "conversationHistory": "Cronologia conversazione",
   "clearConversation": "Cancella conversazione",
   
-  // Phrases for conversation
+  // Phrases for conversation - ADDED MISSING PHRASES
   "phrase1": "Ciao, come stai oggi?",
   "phrase2": "Com'è il tempo dove ti trovi?",
   "phrase3": "Puoi consigliare un buon ristorante?",
@@ -28,6 +28,14 @@ const voiceChatTranslations: TranslationRecord = {
   "phrase6": "Cosa hai fatto lo scorso weekend?",
   "phrase7": "Quali sono i tuoi piani per domani?",
   "phrase8": "Come si dice... in inglese/spagnolo?",
+  
+  // Practice tips - ADDED MISSING KEYS
+  "practiceWithVoiceChat": "Pratica con chat vocale",
+  "useThisTool": "Usa questo strumento per migliorare le tue capacità di parlare e ascoltare. Ecco alcuni suggerimenti:",
+  "askQuestions": "Fai domande su argomenti quotidiani",
+  "practiceCommonPhrases": "Pratica frasi ed espressioni comuni",
+  "describeWhatYouSee": "Descrivi quello che vedi intorno a te",
+  "practiceVocabularyForSpecific": "Pratica il vocabolario per argomenti specifici come viaggi o cibo",
   
   // Error messages
   "speechRecognitionError": "Errore di riconoscimento vocale",
@@ -42,7 +50,11 @@ const voiceChatTranslations: TranslationRecord = {
   "playAgain": "Riproduci di nuovo",
   "translation": "Traduzione",
   "conversationHistoryCleared": "Cronologia conversazione cancellata",
-  "success": "Successo"
+  "success": "Successo",
+  "voiceChatEnded": "Chat vocale terminata",
+  "remaining": "rimanente",
+  "failedToGetResponse": "Impossibile ottenere risposta",
+  "freePracticeWithVoice": "Pratica gratuita con voce"
 };
 
 export default voiceChatTranslations;

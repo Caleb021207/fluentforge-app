@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import italianCoreTranslations from "./core";
+import italianVoiceChatTranslations from "./voice-chat";
 
-// Use only the clean core translations for Italian
+// Complete Italian translations with voice chat integration
 const italianTranslations: TranslationRecord = {
-  ...italianCoreTranslations
+  ...italianCoreTranslations,
+  ...italianVoiceChatTranslations
 };
 
 export default italianTranslations;
