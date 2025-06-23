@@ -3,10 +3,10 @@ import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
   // Voice chat page
-  "practiceDescription": "使用我們的語音聊天練習說英語。點擊麥克風按鈕並開始用英語說話。",
-  "aiModelInfo": "AI模型：我們使用OpenAI GPT-4o-mini，配合Meta MMS進行TTS。",
-  "practiceLevel": "練習水平：B1 – 中級 – 能夠討論熟悉的話題",
-  "cefrB1Description": "中級 – 能夠討論熟悉的話題",
+  "practiceDescription": "使用我哋嘅語音聊天練習講英語。點擊麥克風按鈕並開始用英語說話。",
+  "aiModelInfo": "AI模型：我哋使用OpenAI GPT-4o-mini，配合Meta MMS進行TTS。",
+  "practiceLevel": "練習水平：B1 – 中級 – 能夠討論熟悉嘅話題",
+  "cefrB1Description": "中級 – 能夠討論熟悉嘅話題",
   
   // Voice chat controls
   "startSpeaking": "開始說話",
@@ -15,7 +15,7 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Conversation features
   "conversationStarters": "對話開始語",
-  "tryThesePhrases": "嘗試使用這些短語開始對話",
+  "tryThesePhrases": "嘗試使用呢啲短語開始對話",
   "conversationHistory": "對話歷史",
   "clearConversation": "清除對話",
   
@@ -31,7 +31,7 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Error messages
   "speechRecognitionError": "語音識別錯誤",
-  "speechRecognitionNotSupported": "你的瀏覽器不支持語音識別",
+  "speechRecognitionNotSupported": "你嘅瀏覽器唔支持語音識別",
   "microphoneAccessRequired": "需要麥克風訪問權限",
   "failedToGenerateSpeech": "無法生成語音音頻",
   "startConversationIn": "用{language}開始對話",
@@ -41,7 +41,26 @@ const voiceChatTranslations: TranslationRecord = {
   "playAgain": "再次播放",
   "translation": "翻譯",
   "conversationHistoryCleared": "對話歷史已清除",
-  "success": "成功"
+  "success": "成功",
+  
+  // Additional voice chat translations
+  "practiceWithVoiceChat": "用語音聊天練習",
+  "useThisTool": "使用呢個工具練習你嘅語言技能",
+  "askQuestions": "問問題",
+  "practiceCommonPhrases": "練習常用短語",
+  "describeWhatYouSee": "描述你睇到嘅嘢",
+  "practiceVocabularyForSpecific": "針對特定主題練習詞彙",
+  "startSpeakingToSeeTranscript": "開始說話睇文字記錄",
+  "clickMicrophoneToStartRecording": "點擊麥克風按鈕開始錄音",
+  "currentLanguage": "當前語言",
+  "practiceLanguage": "練習語言",
+  "failedToGetResponse": "無法獲取回應",
+  "translationError": "翻譯錯誤",
+  "failedToGetTranslation": "無法獲取翻譯",
+  "notEnoughMessagesToAnalyze": "冇足夠嘅訊息進行分析",
+  "conversationAnalysisComplete": "對話分析完成",
+  "grammarAccuracy": "語法準確性",
+  "conversationComplexity": "對話複雜性"
 };
 
 export default voiceChatTranslations;
