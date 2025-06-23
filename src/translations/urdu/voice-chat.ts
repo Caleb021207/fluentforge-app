@@ -46,7 +46,36 @@ const voiceChatTranslations: TranslationRecord = {
   stopVoiceChat: "وائس چیٹ بند کریں",
   cefrB1Description: "سادہ زبان میں جانی پہچانی چیزوں پر بات کر سکتے ہیں",
   conversationHistoryCleared: "گفتگو کی تاریخ صاف کر دی گئی",
-  aiModelInfo: "ہم اوپن اے آئی GPT-4o-mini کا استعمال کرتے ہیں، براؤزر پر مبنی اسپیچ سنتھیسس کے ساتھ۔"
+  aiModelInfo: "ہم اوپن اے آئی GPT-4o-mini کا استعمال کرتے ہیں، براؤزر پر مبنی اسپیچ سنتھیسس کے ساتھ۔",
+  
+  // Practice tips that were missing
+  practiceWithVoiceChat: "وائس چیٹ کے ساتھ مشق کریں",
+  useThisTool: "اپنے بولنے اور سننے کے کوشل کو بہتر بنانے کے لیے اس ٹول کا استعمال کریں۔ یہاں کچھ ٹپس ہیں:",
+  askQuestions: "روزمرہ کے موضوعات کے بارے میں سوالات پوچھیں",
+  practiceCommonPhrases: "عام جملے اور اظہارات کی مشق کریں",
+  describeWhatYouSee: "اپنے آس پاس جو کچھ دیکھتے ہیں اس کا بیان کریں",
+  practiceVocabularyForSpecific: "مخصوص موضوعات جیسے سفر یا کھانے کے لیے الفاظ کی مشق کریں",
+  
+  // Indonesian conversation starter phrases
+  phrase1: "آداب، آج آپ کیسے ہیں؟",
+  phrase2: "آپ کے علاقے میں موسم کیسا ہے؟",
+  phrase3: "کیا آپ کوئی اچھا ریستوراں تجویز کر سکتے ہیں؟",
+  phrase4: "آپ کے مشغلے اور دلچسپیاں کیا ہیں؟",
+  phrase5: "اپنی پسندیدہ کتاب یا فلم کے بارے میں بتائیں۔",
+  phrase6: "پچھلے ہفتے آپ نے کیا کیا؟",
+  phrase7: "کل کے لیے آپ کے کیا منصوبے ہیں؟",
+  phrase8: "... کو ہسپانوی/انگریزی میں کیا کہتے ہیں؟",
+  
+  // Page specific translations
+  freePracticeWithVoice: "مفت آواز کے ساتھ مشق",
+  practiceLanguageTips: "اپنے بولنے اور سننے کی مہارت بہتر بنانے کے لیے اس ٹول کا استعمال کریں۔ یہاں کچھ ٹپس ہیں:",
+  askQuestionsAboutTopics: "روزمرہ کے موضوعات کے بارے میں سوالات پوچھیں",
+  practiceEverydayPhrases: "عام جملے اور اظہارات کی مشق کریں",
+  describeImagesOrScenes: "اپنے آس پاس جو کچھ دیکھتے ہیں اس کا بیان کریں",
+  practiceVocabularyForSpecificTopics: "مخصوص موضوعات جیسے سفر یا کھانے کے لیے الفاظ کی مشق کریں",
+  voiceChatEnded: "وائس چیٹ ختم ہو گئی",
+  timeLimit5MinReached: "5 منٹ کی حد پہنچ گئی",
+  aiModelInfo: "اے آئی ماڈل: ہم قدرتی زبان کی سمجھ اور تخلیق کے لیے OpenAI کا GPT-4o-mini استعمال کرتے ہیں، آواز کے جوابات کے لیے براؤزر کے بلٹ ان سپیچ سنتھیسس کے ساتھ۔"
 };
 
 export default voiceChatTranslations;
