@@ -8,6 +8,8 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   spanish: "Español",
   portuguese: "Português",
   french: "Français",
+  german: "Deutsch",
+  italian: "Italiano",
   japanese: "日本語",
   korean: "한국어",
   mandarin: "中文",
@@ -33,8 +35,6 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   igbo: "Igbo",
   tagalog: "Tagalog",
   cantonese: "廣東話",
-  german: "Deutsch",
-  italian: "Italiano",
   thai: "ภาษาไทย",
   // Re-adding the previously removed languages
   gujarati: "ગુજરાતી",
