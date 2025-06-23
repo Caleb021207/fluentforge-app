@@ -16,6 +16,7 @@ import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
+import landingAuthTranslations from "./landing-auth";
 
 // Combine all the translation categories
 const englishTranslations: TranslationRecord = {
@@ -35,6 +36,7 @@ const englishTranslations: TranslationRecord = {
   ...authTranslations,
   ...languagesTranslations,
   ...navigationTranslations,
+  ...landingAuthTranslations,
 };
 
 export default englishTranslations;

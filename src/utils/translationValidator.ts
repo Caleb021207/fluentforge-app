@@ -1,5 +1,4 @@
 
-
 import translations from "@/translations";
 import { AVAILABLE_LANGUAGES } from "@/translations/constants";
 
@@ -20,7 +19,7 @@ export const MASTER_TRANSLATION_KEYS = [
   "cefrB1Description",
   "speechSynthesisNotSupported",
 
-  // UI Elements
+  // UI Elements - Core Actions
   "signIn",
   "createAccount",
   "goToDashboard",
@@ -87,6 +86,44 @@ export const MASTER_TRANSLATION_KEYS = [
   "aiAnalysis",
   "premium",
   "register",
+
+  // Landing Page & Auth Flow
+  "getStarted",
+  "swipeUpToGetStarted",
+  "signInToContinue",
+  "createAccountToGetStarted",
+  "email",
+  "password",
+  "accessPasscode",
+  "incorrectPasscode",
+  "retrying",
+  "authenticationRequired",
+  "pleaseSignInToViewProfile",
+  "autenticacionRequerida",
+  "porFavorIniciaSession",
+  "miPerfil",
+  "myProfile",
+  "roleNotAssigned",
+  "pleaseUseAccessCode",
+
+  // Profile & User Management
+  "student",
+  "teacher",
+  "administrator",
+  "districtAdmin",
+  "estudiante",
+  "profesor",
+  "administrador",
+  "distrito",
+
+  // Practice Interface
+  "correctGrammar",
+  "clearConversation",
+  "authRequired",
+  "pleaseLoginToAccessThisFeature",
+
+  // Settings
+  "parentalControlsDescription",
 
   // AI Analysis
   "aiProgressAnalysis",
@@ -397,20 +434,23 @@ export const MASTER_TRANSLATION_KEYS = [
   "signedInAs",
 ] as const;
 
-// Categories for organization
+// Enhanced categories for better organization
 export const TRANSLATION_CATEGORIES = {
-  core: ["welcomeToLanguageLearning", "yourPersonalAICompanion", "welcomeMessage"],
-  ui: ["signIn", "createAccount", "loading", "error", "success"],
-  navigation: ["home", "practice", "progress", "certificates", "profile"],
-  aiAnalysis: ["aiProgressAnalysis", "uploadLanguageTestTranscripts", "totalAnalyses"],
-  languageSelection: ["iSpeak", "iWantToLearn", "selectYourNativeLanguage"],
-  practice: ["practiceYourLanguage", "chatWithAI", "startConversationIn"],
-  voiceChat: ["voiceChatTitle", "startVoiceChat", "endVoiceChat"],
-  certificates: ["certificationProgress", "readingTest", "writingTest"],
-  progress: ["yourProgress", "lessonsCompleted", "scoreTrends"],
-  auth: ["signInToAccount", "createNewAccount", "emailAddress"],
-  classroom: ["createNewClass", "joinClass", "myClasses"],
-  accuracy: ["accuracyMetrics", "grammarAccuracy", "vocabularyDiversity"],
+  core: ["welcomeToLanguageLearning", "yourPersonalAICompanion", "welcomeMessage", "getStarted", "swipeUpToGetStarted"],
+  ui: ["signIn", "createAccount", "loading", "error", "success", "submit", "save", "cancel", "yes", "no", "ok"],
+  navigation: ["home", "practice", "progress", "certificates", "profile", "settings", "help", "about"],
+  landingAuth: ["signInToContinue", "createAccountToGetStarted", "email", "password", "accessPasscode", "incorrectPasscode", "retrying"],
+  profile: ["authenticationRequired", "pleaseSignInToViewProfile", "myProfile", "student", "teacher", "administrator", "roleNotAssigned"],
+  practiceInterface: ["correctGrammar", "clearConversation", "authRequired", "pleaseLoginToAccessThisFeature"],
+  aiAnalysis: ["aiProgressAnalysis", "uploadLanguageTestTranscripts", "totalAnalyses", "analysisResults", "progressTimeline"],
+  languageSelection: ["iSpeak", "iWantToLearn", "selectYourNativeLanguage", "selectLanguageToLearn"],
+  practice: ["practiceYourLanguage", "chatWithAI", "startConversationIn", "practiceGuide"],
+  voiceChat: ["voiceChatTitle", "startVoiceChat", "endVoiceChat", "listening", "recording"],
+  certificates: ["certificationProgress", "readingTest", "writingTest", "conversationalFluency"],
+  progress: ["yourProgress", "lessonsCompleted", "scoreTrends", "noProgressData"],
+  auth: ["signInToAccount", "createNewAccount", "emailAddress", "forgotPassword"],
+  classroom: ["createNewClass", "joinClass", "myClasses", "generateCode", "students"],
+  accuracy: ["accuracyMetrics", "grammarAccuracy", "vocabularyDiversity", "overallAccuracy"],
 } as const;
 
 /**
@@ -519,9 +559,9 @@ export function getMissingKeysForCategory(
   const categoryKeys = TRANSLATION_CATEGORIES[category];
   
   // Create a Set for efficient lookup of category keys
-  const categoryKeySet = new Set(categoryKeys);
+  const categoryKeySet = new Set<string>(categoryKeys);
   
   return validation.missingKeys.filter(key => 
-    categoryKeySet.has(key as any)
+    categoryKeySet.has(key)
   );
 }
