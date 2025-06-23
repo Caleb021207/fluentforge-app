@@ -3,9 +3,7 @@ import { TranslationRecord } from "../types";
 import generalCoreTranslations from "./general-core";
 import voiceChatTranslations from "./voice-chat";
 import practiceTranslations from "./practice";
-import ui
-
-ElementsTranslations from "./ui-elements";
+import uiElementsTranslations from "./ui-elements";
 import languageSelectionTranslations from "./language-selection";
 import authTranslations from "./auth";
 import navigationTranslations from "./navigation";
