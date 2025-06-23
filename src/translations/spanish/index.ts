@@ -1,6 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import generalTranslations from "./general";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
+import ferpaTranslations from "./ferpa";
+import safetyTranslations from "./safety";
+import dataPrivacyTranslations from "./data-privacy";
 import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
 import certificatesTranslations from "./certificates";
@@ -15,7 +19,11 @@ import navigationTranslations from "./navigation";
 
 // Combine all the translation categories
 const spanishTranslations: TranslationRecord = {
-  ...generalTranslations,
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
+  ...ferpaTranslations,
+  ...safetyTranslations,
+  ...dataPrivacyTranslations,
   ...languageSelectionTranslations,
   ...practiceTranslations,
   ...certificatesTranslations,

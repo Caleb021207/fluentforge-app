@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const navigationTranslations: TranslationRecord = {
@@ -28,7 +29,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "Política de Cookies",
   accessibilityStatement: "Declaración de Accesibilidad",
   pronunciationPractice: "Práctica de Pronunciación",
-  aiAnalysis: "Análisis IA"
+  aiAnalysis: "Análisis de IA"
 };
 
 export default navigationTranslations;
