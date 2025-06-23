@@ -18,6 +18,7 @@ import navigationTranslations from "./navigation";
 const portugueseTranslations: TranslationRecord = {
   ...generalCoreTranslations,
   ...generalTranslations,
+  ...authTranslations,
   ...languageSelectionTranslations,
   ...practiceTranslations,
   ...certificatesTranslations,
@@ -26,7 +27,6 @@ const portugueseTranslations: TranslationRecord = {
   ...voiceChatTranslations,
   ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
-  ...authTranslations,
   ...languagesTranslations,
   ...navigationTranslations,
 };
