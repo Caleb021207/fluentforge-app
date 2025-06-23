@@ -2,73 +2,71 @@
 import { TranslationRecord } from "../types";
 
 const safetyTranslations: TranslationRecord = {
-  safety: "Usalama",
-  contentSafety: "Usalama wa Maudhui",
-  onlineSafety: "Usalama Mtandaoni",
-  dataSecurity: "Usalama wa Data",
-  privacyProtection: "Ulinzi wa Faragha",
-  ageRestrictions: "Vikwazo vya Umri",
+  safetyPolicy: "Sera ya Usalama",
+  childSafety: "Usalama wa Mtoto",
+  onlineSafety: "Usalama wa Mtandaoni",
   parentalControls: "Vidhibiti vya Wazazi",
-  contentFiltering: "Uchujaji wa Maudhui",
-  blockInappropriateContent: "Zuia Maudhui Yasiyofaa",
-  safeSearch: "Utafutaji Salama",
-  reportAbuse: "Ripoti Unyanyasaji",
+  
+  // Safety measures
+  safetyMeasures: "Hatua za Usalama",
+  contentModeration: "Uongozaji wa Maudhui",
+  userReporting: "Kuripoti kwa Mtumiaji",
+  safeInteraction: "Muingiliano Salama",
+  
+  // Parental controls
+  parentalControlsDescription: "Dhibiti jinsi mtoto wako anavyoingiliana na programu",
+  setTimeLimit: "Weka Kikomo cha Muda",
+  monitorActivity: "Fuatilia Shughuli",
+  restrictContent: "Zuia Maudhui",
+  approveContacts: "Idhinisha Mawasiliano",
+  
+  // Age verification
+  ageVerification: "Uthibitisho wa Umri",
+  parentalConsent: "Idhini ya Mzazi",
+  childAccount: "Akaunti ya Mtoto",
+  supervisedAccount: "Akaunti ya Kusimamia",
+  
+  // Safety guidelines
+  safetyGuidelines: "Miongozo ya Usalama",
+  personalInformationSafety: "Usalama wa Taarifa Binafsi",
   reportInappropriateContent: "Ripoti Maudhui Yasiyofaa",
   blockUser: "Zuia Mtumiaji",
-  restrictedMode: "Hali Iliyozuiwa",
-  safetySettings: "Mipangilio ya Usalama",
+  
+  // Content safety
+  appropriateContent: "Maudhui Yanayofaa",
+  ageAppropriate: "Yanayofaa kwa Umri",
+  educationalContent: "Maudhui ya Kielimu",
+  safeEnvironment: "Mazingira Salama",
+  
+  // Emergency procedures
+  emergencyContact: "Mawasiliano ya Dharura",
+  reportIncident: "Ripoti Tukio",
+  safetyHotline: "Simu ya Usalama",
+  immediateAction: "Hatua ya Haraka",
+  
+  // Digital citizenship
+  digitalCitizenship: "Uraia wa Kidijitali",
+  respectfulBehavior: "Tabia ya Heshima",
+  cyberBullying: "Uonevu wa Kimtandao",
+  onlineEtiquette: "Adabu za Mtandaoni",
+  
+  // Privacy and safety
   privacySettings: "Mipangilio ya Faragha",
-  accountSecurity: "Usalama wa Akaunti",
-  passwordSecurity: "Usalama wa Nywila",
-  twoFactorAuthentication: "Uthibitishaji wa Vipengele Viwili",
-  verifiedAccount: "Akaunti Iliyothibitishwa",
-  secureBrowsing: "Kuvinjari kwa Usalama",
+  dataProtection: "Ulinzi wa Data",
+  secureCommunication: "Mawasiliano Salama",
   encryptedData: "Data Iliyosimbwa",
-  dataEncryption: "Usimbaji wa Data",
-  secureConnection: "Muunganisho Salama",
-  safetyTips: "Vidokezo vya Usalama",
-  stayingSafeOnline: "Kubaki Salama Mtandaoni",
-  protectingYourPrivacy: "Kulinda Faragha Yako",
-  securePassword: "Nywila Salama",
-  recognizingScams: "Kutambua Ulaghai",
-  phishingAwareness: "Ufahamu wa Phishing",
-  deviceSecurity: "Usalama wa Kifaa",
-  updateSoftware: "Sasisha Programu",
-  malwareProtection: "Ulinzi wa Malware",
+  
+  // Safety resources
   safetyResources: "Rasilimali za Usalama",
-  safetyCenter: "Kituo cha Usalama",
-  helpCenter: "Kituo cha Usaidizi",
-  safetyPartners: "Washirika wa Usalama",
-  safetyStandards: "Viwango vya Usalama",
-  communityGuidelines: "Miongozo ya Jumuiya",
-  termsOfService: "Masharti ya Huduma",
-  privacyPolicy: "Sera ya Faragha",
-  cookiePolicy: "Sera ya Vidakuzi",
-  childSafety: "Usalama wa Watoto",
-  teenSafety: "Usalama wa Vijana",
-  adultSafety: "Usalama wa Watu Wazima",
-  digitalWellbeing: "Ustawi wa Kidijitali",
-  screenTime: "Muda wa Skrini",
-  digitalBalance: "Usawa wa Kidijitali",
-  mentalHealth: "Afya ya Akili",
-  safetyMode: "Hali ya Usalama",
-  restrictMode: "Hali ya Kuzuia",
-  monitoringTools: "Zana za Ufuatiliaji",
-  activityMonitoring: "Ufuatiliaji wa Shughuli",
-  locationTracking: "Ufuatiliaji wa Mahali",
-  emergencyResponse: "Ufikiaji wa Dharura",
-  crisisResources: "Rasilimali za Mgogoro",
-  helplineContacts: "Mawasiliano ya Simu ya Msaada",
-  emergencyContacts: "Mawasiliano ya Dharura",
-  safetyAlerts: "Tahadhari za Usalama",
-  pinProtection: "Ulinzi wa PIN",
-  setupPIN: "Weka PIN",
-  changePIN: "Badilisha PIN",
-  recoveryOptions: "Chaguo za Urejeshaji",
-  verificationProcess: "Mchakato wa Uthibitishaji",
-  identityVerification: "Uthibitishaji wa Utambulisho",
-  ageVerification: "Uthibitishaji wa Umri",
-  verifyYourAge: "Thibitisha Umri Wako"
+  helpCenter: "Kituo cha Msaada",
+  safetyTips: "Vidokezo vya Usalama",
+  parentGuide: "Mwongozo wa Mzazi",
+  
+  // Incident response
+  incidentResponse: "Mwitiko wa Tukio",
+  reportSafetyIssue: "Ripoti Suala la Usalama",
+  investigationProcess: "Mchakato wa Uchunguzi",
+  followUpAction: "Hatua ya Kufuatilia"
 };
 
 export default safetyTranslations;

@@ -2,61 +2,53 @@
 import { TranslationRecord } from "../types";
 
 const ferpaTranslations: TranslationRecord = {
-  ferpa: "FERPA",
-  ferpaCompliance: "Uzingatiaji wa FERPA",
+  ferpaCompliance: "Utabiri wa FERPA",
+  ferpaPrivacy: "Faragha ya FERPA", 
   educationalRecords: "Rekodi za Elimu",
   studentPrivacy: "Faragha ya Mwanafunzi",
-  yourRights: "Haki Zako",
-  accessToRecords: "Ufikiaji wa Rekodi",
-  amendRecords: "Rekebisha Rekodi",
-  privacyControls: "Vidhibiti vya Faragha",
-  dataSharing: "Ushiriki wa Data",
-  consentRequired: "Ridhaa Inahitajika",
-  consentSettings: "Mipangilio ya Ridhaa",
-  restrictAccess: "Zuia Ufikiaji",
-  allowAccess: "Ruhusu Ufikiaji",
-  ferpaRights: "Haki za FERPA",
-  rightToInspect: "Haki ya Kukagua",
-  rightToRequest: "Haki ya Kuomba Marekebisho",
-  rightToConsent: "Haki ya Ridhaa",
-  rightToFile: "Haki ya Kufungua Malalamiko",
-  directoryInformation: "Taarifa za Saraka",
-  optOutDirectory: "Jiondoe kwenye Taarifa za Saraka",
-  whatIsFerpa: "FERPA ni nini?",
-  ferpaDescription: "Sheria ya Haki za Elimu ya Familia na Faragha (FERPA) ni sheria ya shirikisho inayolinda faragha ya rekodi za elimu za mwanafunzi.",
-  ferpaProtects: "FERPA inalinda usiri wa rekodi za elimu na kuruhusu wanafunzi/wazazi kudhibiti ufichuaji wa taarifa za kibinafsi zinazoweza kutambulika.",
-  requestRecords: "Omba Rekodi",
-  updateConsent: "Sasisha Ridhaa",
-  downloadRecords: "Pakua Rekodi",
-  privacyPreferences: "Mapendeleo ya Faragha",
-  manageFerpaSettings: "Simamia Mipangilio ya FERPA",
-  enableFerpaProtections: "Wezesha Ulinzi wa FERPA",
-  viewRecords: "Angalia Rekodi",
-  shareRecords: "Shiriki Rekodi",
-  recordsRequest: "Ombi la Rekodi",
-  amendmentRequest: "Ombi la Marekebisho",
-  submitRequest: "Wasilisha Ombi",
-  requestSubmitted: "Ombi Limewasilishwa",
-  privacyOfficer: "Afisa wa Faragha",
-  contactPrivacyOfficer: "Wasiliana na Afisa wa Faragha",
-  ferpaComplaintProcedure: "Utaratibu wa Malalamiko ya FERPA",
-  fileComplaint: "Fungua Lalamiko",
-  schoolOfficials: "Maafisa wa Shule",
-  legitimateEducationalInterest: "Maslahi Halali ya Kimasomo",
   parentalRights: "Haki za Wazazi",
-  studentRights: "Haki za Wanafunzi",
-  annualNotification: "Arifa ya Kila Mwaka",
-  recordTypes: "Aina za Rekodi",
-  academicRecords: "Rekodi za Kitaaluma",
-  financialRecords: "Rekodi za Kifedha",
-  disciplinaryRecords: "Rekodi za Nidhamu",
-  ferpaExemptions: "Misamaha ya FERPA",
-  healthSafetyEmergency: "Dharura ya Afya na Usalama",
-  lawEnforcement: "Utekelezaji wa Sheria",
-  transferringRecords: "Kuhamisha Rekodi",
-  recordsRetention: "Uhifadhi wa Rekodi",
-  electronicRecords: "Rekodi za Elektroniki",
-  paperRecords: "Rekodi za Karatasi"
+  
+  // FERPA explanations
+  ferpaDescription: "Sheria ya Haki za Elimu na Faragha ya Familia (FERPA) ni sheria ya shirikisho ambayo inalinda faragha ya rekodi za elimu za wanafunzi.",
+  ferpaRights: "FERPA inawapa wazazi na wanafunzi walio na umri wa miaka 18 au zaidi haki fulani kuhusiana na rekodi za elimu za mwanafunzi.",
+  
+  // FERPA rights
+  rightToInspect: "Haki ya kukagua na kukagua rekodi za elimu za mwanafunzi",
+  rightToAmend: "Haki ya kuomba marekebisho ya rekodi ambazo mzazi au mwanafunzi mzima anafikiri ni makosa au yanayovuruga",
+  rightToConsent: "Haki ya kutoa idhini kabla ya shule haijafichua maelezo yoyote kutoka kwa rekodi za elimu za mwanafunzi",
+  rightToFile: "Haki ya kuwasilisha malalamiko na Ofisi ya Sera ya Elimu (FPCO)",
+  
+  // Educational records
+  whatAreEducationalRecords: "Ni nini rekodi za elimu?",
+  educationalRecordsDefinition: "Rekodi za elimu ni faili, nyaraka, na vifaa vingine vinavyo na maelezo yanayohusiana moja kwa moja na mwanafunzi na vinahifadhiwa na taasisi ya elimu.",
+  
+  // Directory information
+  directoryInformation: "Taarifa za Saraka",
+  directoryInformationDefinition: "Taarifa za saraka ni taarifa katika rekodi ya elimu ya mwanafunzi ambayo kwa ujumla haidhaniliwi kuwa ya dharuri ikionyeshwa.",
+  optOutDirectory: "Wazazi na wanafunzi walio na umri wa miaka 18 au zaidi wana haki ya kuamua kutojumuishwa katika taarifa za saraka.",
+  
+  // Consent and disclosure
+  consentRequired: "Idhini inahitajika",
+  disclosureWithoutConsent: "Ufichuzi bila idhini",
+  legitimateEducationalInterest: "Maslahi halali ya elimu",
+  
+  // Parent and student rights
+  parentRights: "Haki za wazazi za FERPA",
+  studentRights: "Haki za mwanafunzi za FERPA", 
+  rightsTransfer: "Haki zinahamishiwa kwa mwanafunzi anapofikisha umri wa miaka 18",
+  
+  // Compliance measures
+  ferpaTraining: "Mafunzo ya FERPA",
+  privacyOfficer: "Afisa wa Faragha",
+  dataSecurityMeasures: "Hatua za Usalama wa Data",
+  accessControls: "Vidhibiti vya Ufikiaji",
+  auditTrails: "Nyayo za Ukaguzi",
+  
+  // Violations and complaints
+  ferpaViolation: "Ukiukaji wa FERPA",
+  fileComplaint: "Wasilisha Malalamiko",
+  investigationProcess: "Mchakato wa Uchunguzi",
+  correctiveActions: "Hatua za Kurekebisha"
 };
 
 export default ferpaTranslations;

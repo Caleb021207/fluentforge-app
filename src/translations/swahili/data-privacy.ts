@@ -3,47 +3,63 @@ import { TranslationRecord } from "../types";
 
 const dataPrivacyTranslations: TranslationRecord = {
   dataPrivacy: "Faragha ya Data",
-  yourData: "Data Yako",
+  privacyPolicy: "Sera ya Faragha",
   dataCollection: "Ukusanyaji wa Data",
   dataUsage: "Matumizi ya Data",
-  dataSharing: "Ushiriki wa Data",
+  dataStorage: "Uhifadhi wa Data",
+  dataSharing: "Kushiriki Data", 
   dataSecurity: "Usalama wa Data",
-  privacyPolicy: "Sera ya Faragha",
-  termsOfService: "Masharti ya Huduma",
-  cookiePolicy: "Sera ya Vidakuzi",
-  managePreferences: "Simamia Mapendeleo",
-  personalDataOptions: "Chaguo za Data Binafsi",
-  downloadYourData: "Pakua Data Yako",
-  deleteYourData: "Futa Data Yako",
   dataRetention: "Uhifadhi wa Data",
-  thirdPartyServices: "Huduma za Wahusika Wengine",
-  analyticsAndTracking: "Uchanganuzi na Ufuatiliaji",
-  personalization: "Ugeuzi",
-  advertisingPreferences: "Mapendeleo ya Matangazo",
-  optOutOfPersonalizedAds: "Jiondoe kwenye Matangazo Binafsi",
-  dataProtectionRights: "Haki za Ulinzi wa Data",
-  rightToAccess: "Haki ya Kufikia",
-  rightToRectification: "Haki ya Masahihisho",
-  rightToErasure: "Haki ya Ufutaji",
-  rightToRestriction: "Haki ya Uwekaji Mipaka",
-  rightToDataPortability: "Haki ya Ubebaji wa Data",
+  dataRights: "Haki za Data",
+  cookiePolicy: "Sera ya Vidakuzi",
+  
+  // Privacy preferences
+  privacyPreferences: "Mapendeleo ya Faragha",
+  consentManagement: "Usimamizi wa Idhini",
+  dataProcessingConsent: "Idhini ya Kusindika Data",
+  marketingConsent: "Idhini ya Uuzaji",
+  analyticsConsent: "Idhini ya Uchanganuzi",
+  
+  // Data subject rights
+  accessYourData: "Fikia Data Yako",
+  downloadYourData: "Pakua Data Yako", 
+  deleteYourData: "Futa Data Yako",
+  correctYourData: "Sahihisha Data Yako",
+  portYourData: "Hamisha Data Yako",
+  
+  // Privacy settings
+  profileVisibility: "Mwonekano wa Wasifu",
+  activityTracking: "Ufuatiliaji wa Shughuli",
+  locationSharing: "Kushiriki Mahali",
+  personalizedContent: "Maudhui Yaliyobinafsishwa",
+  
+  // GDPR compliance
+  gdprCompliance: "Utabiri wa GDPR",
+  rightToBeInformed: "Haki ya Kujua",
+  rightOfAccess: "Haki ya Ufikiaji",
+  rightToRectification: "Haki ya Kusahihisha",
+  rightToErasure: "Haki ya Kufuta",
+  rightToRestrictProcessing: "Haki ya Kuzuia Usindikaji",
+  rightToDataPortability: "Haki ya Kuhamisha Data",
   rightToObject: "Haki ya Kupinga",
-  californiaPrivacyRights: "Haki za Faragha za California",
-  europeanPrivacyRights: "Haki za Faragha za Ulaya",
-  childrenPrivacy: "Faragha ya Watoto",
-  dataBreachNotification: "Arifa ya Uvunjaji wa Data",
-  contactDataProtectionOfficer: "Wasiliana na Afisa wa Ulinzi wa Data",
-  updatePreferences: "Sasisha Mapendeleo",
-  consentManagement: "Usimamizi wa Ridhaa",
-  withdrawConsent: "Ondoa Ridhaa",
-  privacyControls: "Vidhibiti vya Faragha",
-  enhancedPrivacyMode: "Hali ya Faragha Iliyoboreshwa",
-  doNotTrack: "Usifuatilie",
-  privacyDashboard: "Dashibodi ya Faragha",
-  dataProcessingActivities: "Shughuli za Uchakataji wa Data",
-  internationalDataTransfers: "Uhamisho wa Data wa Kimataifa",
-  privacyByDefault: "Faragha kwa Chaguo-Msingi",
-  dataProtectionByDesign: "Ulinzi wa Data kwa Usanifu"
+  
+  // Consent management
+  acceptAll: "Kubali Yote",
+  rejectAll: "Kataa Yote", 
+  customizeSettings: "Bia Mipangilio",
+  essential: "Muhimu",
+  functional: "Ya Utendaji",
+  analytics: "Uchanganuzi", 
+  marketing: "Uuzaji",
+  
+  // Privacy notices
+  weUseData: "Tunatumia data yako",
+  toImproveService: "kuboresha huduma",
+  toPersonalizeExperience: "kubinafsisha uzoefu",
+  toProvideSupport: "kutoa usaidizi",
+  
+  privacyPolicyUpdated: "Sera ya faragha imesasishwa",
+  reviewChanges: "Kagua mabadiliko"
 };
 
 export default dataPrivacyTranslations;

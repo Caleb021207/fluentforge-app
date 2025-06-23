@@ -31,6 +31,22 @@ serve(async (req) => {
       console.log(`Non-English interface (${userInterfaceLanguage}) detected, using English TTS for English practice`);
       actualLanguage = 'english';
     }
+    
+    // Special handling for Swahili interface users learning English
+    if (userInterfaceLanguage && 
+        userInterfaceLanguage.toLowerCase() === 'swahili' && 
+        actualLanguage === 'english') {
+      console.log(`Swahili interface detected, using English TTS for English practice`);
+      actualLanguage = 'english';
+    }
+    
+    // If Swahili interface user learning Swahili, use Swahili TTS
+    if (userInterfaceLanguage && 
+        userInterfaceLanguage.toLowerCase() === 'swahili' && 
+        actualLanguage === 'swahili') {
+      console.log(`Swahili interface detected, using Swahili TTS for Swahili practice`);
+      actualLanguage = 'swahili';
+    }
 
     // Get voice settings based on the determined language
     const voiceSettings = languageVoiceMap[actualLanguage] || languageVoiceMap["english"];

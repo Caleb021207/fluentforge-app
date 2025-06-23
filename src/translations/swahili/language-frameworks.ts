@@ -2,42 +2,76 @@
 import { TranslationRecord } from "../types";
 
 const languageFrameworksTranslations: TranslationRecord = {
-  commonEuropeanFramework: "Mfumo wa Marejeo wa Kawaida wa Ulaya",
-  cefr: "CEFR",
+  // CEFR Levels
   cefrA1: "A1 - Mwanzo",
-  cefrA2: "A2 - Mwanzo wa Juu",
+  cefrA2: "A2 - Msingi wa Juu", 
   cefrB1: "B1 - Kati",
-  cefrB2: "B2 - Kati-Juu",
-  cefrC1: "C1 - Utendaji Mzuri",
-  cefrC2: "C2 - Utendaji Bora",
-  a1Description: "Anaweza kuelewa na kutumia maneno ya kawaida na misemo ya msingi ili kutimiza mahitaji ya aina maalum.",
-  a2Description: "Anaweza kuelewa sentensi na misemo inayotumiwa mara kwa mara yanayohusiana na maeneo muhimu.",
-  b1Description: "Anaweza kushughulikia hali nyingi zinazoweza kutokea wakati wa kusafiri katika eneo ambapo lugha inatumiwa.",
-  b2Description: "Anaweza kuwasiliana kwa ufasaha na kwa uhuru bila jitihada kubwa na mzungumzaji asilia.",
-  c1Description: "Anaweza kuelewa maandishi mengi ya changamano, na kutambua maana iliyofichwa.",
-  c2Description: "Anaweza kuelewa kwa urahisi karibu kila kitu anachosikia au kusoma.",
-  american: "Marekani",
-  britishCouncil: "Baraza la Uingereza",
-  ilr: "ILR",
-  ilr0: "0 - Hakuna Ufahamu",
-  ilr1: "1 - Ufahamu wa Kazi Kidogo",
-  ilr2: "2 - Ufahamu wa Kazi wa Kutosha",
-  ilr3: "3 - Ufahamu wa Kazi Kamili",
-  ilr4: "4 - Ufahamu wa Kitaalamu",
-  ilr5: "5 - Kama Mzawa au Mzawa",
-  proficiencyLevels: "Viwango vya Utaalamu",
-  beginnerLevel: "Mwanzo",
-  elementaryLevel: "Msingi",
-  intermediateLevel: "Kati",
-  upperIntermediateLevel: "Kati-Juu",
-  advancedLevel: "Juu",
-  proficientLevel: "Mtaalamu",
-  testInformation: "Maelezo ya Mtihani",
-  testFormat: "Muundo wa Mtihani",
-  scoringSystem: "Mfumo wa Alama",
-  testDuration: "Muda wa Mtihani",
-  passingScore: "Alama ya Kupita",
-  levelDescription: "Maelezo ya Kiwango"
+  cefrB2: "B2 - Kati cha Juu",
+  cefrC1: "C1 - Juu",
+  cefrC2: "C2 - Utaalamu",
+  
+  // CEFR Descriptions
+  cefrA1Description: "Mwanzo - Anaweza kuelewa na kutumia misemo ya kila siku",
+  cefrA2Description: "Msingi wa Juu - Anaweza kuongea kuhusu mada za msingi",
+  cefrB1Description: "Kati - Anaweza kujadili mada zinazojulikana",
+  cefrB2Description: "Kati cha Juu - Anaweza kuelewa maandishi magumu na kujadili kwa kina",
+  cefrC1Description: "Juu - Anaweza kutumia lugha kwa ufanisi kwa madhumuni ya kijamii na kazi",
+  cefrC2Description: "Utaalamu - Anaweza kuelewa kila kitu kinachosikiliwa au kusomwa",
+  
+  // ACTFL Levels
+  actflNovice: "Mwanzo",
+  actflIntermediate: "Kati",
+  actflAdvanced: "Juu",
+  actflSuperior: "Bora",
+  actflDistinguished: "Maalumu",
+  
+  // ACTFL Descriptions
+  actflNoviceDescription: "Mwanzo - Anaweza kuongea kwa maneno mafupi na misemo",
+  actflIntermediateDescription: "Kati - Anaweza kushiriki katika mazungumzo ya kijamii",
+  actflAdvancedDescription: "Juu - Anaweza kujadili mada tofauti kwa kina",
+  actflSuperiorDescription: "Bora - Anaweza kuongea kwa ufasaha kuhusu mada nyingi",
+  actflDistinguishedDescription: "Maalumu - Anaweza kuongea kwa kitaalamu kuhusu mada ngumu",
+  
+  // Skill levels
+  beginner: "Mwanzo",
+  elementary: "Msingi",
+  preIntermediate: "Kabla ya Kati",
+  intermediate: "Kati", 
+  upperIntermediate: "Kati cha Juu",
+  advanced: "Juu",
+  proficient: "Mzoefu",
+  expert: "Mtaalamu",
+  native: "Asili",
+  
+  // Skills assessment
+  listening: "Kusikiliza",
+  speaking: "Kuzungumza", 
+  reading: "Kusoma",
+  writing: "Kuandika",
+  grammar: "Sarufi",
+  vocabulary: "Msamiati",
+  pronunciation: "Matamshi",
+  comprehension: "Uelewa",
+  fluency: "Ufasaha",
+  accuracy: "Usahihi",
+  
+  // Assessment scores
+  excellent: "Bora sana",
+  veryGood: "Nzuri sana",
+  good: "Nzuri",
+  satisfactory: "Inatosheleza",
+  fair: "Wastani",
+  poor: "Duni",
+  needsImprovement: "Inahitaji uboreshaji",
+  
+  // Level selection
+  selectYourLevel: "Chagua Kiwango Chako",
+  currentLevel: "Kiwango cha Sasa",
+  targetLevel: "Kiwango lengwa",
+  assessYourLevel: "Tathmini Kiwango Chako",
+  levelAssessment: "Tathmini ya Kiwango",
+  skillLevel: "Kiwango cha Ujuzi",
+  overallLevel: "Kiwango cha Jumla"
 };
 
 export default languageFrameworksTranslations;

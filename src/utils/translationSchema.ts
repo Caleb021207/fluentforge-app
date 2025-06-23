@@ -38,6 +38,7 @@ export const TRANSLATION_SCHEMA = {
   "processing": "string",
   "send": "string",
   "success": "string",
+  "signedInAs": "string",
   
   // Language selection
   "iSpeak": "string",
@@ -55,6 +56,8 @@ export const TRANSLATION_SCHEMA = {
   "textPractice": "string",
   "startChatting": "string",
   "typeMessage": "string",
+  "typeMessageBelow": "string",
+  "typeMessageToPractice": "string",
   "messageCouldNotBeSent": "string",
   "pleaseTypeMessage": "string",
   "correctGrammar": "string",
@@ -62,6 +65,16 @@ export const TRANSLATION_SCHEMA = {
   "responseSuggestions": "string",
   "clickPlayToHear": "string",
   "startConversationToSee": "string",
+  "practiceYourLanguage": "string",
+  "chatWithAI": "string",
+  "startConversationIn": "string",
+  "practiceGuide": "string",
+  "practiceGuideDescription": "string",
+  "practiceGuideItem1": "string",
+  "practiceGuideItem2": "string",
+  "practiceGuideItem3": "string",
+  "practiceGuideItem4": "string",
+  "practiceDisclaimer": "string",
   
   // Voice chat
   "freePracticeWithVoice": "string",
@@ -83,6 +96,7 @@ export const TRANSLATION_SCHEMA = {
   "failedToGenerateSpeech": "string",
   "voiceChatEnded": "string",
   "browserBasedTTS": "string",
+  "useThisTool": "string",
   
   // Premium voice
   "premiumVoiceChat": "string",
@@ -126,21 +140,9 @@ export const TRANSLATION_SCHEMA = {
   "languages.bengali": "string",
   "languages.tagalog": "string",
   "languages.pashto": "string",
-  
-  // Practice page
-  "practiceYourLanguage": "string",
-  "chatWithAI": "string",
-  "startConversationIn": "string",
-  "practiceGuide": "string",
-  "practiceGuideDescription": "string",
-  "practiceGuideItem1": "string",
-  "practiceGuideItem2": "string",
-  "practiceGuideItem3": "string",
-  "practiceGuideItem4": "string",
-  "practiceDisclaimer": "string",
+  "languages.swahili": "string",
   
   // UI elements
-  "signedInAs": "string",
   "lightMode": "string",
   "darkMode": "string",
   "myClasses": "string",
@@ -155,6 +157,8 @@ export const TRANSLATION_SCHEMA = {
   "unauthorized": "string",
   "teacherAccessRequired": "string",
   "generateCode": "string",
+  "currentLanguage": "string",
+  "practiceLanguage": "string",
   
   // Navigation
   "pronunciationPractice": "string",
@@ -223,7 +227,21 @@ export const TRANSLATION_SCHEMA = {
   "sessionExpired": "string",
   "dailyLimitReached": "string",
   "failedToCreateSession": "string",
-  "speechSynthesisNotSupported": "string"
+  "speechSynthesisNotSupported": "string",
+  
+  // Additional Swahili-specific translations
+  "aiIsTyping": "string",
+  "clearConversation": "string",
+  "translation": "string",
+  "conversationHistory": "string",
+  "phrase1": "string",
+  "phrase2": "string",
+  "phrase3": "string",
+  "phrase4": "string",
+  "phrase5": "string",
+  "phrase6": "string",
+  "phrase7": "string",
+  "phrase8": "string"
 } as const;
 
 export type TranslationKey = keyof typeof TRANSLATION_SCHEMA;
