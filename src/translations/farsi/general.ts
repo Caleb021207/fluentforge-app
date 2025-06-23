@@ -2,17 +2,70 @@
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
-  welcomeToLanguageLearning: "به زبان‌آموزی خوش آمدید",
-  yourPersonalAICompanion: "همراه هوش مصنوعی شخصی شما برای یادگیری زبان.",
+  startLearning: "شروع یادگیری",
   signIn: "ورود",
-  createAccount: "ایجاد حساب کاربری",
-  goToDashboard: "رفتن به داشبورد",
+  signUp: "ثبت نام",
+  logOut: "خروج",
+  welcome: "خوش آمدید",
+  home: "خانه",
+  profile: "پروفایل",
+  textPractice: "تمرین متن",
+  unlimitedVoicePractice: "تمرین صوتی نامحدود",
+  premiumVoiceChat: "چت صوتی ویژه",
   practiceWithAI: "تمرین با هوش مصنوعی",
-  processing: "در حال پردازش...",
+  admin: "مدیر",
+  loading: "در حال بارگذاری...",
   error: "خطا",
-  send: "ارسال",
+  success: "موفقیت",
   cancel: "لغو",
-  success: "موفق",
+  save: "ذخیره",
+  delete: "حذف",
+  edit: "ویرایش",
+  submit: "ارسال",
+  required: "اجباری",
+  invalidEmail: "ایمیل نامعتبر",
+  signedInAs: "وارد شده به عنوان",
+  
+  // Analysis page specific
+  aiProgressAnalysis: "تحلیل پیشرفت هوش مصنوعی",
+  uploadLanguageTestTranscripts: "متن آزمون زبان خود را برای تحلیل عمیق هوش مصنوعی آپلود کنید",
+  totalAnalyses: "کل تحلیل‌ها",
+  currentLevel: "سطح فعلی",
+  latestScore: "آخرین امتیاز",
+  uploadAndAnalyze: "آپلود و تحلیل",
+  analysisResults: "نتایج تحلیل",
+  progressTimeline: "جدول زمانی پیشرفت",
+  analysisComplete: "تحلیل کامل شد",
+  transcriptAnalyzedSuccessfully: "متن با موفقیت تحلیل شد",
+  
+  // Practice guide
+  practiceGuide: "راهنمای تمرین {{language}}",
+  practiceGuideDescription: "در اینجا چند نکته برای بیشینه کردن تمرین {{language}} شما آورده شده:",
+  practiceTip1: "سعی کنید جملات کامل بسازید، حتی اگر ساده باشند",
+  practiceTip2: "نگران اشتباهات نباشید - آنها بخشی از یادگیری هستند!",
+  practiceTip3: "اگر چیزی را نمی‌فهمید توضیح بخواهید",
+  practiceTip4: "از کلماتی که اخیراً یاد گرفته‌اید استفاده کنید",
+  practiceTip5: "هوش مصنوعی ما با سطح مهارت شما تطبیق پیدا کرده و تدریجاً به بهبود شما کمک می‌کند",
+  
+  // Chat actions
+  correctGrammar: "تصحیح گرامر",
+  clearConversation: "پاک کردن گفتگو",
+  responseSuggestions: "پیشنهادات پاسخ",
+  startConversationToSeeSuggestions: "گفتگو را شروع کنید تا پیشنهادات را ببینید",
+  clickPlayToHearPronunciation: "برای شنیدن تلفظ روی پخش کلیک کنید",
+  
+  // Pronunciation
+  improvePronunciationSkills: "مهارت‌های تلفظ خود را با تمرینات هدفمند بهبود بخشید",
+  selectComplexityLevel: "سطح پیچیدگی را انتخاب کنید",
+  chooseLanguageProficiency: "سطح دشواری را بر اساس مهارت زبانی خود انتخاب کنید",
+  speechRate: "سرعت گفتار",
+  selectLevelToStart: "سطحی را برای شروع تمرین انتخاب کنید",
+  pronunciationPracticeTips: "نکات تمرین تلفظ",
+  listenCarefullyBeforeSpeak: "قبل از تلاش برای صحبت، با دقت به صدا گوش کنید",
+  payAttentionStressPatterns: "به الگوهای تاکید و لحن توجه کنید",
+  practiceDifficultSounds: "صداهای سخت را چندین بار تمرین کنید",
+  recordAndCompare: "خودتان را ضبط کنید و با گویندگان بومی مقایسه کنید",
+  bePatiencePronunciation: "صبور باشید - بهبود تلفظ زمان می‌برد"
 };
 
 export default generalTranslations;
