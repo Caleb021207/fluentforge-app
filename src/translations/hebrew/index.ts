@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import hebrewCoreTranslations from "./core";
+import hebrewPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Hebrew
+// Complete Hebrew translations with practice integration
 const hebrewTranslations: TranslationRecord = {
-  ...hebrewCoreTranslations
+  ...hebrewCoreTranslations,
+  ...hebrewPracticeTranslations
 };
 
 export default hebrewTranslations;

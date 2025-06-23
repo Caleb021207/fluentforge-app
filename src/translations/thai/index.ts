@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import thaiCoreTranslations from "./core";
+import thaiPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Thai
+// Complete Thai translations with practice integration
 const thaiTranslations: TranslationRecord = {
-  ...thaiCoreTranslations
+  ...thaiCoreTranslations,
+  ...thaiPracticeTranslations
 };
 
 export default thaiTranslations;

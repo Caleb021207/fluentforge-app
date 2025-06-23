@@ -1,4 +1,3 @@
-
 import { LanguageTranslations } from "./types";
 
 // Import all language translations
@@ -41,7 +40,7 @@ import tigrinyaTranslations from "./tigrinya";
 import oromoTranslations from "./oromo";
 
 // Main translations object containing all 37 languages with consistent core translations
-const translations: LanguageTranslations = {
+const translations: Record<string, LanguageTranslations> = {
   english: englishTranslations,
   spanish: spanishTranslations,
   portuguese: portugueseTranslations,

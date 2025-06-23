@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import dutchCoreTranslations from "./core";
+import dutchPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Dutch
+// Complete Dutch translations with practice integration
 const dutchTranslations: TranslationRecord = {
-  ...dutchCoreTranslations
+  ...dutchCoreTranslations,
+  ...dutchPracticeTranslations
 };
 
 export default dutchTranslations;
