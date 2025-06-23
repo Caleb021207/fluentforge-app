@@ -18,18 +18,6 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
 
   return (
     <div className="mt-4 flex items-center justify-end space-x-2">
-      {conversationHistory.length > 3 && (
-        <Button
-          onClick={analyzeCurrentConversation}
-          variant="outline"
-          size="sm"
-          className="mr-auto"
-        >
-          {t("analyzeConversation")}
-        </Button>
-      )}
-      
-      
       <HintButton 
         targetLanguage={practice}
         messages={apiConversationHistory.map(msg => ({ 
