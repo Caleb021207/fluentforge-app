@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import pashtoCoreTranslations from "./core";
+import pashtoPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Pashto
+// Complete Pashto translations with practice integration
 const pashtoTranslations: TranslationRecord = {
-  ...pashtoCoreTranslations
+  ...pashtoCoreTranslations,
+  ...pashtoPracticeTranslations
 };
 
 export default pashtoTranslations;

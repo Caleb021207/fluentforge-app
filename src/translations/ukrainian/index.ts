@@ -1,12 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import ukrainianCoreTranslations from "./core";
-import ukrainianVoiceChatTranslations from "./voice-chat";
+import ukrainianPracticeTranslations from "./practice";
 
-// Complete Ukrainian translations with voice chat integration
+// Complete Ukrainian translations with practice integration
 const ukrainianTranslations: TranslationRecord = {
   ...ukrainianCoreTranslations,
-  ...ukrainianVoiceChatTranslations
+  ...ukrainianPracticeTranslations
 };
 
 export default ukrainianTranslations;

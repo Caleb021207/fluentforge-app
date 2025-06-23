@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import swahiliCoreTranslations from "./core";
+import swahiliPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Swahili
+// Complete Swahili translations with practice integration
 const swahiliTranslations: TranslationRecord = {
-  ...swahiliCoreTranslations
+  ...swahiliCoreTranslations,
+  ...swahiliPracticeTranslations
 };
 
 export default swahiliTranslations;

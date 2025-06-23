@@ -1,10 +1,12 @@
 
 import { TranslationRecord } from "../types";
 import farsiCoreTranslations from "./core";
+import farsiPracticeTranslations from "./practice";
 
-// Use only the clean core translations for Farsi
+// Complete Farsi translations with practice integration
 const farsiTranslations: TranslationRecord = {
-  ...farsiCoreTranslations
+  ...farsiCoreTranslations,
+  ...farsiPracticeTranslations
 };
 
 export default farsiTranslations;
