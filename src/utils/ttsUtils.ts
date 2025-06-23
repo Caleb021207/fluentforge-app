@@ -33,6 +33,9 @@ export async function playTTS(options: TTSOptions): Promise<boolean> {
       return true;
     }
     
+    // Get the user interface language from localStorage or context
+    const userInterfaceLanguage = localStorage.getItem('selectedLanguage') || 'english';
+    
     // Call the Supabase Edge Function for TTS
     console.log(`Generating TTS for "${text.substring(0, 30)}..." in ${language}`);
     onStart?.();
@@ -41,7 +44,8 @@ export async function playTTS(options: TTSOptions): Promise<boolean> {
       body: { 
         text, 
         language, 
-        useMetaMms
+        useMetaMms,
+        userInterfaceLanguage // Pass the interface language for TTS logic
       }
     });
     
@@ -86,13 +90,17 @@ export async function preloadTTS(options: TTSOptions): Promise<boolean> {
       return true;
     }
     
+    // Get the user interface language from localStorage or context
+    const userInterfaceLanguage = localStorage.getItem('selectedLanguage') || 'english';
+    
     console.log(`Preloading TTS for "${text.substring(0, 30)}..." in ${language}`);
     
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: { 
         text, 
         language, 
-        useMetaMms
+        useMetaMms,
+        userInterfaceLanguage // Pass the interface language for TTS logic
       }
     });
     

@@ -13,16 +13,27 @@ serve(async (req) => {
   }
 
   try {
-    const { text, language, speechRate = 1.0, useMetaMms } = await req.json();
+    const { text, language, speechRate = 1.0, useMetaMms, userInterfaceLanguage } = await req.json();
     
     if (!text) {
       throw new Error('Text is required');
     }
 
-    console.log(`TTS request for language: ${language}, text length: ${text.length}, useMetaMms: ${useMetaMms}`);
+    console.log(`TTS request for language: ${language}, text length: ${text.length}, useMetaMms: ${useMetaMms}, userInterface: ${userInterfaceLanguage}`);
 
-    // Get voice settings based on language
-    const voiceSettings = languageVoiceMap[language?.toLowerCase()] || languageVoiceMap["english"];
+    // NEW LOGIC: If user interface is not English and they're practicing English, use English TTS
+    let actualLanguage = language?.toLowerCase();
+    
+    // Check if user interface is non-English and they're practicing English
+    if (userInterfaceLanguage && 
+        userInterfaceLanguage.toLowerCase() !== 'english' && 
+        actualLanguage === 'english') {
+      console.log(`Non-English interface (${userInterfaceLanguage}) detected, using English TTS for English practice`);
+      actualLanguage = 'english';
+    }
+
+    // Get voice settings based on the determined language
+    const voiceSettings = languageVoiceMap[actualLanguage] || languageVoiceMap["english"];
 
     // Split text only if it's actually long
     const textChunks = text.length > 8000 ? splitTextIntoChunks(text) : [text];
@@ -31,13 +42,12 @@ serve(async (req) => {
       console.log(`Split text into ${textChunks.length} chunks`);
     }
     
-    const languageLower = language?.toLowerCase();
     let audioBuffer;
     
     // Special handling for English - prioritize Polly
-    if (languageLower === 'english') {
+    if (actualLanguage === 'english') {
       try {
-        const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
+        const pollyVoice = pollyVoiceMap[actualLanguage] || "Joanna";
         console.log(`Using AWS Polly as primary TTS for English with voice: ${pollyVoice}`);
         audioBuffer = await textToSpeechPolly(text, pollyVoice);
       } catch (pollyError) {
@@ -72,9 +82,9 @@ serve(async (req) => {
         console.error('Azure TTS failed:', azureError);
         
         // Try Meta MMS as second option if supported or explicitly requested
-        if (metaMmsLanguageMap[languageLower] || useMetaMms === true) {
+        if (metaMmsLanguageMap[actualLanguage] || useMetaMms === true) {
           try {
-            const metaMmsLangCode = metaMmsLanguageMap[languageLower] || "eng"; // fallback to English
+            const metaMmsLangCode = metaMmsLanguageMap[actualLanguage] || "eng"; // fallback to English
             console.log(`Azure failed, trying Meta MMS with language code: ${metaMmsLangCode}`);
             audioBuffer = await textToSpeechMetaMms(text, metaMmsLangCode);
           } catch (metaError) {
@@ -82,7 +92,7 @@ serve(async (req) => {
             
             // Fall back to Polly as last resort
             try {
-              const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
+              const pollyVoice = pollyVoiceMap[actualLanguage] || "Joanna";
               console.log(`Azure and Meta MMS failed, trying AWS Polly with voice: ${pollyVoice}`);
               audioBuffer = await textToSpeechPolly(text, pollyVoice);
             } catch (pollyError) {
@@ -93,7 +103,7 @@ serve(async (req) => {
         } else {
           // If Meta MMS is not supported, try Polly directly
           try {
-            const pollyVoice = pollyVoiceMap[languageLower] || "Joanna";
+            const pollyVoice = pollyVoiceMap[actualLanguage] || "Joanna";
             console.log(`Azure failed, trying AWS Polly with voice: ${pollyVoice}`);
             audioBuffer = await textToSpeechPolly(text, pollyVoice);
           } catch (pollyError) {

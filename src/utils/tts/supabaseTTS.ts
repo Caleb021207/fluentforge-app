@@ -33,6 +33,9 @@ export const playTTS = async ({
   }
 
   try {
+    // Get the user interface language from localStorage or context
+    const userInterfaceLanguage = localStorage.getItem('selectedLanguage') || 'english';
+    
     // Pass the Meta MMS flag but don't prioritize it
     // The Edge Function will always try Azure first
     const usesMetaMms = useMetaMms || !!metaMmsLanguageMap[language?.toLowerCase()];
@@ -41,13 +44,14 @@ export const playTTS = async ({
       console.log(`Meta MMS available as fallback for ${language} text-to-speech`);
     }
 
-    // Call the Supabase Edge Function
+    // Call the Supabase Edge Function with user interface language
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: {
         text,
         language,
         speechRate,
-        useMetaMms: usesMetaMms
+        useMetaMms: usesMetaMms,
+        userInterfaceLanguage // Pass the interface language for TTS logic
       },
     });
 
@@ -91,6 +95,9 @@ export const preloadTTS = async (text: string, language: string, speechRate = 1.
   }
 
   try {
+    // Get the user interface language from localStorage or context
+    const userInterfaceLanguage = localStorage.getItem('selectedLanguage') || 'english';
+    
     // Note that we're still passing the Meta MMS flag,
     // but the Edge Function will always try Azure first
     const usesMetaMms = useMetaMms || !!metaMmsLanguageMap[language?.toLowerCase()];
@@ -100,7 +107,8 @@ export const preloadTTS = async (text: string, language: string, speechRate = 1.
         text,
         language,
         speechRate,
-        useMetaMms: usesMetaMms
+        useMetaMms: usesMetaMms,
+        userInterfaceLanguage // Pass the interface language for TTS logic
       },
     });
 
