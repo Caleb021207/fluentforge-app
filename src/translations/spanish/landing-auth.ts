@@ -62,11 +62,24 @@ const landingAuthTranslations: TranslationRecord = {
   teacherProfile: "Perfil de Profesor",
   school: "Escuela",
   role: "Rol",
-  district: "Distrito",
   notAssigned: "No asignado",
   teachingOverview: "Resumen de Enseñanza",
   totalStudents: "Total de Estudiantes",
   classAverageScore: "Puntuación Promedio de la Clase",
+  
+  // Auth Dialog
+  signIn: "Iniciar Sesión",
+  emailPlaceholder: "Ingresa tu correo electrónico",
+  passwordPlaceholder: "Ingresa tu contraseña",
+  accessCodePlaceholder: "Ingresa código de acceso",
+  signInButton: "Iniciar Sesión",
+  createAccountButton: "Crear Cuenta",
+  switchToSignUp: "Registrarse",
+  switchToSignIn: "Iniciar Sesión",
+  authError: "Falló la autenticación. Por favor inténtalo de nuevo.",
+  
+  // Profile Page
+  error: "Error",
 };
 
 export default landingAuthTranslations;
