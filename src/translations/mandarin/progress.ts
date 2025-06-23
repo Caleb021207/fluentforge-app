@@ -2,25 +2,46 @@
 import { TranslationRecord } from "../types";
 
 const progressTranslations: TranslationRecord = {
-  yourProgress: "您的进度",
-  lessonsCompleted: "已完成的课程",
-  throughCurriculum: "课程进度",
-  experienceAchievements: "经验与成就",
-  xpPoints: "经验点数",
-  dailyStreak: "连续学习天数",
-  days: "天",
-  nextLevel: "下一级别",
-  yourLearningProgress: "您的学习进度",
-  scoreTrends: "得分趋势",
-  noProgressData: "无进度数据",
-  completeTestsToSeeProgress: "完成一些认证尝试以查看您的进度！",
-  offlineDataMayNotBeUpToDate: "您处于离线状态。显示的数据可能不是最新的。",
-  networkConnectionIssue: "网络连接问题。无法加载您的进度数据。",
-  problemLoadingProgressData: "加载进度数据时出现问题。请稍后再试。",
-  failedToLoadProgressData: "加载进度数据失败。请稍后再试。",
-  viewingDetails: "查看详情",
-  featureComingSoon: "此功能将在未来的更新中实现。",
-  recentCertificationAttempts: "最近的认证尝试",
+  // Progress page translations
+  aiProgressAnalysis: "AI进度分析",
+  uploadLanguageTestTranscripts: "上传语言测试成绩单",
+  totalAnalyses: "总分析",
+  currentLevel: "当前级别",
+  latestScore: "最新分数",
+  uploadAndAnalyze: "上传并分析",
+  analysisResults: "分析结果",
+  progressTimeline: "进度时间线",
+  progressOverview: "进度概览",
+  trackLanguageLearningJourney: "跟踪您的语言学习之旅",
+  
+  // Test comparison translations
+  firstTest: "首次测试",
+  latestTest: "最新测试",
+  improvement: "提升",
+  
+  // Upload related
+  uploadTestTranscript: "上传测试成绩单",
+  uploadLanguageTestScoreReport: "上传语言测试分数报告",
+  noFileChosen: "未选择文件",
+  dragDropOrClickToUpload: "拖放或点击上传",
+  supportsFileFormats: "支持文件格式：JPG、PNG、PDF",
+  selectFile: "选择文件",
+  
+  // Analysis capabilities
+  whatOurAiCanAnalyze: "我们的AI可以分析什么",
+  overallScoresAndCefrLevels: "总分和CEFR级别",
+  individualSkillBreakdowns: "个人技能细分",
+  strengthsAndAreasForImprovement: "优势和需要改进的领域",
+  progressTrackingOverTime: "随时间跟踪进度",
+  
+  // Additional progress terms
+  noProgressDataYet: "暂无进度数据",
+  uploadMultipleTranscripts: "上传多个成绩单以查看您的进度时间线",
+  achievementsAndMilestones: "成就和里程碑",
+  
+  // Analysis related
+  analysisComplete: "分析完成",
+  transcriptAnalyzedSuccessfully: "成绩单分析成功"
 };
 
 export default progressTranslations;
