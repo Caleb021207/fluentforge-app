@@ -1,13 +1,9 @@
 
-import React, { useEffect, useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import ChatInput from "./ChatInput";
+import React from "react";
 import ChatMessage from "./ChatMessage";
-import EmptyChatState from "./EmptyChatState";
-import LoadingIndicator from "./LoadingIndicator";
-import LanguageMetricsPanel from "./LanguageMetricsPanel";
-import { useLanguageMetricsPanel } from "./hooks/useLanguageMetricsPanel";
+import ChatInput from "./ChatInput";
+import { Card } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
 
 interface Message {
@@ -23,79 +19,58 @@ interface ChatContainerProps {
   handleSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
   getPlaceholderText: () => string;
-  targetLanguage?: string;
+  targetLanguage: string;
 }
 
-export default function ChatContainer({
+const ChatContainer = ({
   messages,
   input,
   setInput,
   handleSubmit,
   isLoading,
   getPlaceholderText,
-  targetLanguage = "spanish"
-}: ChatContainerProps) {
+  targetLanguage
+}: ChatContainerProps) => {
   const { t } = useLocalization();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { 
-    isExpanded, 
-    togglePanel, 
-    metrics, 
-    isAnalyzing, 
-    analyzeCurrentConversation 
-  } = useLanguageMetricsPanel(messages);
-  
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
 
   return (
-    <div className="space-y-2">
-      <Card className="overflow-hidden mb-2">
-        <ScrollArea className="h-[500px] p-4">
-          {messages.length === 0 ? (
-            <EmptyChatState />
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message, index) => (
-                <ChatMessage
-                  key={index}
-                  role={message.role}
-                  content={message.content}
-                  translation={message.translation}
-                />
-              ))}
-              
-              {isLoading && <LoadingIndicator />}
-              
-              <div ref={scrollRef} />
-            </div>
-          )}
-        </ScrollArea>
-        
-        <div className="border-t p-4">
-          <ChatInput
-            isLoading={isLoading}
-            value={input}
-            onChange={setInput}
-            onSubmit={handleSubmit}
-            placeholder={getPlaceholderText()}
-            messages={messages}
-            targetLanguage={targetLanguage}
-          />
-        </div>
-      </Card>
+    <div className="space-y-4">
+      {messages.length > 0 && (
+        <Card className="p-4 max-h-96 overflow-y-auto">
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <ChatMessage
+                key={index}
+                message={message}
+                targetLanguage={targetLanguage}
+              />
+            ))}
+            {isLoading && (
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>AI is thinking...</span>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
 
-      <LanguageMetricsPanel 
-        metrics={metrics}
-        isLoading={isAnalyzing}
-        isExpanded={isExpanded}
-        onToggle={togglePanel}
-        onAnalyze={analyzeCurrentConversation}
+      <ChatInput
+        input={input}
+        setInput={setInput}
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+        placeholder={t("typeYourMessageHere")}
       />
+
+      {messages.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          <p>{t("startTextChat")}</p>
+          <p className="text-sm mt-2">{t("typeMessageBelow")}</p>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default ChatContainer;

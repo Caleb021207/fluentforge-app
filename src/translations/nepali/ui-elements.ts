@@ -134,7 +134,83 @@ const uiElementsTranslations: TranslationRecord = {
   // Theme related
   lightMode: "उज्यालो मोड",
   darkMode: "अँध्यारो मोड",
-  theme: "विषयवस्तु"
+  theme: "विषयवस्तु",
+
+  // Practice specific buttons and UI
+  startChat: "च्याट सुरु गर्नुहोस्",
+  clearConversation: "कुराकानी सफा गर्नुहोस्",
+  correctGrammar: "व्याकरण सुधार गर्नुहोस्",
+  startTextChat: "पाठ च्याट सुरु गर्नुहोस्",
+  typeMessageBelow: "तल सन्देश टाइप गर्नुहोस्",
+  typeYourMessageHere: "तपाईंको सन्देश यहाँ टाइप गर्नुहोस्...",
+  practiceGuide: "अभ्यास गाइड",
+
+  // Profile page buttons and headers
+  myProfile: "मेरो प्रोफाइल",
+  editProfile: "प्रोफाइल सम्पादन गर्नुहोस्",
+  uploadPhoto: "फोटो अपलोड गर्नुहोस्",
+  enterDisplayName: "प्रदर्शन नाम प्रविष्ट गर्नुहोस्",
+  saveChanges: "परिवर्तनहरू सेभ गर्नुहोस्",
+  
+  // Access code related
+  accessCode: "पहुँच कोड",
+  enterCode: "कोड प्रविष्ट गर्नुहोस्",
+  apply: "लागू गर्नुहोस्",
+  
+  // Role and status
+  role: "भूमिका",
+  currentStatus: "हालको स्थिति",
+  districtAdministrator: "जिल्ला प्रशासक",
+  teacher: "शिक्षक",
+  student: "विद्यार्थी",
+  admin: "प्रशासक",
+  district: "जिल्ला",
+
+  // Code management
+  generateNewCode: "नयाँ कोड उत्पन्न गर्नुहोस्",
+  viewMyCodes: "मेरा कोडहरू हेर्नुहोस्",
+
+  // School and education
+  school: "विद्यालय",
+  schools: "विद्यालयहरू",
+  students: "विद्यार्थीहरू",
+  classes: "कक्षाहरू",
+  totalStudents: "कुल विद्यार्थीहरू",
+  totalClasses: "कुल कक्षाहरू",
+  schoolsManaged: "व्यवस्थापित विद्यालयहरू",
+
+  // Statistics and scores
+  avgScore: "औसत स्कोर",
+  districtAvgScore: "जिल्ला औसत स्कोर",
+  classAverageScore: "कक्षाको औसत स्कोर",
+
+  // Settings page
+  parentalControls: "अभिभावकीय नियन्त्रणहरू",
+  safetyPolicy: "सुरक्षा नीति",
+  updatePin: "PIN अपडेट गर्नुहोस्",
+
+  // Authentication and profile states
+  authenticationRequired: "प्रमाणीकरण आवश्यक",
+  pleaseSignInToViewProfile: "कृपया आफ्नो प्रोफाइल हेर्न साइन इन गर्नुहोस्",
+  roleNotAssigned: "भूमिका तोकिएको छैन",
+  pleaseUseAccessCode: "कृपया पहुँच कोड प्रयोग गर्नुहोस्",
+  profileLoadError: "प्रोफाइल लोड गर्न त्रुटि",
+  notAssigned: "तोकिएको छैन",
+
+  // Success messages
+  profileInformationUpdated: "प्रोफाइल जानकारी अपडेट गरियो",
+  profilePictureUpdated: "प्रोफाइल तस्बिर अपडेट गरियो",
+  failedToUpdateProfile: "प्रोफाइल अपडेट गर्न असफल",
+  failedToUploadProfilePicture: "प्रोफाइल तस्बिर अपलोड गर्न असफल",
+
+  // Additional profile elements
+  teacherProfile: "शिक्षक प्रोफाइल",
+  districtAdministratorProfile: "जिल्ला प्रशासक प्रोफाइल",
+  teachingOverview: "शिक्षण अवलोकन",
+  districtOverview: "जिल्ला अवलोकन",
+  schoolsPerformance: "विद्यालयहरूको प्रदर्शन",
+  noSchoolsFoundInDistrict: "जिल्लामा कुनै विद्यालय फेला परेन",
+  principal: "प्रधानाध्यापक"
 };
 
 export default uiElementsTranslations;
