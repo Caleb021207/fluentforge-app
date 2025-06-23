@@ -2,58 +2,88 @@
 import { TranslationRecord } from "../types";
 
 const profileTranslations: TranslationRecord = {
+  // Profile page header
+  myProfile: "ملفي الشخصي",
   languageLearningDashboard: "لوحة تعلم اللغة",
   personalInformation: "المعلومات الشخصية",
-  uploadPhoto: "تحميل صورة",
+  uploadPhoto: "رفع صورة",
   displayName: "اسم العرض",
   enterYourDisplayName: "أدخل اسم العرض الخاص بك",
+  enterDisplayName: "أدخل اسم العرض",
   saveChanges: "حفظ التغييرات",
   saving: "جاري الحفظ...",
+  profilePicture: "صورة الملف الشخصي",
+  profileInformationUpdated: "تم تحديث معلومات الملف الشخصي",
+  profilePictureUpdated: "تم تحديث صورة الملف الشخصي",
+  failedToUpdateProfile: "فشل في تحديث الملف الشخصي",
+  failedToUploadProfilePicture: "فشل في رفع صورة الملف الشخصي",
+  
+  // Learning progress
   learningProgress: "تقدم التعلم",
   lessonProgress: "تقدم الدرس",
   certificationStatus: "حالة الشهادة",
   completed: "مكتمل",
   notTaken: "لم يؤخذ",
+  complete: "مكتمل",
+  
+  // Goals and recommendations
   tipsToReachGoal: "نصائح للوصول إلى هدفك بشكل أسرع:",
-  practiceConsistently: "مارس باستمرار كل يوم",
+  practiceConsistently: "تدرب باستمرار كل يوم",
   completeAllCertifications: "أكمل جميع محاولات الشهادة",
-  focusOnWeakAreas: "ركز على المناطق التي تسجل فيها أقل الدرجات",
-  useAIConversation: "استخدم ممارسة المحادثة مع الذكاء الاصطناعي بانتظام",
+  focusOnWeakAreas: "ركز على المناطق التي تحصل فيها على أقل النقاط",
+  useAIConversation: "استخدم تدريب المحادثة مع الذكاء الاصطناعي بانتظام",
+  
+  // CEFR and progress tracking
   cefrLevelRoadmap: "خارطة طريق مستويات CEFR",
   cefrToActflConversion: "تحويل CEFR إلى ACTFL",
   progressToGoal: "التقدم نحو الهدف",
-  yourTestScores: "درجات اختباراتك",
-  authRequired: "المصادقة مطلوبة",
-  pleaseSignInDashboard: "يرجى تسجيل الدخول لعرض لوحة التحكم الخاصة بك وتتبع تقدم تعلم اللغة.",
+  yourTestScores: "نقاط اختباراتك",
   targetingLevel: "مستوى CEFR المستهدف:",
   estimatedAchievement: "الإنجاز المقدر في",
   weeks: "أسابيع",
   around: "حوالي",
   learningPace: "وتيرة تعلمك الحالية:",
   pointsPerWeek: "نقاط في الأسبوع",
-  complete: "مكتمل",
   lastActivity: "آخر نشاط:",
-  daysStreak: "أيام متتالية! استمر هكذا!",
+  daysStreak: "أيام متتالية! استمر!",
+  
+  // Target date calculations
   noTargetDate: "لم يتم تعيين تاريخ مستهدف",
   maximumLevelAchieved: "تم تحقيق الحد الأقصى للمستوى",
   targetDatePassed: "مر التاريخ المستهدف",
   todayIsTargetDate: "اليوم هو التاريخ المستهدف",
   daysRemaining: "الأيام المتبقية",
   congratulations: "تهانينا!",
-  reachedHighestLevel: "لقد وصلت إلى المستوى C2، أعلى مستوى للكفاءة. استمر في الممارسة للحفاظ على مهاراتك!",
+  reachedHighestLevel: "لقد وصلت إلى أعلى مستوى إتقان وهو C2. استمر في التدريب للحفاظ على مهاراتك!",
   current: "الحالي",
   target: "الهدف",
-  addCertificationScore: "إضافة درجة الشهادة",
-  certificationScoreAdded: "تمت إضافة درجة الشهادة بنجاح",
-  invalidScore: "درجة غير صالحة",
-  scoreMustBeNumber: "يجب أن تكون الدرجة رقمًا بين 0 و100",
-  selectCertificationType: "حدد نوع الشهادة",
+  
+  // Manual score addition
+  addCertificationScore: "إضافة نقاط الشهادة",
+  certificationScoreAdded: "تمت إضافة نقاط الشهادة بنجاح",
+  invalidScore: "نقاط غير صالحة",
+  scoreMustBeNumber: "يجب أن تكون النقاط رقماً بين 0 و100",
+  selectCertificationType: "اختر نوع الشهادة",
   selectLevel: "اختر المستوى",
-  addingScore: "إضافة الدرجة...",
-  addScore: "إضافة درجة",
+  addingScore: "جاري إضافة النقاط...",
+  addScore: "إضافة نقاط",
+  
+  // Analysis and recommendations
   strengths: "نقاط القوة",
-  areasForImprovement: "مجالات للتحسين",
+  areasForImprovement: "مجالات التحسين",
   recommendations: "التوصيات",
+  
+  // Auth states
+  authRequired: "المصادقة مطلوبة",
+  pleaseSignInDashboard: "يرجى تسجيل الدخول لعرض لوحة التحكم وتتبع تقدم تعلم اللغة.",
+  
+  // Roles
+  student: "طالب",
+  teacher: "معلم",
+  admin: "مدير",
+  district: "منطقة",
+  roleNotAssigned: "لم يتم تعيين دور",
+  pleaseUseAccessCode: "يرجى استخدام رمز الوصول"
 };
 
 export default profileTranslations;

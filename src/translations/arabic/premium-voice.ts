@@ -1,7 +1,8 @@
+
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
-  premiumVoiceChat: "دردشة صوتية متميزة",
+  premiumVoiceChat: "الدردشة الصوتية المتميزة",
   premiumVoiceChatBenefits: "فوائد الدردشة الصوتية المتميزة",
   cefrA1Description: "مبتدئ - الجمل والتعبيرات الأساسية",
   cefrA2Description: "أساسي - التواصل اليومي البسيط",
@@ -15,10 +16,10 @@ const premiumVoiceTranslations: TranslationRecord = {
   selectedLevel: "المستوى المحدد",
   cooldownPeriodActive: "تم الوصول إلى الحد الأسبوعي",
   cooldownActive: "تم الوصول إلى الحد الأسبوعي",
-  waitBeforeNextSession: "يجب عليك الانتظار قبل بدء جلسة أخرى",
-  cooldownPeriodDescription: "يجب عليك الانتظار {{time}} قبل بدء جلسة أخرى",
-  resetsAt6AM: "سيتم إعادة تعيين الوقت المسموح به أسبوعياً وهو 10 دقائق في {{time}} (الاثنين الساعة 6:00 صباحاً)",
-  dailyLimitReached: "لقد استخدمت الـ 10 دقائق المسموح بها أسبوعياً. سيتم إعادة تعيين الوقت يوم الاثنين الساعة 6:00 صباحاً.",
+  waitBeforeNextSession: "يجب الانتظار قبل بدء جلسة أخرى",
+  cooldownPeriodDescription: "يجب الانتظار {{time}} قبل بدء جلسة أخرى",
+  resetsAt6AM: "سيتم إعادة تعيين الوقت المسموح أسبوعياً وهو 10 دقائق في {{time}} (الإثنين الساعة 6:00 صباحاً)",
+  dailyLimitReached: "لقد استخدمت الـ 10 دقائق المسموح بها أسبوعياً. سيتم إعادة تعيين الوقت يوم الإثنين الساعة 6:00 صباحاً.",
   loginRequired: "تسجيل الدخول مطلوب",
   pleaseLoginToAccessPremiumFeature: "يرجى تسجيل الدخول للوصول إلى ميزة الدردشة الصوتية المتميزة",
   redirectingToLogin: "جاري التوجيه إلى صفحة تسجيل الدخول",
@@ -27,12 +28,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   loginRequiredDescription: "للوصول إلى ميزة الدردشة الصوتية المتميزة، يرجى تسجيل الدخول إلى حسابك.",
   conversationHistoryCleared: "تم مسح سجل المحادثة",
   remaining: "متبقي هذا الأسبوع",
-  premiumVoiceChatDescription: "قم بإجراء محادثات صوتية طبيعية مع مدرس الذكاء الاصطناعي المتميز لممارسة اللغة {{practice}}! سيساعدك الذكاء الاصطناعي في تصحيح قواعدك اللغوية ومفرداتك ونطقك.",
-  premiumVoiceNote: "استخدام دردشة الصوت المتميزة محدود بـ 10 دقائق أسبوعياً",
-  premiumVoiceNoteWithReset: "تتيح الدردشة الصوتية المتميزة 10 دقائق من وقت التدريب أسبوعياً. يتم إعادة تعيين الوقت كل يوم اثنين الساعة 6:00 صباحاً بالتوقيت المركزي.",
+  premiumVoiceChatDescription: "قم بإجراء محادثات صوتية طبيعية مع مدرس الذكاء الاصطناعي المتميز لتدريب {{practice}}! سيساعدك الذكاء الاصطناعي في تصحيح قواعدك ومفرداتك ونطقك.",
+  premiumVoiceNote: "استخدام الدردشة الصوتية المتميزة محدود بـ 10 دقائق أسبوعياً",
+  premiumVoiceNoteWithReset: "تتيح الدردشة الصوتية المتميزة 10 دقائق من وقت التدريب أسبوعياً. يتم إعادة تعيين الوقت كل يوم إثنين الساعة 6:00 صباحاً بالتوقيت المركزي.",
   benefitNaturalVoice: "تفاعلات صوتية طبيعية وإنسانية باستخدام تقنية ElevenLabs",
-  benefitAccentPronunciation: "لهجة ونطق دقيقين للتعلم الغامر",
-  benefitRegularPractice: "10 دقائق من وقت التدريب أسبوعياً، مع إعادة التعيين كل يوم اثنين الساعة 6:00 صباحاً",
+  benefitAccentPronunciation: "لهجة ونطق دقيقان للتعلم الغامر",
+  benefitRegularPractice: "10 دقائق من وقت التدريب أسبوعياً، مع إعادة التعيين كل يوم إثنين الساعة 6:00 صباحاً",
   timeLimit10MinReached: "تم الوصول إلى الحد الزمني 10 دقائق",
   
   // Voice chat controls
