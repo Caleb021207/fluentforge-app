@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -8,6 +9,7 @@ const voiceChatTranslations: TranslationRecord = {
   endVoiceChat: "आवाज च्याट समाप्त गर्नुहोस्",
   listening: "सुन्दै",
   recording: "रेकर्ड गर्दै",
+  processing: "प्रक्रिया गर्दै",
   
   // Practice descriptions and AI info
   practiceDescription: "AI सँग वास्तविक समयमा कुराकानी गरेर आफ्नो बोली र सुनाइ कौशल सुधार गर्नुहोस्।",
@@ -130,13 +132,6 @@ const voiceChatTranslations: TranslationRecord = {
   startChatting: "च्याट सुरु गर्नुहोस्",
   stopVoiceChat: "आवाज च्याट रोक्नुहोस्",
   voiceChatEnded: "आवाज च्याट समाप्त भयो",
-  listening: "सुन्दै",
-  recording: "रेकर्ड गर्दै",
-  processing: "प्रक्रिया गर्दै",
-  microphonePermissionRequired: "माइक्रोफोन अनुमति आवश्यक",
-  microphonePermissionDenied: "माइक्रोफोन अनुमति अस्वीकार गरियो",
-  voiceChatActive: "आवाज च्याट सक्रिय",
-  voiceChatInactive: "आवाज च्याट निष्क्रिय",
   speakNow: "बोल्नुहोस्",
   listeningForResponse: "प्रतिक्रियाको पर्खाइमा",
   voiceInputDisabled: "आवाज इनपुट असक्षम"
