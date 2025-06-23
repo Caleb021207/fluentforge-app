@@ -21,16 +21,24 @@ const LocalizationContext = createContext<LocalizationContextType>({
   getNativeLanguageName: () => "",
 });
 
-// Check if current path is a classroom-related route
-const isClassroomRoute = (path: string): boolean => {
-  return path.includes("/teacher/classes") || 
+// Routes that should ALWAYS use English
+const ENGLISH_ONLY_ROUTES = [
+  "/profile",
+  "/settings", 
+  "/ai-tutor",
+  "/admin"
+];
+
+// Check if current path should use English only
+const shouldUseEnglishOnly = (path: string): boolean => {
+  return ENGLISH_ONLY_ROUTES.some(route => path.includes(route)) ||
+         path.includes("/teacher/classes") || 
          path.includes("/student/class");
 };
 
 // Provider component
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
-  const [missingKeys, setMissingKeys] = useState<Set<string>>(new Set());
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   
   // Update path when it changes
@@ -52,87 +60,44 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     if (savedLanguage && translations[savedLanguage]) {
       setCurrentLanguage(savedLanguage);
     }
-    
-    // Debug - log available translations
-    console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
-    console.log("Available translations:", Object.keys(translations));
   }, []);
 
-  // Enhanced translation function with proper interpolation support
+  // Focused translation function with automatic English fallback
   const t = (key: string, replacements?: Record<string, string>): string => {
     try {
-      // Check if translations exist
-      if (!translations) {
-        console.error("No translations available");
+      // Force English for certain routes
+      const languageToUse = shouldUseEnglishOnly(currentPath) ? DEFAULT_LANGUAGE : currentLanguage;
+      
+      // Get translations for the target language
+      const targetTranslations = translations[languageToUse];
+      const fallbackTranslations = translations[DEFAULT_LANGUAGE];
+      
+      if (!targetTranslations || !fallbackTranslations) {
+        console.error(`Missing translations for language: ${languageToUse}`);
         return key;
       }
       
-      // Always use English translations for classroom routes
-      const isClassroom = isClassroomRoute(currentPath);
-      const languageToUse = isClassroom ? DEFAULT_LANGUAGE : currentLanguage;
+      // Try to get translation from target language first
+      let translationValue = targetTranslations[key];
       
-      // Check if selected language exists
-      const selectedTranslations = translations[languageToUse];
-      const defaultTranslations = translations[DEFAULT_LANGUAGE];
-      
-      if (!selectedTranslations) {
-        console.error(`No translations for language: ${languageToUse}`);
-        return String(defaultTranslations?.[key]) || key;
-      }
-      
-      // Get translation for selected language or fallback to default
-      let translationValue: string = "";
-      
-      // Handle nested objects in translations (e.g., suggestedTopics.introductions)
-      if (key.includes('.')) {
-        const [parentKey, childKey] = key.split('.');
-        const parentObject = selectedTranslations[parentKey];
+      // If not found or not a string, fallback to English
+      if (!translationValue || typeof translationValue !== 'string') {
+        translationValue = fallbackTranslations[key];
         
-        if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
-          const nestedValue = (parentObject as Record<string, any>)[childKey];
-          translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
-        }
-      } else {
-        const value = selectedTranslations[key];
-        translationValue = typeof value === 'string' ? value : 
-                           (value !== undefined ? String(value) : "");
-      }
-      
-      // Fallback to default language if not found or not a string
-      if (translationValue === "" && defaultTranslations) {
-        if (key.includes('.')) {
-          const [parentKey, childKey] = key.split('.');
-          const parentObject = defaultTranslations[parentKey];
-          
-          if (parentObject && typeof parentObject === 'object' && !Array.isArray(parentObject)) {
-            const nestedValue = (parentObject as Record<string, any>)[childKey];
-            translationValue = typeof nestedValue === 'string' ? nestedValue : String(key);
-          }
-        } else {
-          const value = defaultTranslations[key];
-          translationValue = typeof value === 'string' ? value : 
-                             (value !== undefined ? String(value) : key);
-        }
-        
-        if (translationValue !== key) {
-          if (!missingKeys.has(key)) {
-            console.warn(`Missing translation for key "${key}" in language "${languageToUse}"`);
-            setMissingKeys(prev => new Set([...prev, key]));
-          }
+        // Log missing translation only if we're not already using English
+        if (languageToUse !== DEFAULT_LANGUAGE && translationValue) {
+          console.warn(`Missing translation for "${key}" in ${languageToUse}, using English fallback`);
         }
       }
       
-      // If translation is missing in both languages, return the key
-      if (translationValue === "") {
-        if (!missingKeys.has(key)) {
-          console.error(`Translation key not found: "${key}" in any language`);
-          setMissingKeys(prev => new Set([...prev, key]));
-        }
+      // If still not found, return the key itself
+      if (!translationValue || typeof translationValue !== 'string') {
+        console.error(`Translation key not found: "${key}"`);
         return key;
       }
       
-      // Enhanced replacement logic with proper interpolation support
-      if (replacements && translationValue) {
+      // Apply replacements if provided
+      if (replacements) {
         let result = translationValue;
         Object.entries(replacements).forEach(([placeholder, replaceValue]) => {
           // Support {{placeholder}} format (primary)
@@ -170,16 +135,11 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Custom hook for using the localization context
+// Custom hook
 export const useLocalization = () => {
   const context = useContext(LocalizationContext);
-  
   if (!context) {
     throw new Error("useLocalization must be used within a LocalizationProvider");
   }
-  
   return context;
 };
-
-// Re-export from translations module for easy access
-export { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE };
