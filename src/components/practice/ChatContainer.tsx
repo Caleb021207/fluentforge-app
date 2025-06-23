@@ -41,8 +41,9 @@ const ChatContainer = ({
             {messages.map((message, index) => (
               <ChatMessage
                 key={index}
-                message={message}
-                targetLanguage={targetLanguage}
+                role={message.role}
+                content={message.content}
+                translation={message.translation}
               />
             ))}
             {isLoading && (
@@ -56,11 +57,13 @@ const ChatContainer = ({
       )}
 
       <ChatInput
-        input={input}
-        setInput={setInput}
-        handleSubmit={handleSubmit}
+        value={input}
+        onChange={setInput}
+        onSubmit={handleSubmit}
         isLoading={isLoading}
         placeholder={t("typeYourMessageHere")}
+        messages={messages}
+        targetLanguage={targetLanguage}
       />
 
       {messages.length === 0 && (
