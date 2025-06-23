@@ -24,12 +24,15 @@ const landingAuthTranslations: TranslationRecord = {
   myProfile: "Mi Perfil",
   roleNotAssigned: "Rol No Asignado",
   pleaseUseAccessCode: "Por favor usa un código de acceso para asignar tu rol en el sistema",
+  profileLoadError: "Hubo un problema al cargar los datos de tu perfil",
   
   // User Roles
   student: "Estudiante",
   teacher: "Profesor",
   administrator: "Administrador", 
   districtAdmin: "Administrador de Distrito",
+  admin: "Administrador",
+  district: "Administrador de Distrito",
   
   // Practice Interface
   correctGrammar: "Corregir Gramática",

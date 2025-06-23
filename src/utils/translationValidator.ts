@@ -1,4 +1,3 @@
-
 import translations from "@/translations";
 import { AVAILABLE_LANGUAGES } from "@/translations/constants";
 
@@ -108,12 +107,15 @@ export const MASTER_TRANSLATION_KEYS = [
   "pleaseUseAccessCode",
   "dontHaveAccount",
   "alreadyHaveAccount",
+  "profileLoadError",
 
   // Profile & User Management
   "student",
   "teacher",
   "administrator",
   "districtAdmin",
+  "admin",
+  "district",
   "estudiante",
   "profesor",
   "administrador",
@@ -137,7 +139,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "teacherProfile",
   "school",
   "role",
-  "district",
   "notAssigned",
   "teachingOverview",
   "totalStudents",

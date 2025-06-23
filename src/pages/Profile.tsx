@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Loader2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,7 +24,7 @@ const ProfilePage = () => {
   const [authError, setAuthError] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { t, currentLanguage } = useLocalization();
+  const { t } = useLocalization();
 
   const fetchUserData = async (showLoadingState = true) => {
     if (showLoadingState) setIsLoading(true);
@@ -51,8 +52,8 @@ const ProfilePage = () => {
           // Don't show toast error on initial load if profile doesn't exist yet
           if (showLoadingState) {
             toast({
-              title: "Error loading profile",
-              description: "There was a problem loading your profile data.",
+              title: t("error"),
+              description: t("profileLoadError"),
               variant: "destructive"
             });
           }
@@ -101,12 +102,10 @@ const ProfilePage = () => {
     return (
       <div className="text-center py-8">
         <h1 className="text-2xl font-bold mb-4">
-          {currentLanguage === "spanish" ? "Autenticación Requerida" : "Authentication Required"}
+          {t("authenticationRequired")}
         </h1>
         <p className="mb-6">
-          {currentLanguage === "spanish" 
-            ? "Por favor inicia sesión para ver tu perfil." 
-            : "Please sign in to view your profile."}
+          {t("pleaseSignInToViewProfile")}
         </p>
         <Button 
           onClick={handleSignIn} 
@@ -128,16 +127,6 @@ const ProfilePage = () => {
     );
   }
 
-  const getRoleDisplayName = (role: string) => {
-    switch (role) {
-      case 'student': return currentLanguage === "spanish" ? "Estudiante" : "Student";
-      case 'teacher': return currentLanguage === "spanish" ? "Profesor" : "Teacher";
-      case 'admin': return currentLanguage === "spanish" ? "Administrador" : "Administrator";
-      case 'district': return currentLanguage === "spanish" ? "Distrito" : "District Admin";
-      default: return role;
-    }
-  };
-
   const renderRoleSpecificProfile = () => {
     switch (profile.role) {
       case 'teacher':
@@ -151,9 +140,9 @@ const ProfilePage = () => {
       default:
         return (
           <div className="text-center py-12">
-            <h3 className="text-lg font-medium mb-2">Role Not Assigned</h3>
+            <h3 className="text-lg font-medium mb-2">{t("roleNotAssigned")}</h3>
             <p className="text-muted-foreground">
-              Please use an access code to assign your role in the system.
+              {t("pleaseUseAccessCode")}
             </p>
           </div>
         );
@@ -166,10 +155,10 @@ const ProfilePage = () => {
         <User className="h-8 w-8" />
         <div>
           <h1 className="text-3xl font-bold">
-            {currentLanguage === "spanish" ? "Mi Perfil" : "My Profile"}
+            {t("myProfile")}
           </h1>
           <p className="text-muted-foreground">
-            {profile.display_name || user.email} • {getRoleDisplayName(profile.role)}
+            {profile.display_name || user.email} • {t(profile.role)}
           </p>
         </div>
       </div>
