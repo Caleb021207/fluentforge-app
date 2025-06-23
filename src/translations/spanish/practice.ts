@@ -93,7 +93,7 @@ const practiceTranslations: TranslationRecord = {
   strengthsAndAreasForImprovement: "• Fortalezas y áreas de mejora",
   progressTrackingOverTime: "• Seguimiento del progreso a lo largo del tiempo",
   
-  // NEW: Analysis page specific translations
+  // Analysis page specific translations
   latestAnalysisResults: "Resultados del Análisis Más Reciente",
   detailedAnalysis: "Análisis Detallado",
   analysisBreakdown: "Desglose del Análisis",
@@ -104,6 +104,12 @@ const practiceTranslations: TranslationRecord = {
   yourPreviousAnalysisResults: "Tus Resultados de Análisis Anteriores",
   analysisComplete: "Análisis Completado",
   transcriptAnalyzedSuccessfully: "¡Tu transcripción ha sido analizada exitosamente!",
+  
+  // Hint button interface translations
+  responseSuggestions: "Sugerencias de Respuesta",
+  clickPlayToHearPronunciation: "Haz clic en reproducir para escuchar la pronunciación",
+  startConversationForSuggestions: "Inicia una conversación para ver sugerencias",
+  getResponseSuggestions: "Obtener sugerencias de respuesta",
   
   // Skill names (standardized)
   reading: "Lectura",

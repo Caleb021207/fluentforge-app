@@ -93,7 +93,7 @@ const practiceTranslations: TranslationRecord = {
   strengthsAndAreasForImprovement: "• बलियो क्षेत्र र सुधारका क्षेत्रहरू",
   progressTrackingOverTime: "• समयसँगै प्रगति ट्र्याकिङ",
   
-  // NEW: Analysis page specific translations
+  // Analysis page specific translations
   latestAnalysisResults: "भर्खरको विश्लेषण परिणामहरू",
   detailedAnalysis: "विस्तृत विश्लेषण",
   analysisBreakdown: "विश्लेषण विभाजन",
@@ -104,6 +104,12 @@ const practiceTranslations: TranslationRecord = {
   yourPreviousAnalysisResults: "तपाईंका अघिल्ला विश्लेषण परिणामहरू",
   analysisComplete: "विश्लेषण पूरा भयो",
   transcriptAnalyzedSuccessfully: "तपाईंको ट्रान्सक्रिप्ट सफलतापूर्वक विश्लेषण गरिएको छ!",
+  
+  // Hint button interface translations
+  responseSuggestions: "जवाफ सुझावहरू",
+  clickPlayToHearPronunciation: "उच्चारण सुन्न प्ले मा क्लिक गर्नुहोस्",
+  startConversationForSuggestions: "सुझावहरू हेर्न कुराकानी सुरु गर्नुहोस्",
+  getResponseSuggestions: "जवाफ सुझावहरू प्राप्त गर्नुहोस्",
   
   // Skill names (standardized)
   reading: "पढाइ",
