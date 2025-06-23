@@ -1,10 +1,9 @@
-
 /**
  * Batch Translation Implementation System
  * Uses existing infrastructure to implement multiple languages at once
  */
 
-import { generateLanguageIntegrationReport, createBatchTranslationTemplate, generateLanguageFileStructure } from "./languageIntegrator";
+import { generateLanguageIntegrationReport, createBatchTranslationTemplate } from "./languageIntegrator";
 import { LANGUAGE_TRANSLATION_TEMPLATES, generateTranslationFile } from "./translationGenerator";
 import { validateLanguageTranslations, MASTER_TRANSLATION_KEYS } from "./translationValidator";
 import { AVAILABLE_LANGUAGES } from "@/translations/constants";
@@ -351,9 +350,9 @@ export function createBatchImplementationPlan(targetLanguages: string[]): BatchI
 }
 
 /**
- * Generates file structure for a single language
+ * Generates file structure for a single language - renamed to avoid import conflict
  */
-export function generateLanguageFileStructure(languageCode: string): {
+export function generateBatchLanguageFileStructure(languageCode: string): {
   indexContent: string;
   moduleFiles: Record<string, string>;
 } {
@@ -427,7 +426,7 @@ export function simulateBatchImplementation(targetLanguages: string[]): BatchImp
   
   targetLanguages.forEach(language => {
     try {
-      const { indexContent, moduleFiles } = generateLanguageFileStructure(language);
+      const { indexContent, moduleFiles } = generateBatchLanguageFileStructure(language);
       const filesCreated = [`src/translations/${language}/index.ts`, ...Object.keys(moduleFiles).map(f => `src/translations/${language}/${f}`)];
       const translationsAdded = Object.values(moduleFiles).reduce((acc, content) => {
         return acc + (content.match(/"/g) || []).length / 2; // Rough count of translations
@@ -480,7 +479,7 @@ export function simulateBatchImplementation(targetLanguages: string[]): BatchImp
 
 export default {
   createBatchImplementationPlan,
-  generateLanguageFileStructure,
+  generateBatchLanguageFileStructure,
   simulateBatchImplementation,
   PRIORITY_LANGUAGES,
   ENHANCED_TRANSLATION_TEMPLATES

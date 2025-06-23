@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   createBatchImplementationPlan, 
   simulateBatchImplementation,
-  generateLanguageFileStructure,
+  generateBatchLanguageFileStructure,
   PRIORITY_LANGUAGES,
   ENHANCED_TRANSLATION_TEMPLATES,
   type BatchImplementationResult,
