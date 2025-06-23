@@ -7,12 +7,14 @@ import { ExtendedUserProfile } from "@/types/school";
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
 import StudentTestScores from "./StudentTestScores";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface TeacherProfileProps {
   profile: ExtendedUserProfile;
 }
 
 const TeacherProfile = ({ profile }: TeacherProfileProps) => {
+  const { t } = useLocalization();
   const [isLoading, setIsLoading] = useState(false);
   const [classAverage, setClassAverage] = useState<number | null>(null);
   const [studentCount, setStudentCount] = useState<number>(0);
@@ -36,22 +38,22 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Teacher Profile
+            {t("teacherProfile")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">School</p>
-              <p className="font-medium">{profile.school?.name || 'Not assigned'}</p>
+              <p className="text-sm text-muted-foreground">{t("school")}</p>
+              <p className="font-medium">{profile.school?.name || t("notAssigned")}</p>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Role</p>
-              <Badge variant="default">Teacher</Badge>
+              <p className="text-sm text-muted-foreground">{t("role")}</p>
+              <Badge variant="default">{t("teacher")}</Badge>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">District</p>
-              <p className="font-medium">{profile.school?.district || 'Not assigned'}</p>
+              <p className="text-sm text-muted-foreground">{t("district")}</p>
+              <p className="font-medium">{profile.school?.district || t("notAssigned")}</p>
             </div>
           </div>
         </CardContent>
@@ -62,7 +64,7 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Teaching Overview
+            {t("teachingOverview")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -71,13 +73,13 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
               <div className="text-2xl font-bold text-primary">
                 {studentCount}
               </div>
-              <p className="text-sm text-muted-foreground">Total Students</p>
+              <p className="text-sm text-muted-foreground">{t("totalStudents")}</p>
             </div>
             <div className="text-center p-4 bg-primary/5 rounded-lg">
               <div className="text-2xl font-bold text-primary">
                 {classAverage !== null ? `${classAverage}%` : 'N/A'}
               </div>
-              <p className="text-sm text-muted-foreground">Class Average Score</p>
+              <p className="text-sm text-muted-foreground">{t("classAverageScore")}</p>
             </div>
           </div>
         </CardContent>

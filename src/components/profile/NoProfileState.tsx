@@ -11,7 +11,7 @@ interface NoProfileStateProps {
 }
 
 const NoProfileState = ({ user, onProfileUpdate }: NoProfileStateProps) => {
-  const { currentLanguage } = useLocalization();
+  const { t } = useLocalization();
 
   return (
     <div className="space-y-6">
@@ -19,7 +19,7 @@ const NoProfileState = ({ user, onProfileUpdate }: NoProfileStateProps) => {
         <UserCircle className="h-8 w-8" />
         <div>
           <h1 className="text-3xl font-bold">
-            {currentLanguage === "spanish" ? "Configurar Perfil" : "Set Up Profile"}
+            {t("setUpProfile")}
           </h1>
           <p className="text-muted-foreground">
             {user.email}
@@ -33,26 +33,23 @@ const NoProfileState = ({ user, onProfileUpdate }: NoProfileStateProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Key className="h-5 w-5" />
-              {currentLanguage === "spanish" ? "Bienvenido" : "Welcome"}
+              {t("welcome")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              {currentLanguage === "spanish" 
-                ? "Para comenzar, necesitas un código de acceso. Estos códigos son proporcionados por tu distrito, escuela o profesor."
-                : "To get started, you need an access code. These codes are provided by your district, school, or teacher."
-              }
+              {t("accessCodeInstructions")}
             </p>
             
             <div className="bg-muted p-4 rounded-lg">
               <h4 className="font-medium mb-2">
-                {currentLanguage === "spanish" ? "Tipos de Códigos:" : "Code Types:"}
+                {t("codeTypes")}
               </h4>
               <ul className="text-sm space-y-1">
-                <li>• <strong>DIST</strong> - {currentLanguage === "spanish" ? "Administrador de Distrito" : "District Administrator"}</li>
-                <li>• <strong>SCH</strong> - {currentLanguage === "spanish" ? "Administrador de Escuela" : "School Administrator"}</li>
-                <li>• <strong>TCH</strong> - {currentLanguage === "spanish" ? "Profesor" : "Teacher"}</li>
-                <li>• <strong>CLS</strong> - {currentLanguage === "spanish" ? "Estudiante (Clase)" : "Student (Class)"}</li>
+                <li>• <strong>DIST</strong> - {t("districtAdmin")}</li>
+                <li>• <strong>SCH</strong> - {t("schoolAdministrator")}</li>
+                <li>• <strong>TCH</strong> - {t("teacher")}</li>
+                <li>• <strong>CLS</strong> - {t("studentClass")}</li>
               </ul>
             </div>
           </CardContent>

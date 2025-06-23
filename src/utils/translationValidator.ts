@@ -128,6 +128,21 @@ export const MASTER_TRANSLATION_KEYS = [
   // Settings
   "parentalControlsDescription",
 
+  // Profile Setup & Components
+  "setUpProfile",
+  "welcome",
+  "accessCodeInstructions",
+  "codeTypes",
+  "schoolAdministrator",
+  "teacherProfile",
+  "school",
+  "role",
+  "district",
+  "notAssigned",
+  "teachingOverview",
+  "totalStudents",
+  "classAverageScore",
+
   // AI Analysis
   "aiProgressAnalysis",
   "uploadLanguageTestTranscripts",

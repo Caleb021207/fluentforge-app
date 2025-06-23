@@ -48,6 +48,22 @@ const landingAuthTranslations: TranslationRecord = {
   // Auth Dialog Navigation
   dontHaveAccount: "¿No tienes una cuenta?",
   alreadyHaveAccount: "¿Ya tienes una cuenta?",
+  
+  // Profile Setup
+  setUpProfile: "Configurar Perfil",
+  welcome: "Bienvenido",
+  accessCodeInstructions: "Para comenzar, necesitas un código de acceso. Estos códigos son proporcionados por tu distrito, escuela o profesor.",
+  codeTypes: "Tipos de Códigos:",
+  schoolAdministrator: "Administrador de Escuela",
+  studentClass: "Estudiante (Clase)",
+  teacherProfile: "Perfil de Profesor",
+  school: "Escuela",
+  role: "Rol",
+  district: "Distrito",
+  notAssigned: "No asignado",
+  teachingOverview: "Resumen de Enseñanza",
+  totalStudents: "Total de Estudiantes",
+  classAverageScore: "Puntuación Promedio de la Clase",
 };
 
 export default landingAuthTranslations;
