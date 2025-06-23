@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
@@ -40,7 +39,10 @@ const voiceChatTranslations: TranslationRecord = {
   askQuestions: "Posez des questions sur des sujets quotidiens",
   practiceCommonPhrases: "Pratiquez des phrases et expressions communes",
   describeWhatYouSee: "Décrivez ce que vous voyez autour de vous",
-  practiceVocabularyForSpecific: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture"
+  practiceVocabularyForSpecific: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture",
+  practiceLevel: "Niveau de pratique",
+  cefrB1Description: "Intermédiaire - Peut discuter de sujets familiers",
+  startSpeaking: "Commencer à parler"
 };
 
 export default voiceChatTranslations;

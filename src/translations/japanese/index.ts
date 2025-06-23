@@ -1,35 +1,39 @@
 
 import { TranslationRecord } from "../types";
+import generalTranslations from "./general";
 import generalCoreTranslations from "./general-core";
-import uiElementsTranslations from "./ui-elements";
-import authTranslations from "./auth";
-import navigationTranslations from "./navigation";
-import landingAuthTranslations from "./landing-auth";
+import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
-import profileTranslations from "./profile";
-import premiumVoiceTranslations from "./premium-voice";
-import languagesTranslations from "./languages";
 import certificatesTranslations from "./certificates";
 import progressTranslations from "./progress";
+import profileTranslations from "./profile";
+import voiceChatTranslations from "./voice-chat";
+import premiumVoiceTranslations from "./premium-voice";
 import languageFrameworksTranslations from "./language-frameworks";
-import languageSelectionTranslations from "./language-selection";
+import authTranslations from "./auth";
+import languagesTranslations from "./languages";
+import navigationTranslations from "./navigation";
+import uiElementsTranslations from "./ui-elements";
+import landingAuthTranslations from "./landing-auth";
+import pronunciationTranslations from "./pronunciation";
 
-const translations: TranslationRecord = {
+const japaneseTranslations: TranslationRecord = {
+  ...generalTranslations,
   ...generalCoreTranslations,
-  ...uiElementsTranslations,
-  ...authTranslations,
-  ...navigationTranslations,
-  ...landingAuthTranslations,
+  ...languageSelectionTranslations,
   ...practiceTranslations,
-  ...voiceChatTranslations,
-  ...profileTranslations,
-  ...premiumVoiceTranslations,
-  ...languagesTranslations,
   ...certificatesTranslations,
   ...progressTranslations,
+  ...profileTranslations,
+  ...voiceChatTranslations,
+  ...premiumVoiceTranslations,
   ...languageFrameworksTranslations,
-  ...languageSelectionTranslations
+  ...authTranslations,
+  ...languagesTranslations,
+  ...navigationTranslations,
+  ...uiElementsTranslations,
+  ...landingAuthTranslations,
+  ...pronunciationTranslations,
 };
 
-export default translations;
+export default japaneseTranslations;

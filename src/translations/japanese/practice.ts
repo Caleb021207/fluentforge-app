@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
@@ -19,7 +18,9 @@ const practiceTranslations: TranslationRecord = {
   typeYourMessageHere: "ここにメッセージを入力してください...",
   typeMessageBelow: "以下にメッセージを入力してください",
   chatPlaceholder: "{{targetLanguage}}を練習するためにメッセージを入力してください...",
-  practicePrompt: "こんにちは！{{targetLanguage}}での会話を練習したいと思います。私の{{targetLanguage}}の文法、語彙、使用法を修正して手伝ってください。基本的な会話から始めませんか？"
+  practicePrompt: "こんにちは！{{targetLanguage}}での会話を練習したいと思います。私の{{targetLanguage}}の文法、語彙、使用法を修正して手伝ってください。基本的な会話から始めませんか？",
+  responseSuggestions: "応答の提案",
+  clickPlayToHearPronunciation: "発音を聞くには再生をクリック"
 };
 
 export default practiceTranslations;

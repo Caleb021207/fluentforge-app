@@ -91,6 +91,9 @@ const practiceTranslations: TranslationRecord = {
   "speechRecognitionNotSupported": "Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói",
   "noSpeechDetected": "Không Phát Hiện Giọng Nói",
   "pleaseTryAgain": "Vui lòng thử lại",
+  
+  // Adding the missing "Correct Grammar" translation
+  "correctGrammar": "Sửa ngữ pháp",
 };
 
 export default practiceTranslations;
