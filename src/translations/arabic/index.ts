@@ -1,5 +1,5 @@
 
-import {  } from "../types";
+import { TranslationRecord } from "../types";
 import arabicCoreTranslations from "./core";
 import arabicPracticeTranslations from "./practice";
 
