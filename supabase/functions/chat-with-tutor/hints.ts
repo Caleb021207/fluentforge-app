@@ -5,9 +5,14 @@ const openai = new OpenAI({
   apiKey: Deno.env.get("OPENAI_API_KEY") || "",
 });
 
+export interface SuggestionItem {
+  phrase: string;
+  translation: string;
+}
+
 export interface SuggestionCategory {
   title: string;
-  suggestions: string[];
+  suggestions: SuggestionItem[];
 }
 
 export interface ConversationHints {
@@ -24,15 +29,15 @@ export async function generateHints(
     const defaultHints: SuggestionCategory[] = [
       {
         title: "Greetings",
-        suggestions: getDefaultHints(targetLanguage, "greetings"),
+        suggestions: getDefaultHints(targetLanguage, "greetings", userLanguage),
       },
       {
         title: "Questions",
-        suggestions: getDefaultHints(targetLanguage, "questions"),
+        suggestions: getDefaultHints(targetLanguage, "questions", userLanguage),
       },
       {
         title: "Responses",
-        suggestions: getDefaultHints(targetLanguage, "responses"),
+        suggestions: getDefaultHints(targetLanguage, "responses", userLanguage),
       },
     ];
 
@@ -53,12 +58,21 @@ export async function generateHints(
           content: `You are a language learning assistant that suggests helpful phrases for the next response. 
           Given a conversation in ${targetLanguage}, generate 3 categories of suggestions with 3-4 phrases each that the user might want to say next.
           The phrases should be appropriate to the conversation context and at a CEFR B1 level.
+          
+          IMPORTANT: For each phrase, provide BOTH the phrase in ${targetLanguage} AND its translation in ${userLanguage}.
+          
           Format your response as JSON with this structure:
           {
             "categories": [
               {
                 "title": "Category name in ${userLanguage}",
-                "suggestions": ["phrase in ${targetLanguage}", "phrase in ${targetLanguage}", ...]
+                "suggestions": [
+                  {
+                    "phrase": "phrase in ${targetLanguage}",
+                    "translation": "translation in ${userLanguage}"
+                  },
+                  ...
+                ]
               },
               ...
             ]
@@ -68,7 +82,7 @@ export async function generateHints(
         ...limitedHistory,
       ],
       response_format: { type: "json_object" },
-      max_tokens: 800,
+      max_tokens: 1200,
     });
 
     const content = response.choices[0].message.content;
@@ -98,41 +112,101 @@ export async function generateHints(
     return [
       {
         title: "Greetings",
-        suggestions: getDefaultHints(targetLanguage, "greetings"),
+        suggestions: getDefaultHints(targetLanguage, "greetings", userLanguage),
       },
       {
         title: "Questions",
-        suggestions: getDefaultHints(targetLanguage, "questions"),
+        suggestions: getDefaultHints(targetLanguage, "questions", userLanguage),
       },
       {
         title: "Responses",
-        suggestions: getDefaultHints(targetLanguage, "responses"),
+        suggestions: getDefaultHints(targetLanguage, "responses", userLanguage),
       },
     ];
   }
 }
 
-function getDefaultHints(language: string, category: string): string[] {
+function getDefaultHints(language: string, category: string, userLanguage: string): SuggestionItem[] {
   const hints = {
     spanish: {
-      greetings: ["¡Hola!", "Buenos días", "¿Cómo estás?", "Encantado de conocerte"],
-      questions: ["¿Qué hiciste hoy?", "¿Puedes ayudarme?", "¿Cómo se dice...?", "¿Qué significa...?"],
-      responses: ["Sí, estoy de acuerdo", "No entiendo", "Podría ser", "Eso es interesante"],
+      greetings: [
+        { phrase: "¡Hola!", translation: "Hello!" },
+        { phrase: "Buenos días", translation: "Good morning" },
+        { phrase: "¿Cómo estás?", translation: "How are you?" },
+        { phrase: "Encantado de conocerte", translation: "Nice to meet you" }
+      ],
+      questions: [
+        { phrase: "¿Qué hiciste hoy?", translation: "What did you do today?" },
+        { phrase: "¿Puedes ayudarme?", translation: "Can you help me?" },
+        { phrase: "¿Cómo se dice...?", translation: "How do you say...?" },
+        { phrase: "¿Qué significa...?", translation: "What does...mean?" }
+      ],
+      responses: [
+        { phrase: "Sí, estoy de acuerdo", translation: "Yes, I agree" },
+        { phrase: "No entiendo", translation: "I don't understand" },
+        { phrase: "Podría ser", translation: "It could be" },
+        { phrase: "Eso es interesante", translation: "That's interesting" }
+      ],
     },
     french: {
-      greetings: ["Bonjour!", "Salut!", "Comment ça va?", "Enchanté"],
-      questions: ["Qu'as-tu fait aujourd'hui?", "Peux-tu m'aider?", "Comment dit-on...?", "Que signifie...?"],
-      responses: ["Oui, je suis d'accord", "Je ne comprends pas", "C'est possible", "C'est intéressant"],
+      greetings: [
+        { phrase: "Bonjour!", translation: "Hello!" },
+        { phrase: "Salut!", translation: "Hi!" },
+        { phrase: "Comment ça va?", translation: "How are you?" },
+        { phrase: "Enchanté", translation: "Nice to meet you" }
+      ],
+      questions: [
+        { phrase: "Qu'as-tu fait aujourd'hui?", translation: "What did you do today?" },
+        { phrase: "Peux-tu m'aider?", translation: "Can you help me?" },
+        { phrase: "Comment dit-on...?", translation: "How do you say...?" },
+        { phrase: "Que signifie...?", translation: "What does...mean?" }
+      ],
+      responses: [
+        { phrase: "Oui, je suis d'accord", translation: "Yes, I agree" },
+        { phrase: "Je ne comprends pas", translation: "I don't understand" },
+        { phrase: "C'est possible", translation: "It's possible" },
+        { phrase: "C'est intéressant", translation: "That's interesting" }
+      ],
     },
     portuguese: {
-      greetings: ["Olá!", "Bom dia!", "Como está?", "Prazer em conhecê-lo"],
-      questions: ["O que você fez hoje?", "Pode me ajudar?", "Como se diz...?", "O que significa...?"],
-      responses: ["Sim, eu concordo", "Eu não entendo", "Pode ser", "Isso é interessante"],
+      greetings: [
+        { phrase: "Olá!", translation: "Hello!" },
+        { phrase: "Bom dia!", translation: "Good morning!" },
+        { phrase: "Como está?", translation: "How are you?" },
+        { phrase: "Prazer em conhecê-lo", translation: "Nice to meet you" }
+      ],
+      questions: [
+        { phrase: "O que você fez hoje?", translation: "What did you do today?" },
+        { phrase: "Pode me ajudar?", translation: "Can you help me?" },
+        { phrase: "Como se diz...?", translation: "How do you say...?" },
+        { phrase: "O que significa...?", translation: "What does...mean?" }
+      ],
+      responses: [
+        { phrase: "Sim, eu concordo", translation: "Yes, I agree" },
+        { phrase: "Eu não entendo", translation: "I don't understand" },
+        { phrase: "Pode ser", translation: "It could be" },
+        { phrase: "Isso é interessante", translation: "That's interesting" }
+      ],
     },
     english: {
-      greetings: ["Hello!", "Good morning", "How are you?", "Nice to meet you"],
-      questions: ["What did you do today?", "Can you help me?", "How do you say...?", "What does...mean?"],
-      responses: ["Yes, I agree", "I don't understand", "It could be", "That's interesting"],
+      greetings: [
+        { phrase: "Hello!", translation: "Hello!" },
+        { phrase: "Good morning", translation: "Good morning" },
+        { phrase: "How are you?", translation: "How are you?" },
+        { phrase: "Nice to meet you", translation: "Nice to meet you" }
+      ],
+      questions: [
+        { phrase: "What did you do today?", translation: "What did you do today?" },
+        { phrase: "Can you help me?", translation: "Can you help me?" },
+        { phrase: "How do you say...?", translation: "How do you say...?" },
+        { phrase: "What does...mean?", translation: "What does...mean?" }
+      ],
+      responses: [
+        { phrase: "Yes, I agree", translation: "Yes, I agree" },
+        { phrase: "I don't understand", translation: "I don't understand" },
+        { phrase: "It could be", translation: "It could be" },
+        { phrase: "That's interesting", translation: "That's interesting" }
+      ],
     }
   };
   

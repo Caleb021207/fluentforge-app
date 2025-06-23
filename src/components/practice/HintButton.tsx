@@ -7,8 +7,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { playTTS } from "@/utils/tts";
 import { supabase } from "@/integrations/supabase/client";
-import type { Message, SuggestionCategory } from "@/types/chat";
+import type { Message } from "@/types/chat";
 import { Separator } from "@/components/ui/separator";
+
+interface SuggestionItem {
+  phrase: string;
+  translation: string;
+}
+
+interface SuggestionCategory {
+  title: string;
+  suggestions: SuggestionItem[];
+}
 
 interface HintButtonProps {
   targetLanguage: string;
@@ -65,11 +75,19 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
         setHints([
           {
             title: t("greetings"),
-            suggestions: ["Hola, ¿cómo estás?", "Buenos días", "Encantado de conocerte"]
+            suggestions: [
+              { phrase: "Hola, ¿cómo estás?", translation: "Hello, how are you?" },
+              { phrase: "Buenos días", translation: "Good morning" },
+              { phrase: "Encantado de conocerte", translation: "Nice to meet you" }
+            ]
           },
           {
             title: t("questions"),
-            suggestions: ["¿Qué te gusta hacer?", "¿De dónde eres?", "¿Cuál es tu comida favorita?"]
+            suggestions: [
+              { phrase: "¿Qué te gusta hacer?", translation: "What do you like to do?" },
+              { phrase: "¿De dónde eres?", translation: "Where are you from?" },
+              { phrase: "¿Cuál es tu comida favorita?", translation: "What's your favorite food?" }
+            ]
           }
         ]);
       }
@@ -85,11 +103,19 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
       setHints([
         {
           title: t("greetings"),
-          suggestions: ["Hola, ¿cómo estás?", "Buenos días", "Encantado de conocerte"]
+          suggestions: [
+            { phrase: "Hola, ¿cómo estás?", translation: "Hello, how are you?" },
+            { phrase: "Buenos días", translation: "Good morning" },
+            { phrase: "Encantado de conocerte", translation: "Nice to meet you" }
+          ]
         },
         {
           title: t("questions"),
-          suggestions: ["¿Qué te gusta hacer?", "¿De dónde eres?", "¿Cuál es tu comida favorita?"]
+          suggestions: [
+            { phrase: "¿Qué te gusta hacer?", translation: "What do you like to do?" },
+            { phrase: "¿De dónde eres?", translation: "Where are you from?" },
+            { phrase: "¿Cuál es tu comida favorita?", translation: "What's your favorite food?" }
+          ]
         }
       ]);
     } finally {
@@ -172,13 +198,16 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
                       key={i}
                       className="flex items-center justify-between p-2 text-sm rounded-md hover:bg-muted"
                     >
-                      <span className="flex-1 mr-2">{suggestion}</span>
+                      <div className="flex-1 mr-2">
+                        <div className="font-medium">{suggestion.phrase}</div>
+                        <div className="text-xs text-muted-foreground">{suggestion.translation}</div>
+                      </div>
                       <Button
                         size="sm"
                         variant="ghost"
-                        className={`h-8 w-8 p-0 ${isPlaying === suggestion ? 'text-primary' : ''}`}
+                        className={`h-8 w-8 p-0 flex-shrink-0 ${isPlaying === suggestion.phrase ? 'text-primary' : ''}`}
                         disabled={isPlaying !== null}
-                        onClick={() => playHintAudio(suggestion)}
+                        onClick={() => playHintAudio(suggestion.phrase)}
                       >
                         <Volume2 className="h-4 w-4" />
                         <span className="sr-only">{t("play")}</span>
