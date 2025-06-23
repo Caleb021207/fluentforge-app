@@ -12,6 +12,8 @@ import navigationTranslations from "./navigation";
 import certificatesTranslations from "./certificates";
 import progressTranslations from "./progress";
 import profileTranslations from "./profile";
+import pronunciationTranslations from "./pronunciation";
+import landingAuthTranslations from "./landing-auth";
 
 // Combine all the translation categories
 const pashtoTranslations: TranslationRecord = {
@@ -27,6 +29,8 @@ const pashtoTranslations: TranslationRecord = {
   ...certificatesTranslations,
   ...progressTranslations,
   ...profileTranslations,
+  ...pronunciationTranslations,
+  ...landingAuthTranslations,
 };
 
 export default pashtoTranslations;
