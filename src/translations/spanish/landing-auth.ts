@@ -89,6 +89,104 @@ const landingAuthTranslations: TranslationRecord = {
   
   // Profile Page
   error: "Error",
+  
+  // UserInfo Component
+  personalInformation: "Información Personal",
+  cancel: "Cancelar",
+  edit: "Editar",
+  profilePicture: "Foto de Perfil",
+  uploadPhoto: "Subir Foto",
+  displayName: "Nombre de Usuario",
+  enterDisplayName: "Ingresa tu nombre de usuario",
+  saving: "Guardando...",
+  saveChanges: "Guardar Cambios",
+  profileInformationUpdated: "Información del perfil actualizada exitosamente",
+  failedToUpdateProfile: "Error al actualizar la información del perfil. Inténtalo de nuevo.",
+  profilePictureUpdated: "Foto de perfil actualizada exitosamente",
+  failedToUploadProfilePicture: "Error al subir la foto de perfil",
+  
+  // AccessCodeInput Component
+  accessCode: "Código de Acceso",
+  currentStatus: "Estado Actual",
+  at: "en",
+  enterCode: "Ingresa Código",
+  accessCodeExample: "ej: DIST123456",
+  apply: "Aplicar",
+  
+  // AuthRequiredPrompt Component
+  loginRequired: "Inicio de Sesión Requerido",
+  loginRequiredDescription: "Por favor inicia sesión para acceder a esta función",
+  redirectingToLogin: "Redirigiendo al inicio de sesión",
+  
+  // LogoutButton Component
+  signOut: "Cerrar Sesión",
+  logout: "Cerrar Sesión",
+  loggedOutSuccessfully: "Sesión Cerrada Exitosamente",
+  youHaveBeenSignedOut: "Has cerrado sesión",
+  errorSigningOut: "Error al Cerrar Sesión",
+  errorOccurredWhileSigningOut: "Ocurrió un error al cerrar sesión",
+  
+  // StudentProfile Component
+  studentProfile: "Perfil de Estudiante",
+  gradeLevel: "Nivel de Grado",
+  studentId: "ID de Estudiante",
+  graduationYear: "Año de Graduación",
+  notSet: "No establecido",
+  learningActivity: "Actividad de Aprendizaje",
+  activeClasses: "Clases Activas",
+  practiceSessions: "Sesiones de Práctica",
+  voiceChatMinutes: "Minutos de Chat de Voz",
+  recentGrades: "Calificaciones Recientes",
+  points: "puntos",
+  pending: "Pendiente",
+  currentClassesAndTeachers: "Clases y Profesores Actuales",
+  unnamedClass: "Clase Sin Nombre",
+  noSubject: "Sin Materia",
+  noCode: "Sin Código",
+  currentYear: "Año Actual",
+  noClassesYet: "Aún No Hay Clases",
+  haventJoinedClasses: "Aún no te has unido a ninguna clase.",
+  askTeacherForClassCode: "Pide a tu profesor un código de clase para comenzar.",
+  
+  // AdminProfile Component
+  schoolDataNotAvailable: "Datos de Escuela No Disponibles",
+  unableToLoadSchoolData: "No se pudieron cargar los datos de administración escolar. Contacta soporte.",
+  schoolAdministratorProfile: "Perfil de Administrador Escolar",
+  schoolAddress: "Dirección de la Escuela",
+  notProvided: "No proporcionado",
+  principal: "Director",
+  schoolOverview: "Resumen de la Escuela",
+  totalClasses: "Total de Clases",
+  teachers: "Profesores",
+  enrollments: "Inscripciones",
+  avgCertScore: "Punt. Cert. Promedio",
+  classroomManagement: "Gestión de Aulas",
+  noPeriodAssigned: "Sin período asignado",
+  students: "estudiantes",
+  room: "Aula",
+  tbd: "Por Determinar",
+  certificationPerformance: "Rendimiento de Certificación",
+  noClassesFoundInSchool: "No se encontraron clases en tu escuela",
+  schoolCertificationPerformance: "Rendimiento de Certificación Escolar",
+  classes: "clases",
+  averageScore: "Puntuación Promedio",
+  noCertificationDataAvailable: "Aún no hay datos de certificación disponibles",
+  
+  // DistrictProfile Component
+  districtAdministratorProfile: "Perfil de Administrador de Distrito",
+  districtAdministrator: "Administrador de Distrito",
+  schoolsManaged: "Escuelas Gestionadas",
+  districtOverview: "Resumen del Distrito",
+  schools: "Escuelas",
+  districtAvgScore: "Punt. Promedio del Distrito",
+  schoolsPerformance: "Rendimiento de Escuelas",
+  avgScore: "Punt. Promedio",
+  noSchoolsFoundInDistrict: "No se encontraron escuelas en este distrito",
+  
+  // Common
+  success: "Éxito",
+  pleaseEnterAccessCode: "Por favor ingresa un código de acceso",
+  failedToProcessAccessCode: "Error al procesar el código de acceso. Inténtalo de nuevo.",
 };
 
 export default landingAuthTranslations;

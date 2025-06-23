@@ -20,13 +20,13 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
   const [code, setCode] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
-  const { currentLanguage } = useLocalization();
+  const { t } = useLocalization();
 
   const handleProcessCode = async () => {
     if (!code.trim()) {
       toast({
-        title: "Error",
-        description: "Please enter an access code",
+        title: t("error"),
+        description: t("pleaseEnterAccessCode"),
         variant: "destructive"
       });
       return;
@@ -40,17 +40,16 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
       
       if (result.success) {
         toast({
-          title: "Success",
+          title: t("success"),
           description: result.message,
         });
         setCode("");
         
-        // Trigger the profile update immediately
         console.log('Access code processed successfully, triggering profile update...');
         onCodeProcessed();
       } else {
         toast({
-          title: "Error",
+          title: t("error"),
           description: result.message,
           variant: "destructive"
         });
@@ -58,8 +57,8 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
     } catch (error) {
       console.error('Error processing code:', error);
       toast({
-        title: "Error",
-        description: "Failed to process access code. Please try again.",
+        title: t("error"),
+        description: t("failedToProcessAccessCode"),
         variant: "destructive"
       });
     } finally {
@@ -69,10 +68,10 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
 
   const getRoleDisplay = (role: string) => {
     switch (role) {
-      case 'student': return currentLanguage === "spanish" ? "Estudiante" : "Student";
-      case 'teacher': return currentLanguage === "spanish" ? "Profesor" : "Teacher";
-      case 'admin': return currentLanguage === "spanish" ? "Administrador" : "Administrator";
-      case 'district': return currentLanguage === "spanish" ? "Distrito" : "District Admin";
+      case 'student': return t("student");
+      case 'teacher': return t("teacher");
+      case 'admin': return t("administrator");
+      case 'district': return t("districtAdmin");
       default: return role;
     }
   };
@@ -82,7 +81,7 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Key className="h-5 w-5" />
-          {currentLanguage === "spanish" ? "Código de Acceso" : "Access Code"}
+          {t("accessCode")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -90,13 +89,13 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
         {currentRole && (
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              {currentLanguage === "spanish" ? "Estado Actual" : "Current Status"}
+              {t("currentStatus")}
             </Label>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-500" />
               <Badge variant="default">{getRoleDisplay(currentRole)}</Badge>
               {currentAssignment && (
-                <span className="text-sm text-muted-foreground">at {currentAssignment}</span>
+                <span className="text-sm text-muted-foreground">{t("at")} {currentAssignment}</span>
               )}
             </div>
           </div>
@@ -105,14 +104,14 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
         {/* Code Input */}
         <div className="space-y-2">
           <Label htmlFor="accessCode">
-            {currentLanguage === "spanish" ? "Ingresa Código" : "Enter Code"}
+            {t("enterCode")}
           </Label>
           <div className="flex gap-2">
             <Input
               id="accessCode"
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
-              placeholder={currentLanguage === "spanish" ? "Ej: DIST123456" : "e.g., DIST123456"}
+              placeholder={t("accessCodeExample")}
               disabled={isProcessing}
               className="font-mono"
               maxLength={10}
@@ -125,10 +124,10 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
               {isProcessing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {currentLanguage === "spanish" ? "Procesando..." : "Processing..."}
+                  {t("processing")}
                 </>
               ) : (
-                currentLanguage === "spanish" ? "Aplicar" : "Apply"
+                t("apply")
               )}
             </Button>
           </div>
@@ -137,13 +136,13 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
         {/* Code Type Info */}
         <div className="text-xs text-muted-foreground space-y-1">
           <p className="font-medium">
-            {currentLanguage === "spanish" ? "Tipos de Código:" : "Code Types:"}
+            {t("codeTypes")}:
           </p>
           <div className="grid grid-cols-2 gap-1">
-            <span>• DIST - {currentLanguage === "spanish" ? "Distrito" : "District"}</span>
-            <span>• SCH - {currentLanguage === "spanish" ? "Escuela" : "School"}</span>
-            <span>• TCH - {currentLanguage === "spanish" ? "Profesor" : "Teacher"}</span>
-            <span>• CLS - {currentLanguage === "spanish" ? "Clase" : "Class"}</span>
+            <span>• DIST - {t("district")}</span>
+            <span>• SCH - {t("school")}</span>
+            <span>• TCH - {t("teacher")}</span>
+            <span>• CLS - {t("studentClass")}</span>
           </div>
         </div>
       </CardContent>

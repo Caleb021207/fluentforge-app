@@ -89,6 +89,104 @@ const landingAuthTranslations: TranslationRecord = {
   
   // Profile Page
   error: "Error",
+  
+  // UserInfo Component
+  personalInformation: "Personal Information",
+  cancel: "Cancel",
+  edit: "Edit",
+  profilePicture: "Profile Picture",
+  uploadPhoto: "Upload Photo",
+  displayName: "Display Name",
+  enterDisplayName: "Enter your display name",
+  saving: "Saving...",
+  saveChanges: "Save Changes",
+  profileInformationUpdated: "Profile information updated successfully",
+  failedToUpdateProfile: "Failed to update profile information. Please try again.",
+  profilePictureUpdated: "Profile picture updated successfully",
+  failedToUploadProfilePicture: "Failed to upload profile picture",
+  
+  // AccessCodeInput Component
+  accessCode: "Access Code",
+  currentStatus: "Current Status",
+  at: "at",
+  enterCode: "Enter Code",
+  accessCodeExample: "e.g., DIST123456",
+  apply: "Apply",
+  
+  // AuthRequiredPrompt Component
+  loginRequired: "Login Required",
+  loginRequiredDescription: "Please sign in to access this feature",
+  redirectingToLogin: "Redirecting to login",
+  
+  // LogoutButton Component
+  signOut: "Sign Out",
+  logout: "Logout",
+  loggedOutSuccessfully: "Logged Out Successfully",
+  youHaveBeenSignedOut: "You have been signed out",
+  errorSigningOut: "Error Signing Out",
+  errorOccurredWhileSigningOut: "An error occurred while signing out",
+  
+  // StudentProfile Component
+  studentProfile: "Student Profile",
+  gradeLevel: "Grade Level",
+  studentId: "Student ID",
+  graduationYear: "Graduation Year",
+  notSet: "Not set",
+  learningActivity: "Learning Activity",
+  activeClasses: "Active Classes",
+  practiceSessions: "Practice Sessions",
+  voiceChatMinutes: "Voice Chat Minutes",
+  recentGrades: "Recent Grades",
+  points: "points",
+  pending: "Pending",
+  currentClassesAndTeachers: "Current Classes & Teachers",
+  unnamedClass: "Unnamed Class",
+  noSubject: "No Subject",
+  noCode: "No Code",
+  currentYear: "Current Year",
+  noClassesYet: "No Classes Yet",
+  haventJoinedClasses: "You haven't joined any classes yet.",
+  askTeacherForClassCode: "Ask your teacher for a class code to get started.",
+  
+  // AdminProfile Component
+  schoolDataNotAvailable: "School Data Not Available",
+  unableToLoadSchoolData: "Unable to load school administration data. Please contact support.",
+  schoolAdministratorProfile: "School Administrator Profile",
+  schoolAddress: "School Address",
+  notProvided: "Not provided",
+  principal: "Principal",
+  schoolOverview: "School Overview",
+  totalClasses: "Total Classes",
+  teachers: "Teachers",
+  enrollments: "Enrollments",
+  avgCertScore: "Avg Cert Score",
+  classroomManagement: "Classroom Management",
+  noPeriodAssigned: "No period assigned",
+  students: "Students",
+  room: "Room",
+  tbd: "TBD",
+  certificationPerformance: "Certification Performance",
+  noClassesFoundInSchool: "No classes found in your school",
+  schoolCertificationPerformance: "School Certification Performance",
+  classes: "classes",
+  averageScore: "Average Score",
+  noCertificationDataAvailable: "No certification data available yet",
+  
+  // DistrictProfile Component
+  districtAdministratorProfile: "District Administrator Profile",
+  districtAdministrator: "District Administrator",
+  schoolsManaged: "Schools Managed",
+  districtOverview: "District Overview",
+  schools: "Schools",
+  districtAvgScore: "District Avg Score",
+  schoolsPerformance: "Schools Performance",
+  avgScore: "Avg Score",
+  noSchoolsFoundInDistrict: "No schools found in this district",
+  
+  // Common
+  success: "Success",
+  pleaseEnterAccessCode: "Please enter an access code",
+  failedToProcessAccessCode: "Failed to process access code. Please try again.",
 };
 
 export default landingAuthTranslations;

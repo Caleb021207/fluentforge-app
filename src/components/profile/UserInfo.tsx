@@ -37,7 +37,7 @@ const UserInfo = ({
   const [isEditing, setIsEditing] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState(displayName);
   const [isSaving, setIsSaving] = useState(false);
-  const { currentLanguage } = useLocalization();
+  const { t } = useLocalization();
 
   const handleEditToggle = () => {
     if (isEditing) {
@@ -65,15 +65,15 @@ const UserInfo = ({
         setIsEditing(false);
         
         toast({
-          title: "Success",
-          description: "Profile information updated successfully",
+          title: t("success"),
+          description: t("profileInformationUpdated"),
         });
       }
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
-        title: "Error",
-        description: "Failed to update profile information. Please try again.",
+        title: t("error"),
+        description: t("failedToUpdateProfile"),
         variant: "destructive",
       });
     } finally {
@@ -108,30 +108,29 @@ const UserInfo = ({
 
         if (updatedProfile) {
           toast({
-            title: "Success",
-            description: "Profile picture updated successfully",
+            title: t("success"),
+            description: t("profilePictureUpdated"),
           });
         }
       } catch (error) {
         console.error('Error uploading to avatars bucket:', error);
         toast({
-          title: "Error",
-          description: "Failed to upload profile picture. Storage bucket may not exist.",
+          title: t("error"),
+          description: t("failedToUploadProfilePicture"),
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error('Error uploading avatar:', error);
       toast({
-        title: "Error",
-        description: "Failed to upload profile picture",
+        title: t("error"),
+        description: t("failedToUploadProfilePicture"),
         variant: "destructive",
       });
     }
   };
 
   const handleCodeProcessed = () => {
-    // Trigger profile refresh
     if (onProfileUpdate) {
       onProfileUpdate();
     }
@@ -143,16 +142,14 @@ const UserInfo = ({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>
-            {currentLanguage === "spanish" ? "Información Personal" : "Personal Information"}
+            {t("personalInformation")}
           </CardTitle>
           <Button
             variant="outline" 
             size="sm"
             onClick={handleEditToggle}
           >
-            {isEditing 
-              ? (currentLanguage === "spanish" ? "Cancelar" : "Cancel") 
-              : (currentLanguage === "spanish" ? "Editar" : "Edit")}
+            {isEditing ? t("cancel") : t("edit")}
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -161,7 +158,7 @@ const UserInfo = ({
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
-                  alt="Profile"
+                  alt={t("profilePicture")}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -176,9 +173,7 @@ const UserInfo = ({
               <Label htmlFor="avatar" className="cursor-pointer">
                 <div className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800">
                   <Upload className="w-4 h-4" />
-                  <span>
-                    {currentLanguage === "spanish" ? "Subir Foto" : "Upload Photo"}
-                  </span>
+                  <span>{t("uploadPhoto")}</span>
                 </div>
                 <Input
                   id="avatar"
@@ -193,16 +188,14 @@ const UserInfo = ({
 
           <div className="space-y-2">
             <Label htmlFor="displayName">
-              {currentLanguage === "spanish" ? "Nombre de Usuario" : "Display Name"}
+              {t("displayName")}
             </Label>
             {isEditing ? (
               <Input
                 id="displayName"
                 value={newDisplayName}
                 onChange={(e) => setNewDisplayName(e.target.value)}
-                placeholder={currentLanguage === "spanish" 
-                  ? "Ingresa tu nombre de usuario" 
-                  : "Enter your display name"}
+                placeholder={t("enterDisplayName")}
               />
             ) : (
               <Input
@@ -223,12 +216,12 @@ const UserInfo = ({
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {currentLanguage === "spanish" ? "Guardando..." : "Saving..."}
+                  {t("saving")}
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-4 w-4" />
-                  {currentLanguage === "spanish" ? "Guardar Cambios" : "Save Changes"}
+                  {t("saveChanges")}
                 </>
               )}
             </Button>

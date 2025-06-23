@@ -8,12 +8,14 @@ import { getAdminSchoolData, getSchoolClassroomData } from "@/utils/schoolUtils"
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
 import ClassTestAverages from "./ClassTestAverages";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface AdminProfileProps {
   profile: ExtendedUserProfile;
 }
 
 const AdminProfile = ({ profile }: AdminProfileProps) => {
+  const { t } = useLocalization();
   const [schoolData, setSchoolData] = useState<AdminSchoolData | null>(null);
   const [classroomData, setClassroomData] = useState<TeacherClassData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,17 +52,15 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
   if (!schoolData) {
     return (
       <div className="text-center py-8">
-        <h3 className="text-lg font-medium mb-2">School Data Not Available</h3>
+        <h3 className="text-lg font-medium mb-2">{t("schoolDataNotAvailable")}</h3>
         <p className="text-muted-foreground">
-          Unable to load school administration data. Please contact support.
+          {t("unableToLoadSchoolData")}
         </p>
       </div>
     );
   }
 
-  // Use the calculated average certification score from transcript analyses
   const averageCertScore = schoolData.avg_certification_score;
-
   const totalEnrollments = schoolData.total_students;
 
   return (
@@ -76,33 +76,33 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building className="h-5 w-5" />
-            School Administrator Profile
+            {t("schoolAdministratorProfile")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">School</p>
+              <p className="text-sm text-muted-foreground">{t("school")}</p>
               <p className="font-medium">{schoolData.school.name}</p>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Role</p>
-              <Badge variant="default">Administrator</Badge>
+              <p className="text-sm text-muted-foreground">{t("role")}</p>
+              <Badge variant="default">{t("administrator")}</Badge>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">District</p>
-              <p className="font-medium">{schoolData.school.district || 'Not assigned'}</p>
+              <p className="text-sm text-muted-foreground">{t("district")}</p>
+              <p className="font-medium">{schoolData.school.district || t("notAssigned")}</p>
             </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">School Address</p>
-              <p className="text-sm">{schoolData.school.address || 'Not provided'}</p>
+              <p className="text-sm text-muted-foreground">{t("schoolAddress")}</p>
+              <p className="text-sm">{schoolData.school.address || t("notProvided")}</p>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Principal</p>
-              <p className="text-sm">{schoolData.school.principal_name || 'Not assigned'}</p>
+              <p className="text-sm text-muted-foreground">{t("principal")}</p>
+              <p className="text-sm">{schoolData.school.principal_name || t("notAssigned")}</p>
             </div>
           </div>
         </CardContent>
@@ -113,26 +113,26 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
-            School Overview
+            {t("schoolOverview")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{schoolData.total_classes}</div>
-              <p className="text-sm text-muted-foreground">Total Classes</p>
+              <p className="text-sm text-muted-foreground">{t("totalClasses")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{schoolData.total_teachers}</div>
-              <p className="text-sm text-muted-foreground">Teachers</p>
+              <p className="text-sm text-muted-foreground">{t("teachers")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{totalEnrollments}</div>
-              <p className="text-sm text-muted-foreground">Enrollments</p>
+              <p className="text-sm text-muted-foreground">{t("enrollments")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{averageCertScore.toFixed(1)}</div>
-              <p className="text-sm text-muted-foreground">Avg Cert Score</p>
+              <p className="text-sm text-muted-foreground">{t("avgCertScore")}</p>
             </div>
           </div>
         </CardContent>
@@ -143,7 +143,7 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Classroom Management
+            {t("classroomManagement")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -155,23 +155,23 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
                     <div>
                       <h4 className="font-medium">{classroom.class_info.name}</h4>
                       <p className="text-sm text-muted-foreground">
-                        {classroom.class_info.subject?.name} • {classroom.class_info.period || 'No period assigned'}
+                        {classroom.class_info.subject?.name} • {classroom.class_info.period || t("noPeriodAssigned")}
                       </p>
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold">{classroom.enrollment_count}</div>
-                      <p className="text-sm text-muted-foreground">Students</p>
+                      <p className="text-sm text-muted-foreground">{t("students")}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4" />
-                        <span className="text-sm">Teacher: {classroom.class_info.teacher?.display_name || 'Not assigned'}</span>
+                        <span className="text-sm">{t("teacher")}: {classroom.class_info.teacher?.display_name || t("notAssigned")}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="h-4 w-4" />
-                        <span className="text-sm">Room: {classroom.class_info.room_number || 'TBD'}</span>
+                        <span className="text-sm">{t("room")}: {classroom.class_info.room_number || t("tbd")}</span>
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -183,7 +183,7 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
                   </div>
                   {classroom.certification_stats.length > 0 && (
                     <div className="mt-2 pt-2 border-t">
-                      <p className="text-sm font-medium">Certification Performance:</p>
+                      <p className="text-sm font-medium">{t("certificationPerformance")}:</p>
                       <div className="flex gap-2 mt-1">
                         {classroom.certification_stats.map((stat) => (
                           <Badge key={stat.id} variant="secondary" className="text-xs">
@@ -198,7 +198,7 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-8">
-              No classes found in your school
+              {t("noClassesFoundInSchool")}
             </p>
           )}
         </CardContent>
@@ -209,7 +209,7 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <GraduationCap className="h-5 w-5" />
-            School Certification Performance
+            {t("schoolCertificationPerformance")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -221,12 +221,12 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
                     <div>
                       <h4 className="font-medium capitalize">{stat.certification_type.replace('_', ' ')}</h4>
                       <p className="text-sm text-muted-foreground">
-                        {stat.student_count} students • {stat.class_count} classes
+                        {stat.student_count} {t("students")} • {stat.class_count} {t("classes")}
                       </p>
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold">{stat.avg_score?.toFixed(1) || 'N/A'}</div>
-                      <p className="text-sm text-muted-foreground">Average Score</p>
+                      <p className="text-sm text-muted-foreground">{t("averageScore")}</p>
                     </div>
                   </div>
                   <div className="mt-2">
@@ -237,7 +237,7 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-8">
-              No certification data available yet
+              {t("noCertificationDataAvailable")}
             </p>
           )}
         </CardContent>

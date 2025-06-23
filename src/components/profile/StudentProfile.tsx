@@ -8,17 +8,20 @@ import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from 
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import TestScoreCard from "./TestScoreCard";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface StudentProfileProps {
   profile: ExtendedUserProfile;
 }
 
 const StudentProfile = ({ profile }: StudentProfileProps) => {
+  const { t } = useLocalization();
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
   const [grades, setGrades] = useState<StudentGrade[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
   const [latestTestScore, setLatestTestScore] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchStudentData = async () => {
       setIsLoading(true);
@@ -84,26 +87,26 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <GraduationCap className="h-5 w-5" />
-            Student Profile
+            {t("studentProfile")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">School</p>
-              <p className="font-medium">{profile.school?.name || 'Not assigned'}</p>
+              <p className="text-sm text-muted-foreground">{t("school")}</p>
+              <p className="font-medium">{profile.school?.name || t("notAssigned")}</p>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Grade Level</p>
-              <p className="font-medium">{profile.grade_level?.level_name || 'Not assigned'}</p>
+              <p className="text-sm text-muted-foreground">{t("gradeLevel")}</p>
+              <p className="font-medium">{profile.grade_level?.level_name || t("notAssigned")}</p>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Student ID</p>
-              <p className="font-medium">{profile.student_id || 'Not assigned'}</p>
+              <p className="text-sm text-muted-foreground">{t("studentId")}</p>
+              <p className="font-medium">{profile.student_id || t("notAssigned")}</p>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Graduation Year</p>
-              <p className="font-medium">{profile.graduation_year || 'Not set'}</p>
+              <p className="text-sm text-muted-foreground">{t("graduationYear")}</p>
+              <p className="font-medium">{profile.graduation_year || t("notSet")}</p>
             </div>
           </div>
           
@@ -121,39 +124,39 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Star className="h-5 w-5" />
-            Learning Activity
+            {t("learningActivity")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{enrollments.length}</div>
-              <p className="text-sm text-muted-foreground">Active Classes</p>
+              <p className="text-sm text-muted-foreground">{t("activeClasses")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{totalPracticeSessions}</div>
-              <p className="text-sm text-muted-foreground">Practice Sessions</p>
+              <p className="text-sm text-muted-foreground">{t("practiceSessions")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{Math.round(totalVoiceChatMinutes)}</div>
-              <p className="text-sm text-muted-foreground">Voice Chat Minutes</p>
+              <p className="text-sm text-muted-foreground">{t("voiceChatMinutes")}</p>
             </div>
           </div>
 
           {grades.length > 0 && (
             <div className="space-y-3">
-              <h4 className="font-medium">Recent Grades</h4>
+              <h4 className="font-medium">{t("recentGrades")}</h4>
               <div className="space-y-2">
                 {grades.slice(0, 5).map((grade) => (
                   <div key={grade.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                     <div>
                       <p className="font-medium">{grade.assignment?.title}</p>
                       <p className="text-sm text-muted-foreground">
-                        {grade.assignment?.assignment_type} • {grade.points_earned}/{grade.assignment?.points_possible} points
+                        {grade.assignment?.assignment_type} • {grade.points_earned}/{grade.assignment?.points_possible} {t("points")}
                       </p>
                     </div>
                     <Badge variant={grade.grade_letter === 'A' || grade.grade_letter === 'A+' ? 'default' : 'secondary'}>
-                      {grade.grade_letter || 'Pending'}
+                      {grade.grade_letter || t("pending")}
                     </Badge>
                   </div>
                 ))}
@@ -168,7 +171,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Current Classes & Teachers
+            {t("currentClassesAndTeachers")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -178,9 +181,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                 <div key={enrollment.id} className="border rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="space-y-2">
-                      <h4 className="font-medium">{enrollment.class_info?.name || 'Unnamed Class'}</h4>
+                      <h4 className="font-medium">{enrollment.class_info?.name || t("unnamedClass")}</h4>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{enrollment.class_info?.subject?.name || 'No Subject'}</span>
+                        <span>{enrollment.class_info?.subject?.name || t("noSubject")}</span>
                         {enrollment.class_info?.period && (
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
@@ -195,13 +198,13 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                         <div className="flex items-center gap-2 text-sm">
                           <User className="h-3 w-3" />
                           <span className="font-medium">
-                            Teacher: {(enrollment.class_info as any).teacher.display_name || (enrollment.class_info as any).teacher.email}
+                            {t("teacher")}: {(enrollment.class_info as any).teacher.display_name || (enrollment.class_info as any).teacher.email}
                           </span>
                         </div>
                       )}
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">{enrollment.class_info?.class_code || 'No Code'}</Badge>
-                        <Badge variant="secondary">{enrollment.class_info?.academic_year || 'Current Year'}</Badge>
+                        <Badge variant="outline">{enrollment.class_info?.class_code || t("noCode")}</Badge>
+                        <Badge variant="secondary">{enrollment.class_info?.academic_year || t("currentYear")}</Badge>
                       </div>
                     </div>
                     {enrollment.final_grade && (
@@ -215,10 +218,10 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
             <div className="text-center py-8">
               <div className="space-y-3">
                 <BookOpen className="h-12 w-12 text-muted-foreground mx-auto" />
-                <h3 className="text-lg font-medium">No Classes Yet</h3>
-                <p className="text-muted-foreground">You haven't joined any classes yet.</p>
+                <h3 className="text-lg font-medium">{t("noClassesYet")}</h3>
+                <p className="text-muted-foreground">{t("haventJoinedClasses")}</p>
                 <p className="text-sm text-muted-foreground">
-                  Ask your teacher for a class code to get started.
+                  {t("askTeacherForClassCode")}
                 </p>
               </div>
             </div>

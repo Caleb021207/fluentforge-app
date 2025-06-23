@@ -8,12 +8,14 @@ import { getDistrictSchoolsData } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
 import SchoolTestAverages from "./SchoolTestAverages";
+import { useLocalization } from "@/context/LocalizationContext";
 
 interface DistrictProfileProps {
   profile: ExtendedUserProfile;
 }
 
 const DistrictProfile = ({ profile }: DistrictProfileProps) => {
+  const { t } = useLocalization();
   const [schoolsData, setSchoolsData] = useState<DistrictSchoolData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -63,21 +65,21 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MapPin className="h-5 w-5" />
-            District Administrator Profile
+            {t("districtAdministratorProfile")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Role</p>
-              <Badge variant="default">District Administrator</Badge>
+              <p className="text-sm text-muted-foreground">{t("role")}</p>
+              <Badge variant="default">{t("districtAdministrator")}</Badge>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Schools Managed</p>
+              <p className="text-sm text-muted-foreground">{t("schoolsManaged")}</p>
               <p className="font-medium">{schoolsData.length}</p>
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Total Students</p>
+              <p className="text-sm text-muted-foreground">{t("totalStudents")}</p>
               <p className="font-medium">{totalStudents.toLocaleString()}</p>
             </div>
           </div>
@@ -89,26 +91,26 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            District Overview
+            {t("districtOverview")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{schoolsData.length}</div>
-              <p className="text-sm text-muted-foreground">Schools</p>
+              <p className="text-sm text-muted-foreground">{t("schools")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{totalClasses}</div>
-              <p className="text-sm text-muted-foreground">Total Classes</p>
+              <p className="text-sm text-muted-foreground">{t("totalClasses")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{totalStudents.toLocaleString()}</div>
-              <p className="text-sm text-muted-foreground">Total Students</p>
+              <p className="text-sm text-muted-foreground">{t("totalStudents")}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{overallAvgScore.toFixed(1)}</div>
-              <p className="text-sm text-muted-foreground">District Avg Score</p>
+              <p className="text-sm text-muted-foreground">{t("districtAvgScore")}</p>
             </div>
           </div>
         </CardContent>
@@ -119,7 +121,7 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5" />
-            Schools Performance
+            {t("schoolsPerformance")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -138,11 +140,11 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {schoolData.total_students} students • {schoolData.total_classes} classes
+                        {schoolData.total_students} {t("students")} • {schoolData.total_classes} {t("classes")}
                       </p>
                       {schoolData.school.principal_name && (
                         <p className="text-sm text-muted-foreground">
-                          Principal: {schoolData.school.principal_name}
+                          {t("principal")}: {schoolData.school.principal_name}
                         </p>
                       )}
                     </div>
@@ -150,7 +152,7 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
                       <div className="text-lg font-bold">
                         {schoolData.avg_certification_score.toFixed(1)}
                       </div>
-                      <p className="text-sm text-muted-foreground">Avg Score</p>
+                      <p className="text-sm text-muted-foreground">{t("avgScore")}</p>
                     </div>
                   </div>
                   
@@ -168,7 +170,7 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-8">
-              No schools found in this district
+              {t("noSchoolsFoundInDistrict")}
             </p>
           )}
         </CardContent>

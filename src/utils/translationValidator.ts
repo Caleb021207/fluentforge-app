@@ -1,3 +1,4 @@
+
 import translations from "@/translations";
 import { AVAILABLE_LANGUAGES } from "@/translations/constants";
 
@@ -99,9 +100,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "retrying",
   "authenticationRequired",
   "pleaseSignInToViewProfile",
-  "autenticacionRequerida",
-  "porFavorIniciaSession",
-  "miPerfil",
   "myProfile",
   "roleNotAssigned",
   "pleaseUseAccessCode",
@@ -116,10 +114,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "districtAdmin",
   "admin",
   "district",
-  "estudiante",
-  "profesor",
-  "administrador",
-  "distrito",
 
   // Practice Interface
   "correctGrammar",
@@ -161,6 +155,97 @@ export const MASTER_TRANSLATION_KEYS = [
   "switchToSignUp",
   "switchToSignIn",
   "authError",
+
+  // UserInfo Component
+  "personalInformation",
+  "profilePicture",
+  "uploadPhoto",
+  "displayName",
+  "enterDisplayName",
+  "saving",
+  "saveChanges",
+  "profileInformationUpdated",
+  "failedToUpdateProfile",
+  "profilePictureUpdated",
+  "failedToUploadProfilePicture",
+
+  // AccessCodeInput Component
+  "accessCode",
+  "currentStatus",
+  "at",
+  "enterCode",
+  "accessCodeExample",
+  "apply",
+  "pleaseEnterAccessCode",
+  "failedToProcessAccessCode",
+
+  // AuthRequiredPrompt Component
+  "loginRequiredDescription",
+  "redirectingToLogin",
+
+  // LogoutButton Component
+  "signOut",
+  "loggedOutSuccessfully",
+  "youHaveBeenSignedOut",
+  "errorSigningOut",
+  "errorOccurredWhileSigningOut",
+
+  // StudentProfile Component
+  "studentProfile",
+  "gradeLevel",
+  "studentId",
+  "graduationYear",
+  "notSet",
+  "learningActivity",
+  "activeClasses",
+  "practiceSessions",
+  "voiceChatMinutes",
+  "recentGrades",
+  "points",
+  "pending",
+  "currentClassesAndTeachers",
+  "unnamedClass",
+  "noSubject",
+  "noCode",
+  "currentYear",
+  "noClassesYet",
+  "haventJoinedClasses",
+  "askTeacherForClassCode",
+
+  // AdminProfile Component
+  "schoolDataNotAvailable",
+  "unableToLoadSchoolData",
+  "schoolAdministratorProfile",
+  "schoolAddress",
+  "notProvided",
+  "principal",
+  "schoolOverview",
+  "totalClasses",
+  "teachers",
+  "enrollments",
+  "avgCertScore",
+  "classroomManagement",
+  "noPeriodAssigned",
+  "students",
+  "room",
+  "tbd",
+  "certificationPerformance",
+  "noClassesFoundInSchool",
+  "schoolCertificationPerformance",
+  "classes",
+  "averageScore",
+  "noCertificationDataAvailable",
+
+  // DistrictProfile Component
+  "districtAdministratorProfile",
+  "districtAdministrator",
+  "schoolsManaged",
+  "districtOverview",
+  "schools",
+  "districtAvgScore",
+  "schoolsPerformance",
+  "avgScore",
+  "noSchoolsFoundInDistrict",
 
   // AI Analysis
   "aiProgressAnalysis",
@@ -338,8 +423,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "notifications",
   "savePreferences",
   "privacySettingsSaved",
-  "saving",
-  "saveChanges",
   "preferencesUpdated",
 
   // Classroom Management
@@ -358,7 +441,6 @@ export const MASTER_TRANSLATION_KEYS = [
   "active",
   "inactive",
   "code",
-  "students",
   "created",
   "activate",
   "deactivate",
