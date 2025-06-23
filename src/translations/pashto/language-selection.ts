@@ -2,21 +2,27 @@
 import { TranslationRecord } from "../types";
 
 const languageSelectionTranslations: TranslationRecord = {
-  iSpeak: "زه غږېږم:",
+  selectLanguages: "ژبې وټاکئ",
+  chooseNativeLanguage: "خپله مورنۍ ژبه وټاکئ",
+  chooseTargetLanguage: "د زده کړې لپاره ژبه وټاکئ",
+  continueWithSelection: "د ټاکنې سره دوام ورکړئ",
+  languagePairSaved: "د ژبې جوړه وساتل شوه",
+  invalidLanguageSelection: "د ژبې غلطه ټاکنه",
+  
+  // Additional language selection translations
+  iSpeak: "زه خبرې کوم:",
   iWantToLearn: "زه غواړم زده کړم:",
-  selectYourNativeLanguage: "خپله مورنۍ ژبه غوره کړئ",
-  selectLanguageToLearn: "د زده کړې لپاره ژبه غوره کړئ",
-  saveLanguagePreferences: "د ژبې غوراوي خوندي کړئ",
-  languagePreferencesSaved: "د ژبې غوراوي خوندي شول",
+  selectYourNativeLanguage: "خپله مورنۍ ژبه وټاکئ",
+  selectLanguageToLearn: "د زده کړې لپاره ژبه وټاکئ",
+  saveLanguagePreferences: "د ژبې غوره توبونه وساتئ",
+  languagePreferencesSaved: "د ژبې غوره توبونه وساتل شول",
   youreNowLearning: "اوس تاسو زده کوئ",
   from: "له",
-  pleaseSelectBothLanguages: "مهرباني وکړئ دواړه ژبې غوره کړئ",
-  youNeedToSelectBoth: "تاسو باید خپله مورنۍ ژبه او هغه ژبه چې تاسو یې زده کول غواړئ غوره کړئ",
-  studyMaterialsComingSoon: "له {{nativeLanguage}} څخه د {{targetLanguage}} زده کړې لپاره د زده کړې مواد ژر راځي!",
-  someFeaturesLimited: "ځینې ځانګړتیاوې ممکن محدودې یا نه شتون ولري.",
-  selectYourLanguagePreferences: "خپلې ژبې غوراوي غوره کړئ",
-  welcomeToLanguageLearning: "د ژبې زده کړې ته ښه راغلاست",
-  yourPersonalAICompanion: "ستاسو شخصي AI ملګری"
+  pleaseSelectBothLanguages: "مهرباني وکړئ دواړه ژبې وټاکئ",
+  youNeedToSelectBoth: "تاسو باید مورنۍ او اصلي ژبې وټاکئ",
+  studyMaterialsComingSoon: "د {{targetLanguage}} د {{nativeLanguage}} څخه زده کړې لپاره مطالب ډېر ژر راځي!",
+  someFeaturesLimited: "ځینې ځانګړتیاوې کولی شي محدودې یا نشته وي.",
+  selectYourLanguagePreferences: "د خپلې ژبې غوره توبونه وټاکئ"
 };
 
 export default languageSelectionTranslations;

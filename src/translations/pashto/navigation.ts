@@ -3,32 +3,34 @@ import { TranslationRecord } from "../types";
 
 const navigationTranslations: TranslationRecord = {
   home: "کور",
+  practice: "تمرین",
   textPractice: "لیکلی تمرین",
   unlimitedVoicePractice: "نامحدود غږیز تمرین",
-  practice: "تمرین",
-  voiceChat: "غږیز چت",
-  accuracy: "دقت",
-  progress: "پرمختګ",
-  certificates: "سندونه",
+  pronunciationPractice: "د تلفظ تمرین",
+  premiumVoiceChat: "ممتاز غږیز چټ",
+  voiceChat: "غږیز چټ",
   lessons: "درسونه",
+  vocabulary: "لغتونه",
+  certificates: "سندونه",
+  progress: "پرمختګ",
   profile: "پروفایل",
   settings: "تنظیمات",
-  premium: "ځانګړي",
-  logout: "وتل",
-  login: "ننوتل",
-  register: "ثبتول",
-  classes: "ټولګۍ",
-  teacherClasses: "د ښوونکي ټولګۍ",
-  studentClass: "د زده کوونکي ټولګي",
-  switchLanguage: "ژبه بدلول",
   help: "مرسته",
-  about: "زموږ د دې اړه",
+  about: "د اړه",
   contact: "اړیکه",
-  termsOfService: "د خدماتو شرایط",
-  privacyPolicy: "د محرمیت پالیسي",
-  cookiePolicy: "د کوکۍ پالیسي",
-  accessibilityStatement: "د لاسرسي بیان",
-  pronunciationPractice: "د تلفظ تمرین"
+  myClasses: "زما ټولګي",
+  myClass: "زما ټولګی",
+  admin: "پرچونګر",
+  
+  // Navigation actions
+  goToDashboard: "ډېش بورډ ته لاړشئ",
+  returnToHome: "کور ته بیرته ستانه شئ",
+  backToMenu: "بیرته مینو ته",
+  
+  // User menu
+  signedInAs: "په دې نوم ننوتی",
+  lightMode: "رڼا حالت",
+  darkMode: "تیاره حالت"
 };
 
 export default navigationTranslations;

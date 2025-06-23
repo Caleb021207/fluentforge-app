@@ -6,6 +6,12 @@ import languageSelectionTranslations from "./language-selection";
 import practiceTranslations from "./practice";
 import languagesTranslations from "./languages";
 import voiceChatTranslations from "./voice-chat";
+import premiumVoiceTranslations from "./premium-voice";
+import authTranslations from "./auth";
+import navigationTranslations from "./navigation";
+import certificatesTranslations from "./certificates";
+import progressTranslations from "./progress";
+import profileTranslations from "./profile";
 
 // Combine all the translation categories
 const pashtoTranslations: TranslationRecord = {
@@ -15,6 +21,12 @@ const pashtoTranslations: TranslationRecord = {
   ...practiceTranslations,
   ...languagesTranslations,
   ...voiceChatTranslations,
+  ...premiumVoiceTranslations,
+  ...authTranslations,
+  ...navigationTranslations,
+  ...certificatesTranslations,
+  ...progressTranslations,
+  ...profileTranslations,
 };
 
 export default pashtoTranslations;
