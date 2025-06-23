@@ -16,7 +16,9 @@ const landingAuthTranslations: TranslationRecord = {
   trackYourProgress: "Отслеживайте свой прогресс",
   earnCertificates: "Получайте сертификаты",
   getStarted: "Начать",
-  learnMore: "Узнать больше"
+  learnMore: "Узнать больше",
+  swipeUpToGetStarted: "Проведите вверх, чтобы начать",
+  signUp: "Регистрация"
 };
 
 export default landingAuthTranslations;
