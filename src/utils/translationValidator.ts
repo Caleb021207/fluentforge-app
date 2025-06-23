@@ -1,4 +1,3 @@
-
 import translations from "@/translations";
 import { AVAILABLE_LANGUAGES } from "@/translations/constants";
 
@@ -510,9 +509,14 @@ export function getLanguagesByCompleteness(): Array<{
 /**
  * Generates missing translation keys for a specific category
  */
-export function getMissingKeysForCategory(languageCode: string, category: keyof typeof TRANSLATION_CATEGORIES): string[] {
+export function getMissingKeysForCategory(
+  languageCode: string, 
+  category: keyof typeof TRANSLATION_CATEGORIES
+): string[] {
   const validation = validateLanguageTranslations(languageCode);
   const categoryKeys = TRANSLATION_CATEGORIES[category];
   
-  return validation.missingKeys.filter(key => categoryKeys.includes(key as any));
+  return validation.missingKeys.filter(key => 
+    categoryKeys.includes(key as typeof categoryKeys[number])
+  );
 }
