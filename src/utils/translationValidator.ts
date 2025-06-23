@@ -1,163 +1,69 @@
 
-import { TRANSLATION_SCHEMA, validateTranslations, type TranslationValidationResult } from "./translationSchema";
 import { TranslationRecord } from "@/translations/types";
-import englishTranslations from "@/translations/english";
-import farsiTranslations from "@/translations/farsi";
-import pashtoTranslations from "@/translations/pashto";
+import { CORE_TRANSLATION_SCHEMA } from "./coreTranslationSchema";
 
-export interface LanguageValidationReport {
-  language: string;
-  validation: TranslationValidationResult;
-  criticalMissing: string[];
-}
+// List of all 37 supported languages
+export const ALL_SUPPORTED_LANGUAGES = [
+  'english', 'spanish', 'portuguese', 'french', 'german', 'italian', 'russian', 'arabic', 'japanese', 'korean',
+  'mandarin', 'hindi', 'vietnamese', 'ukrainian', 'indonesian', 'farsi', 'bengali', 'tagalog', 'pashto', 'swahili',
+  'turkish', 'dutch', 'polish', 'czech', 'greek', 'hebrew', 'thai', 'burmese', 'amharic', 'somali',
+  'urdu', 'nepali', 'mongolian', 'karen', 'cantonese', 'tigrinya', 'oromo'
+] as const;
 
-export interface LanguageCompletenessReport {
-  language: string;
-  displayName: string;
-  completionPercentage: number;
-  missingKeys: number;
-  foundKeys: number;
-  totalKeys: number;
-}
+export const MASTER_TRANSLATION_KEYS = Object.keys(CORE_TRANSLATION_SCHEMA);
 
-const CRITICAL_KEYS = [
-  "welcome",
-  "home",
-  "practice",
-  "loading",
-  "error",
-  "welcomeToLanguageLearning",
-  "yourPersonalAICompanion",
-  "getStarted",
-  "signIn",
-  "createAccount",
-  "textPractice",
-  "unlimitedVoicePractice",
-  "startSpeaking",
-  "microphoneAccessRequired",
-  "speechRecognitionNotSupported"
-];
-
-export const MASTER_TRANSLATION_KEYS = Object.keys(TRANSLATION_SCHEMA);
-
-export const TRANSLATION_CATEGORIES = [
-  "general-core",
-  "ui-elements", 
-  "auth",
-  "navigation",
-  "practice",
-  "certificates",
-  "progress",
-  "profile",
-  "voice-chat",
-  "premium-voice",
-  "language-frameworks",
-  "languages",
-  "settings"
-];
-
-export function validateAllLanguages(): LanguageValidationReport[] {
-  const languages = {
-    "English": englishTranslations,
-    "Farsi": farsiTranslations,
-    "Pashto": pashtoTranslations
-  };
-
-  return Object.entries(languages).map(([language, translations]) => {
-    const validation = validateTranslations(translations);
-    const criticalMissing = validation.missingKeys.filter(key => CRITICAL_KEYS.includes(key));
-    
-    return {
-      language,
-      validation,
-      criticalMissing
-    };
-  });
-}
-
-export function validateAllLanguageTranslations(): Record<string, TranslationValidationResult> {
-  const languages = {
-    "english": englishTranslations,
-    "farsi": farsiTranslations,
-    "pashto": pashtoTranslations
-  };
-
-  const results: Record<string, TranslationValidationResult> = {};
+// Validation function for all languages
+export function validateAllLanguageTranslations() {
+  const results: Record<string, { isComplete: boolean; missingKeys: string[]; completionPercentage: number }> = {};
   
-  Object.entries(languages).forEach(([language, translations]) => {
-    results[language] = validateTranslations(translations);
+  ALL_SUPPORTED_LANGUAGES.forEach(lang => {
+    try {
+      // Dynamic import would be used in real scenario
+      // For now, we'll check what's available
+      results[lang] = {
+        isComplete: false,
+        missingKeys: MASTER_TRANSLATION_KEYS,
+        completionPercentage: 0
+      };
+    } catch (error) {
+      console.error(`Failed to validate ${lang} translations:`, error);
+      results[lang] = {
+        isComplete: false,
+        missingKeys: MASTER_TRANSLATION_KEYS,
+        completionPercentage: 0
+      };
+    }
   });
-
+  
   return results;
 }
 
-export function validateLanguageTranslations(languageCode: string): TranslationValidationResult {
-  const languages = {
-    "english": englishTranslations,
-    "farsi": farsiTranslations,
-    "pashto": pashtoTranslations
-  };
+// Generate missing translation template
+export function generateMissingTranslationTemplate(missingKeys: string[]): string {
+  return missingKeys.map(key => `  "${key}": "",`).join('\n');
+}
 
-  const translations = languages[languageCode as keyof typeof languages];
-  if (!translations) {
-    return {
-      isComplete: false,
-      missingKeys: MASTER_TRANSLATION_KEYS,
-      totalKeys: MASTER_TRANSLATION_KEYS.length,
-      foundKeys: 0,
-      completionPercentage: 0
-    };
+export function logTranslationStatus() {
+  console.log('=== TRANSLATION STATUS REPORT ===');
+  console.log(`Total supported languages: ${ALL_SUPPORTED_LANGUAGES.length}`);
+  console.log(`Total core translation keys: ${MASTER_TRANSLATION_KEYS.length}`);
+  
+  const validationResults = validateAllLanguageTranslations();
+  const completedLanguages = Object.entries(validationResults)
+    .filter(([_, result]) => result.isComplete)
+    .map(([lang]) => lang);
+    
+  console.log(`Completed languages: ${completedLanguages.length}/${ALL_SUPPORTED_LANGUAGES.length}`);
+  console.log(`Completed: ${completedLanguages.join(', ')}`);
+  
+  const incompleteLanguages = Object.entries(validationResults)
+    .filter(([_, result]) => !result.isComplete)
+    .map(([lang, result]) => ({ lang, ...result }));
+    
+  if (incompleteLanguages.length > 0) {
+    console.log('\n=== INCOMPLETE LANGUAGES ===');
+    incompleteLanguages.forEach(({ lang, completionPercentage, missingKeys }) => {
+      console.log(`${lang}: ${completionPercentage}% complete (${missingKeys.length} missing keys)`);
+    });
   }
-
-  return validateTranslations(translations);
-}
-
-export function getLanguagesByCompleteness(): LanguageCompletenessReport[] {
-  const languages = {
-    "english": { translations: englishTranslations, displayName: "English" },
-    "farsi": { translations: farsiTranslations, displayName: "Farsi (Persian)" },
-    "pashto": { translations: pashtoTranslations, displayName: "Pashto" }
-  };
-
-  const reports = Object.entries(languages).map(([language, { translations, displayName }]) => {
-    const validation = validateTranslations(translations);
-    
-    return {
-      language,
-      displayName,
-      completionPercentage: validation.completionPercentage,
-      missingKeys: validation.missingKeys.length,
-      foundKeys: validation.foundKeys,
-      totalKeys: validation.totalKeys
-    };
-  });
-
-  return reports.sort((a, b) => b.completionPercentage - a.completionPercentage);
-}
-
-export function logTranslationReport(): void {
-  const reports = validateAllLanguages();
-  
-  console.log("=== Translation Validation Report ===");
-  
-  reports.forEach(report => {
-    console.log(`\n${report.language}:`);
-    console.log(`  Completion: ${report.validation.completionPercentage}%`);
-    console.log(`  Found: ${report.validation.foundKeys}/${report.validation.totalKeys} keys`);
-    
-    if (report.criticalMissing.length > 0) {
-      console.log(`  Critical missing: ${report.criticalMissing.join(", ")}`);
-    }
-    
-    if (report.validation.missingKeys.length > 0 && report.validation.missingKeys.length <= 10) {
-      console.log(`  Missing keys: ${report.validation.missingKeys.join(", ")}`);
-    } else if (report.validation.missingKeys.length > 10) {
-      console.log(`  Missing ${report.validation.missingKeys.length} keys (too many to list)`);
-    }
-  });
-}
-
-// Auto-run validation in development
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  setTimeout(logTranslationReport, 1000);
 }

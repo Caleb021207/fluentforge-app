@@ -1,17 +1,14 @@
 
-import generalTranslations from './general';
-import uiElementsTranslations from './ui-elements';
-import voiceChatTranslations from './voice-chat';
-import premiumVoiceTranslations from './premium-voice';
-import practiceTranslations from './practice';
-import { TranslationRecord } from '../types';
+import { TranslationRecord } from "../types";
 
+// Basic Urdu translations - needs full core implementation
 const urduTranslations: TranslationRecord = {
-  ...generalTranslations,
-  ...uiElementsTranslations,
-  ...voiceChatTranslations,
-  ...premiumVoiceTranslations,
-  ...practiceTranslations
+  "home": "گھر",
+  "practice": "مشق",
+  "loading": "لوڈ ہو رہا ہے...",
+  "error": "خرابی",
+  "send": "بھیجیں",
+  "continue": "جاری رکھیں"
 };
 
 export default urduTranslations;

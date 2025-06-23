@@ -1,22 +1,14 @@
 
 import { TranslationRecord } from "../types";
-import generalCoreTranslations from "./general-core";
-import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
-import languageSelectionTranslations from "./language-selection";
-import uiElementsTranslations from "./ui-elements";
-import navigationTranslations from "./navigation";
-import authTranslations from "./auth";
 
-// Combine all the translation categories
+// Basic Tigrinya translations - needs full core implementation
 const tigrinyaTranslations: TranslationRecord = {
-  ...generalCoreTranslations,
-  ...practiceTranslations,
-  ...voiceChatTranslations,
-  ...languageSelectionTranslations,
-  ...uiElementsTranslations,
-  ...navigationTranslations,
-  ...authTranslations,
+  "home": "ቤት",
+  "practice": "ልምምድ",
+  "loading": "ተጻሒፍዎ ኣሎ...",
+  "error": "ጌጋ",
+  "send": "ላእክ",
+  "continue": "ቀጽል"
 };
 
 export default tigrinyaTranslations;
