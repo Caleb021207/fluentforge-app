@@ -25,6 +25,7 @@ const minimalTranslations: TranslationRecord = {
   
   // Header
   loggedInAs: "로그인 계정",
+  signedInAs: "로그인 계정",
   logout: "로그아웃",
   lightMode: "라이트 모드",
   
