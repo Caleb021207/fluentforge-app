@@ -1,20 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import generalCoreTranslations from "./general-core";
-import uiElementsTranslations from "./ui-elements";
-import practiceTranslations from "./practice";
-import profileTranslations from "./profile";
-import voiceChatTranslations from "./voice-chat";
-import landingAuthTranslations from "./landing-auth";
+import minimalTranslations from "./minimal";
 
-// Combine all the translation categories
+// Use only the minimal translations for Nepali
 const nepaliTranslations: TranslationRecord = {
-  ...generalCoreTranslations,
-  ...uiElementsTranslations,
-  ...practiceTranslations,
-  ...profileTranslations,
-  ...voiceChatTranslations,
-  ...landingAuthTranslations,
+  ...minimalTranslations,
 };
 
 export default nepaliTranslations;

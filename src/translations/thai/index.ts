@@ -1,22 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import generalCoreTranslations from "./general-core";
-import uiElementsTranslations from "./ui-elements";
-import languageSelectionTranslations from "./language-selection";
-import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
-import authTranslations from "./auth";
-import navigationTranslations from "./navigation";
+import minimalTranslations from "./minimal";
 
-// Combine all the translation categories
+// Use only the minimal translations for Thai
 const thaiTranslations: TranslationRecord = {
-  ...generalCoreTranslations,
-  ...uiElementsTranslations,
-  ...languageSelectionTranslations,
-  ...practiceTranslations,
-  ...voiceChatTranslations,
-  ...authTranslations,
-  ...navigationTranslations,
+  ...minimalTranslations,
 };
 
 export default thaiTranslations;
