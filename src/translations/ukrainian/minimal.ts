@@ -1,0 +1,248 @@
+
+import { TranslationRecord } from "../types";
+
+const minimalTranslations: TranslationRecord = {
+  // Home page
+  welcomeToLanguageLearning: "Ласкаво просимо до вивчення мов",
+  yourPersonalAICompanion: "Ваш особистий AI-помічник",
+  swipeUpToGetStarted: "Проведіть вгору, щоб почати",
+  selectNativeLanguage: "Оберіть рідну мову",
+  iSpeak: "Я розмовляю",
+  saveLanguagePreferences: "Зберегти мовні налаштування",
+  getStarted: "Почати",
+  selectYourLanguagePreferences: "Оберіть мовні налаштування",
+  
+  // Authentication
+  signIn: "Увійти",
+  signUp: "Зареєструватися",
+  signInToContinue: "Увійдіть, щоб продовжити",
+  createAccountToGetStarted: "Створіть обліковий запис, щоб почати",
+  email: "Електронна пошта",
+  password: "Пароль",
+  accessPasscode: "Код доступу",
+  dontHaveAccount: "Немає облікового запису?",
+  alreadyHaveAccount: "Вже маєте обліковий запис?",
+  
+  // Header
+  loggedInAs: "Увійшли як",
+  signedInAs: "Увійшли як",
+  logout: "Вийти",
+  lightMode: "Світлий режим",
+  
+  // Practice page
+  practice: "Практика",
+  englishPractice: "Практика англійської",
+  startChatting: "Почати спілкування",
+  startConversationIn: "Почніть розмову {{language}}",
+  fixGrammar: "Виправити граматику",
+  correctGrammar: "Виправити граматику",
+  clearConversation: "Очистити розмову",
+  startTextChat: "Почати текстовий чат",
+  startTextChatting: "Почати текстовий чат",
+  typeMessageBelow: "Введіть повідомлення нижче",
+  typeMessageToPractice: "Введіть повідомлення для практики {{language}}...",
+  send: "Надіслати",
+  
+  // Practice Guide
+  practiceGuide: "Посібник з практики {{language}}",
+  practiceGuideTitle: "Посібник з практики {{language}}",
+  practiceGuideDescription: "Ось кілька порад для ефективного вивчення {{language}}:",
+  practiceGuideIntro: "Ось кілька порад для ефективного вивчення {{language}}:",
+  practiceGuideTip1: "Намагайтеся будувати повні речення, навіть прості.",
+  practiceGuideTip2: "Не бійтеся помилок — це частина навчання!",
+  practiceGuideTip3: "Запитуйте пояснення, якщо щось незрозуміло.",
+  practiceGuideTip4: "Використовуйте слова, які нещодавно вивчили.",
+  practiceGuideTip5: "AI адаптується до вашого рівня.",
+  
+  // Practice tips - using t() keys
+  practiceTip1: "Намагайтеся будувати повні речення, навіть прості.",
+  practiceTip2: "Не бійтеся помилок — це частина навчання!",
+  practiceTip3: "Запитуйте пояснення, якщо щось незрозуміло.",
+  practiceTip4: "Використовуйте слова, які нещодавно вивчили.",
+  practiceTip5: "AI адаптується до вашого рівня.",
+
+  // Practice Guide - using exact same keys as shown in the UI
+  "Try to form complete sentences, even if they're simple.": "Намагайтеся будувати повні речення, навіть прості.",
+  "Don't worry about mistakes — they're part of learning!": "Не бійтеся помилок — це частина навчання!",
+  "Ask for explanations if there's something you don't understand.": "Запитуйте пояснення, якщо щось незрозуміло.",
+  "Use words you've learned recently.": "Використовуйте слова, які нещодавно вивчили.",
+  "Our AI will adapt to your skill level and gradually help you improve.": "AI адаптується до вашого рівня та поступово допоможе покращитись.",
+  "Here are some tips to get the most out of your {{language}} practice:": "Ось кілька порад для ефективного вивчення {{language}}:",
+  
+  // Hint button
+  suggestionResponses: "Підказки для відповіді",
+  responseSuggestions: "Підказки для відповіді",
+  clickPlayToHearPronunciation: "Натисніть відтворення, щоб почути вимову",
+  startConversationForSuggestions: "Почніть розмову для підказок",
+  startConversationToSeeSuggestions: "Почніть розмову, щоб побачити підказки",
+  getResponseSuggestions: "Отримати підказки відповіді",
+  greetings: "Вітання",
+  questions: "Запитання",
+  error: "Помилка",
+  couldNotGenerateHints: "Не вдалося згенерувати підказки",
+  failedToPlayAudio: "Не вдалося відтворити аудіо",
+  play: "Відтворити",
+  
+  // Voice chat
+  unlimitedVoicePractice: "Необмежена голосова практика",
+  practiceDescription: "Опис практики",
+  aiModelInfo: "Інформація про AI модель: Використовує OpenAI GPT-4o-mini для розуміння та генерації природної мови, використовує технологію синтезу мовлення браузера для голосових відповідей.",
+  practiceLevel: "Рівень практики",
+  intermediatePracticeLevel: "Середній - Може обговорювати знайомі теми",
+  "Intermediate - Can discuss familiar topics": "Середній - Може обговорювати знайомі теми",
+  
+  // CEFR Level Descriptions
+  cefrB1Description: "Середній - Може обговорювати знайомі теми",
+  cefrA1Description: "Початковий - Базові фрази та вирази",
+  cefrA2Description: "Елементарний - Проста щоденна комунікація",
+  cefrB2Description: "Вище середнього - Може вільно спілкуватися",
+  
+  currentLanguage: "Поточна мова",
+  practiceLanguage: "Мова практики",
+  startSpeaking: "Почати говорити",
+  stopListening: "Припинити слухання",
+  listeningNow: "Зараз слухаю",
+  youSaid: "Ви сказали",
+  conversationStarters: "Початки розмов",
+  howToStartConversation: "Як почати розмову",
+  tryThesePhrases: "Спробуйте ці фрази для початку розмови:",
+  conversationStarter1: "Привіт, як справи сьогодні?",
+  conversationStarter2: "Яка погода у вас?",
+  conversationStarter3: "Чи можете порекомендувати хороший ресторан?",
+  conversationStarter4: "Які ваші хобі та інтереси?",
+  conversationStarter5: "Розкажіть про вашу улюблену книгу або фільм.",
+  conversationStarter6: "Що ви робили минулих вихідних?",
+  conversationStarter7: "Які ваші плани на завтра?",
+  conversationStarter8: "Як сказати '...' іспанською/англійською?",
+
+  // Voice chat phrases that appear in the UI exactly as shown
+  "Hello, how are you today?": "Привіт, як справи сьогодні?",
+  "What's the weather like where you are?": "Яка погода у вас?",
+  "Can you recommend a good restaurant?": "Чи можете порекомендувати хороший ресторан?",
+  "What are your hobbies and interests?": "Які ваші хобі та інтереси?",
+  "Tell me about your favorite book or movie.": "Розкажіть про вашу улюблену книгу або фільм.",
+  "What did you do last weekend?": "Що ви робили минулих вихідних?",
+  "What are your plans for tomorrow?": "Які ваші плани на завтра?",
+  "How do you say... in Spanish/English?": "Як сказати '...' іспанською/англійською?",
+
+  practiceWithVoiceChat: "Практикуйтесь з голосовим чатом",
+  voiceChatTips: "Використовуйте цей інструмент для покращення навичок говоріння та слухання. Ось кілька порад:",
+  voiceTip1: "Ставте запитання про повсякденні теми",
+  voiceTip2: "Практикуйте поширені фрази та вирази",
+  voiceTip3: "Описуйте те, що бачите навколо себе",
+  voiceTip4: "Практикуйте словник для конкретних тем, таких як подорожі або їжа",
+
+  // Voice chat tips that appear exactly as shown in the UI
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "Використовуйте цей інструмент для покращення навичок говоріння та слухання. Ось кілька порад:",
+  "Ask questions about everyday topics": "Ставте запитання про повсякденні теми",
+  "Practice common phrases and expressions": "Практикуйте поширені фрази та вирази",
+  "Describe what you see around you": "Описуйте те, що бачите навколо себе",
+  "Practice vocabulary for specific topics like travel or food": "Практикуйте словник для конкретних тем, таких як подорожі або їжа",
+  
+  // Additional voice chat translations
+  startSpeakingToSeeTranscript: "Почніть говорити, щоб побачити транскрипт",
+  clickMicrophoneToStartRecording: "Натисніть на мікрофон, щоб почати запис",
+  
+  // Premium Voice Chat
+  premiumVoiceChat: "Преміум голосовий чат",
+  premiumVoiceChatBenefits: "Переваги преміум голосового чату",
+  premiumVoiceChatDescription: "Практикуйте {{practice}} через природну голосову розмову з преміум AI-тьютором! AI допоможе вам виправити граматику, словниковий запас і вимову.",
+  premiumVoiceNote: "Преміум голосовий чат обмежений 10 хвилинами на тиждень",
+  premiumVoiceNoteWithReset: "Преміум голосовий чат дозволяє 10 хвилин практики на тиждень. Час скидається о 6 ранку в понеділок (Центральний час).",
+  benefitNaturalVoice: "Природна, схожа на людську голосова взаємодія з використанням технології ElevenLabs",
+  benefitAccentPronunciation: "Точний акцент і вимова для занурення в навчання",
+  benefitRegularPractice: "10 хвилин практики на тиждень, скидається о 6 ранку в понеділок",
+  
+  // Pronunciation practice
+  pronunciationPractice: "Практика вимови",
+  improvePronunciationSkillsWith: "Покращуйте навички вимови цільовою практикою",
+  selectComplexityLevel: "Оберіть рівень складності",
+  chooseDifficultyLevelBasedOn: "Оберіть рівень складності на основі ваших мовних здібностей",
+  speechRate: "Швидкість мовлення",
+  selectLevelToStart: "Оберіть рівень для початку практики",
+  startExercise: "Почати вправу",
+  pronunciationPracticeTips: "Поради з практики вимови",
+  listenCarefullyTip: "Уважно слухайте звук перед тим, як говорити",
+  payAttentionToStressTip: "Зверніть увагу на наголос і інтонацію",
+  practiceDifficultSoundsTip: "Практикуйте складні звуки кілька разів",
+  recordYourselfTip: "Запишіть себе і порівняйте з носіями мови",
+  bePatientTip: "Будьте терплячі — покращення вимови потребує часу",
+  practiceExercise: "Практична вправа",
+  topic: "Тема",
+  listenToPhrase: "Прослухати фразу",
+  clickWordToHear: "Натисніть на слово, щоб почути",
+  yourPronunciation: "Ваша вимова",
+  startRecording: "Почати запис",
+  clickStartToRecord: "Натисніть 'Почати', щоб записати",
+  tryAgain: "Спробувати знову",
+  newPhrase: "Нова фраза",
+  generatingExercise: "Генерується вправа",
+  generatingNewPhrase: "Генерується нова фраза",
+  levelDescription: "Опис рівня",
+  failedToGeneratePhrase: "Не вдалося згенерувати фразу",
+  noSpeechDetected: "Мовлення не виявлено",
+  pleaseTryAgain: "Будь ласка, спробуйте знову",
+  failedToAnalyzePronunciation: "Не вдалося проаналізувати вимову",
+  
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "Відгук про вимову",
+  accuracyScore: "Оцінка точності",
+  intonationScore: "Оцінка інтонації",
+  fluencyScore: "Оцінка плавності",
+  complexityScore: "Оцінка складності",
+  wordAnalysis: "Аналіз слів",
+  phonemeAnalysis: "Аналіз фонем",
+  overallFeedback: "Загальний відгук",
+  excellent: "Відмінно",
+  good: "Добре",
+  fair: "Задовільно",
+  needsImprovement: "Потребує покращення",
+  
+  // Additional UI elements
+  processing: "Обробка",
+  stopRecording: "Припинити запис",
+  listeningToYou: "Слухаю вас",
+  realTimeTranscription: "Транскрипція в реальному часі",
+  yourTranscription: "Ваша транскрипція",
+  playing: "Відтворення",
+  
+  // Complexity levels
+  novice: "Новачок",
+  intermediate: "Середній",
+  advanced: "Просунутий",
+  superior: "Досконалий",
+  noviceLevelDescription: "Може впоратися з базовими та знайомими темами",
+  intermediateLevelDescription: "Може обговорювати знайомі теми",
+  advancedLevelDescription: "Може впевнено впоратися зі складними темами",
+  superiorLevelDescription: "Може виконувати всі мовні завдання",
+  noviceLevelShortDescription: "Прості фрази",
+  intermediateLevelShortDescription: "Знайомі теми",
+  advancedLevelShortDescription: "Складні теми",
+  superiorLevelShortDescription: "Всі завдання",
+  
+  // Navigation
+  home: "Головна",
+  textPractice: "Практика",
+  unlimitedVoicePracticeNav: "Необмежена голосова практика",
+  pronunciationPracticeNav: "Практика вимови",
+  aiAnalysis: "AI аналіз",
+  profile: "Профіль",
+  settings: "Налаштування",
+  
+  // Transcript Analysis - English placeholders as requested
+  progressOverview: "Progress Overview",
+  trackLanguageLearningJourney: "Track Language Learning Journey",
+  aiProgressAnalysis: "AI Progress Analysis",
+  uploadLanguageTestTranscripts: "Upload language test transcripts",
+  totalAnalyses: "Total Analyses",
+  currentLevel: "Current Level",
+  latestScore: "Latest Score",
+  uploadAndAnalyze: "Upload and Analyze",
+  analysisResults: "Analysis Results",
+  progressTimeline: "Progress Timeline",
+  firstTest: "First Test",
+  latestTest: "Latest Test",
+  improvement: "Improvement"
+};
+
+export default minimalTranslations;
