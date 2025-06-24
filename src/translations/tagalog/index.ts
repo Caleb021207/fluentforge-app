@@ -1,12 +1,27 @@
 
 import { TranslationRecord } from "../types";
-import tagalogCoreTranslations from "./core";
-import tagalogPracticeTranslations from "./practice";
+import authTranslations from "./auth";
+import generalTranslations from "./general";
+import generalCoreTranslations from "./general-core";
+import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
+import profileTranslations from "./profile";
+import premiumVoiceTranslations from "./premium-voice";
+import languagesTranslations from "./languages";
+import classroomTranslations from "./classroom";
 
-// Complete Tagalog translations with practice integration
-const tagalogTranslations: TranslationRecord = {
-  ...tagalogCoreTranslations,
-  ...tagalogPracticeTranslations
+const translations: TranslationRecord = {
+  ...authTranslations,
+  ...generalTranslations,
+  ...generalCoreTranslations,
+  ...languageSelectionTranslations,
+  ...practiceTranslations,
+  ...voiceChatTranslations,
+  ...profileTranslations,
+  ...premiumVoiceTranslations,
+  ...languagesTranslations,
+  ...classroomTranslations,
 };
 
-export default tagalogTranslations;
+export default translations;

@@ -2,68 +2,143 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
-  textPractice: "ممارسة النص",
-  practiceWithAITutor: "التدرب مع مدرس الذكاء الاصطناعي",
-  chatWithAITutor: "تحدث مع مدرس الذكاء الاصطناعي لممارسة اللغة الإنجليزية! سيساعدك الذكاء الاصطناعي في تصحيح القواعد والمفردات والنطق. لا تتردد في طرح أسئلة حول اللغة أو الثقافة.",
-  startVoiceChat: "بدء المحادثة الصوتية",
-  stopVoiceChat: "إيقاف المحادثة الصوتية",
-  getSkillsAssessment: "الحصول على تقييم المهارات",
+  // Practice page core
+  practice: "ممارسة",
+  practiceWithAI: "ممارسة مع الذكاء الاصطناعي",
+  startChatting: "بدء المحادثة",
+  clearConversation: "مسح المحادثة",
+  correctGrammar: "تصحيح القواعد",
+  
+  // Chat interface with proper interpolation
+  startConversationIn: "بدء محادثة باللغة {{language}}",
+  startTextChatting: "بدء المحادثة النصية",
+  
+  // Practice guide with proper interpolation
+  practiceGuide: "دليل ممارسة {{language}}",
+  practiceGuideDescription: "اتبع هذه النصائح لجعل رحلة تعلم {{language}} أسهل:",
+  practiceTip1: "حاول تكوين جمل كاملة، حتى لو كانت بسيطة.",
+  practiceTip2: "لا تقلق بشأن الأخطاء — فهي جزء من التعلم!",
+  practiceTip3: "اطلب توضيحات إذا كنت لا تفهم شيئًا.",
+  practiceTip4: "استخدم الكلمات التي تعلمتها مؤخرًا.",
+  practiceTip5: "سيتكيف الذكاء الاصطناعي مع مستوى مهارتك وسيساعدك تدريجيًا على التحسن.",
+  
+  // Chat interface
+  typeYourMessageHere: "اكتب رسالتك هنا...",
+  typeMessageBelow: "اكتب رسالة أدناه",
+  chatPlaceholder: "اكتب رسالتك لممارسة {{targetLanguage}}...",
+  practicePrompt: "مرحبًا! أود ممارسة المحادثة باللغة {{targetLanguage}}. يرجى مساعدتي من خلال تصحيح قواعد {{targetLanguage}} والمفردات والاستخدام. هل يمكننا البدء بمحادثة أساسية؟",
+  
+  // Pronunciation practice
+  pronunciationPractice: "ممارسة النطق",
+  improvePronunciationSkillsWith: "حسن مهارات النطق بتمارين موجهة",
+  selectComplexityLevel: "اختر مستوى التعقيد",
+  chooseDifficultyLevelBasedOn: "اختر مستوى الصعوبة بناءً على كفاءتك اللغوية",
+  selectLevelToStart: "اختر مستوى لبدء الممارسة",
+  pronunciationPracticeTips: "نصائح ممارسة النطق",
+  speechRate: "معدل الكلام",
+  
+  // Pronunciation tips
+  listenCarefullyTip: "استمع بعناية للصوت قبل محاولة التحدث",
+  payAttentionToStressTip: "انتبه لأنماط النبرة والتنغيم",
+  practiceDifficultSoundsTip: "مارس الأصوات الصعبة عدة مرات",
+  recordYourselfTip: "سجل نفسك وقارن مع المتحدثين الأصليين",
+  bePatientTip: "كن صبورًا - تحسين النطق يستغرق وقتًا",
+  
+  // Pronunciation exercise interface
+  practiceExercise: "تمرين ممارسة",
+  topic: "موضوع",
+  listenToPhrase: "استمع للعبارة",
+  playing: "تشغيل",
+  clickWordToHear: "انقر على الكلمة للاستماع",
+  tryAgain: "حاول مرة أخرى",
+  newPhrase: "عبارة جديدة",
+  generatingNewPhrase: "إنشاء عبارة جديدة",
+  startExercise: "بدء التمرين",
+  generatingExercise: "إنشاء التمرين",
+  levelDescription: "وصف المستوى",
+  
+  // Pronunciation recording and feedback
+  yourPronunciation: "نطقك",
+  startRecording: "بدء التسجيل",
+  clickStartToRecord: "انقر للبدء في التسجيل",
+  listeningToYou: "أستمع إليك",
+  processing: "معالجة",
+  realTimeTranscription: "نسخ في الوقت الفعلي",
+  yourTranscription: "نسختك",
+  
+  // Pronunciation feedback scores
+  excellent: "ممتاز",
+  good: "جيد",
+  fair: "مقبول",
+  needsImprovement: "يحتاج تحسين",
+  accuracyScore: "نقاط الدقة",
+  intonationScore: "نقاط التنغيم",
+  fluencyScore: "نقاط الطلاقة",
+  complexityScore: "نقاط التعقيد",
+  wordAnalysis: "تحليل الكلمات",
+  phonemeAnalysis: "تحليل الأصوات",
+  overallFeedback: "التعليقات العامة",
+  
+  // Complexity levels
+  novice: "مبتدئ",
+  intermediate: "متوسط",
+  advanced: "متقدم",
+  superior: "متفوق",
+  noviceLevelShortDescription: "كلمات وعبارات أساسية",
+  intermediateLevelShortDescription: "جمل بسيطة ومحادثات",
+  advancedLevelShortDescription: "تعبيرات وأفكار معقدة",
+  superiorLevelShortDescription: "استخدام متطور للغة",
+  
+  // Voice chat
+  startVoiceConversation: "بدء محادثة صوتية",
+  endVoiceConversation: "إنهاء المحادثة الصوتية",
+  voiceChatActive: "المحادثة الصوتية نشطة",
+  
+  // Progress and analysis
+  aiProgressAnalysis: "تحليل التقدم بالذكاء الاصطناعي",
+  uploadLanguageTestTranscripts: "رفع نصوص اختبارات اللغة",
+  totalAnalyses: "التحليلات الإجمالية",
+  currentLevel: "المستوى الحالي",
+  latestScore: "أحدث نقاط",
+  uploadAndAnalyze: "رفع وتحليل",
+  analysisResults: "نتائج التحليل",
+  progressTimeline: "الجدول الزمني للتقدم",
+  uploadTestTranscript: "رفع نص الاختبار",
+  uploadLanguageTestScoreReport: "رفع تقرير نقاط اختبار اللغة",
+  noFileChosen: "لم يتم اختيار ملف",
+  dragDropOrClickToUpload: "اسحب وأفلت أو انقر للرفع",
+  supportsFileFormats: "يدعم ملفات JPEG وPNG وWebP وPDF حتى 10 ميجابايت",
+  selectFile: "اختر ملف",
+  whatOurAiCanAnalyze: "ما يمكن لذكائنا الاصطناعي تحليله:",
+  overallScoresAndCefrLevels: "• النقاط الإجمالية ومستويات CEFR",
+  individualSkillBreakdowns: "• تفصيل المهارات الفردية",
+  strengthsAndAreasForImprovement: "• نقاط القوة ومجالات التحسين",
+  progressTrackingOverTime: "• تتبع التقدم عبر الزمن",
+  
+  // Analysis page specific translations
+  latestAnalysisResults: "نتائج التحليل الأحدث",
+  detailedAnalysis: "تحليل مفصل",
+  analysisBreakdown: "تفصيل التحليل",
+  strengths: "نقاط القوة",
+  areasForImprovement: "مجالات التحسين",
+  aiRecommendations: "توصيات الذكاء الاصطناعي",
+  analysisHistory: "تاريخ التحليلات",
+  yourPreviousAnalysisResults: "نتائج تحليلاتك السابقة",
+  analysisComplete: "التحليل مكتمل",
+  transcriptAnalyzedSuccessfully: "تم تحليل نصك بنجاح!",
+  
+  // Hint button interface translations
+  responseSuggestions: "اقتراحات الرد",
+  clickPlayToHearPronunciation: "انقر على التشغيل لسماع النطق",
+  startConversationForSuggestions: "ابدأ محادثة لرؤية الاقتراحات",
+  getResponseSuggestions: "احصل على اقتراحات الرد",
+  
+  // Skill names (standardized)
   reading: "القراءة",
   writing: "الكتابة",
   speaking: "التحدث",
   listening: "الاستماع",
-  overallLevel: "المستوى العام",
-  startChatting: "ابدأ المحادثة مع مدرس الذكاء الاصطناعي!",
-  clickToStartVoice: "اضغط على 'بدء المحادثة الصوتية' للتحدث مع المدرس",
-  allowMicAccess: "يرجى السماح بالوصول للميكروفون لاستخدام الميزات الصوتية",
-  typeMessage: "اكتب رسالتك بالعربية أو الإنجليزية...",
-  practiceWithTextChat: "التدرب مع المحادثة النصية",
-  textConversationPractice: "ممارسة المحادثة النصية",
-  startTextChatting: "بدء المحادثة النصية مع مدرس الذكاء الاصطناعي",
-  typeMessageBelow: "اكتب رسالة أدناه للبدء",
-  send: "إرسال",
-  sendEnglishPracticePrompt: "إرسال مطالبة ممارسة الإنجليزية",
-  noticeTextBasedPractice: "ملاحظة: هذه ميزة ممارسة قائمة على النص. للممارسة الصوتية، جرب ميزات المحادثة الصوتية غير المحدودة أو المحادثة الصوتية المميزة.",
-  askAboutGrammarRules: "السؤال عن قواعد النحو",
-  practiceConversationsDifferentSituations: "ممارسة المحادثات في مواقف مختلفة",
-  learnNewVocabulary: "تعلم مفردات جديدة",
-  discussCulturalTopics: "مناقشة المواضيع الثقافية",
-  practicePrompt: "مرحباً! أريد ممارسة المحادثة بـ{{targetLanguage}}. من فضلك ساعدني بتصحيح قواعد {{targetLanguage}} والمفردات والاستخدام. هل يمكننا البدء بمحادثة أساسية؟",
-  chatPlaceholder: "اكتب رسالتك لممارسة {{targetLanguage}}...",
-  startConversationIn: "بدء محادثة بـ{{language}}",
-  practiceGuide: "دليل ممارسة {{language}}",
-  practiceGuideDescription: "إليك بعض النصائح للاستفادة القصوى من ممارسة {{language}}:",
-  practiceGuideItem1: "حاول تكوين جمل كاملة، حتى لو كانت بسيطة.",
-  practiceGuideItem2: "لا تقلق من الأخطاء — فهي جزء من التعلم!",
-  practiceGuideItem3: "اطلب التوضيح إذا كان هناك شيء لا تفهمه.",
-  practiceGuideItem4: "حاول استخدام المفردات التي تعلمتها مؤخراً.",
-  practiceDisclaimer: "سيتكيف الذكاء الاصطناعي مع مستوى مهارتك ويساعدك على التحسن تدريجياً.",
-  
-  // Additional practice translations
-  practice: "ممارسة",
-  practiceWithAI: "ممارسة مع الذكاء الاصطناعي",
-  clearConversation: "مسح المحادثة",
-  correctGrammar: "تصحيح القواعد",
-  practiceTip1: "حاول تكوين جمل كاملة، حتى لو كانت بسيطة.",
-  practiceTip2: "لا تقلق من الأخطاء — فهي جزء من التعلم!",
-  practiceTip3: "اطلب التوضيح إذا كان هناك شيء لا تفهمه.",
-  practiceTip4: "حاول استخدام المفردات التي تعلمتها مؤخراً.",
-  practiceTip5: "سيتكيف الذكاء الاصطناعي مع مستوى مهارتك ويساعدك على التحسن تدريجياً.",
-  
-  // Chat interface translations
-  responseSuggestions: "اقتراحات الاستجابة",
-  clickPlayToHear: "اضغط على تشغيل لسماع النطق",
-  startConversationToSee: "ابدأ محادثة لرؤية الاقتراحات",
-  
-  // Hint button translations
-  getResponseSuggestions: "الحصول على اقتراحات الاستجابة",
-  greetings: "التحيات",
-  questions: "الأسئلة",
-  error: "خطأ",
-  couldNotGenerateHints: "لم يتمكن من إنشاء اقتراحات",
-  failedToPlayAudio: "فشل في تشغيل الصوت",
-  play: "تشغيل",
-  startConversationForSuggestions: "ابدأ محادثة لرؤية الاقتراحات"
+  overallLevel: "المستوى العام"
 };
 
 export default practiceTranslations;

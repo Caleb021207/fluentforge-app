@@ -2,124 +2,141 @@
 import { TranslationRecord } from "../types";
 
 const uiElementsTranslations: TranslationRecord = {
-  // Authentication and account
+  button: "Kitufe",
+  input: "Ingizo",
+  form: "Fomu",
+  menu: "Menyu",
+  sidebar: "Upau wa kando",
+  header: "Kichwa",
+  footer: "Kijachini",
+  navbar: "Upau wa usogezi",
+  dashboard: "Dashibodi",
+  table: "Jedwali",
+  list: "Orodha",
+  card: "Kadi",
+  modal: "Modali",
+  popup: "Dirisha ibukizi",
+  tooltip: "Kidokezo",
+  badge: "Beji",
+  alert: "Tahadhari",
+  notification: "Arifa",
+  toast: "Ujumbe mfupi",
+  drawer: "Droo",
+  tabs: "Tabo",
+  accordion: "Akodiyo",
+  dropdown: "Dropdown",
+  select: "Chagua",
+  checkbox: "Kisanduku cha kuteua",
+  radio: "Kitufe cha redio",
+  switch: "Swichi",
+  slider: "Kitelezi",
+  datepicker: "Kichagua tarehe",
+  timepicker: "Kichagua wakati",
+  colorpicker: "Kichagua rangi",
+  fileUpload: "Pakia faili",
+  avatar: "Avatari",
+  chip: "Chipu",
+  divider: "Kigawanyi",
+  progress: "Maendeleo",
+  spinner: "Kizungushi",
+  pagination: "Ugawaji kurasa",
+  breadcrumbs: "Njia ya kufuatilia",
+  stepper: "Hatua",
+  dialog: "Mazungumzo",
+  snackbar: "Ujumbe wa muda",
+  banner: "Bango",
+  skeleton: "Mfumo wa muda",
+  searchBar: "Sehemu ya utafutaji",
+  filter: "Chuja",
+  sort: "Panga",
+  chart: "Chati",
+  graph: "Grafu",
+  icon: "Aikoni",
+  image: "Picha",
+  video: "Video",
+  audio: "Sauti",
+  
+  // Adding missing home page translations
   signIn: "Ingia",
-  createAccount: "Unda Akaunti",
+  createAccount: "Tengeneza Akaunti",
   goToDashboard: "Nenda kwenye Dashibodi",
   practiceWithAI: "Fanya Mazoezi na AI",
-  signedInAs: "Umeingia kama",
-  loginRequiredForFeature: "Unahitaji kuingia ili kutumia kipengele hiki",
-  notSignedIn: "Hujajiandikisha",
-  
-  // Basic UI actions
   processing: "Inachakata...",
-  error: "Hitilafu",
-  send: "Tuma",
-  cancel: "Ghairi",
-  success: "Mafanikio",
+  // error: "Hitilafu", // Removed duplicate
+  // send: "Tuma", // Removed duplicate
+  // cancel: "Ghairi", // Removed duplicate
+  // success: "Mafanikio", // Removed duplicate
   home: "Nyumbani",
   practice: "Mazoezi",
   vocabulary: "Msamiati",
   lessons: "Masomo",
   certificates: "Vyeti",
-  progress: "Maendeleo",
-  settings: "Mipangilio",
-  profile: "Wasifu",
-  help: "Msaada",
+  // progress: "Maendeleo", // Removed duplicate
+  // settings: "Mipangilio", // Removed duplicate
+  // profile: "Wasifu", // Removed duplicate
+  // help: "Msaada", // Removed duplicate
   about: "Kuhusu",
   contact: "Wasiliana",
-  logout: "Toka",
+  // logout: "Toka", // Removed duplicate
   voiceChat: "Mazungumzo ya Sauti",
   premiumVoiceChat: "Mazungumzo ya Sauti ya Premium",
   startingUp: "Inaanza...",
-  login: "Ingia",
+  // login: "Ingia", // Removed duplicate
   signup: "Jiandikishe",
-  submit: "Wasilisha",
-  save: "Hifadhi",
-  edit: "Hariri",
-  delete: "Futa",
-  loading: "Inapakia...",
-  warning: "Onyo",
-  info: "Taarifa",
+  // submit: "Wasilisha", // Removed duplicate
+  // save: "Hifadhi", // Removed duplicate
+  // edit: "Hariri", // Removed duplicate
+  // delete: "Futa", // Removed duplicate
+  // loading: "Inapakia...", // Removed duplicate
+  // warning: "Onyo", // Removed duplicate
+  // info: "Habari", // Removed duplicate
   confirmation: "Uthibitisho",
-  yes: "Ndio",
-  no: "Hapana",
+  // yes: "Ndio", // Removed duplicate
+  // no: "Hapana", // Removed duplicate
   ok: "Sawa",
-  next: "Ifuatayo",
+  // next: "Ifuatayo", // Removed duplicate
   previous: "Iliyotangulia",
-  back: "Rudi nyuma",
+  // back: "Rudi nyuma", // Removed duplicate
   finish: "Maliza",
   restart: "Anza tena",
   language: "Lugha",
-  search: "Tafuta",
-  filter: "Chuja",
-  sort: "Panga",
-  all: "Zote",
-  none: "Hakuna",
+  // search: "Tafuta", // Removed duplicate
+  // filter: "Chuja", // Removed duplicate
+  // sort: "Panga", // Removed duplicate
+  // all: "Zote", // Removed duplicate
+  // none: "Hakuna", // Removed duplicate
   
-  // Practice specific
+  // UI specific elements for homepage
+  signedInAs: "Umeingia kama",
   textPractice: "Mazoezi ya Maandishi",
   unlimitedVoicePractice: "Mazoezi ya Sauti Yasiyona Kikomo",
   myClasses: "Madarasa Yangu",
   myClass: "Darasa Langu",
-  startChatting: "Anza Kuongea",
-  typeMessageBelow: "Andika ujumbe hapa chini",
-  typeMessageToPractice: "Andika ujumbe wako kwa kufanya mazoezi ya {{language}}...",
-  currentLanguage: "Lugha ya sasa",
-  practiceLanguage: "Lugha ya mazoezi",
+  // welcomeToLanguageLearning: "Karibu kwenye Palavox", // Removed duplicate
+  // yourPersonalAICompanion: "Msaidizi wako binafsi wa AI kwa kujifunza kwa ufanisi", // Removed duplicate
+  loginRequiredForFeature: "Unahitaji kuingia ili kutumia kipengele hiki",
+  notSignedIn: "Hujajiandikisha",
+
+  // Buttons and actions
+  // startChatting: "Anza Kuongea", // Removed duplicate
+  // continue: "Endelea", // Removed duplicate
+  incorrectPin: "PIN sio sahihi",
   
-  // Theme settings
-  lightMode: "Hali ya Mwanga",
-  darkMode: "Hali ya Giza",
-  
-  // Class management
-  createNewClass: "Unda Darasa Jipya",
-  className: "Jina la Darasa",
-  creating: "Inaunda...",
-  createClass: "Unda Darasa",
-  joinClass: "Jiunge na Darasa",
-  enterClassCode: "Ingiza Msimbo wa Darasa",
-  joining: "Inaungana...",
-  unauthorized: "Hauruhusiwi",
-  teacherAccessRequired: "Ufikiaji wa mwalimu unahitajika kwa ukurasa huu",
-  generateCode: "Zalisha Msimbo",
-  
-  // Class list management
-  classActivated: "Darasa limewashwa",
-  classDeactivated: "Darasa limezimwa",
-  active: "Amilifu",
-  inactive: "Haimo Amilifu",
-  code: "Msimbo",
-  students: "Wanafunzi",
-  created: "Imeundwa",
-  activate: "Washa",
-  deactivate: "Zima",
-  noClassesCreated: "Hakuna madarasa yaliyoundwa bado",
-  noClassJoined: "Bado hujajiunge na darasa lolote",
-  teacher: "Mwalimu",
-  joined: "Umejiunge",
-  classCode: "Msimbo wa Darasa",
-  viewStudents: "Ona Wanafunzi",
-  noStudentsInClass: "Hakuna wanafunzi katika darasa hili bado",
-  
-  // Navigation and app structure
-  startConversationIn: "Anza mazungumzo kwa {{language}}",
-  welcomeToLanguageLearning: "Karibu kwenye Kujifunza Lugha",
-  yourPersonalAICompanion: "Msaidizi wako binafsi wa AI wa kujifunza lugha",
-  
-  // Additional UI elements
-  continue: "Endelea",
-  incorrectPin: "PIN si sahihi",
+  // Parental controls and footer
   parentalControls: "Vidhibiti vya Wazazi",
   safetyPolicy: "Sera ya Usalama",
   ferpaPrivacy: "Faragha ya FERPA",
   
-  // Status messages
-  connectionLost: "Muunganisho wa mtandao umekatika",
-  reconnecting: "Inaungana tena...",
-  returnToHome: "Rudi kwenye ukurasa wa kwanza",
-  pageTitle: "Palavox - Jifunze Lugha",
-  pageDescription: "Jifunze kuzungumza kwa asili"
+  // Class management 
+  createNewClass: "Tengeneza Darasa Jipya",
+  className: "Jina la Darasa",
+  creating: "Inatengeneza...",
+  createClass: "Tengeneza Darasa",
+  joinClass: "Jiunge na Darasa",
+  enterClassCode: "Ingiza Msimbo wa Darasa",
+  joining: "Inaungana...",
+  unauthorized: "Hauruhusiwi",
+  teacherAccessRequired: "Ufikiaji wa mwalimu unahitajika kwa ukurasa huu"
 };
 
 export default uiElementsTranslations;

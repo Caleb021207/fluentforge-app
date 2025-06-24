@@ -2,36 +2,43 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
+  // Practice page
+  practiceYourLanguage: "Exersați {{language}}",
+  chatWithAI: "Conversați cu tutorul nostru AI pentru a vă practica {{language}}! AI-ul vă va ajuta să corectați gramatica, vocabularul și vă va oferi sfaturi despre pronunție și cultură.",
+  typeMessage: "Tastați un mesaj...",
+  startConversationIn: "Începe o conversație în {{language}}",
+  practiceWithAI: "Practică cu AI",
+  startTextChatting: "Începeți să conversați prin text",
+  noticeTextBasedPractice: "Notă: Aceasta este o practică bazată pe text. Veți primi răspunsuri text de la AI.",
+  aiResponding: "AI răspunde...",
   textPractice: "Practică text",
-  practiceWithAITutor: "Practică cu tutorul AI",
-  chatWithAITutor: "Conversează cu tutorul nostru AI pentru a-ți practica engleza! AI-ul te va ajuta să îți corectezi gramatica, vocabularul și pronunția. Nu ezita să pui întrebări despre limbă sau cultură.",
-  startVoiceChat: "Începe chat vocal",
-  stopVoiceChat: "Oprește chat vocal",
-  getSkillsAssessment: "Obține evaluarea competențelor",
-  reading: "Citire",
-  writing: "Scriere",
-  speaking: "Vorbire",
-  listening: "Ascultare",
-  overallLevel: "Nivel general",
-  startChatting: "Începe să conversezi cu tutorul tău AI de limbă!",
-  clickToStartVoice: "Dă click pe 'Începe chat vocal' pentru a vorbi cu tutorul",
-  typeMessage: "Scrie mesajul tău în română sau engleză...",
+  voicePractice: "Practică vocală",
+  translationShown: "Traducere afișată",
+  hideTranslation: "Ascunde traducerea",
+  showTranslation: "Arată traducerea",
+  translationError: "Eroare de traducere",
+  failedToGetTranslation: "Nu s-a putut obține traducerea",
+  trySimpleWords: "Încercați cuvinte mai simple",
+  useBuiltInPhrases: "Utilizați frazele integrate",
+  startNewConversation: "Începe o conversație nouă",
+  sentenceStarters: "Începători de propoziții",
+  
+  // New translations
   practiceWithTextChat: "Practică cu chat text",
   textConversationPractice: "Practică conversație text",
-  startTextChatting: "Începe chat text cu tutorul AI",
+  startChatting: "Începe o conversație cu tutorul tău AI de limba engleză!",
   typeMessageBelow: "Scrie un mesaj mai jos pentru a începe",
-  send: "Trimite",
-  sendEnglishPracticePrompt: "Trimite prompt de practică engleză",
-  practicePrompt: "Salut! Aș vrea să practic conversația în {{targetLanguage}}. Te rog ajută-mă prin corectarea gramaticii, vocabularului și folosirii {{targetLanguage}}. Putem începe cu o conversație de bază?",
-  chatPlaceholder: "Scrie mesajul tău pentru a practica {{targetLanguage}}...",
-  startConversationIn: "Începe conversația în {{language}}",
-  practiceGuide: "Ghid de practică {{language}}",
-  practiceGuideDescription: "Iată câteva sfaturi pentru a profita la maximum de practica ta {{language}}:",
-  practiceGuideItem1: "Încearcă să formezi propoziții complete, chiar dacă sunt simple.",
-  practiceGuideItem2: "Nu te îngrijora de greșeli — fac parte din învățare!",
-  practiceGuideItem3: "Cere explicații dacă nu înțelegi ceva.",
+  chatPlaceholder: "Scrie mesajul tău pentru a exersa {{language}}...",
+  practicePrompt: "Bună! Aș dori să practic conversația în {{targetLanguage}} cu tine. Te rog să mă ajuți corectând gramatica, vocabularul și utilizarea {{targetLanguage}}. Putem începe cu o conversație de bază?",
+  
+  // Practice guide
+  practiceGuide: "Ghid de practică pentru limba {{language}}",
+  practiceGuideDescription: "Iată câteva sfaturi pentru a profita la maximum de practica limbii {{language}}:",
+  practiceGuideItem1: "Încearcă să formulezi propoziții complete, chiar dacă sunt simple.",
+  practiceGuideItem2: "Nu-ți face griji pentru greșeli – ele fac parte din procesul de învățare!",
+  practiceGuideItem3: "Cere lămuriri dacă nu înțelegi ceva.",
   practiceGuideItem4: "Încearcă să folosești vocabularul pe care l-ai învățat recent.",
-  practiceDisclaimer: "AI-ul nostru se va adapta la nivelul tău de competență și te va ajuta să te îmbunătățești treptat."
+  practiceDisclaimer: "AI-ul nostru se va adapta nivelului tău și te va ajuta să progresezi treptat."
 };
 
 export default practiceTranslations;

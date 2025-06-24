@@ -2,42 +2,143 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
-  textPractice: "Pratique de texte",
-  practiceWithAITutor: "Pratiquer avec le tuteur IA",
-  chatWithAITutor: "Discutez avec notre tuteur IA pour pratiquer votre anglais ! L'IA vous aidera à corriger votre grammaire, votre vocabulaire et votre prononciation. N'hésitez pas à poser des questions sur la langue ou la culture.",
-  startVoiceChat: "Commencer le chat vocal",
-  stopVoiceChat: "Arrêter le chat vocal",
-  getSkillsAssessment: "Obtenir l'évaluation des compétences",
+  // Practice page core
+  practice: "Pratique",
+  practiceWithAI: "Pratiquer avec l'IA",
+  startChatting: "Commencer à discuter",
+  clearConversation: "Effacer la conversation",
+  correctGrammar: "Corriger la grammaire",
+  
+  // Chat interface with proper interpolation
+  startConversationIn: "Commencer une conversation en {{language}}",
+  startTextChatting: "Commencer la discussion textuelle",
+  
+  // Practice guide with proper interpolation
+  practiceGuide: "Guide de pratique {{language}}",
+  practiceGuideDescription: "Suivez ces conseils pour faciliter votre parcours d'apprentissage du {{language}} :",
+  practiceTip1: "Essayez de former des phrases complètes, même si elles sont simples.",
+  practiceTip2: "Ne vous inquiétez pas des erreurs — elles font partie de l'apprentissage !",
+  practiceTip3: "Demandez des explications si vous ne comprenez pas quelque chose.",
+  practiceTip4: "Utilisez des mots que vous avez récemment appris.",
+  practiceTip5: "Notre IA s'adaptera à votre niveau de compétence et vous aidera progressivement à vous améliorer.",
+  
+  // Chat interface
+  typeYourMessageHere: "Tapez votre message ici...",
+  typeMessageBelow: "Tapez un message ci-dessous",
+  chatPlaceholder: "Tapez votre message pour pratiquer le {{targetLanguage}}...",
+  practicePrompt: "Bonjour ! J'aimerais pratiquer la conversation en {{targetLanguage}}. Veuillez m'aider en corrigeant ma grammaire, mon vocabulaire et mon usage du {{targetLanguage}}. Pouvons-nous commencer par une conversation de base ?",
+  
+  // Pronunciation practice
+  pronunciationPractice: "Pratique de la prononciation",
+  improvePronunciationSkillsWith: "Améliorez vos compétences de prononciation avec des exercices ciblés",
+  selectComplexityLevel: "Sélectionner le niveau de complexité",
+  chooseDifficultyLevelBasedOn: "Choisissez un niveau de difficulté basé sur votre maîtrise linguistique",
+  selectLevelToStart: "Sélectionnez un niveau pour commencer à pratiquer",
+  pronunciationPracticeTips: "Conseils de pratique de la prononciation",
+  speechRate: "Vitesse de parole",
+  
+  // Pronunciation tips
+  listenCarefullyTip: "Écoutez attentivement l'audio avant d'essayer de parler",
+  payAttentionToStressTip: "Prêtez attention aux modèles d'accent et d'intonation",
+  practiceDifficultSoundsTip: "Pratiquez les sons difficiles plusieurs fois",
+  recordYourselfTip: "Enregistrez-vous et comparez avec des locuteurs natifs",
+  bePatientTip: "Soyez patient - l'amélioration de la prononciation prend du temps",
+  
+  // Pronunciation exercise interface
+  practiceExercise: "Exercice de pratique",
+  topic: "Sujet",
+  listenToPhrase: "Écouter la phrase",
+  playing: "En lecture",
+  clickWordToHear: "Cliquez sur le mot pour entendre",
+  tryAgain: "Essayer encore",
+  newPhrase: "Nouvelle phrase",
+  generatingNewPhrase: "Génération d'une nouvelle phrase",
+  startExercise: "Commencer l'exercice",
+  generatingExercise: "Génération de l'exercice",
+  levelDescription: "Description du niveau",
+  
+  // Pronunciation recording and feedback
+  yourPronunciation: "Votre prononciation",
+  startRecording: "Commencer l'enregistrement",
+  clickStartToRecord: "Cliquez pour commencer à enregistrer",
+  listeningToYou: "Vous écoute",
+  processing: "Traitement en cours",
+  realTimeTranscription: "Transcription en temps réel",
+  yourTranscription: "Votre transcription",
+  
+  // Pronunciation feedback scores
+  excellent: "Excellent",
+  good: "Bon",
+  fair: "Passable",
+  needsImprovement: "À améliorer",
+  accuracyScore: "Score de précision",
+  intonationScore: "Score d'intonation",
+  fluencyScore: "Score de fluidité",
+  complexityScore: "Score de complexité",
+  wordAnalysis: "Analyse des mots",
+  phonemeAnalysis: "Analyse des phonèmes",
+  overallFeedback: "Commentaires généraux",
+  
+  // Complexity levels
+  novice: "Débutant",
+  intermediate: "Intermédiaire",
+  advanced: "Avancé",
+  superior: "Supérieur",
+  noviceLevelShortDescription: "Mots et phrases de base",
+  intermediateLevelShortDescription: "Phrases simples et conversations",
+  advancedLevelShortDescription: "Expressions et idées complexes",
+  superiorLevelShortDescription: "Usage sophistiqué de la langue",
+  
+  // Voice chat
+  startVoiceConversation: "Commencer une conversation vocale",
+  endVoiceConversation: "Terminer la conversation vocale",
+  voiceChatActive: "Chat vocal actif",
+  
+  // Progress and analysis
+  aiProgressAnalysis: "Analyse de progression IA",
+  uploadLanguageTestTranscripts: "Télécharger les transcriptions de test de langue",
+  totalAnalyses: "Analyses totales",
+  currentLevel: "Niveau actuel",
+  latestScore: "Score le plus récent",
+  uploadAndAnalyze: "Télécharger et analyser",
+  analysisResults: "Résultats de l'analyse",
+  progressTimeline: "Chronologie des progrès",
+  uploadTestTranscript: "Télécharger la transcription de test",
+  uploadLanguageTestScoreReport: "Télécharger le rapport de score de test de langue",
+  noFileChosen: "Aucun fichier choisi",
+  dragDropOrClickToUpload: "Glissez-déposez ou cliquez pour télécharger",
+  supportsFileFormats: "Prend en charge les fichiers JPEG, PNG, WebP et PDF jusqu'à 10 Mo",
+  selectFile: "Sélectionner un fichier",
+  whatOurAiCanAnalyze: "Ce que notre IA peut analyser :",
+  overallScoresAndCefrLevels: "• Scores globaux et niveaux CECR",
+  individualSkillBreakdowns: "• Décomposition des compétences individuelles",
+  strengthsAndAreasForImprovement: "• Forces et domaines d'amélioration",
+  progressTrackingOverTime: "• Suivi des progrès dans le temps",
+  
+  // Analysis page specific translations
+  latestAnalysisResults: "Derniers Résultats d'Analyse",
+  detailedAnalysis: "Analyse Détaillée",
+  analysisBreakdown: "Décomposition de l'Analyse",
+  strengths: "Points Forts",
+  areasForImprovement: "Domaines d'Amélioration",
+  aiRecommendations: "Recommandations de l'IA",
+  analysisHistory: "Historique des Analyses",
+  yourPreviousAnalysisResults: "Vos Résultats d'Analyses Précédentes",
+  analysisComplete: "Analyse Terminée",
+  transcriptAnalyzedSuccessfully: "Votre transcription a été analysée avec succès !",
+  
+  // Hint button interface translations
+  responseSuggestions: "Suggestions de Réponse",
+  clickPlayToHearPronunciation: "Cliquez sur lecture pour entendre la prononciation",
+  startConversationForSuggestions: "Commencez une conversation pour voir les suggestions",
+  getResponseSuggestions: "Obtenir des suggestions de réponse",
+  
+  // Skill names (standardized)
   reading: "Lecture",
   writing: "Écriture",
   speaking: "Expression orale",
   listening: "Écoute",
-  overallLevel: "Niveau général",
-  startChatting: "Commencez à discuter avec votre tuteur IA !",
-  clickToStartVoice: "Cliquez sur 'Commencer le chat vocal' pour parler avec le tuteur",
-  allowMicAccess: "Veuillez autoriser l'accès au microphone pour utiliser les fonctionnalités vocales",
-  typeMessage: "Tapez votre message en français ou en anglais...",
-  practiceWithTextChat: "Pratiquer avec le chat texte",
-  textConversationPractice: "Pratique de conversation textuelle",
-  startTextChatting: "Commencer le chat texte avec le tuteur IA",
-  typeMessageBelow: "Tapez un message ci-dessous pour commencer",
-  send: "Envoyer",
-  sendEnglishPracticePrompt: "Envoyer l'invite de pratique anglaise",
-  noticeTextBasedPractice: "Note : Il s'agit d'une fonctionnalité de pratique basée sur le texte. Pour la pratique vocale, essayez nos fonctionnalités de Chat Vocal Illimité ou de Chat Vocal Premium.",
-  askAboutGrammarRules: "Poser des questions sur les règles de grammaire",
-  practiceConversationsDifferentSituations: "Pratiquer les conversations dans différentes situations",
-  learnNewVocabulary: "Apprendre du nouveau vocabulaire",
-  discussCulturalTopics: "Discuter de sujets culturels",
-  practicePrompt: "Bonjour ! Je voudrais pratiquer la conversation en {{targetLanguage}}. Aidez-moi en corrigeant ma grammaire, mon vocabulaire et mon usage en {{targetLanguage}}. Pouvons-nous commencer par une conversation de base ?",
-  chatPlaceholder: "Tapez votre message pour pratiquer {{targetLanguage}}...",
-  startConversationIn: "Commencer une conversation en {{language}}",
-  practiceGuide: "Guide de pratique {{language}}",
-  practiceGuideDescription: "Voici quelques conseils pour tirer le meilleur parti de votre pratique {{language}} :",
-  practiceGuideItem1: "Essayez de former des phrases complètes, même si elles sont simples.",
-  practiceGuideItem2: "Ne vous inquiétez pas des erreurs — elles font partie de l'apprentissage !",
-  practiceGuideItem3: "Demandez des explications si vous ne comprenez pas quelque chose.",
-  practiceGuideItem4: "Essayez d'utiliser le vocabulaire que vous avez récemment appris.",
-  practiceDisclaimer: "Notre IA s'adaptera à votre niveau de compétence et vous aidera à vous améliorer progressivement."
+  overallLevel: "Niveau Global"
 };
 
 export default practiceTranslations;

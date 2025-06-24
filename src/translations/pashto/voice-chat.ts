@@ -2,63 +2,63 @@
 import { TranslationRecord } from "../types";
 
 const voiceChatTranslations: TranslationRecord = {
-  freePracticeWithVoice: "د غږ سره وړیا تمرین",
+  freePracticeWithVoice: "وړیا غږیز تمرین",
   unlimitedVoicePractice: "نامحدود غږیز تمرین",
   startSpeaking: "خبرې پیل کړئ",
-  stopListening: "اورېدل ودروئ",
-  listeningNow: "اوس اورېدل کیږي",
-  youSaid: "تاسو وویل:",
-  aiResponse: "د AI ځواب:",
-  playAgain: "بیا غږ کړئ",
-  speaking: "خبرې کوي",
-  practiceWithVoiceChat: "د غږیز چت سره تمرین وکړئ",
-  conversationStarters: "د خبرو پیلونکي",
-  tryThesePhrases: "دا جملې وازموئ:",
-  speechRecognitionError: "د خبرو پېژندنې تېروتنه",
-  speechRecognitionNotSupported: "ستاسو براوزر د خبرو پېژندنې ملاتړ نه کوي",
-  microphoneAccessRequired: "د مایکروفون لاسرسي اړین دی",
-  failedToGetResponse: "د ځواب اخیستل ناکام شو",
-  failedToGenerateSpeech: "د خبرو جوړول ناکام شو",
-  voiceChatEnded: "غږیز چت پای ته ورسید",
-  browserBasedTTS: "د براوزر پر بنسټ TTS",
+  stopListening: "اوریدل بند کړئ",
+  listeningNow: "اوس اوري",
+  youSaid: "تاسو وویل",
+  aiResponse: "د AI ځواب",
+  playAgain: "بیا کړئ",
+  speaking: "خبرې کول",
+  practiceWithVoiceChat: "د غږیز چټ سره تمرین وکړئ",
+  practiceLanguageTips: "د خبرو کولو او اوریدو مهارتونو د ښه کولو لپاره دا وسیله وکاروئ. دلته ځینې مشورې دي:",
+  askQuestionsAboutTopics: "د ورځني موضوعاتو په اړه پوښتنې وکړئ",
+  practiceEverydayPhrases: "عادي اصطلاحات او عبارتونه تمرین کړئ",
+  describeImagesOrScenes: "هغه څه چې تاسو په خپل شاوخوا کې وینئ تشریح کړئ",
+  practiceVocabularyForSpecificTopics: "د ځانګړو موضوعاتو لکه سفر یا خوړو لپاره لغتونه تمرین کړئ",
+  speechRecognitionError: "د خبرو پیژندنې تېروتنه",
+  speechRecognitionNotSupported: "ستاسو په لټوونکي کې د خبرو پیژندنه نه ده ملاتړ شوي",
+  microphoneAccessRequired: "مایکروفون ته لاسرسی اړین دی",
+  failedToGetResponse: "له AI څخه ځواب ترلاسه کولو کې پاتې راغی. مهرباني وکړئ بیا هڅه وکړئ.",
+  failedToGenerateSpeech: "خبرې تولیدولو کې پاتې راغی. مهرباني وکړئ بیا هڅه وکړئ.",
+  audioPlaybackError: "د غږ غږولو کې تېروتنه. مهرباني وکړئ بیا هڅه وکړئ.",
+  conversationStarters: "د خبرو اترو پیل کوونکي",
+  tryThesePhrases: "د خبرو اترو پیلولو لپاره دا عبارتونه هڅه وکړئ:",
+  inYourTargetLanguage: "په خپل هدف ژبه کې:",
+  inYourNativeLanguage: "په خپله مورنۍ ژبه کې:",
+  translation: "ژباړه",
+  conversationHistory: "د خبرو اترو تاریخچه",
+  clearConversation: "خبرې اترې پاکې کړئ",
+  voiceChatEnded: "غږیز چټ پای ته ورسید",
+  timeLimit5MinReached: "د 5 دقیقو وخت محدودیت ته ورسیدل",
+  phrase1: "سلام، نن څنګه یاست؟",
+  phrase2: "ستاسو په سیمه کې هوا څنګه ده؟",
+  phrase3: "ایا تاسو یو ښه رستورانت وړاندیز کولی شئ؟",
+  phrase4: "ستاسو شوق او علاقې څه دي؟",
+  phrase5: "ما ته د خپل خوښې کتاب یا فلم په اړه ووایئ.",
+  phrase6: "تیر اونۍ پای کې مو څه وکړل؟",
+  phrase7: "سبا لپاره ستاسو پلانونه څه دي؟",
+  phrase8: "څنګه ... په انګلیسي ویل کیږي؟",
+  browserBasedTTS: "یادونه: دا د لټونکی-پر بنسټ متن-څخه-خبرو تکنالوژی کاروي. د ElevenLabs سره د غوره غږ کیفیت لپاره، زموږ ممتاز غږیز چټ وازمایئ.",
   
-  // Voice chat practice guide
-  practiceWithVoiceChatDescription: "د خپلو خبرو او اورېدلو مهارتونو د ښه کولو لپاره دا وسیله وکاروئ. دلته ځینې نکتې دي:",
-  askQuestionsAboutEverydayTopics: "د ورځني ژوند موضوعاتو په اړه پوښتنې وکړئ",
-  practiceCommonPhrasesAndExpressions: "عام جملې او بیانات تمرین وکړئ",
-  describeWhatYouSeeAroundYou: "هغه څه چې ستاسو شاوخوا یې ګورئ بیان یې کړئ",
-  practiceVocabularyForSpecificTopics: "د ځانګړو موضوعاتو لکه سفر یا خواړو لپاره لغتونه تمرین وکړئ",
+  // Additional keys needed for the practice tips box
+  askQuestions: "د ورځني موضوعاتو په اړه پوښتنې وکړئ",
+  practiceCommonPhrases: "عادي اصطلاحات او عبارتونه تمرین کړئ",
+  describeWhatYouSee: "هغه څه چې تاسو وینئ تشریح کړئ",
+  practiceVocabularyForSpecific: "د ځانګړو موضوعاتو لکه سفر یا خوړو لپاره لغتونه تمرین کړئ",
+  useThisTool: "د خبرو کولو او اوریدو مهارتونو د ښه کولو لپاره دا وسیله وکاروئ. دلته ځینې مشورې دي:",
   
-  // Sample conversation starters  
-  helloHowAreYouToday: "سلام، نن څنګه یاست؟",
-  howIsTheWeatherInYourArea: "ستاسو په سیمه کې هوا څنګه ده؟",
-  canYouRecommendAGoodRestaurant: "آیا تاسو یو ښه رستوران وړاندیز کولی شئ؟",
-  whatAreYourHobbiesAndInterests: "ستاسو شوقونه او علایق څه دي؟",
-  tellMeAboutYourFavoriteBookOrMovie: "ماته خپل د خوښې کتاب یا فلم په اړه ووایاست.",
-  whatDidYouDoLastWeek: "تېره اونۍ مو څه وکړل؟",
-  whatAreYourPlansForTomorrow: "د سبا لپاره مو څه پلانونه دي؟",
-  howDoYouSayInSpanishEnglish: "... په هسپانوي/انګلیسي کې څنګه وایي؟",
+  // Specific translation for the practice description
+  practiceDescription: "د انګلیسي ژبې خبرو کولو مهارتونه زموږ د غږیز چټ سره تمرین کړئ. د مایکروفون تڼۍ کلیک کړئ او په انګلیسي خبرې پیل کړئ. AI به تاسو ته په انګلیسي ځواب درکړي او تمرین کې به مرسته وکړي.",
   
-  // Missing conversation starter translations
-  "Hello, how are you today?": "سلام، نن څنګه یاست؟",
-  "What's the weather like where you are?": "ستاسو په سیمه کې هوا څنګه ده؟",
-  "Can you recommend a good restaurant?": "آیا تاسو یو ښه رستوران وړاندیز کولی شئ؟",
-  "What are your hobbies and interests?": "ستاسو شوقونه او علایق څه دي؟",
-  "Tell me about your favorite book or movie.": "ماته خپل د خوښې کتاب یا فلم په اړه ووایاست.",
-  "What did you do last weekend?": "تېره اونۍ مو څه وکړل؟",
-  "What are your plans for tomorrow?": "د سبا لپاره مو څه پلانونه دي؟",
-  "How do you say... in Spanish/English?": "... په هسپانوي/انګلیسي کې څنګه وایي؟",
+  // Adding AI model info text translation
+  aiModelLabel: "د AI ماډل:",
+  aiModelInfoText: "موږ د طبیعي ژبې پوهاوي او جوړولو لپاره د OpenAI's GPT-4o-mini کاروو، د غږیز ځوابونو لپاره د لټونګر داخلي د وینا سینتیسس سره.",
   
-  // Tips translations
-  "Ask questions about everyday topics": "د ورځني ژوند موضوعاتو په اړه پوښتنې وکړئ",
-  "Practice common phrases and expressions": "عام جملې او بیانات تمرین وکړئ",
-  "Describe what you see around you": "هغه څه چې ستاسو شاوخوا یې ګورئ بیان یې کړئ",
-  "Practice vocabulary for specific topics like travel or food": "د ځانګړو موضوعاتو لکه سفر یا خواړو لپاره لغتونه تمرین وکړئ",
-  
-  // Additional missing keys
-  "Use this tool to improve your speaking and listening skills. Here are some tips:": "د خپلو خبرو او اورېدلو مهارتونو د ښه کولو لپاره دا وسیله وکاروئ. دلته ځینې نکتې دي:",
-  "Click play to hear pronunciation": "د تلفظ د اورېدلو لپاره پلے کلیک کړئ",
-  "Start a conversation to see suggestions": "وړاندیزونه د لیدو لپاره خبرې پیل کړئ"
+  // Adding practice level text translation
+  practiceLevel: "د تمرین کچه",
+  cefrB1Description: "منځنۍ کچه - په آشنا موضوعاتو خبرې کولی شي"
 };
 
 export default voiceChatTranslations;

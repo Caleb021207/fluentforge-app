@@ -1,12 +1,32 @@
 
 import { TranslationRecord } from "../types";
-import hindiCoreTranslations from "./core";
-import hindiPracticeTranslations from "./practice";
+import generalTranslations from "./general";
+import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
+import certificatesTranslations from "./certificates";
+import progressTranslations from "./progress";
+import profileTranslations from "./profile";
+import voiceChatTranslations from "./voice-chat";
+import premiumVoiceTranslations from "./premium-voice";
+import languageFrameworksTranslations from "./language-frameworks";
+import authTranslations from "./auth";
+import languagesTranslations from "./languages";
+import navigationTranslations from "./navigation";
 
-// Complete Hindi translations with practice integration
+// Combine all the translation categories
 const hindiTranslations: TranslationRecord = {
-  ...hindiCoreTranslations,
-  ...hindiPracticeTranslations
+  ...generalTranslations,
+  ...languageSelectionTranslations,
+  ...practiceTranslations,
+  ...certificatesTranslations,
+  ...progressTranslations,
+  ...profileTranslations,
+  ...voiceChatTranslations,
+  ...premiumVoiceTranslations,
+  ...languageFrameworksTranslations,
+  ...authTranslations,
+  ...languagesTranslations,
+  ...navigationTranslations,
 };
 
 export default hindiTranslations;

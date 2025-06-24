@@ -1,10 +1,22 @@
 
 import { TranslationRecord } from "../types";
-import tigrinyaCoreTranslations from "./core";
+import generalCoreTranslations from "./general-core";
+import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
+import languageSelectionTranslations from "./language-selection";
+import uiElementsTranslations from "./ui-elements";
+import navigationTranslations from "./navigation";
+import authTranslations from "./auth";
 
-// Use only the clean core translations for Tigrinya
+// Combine all the translation categories
 const tigrinyaTranslations: TranslationRecord = {
-  ...tigrinyaCoreTranslations
+  ...generalCoreTranslations,
+  ...practiceTranslations,
+  ...voiceChatTranslations,
+  ...languageSelectionTranslations,
+  ...uiElementsTranslations,
+  ...navigationTranslations,
+  ...authTranslations,
 };
 
 export default tigrinyaTranslations;

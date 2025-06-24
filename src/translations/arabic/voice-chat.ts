@@ -20,7 +20,7 @@ const voiceChatTranslations: TranslationRecord = {
   startSpeaking: "بدء التحدث",
   stopListening: "إيقاف الاستماع",
   
-  // Practice descriptions and AI info - FIXED
+  // Practice descriptions and AI info
   practiceDescription: "حسن مهارات التحدث والاستماع من خلال إجراء محادثات في الوقت الفعلي مع الذكاء الاصطناعي.",
   aiModelInfo: "نستخدم GPT-4o-mini من OpenAI لفهم وتوليد اللغة الطبيعية، مع تركيب الكلام المدمج في المتصفح للاستجابات الصوتية.",
   

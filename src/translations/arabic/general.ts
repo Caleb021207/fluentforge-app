@@ -2,70 +2,61 @@
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
-  startLearning: "ابدأ التعلم",
+  // Welcome and core messages
+  welcomeToLanguageLearning: "مرحباً بك في Palavox",
+  yourPersonalAICompanion: "مساعد التعلم الشخصي المدعوم بالذكاء الاصطناعي. ابدأ رحلتك نحو الطلاقة اليوم.",
+  welcomeMessage: "مرحباً بك في تطبيق Palavox لتعلم اللغات!",
+  
+  // Basic actions
   signIn: "تسجيل الدخول",
-  signUp: "إنشاء حساب",
-  logOut: "تسجيل الخروج",
-  welcome: "مرحباً",
-  home: "الرئيسية",
-  profile: "الملف الشخصي",
-  textPractice: "ممارسة النص",
-  unlimitedVoicePractice: "ممارسة صوتية غير محدودة",
-  premiumVoiceChat: "محادثة صوتية مميزة",
+  createAccount: "إنشاء حساب",
+  goToDashboard: "الذهاب إلى لوحة التحكم",
   practiceWithAI: "التدرب مع الذكاء الاصطناعي",
-  admin: "المدير",
-  loading: "جاري التحميل...",
+  processing: "جاري المعالجة...",
   error: "خطأ",
-  success: "نجاح",
+  send: "إرسال",
   cancel: "إلغاء",
-  save: "حفظ",
-  delete: "حذف",
-  edit: "تعديل",
-  submit: "إرسال",
-  required: "مطلوب",
-  invalidEmail: "بريد إلكتروني غير صحيح",
-  signedInAs: "مسجل الدخول باسم",
+  success: "نجاح",
   
-  // Analysis page specific
-  aiProgressAnalysis: "تحليل التقدم بالذكاء الاصطناعي",
-  uploadLanguageTestTranscripts: "ارفع نصوص اختبار اللغة للحصول على تحليل عميق بالذكاء الاصطناعي",
-  totalAnalyses: "إجمالي التحليلات",
-  currentLevel: "المستوى الحالي",
-  latestScore: "أحدث نتيجة",
-  uploadAndAnalyze: "ارفع وحلل",
-  analysisResults: "نتائج التحليل",
-  progressTimeline: "الجدول الزمني للتقدم",
-  analysisComplete: "اكتمل التحليل",
-  transcriptAnalyzedSuccessfully: "تم تحليل النص بنجاح",
+  // Additional landing page and auth translations
+  swipeUpToGetStarted: "اسحب لأعلى للبدء",
+  getStarted: "البدء",
+  signUp: "التسجيل",
+  signInToContinue: "سجل الدخول للمتابعة",
+  email: "البريد الإلكتروني",
+  password: "كلمة المرور",
+  dontHaveAnAccount: "ليس لديك حساب؟",
+  alreadyHaveAnAccount: "لديك حساب بالفعل؟",
   
-  // Practice guide
-  practiceGuide: "دليل ممارسة {{language}}",
-  practiceGuideDescription: "إليك بعض النصائح لتحقيق أقصى استفادة من ممارسة {{language}}:",
-  practiceTip1: "حاول تكوين جمل كاملة، حتى لو كانت بسيطة",
-  practiceTip2: "لا تقلق بشأن الأخطاء - إنها جزء من التعلم!",
-  practiceTip3: "اطلب توضيحات إذا كان هناك شيء لا تفهمه",
-  practiceTip4: "استخدم الكلمات التي تعلمتها مؤخراً",
-  practiceTip5: "سيتكيف الذكاء الاصطناعي مع مستوى مهارتك ويساعدك على التحسن تدريجياً",
+  // User interface elements
+  signedInAs: "مسجل الدخول باسم:",
+  lightMode: "الوضع الفاتح",
+  darkMode: "الوضع الداكن",
   
-  // Chat actions
-  correctGrammar: "تصحيح القواعد",
-  clearConversation: "مسح المحادثة",
-  responseSuggestions: "اقتراحات الرد",
-  startConversationToSeeSuggestions: "ابدأ محادثة لرؤية الاقتراحات",
-  clickPlayToHearPronunciation: "انقر على تشغيل لسماع النطق",
+  // Practice level descriptions
+  practiceLevel: "مستوى التدريب",
+  currentLanguage: "اللغة الحالية",
+  practiceLanguage: "لغة التدريب",
   
-  // Pronunciation
-  improvePronunciationSkills: "حسن مهارات النطق من خلال التمارين المستهدفة",
-  selectComplexityLevel: "اختر مستوى التعقيد",
-  chooseLanguageProficiency: "اختر مستوى الصعوبة بناءً على إتقانك للغة",
-  speechRate: "معدل الكلام",
-  selectLevelToStart: "اختر مستوى لبدء الممارسة",
-  pronunciationPracticeTips: "نصائح ممارسة النطق",
-  listenCarefullyBeforeSpeak: "استمع بعناية للصوت قبل محاولة التحدث",
-  payAttentionStressPatterns: "انتبه لأنماط التوتر والنبرة",
-  practiceDifficultSounds: "مارس الأصوات الصعبة عدة مرات",
-  recordAndCompare: "سجل نفسك وقارن مع المتحدثين الأصليين",
-  bePatiencePronunciation: "كن صبوراً - تحسين النطق يحتاج وقت"
+  // Level descriptions
+  beginnerDescription: "مبتدئ - الكلمات والعبارات الأساسية",
+  intermediateDescription: "متوسط - يمكن مناقشة المواضيع المألوفة",
+  advancedDescription: "متقدم - التعبيرات والأفكار المعقدة",
+  superiorDescription: "متفوق - استخدام متطور للغة",
+  
+  // Status messages
+  pageNotFound: "الصفحة غير موجودة",
+  networkConnectionIssue: "مشكلة في الاتصال بالشبكة",
+  pleaseWait: "يرجى الانتظار",
+  sessionExpired: "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.",
+  cooldownActive: "فترة الانتظار نشطة",
+  dailyLimitReached: "تم الوصول إلى الحد اليومي",
+  loginRequired: "تسجيل الدخول مطلوب",
+  failedToCreateSession: "فشل في إنشاء الجلسة",
+  profileLoadError: "خطأ في تحميل الملف الشخصي",
+  
+  // Additional core translations
+  speechSynthesisNotSupported: "تركيب الكلام غير مدعوم في هذا المتصفح"
 };
 
 export default generalTranslations;

@@ -2,38 +2,37 @@
 import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
-  // Theme and modes
-  lightMode: "رڼا حالت",
-  darkMode: "تیاره حالت",
+  welcome: "ښه راغلاست",
+  home: "کور",
+  practice: "تمرین",
+  lessons: "درسونه",
+  progress: "پرمختګ",
+  certificates: "سندونه",
+  voiceChat: "غږیز چت",
+  settings: "تنظیمات",
+  profile: "پروفایل",
+  login: "ننوتل",
+  signup: "ثبتول",
+  logout: "وتل",
+  loading: "بارېدونکی...",
+  error: "تېروتنه",
+  save: "ساتل",
+  cancel: "لغوه کول",
+  submit: "سپارل",
+  delete: "حذف کول",
+  edit: "سمول",
+  continue: "ادامه ورکول",
+  back: "شاته",
   
-  // General app info
-  appName: "Palavox",
-  appDescription: "د AI پاړتر ژبې زده کړې پلیټفارم",
-  
-  // Common status messages  
-  pageNotFound: "پاڼه ونه موندل شوه",
-  networkConnectionIssue: "د شبکې اړیکې ستونزه",
-  pleaseWait: "مهرباني وکړئ انتظار وکړئ",
-  sessionExpired: "د غونډې وخت پای ته ورسید",
-  dailyLimitReached: "ورځنی حد ته ورسید",
-  failedToCreateSession: "د غونډې جوړول ناکام شو",
-  speechSynthesisNotSupported: "د خبرو جوړول د دې ویب براوزر لخوا نه ملاتړیږي",
-  
-  // Practice modes
-  practiceMode: "د تمرین حالت",
-  freeMode: "وړیا حالت",
-  premiumMode: "ممتاز حالت",
-  
-  // Time and dates
-  today: "نن",
-  yesterday: "پرون",
-  tomorrow: "سبا",
-  thisWeek: "دا اونۍ",
-  lastWeek: "تېره اونۍ",
-  nextWeek: "راتلونکې اونۍ",
-  thisMonth: "دا میاشت",
-  lastMonth: "تېره میاشت",
-  nextMonth: "راتلونکې میاشت"
+  // Additional navigation items
+  textPractice: "لیکلی تمرین",
+  unlimitedVoicePractice: "نامحدود غږیز تمرین",
+  loginRequiredForFeature: "د دې ځانګړتیا کارولو لپاره باید ننوتل وکړئ",
+  parentalControls: "د والدینو کنټرولونه",
+  safetyPolicy: "د خوندیتوب تګلاره",
+  ferpaPrivacy: "د FERPA محرمیت",
+  chatWithAI: "د {{language}} تمرین لپاره زموږ د AI استاد سره خبرې وکړئ",
+  practiceYourLanguage: "خپل {{language}} تمرین کړئ"
 };
 
 export default generalTranslations;

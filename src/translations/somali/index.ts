@@ -1,10 +1,21 @@
 
 import { TranslationRecord } from "../types";
-import somaliCoreTranslations from "./core";
+import languageSelectionTranslations from "./language-selection";
+import languagesTranslations from "./languages";
+import practiceTranslations from "./practice";
+import classroomTranslations from "./classroom";
+import voiceChatTranslations from "./voice-chat";
+import premiumVoiceTranslations from "./premium-voice";
+import generalTranslations from "./general";
 
-// Use only the clean core translations for Somali
 const somaliTranslations: TranslationRecord = {
-  ...somaliCoreTranslations
+  ...languageSelectionTranslations,
+  ...languagesTranslations,
+  ...practiceTranslations,
+  ...classroomTranslations,
+  ...voiceChatTranslations,
+  ...premiumVoiceTranslations,
+  ...generalTranslations
 };
 
 export default somaliTranslations;

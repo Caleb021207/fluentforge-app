@@ -1,12 +1,22 @@
 
 import { TranslationRecord } from "../types";
-import germanCoreTranslations from "./core";
-import germanPracticeTranslations from "./practice";
+import generalCoreTranslations from "./general-core";
+import voiceChatTranslations from "./voice-chat";
+import practiceTranslations from "./practice";
+import uiElementsTranslations from "./ui-elements";
+import languageSelectionTranslations from "./language-selection";
+import authTranslations from "./auth";
+import navigationTranslations from "./navigation";
 
-// Complete German translations with practice integration
+// Combine all the translation categories
 const germanTranslations: TranslationRecord = {
-  ...germanCoreTranslations,
-  ...germanPracticeTranslations
+  ...generalCoreTranslations,
+  ...voiceChatTranslations,
+  ...practiceTranslations,
+  ...uiElementsTranslations,
+  ...languageSelectionTranslations,
+  ...authTranslations,
+  ...navigationTranslations,
 };
 
 export default germanTranslations;

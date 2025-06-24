@@ -1,12 +1,22 @@
 
 import { TranslationRecord } from "../types";
-import gujaratiGeneralTranslations from "./general-core";
-import gujaratiPracticeTranslations from "./practice";
+import generalCoreTranslations from "./general-core";
+import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
+import languageSelectionTranslations from "./language-selection";
+import uiElementsTranslations from "./ui-elements";
+import navigationTranslations from "./navigation";
+import authTranslations from "./auth";
 
-// Complete Gujarati translations with practice integration
+// Combine all the translation categories
 const gujaratiTranslations: TranslationRecord = {
-  ...gujaratiGeneralTranslations,
-  ...gujaratiPracticeTranslations
+  ...generalCoreTranslations,
+  ...practiceTranslations,
+  ...voiceChatTranslations,
+  ...languageSelectionTranslations,
+  ...uiElementsTranslations,
+  ...navigationTranslations,
+  ...authTranslations,
 };
 
 export default gujaratiTranslations;

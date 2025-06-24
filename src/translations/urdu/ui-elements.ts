@@ -60,18 +60,6 @@ const uiElementsTranslations: TranslationRecord = {
   myClasses: "میری کلاسز",
   myClass: "میری کلاس",
   loginRequiredForFeature: "اس خصوصیت کا استعمال کرنے کے لیے لاگ ان کریں",
-  
-  // Missing translations that were showing in English
-  signedInAs: "اس نام سے لاگ ان:",
-  startChatting: "چیٹ شروع کریں",
-  typeMessageBelow: "شروع کرنے کے لیے نیچے پیغام لکھیں",
-  typeMessageToPractice: "{{language}} کی مشق کے لیے اپنا پیغام لکھیں...",
-  currentLanguage: "موجودہ زبان",
-  practiceLanguage: "مشق کی زبان",
-  
-  // Light/Dark mode
-  lightMode: "روشن موڈ",
-  darkMode: "تاریک موڈ"
 };
 
 export default uiElementsTranslations;

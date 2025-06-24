@@ -1,12 +1,20 @@
 
 import { TranslationRecord } from "../types";
-import pashtoCoreTranslations from "./core";
-import pashtoPracticeTranslations from "./practice";
+import generalTranslations from "./general";
+import uiElementsTranslations from "./ui-elements";
+import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
+import languagesTranslations from "./languages";
+import voiceChatTranslations from "./voice-chat";
 
-// Complete Pashto translations with practice integration
+// Combine all the translation categories
 const pashtoTranslations: TranslationRecord = {
-  ...pashtoCoreTranslations,
-  ...pashtoPracticeTranslations
+  ...generalTranslations,
+  ...uiElementsTranslations,
+  ...languageSelectionTranslations,
+  ...practiceTranslations,
+  ...languagesTranslations,
+  ...voiceChatTranslations,
 };
 
 export default pashtoTranslations;

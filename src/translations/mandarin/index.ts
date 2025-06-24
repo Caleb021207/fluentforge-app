@@ -1,10 +1,38 @@
 
 import { TranslationRecord } from "../types";
-import mandarinCoreTranslations from "./core";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
+import generalTranslations from "./general";
+import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
+import certificatesTranslations from "./certificates";
+import progressTranslations from "./progress";
+import profileTranslations from "./profile";
+import voiceChatTranslations from "./voice-chat";
+import premiumVoiceTranslations from "./premium-voice";
+import languageFrameworksTranslations from "./language-frameworks";
+import authTranslations from "./auth";
+import languagesTranslations from "./languages";
+import navigationTranslations from "./navigation";
+import settingsTranslations from "./settings";
 
-// Use only the clean core translations for Mandarin
+// Combine all the translation categories
 const mandarinTranslations: TranslationRecord = {
-  ...mandarinCoreTranslations
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
+  ...generalTranslations,
+  ...languageSelectionTranslations,
+  ...practiceTranslations,
+  ...certificatesTranslations,
+  ...progressTranslations,
+  ...profileTranslations,
+  ...voiceChatTranslations,
+  ...premiumVoiceTranslations,
+  ...languageFrameworksTranslations,
+  ...authTranslations,
+  ...languagesTranslations,
+  ...navigationTranslations,
+  ...settingsTranslations,
 };
 
 export default mandarinTranslations;

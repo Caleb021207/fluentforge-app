@@ -13,23 +13,22 @@ const navigationTranslations: TranslationRecord = {
   lessons: "درسونه",
   profile: "پروفایل",
   settings: "تنظیمات",
-  premium: "ممتاز",
+  premium: "ځانګړي",
   logout: "وتل",
   login: "ننوتل",
   register: "ثبتول",
-  classes: "ټولګي",
-  teacherClasses: "د ښوونکي ټولګي",
-  studentClass: "د زده کوونکي ټولګی",
+  classes: "ټولګۍ",
+  teacherClasses: "د ښوونکي ټولګۍ",
+  studentClass: "د زده کوونکي ټولګي",
   switchLanguage: "ژبه بدلول",
   help: "مرسته",
-  about: "په اړه",
+  about: "زموږ د دې اړه",
   contact: "اړیکه",
   termsOfService: "د خدماتو شرایط",
-  privacyPolicy: "د محرمیت تګلاره",
-  cookiePolicy: "د کوکي تګلاره",
+  privacyPolicy: "د محرمیت پالیسي",
+  cookiePolicy: "د کوکۍ پالیسي",
   accessibilityStatement: "د لاسرسي بیان",
-  pronunciationPractice: "د تلفظ تمرین",
-  aiAnalysis: "د AI تحلیل"
+  pronunciationPractice: "د تلفظ تمرین"
 };
 
 export default navigationTranslations;

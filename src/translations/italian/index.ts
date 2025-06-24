@@ -1,14 +1,22 @@
 
 import { TranslationRecord } from "../types";
-import italianCoreTranslations from "./core";
-import italianPracticeTranslations from "./practice";
-import italianVoiceChatTranslations from "./voice-chat";
+import generalCoreTranslations from "./general-core";
+import voiceChatTranslations from "./voice-chat";
+import practiceTranslations from "./practice";
+import uiElementsTranslations from "./ui-elements";
+import languageSelectionTranslations from "./language-selection";
+import authTranslations from "./auth";
+import navigationTranslations from "./navigation";
 
-// Complete Italian translations with practice and voice chat integration
+// Combine all the translation categories
 const italianTranslations: TranslationRecord = {
-  ...italianCoreTranslations,
-  ...italianPracticeTranslations,
-  ...italianVoiceChatTranslations
+  ...generalCoreTranslations,
+  ...voiceChatTranslations,
+  ...practiceTranslations,
+  ...uiElementsTranslations,
+  ...languageSelectionTranslations,
+  ...authTranslations,
+  ...navigationTranslations,
 };
 
 export default italianTranslations;

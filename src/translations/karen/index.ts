@@ -1,10 +1,22 @@
 
 import { TranslationRecord } from "../types";
-import karenCoreTranslations from "./core";
+import generalCoreTranslations from "./general-core";
+import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
+import languageSelectionTranslations from "./language-selection";
+import uiElementsTranslations from "./ui-elements";
+import navigationTranslations from "./navigation";
+import authTranslations from "./auth";
 
-// Use only the clean core translations for Karen
+// Combine all the translation categories
 const karenTranslations: TranslationRecord = {
-  ...karenCoreTranslations
+  ...generalCoreTranslations,
+  ...practiceTranslations,
+  ...voiceChatTranslations,
+  ...languageSelectionTranslations,
+  ...uiElementsTranslations,
+  ...navigationTranslations,
+  ...authTranslations,
 };
 
 export default karenTranslations;

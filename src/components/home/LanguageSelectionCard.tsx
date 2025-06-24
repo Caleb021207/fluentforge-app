@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,7 @@ const LanguageSelectionCard = ({
 }: LanguageSelectionCardProps) => {
   const { t } = useLocalization();
 
-  // Languages in their native names with flag emojis (only well-supported languages)
+  // Languages in their native names with flag emojis
   const NATIVE_LANGUAGE_NAMES = {
     english: "🇺🇸 English",
     spanish: "🇪🇸 Español",
@@ -33,6 +34,7 @@ const LanguageSelectionCard = ({
     korean: "🇰🇷 한국어",
     arabic: "🇸🇦 العربية",
     mandarin: "🇨🇳 中文",
+    cantonese: "🇭🇰 廣東話",
     vietnamese: "🇻🇳 Tiếng Việt",
     french: "🇫🇷 Français",
     japanese: "🇯🇵 日本語",
@@ -41,19 +43,33 @@ const LanguageSelectionCard = ({
     hindi: "🇮🇳 हिन्दी",
     indonesian: "🇮🇩 Bahasa Indonesia",
     farsi: "🇮🇷 فارسی",
+    urdu: "🇵🇰 اردو",
+    pashto: "🇦🇫 پښتو",
+    swahili: "🇰🇪 Kiswahili",
     bengali: "🇧🇩 বাংলা",
+    somali: "🇸🇴 Soomaali",
+    yoruba: "🇳🇬 Yorùbá",
+    amharic: "🇪🇹 አማርኛ",
+    malayalam: "🇮🇳 മലയാളം",
     polish: "🇵🇱 Polski",
     turkish: "🇹🇷 Türkçe",
+    romanian: "🇷🇴 Română",
+    haitian: "🇭🇹 Kreyòl Ayisyen",
+    igbo: "🇳🇬 Igbo",
     tagalog: "🇵🇭 Tagalog",
     german: "🇩🇪 Deutsch",
     italian: "🇮🇹 Italiano",
     thai: "🇹🇭 ภาษาไทย",
+    // Re-adding the previously removed languages
+    gujarati: "🇮🇳 ગુજરાતી",
+    punjabi: "🇮🇳 ਪੰਜਾਬੀ",
+    nepali: "🇳🇵 नेपाली",
   };
 
   // Available target languages based on native language
   const availableTargetLanguages = getAvailableTargetLanguages(nativeLanguage);
   
-  // Target language flags and names mapping (only well-supported languages)
+  // Target language flags and names mapping
   const TARGET_LANGUAGE_NAMES = {
     english: "🇺🇸 English",
     spanish: "🇪🇸 Spanish",
@@ -69,13 +85,27 @@ const LanguageSelectionCard = ({
     hindi: "🇮🇳 Hindi",
     indonesian: "🇮🇩 Indonesian",
     farsi: "🇮🇷 Farsi/Dari",
+    urdu: "🇵🇰 Urdu",
+    pashto: "🇦🇫 Pashto",
+    swahili: "🇰🇪 Swahili",
     bengali: "🇧🇩 Bengali",
+    somali: "🇸🇴 Somali",
+    yoruba: "🇳🇬 Yoruba",
+    amharic: "🇪🇹 Amharic",
+    malayalam: "🇮🇳 Malayalam",
     polish: "🇵🇱 Polish",
     turkish: "🇹🇷 Turkish",
+    romanian: "🇷🇴 Romanian",
+    haitian: "🇭🇹 Haitian Creole",
+    igbo: "🇳🇬 Igbo",
     tagalog: "🇵🇭 Filipino/Tagalog",
     german: "🇩🇪 German",
     italian: "🇮🇹 Italian",
     thai: "🇹🇭 Thai",
+    // Re-adding the previously removed languages
+    gujarati: "🇮🇳 Gujarati",
+    punjabi: "🇮🇳 Punjabi",
+    nepali: "🇳🇵 Nepali",
   };
   
   // Determine disabled options based on native language

@@ -1,12 +1,22 @@
 
 import { TranslationRecord } from "../types";
-import thaiCoreTranslations from "./core";
-import thaiPracticeTranslations from "./practice";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
+import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
+import authTranslations from "./auth";
+import navigationTranslations from "./navigation";
 
-// Complete Thai translations with practice integration
+// Combine all the translation categories
 const thaiTranslations: TranslationRecord = {
-  ...thaiCoreTranslations,
-  ...thaiPracticeTranslations
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
+  ...languageSelectionTranslations,
+  ...practiceTranslations,
+  ...voiceChatTranslations,
+  ...authTranslations,
+  ...navigationTranslations,
 };
 
 export default thaiTranslations;

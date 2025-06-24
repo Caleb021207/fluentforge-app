@@ -1,12 +1,22 @@
 
 import { TranslationRecord } from "../types";
-import farsiCoreTranslations from "./core";
-import farsiPracticeTranslations from "./practice";
+import generalTranslations from "./general";
+import languageSelectionTranslations from "./language-selection";
+import practiceTranslations from "./practice";
+import authTranslations from "./auth";
+import languagesTranslations from "./languages";
+import uiElementsTranslations from "./ui-elements";
+import voiceChatTranslations from "./voice-chat";
 
-// Complete Farsi translations with practice integration
+// Combine all the translation categories
 const farsiTranslations: TranslationRecord = {
-  ...farsiCoreTranslations,
-  ...farsiPracticeTranslations
+  ...generalTranslations,
+  ...languageSelectionTranslations,
+  ...practiceTranslations,
+  ...authTranslations,
+  ...languagesTranslations,
+  ...uiElementsTranslations,
+  ...voiceChatTranslations,
 };
 
 export default farsiTranslations;

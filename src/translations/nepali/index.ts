@@ -1,12 +1,20 @@
 
 import { TranslationRecord } from "../types";
-import nepaliCoreTranslations from "./core";
-import nepaliPracticeTranslations from "./practice";
+import generalCoreTranslations from "./general-core";
+import uiElementsTranslations from "./ui-elements";
+import practiceTranslations from "./practice";
+import profileTranslations from "./profile";
+import voiceChatTranslations from "./voice-chat";
+import landingAuthTranslations from "./landing-auth";
 
-// Complete Nepali translations with practice integration
+// Combine all the translation categories
 const nepaliTranslations: TranslationRecord = {
-  ...nepaliCoreTranslations,
-  ...nepaliPracticeTranslations
+  ...generalCoreTranslations,
+  ...uiElementsTranslations,
+  ...practiceTranslations,
+  ...profileTranslations,
+  ...voiceChatTranslations,
+  ...landingAuthTranslations,
 };
 
 export default nepaliTranslations;

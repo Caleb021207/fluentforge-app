@@ -1,52 +1,94 @@
 
 import { TranslationRecord } from "./types";
+import arabic from "./arabic";
+import bengali from "./bengali";
+import cantonese from "./cantonese";
+import english from "./english";
+import farsi from "./farsi";
+import french from "./french";
+import hindi from "./hindi";
+import indonesian from "./indonesian";
+import japanese from "./japanese";
+import korean from "./korean";
+import malayalam from "./malayalam";
+import mandarin from "./mandarin";
+import pashto from "./pashto";
+import polish from "./polish";
+import portuguese from "./portuguese";
+import romanian from "./romanian";
+import russian from "./russian";
+import somali from "./somali";
+import spanish from "./spanish";
+import swahili from "./swahili";
+import tagalog from "./tagalog";
+import turkish from "./turkish";
+import ukrainian from "./ukrainian";
+import urdu from "./urdu";
+import vietnamese from "./vietnamese";
+import yoruba from "./yoruba";
+import amharic from "./amharic";
+import igbo from "./igbo";
+import haitian from "./haitian";
 
-// Import only well-supported language translations
-import englishTranslations from "./english";
-import spanishTranslations from "./spanish";
-import portugueseTranslations from "./portuguese";
-import frenchTranslations from "./french";
-import germanTranslations from "./german";
-import italianTranslations from "./italian";
-import russianTranslations from "./russian";
-import arabicTranslations from "./arabic";
-import japaneseTranslations from "./japanese";
-import koreanTranslations from "./korean";
-import mandarinTranslations from "./mandarin";
-import hindiTranslations from "./hindi";
-import vietnameseTranslations from "./vietnamese";
-import ukrainianTranslations from "./ukrainian";
-import indonesianTranslations from "./indonesian";
-import farsiTranslations from "./farsi";
-import bengaliTranslations from "./bengali";
-import tagalogTranslations from "./tagalog";
-import turkishTranslations from "./turkish";
-import polishTranslations from "./polish";
-import thaiTranslations from "./thai";
+// Import new languages
+import german from "./german";
+import italian from "./italian";
+import thai from "./thai";
+import burmese from "./burmese";
+import karen from "./karen";
+import nepali from "./nepali";
+import tigrinya from "./tigrinya";
+import punjabi from "./punjabi";
+import marathi from "./marathi";
+import gujarati from "./gujarati";
+import sinhala from "./sinhala";
 
-// Main translations object containing only the 21 well-supported languages
+import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "./constants";
+
+// Map of all translations by language code
 const translations: Record<string, TranslationRecord> = {
-  english: englishTranslations,
-  spanish: spanishTranslations,
-  portuguese: portugueseTranslations,
-  french: frenchTranslations,
-  german: germanTranslations,
-  italian: italianTranslations,
-  russian: russianTranslations,
-  arabic: arabicTranslations,
-  japanese: japaneseTranslations,
-  korean: koreanTranslations,
-  mandarin: mandarinTranslations,
-  hindi: hindiTranslations,
-  vietnamese: vietnameseTranslations,
-  ukrainian: ukrainianTranslations,
-  indonesian: indonesianTranslations,
-  farsi: farsiTranslations,
-  bengali: bengaliTranslations,
-  tagalog: tagalogTranslations,
-  turkish: turkishTranslations,
-  polish: polishTranslations,
-  thai: thaiTranslations
+  english,
+  spanish,
+  portuguese,
+  french,
+  japanese,
+  korean,
+  mandarin,
+  cantonese,
+  russian,
+  arabic,
+  hindi,
+  vietnamese,
+  ukrainian,
+  indonesian,
+  farsi,
+  urdu,
+  pashto,
+  swahili,
+  bengali,
+  somali,
+  yoruba,
+  amharic,
+  malayalam,
+  polish,
+  turkish,
+  romanian,
+  igbo,
+  haitian,
+  tagalog,
+  // Add new languages
+  german,
+  italian,
+  thai,
+  burmese,
+  karen,
+  nepali,
+  tigrinya,
+  punjabi,
+  marathi,
+  gujarati,
+  sinhala,
 };
 
+export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };
 export default translations;
