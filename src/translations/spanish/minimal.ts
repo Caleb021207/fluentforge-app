@@ -47,7 +47,7 @@ const minimalTranslations: TranslationRecord = {
   // Hint button
   suggestionResponses: "Sugerencias de Respuestas",
   clickPlayToHearPronunciation: "Haz clic en reproducir para escuchar la pronunciación",
-  startConversationToSeeSuggestions: "Inicia una conversación para ver sugerencias.",
+  startConversationToSeeSuggestions: "Inicia conversación para ver sugerencias.",
   
   // Voice chat
   unlimitedVoicePractice: "Práctica de Voz Ilimitada",
@@ -98,6 +98,20 @@ const minimalTranslations: TranslationRecord = {
   clickStartToRecord: "Haz clic en 'Comenzar' para grabar",
   tryAgain: "Intentar de Nuevo",
   newPhrase: "Nueva Frase",
+  
+  // Complexity levels
+  novice: "Principiante",
+  intermediate: "Intermedio",
+  advanced: "Avanzado",
+  superior: "Superior",
+  noviceLevelDescription: "Puede manejar temas simples y familiares",
+  intermediateLevelDescription: "Puede discutir temas familiares",
+  advancedLevelDescription: "Puede manejar temas complejos con confianza",
+  superiorLevelDescription: "Puede manejar cualquier tarea lingüística",
+  noviceLevelShortDescription: "Frases simples",
+  intermediateLevelShortDescription: "Temas familiares",
+  advancedLevelShortDescription: "Temas complejos",
+  superiorLevelShortDescription: "Cualquier tarea",
   
   // Navigation
   home: "Inicio",

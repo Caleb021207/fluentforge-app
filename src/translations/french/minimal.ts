@@ -99,6 +99,20 @@ const minimalTranslations: TranslationRecord = {
   tryAgain: "Réessayer",
   newPhrase: "Nouvelle Phrase",
   
+  // Complexity levels
+  novice: "Débutant",
+  intermediate: "Intermédiaire",
+  advanced: "Avancé",
+  superior: "Supérieur",
+  noviceLevelDescription: "Peut gérer des sujets simples et familiers",
+  intermediateLevelDescription: "Peut discuter de sujets familiers",
+  advancedLevelDescription: "Peut gérer des sujets complexes avec confiance",
+  superiorLevelDescription: "Peut gérer toute tâche linguistique",
+  noviceLevelShortDescription: "Phrases simples",
+  intermediateLevelShortDescription: "Sujets familiers",
+  advancedLevelShortDescription: "Sujets complexes",
+  superiorLevelShortDescription: "Toute tâche",
+  
   // Navigation
   home: "Accueil",
   textPractice: "Pratique",
