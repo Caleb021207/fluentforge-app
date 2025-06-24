@@ -49,6 +49,14 @@ const minimalTranslations: TranslationRecord = {
   practiceGuideTip3: "이해하지 못하는 것이 있으면 설명을 요청하세요.",
   practiceGuideTip4: "최근에 배운 단어를 사용해 보세요.",
   practiceGuideTip5: "우리 AI는 당신의 실력 수준에 맞춰 점진적으로 향상을 도와드립니다.",
+
+  // Practice Guide - using exact same keys as shown in the UI
+  "Try to form complete sentences, even if they're simple.": "간단하더라도 완전한 문장을 만들어 보세요.",
+  "Don't worry about mistakes — they're part of learning!": "실수를 두려워하지 마세요 - 실수는 학습의 일부입니다!",
+  "Ask for explanations if there's something you don't understand.": "이해하지 못하는 것이 있으면 설명을 요청하세요.",
+  "Use words you've learned recently.": "최근에 배운 단어를 사용해 보세요.",
+  "Our AI will adapt to your skill level and gradually help you improve.": "우리 AI는 당신의 실력 수준에 맞춰 점진적으로 향상을 도와드립니다.",
+  "Here are some tips to get the most out of your {{language}} practice:": "{{language}} 연습을 최대한 활용하기 위한 몇 가지 팁입니다:",
   
   // Hint button - FIXED KEYS
   suggestionResponses: "응답 제안",
@@ -70,6 +78,7 @@ const minimalTranslations: TranslationRecord = {
   aiModelInfo: "AI 모델 정보: 자연어 이해 및 생성을 위해 OpenAI GPT-4o-mini를 사용하며, 음성 응답을 위해 브라우저 기반 음성 합성을 사용합니다.",
   practiceLevel: "연습 수준",
   intermediatePracticeLevel: "중급 - 익숙한 주제에 대해 토론할 수 있음",
+  "Intermediate - Can discuss familiar topics": "중급 - 익숙한 주제에 대해 토론할 수 있음",
   currentLanguage: "현재 언어",
   practiceLanguage: "연습 언어",
   startSpeaking: "말하기 시작",
@@ -87,12 +96,30 @@ const minimalTranslations: TranslationRecord = {
   conversationStarter6: "지난 주말에 무엇을 하셨나요?",
   conversationStarter7: "내일 계획이 무엇인가요?",
   conversationStarter8: "...을/를 스페인어/영어로 어떻게 말하나요?",
+
+  // Voice chat phrases that appear in the UI exactly as shown
+  "Hello, how are you today?": "안녕하세요, 오늘 어떻게 지내세요?",
+  "What's the weather like where you are?": "당신이 있는 곳의 날씨는 어떤가요?",
+  "Can you recommend a good restaurant?": "좋은 레스토랑을 추천해 주실 수 있나요?",
+  "What are your hobbies and interests?": "당신의 취미와 관심사는 무엇인가요?",
+  "Tell me about your favorite book or movie.": "좋아하는 책이나 영화에 대해 말해주세요.",
+  "What did you do last weekend?": "지난 주말에 무엇을 하셨나요?",
+  "What are your plans for tomorrow?": "내일 계획이 무엇인가요?",
+  "How do you say... in Spanish/English?": "...을/를 스페인어/영어로 어떻게 말하나요?",
+
   practiceWithVoiceChat: "음성 채팅으로 연습",
   voiceChatTips: "이 도구를 사용하여 말하기와 듣기 실력을 향상시키세요. 다음은 몇 가지 팁입니다:",
   voiceTip1: "일상적인 주제에 대해 질문하기",
   voiceTip2: "일반적인 문구와 표현 연습하기",
   voiceTip3: "주변에서 보는 것 설명하기",
   voiceTip4: "여행이나 음식과 같은 특정 주제의 어휘 연습하기",
+
+  // Voice chat tips that appear exactly as shown in the UI
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "이 도구를 사용하여 말하기와 듣기 실력을 향상시키세요. 다음은 몇 가지 팁입니다:",
+  "Ask questions about everyday topics": "일상적인 주제에 대해 질문하기",
+  "Practice common phrases and expressions": "일반적인 문구와 표현 연습하기",
+  "Describe what you see around you": "주변에서 보는 것 설명하기",
+  "Practice vocabulary for specific topics like travel or food": "여행이나 음식과 같은 특정 주제의 어휘 연습하기",
   
   // Additional voice chat translations
   startSpeakingToSeeTranscript: "대화를 보려면 말하기를 시작하세요",
