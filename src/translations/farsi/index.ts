@@ -1,22 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import generalTranslations from "./general";
-import languageSelectionTranslations from "./language-selection";
-import practiceTranslations from "./practice";
-import authTranslations from "./auth";
-import languagesTranslations from "./languages";
-import uiElementsTranslations from "./ui-elements";
-import voiceChatTranslations from "./voice-chat";
+import minimalTranslations from "./minimal";
 
-// Combine all the translation categories
+// Use only the minimal translations for Farsi
 const farsiTranslations: TranslationRecord = {
-  ...generalTranslations,
-  ...languageSelectionTranslations,
-  ...practiceTranslations,
-  ...authTranslations,
-  ...languagesTranslations,
-  ...uiElementsTranslations,
-  ...voiceChatTranslations,
+  ...minimalTranslations,
 };
 
 export default farsiTranslations;
