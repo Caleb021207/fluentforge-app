@@ -1,0 +1,248 @@
+
+import { TranslationRecord } from "../types";
+
+const minimalTranslations: TranslationRecord = {
+  // Home page
+  welcomeToLanguageLearning: "語学学習へようこそ",
+  yourPersonalAICompanion: "あなたのAIパートナー",
+  swipeUpToGetStarted: "上にスワイプして開始",
+  selectNativeLanguage: "母語を選択",
+  iSpeak: "話せる言語",
+  saveLanguagePreferences: "言語設定を保存",
+  getStarted: "開始",
+  selectYourLanguagePreferences: "言語設定を選択",
+  
+  // Authentication
+  signIn: "ログイン",
+  signUp: "新規登録",
+  signInToContinue: "続行するにはログインしてください",
+  createAccountToGetStarted: "はじめるにはアカウントを作成",
+  email: "メールアドレス",
+  password: "パスワード",
+  accessPasscode: "アクセスコード",
+  dontHaveAccount: "アカウントをお持ちでないですか？",
+  alreadyHaveAccount: "すでにアカウントがありますか？",
+  
+  // Header
+  loggedInAs: "ログイン中",
+  signedInAs: "ログイン中",
+  logout: "ログアウト",
+  lightMode: "ライトモード",
+  
+  // Practice page
+  practice: "練習",
+  englishPractice: "英語の練習",
+  startChatting: "チャットを開始",
+  startConversationIn: "{{language}}で会話を始めよう",
+  fixGrammar: "文法を修正",
+  correctGrammar: "文法を修正",
+  clearConversation: "会話をリセット",
+  startTextChat: "テキストチャットを開始",
+  startTextChatting: "テキストチャットを開始",
+  typeMessageBelow: "下にメッセージを入力",
+  typeMessageToPractice: "{{language}}で練習するにはメッセージを入力...",
+  send: "送信",
+  
+  // Practice Guide
+  practiceGuide: "{{language}}練習ガイド",
+  practiceGuideTitle: "{{language}}練習ガイド",
+  practiceGuideDescription: "以下は効果的な{{language}}練習のヒントです：",
+  practiceGuideIntro: "以下は効果的な{{language}}練習のヒントです：",
+  practiceGuideTip1: "簡単でも、文全体で話すようにしましょう。",
+  practiceGuideTip2: "間違えても気にしないで！それが学びです。",
+  practiceGuideTip3: "わからなければ質問して大丈夫です。",
+  practiceGuideTip4: "最近覚えた単語を使ってみましょう。",
+  practiceGuideTip5: "AIはあなたのレベルに応じて調整されます。",
+  
+  // Practice tips - using t() keys
+  practiceTip1: "簡単でも、文全体で話すようにしましょう。",
+  practiceTip2: "間違えても気にしないで！それが学びです。",
+  practiceTip3: "わからなければ質問して大丈夫です。",
+  practiceTip4: "最近覚えた単語を使ってみましょう。",
+  practiceTip5: "AIはあなたのレベルに応じて調整されます。",
+
+  // Practice Guide - using exact same keys as shown in the UI
+  "Try to form complete sentences, even if they're simple.": "簡単でも、文全体で話すようにしましょう。",
+  "Don't worry about mistakes — they're part of learning!": "間違えても気にしないで！それが学びです。",
+  "Ask for explanations if there's something you don't understand.": "わからなければ質問して大丈夫です。",
+  "Use words you've learned recently.": "最近覚えた単語を使ってみましょう。",
+  "Our AI will adapt to your skill level and gradually help you improve.": "AIはあなたのレベルに応じて調整されます。",
+  "Here are some tips to get the most out of your {{language}} practice:": "以下は効果的な{{language}}練習のヒントです：",
+  
+  // Hint button
+  suggestionResponses: "返答のヒント",
+  responseSuggestions: "返答のヒント",
+  clickPlayToHearPronunciation: "再生をクリックして発音を聞く",
+  startConversationForSuggestions: "会話を始めて提案を表示",
+  startConversationToSeeSuggestions: "会話を始めて提案を表示",
+  getResponseSuggestions: "返答の提案を取得",
+  greetings: "挨拶",
+  questions: "質問",
+  error: "エラー",
+  couldNotGenerateHints: "ヒントを生成できませんでした",
+  failedToPlayAudio: "音声の再生に失敗しました",
+  play: "再生",
+  
+  // Voice chat
+  unlimitedVoicePractice: "無制限ボイス練習",
+  practiceDescription: "練習の説明",
+  aiModelInfo: "AIモデル情報：OpenAI GPT-4o-miniで自然言語を理解・生成し、ブラウザ音声合成で応答します。",
+  practiceLevel: "練習レベル",
+  intermediatePracticeLevel: "中級 - 慣れたテーマで会話可能",
+  "Intermediate - Can discuss familiar topics": "中級 - 慣れたテーマで会話可能",
+  
+  // CEFR Level Descriptions
+  cefrB1Description: "中級 - 慣れたテーマで会話可能",
+  cefrA1Description: "初級者 - 基本的なフレーズと表現",
+  cefrA2Description: "基礎 - 簡単な日常会話",
+  cefrB2Description: "中上級 - 流暢にコミュニケーション",
+  
+  currentLanguage: "現在の言語",
+  practiceLanguage: "練習言語",
+  startSpeaking: "話し始める",
+  stopListening: "聞き取り停止",
+  listeningNow: "聞き取り中",
+  youSaid: "あなたの発言",
+  conversationStarters: "会話のきっかけ",
+  howToStartConversation: "会話の始め方",
+  tryThesePhrases: "以下のフレーズを試してください：",
+  conversationStarter1: "こんにちは、今日はどうですか？",
+  conversationStarter2: "そちらの天気はどう？",
+  conversationStarter3: "おすすめのレストランありますか？",
+  conversationStarter4: "趣味は何ですか？",
+  conversationStarter5: "好きな本や映画について教えてください。",
+  conversationStarter6: "先週末は何をしましたか？",
+  conversationStarter7: "明日の予定は？",
+  conversationStarter8: "「...」は英語/スペイン語でどう言う？",
+
+  // Voice chat phrases that appear in the UI exactly as shown
+  "Hello, how are you today?": "こんにちは、今日はどうですか？",
+  "What's the weather like where you are?": "そちらの天気はどう？",
+  "Can you recommend a good restaurant?": "おすすめのレストランありますか？",
+  "What are your hobbies and interests?": "趣味は何ですか？",
+  "Tell me about your favorite book or movie.": "好きな本や映画について教えてください。",
+  "What did you do last weekend?": "先週末は何をしましたか？",
+  "What are your plans for tomorrow?": "明日の予定は？",
+  "How do you say... in Spanish/English?": "「...」は英語/スペイン語でどう言う？",
+
+  practiceWithVoiceChat: "音声チャットで練習",
+  voiceChatTips: "このツールでスピーキングとリスニングスキルを向上させましょう。ヒント：",
+  voiceTip1: "日常の質問をしてみましょう",
+  voiceTip2: "よく使う表現を練習",
+  voiceTip3: "周囲のものを説明する練習",
+  voiceTip4: "旅行や食べ物などのテーマに集中",
+
+  // Voice chat tips that appear exactly as shown in the UI
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "このツールでスピーキングとリスニングスキルを向上させましょう。ヒント：",
+  "Ask questions about everyday topics": "日常の質問をしてみましょう",
+  "Practice common phrases and expressions": "よく使う表現を練習",
+  "Describe what you see around you": "周囲のものを説明する練習",
+  "Practice vocabulary for specific topics like travel or food": "旅行や食べ物などのテーマに集中",
+  
+  // Additional voice chat translations
+  startSpeakingToSeeTranscript: "話し始めて文字起こしを表示",
+  clickMicrophoneToStartRecording: "マイクをクリックして録音開始",
+  
+  // Premium Voice Chat
+  premiumVoiceChat: "プレミアム音声チャット",
+  premiumVoiceChatBenefits: "プレミアム音声のメリット",
+  premiumVoiceChatDescription: "AI上級チューターとの自然な音声会話で{{practice}}を練習！AIが文法、語彙、発音を修正してくれます。",
+  premiumVoiceNote: "プレミアム音声チャットは週10分のセッションに制限されています",
+  premiumVoiceNoteWithReset: "プレミアム音声チャットは週10分の練習時間が許可されています。時間は毎週月曜日午前6時（中部時間）にリセットされます。",
+  benefitNaturalVoice: "ElevenLabs技術による自然で人間らしい音声インタラクション",
+  benefitAccentPronunciation: "イマーシブ学習のための正確なアクセントと発音",
+  benefitRegularPractice: "週10分の練習時間、毎週月曜日午前6時にリセット",
+  
+  // Pronunciation practice
+  pronunciationPractice: "発音練習",
+  improvePronunciationSkillsWith: "レベル別練習で発音を改善",
+  selectComplexityLevel: "難易度を選択",
+  chooseDifficultyLevelBasedOn: "自分のレベルに合った難易度を選んでください",
+  speechRate: "話す速度",
+  selectLevelToStart: "開始するレベルを選択",
+  startExercise: "練習を始める",
+  pronunciationPracticeTips: "発音練習のコツ",
+  listenCarefullyTip: "録音前によく聞いて理解しましょう",
+  payAttentionToStressTip: "アクセントとイントネーションに注意",
+  practiceDifficultSoundsTip: "難しい音を繰り返し練習",
+  recordYourselfTip: "自分の声を録音し、ネイティブと比較",
+  bePatientTip: "忍耐が必要 — 上達には時間がかかります",
+  practiceExercise: "練習内容",
+  topic: "トピック",
+  listenToPhrase: "フレーズを聞く",
+  clickWordToHear: "単語をクリックして再生",
+  yourPronunciation: "あなたの発音",
+  startRecording: "録音を開始",
+  clickStartToRecord: "『開始』をクリックして録音",
+  tryAgain: "もう一度試す",
+  newPhrase: "新しいフレーズ",
+  generatingExercise: "練習を生成中",
+  generatingNewPhrase: "新しいフレーズを生成中",
+  levelDescription: "レベルの説明",
+  failedToGeneratePhrase: "フレーズの生成に失敗しました",
+  noSpeechDetected: "音声が検出されませんでした",
+  pleaseTryAgain: "もう一度お試しください",
+  failedToAnalyzePronunciation: "発音分析に失敗しました",
+  
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "発音フィードバック",
+  accuracyScore: "正確度スコア",
+  intonationScore: "イントネーションスコア",
+  fluencyScore: "流暢さスコア",
+  complexityScore: "複雑さスコア",
+  wordAnalysis: "単語分析",
+  phonemeAnalysis: "音素分析",
+  overallFeedback: "総合フィードバック",
+  excellent: "優秀",
+  good: "良い",
+  fair: "普通",
+  needsImprovement: "改善が必要",
+  
+  // Additional UI elements
+  processing: "処理中",
+  stopRecording: "録音停止",
+  listeningToYou: "あなたの話を聞いています",
+  realTimeTranscription: "リアルタイム文字起こし",
+  yourTranscription: "あなたの文字起こし",
+  playing: "再生中",
+  
+  // Complexity levels
+  novice: "初級",
+  intermediate: "中級",
+  advanced: "上級",
+  superior: "流暢",
+  noviceLevelDescription: "基本的でよくある話題に対応できる",
+  intermediateLevelDescription: "慣れた内容で会話ができる",
+  advancedLevelDescription: "複雑なテーマでも自信を持って話せる",
+  superiorLevelDescription: "あらゆる言語タスクに対応可能",
+  noviceLevelShortDescription: "簡単なフレーズ",
+  intermediateLevelShortDescription: "慣れたテーマ",
+  advancedLevelShortDescription: "複雑なテーマ",
+  superiorLevelShortDescription: "すべてのタスク",
+  
+  // Navigation
+  home: "ホーム",
+  textPractice: "練習",
+  unlimitedVoicePracticeNav: "無制限ボイス練習",
+  pronunciationPracticeNav: "発音練習",
+  aiAnalysis: "AI分析",
+  profile: "プロフィール",
+  settings: "設定",
+  
+  // Transcript Analysis - English placeholders as requested
+  progressOverview: "Progress Overview",
+  trackLanguageLearningJourney: "Track Language Learning Journey",
+  aiProgressAnalysis: "AI Progress Analysis",
+  uploadLanguageTestTranscripts: "Upload language test transcripts",
+  totalAnalyses: "Total Analyses",
+  currentLevel: "Current Level",
+  latestScore: "Latest Score",
+  uploadAndAnalyze: "Upload and Analyze",
+  analysisResults: "Analysis Results",
+  progressTimeline: "Progress Timeline",
+  firstTest: "First Test",
+  latestTest: "Latest Test",
+  improvement: "Improvement"
+};
+
+export default minimalTranslations;
