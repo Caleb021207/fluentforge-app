@@ -1,22 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import generalCoreTranslations from "./general-core";
-import voiceChatTranslations from "./voice-chat";
-import practiceTranslations from "./practice";
-import uiElementsTranslations from "./ui-elements";
-import languageSelectionTranslations from "./language-selection";
-import authTranslations from "./auth";
-import navigationTranslations from "./navigation";
+import minimalTranslations from "./minimal";
 
-// Combine all the translation categories
+// Use only the minimal translations for Italian
 const italianTranslations: TranslationRecord = {
-  ...generalCoreTranslations,
-  ...voiceChatTranslations,
-  ...practiceTranslations,
-  ...uiElementsTranslations,
-  ...languageSelectionTranslations,
-  ...authTranslations,
-  ...navigationTranslations,
+  ...minimalTranslations,
 };
 
 export default italianTranslations;
