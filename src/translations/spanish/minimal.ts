@@ -1,0 +1,112 @@
+
+import { TranslationRecord } from "../types";
+
+const minimalTranslations: TranslationRecord = {
+  // Home page
+  welcomeToLanguageLearning: "Bienvenido al aprendizaje de idiomas",
+  yourPersonalAICompanion: "Tu compañero personal de IA",
+  swipeUpToGetStarted: "Desliza hacia arriba para comenzar",
+  selectNativeLanguage: "Selecciona idioma nativo",
+  iSpeak: "Yo hablo",
+  saveLanguagePreferences: "Guardar preferencias de idioma",
+  
+  // Authentication
+  signIn: "Iniciar Sesión",
+  signUp: "Crear Cuenta",
+  signInToContinue: "Iniciar Sesión",
+  createAccountToGetStarted: "Crear Cuenta",
+  email: "Correo Electrónico",
+  password: "Contraseña",
+  accessPasscode: "Código de Acceso",
+  dontHaveAccount: "¿No tienes cuenta?",
+  alreadyHaveAccount: "¿Ya tienes cuenta?",
+  
+  // Header
+  loggedInAs: "Conectado como",
+  logout: "Cerrar Sesión",
+  
+  // Practice page
+  practice: "Práctica",
+  englishPractice: "Práctica de English",
+  startChatting: "Comenzar Conversación",
+  startConversationIn: "Comenzar conversación en {{language}}",
+  fixGrammar: "Corregir Gramática",
+  clearConversation: "Limpiar Conversación",
+  startTextChat: "Comenzar Chat de Texto",
+  typeMessageBelow: "Escribe un mensaje abajo",
+  typeMessageToPractice: "Escribe tu mensaje para practicar {{language}}...",
+  send: "Enviar",
+  practiceGuideTitle: "Guía de práctica de {{language}}",
+  practiceGuideIntro: "Aquí tienes algunos consejos para aprovechar al máximo tu práctica de {{language}}:",
+  practiceGuideTip1: "Trata de formar oraciones completas, aunque sean simples.",
+  practiceGuideTip2: "¡No te preocupes por los errores, son parte del aprendizaje!",
+  practiceGuideTip3: "Pide explicaciones si hay algo que no entiendes.",
+  practiceGuideTip4: "Trata de usar palabras que hayas aprendido recientemente.",
+  practiceGuideTip5: "Nuestra IA se adaptará a tu nivel de habilidad y gradualmente te ayudará a mejorar.",
+  
+  // Hint button
+  suggestionResponses: "Sugerencias de Respuestas",
+  clickPlayToHearPronunciation: "Haz clic en reproducir para escuchar la pronunciación",
+  startConversationToSeeSuggestions: "Inicia una conversación para ver sugerencias.",
+  
+  // Voice chat
+  unlimitedVoicePractice: "Práctica de Voz Ilimitada",
+  practiceDescription: "Descripción de práctica",
+  aiModelInfo: "Información del modelo de IA: Se utiliza OpenAI GPT-4o-mini para la comprensión y generación del lenguaje natural, con síntesis de voz basada en navegador para respuestas de voz.",
+  practiceLevel: "Nivel de práctica",
+  intermediatePracticeLevel: "Intermedio - Puede discutir temas familiares",
+  currentLanguage: "idioma actual",
+  practiceLanguage: "idioma de práctica",
+  startSpeaking: "Comenzar a Hablar",
+  conversationStarters: "Iniciadores de Conversación",
+  tryThesePhrases: "Prueba estas frases para comenzar una conversación:",
+  conversationStarter1: "Hola, ¿cómo estás hoy?",
+  conversationStarter2: "¿Cómo está el clima donde estás?",
+  conversationStarter3: "¿Puedes recomendar un buen restaurante?",
+  conversationStarter4: "¿Cuáles son tus pasatiempos e intereses?",
+  conversationStarter5: "Háblame de tu libro o película favorita.",
+  conversationStarter6: "¿Qué hiciste el fin de semana pasado?",
+  conversationStarter7: "¿Cuáles son tus planes para mañana?",
+  conversationStarter8: "¿Cómo se dice... en español/inglés?",
+  practiceWithVoiceChat: "Práctica con Chat de Voz",
+  voiceChatTips: "Usa esta herramienta para mejorar tus habilidades de habla y escucha. Aquí tienes algunos consejos:",
+  voiceTip1: "Haz preguntas sobre temas cotidianos",
+  voiceTip2: "Practica frases y expresiones comunes",
+  voiceTip3: "Describe lo que ves a tu alrededor",
+  voiceTip4: "Practica vocabulario para temas específicos como viajes o comida",
+  
+  // Pronunciation practice
+  pronunciationPractice: "Práctica de Pronunciación",
+  improvePronunciationSkillsWith: "Mejora tus habilidades de pronunciación con ejercicios dirigidos",
+  selectComplexityLevel: "Seleccionar Nivel de Complejidad",
+  chooseDifficultyLevelBasedOn: "Elige el nivel de dificultad basado en tus habilidades lingüísticas",
+  speechRate: "Velocidad del Habla",
+  selectLevelToStart: "Selecciona un nivel para comenzar la práctica",
+  startExercise: "Comenzar Ejercicio",
+  pronunciationPracticeTips: "Consejos de Práctica de Pronunciación",
+  listenCarefullyTip: "Escucha atentamente el audio antes de intentar hablar",
+  payAttentionToStressTip: "Presta atención a los patrones de estrés y entonación",
+  practiceDifficultSoundsTip: "Practica sonidos difíciles varias veces",
+  recordYourselfTip: "Grábate y compara con hablantes nativos",
+  bePatientTip: "Ten paciencia - mejorar la pronunciación toma tiempo",
+  practiceExercise: "Ejercicio de Práctica",
+  topic: "Tema",
+  listenToPhrase: "Escuchar Frase",
+  clickWordToHear: "Haz clic en la palabra para escuchar",
+  yourPronunciation: "Tu Pronunciación",
+  startRecording: "Comenzar Grabación",
+  clickStartToRecord: "Haz clic en 'Comenzar' para grabar",
+  tryAgain: "Intentar de Nuevo",
+  newPhrase: "Nueva Frase",
+  
+  // Navigation
+  home: "Inicio",
+  textPractice: "Práctica",
+  unlimitedVoicePracticeNav: "Práctica de Voz Ilimitada",
+  pronunciationPracticeNav: "Práctica de Pronunciación",
+  aiAnalysis: "Análisis IA",
+  profile: "Perfil",
+  settings: "Configuración"
+};
+
+export default minimalTranslations;

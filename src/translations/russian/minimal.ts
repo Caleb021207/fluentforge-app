@@ -1,0 +1,112 @@
+
+import { TranslationRecord } from "../types";
+
+const minimalTranslations: TranslationRecord = {
+  // Home page
+  welcomeToLanguageLearning: "Добро пожаловать в изучение языков",
+  yourPersonalAICompanion: "Ваш персональный ИИ-компаньон",
+  swipeUpToGetStarted: "Проведите вверх, чтобы начать",
+  selectNativeLanguage: "Выберите родной язык",
+  iSpeak: "Я говорю",
+  saveLanguagePreferences: "Сохранить языковые настройки",
+  
+  // Authentication
+  signIn: "Войти",
+  signUp: "Создать аккаунт",
+  signInToContinue: "Войти",
+  createAccountToGetStarted: "Создать аккаунт",
+  email: "Электронная почта",
+  password: "Пароль",
+  accessPasscode: "Access Passcode",
+  dontHaveAccount: "Нет аккаунта?",
+  alreadyHaveAccount: "Уже есть аккаунт?",
+  
+  // Header
+  loggedInAs: "Вошли как",
+  logout: "Выйти",
+  
+  // Practice page
+  practice: "Практика",
+  englishPractice: "English Практика",
+  startChatting: "Начать разговор",
+  startConversationIn: "Начать разговор на {{language}}",
+  fixGrammar: "Исправить грамматику",
+  clearConversation: "Очистить разговор",
+  startTextChat: "Начать текстовый чат",
+  typeMessageBelow: "Введите сообщение ниже",
+  typeMessageToPractice: "Введите сообщение для практики {{language}}...",
+  send: "Отправить",
+  practiceGuideTitle: "Руководство по практике {{language}}",
+  practiceGuideIntro: "Вот несколько советов, чтобы максимально эффективно практиковать {{language}}:",
+  practiceGuideTip1: "Старайтесь составлять полные предложения, даже если они простые.",
+  practiceGuideTip2: "Не беспокойтесь об ошибках — они являются частью обучения!",
+  practiceGuideTip3: "Просите объяснения, если что-то непонятно.",
+  practiceGuideTip4: "Попробуйте использовать недавно изученные слова.",
+  practiceGuideTip5: "Наш ИИ адаптируется к вашему уровню навыков и постепенно поможет вам улучшиться.",
+  
+  // Hint button
+  suggestionResponses: "Предложения ответов",
+  clickPlayToHearPronunciation: "Нажмите воспроизведение, чтобы услышать произношение",
+  startConversationToSeeSuggestions: "Start a conversation to see suggestions.",
+  
+  // Voice chat
+  unlimitedVoicePractice: "Безлимитная голосовая практика",
+  practiceDescription: "Описание практики",
+  aiModelInfo: "Информация о модели AI: OpenAI GPT-4o-mini используется для понимания и генерации естественного языка, а синтез речи на основе браузера используется для голосовых ответов.",
+  practiceLevel: "Уровень практики",
+  intermediatePracticeLevel: "Средний - Может обсуждать знакомые темы",
+  currentLanguage: "currentLanguage",
+  practiceLanguage: "practiceLanguage",
+  startSpeaking: "Начать говорить",
+  conversationStarters: "Как начать разговор",
+  tryThesePhrases: "Попробуйте эти фразы, чтобы начать разговор:",
+  conversationStarter1: "Здравствуйте, как у вас дела сегодня?",
+  conversationStarter2: "Какая погода в вашем районе?",
+  conversationStarter3: "Можете ли вы порекомендовать хороший ресторан?",
+  conversationStarter4: "Какие у вас хобби и интересы?",
+  conversationStarter5: "Расскажите о своей любимой книге или фильме.",
+  conversationStarter6: "Чем вы занимались в прошлые выходные?",
+  conversationStarter7: "Какие у вас планы на завтра?",
+  conversationStarter8: "Как будет... на английском/испанском?",
+  practiceWithVoiceChat: "Практика с голосовым чатом",
+  voiceChatTips: "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:",
+  voiceTip1: "Задавайте вопросы о повседневных темах",
+  voiceTip2: "Практикуйте общие фразы и выражения",
+  voiceTip3: "Описывайте то, что видите вокруг",
+  voiceTip4: "Практикуйте словарный запас для конкретных тем, таких как путешествия или еда",
+  
+  // Pronunciation practice
+  pronunciationPractice: "Практика произношения",
+  improvePronunciationSkillsWith: "Улучшите навыки произношения с помощью целенаправленных упражнений",
+  selectComplexityLevel: "Выберите уровень сложности",
+  chooseDifficultyLevelBasedOn: "Выберите уровень сложности на основе ваших языковых способностей",
+  speechRate: "Скорость речи",
+  selectLevelToStart: "Выберите уровень для начала практики",
+  startExercise: "Start Exercise",
+  pronunciationPracticeTips: "Советы по практике произношения",
+  listenCarefullyTip: "Внимательно слушайте аудио перед попыткой говорить",
+  payAttentionToStressTip: "Обращайте внимание на ударения и интонацию", 
+  practiceDifficultSoundsTip: "Практикуйте сложные звуки несколько раз",
+  recordYourselfTip: "Записывайте себя и сравнивайте с носителями языка",
+  bePatientTip: "Будьте терпеливы - улучшение произношения требует времени",
+  practiceExercise: "Practice Exercise",
+  topic: "Topic",
+  listenToPhrase: "Listen to Phrase",
+  clickWordToHear: "Click word to hear",
+  yourPronunciation: "Ваше произношение",
+  startRecording: "Начать запись",
+  clickStartToRecord: "Нажмите «Начать», чтобы записать",
+  tryAgain: "Попробуйте снова",
+  newPhrase: "Новая фраза",
+  
+  // Navigation
+  home: "Главная",
+  textPractice: "Практика",
+  unlimitedVoicePracticeNav: "Безлимитная голосовая практика",
+  pronunciationPracticeNav: "Практика произношения", 
+  aiAnalysis: "ИИ анализ",
+  profile: "Профиль",
+  settings: "Настройки"
+};
+
+export default minimalTranslations;
