@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "./types";
 import arabic from "./arabic";
 import bengali from "./bengali";
@@ -30,18 +29,23 @@ import amharic from "./amharic";
 import igbo from "./igbo";
 import haitian from "./haitian";
 
-// Import new languages
+// Import existing languages
 import german from "./german";
 import italian from "./italian";
 import thai from "./thai";
 import burmese from "./burmese";
 import karen from "./karen";
 import nepali from "./nepali";
-import tigrinya from "./tigrinya";
 import punjabi from "./punjabi";
 import marathi from "./marathi";
 import gujarati from "./gujarati";
 import sinhala from "./sinhala";
+
+// Import 6 new languages
+import tamil from "./tamil";
+import telugu from "./telugu";
+import tigrinya from "./tigrinya";
+import zulu from "./zulu";
 
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "./constants";
 
@@ -76,18 +80,22 @@ const translations: Record<string, TranslationRecord> = {
   igbo,
   haitian,
   tagalog,
-  // Add new languages
+  // Existing languages
   german,
   italian,
   thai,
   burmese,
   karen,
   nepali,
-  tigrinya,
   punjabi,
   marathi,
   gujarati,
   sinhala,
+  // Adding 6 new languages
+  tamil,
+  telugu,
+  tigrinya,
+  zulu,
 };
 
 export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES };

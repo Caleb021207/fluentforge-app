@@ -41,6 +41,10 @@ export const languageCodeMap: Record<string, string> = {
   'marathi': 'mr-IN',
   'gujarati': 'gu-IN',
   'sinhala': 'si-LK',
+  // Adding 6 new languages
+  'tamil': 'ta-IN',
+  'telugu': 'te-IN',
+  'zulu': 'zu-ZA',
 };
 
 // Meta MMS specific language codes (ISO 639-3)
@@ -65,6 +69,10 @@ export const metaMmsLanguageMap: Record<string, string> = {
   'marathi': 'mar',
   'gujarati': 'guj',
   'sinhala': 'sin',
+  // Adding 6 new languages
+  'tamil': 'tam',
+  'telugu': 'tel',
+  'zulu': 'zul',
 };
 
 // TTS cache constants

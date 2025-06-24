@@ -36,8 +36,14 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   german: "Deutsch",
   italian: "Italiano",
   thai: "ภาษาไทย",
-  // Re-adding the previously removed languages
   gujarati: "ગુજરાતી",
   punjabi: "ਪੰਜਾਬੀ",
   nepali: "नेपाली",
+  // Adding 6 new well-supported languages
+  tamil: "தமிழ்",
+  marathi: "मराठी",
+  telugu: "తెలుగు",
+  burmese: "မြန်မာ",
+  tigrinya: "ትግርኛ",
+  zulu: "isiZulu",
 };

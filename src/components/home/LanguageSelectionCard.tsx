@@ -60,10 +60,16 @@ const LanguageSelectionCard = ({
     german: "🇩🇪 Deutsch",
     italian: "🇮🇹 Italiano",
     thai: "🇹🇭 ภาษาไทย",
-    // Re-adding the previously removed languages
     gujarati: "🇮🇳 ગુજરાતી",
     punjabi: "🇮🇳 ਪੰਜਾਬੀ",
     nepali: "🇳🇵 नेपाली",
+    // Adding 6 new languages
+    tamil: "🇮🇳 தமிழ்",
+    marathi: "🇮🇳 मराठी",
+    telugu: "🇮🇳 తెలుగు",
+    burmese: "🇲🇲 မြန်မာ",
+    tigrinya: "🇪🇷 ትግርኛ",
+    zulu: "🇿🇦 isiZulu",
   };
 
   // Available target languages based on native language
@@ -102,10 +108,16 @@ const LanguageSelectionCard = ({
     german: "🇩🇪 German",
     italian: "🇮🇹 Italian",
     thai: "🇹🇭 Thai",
-    // Re-adding the previously removed languages
     gujarati: "🇮🇳 Gujarati",
     punjabi: "🇮🇳 Punjabi",
     nepali: "🇳🇵 Nepali",
+    // Adding 6 new languages
+    tamil: "🇮🇳 Tamil",
+    marathi: "🇮🇳 Marathi",
+    telugu: "🇮🇳 Telugu", 
+    burmese: "🇲🇲 Burmese",
+    tigrinya: "🇪🇷 Tigrinya",
+    zulu: "🇿🇦 Zulu",
   };
   
   // Determine disabled options based on native language
