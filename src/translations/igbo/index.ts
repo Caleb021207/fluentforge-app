@@ -1,19 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import languageSelectionTranslations from "./language-selection";
-import classroomTranslations from "./classroom";
-import practiceTranslations from "./practice";
-import voiceChatTranslations from "./voice-chat";
-import premiumVoiceTranslations from "./premium-voice";
-import generalTranslations from "./general";
+import minimalTranslations from "./minimal";
 
+// Use only the minimal translations for Igbo
 const igboTranslations: TranslationRecord = {
-  ...languageSelectionTranslations,
-  ...classroomTranslations,
-  ...practiceTranslations,
-  ...voiceChatTranslations,
-  ...premiumVoiceTranslations,
-  ...generalTranslations
+  ...minimalTranslations,
 };
 
 export default igboTranslations;
