@@ -1,3 +1,4 @@
+
 import { TranslationRecord } from "../types";
 
 const minimalTranslations: TranslationRecord = {
@@ -59,7 +60,14 @@ const minimalTranslations: TranslationRecord = {
   practiceGuideDescription: "ਪ੍ਰਭਾਵੀ {{language}} ਅਭਿਆਸ ਲਈ ਉਪਯੋਗੀ ਸੁਝਾਅ:",
   practiceGuideIntro: "ਚੰਗੇ ਅਭਿਆਸ ਲਈ ਕੁਝ ਸੁਝਾਅ:",
 
-  // Missing practice guide tips
+  // Practice tips - these are the exact strings being used in components
+  practiceTip1: "ਪੂਰੇ ਵਾਕ ਬਣਾਉਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ, ਭਾਵੇਂ ਉਹ ਸਧਾਰਨ ਹੋਣ।",
+  practiceTip2: "ਗਲਤੀਆਂ ਦੀ ਚਿੰਤਾ ਨਾ ਕਰੋ — ਇਹ ਸਿੱਖਣ ਦਾ ਹਿੱਸਾ ਹਨ!",
+  practiceTip3: "ਜੇ ਕੁਝ ਸਮਝ ਨਾ ਆਵੇ ਤਾਂ ਸਪੱਸ਼ਟੀਕਰਨ ਮੰਗੋ।",
+  practiceTip4: "ਹਾਲ ਹੀ ਵਿੱਚ ਸਿੱਖੇ ਸ਼ਬਦਾਂ ਦੀ ਵਰਤੋਂ ਕਰੋ।",
+  practiceTip5: "ਸਾਡਾ AI ਤੁਹਾਡੇ ਹੁਨਰ ਪੱਧਰ ਦੇ ਅਨੁਕੂਲ ਹੋਵੇਗਾ ਅਤੇ ਹੌਲੀ ਹੌਲੀ ਸੁਧਾਰਨ ਵਿੱਚ ਮਦਦ ਕਰੇਗਾ।",
+
+  // Missing practice guide tips with exact English strings as keys
   "Try to form complete sentences, even if they're simple.": "ਪੂਰੇ ਵਾਕ ਬਣਾਉਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ, ਭਾਵੇਂ ਉਹ ਸਧਾਰਨ ਹੋਣ।",
   "Don't worry about mistakes — they're part of learning!": "ਗਲਤੀਆਂ ਦੀ ਚਿੰਤਾ ਨਾ ਕਰੋ — ਇਹ ਸਿੱਖਣ ਦਾ ਹਿੱਸਾ ਹਨ!",
   "Ask for explanations if there's something you don't understand.": "ਜੇ ਕੁਝ ਸਮਝ ਨਾ ਆਵੇ ਤਾਂ ਸਪੱਸ਼ਟੀਕਰਨ ਮੰਗੋ।",
@@ -139,13 +147,21 @@ const minimalTranslations: TranslationRecord = {
   pleaseTryAgain: "ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
   failedToAnalyzePronunciation: "ਉਚਾਰਣ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਅਸਫਲ ਹੋਇਆ",
 
-  // Missing pronunciation practice tips
+  // Missing pronunciation practice tips with exact English strings as keys
   "Pronunciation Practice Tips": "ਉਚਾਰਣ ਅਭਿਆਸ ਸੁਝਾਅ",
   "Listen carefully to the audio before attempting to speak": "ਬੋਲਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਆਡੀਓ ਨੂੰ ਧਿਆਨ ਨਾਲ ਸੁਣੋ",
   "Pay attention to stress patterns and intonation": "ਤਨਾਅ ਦੇ ਨਮੂਨਿਆਂ ਅਤੇ ਸੁਰ ਵਿੱਚ ਬਦਲਾਅ 'ਤੇ ਧਿਆਨ ਦਿਓ",
   "Practice difficult sounds multiple times": "ਮੁਸ਼ਕਿਲ ਆਵਾਜ਼ਾਂ ਦਾ ਕਈ ਵਾਰ ਅਭਿਆਸ ਕਰੋ",
   "Record yourself and compare with native speakers": "ਆਪਣੇ ਆਪ ਨੂੰ ਰਿਕਾਰਡ ਕਰੋ ਅਤੇ ਮੂਲ ਬੋਲਣ ਵਾਲਿਆਂ ਨਾਲ ਤੁਲਨਾ ਕਰੋ",
   "Be patient - pronunciation improvement takes time": "ਧੀਰਜ ਰੱਖੋ - ਉਚਾਰਣ ਵਿੱਚ ਸੁਧਾਰ ਵਿੱਚ ਸਮਾਂ ਲੱਗਦਾ ਹੈ",
+
+  // Pronunciation practice tips with correct keys
+  listenCarefullyTip: "ਬੋਲਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਆਡੀਓ ਨੂੰ ਧਿਆਨ ਨਾਲ ਸੁਣੋ",
+  payAttentionToStressTip: "ਤਨਾਅ ਦੇ ਨਮੂਨਿਆਂ ਅਤੇ ਸੁਰ ਵਿੱਚ ਬਦਲਾਅ 'ਤੇ ਧਿਆਨ ਦਿਓ",
+  practiceDifficultSoundsTip: "ਮੁਸ਼ਕਿਲ ਆਵਾਜ਼ਾਂ ਦਾ ਕਈ ਵਾਰ ਅਭਿਆਸ ਕਰੋ",
+  recordYourselfTip: "ਆਪਣੇ ਆਪ ਨੂੰ ਰਿਕਾਰਡ ਕਰੋ ਅਤੇ ਮੂਲ ਬੋਲਣ ਵਾਲਿਆਂ ਨਾਲ ਤੁਲਨਾ ਕਰੋ",
+  bePatientTip: "ਧੀਰਜ ਰੱਖੋ - ਉਚਾਰਣ ਵਿੱਚ ਸੁਧਾਰ ਵਿੱਚ ਸਮਾਂ ਲੱਗਦਾ ਹੈ",
+  pronunciationPracticeTips: "ਉਚਾਰਣ ਅਭਿਆਸ ਸੁਝਾਅ",
 
   // Additional UI elements
   processing: "ਪ੍ਰਕਿਰਿਆ ਕਰ ਰਹੇ ਹਾਂ",
