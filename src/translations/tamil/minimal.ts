@@ -198,11 +198,9 @@ const minimalTranslations: TranslationRecord = {
 
   // Common UI elements
   processing: "செயல்படுத்துகிறது",
-  error: "பிழை",
   send: "அனுப்பு",
   cancel: "ரத்து செய்",
   success: "வெற்றி",
-  play: "இயக்கு",
 
   // Additional UI elements
   stopRecording: "பதிவை நிறுத்தவும்",

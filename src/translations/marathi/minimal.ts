@@ -144,7 +144,7 @@ const minimalTranslations: TranslationRecord = {
   // Premium Voice Chat
   premiumVoiceChat: "प्रीमियम आवाज चॅट",
   premiumVoiceChatBenefits: "प्रीमियम आवाज चॅट फायदे",
-  premiumVoiceChatDescription: "प्रीमियम AI शिक्षकासह नैसर्गिक आवाज संवादांद्वारे {{practice}} चा सराव करा! AI व्याकरण, शब्दसंग्रह आणि उच्चार सुधारण्यास मदत करेल.",
+  premiumVoiceChatDescription: "प्रीमियम AI शिक्षकासह नैसर्गिक आवाज संवादांद्वारा {{practice}} चा सराव करा! AI व्याकरण, शब्दसंग्रह आणि उच्चार सुधारण्यास मदत करेल.",
   premiumVoiceNote: "प्रीमियम आवाज चॅट आठवड्यातून 10 मिनिटांपुरते मर्यादित आहे",
   premiumVoiceNoteWithReset: "प्रीमियम आवाज चॅट आठवड्यातून 10 मिनिटे सरावाची परवानगी देते. वेळ सोमवार सकाळी 6 वाजता (मध्य वेळ) रीसेट होते.",
   benefitNaturalVoice: "ElevenLabs तंत्रज्ञान वापरून नैसर्गिक, मानवी आवाज संवाद",
