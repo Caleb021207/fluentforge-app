@@ -76,10 +76,8 @@ const minimalTranslations: TranslationRecord = {
   getResponseSuggestions: "प्रतिसाद सूचना मिळवा",
   greetings: "नमस्कार",
   questions: "प्रश्न",
-  error: "त्रुटी",
   couldNotGenerateHints: "सूचना तयार करू शकलो नाही",
   failedToPlayAudio: "ऑडिओ प्ले करणे अयशस्वी",
-  play: "प्ले करा",
 
   // Voice chat
   unlimitedVoicePractice: "अमर्यादित आवाज सराव",
