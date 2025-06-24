@@ -46,8 +46,17 @@ const minimalTranslations: TranslationRecord = {
   
   // Hint button
   suggestionResponses: "Suggestions de Réponses",
+  responseSuggestions: "Suggestions de Réponses",
   clickPlayToHearPronunciation: "Cliquez sur lecture pour entendre la prononciation",
-  startConversationToSeeSuggestions: "Commencez une conversation pour voir les suggestions.",
+  startConversationToSeeSuggestions: "Commencez une conversation pour voir les suggestions",
+  startConversationForSuggestions: "Commencez une conversation pour voir les suggestions",
+  getResponseSuggestions: "Obtenir des suggestions de réponses",
+  greetings: "Salutations",
+  questions: "Questions",
+  error: "Erreur",
+  couldNotGenerateHints: "Impossible de générer des suggestions",
+  failedToPlayAudio: "Échec de la lecture audio",
+  play: "Jouer",
   
   // Voice chat
   unlimitedVoicePractice: "Pratique Vocale Illimitée",
@@ -98,6 +107,13 @@ const minimalTranslations: TranslationRecord = {
   clickStartToRecord: "Cliquez sur 'Commencer' pour enregistrer",
   tryAgain: "Réessayer",
   newPhrase: "Nouvelle Phrase",
+  generatingExercise: "Génération de l'exercice",
+  generatingNewPhrase: "Génération d'une nouvelle phrase",
+  levelDescription: "Description du niveau",
+  failedToGeneratePhrase: "Échec de la génération de phrase",
+  noSpeechDetected: "Aucune parole détectée",
+  pleaseTryAgain: "Veuillez réessayer",
+  failedToAnalyzePronunciation: "Échec de l'analyse de prononciation",
   
   // Complexity levels
   novice: "Débutant",

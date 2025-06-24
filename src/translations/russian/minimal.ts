@@ -17,7 +17,7 @@ const minimalTranslations: TranslationRecord = {
   createAccountToGetStarted: "Создать аккаунт",
   email: "Электронная почта",
   password: "Пароль",
-  accessPasscode: "Access Passcode",
+  accessPasscode: "Код доступа",
   dontHaveAccount: "Нет аккаунта?",
   alreadyHaveAccount: "Уже есть аккаунт?",
   
@@ -44,10 +44,19 @@ const minimalTranslations: TranslationRecord = {
   practiceGuideTip4: "Попробуйте использовать недавно изученные слова.",
   practiceGuideTip5: "Наш ИИ адаптируется к вашему уровню навыков и постепенно поможет вам улучшиться.",
   
-  // Hint button
+  // Hint button - these were missing
   suggestionResponses: "Предложения ответов",
+  responseSuggestions: "Предложения ответов",
   clickPlayToHearPronunciation: "Нажмите воспроизведение, чтобы услышать произношение",
-  startConversationToSeeSuggestions: "Начните разговор, чтобы увидеть предложения.",
+  startConversationToSeeSuggestions: "Начните разговор, чтобы увидеть предложения",
+  startConversationForSuggestions: "Начните разговор, чтобы увидеть предложения",
+  getResponseSuggestions: "Получить предложения ответов",
+  greetings: "Приветствия",
+  questions: "Вопросы",
+  error: "Ошибка",
+  couldNotGenerateHints: "Не удалось сгенерировать подсказки",
+  failedToPlayAudio: "Не удалось воспроизвести аудио",
+  play: "Воспроизвести",
   
   // Voice chat
   unlimitedVoicePractice: "Безлимитная голосовая практика",
@@ -98,6 +107,13 @@ const minimalTranslations: TranslationRecord = {
   clickStartToRecord: "Нажмите «Начать», чтобы записать",
   tryAgain: "Попробуйте снова",
   newPhrase: "Новая фраза",
+  generatingExercise: "Генерация упражнения",
+  generatingNewPhrase: "Генерация новой фразы",
+  levelDescription: "Описание уровня",
+  failedToGeneratePhrase: "Не удалось сгенерировать фразу",
+  noSpeechDetected: "Речь не обнаружена",
+  pleaseTryAgain: "Пожалуйста, попробуйте еще раз",
+  failedToAnalyzePronunciation: "Не удалось проанализировать произношение",
   
   // Complexity levels
   novice: "Новичок",
