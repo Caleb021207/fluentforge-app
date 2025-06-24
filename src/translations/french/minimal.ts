@@ -44,12 +44,12 @@ const minimalTranslations: TranslationRecord = {
   practiceGuideTip4: "Essayez d'utiliser des mots que vous avez récemment appris.",
   practiceGuideTip5: "Notre IA s'adaptera à votre niveau de compétence et vous aidera progressivement à vous améliorer.",
   
-  // Hint button
+  // Hint button - FIXED KEYS
   suggestionResponses: "Suggestions de Réponses",
   responseSuggestions: "Suggestions de Réponses",
   clickPlayToHearPronunciation: "Cliquez sur lecture pour entendre la prononciation",
-  startConversationToSeeSuggestions: "Commencez une conversation pour voir les suggestions",
   startConversationForSuggestions: "Commencez une conversation pour voir les suggestions",
+  startConversationToSeeSuggestions: "Commencez une conversation pour voir les suggestions",
   getResponseSuggestions: "Obtenir des suggestions de réponses",
   greetings: "Salutations",
   questions: "Questions",
@@ -62,7 +62,7 @@ const minimalTranslations: TranslationRecord = {
   unlimitedVoicePractice: "Pratique Vocale Illimitée",
   practiceDescription: "Description de la pratique",
   aiModelInfo: "Informations sur le modèle IA: OpenAI GPT-4o-mini est utilisé pour la compréhension et la génération du langage naturel, avec synthèse vocale basée sur navigateur pour les réponses vocales.",
-  practiceLevel: "Niveau de pratique",
+  practiceLevel: "niveau de pratique",
   intermediatePracticeLevel: "Intermédiaire - Peut discuter de sujets familiers",
   currentLanguage: "langue actuelle",
   practiceLanguage: "langue de pratique",
@@ -84,7 +84,7 @@ const minimalTranslations: TranslationRecord = {
   voiceTip3: "Décrivez ce que vous voyez autour de vous",
   voiceTip4: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture",
   
-  // Pronunciation practice
+  // Pronunciation practice - ALL KEYS
   pronunciationPractice: "Pratique de Prononciation",
   improvePronunciationSkillsWith: "Améliorez vos compétences de prononciation avec des exercices ciblés",
   selectComplexityLevel: "Sélectionner le Niveau de Complexité",
@@ -115,6 +115,28 @@ const minimalTranslations: TranslationRecord = {
   pleaseTryAgain: "Veuillez réessayer",
   failedToAnalyzePronunciation: "Échec de l'analyse de prononciation",
   
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "Retour de Prononciation",
+  accuracyScore: "Précision",
+  intonationScore: "Intonation",
+  fluencyScore: "Fluidité",
+  complexityScore: "Complexité",
+  wordAnalysis: "Analyse des Mots",
+  phonemeAnalysis: "Analyse des Phonèmes",
+  overallFeedback: "Retour Général",
+  excellent: "Excellent",
+  good: "Bon",
+  fair: "Acceptable",
+  needsImprovement: "À Améliorer",
+  
+  // Additional UI elements
+  processing: "Traitement",
+  stopRecording: "Arrêter l'Enregistrement",
+  listeningToYou: "Vous écoute",
+  realTimeTranscription: "Transcription en temps réel",
+  yourTranscription: "Votre Transcription",
+  playing: "Lecture",
+  
   // Complexity levels
   novice: "Débutant",
   intermediate: "Intermédiaire",
@@ -122,7 +144,10 @@ const minimalTranslations: TranslationRecord = {
   superior: "Supérieur",
   noviceLevelDescription: "Peut gérer des sujets simples et familiers",
   intermediateLevelDescription: "Peut discuter de sujets familiers",
-  advancedLevelDescription: "Peut gérer des sujets complexes avec confiance",
+  advancedLevelDescription: "Peut gérer des sujets complexes avec conf
+
+
+ce",
   superiorLevelDescription: "Peut gérer toute tâche linguistique",
   noviceLevelShortDescription: "Phrases simples",
   intermediateLevelShortDescription: "Sujets familiers",

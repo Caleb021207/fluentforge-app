@@ -44,12 +44,12 @@ const minimalTranslations: TranslationRecord = {
   practiceGuideTip4: "Trata de usar palabras que hayas aprendido recientemente.",
   practiceGuideTip5: "Nuestra IA se adaptará a tu nivel de habilidad y gradualmente te ayudará a mejorar.",
   
-  // Hint button
+  // Hint button - FIXED KEYS
   suggestionResponses: "Sugerencias de Respuestas",
   responseSuggestions: "Sugerencias de Respuestas",
   clickPlayToHearPronunciation: "Haz clic en reproducir para escuchar la pronunciación",
-  startConversationToSeeSuggestions: "Inicia conversación para ver sugerencias",
   startConversationForSuggestions: "Inicia conversación para ver sugerencias",
+  startConversationToSeeSuggestions: "Inicia conversación para ver sugerencias",
   getResponseSuggestions: "Obtener sugerencias de respuestas",
   greetings: "Saludos",
   questions: "Preguntas",
@@ -62,7 +62,7 @@ const minimalTranslations: TranslationRecord = {
   unlimitedVoicePractice: "Práctica de Voz Ilimitada",
   practiceDescription: "Descripción de práctica",
   aiModelInfo: "Información del modelo de IA: Se utiliza OpenAI GPT-4o-mini para la comprensión y generación del lenguaje natural, con síntesis de voz basada en navegador para respuestas de voz.",
-  practiceLevel: "Nivel de práctica",
+  practiceLevel: "nivel de práctica",
   intermediatePracticeLevel: "Intermedio - Puede discutir temas familiares",
   currentLanguage: "idioma actual",
   practiceLanguage: "idioma de práctica",
@@ -84,7 +84,7 @@ const minimalTranslations: TranslationRecord = {
   voiceTip3: "Describe lo que ves a tu alrededor",
   voiceTip4: "Practica vocabulario para temas específicos como viajes o comida",
   
-  // Pronunciation practice
+  // Pronunciation practice - ALL KEYS
   pronunciationPractice: "Práctica de Pronunciación",
   improvePronunciationSkillsWith: "Mejora tus habilidades de pronunciación con ejercicios dirigidos",
   selectComplexityLevel: "Seleccionar Nivel de Complejidad",
@@ -114,6 +114,28 @@ const minimalTranslations: TranslationRecord = {
   noSpeechDetected: "No se detectó voz",
   pleaseTryAgain: "Por favor, inténtalo de nuevo",
   failedToAnalyzePronunciation: "Error al analizar pronunciación",
+  
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "Retroalimentación de Pronunciación",
+  accuracyScore: "Precisión",
+  intonationScore: "Entonación",
+  fluencyScore: "Fluidez",
+  complexityScore: "Complejidad",
+  wordAnalysis: "Análisis de Palabras",
+  phonemeAnalysis: "Análisis de Fonemas",
+  overallFeedback: "Retroalimentación General",
+  excellent: "Excelente",
+  good: "Bueno",
+  fair: "Regular",
+  needsImprovement: "Necesita Mejora",
+  
+  // Additional UI elements
+  processing: "Procesando",
+  stopRecording: "Detener Grabación",
+  listeningToYou: "Escuchándote",
+  realTimeTranscription: "Transcripción en tiempo real",
+  yourTranscription: "Tu Transcripción",
+  playing: "Reproduciendo",
   
   // Complexity levels
   novice: "Principiante",

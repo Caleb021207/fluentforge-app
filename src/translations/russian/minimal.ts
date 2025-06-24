@@ -44,12 +44,12 @@ const minimalTranslations: TranslationRecord = {
   practiceGuideTip4: "Попробуйте использовать недавно изученные слова.",
   practiceGuideTip5: "Наш ИИ адаптируется к вашему уровню навыков и постепенно поможет вам улучшиться.",
   
-  // Hint button - these were missing
+  // Hint button - FIXED KEYS
   suggestionResponses: "Предложения ответов",
   responseSuggestions: "Предложения ответов",
   clickPlayToHearPronunciation: "Нажмите воспроизведение, чтобы услышать произношение",
-  startConversationToSeeSuggestions: "Начните разговор, чтобы увидеть предложения",
   startConversationForSuggestions: "Начните разговор, чтобы увидеть предложения",
+  startConversationToSeeSuggestions: "Начните разговор, чтобы увидеть предложения",
   getResponseSuggestions: "Получить предложения ответов",
   greetings: "Приветствия",
   questions: "Вопросы",
@@ -62,7 +62,7 @@ const minimalTranslations: TranslationRecord = {
   unlimitedVoicePractice: "Безлимитная голосовая практика",
   practiceDescription: "Описание практики",
   aiModelInfo: "Информация о модели AI: OpenAI GPT-4o-mini используется для понимания и генерации естественного языка, а синтез речи на основе браузера используется для голосовых ответов.",
-  practiceLevel: "Уровень практики",
+  practiceLevel: "уровень практики",
   intermediatePracticeLevel: "Средний - Может обсуждать знакомые темы",
   currentLanguage: "текущий язык",
   practiceLanguage: "язык практики",
@@ -84,7 +84,7 @@ const minimalTranslations: TranslationRecord = {
   voiceTip3: "Описывайте то, что видите вокруг",
   voiceTip4: "Практикуйте словарный запас для конкретных тем, таких как путешествия или еда",
   
-  // Pronunciation practice
+  // Pronunciation practice - ALL KEYS
   pronunciationPractice: "Практика произношения",
   improvePronunciationSkillsWith: "Улучшите навыки произношения с помощью целенаправленных упражнений",
   selectComplexityLevel: "Выберите уровень сложности",
@@ -114,6 +114,28 @@ const minimalTranslations: TranslationRecord = {
   noSpeechDetected: "Речь не обнаружена",
   pleaseTryAgain: "Пожалуйста, попробуйте еще раз",
   failedToAnalyzePronunciation: "Не удалось проанализировать произношение",
+  
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "Обратная связь по произношению",
+  accuracyScore: "Точность",
+  intonationScore: "Интонация",
+  fluencyScore: "Беглость",
+  complexityScore: "Сложность",
+  wordAnalysis: "Анализ слов",
+  phonemeAnalysis: "Анализ фонем",
+  overallFeedback: "Общая обратная связь",
+  excellent: "Отлично",
+  good: "Хорошо",
+  fair: "Удовлетворительно",
+  needsImprovement: "Требует улучшения",
+  
+  // Additional UI elements
+  processing: "Обработка",
+  stopRecording: "Остановить запись",
+  listeningToYou: "Слушаю вас",
+  realTimeTranscription: "Транскрипция в реальном времени",
+  yourTranscription: "Ваша транскрипция",
+  playing: "Воспроизведение",
   
   // Complexity levels
   novice: "Новичок",
