@@ -15,6 +15,20 @@ const japaneseCoreTranslations: TranslationRecord = {
   "signIn": "サインイン",
   "createAccount": "アカウント作成",
   
+  // Auth elements - FIXED
+  "email": "メールアドレス",
+  "password": "パスワード",
+  "accessPasscode": "アクセスパスコード",
+  "signInToContinue": "続行するにはサインインしてください",
+  "createAccountToGetStarted": "開始するにはアカウントを作成してください",
+  "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+  "dontHaveAccount": "アカウントをお持ちでないですか？",
+  
+  // Language selection - FIXED
+  "selectYourLanguagePreferences": "言語設定を選択してください",
+  "iSpeak": "私が話す言語",
+  "selectYourNativeLanguage": "母国語を選択してください",
+  
   // Home page elements
   "welcomeToLanguageLearning": "言語学習へようこそ",
   "yourPersonalAICompanion": "あなた専用のAI言語学習コンパニオン", 
@@ -35,6 +49,7 @@ const japaneseCoreTranslations: TranslationRecord = {
   "practiceDisclaimer": "私たちのAIはあなたのスキルレベルに適応し、段階的に上達をサポートします。",
   "startTextChatting": "テキストチャットを始める",
   "typeMessageToPractice": "{{language}}の練習のためメッセージを入力してください...",
+  "typeMessageBelow": "以下にメッセージを入力してください",
   "send": "送信",
   "clearConversation": "会話をクリア",
   "correctGrammar": "文法を修正",
@@ -49,8 +64,8 @@ const japaneseCoreTranslations: TranslationRecord = {
   "tryThesePhrases": "会話を始めるためにこれらのフレーズを試してください：",
   "practiceWithVoiceChat": "音声チャットで練習",
   "useThisTool": "このツールを使って話すスキルと聞くスキルを向上させましょう。いくつかのヒントです：",
-  "askQuestionsAboutTopics": "日常的なトピックについて質問する",
-  "practiceEverydayPhrases": "一般的なフレーズや表現を練習する", 
+  "askQuestions": "日常的な話題について質問する",
+  "practiceCommonPhrases": "一般的なフレーズや表現を練習する", 
   "describeWhatYouSee": "周りに見えるものを説明する",
   "practiceVocabularyForSpecific": "旅行や食べ物など特定のトピックの語彙を練習する",
   "responseSuggestions": "応答の提案",

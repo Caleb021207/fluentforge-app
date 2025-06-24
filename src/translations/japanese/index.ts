@@ -1,10 +1,14 @@
 
 import { TranslationRecord } from "../types";
 import japaneseCoreTranslations from "./core";
+import japanesePracticeTranslations from "./practice";
+import japaneseVoiceChatTranslations from "./voice-chat";
 
-// Use only the clean core translations for Japanese
+// Complete Japanese translations with voice chat and practice integration
 const japaneseTranslations: TranslationRecord = {
-  ...japaneseCoreTranslations
+  ...japaneseCoreTranslations,
+  ...japanesePracticeTranslations,
+  ...japaneseVoiceChatTranslations
 };
 
 export default japaneseTranslations;
