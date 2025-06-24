@@ -1,0 +1,248 @@
+
+import { TranslationRecord } from "../types";
+
+const minimalTranslations: TranslationRecord = {
+  // Home page
+  welcomeToLanguageLearning: "Chào mừng đến với học ngôn ngữ",
+  yourPersonalAICompanion: "Trợ lý AI cá nhân của bạn",
+  swipeUpToGetStarted: "Vuốt lên để bắt đầu",
+  selectNativeLanguage: "Chọn ngôn ngữ mẹ đẻ",
+  iSpeak: "Tôi nói",
+  saveLanguagePreferences: "Lưu lựa chọn ngôn ngữ",
+  getStarted: "Bắt đầu",
+  selectYourLanguagePreferences: "Chọn tùy chọn ngôn ngữ của bạn",
+  
+  // Authentication
+  signIn: "Đăng nhập",
+  signUp: "Đăng ký",
+  signInToContinue: "Đăng nhập để tiếp tục",
+  createAccountToGetStarted: "Tạo tài khoản để bắt đầu",
+  email: "Email",
+  password: "Mật khẩu",
+  accessPasscode: "Mã truy cập",
+  dontHaveAccount: "Chưa có tài khoản?",
+  alreadyHaveAccount: "Đã có tài khoản?",
+  
+  // Header
+  loggedInAs: "Đăng nhập với tên",
+  signedInAs: "Đăng nhập với tên",
+  logout: "Đăng xuất",
+  lightMode: "Chế độ sáng",
+  
+  // Practice page
+  practice: "Luyện tập",
+  englishPractice: "Luyện tập tiếng Anh",
+  startChatting: "Bắt đầu trò chuyện",
+  startConversationIn: "Bắt đầu cuộc hội thoại bằng {{language}}",
+  fixGrammar: "Sửa ngữ pháp",
+  correctGrammar: "Sửa ngữ pháp",
+  clearConversation: "Xóa cuộc trò chuyện",
+  startTextChat: "Bắt đầu trò chuyện văn bản",
+  startTextChatting: "Bắt đầu trò chuyện văn bản",
+  typeMessageBelow: "Nhập tin nhắn bên dưới",
+  typeMessageToPractice: "Nhập tin nhắn để luyện {{language}}...",
+  send: "Gửi",
+  
+  // Practice Guide
+  practiceGuide: "Hướng dẫn luyện {{language}}",
+  practiceGuideTitle: "Hướng dẫn luyện {{language}}",
+  practiceGuideDescription: "Dưới đây là vài mẹo để luyện tập {{language}} hiệu quả:",
+  practiceGuideIntro: "Dưới đây là vài mẹo để luyện tập {{language}} hiệu quả:",
+  practiceGuideTip1: "Cố gắng nói câu đầy đủ, đơn giản cũng được.",
+  practiceGuideTip2: "Đừng sợ sai — sai là cách học!",
+  practiceGuideTip3: "Nếu không hiểu, cứ hỏi.",
+  practiceGuideTip4: "Thử dùng từ bạn mới học.",
+  practiceGuideTip5: "AI sẽ điều chỉnh theo trình độ của bạn.",
+  
+  // Practice tips - using t() keys
+  practiceTip1: "Cố gắng nói câu đầy đủ, đơn giản cũng được.",
+  practiceTip2: "Đừng sợ sai — sai là cách học!",
+  practiceTip3: "Nếu không hiểu, cứ hỏi.",
+  practiceTip4: "Thử dùng từ bạn mới học.",
+  practiceTip5: "AI sẽ điều chỉnh theo trình độ của bạn.",
+
+  // Practice Guide - using exact same keys as shown in the UI
+  "Try to form complete sentences, even if they're simple.": "Cố gắng nói câu đầy đủ, đơn giản cũng được.",
+  "Don't worry about mistakes — they're part of learning!": "Đừng sợ sai — sai là cách học!",
+  "Ask for explanations if there's something you don't understand.": "Nếu không hiểu, cứ hỏi.",
+  "Use words you've learned recently.": "Thử dùng từ bạn mới học.",
+  "Our AI will adapt to your skill level and gradually help you improve.": "AI sẽ điều chỉnh theo trình độ của bạn.",
+  "Here are some tips to get the most out of your {{language}} practice:": "Dưới đây là vài mẹo để luyện tập {{language}} hiệu quả:",
+  
+  // Hint button
+  suggestionResponses: "Gợi ý trả lời",
+  responseSuggestions: "Gợi ý trả lời",
+  clickPlayToHearPronunciation: "Nhấn để nghe phát âm",
+  startConversationForSuggestions: "Bắt đầu trò chuyện để có gợi ý",
+  startConversationToSeeSuggestions: "Bắt đầu trò chuyện để xem gợi ý",
+  getResponseSuggestions: "Lấy gợi ý trả lời",
+  greetings: "Lời chào",
+  questions: "Câu hỏi",
+  error: "Lỗi",
+  couldNotGenerateHints: "Không thể tạo gợi ý",
+  failedToPlayAudio: "Phát âm thanh thất bại",
+  play: "Phát",
+  
+  // Voice chat
+  unlimitedVoicePractice: "Luyện nói không giới hạn",
+  practiceDescription: "Mô tả luyện tập",
+  aiModelInfo: "Thông tin mô hình AI: Sử dụng OpenAI GPT-4o-mini để hiểu và tạo ngôn ngữ tự nhiên, sử dụng công nghệ tổng hợp giọng nói trên trình duyệt để phản hồi bằng giọng nói.",
+  practiceLevel: "Trình độ luyện tập",
+  intermediatePracticeLevel: "Trung cấp - Có thể thảo luận các chủ đề quen thuộc",
+  "Intermediate - Can discuss familiar topics": "Trung cấp - Có thể thảo luận các chủ đề quen thuộc",
+  
+  // CEFR Level Descriptions
+  cefrB1Description: "Trung cấp - Có thể thảo luận các chủ đề quen thuộc",
+  cefrA1Description: "Người mới bắt đầu - Các cụm từ và biểu đạt cơ bản",
+  cefrA2Description: "Sơ cấp - Giao tiếp hàng ngày đơn giản",
+  cefrB2Description: "Trung cao cấp - Có thể giao tiếp trôi chảy",
+  
+  currentLanguage: "Ngôn ngữ hiện tại",
+  practiceLanguage: "Ngôn ngữ luyện tập",
+  startSpeaking: "Bắt đầu nói",
+  stopListening: "Ngừng nghe",
+  listeningNow: "Đang nghe",
+  youSaid: "Bạn đã nói",
+  conversationStarters: "Câu mở đầu cuộc trò chuyện",
+  howToStartConversation: "Cách bắt đầu cuộc trò chuyện",
+  tryThesePhrases: "Hãy thử những cụm từ này để bắt đầu cuộc trò chuyện:",
+  conversationStarter1: "Chào bạn, hôm nay thế nào?",
+  conversationStarter2: "Thời tiết ở chỗ bạn như thế nào?",
+  conversationStarter3: "Bạn có thể giới thiệu một nhà hàng ngon không?",
+  conversationStarter4: "Sở thích của bạn là gì?",
+  conversationStarter5: "Hãy kể về cuốn sách hoặc bộ phim yêu thích của bạn.",
+  conversationStarter6: "Bạn đã làm gì vào cuối tuần trước?",
+  conversationStarter7: "Kế hoạch của bạn cho ngày mai là gì?",
+  conversationStarter8: "Nói '...' bằng tiếng Tây Ban Nha/tiếng Anh như thế nào?",
+
+  // Voice chat phrases that appear in the UI exactly as shown
+  "Hello, how are you today?": "Chào bạn, hôm nay thế nào?",
+  "What's the weather like where you are?": "Thời tiết ở chỗ bạn như thế nào?",
+  "Can you recommend a good restaurant?": "Bạn có thể giới thiệu một nhà hàng ngon không?",
+  "What are your hobbies and interests?": "Sở thích của bạn là gì?",
+  "Tell me about your favorite book or movie.": "Hãy kể về cuốn sách hoặc bộ phim yêu thích của bạn.",
+  "What did you do last weekend?": "Bạn đã làm gì vào cuối tuần trước?",
+  "What are your plans for tomorrow?": "Kế hoạch của bạn cho ngày mai là gì?",
+  "How do you say... in Spanish/English?": "Nói '...' bằng tiếng Tây Ban Nha/tiếng Anh như thế nào?",
+
+  practiceWithVoiceChat: "Luyện tập với trò chuyện bằng giọng nói",
+  voiceChatTips: "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:",
+  voiceTip1: "Đặt câu hỏi về các chủ đề hàng ngày",
+  voiceTip2: "Luyện tập các cụm từ và biểu đạt phổ biến",
+  voiceTip3: "Mô tả những gì bạn thấy xung quanh mình",
+  voiceTip4: "Luyện từ vựng cho các chủ đề cụ thể như du lịch hoặc ẩm thực",
+
+  // Voice chat tips that appear exactly as shown in the UI
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:",
+  "Ask questions about everyday topics": "Đặt câu hỏi về các chủ đề hàng ngày",
+  "Practice common phrases and expressions": "Luyện tập các cụm từ và biểu đạt phổ biến",
+  "Describe what you see around you": "Mô tả những gì bạn thấy xung quanh mình",
+  "Practice vocabulary for specific topics like travel or food": "Luyện từ vựng cho các chủ đề cụ thể như du lịch hoặc ẩm thực",
+  
+  // Additional voice chat translations
+  startSpeakingToSeeTranscript: "Bắt đầu nói để xem bản ghi",
+  clickMicrophoneToStartRecording: "Nhấp vào microphone để bắt đầu ghi âm",
+  
+  // Premium Voice Chat
+  premiumVoiceChat: "Trò chuyện giọng nói cao cấp",
+  premiumVoiceChatBenefits: "Lợi ích trò chuyện giọng nói cao cấp",
+  premiumVoiceChatDescription: "Luyện tập {{practice}} thông qua cuộc trò chuyện giọng nói tự nhiên với gia sư AI cao cấp! AI sẽ giúp bạn sửa ngữ pháp, từ vựng và phát âm.",
+  premiumVoiceNote: "Trò chuyện giọng nói cao cấp giới hạn 10 phút mỗi tuần",
+  premiumVoiceNoteWithReset: "Trò chuyện giọng nói cao cấp cho phép 10 phút luyện tập mỗi tuần. Thời gian được đặt lại vào 6 giờ sáng thứ Hai (Giờ Trung tâm).",
+  benefitNaturalVoice: "Tương tác giọng nói tự nhiên, giống con người sử dụng công nghệ ElevenLabs",
+  benefitAccentPronunciation: "Giọng điệu và phát âm chính xác cho việc học nhập vai",
+  benefitRegularPractice: "10 phút luyện tập mỗi tuần, đặt lại vào 6 giờ sáng thứ Hai",
+  
+  // Pronunciation practice
+  pronunciationPractice: "Luyện phát âm",
+  improvePronunciationSkillsWith: "Cải thiện kỹ năng phát âm với luyện tập có mục tiêu",
+  selectComplexityLevel: "Chọn mức độ phức tạp",
+  chooseDifficultyLevelBasedOn: "Chọn mức độ khó dựa trên khả năng ngôn ngữ của bạn",
+  speechRate: "Tốc độ nói",
+  selectLevelToStart: "Chọn một cấp độ để bắt đầu luyện tập",
+  startExercise: "Bắt đầu bài tập",
+  pronunciationPracticeTips: "Mẹo luyện phát âm",
+  listenCarefullyTip: "Hãy nghe kỹ âm thanh trước khi nói",
+  payAttentionToStressTip: "Chú ý đến mẫu trọng âm và ngữ điệu",
+  practiceDifficultSoundsTip: "Luyện tập lặp lại những âm khó",
+  recordYourselfTip: "Ghi âm bản thân và so sánh với người nói bản ngữ",
+  bePatientTip: "Hãy kiên nhẫn — cải thiện phát âm cần thời gian",
+  practiceExercise: "Bài tập luyện tập",
+  topic: "Chủ đề",
+  listenToPhrase: "Nghe cụm từ",
+  clickWordToHear: "Nhấp vào từ để nghe",
+  yourPronunciation: "Phát âm của bạn",
+  startRecording: "Bắt đầu ghi âm",
+  clickStartToRecord: "Nhấp 'Bắt đầu' để ghi âm",
+  tryAgain: "Thử lại",
+  newPhrase: "Cụm từ mới",
+  generatingExercise: "Đang tạo bài tập",
+  generatingNewPhrase: "Đang tạo cụm từ mới",
+  levelDescription: "Mô tả cấp độ",
+  failedToGeneratePhrase: "Không thể tạo cụm từ",
+  noSpeechDetected: "Không phát hiện giọng nói",
+  pleaseTryAgain: "Vui lòng thử lại",
+  failedToAnalyzePronunciation: "Không thể phân tích phát âm",
+  
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "Phản hồi phát âm",
+  accuracyScore: "Điểm chính xác",
+  intonationScore: "Điểm ngữ điệu",
+  fluencyScore: "Điểm trôi chảy",
+  complexityScore: "Điểm phức tạp",
+  wordAnalysis: "Phân tích từ",
+  phonemeAnalysis: "Phân tích âm vị",
+  overallFeedback: "Phản hồi tổng thể",
+  excellent: "Xuất sắc",
+  good: "Tốt",
+  fair: "Khá",
+  needsImprovement: "Cần cải thiện",
+  
+  // Additional UI elements
+  processing: "Đang xử lý",
+  stopRecording: "Dừng ghi âm",
+  listeningToYou: "Đang nghe bạn",
+  realTimeTranscription: "Phiên âm thời gian thực",
+  yourTranscription: "Phiên âm của bạn",
+  playing: "Đang phát",
+  
+  // Complexity levels
+  novice: "Người mới",
+  intermediate: "Trung cấp",
+  advanced: "Nâng cao",
+  superior: "Thành thạo",
+  noviceLevelDescription: "Có thể xử lý các chủ đề cơ bản và quen thuộc",
+  intermediateLevelDescription: "Có thể thảo luận các chủ đề quen thuộc",
+  advancedLevelDescription: "Có thể xử lý các chủ đề phức tạp một cách tự tin",
+  superiorLevelDescription: "Có thể thực hiện tất cả các nhiệm vụ ngôn ngữ",
+  noviceLevelShortDescription: "Cụm từ đơn giản",
+  intermediateLevelShortDescription: "Chủ đề quen thuộc",
+  advancedLevelShortDescription: "Chủ đề phức tạp",
+  superiorLevelShortDescription: "Tất cả nhiệm vụ",
+  
+  // Navigation
+  home: "Trang chủ",
+  textPractice: "Luyện tập",
+  unlimitedVoicePracticeNav: "Luyện nói không giới hạn",
+  pronunciationPracticeNav: "Luyện phát âm",
+  aiAnalysis: "Phân tích AI",
+  profile: "Hồ sơ",
+  settings: "Cài đặt",
+  
+  // Transcript Analysis - English placeholders as requested
+  progressOverview: "Progress Overview",
+  trackLanguageLearningJourney: "Track Language Learning Journey",
+  aiProgressAnalysis: "AI Progress Analysis",
+  uploadLanguageTestTranscripts: "Upload language test transcripts",
+  totalAnalyses: "Total Analyses",
+  currentLevel: "Current Level",
+  latestScore: "Latest Score",
+  uploadAndAnalyze: "Upload and Analyze",
+  analysisResults: "Analysis Results",
+  progressTimeline: "Progress Timeline",
+  firstTest: "First Test",
+  latestTest: "Latest Test",
+  improvement: "Improvement"
+};
+
+export default minimalTranslations;
