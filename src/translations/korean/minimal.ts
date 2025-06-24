@@ -29,7 +29,7 @@ const minimalTranslations: TranslationRecord = {
   logout: "로그아웃",
   lightMode: "라이트 모드",
   
-  // Practice page
+  // Practice page - FIX KEY MISMATCHES
   practice: "연습",
   englishPractice: "English 연습",
   startChatting: "대화 시작",
@@ -42,13 +42,24 @@ const minimalTranslations: TranslationRecord = {
   typeMessageBelow: "아래에 메시지를 입력하세요",
   typeMessageToPractice: "{{language}} 연습을 위해 메시지를 입력하세요...",
   send: "전송",
+  
+  // Practice Guide - FIXED KEYS to match PracticeGuide.tsx
+  practiceGuide: "{{language}} 연습 가이드",
   practiceGuideTitle: "{{language}} 연습 가이드",
+  practiceGuideDescription: "{{language}} 연습을 최대한 활용하기 위한 몇 가지 팁입니다:",
   practiceGuideIntro: "{{language}} 연습을 최대한 활용하기 위한 몇 가지 팁입니다:",
   practiceGuideTip1: "간단하더라도 완전한 문장을 만들어 보세요.",
   practiceGuideTip2: "실수를 두려워하지 마세요 - 실수는 학습의 일부입니다!",
   practiceGuideTip3: "이해하지 못하는 것이 있으면 설명을 요청하세요.",
   practiceGuideTip4: "최근에 배운 단어를 사용해 보세요.",
   practiceGuideTip5: "우리 AI는 당신의 실력 수준에 맞춰 점진적으로 향상을 도와드립니다.",
+  
+  // Practice tips - using t() keys
+  practiceTip1: "간단하더라도 완전한 문장을 만들어 보세요.",
+  practiceTip2: "실수를 두려워하지 마세요 - 실수는 학습의 일부입니다!",
+  practiceTip3: "이해하지 못하는 것이 있으면 설명을 요청하세요.",
+  practiceTip4: "최근에 배운 단어를 사용해 보세요.",
+  practiceTip5: "우리 AI는 당신의 실력 수준에 맞춰 점진적으로 향상을 도와드립니다.",
 
   // Practice Guide - using exact same keys as shown in the UI
   "Try to form complete sentences, even if they're simple.": "간단하더라도 완전한 문장을 만들어 보세요.",
@@ -79,6 +90,13 @@ const minimalTranslations: TranslationRecord = {
   practiceLevel: "연습 수준",
   intermediatePracticeLevel: "중급 - 익숙한 주제에 대해 토론할 수 있음",
   "Intermediate - Can discuss familiar topics": "중급 - 익숙한 주제에 대해 토론할 수 있음",
+  
+  // CEFR Level Descriptions - ADD MISSING KEY
+  cefrB1Description: "중급 - 익숙한 주제에 대해 토론할 수 있음",
+  cefrA1Description: "초급자 - 기본 구문과 표현",
+  cefrA2Description: "초등 - 간단한 일상 의사소통",
+  cefrB2Description: "중상급 - 유창하게 상호작용 가능",
+  
   currentLanguage: "현재 언어",
   practiceLanguage: "연습 언어",
   startSpeaking: "말하기 시작",
@@ -124,6 +142,16 @@ const minimalTranslations: TranslationRecord = {
   // Additional voice chat translations
   startSpeakingToSeeTranscript: "대화를 보려면 말하기를 시작하세요",
   clickMicrophoneToStartRecording: "녹음을 시작하려면 마이크를 클릭하세요",
+  
+  // Premium Voice Chat - ADD ALL MISSING KEYS
+  premiumVoiceChat: "프리미엄 음성 채팅",
+  premiumVoiceChatBenefits: "프리미엄 음성 혜택",
+  premiumVoiceChatDescription: "AI 프리미엄 튜터와 자연스러운 음성 대화를 나누어 {{practice}} 연습을 하세요! AI가 문법, 어휘, 발음을 교정하는 데 도움을 줄 것입니다.",
+  premiumVoiceNote: "프리미엄 음성 채팅은 매주 10분 세션으로 제한됩니다",
+  premiumVoiceNoteWithReset: "프리미엄 음성 채팅은 주간 10분의 연습 시간을 허용합니다. 시간은 매주 월요일 오전 6시(중부 시간)에 재설정됩니다.",
+  benefitNaturalVoice: "ElevenLabs 기술을 사용한 자연스럽고 인간적인 음성 상호작용",
+  benefitAccentPronunciation: "몰입형 학습을 위한 정확한 억양과 발음",
+  benefitRegularPractice: "매주 월요일 오전 6시에 재설정되는 10분의 주간 연습 시간",
   
   // Pronunciation practice - ALL KEYS
   pronunciationPractice: "발음 연습",
