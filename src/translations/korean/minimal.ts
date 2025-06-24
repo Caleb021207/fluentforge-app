@@ -9,12 +9,14 @@ const minimalTranslations: TranslationRecord = {
   selectNativeLanguage: "모국어 선택",
   iSpeak: "저는 다음 언어를 사용합니다",
   saveLanguagePreferences: "언어 설정 저장",
+  getStarted: "시작하기",
+  selectYourLanguagePreferences: "언어 설정 선택",
   
   // Authentication
   signIn: "로그인",
   signUp: "회원가입",
-  signInToContinue: "로그인",
-  createAccountToGetStarted: "계정 생성",
+  signInToContinue: "로그인하여 계속하기",
+  createAccountToGetStarted: "계정을 만들어 시작하기",
   email: "이메일",
   password: "비밀번호",
   accessPasscode: "액세스 코드",
@@ -24,6 +26,7 @@ const minimalTranslations: TranslationRecord = {
   // Header
   loggedInAs: "로그인 계정",
   logout: "로그아웃",
+  lightMode: "라이트 모드",
   
   // Practice page
   practice: "연습",
@@ -31,8 +34,10 @@ const minimalTranslations: TranslationRecord = {
   startChatting: "대화 시작",
   startConversationIn: "{{language}}로 대화 시작",
   fixGrammar: "문법 수정",
+  correctGrammar: "문법 수정",
   clearConversation: "대화 지우기",
   startTextChat: "텍스트 채팅 시작",
+  startTextChatting: "텍스트 채팅 시작",
   typeMessageBelow: "아래에 메시지를 입력하세요",
   typeMessageToPractice: "{{language}} 연습을 위해 메시지를 입력하세요...",
   send: "전송",
@@ -71,6 +76,7 @@ const minimalTranslations: TranslationRecord = {
   listeningNow: "지금 듣고 있습니다",
   youSaid: "당신이 말한 것",
   conversationStarters: "대화 시작하기",
+  howToStartConversation: "대화를 시작하는 방법",
   tryThesePhrases: "대화를 시작하려면 다음 문구를 시도해 보세요:",
   conversationStarter1: "안녕하세요, 오늘 어떻게 지내세요?",
   conversationStarter2: "당신이 있는 곳의 날씨는 어떤가요?",
@@ -79,7 +85,7 @@ const minimalTranslations: TranslationRecord = {
   conversationStarter5: "좋아하는 책이나 영화에 대해 말해주세요.",
   conversationStarter6: "지난 주말에 무엇을 하셨나요?",
   conversationStarter7: "내일 계획이 무엇인가요?",
-  conversationStarter8: "...을/를 영어/스페인어로 어떻게 말하나요?",
+  conversationStarter8: "...을/를 스페인어/영어로 어떻게 말하나요?",
   practiceWithVoiceChat: "음성 채팅으로 연습",
   voiceChatTips: "이 도구를 사용하여 말하기와 듣기 실력을 향상시키세요. 다음은 몇 가지 팁입니다:",
   voiceTip1: "일상적인 주제에 대해 질문하기",
@@ -163,7 +169,7 @@ const minimalTranslations: TranslationRecord = {
   profile: "프로필",
   settings: "설정",
   
-  // Transcript Analysis - NEW TRANSLATIONS
+  // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",
   aiProgressAnalysis: "AI Progress Analysis",
