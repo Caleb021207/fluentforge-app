@@ -10,7 +10,7 @@ const minimalTranslations: TranslationRecord = {
   iSpeak: "저는 다음 언어를 사용합니다",
   saveLanguagePreferences: "언어 설정 저장",
   getStarted: "시작하기",
-  selectYourLanguagePreferences: "언어 설정 선택",
+  selectYourLanguagePreferences: "언어 설정을 선택하세요",
   
   // Authentication
   signIn: "로그인",
