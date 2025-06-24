@@ -94,6 +94,10 @@ const minimalTranslations: TranslationRecord = {
   voiceTip3: "주변에서 보는 것 설명하기",
   voiceTip4: "여행이나 음식과 같은 특정 주제의 어휘 연습하기",
   
+  // Additional voice chat translations
+  startSpeakingToSeeTranscript: "대화를 보려면 말하기를 시작하세요",
+  clickMicrophoneToStartRecording: "녹음을 시작하려면 마이크를 클릭하세요",
+  
   // Pronunciation practice - ALL KEYS
   pronunciationPractice: "발음 연습",
   improvePronunciationSkillsWith: "목표 지향적인 연습으로 발음 실력 향상",
