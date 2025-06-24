@@ -26,7 +26,7 @@ const minimalTranslations: TranslationRecord = {
   alreadyHaveAccount: "ఇప్పటికే ఖాతా ఉందా?",
 
   // Header
-  loggedInAs: "ఈ విధంగా లాగిన్ చేసారు:",
+  loggedInAs: "ఈ విధంగా లాগిన్ చేసారు:",
   signedInAs: "ఈ విధంగా సైన్ ఇన్ చేసారు:",
   logout: "లాగ్ అవుట్",
   lightMode: "లైట్ మోడ్",
@@ -52,7 +52,6 @@ const minimalTranslations: TranslationRecord = {
   startTextChatting: "టెక్స్ట్ చాట్టింగ్ ప్రారంభించండి",
   typeMessageBelow: "కింద సందేశం టైప్ చేయండి",
   typeMessageToPractice: "{{language}} అభ్యాసం కోసం సందేశం టైప్ చేయండి...",
-  send: "పంపండి",
 
   // Practice Guide
   practiceGuide: "{{language}} అభ్యాస గైడ్",

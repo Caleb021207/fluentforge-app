@@ -52,7 +52,6 @@ const minimalTranslations: TranslationRecord = {
   startTextChatting: "உரை அரட்டை தொடங்குதல்",
   typeMessageBelow: "கீழே செய்தி தட்டச்சு செய்யவும்",
   typeMessageToPractice: "{{language}} பயிற்சிக்காக செய்தி தட்டச்சு செய்யவும்...",
-  send: "அனுப்பவும்",
 
   // Practice Guide
   practiceGuide: "{{language}} பயிற்சி வழிகாட்டி",

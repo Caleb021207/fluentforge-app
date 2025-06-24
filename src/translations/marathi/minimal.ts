@@ -52,7 +52,6 @@ const minimalTranslations: TranslationRecord = {
   startTextChatting: "मजकूर चॅटिंग सुरू करा",
   typeMessageBelow: "खाली संदेश टाइप करा",
   typeMessageToPractice: "{{language}} सरावासाठी संदेश टाइप करा...",
-  send: "पाठवा",
 
   // Practice Guide
   practiceGuide: "{{language}} सराव मार्गदर्शक",

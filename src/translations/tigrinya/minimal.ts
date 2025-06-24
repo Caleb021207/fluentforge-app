@@ -52,7 +52,6 @@ const minimalTranslations: TranslationRecord = {
   startTextChatting: "ጽሑፍ ዘተ ምጅማር",
   typeMessageBelow: "ኣብ ታሕቲ መልእኽቲ ጽሓፉ",
   typeMessageToPractice: "ንልምምድ {{language}} መልእኽቲ ጽሓፉ...",
-  send: "ስደዱ",
 
   // Practice Guide
   practiceGuide: "{{language}} ልምምድ መምሪሒ",

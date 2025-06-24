@@ -52,7 +52,6 @@ const minimalTranslations: TranslationRecord = {
   startTextChatting: "Qalisa ukuxoxa kombhalo",
   typeMessageBelow: "Thayipha umlayezo ngezansi",
   typeMessageToPractice: "Thayipha umlayezo ukuziqeqesha {{language}}...",
-  send: "Thumela",
 
   // Practice Guide
   practiceGuide: "Isiqondiso sokuziqeqesha se-{{language}}",
