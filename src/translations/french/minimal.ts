@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const minimalTranslations: TranslationRecord = {
@@ -67,6 +66,9 @@ const minimalTranslations: TranslationRecord = {
   currentLanguage: "langue actuelle",
   practiceLanguage: "langue de pratique",
   startSpeaking: "Commencer à Parler",
+  stopListening: "Arrêter d'Écouter",
+  listeningNow: "Écoute maintenant",
+  youSaid: "Vous avez dit",
   conversationStarters: "Démarreurs de Conversation",
   tryThesePhrases: "Essayez ces phrases pour commencer une conversation:",
   conversationStarter1: "Bonjour, comment allez-vous aujourd'hui?",

@@ -58,7 +58,7 @@ const minimalTranslations: TranslationRecord = {
   failedToPlayAudio: "Error al reproducir audio",
   play: "Reproducir",
   
-  // Voice chat
+  // Voice chat - UPDATED TRANSLATIONS
   unlimitedVoicePractice: "Práctica de Voz Ilimitada",
   practiceDescription: "Descripción de práctica",
   aiModelInfo: "Información del modelo de IA: Se utiliza OpenAI GPT-4o-mini para la comprensión y generación del lenguaje natural, con síntesis de voz basada en navegador para respuestas de voz.",
@@ -67,6 +67,9 @@ const minimalTranslations: TranslationRecord = {
   currentLanguage: "idioma actual",
   practiceLanguage: "idioma de práctica",
   startSpeaking: "Comenzar a Hablar",
+  stopListening: "Dejar de Escuchar",
+  listeningNow: "Escuchando ahora",
+  youSaid: "Dijiste",
   conversationStarters: "Iniciadores de Conversación",
   tryThesePhrases: "Prueba estas frases para comenzar una conversación:",
   conversationStarter1: "Hola, ¿cómo estás hoy?",
