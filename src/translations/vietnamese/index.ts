@@ -2,11 +2,13 @@
 import { TranslationRecord } from "../types";
 import vietnameseCoreTranslations from "./core";
 import vietnamesePracticeTranslations from "./practice";
+import vietnameseVoiceChatTranslations from "./voice-chat";
 
-// Complete Vietnamese translations with practice integration
+// Complete Vietnamese translations with voice chat and practice integration
 const vietnameseTranslations: TranslationRecord = {
   ...vietnameseCoreTranslations,
-  ...vietnamesePracticeTranslations
+  ...vietnamesePracticeTranslations,
+  ...vietnameseVoiceChatTranslations
 };
 
 export default vietnameseTranslations;
