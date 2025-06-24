@@ -1,0 +1,248 @@
+
+import { TranslationRecord } from "../types";
+
+const minimalTranslations: TranslationRecord = {
+  // Home page
+  welcomeToLanguageLearning: "مرحبًا بك في تعلم اللغات",
+  yourPersonalAICompanion: "رفيقك الذكي الشخصي",
+  swipeUpToGetStarted: "اسحب للأعلى للبدء",
+  selectNativeLanguage: "اختر لغتك الأم",
+  iSpeak: "أنا أتحدث",
+  saveLanguagePreferences: "حفظ تفضيلات اللغة",
+  getStarted: "ابدأ",
+  selectYourLanguagePreferences: "اختر تفضيلات اللغة",
+  
+  // Authentication
+  signIn: "تسجيل الدخول",
+  signUp: "إنشاء حساب",
+  signInToContinue: "سجّل الدخول للمتابعة",
+  createAccountToGetStarted: "أنشئ حسابًا للبدء",
+  email: "البريد الإلكتروني",
+  password: "كلمة المرور",
+  accessPasscode: "رمز الدخول",
+  dontHaveAccount: "ليس لديك حساب؟",
+  alreadyHaveAccount: "لديك حساب بالفعل؟",
+  
+  // Header
+  loggedInAs: "تم تسجيل الدخول باسم",
+  signedInAs: "تم تسجيل الدخول باسم",
+  logout: "تسجيل الخروج",
+  lightMode: "الوضع الفاتح",
+  
+  // Practice page
+  practice: "ممارسة",
+  englishPractice: "ممارسة English",
+  startChatting: "ابدأ المحادثة",
+  startConversationIn: "ابدأ المحادثة بـ{{language}}",
+  fixGrammar: "تصحيح القواعد",
+  correctGrammar: "تصحيح القواعد",
+  clearConversation: "مسح المحادثة",
+  startTextChat: "بدء محادثة نصية",
+  startTextChatting: "بدء محادثة نصية",
+  typeMessageBelow: "اكتب الرسالة أدناه",
+  typeMessageToPractice: "اكتب رسالة لممارسة {{language}}...",
+  send: "إرسال",
+  
+  // Practice Guide
+  practiceGuide: "دليل ممارسة {{language}}",
+  practiceGuideTitle: "دليل ممارسة {{language}}",
+  practiceGuideDescription: "إليك بعض النصائح للحصول على أقصى استفادة من ممارسة {{language}}:",
+  practiceGuideIntro: "إليك بعض النصائح للحصول على أقصى استفادة من ممارسة {{language}}:",
+  practiceGuideTip1: "حاول تشكيل جمل كاملة حتى وإن كانت بسيطة.",
+  practiceGuideTip2: "لا تقلق بشأن الأخطاء — فهي جزء من التعلم!",
+  practiceGuideTip3: "اطلب توضيحًا إذا لم تفهم شيئًا.",
+  practiceGuideTip4: "استخدم الكلمات التي تعلمتها مؤخرًا.",
+  practiceGuideTip5: "يتكيف الذكاء الاصطناعي مع مستواك تدريجيًا ليساعدك على التحسن.",
+  
+  // Practice tips - using t() keys
+  practiceTip1: "حاول تشكيل جمل كاملة حتى وإن كانت بسيطة.",
+  practiceTip2: "لا تقلق بشأن الأخطاء — فهي جزء من التعلم!",
+  practiceTip3: "اطلب توضيحًا إذا لم تفهم شيئًا.",
+  practiceTip4: "استخدم الكلمات التي تعلمتها مؤخرًا.",
+  practiceTip5: "يتكيف الذكاء الاصطناعي مع مستواك تدريجيًا ليساعدك على التحسن.",
+
+  // Practice Guide - using exact same keys as shown in the UI
+  "Try to form complete sentences, even if they're simple.": "حاول تشكيل جمل كاملة حتى وإن كانت بسيطة.",
+  "Don't worry about mistakes — they're part of learning!": "لا تقلق بشأن الأخطاء — فهي جزء من التعلم!",
+  "Ask for explanations if there's something you don't understand.": "اطلب توضيحًا إذا لم تفهم شيئًا.",
+  "Use words you've learned recently.": "استخدم الكلمات التي تعلمتها مؤخرًا.",
+  "Our AI will adapt to your skill level and gradually help you improve.": "يتكيف الذكاء الاصطناعي مع مستواك تدريجيًا ليساعدك على التحسن.",
+  "Here are some tips to get the most out of your {{language}} practice:": "إليك بعض النصائح للحصول على أقصى استفادة من ممارسة {{language}}:",
+  
+  // Hint button
+  suggestionResponses: "اقتراحات للرد",
+  responseSuggestions: "اقتراحات للرد",
+  clickPlayToHearPronunciation: "اضغط على التشغيل لسماع النطق",
+  startConversationForSuggestions: "ابدأ المحادثة للحصول على اقتراحات",
+  startConversationToSeeSuggestions: "ابدأ المحادثة لرؤية الاقتراحات",
+  getResponseSuggestions: "احصل على اقتراحات للرد",
+  greetings: "تحيات",
+  questions: "أسئلة",
+  error: "خطأ",
+  couldNotGenerateHints: "تعذر إنشاء تلميحات",
+  failedToPlayAudio: "فشل في تشغيل الصوت",
+  play: "تشغيل",
+  
+  // Voice chat
+  unlimitedVoicePractice: "ممارسة صوتية غير محدودة",
+  practiceDescription: "وصف الممارسة",
+  aiModelInfo: "معلومات النموذج: يستخدم OpenAI GPT-4o-mini لفهم وإنشاء اللغة الطبيعية، ويستخدم تقنية تصنيع الكلام المبنية على المتصفح للاستجابات الصوتية.",
+  practiceLevel: "مستوى الممارسة",
+  intermediatePracticeLevel: "متوسط - يمكنه مناقشة المواضيع المألوفة",
+  "Intermediate - Can discuss familiar topics": "متوسط - يمكنه مناقشة المواضيع المألوفة",
+  
+  // CEFR Level Descriptions
+  cefrB1Description: "متوسط - يمكنه مناقشة المواضيع المألوفة",
+  cefrA1Description: "مبتدئ - عبارات وتعابير أساسية",
+  cefrA2Description: "ابتدائي - تواصل يومي بسيط",
+  cefrB2Description: "فوق متوسط - يمكنه التفاعل بطلاقة",
+  
+  currentLanguage: "اللغة الحالية",
+  practiceLanguage: "لغة الممارسة",
+  startSpeaking: "ابدأ التحدث",
+  stopListening: "توقف عن الاستماع",
+  listeningNow: "أستمع الآن",
+  youSaid: "قلت",
+  conversationStarters: "بدايات المحادثة",
+  howToStartConversation: "كيفية بدء المحادثة",
+  tryThesePhrases: "جرّب هذه العبارات لبدء المحادثة:",
+  conversationStarter1: "مرحبًا، كيف حالك اليوم؟",
+  conversationStarter2: "كيف هو الطقس عندك؟",
+  conversationStarter3: "هل يمكنك اقتراح مطعم جيد؟",
+  conversationStarter4: "ما هي هواياتك واهتماماتك؟",
+  conversationStarter5: "حدثني عن كتابك أو فيلمك المفضل.",
+  conversationStarter6: "ماذا فعلت في عطلة نهاية الأسبوع الماضية؟",
+  conversationStarter7: "ما خططك للغد؟",
+  conversationStarter8: "كيف تقول... بالإسبانية/الإنجليزية؟",
+
+  // Voice chat phrases that appear in the UI exactly as shown
+  "Hello, how are you today?": "مرحبًا، كيف حالك اليوم؟",
+  "What's the weather like where you are?": "كيف هو الطقس عندك؟",
+  "Can you recommend a good restaurant?": "هل يمكنك اقتراح مطعم جيد؟",
+  "What are your hobbies and interests?": "ما هي هواياتك واهتماماتك؟",
+  "Tell me about your favorite book or movie.": "حدثني عن كتابك أو فيلمك المفضل.",
+  "What did you do last weekend?": "ماذا فعلت في عطلة نهاية الأسبوع الماضية؟",
+  "What are your plans for tomorrow?": "ما خططك للغد؟",
+  "How do you say... in Spanish/English?": "كيف تقول... بالإسبانية/الإنجليزية؟",
+
+  practiceWithVoiceChat: "ممارسة باستخدام الدردشة الصوتية",
+  voiceChatTips: "استخدم هذه الأداة لتحسين مهاراتك في التحدث والاستماع. إليك بعض النصائح:",
+  voiceTip1: "اطرح أسئلة عن مواضيع الحياة اليومية",
+  voiceTip2: "تمرّن على العبارات والتعابير الشائعة",
+  voiceTip3: "صف ما تراه من حولك",
+  voiceTip4: "تمرّن على مفردات مواضيع محددة مثل السفر أو الطعام",
+
+  // Voice chat tips that appear exactly as shown in the UI
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "استخدم هذه الأداة لتحسين مهاراتك في التحدث والاستماع. إليك بعض النصائح:",
+  "Ask questions about everyday topics": "اطرح أسئلة عن مواضيع الحياة اليومية",
+  "Practice common phrases and expressions": "تمرّن على العبارات والتعابير الشائعة",
+  "Describe what you see around you": "صف ما تراه من حولك",
+  "Practice vocabulary for specific topics like travel or food": "تمرّن على مفردات مواضيع محددة مثل السفر أو الطعام",
+  
+  // Additional voice chat translations
+  startSpeakingToSeeTranscript: "ابدأ التحدث لرؤية النص",
+  clickMicrophoneToStartRecording: "اضغط على الميكروفون لبدء التسجيل",
+  
+  // Premium Voice Chat
+  premiumVoiceChat: "دردشة صوتية مميزة",
+  premiumVoiceChatBenefits: "مزايا الصوت المميز",
+  premiumVoiceChatDescription: "تدرب على {{practice}} من خلال محادثات صوتية طبيعية مع مدرس الذكاء الاصطناعي المميز! سيساعدك الذكاء الاصطناعي في تصحيح القواعد والمفردات والنطق.",
+  premiumVoiceNote: "الدردشة الصوتية المميزة محدودة بجلسات 10 دقائق أسبوعيًا",
+  premiumVoiceNoteWithReset: "الدردشة الصوتية المميزة تسمح بممارسة لمدة 10 دقائق أسبوعيًا. يتم إعادة تعيين الوقت كل يوم اثنين في 6 صباحًا بالتوقيت المركزي.",
+  benefitNaturalVoice: "تفاعل صوتي طبيعي وإنساني باستخدام تقنية ElevenLabs",
+  benefitAccentPronunciation: "نبرة ونطق دقيق للتعلم المغمور",
+  benefitRegularPractice: "10 دقائق من وقت الممارسة الأسبوعي يتم إعادة تعيينه كل يوم اثنين في 6 صباحًا",
+  
+  // Pronunciation practice
+  pronunciationPractice: "تمارين النطق",
+  improvePronunciationSkillsWith: "حسّن مهارات النطق من خلال التمارين الموجهة",
+  selectComplexityLevel: "اختر مستوى التعقيد",
+  chooseDifficultyLevelBasedOn: "اختر مستوى الصعوبة حسب قدراتك اللغوية",
+  speechRate: "معدل الكلام",
+  selectLevelToStart: "اختر المستوى لبدء الممارسة",
+  startExercise: "ابدأ التمرين",
+  pronunciationPracticeTips: "نصائح ممارسة النطق",
+  listenCarefullyTip: "استمع بعناية للصوت قبل محاولة التحدث",
+  payAttentionToStressTip: "انتبه للتشديد وأنماط التنغيم",
+  practiceDifficultSoundsTip: "تمرّن على الأصوات الصعبة عدة مرات",
+  recordYourselfTip: "سجّل نفسك وقارن مع المتحدثين الأصليين",
+  bePatientTip: "كن صبورًا - تحسين النطق يحتاج وقت",
+  practiceExercise: "تمرين الممارسة",
+  topic: "الموضوع",
+  listenToPhrase: "استمع للعبارة",
+  clickWordToHear: "اضغط على الكلمة لسماعها",
+  yourPronunciation: "نطقك",
+  startRecording: "ابدأ التسجيل",
+  clickStartToRecord: "اضغط 'ابدأ' للتسجيل",
+  tryAgain: "حاول مرة أخرى",
+  newPhrase: "عبارة جديدة",
+  generatingExercise: "إنشاء التمرين",
+  generatingNewPhrase: "إنشاء عبارة جديدة",
+  levelDescription: "وصف المستوى",
+  failedToGeneratePhrase: "فشل في إنشاء العبارة",
+  noSpeechDetected: "لم يتم الكشف عن الكلام",
+  pleaseTryAgain: "يرجى المحاولة مرة أخرى",
+  failedToAnalyzePronunciation: "فشل في تحليل النطق",
+  
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "ملاحظات النطق",
+  accuracyScore: "نقاط الدقة",
+  intonationScore: "نقاط التنغيم",
+  fluencyScore: "نقاط الطلاقة",
+  complexityScore: "نقاط التعقيد",
+  wordAnalysis: "تحليل الكلمات",
+  phonemeAnalysis: "تحليل الأصوات",
+  overallFeedback: "الملاحظات العامة",
+  excellent: "ممتاز",
+  good: "جيد",
+  fair: "مقبول",
+  needsImprovement: "يحتاج تحسين",
+  
+  // Additional UI elements
+  processing: "معالجة",
+  stopRecording: "توقف عن التسجيل",
+  listeningToYou: "أستمع إليك",
+  realTimeTranscription: "نسخ في الوقت الفعلي",
+  yourTranscription: "نسختك",
+  playing: "يتم التشغيل",
+  
+  // Complexity levels
+  novice: "مبتدئ",
+  intermediate: "متوسط",
+  advanced: "متقدم",
+  superior: "متفوق",
+  noviceLevelDescription: "يمكنه التعامل مع المواضيع البسيطة والمألوفة",
+  intermediateLevelDescription: "يمكنه مناقشة المواضيع المألوفة",
+  advancedLevelDescription: "يمكنه التعامل مع مواضيع معقدة بثقة",
+  superiorLevelDescription: "يمكنه التعامل مع جميع المهام اللغوية",
+  noviceLevelShortDescription: "عبارات بسيطة",
+  intermediateLevelShortDescription: "مواضيع مألوفة",
+  advancedLevelShortDescription: "مواضيع معقدة",
+  superiorLevelShortDescription: "جميع المهام",
+  
+  // Navigation
+  home: "الرئيسية",
+  textPractice: "ممارسة",
+  unlimitedVoicePracticeNav: "ممارسة صوتية غير محدودة",
+  pronunciationPracticeNav: "تمارين النطق",
+  aiAnalysis: "تحليل الذكاء الاصطناعي",
+  profile: "الملف الشخصي",
+  settings: "الإعدادات",
+  
+  // Transcript Analysis - English placeholders as requested
+  progressOverview: "Progress Overview",
+  trackLanguageLearningJourney: "Track Language Learning Journey",
+  aiProgressAnalysis: "AI Progress Analysis",
+  uploadLanguageTestTranscripts: "Upload language test transcripts",
+  totalAnalyses: "Total Analyses",
+  currentLevel: "Current Level",
+  latestScore: "Latest Score",
+  uploadAndAnalyze: "Upload and Analyze",
+  analysisResults: "Analysis Results",
+  progressTimeline: "Progress Timeline",
+  firstTest: "First Test",
+  latestTest: "Latest Test",
+  improvement: "Improvement"
+};
+
+export default minimalTranslations;
