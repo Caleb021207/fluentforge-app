@@ -144,10 +144,7 @@ const minimalTranslations: TranslationRecord = {
   superior: "Supérieur",
   noviceLevelDescription: "Peut gérer des sujets simples et familiers",
   intermediateLevelDescription: "Peut discuter de sujets familiers",
-  advancedLevelDescription: "Peut gérer des sujets complexes avec conf
-
-
-ce",
+  advancedLevelDescription: "Peut gérer des sujets complexes avec confiance",
   superiorLevelDescription: "Peut gérer toute tâche linguistique",
   noviceLevelShortDescription: "Phrases simples",
   intermediateLevelShortDescription: "Sujets familiers",
