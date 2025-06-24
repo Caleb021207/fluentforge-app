@@ -4,6 +4,7 @@ import { useDynamicTTS } from "./hooks/useDynamicTTS";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Volume2, Loader2 } from "lucide-react";
+import { getTargetLanguage } from "@/utils/languageConstants";
 
 interface WordByWordTTSProps {
   phrase: string;
@@ -11,11 +12,12 @@ interface WordByWordTTSProps {
 }
 
 const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase, speechRate }) => {
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
+  const targetLanguage = getTargetLanguage(currentLanguage);
   const words = phrase.split(/\s+/);
   
   const tts = useDynamicTTS({
-    language: "spanish",
+    language: targetLanguage,
     speechRate
   });
   
