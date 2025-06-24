@@ -5,41 +5,41 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "ਭਾਸ਼ਾ ਸਿੱਖਣ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ",
   yourPersonalAICompanion: "ਤੁਹਾਡਾ ਨਿੱਜੀ AI ਸਾਥੀ",
-  swipeUpToGetStarted: "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਉੱਤੇ ਸਵਾਇਪ ਕਰੋ",
+  swipeUpToGetStarted: "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਉੱਪਰ ਸਵਾਈਪ ਕਰੋ",
   getStarted: "ਸ਼ੁਰੂ ਕਰੋ",
   selectYourLanguagePreferences: "ਆਪਣੀ ਭਾਸ਼ਾ ਪਸੰਦਾਂ ਚੁਣੋ",
 
   // Language selection
-  selectNativeLanguage: "ਆਪਣੀ ਮਾਤਭਾਸ਼ਾ ਚੁਣੋ",
-  iSpeak: "ਮੈਂ ਗੱਲ ਕਰਦਾ/ਕਰਦੀ ਹਾਂ",
-  saveLanguagePreferences: "ਭਾਸ਼ਾ ਦੀ ਪਸੰਦ ਸੰਭਾਲੋ",
+  selectNativeLanguage: "ਆਪਣੀ ਮੂਲ ਭਾਸ਼ਾ ਚੁਣੋ",
+  iSpeak: "ਮੈਂ ਬੋਲਦਾ/ਬੋਲਦੀ ਹਾਂ",
+  saveLanguagePreferences: "ਭਾਸ਼ਾ ਪਸੰਦ ਸੰਭਾਲੋ",
 
   // Auth
-  signIn: "ਸਾਈਨ ਇਨ",
-  signUp: "ਸਾਈਨ ਅਪ",
-  signInToContinue: "ਜਾਰੀ ਰੱਖਣ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ",
+  signIn: "ਸਾਇਨ ਇਨ",
+  signUp: "ਰਜਿਸਟਰ",
+  signInToContinue: "ਜਾਰੀ ਰੱਖਣ ਲਈ ਸਾਇਨ ਇਨ ਕਰੋ",
   createAccountToGetStarted: "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਖਾਤਾ ਬਣਾਓ",
-  email: "ਈਮੇਲ",
+  email: "ਈ‑ਮੇਲ",
   password: "ਪਾਸਵਰਡ",
-  accessPasscode: "ਐਕਸੈੱਸ ਕੋਡ",
-  dontHaveAccount: "ਕੀ ਤੁਹਾਡਾ ਖਾਤਾ ਨਹੀਂ?",
-  alreadyHaveAccount: "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
+  accessPasscode: "ਪਹੁੰਚ ਕੋਡ",
+  dontHaveAccount: "ਖਾਤਾ ਨਹੀਂ?",
+  alreadyHaveAccount: "ਖਾਤਾ ਪਹਿਲਾਂ ਹੀ ਹੈ?",
 
   // Header
-  loggedInAs: "ਲਾਗਇਨ ਹੋਇਆ:",
+  loggedInAs: "ਲੋਗ ਇਨ: ",
   signedInAs: "ਸਾਈਨ ਇਨ ਹੋਇਆ:",
-  logout: "ਲਾਗ ਆਉਟ",
+  logout: "ਲੋਗ ਆਊਟ",
   lightMode: "ਲਾਈਟ ਮੋਡ",
 
   // Navigation
-  home: "ਘਰ",
+  home: "ਹੋਮ",
   practice: "ਅਭਿਆਸ",
   textPractice: "ਟੈਕਸਟ ਅਭਿਆਸ",
-  unlimitedVoicePracticeNav: "ਅਣਗਿਣਤ ਆਵਾਜ਼ ਅਭਿਆਸ",
+  unlimitedVoicePracticeNav: "ਅਨਲਿਮਿਟਿਡ ਵਾਇਸ ਅਭਿਆਸ",
   pronunciationPracticeNav: "ਉਚਾਰਣ ਅਭਿਆਸ",
   aiAnalysis: "AI ਵਿਸ਼ਲੇਸ਼ਣ",
-  profile: "ਪ੍ਰੋਫਾਈਲ",
-  settings: "ਸੈਟਿੰਗਾਂ",
+  profile: "ਪ੍ਰੋਫ਼ਾਈਲ",
+  settings: "ਸੈੱਟਿੰਗਜ਼",
 
   // Practice page
   englishPractice: "ਅੰਗਰੇਜ਼ੀ ਅਭਿਆਸ",
@@ -51,14 +51,14 @@ const minimalTranslations: TranslationRecord = {
   startTextChat: "ਟੈਕਸਟ ਚੈਟ ਸ਼ੁਰੂ ਕਰੋ",
   startTextChatting: "ਟੈਕਸਟ ਚੈਟਿੰਗ ਸ਼ੁਰੂ ਕਰੋ",
   typeMessageBelow: "ਹੇਠਾਂ ਸੁਨੇਹਾ ਲਿਖੋ",
-  typeMessageToPractice: "{{language}} ਵਿੱਚ ਅਭਿਆਸ ਲਈ ਸੁਨੇਹਾ ਲਿਖੋ...",
+  typeMessageToPractice: "{{language}} ਅਭਿਆਸ ਲਈ ਸੁਨੇਹਾ ਲਿਖੋ...",
   send: "ਭੇਜੋ",
 
   // Practice Guide
   practiceGuide: "{{language}} ਅਭਿਆਸ ਗਾਈਡ",
   practiceGuideTitle: "{{language}} ਅਭਿਆਸ ਗਾਈਡ",
   practiceGuideDescription: "ਪ੍ਰਭਾਵੀ {{language}} ਅਭਿਆਸ ਲਈ ਉਪਯੋਗੀ ਸੁਝਾਅ:",
-  practiceGuideIntro: "ਪ੍ਰਭਾਵੀ {{language}} ਅਭਿਆਸ ਲਈ ਉਪਯੋਗੀ ਸੁਝਾਅ:",
+  practiceGuideIntro: "ਚੰਗੇ ਅਭਿਆਸ ਲਈ ਕੁਝ ਸੁਝਾਅ:",
 
   // Hint button
   suggestionResponses: "ਸੁਝਾਏ ਗਏ ਜਵਾਬ",
@@ -75,7 +75,7 @@ const minimalTranslations: TranslationRecord = {
   play: "ਚਲਾਓ",
 
   // Voice chat
-  unlimitedVoicePractice: "ਅਣਗਿਣਤ ਆਵਾਜ਼ ਅਭਿਆਸ",
+  unlimitedVoicePractice: "ਅਨਲਿਮਿਟਿਡ ਵਾਇਸ ਅਭਿਆਸ",
   practiceDescription: "ਅਭਿਆਸ ਦੀ ਵੇਰਵਾ",
   aiModelInfo: "AI ਮਾਡਲ ਜਾਣਕਾਰੀ: ਕੁਦਰਤੀ ਭਾਸ਼ਾ ਸਮਝ ਅਤੇ ਉਤਪਾਦਨ ਲਈ OpenAI GPT-4o-mini, ਆਵਾਜ਼ੀ ਜਵਾਬਾਂ ਲਈ ਬ੍ਰਾਊਜ਼ਰ TTS।",
   practiceLevel: "ਅਭਿਆਸ ਪੱਧਰ",
