@@ -1,0 +1,248 @@
+
+import { TranslationRecord } from "../types";
+
+const minimalTranslations: TranslationRecord = {
+  // Home page
+  welcomeToLanguageLearning: "欢迎来到语言学习",
+  yourPersonalAICompanion: "你的个人AI助手",
+  swipeUpToGetStarted: "上滑开始",
+  selectNativeLanguage: "选择你的母语",
+  iSpeak: "我会说",
+  saveLanguagePreferences: "保存语言偏好",
+  getStarted: "开始",
+  selectYourLanguagePreferences: "选择你的语言偏好",
+  
+  // Authentication
+  signIn: "登录",
+  signUp: "注册",
+  signInToContinue: "请登录以继续",
+  createAccountToGetStarted: "创建账户开始",
+  email: "邮箱",
+  password: "密码",
+  accessPasscode: "访问码",
+  dontHaveAccount: "没有账户？",
+  alreadyHaveAccount: "已有账户？",
+  
+  // Header
+  loggedInAs: "已登录为",
+  signedInAs: "已登录为",
+  logout: "退出登录",
+  lightMode: "浅色模式",
+  
+  // Practice page - FIX KEY MISMATCHES
+  practice: "练习",
+  englishPractice: "English 练习",
+  startChatting: "开始聊天",
+  startConversationIn: "用{{language}}开始对话",
+  fixGrammar: "语法修正",
+  correctGrammar: "语法修正",
+  clearConversation: "清除对话",
+  startTextChat: "开始文本聊天",
+  startTextChatting: "开始文本聊天",
+  typeMessageBelow: "在下方输入消息",
+  typeMessageToPractice: "输入消息以练习{{language}}...",
+  send: "发送",
+  
+  // Practice Guide - FIXED KEYS to match PracticeGuide.tsx
+  practiceGuide: "{{language}}练习指南",
+  practiceGuideTitle: "{{language}}练习指南",
+  practiceGuideDescription: "以下是一些充分利用{{language}}练习的建议：",
+  practiceGuideIntro: "以下是一些充分利用{{language}}练习的建议：",
+  practiceGuideTip1: "尽量使用完整句子，即使很简单。",
+  practiceGuideTip2: "不要担心错误——错误是学习的一部分！",
+  practiceGuideTip3: "如果不理解，请提问。",
+  practiceGuideTip4: "尝试使用你最近学过的词。",
+  practiceGuideTip5: "我们的AI会根据你的水平调整内容。",
+  
+  // Practice tips - using t() keys
+  practiceTip1: "尽量使用完整句子，即使很简单。",
+  practiceTip2: "不要担心错误——错误是学习的一部分！",
+  practiceTip3: "如果不理解，请提问。",
+  practiceTip4: "尝试使用你最近学过的词。",
+  practiceTip5: "我们的AI会根据你的水平调整内容。",
+
+  // Practice Guide - using exact same keys as shown in the UI
+  "Try to form complete sentences, even if they're simple.": "尽量使用完整句子，即使很简单。",
+  "Don't worry about mistakes — they're part of learning!": "不要担心错误——错误是学习的一部分！",
+  "Ask for explanations if there's something you don't understand.": "如果不理解，请提问。",
+  "Use words you've learned recently.": "尝试使用你最近学过的词。",
+  "Our AI will adapt to your skill level and gradually help you improve.": "我们的AI会根据你的水平调整内容。",
+  "Here are some tips to get the most out of your {{language}} practice:": "以下是一些充分利用{{language}}练习的建议：",
+  
+  // Hint button - FIXED KEYS
+  suggestionResponses: "建议回复",
+  responseSuggestions: "建议回复",
+  clickPlayToHearPronunciation: "点击播放以听发音",
+  startConversationForSuggestions: "开始对话以获取建议",
+  startConversationToSeeSuggestions: "开始对话以查看建议",
+  getResponseSuggestions: "获取回复建议",
+  greetings: "问候",
+  questions: "问题",
+  error: "错误",
+  couldNotGenerateHints: "无法生成提示",
+  failedToPlayAudio: "播放音频失败",
+  play: "播放",
+  
+  // Voice chat - UPDATED TRANSLATIONS
+  unlimitedVoicePractice: "无限语音练习",
+  practiceDescription: "练习说明",
+  aiModelInfo: "AI模型信息：使用OpenAI GPT-4o-mini进行自然语言理解和生成，使用基于浏览器的语音合成进行语音响应。",
+  practiceLevel: "练习水平",
+  intermediatePracticeLevel: "中级 - 能讨论熟悉话题",
+  "Intermediate - Can discuss familiar topics": "中级 - 能讨论熟悉话题",
+  
+  // CEFR Level Descriptions - ADD MISSING KEY
+  cefrB1Description: "中级 - 能讨论熟悉话题",
+  cefrA1Description: "初级者 - 基本短语和表达",
+  cefrA2Description: "基础 - 简单的日常交流",
+  cefrB2Description: "中高级 - 能流利交流",
+  
+  currentLanguage: "当前语言",
+  practiceLanguage: "练习语言",
+  startSpeaking: "开始说话",
+  stopListening: "停止听取",
+  listeningNow: "正在听取",
+  youSaid: "你说的",
+  conversationStarters: "对话开场白",
+  howToStartConversation: "如何开始对话",
+  tryThesePhrases: "试试这些短语来开始对话：",
+  conversationStarter1: "你好，今天过得怎么样？",
+  conversationStarter2: "你那边的天气怎么样？",
+  conversationStarter3: "你能推荐一个好餐厅吗？",
+  conversationStarter4: "你有什么兴趣爱好？",
+  conversationStarter5: "说说你最喜欢的书或电影。",
+  conversationStarter6: "你上个周末做了什么？",
+  conversationStarter7: "你明天有什么计划？",
+  conversationStarter8: "用西班牙语/英语怎么说...？",
+
+  // Voice chat phrases that appear in the UI exactly as shown
+  "Hello, how are you today?": "你好，今天过得怎么样？",
+  "What's the weather like where you are?": "你那边的天气怎么样？",
+  "Can you recommend a good restaurant?": "你能推荐一个好餐厅吗？",
+  "What are your hobbies and interests?": "你有什么兴趣爱好？",
+  "Tell me about your favorite book or movie.": "说说你最喜欢的书或电影。",
+  "What did you do last weekend?": "你上个周末做了什么？",
+  "What are your plans for tomorrow?": "你明天有什么计划？",
+  "How do you say... in Spanish/English?": "用西班牙语/英语怎么说...？",
+
+  practiceWithVoiceChat: "使用语音聊天练习",
+  voiceChatTips: "使用这个工具来提高你的口语和听力技能。以下是一些提示：",
+  voiceTip1: "提问日常话题",
+  voiceTip2: "练习常用短语和表达",
+  voiceTip3: "描述你周围看到的东西",
+  voiceTip4: "练习特定主题的词汇，如旅行或食物",
+
+  // Voice chat tips that appear exactly as shown in the UI
+  "Use this tool to improve your speaking and listening skills. Here are some tips:": "使用这个工具来提高你的口语和听力技能。以下是一些提示：",
+  "Ask questions about everyday topics": "提问日常话题",
+  "Practice common phrases and expressions": "练习常用短语和表达",
+  "Describe what you see around you": "描述你周围看到的东西",
+  "Practice vocabulary for specific topics like travel or food": "练习特定主题的词汇，如旅行或食物",
+  
+  // Additional voice chat translations
+  startSpeakingToSeeTranscript: "开始说话以查看转录",
+  clickMicrophoneToStartRecording: "点击麦克风开始录音",
+  
+  // Premium Voice Chat - ADD ALL MISSING KEYS
+  premiumVoiceChat: "高级语音聊天",
+  premiumVoiceChatBenefits: "高级语音优势",
+  premiumVoiceChatDescription: "通过与AI高级导师的自然语音对话练习{{practice}}！AI将帮助您纠正语法、词汇和发音。",
+  premiumVoiceNote: "高级语音聊天限制为每周10分钟会话",
+  premiumVoiceNoteWithReset: "高级语音聊天允许每周10分钟的练习时间。时间在每周一上午6点（中部时间）重置。",
+  benefitNaturalVoice: "使用ElevenLabs技术的自然、人性化语音交互",
+  benefitAccentPronunciation: "准确的口音和发音用于沉浸式学习",
+  benefitRegularPractice: "每周10分钟的练习时间，每周一上午6点重置",
+  
+  // Pronunciation practice - ALL KEYS
+  pronunciationPractice: "发音练习",
+  improvePronunciationSkillsWith: "通过目标练习提升发音技能",
+  selectComplexityLevel: "选择复杂度等级",
+  chooseDifficultyLevelBasedOn: "根据你的语言能力选择难度等级",
+  speechRate: "语速",
+  selectLevelToStart: "选择等级开始练习",
+  startExercise: "开始练习",
+  pronunciationPracticeTips: "发音练习提示",
+  listenCarefullyTip: "说话前仔细听音频",
+  payAttentionToStressTip: "注意重音和语调模式",
+  practiceDifficultSoundsTip: "多次练习困难的发音",
+  recordYourselfTip: "录下你的发音并与母语者比较",
+  bePatientTip: "保持耐心——改进发音需要时间",
+  practiceExercise: "练习练习",
+  topic: "话题",
+  listenToPhrase: "听短语",
+  clickWordToHear: "点击单词听发音",
+  yourPronunciation: "你的发音",
+  startRecording: "开始录音",
+  clickStartToRecord: "点击'开始'录音",
+  tryAgain: "再试一次",
+  newPhrase: "新短语",
+  generatingExercise: "生成练习中",
+  generatingNewPhrase: "生成新短语中",
+  levelDescription: "等级说明",
+  failedToGeneratePhrase: "生成短语失败",
+  noSpeechDetected: "未检测到语音",
+  pleaseTryAgain: "请再试一次",
+  failedToAnalyzePronunciation: "发音分析失败",
+  
+  // Additional pronunciation feedback translations
+  pronunciationFeedback: "发音反馈",
+  accuracyScore: "准确度",
+  intonationScore: "语调",
+  fluencyScore: "流利度",
+  complexityScore: "复杂度",
+  wordAnalysis: "单词分析",
+  phonemeAnalysis: "音素分析",
+  overallFeedback: "整体反馈",
+  excellent: "优秀",
+  good: "良好",
+  fair: "尚可",
+  needsImprovement: "需要改进",
+  
+  // Additional UI elements
+  processing: "处理中",
+  stopRecording: "停止录音",
+  listeningToYou: "正在听你说话",
+  realTimeTranscription: "实时转录",
+  yourTranscription: "你的转录",
+  playing: "播放中",
+  
+  // Complexity levels
+  novice: "初级",
+  intermediate: "中级",
+  advanced: "高级",
+  superior: "精通",
+  noviceLevelDescription: "能处理简单和熟悉的话题",
+  intermediateLevelDescription: "能讨论熟悉话题",
+  advancedLevelDescription: "能自信地处理复杂话题",
+  superiorLevelDescription: "能执行所有语言任务",
+  noviceLevelShortDescription: "简单短语",
+  intermediateLevelShortDescription: "熟悉话题",
+  advancedLevelShortDescription: "复杂话题",
+  superiorLevelShortDescription: "所有任务",
+  
+  // Navigation
+  home: "主页",
+  textPractice: "练习",
+  unlimitedVoicePracticeNav: "无限语音练习",
+  pronunciationPracticeNav: "发音练习",
+  aiAnalysis: "AI分析",
+  profile: "个人资料",
+  settings: "设置",
+  
+  // Transcript Analysis - English placeholders as requested
+  progressOverview: "Progress Overview",
+  trackLanguageLearningJourney: "Track Language Learning Journey",
+  aiProgressAnalysis: "AI Progress Analysis",
+  uploadLanguageTestTranscripts: "Upload language test transcripts",
+  totalAnalyses: "Total Analyses",
+  currentLevel: "Current Level",
+  latestScore: "Latest Score",
+  uploadAndAnalyze: "Upload and Analyze",
+  analysisResults: "Analysis Results",
+  progressTimeline: "Progress Timeline",
+  firstTest: "First Test",
+  latestTest: "Latest Test",
+  improvement: "Improvement"
+};
+
+export default minimalTranslations;
