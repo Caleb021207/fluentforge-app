@@ -1,21 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import languageSelectionTranslations from "./language-selection";
-import languagesTranslations from "./languages";
-import practiceTranslations from "./practice";
-import classroomTranslations from "./classroom";
-import voiceChatTranslations from "./voice-chat";
-import premiumVoiceTranslations from "./premium-voice";
-import generalTranslations from "./general";
+import minimalTranslations from "./minimal";
 
+// Use only the minimal translations for Somali
 const somaliTranslations: TranslationRecord = {
-  ...languageSelectionTranslations,
-  ...languagesTranslations,
-  ...practiceTranslations,
-  ...classroomTranslations,
-  ...voiceChatTranslations,
-  ...premiumVoiceTranslations,
-  ...generalTranslations
+  ...minimalTranslations,
 };
 
 export default somaliTranslations;
