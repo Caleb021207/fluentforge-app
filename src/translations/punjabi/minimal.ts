@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const minimalTranslations: TranslationRecord = {
@@ -60,6 +59,13 @@ const minimalTranslations: TranslationRecord = {
   practiceGuideDescription: "ਪ੍ਰਭਾਵੀ {{language}} ਅਭਿਆਸ ਲਈ ਉਪਯੋਗੀ ਸੁਝਾਅ:",
   practiceGuideIntro: "ਚੰਗੇ ਅਭਿਆਸ ਲਈ ਕੁਝ ਸੁਝਾਅ:",
 
+  // Missing practice guide tips
+  "Try to form complete sentences, even if they're simple.": "ਪੂਰੇ ਵਾਕ ਬਣਾਉਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ, ਭਾਵੇਂ ਉਹ ਸਧਾਰਨ ਹੋਣ।",
+  "Don't worry about mistakes — they're part of learning!": "ਗਲਤੀਆਂ ਦੀ ਚਿੰਤਾ ਨਾ ਕਰੋ — ਇਹ ਸਿੱਖਣ ਦਾ ਹਿੱਸਾ ਹਨ!",
+  "Ask for explanations if there's something you don't understand.": "ਜੇ ਕੁਝ ਸਮਝ ਨਾ ਆਵੇ ਤਾਂ ਸਪੱਸ਼ਟੀਕਰਨ ਮੰਗੋ।",
+  "Use words you've learned recently.": "ਹਾਲ ਹੀ ਵਿੱਚ ਸਿੱਖੇ ਸ਼ਬਦਾਂ ਦੀ ਵਰਤੋਂ ਕਰੋ।",
+  "Our AI will adapt to your skill level and gradually help you improve.": "ਸਾਡਾ AI ਤੁਹਾਡੇ ਹੁਨਰ ਪੱਧਰ ਦੇ ਅਨੁਕੂਲ ਹੋਵੇਗਾ ਅਤੇ ਹੌਲੀ ਹੌਲੀ ਸੁਧਾਰਨ ਵਿੱਚ ਮਦਦ ਕਰੇਗਾ।",
+
   // Hint button
   suggestionResponses: "ਸੁਝਾਏ ਗਏ ਜਵਾਬ",
   responseSuggestions: "ਜਵਾਬ ਸੁਝਾਅ",
@@ -100,6 +106,15 @@ const minimalTranslations: TranslationRecord = {
   conversationStarter7: "ਕੱਲ੍ਹ ਲਈ ਤੁਹਾਡੀਆਂ ਯੋਜਨਾਵਾਂ ਕੀ ਹਨ?",
   conversationStarter8: "'...' ਨੂੰ ਅੰਗਰੇਜ਼ੀ/ਸਪੇਨੀ ਵਿੱਚ ਕਿਵੇਂ ਕਹਿੰਦੇ ਹਨ?",
 
+  // Missing voice chat elements
+  "Practice with Voice Chat": "ਵਾਇਸ ਚੈਟ ਨਾਲ ਅਭਿਆਸ ਕਰੋ",
+  practiceWithVoiceChat: "ਵਾਇਸ ਚੈਟ ਨਾਲ ਅਭਿਆਸ ਕਰੋ",
+  voiceChatTips: "ਵਾਇਸ ਚੈਟ ਸੁਝਾਅ:",
+  voiceTip1: "ਆਪਣੀ ਦਿਲਚਸਪੀ ਦੇ ਵਿਸ਼ਿਆਂ ਬਾਰੇ ਪੁੱਛੋ",
+  voiceTip2: "ਆਮ ਵਾਕਾਂ ਅਤੇ ਮੁਹਾਵਰਿਆਂ ਦਾ ਅਭਿਆਸ ਕਰੋ",
+  voiceTip3: "ਆਪਣੇ ਆਲੇ-ਦੁਆਲੇ ਜੋ ਤੁਸੀਂ ਦੇਖਦੇ ਹੋ ਉਸਦਾ ਵਰਣਨ ਕਰੋ",
+  voiceTip4: "ਯਾਤਰਾ ਜਾਂ ਭੋਜਨ ਵਰਗੇ ਖਾਸ ਵਿਸ਼ਿਆਂ ਲਈ ਸ਼ਬਦਾਵਲੀ ਦਾ ਅਭਿਆਸ ਕਰੋ",
+
   // Pronunciation practice
   pronunciationPractice: "ਉਚਾਰਣ ਅਭਿਆਸ",
   improvePronunciationSkillsWith: "ਇਨ੍ਹਾਂ ਅਭਿਆਸਾਂ ਨਾਲ ਉਚਾਰਣ ਸੁਧਾਰੋ",
@@ -124,6 +139,14 @@ const minimalTranslations: TranslationRecord = {
   pleaseTryAgain: "ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
   failedToAnalyzePronunciation: "ਉਚਾਰਣ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਅਸਫਲ ਹੋਇਆ",
 
+  // Missing pronunciation practice tips
+  "Pronunciation Practice Tips": "ਉਚਾਰਣ ਅਭਿਆਸ ਸੁਝਾਅ",
+  "Listen carefully to the audio before attempting to speak": "ਬੋਲਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਆਡੀਓ ਨੂੰ ਧਿਆਨ ਨਾਲ ਸੁਣੋ",
+  "Pay attention to stress patterns and intonation": "ਤਨਾਅ ਦੇ ਨਮੂਨਿਆਂ ਅਤੇ ਸੁਰ ਵਿੱਚ ਬਦਲਾਅ 'ਤੇ ਧਿਆਨ ਦਿਓ",
+  "Practice difficult sounds multiple times": "ਮੁਸ਼ਕਿਲ ਆਵਾਜ਼ਾਂ ਦਾ ਕਈ ਵਾਰ ਅਭਿਆਸ ਕਰੋ",
+  "Record yourself and compare with native speakers": "ਆਪਣੇ ਆਪ ਨੂੰ ਰਿਕਾਰਡ ਕਰੋ ਅਤੇ ਮੂਲ ਬੋਲਣ ਵਾਲਿਆਂ ਨਾਲ ਤੁਲਨਾ ਕਰੋ",
+  "Be patient - pronunciation improvement takes time": "ਧੀਰਜ ਰੱਖੋ - ਉਚਾਰਣ ਵਿੱਚ ਸੁਧਾਰ ਵਿੱਚ ਸਮਾਂ ਲੱਗਦਾ ਹੈ",
+
   // Additional UI elements
   processing: "ਪ੍ਰਕਿਰਿਆ ਕਰ ਰਹੇ ਹਾਂ",
   stopRecording: "ਰਿਕਾਰਡਿੰਗ ਬੰਦ ਕਰੋ",
@@ -145,6 +168,12 @@ const minimalTranslations: TranslationRecord = {
   intermediateLevelShortDescription: "ਜਾਣੇ-ਪਛਾਣੇ ਵਿਸ਼ੇ",
   advancedLevelShortDescription: "ਗੁੰਝਲਦਾਰ ਵਿਸ਼ੇ",
   superiorLevelShortDescription: "ਸਾਰੇ ਕਾਰਜ",
+
+  // Auth section additions  
+  "Sign Out": "ਸਾਈਨ ਆਊਟ",
+
+  // Missing placeholders
+  "Type your message to practice english...": "ਅੰਗਰੇਜ਼ੀ ਅਭਿਆਸ ਲਈ ਆਪਣਾ ਸੁਨੇਹਾ ਲਿਖੋ...",
 
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
