@@ -1,19 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import languageSelectionTranslations from "./language-selection";
-import classroomTranslations from "./classroom";
-import practiceTranslations from "./practice";
-import premiumVoiceTranslations from "./premium-voice";
-import voiceChatTranslations from "./voice-chat";
-import generalTranslations from "./general";
+import minimalTranslations from "./minimal";
 
+// Use only the minimal translations for Malayalam
 const malayalamTranslations: TranslationRecord = {
-  ...languageSelectionTranslations,
-  ...classroomTranslations,
-  ...practiceTranslations,
-  ...premiumVoiceTranslations,
-  ...voiceChatTranslations,
-  ...generalTranslations
+  ...minimalTranslations,
 };
 
 export default malayalamTranslations;
