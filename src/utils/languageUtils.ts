@@ -1,4 +1,3 @@
-
 /**
  * Returns display name for a language code
  * @param language The language code
@@ -35,19 +34,14 @@ export const getLanguageDisplayName = (language: string): string => {
     'turkish': 'Turkish',
     'romanian': 'Romanian',
     'tagalog': 'Filipino/Tagalog',
+    // Adding new languages
     'german': 'German',
     'italian': 'Italian',
     'thai': 'Thai',
+    // Re-adding previously removed languages
     'gujarati': 'Gujarati',
     'punjabi': 'Punjabi',
-    'nepali': 'Nepali',
-    // Adding 6 new languages
-    'tamil': 'Tamil',
-    'marathi': 'Marathi',
-    'telugu': 'Telugu',
-    'burmese': 'Burmese',
-    'tigrinya': 'Tigrinya',
-    'zulu': 'Zulu'
+    'nepali': 'Nepali'
   };
   
   return languageMap[language?.toLowerCase()] || language || 'English';
@@ -106,19 +100,14 @@ export const getNativeLanguageDisplayName = (language: string): string => {
     'turkish': 'Türkçe',
     'romanian': 'Română',
     'tagalog': 'Tagalog',
+    // Adding new languages in native script
     'german': 'Deutsch',
     'italian': 'Italiano',
     'thai': 'ภาษาไทย',
+    // Re-adding previously removed languages in native script
     'gujarati': 'ગુજરાતી',
     'punjabi': 'ਪੰਜਾਬੀ',
-    'nepali': 'नेपाली',
-    // Adding 6 new languages in native script
-    'tamil': 'தமிழ்',
-    'marathi': 'मराठी',
-    'telugu': 'తెలుగు',
-    'burmese': 'မြန်မာ',
-    'tigrinya': 'ትግርኛ',
-    'zulu': 'isiZulu'
+    'nepali': 'नेपाली'
   };
   
   return nativeNameMap[language?.toLowerCase()] || getLanguageDisplayName(language);
@@ -180,19 +169,14 @@ export const hasStudyMaterials = (nativeLanguage: string, targetLanguage: string
     'turkish-english',
     'romanian-english',
     'tagalog-english',
+    // Adding new language pairs
     'german-english',
     'italian-english',
     'thai-english',
+    // Re-adding previously removed language pairs
     'gujarati-english',
     'punjabi-english',
-    'nepali-english',
-    // Adding 6 new language pairs
-    'tamil-english',
-    'marathi-english',
-    'telugu-english',
-    'burmese-english',
-    'tigrinya-english',
-    'zulu-english'
+    'nepali-english'
   ];
   
   const pairKey = `${nativeLanguage?.toLowerCase() || ''}-${targetLanguage?.toLowerCase() || ''}`;
@@ -213,7 +197,7 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'japanese': 'ja-JP',
     'korean': 'ko-KR',
     'mandarin': 'zh-CN',
-    'cantonese': 'zh-HK',
+    'cantonese': 'zh-HK', // Added Cantonese language code
     'russian': 'ru-RU',
     'arabic': 'ar-SA',
     'hindi': 'hi-IN',
@@ -224,6 +208,7 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'urdu': 'ur-PK',
     'pashto': 'ps-AF',
     'swahili': 'sw-KE',
+    // Adding new languages with their language codes
     'bengali': 'bn-BD',
     'somali': 'so-SO',
     'yoruba': 'yo-NG',
@@ -234,14 +219,7 @@ export const getSpeechSynthesisLanguageCode = (language: string): string => {
     'polish': 'pl-PL',
     'turkish': 'tr-TR',
     'romanian': 'ro-RO',
-    'tagalog': 'fil-PH',
-    // Adding 6 new languages
-    'tamil': 'ta-IN',
-    'marathi': 'mr-IN',
-    'telugu': 'te-IN',
-    'burmese': 'my-MM',
-    'tigrinya': 'ti-ER',
-    'zulu': 'zu-ZA'
+    'tagalog': 'fil-PH'
   };
   
   return languageCodeMap[language?.toLowerCase()] || 'en-US';

@@ -28,19 +28,14 @@ export const TRANSLATION_REQUIRED_LANGUAGES = [
   "romanian",
   "tagalog",
   "cantonese",
+  // Adding new languages
   "german",
   "italian",
   "thai",
+  // Re-adding previously removed languages
   "gujarati",
   "punjabi",
   "nepali",
-  // Adding 6 new languages
-  "tamil",
-  "marathi", 
-  "telugu",
-  "burmese",
-  "tigrinya",
-  "zulu",
 ];
 
 /**
@@ -60,3 +55,4 @@ export const getTargetLanguage = (currentLanguage: string): string => {
 export const getNativeLanguage = (currentLanguage: string): string => {
   return currentLanguage;
 };
+
