@@ -161,7 +161,22 @@ const minimalTranslations: TranslationRecord = {
   pronunciationPracticeNav: "Práctica de Pronunciación",
   aiAnalysis: "Análisis IA",
   profile: "Perfil",
-  settings: "Configuración"
+  settings: "Configuración",
+  
+  // Transcript Analysis - NEW TRANSLATIONS
+  progressOverview: "Progress Overview",
+  trackLanguageLearningJourney: "Track Language Learning Journey",
+  aiProgressAnalysis: "AI Progress Analysis",
+  uploadLanguageTestTranscripts: "Upload language test transcripts",
+  totalAnalyses: "Total Analyses",
+  currentLevel: "Current Level",
+  latestScore: "Latest Score",
+  uploadAndAnalyze: "Upload and Analyze",
+  analysisResults: "Analysis Results",
+  progressTimeline: "Progress Timeline",
+  firstTest: "First Test",
+  latestTest: "Latest Test",
+  improvement: "Improvement"
 };
 
 export default minimalTranslations;
