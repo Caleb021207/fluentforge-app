@@ -9,18 +9,18 @@ const ConversationStarters: React.FC<ConversationStartersProps> = ({
   onPhraseClick,
   phrases
 }) => {
-  const { t, currentLanguage } = useLocalization();
+  const { t } = useLocalization();
   
-  // Get default phrases if none provided
+  // Get default phrases using translation keys instead of hardcoded strings
   const defaultPhrases = phrases || [
-    t("phrase1"),
-    t("phrase2"),
-    t("phrase3"),
-    t("phrase4"),
-    t("phrase5"),
-    t("phrase6"),
-    t("phrase7"),
-    t("phrase8")
+    t("conversationStarter1"),
+    t("conversationStarter2"),
+    t("conversationStarter3"),
+    t("conversationStarter4"),
+    t("conversationStarter5"),
+    t("conversationStarter6"),
+    t("conversationStarter7"),
+    t("conversationStarter8")
   ];
 
   return (

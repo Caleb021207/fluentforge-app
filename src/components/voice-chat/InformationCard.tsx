@@ -2,9 +2,8 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLocalization } from "@/context/LocalizationContext";
-import { InformationCardProps } from "@/types/voiceChat";
 
-const InformationCard: React.FC<InformationCardProps> = () => {
+const InformationCard: React.FC = () => {
   const { t } = useLocalization();
 
   return (
@@ -14,24 +13,24 @@ const InformationCard: React.FC<InformationCardProps> = () => {
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          {t("useThisTool")}
+          {t("voiceChatTips")}
         </p>
         <ul className="space-y-2 text-sm">
           <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>{t("askQuestions")}</span>
+            <span className="text-accent mr-2">•</span>
+            <span>{t("voiceTip1")}</span>
           </li>
           <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>{t("practiceCommonPhrases")}</span>
+            <span className="text-accent mr-2">•</span>
+            <span>{t("voiceTip2")}</span>
           </li>
           <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>{t("describeWhatYouSee")}</span>
+            <span className="text-accent mr-2">•</span>
+            <span>{t("voiceTip3")}</span>
           </li>
           <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>{t("practiceVocabularyForSpecific")}</span>
+            <span className="text-accent mr-2">•</span>
+            <span>{t("voiceTip4")}</span>
           </li>
         </ul>
       </CardContent>
