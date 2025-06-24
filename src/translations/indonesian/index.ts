@@ -1,30 +1,10 @@
 
 import { TranslationRecord } from "../types";
-import authTranslations from "./auth";
-import certificatesTranslations from "./certificates";
-import generalTranslations from "./general";
-import languageFrameworksTranslations from "./language-frameworks";
-import languageSelectionTranslations from "./language-selection";
-import practiceTranslations from "./practice";
-import premiumVoiceTranslations from "./premium-voice";
-import profileTranslations from "./profile";
-import progressTranslations from "./progress";
-import voiceChatTranslations from "./voice-chat";
-import languagesTranslations from "./languages";
+import minimalTranslations from "./minimal";
 
-// Combine all Indonesian translations
+// Use only the minimal translations for Indonesian
 const indonesianTranslations: TranslationRecord = {
-  ...authTranslations,
-  ...certificatesTranslations,
-  ...generalTranslations,
-  ...languageFrameworksTranslations,
-  ...languageSelectionTranslations,
-  ...practiceTranslations,
-  ...premiumVoiceTranslations,
-  ...profileTranslations,
-  ...progressTranslations,
-  ...voiceChatTranslations,
-  ...languagesTranslations
+  ...minimalTranslations,
 };
 
 export default indonesianTranslations;
