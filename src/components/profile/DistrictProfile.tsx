@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +32,7 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
     try {
       console.log('DistrictProfile: Fetching data for user:', profile.id, 'role:', profile.role);
       
-      // First check permissions
+      // First check permissions and fix any issues
       const permissionCheck = await checkAndFixDistrictPermissions(profile.id);
       setDebugInfo(permissionCheck);
       
@@ -40,13 +41,30 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
         return;
       }
 
+      // If we fixed permissions, show a success message
+      if (permissionCheck.message) {
+        toast({
+          title: "Permissions Updated",
+          description: permissionCheck.message
+        });
+      }
+
       // Try to fetch district schools data
       const data = await getDistrictSchoolsData(profile.id);
       console.log('DistrictProfile: Received data:', data);
       setSchoolsData(data);
       
       if (data.length === 0) {
-        setPermissionError('No schools found - this may be a permission issue');
+        setPermissionError('No schools found - checking if data needs to be refreshed');
+        
+        // Wait a moment and try again in case the permissions just got fixed
+        setTimeout(async () => {
+          const retryData = await getDistrictSchoolsData(profile.id);
+          if (retryData.length > 0) {
+            setSchoolsData(retryData);
+            setPermissionError(null);
+          }
+        }, 1000);
       }
       
     } catch (error) {
@@ -73,6 +91,11 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
         variant: "destructive"
       });
     }
+  };
+
+  const handleFixPermissions = async () => {
+    setIsLoading(true);
+    await fetchDistrictData();
   };
 
   useEffect(() => {
@@ -104,9 +127,9 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
               There seems to be an issue accessing district data. This could be due to:
             </p>
             <ul className="list-disc list-inside text-sm space-y-1 text-muted-foreground">
-              <li>Authentication session has expired</li>
-              <li>District permissions are not properly set up</li>
-              <li>Row Level Security policies are blocking access</li>
+              <li>Schools not properly linked to your district</li>
+              <li>Row Level Security policies need time to take effect</li>
+              <li>Authentication session needs refreshing</li>
             </ul>
             
             <div className="bg-muted p-3 rounded text-xs">
@@ -123,9 +146,9 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
             )}
             
             <div className="flex gap-2">
-              <Button onClick={fetchDistrictData} variant="outline" size="sm">
+              <Button onClick={handleFixPermissions} variant="outline" size="sm">
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Retry
+                Fix Permissions & Retry
               </Button>
               <Button onClick={handleRefreshAuth} variant="outline" size="sm">
                 Refresh Authentication

@@ -58,7 +58,32 @@ export const checkAndFixDistrictPermissions = async (userId: string) => {
           return { success: false, error: 'Failed to create district association', details: insertError };
         }
 
-        return { success: true, message: 'District association created', district: districts[0] };
+        // Update schools to be linked to this district if they aren't already
+        const { error: schoolUpdateError } = await supabase
+          .from('schools')
+          .update({ district_id: districts[0].id })
+          .is('district_id', null);
+
+        if (schoolUpdateError) {
+          console.warn('Failed to link schools to district:', schoolUpdateError);
+        }
+
+        return { success: true, message: 'District association created and schools linked', district: districts[0] };
+      }
+    }
+
+    // Check if schools in the district are properly linked
+    if (districtUsers && districtUsers.length > 0) {
+      const districtId = districtUsers[0].district_id;
+      
+      // Update any schools without district_id to be linked to this district
+      const { error: schoolUpdateError } = await supabase
+        .from('schools')
+        .update({ district_id: districtId })
+        .is('district_id', null);
+
+      if (schoolUpdateError) {
+        console.warn('Failed to link schools to district:', schoolUpdateError);
       }
     }
 
@@ -71,6 +96,10 @@ export const checkAndFixDistrictPermissions = async (userId: string) => {
       .from('classes')
       .select('*');
 
+    const { data: enrollments, error: enrollmentsError } = await supabase
+      .from('student_enrollments')
+      .select('*');
+
     return {
       success: true,
       profile,
@@ -79,7 +108,9 @@ export const checkAndFixDistrictPermissions = async (userId: string) => {
         schools: schools?.length || 0,
         schoolsError,
         classes: classes?.length || 0,
-        classesError
+        classesError,
+        enrollments: enrollments?.length || 0,
+        enrollmentsError
       }
     };
 
