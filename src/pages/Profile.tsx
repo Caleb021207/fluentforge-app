@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Loader2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -84,7 +83,9 @@ const ProfilePage = () => {
                 school_districts (
                   id,
                   name,
-                  code
+                  code,
+                  created_at,
+                  updated_at
                 )
               `)
               .eq('user_id', user.id);
