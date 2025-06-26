@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +10,7 @@ import CodeManagement from "@/components/admin/CodeManagement";
 import SchoolTestAverages from "./SchoolTestAverages";
 import { useLocalization } from "@/context/LocalizationContext";
 import { checkAndFixDistrictPermissions, forceRefreshAuth } from "@/utils/districtPermissionsFixer";
-import { useToast } = from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface DistrictProfileProps {
   profile: ExtendedUserProfile;
