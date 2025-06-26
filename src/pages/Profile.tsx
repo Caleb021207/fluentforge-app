@@ -23,6 +23,7 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useLocalization();
@@ -44,18 +45,47 @@ const ProfilePage = () => {
       
       if (user) {
         console.log('Fetching profile for user:', user.id);
+        
+        // First check basic profile
+        const { data: basicProfile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        console.log('Basic profile:', basicProfile, 'Error:', profileError);
+
+        // Check district associations for district admin users
+        const { data: districtUsers, error: districtError } = await supabase
+          .from('district_users')
+          .select('*, school_districts(*)')
+          .eq('user_id', user.id);
+
+        console.log('District associations:', districtUsers, 'Error:', districtError);
+
+        setDebugInfo({
+          basicProfile,
+          profileError,
+          districtUsers,
+          districtError,
+          userId: user.id
+        });
+
         try {
           const extendedProfile = await getExtendedUserProfile(user.id);
-          console.log('Profile fetch result:', extendedProfile);
+          console.log('Extended profile fetch result:', extendedProfile);
           setProfile(extendedProfile);
         } catch (error) {
           console.error('Error fetching extended profile:', error);
-          if (showLoadingState) {
-            toast({
-              title: t("error"),
-              description: t("profileLoadError"),
-              variant: "destructive"
-            });
+          
+          // If extended profile fails but we have a basic profile, use that
+          if (basicProfile) {
+            console.log('Using basic profile as fallback');
+            setProfile({
+              ...basicProfile,
+              school: null,
+              district_associations: districtUsers || []
+            } as ExtendedUserProfile);
           }
         }
       }
@@ -66,10 +96,6 @@ const ProfilePage = () => {
       if (showLoadingState) setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchUserData();
-  }, [toast]);
 
   const handleSignIn = () => {
     navigate("/");
@@ -85,6 +111,10 @@ const ProfilePage = () => {
       window.location.reload();
     }, 1000);
   };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [toast]);
 
   if (isLoading) {
     return (
@@ -113,7 +143,18 @@ const ProfilePage = () => {
     );
   }
 
-  if (!profile || !profile.role) {
+  // Check if user has no profile or role at all
+  if (!profile) {
+    return (
+      <NoProfileState 
+        user={user} 
+        onProfileUpdate={handleProfileUpdate} 
+      />
+    );
+  }
+
+  // Check if user has a profile but no role assigned
+  if (!profile.role) {
     return (
       <NoProfileState 
         user={user} 
@@ -166,8 +207,16 @@ const ProfilePage = () => {
       </div>
 
       {showDebug && (
-        <div className="mb-6">
+        <div className="mb-6 space-y-4">
           <AuthDebugPanel />
+          {debugInfo && (
+            <div className="bg-muted p-4 rounded">
+              <h3 className="font-semibold mb-2">Profile Detection Debug:</h3>
+              <pre className="text-xs overflow-auto">
+                {JSON.stringify(debugInfo, null, 2)}
+              </pre>
+            </div>
+          )}
         </div>
       )}
 

@@ -131,10 +131,13 @@ export interface DistrictUser {
   id: string;
   user_id: string;
   district_id: string;
-  role: 'viewer' | 'manager' | 'admin';
-  permissions: Record<string, any>;
+  role: string;
+  consent_provided: boolean;
+  consent_date: string | null;
+  consent_type: string | null;
   created_at: string;
   updated_at: string;
+  school_districts?: SchoolDistrict;
 }
 
 export type UserRole = 'student' | 'teacher' | 'admin' | 'district';
@@ -146,17 +149,16 @@ export interface ExtendedUserProfile {
   target_level: string | null;
   target_date: string | null;
   avatar_url: string | null;
-  email: string | null;
-  school_id: string | null;
-  grade_level_id: string | null;
-  student_id: string | null;
-  role: UserRole;
-  graduation_year: number | null;
   created_at: string;
   updated_at: string;
-  // Joined data
-  school?: School;
-  grade_level?: GradeLevel;
+  role: string | null;
+  email: string | null;
+  student_id: string | null;
+  school_id: string | null;
+  graduation_year: number | null;
+  grade_level_id: string | null;
+  school: School | null;
+  district_associations?: DistrictUser[];
 }
 
 export interface TeacherClassData {
@@ -181,4 +183,12 @@ export interface DistrictSchoolData {
   total_students: number;
   total_classes: number;
   certification_stats: SchoolCertificationStats[];
+}
+
+export interface SchoolDistrict {
+  id: string;
+  name: string;
+  code: string;
+  created_at: string;
+  updated_at: string;
 }

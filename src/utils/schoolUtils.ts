@@ -106,9 +106,9 @@ export const getStudentUsageMetrics = async (studentId: string): Promise<Student
 
 export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUserProfile | null> => {
   try {
-    console.log('Fetching extended profile for user:', userId);
+    console.log('Getting extended profile for user:', userId);
     
-    // First, get the basic profile without joins to avoid RLS issues
+    // Get basic profile
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
@@ -116,59 +116,57 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       .single();
 
     if (profileError) {
-      console.error('Error fetching basic profile:', profileError);
-      return null;
+      console.error('Profile error:', profileError);
+      throw new Error(`Failed to fetch profile: ${profileError.message}`);
     }
 
     if (!profile) {
-      console.log('No profile found for user:', userId);
+      console.log('No profile found for user');
       return null;
     }
 
     console.log('Basic profile found:', profile);
 
-    // Now fetch related data separately if needed
-    let school = null;
-    let grade_level = null;
-
-    if (profile.school_id) {
-      try {
-        const { data: schoolData } = await supabase
-          .from('schools')
-          .select('*')
-          .eq('id', profile.school_id)
-          .single();
-        school = schoolData;
-      } catch (error) {
-        console.log('Could not fetch school data:', error);
-      }
-    }
-
-    if (profile.grade_level_id) {
-      try {
-        const { data: gradeLevelData } = await supabase
-          .from('grade_levels')
-          .select('*')
-          .eq('id', profile.grade_level_id)
-          .single();
-        grade_level = gradeLevelData;
-      } catch (error) {
-        console.log('Could not fetch grade level data:', error);
-      }
-    }
-
-    const extendedProfile: ExtendedUserProfile = {
+    let extendedProfile: ExtendedUserProfile = {
       ...profile,
-      role: profile.role as UserRole, // Cast to proper UserRole type
-      school: school || undefined,
-      grade_level: grade_level || undefined
+      school: null
     };
 
-    console.log('Extended profile created:', extendedProfile);
+    // If user has a school_id, fetch school info
+    if (profile.school_id) {
+      const { data: school, error: schoolError } = await supabase
+        .from('schools')
+        .select('*')
+        .eq('id', profile.school_id)
+        .single();
+
+      if (!schoolError && school) {
+        extendedProfile.school = school;
+      }
+    }
+
+    // For district admins, get district associations
+    if (profile.role === 'district') {
+      const { data: districtUsers, error: districtError } = await supabase
+        .from('district_users')
+        .select('district_id, school_districts(name)')
+        .eq('user_id', userId);
+
+      if (!districtError && districtUsers) {
+        console.log('District associations found:', districtUsers);
+        extendedProfile.district_associations = districtUsers;
+      } else {
+        console.warn('No district associations found for district admin:', districtError);
+        extendedProfile.district_associations = [];
+      }
+    }
+
+    console.log('Extended profile complete:', extendedProfile);
     return extendedProfile;
+
   } catch (error) {
     console.error('Error in getExtendedUserProfile:', error);
-    return null;
+    throw error;
   }
 };
 
@@ -332,126 +330,108 @@ export const getSchoolClassroomData = async (userId: string): Promise<TeacherCla
 
 export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSchoolData[]> => {
   try {
-    console.log('getDistrictSchoolsData: Starting fetch for user:', userId);
-    
-    // Get user's district assignments
-    const { data: userDistricts, error: districtError } = await supabase
+    console.log('Getting district schools data for user:', userId);
+
+    // First verify the user is a district admin
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
+
+    if (profileError || profile?.role !== 'district') {
+      console.error('User is not a district admin:', profileError, profile);
+      throw new Error('User is not authorized as district admin');
+    }
+
+    // Get district associations
+    const { data: districtUsers, error: districtError } = await supabase
       .from('district_users')
-      .select('district_id')
+      .select('district_id, school_districts(name)')
       .eq('user_id', userId);
 
-    console.log('getDistrictSchoolsData: District assignments:', userDistricts, 'Error:', districtError);
+    if (districtError) {
+      console.error('District association error:', districtError);
+      throw new Error('Failed to get district associations');
+    }
 
-    if (!userDistricts || userDistricts.length === 0) {
-      console.log('getDistrictSchoolsData: No district assignments found');
+    if (!districtUsers || districtUsers.length === 0) {
+      console.warn('No district associations found');
       return [];
     }
 
-    const districtIds = userDistricts.map(d => d.district_id);
-    console.log('getDistrictSchoolsData: District IDs:', districtIds);
+    console.log('District associations:', districtUsers);
 
-    // Get schools in the user's districts
+    // Get district IDs
+    const districtIds = districtUsers.map(du => du.district_id);
+
+    // Get schools in the districts
     const { data: schools, error: schoolsError } = await supabase
       .from('schools')
       .select('*')
       .in('district_id', districtIds);
 
-    console.log('getDistrictSchoolsData: Schools found:', schools?.length || 0, 'Error:', schoolsError);
+    if (schoolsError) {
+      console.error('Schools query error:', schoolsError);
+      throw new Error('Failed to fetch schools');
+    }
 
     if (!schools || schools.length === 0) {
-      console.log('getDistrictSchoolsData: No schools found in districts');
+      console.warn('No schools found in districts');
       return [];
     }
 
-    const districtData: DistrictSchoolData[] = [];
+    console.log('Schools found:', schools);
+
+    // For each school, get aggregate data
+    const schoolsData: DistrictSchoolData[] = [];
 
     for (const school of schools) {
-      console.log('getDistrictSchoolsData: Processing school:', school.name, school.id);
-      
-      // Get classes for this school
+      // Get total classes in school
       const { data: classes, error: classesError } = await supabase
         .from('classes')
-        .select('id, name')
+        .select('id')
         .eq('school_id', school.id);
 
-      console.log('getDistrictSchoolsData: Classes in', school.name, ':', classes?.length || 0, 'Error:', classesError);
+      const totalClasses = classes?.length || 0;
 
-      let totalEnrollments = 0;
-      let studentIds: string[] = [];
+      // Get total students (via enrollments)
+      const { data: enrollments, error: enrollmentsError } = await supabase
+        .from('student_enrollments')
+        .select('student_id, classes!inner(school_id)')
+        .eq('classes.school_id', school.id);
 
-      if (classes && classes.length > 0) {
-        const classIds = classes.map(c => c.id);
-        
-        // Get student enrollments
-        const { data: enrollments, error: enrollmentError } = await supabase
-          .from('student_enrollments')
-          .select('student_id')
-          .in('class_id', classIds)
-          .eq('status', 'active');
-        
-        console.log('getDistrictSchoolsData: Enrollments found:', enrollments?.length || 0, 'Error:', enrollmentError);
-        
-        totalEnrollments = enrollments?.length || 0;
-        studentIds = enrollments?.map(e => e.student_id) || [];
-      }
+      // Count unique students
+      const uniqueStudentIds = new Set(enrollments?.map(e => e.student_id) || []);
+      const totalStudents = uniqueStudentIds.size;
 
-      // Calculate average score from transcript analyses
-      let avgCertificationScore = 0;
-      
-      if (studentIds.length > 0) {
-        console.log('getDistrictSchoolsData: Getting scores for students:', studentIds);
-        
-        // Get all transcript analyses for these students
-        const { data: transcriptScores, error: scoresError } = await supabase
-          .from('transcript_analyses')
-          .select('user_id, overall_score, created_at')
-          .in('user_id', studentIds)
-          .not('overall_score', 'is', null)
-          .order('created_at', { ascending: false });
-
-        console.log('getDistrictSchoolsData: Transcript scores found:', transcriptScores?.length || 0, 'Error:', scoresError);
-
-        if (transcriptScores && transcriptScores.length > 0) {
-          // Get the latest score for each student
-          const latestScores = new Map<string, number>();
-          
-          for (const score of transcriptScores) {
-            if (!latestScores.has(score.user_id) && score.overall_score !== null) {
-              latestScores.set(score.user_id, score.overall_score);
-            }
-          }
-          
-          const scores = Array.from(latestScores.values());
-          console.log('getDistrictSchoolsData: Latest scores per student:', scores);
-          
-          if (scores.length > 0) {
-            avgCertificationScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-          }
-        }
-      }
-
-      // Get certification stats
-      const { data: certStats } = await supabase
+      // Get certification stats for the school
+      const { data: certStats, error: certError } = await supabase
         .from('school_certification_stats')
         .select('*')
         .eq('school_id', school.id);
 
-      const schoolData = {
-        school,
-        avg_certification_score: avgCertificationScore,
-        total_students: totalEnrollments,
-        total_classes: classes?.length || 0,
-        certification_stats: certStats || []
-      };
+      // Calculate average certification score
+      let avgScore = 0;
+      if (certStats && certStats.length > 0) {
+        const totalScore = certStats.reduce((sum, stat) => sum + (stat.avg_score || 0), 0);
+        avgScore = totalScore / certStats.length;
+      }
 
-      console.log('getDistrictSchoolsData: Final school data:', schoolData);
-      districtData.push(schoolData);
+      schoolsData.push({
+        school,
+        total_students: totalStudents,
+        total_classes: totalClasses,
+        avg_certification_score: avgScore,
+        certification_stats: certStats || []
+      });
     }
 
-    console.log('getDistrictSchoolsData: Final district data:', districtData);
-    return districtData;
+    console.log('District schools data:', schoolsData);
+    return schoolsData;
+
   } catch (error) {
     console.error('Error in getDistrictSchoolsData:', error);
-    return [];
+    throw error;
   }
 };
