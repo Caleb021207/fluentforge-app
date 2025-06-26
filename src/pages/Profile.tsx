@@ -32,6 +32,7 @@ const ProfilePage = () => {
     if (showLoadingState) setIsLoading(true);
     
     try {
+      console.log('ProfilePage: Starting fetchUserData');
       const { data: { user }, error } = await supabase.auth.getUser();
       
       if (error) {
@@ -44,7 +45,7 @@ const ProfilePage = () => {
       setUser(user);
       
       if (user) {
-        console.log('Fetching profile for user:', user.id);
+        console.log('ProfilePage: Fetching profile for user:', user.id);
         
         // First check basic profile
         const { data: basicProfile, error: profileError } = await supabase
@@ -53,45 +54,74 @@ const ProfilePage = () => {
           .eq('id', user.id)
           .single();
 
-        console.log('Basic profile:', basicProfile, 'Error:', profileError);
+        console.log('ProfilePage: Basic profile:', basicProfile, 'Error:', profileError);
 
-        // Check district associations for district admin users
-        const { data: districtUsers, error: districtError } = await supabase
-          .from('district_users')
-          .select('*, school_districts(*)')
-          .eq('user_id', user.id);
-
-        console.log('District associations:', districtUsers, 'Error:', districtError);
-
+        // Set debug info early
         setDebugInfo({
           basicProfile,
           profileError,
-          districtUsers,
-          districtError,
-          userId: user.id
+          userId: user.id,
+          step: 'basic_profile_fetch'
         });
 
+        // If no basic profile exists, show NoProfileState
+        if (!basicProfile) {
+          console.log('ProfilePage: No basic profile found');
+          setProfile(null);
+          setIsLoading(false);
+          return;
+        }
+
+        // Try to get extended profile, but fall back to basic if it fails
         try {
+          console.log('ProfilePage: Attempting to fetch extended profile');
           const extendedProfile = await getExtendedUserProfile(user.id);
-          console.log('Extended profile fetch result:', extendedProfile);
-          setProfile(extendedProfile);
-        } catch (error) {
-          console.error('Error fetching extended profile:', error);
+          console.log('ProfilePage: Extended profile fetch result:', extendedProfile);
           
-          // If extended profile fails but we have a basic profile, use that
-          if (basicProfile) {
-            console.log('Using basic profile as fallback');
+          if (extendedProfile) {
+            setProfile(extendedProfile);
+          } else {
+            // Fall back to basic profile with minimal structure
+            console.log('ProfilePage: Using basic profile as fallback');
             setProfile({
               ...basicProfile,
               school: null,
-              district_associations: districtUsers || []
+              district_associations: []
             } as ExtendedUserProfile);
           }
+          
+          setDebugInfo(prev => ({
+            ...prev,
+            extendedProfile,
+            step: 'extended_profile_success'
+          }));
+          
+        } catch (extendedError) {
+          console.error('ProfilePage: Extended profile fetch failed:', extendedError);
+          
+          // Always fall back to basic profile when extended fetch fails
+          console.log('ProfilePage: Falling back to basic profile due to extended fetch error');
+          setProfile({
+            ...basicProfile,
+            school: null,
+            district_associations: []
+          } as ExtendedUserProfile);
+          
+          setDebugInfo(prev => ({
+            ...prev,
+            extendedProfileError: extendedError,
+            step: 'extended_profile_fallback'
+          }));
         }
       }
     } catch (error) {
-      console.error('Error getting user:', error);
+      console.error('ProfilePage: Error getting user:', error);
       setAuthError(true);
+      setDebugInfo(prev => ({
+        ...prev,
+        topLevelError: error,
+        step: 'top_level_error'
+      }));
     } finally {
       if (showLoadingState) setIsLoading(false);
     }
@@ -102,7 +132,7 @@ const ProfilePage = () => {
   };
 
   const handleProfileUpdate = async () => {
-    console.log('Profile update requested, refreshing data...');
+    console.log('ProfilePage: Profile update requested, refreshing data...');
     
     await new Promise(resolve => setTimeout(resolve, 500));
     await fetchUserData(false);
@@ -145,6 +175,7 @@ const ProfilePage = () => {
 
   // Check if user has no profile or role at all
   if (!profile) {
+    console.log('ProfilePage: No profile found, showing NoProfileState');
     return (
       <NoProfileState 
         user={user} 
@@ -155,6 +186,7 @@ const ProfilePage = () => {
 
   // Check if user has a profile but no role assigned
   if (!profile.role) {
+    console.log('ProfilePage: Profile exists but no role assigned');
     return (
       <NoProfileState 
         user={user} 
@@ -162,6 +194,8 @@ const ProfilePage = () => {
       />
     );
   }
+
+  console.log('ProfilePage: Rendering profile for role:', profile.role);
 
   const renderRoleSpecificProfile = () => {
     switch (profile.role) {

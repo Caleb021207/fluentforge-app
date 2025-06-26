@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { StudentEnrollment, StudentGrade, StudentUsageMetrics, ExtendedUserProfile, AdminSchoolData, TeacherClassData, DistrictSchoolData, UserRole } from "@/types/school";
 
@@ -107,7 +106,7 @@ export const getStudentUsageMetrics = async (studentId: string): Promise<Student
 
 export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUserProfile | null> => {
   try {
-    console.log('Getting extended profile for user:', userId);
+    console.log('getExtendedUserProfile: Getting extended profile for user:', userId);
     
     // Get basic profile
     const { data: profile, error: profileError } = await supabase
@@ -117,16 +116,16 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       .single();
 
     if (profileError) {
-      console.error('Profile error:', profileError);
+      console.error('getExtendedUserProfile: Profile error:', profileError);
       throw new Error(`Failed to fetch profile: ${profileError.message}`);
     }
 
     if (!profile) {
-      console.log('No profile found for user');
+      console.log('getExtendedUserProfile: No profile found for user');
       return null;
     }
 
-    console.log('Basic profile found:', profile);
+    console.log('getExtendedUserProfile: Basic profile found:', profile);
 
     let extendedProfile: ExtendedUserProfile = {
       ...profile,
@@ -134,57 +133,72 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       district_associations: []
     };
 
-    // If user has a school_id, fetch school info
+    // If user has a school_id, fetch school info (with error handling)
     if (profile.school_id) {
-      const { data: school, error: schoolError } = await supabase
-        .from('schools')
-        .select('*')
-        .eq('id', profile.school_id)
-        .single();
+      try {
+        const { data: school, error: schoolError } = await supabase
+          .from('schools')
+          .select('*')
+          .eq('id', profile.school_id)
+          .single();
 
-      if (!schoolError && school) {
-        extendedProfile.school = school;
+        if (!schoolError && school) {
+          extendedProfile.school = school;
+          console.log('getExtendedUserProfile: School data loaded:', school);
+        } else {
+          console.warn('getExtendedUserProfile: Could not load school data:', schoolError);
+        }
+      } catch (schoolFetchError) {
+        console.warn('getExtendedUserProfile: School fetch failed:', schoolFetchError);
+        // Continue without school data
       }
     }
 
-    // For district admins, get district associations with complete data
+    // For district admins, get district associations with complete data (with error handling)
     if (profile.role === 'district') {
-      const { data: districtUsers, error: districtError } = await supabase
-        .from('district_users')
-        .select(`
-          id,
-          user_id,
-          district_id,
-          role,
-          consent_provided,
-          consent_date,
-          consent_type,
-          created_at,
-          updated_at,
-          school_districts (
+      try {
+        const { data: districtUsers, error: districtError } = await supabase
+          .from('district_users')
+          .select(`
             id,
-            name,
-            code,
+            user_id,
+            district_id,
+            role,
+            consent_provided,
+            consent_date,
+            consent_type,
             created_at,
-            updated_at
-          )
-        `)
-        .eq('user_id', userId);
+            updated_at,
+            school_districts (
+              id,
+              name,
+              code,
+              created_at,
+              updated_at
+            )
+          `)
+          .eq('user_id', userId);
 
-      if (!districtError && districtUsers) {
-        console.log('District associations found:', districtUsers);
-        extendedProfile.district_associations = districtUsers;
-      } else {
-        console.warn('No district associations found for district admin:', districtError);
+        if (!districtError && districtUsers) {
+          console.log('getExtendedUserProfile: District associations found:', districtUsers);
+          extendedProfile.district_associations = districtUsers;
+        } else {
+          console.warn('getExtendedUserProfile: No district associations found for district admin:', districtError);
+          extendedProfile.district_associations = [];
+        }
+      } catch (districtFetchError) {
+        console.warn('getExtendedUserProfile: District associations fetch failed:', districtFetchError);
+        // Continue with empty district associations
         extendedProfile.district_associations = [];
       }
     }
 
-    console.log('Extended profile complete:', extendedProfile);
+    console.log('getExtendedUserProfile: Extended profile complete:', extendedProfile);
     return extendedProfile;
 
   } catch (error) {
-    console.error('Error in getExtendedUserProfile:', error);
+    console.error('getExtendedUserProfile: Error in getExtendedUserProfile:', error);
+    // Don't throw the error - let the caller handle fallback
     throw error;
   }
 };
@@ -349,7 +363,7 @@ export const getSchoolClassroomData = async (userId: string): Promise<TeacherCla
 
 export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSchoolData[]> => {
   try {
-    console.log('Getting district schools data for user:', userId);
+    console.log('getDistrictSchoolsData: Getting district schools data for user:', userId);
 
     // First verify the user is a district admin
     const { data: profile, error: profileError } = await supabase
@@ -359,7 +373,7 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       .single();
 
     if (profileError || profile?.role !== 'district') {
-      console.error('User is not a district admin:', profileError, profile);
+      console.error('getDistrictSchoolsData: User is not a district admin:', profileError, profile);
       throw new Error('User is not authorized as district admin');
     }
 
@@ -377,16 +391,16 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       .eq('user_id', userId);
 
     if (districtError) {
-      console.error('District association error:', districtError);
+      console.error('getDistrictSchoolsData: District association error:', districtError);
       throw new Error('Failed to get district associations');
     }
 
     if (!districtUsers || districtUsers.length === 0) {
-      console.warn('No district associations found');
+      console.warn('getDistrictSchoolsData: No district associations found');
       return [];
     }
 
-    console.log('District associations:', districtUsers);
+    console.log('getDistrictSchoolsData: District associations:', districtUsers);
 
     // Get district IDs
     const districtIds = districtUsers.map(du => du.district_id);
@@ -398,16 +412,16 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       .in('district_id', districtIds);
 
     if (schoolsError) {
-      console.error('Schools query error:', schoolsError);
+      console.error('getDistrictSchoolsData: Schools query error:', schoolsError);
       throw new Error('Failed to fetch schools');
     }
 
     if (!schools || schools.length === 0) {
-      console.warn('No schools found in districts');
+      console.warn('getDistrictSchoolsData: No schools found in districts');
       return [];
     }
 
-    console.log('Schools found:', schools);
+    console.log('getDistrictSchoolsData: Schools found:', schools);
 
     // For each school, get aggregate data
     const schoolsData: DistrictSchoolData[] = [];
@@ -453,11 +467,11 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       });
     }
 
-    console.log('District schools data:', schoolsData);
+    console.log('getDistrictSchoolsData: District schools data:', schoolsData);
     return schoolsData;
 
   } catch (error) {
-    console.error('Error in getDistrictSchoolsData:', error);
+    console.error('getDistrictSchoolsData: Error in getDistrictSchoolsData:', error);
     throw error;
   }
 };
