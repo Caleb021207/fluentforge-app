@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLocalization } from "@/context/LocalizationContext";
 import { ExtendedUserProfile } from "@/types/school";
-import { getExtendedUserProfile } from "@/utils/schoolUtils";
 import StudentProfile from "@/components/profile/StudentProfile";
 import TeacherProfile from "@/components/profile/TeacherProfile";
 import AdminProfile from "@/components/profile/AdminProfile";
@@ -48,51 +47,76 @@ const ProfilePage = () => {
         console.log('ProfilePage: Fetching profile for user:', user.id);
         
         try {
-          // Try to get extended profile first
-          const extendedProfile = await getExtendedUserProfile(user.id);
-          console.log('ProfilePage: Extended profile result:', extendedProfile);
+          // Fetch basic profile first
+          const { data: basicProfile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+          console.log('ProfilePage: Basic profile result:', basicProfile, 'Error:', profileError);
           
-          if (extendedProfile) {
-            setProfile(extendedProfile);
+          if (profileError) {
+            console.log('ProfilePage: No profile found, showing NoProfileState');
+            setProfile(null);
             setDebugInfo({
-              extendedProfile,
+              profileError,
               userId: user.id,
-              step: 'extended_profile_success'
+              step: 'no_profile_found'
             });
-          } else {
-            // If extended profile fails, try basic profile as fallback
-            const { data: basicProfile, error: profileError } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', user.id)
-              .single();
+            return;
+          }
 
-            console.log('ProfilePage: Basic profile fallback:', basicProfile, 'Error:', profileError);
+          // If we have a basic profile, now fetch additional data based on role
+          let extendedProfile: ExtendedUserProfile = {
+            ...basicProfile,
+            school: null,
+            district_associations: []
+          };
 
-            if (basicProfile) {
-              // Use basic profile with minimal structure
-              setProfile({
-                ...basicProfile,
-                school: null,
-                district_associations: []
-              } as ExtendedUserProfile);
-              
-              setDebugInfo({
-                basicProfile,
-                userId: user.id,
-                step: 'basic_profile_fallback'
-              });
-            } else {
-              // No profile found at all
-              console.log('ProfilePage: No profile found');
-              setProfile(null);
-              setDebugInfo({
-                profileError,
-                userId: user.id,
-                step: 'no_profile_found'
-              });
+          // If user is district admin, fetch district associations
+          if (basicProfile.role === 'district') {
+            console.log('ProfilePage: Fetching district associations for district admin');
+            const { data: districtAssociations, error: districtError } = await supabase
+              .from('district_users')
+              .select(`
+                *,
+                school_districts (
+                  id,
+                  name,
+                  code
+                )
+              `)
+              .eq('user_id', user.id);
+
+            if (!districtError && districtAssociations) {
+              extendedProfile.district_associations = districtAssociations;
+              console.log('ProfilePage: District associations:', districtAssociations);
             }
           }
+
+          // If user has a school_id, fetch school info
+          if (basicProfile.school_id) {
+            console.log('ProfilePage: Fetching school info for school_id:', basicProfile.school_id);
+            const { data: schoolData, error: schoolError } = await supabase
+              .from('schools')
+              .select('*')
+              .eq('id', basicProfile.school_id)
+              .single();
+
+            if (!schoolError && schoolData) {
+              extendedProfile.school = schoolData;
+              console.log('ProfilePage: School data:', schoolData);
+            }
+          }
+
+          setProfile(extendedProfile);
+          setDebugInfo({
+            extendedProfile,
+            userId: user.id,
+            step: 'profile_loaded_successfully'
+          });
+
         } catch (error) {
           console.error('ProfilePage: Profile fetch error:', error);
           setProfile(null);
