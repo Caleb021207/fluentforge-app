@@ -106,7 +106,7 @@ export const useProfileData = () => {
             const { data: schoolData, error: schoolError } = await supabase
               .from('schools')
               .select('*')
-              .eq('id', basicProfile.school_id)
+              .eq('id', basicProfile.school_id)  
               .single();
 
             if (!schoolError && schoolData) {
