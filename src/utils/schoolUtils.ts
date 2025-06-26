@@ -108,7 +108,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
   try {
     console.log('getExtendedUserProfile: Getting extended profile for user:', userId);
     
-    // Get basic profile
+    // Get basic profile with better error handling
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
@@ -117,7 +117,8 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
 
     if (profileError) {
       console.error('getExtendedUserProfile: Profile error:', profileError);
-      throw new Error(`Failed to fetch profile: ${profileError.message}`);
+      // Don't throw here - let caller handle the absence of a profile
+      return null;
     }
 
     if (!profile) {
@@ -133,14 +134,14 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       district_associations: []
     };
 
-    // If user has a school_id, fetch school info (with error handling)
+    // If user has a school_id, fetch school info with better error handling
     if (profile.school_id) {
       try {
         const { data: school, error: schoolError } = await supabase
           .from('schools')
           .select('*')
           .eq('id', profile.school_id)
-          .single();
+          .maybeSingle();
 
         if (!schoolError && school) {
           extendedProfile.school = school;
@@ -154,7 +155,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       }
     }
 
-    // For district admins, get district associations with complete data (with error handling)
+    // For district admins, get district associations with better error handling
     if (profile.role === 'district') {
       try {
         const { data: districtUsers, error: districtError } = await supabase
@@ -188,7 +189,6 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
         }
       } catch (districtFetchError) {
         console.warn('getExtendedUserProfile: District associations fetch failed:', districtFetchError);
-        // Continue with empty district associations
         extendedProfile.district_associations = [];
       }
     }
@@ -197,9 +197,9 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
     return extendedProfile;
 
   } catch (error) {
-    console.error('getExtendedUserProfile: Error in getExtendedUserProfile:', error);
-    // Don't throw the error - let the caller handle fallback
-    throw error;
+    console.error('getExtendedUserProfile: Unexpected error:', error);
+    // Return null instead of throwing to allow fallback handling
+    return null;
   }
 };
 

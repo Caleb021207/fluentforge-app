@@ -32,7 +32,7 @@ const ProfilePage = () => {
     if (showLoadingState) setIsLoading(true);
     
     try {
-      console.log('ProfilePage: Starting fetchUserData');
+      console.log('ProfilePage: Starting fetchUserData with cleaned policies');
       const { data: { user }, error } = await supabase.auth.getUser();
       
       if (error) {
@@ -47,81 +47,64 @@ const ProfilePage = () => {
       if (user) {
         console.log('ProfilePage: Fetching profile for user:', user.id);
         
-        // First check basic profile
-        const { data: basicProfile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        console.log('ProfilePage: Basic profile:', basicProfile, 'Error:', profileError);
-
-        // Set debug info early
-        setDebugInfo({
-          basicProfile,
-          profileError,
-          userId: user.id,
-          step: 'basic_profile_fetch'
-        });
-
-        // If no basic profile exists, show NoProfileState
-        if (!basicProfile) {
-          console.log('ProfilePage: No basic profile found');
-          setProfile(null);
-          setIsLoading(false);
-          return;
-        }
-
-        // Try to get extended profile, but fall back to basic if it fails
         try {
-          console.log('ProfilePage: Attempting to fetch extended profile');
+          // Try to get extended profile first
           const extendedProfile = await getExtendedUserProfile(user.id);
-          console.log('ProfilePage: Extended profile fetch result:', extendedProfile);
+          console.log('ProfilePage: Extended profile result:', extendedProfile);
           
-          if (extendedProfile) {
-            setProfile(extendedProfile);
-          } else {
-            // Fall back to basic profile with minimal structure
-            console.log('ProfilePage: Using basic profile as fallback');
+          setProfile(extendedProfile);
+          setDebugInfo({
+            extendedProfile,
+            userId: user.id,
+            step: 'extended_profile_success'
+          });
+          
+        } catch (extendedError) {
+          console.error('ProfilePage: Extended profile fetch failed:', extendedError);
+          
+          // If extended profile fails, try basic profile as fallback
+          const { data: basicProfile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+          console.log('ProfilePage: Basic profile fallback:', basicProfile, 'Error:', profileError);
+
+          if (basicProfile) {
+            // Use basic profile with minimal structure
             setProfile({
               ...basicProfile,
               school: null,
               district_associations: []
             } as ExtendedUserProfile);
+            
+            setDebugInfo({
+              basicProfile,
+              extendedProfileError: extendedError,
+              userId: user.id,
+              step: 'basic_profile_fallback'
+            });
+          } else {
+            // No profile found at all
+            console.log('ProfilePage: No profile found');
+            setProfile(null);
+            setDebugInfo({
+              profileError,
+              extendedProfileError: extendedError,
+              userId: user.id,
+              step: 'no_profile_found'
+            });
           }
-          
-          setDebugInfo(prev => ({
-            ...prev,
-            extendedProfile,
-            step: 'extended_profile_success'
-          }));
-          
-        } catch (extendedError) {
-          console.error('ProfilePage: Extended profile fetch failed:', extendedError);
-          
-          // Always fall back to basic profile when extended fetch fails
-          console.log('ProfilePage: Falling back to basic profile due to extended fetch error');
-          setProfile({
-            ...basicProfile,
-            school: null,
-            district_associations: []
-          } as ExtendedUserProfile);
-          
-          setDebugInfo(prev => ({
-            ...prev,
-            extendedProfileError: extendedError,
-            step: 'extended_profile_fallback'
-          }));
         }
       }
     } catch (error) {
-      console.error('ProfilePage: Error getting user:', error);
+      console.error('ProfilePage: Top-level error:', error);
       setAuthError(true);
-      setDebugInfo(prev => ({
-        ...prev,
+      setDebugInfo({
         topLevelError: error,
         step: 'top_level_error'
-      }));
+      });
     } finally {
       if (showLoadingState) setIsLoading(false);
     }
@@ -133,18 +116,12 @@ const ProfilePage = () => {
 
   const handleProfileUpdate = async () => {
     console.log('ProfilePage: Profile update requested, refreshing data...');
-    
-    await new Promise(resolve => setTimeout(resolve, 500));
     await fetchUserData(false);
-    
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
   };
 
   useEffect(() => {
     fetchUserData();
-  }, [toast]);
+  }, []);
 
   if (isLoading) {
     return (
