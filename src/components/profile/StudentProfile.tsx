@@ -20,6 +20,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
   const [grades, setGrades] = useState<StudentGrade[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
   const [latestTestScore, setLatestTestScore] = useState<any>(null);
+  const [gradeLevel, setGradeLevel] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -44,6 +45,17 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         setGrades(gradeData || []);
         setUsageMetrics(usageData || []);
 
+        // Fetch grade level if grade_level_id exists
+        if (profile.grade_level_id) {
+          const { data: gradeLevelData } = await supabase
+            .from('grade_levels')
+            .select('*')
+            .eq('id', profile.grade_level_id)
+            .single();
+          
+          setGradeLevel(gradeLevelData);
+        }
+
         // Fetch most recent transcript analysis
         const { data: latestAnalysis } = await supabase
           .from('transcript_analyses')
@@ -62,7 +74,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
     };
 
     fetchStudentData();
-  }, [profile.id]);
+  }, [profile.id, profile.grade_level_id]);
 
   const totalPracticeSessions = usageMetrics.reduce((sum, metric) => sum + metric.practice_sessions, 0);
   const totalVoiceChatMinutes = usageMetrics.reduce((sum, metric) => sum + metric.voice_chat_minutes, 0);
@@ -98,7 +110,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
             </div>
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">{t("gradeLevel")}</p>
-              <p className="font-medium">{profile.grade_level?.level_name || t("notAssigned")}</p>
+              <p className="font-medium">{gradeLevel?.level_name || t("notAssigned")}</p>
             </div>
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">{t("studentId")}</p>

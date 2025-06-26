@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { StudentEnrollment, StudentGrade, StudentUsageMetrics, ExtendedUserProfile, AdminSchoolData, TeacherClassData, DistrictSchoolData, UserRole } from "@/types/school";
 
@@ -129,7 +130,8 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
 
     let extendedProfile: ExtendedUserProfile = {
       ...profile,
-      school: null
+      school: null,
+      district_associations: []
     };
 
     // If user has a school_id, fetch school info
@@ -145,11 +147,28 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       }
     }
 
-    // For district admins, get district associations
+    // For district admins, get district associations with complete data
     if (profile.role === 'district') {
       const { data: districtUsers, error: districtError } = await supabase
         .from('district_users')
-        .select('district_id, school_districts(name)')
+        .select(`
+          id,
+          user_id,
+          district_id,
+          role,
+          consent_provided,
+          consent_date,
+          consent_type,
+          created_at,
+          updated_at,
+          school_districts (
+            id,
+            name,
+            code,
+            created_at,
+            updated_at
+          )
+        `)
         .eq('user_id', userId);
 
       if (!districtError && districtUsers) {
@@ -344,10 +363,17 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       throw new Error('User is not authorized as district admin');
     }
 
-    // Get district associations
+    // Get district associations with complete data
     const { data: districtUsers, error: districtError } = await supabase
       .from('district_users')
-      .select('district_id, school_districts(name)')
+      .select(`
+        district_id,
+        school_districts (
+          id,
+          name,
+          code
+        )
+      `)
       .eq('user_id', userId);
 
     if (districtError) {
