@@ -2,13 +2,16 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Building2, Users, TrendingUp, Award } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MapPin, Building2, Users, TrendingUp, Award, AlertTriangle, RefreshCw } from "lucide-react";
 import { ExtendedUserProfile, DistrictSchoolData } from "@/types/school";
 import { getDistrictSchoolsData } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
 import SchoolTestAverages from "./SchoolTestAverages";
 import { useLocalization } from "@/context/LocalizationContext";
+import { checkAndFixDistrictPermissions, forceRefreshAuth } from "@/utils/districtPermissionsFixer";
+import { useToast } = from "@/hooks/use-toast";
 
 interface DistrictProfileProps {
   profile: ExtendedUserProfile;
@@ -16,24 +19,64 @@ interface DistrictProfileProps {
 
 const DistrictProfile = ({ profile }: DistrictProfileProps) => {
   const { t } = useLocalization();
+  const { toast } = useToast();
   const [schoolsData, setSchoolsData] = useState<DistrictSchoolData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [permissionError, setPermissionError] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
+
+  const fetchDistrictData = async () => {
+    setIsLoading(true);
+    setPermissionError(null);
+    
+    try {
+      console.log('DistrictProfile: Fetching data for user:', profile.id, 'role:', profile.role);
+      
+      // First check permissions
+      const permissionCheck = await checkAndFixDistrictPermissions(profile.id);
+      setDebugInfo(permissionCheck);
+      
+      if (!permissionCheck.success) {
+        setPermissionError(permissionCheck.error || 'Permission check failed');
+        return;
+      }
+
+      // Try to fetch district schools data
+      const data = await getDistrictSchoolsData(profile.id);
+      console.log('DistrictProfile: Received data:', data);
+      setSchoolsData(data);
+      
+      if (data.length === 0) {
+        setPermissionError('No schools found - this may be a permission issue');
+      }
+      
+    } catch (error) {
+      console.error('Error fetching district data:', error);
+      setPermissionError(error instanceof Error ? error.message : 'Unknown error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRefreshAuth = async () => {
+    const result = await forceRefreshAuth();
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: "Authentication refreshed successfully"
+      });
+      // Reload the page after successful refresh
+      setTimeout(() => window.location.reload(), 1000);
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to refresh authentication",
+        variant: "destructive"
+      });
+    }
+  };
 
   useEffect(() => {
-    const fetchDistrictData = async () => {
-      setIsLoading(true);
-      try {
-        console.log('DistrictProfile: Fetching data for user:', profile.id, 'role:', profile.role);
-        const data = await getDistrictSchoolsData(profile.id);
-        console.log('DistrictProfile: Received data:', data);
-        setSchoolsData(data);
-      } catch (error) {
-        console.error('Error fetching district data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchDistrictData();
   }, [profile.id]);
 
@@ -42,6 +85,58 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
       <div className="space-y-6">
         <Skeleton className="h-48 w-full" />
         <Skeleton className="h-64 w-full" />
+      </div>
+    );
+  }
+
+  // Show permission error state
+  if (permissionError) {
+    return (
+      <div className="space-y-6">
+        <Card className="border-destructive">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Data Access Issue
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              There seems to be an issue accessing district data. This could be due to:
+            </p>
+            <ul className="list-disc list-inside text-sm space-y-1 text-muted-foreground">
+              <li>Authentication session has expired</li>
+              <li>District permissions are not properly set up</li>
+              <li>Row Level Security policies are blocking access</li>
+            </ul>
+            
+            <div className="bg-muted p-3 rounded text-xs">
+              <strong>Error:</strong> {permissionError}
+            </div>
+            
+            {debugInfo && (
+              <details className="text-xs">
+                <summary className="cursor-pointer">Debug Information</summary>
+                <pre className="mt-2 bg-muted p-2 rounded overflow-auto">
+                  {JSON.stringify(debugInfo, null, 2)}
+                </pre>
+              </details>
+            )}
+            
+            <div className="flex gap-2">
+              <Button onClick={fetchDistrictData} variant="outline" size="sm">
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Retry
+              </Button>
+              <Button onClick={handleRefreshAuth} variant="outline" size="sm">
+                Refresh Authentication
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Still show code management even if data access fails */}
+        <CodeManagement userRole="district" />
       </div>
     );
   }

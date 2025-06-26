@@ -1242,7 +1242,7 @@ export type Database = {
         Returns: Json
       }
       process_access_code: {
-        Args: { p_code: string }
+        Args: Record<PropertyKey, never> | { p_code: string }
         Returns: Json
       }
       recalculate_student_metrics: {

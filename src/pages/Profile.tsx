@@ -15,13 +15,14 @@ import AdminProfile from "@/components/profile/AdminProfile";
 import DistrictProfile from "@/components/profile/DistrictProfile";
 import UserInfo from "@/components/profile/UserInfo";
 import NoProfileState from "@/components/profile/NoProfileState";
-
+import AuthDebugPanel from "@/components/debug/AuthDebugPanel";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<ExtendedUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useLocalization();
@@ -49,7 +50,6 @@ const ProfilePage = () => {
           setProfile(extendedProfile);
         } catch (error) {
           console.error('Error fetching extended profile:', error);
-          // Don't show toast error on initial load if profile doesn't exist yet
           if (showLoadingState) {
             toast({
               title: t("error"),
@@ -78,13 +78,9 @@ const ProfilePage = () => {
   const handleProfileUpdate = async () => {
     console.log('Profile update requested, refreshing data...');
     
-    // Add a small delay to ensure database changes are committed
     await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Refresh the profile data
     await fetchUserData(false);
     
-    // Force a page refresh if profile still isn't showing correctly
     setTimeout(() => {
       window.location.reload();
     }, 1000);
@@ -117,7 +113,6 @@ const ProfilePage = () => {
     );
   }
 
-  // Show NoProfileState when user exists but profile is null/undefined or has no role
   if (!profile || !profile.role) {
     return (
       <NoProfileState 
@@ -153,7 +148,7 @@ const ProfilePage = () => {
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <User className="h-8 w-8" />
-        <div>
+        <div className="flex-1">
           <h1 className="text-3xl font-bold">
             {t("myProfile")}
           </h1>
@@ -161,10 +156,22 @@ const ProfilePage = () => {
             {profile.display_name || user.email} • {t(profile.role)}
           </p>
         </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => setShowDebug(!showDebug)}
+        >
+          {showDebug ? "Hide" : "Show"} Debug
+        </Button>
       </div>
 
+      {showDebug && (
+        <div className="mb-6">
+          <AuthDebugPanel />
+        </div>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* User Info Card - Always visible */}
         <div className="lg:col-span-1">
           <UserInfo
             user={user}
@@ -184,7 +191,6 @@ const ProfilePage = () => {
           />
         </div>
 
-        {/* Role-specific content */}
         <div className="lg:col-span-2">
           {renderRoleSpecificProfile()}
         </div>
