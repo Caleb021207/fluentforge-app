@@ -202,7 +202,7 @@ const UserInfo = ({
                 id="displayName"
                 value={displayName}
                 readOnly
-                className="bg-gray-50"
+                className="bg-muted text-foreground"
               />
             )}
           </div>
