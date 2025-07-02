@@ -40,8 +40,6 @@ const ProfileLayout = ({ user, profile, debugInfo, onProfileUpdate }: ProfileLay
             user={user}
             displayName={profile.display_name || ""}
             setProfileData={handleProfileDataUpdate}
-            avatarUrl={profile.avatar_url}
-            setAvatarUrl={() => onProfileUpdate()}
             userRole={profile.role}
             userSchool={profile.school?.name}
             onProfileUpdate={onProfileUpdate}

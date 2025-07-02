@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Upload, Save, Loader2 } from "lucide-react";
+import { Save, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
 import { updateUserProfile } from "@/utils/profileUtils";
@@ -16,8 +16,6 @@ interface UserInfoProps {
   user: User | null;
   displayName: string;
   setProfileData: (data: any) => void;
-  avatarUrl: string | null;
-  setAvatarUrl: (url: string | null) => void;
   userRole?: string;
   userSchool?: string;
   onProfileUpdate?: () => void;
@@ -27,8 +25,6 @@ const UserInfo = ({
   user, 
   displayName, 
   setProfileData, 
-  avatarUrl, 
-  setAvatarUrl,
   userRole,
   userSchool,
   onProfileUpdate
@@ -81,54 +77,6 @@ const UserInfo = ({
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      if (!event.target.files || !event.target.files[0] || !user) return;
-
-      const file = event.target.files[0];
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}/avatar.${fileExt}`;
-
-      try {
-        const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(filePath, file, { upsert: true });
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(filePath);
-
-        setAvatarUrl(publicUrl);
-
-        const updatedProfile = await updateUserProfile(user.id, { 
-          avatar_url: publicUrl 
-        });
-
-        if (updatedProfile) {
-          toast({
-            title: t("success"),
-            description: t("profilePictureUpdated"),
-          });
-        }
-      } catch (error) {
-        console.error('Error uploading to avatars bucket:', error);
-        toast({
-          title: t("error"),
-          description: t("failedToUploadProfilePicture"),
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Error uploading avatar:', error);
-      toast({
-        title: t("error"),
-        description: t("failedToUploadProfilePicture"),
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleCodeProcessed = () => {
     if (onProfileUpdate) {
@@ -154,35 +102,12 @@ const UserInfo = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col items-center space-y-4 mb-6">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden bg-gray-100">
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={t("profilePicture")}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                  <span className="text-gray-500 text-4xl">
-                    {displayName.charAt(0).toUpperCase() || "U"}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="avatar" className="cursor-pointer">
-                <div className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800">
-                  <Upload className="w-4 h-4" />
-                  <span>{t("uploadPhoto")}</span>
-                </div>
-                <Input
-                  id="avatar"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileUpload}
-                />
-              </Label>
+            <div className="relative w-32 h-32 rounded-full overflow-hidden bg-muted">
+              <div className="w-full h-full flex items-center justify-center">
+                <span className="text-muted-foreground text-4xl">
+                  {displayName.charAt(0).toUpperCase() || "U"}
+                </span>
+              </div>
             </div>
           </div>
 
