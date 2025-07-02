@@ -22,7 +22,7 @@ const ProfileHeader = ({ user, profile, showDebug, onToggleDebug }: ProfileHeade
         <h1 className="text-3xl font-bold">
           {t("myProfile")}
         </h1>
-        <p className="text-foreground/80">
+        <p className="text-palavox-primary">
           {profile.display_name || user.email} • {t(profile.role)}
         </p>
       </div>
