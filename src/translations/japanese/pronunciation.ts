@@ -13,7 +13,14 @@ const pronunciationTranslations: TranslationRecord = {
   payAttentionToStressTip: "ストレスパターンとイントネーションに注意を払う",
   practiceDifficultSoundsTip: "難しい音を何度も練習する",
   recordYourselfTip: "自分を録音して母語話者と比較する",
-  bePatientTip: "辛抱強く - 発音の向上には時間がかかります"
+  bePatientTip: "辛抱強く - 発音の向上には時間がかかります",
+  
+  // New missing translations
+  yourPronunciation: "あなたの発音",
+  startRecording: "録音開始",
+  clickStartToRecord: "「開始」をクリックして録音",
+  tryAgain: "もう一度試す",
+  newPhrase: "新しいフレーズ"
 };
 
 export default pronunciationTranslations;

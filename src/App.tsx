@@ -9,7 +9,7 @@ import Lessons from "@/pages/Lessons";
 import TranscriptAnalysis from "@/pages/TranscriptAnalysis";
 import Progress from "@/pages/Progress";
 import Profile from "@/pages/Profile";
-import PronunciationPractice from "@/pages/PronunciationPractice";
+import PronunciationPracticeContainer from "@/components/pronunciation/PronunciationPracticeContainer";
 import VoiceChat from "@/pages/VoiceChat";
 import Settings from "@/pages/Settings";
 
@@ -21,7 +21,7 @@ function App() {
           <Route path="/" element={<NewLandingPage />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/voice-chat" element={<VoiceChat />} />
-          <Route path="/pronunciation-practice" element={<PronunciationPractice />} />
+          <Route path="/pronunciation-practice" element={<PronunciationPracticeContainer />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/analysis" element={<TranscriptAnalysis />} />

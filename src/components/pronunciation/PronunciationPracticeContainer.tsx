@@ -11,9 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, ChevronLeft } from "lucide-react";
 import { usePronunciationExercise } from "./hooks/usePronunciationExercise";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 
 
 const PronunciationPracticeContainer = () => {
+  const { isLoading: authLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
   const {
     complexity,
@@ -41,8 +44,18 @@ const PronunciationPracticeContainer = () => {
     targetLanguage
   } = usePronunciationExercise();
 
+  if (authLoading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+    </div>;
+  }
+
+  if (!isAuthenticated) {
+    return <AuthRequiredPrompt />;
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto p-4">
       <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("pronunciationPractice")}</h1>
@@ -57,15 +70,15 @@ const PronunciationPracticeContainer = () => {
       </div>
 
       {!showExercise ? (
-        <div className="space-y-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>{t("selectComplexityLevel")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-sm text-muted-foreground">
                 {t("chooseDifficultyLevelBasedOn")}
               </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
               
               <ComplexityDropdown 
                 selectedComplexity={complexity} 
@@ -95,10 +108,29 @@ const PronunciationPracticeContainer = () => {
                   </Button>
                 </div>
               )}
+
+              {!complexity && (
+                <p className="text-center text-muted-foreground py-8">
+                  {t("selectLevelToStart")}
+                </p>
+              )}
             </CardContent>
           </Card>
-          
-          <PronunciationInstructions />
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("pronunciationPracticeTips")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li>• {t("listenCarefullyTip")}</li>
+                <li>• {t("payAttentionToStressTip")}</li>
+                <li>• {t("practiceDifficultSoundsTip")}</li>
+                <li>• {t("recordYourselfTip")}</li>
+                <li>• {t("bePatientTip")}</li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       ) : (
         <Card className="mb-6">
