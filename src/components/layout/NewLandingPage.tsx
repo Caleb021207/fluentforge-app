@@ -10,6 +10,7 @@ import { useLocalization } from '@/context/LocalizationContext';
 import { useAuthFlow } from '@/hooks/useAuthFlow';
 import { useToast } from '@/hooks/use-toast';
 import { hasStudyMaterials } from '@/utils/languageUtils';
+import { secureStorage } from '@/utils/security/dataEncryption';
 
 const NewLandingPage = () => {
   const { theme } = useTheme();
@@ -43,8 +44,8 @@ const NewLandingPage = () => {
 
   const handleLanguageSelection = () => {
     if (nativeLanguage && targetLanguage) {
-      localStorage.setItem("nativeLanguage", nativeLanguage);
-      localStorage.setItem("targetLanguage", targetLanguage);
+      secureStorage.setItem("nativeLanguage", nativeLanguage, false);
+      secureStorage.setItem("targetLanguage", targetLanguage, false);
       
       const languagePair = `${nativeLanguage}-${targetLanguage}`;
       sessionStorage.setItem("languagePair", languagePair);

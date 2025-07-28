@@ -5,6 +5,7 @@ import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "@/translations/constants"
 import { LanguageTranslations } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
 import { useLocation } from "react-router-dom";
+import { secureStorage } from "@/utils/security/dataEncryption";
 
 // Create context
 type LocalizationContextType = {
@@ -48,7 +49,7 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // Load language preference from localStorage
-    const savedLanguage = localStorage.getItem("nativeLanguage");
+    const savedLanguage = secureStorage.getItem("nativeLanguage");
     if (savedLanguage && translations[savedLanguage]) {
       setCurrentLanguage(savedLanguage);
     }

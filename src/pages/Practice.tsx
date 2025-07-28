@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
+import { secureStorage } from "@/utils/security/dataEncryption";
 
 // Create an interface that matches the Message structure from useChatMessages
 interface MessageWithTranslationType {
@@ -27,8 +28,8 @@ const Practice = () => {
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
   
   useEffect(() => {
-    const savedTargetLanguage = localStorage.getItem("targetLanguage");
-    const savedNativeLanguage = localStorage.getItem("nativeLanguage");
+    const savedTargetLanguage = secureStorage.getItem("targetLanguage");
+    const savedNativeLanguage = secureStorage.getItem("nativeLanguage");
     
     if (savedNativeLanguage && savedTargetLanguage) {
       setTargetLanguage(savedTargetLanguage);

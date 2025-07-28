@@ -86,6 +86,36 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          encrypted: boolean | null
+          id: string
+          setting_key: string
+          setting_value: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          encrypted?: boolean | null
+          id?: string
+          setting_key: string
+          setting_value: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          encrypted?: boolean | null
+          id?: string
+          setting_key?: string
+          setting_value?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       assignments: {
         Row: {
           assignment_type: string | null
@@ -597,6 +627,33 @@ export type Database = {
           },
         ]
       }
+      rate_limits: {
+        Row: {
+          action_type: string
+          count: number | null
+          created_at: string
+          id: string
+          user_id: string
+          window_start: string
+        }
+        Insert: {
+          action_type: string
+          count?: number | null
+          created_at?: string
+          id?: string
+          user_id: string
+          window_start?: string
+        }
+        Update: {
+          action_type?: string
+          count?: number | null
+          created_at?: string
+          id?: string
+          user_id?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       recent_phrases: {
         Row: {
           created_at: string
@@ -732,6 +789,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          success: boolean | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       student_enrollments: {
         Row: {
@@ -1199,6 +1289,15 @@ export type Database = {
       change_user_role_for_testing: {
         Args: { target_role: string }
         Returns: Json
+      }
+      check_rate_limit: {
+        Args: {
+          p_user_id: string
+          p_action_type: string
+          p_max_requests?: number
+          p_window_minutes?: number
+        }
+        Returns: boolean
       }
       cleanup_old_phrases: {
         Args: { p_level: string; p_language: string }

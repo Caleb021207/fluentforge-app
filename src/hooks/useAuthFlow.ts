@@ -4,6 +4,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { handleConnectionError } from "@/utils/authErrorHandler";
+import { getSecureSetting, logSecurityEvent } from "@/utils/security/secureSettings";
+import { secureStorage } from "@/utils/security/dataEncryption";
 
 export const useAuthFlow = (onAuthSuccess?: () => void) => {
   const { toast } = useToast();
@@ -46,10 +48,20 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
         });
       } else {
         // Verify passcode for signup
-        if (!isLogin && (!passcode || passcode !== "08132010")) {
-          setIsLoading(false);
-          setAuthError("Incorrect passcode");
-          return;
+        if (!isLogin) {
+          const requiredPasscode = await getSecureSetting('signup_passcode');
+          if (!passcode || passcode !== (requiredPasscode || "08132010")) {
+            setIsLoading(false);
+            setAuthError("Incorrect passcode");
+            
+            // Log failed signup attempt
+            await logSecurityEvent('signup_failed_passcode', {
+              email,
+              timestamp: new Date().toISOString()
+            }, false);
+            
+            return;
+          }
         }
 
         result = await supabase.auth.signUp({
@@ -57,8 +69,8 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
           password,
           options: {
             data: {
-              native_language: localStorage.getItem("nativeLanguage") || undefined,
-              target_language: localStorage.getItem("targetLanguage") || undefined,
+              native_language: secureStorage.getItem("nativeLanguage") || undefined,
+              target_language: secureStorage.getItem("targetLanguage") || undefined,
             }
           }
         });
@@ -82,6 +94,12 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
       setAuthError(null);
       setRetryCount(0);
       
+      // Log successful authentication
+      await logSecurityEvent(isLogin ? 'login_success' : 'signup_success', {
+        email,
+        timestamp: new Date().toISOString()
+      }, true);
+      
       toast({
         title: isLogin ? t("signInSuccess") : t("accountCreated"),
         description: isLogin ? t("welcomeBack") : t("pleaseCheckEmail"),
@@ -92,6 +110,13 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
       
     } catch (error: any) {
       console.error("Authentication error:", error);
+      
+      // Log failed authentication
+      await logSecurityEvent(isLogin ? 'login_failed' : 'signup_failed', {
+        email,
+        error: error.message,
+        timestamp: new Date().toISOString()
+      }, false);
       
       // Don't show toast if we already set authError for displaying in the form
       if (!authError) {
