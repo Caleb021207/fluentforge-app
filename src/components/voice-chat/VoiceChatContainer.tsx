@@ -19,12 +19,7 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
   const { t } = useLocalization();
   const scrollRef = useRef<HTMLDivElement>(null);
   
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
+  // Auto-scroll disabled for better UX during rapid conversations
 
   return (
     <Card className="overflow-hidden mb-6">

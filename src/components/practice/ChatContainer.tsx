@@ -45,12 +45,7 @@ export default function ChatContainer({
     analyzeCurrentConversation 
   } = useLanguageMetricsPanel(messages);
   
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
+  // Auto-scroll disabled for better UX during rapid conversations
 
   return (
     <div className="space-y-2">
