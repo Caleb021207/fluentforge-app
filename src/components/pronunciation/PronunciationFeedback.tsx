@@ -69,16 +69,6 @@ const PronunciationFeedback: React.FC<PronunciationFeedbackProps> = ({ feedback 
           </div>
         )}
         
-        {/* Complexity Score (if available) */}
-        {feedback.complexityScore !== undefined && (
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm">{t("complexityScore")}</span>
-              <span className="text-sm font-medium">{Math.round(feedback.complexityScore)}%</span>
-            </div>
-            <Progress value={feedback.complexityScore} className="h-2" />
-          </div>
-        )}
         
         {/* Word Analysis */}
         <div className="space-y-2">
