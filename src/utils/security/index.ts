@@ -1,6 +1,14 @@
+
 /**
  * Security utilities index - exports all security-related functions
  */
+
+// Data encryption for client-side storage
+export {
+  encryptData,
+  decryptData,
+  secureStorage
+} from './dataEncryption';
 
 // Secure settings management
 export {
@@ -9,20 +17,6 @@ export {
   checkRateLimit,
   logSecurityEvent
 } from './secureSettings';
-
-// File validation and security
-export {
-  validateFile,
-  sanitizeFilename,
-  validateBase64Image
-} from './fileValidation';
-
-// Data encryption for client-side storage
-export {
-  encryptData,
-  decryptData,
-  secureStorage
-} from './dataEncryption';
 
 // Security initialization
 export {
