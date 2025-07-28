@@ -8,6 +8,7 @@ import languageSelectionTranslations from "./language-selection";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
+import pronunciationTranslations from "./pronunciation";
 
 const frenchTranslations: TranslationRecord = {
   ...generalTranslations,
@@ -18,6 +19,7 @@ const frenchTranslations: TranslationRecord = {
   ...authTranslations,
   ...languagesTranslations,
   ...navigationTranslations,
+  ...pronunciationTranslations,
   ...minimalTranslations,
 };
 
