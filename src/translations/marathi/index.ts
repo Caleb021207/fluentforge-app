@@ -7,9 +7,11 @@ import languageSelectionTranslations from "./language-selection";
 import uiElementsTranslations from "./ui-elements";
 import navigationTranslations from "./navigation";
 import authTranslations from "./auth";
+import pronunciationTranslations from "./pronunciation";
 
 // Combine all the translation categories
 const marathiTranslations: TranslationRecord = {
+  ...pronunciationTranslations,
   ...generalCoreTranslations,
   ...practiceTranslations,
   ...voiceChatTranslations,
