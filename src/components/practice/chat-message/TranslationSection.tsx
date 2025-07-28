@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import TranslationContent from "./TranslationContent";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import type { TranslationType } from "../hooks/useTranslationHandler";
 
 interface TranslationSectionProps {
@@ -29,6 +30,7 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   const { toast } = useToast();
   const [translationText, setTranslationText] = useState<string>("");
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   
   // Process translation on component mount and when translation prop changes
   useEffect(() => {
@@ -98,13 +100,25 @@ const TranslationSection: React.FC<TranslationSectionProps> = ({
   
   return (
     <div className="border-t border-border mt-2 pt-2">
-      <TranslationContent
-        role={role}
-        translation={translationText}
-        isTranslationPlaying={isTranslationPlaying}
-        isTranslationLoading={isTranslationLoading}
-        onPlayTranslationAudio={onPlayTranslationAudio}
-      />
+      {/* Translation toggle button */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-2 w-full justify-start"
+      >
+        {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        <span>{isExpanded ? t("hideTranslation") : t("showTranslation")}</span>
+      </button>
+      
+      {/* Translation content - only shown when expanded */}
+      {isExpanded && (
+        <TranslationContent
+          role={role}
+          translation={translationText}
+          isTranslationPlaying={isTranslationPlaying}
+          isTranslationLoading={isTranslationLoading}
+          onPlayTranslationAudio={onPlayTranslationAudio}
+        />
+      )}
     </div>
   );
 };

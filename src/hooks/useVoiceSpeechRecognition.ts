@@ -100,18 +100,16 @@ export const useVoiceSpeechRecognition = ({
       cleanUpRecognition();
       setIsInitializing(false);
       
+      // Only show toast for critical errors, not for aborted/stopped recognition
       if (event.error === 'not-allowed') {
         toast({
           title: t("microphoneAccessRequired"),
           description: t("allowMicAccess"),
           variant: "destructive",
         });
-      } else {
-        toast({
-          title: t("error"),
-          description: `${t("speechRecognitionError")}: ${event.error}`,
-          variant: "destructive",
-        });
+      } else if (event.error !== 'aborted' && event.error !== 'no-speech') {
+        // Silent logging for aborted and no-speech errors (they're normal)
+        console.warn('Speech recognition error (silent):', event.error);
       }
     };
     

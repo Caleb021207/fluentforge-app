@@ -72,6 +72,10 @@ const practiceTranslations: TranslationRecord = {
   chatPlaceholder: "Type your message to practice {{targetLanguage}}...",
   practicePrompt: "Hello! I would like to practice {{targetLanguage}} conversation. Please help me by correcting my {{targetLanguage}} grammar, vocabulary, and usage. Can we start with a basic conversation?",
   
+  // Translation toggles
+  showTranslation: "Show translation",
+  hideTranslation: "Hide translation",
+  
   // Progress and analysis
   aiProgressAnalysis: "AI Progress Analysis",
   uploadLanguageTestTranscripts: "Upload language test transcripts",
