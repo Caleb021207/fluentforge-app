@@ -24,11 +24,8 @@ export const useSecureApiKeys = () => {
 
       if (error) {
         setError(error.message);
-        toast({
-          title: t("error"),
-          description: error.message,
-          variant: "destructive",
-        });
+        // Silently log ElevenLabs API key errors without showing toast
+        console.warn('ElevenLabs API key not configured (silent):', error.message);
         return null;
       }
 
