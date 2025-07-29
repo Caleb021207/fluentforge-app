@@ -12,6 +12,7 @@ import Profile from "@/pages/Profile";
 import PronunciationPracticeContainer from "@/components/pronunciation/PronunciationPracticeContainer";
 import VoiceChat from "@/pages/VoiceChat";
 import Settings from "@/pages/Settings";
+import CertificationCodeTester from "@/pages/CertificationCodeTester";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/analysis" element={<TranscriptAnalysis />} />
+          <Route path="/code-tester" element={<CertificationCodeTester />} />
         </Routes>
         <Toaster />
       </NewLayout>
