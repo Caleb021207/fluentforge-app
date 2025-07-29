@@ -175,31 +175,6 @@ export const updateUserRole = async (userId: string, role: 'student' | 'teacher'
 };
 
 /**
- * Function to make the currently logged in user a teacher
+ * SECURITY: Role changes are now restricted to admin users only via RLS policies
+ * Self-service role changes have been removed for security reasons
  */
-export const makeMyselfTeacher = async (): Promise<boolean> => {
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return false;
-    
-    return await updateUserRole(user.id, 'teacher');
-  } catch (error) {
-    console.error('Error in makeMyselfTeacher:', error);
-    return false;
-  }
-};
-
-/**
- * Function to make the currently logged in user a student
- */
-export const makeMyselfStudent = async (): Promise<boolean> => {
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return false;
-    
-    return await updateUserRole(user.id, 'student');
-  } catch (error) {
-    console.error('Error in makeMyselfStudent:', error);
-    return false;
-  }
-};

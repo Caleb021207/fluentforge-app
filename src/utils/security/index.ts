@@ -7,6 +7,8 @@
 export {
   encryptData,
   decryptData,
+  encryptDataSecure,
+  decryptDataSecure,
   secureStorage
 } from './dataEncryption';
 
