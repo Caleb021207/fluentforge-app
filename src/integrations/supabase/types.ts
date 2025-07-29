@@ -1467,10 +1467,6 @@ export type Database = {
         Args: { target_student_id: string }
         Returns: Json
       }
-      change_user_role_for_testing: {
-        Args: { target_role: string }
-        Returns: Json
-      }
       check_rate_limit: {
         Args: {
           p_user_id: string
@@ -1521,6 +1517,14 @@ export type Database = {
       join_classroom: {
         Args: { class_code: string }
         Returns: Json
+      }
+      log_role_change_attempt: {
+        Args: {
+          target_user_id: string
+          requested_role: string
+          success: boolean
+        }
+        Returns: undefined
       }
       process_access_code: {
         Args: Record<PropertyKey, never> | { p_code: string }
