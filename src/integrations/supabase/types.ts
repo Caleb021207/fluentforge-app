@@ -62,6 +62,42 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_override_logs: {
+        Row: {
+          admin_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          new_value: number | null
+          override_type: string
+          previous_value: number | null
+          reason: string | null
+          student_id: string
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          new_value?: number | null
+          override_type: string
+          previous_value?: number | null
+          reason?: string | null
+          student_id: string
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          new_value?: number | null
+          override_type?: string
+          previous_value?: number | null
+          reason?: string | null
+          student_id?: string
+        }
+        Relationships: []
+      }
       api_calls_tracking: {
         Row: {
           created_at: string
@@ -1000,6 +1036,60 @@ export type Database = {
         }
         Relationships: []
       }
+      student_usage_limits: {
+        Row: {
+          academic_year: string
+          certification_attempts_semester_limit: number
+          certification_attempts_used_current_semester: number
+          created_at: string
+          current_month: string
+          current_semester: string
+          id: string
+          last_reset_month: string | null
+          last_reset_semester: string | null
+          student_id: string
+          text_messages_monthly_limit: number | null
+          text_messages_used_current_month: number
+          updated_at: string
+          voice_minutes_monthly_limit: number
+          voice_minutes_used_current_month: number
+        }
+        Insert: {
+          academic_year?: string
+          certification_attempts_semester_limit?: number
+          certification_attempts_used_current_semester?: number
+          created_at?: string
+          current_month?: string
+          current_semester?: string
+          id?: string
+          last_reset_month?: string | null
+          last_reset_semester?: string | null
+          student_id: string
+          text_messages_monthly_limit?: number | null
+          text_messages_used_current_month?: number
+          updated_at?: string
+          voice_minutes_monthly_limit?: number
+          voice_minutes_used_current_month?: number
+        }
+        Update: {
+          academic_year?: string
+          certification_attempts_semester_limit?: number
+          certification_attempts_used_current_semester?: number
+          created_at?: string
+          current_month?: string
+          current_semester?: string
+          id?: string
+          last_reset_month?: string | null
+          last_reset_semester?: string | null
+          student_id?: string
+          text_messages_monthly_limit?: number | null
+          text_messages_used_current_month?: number
+          updated_at?: string
+          voice_minutes_monthly_limit?: number
+          voice_minutes_used_current_month?: number
+        }
+        Relationships: []
+      }
       student_usage_metrics: {
         Row: {
           class_id: string | null
@@ -1180,6 +1270,54 @@ export type Database = {
           },
         ]
       }
+      time_restrictions: {
+        Row: {
+          allowed_days: number[]
+          class_id: string | null
+          created_at: string
+          created_by: string | null
+          end_time: string
+          id: string
+          is_active: boolean
+          restriction_type: string
+          school_id: string | null
+          start_time: string
+          student_id: string | null
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_days?: number[]
+          class_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          restriction_type: string
+          school_id?: string | null
+          start_time?: string
+          student_id?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_days?: number[]
+          class_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          restriction_type?: string
+          school_id?: string | null
+          start_time?: string
+          student_id?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       transcript_analyses: {
         Row: {
           analysis_status: string
@@ -1258,6 +1396,45 @@ export type Database = {
         }
         Relationships: []
       }
+      usage_tracking: {
+        Row: {
+          academic_year: string
+          created_at: string
+          ended_at: string | null
+          id: string
+          messages_count: number | null
+          minutes_used: number | null
+          session_id: string | null
+          session_type: string
+          started_at: string
+          student_id: string
+        }
+        Insert: {
+          academic_year?: string
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          messages_count?: number | null
+          minutes_used?: number | null
+          session_id?: string | null
+          session_type: string
+          started_at?: string
+          student_id: string
+        }
+        Update: {
+          academic_year?: string
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          messages_count?: number | null
+          minutes_used?: number | null
+          session_id?: string | null
+          session_type?: string
+          started_at?: string
+          student_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       class_student_metrics: {
@@ -1285,6 +1462,10 @@ export type Database = {
       auth_user_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      can_start_voice_session: {
+        Args: { target_student_id: string }
+        Returns: Json
       }
       change_user_role_for_testing: {
         Args: { target_role: string }
@@ -1321,6 +1502,10 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: string[]
       }
+      initialize_student_usage_limits: {
+        Args: { target_student_id: string }
+        Returns: undefined
+      }
       is_student_in_admin_school: {
         Args: { student_user_id: string }
         Returns: boolean
@@ -1343,6 +1528,14 @@ export type Database = {
       }
       recalculate_student_metrics: {
         Args: { target_student_id: string }
+        Returns: undefined
+      }
+      reset_monthly_usage: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      reset_semester_usage: {
+        Args: Record<PropertyKey, never>
         Returns: undefined
       }
       update_student_language_aggregate_metrics: {

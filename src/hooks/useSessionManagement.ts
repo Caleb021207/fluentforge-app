@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import type { MessageCount, SessionStatus } from "@/types/chat";
-import { calculateRemainingWeeklyTime } from "@/utils/voiceChatUtils";
+import { calculateRemainingMonthlyTime } from "@/utils/voiceChatUtils";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 
 export const useSessionManagement = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -17,6 +18,7 @@ export const useSessionManagement = () => {
   
   const { toast } = useToast();
   const { t } = useLocalization();
+  const { usageLimits, checkCanStartVoiceSession, trackVoiceSession } = useUsageLimits();
 
   // Check auth and calculate remaining time on mount
   useEffect(() => {
@@ -26,7 +28,7 @@ export const useSessionManagement = () => {
         setIsLoggedIn(!!user);
         
         if (user) {
-          const remainingTime = await calculateRemainingWeeklyTime(user.id);
+          const remainingTime = await calculateRemainingMonthlyTime(user.id);
           setWeeklyTimeRemaining(remainingTime);
           
           try {
@@ -60,7 +62,7 @@ export const useSessionManagement = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setIsLoggedIn(!!session?.user);
       if (session?.user) {
-        const remainingTime = await calculateRemainingWeeklyTime(session.user.id);
+        const remainingTime = await calculateRemainingMonthlyTime(session.user.id);
         setWeeklyTimeRemaining(remainingTime);
       } else {
         setWeeklyTimeRemaining(null);
@@ -90,7 +92,7 @@ export const useSessionManagement = () => {
       console.log('Created premium voice session for:', user.id);
       
       // Update the remaining time immediately after creating a session
-      const remainingTime = await calculateRemainingWeeklyTime(user.id);
+      const remainingTime = await calculateRemainingMonthlyTime(user.id);
       setWeeklyTimeRemaining(remainingTime);
 
     } catch (error: any) {
@@ -120,7 +122,7 @@ export const useSessionManagement = () => {
       }
 
       // Update remaining time after ending session
-      const remainingTime = await calculateRemainingWeeklyTime(user.id);
+      const remainingTime = await calculateRemainingMonthlyTime(user.id);
       setWeeklyTimeRemaining(remainingTime);
 
       return true;

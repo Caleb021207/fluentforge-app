@@ -2,7 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Track TTS usage in the database
+ * Track TTS usage in the database using the new usage tracking system
  */
 export async function trackTTSUsage(language: string, textLength: number): Promise<void> {
   try {
@@ -22,15 +22,27 @@ export async function trackTTSUsage(language: string, textLength: number): Promi
 
     console.log(`Tracking voice practice for user ${user.id}`);
     
-    // Log the API call to the tracking table using the correct column structure
-    const { data, error } = await supabase.from('api_calls_tracking').insert({
+    // Track in new usage_tracking table
+    const { error: trackingError } = await supabase.from('usage_tracking').insert({
+      student_id: user.id,
+      session_type: 'voice_practice',
+      messages_count: 1,
+      minutes_used: Math.ceil(textLength / 150) // Estimate 1 minute per 150 characters
+    });
+    
+    if (trackingError) {
+      console.error("Error inserting usage tracking:", trackingError);
+    }
+    
+    // Also track in legacy API calls table for backward compatibility
+    const { error } = await supabase.from('api_calls_tracking').insert({
       user_id: user.id,
       service: 'tts',
       endpoint: 'voice_practice'
     });
     
     if (error) {
-      console.error("Error inserting tracking record:", error);
+      console.error("Error inserting API tracking record:", error);
       return;
     }
     

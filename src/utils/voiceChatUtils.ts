@@ -50,46 +50,55 @@ export const formatCooldownTime = (seconds: number): string => {
 };
 
 /**
- * Calculate remaining weekly voice chat time for a user
- * The limit is 10 minutes (600 seconds) per week
- * Note: Since premium_voice_chat_sessions table doesn't exist, we'll use api_calls_tracking
+ * Calculate remaining monthly voice chat time for a user
+ * The limit is 400 minutes per month (24,000 seconds)
+ * Uses the new usage_tracking system for accurate tracking
  */
-export const calculateRemainingWeeklyTime = async (userId: string): Promise<number> => {
-  const weekStart = getCurrentWeekStart();
-  const WEEKLY_LIMIT_SECONDS = 600; // 10 minutes in seconds
+export const calculateRemainingMonthlyTime = async (userId: string): Promise<number> => {
+  const MONTHLY_LIMIT_SECONDS = 24000; // 400 minutes in seconds
   
   try {
-    // Use api_calls_tracking to estimate voice usage
-    const { data, error } = await supabase
-      .from('api_calls_tracking')
-      .select('created_at')
-      .eq('user_id', userId)
-      .eq('service', 'premium_voice')
-      .gte('created_at', weekStart.toISOString());
+    // Get usage limits from the new system
+    const { data: limits, error } = await supabase
+      .from('student_usage_limits')
+      .select('voice_minutes_monthly_limit, voice_minutes_used_current_month')
+      .eq('student_id', userId)
+      .single();
     
     if (error) {
-      console.error("Error fetching session data:", error);
-      return WEEKLY_LIMIT_SECONDS; // Default to full time if error
+      console.error("Error fetching usage limits:", error);
+      return MONTHLY_LIMIT_SECONDS; // Default to full time if error
     }
     
-    if (!data || data.length === 0) {
-      return WEEKLY_LIMIT_SECONDS; // No sessions yet
+    if (!limits) {
+      // Initialize limits for new user
+      await supabase.rpc('initialize_student_usage_limits', {
+        target_student_id: userId
+      });
+      return MONTHLY_LIMIT_SECONDS; // Return full time for new user
     }
     
-    // Estimate 30 seconds per voice session (this is a rough estimate)
-    const estimatedTimeUsed = data.length * 30;
-    const cappedTimeUsed = Math.min(estimatedTimeUsed, WEEKLY_LIMIT_SECONDS);
+    const remainingMinutes = limits.voice_minutes_monthly_limit - limits.voice_minutes_used_current_month;
+    const remainingSeconds = Math.max(0, remainingMinutes * 60);
     
-    // Calculate remaining time
-    const remainingTime = Math.max(0, WEEKLY_LIMIT_SECONDS - cappedTimeUsed);
-    console.log(`User ${userId} has estimated ${cappedTimeUsed}s used, remaining: ${remainingTime}s this week`);
+    console.log(`User ${userId} has ${limits.voice_minutes_used_current_month} minutes used, ${remainingMinutes} minutes remaining this month`);
     
-    return remainingTime;
+    return remainingSeconds;
     
   } catch (error) {
-    console.error("Error in calculateRemainingWeeklyTime:", error);
-    return WEEKLY_LIMIT_SECONDS; // Default to full time if error
+    console.error("Error in calculateRemainingMonthlyTime:", error);
+    return MONTHLY_LIMIT_SECONDS; // Default to full time if error
   }
+};
+
+/**
+ * @deprecated Use calculateRemainingMonthlyTime instead
+ * Calculate remaining weekly voice chat time for a user
+ */
+export const calculateRemainingWeeklyTime = async (userId: string): Promise<number> => {
+  // Convert monthly limit to weekly for backward compatibility
+  const monthlySeconds = await calculateRemainingMonthlyTime(userId);
+  return Math.min(monthlySeconds, 600); // Cap at 10 minutes for backward compatibility
 };
 
 /**

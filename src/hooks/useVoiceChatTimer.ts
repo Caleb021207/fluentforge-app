@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { formatTime } from "@/utils/timeUtils";
+import { formatTime } from "@/utils/voiceChatUtils";
 
 interface UseVoiceChatTimerProps {
   isConversationActive: () => boolean;
