@@ -1,1 +1,7 @@
 project_id = "dukpljcweixxmpkiblwo"
+
+[functions.verify-certification-code]
+verify_jwt = false
+
+[functions.record-certification-usage]
+verify_jwt = false
