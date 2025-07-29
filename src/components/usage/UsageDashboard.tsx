@@ -52,7 +52,7 @@ export const UsageDashboard = () => {
   const certStatus = getUsageStatus(certUsagePercent);
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-1">
       {/* Voice Practice Usage */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -71,52 +71,6 @@ export const UsageDashboard = () => {
             <Badge variant={voiceStatus.variant}>{voiceStatus.label}</Badge>
             <span className="text-xs text-muted-foreground">
               {Math.round(voiceUsagePercent)}% used
-            </span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Text Messages */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Text Messages</CardTitle>
-          <MessageSquare className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">Unlimited</div>
-          <p className="text-xs text-muted-foreground mb-2">
-            {usageLimits.textMessagesUsed.toLocaleString()} sent this month
-          </p>
-          <div className="h-2 bg-muted rounded-full">
-            <div className="h-2 bg-primary rounded-full w-1/4"></div>
-          </div>
-          <div className="flex justify-between items-center mt-2">
-            <Badge variant="outline">Active</Badge>
-            {usageLimits.textMessagesUsed >= 5000 && (
-              <Badge variant="secondary">High Usage</Badge>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Certification Attempts */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Certification Tests</CardTitle>
-          <Award className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {usageLimits.certificationAttemptsLimit - usageLimits.certificationAttemptsUsed}
-          </div>
-          <p className="text-xs text-muted-foreground mb-2">
-            {usageLimits.certificationAttemptsUsed} of {usageLimits.certificationAttemptsLimit} used this semester
-          </p>
-          <Progress value={certUsagePercent} className="h-2" />
-          <div className="flex justify-between items-center mt-2">
-            <Badge variant={certStatus.variant}>{certStatus.label}</Badge>
-            <span className="text-xs text-muted-foreground">
-              {Math.round(certUsagePercent)}% used
             </span>
           </div>
         </CardContent>
