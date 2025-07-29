@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Shield, FileText, TrendingUp } from "lucide-react";
+import { Shield, FileText, TrendingUp, TestTube } from "lucide-react";
 import ParentalControls from "@/components/compliance/ParentalControls";
 import { UsageDashboard } from "@/components/usage/UsageDashboard";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +31,28 @@ const Settings = () => {
         <UsageDashboard />
       </div>
       
+      {/* Certification Testing Section */}
+      <Card className="w-full mb-6">
+        <CardHeader className="flex flex-row items-center gap-2">
+          <TestTube size={20} className="text-primary" />
+          <div>
+            <CardTitle>Certification Code Testing</CardTitle>
+            <CardDescription>Test the generation, verification, and usage recording of certification codes</CardDescription>
+          </div>
+        </CardHeader>
+        <CardFooter className="flex justify-end">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1" 
+            onClick={() => navigate("/code-tester")}
+          >
+            <TestTube size={16} />
+            Open Code Tester
+          </Button>
+        </CardFooter>
+      </Card>
+
       {/* Parental Controls Section */}
       <Card className="w-full">
         <CardHeader className="flex flex-row items-center gap-2">
