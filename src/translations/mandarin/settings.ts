@@ -5,6 +5,12 @@ const settingsTranslations: TranslationRecord = {
   settings: "设置",
   usageLimits: "使用限制",
   usageLimitsDescription: "监控您的平台使用情况和剩余限制",
+  
+  // Usage limit enforcement
+  usageLimitReached: "已达到使用限制",
+  monthlyVoiceLimitReached: "您已达到每月语音聊天限制",
+  outsideAllowedHours: "语音聊天在这些时间内不可用",
+  voiceSessionBlocked: "语音会话被阻止",
   generalSettings: "常规设置",
   languageSettings: "语言设置",
   notificationSettings: "通知设置",

@@ -6,6 +6,12 @@ const settingsTranslations: TranslationRecord = {
   settings: "सेटिङहरू",
   usageLimits: "प्रयोग सीमाहरू",
   usageLimitsDescription: "आफ्नो प्लेटफर्म प्रयोग र बाँकी सीमाहरू निगरानी गर्नुहोस्",
+  
+  // Usage limit enforcement
+  usageLimitReached: "प्रयोग सीमा पुगेको छ",
+  monthlyVoiceLimitReached: "तपाईंले मासिक आवाज च्याट सीमा पुग्नुभएको छ",
+  outsideAllowedHours: "यी घण्टाहरूमा आवाज च्याट उपलब्ध छैन",
+  voiceSessionBlocked: "आवाज सत्र रोकिएको",
   generalSettings: "सामान्य सेटिङहरू",
   accountSettings: "खाता सेटिङहरू",
   privacySettings: "गोपनीयता सेटिङहरू",

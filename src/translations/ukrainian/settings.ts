@@ -5,6 +5,12 @@ const settingsTranslations: TranslationRecord = {
   settings: "Налаштування",
   usageLimits: "Обмеження Використання",
   usageLimitsDescription: "Відстежуйте використання платформи та залишкові обмеження",
+  
+  // Usage limit enforcement
+  usageLimitReached: "Досягнуто ліміт використання",
+  monthlyVoiceLimitReached: "Ви досягли місячного ліміту голосового чату",
+  outsideAllowedHours: "Голосовий чат недоступний у ці години",
+  voiceSessionBlocked: "Голосова Сесія Заблокована",
   accountSettings: "Налаштування облікового запису",
   profileSettings: "Налаштування профілю",
   languageSettings: "Мовні налаштування",

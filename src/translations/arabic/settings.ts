@@ -5,6 +5,12 @@ const settingsTranslations: TranslationRecord = {
   settings: "الإعدادات",
   usageLimits: "حدود الاستخدام",
   usageLimitsDescription: "راقب استخدامك للمنصة والحدود المتبقية",
+  
+  // Usage limit enforcement
+  usageLimitReached: "تم الوصول إلى حد الاستخدام",
+  monthlyVoiceLimitReached: "لقد وصلت إلى حد الدردشة الصوتية الشهري",
+  outsideAllowedHours: "الدردشة الصوتية غير متاحة خلال هذه الساعات",
+  voiceSessionBlocked: "جلسة الصوت محجوبة",
   generalSettings: "الإعدادات العامة",
   languageSettings: "إعدادات اللغة",
   notificationSettings: "إعدادات الإشعارات",

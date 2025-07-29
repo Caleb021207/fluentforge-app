@@ -6,6 +6,12 @@ const settingsTranslations: TranslationRecord = {
   settings: "Settings",
   usageLimits: "Usage Limits",
   usageLimitsDescription: "Monitor your platform usage and remaining limits",
+  
+  // Usage limit enforcement
+  usageLimitReached: "Usage limit reached",
+  monthlyVoiceLimitReached: "You have reached your monthly voice chat limit",
+  outsideAllowedHours: "Voice chat is not available during these hours",
+  voiceSessionBlocked: "Voice Session Blocked",
   generalSettings: "General Settings",
   accountSettings: "Account Settings",
   privacySettings: "Privacy Settings",
