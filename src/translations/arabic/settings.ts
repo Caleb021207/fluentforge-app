@@ -3,6 +3,8 @@ import { TranslationRecord } from "../types";
 
 const settingsTranslations: TranslationRecord = {
   settings: "الإعدادات",
+  usageLimits: "حدود الاستخدام",
+  usageLimitsDescription: "راقب استخدامك للمنصة والحدود المتبقية",
   generalSettings: "الإعدادات العامة",
   languageSettings: "إعدادات اللغة",
   notificationSettings: "إعدادات الإشعارات",

@@ -4,6 +4,8 @@ import { TranslationRecord } from "../types";
 const settingsTranslations: TranslationRecord = {
   // Settings page
   settings: "Configuración",
+  usageLimits: "Límites de Uso",
+  usageLimitsDescription: "Monitorea tu uso de la plataforma y los límites restantes",
   generalSettings: "Configuración General",
   accountSettings: "Configuración de Cuenta",
   privacySettings: "Configuración de Privacidad",

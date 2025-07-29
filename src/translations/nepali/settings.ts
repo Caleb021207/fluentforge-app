@@ -4,6 +4,8 @@ import { TranslationRecord } from "../types";
 const settingsTranslations: TranslationRecord = {
   // Settings page
   settings: "सेटिङहरू",
+  usageLimits: "प्रयोग सीमाहरू",
+  usageLimitsDescription: "आफ्नो प्लेटफर्म प्रयोग र बाँकी सीमाहरू निगरानी गर्नुहोस्",
   generalSettings: "सामान्य सेटिङहरू",
   accountSettings: "खाता सेटिङहरू",
   privacySettings: "गोपनीयता सेटिङहरू",

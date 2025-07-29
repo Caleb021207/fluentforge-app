@@ -2,6 +2,9 @@
 import { TranslationRecord } from "../types";
 
 const settingsTranslations: TranslationRecord = {
+  settings: "Налаштування",
+  usageLimits: "Обмеження Використання",
+  usageLimitsDescription: "Відстежуйте використання платформи та залишкові обмеження",
   accountSettings: "Налаштування облікового запису",
   profileSettings: "Налаштування профілю",
   languageSettings: "Мовні налаштування",
