@@ -216,17 +216,18 @@ const CertificationCodeTester = () => {
               />
             </div>
             <div>
-              <Label htmlFor="testType">Test Type</Label>
+              <Label htmlFor="testType">Test Section</Label>
               <select
                 id="testType"
                 value={testType}
                 onChange={(e) => setTestType(e.target.value)}
                 className="w-full p-2 border rounded"
               >
-                <option value="reading">Reading</option>
-                <option value="writing">Writing</option>
-                <option value="speaking">Speaking</option>
-                <option value="listening">Listening</option>
+                <option value="reading">Reading Section</option>
+                <option value="writing">Writing Section</option>
+                <option value="speaking">Speaking Section</option>
+                <option value="listening">Listening Section</option>
+                <option value="complete">Complete Test</option>
               </select>
             </div>
           </div>
