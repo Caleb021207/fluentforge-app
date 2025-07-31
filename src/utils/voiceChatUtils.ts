@@ -51,11 +51,11 @@ export const formatCooldownTime = (seconds: number): string => {
 
 /**
  * Calculate remaining monthly voice chat time for a user
- * The limit is 400 minutes per month (24,000 seconds)
+ * The limit is 100 minutes per month (6,000 seconds)
  * Uses the new usage_tracking system for accurate tracking
  */
 export const calculateRemainingMonthlyTime = async (userId: string): Promise<number> => {
-  const MONTHLY_LIMIT_SECONDS = 24000; // 400 minutes in seconds
+  const MONTHLY_LIMIT_SECONDS = 6000; // 100 minutes in seconds
   
   try {
     // Get usage limits from the new system
