@@ -1,6 +1,7 @@
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -16,8 +17,29 @@ interface TranscriptUploadProps {
 const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const { toast } = useToast();
+const { toast } = useToast();
   const { t } = useLocalization();
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    // Initialize auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!isMounted) return;
+      setIsAuthenticated(!!session);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -42,6 +64,21 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
         description: t("supportedFileTypes") || "Please upload a JPEG, PNG, WebP, or PDF file.",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Ensure authenticated session before proceeding
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      await supabase.auth.signOut();
+      toast({
+        title: t("sessionExpired") || "Session expired",
+        description: t("pleaseSignInAgain") || "Please sign in again to upload transcripts.",
+        variant: "destructive",
+      });
+      setIsUploading(false);
+      setUploadProgress(0);
+      navigate('/auth');
       return;
     }
 
@@ -163,7 +200,7 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
       'application/pdf': ['.pdf']
     },
     multiple: false,
-    disabled: isUploading
+    disabled: isUploading || !isAuthenticated
   });
 
   const getFileIcon = (type: string) => {
@@ -181,6 +218,14 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {!isAuthenticated && (
+          <div className="mb-4 p-3 rounded-md border border-border bg-card">
+            <p className="text-sm">{t("pleaseSignInToUpload") || "Please sign in to upload transcripts."}</p>
+            <div className="mt-2">
+              <Button size="sm" onClick={() => navigate('/auth')}>{t("signIn") || "Sign in"}</Button>
+            </div>
+          </div>
+        )}
         <div
           {...getRootProps()}
           className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
