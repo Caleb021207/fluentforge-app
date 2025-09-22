@@ -8,6 +8,13 @@ const practiceTranslations: TranslationRecord = {
   startChatting: "Comenzar a chatear",
   clearConversation: "Limpiar conversación",
   correctGrammar: "Corregir gramática",
+  conversationLevel: "Nivel de conversación",
+  basicLevel: "Básico (A1-A2)",
+  intermediateLevel: "Intermedio (B1)",
+  advancedLevel: "Avanzado (B2-C1)",
+  conversationLevelUpdated: "Nivel de conversación actualizado",
+  levelSetTo: "Nivel establecido a",
+  selectLevel: "Seleccionar nivel",
   
   // Chat interface with proper interpolation
   startConversationIn: "Iniciar conversación en {{language}}",
