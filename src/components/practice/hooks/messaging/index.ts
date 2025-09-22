@@ -15,7 +15,7 @@ export const useChatMessaging = () => {
   const { processTranslation } = useTranslationProcessor();
   const { hasError, setHasError, handleError, clearError } = useErrorHandler();
 
-  const sendChatMessage = async (message: string, correctGrammar: boolean = false) => {
+  const sendChatMessage = async (message: string, correctGrammar: boolean = false, conversationHistory: {role: 'user' | 'assistant' | 'system'; content: string}[] = []) => {
     if (!message || message.trim() === "") {
       return null;
     }
@@ -27,8 +27,8 @@ export const useChatMessaging = () => {
       // Get the targetLanguage from localStorage 
       const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
       
-      // Send the request with the correctGrammar option
-      const response = await sendChatRequest(message, currentLanguage, targetLanguage, correctGrammar);
+      // Send the request with the correctGrammar option and conversation history
+      const response = await sendChatRequest(message, currentLanguage, targetLanguage, correctGrammar, conversationHistory);
       
       if (!response) {
         return null;

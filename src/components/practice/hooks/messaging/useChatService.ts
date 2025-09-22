@@ -15,7 +15,8 @@ export const useChatService = () => {
     message: string, 
     userLanguage: string, 
     targetLanguage: string,
-    correctGrammar: boolean = false
+    correctGrammar: boolean = false,
+    conversationHistory: {role: 'user' | 'assistant' | 'system'; content: string}[] = []
   ): Promise<ChatResponse | null> => {
     if (!message || message.trim() === "") {
       toast({
@@ -43,7 +44,8 @@ export const useChatService = () => {
         targetLanguage,
         requestType: 'conversation',
         requestTranslation: true,
-        correctGrammar
+        correctGrammar,
+        conversationHistoryLength: conversationHistory.length
       });
       
       // Explicitly define language roles to avoid confusion
@@ -56,7 +58,8 @@ export const useChatService = () => {
           targetLanguage: targetLanguage, // Language the user is learning
           requestType: 'conversation',
           requestTranslation: true,
-          correctGrammar: correctGrammar  // New flag to control grammar correction
+          correctGrammar: correctGrammar,  // Flag to control grammar correction
+          conversationHistory: conversationHistory  // Add conversation history for context
         }
       });
 

@@ -18,6 +18,8 @@ export const useChatMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [correctGrammar, setCorrectGrammar] = useState<boolean>(false);
+  // Add conversation history for API context (similar to voice chat)
+  const [apiConversationHistory, setApiConversationHistory] = useState<{role: 'user' | 'assistant' | 'system'; content: string}[]>([]);
   const { t, currentLanguage } = useLocalization();
   const { isLoading, hasError, sendChatMessage, retryLastMessage, extractStringFromTranslation } = useChatMessaging();
   const { generateLanguageLearningPrompt } = usePromptGenerator();
@@ -27,12 +29,23 @@ export const useChatMessages = () => {
   // Load saved messages from session storage
   useEffect(() => {
     const savedMessages = sessionStorage.getItem('chatMessages');
+    const savedApiHistory = sessionStorage.getItem('apiConversationHistory');
+    
     if (savedMessages) {
       try {
         const parsedMessages = JSON.parse(savedMessages);
         setMessages(parsedMessages);
       } catch (e) {
         console.error('Failed to parse saved messages:', e);
+      }
+    }
+    
+    if (savedApiHistory) {
+      try {
+        const parsedApiHistory = JSON.parse(savedApiHistory);
+        setApiConversationHistory(parsedApiHistory);
+      } catch (e) {
+        console.error('Failed to parse saved API history:', e);
       }
     }
     
@@ -49,6 +62,13 @@ export const useChatMessages = () => {
       sessionStorage.setItem('chatMessages', JSON.stringify(messages));
     }
   }, [messages]);
+
+  // Save API conversation history when it changes
+  useEffect(() => {
+    if (apiConversationHistory.length > 0) {
+      sessionStorage.setItem('apiConversationHistory', JSON.stringify(apiConversationHistory));
+    }
+  }, [apiConversationHistory]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +91,7 @@ export const useChatMessages = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     
-    // Send message to API, passing the correctGrammar flag
+    // Send message to API with conversation history for context
     const response = await sendChatMessageWithCorrection(input);
     
     if (response) {
@@ -83,15 +103,22 @@ export const useChatMessages = () => {
       };
       
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Update API conversation history to maintain context
+      const updatedHistory = [
+        ...apiConversationHistory,
+        { role: 'user' as const, content: input },
+        { role: 'assistant' as const, content: response.content }
+      ];
+      setApiConversationHistory(updatedHistory);
     }
   };
   
-  // Modified send function that includes grammar correction preference
+  // Modified send function that includes grammar correction preference and conversation history
   const sendChatMessageWithCorrection = async (message: string) => {
-    // Get the current instance of sendChatMessage but add correctGrammar option
     try {
-      // Pass the correctGrammar flag in the request
-      return await sendChatMessage(message, correctGrammar);
+      // Pass the correctGrammar flag and conversation history for context
+      return await sendChatMessage(message, correctGrammar, apiConversationHistory);
     } catch (error) {
       console.error("Error sending message with correction flag:", error);
       return null;
@@ -125,7 +152,9 @@ export const useChatMessages = () => {
   
   const clearConversation = () => {
     setMessages([]);
+    setApiConversationHistory([]);
     sessionStorage.removeItem('chatMessages');
+    sessionStorage.removeItem('apiConversationHistory');
     
     // Reset message count
     setMessageCount({ inputs: 0, outputs: 0 });
