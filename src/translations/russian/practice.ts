@@ -14,6 +14,8 @@ const practiceTranslations: TranslationRecord = {
   conversationLevelUpdated: "Уровень разговора обновлен",
   levelSetTo: "Уровень установлен на",
   selectLevel: "Выберите уровень",
+  grammarCorrectionEnabled: "Исправление грамматики включено",
+  grammarCorrectionDisabled: "Исправление грамматики выключено",
   startConversationIn: "Начать разговор на {{language}}",
   startTextChatting: "Начать текстовый чат",
   practiceGuide: "Руководство по практике {{language}}",

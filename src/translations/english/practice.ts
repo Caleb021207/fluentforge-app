@@ -15,6 +15,8 @@ const practiceTranslations: TranslationRecord = {
   conversationLevelUpdated: "Conversation Level Updated",
   levelSetTo: "Level set to",
   selectLevel: "Select level",
+  grammarCorrectionEnabled: "Grammar correction enabled",
+  grammarCorrectionDisabled: "Grammar correction disabled",
   
   // Practice guide
   practiceGuide: "Practice Guide",

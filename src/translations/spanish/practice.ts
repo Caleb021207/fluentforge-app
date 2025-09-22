@@ -15,6 +15,8 @@ const practiceTranslations: TranslationRecord = {
   conversationLevelUpdated: "Nivel de conversación actualizado",
   levelSetTo: "Nivel establecido a",
   selectLevel: "Seleccionar nivel",
+  grammarCorrectionEnabled: "Corrección gramatical habilitada",
+  grammarCorrectionDisabled: "Corrección gramatical deshabilitada",
   
   // Chat interface with proper interpolation
   startConversationIn: "Iniciar conversación en {{language}}",

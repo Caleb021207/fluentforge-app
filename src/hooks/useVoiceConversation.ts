@@ -14,7 +14,7 @@ type ConversationMessage = {
   timestamp: Date;
 };
 
-export const useVoiceConversation = () => {
+export const useVoiceConversation = (conversationLevel: string = "intermediate", correctGrammar: boolean = false) => {
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: 'user' | 'assistant' | 'system'; content: string}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +52,8 @@ export const useVoiceConversation = () => {
           userLanguage: native || currentLanguage,
           targetLanguage: practice || 'english',
           conversationHistory: apiConversationHistory,
-          cefrLevel: 'B1',
+          conversationLevel: conversationLevel,
+          correctGrammar: correctGrammar,
           requestTranslation: true
         }
       });

@@ -1,6 +1,12 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CardContent } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
 import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
 import { getLanguagePair } from "@/utils/languageUtils";
@@ -27,10 +33,55 @@ import { Message } from "@/types/chat";
 const VoiceChat: React.FC<VoiceChatProps> = () => {
   const { currentLanguage, t } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
+  const { toast } = useToast();
+  const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
+  const [correctGrammar, setCorrectGrammar] = useState<boolean>(false);
+
+  // Load saved preferences
+  useEffect(() => {
+    const storedLevel = localStorage.getItem("conversationLevel");
+    if (storedLevel) {
+      setConversationLevel(storedLevel);
+    }
+    
+    const savedCorrectGrammar = localStorage.getItem('correctGrammar');
+    if (savedCorrectGrammar) {
+      setCorrectGrammar(savedCorrectGrammar === 'true');
+    }
+  }, []);
+
+  const handleLevelChange = (newLevel: string) => {
+    setConversationLevel(newLevel);
+    localStorage.setItem("conversationLevel", newLevel);
+    
+    const levelNames = {
+      basic: t("basicLevel") || "Basic (A1-A2)",
+      intermediate: t("intermediateLevel") || "Intermediate (B1)", 
+      advanced: t("advancedLevel") || "Advanced (B2-C1)"
+    };
+    
+    toast({
+      title: t("conversationLevelUpdated") || "Conversation Level Updated",
+      description: `${t("levelSetTo") || "Level set to"} ${levelNames[newLevel as keyof typeof levelNames]}`,
+      variant: "default",
+    });
+  };
+
+  const toggleGrammarCorrection = () => {
+    const newValue = !correctGrammar;
+    setCorrectGrammar(newValue);
+    localStorage.setItem('correctGrammar', String(newValue));
+    
+    toast({
+      title: newValue ? t("grammarCorrectionEnabled") : t("grammarCorrectionDisabled"),
+      description: newValue ? t("tutor.willCorrectGrammar") : t("tutor.wontCorrectGrammar"),
+      variant: "default",
+    });
+  };
   
   // Initialize hooks
   const { conversationHistory, apiConversationHistory, isLoading, sendMessage, 
-          clearConversation, handleAnalyzeConversation, sessionIdRef } = useVoiceConversation();
+          clearConversation, handleAnalyzeConversation, sessionIdRef } = useVoiceConversation(conversationLevel, correctGrammar);
   
   const { speakWithAzureTTS, isSpeaking } = useVoiceTTS({ practiceLanguage: practice });
   
@@ -64,6 +115,46 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
       <VoiceChatHeader />
 
       <div className="flex flex-col gap-6">
+        {/* Conversation Settings Card */}
+        <Card>
+          <CardContent className="p-4 space-y-4">
+            {/* Conversation Level Selector */}
+            <div className="flex items-center justify-between">
+              <Label htmlFor="conversation-level" className="text-sm font-medium">
+                {t("conversationLevel") || "Conversation Level"}
+              </Label>
+              <Select value={conversationLevel} onValueChange={handleLevelChange}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder={t("selectLevel") || "Select level"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="basic">
+                    {t("basicLevel") || "Basic (A1-A2)"}
+                  </SelectItem>
+                  <SelectItem value="intermediate">
+                    {t("intermediateLevel") || "Intermediate (B1)"}
+                  </SelectItem>
+                  <SelectItem value="advanced">
+                    {t("advancedLevel") || "Advanced (B2-C1)"}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Grammar Correction Toggle */}
+            <div className="flex items-center justify-between">
+              <Label htmlFor="grammar-correction" className="text-sm font-medium">
+                {t("correctGrammar") || "Grammar Correction"}
+              </Label>
+              <Switch
+                id="grammar-correction"
+                checked={correctGrammar}
+                onCheckedChange={toggleGrammarCorrection}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="p-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <PracticeInfoPanel />

@@ -14,6 +14,8 @@ const practiceTranslations: TranslationRecord = {
   conversationLevelUpdated: "बातचीत का स्तर अपडेट किया गया",
   levelSetTo: "स्तर सेट किया गया",
   selectLevel: "स्तर चुनें",
+  grammarCorrectionEnabled: "व्याकरण सुधार सक्षम",
+  grammarCorrectionDisabled: "व्याकरण सुधार अक्षम",
   sendMessage: "संदेश भेजें",
   networkConnectionIssue: "नेटवर्क कनेक्शन समस्या, कृपया बाद में पुनः प्रयास करें",
   suggestedPrompts: "सुझाए गए प्रॉम्प्ट्स",
