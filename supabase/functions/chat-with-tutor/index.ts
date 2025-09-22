@@ -75,7 +75,7 @@ serve(async (req) => {
     // Log the access for FERPA compliance
     logDataAccess("anonymous", "language_practice", "language_learning");
 
-    console.log(`Received message: ${message} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation}`);
+    console.log(`Received message: ${message} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation} Grammar correction: ${correctGrammar} Conversation history length: ${conversationHistory.length}`);
 
     // Handle hint requests
     if (requestType === 'hint') {
@@ -163,20 +163,27 @@ serve(async (req) => {
 
     // Step 2: Generate Reply from OpenAI with updated system message
     // Modified to only correct grammar if explicitly requested
-    const systemMessage = `You are a patient and encouraging AI language tutor. Your goal is to help the user practice ${targetLangDisplay}.
+    let systemMessage = `You are a patient and encouraging AI language tutor. Your goal is to help the user practice ${targetLangDisplay}.
     The user's native language is ${userLangDisplay}.
     The user is at a CEFR level of ${cefrLevel}.
-    If the user asks you to translate something, please provide the translation.
     
-    IMPORTANT: ${correctGrammar 
-      ? "If the user makes grammatical errors, gently correct them and explain the correction." 
-      : "DO NOT correct the user's grammar or point out errors unless they explicitly ask for help or correction."
+    ${correctGrammar ? 
+      `GRAMMAR CORRECTION MODE: The user wants grammar feedback. When responding:
+      1. FIRST provide your natural response to their message
+      2. THEN, if you notice any grammar mistakes in their MOST RECENT message, add a separate paragraph that starts with "📝 Grammar note:" and gently correct the errors with explanations
+      3. Show the corrected version and explain why it's better
+      4. Be encouraging and supportive in your corrections` 
+      : 
+      `CONVERSATION MODE: Focus on natural conversation flow. Do NOT correct grammar errors unless the user specifically asks for help with grammar.`
     }
     
+    If the user asks you to translate something, provide the translation.
     If the user asks a question about grammar or vocabulary, provide a clear and concise answer.
     If the user is struggling, offer encouragement and suggest simpler ways to express themselves.
     If the user is doing well, offer praise and suggest more advanced vocabulary or grammar.
     You should always respond in ${targetLangDisplay}.`;
+
+    console.log(`Grammar correction enabled: ${correctGrammar}`);
 
     // Call OpenAI for conversation response
     const chatResponse = await openai.chat.completions.create({
