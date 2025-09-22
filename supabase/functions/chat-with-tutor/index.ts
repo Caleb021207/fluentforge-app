@@ -55,8 +55,8 @@ serve(async (req) => {
       userLanguage: rawUserLanguage, 
       targetLanguage: rawTargetLanguage, 
       conversationHistory = [],
-      cefrLevel = "B1",
-      correctGrammar = false // New flag to control grammar correction
+      conversationLevel = "intermediate",  // Add conversation level with default
+      correctGrammar = false // Flag to control grammar correction
     } = requestData;
 
     // Validate language parameters
@@ -75,7 +75,7 @@ serve(async (req) => {
     // Log the access for FERPA compliance
     logDataAccess("anonymous", "language_practice", "language_learning");
 
-    console.log(`Received message: ${message} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation} Grammar correction: ${correctGrammar} Conversation history length: ${conversationHistory.length}`);
+    console.log(`Received message: ${message} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation} Grammar correction: ${correctGrammar} Conversation level: ${conversationLevel} Conversation history length: ${conversationHistory.length}`);
 
     // Handle hint requests
     if (requestType === 'hint') {
@@ -163,27 +163,44 @@ serve(async (req) => {
 
     // Step 2: Generate Reply from OpenAI with updated system message
     // Modified to only correct grammar if explicitly requested
+    // Map conversation level to CEFR levels and descriptions
+    const levelMapping = {
+      basic: {
+        cefr: "A1-A2",
+        description: "Use simple vocabulary, short sentences, and basic grammar structures. Speak about everyday topics like family, food, weather, and daily routines."
+      },
+      intermediate: {
+        cefr: "B1", 
+        description: "Use more complex sentences with connecting words. Discuss opinions, experiences, plans, and abstract concepts. Include varied vocabulary and grammar structures."
+      },
+      advanced: {
+        cefr: "B2-C1",
+        description: "Use sophisticated vocabulary, complex sentence structures, and nuanced expressions. Discuss complex topics, abstract ideas, and use idiomatic expressions appropriately."
+      }
+    };
+    
+    const currentLevel = levelMapping[conversationLevel as keyof typeof levelMapping] || levelMapping.intermediate;
+    
     let systemMessage = `You are a patient and encouraging AI language tutor. Your goal is to help the user practice ${targetLangDisplay}.
     The user's native language is ${userLangDisplay}.
-    The user is at a CEFR level of ${cefrLevel}.
+    The user is at a ${currentLevel.cefr} level. ${currentLevel.description}
     
     ${correctGrammar ? 
       `GRAMMAR CORRECTION MODE: The user wants grammar feedback. When responding:
-      1. FIRST provide your natural response to their message
-      2. THEN, if you notice any grammar mistakes in their MOST RECENT message, add a separate paragraph that starts with "📝 Grammar note:" and gently correct the errors with explanations
+      1. FIRST provide your natural response to their message at their level (${currentLevel.cefr})
+      2. THEN, if you notice any grammar mistakes in their MOST RECENT message, add a separate paragraph that starts with "📝 Grammar note:" and gently correct ONLY those errors
       3. Show the corrected version and explain why it's better
-      4. Be encouraging and supportive in your corrections` 
+      4. Be encouraging and supportive in your corrections
+      5. Focus ONLY on the user's most recent message, not previous ones` 
       : 
-      `CONVERSATION MODE: Focus on natural conversation flow. Do NOT correct grammar errors unless the user specifically asks for help with grammar.`
+      `CONVERSATION MODE: Focus on natural conversation flow at the ${currentLevel.cefr} level. Do NOT correct grammar errors unless the user specifically asks for help with grammar.`
     }
     
+    Always facilitate engaging conversation and respond in ${targetLangDisplay} at the appropriate ${currentLevel.cefr} level.
     If the user asks you to translate something, provide the translation.
-    If the user asks a question about grammar or vocabulary, provide a clear and concise answer.
-    If the user is struggling, offer encouragement and suggest simpler ways to express themselves.
-    If the user is doing well, offer praise and suggest more advanced vocabulary or grammar.
-    You should always respond in ${targetLangDisplay}.`;
+    If the user asks a question about grammar or vocabulary, provide a clear answer.`;
 
-    console.log(`Grammar correction enabled: ${correctGrammar}`);
+    console.log(`Grammar correction enabled: ${correctGrammar}, Conversation level: ${conversationLevel} (${currentLevel.cefr})`);
 
     // Call OpenAI for conversation response
     const chatResponse = await openai.chat.completions.create({

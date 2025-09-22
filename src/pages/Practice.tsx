@@ -11,7 +11,10 @@ import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 import { Trash } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
 import { secureStorage } from "@/utils/security/dataEncryption";
 
@@ -25,7 +28,9 @@ interface MessageWithTranslationType {
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { currentLanguage, t } = useLocalization();
+  const { toast } = useToast();
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
+  const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
   
   useEffect(() => {
     const savedTargetLanguage = secureStorage.getItem("targetLanguage");
@@ -41,6 +46,12 @@ const Practice = () => {
       }
     }
     
+    // Initialize conversation level from localStorage
+    const storedLevel = localStorage.getItem("conversationLevel");
+    if (storedLevel) {
+      setConversationLevel(storedLevel);
+    }
+    
     // Debug for Thai language - Fix the comparison to use lowercase comparison
     if (currentLanguage.toLowerCase() === 'thai') {
       console.log('Practice component initialized with Thai language:', {
@@ -49,6 +60,23 @@ const Practice = () => {
       });
     }
   }, [currentLanguage]);
+  
+  const handleLevelChange = (newLevel: string) => {
+    setConversationLevel(newLevel);
+    localStorage.setItem("conversationLevel", newLevel);
+    
+    const levelNames = {
+      basic: t("basicLevel") || "Basic (A1-A2)",
+      intermediate: t("intermediateLevel") || "Intermediate (B1)", 
+      advanced: t("advancedLevel") || "Advanced (B2-C1)"
+    };
+    
+    toast({
+      title: t("conversationLevelUpdated") || "Conversation Level Updated",
+      description: `${t("levelSetTo") || "Level set to"} ${levelNames[newLevel as keyof typeof levelNames]}`,
+      variant: "default",
+    });
+  };
   
   const {
     messages,
@@ -61,7 +89,7 @@ const Practice = () => {
     getPlaceholderText,
     correctGrammar,
     toggleGrammarCorrection
-  } = useChatMessages();
+  } = useChatMessages(conversationLevel);
   
   const {
     startVoiceConversation,
@@ -102,6 +130,45 @@ const Practice = () => {
     <div className="max-w-4xl mx-auto p-4">
       <PracticeHeader targetLanguage={targetLanguage} />
       
+      <Card className="mb-6">
+        <CardContent className="p-4 space-y-4">
+          {/* Conversation Level Selector */}
+          <div className="flex items-center justify-between">
+            <Label htmlFor="conversation-level" className="text-sm font-medium">
+              {t("conversationLevel") || "Conversation Level"}
+            </Label>
+            <Select value={conversationLevel} onValueChange={handleLevelChange}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder={t("selectLevel") || "Select level"} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="basic">
+                  {t("basicLevel") || "Basic (A1-A2)"}
+                </SelectItem>
+                <SelectItem value="intermediate">
+                  {t("intermediateLevel") || "Intermediate (B1)"}
+                </SelectItem>
+                <SelectItem value="advanced">
+                  {t("advancedLevel") || "Advanced (B2-C1)"}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Grammar Correction Toggle */}
+          <div className="flex items-center justify-between">
+            <Label htmlFor="grammar-correction" className="text-sm font-medium">
+              {t("correctGrammar") || "Grammar Correction"}
+            </Label>
+            <Switch
+              id="grammar-correction"
+              checked={correctGrammar}
+              onCheckedChange={toggleGrammarCorrection}
+            />
+          </div>
+        </CardContent>
+      </Card>
+      
       <div className="flex justify-between items-center mb-4">
         <div className="flex space-x-4 items-center">
           <PracticePromptButton
@@ -109,17 +176,6 @@ const Practice = () => {
             isLoading={chatLoading}
             targetLanguage={targetLanguage}
           />
-          
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="grammar-correction"
-              checked={correctGrammar}
-              onCheckedChange={toggleGrammarCorrection}
-            />
-            <Label htmlFor="grammar-correction" className="text-sm">
-              {t("correctGrammar")}
-            </Label>
-          </div>
         </div>
         
         <Button 

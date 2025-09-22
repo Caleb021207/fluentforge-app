@@ -8,6 +8,13 @@ const practiceTranslations: TranslationRecord = {
   startChatting: "Start Chatting",
   clearConversation: "Clear Conversation",
   correctGrammar: "Correct Grammar",
+  conversationLevel: "Conversation Level",
+  basicLevel: "Basic (A1-A2)",
+  intermediateLevel: "Intermediate (B1)",
+  advancedLevel: "Advanced (B2-C1)",
+  conversationLevelUpdated: "Conversation Level Updated",
+  levelSetTo: "Level set to",
+  selectLevel: "Select level",
   
   // Practice guide
   practiceGuide: "Practice Guide",

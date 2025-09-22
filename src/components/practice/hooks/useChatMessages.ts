@@ -14,7 +14,7 @@ interface Message {
   translation?: TranslationType;
 }
 
-export const useChatMessages = () => {
+export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [correctGrammar, setCorrectGrammar] = useState<boolean>(false);
@@ -117,8 +117,8 @@ export const useChatMessages = () => {
   // Modified send function that includes grammar correction preference and conversation history
   const sendChatMessageWithCorrection = async (message: string) => {
     try {
-      // Pass the correctGrammar flag and conversation history for context
-      return await sendChatMessage(message, correctGrammar, apiConversationHistory);
+      // Pass the correctGrammar flag and conversation history for context, plus conversation level
+      return await sendChatMessage(message, correctGrammar, apiConversationHistory, conversationLevel);
     } catch (error) {
       console.error("Error sending message with correction flag:", error);
       return null;
