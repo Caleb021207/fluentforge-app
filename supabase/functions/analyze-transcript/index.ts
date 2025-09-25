@@ -1,6 +1,6 @@
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
 const corsHeaders = {
@@ -307,7 +307,7 @@ Focus on actionable insights for language learning progress.`
               user_id: user.id,
               action: 'transcript_analysis_error',
               details: {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
                 timestamp: new Date().toISOString()
               },
               success: false
@@ -321,7 +321,7 @@ Focus on actionable insights for language learning progress.`
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message || 'Unknown error occurred during analysis'
+        error: error instanceof Error ? error.message : 'Unknown error occurred during analysis'
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
