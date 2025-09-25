@@ -59,9 +59,9 @@ serve(async (req) => {
     const actualWords = normalizedActual.split(/\s+/);
     
     // Word-level analysis
-    const wordAnalysis = expectedWords.map(expectedWord => {
+    const wordAnalysis = expectedWords.map((expectedWord: string) => {
       // Check if the word appears in the actual phrase
-      const matchFound = actualWords.some(actualWord => 
+      const matchFound = actualWords.some((actualWord: string) =>
         actualWord === expectedWord || 
         (actualWord.length > 2 && expectedWord.includes(actualWord)) ||
         (expectedWord.length > 2 && actualWord.includes(expectedWord))
@@ -75,7 +75,7 @@ serve(async (req) => {
     });
     
     // Calculate overall accuracy score (word-level)
-    const correctWords = wordAnalysis.filter(w => w.isCorrect).length;
+    const correctWords = wordAnalysis.filter((w: any) => w.isCorrect).length;
     const accuracyScore = (correctWords / expectedWords.length) * 100;
     
     // Mock intonation score based on sentence structure
@@ -156,7 +156,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

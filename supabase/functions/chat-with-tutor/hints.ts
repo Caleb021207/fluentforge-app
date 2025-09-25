@@ -79,7 +79,10 @@ export async function generateHints(
           }
           Make the categories relevant to the conversation. For example: questions, reactions, opinions, requests, etc.`,
         },
-        ...limitedHistory,
+        ...limitedHistory.map(msg => ({ 
+          role: msg.role as "user" | "assistant" | "system", 
+          content: msg.content 
+        })),
       ],
       response_format: { type: "json_object" },
       max_tokens: 1200,
@@ -88,10 +91,11 @@ export async function generateHints(
     const content = response.choices[0].message.content;
     
     try {
-      const parsedContent = JSON.parse(content);
+      const parsedContent = JSON.parse(content || "{}");
       
       // Validate the structure
       if (
+        !content ||
         parsedContent &&
         parsedContent.categories &&
         Array.isArray(parsedContent.categories) &&

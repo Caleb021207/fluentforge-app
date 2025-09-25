@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
     const response: VerificationResponse = {
       valid: true,
       message: 'Code is valid',
-      remaining_uses: remainingUses,
+      remaining_uses: remainingUses ?? undefined,
       expires_at: codeRecord.expires_at
     }
 

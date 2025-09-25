@@ -68,10 +68,10 @@ serve(async (req) => {
     const analysisText = analysisResponse.choices[0].message.content;
     let metrics;
     try {
-      metrics = JSON.parse(analysisText);
+      metrics = JSON.parse(analysisText || "{}");
       
       // Validate metrics format
-      if (typeof metrics.grammarAccuracy !== 'number' || typeof metrics.conversationComplexity !== 'number') {
+      if (!analysisText || typeof metrics.grammarAccuracy !== 'number' || typeof metrics.conversationComplexity !== 'number') {
         throw new Error("Invalid metrics format");
       }
       
@@ -132,7 +132,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message || "An error occurred during analysis" 
+        error: error instanceof Error ? error.message : "An error occurred during analysis" 
       }),
       {
         status: 500,

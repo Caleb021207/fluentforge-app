@@ -240,7 +240,7 @@ serve(async (req) => {
           max_tokens: 800,
         });
         
-        translation = translationResponse.choices[0].message.content;
+        translation = translationResponse.choices[0].message.content || "";
         console.log(`Generated translation from ${targetLanguage} to ${userLanguage}: ${translation.substring(0, 50)}...`);
       } catch (translationError) {
         console.error("Translation error:", translationError);
@@ -268,7 +268,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error in chat-with-tutor function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

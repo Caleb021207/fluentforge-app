@@ -14,7 +14,9 @@ export class TranslationCache {
     // Implement simple LRU by clearing oldest entries when exceeding size
     if (this.cache.size >= this.MAX_ENTRIES) {
       const oldestKey = this.cache.keys().next().value;
-      this.cache.delete(oldestKey);
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
     }
     
     this.cache.set(key, value);
@@ -81,7 +83,7 @@ export async function getTranslation(
       });
     } catch (error) {
       console.error('Translation API call failed:', error);
-      throw new Error(`Failed to call translation API: ${error.message}`);
+      throw new Error(`Failed to call translation API: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   
@@ -110,7 +112,7 @@ export async function getTranslation(
     });
   } catch (error) {
     console.error('Translation API call failed:', error);
-    throw new Error(`Failed to call translation API: ${error.message}`);
+    throw new Error(`Failed to call translation API: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -217,7 +219,7 @@ export async function getSpecificLanguageTranslation(
     return data.choices[0].message.content.trim();
   } catch (error) {
     console.error(`Translation error for ${languageName}:`, error);
-    throw new Error(`Failed to get ${languageName} translation: ${error.message}`);
+    throw new Error(`Failed to get ${languageName} translation: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 

@@ -53,7 +53,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Failed to process request', 
-        details: error.message,
+        details: error instanceof Error ? error.message : String(error),
         content: null,
         translation: null
       }),

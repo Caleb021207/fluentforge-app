@@ -69,7 +69,7 @@ function formatTranscriptForAnalysis(transcript: any): string {
   let formattedText = "Conversation Transcript:\n\n";
   
   // Merge and sort all messages by timestamp if available
-  let allMessages = [];
+  let allMessages: any[] = [];
   
   if (transcript.userMessages && Array.isArray(transcript.userMessages)) {
     allMessages = allMessages.concat(

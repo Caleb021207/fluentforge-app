@@ -81,7 +81,7 @@ serve(async (req) => {
       JSON.stringify({ 
         status: "error",
         timestamp: new Date().toISOString(),
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500,
