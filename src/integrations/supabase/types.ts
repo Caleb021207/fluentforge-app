@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -517,6 +517,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_captures: {
+        Row: {
+          captured_at: string
+          created_at: string
+          email: string
+          id: string
+          ip_address: unknown | null
+          source: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          captured_at?: string
+          created_at?: string
+          email: string
+          id?: string
+          ip_address?: unknown | null
+          source?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          captured_at?: string
+          created_at?: string
+          email?: string
+          id?: string
+          ip_address?: unknown | null
+          source?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
       }
       grade_levels: {
         Row: {
@@ -1437,26 +1467,7 @@ export type Database = {
       }
     }
     Views: {
-      class_student_metrics: {
-        Row: {
-          classroom_id: string | null
-          last_activity: string | null
-          premium_voice_calls: number | null
-          student_email: string | null
-          student_id: string | null
-          student_name: string | null
-          text_practice_calls: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       auth_user_id: {
@@ -1469,15 +1480,15 @@ export type Database = {
       }
       check_rate_limit: {
         Args: {
-          p_user_id: string
           p_action_type: string
           p_max_requests?: number
+          p_user_id: string
           p_window_minutes?: number
         }
         Returns: boolean
       }
       cleanup_old_phrases: {
-        Args: { p_level: string; p_language: string }
+        Args: { p_language: string; p_level: string }
         Returns: undefined
       }
       create_classroom: {
@@ -1487,12 +1498,24 @@ export type Database = {
       generate_access_code: {
         Args: {
           p_code_type: Database["public"]["Enums"]["code_type"]
-          p_target_id: string
-          p_target_name: string
           p_expires_at?: string
           p_max_uses?: number
+          p_target_id: string
+          p_target_name: string
         }
         Returns: string
+      }
+      get_class_student_metrics: {
+        Args: { target_classroom_id?: string }
+        Returns: {
+          classroom_id: string
+          last_activity: string
+          premium_voice_calls: number
+          student_email: string
+          student_id: string
+          student_name: string
+          text_practice_calls: number
+        }[]
       }
       get_user_district_ids: {
         Args: { target_user_id: string }
@@ -1501,6 +1524,10 @@ export type Database = {
       initialize_student_usage_limits: {
         Args: { target_student_id: string }
         Returns: undefined
+      }
+      is_admin_user: {
+        Args: { user_id: string }
+        Returns: boolean
       }
       is_student_in_admin_school: {
         Args: { student_user_id: string }
@@ -1520,9 +1547,9 @@ export type Database = {
       }
       log_role_change_attempt: {
         Args: {
-          target_user_id: string
           requested_role: string
           success: boolean
+          target_user_id: string
         }
         Returns: undefined
       }
