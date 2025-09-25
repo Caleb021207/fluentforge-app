@@ -104,11 +104,11 @@ serve(async (req) => {
       )
     }
 
-    // Rate limiting check
+    // Rate limiting check - more reasonable limits for better user experience
     const { data: rateLimitOk, error: rateLimitError } = await supabase.rpc('check_rate_limit', {
       p_user_id: user.id,
       p_action_type: 'transcript_analysis',
-      p_max_requests: 5,  // 5 requests
+      p_max_requests: 20,  // 20 requests
       p_window_minutes: 60  // per hour
     })
 
