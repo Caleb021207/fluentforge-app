@@ -78,7 +78,7 @@ serve(async (req) => {
       "Superior": "academically or professionally oriented content with specialized vocabulary"
     };
 
-    const instruction = levelInstructions[level] || levelInstructions.Intermediate;
+    const instruction = (levelInstructions as any)[level] || levelInstructions.Intermediate;
     
     // Enhanced variety techniques
     const randomContext = getRandomContext();
@@ -190,7 +190,8 @@ ONLY respond with the JSON. No explanations or additional text.`
     }
 
     // Store the new phrase in the database (background task)
-    EdgeRuntime.waitUntil((async () => {
+    // Note: EdgeRuntime.waitUntil is not available, using immediate async instead
+    (async () => {
       try {
         // Insert new phrase
         const { error: insertError } = await supabase
@@ -222,7 +223,7 @@ ONLY respond with the JSON. No explanations or additional text.`
       } catch (error) {
         console.error("Background task error:", error);
       }
-    })());
+    })().catch(err => console.error('Background task failed:', err));
 
     console.log(`Successfully generated unique phrase after ${attempts} attempts`);
 

@@ -85,7 +85,7 @@ export async function textToSpeechPolly(text: string, voiceName: string): Promis
   }
   
   const kDate = await hmacSha256(
-    new TextEncoder().encode(`AWS4${AWS_SECRET_ACCESS_KEY}`),
+    new TextEncoder().encode(`AWS4${AWS_SECRET_ACCESS_KEY}`).buffer,
     datestamp
   );
   const kRegion = await hmacSha256(kDate, AWS_REGION);

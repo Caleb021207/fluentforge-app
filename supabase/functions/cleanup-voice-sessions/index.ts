@@ -1,5 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -24,7 +25,7 @@ serve(async (req) => {
     const { data: abandonedSessions, error: queryError } = await supabaseClient
       .from('premium_voice_chat_sessions')
       .select('id, user_id, session_start')
-      .is('session_end', null)
+      .filter('session_end', 'is', null)
       .lt('session_start', fifteenMinutesAgo);
 
     if (queryError) {
@@ -63,7 +64,7 @@ serve(async (req) => {
         sessionId: session.id,
         userId: session.user_id,
         success: !error,
-        error: error ? error.message : null
+        error: error ? (error as any)?.message || String(error) : null
       });
       
       if (error) {
@@ -96,7 +97,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message
+        error: error instanceof Error ? error.message : String(error)
       }),
       { 
         status: 500,
@@ -105,28 +106,3 @@ serve(async (req) => {
     );
   }
 });
-
-// Helper to create Supabase client
-function createClient(supabaseUrl: string, supabaseKey: string) {
-  return {
-    from: (table: string) => ({
-      select: (query: string) => ({
-        eq: (column: string, value: any) => ({
-          is: (column: string, value: any) => ({
-            lt: (column: string, value: any) => {
-              return { data: [], error: null }; // Mock implementation
-            }
-          })
-        })
-      }),
-      update: (data: any) => ({
-        eq: (column: string, value: any) => {
-          return { data: null, error: null }; // Mock implementation
-        }
-      })
-    }),
-    rpc: (func: string, params: any) => {
-      return Promise.resolve({ data: null, error: null }); // Mock implementation
-    }
-  };
-}

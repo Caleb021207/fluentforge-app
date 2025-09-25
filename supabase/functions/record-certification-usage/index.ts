@@ -30,11 +30,30 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
+    // First get the current code
+    const { data: currentCode, error: fetchError } = await supabase
+      .from('access_codes')
+      .select('current_uses, max_uses')
+      .eq('code', code.trim().toUpperCase())
+      .eq('active', true)
+      .single()
+
+    if (fetchError || !currentCode) {
+      console.error('Error fetching code:', fetchError)
+      return new Response(
+        JSON.stringify({ success: false, message: 'Invalid or inactive code' }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 400 
+        }
+      )
+    }
+
     // Increment code usage
     const { data: updatedCode, error: updateError } = await supabase
       .from('access_codes')
       .update({ 
-        current_uses: supabase.raw('current_uses + 1'),
+        current_uses: (currentCode.current_uses || 0) + 1,
         updated_at: new Date().toISOString()
       })
       .eq('code', code.trim().toUpperCase())

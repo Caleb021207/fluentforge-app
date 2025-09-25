@@ -115,7 +115,7 @@ serve(async (req) => {
     }
     
     // Process to base64 efficiently
-    const base64Audio = processAudioToBase64(audioBuffer);
+    const base64Audio = processAudioToBase64(audioBuffer as ArrayBuffer);
 
     console.log("Successfully generated speech, returning base64 audio");
 
@@ -130,7 +130,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Failed to generate speech. Please try again.',
-        details: error.message 
+        details: error instanceof Error ? error.message : String(error) 
       }),
       { 
         status: 500,
