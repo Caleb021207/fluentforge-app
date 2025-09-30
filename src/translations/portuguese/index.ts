@@ -13,6 +13,7 @@ import languageFrameworksTranslations from "./language-frameworks";
 import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
+import pronunciationTranslations from "./pronunciation";
 
 // Combine all the translation categories
 const portugueseTranslations: TranslationRecord = {
@@ -29,6 +30,7 @@ const portugueseTranslations: TranslationRecord = {
   ...languageFrameworksTranslations,
   ...languagesTranslations,
   ...navigationTranslations,
+  ...pronunciationTranslations,
 };
 
 export default portugueseTranslations;
