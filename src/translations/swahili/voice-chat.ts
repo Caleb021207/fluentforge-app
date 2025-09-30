@@ -58,7 +58,15 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Adding practice level text translation
   practiceLevel: "Kiwango cha Mazoezi",
-  cefrB1Description: "Kiwango cha Kati - Inaweza kuzungumza kuhusu mada zinazojulikana"
+  cefrB1Description: "Kiwango cha Kati - Inaweza kuzungumza kuhusu mada zinazojulikana",
+  
+  // Conversation level settings
+  conversationLevel: "Kiwango cha Mazungumzo",
+  selectLevel: "Chagua kiwango",
+  basicLevel: "Msingi (A1-A2)",
+  intermediateLevel: "Kati (B1)",
+  advancedLevel: "Juu (B2-C1)",
+  correctGrammar: "Sahihisha Sarufi",
 };
 
 export default voiceChatTranslations;

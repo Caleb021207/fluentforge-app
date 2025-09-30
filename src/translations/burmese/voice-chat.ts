@@ -64,7 +64,15 @@ const voiceChatTranslations: TranslationRecord = {
   error: "အမှား",
   networkConnectionIssue: "ကွန်ရက်ချိတ်ဆက်မှုပြဿနာ",
   allowMicAccess: "မိုက်ခရိုဖုန်းသုံးခွင့်ပြုပါ",
-  startChatting: "စကားစပြောပါ"
+  startChatting: "စကားစပြောပါ",
+  
+  // Conversation level settings
+  conversationLevel: "စကားပြောဆိုမှုအဆင့်",
+  selectLevel: "အဆင့်ရွေးချယ်ပါ",
+  basicLevel: "အခြေခံ (A1-A2)",
+  intermediateLevel: "အလယ်အလတ် (B1)",
+  advancedLevel: "အဆင့်မြင့် (B2-C1)",
+  correctGrammar: "သဒ္ဒါပြုပြင်ခြင်း",
 };
 
 export default voiceChatTranslations;

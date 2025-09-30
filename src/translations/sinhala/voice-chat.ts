@@ -64,7 +64,15 @@ const voiceChatTranslations: TranslationRecord = {
   error: "දෝෂය",
   networkConnectionIssue: "ජාල සම්බන්ධතා ගැටලුව",
   allowMicAccess: "මයික්‍රෆෝන ප්‍රවේශයට අවසර දෙන්න",
-  startChatting: "චැට් කිරීම ආරම්භ කරන්න"
+  startChatting: "චැට් කිරීම ආරම්භ කරන්න",
+  
+  // Conversation level settings
+  conversationLevel: "සංවාද මට්ටම",
+  selectLevel: "මට්ටම තෝරන්න",
+  basicLevel: "මූලික (A1-A2)",
+  intermediateLevel: "මධ්‍යම (B1)",
+  advancedLevel: "උසස් (B2-C1)",
+  correctGrammar: "ව්‍යාකරණ නිවැරදි කිරීම",
 };
 
 export default voiceChatTranslations;

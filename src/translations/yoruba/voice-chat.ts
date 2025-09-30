@@ -16,7 +16,15 @@ const voiceChatTranslations: TranslationRecord = {
   startChatting: "Ó ti lè bẹ̀rẹ̀ ìbárasọ̀rọ̀ báyìí!",
   allowMicAccess: "Jọwọ́ gba ààyè láti lo maikírófoonu rẹ",
   useThisTool: "Lo ohun èlò yìí láti mu àwọn ìṣeré sísọ àti gbígbọ́ rẹ dára. Àwọn ìmọ̀ràn díẹ̀ nìyí:",
-  aiModelLabel: "Àwọn àwòrán AI:"
+  aiModelLabel: "Àwọn àwòrán AI:",
+  
+  // Conversation level settings
+  conversationLevel: "Ipò Ìbárasọ̀rọ̀",
+  selectLevel: "Yan ipò",
+  basicLevel: "Ìbẹ̀rẹ̀ (A1-A2)",
+  intermediateLevel: "Àárín (B1)",
+  advancedLevel: "Gíga (B2-C1)",
+  correctGrammar: "Àtúnṣe Gírámà",
 };
 
 export default voiceChatTranslations;

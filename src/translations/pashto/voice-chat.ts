@@ -58,7 +58,15 @@ const voiceChatTranslations: TranslationRecord = {
   
   // Adding practice level text translation
   practiceLevel: "د تمرین کچه",
-  cefrB1Description: "منځنۍ کچه - په آشنا موضوعاتو خبرې کولی شي"
+  cefrB1Description: "منځنۍ کچه - په آشنا موضوعاتو خبرې کولی شي",
+  
+  // Conversation level settings
+  conversationLevel: "د خبرو اترو کچه",
+  selectLevel: "کچه انتخاب کړئ",
+  basicLevel: "بنسټیز (A1-A2)",
+  intermediateLevel: "منځنی (B1)",
+  advancedLevel: "پرمختللی (B2-C1)",
+  correctGrammar: "ګرامر سمول",
 };
 
 export default voiceChatTranslations;

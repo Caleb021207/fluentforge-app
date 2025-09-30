@@ -63,7 +63,15 @@ const voiceChatTranslations: TranslationRecord = {
   error: "ข้อผิดพลาด",
   networkConnectionIssue: "ปัญหาการเชื่อมต่อเครือข่าย",
   allowMicAccess: "อนุญาตการเข้าถึงไมโครโฟน",
-  startChatting: "เริ่มแชท"
+  startChatting: "เริ่มแชท",
+  
+  // Conversation level settings
+  conversationLevel: "ระดับการสนทนา",
+  selectLevel: "เลือกระดับ",
+  basicLevel: "พื้นฐาน (A1-A2)",
+  intermediateLevel: "ระดับกลาง (B1)",
+  advancedLevel: "ขั้นสูง (B2-C1)",
+  correctGrammar: "แก้ไขไวยากรณ์",
 };
 
 export default voiceChatTranslations;

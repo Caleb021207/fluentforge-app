@@ -85,7 +85,15 @@ const voiceChatTranslations: TranslationRecord = {
   practiceLevel: "Nivel de practică",
 
   // Time-related
-  remaining: "rămas"
+  remaining: "rămas",
+  
+  // Conversation level settings
+  conversationLevel: "Nivel de Conversație",
+  selectLevel: "Selectează nivelul",
+  basicLevel: "De bază (A1-A2)",
+  intermediateLevel: "Intermediar (B1)",
+  advancedLevel: "Avansat (B2-C1)",
+  correctGrammar: "Corectare Gramaticală",
 };
 
 export default voiceChatTranslations;

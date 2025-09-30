@@ -85,6 +85,14 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "Описуйте те, що бачите навколо себе",
   practiceVocabularyForSpecific: "Практикуйте словниковий запас на конкретні теми, як-от подорожі або їжа",
   useThisTool: "Використовуйте цей інструмент для покращення навичок розмови та слухання. Ось кілька порад:",
+  
+  // Conversation level settings
+  conversationLevel: "Рівень Розмови",
+  selectLevel: "Оберіть рівень",
+  basicLevel: "Базовий (A1-A2)",
+  intermediateLevel: "Середній (B1)",
+  advancedLevel: "Просунутий (B2-C1)",
+  correctGrammar: "Виправлення Граматики",
 };
 
 export default voiceChatTranslations;

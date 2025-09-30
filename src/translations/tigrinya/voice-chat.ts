@@ -64,7 +64,15 @@ const voiceChatTranslations: TranslationRecord = {
   error: "ጌጋ",
   networkConnectionIssue: "ናይ መርበብ ርክብ ጸገም",
   allowMicAccess: "ንማይክሮፎን ፍቓድ ሃብ",
-  startChatting: "ዝርርብ ጀምር"
+  startChatting: "ዝርርብ ጀምር",
+  
+  // Conversation level settings
+  conversationLevel: "ደረጃ ዝርርብ",
+  selectLevel: "ደረጃ ምረጽ",
+  basicLevel: "መሰረታዊ (A1-A2)",
+  intermediateLevel: "ማእከላይ (B1)",
+  advancedLevel: "ላዕለዋይ (B2-C1)",
+  correctGrammar: "ሰዋስው ኣረም",
 };
 
 export default voiceChatTranslations;

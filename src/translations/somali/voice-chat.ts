@@ -53,7 +53,15 @@ const voiceChatTranslations: TranslationRecord = {
   networkConnectionIssue: "Mushkilad xiriirka network-ga",
   startChatting: "Waxaad bilaabi kartaa sheekada hadda!",
   allowMicAccess: "Fadlan ogolow isticmaalka microphone-kaaga",
-  aiModelLabel: "Noocyada AI:"
+  aiModelLabel: "Noocyada AI:",
+  
+  // Conversation level settings
+  conversationLevel: "Heerka Sheekada",
+  selectLevel: "Heer dooro",
+  basicLevel: "Aasaasi (A1-A2)",
+  intermediateLevel: "Dhexdhexaad (B1)",
+  advancedLevel: "Sare (B2-C1)",
+  correctGrammar: "Sixid Grammar",
 };
 
 export default voiceChatTranslations;

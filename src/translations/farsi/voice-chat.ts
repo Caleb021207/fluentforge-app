@@ -78,7 +78,15 @@ const voiceChatTranslations: TranslationRecord = {
   browserBasedTTS: "توجه: این از سیستم تبدیل متن به گفتار مبتنی بر مرورگر استفاده می‌کند. برای کیفیت صدای برتر با ElevenLabs، چت صوتی ویژه ما را امتحان کنید.",
   practiceLevel: "سطح تمرین: B1 - متوسط - می‌تواند درباره موضوعات آشنا بحث کند",
   cefrB1Description: "سطح متوسط - می‌تواند درباره موضوعات آشنا بحث کند",
-  conversationHistoryCleared: "تاریخچه مکالمه پاک شد"
+  conversationHistoryCleared: "تاریخچه مکالمه پاک شد",
+  
+  // Conversation level settings
+  conversationLevel: "سطح مکالمه",
+  selectLevel: "انتخاب سطح",
+  basicLevel: "پایه (A1-A2)",
+  intermediateLevel: "متوسط (B1)",
+  advancedLevel: "پیشرفته (B2-C1)",
+  correctGrammar: "اصلاح گرامر",
 };
 
 export default voiceChatTranslations;

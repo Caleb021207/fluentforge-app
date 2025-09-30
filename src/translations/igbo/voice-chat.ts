@@ -87,7 +87,15 @@ const voiceChatTranslations: TranslationRecord = {
   practiceEverydayPhrases: "Mụọ ahịrịokwu na nkwupụta ndị a na-akpọkarị",
   describeImagesOrScenes: "Kọwaa ihe ị na-ahụ gburugburu gị",
   practiceVocabularyForSpecificTopics: "Mụọ okwu maka isiokwu pụrụ iche dị ka njem ma ọ bụ nri",
-  failedToGenerateSpeech: "Enweghị ike imepụta okwu"
+  failedToGenerateSpeech: "Enweghị ike imepụta okwu",
+  
+  // Conversation level settings
+  conversationLevel: "Ọkwa Mkparịta Ụka",
+  selectLevel: "Họrọ ọkwa",
+  basicLevel: "Mmalite (A1-A2)",
+  intermediateLevel: "Etiti (B1)",
+  advancedLevel: "Elu (B2-C1)",
+  correctGrammar: "Dozie Ụtọasụsụ",
 };
 
 export default voiceChatTranslations;

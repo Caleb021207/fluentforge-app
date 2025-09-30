@@ -64,7 +64,15 @@ const voiceChatTranslations: TranslationRecord = {
   error: "त्रुटी",
   networkConnectionIssue: "नेटवर्क कनेक्शन समस्या",
   allowMicAccess: "मायक्रोफोन ऍक्सेसला अनुमती द्या",
-  startChatting: "चॅटिंग सुरू करा"
+  startChatting: "चॅटिंग सुरू करा",
+  
+  // Conversation level settings
+  conversationLevel: "संभाषण पातळी",
+  selectLevel: "पातळी निवडा",
+  basicLevel: "मूलभूत (A1-A2)",
+  intermediateLevel: "मध्यम (B1)",
+  advancedLevel: "प्रगत (B2-C1)",
+  correctGrammar: "व्याकरण सुधारणा",
 };
 
 export default voiceChatTranslations;

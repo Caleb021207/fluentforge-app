@@ -134,7 +134,15 @@ const voiceChatTranslations: TranslationRecord = {
   voiceChatEnded: "आवाज च्याट समाप्त भयो",
   speakNow: "बोल्नुहोस्",
   listeningForResponse: "प्रतिक्रियाको पर्खाइमा",
-  voiceInputDisabled: "आवाज इनपुट असक्षम"
+  voiceInputDisabled: "आवाज इनपुट असक्षम",
+  
+  // Conversation level settings
+  conversationLevel: "कुराकानी स्तर",
+  selectLevel: "स्तर चयन गर्नुहोस्",
+  basicLevel: "आधारभूत (A1-A2)",
+  intermediateLevel: "मध्यवर्ती (B1)",
+  advancedLevel: "उन्नत (B2-C1)",
+  correctGrammar: "व्याकरण सुधार",
 };
 
 export default voiceChatTranslations;

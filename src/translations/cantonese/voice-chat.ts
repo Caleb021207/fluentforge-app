@@ -60,7 +60,15 @@ const voiceChatTranslations: TranslationRecord = {
   "notEnoughMessagesToAnalyze": "冇足夠嘅訊息進行分析",
   "conversationAnalysisComplete": "對話分析完成",
   "grammarAccuracy": "語法準確性",
-  "conversationComplexity": "對話複雜性"
+  "conversationComplexity": "對話複雜性",
+  
+  // Conversation level settings
+  conversationLevel: "對話水平",
+  selectLevel: "選擇水平",
+  basicLevel: "基礎 (A1-A2)",
+  intermediateLevel: "中級 (B1)",
+  advancedLevel: "高級 (B2-C1)",
+  correctGrammar: "文法修正",
 };
 
 export default voiceChatTranslations;
