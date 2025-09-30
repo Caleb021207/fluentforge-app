@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Transkriptiniz",
   processing: "İşleniyor",
   listeningToYou: "Sizi dinliyor",
-  realTimeTranscription: "Gerçek zamanlı transkript"
+  realTimeTranscription: "Gerçek zamanlı transkript",
+  generatingNewPhrase: "Yeni Cümle Oluşturuluyor",
+  startExercise: "Alıştırmayı Başlat",
+  generatingExercise: "Alıştırma Oluşturuluyor",
+  practiceExercise: "Alıştırma",
+  levelDescription: "Seviye Açıklaması"
 };
 
 export default pronunciationTranslations;

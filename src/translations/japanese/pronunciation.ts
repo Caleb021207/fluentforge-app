@@ -25,7 +25,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "あなたの文字起こし",
   processing: "処理中",
   listeningToYou: "聞いています",
-  realTimeTranscription: "リアルタイム文字起こし"
+  realTimeTranscription: "リアルタイム文字起こし",
+  generatingNewPhrase: "新しいフレーズを生成中",
+  startExercise: "練習を開始",
+  generatingExercise: "練習を生成中",
+  practiceExercise: "練習問題",
+  levelDescription: "レベルの説明"
 };
 
 export default pronunciationTranslations;

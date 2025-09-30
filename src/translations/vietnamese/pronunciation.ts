@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Bản Ghi Của Bạn",
   processing: "Đang Xử Lý",
   listeningToYou: "Đang nghe bạn",
-  realTimeTranscription: "Ghi âm thời gian thực"
+  realTimeTranscription: "Ghi âm thời gian thực",
+  generatingNewPhrase: "Đang Tạo Cụm Từ Mới",
+  startExercise: "Bắt Đầu Bài Tập",
+  generatingExercise: "Đang Tạo Bài Tập",
+  practiceExercise: "Bài Tập",
+  levelDescription: "Mô Tả Cấp Độ"
 };
 
 export default pronunciationTranslations;

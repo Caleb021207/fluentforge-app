@@ -1,4 +1,3 @@
-
 import { TranslationRecord } from "../types";
 
 const pronunciationTranslations: TranslationRecord = {
@@ -25,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Ваша транскрипція",
   processing: "Обробка",
   listeningToYou: "Слухаю вас",
-  realTimeTranscription: "Транскрипція в реальному часі"
+  realTimeTranscription: "Транскрипція в реальному часі",
+  generatingNewPhrase: "Генерація нової фрази",
+  startExercise: "Почати вправу",
+  generatingExercise: "Генерація вправи",
+  practiceExercise: "Вправа",
+  levelDescription: "Опис рівня"
 };
 
 export default pronunciationTranslations;

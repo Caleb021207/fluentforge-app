@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "당신의 전사",
   processing: "처리 중",
   listeningToYou: "듣고 있습니다",
-  realTimeTranscription: "실시간 전사"
+  realTimeTranscription: "실시간 전사",
+  generatingNewPhrase: "새 구문 생성 중",
+  startExercise: "연습 시작",
+  generatingExercise: "연습 생성 중",
+  practiceExercise: "연습 문제",
+  levelDescription: "수준 설명"
 };
 
 export default pronunciationTranslations;

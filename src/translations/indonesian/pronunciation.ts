@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Transkripsi Anda",
   processing: "Memproses",
   listeningToYou: "Mendengarkan Anda",
-  realTimeTranscription: "Transkripsi waktu nyata"
+  realTimeTranscription: "Transkripsi waktu nyata",
+  generatingNewPhrase: "Membuat Frasa Baru",
+  startExercise: "Mulai Latihan",
+  generatingExercise: "Membuat Latihan",
+  practiceExercise: "Latihan",
+  levelDescription: "Deskripsi Tingkat"
 };
 
 export default pronunciationTranslations;

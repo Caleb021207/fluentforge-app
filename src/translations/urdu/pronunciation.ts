@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "آپ کا نقل",
   processing: "عملدرآمد",
   listeningToYou: "آپ کو سن رہا ہے",
-  realTimeTranscription: "حقیقی وقت نقل"
+  realTimeTranscription: "حقیقی وقت نقل",
+  generatingNewPhrase: "نیا جملہ تیار کیا جا رہا ہے",
+  startExercise: "مشق شروع کریں",
+  generatingExercise: "مشق تیار کی جا رہی ہے",
+  practiceExercise: "مشق",
+  levelDescription: "سطح کی تفصیل"
 };
 
 export default pronunciationTranslations;

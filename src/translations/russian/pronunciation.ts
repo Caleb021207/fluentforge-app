@@ -25,7 +25,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Ваша транскрипция",
   processing: "Обработка",
   listeningToYou: "Слушаю вас",
-  realTimeTranscription: "Транскрипция в реальном времени"
+  realTimeTranscription: "Транскрипция в реальном времени",
+  generatingNewPhrase: "Генерация новой фразы",
+  startExercise: "Начать упражнение",
+  generatingExercise: "Генерация упражнения",
+  practiceExercise: "Упражнение",
+  levelDescription: "Описание уровня"
 };
 
 export default pronunciationTranslations;

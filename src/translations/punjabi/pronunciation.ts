@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "ਤੁਹਾਡਾ ਟ੍ਰਾਂਸਕ੍ਰਿਪਸ਼ਨ",
   processing: "ਪ੍ਰੋਸੈਸਿੰਗ",
   listeningToYou: "ਤੁਹਾਨੂੰ ਸੁਣ ਰਿਹਾ ਹੈ",
-  realTimeTranscription: "ਰੀਅਲ-ਟਾਈਮ ਟ੍ਰਾਂਸਕ੍ਰਿਪਸ਼ਨ"
+  realTimeTranscription: "ਰੀਅਲ-ਟਾਈਮ ਟ੍ਰਾਂਸਕ੍ਰਿਪਸ਼ਨ",
+  generatingNewPhrase: "ਨਵਾਂ ਵਾਕ ਤਿਆਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ",
+  startExercise: "ਅਭਿਆਸ ਸ਼ੁਰੂ ਕਰੋ",
+  generatingExercise: "ਅਭਿਆਸ ਤਿਆਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ",
+  practiceExercise: "ਅਭਿਆਸ",
+  levelDescription: "ਪੱਧਰ ਦਾ ਵੇਰਵਾ"
 };
 
 export default pronunciationTranslations;

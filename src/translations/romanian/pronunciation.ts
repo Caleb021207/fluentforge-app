@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Transcrierea Ta",
   processing: "Procesare",
   listeningToYou: "Te ascultă",
-  realTimeTranscription: "Transcriere în timp real"
+  realTimeTranscription: "Transcriere în timp real",
+  generatingNewPhrase: "Generare Frază Nouă",
+  startExercise: "Începe Exercițiul",
+  generatingExercise: "Generare Exercițiu",
+  practiceExercise: "Exercițiu",
+  levelDescription: "Descrierea Nivelului"
 };
 
 export default pronunciationTranslations;

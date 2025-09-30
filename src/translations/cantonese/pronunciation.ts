@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "你嘅轉錄",
   processing: "處理緊",
   listeningToYou: "聽緊你講嘢",
-  realTimeTranscription: "即時轉錄"
+  realTimeTranscription: "即時轉錄",
+  generatingNewPhrase: "產生緊新短語",
+  startExercise: "開始練習",
+  generatingExercise: "產生緊練習",
+  practiceExercise: "練習",
+  levelDescription: "級別描述"
 };
 
 export default pronunciationTranslations;

@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "您的转录",
   processing: "处理中",
   listeningToYou: "正在听您说话",
-  realTimeTranscription: "实时转录"
+  realTimeTranscription: "实时转录",
+  generatingNewPhrase: "生成新短语",
+  startExercise: "开始练习",
+  generatingExercise: "生成练习",
+  practiceExercise: "练习",
+  levelDescription: "级别描述"
 };
 
 export default pronunciationTranslations;

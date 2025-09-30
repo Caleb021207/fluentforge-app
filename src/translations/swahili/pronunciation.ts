@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Nakala Yako",
   processing: "Inachakata",
   listeningToYou: "Inakusikiliza",
-  realTimeTranscription: "Nakala ya wakati halisi"
+  realTimeTranscription: "Nakala ya wakati halisi",
+  generatingNewPhrase: "Inaunda Kirai Kipya",
+  startExercise: "Anza Zoezi",
+  generatingExercise: "Inaunda Zoezi",
+  practiceExercise: "Zoezi",
+  levelDescription: "Maelezo ya Kiwango"
 };
 
 export default pronunciationTranslations;

@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "ඔබේ පිටපත",
   processing: "සැකසෙමින්",
   listeningToYou: "ඔබට සවන් දෙමින්",
-  realTimeTranscription: "තථ්‍ය කාලීන පිටපත"
+  realTimeTranscription: "තථ්‍ය කාලීන පිටපත",
+  generatingNewPhrase: "නව වාක්‍ය ඛණ්ඩය උත්පාදනය කරමින්",
+  startExercise: "අභ්‍යාසය ආරම්භ කරන්න",
+  generatingExercise: "අභ්‍යාසය උත්පාදනය කරමින්",
+  practiceExercise: "අභ්‍යාසය",
+  levelDescription: "මට්ටම විස්තරය"
 };
 
 export default pronunciationTranslations;

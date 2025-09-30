@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "การถอดเสียงของคุณ",
   processing: "กำลังประมวลผล",
   listeningToYou: "กำลังฟังคุณ",
-  realTimeTranscription: "การถอดเสียงแบบเรียลไทม์"
+  realTimeTranscription: "การถอดเสียงแบบเรียลไทม์",
+  generatingNewPhrase: "กำลังสร้างวลีใหม่",
+  startExercise: "เริ่มฝึกปฏิบัติ",
+  generatingExercise: "กำลังสร้างแบบฝึกหัด",
+  practiceExercise: "แบบฝึกหัด",
+  levelDescription: "คำอธิบายระดับ"
 };
 
 export default pronunciationTranslations;

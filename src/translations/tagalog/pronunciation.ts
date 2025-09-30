@@ -24,7 +24,12 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Inyong Transkripsyon",
   processing: "Pinoproseso",
   listeningToYou: "Nakikinig sa inyo",
-  realTimeTranscription: "Real-time na transkripsyon"
+  realTimeTranscription: "Real-time na transkripsyon",
+  generatingNewPhrase: "Gumagawa ng Bagong Parirala",
+  startExercise: "Simulan ang Ehersisyo",
+  generatingExercise: "Gumagawa ng Ehersisyo",
+  practiceExercise: "Ehersisyo",
+  levelDescription: "Paglalarawan ng Antas"
 };
 
 export default pronunciationTranslations;
