@@ -42,7 +42,21 @@ const voiceChatTranslations: TranslationRecord = {
   "playAgain": "Riproduci di nuovo",
   "translation": "Traduzione",
   "conversationHistoryCleared": "Cronologia conversazione cancellata",
-  "success": "Successo"
+  "success": "Successo",
+  
+  // Conversation level settings
+  conversationLevel: "Livello di Conversazione",
+  selectLevel: "Seleziona livello",
+  basicLevel: "Base (A1-A2)",
+  intermediateLevel: "Intermedio (B1)",
+  advancedLevel: "Avanzato (B2-C1)",
+  correctGrammar: "Correzione Grammaticale",
+  conversationLevelUpdated: "Livello di Conversazione Aggiornato",
+  levelSetTo: "Livello impostato su",
+  grammarCorrectionEnabled: "Correzione Grammaticale Attivata",
+  grammarCorrectionDisabled: "Correzione Grammaticale Disattivata",
+  "tutor.willCorrectGrammar": "Il tutor correggerà ora i tuoi errori grammaticali",
+  "tutor.wontCorrectGrammar": "Il tutor si concentrerà sul flusso della conversazione",
 };
 
 export default voiceChatTranslations;

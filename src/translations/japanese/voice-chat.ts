@@ -40,7 +40,21 @@ const voiceChatTranslations: TranslationRecord = {
   askQuestions: "日常的な話題について質問する",
   practiceCommonPhrases: "一般的なフレーズや表現を練習する",
   describeWhatYouSee: "周りに見えるものを説明する",
-  practiceVocabularyForSpecific: "旅行や食べ物などの特定の話題の語彙を練習する"
+  practiceVocabularyForSpecific: "旅行や食べ物などの特定の話題の語彙を練習する",
+  
+  // Conversation level settings
+  conversationLevel: "会話レベル",
+  selectLevel: "レベルを選択",
+  basicLevel: "基礎 (A1-A2)",
+  intermediateLevel: "中級 (B1)",
+  advancedLevel: "上級 (B2-C1)",
+  correctGrammar: "文法修正",
+  conversationLevelUpdated: "会話レベルが更新されました",
+  levelSetTo: "レベル設定:",
+  grammarCorrectionEnabled: "文法修正が有効になりました",
+  grammarCorrectionDisabled: "文法修正が無効になりました",
+  "tutor.willCorrectGrammar": "チューターが文法の誤りを修正します",
+  "tutor.wontCorrectGrammar": "チューターは会話の流れに集中します",
 };
 
 export default voiceChatTranslations;

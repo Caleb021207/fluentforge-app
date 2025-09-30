@@ -52,7 +52,15 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecificTopics: "Latih kosakata untuk topik tertentu seperti perjalanan atau makanan",
   voiceChatEnded: "Obrolan suara berakhir",
   timeLimit5MinReached: "Batas waktu 5 menit telah tercapai",
-  aiModelInfo: "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara."
+  aiModelInfo: "Model AI: Kami menggunakan GPT-4o-mini dari OpenAI untuk pemahaman dan generasi bahasa alami, dengan Sintesis Ucapan bawaan browser untuk respons suara.",
+  
+  // Conversation level settings
+  conversationLevel: "Tingkat Percakapan",
+  selectLevel: "Pilih tingkat",
+  basicLevel: "Dasar (A1-A2)",
+  intermediateLevel: "Menengah (B1)",
+  advancedLevel: "Lanjutan (B2-C1)",
+  correctGrammar: "Koreksi Tata Bahasa",
 };
 
 export default voiceChatTranslations;

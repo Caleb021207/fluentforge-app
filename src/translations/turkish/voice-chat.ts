@@ -53,7 +53,15 @@ const voiceChatTranslations: TranslationRecord = {
   aiModelInfoText: "OpenAI GPT-4o-mini kullanıyoruz, yanıtlar için tarayıcı tabanlı ses sentezi ile birlikte.",
   browserBasedTTS: "Not: Bu, tarayıcı tabanlı metin-konuşma dönüşümü kullanır. ElevenLabs ile premium ses kalitesi için Premium Sesli Sohbet'i deneyin.",
   useThisTool: "Konuşma ve dinleme becerilerinizi geliştirmek için bu aracı kullanın. İşte bazı ipuçları:",
-  failedToGenerateSpeech: "Konuşma oluşturulamadı"
+  failedToGenerateSpeech: "Konuşma oluşturulamadı",
+  
+  // Conversation level settings
+  conversationLevel: "Konuşma Seviyesi",
+  selectLevel: "Seviye seçin",
+  basicLevel: "Temel (A1-A2)",
+  intermediateLevel: "Orta Seviye (B1)",
+  advancedLevel: "İleri Seviye (B2-C1)",
+  correctGrammar: "Dilbilgisi Düzeltme",
 };
 
 export default voiceChatTranslations;

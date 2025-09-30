@@ -79,6 +79,20 @@ const voiceChatTranslations: TranslationRecord = {
   describeImagesOrScenes: "अपने आसपास जो देख रहे हैं उसका वर्णन करें",
   practiceVocabularyForSpecificTopics: "यात्रा या भोजन जैसे विशिष्ट विषयों के लिए शब्दावली का अभ्यास करें",
   timeLimit5MinReached: "5 मिनट की समय सीमा पूरी हो गई है",
+  
+  // Conversation level settings
+  conversationLevel: "वार्तालाप स्तर",
+  selectLevel: "स्तर चुनें",
+  basicLevel: "बुनियादी (A1-A2)",
+  intermediateLevel: "मध्यवर्ती (B1)",
+  advancedLevel: "उन्नत (B2-C1)",
+  correctGrammar: "व्याकरण सुधार",
+  conversationLevelUpdated: "वार्तालाप स्तर अपडेट किया गया",
+  levelSetTo: "स्तर सेट किया गया",
+  grammarCorrectionEnabled: "व्याकरण सुधार सक्षम",
+  grammarCorrectionDisabled: "व्याकरण सुधार अक्षम",
+  "tutor.willCorrectGrammar": "शिक्षक अब आपकी व्याकरण की गलतियों को ठीक करेगा",
+  "tutor.wontCorrectGrammar": "शिक्षक वार्तालाप के प्रवाह पर ध्यान केंद्रित करेगा",
 };
 
 export default voiceChatTranslations;

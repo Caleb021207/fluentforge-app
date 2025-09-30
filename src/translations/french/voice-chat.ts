@@ -42,7 +42,21 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecific: "Pratiquez le vocabulaire pour des sujets spécifiques comme les voyages ou la nourriture",
   practiceLevel: "Niveau de pratique",
   cefrB1Description: "Intermédiaire - Peut discuter de sujets familiers",
-  startSpeaking: "Commencer à parler"
+  startSpeaking: "Commencer à parler",
+  
+  // Conversation level settings
+  conversationLevel: "Niveau de Conversation",
+  selectLevel: "Sélectionner le niveau",
+  basicLevel: "Basique (A1-A2)",
+  intermediateLevel: "Intermédiaire (B1)",
+  advancedLevel: "Avancé (B2-C1)",
+  correctGrammar: "Correction Grammaticale",
+  conversationLevelUpdated: "Niveau de Conversation Mis à Jour",
+  levelSetTo: "Niveau défini sur",
+  grammarCorrectionEnabled: "Correction Grammaticale Activée",
+  grammarCorrectionDisabled: "Correction Grammaticale Désactivée",
+  "tutor.willCorrectGrammar": "Le tuteur corrigera maintenant vos erreurs grammaticales",
+  "tutor.wontCorrectGrammar": "Le tuteur se concentrera sur la fluidité de la conversation",
 };
 
 export default voiceChatTranslations;

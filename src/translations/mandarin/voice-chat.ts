@@ -69,7 +69,21 @@ const voiceChatTranslations: TranslationRecord = {
   clearConversation: "清除对话",
   voiceChatEnded: "语音聊天已结束",
   timeLimit5MinReached: "已达到5分钟时间限制",
-  browserBasedTTS: "注意：这使用基于浏览器的文本转语音。要获得ElevenLabs的高级语音质量，请尝试高级语音聊天。"
+  browserBasedTTS: "注意：这使用基于浏览器的文本转语音。要获得ElevenLabs的高级语音质量，请尝试高级语音聊天。",
+  
+  // Conversation level settings
+  conversationLevel: "对话级别",
+  selectLevel: "选择级别",
+  basicLevel: "基础 (A1-A2)",
+  intermediateLevel: "中级 (B1)",
+  advancedLevel: "高级 (B2-C1)",
+  correctGrammar: "语法纠正",
+  conversationLevelUpdated: "对话级别已更新",
+  levelSetTo: "级别设置为",
+  grammarCorrectionEnabled: "语法纠正已启用",
+  grammarCorrectionDisabled: "语法纠正已禁用",
+  "tutor.willCorrectGrammar": "老师现在将纠正您的语法错误",
+  "tutor.wontCorrectGrammar": "老师将专注于对话流畅度",
 };
 
 export default voiceChatTranslations;

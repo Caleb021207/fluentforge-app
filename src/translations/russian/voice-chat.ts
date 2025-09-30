@@ -89,6 +89,20 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "Описывайте то, что видите вокруг",
   practiceVocabularyForSpecific: "Практикуйте словарный запас для конкретных тем, таких как путешествия или еда",
   useThisTool: "Используйте этот инструмент для улучшения разговорных и слуховых навыков. Вот несколько советов:",
+  
+  // Conversation level settings
+  conversationLevel: "Уровень разговора",
+  selectLevel: "Выбрать уровень",
+  basicLevel: "Базовый (A1-A2)",
+  intermediateLevel: "Средний (B1)",
+  advancedLevel: "Продвинутый (B2-C1)",
+  correctGrammar: "Исправление грамматики",
+  conversationLevelUpdated: "Уровень разговора обновлен",
+  levelSetTo: "Уровень установлен на",
+  grammarCorrectionEnabled: "Исправление грамматики включено",
+  grammarCorrectionDisabled: "Исправление грамматики выключено",
+  "tutor.willCorrectGrammar": "Преподаватель теперь будет исправлять грамматические ошибки",
+  "tutor.wontCorrectGrammar": "Преподаватель сосредоточится на ходе разговора",
 };
 
 export default voiceChatTranslations;

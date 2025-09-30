@@ -11,6 +11,7 @@ import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguage
 import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
 import { getLanguagePair } from "@/utils/languageUtils";
 import { useLocalization } from "@/context/LocalizationContext";
+import { getEnglishOnlyMessage } from "@/utils/englishOnlyMessages";
 
 // Importing components
 import VoiceChatHeader from "@/components/voice-chat/VoiceChatHeader";
@@ -55,14 +56,14 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
     localStorage.setItem("conversationLevel", newLevel);
     
     const levelNames = {
-      basic: t("basicLevel") || "Basic (A1-A2)",
-      intermediate: t("intermediateLevel") || "Intermediate (B1)", 
-      advanced: t("advancedLevel") || "Advanced (B2-C1)"
+      basic: getEnglishOnlyMessage("basicLevel"),
+      intermediate: getEnglishOnlyMessage("intermediateLevel"),
+      advanced: getEnglishOnlyMessage("advancedLevel")
     };
     
     toast({
-      title: t("conversationLevelUpdated") || "Conversation Level Updated",
-      description: `${t("levelSetTo") || "Level set to"} ${levelNames[newLevel as keyof typeof levelNames]}`,
+      title: getEnglishOnlyMessage("conversationLevelUpdated"),
+      description: `${getEnglishOnlyMessage("levelSetTo")} ${levelNames[newLevel as keyof typeof levelNames]}`,
       variant: "default",
     });
   };
@@ -73,8 +74,8 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
     localStorage.setItem('correctGrammar', String(newValue));
     
     toast({
-      title: newValue ? t("grammarCorrectionEnabled") : t("grammarCorrectionDisabled"),
-      description: newValue ? t("tutor.willCorrectGrammar") : t("tutor.wontCorrectGrammar"),
+      title: newValue ? getEnglishOnlyMessage("grammarCorrectionEnabled") : getEnglishOnlyMessage("grammarCorrectionDisabled"),
+      description: newValue ? getEnglishOnlyMessage("tutorWillCorrectGrammar") : getEnglishOnlyMessage("tutorWontCorrectGrammar"),
       variant: "default",
     });
   };

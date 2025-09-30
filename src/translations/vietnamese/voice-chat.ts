@@ -61,6 +61,20 @@ const voiceChatTranslations: TranslationRecord = {
   describeWhatYouSee: "Mô tả những gì bạn thấy xung quanh mình",
   practiceVocabularyForSpecific: "Thực hành từ vựng cho các chủ đề cụ thể như du lịch hoặc ẩm thực",
   useThisTool: "Sử dụng công cụ này để cải thiện kỹ năng nói và nghe của bạn. Dưới đây là một số mẹo:",
+  
+  // Conversation level settings
+  conversationLevel: "Cấp độ Hội thoại",
+  selectLevel: "Chọn cấp độ",
+  basicLevel: "Cơ bản (A1-A2)",
+  intermediateLevel: "Trung cấp (B1)",
+  advancedLevel: "Nâng cao (B2-C1)",
+  correctGrammar: "Sửa ngữ pháp",
+  conversationLevelUpdated: "Cấp độ Hội thoại đã được cập nhật",
+  levelSetTo: "Cấp độ được đặt thành",
+  grammarCorrectionEnabled: "Đã bật sửa ngữ pháp",
+  grammarCorrectionDisabled: "Đã tắt sửa ngữ pháp",
+  "tutor.willCorrectGrammar": "Gia sư bây giờ sẽ sửa lỗi ngữ pháp của bạn",
+  "tutor.wontCorrectGrammar": "Gia sư sẽ tập trung vào luồng hội thoại",
 };
 
 export default voiceChatTranslations;

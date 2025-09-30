@@ -46,7 +46,21 @@ const voiceChatTranslations: TranslationRecord = {
   stopVoiceChat: "وائس چیٹ بند کریں",
   cefrB1Description: "سادہ زبان میں جانی پہچانی چیزوں پر بات کر سکتے ہیں",
   conversationHistoryCleared: "گفتگو کی تاریخ صاف کر دی گئی",
-  aiModelInfo: "ہم اوپن اے آئی GPT-4o-mini کا استعمال کرتے ہیں، براؤزر پر مبنی اسپیچ سنتھیسس کے ساتھ۔"
+  aiModelInfo: "ہم اوپن اے آئی GPT-4o-mini کا استعمال کرتے ہیں، براؤزر پر مبنی اسپیچ سنتھیسس کے ساتھ۔",
+  
+  // Conversation level settings
+  conversationLevel: "گفتگو کی سطح",
+  selectLevel: "سطح منتخب کریں",
+  basicLevel: "بنیادی (A1-A2)",
+  intermediateLevel: "درمیانی (B1)",
+  advancedLevel: "اعلیٰ (B2-C1)",
+  correctGrammar: "گرامر کی اصلاح",
+  conversationLevelUpdated: "گفتگو کی سطح اپ ڈیٹ کی گئی",
+  levelSetTo: "سطح مقرر کی گئی",
+  grammarCorrectionEnabled: "گرامر کی اصلاح فعال کی گئی",
+  grammarCorrectionDisabled: "گرامر کی اصلاح غیر فعال کی گئی",
+  "tutor.willCorrectGrammar": "ٹیوٹر اب آپ کی گرامر کی غلطیاں درست کرے گا",
+  "tutor.wontCorrectGrammar": "ٹیوٹر گفتگو کی روانی پر توجہ مرکوز کرے گا",
 };
 
 export default voiceChatTranslations;

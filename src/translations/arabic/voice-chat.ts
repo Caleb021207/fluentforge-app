@@ -42,7 +42,21 @@ const voiceChatTranslations: TranslationRecord = {
   askQuestions: "اسأل أسئلة حول مواضيع يومية",
   practiceCommonPhrases: "مارس العبارات والتعبيرات الشائعة",
   describeWhatYouSee: "صف ما تراه حولك",
-  practiceVocabularyForSpecific: "مارس المفردات لمواضيع محددة مثل السفر أو الطعام"
+  practiceVocabularyForSpecific: "مارس المفردات لمواضيع محددة مثل السفر أو الطعام",
+  
+  // Conversation level settings
+  conversationLevel: "مستوى المحادثة",
+  selectLevel: "اختر المستوى",
+  basicLevel: "أساسي (A1-A2)",
+  intermediateLevel: "متوسط (B1)",
+  advancedLevel: "متقدم (B2-C1)",
+  correctGrammar: "تصحيح القواعد",
+  conversationLevelUpdated: "تم تحديث مستوى المحادثة",
+  levelSetTo: "تم ضبط المستوى على",
+  grammarCorrectionEnabled: "تم تفعيل تصحيح القواعد",
+  grammarCorrectionDisabled: "تم تعطيل تصحيح القواعد",
+  "tutor.willCorrectGrammar": "سيقوم المعلم الآن بتصحيح أخطائك النحوية",
+  "tutor.wontCorrectGrammar": "سيركز المعلم على تدفق المحادثة",
 };
 
 export default voiceChatTranslations;

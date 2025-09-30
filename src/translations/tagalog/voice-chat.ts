@@ -41,7 +41,15 @@ const voiceChatTranslations: TranslationRecord = {
   "playAgain": "I-play muli",
   "translation": "Pagsasalin",
   "conversationHistoryCleared": "Na-clear na ang kasaysayan ng pag-uusap",
-  "success": "Tagumpay"
+  "success": "Tagumpay",
+  
+  // Conversation level settings
+  conversationLevel: "Antas ng Pag-uusap",
+  selectLevel: "Pumili ng antas",
+  basicLevel: "Pangunahin (A1-A2)",
+  intermediateLevel: "Intermediate (B1)",
+  advancedLevel: "Advanced (B2-C1)",
+  correctGrammar: "Pagwasto ng Gramatika",
 };
 
 export default voiceChatTranslations;

@@ -69,7 +69,21 @@ const voiceChatTranslations: TranslationRecord = {
   voiceChatEnded: "Chat de voz encerrado",
   timeLimit5MinReached: "O limite de tempo de 5 minutos foi atingido",
   speaking: "Falando",
-  microphoneAccessRequired: "O acesso ao microfone é necessário para este recurso"
+  microphoneAccessRequired: "O acesso ao microfone é necessário para este recurso",
+  
+  // Conversation level settings
+  conversationLevel: "Nível de Conversação",
+  selectLevel: "Selecionar nível",
+  basicLevel: "Básico (A1-A2)",
+  intermediateLevel: "Intermediário (B1)",
+  advancedLevel: "Avançado (B2-C1)",
+  correctGrammar: "Correção Gramatical",
+  conversationLevelUpdated: "Nível de Conversação Atualizado",
+  levelSetTo: "Nível definido para",
+  grammarCorrectionEnabled: "Correção Gramatical Ativada",
+  grammarCorrectionDisabled: "Correção Gramatical Desativada",
+  "tutor.willCorrectGrammar": "O tutor agora corrigirá seus erros gramaticais",
+  "tutor.wontCorrectGrammar": "O tutor se concentrará no fluxo da conversação",
 };
 
 export default voiceChatTranslations;

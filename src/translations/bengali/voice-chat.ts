@@ -62,7 +62,21 @@ const voiceChatTranslations: TranslationRecord = {
   failedToGenerateSpeech: "কথা উৎপাদন করতে ব্যর্থ হয়েছে",
   speechRecognitionNotSupported: "আপনার ব্রাউজার কথা শনাক্তকরণ সমর্থন করে না",
   Success: "সফল",
-  conversationHistoryCleared: "কথোপকথনের ইতিহাস মুছে ফেলা হয়েছে"
+  conversationHistoryCleared: "কথোপকথনের ইতিহাস মুছে ফেলা হয়েছে",
+  
+  // Conversation level settings
+  conversationLevel: "কথোপকথন স্তর",
+  selectLevel: "স্তর নির্বাচন করুন",
+  basicLevel: "মৌলিক (A1-A2)",
+  intermediateLevel: "মধ্যবর্তী (B1)",
+  advancedLevel: "উন্নত (B2-C1)",
+  correctGrammar: "ব্যাকরণ সংশোধন",
+  conversationLevelUpdated: "কথোপকথন স্তর আপডেট করা হয়েছে",
+  levelSetTo: "স্তর সেট করা হয়েছে",
+  grammarCorrectionEnabled: "ব্যাকরণ সংশোধন সক্রিয় করা হয়েছে",
+  grammarCorrectionDisabled: "ব্যাকরণ সংশোধন নিষ্ক্রিয় করা হয়েছে",
+  "tutor.willCorrectGrammar": "শিক্ষক এখন আপনার ব্যাকরণের ভুল সংশোধন করবে",
+  "tutor.wontCorrectGrammar": "শিক্ষক কথোপকথনের প্রবাহে মনোনিবেশ করবে",
 };
 
 export default voiceChatTranslations;

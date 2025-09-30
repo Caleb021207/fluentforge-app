@@ -55,6 +55,20 @@ const voiceChatTranslations: TranslationRecord = {
   practiceVocabularyForSpecific: "Practice vocabulary for specific topics like travel or food",
   useThisTool: "Use this tool to improve your speaking and listening skills. Here are some tips:",
   speaking: "Speaking",
+  
+  // Conversation level settings
+  conversationLevel: "Conversation Level",
+  selectLevel: "Select level",
+  basicLevel: "Basic (A1-A2)",
+  intermediateLevel: "Intermediate (B1)",
+  advancedLevel: "Advanced (B2-C1)",
+  correctGrammar: "Grammar Correction",
+  conversationLevelUpdated: "Conversation Level Updated",
+  levelSetTo: "Level set to",
+  grammarCorrectionEnabled: "Grammar Correction Enabled",
+  grammarCorrectionDisabled: "Grammar Correction Disabled",
+  "tutor.willCorrectGrammar": "The tutor will now correct your grammar mistakes",
+  "tutor.wontCorrectGrammar": "The tutor will focus on conversation flow",
 };
 
 export default voiceChatTranslations;

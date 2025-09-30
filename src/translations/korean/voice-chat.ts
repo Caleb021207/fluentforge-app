@@ -76,7 +76,21 @@ const voiceChatTranslations: TranslationRecord = {
   voiceChatEnded: "음성 채팅이 종료되었습니다",
   timeLimit5MinReached: "5분 시간 제한에 도달했습니다",
   speaking: "말하는 중",
-  browserBasedTTS: "참고: 이것은 브라우저 기반 텍스트 음성 변환을 사용합니다. ElevenLabs를 통한 프리미엄 음성 품질을 원하시면 프리미엄 음성 채팅을 이용해보세요."
+  browserBasedTTS: "참고: 이것은 브라우저 기반 텍스트 음성 변환을 사용합니다. ElevenLabs를 통한 프리미엄 음성 품질을 원하시면 프리미엄 음성 채팅을 이용해보세요.",
+  
+  // Conversation level settings
+  conversationLevel: "대화 수준",
+  selectLevel: "수준 선택",
+  basicLevel: "기초 (A1-A2)",
+  intermediateLevel: "중급 (B1)",
+  advancedLevel: "고급 (B2-C1)",
+  correctGrammar: "문법 교정",
+  conversationLevelUpdated: "대화 수준 업데이트됨",
+  levelSetTo: "수준 설정:",
+  grammarCorrectionEnabled: "문법 교정 활성화됨",
+  grammarCorrectionDisabled: "문법 교정 비활성화됨",
+  "tutor.willCorrectGrammar": "튜터가 이제 문법 오류를 교정합니다",
+  "tutor.wontCorrectGrammar": "튜터가 대화 흐름에 집중합니다",
 };
 
 export default voiceChatTranslations;
