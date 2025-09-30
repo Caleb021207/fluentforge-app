@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Inyong Pagbigkas",
   startRecording: "Simulan ang Pag-record",
+  stopRecording: "Ihinto ang Pag-record",
   clickStartToRecord: "I-click ang 'Simulan' para mag-record",
   tryAgain: "Subukan Ulit",
-  newPhrase: "Bagong Parirala"
+  newPhrase: "Bagong Parirala",
+  yourTranscription: "Inyong Transkripsyon",
+  processing: "Pinoproseso",
+  listeningToYou: "Nakikinig sa inyo",
+  realTimeTranscription: "Real-time na transkripsyon"
 };
 
 export default pronunciationTranslations;

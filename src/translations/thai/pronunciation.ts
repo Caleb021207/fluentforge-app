@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "การออกเสียงของคุณ",
   startRecording: "เริ่มบันทึก",
+  stopRecording: "หยุดบันทึก",
   clickStartToRecord: "คลิก 'เริ่ม' เพื่อบันทึก",
   tryAgain: "ลองอีกครั้ง",
-  newPhrase: "วลีใหม่"
+  newPhrase: "วลีใหม่",
+  yourTranscription: "การถอดเสียงของคุณ",
+  processing: "กำลังประมวลผล",
+  listeningToYou: "กำลังฟังคุณ",
+  realTimeTranscription: "การถอดเสียงแบบเรียลไทม์"
 };
 
 export default pronunciationTranslations;

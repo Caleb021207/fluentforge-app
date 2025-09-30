@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Nkwupụta Gị",
   startRecording: "Malite Ndekọ",
+  stopRecording: "Kwụsị Ndekọ",
   clickStartToRecord: "Pịa 'Malite' iji dekọọ",
   tryAgain: "Nwaa Ọzọ",
-  newPhrase: "Nkebi Okwu Ọhụrụ"
+  newPhrase: "Nkebi Okwu Ọhụrụ",
+  yourTranscription: "Ndekọ Gị",
+  processing: "Na-eme",
+  listeningToYou: "Na-ege gị ntị",
+  realTimeTranscription: "Ndekọ n'oge ezigbo"
 };
 
 export default pronunciationTranslations;

@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "ኣደማምጻኻ",
   startRecording: "ቅዳሕ ጀምር",
+  stopRecording: "ቅዳሕ ኣቛርጽ",
   clickStartToRecord: "ንምቅዳሕ 'ጀምር' ጠዊቕ",
   tryAgain: "ደጊም ፈትን",
-  newPhrase: "ሓዲስ ኣኽሊል ቃላት"
+  newPhrase: "ሓዲስ ኣኽሊል ቃላት",
+  yourTranscription: "ትሕዝቶኻ",
+  processing: "ይሰርሕ ኣሎ",
+  listeningToYou: "ይሰምዓካ ኣሎ",
+  realTimeTranscription: "ናይ ሓቀኛ ግዜ ትሕዝቶ"
 };
 
 export default pronunciationTranslations;

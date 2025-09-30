@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Your Pronunciation",
   startRecording: "Start Recording",
+  stopRecording: "Stop Recording",
   clickStartToRecord: "Click 'Start' to record",
   tryAgain: "Try Again",
-  newPhrase: "New Phrase"
+  newPhrase: "New Phrase",
+  yourTranscription: "Your Transcription",
+  processing: "Processing",
+  listeningToYou: "Listening to you",
+  realTimeTranscription: "Real-time transcription"
 };
 
 export default pronunciationTranslations;

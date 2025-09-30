@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Matamshi Yako",
   startRecording: "Anza Kurekodi",
+  stopRecording: "Acha Kurekodi",
   clickStartToRecord: "Bonyeza 'Anza' kurekodi",
   tryAgain: "Jaribu Tena",
-  newPhrase: "Kirai Kipya"
+  newPhrase: "Kirai Kipya",
+  yourTranscription: "Nakala Yako",
+  processing: "Inachakata",
+  listeningToYou: "Inakusikiliza",
+  realTimeTranscription: "Nakala ya wakati halisi"
 };
 
 export default pronunciationTranslations;

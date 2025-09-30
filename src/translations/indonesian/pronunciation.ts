@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Pelafalan Anda",
   startRecording: "Mulai Merekam",
+  stopRecording: "Hentikan Perekaman",
   clickStartToRecord: "Klik 'Mulai' untuk merekam",
   tryAgain: "Coba Lagi",
-  newPhrase: "Frasa Baru"
+  newPhrase: "Frasa Baru",
+  yourTranscription: "Transkripsi Anda",
+  processing: "Memproses",
+  listeningToYou: "Mendengarkan Anda",
+  realTimeTranscription: "Transkripsi waktu nyata"
 };
 
 export default pronunciationTranslations;

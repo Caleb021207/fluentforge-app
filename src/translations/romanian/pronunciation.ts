@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Pronunția Ta",
   startRecording: "Începe Înregistrarea",
+  stopRecording: "Oprește Înregistrarea",
   clickStartToRecord: "Fă clic pe 'Începe' pentru a înregistra",
   tryAgain: "Încearcă Din Nou",
-  newPhrase: "Frază Nouă"
+  newPhrase: "Frază Nouă",
+  yourTranscription: "Transcrierea Ta",
+  processing: "Procesare",
+  listeningToYou: "Te ascultă",
+  realTimeTranscription: "Transcriere în timp real"
 };
 
 export default pronunciationTranslations;

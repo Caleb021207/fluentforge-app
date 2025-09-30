@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "ستاسو تلفظ",
   startRecording: "ثبتول پیل کړئ",
+  stopRecording: "ثبتول ودرولئ",
   clickStartToRecord: "د ثبت کولو لپاره 'پیل کړئ' باندې کلیک وکړئ",
   tryAgain: "بیا هڅه وکړئ",
-  newPhrase: "نوې جمله"
+  newPhrase: "نوې جمله",
+  yourTranscription: "ستاسو لیکنه",
+  processing: "پروسس کول",
+  listeningToYou: "تاسو ته غوږ نیسي",
+  realTimeTranscription: "حقیقي وخت لیکنه"
 };
 
 export default pronunciationTranslations;

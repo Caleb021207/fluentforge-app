@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "ඔබේ උච්චාරණය",
   startRecording: "පටිගත කිරීම ආරම්භ කරන්න",
+  stopRecording: "පටිගත කිරීම නවතන්න",
   clickStartToRecord: "පටිගත කිරීමට 'ආරම්භ කරන්න' ක්ලික් කරන්න",
   tryAgain: "නැවත උත්සාහ කරන්න",
-  newPhrase: "නව වාක්‍ය ඛණ්ඩය"
+  newPhrase: "නව වාක්‍ය ඛණ්ඩය",
+  yourTranscription: "ඔබේ පිටපත",
+  processing: "සැකසෙමින්",
+  listeningToYou: "ඔබට සවන් දෙමින්",
+  realTimeTranscription: "තථ්‍ය කාලීන පිටපත"
 };
 
 export default pronunciationTranslations;

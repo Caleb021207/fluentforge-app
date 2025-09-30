@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Phát Âm Của Bạn",
   startRecording: "Bắt Đầu Ghi",
+  stopRecording: "Dừng Ghi",
   clickStartToRecord: "Nhấp 'Bắt Đầu' để ghi",
   tryAgain: "Thử Lại",
-  newPhrase: "Cụm Từ Mới"
+  newPhrase: "Cụm Từ Mới",
+  yourTranscription: "Bản Ghi Của Bạn",
+  processing: "Đang Xử Lý",
+  listeningToYou: "Đang nghe bạn",
+  realTimeTranscription: "Ghi âm thời gian thực"
 };
 
 export default pronunciationTranslations;

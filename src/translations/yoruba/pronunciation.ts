@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Ìpè Rẹ",
   startRecording: "Bẹ̀rẹ̀ Gbígba síle",
+  stopRecording: "Dúró Gbígba síle",
   clickStartToRecord: "Tẹ 'Bẹ̀rẹ̀' láti gba síle",
   tryAgain: "Gbìyànjú Lẹ́ẹ̀kan síi",
-  newPhrase: "Gbolóhùn Tuntun"
+  newPhrase: "Gbolóhùn Tuntun",
+  yourTranscription: "Àkọsílẹ̀ Rẹ",
+  processing: "Ń ṣiṣẹ́",
+  listeningToYou: "Ń gbọ́ tirẹ",
+  realTimeTranscription: "Àkọsílẹ̀ àkókò gidi"
 };
 
 export default pronunciationTranslations;

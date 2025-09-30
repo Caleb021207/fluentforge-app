@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Dhawaaqidaada",
   startRecording: "Bilow Duubista",
+  stopRecording: "Jooji Duubista",
   clickStartToRecord: "Dhufo 'Bilow' si aad u duubto",
   tryAgain: "Mar kale Isku Day",
-  newPhrase: "Weedh Cusub"
+  newPhrase: "Weedh Cusub",
+  yourTranscription: "Qoraalkaa",
+  processing: "Habka",
+  listeningToYou: "Waan ku dhageysanayaa",
+  realTimeTranscription: "Qoraalka waqtiga dhabta ah"
 };
 
 export default pronunciationTranslations;

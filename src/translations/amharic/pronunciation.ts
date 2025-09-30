@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "የእርስዎ አመጣጥ",
   startRecording: "ቅዳት ይጀምሩ",
+  stopRecording: "ቅዳትን ያቁሙ",
   clickStartToRecord: "ለመቅዳት 'ይጀምሩ' ን ይጫኑ",
   tryAgain: "እንደገና ይሞክሩ",
-  newPhrase: "አዲስ ሐረግ"
+  newPhrase: "አዲስ ሐረግ",
+  yourTranscription: "የእርስዎ ግልባጭ",
+  processing: "በማስኬድ ላይ",
+  listeningToYou: "እርስዎን እየሰማ ነው",
+  realTimeTranscription: "በቅጽበታዊ ግልባጭ"
 };
 
 export default pronunciationTranslations;

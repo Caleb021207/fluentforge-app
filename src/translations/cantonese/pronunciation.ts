@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "你嘅發音",
   startRecording: "開始錄音",
+  stopRecording: "停止錄音",
   clickStartToRecord: "點擊'開始'錄音",
   tryAgain: "再試一次",
-  newPhrase: "新短語"
+  newPhrase: "新短語",
+  yourTranscription: "你嘅轉錄",
+  processing: "處理緊",
+  listeningToYou: "聽緊你講嘢",
+  realTimeTranscription: "即時轉錄"
 };
 
 export default pronunciationTranslations;

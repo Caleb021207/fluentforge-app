@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "당신의 발음",
   startRecording: "녹음 시작",
+  stopRecording: "녹음 중지",
   clickStartToRecord: "'시작'을 클릭하여 녹음하세요",
   tryAgain: "다시 시도",
-  newPhrase: "새 구문"
+  newPhrase: "새 구문",
+  yourTranscription: "당신의 전사",
+  processing: "처리 중",
+  listeningToYou: "듣고 있습니다",
+  realTimeTranscription: "실시간 전사"
 };
 
 export default pronunciationTranslations;

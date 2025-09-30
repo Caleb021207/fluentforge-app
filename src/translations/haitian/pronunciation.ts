@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Pwononsyasyon Ou",
   startRecording: "Kòmanse Anrejisteman",
+  stopRecording: "Sispann Anrejisteman",
   clickStartToRecord: "Klike sou 'Kòmanse' pou anrejistre",
   tryAgain: "Eseye Ankò",
-  newPhrase: "Nouvo Fraz"
+  newPhrase: "Nouvo Fraz",
+  yourTranscription: "Transkripsyon Ou",
+  processing: "Ap Trete",
+  listeningToYou: "Ap Koute Ou",
+  realTimeTranscription: "Transkripsyon an Tan Reyèl"
 };
 
 export default pronunciationTranslations;

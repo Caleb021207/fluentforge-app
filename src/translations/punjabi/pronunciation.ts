@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "ਤੁਹਾਡਾ ਉਚਾਰਨ",
   startRecording: "ਰਿਕਾਰਡਿੰਗ ਸ਼ੁਰੂ ਕਰੋ",
+  stopRecording: "ਰਿਕਾਰਡਿੰਗ ਬੰਦ ਕਰੋ",
   clickStartToRecord: "ਰਿਕਾਰਡ ਕਰਨ ਲਈ 'ਸ਼ੁਰੂ ਕਰੋ' 'ਤੇ ਕਲਿੱਕ ਕਰੋ",
   tryAgain: "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
-  newPhrase: "ਨਵਾਂ ਵਾਕ"
+  newPhrase: "ਨਵਾਂ ਵਾਕ",
+  yourTranscription: "ਤੁਹਾਡਾ ਟ੍ਰਾਂਸਕ੍ਰਿਪਸ਼ਨ",
+  processing: "ਪ੍ਰੋਸੈਸਿੰਗ",
+  listeningToYou: "ਤੁਹਾਨੂੰ ਸੁਣ ਰਿਹਾ ਹੈ",
+  realTimeTranscription: "ਰੀਅਲ-ਟਾਈਮ ਟ੍ਰਾਂਸਕ੍ਰਿਪਸ਼ਨ"
 };
 
 export default pronunciationTranslations;

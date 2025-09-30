@@ -17,9 +17,14 @@ const pronunciationTranslations: TranslationRecord = {
   // New missing translations
   yourPronunciation: "Telaffuzunuz",
   startRecording: "Kaydı Başlat",
+  stopRecording: "Kaydı Durdur",
   clickStartToRecord: "Kaydetmek için 'Başlat'a tıklayın",
   tryAgain: "Tekrar Deneyin",
-  newPhrase: "Yeni Cümle"
+  newPhrase: "Yeni Cümle",
+  yourTranscription: "Transkriptiniz",
+  processing: "İşleniyor",
+  listeningToYou: "Sizi dinliyor",
+  realTimeTranscription: "Gerçek zamanlı transkript"
 };
 
 export default pronunciationTranslations;
