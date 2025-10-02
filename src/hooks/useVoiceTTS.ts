@@ -29,9 +29,8 @@ export const useVoiceTTS = ({ practiceLanguage, speechRate = 1.0 }: UseVoiceTTSP
       text: text,
       language: practiceLanguage.toLowerCase(),
       speechRate: speechRate,
-      useMetaMms: false, // Use Azure as primary TTS provider
       onStart: () => {
-        console.log("TTS started with Azure");
+        console.log("TTS started with OpenAI");
         setIsSpeaking(true);
       },
       onEnd: () => {

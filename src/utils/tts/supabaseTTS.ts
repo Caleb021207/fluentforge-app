@@ -3,17 +3,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { ttsCache } from "./cache";
 import { useBrowserTTS } from "./browserTTS";
 import { trackTTSUsage } from "./tracking";
-import { metaMmsLanguageMap } from "./constants";
 import type { TTSOptions } from "./types";
 
 /**
- * Play audio using Supabase Edge Function TTS
+ * Play audio using Supabase Edge Function TTS (OpenAI)
  */
 export const playTTS = async ({
   text,
   language,
   speechRate = 1.0,
-  useMetaMms = false,
+  voice = 'alloy',
   onStart,
   onEnd,
   onError
@@ -24,34 +23,21 @@ export const playTTS = async ({
     return;
   }
 
-  // Check for existing cached audio for this text and language
+  // Check for existing cached audio for this text
   const cachedAudio = ttsCache.get(text, language);
 
   if (cachedAudio) {
-    console.log("Using cached audio for", language, text.substring(0, 40) + "...");
+    console.log("Using cached audio for text:", text.substring(0, 40) + "...");
     return playAudioFromBase64(cachedAudio, onStart, onEnd, onError);
   }
 
   try {
-    // Get the user interface language from localStorage or context
-    const userInterfaceLanguage = localStorage.getItem('selectedLanguage') || 'english';
-    
-    // Pass the Meta MMS flag but don't prioritize it
-    // The Edge Function will always try Azure first
-    const usesMetaMms = useMetaMms || !!metaMmsLanguageMap[language?.toLowerCase()];
-    
-    if (usesMetaMms) {
-      console.log(`Meta MMS available as fallback for ${language} text-to-speech`);
-    }
-
-    // Call the Supabase Edge Function with user interface language
+    // Call the Supabase Edge Function (OpenAI TTS)
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: {
         text,
-        language,
-        speechRate,
-        useMetaMms: usesMetaMms,
-        userInterfaceLanguage // Pass the interface language for TTS logic
+        voice,
+        speechRate
       },
     });
 
@@ -86,29 +72,20 @@ export const playTTS = async ({
 /**
  * Preload TTS audio for future use
  */
-export const preloadTTS = async (text: string, language: string, speechRate = 1.0, useMetaMms = false) => {
+export const preloadTTS = async (text: string, language: string, speechRate = 1.0, voice = 'alloy') => {
   if (!text || text.trim() === "") return;
 
   if (ttsCache.has(text, language)) {
-    console.log("Audio already preloaded for", language, text.substring(0, 40) + "...");
+    console.log("Audio already preloaded for text:", text.substring(0, 40) + "...");
     return;
   }
 
   try {
-    // Get the user interface language from localStorage or context
-    const userInterfaceLanguage = localStorage.getItem('selectedLanguage') || 'english';
-    
-    // Note that we're still passing the Meta MMS flag,
-    // but the Edge Function will always try Azure first
-    const usesMetaMms = useMetaMms || !!metaMmsLanguageMap[language?.toLowerCase()];
-
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: {
         text,
-        language,
-        speechRate,
-        useMetaMms: usesMetaMms,
-        userInterfaceLanguage // Pass the interface language for TTS logic
+        voice,
+        speechRate
       },
     });
 
@@ -119,7 +96,7 @@ export const preloadTTS = async (text: string, language: string, speechRate = 1.
 
     // Cache the audio
     ttsCache.set(text, language, data.audioContent);
-    console.log("Successfully preloaded audio for", language, text.substring(0, 40) + "...");
+    console.log("Successfully preloaded audio for text:", text.substring(0, 40) + "...");
   } catch (err) {
     console.error("Preload TTS error:", err);
   }

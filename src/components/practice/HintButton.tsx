@@ -132,7 +132,6 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
       text,
       language: targetLanguage.toLowerCase(),
       speechRate: 1.0, // Default rate for hints
-      useMetaMms: false,
       onStart: () => setIsPlaying(text),
       onEnd: () => setIsPlaying(null),
       onError: (err) => {
