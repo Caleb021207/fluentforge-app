@@ -3,6 +3,7 @@ import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
   practice: "Практика",
+  textPractice: "Текстовая практика",
   practiceWithAI: "Практика с ИИ",
   startChatting: "Начать общение",
   clearConversation: "Очистить разговор",

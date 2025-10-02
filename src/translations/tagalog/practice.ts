@@ -2,6 +2,7 @@ import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
   "practice": "Pagsasanay",
+  "textPractice": "Pagsasanay sa Teksto",
   "startConversation": "Magsimula ng pag-uusap",
   "startChatting": "Simulan ang pakikipag-usap sa iyong AI na guro sa wika!",
   "chatPlaceholder": "Mag-type ng mensahe...",

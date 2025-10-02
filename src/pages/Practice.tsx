@@ -5,7 +5,6 @@ import ChatContainer from "@/components/practice/ChatContainer";
 import PracticePromptButton from "@/components/practice/PracticePromptButton";
 import PracticeGuide from "@/components/practice/PracticeGuide";
 import { useChatMessages } from "@/components/practice/hooks/useChatMessages";
-import { useVoiceChat } from "@/components/practice/hooks/useVoiceChat";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { Button } from "@/components/ui/button";
@@ -90,12 +89,6 @@ const Practice = () => {
     correctGrammar,
     toggleGrammarCorrection
   } = useChatMessages(conversationLevel);
-  
-  const {
-    startVoiceConversation,
-    endVoiceConversation,
-    isConversationActive
-  } = useVoiceChat();
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">

@@ -4,6 +4,7 @@ import { TranslationRecord } from "./types";
 // Create an empty practice translations file as placeholder
 const practiceTranslations: TranslationRecord = {
   // Basic translations that should be available in all languages
+  "textPractice": "Text Practice",
   "clickStartToRecord": "Click 'Start Recording' to begin",
   "startRecording": "Start Recording",
   "stopRecording": "Stop Recording",

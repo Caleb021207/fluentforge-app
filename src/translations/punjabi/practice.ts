@@ -2,6 +2,7 @@
 import { TranslationRecord } from "../types";
 
 const practiceTranslations: TranslationRecord = {
+  "practice": "ਅਭਿਆਸ",
   "textPractice": "ਟੈਕਸਟ ਅਭਿਆਸ",
   "practiceWithAITutor": "AI ਭਾਸ਼ਾ ਟਿਊਟਰ ਨਾਲ ਅਭਿਆਸ ਕਰੋ",
   "chatWithAITutor": "ਆਪਣੀ ਅੰਗਰੇਜ਼ੀ ਦਾ ਅਭਿਆਸ ਕਰਨ ਲਈ ਸਾਡੇ AI ਟਿਊਟਰ ਨਾਲ ਗੱਲ ਕਰੋ! AI ਤੁਹਾਡੇ ਵਿਆਕਰਣ, ਸ਼ਬਦਾਵਲੀ, ਅਤੇ ਉਚਾਰਨ ਨੂੰ ਸੁਧਾਰਨ ਵਿੱਚ ਮਦਦ ਕਰੇਗਾ। ਭਾਸ਼ਾ ਜਾਂ ਸੱਭਿਆਚਾਰ ਬਾਰੇ ਸਵਾਲ ਪੁੱਛਣ ਤੋਂ ਨਾ ਝਿਜਕੋ।",
