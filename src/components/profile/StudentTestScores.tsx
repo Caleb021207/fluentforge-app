@@ -2,19 +2,36 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, TrendingUp, Calendar, AlertCircle, CheckCircle } from "lucide-react";
+import { Users, TrendingUp, Calendar, AlertCircle, CheckCircle, BarChart, MessageSquare, Mic } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getCEFRColor } from "@/components/transcript-analysis/utils/cefrUtils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-interface StudentScore {
+interface StudentMetrics {
   student_id: string;
   student_name: string;
   student_email: string;
+  class_name: string;
+  // Test scores
   overall_score: number | null;
   cefr_level: string | null;
   upload_date: string | null;
-  class_name: string;
+  // Language metrics
+  avg_grammar_accuracy: number | null;
+  avg_conversation_complexity: number | null;
+  // Usage metrics
+  text_practice_calls: number;
+  premium_voice_calls: number;
+  last_activity: string | null;
+}
+
+interface ClassAverages {
+  overall_score: number | null;
+  grammar_accuracy: number | null;
+  conversation_complexity: number | null;
+  total_students: number;
+  students_with_scores: number;
 }
 
 interface StudentTestScoresProps {
@@ -23,18 +40,18 @@ interface StudentTestScoresProps {
 }
 
 const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) => {
-  const [studentScores, setStudentScores] = useState<StudentScore[]>([]);
+  const [studentMetrics, setStudentMetrics] = useState<StudentMetrics[]>([]);
+  const [classAverages, setClassAverages] = useState<ClassAverages | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [classAverage, setClassAverage] = useState<number | null>(null);
   const [debugInfo, setDebugInfo] = useState<any>(null);
 
   useEffect(() => {
-    const fetchStudentScores = async () => {
+    const fetchStudentData = async () => {
       setIsLoading(true);
       try {
-        console.log('Fetching data for teacher:', teacherId);
+        console.log('Fetching comprehensive student data for teacher:', teacherId);
 
-        // First, let's check what classes this teacher has
+        // Get teacher's classes with all enrolled students
         const { data: teacherClasses, error: classError } = await supabase
           .from('classes')
           .select(`
@@ -53,127 +70,120 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
           `)
           .eq('teacher_id', teacherId);
 
-        console.log('Teacher classes with enrollments:', teacherClasses);
+        console.log('Teacher classes:', teacherClasses);
         console.log('Class fetch error:', classError);
 
-        let classesToProcess = teacherClasses || [];
-
-        // If no assigned classes found, check if this is a teacher in the same school
-        // and show all students from that school for testing purposes
         if (!teacherClasses || teacherClasses.length === 0) {
-          console.log('No assigned classes found, checking for school-based access...');
-          
-          // Get the teacher's profile to find their school
-          const { data: teacherProfile } = await supabase
-            .from('profiles')
-            .select('school_id')
-            .eq('id', teacherId)
-            .single();
-
-          if (teacherProfile?.school_id) {
-            // Get all classes in the same school with students
-            const { data: schoolClasses } = await supabase
-              .from('classes')
-              .select(`
-                id,
-                name,
-                class_code,
-                academic_year,
-                student_enrollments!inner (
-                  student_id,
-                  profiles!inner (
-                    id,
-                    display_name,
-                    email
-                  )
-                )
-              `)
-              .eq('school_id', teacherProfile.school_id);
-
-            if (schoolClasses && schoolClasses.length > 0) {
-              classesToProcess = schoolClasses;
-              console.log('Found school classes for testing:', schoolClasses);
-            }
-          }
-        }
-
-        setDebugInfo({
-          teacherClasses: teacherClasses?.length || 0,
-          totalEnrollments: classesToProcess?.reduce((sum, cls) => sum + (cls.student_enrollments?.length || 0), 0) || 0,
-          classError: classError?.message || null,
-          usingSchoolAccess: (teacherClasses?.length || 0) === 0 && (classesToProcess?.length || 0) > 0
-        });
-
-        if (!classesToProcess || classesToProcess.length === 0) {
-          console.log('No classes found for teacher');
-          setStudentScores([]);
+          console.log('No classes assigned to this teacher');
+          setStudentMetrics([]);
           setIsLoading(false);
+          setDebugInfo({ teacherClasses: 0, totalEnrollments: 0 });
           return;
         }
 
-        // Process each class and get student scores
-        const allStudentScores: StudentScore[] = [];
+        setDebugInfo({
+          teacherClasses: teacherClasses.length,
+          totalEnrollments: teacherClasses.reduce((sum, cls) => sum + (cls.student_enrollments?.length || 0), 0)
+        });
+
+        // Collect all student data
+        const allStudentMetrics: StudentMetrics[] = [];
         
-        for (const classData of classesToProcess) {
+        for (const classData of teacherClasses) {
           if (!classData.student_enrollments || classData.student_enrollments.length === 0) {
             continue;
           }
 
           for (const enrollment of classData.student_enrollments) {
-            // Get the most recent transcript analysis for each student
+            const studentId = enrollment.student_id;
+
+            // Get test scores from transcript_analyses
             const { data: latestAnalysis } = await supabase
               .from('transcript_analyses')
               .select('overall_score, cefr_level, upload_date')
-              .eq('user_id', enrollment.student_id)
+              .eq('user_id', studentId)
               .order('upload_date', { ascending: false })
               .limit(1)
               .maybeSingle();
 
-            allStudentScores.push({
-              student_id: enrollment.student_id,
+            // Get language metrics
+            const { data: languageMetrics } = await supabase
+              .from('student_metrics')
+              .select('avg_grammar_accuracy, avg_conversation_complexity, text_practice_calls, premium_voice_calls, last_activity')
+              .eq('student_id', studentId)
+              .maybeSingle();
+
+            allStudentMetrics.push({
+              student_id: studentId,
               student_name: enrollment.profiles.display_name || enrollment.profiles.email || 'Unknown',
               student_email: enrollment.profiles.email || '',
+              class_name: classData.name,
               overall_score: latestAnalysis?.overall_score || null,
               cefr_level: latestAnalysis?.cefr_level || null,
               upload_date: latestAnalysis?.upload_date || null,
-              class_name: classData.name
+              avg_grammar_accuracy: languageMetrics?.avg_grammar_accuracy || null,
+              avg_conversation_complexity: languageMetrics?.avg_conversation_complexity || null,
+              text_practice_calls: languageMetrics?.text_practice_calls || 0,
+              premium_voice_calls: languageMetrics?.premium_voice_calls || 0,
+              last_activity: languageMetrics?.last_activity || null
             });
           }
         }
 
-        console.log('All student scores:', allStudentScores);
-        setStudentScores(allStudentScores);
+        console.log('All student metrics:', allStudentMetrics);
+        setStudentMetrics(allStudentMetrics);
 
-        // Calculate class average
-        const validScores = allStudentScores.filter(s => s.overall_score !== null);
-        let average = null;
-        if (validScores.length > 0) {
-          average = validScores.reduce((sum, s) => sum + (s.overall_score || 0), 0) / validScores.length;
-          setClassAverage(Math.round(average));
-        }
+        // Calculate class averages
+        const studentsWithScores = allStudentMetrics.filter(s => s.overall_score !== null);
+        const studentsWithGrammar = allStudentMetrics.filter(s => s.avg_grammar_accuracy !== null);
+        const studentsWithComplexity = allStudentMetrics.filter(s => s.avg_conversation_complexity !== null);
 
-        // Call the callback to update parent component
+        const averages: ClassAverages = {
+          overall_score: studentsWithScores.length > 0
+            ? studentsWithScores.reduce((sum, s) => sum + (s.overall_score || 0), 0) / studentsWithScores.length
+            : null,
+          grammar_accuracy: studentsWithGrammar.length > 0
+            ? studentsWithGrammar.reduce((sum, s) => sum + (s.avg_grammar_accuracy || 0), 0) / studentsWithGrammar.length
+            : null,
+          conversation_complexity: studentsWithComplexity.length > 0
+            ? studentsWithComplexity.reduce((sum, s) => sum + (s.avg_conversation_complexity || 0), 0) / studentsWithComplexity.length
+            : null,
+          total_students: allStudentMetrics.length,
+          students_with_scores: studentsWithScores.length
+        };
+
+        setClassAverages(averages);
+
+        // Update parent component
         if (onDataUpdate) {
-          onDataUpdate(average ? Math.round(average) : null, allStudentScores.length);
+          onDataUpdate(
+            averages.overall_score ? Math.round(averages.overall_score) : null,
+            allStudentMetrics.length
+          );
         }
 
       } catch (error) {
-        console.error('Error fetching student scores:', error);
+        console.error('Error fetching student data:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchStudentScores();
-  }, [teacherId]);
+    fetchStudentData();
+  }, [teacherId, onDataUpdate]);
 
   const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'No test taken';
+    if (!dateString) return 'No activity';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  const formatScore = (score: number | null) => {
+    if (score === null) return 'N/A';
+    return `${Math.round(score)}%`;
   };
 
   if (isLoading) {
@@ -182,106 +192,135 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Student Test Scores
+            Student Roster & Performance
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-64 w-full" />
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          Student Test Scores
-        </CardTitle>
-        {classAverage !== null && (
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-sm text-muted-foreground">
-              Class Average: <span className="font-semibold text-primary">{classAverage}%</span>
-            </span>
-          </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        {/* Status Information */}
-        {debugInfo && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <div className="flex items-center gap-2 mb-2">
-              {studentScores.length > 0 ? (
-                <CheckCircle className="h-4 w-4 text-green-600" />
-              ) : (
-                <AlertCircle className="h-4 w-4 text-blue-600" />
-              )}
-              <span className="text-sm font-medium text-blue-800">Teacher Dashboard Status</span>
-            </div>
-            <div className="text-xs text-blue-700 space-y-1">
-              <p>Classes assigned: {debugInfo.teacherClasses}</p>
-              <p>Total student enrollments: {debugInfo.totalEnrollments}</p>
-              <p>Students with test scores: {studentScores.filter(s => s.overall_score !== null).length}</p>
-              {debugInfo.usingSchoolAccess && (
-                <p className="text-yellow-700">🔍 Showing school-wide data for testing (not assigned as teacher)</p>
-              )}
-              {studentScores.length > 0 ? (
-                <p className="text-green-700 font-medium">✅ Successfully found and loaded student data!</p>
-              ) : debugInfo.teacherClasses === 0 ? (
-                <p>No classes are currently assigned to you. Students need to join using class codes.</p>
-              ) : (
-                <p>Classes found but no students have enrolled yet or uploaded test scores.</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {studentScores.length > 0 ? (
-          <div className="space-y-3">
-            {studentScores
-              .sort((a, b) => (b.overall_score || 0) - (a.overall_score || 0))
-              .map((student) => (
-              <div key={student.student_id} className="border rounded-lg p-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">{student.student_name}</h4>
-                    <p className="text-sm text-muted-foreground">{student.student_email}</p>
-                    <p className="text-xs text-muted-foreground">{student.class_name}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-2">
-                      <div className="text-lg font-bold">
-                        {student.overall_score ? `${Math.round(student.overall_score)}%` : 'No score'}
-                      </div>
-                      {student.cefr_level && (
-                        <Badge className={getCEFRColor(student.cefr_level)} variant="outline">
-                          {student.cefr_level}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Calendar className="h-3 w-3" />
-                      {formatDate(student.upload_date)}
-                    </div>
-                  </div>
+    <div className="space-y-6">
+      {/* Class Averages Overview */}
+      {classAverages && classAverages.total_students > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart className="h-5 w-5" />
+              Class Averages
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-primary/5 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
+                  {classAverages.total_students}
                 </div>
+                <p className="text-sm text-muted-foreground">Total Students</p>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="text-muted-foreground mb-2">
-              No student test scores found
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Students need to join your classes using class access codes and upload transcripts for AI analysis.
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              <div className="text-center p-4 bg-primary/5 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
+                  {formatScore(classAverages.overall_score)}
+                </div>
+                <p className="text-sm text-muted-foreground">Avg Test Score</p>
+              </div>
+              <div className="text-center p-4 bg-primary/5 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
+                  {formatScore(classAverages.grammar_accuracy)}
+                </div>
+                <p className="text-sm text-muted-foreground">Avg Grammar</p>
+              </div>
+              <div className="text-center p-4 bg-primary/5 rounded-lg">
+                <div className="text-2xl font-bold text-primary">
+                  {formatScore(classAverages.conversation_complexity)}
+                </div>
+                <p className="text-sm text-muted-foreground">Avg Complexity</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Student Roster Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            Student Roster & Performance
+          </CardTitle>
+          {debugInfo && (
+            <div className="text-sm text-muted-foreground">
+              {debugInfo.teacherClasses} class(es) • {debugInfo.totalEnrollments} student(s)
+            </div>
+          )}
+        </CardHeader>
+        <CardContent>
+          {studentMetrics.length > 0 ? (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Student</TableHead>
+                    <TableHead>Class</TableHead>
+                    <TableHead className="text-right">Test Score</TableHead>
+                    <TableHead className="text-right">Grammar</TableHead>
+                    <TableHead className="text-right">Complexity</TableHead>
+                    <TableHead className="text-center"><MessageSquare className="h-4 w-4 inline" /> Text</TableHead>
+                    <TableHead className="text-center"><Mic className="h-4 w-4 inline" /> Voice</TableHead>
+                    <TableHead>Last Activity</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {studentMetrics
+                    .sort((a, b) => (b.overall_score || 0) - (a.overall_score || 0))
+                    .map((student) => (
+                    <TableRow key={student.student_id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{student.student_name}</div>
+                          <div className="text-sm text-muted-foreground">{student.student_email}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-sm">{student.class_name}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="font-semibold">{formatScore(student.overall_score)}</span>
+                          {student.cefr_level && (
+                            <Badge className={getCEFRColor(student.cefr_level)} variant="outline">
+                              {student.cefr_level}
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">{formatScore(student.avg_grammar_accuracy)}</TableCell>
+                      <TableCell className="text-right">{formatScore(student.avg_conversation_complexity)}</TableCell>
+                      <TableCell className="text-center">{student.text_practice_calls}</TableCell>
+                      <TableCell className="text-center">{student.premium_voice_calls}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {formatDate(student.last_activity)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground mb-2">
+                No students enrolled yet
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Students need to join your classes using class access codes.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
