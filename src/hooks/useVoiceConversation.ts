@@ -31,7 +31,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     sessionIdRef.current = crypto.randomUUID();
   }
 
-  const sendMessage = async (text: string, speakResponse: (text: string) => void) => {
+  const sendMessage = async (text: string, speakResponse: (text: string) => Promise<void>) => {
     if (!text.trim()) return;
     
     setIsLoading(true);
@@ -84,6 +84,13 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         }
       }
       
+      // Extract conversational content only (before grammar note) for TTS
+      const ttsContent = content.split(/\n\n?📝/)[0].trim();
+      
+      // Wait for TTS to load before showing the message
+      await speakResponse(ttsContent);
+      
+      // Now add the message to conversation history after TTS is ready
       const aiMessage: ConversationMessage = {
         role: 'assistant',
         content: content,
@@ -102,10 +109,6 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       ];
       
       setApiConversationHistory(data.updatedHistory || updatedHistory);
-      
-      // Extract conversational content only (before grammar note) for TTS
-      const ttsContent = content.split(/\n\n?📝/)[0].trim();
-      speakResponse(ttsContent);
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({

@@ -15,7 +15,7 @@ export const useVoiceTTS = ({ practiceLanguage, speechRate = 1.0 }: UseVoiceTTSP
   const { t } = useLocalization();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const speakWithAzureTTS = (text: string) => {
+  const speakWithAzureTTS = async (text: string): Promise<void> => {
     if (!text || text.trim() === '') {
       console.warn('Empty text provided to speakWithAzureTTS');
       return;
@@ -25,27 +25,31 @@ export const useVoiceTTS = ({ practiceLanguage, speechRate = 1.0 }: UseVoiceTTSP
     
     setIsSpeaking(true);
     
-    playTTS({
-      text: text,
-      language: practiceLanguage.toLowerCase(),
-      speechRate: speechRate,
-      onStart: () => {
-        console.log("TTS started with OpenAI");
-        setIsSpeaking(true);
-      },
-      onEnd: () => {
-        console.log("TTS ended");
-        setIsSpeaking(false);
-      },
-      onError: (error) => {
-        console.error("TTS error:", error);
-        setIsSpeaking(false);
-        toast({
-          title: t("error"),
-          description: t("failedToGenerateSpeech"),
-          variant: "destructive",
-        });
-      }
+    return new Promise((resolve) => {
+      playTTS({
+        text: text,
+        language: practiceLanguage.toLowerCase(),
+        speechRate: speechRate,
+        onStart: () => {
+          console.log("TTS started with OpenAI - audio loaded and ready");
+          setIsSpeaking(true);
+          resolve(); // Resolve when audio is loaded and starts playing
+        },
+        onEnd: () => {
+          console.log("TTS ended");
+          setIsSpeaking(false);
+        },
+        onError: (error) => {
+          console.error("TTS error:", error);
+          setIsSpeaking(false);
+          toast({
+            title: t("error"),
+            description: t("failedToGenerateSpeech"),
+            variant: "destructive",
+          });
+          resolve(); // Resolve even on error so we don't block the UI
+        }
+      });
     });
   };
 
