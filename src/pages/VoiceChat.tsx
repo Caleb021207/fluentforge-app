@@ -207,6 +207,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ConversationStarters 
             onPhraseClick={handlePhraseClick}
+            targetLanguage={practice}
           />
           
           <InformationCard />

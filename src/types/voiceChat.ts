@@ -48,6 +48,7 @@ export interface VoiceChatControlsProps {
 export interface ConversationStartersProps {
   onPhraseClick: (phrase: string) => void;
   phrases?: string[];
+  targetLanguage?: string;
 }
 
 export interface InformationCardProps {

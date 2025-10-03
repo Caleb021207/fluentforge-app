@@ -4,24 +4,17 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 import { ConversationStartersProps } from "@/types/voiceChat";
+import { getTargetLanguagePhrases } from "@/utils/conversationStarterUtils";
 
 const ConversationStarters: React.FC<ConversationStartersProps> = ({ 
   onPhraseClick,
-  phrases
+  phrases,
+  targetLanguage
 }) => {
   const { t } = useLocalization();
   
-  // Get default phrases using translation keys instead of hardcoded strings
-  const defaultPhrases = phrases || [
-    t("conversationStarter1"),
-    t("conversationStarter2"),
-    t("conversationStarter3"),
-    t("conversationStarter4"),
-    t("conversationStarter5"),
-    t("conversationStarter6"),
-    t("conversationStarter7"),
-    t("conversationStarter8")
-  ];
+  // Get phrases in target language (language being learned)
+  const defaultPhrases = phrases || getTargetLanguagePhrases(targetLanguage || 'Spanish');
 
   return (
     <Card>
