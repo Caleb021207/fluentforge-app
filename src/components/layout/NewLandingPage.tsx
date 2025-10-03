@@ -140,30 +140,19 @@ const NewLandingPage = ({ isSignedIn = false }: { isSignedIn?: boolean }) => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="flex flex-col items-center gap-6 mt-12"
         >
-          {/* Primary CTA - Changes based on auth state */}
-          {isSignedIn ? (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/practice')}
-              className="px-12 py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all"
-            >
-              {t("startPracticing")}
-            </motion.button>
-          ) : (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setIsPanelOpen(true)}
-              className="px-12 py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all"
-            >
-              {t("getStarted")}
-            </motion.button>
-          )}
+          {/* Primary CTA - Start Practicing */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/practice')}
+            className="px-12 py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all"
+          >
+            {t("startPracticing")}
+          </motion.button>
 
           {/* Secondary info */}
           <p className="text-sm text-muted-foreground">
-            {isSignedIn ? t("practiceYourLanguageSkills") : `${t("selectNativeLanguage")} • ${t("practice")}`}
+            {t("practiceYourLanguageSkills")}
           </p>
         </motion.div>
       </motion.div>
