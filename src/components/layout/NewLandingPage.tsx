@@ -144,7 +144,7 @@ const NewLandingPage = ({ isSignedIn = false }: { isSignedIn?: boolean }) => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate('/practice')}
+            onClick={() => isSignedIn ? navigate('/practice') : setIsPanelOpen(true)}
             className="px-12 py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all"
           >
             {t("startPracticing")}
