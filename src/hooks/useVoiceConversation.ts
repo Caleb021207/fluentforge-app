@@ -103,8 +103,9 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       
       setApiConversationHistory(data.updatedHistory || updatedHistory);
       
-      // Use target language for TTS (which is the practice language)
-      speakResponse(content);
+      // Extract conversational content only (before grammar note) for TTS
+      const ttsContent = content.split(/\n\n?📝/)[0].trim();
+      speakResponse(ttsContent);
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({

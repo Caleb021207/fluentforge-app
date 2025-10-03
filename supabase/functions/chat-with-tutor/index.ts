@@ -188,19 +188,26 @@ serve(async (req) => {
     ${correctGrammar ? 
       `GRAMMAR CORRECTION MODE: The user wants grammar feedback. When responding:
       1. FIRST provide your natural response to their message at their level (${currentLevel.cefr})
-      2. THEN, if you notice any MAJOR grammar mistakes in their MOST RECENT message that affect meaning or comprehension, add a separate paragraph that starts with "📝 Grammar note:"
-      3. ONLY correct errors that significantly impact understanding, such as:
-         - Wrong verb forms (e.g., "how you is" → "how are you")
-         - Missing essential words that change meaning
-         - Incorrect word order that makes sentences unclear
-         - Wrong tense usage that confuses the timeline
-      4. DO NOT correct minor style issues like:
-         - Missing commas or apostrophes
-         - Contractions vs full forms ("thats" vs "that's")  
-         - Informal vs formal language choices ("real cool" vs "really cool")
-         - Minor punctuation that doesn't affect meaning
-      5. Be encouraging and focus only on errors that genuinely help communication
-      6. Focus ONLY on the user's most recent message, not previous ones` 
+      2. THEN, ONLY if you notice ACTUAL grammar errors in their MOST RECENT message, add a separate paragraph starting with "📝 Grammar note:"
+      
+      CRITICAL: Before flagging any error, verify it is ACTUALLY incorrect in their text.
+      
+      ONLY correct errors like:
+      - Wrong verb conjugation: "yo es" → "yo soy"
+      - Missing required articles: "quiero manzana" → "quiero una manzana"  
+      - Incorrect word order: "casa grande la" → "la casa grande"
+      - Wrong tense affecting meaning
+      
+      DO NOT correct:
+      - Punctuation (missing commas, periods, accents, question marks)
+      - Stylistic choices that are already grammatically correct
+      - Missing exclamation points or question marks
+      - Informal vs formal register
+      - Things that are ALREADY CORRECT (e.g., "podrías ayudarme con eso" is already correct)
+      
+      If you're unsure whether something is wrong, DO NOT flag it.
+      Be encouraging and conservative - only flag clear errors that affect comprehension.
+      Focus ONLY on the user's most recent message, not previous ones.` 
       : 
       `CONVERSATION MODE: Focus on natural conversation flow at the ${currentLevel.cefr} level. Do NOT correct grammar errors unless the user specifically asks for help with grammar.`
     }
