@@ -91,8 +91,6 @@ Consider common pronunciation challenges for ${nativeLanguage} speakers learning
 Provide feedback as a JSON object with this EXACT structure:
 {
   "accuracyScore": <number 0-100>,
-  "intonationScore": <number 0-100>,
-  "fluencyScore": <number 0-100>,
   "wordAnalysis": [
     {
       "word": "<original word from expected phrase>",
@@ -162,8 +160,6 @@ Analyze this pronunciation attempt and provide detailed feedback.`
       
       analysisResult = {
         accuracyScore: parsed.accuracyScore || 0,
-        intonationScore: parsed.intonationScore || 0,
-        fluencyScore: parsed.fluencyScore || 0,
         wordAnalysis: parsed.wordAnalysis || [],
         overallFeedback: parsed.overallFeedback || 'Keep practicing!',
         complexityScore: parsed.complexityScore,
@@ -183,9 +179,7 @@ Analyze this pronunciation attempt and provide detailed feedback.`
           suggestion: actualWords.includes(word) ? undefined : `Practice: ${word}`
         })),
         overallFeedback: 'AI analysis unavailable. Basic word matching shows ' + 
-                        `${Math.round(accuracyScore)}% accuracy.`,
-        intonationScore: 70,
-        fluencyScore: 70
+                        `${Math.round(accuracyScore)}% accuracy.`
       };
     }
 

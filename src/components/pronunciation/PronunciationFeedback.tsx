@@ -47,29 +47,6 @@ const PronunciationFeedback: React.FC<PronunciationFeedbackProps> = ({ feedback 
           <Progress value={feedback.accuracyScore} className="h-2" />
         </div>
         
-        {/* Intonation Score (if available) */}
-        {feedback.intonationScore !== undefined && (
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm">{t("intonationScore")}</span>
-              <span className="text-sm font-medium">{Math.round(feedback.intonationScore)}%</span>
-            </div>
-            <Progress value={feedback.intonationScore} className="h-2" />
-          </div>
-        )}
-        
-        {/* Fluency Score (if available) */}
-        {feedback.fluencyScore !== undefined && (
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm">{t("fluencyScore")}</span>
-              <span className="text-sm font-medium">{Math.round(feedback.fluencyScore)}%</span>
-            </div>
-            <Progress value={feedback.fluencyScore} className="h-2" />
-          </div>
-        )}
-        
-        
         {/* Word Analysis */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium">{t("wordAnalysis")}</h4>
