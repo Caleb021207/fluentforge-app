@@ -156,10 +156,11 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
       <PopoverTrigger asChild>
         <Button 
           variant="outline" 
+          size="icon"
           className={className}
+          title={t("getResponseSuggestions")}
         >
-          <HelpCircle className="h-5 w-5 mr-2" />
-          {t("getResponseSuggestions")}
+          <HelpCircle className="h-6 w-6" />
         </Button>
       </PopoverTrigger>
       <PopoverContent 
