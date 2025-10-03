@@ -39,29 +39,31 @@ const SpeechRateControl: React.FC<SpeechRateControlProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="w-[180px] justify-start">
-          <Volume2 className="mr-2 h-4 w-4" />
-          {t("speechRate")}: {speechRate.toFixed(1)}x
+        <Button variant="outline" size="sm" className="min-w-[180px] justify-start whitespace-nowrap">
+          <Volume2 className="mr-2 h-4 w-4 flex-shrink-0" />
+          <span className="truncate">{t("speechRate")}: {speechRate.toFixed(1)}x</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[220px] p-4">
+      <PopoverContent className="w-[240px] p-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="speech-rate">{t("speechRate")}</Label>
             <span className="text-sm font-medium">{speechRate.toFixed(1)}x</span>
           </div>
-          <Slider
-            id="speech-rate"
-            min={0.5}
-            max={2.0}
-            step={0.1}
-            defaultValue={[speechRate]}
-            onValueChange={handleRateChange}
-          />
-          <div className="flex justify-between text-xs text-muted-foreground pt-1">
-            <span>0.5x</span>
-            <span>1.0x</span>
-            <span>2.0x</span>
+          <div className="pt-2">
+            <Slider
+              id="speech-rate"
+              min={0.5}
+              max={2.0}
+              step={0.1}
+              defaultValue={[speechRate]}
+              onValueChange={handleRateChange}
+            />
+          </div>
+          <div className="relative pt-1">
+            <span className="absolute left-0 text-xs text-muted-foreground">0.5x</span>
+            <span className="absolute left-1/2 -translate-x-1/2 text-xs text-muted-foreground">1.25x</span>
+            <span className="absolute right-0 text-xs text-muted-foreground">2.0x</span>
           </div>
         </div>
       </PopoverContent>
