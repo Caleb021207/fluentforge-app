@@ -25,6 +25,7 @@ export const useVoiceSpeechRecognition = ({
   const recognitionRef = useRef<any>(null);
   const isListeningRef = useRef<boolean>(false);
   const autoSendTimeoutRef = useRef<number | null>(null);
+  const finalTranscriptRef = useRef<string>("");  // Accumulate finalized speech
   
   // Clean up function that properly stops recognition and clears timeouts
   const cleanUpRecognition = useCallback(() => {
@@ -72,25 +73,45 @@ export const useVoiceSpeechRecognition = ({
     recognition.onresult = (event: any) => {
       if (!isListeningRef.current) return; // Skip if we've already stopped listening
       
-      const lastResultIndex = event.results.length - 1;
-      if (lastResultIndex >= 0 && event.results[lastResultIndex]) {
-        const latestTranscript = event.results[lastResultIndex][0].transcript;
-        
+      // Accumulate all finalized results
+      let finalTranscript = finalTranscriptRef.current;
+      let interimTranscript = "";
+      
+      for (let i = 0; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalTranscript += result[0].transcript + " ";
+        } else {
+          interimTranscript += result[0].transcript;
+        }
+      }
+      
+      // Update the ref with accumulated finalized text
+      finalTranscriptRef.current = finalTranscript;
+      
+      // Combine finalized and interim for display
+      const combinedTranscript = (finalTranscript + interimTranscript).trim();
+      
+      if (combinedTranscript) {
         // Reset silence detection timer
         if (autoSendTimeoutRef.current) {
           window.clearTimeout(autoSendTimeoutRef.current);
         }
         
+        // Auto-send after 3 seconds of silence
         autoSendTimeoutRef.current = window.setTimeout(() => {
-          if (isListeningRef.current && latestTranscript && onSendTranscript) {
-            onSendTranscript(latestTranscript);
+          if (isListeningRef.current && combinedTranscript && onSendTranscript) {
+            // Stop recording before sending
             cleanUpRecognition();
+            onSendTranscript(combinedTranscript);
+            setTranscript("");
+            finalTranscriptRef.current = "";
           }
-        }, 10000);
+        }, 3000);
         
-        setTranscript(latestTranscript);
+        setTranscript(combinedTranscript);
         if (onTranscriptChange) {
-          onTranscriptChange(latestTranscript);
+          onTranscriptChange(combinedTranscript);
         }
       }
     };
@@ -155,14 +176,16 @@ export const useVoiceSpeechRecognition = ({
     }
     
     if (isListening) {
-      console.log("Stopping recording");
+      console.log("Stopping recording - keeping transcript");
+      // Stop recording but DON'T clear transcript
       cleanUpRecognition();
     } else {
       console.log("Starting recording");
       setIsInitializing(true);
       
-      // Reset transcript when starting a new recording
+      // Reset transcripts when starting a new recording
       setTranscript("");
+      finalTranscriptRef.current = "";
       
       try {
         // Clean up any existing instances first
@@ -216,6 +239,9 @@ export const useVoiceSpeechRecognition = ({
   const handleSendTranscript = (text: string) => {
     if (!text.trim()) return;
     
+    // CRITICAL: Stop recording immediately to prevent capturing TTS response
+    cleanUpRecognition();
+    
     if (autoSendTimeoutRef.current) {
       window.clearTimeout(autoSendTimeoutRef.current);
       autoSendTimeoutRef.current = null;
@@ -224,7 +250,10 @@ export const useVoiceSpeechRecognition = ({
     if (onSendTranscript) {
       onSendTranscript(text);
     }
+    
+    // Clear transcript and reset accumulator after sending
     setTranscript("");
+    finalTranscriptRef.current = "";
   };
 
   return {
@@ -233,6 +262,9 @@ export const useVoiceSpeechRecognition = ({
     transcript,
     toggleListening,
     handleSendTranscript,
-    clearTranscript: () => setTranscript("")
+    clearTranscript: () => {
+      setTranscript("");
+      finalTranscriptRef.current = "";
+    }
   };
 };
