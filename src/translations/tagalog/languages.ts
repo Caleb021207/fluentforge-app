@@ -32,8 +32,42 @@ const languagesTranslations: TranslationRecord = {
     "yoruba": "Yoruba",
     "igbo": "Igbo",
     "amharic": "Amharic",
-    "malayalam": "Malayalam"
-  }
+    "malayalam": "Malayalam",
+    "thai": "Thai"
+  },
+
+  // Individual language keys for direct access
+  "english": "Ingles",
+  "spanish": "Espanyol",
+  "french": "Pranses",
+  "portuguese": "Portuges",
+  "german": "Aleman",
+  "italian": "Italyano",
+  "russian": "Ruso",
+  "japanese": "Hapon",
+  "korean": "Koreano",
+  "mandarin": "Mandarin",
+  "arabic": "Arabe",
+  "hindi": "Hindi",
+  "bengali": "Bengali",
+  "vietnamese": "Biyetnamis",
+  "indonesian": "Indonesyano",
+  "polish": "Polako",
+  "turkish": "Turko",
+  "romanian": "Rumano",
+  "tagalog": "Tagalog",
+  "farsi": "Farsi",
+  "urdu": "Urdu",
+  "ukrainian": "Ukraniano",
+  "pashto": "Pashto",
+  "haitian": "Haitian Creole",
+  "swahili": "Swahili",
+  "somali": "Somali",
+  "yoruba": "Yoruba",
+  "igbo": "Igbo",
+  "amharic": "Amharic",
+  "malayalam": "Malayalam",
+  "thai": "Thai"
 };
 
 export default languagesTranslations;
