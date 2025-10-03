@@ -29,7 +29,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "Inizia Esercizio",
   generatingExercise: "Generazione Esercizio",
   practiceExercise: "Esercizio di Pratica",
-  levelDescription: "Descrizione del Livello"
+  levelDescription: "Descrizione del Livello",
+  checkPronunciation: "Verifica Pronuncia"
 };
 
 export default pronunciationTranslations;

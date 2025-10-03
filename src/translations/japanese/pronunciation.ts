@@ -30,7 +30,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "練習を開始",
   generatingExercise: "練習を生成中",
   practiceExercise: "練習問題",
-  levelDescription: "レベルの説明"
+  levelDescription: "レベルの説明",
+  checkPronunciation: "発音を確認"
 };
 
 export default pronunciationTranslations;

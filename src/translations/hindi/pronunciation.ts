@@ -29,7 +29,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "अभ्यास शुरू करें",
   generatingExercise: "अभ्यास उत्पन्न हो रहा है",
   practiceExercise: "अभ्यास",
-  levelDescription: "स्तर विवरण"
+  levelDescription: "स्तर विवरण",
+  checkPronunciation: "उच्चारण जांचें"
 };
 
 export default pronunciationTranslations;

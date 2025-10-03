@@ -30,7 +30,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "Начать упражнение",
   generatingExercise: "Генерация упражнения",
   practiceExercise: "Упражнение",
-  levelDescription: "Описание уровня"
+  levelDescription: "Описание уровня",
+  checkPronunciation: "Проверить произношение"
 };
 
 export default pronunciationTranslations;

@@ -29,7 +29,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "പരിശീലനം ആരംഭിക്കുക",
   generatingExercise: "പരിശീലനം സൃഷ്ടിക്കുന്നു",
   practiceExercise: "പരിശീലനം",
-  levelDescription: "നിലയുടെ വിവരണം"
+  levelDescription: "നിലയുടെ വിവരണം",
+  checkPronunciation: "ഉച്ചാരണം പരിശോധിക്കുക"
 };
 
 export default pronunciationTranslations;

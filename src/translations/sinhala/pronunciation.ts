@@ -29,7 +29,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "අභ්‍යාසය ආරම්භ කරන්න",
   generatingExercise: "අභ්‍යාසය උත්පාදනය කරමින්",
   practiceExercise: "අභ්‍යාසය",
-  levelDescription: "මට්ටම විස්තරය"
+  levelDescription: "මට්ටම විස්තරය",
+  checkPronunciation: "උච්චාරණය පරීක්ෂා කරන්න"
 };
 
 export default pronunciationTranslations;
