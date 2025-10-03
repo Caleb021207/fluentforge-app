@@ -16,6 +16,16 @@ const generalCoreTranslations: TranslationRecord = {
   failedToCreateSession: "Failed to create session",
   cefrB1Description: "Intermediate - Can discuss familiar topics",
   speechSynthesisNotSupported: "Speech synthesis is not supported in your browser",
+  
+  // UI Mode
+  lightMode: "Light Mode",
+  darkMode: "Dark Mode",
+  
+  // Voice Chat Info
+  practiceLevel: "Practice Level",
+  currentLanguage: "Current Language",
+  practiceLanguage: "Practice Language",
+  practiceDescription: "Practice Description",
 };
 
 export default generalCoreTranslations;

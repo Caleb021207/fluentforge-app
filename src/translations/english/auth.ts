@@ -67,6 +67,10 @@ const authTranslations: TranslationRecord = {
   pleaseLoginToAccessFeature: "Please log in to access this feature",
   redirectingToLogin: "Redirecting to login page...",
   loginRequiredForFeature: "Login required to access this feature",
+  
+  // Header translations
+  signedInAs: "Signed in as",
+  loggedInAs: "Logged in as",
 };
 
 export default authTranslations;
