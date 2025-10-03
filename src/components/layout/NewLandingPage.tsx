@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useNavigate } from 'react-router-dom';
@@ -11,19 +11,35 @@ import { useAuthFlow } from '@/hooks/useAuthFlow';
 import { useToast } from '@/hooks/use-toast';
 import { hasStudyMaterials } from '@/utils/languageUtils';
 import { secureStorage } from '@/utils/security/dataEncryption';
+import { supabase } from '@/integrations/supabase/client';
 
-const NewLandingPage = ({ isSignedIn = false }: { isSignedIn?: boolean }) => {
+const NewLandingPage = () => {
   const { theme } = useTheme();
   const { t, setCurrentLanguage } = useLocalization();
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  console.log('NewLandingPage - isSignedIn:', isSignedIn);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("");
   const [studyMaterialsAvailable, setStudyMaterialsAvailable] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsSignedIn(!!session?.user);
+    };
+    
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsSignedIn(!!session?.user);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleAuthSuccess = () => {
     console.log('Auth success - navigating to profile');
@@ -147,7 +163,6 @@ const NewLandingPage = ({ isSignedIn = false }: { isSignedIn?: boolean }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => {
-              console.log('Button clicked - isSignedIn:', isSignedIn);
               if (isSignedIn) {
                 navigate('/practice');
               } else {
