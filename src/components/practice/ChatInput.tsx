@@ -58,7 +58,7 @@ export default function ChatInput({
   };
   
   return (
-    <form onSubmit={onSubmit} className="relative">
+    <form onSubmit={onSubmit} className="space-y-3">
       <div className="relative">
         <Textarea
           ref={textareaRef}
@@ -67,14 +67,10 @@ export default function ChatInput({
           onKeyDown={handleKeyDown}
           rows={rows}
           placeholder={placeholder}
-          className="pr-24 resize-none py-3 min-h-[50px]"
+          className="pr-12 resize-none py-3 min-h-[50px]"
           disabled={isLoading}
         />
-        <div className="absolute right-2 bottom-1.5 flex space-x-2">
-          <HintButton 
-            targetLanguage={targetLanguage}
-            messages={messages}
-          />
+        <div className="absolute right-2 bottom-1.5">
           <Button 
             size="sm" 
             type="submit" 
@@ -85,6 +81,12 @@ export default function ChatInput({
             <span className="sr-only">{t("send")}</span>
           </Button>
         </div>
+      </div>
+      <div className="flex justify-center">
+        <HintButton 
+          targetLanguage={targetLanguage}
+          messages={messages}
+        />
       </div>
     </form>
   );
