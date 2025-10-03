@@ -183,10 +183,12 @@ export const usePronunciationExercise = () => {
       
       // Get pronunciation analysis from our utility function
       const languageCode = getLanguageCode(targetLanguage);
+      const nativeLanguageCode = getLanguageCode(currentLanguage);
       const analysisResult = await analyzePronunciation(
         currentExercise.phrase,
         transcribed,
-        languageCode
+        languageCode,
+        nativeLanguageCode
       );
       
       console.log("Pronunciation analysis result:", analysisResult);

@@ -52,14 +52,16 @@ export async function transcribeAudio(
 export async function analyzePronunciation(
   expectedPhrase: string,
   actualPhrase: string,
-  language: string = "es"
+  language: string = "es",
+  nativeLanguage: string = "en"
 ): Promise<PronunciationAnalysisResult> {
   try {
     const { data, error } = await supabase.functions.invoke("analyze-pronunciation", {
       body: {
         expectedPhrase,
         actualPhrase,
-        language
+        language,
+        nativeLanguage
       }
     });
 

@@ -34,21 +34,25 @@ serve(async (req) => {
   }
 
   try {
-    const { expectedPhrase, actualPhrase, language = "es" } = await req.json();
+    const { expectedPhrase, actualPhrase, language = "es", nativeLanguage = "en" } = await req.json();
 
     if (!expectedPhrase || !actualPhrase) {
       throw new Error("Missing required parameters");
     }
 
-    // Helper function to remove accent marks for comparison
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY is not configured');
+    }
+
+    console.log(`Analyzing pronunciation: "${expectedPhrase}" vs "${actualPhrase}"`);
+
+    // Helper function to remove accent marks for basic word matching
     const removeAccents = (str: string): string => {
       return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     };
 
-    // In a production environment with OpenAI API key, we would use AI for deeper analysis
-    // For now, we'll enhance our basic algorithm with more comprehensive metrics
-    
-    // Normalize both phrases (including removing accents for comparison)
+    // Get basic word matching for context
     const normalizedExpected = removeAccents(expectedPhrase
       .toLowerCase()
       .replace(/[.,!?;:¿¡]/g, '')
@@ -59,110 +63,141 @@ serve(async (req) => {
       .replace(/[.,!?;:¿¡]/g, '')
       .trim());
 
-    // Split into words
     const expectedWords = normalizedExpected.split(/\s+/);
     const actualWords = normalizedActual.split(/\s+/);
-    
-    // Word-level analysis
-    const wordAnalysis = expectedWords.map((expectedWord: string) => {
-      // Check if the word appears in the actual phrase
-      const matchFound = actualWords.some((actualWord: string) =>
-        actualWord === expectedWord || 
-        (actualWord.length > 2 && expectedWord.includes(actualWord)) ||
-        (expectedWord.length > 2 && actualWord.includes(expectedWord))
-      );
-      
-      return {
-        word: expectedWord,
-        isCorrect: matchFound,
-        suggestion: matchFound ? undefined : `Missing: ${expectedWord}`
-      };
-    });
-    
-    // Calculate overall accuracy score (word-level)
-    const correctWords = wordAnalysis.filter((w: any) => w.isCorrect).length;
-    const accuracyScore = (correctWords / expectedWords.length) * 100;
-    
-    // Mock intonation score based on sentence structure
-    // In a real implementation, this would use acoustic analysis
-    const hasQuestionMark = expectedPhrase.includes('?');
-    const actualHasQuestionMark = actualPhrase.includes('?');
-    const intonationScore = hasQuestionMark === actualHasQuestionMark ? 
-      (Math.random() * 20) + 70 : // Good intonation score (70-90%)
-      (Math.random() * 30) + 40;  // Poor intonation (40-70%)
-    
-    // Mock fluency score based on word count ratio
-    // In a real implementation, this would use speech rate and pauses
-    const expectedWordCount = expectedWords.length;
-    const actualWordCount = actualWords.length;
-    const wordCountRatio = Math.min(actualWordCount / expectedWordCount, 1.5);
-    const fluencyScore = Math.min(90, (wordCountRatio * 70) + (Math.random() * 20));
-    
-    // Mock complexity score based on phrase length and word variety
-    // In a real implementation, this would analyze grammar structures
-    const uniqueWordsRatio = new Set(actualWords).size / actualWords.length;
-    const complexityScore = Math.min(95, uniqueWordsRatio * 100);
-    
-    // Generate mock phoneme analysis (simplified)
-    // In a real implementation, this would analyze phonetic pronunciation
-    const phonemeAnalysis = [];
-    
-    // (In a full implementation with AI, we'd do phoneme-level analysis here)
-    
-    // Generate feedback based on scores
-    let overallFeedback = "";
-    
-    if (accuracyScore >= 80) {
-      overallFeedback = "Excellent pronunciation! Your words are clear and mostly accurate.";
-      
-      if (intonationScore < 70) {
-        overallFeedback += " Try to focus on sentence intonation patterns.";
-      } else {
-        overallFeedback += " Your intonation is natural.";
-      }
-      
-      if (fluencyScore < 70) {
-        overallFeedback += " Work on creating a smoother flow between words.";
-      }
-    } else if (accuracyScore >= 60) {
-      overallFeedback = "Good pronunciation. Focus on the highlighted words to improve further.";
-      
-      if (intonationScore < 70) {
-        overallFeedback += " Pay attention to rising and falling tones in questions and statements.";
-      }
-      
-      if (fluencyScore < 60) {
-        overallFeedback += " Try practicing at a slower pace to improve accuracy.";
-      }
-    } else if (accuracyScore >= 40) {
-      overallFeedback = "Fair attempt. Try listening to each word carefully before pronouncing them.";
-      overallFeedback += " Focus on stressing the correct syllables in longer words.";
-      
-      if (correctWords / expectedWords.length < 0.5) {
-        overallFeedback += " Practice with shorter phrases first.";
-      }
-    } else {
-      overallFeedback = "You need more practice. Try slowing down and focusing on one word at a time.";
-      overallFeedback += " Listen carefully to native speakers and imitate their pronunciation.";
-    }
-    
-    // Prepare the response
-    const response: PronunciationAnalysisResult = {
-      accuracyScore,
-      wordAnalysis,
-      overallFeedback,
-      intonationScore,
-      fluencyScore,
-      complexityScore,
-      // phonemeAnalysis would be included here with AI
-    };
 
-    return new Response(JSON.stringify(response), {
+    // Call Lovable AI for intelligent pronunciation analysis
+    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          {
+            role: 'system',
+            content: `You are an expert pronunciation coach for ${language} language learners whose native language is ${nativeLanguage}. 
+
+Your task is to analyze pronunciation attempts and provide detailed, actionable feedback.
+
+Consider common pronunciation challenges for ${nativeLanguage} speakers learning ${language}, including:
+- Phonemes that don't exist in ${nativeLanguage}
+- Stress patterns and syllable emphasis differences
+- Intonation patterns specific to ${language}
+- Common substitution errors
+
+Provide feedback as a JSON object with this EXACT structure:
+{
+  "accuracyScore": <number 0-100>,
+  "intonationScore": <number 0-100>,
+  "fluencyScore": <number 0-100>,
+  "wordAnalysis": [
+    {
+      "word": "<original word from expected phrase>",
+      "isCorrect": <true/false>,
+      "suggestion": "<specific phonetic tip if incorrect, omit if correct>"
+    }
+  ],
+  "overallFeedback": "<2-3 sentences of encouraging, specific feedback>"
+}
+
+Be accurate but encouraging. If they missed a word entirely, mark it incorrect. Focus on the most impactful improvements.`
+          },
+          {
+            role: 'user',
+            content: `Expected phrase: "${expectedPhrase}"
+Actual pronunciation (transcribed): "${actualPhrase}"
+
+Expected words: ${expectedWords.join(', ')}
+Actual words: ${actualWords.join(', ')}
+
+Analyze this pronunciation attempt and provide detailed feedback.`
+          }
+        ],
+        temperature: 0.7,
+      }),
+    });
+
+    if (!aiResponse.ok) {
+      const errorText = await aiResponse.text();
+      console.error('AI API error:', aiResponse.status, errorText);
+      
+      // Handle rate limit errors gracefully
+      if (aiResponse.status === 429) {
+        return new Response(JSON.stringify({ 
+          error: 'Rate limit exceeded. Please try again in a moment.' 
+        }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      if (aiResponse.status === 402) {
+        return new Response(JSON.stringify({ 
+          error: 'AI service requires payment. Please contact support.' 
+        }), {
+          status: 402,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      throw new Error(`AI analysis failed: ${errorText}`);
+    }
+
+    const aiData = await aiResponse.json();
+    const aiContent = aiData.choices[0].message.content;
+    
+    console.log('AI response:', aiContent);
+
+    // Parse the AI response
+    let analysisResult: PronunciationAnalysisResult;
+    try {
+      // Extract JSON from potential markdown code blocks
+      const jsonMatch = aiContent.match(/```json\s*([\s\S]*?)\s*```/) || 
+                       aiContent.match(/\{[\s\S]*\}/);
+      const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : aiContent;
+      const parsed = JSON.parse(jsonStr);
+      
+      analysisResult = {
+        accuracyScore: parsed.accuracyScore || 0,
+        intonationScore: parsed.intonationScore || 0,
+        fluencyScore: parsed.fluencyScore || 0,
+        wordAnalysis: parsed.wordAnalysis || [],
+        overallFeedback: parsed.overallFeedback || 'Keep practicing!',
+        complexityScore: parsed.complexityScore,
+        phonemeAnalysis: parsed.phonemeAnalysis
+      };
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', parseError, aiContent);
+      // Fallback to basic analysis
+      const correctWords = expectedWords.filter(w => actualWords.includes(w)).length;
+      const accuracyScore = (correctWords / expectedWords.length) * 100;
+      
+      analysisResult = {
+        accuracyScore,
+        wordAnalysis: expectedWords.map(word => ({
+          word,
+          isCorrect: actualWords.includes(word),
+          suggestion: actualWords.includes(word) ? undefined : `Practice: ${word}`
+        })),
+        overallFeedback: 'AI analysis unavailable. Basic word matching shows ' + 
+                        `${Math.round(accuracyScore)}% accuracy.`,
+        intonationScore: 70,
+        fluencyScore: 70
+      };
+    }
+
+    return new Response(JSON.stringify(analysisResult), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }), {
-      status: 400,
+    console.error('Error in analyze-pronunciation:', error);
+    return new Response(JSON.stringify({ 
+      error: error instanceof Error ? error.message : String(error) 
+    }), {
+      status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
