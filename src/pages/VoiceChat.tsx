@@ -157,9 +157,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
         </Card>
 
         <Card className="p-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-            <PracticeInfoPanel />
-
+          <div className="flex justify-center mb-6">
             <VoiceRecognitionControls
               isListening={isListening}
               isLoading={isLoading}
