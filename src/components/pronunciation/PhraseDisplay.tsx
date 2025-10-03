@@ -10,22 +10,19 @@ import { getTargetLanguage } from "@/utils/languageConstants";
 interface PhraseDisplayProps {
   phrase: string;
   translation: string;
-  speechRate: number;
   topic?: string;
 }
 
 const PhraseDisplay: React.FC<PhraseDisplayProps> = ({ 
   phrase, 
   translation, 
-  speechRate,
   topic 
 }) => {
   const { t, currentLanguage } = useLocalization();
   const targetLanguage = getTargetLanguage(currentLanguage);
   
   const tts = useDynamicTTS({
-    language: targetLanguage,
-    speechRate
+    language: targetLanguage
   });
 
   const handlePlayPhrase = () => {
@@ -63,7 +60,7 @@ const PhraseDisplay: React.FC<PhraseDisplayProps> = ({
           </Button>
         </div>
         
-        <WordByWordTTS phrase={phrase} speechRate={speechRate} />
+        <WordByWordTTS phrase={phrase} />
       </div>
     </div>
   );

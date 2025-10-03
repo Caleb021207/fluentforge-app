@@ -29,7 +29,6 @@ export const usePronunciationExercise = () => {
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState<PronunciationAnalysisResult | null>(null);
-  const [speechRate, setSpeechRate] = useState(1.5);
   const [messages, setMessages] = useState<Message[]>([]);
   const [showExercise, setShowExercise] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -294,8 +293,6 @@ export const usePronunciationExercise = () => {
     isInitializing,
     isAnalyzing,
     transcript,
-    speechRate,
-    setSpeechRate,
     feedback,
     messages,
     showExercise,

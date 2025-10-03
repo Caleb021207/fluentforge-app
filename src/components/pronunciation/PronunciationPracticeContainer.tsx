@@ -2,7 +2,6 @@
 import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import ComplexityDropdown from "./ComplexityDropdown";
-import SpeechRateControl from "./SpeechRateControl";
 import PhraseDisplay from "./PhraseDisplay";
 import RecordingControls from "./RecordingControls";
 import PronunciationFeedback from "./PronunciationFeedback";
@@ -28,8 +27,6 @@ const PronunciationPracticeContainer = () => {
     isInitializing,
     isAnalyzing,
     transcript,
-    speechRate,
-    setSpeechRate,
     feedback,
     messages,
     showExercise,
@@ -57,17 +54,9 @@ const PronunciationPracticeContainer = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("pronunciationPractice")}</h1>
-          <p className="text-muted-foreground">{t("improvePronunciationSkillsWith", { language: targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1) })}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <SpeechRateControl 
-            speechRate={speechRate} 
-            setSpeechRate={setSpeechRate} 
-          />
-        </div>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight">{t("pronunciationPractice")}</h1>
+        <p className="text-muted-foreground">{t("improvePronunciationSkillsWith", { language: targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1) })}</p>
       </div>
 
       {!showExercise ? (
@@ -158,7 +147,6 @@ const PronunciationPracticeContainer = () => {
               <PhraseDisplay 
                 phrase={currentExercise.phrase}
                 translation={currentExercise.translation}
-                speechRate={speechRate}
                 topic={currentExercise.topic}
               />
             )}
