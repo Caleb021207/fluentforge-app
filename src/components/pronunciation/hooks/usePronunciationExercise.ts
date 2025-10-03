@@ -72,14 +72,8 @@ export const usePronunciationExercise = () => {
   } = useRealTimeTranscription({
     targetLanguage,
     onTranscriptComplete: async (finalTranscript) => {
-      if (currentExercise && finalTranscript.trim()) {
-        console.log("Real-time transcription completed:", finalTranscript);
-        
-        // Wait a moment to show the transcription before analyzing
-        setTimeout(async () => {
-          await processPronunciationFeedback(finalTranscript);
-        }, 1500);
-      }
+      // Just log completion, don't auto-analyze
+      console.log("Real-time transcription completed:", finalTranscript);
     }
   });
 
@@ -245,8 +239,20 @@ export const usePronunciationExercise = () => {
   const handleStopRecording = useCallback(() => {
     console.log("Stopping pronunciation recording...");
     stopListening();
-    // Transcription and analysis happens in the onTranscriptComplete callback
   }, [stopListening]);
+
+  // Submit pronunciation for analysis
+  const handleSubmitPronunciation = useCallback(async () => {
+    if (!transcript.trim()) {
+      toast({
+        title: t("noSpeechDetected"),
+        description: t("pleaseTryAgain"),
+        variant: "destructive",
+      });
+      return;
+    }
+    await processPronunciationFeedback(transcript);
+  }, [transcript, processPronunciationFeedback, t, toast]);
 
   // Get a new phrase at the same complexity level
   const handleNextExercise = useCallback(async () => {
@@ -294,6 +300,7 @@ export const usePronunciationExercise = () => {
     handleStartExercise,
     handleStartRecording,
     handleStopRecording,
+    handleSubmitPronunciation,
     handleNextExercise,
     handleTryAgain,
     handleBackToLevels,

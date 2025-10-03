@@ -29,7 +29,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "Simulan ang Ehersisyo",
   generatingExercise: "Gumagawa ng Ehersisyo",
   practiceExercise: "Ehersisyo",
-  levelDescription: "Paglalarawan ng Antas"
+  levelDescription: "Paglalarawan ng Antas",
+  checkPronunciation: "Suriin ang Pagbigkas"
 };
 
 export default pronunciationTranslations;

@@ -29,7 +29,8 @@ const pronunciationTranslations: TranslationRecord = {
   startExercise: "Anza Zoezi",
   generatingExercise: "Inaunda Zoezi",
   practiceExercise: "Zoezi",
-  levelDescription: "Maelezo ya Kiwango"
+  levelDescription: "Maelezo ya Kiwango",
+  checkPronunciation: "Angalia Matamshi"
 };
 
 export default pronunciationTranslations;

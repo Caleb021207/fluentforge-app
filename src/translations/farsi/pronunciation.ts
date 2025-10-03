@@ -24,7 +24,13 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "رونوشت شما",
   processing: "در حال پردازش",
   listeningToYou: "به شما گوش می‌دهد",
-  realTimeTranscription: "رونویسی در زمان واقعی"
+  realTimeTranscription: "رونویسی در زمان واقعی",
+  generatingNewPhrase: "در حال ایجاد عبارت جدید",
+  startExercise: "شروع تمرین",
+  generatingExercise: "در حال ایجاد تمرین",
+  practiceExercise: "تمرین",
+  levelDescription: "توضیحات سطح",
+  checkPronunciation: "بررسی تلفظ"
 };
 
 export default pronunciationTranslations;

@@ -24,7 +24,13 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Transkripsyon Ou",
   processing: "Ap Trete",
   listeningToYou: "Ap Koute Ou",
-  realTimeTranscription: "Transkripsyon an Tan Reyèl"
+  realTimeTranscription: "Transkripsyon an Tan Reyèl",
+  generatingNewPhrase: "Ap Kreye Nouvo Fraz",
+  startExercise: "Kòmanse Egzèsis",
+  generatingExercise: "Ap Kreye Egzèsis",
+  practiceExercise: "Egzèsis",
+  levelDescription: "Deskripsyon Nivo",
+  checkPronunciation: "Verifye Pwononsyasyon"
 };
 
 export default pronunciationTranslations;

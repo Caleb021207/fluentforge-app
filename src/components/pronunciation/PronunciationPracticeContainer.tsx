@@ -36,6 +36,7 @@ const PronunciationPracticeContainer = () => {
     handleStartExercise,
     handleStartRecording,
     handleStopRecording,
+    handleSubmitPronunciation,
     handleNextExercise,
     handleTryAgain,
     handleBackToLevels,
@@ -170,6 +171,7 @@ const PronunciationPracticeContainer = () => {
               transcript={transcript}
               onStartRecording={handleStartRecording}
               onStopRecording={handleStopRecording}
+              onSubmitPronunciation={handleSubmitPronunciation}
             />
 
             {feedback && (

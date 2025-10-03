@@ -3,7 +3,7 @@ import React from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mic, MicOff, Loader2 } from "lucide-react";
+import { Mic, MicOff, Loader2, Check } from "lucide-react";
 
 interface RecordingControlsProps {
   isRecording: boolean;
@@ -13,6 +13,7 @@ interface RecordingControlsProps {
   transcript: string;
   onStartRecording: () => void;
   onStopRecording: () => void;
+  onSubmitPronunciation: () => void;
 }
 
 const RecordingControls: React.FC<RecordingControlsProps> = ({
@@ -22,7 +23,8 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
   isAnalyzing = false,
   transcript,
   onStartRecording,
-  onStopRecording
+  onStopRecording,
+  onSubmitPronunciation
 }) => {
   const { t } = useLocalization();
 
@@ -113,9 +115,19 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
               <p>Initializing microphone...</p>
             </div>
           ) : transcript ? (
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">{t("yourTranscription")}:</p>
-              <p className="text-xl">{transcript}</p>
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">{t("yourTranscription")}:</p>
+                <p className="text-xl">{transcript}</p>
+              </div>
+              <Button 
+                onClick={onSubmitPronunciation}
+                className="w-full"
+                size="lg"
+              >
+                <Check className="h-4 w-4 mr-2" />
+                {t("checkPronunciation")}
+              </Button>
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-2">

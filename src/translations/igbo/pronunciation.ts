@@ -24,7 +24,13 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "Ndekọ Gị",
   processing: "Na-eme",
   listeningToYou: "Na-ege gị ntị",
-  realTimeTranscription: "Ndekọ n'oge ezigbo"
+  realTimeTranscription: "Ndekọ n'oge ezigbo",
+  generatingNewPhrase: "Na-emepụta Nkebi Okwu Ọhụrụ",
+  startExercise: "Malite Omume",
+  generatingExercise: "Na-emepụta Omume",
+  practiceExercise: "Omume",
+  levelDescription: "Nkọwa Ọkwa",
+  checkPronunciation: "Lelee Nkwupụta"
 };
 
 export default pronunciationTranslations;

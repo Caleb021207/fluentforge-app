@@ -24,7 +24,13 @@ const pronunciationTranslations: TranslationRecord = {
   yourTranscription: "የእርስዎ ግልባጭ",
   processing: "በማስኬድ ላይ",
   listeningToYou: "እርስዎን እየሰማ ነው",
-  realTimeTranscription: "በቅጽበታዊ ግልባጭ"
+  realTimeTranscription: "በቅጽበታዊ ግልባጭ",
+  generatingNewPhrase: "አዲስ ሐረግ በማመንጨት ላይ",
+  startExercise: "ልምምድ ይጀምሩ",
+  generatingExercise: "ልምምድ በማመንጨት ላይ",
+  practiceExercise: "ልምምድ",
+  levelDescription: "የደረጃ መግለጫ",
+  checkPronunciation: "አመጣጥ ያረጋግጡ"
 };
 
 export default pronunciationTranslations;
