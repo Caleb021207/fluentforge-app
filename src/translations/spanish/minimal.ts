@@ -163,6 +163,14 @@ const minimalTranslations: TranslationRecord = {
   profile: "Perfil",
   settings: "Configuración",
   
+  // Quick practice links
+  startPracticing: "Comienza a Practicar",
+  choosePracticeMode: "Elige tu modo de práctica preferido",
+  typeAndChat: "Escribe y chatea",
+  voicePractice: "Práctica de Voz",
+  speakAndListen: "Habla y escucha",
+  improvePronunciation: "Mejora tu pronunciación",
+  
   // Transcript Analysis - NEW TRANSLATIONS
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

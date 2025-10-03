@@ -1,8 +1,10 @@
 
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User, AlertCircle, MessageSquare, Mic, Volume2 } from "lucide-react";
 import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -91,7 +93,68 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Test Scores - Top Priority */}
+      {/* Quick Practice Links - Top Priority for Easy Access */}
+      <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-primary" />
+            {t("startPracticing")}
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            {t("choosePracticeMode")}
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link to="/practice" className="block">
+              <Button 
+                variant="outline" 
+                className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
+              >
+                <MessageSquare className="h-8 w-8 text-primary" />
+                <div className="text-center">
+                  <div className="font-semibold">{t("textPractice")}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {t("typeAndChat")}
+                  </div>
+                </div>
+              </Button>
+            </Link>
+            
+            <Link to="/voice-chat" className="block">
+              <Button 
+                variant="outline" 
+                className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
+              >
+                <Mic className="h-8 w-8 text-primary" />
+                <div className="text-center">
+                  <div className="font-semibold">{t("voicePractice")}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {t("speakAndListen")}
+                  </div>
+                </div>
+              </Button>
+            </Link>
+            
+            <Link to="/pronunciation-practice" className="block">
+              <Button 
+                variant="outline" 
+                className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
+              >
+                <Volume2 className="h-8 w-8 text-primary" />
+                <div className="text-center">
+                  <div className="font-semibold">{t("pronunciationPractice")}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {t("improvePronunciation")}
+                  </div>
+                </div>
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Test Scores - Second Priority */}
       <TestScoreCard testScore={latestTestScore} />
 
       {/* Student Overview */}

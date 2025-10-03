@@ -133,24 +133,27 @@ const NewLandingPage = () => {
           {t("yourPersonalAICompanion")}
         </motion.p>
 
-        {/* Swipe Up Indicator */}
+        {/* Call to Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="cursor-pointer"
-          onClick={() => setIsPanelOpen(true)}
+          className="flex flex-col items-center gap-6 mt-12"
         >
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="flex flex-col items-center gap-4 p-6 rounded-2xl bg-card/50 backdrop-blur border hover:bg-card/70 transition-colors"
+          {/* Primary CTA - Start Practicing */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsPanelOpen(true)}
+            className="px-12 py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all"
           >
-            
-            <p className="text-sm font-medium text-muted-foreground">
-              {t("swipeUpToGetStarted")}
-            </p>
-          </motion.div>
+            {t("getStarted")}
+          </motion.button>
+
+          {/* Secondary info */}
+          <p className="text-sm text-muted-foreground">
+            {t("selectNativeLanguage")} • {t("practice")}
+          </p>
         </motion.div>
       </motion.div>
 
