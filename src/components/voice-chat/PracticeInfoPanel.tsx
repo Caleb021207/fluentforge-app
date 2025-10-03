@@ -7,6 +7,10 @@ import { PracticeInfoPanelProps } from "@/types/voiceChat";
 const PracticeInfoPanel: React.FC<PracticeInfoPanelProps> = () => {
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
+  
+  // Convert language names to translation keys (e.g., "English" -> "english")
+  const nativeKey = native.toLowerCase();
+  const practiceKey = practice.toLowerCase();
 
   return (
     <div>
@@ -18,10 +22,10 @@ const PracticeInfoPanel: React.FC<PracticeInfoPanelProps> = () => {
       </p>
       <p className="text-sm mt-1">
         <span className="font-medium">
-          {t("currentLanguage")}: {native}
+          {t("currentLanguage")}: {t(nativeKey)}
         </span> | 
         <span className="font-medium ml-2">
-          {t("practiceLanguage")}: {practice}
+          {t("practiceLanguage")}: {t(practiceKey)}
         </span>
       </p>
     </div>
