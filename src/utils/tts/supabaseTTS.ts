@@ -16,11 +16,11 @@ export const playTTS = async ({
   onStart,
   onEnd,
   onError
-}: TTSOptions) => {
+}: TTSOptions): Promise<HTMLAudioElement | null> => {
   if (!text || text.trim() === "") {
     console.warn("Empty text provided to playTTS");
     onError?.("Empty text provided");
-    return;
+    return null;
   }
 
   // Check for existing cached audio for this text
@@ -48,11 +48,12 @@ export const playTTS = async ({
       const browserTTS = useBrowserTTS();
       if (browserTTS.isBrowserSupported) {
         console.log("Falling back to browser TTS");
-        return browserTTS.speak(text, language, onStart, onEnd, onError);
+        browserTTS.speak(text, language, onStart, onEnd, onError);
+        return null;
       }
       
       onError?.(error?.message || "Failed to generate speech");
-      return;
+      return null;
     }
 
     // Cache the audio for future requests
@@ -66,6 +67,7 @@ export const playTTS = async ({
   } catch (err: any) {
     console.error("TTS error:", err);
     onError?.(err?.message || "Failed to generate speech");
+    return null;
   }
 };
 
