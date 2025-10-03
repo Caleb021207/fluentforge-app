@@ -77,7 +77,8 @@ export const useVoiceSpeechRecognition = ({
       let finalTranscript = finalTranscriptRef.current;
       let interimTranscript = "";
       
-      for (let i = 0; i < event.results.length; i++) {
+      // CRITICAL FIX: Only process NEW results using resultIndex to avoid duplicates
+      for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
         if (result.isFinal) {
           finalTranscript += result[0].transcript + " ";
