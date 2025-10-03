@@ -10,18 +10,18 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkUser = async () => {
+    const checkAuth = async () => {
       try {
-        const { data } = await supabase.auth.getUser();
-        setIsSignedIn(!!data.user);
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsSignedIn(!!session?.user);
       } catch (error) {
-        console.error('Error checking user:', error);
+        console.error('Error checking auth:', error);
       } finally {
         setIsLoading(false);
       }
     };
     
-    checkUser();
+    checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsSignedIn(!!session?.user);
