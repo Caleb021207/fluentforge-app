@@ -37,7 +37,22 @@ const voiceChatTranslations: TranslationRecord = {
   phrase6: "What did you do last weekend?",
   phrase7: "What are your plans for tomorrow?",
   phrase8: "How do you say... in Spanish/English?",
+  conversationStarter1: "Hello, how are you today?",
+  conversationStarter2: "What's the weather like where you are?",
+  conversationStarter3: "Can you recommend a good restaurant?",
+  conversationStarter4: "What are your hobbies and interests?",
+  conversationStarter5: "Tell me about your favorite book or movie.",
+  conversationStarter6: "What did you do last weekend?",
+  conversationStarter7: "What are your plans for tomorrow?",
+  conversationStarter8: "How do you say... in Spanish/English?",
   translation: "Translation",
+  
+  // Voice chat tips
+  voiceChatTips: "Use this tool to improve your speaking and listening skills. Here are some tips:",
+  voiceTip1: "Ask questions about everyday topics",
+  voiceTip2: "Practice common phrases and expressions",
+  voiceTip3: "Describe what you see around you",
+  voiceTip4: "Practice vocabulary for specific topics like travel or food",
   
   // Voice chat UI
   conversationHistory: "Conversation History",
