@@ -90,7 +90,6 @@ Consider common pronunciation challenges for ${nativeLanguage} speakers learning
 
 Provide feedback as a JSON object with this EXACT structure:
 {
-  "accuracyScore": <number 0-100>,
   "wordAnalysis": [
     {
       "word": "<original word from expected phrase>",
@@ -100,6 +99,8 @@ Provide feedback as a JSON object with this EXACT structure:
   ],
   "overallFeedback": "<2-3 sentences of encouraging, specific feedback>"
 }
+
+NOTE: Do not include an "accuracyScore" field - it will be calculated automatically based on word matching.
 
 Be accurate but encouraging. If they missed a word entirely, mark it incorrect. Focus on the most impactful improvements.`
           },
@@ -158,9 +159,15 @@ Analyze this pronunciation attempt and provide detailed feedback.`
       const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : aiContent;
       const parsed = JSON.parse(jsonStr);
       
+      // Calculate accuracy objectively based on word matching
+      const wordAnalysis = parsed.wordAnalysis || [];
+      const correctWords = wordAnalysis.filter((w: WordFeedback) => w.isCorrect).length;
+      const totalWords = wordAnalysis.length || 1;
+      const objectiveAccuracy = Math.round((correctWords / totalWords) * 100);
+      
       analysisResult = {
-        accuracyScore: parsed.accuracyScore || 0,
-        wordAnalysis: parsed.wordAnalysis || [],
+        accuracyScore: objectiveAccuracy,
+        wordAnalysis: wordAnalysis,
         overallFeedback: parsed.overallFeedback || 'Keep practicing!',
         complexityScore: parsed.complexityScore,
         phonemeAnalysis: parsed.phonemeAnalysis
