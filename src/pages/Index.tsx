@@ -32,13 +32,6 @@ const Index = () => {
     };
   }, []);
 
-  // Redirect to profile page when user signs in
-  useEffect(() => {
-    if (isSignedIn && !isLoading) {
-      navigate('/profile');
-    }
-  }, [isSignedIn, isLoading, navigate]);
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -47,16 +40,7 @@ const Index = () => {
     );
   }
 
-  if (!isSignedIn) {
-    return <NewLandingPage />;
-  }
-
-  // This return should not be reached due to the redirect, but kept as fallback
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-    </div>
-  );
+  return <NewLandingPage isSignedIn={isSignedIn} />;
 };
 
 export default Index;
