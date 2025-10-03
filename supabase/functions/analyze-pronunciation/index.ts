@@ -40,19 +40,24 @@ serve(async (req) => {
       throw new Error("Missing required parameters");
     }
 
+    // Helper function to remove accent marks for comparison
+    const removeAccents = (str: string): string => {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    };
+
     // In a production environment with OpenAI API key, we would use AI for deeper analysis
     // For now, we'll enhance our basic algorithm with more comprehensive metrics
     
-    // Normalize both phrases
-    const normalizedExpected = expectedPhrase
+    // Normalize both phrases (including removing accents for comparison)
+    const normalizedExpected = removeAccents(expectedPhrase
       .toLowerCase()
-      .replace(/[.,!?;:]/g, '')
-      .trim();
+      .replace(/[.,!?;:¿¡]/g, '')
+      .trim());
       
-    const normalizedActual = actualPhrase
+    const normalizedActual = removeAccents(actualPhrase
       .toLowerCase()
-      .replace(/[.,!?;:]/g, '')
-      .trim();
+      .replace(/[.,!?;:¿¡]/g, '')
+      .trim());
 
     // Split into words
     const expectedWords = normalizedExpected.split(/\s+/);

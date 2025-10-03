@@ -191,6 +191,19 @@ const uiElementsTranslations: TranslationRecord = {
   reviewPastConversations: "Review past conversations to identify patterns of errors",
   setSpecificGoals: "Set specific goals for improvement in each practice session",
   useVariedPracticeFormats: "Use both text and voice practice to improve different skills",
+  
+  // Pronunciation feedback
+  pronunciationFeedback: "Pronunciation Feedback",
+  accuracyScore: "Accuracy Score",
+  intonationScore: "Intonation Score",
+  fluencyScore: "Fluency Score",
+  wordAnalysis: "Word Analysis",
+  phonemeAnalysis: "Phoneme Analysis",
+  overallFeedback: "Overall Feedback",
+  excellent: "Excellent",
+  good: "Good",
+  fair: "Fair",
+  needsImprovement: "Needs Improvement",
 };
 
 export default uiElementsTranslations;
