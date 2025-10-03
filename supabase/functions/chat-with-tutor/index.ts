@@ -185,7 +185,7 @@ serve(async (req) => {
 The user's native language is ${userLangDisplay}.
 The user is at ${currentLevel.cefr} level. ${currentLevel.description}
 
-${correctGrammar ? 
+    ${correctGrammar ? 
   `⚠️ GRAMMAR CORRECTION MODE ACTIVE ⚠️
 
 Your response MUST have TWO parts:
@@ -194,26 +194,36 @@ PART 1 - Natural Response:
 Reply naturally to their message in ${targetLangDisplay} at ${currentLevel.cefr} level. Be conversational and engaging.
 
 PART 2 - Grammar Feedback (MANDATORY):
-After your response, add a blank line, then analyze their MOST RECENT message for errors.
+After your response, add a blank line, then analyze their MOST RECENT message for EXPLICITLY NECESSARY errors only.
+
+CRITICAL: Only correct errors that are clearly wrong or affect comprehension. DO NOT correct:
+- Stylistic preferences (e.g., "the church" vs "to church" - both can be correct)
+- Minor phrasing variations that are grammatically acceptable
+- Informal vs formal language choices
+- Natural conversational shortcuts
 
 Format: "📝 Grammar note: [your corrections here]"
 
-ALWAYS check for these errors:
-- Wrong verb conjugations (tense, person, number)
-- Missing or incorrect articles (el, la, un, una)
-- Wrong word order
-- Incorrect prepositions
-- Missing accents that change meaning
-- Gender agreement errors
-- Mixing languages incorrectly (code-switching errors)
+ONLY correct these EXPLICIT errors:
+- Wrong verb conjugations that make the sentence incorrect (not just less formal)
+- Completely missing or incorrect articles when required by grammar rules
+- Word order that makes the sentence confusing or incomprehensible
+- Prepositions that change the meaning or make it unclear
+- Missing accents that change the meaning of words
+- Gender agreement errors that are clearly wrong
+- Mixing languages when the user is trying to speak in only one language
 
 Example of what TO correct:
 User: "hola how you esta hoy"
 You should note: "📝 Grammar note: Try 'Hola, ¿cómo estás hoy?' - 'how you' should be '¿cómo estás?' (with accent), and stay in Spanish throughout."
 
-If their message has NO errors, write: "📝 Grammar note: Great job! No corrections needed."
+Example of what NOT to correct:
+User: "I'm going to the church" (both "to church" and "to the church" can be correct)
+DO NOT correct this - it's a stylistic preference, not an error.
 
-Be specific, helpful, and encouraging.` 
+If their message has NO explicit errors, write: "📝 Grammar note: Great job! No corrections needed."
+
+Be specific, helpful, and encouraging. When in doubt, don't correct it.` 
   : 
   `CONVERSATION MODE: Respond naturally in ${targetLangDisplay} at ${currentLevel.cefr} level. Do NOT provide grammar corrections unless specifically asked.`
 }
