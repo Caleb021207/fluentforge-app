@@ -176,28 +176,7 @@ serve(async (req) => {
 
     const prompt = `Analyze this language learning test transcript/score report.
 
-IMPORTANT: You must provide recommendations specific to our platform's practice features.
-
-Available practice modes on our platform:
-1. TEXT PRACTICE (route: /practice)
-   - Interactive chat with AI tutor at selected CEFR level (A1-C2)
-   - Toggle real-time translations of AI responses
-   - AI generates contextual recommendations during conversation
-   - Best for: grammar improvement, vocabulary building, reading comprehension, written production
-
-2. VOICE PRACTICE (route: /voice-chat)
-   - Speak naturally and AI responds with speech
-   - Real-time conversational practice at selected level
-   - Develops listening comprehension and spoken fluency simultaneously
-   - Best for: speaking confidence, pronunciation in context, listening comprehension, conversational flow
-
-3. PRONUNCIATION PRACTICE (route: /pronunciation-practice)
-   - Listen to individual words/phrases with translations
-   - Practice speaking with feedback
-   - Level-selectable (A1-C2)
-   - Best for: phonetic accuracy, word-level pronunciation, accent reduction, vocabulary acquisition
-
-Extract the following information based on our three-section assessment structure:
+Extract the following information:
 1. Overall Score (percentage)
 2. CEFR Level (A1, A2, B1, B2, C1, C2)
 3. Section scores:
@@ -314,11 +293,22 @@ Focus on actionable insights that directly address the identified weaknesses.`
 
     console.log('Successfully parsed analysis:', parsedAnalysis)
 
-    // Validate and sanitize recommendations (now just strings)
+    // Validate and sanitize recommendations (convert to strings if needed)
     if (parsedAnalysis.recommendations && Array.isArray(parsedAnalysis.recommendations)) {
       parsedAnalysis.recommendations = parsedAnalysis.recommendations
         .slice(0, 10)
-        .map((rec: any) => String(rec).slice(0, 500));
+        .map((rec: any) => {
+          // If it's already a string, use it
+          if (typeof rec === 'string') {
+            return rec.slice(0, 500);
+          }
+          // If it's an object with recommendation_text, extract that
+          if (rec.recommendation_text) {
+            return String(rec.recommendation_text).slice(0, 500);
+          }
+          // Fallback: stringify the object
+          return String(rec).slice(0, 500);
+        });
     } else {
       parsedAnalysis.recommendations = [];
     }

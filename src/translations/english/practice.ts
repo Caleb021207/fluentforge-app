@@ -123,6 +123,8 @@ const practiceTranslations: TranslationRecord = {
   strengths: "Strengths",
   areasForImprovement: "Areas for Improvement",
   aiRecommendations: "AI Recommendations",
+  recommendationsForImprovement: "Recommendations for Improvement",
+  basedOnIdentifiedWeaknesses: "Based on the areas of improvement identified in your analysis",
   analysisHistory: "Analysis History",
   yourPreviousAnalysisResults: "Your Previous Analysis Results",
   analysisComplete: "Analysis Complete",
