@@ -27,7 +27,7 @@ const RecommendationsCard: React.FC<RecommendationsCardProps> = ({ recommendatio
       <CardContent className="space-y-3">
         {recommendations.map((rec, idx) => (
           <div key={idx} className="p-4 rounded-lg border border-border bg-card">
-            <p className="text-sm leading-relaxed">{rec}</p>
+            <p className="text-sm leading-relaxed break-words whitespace-normal">{rec}</p>
           </div>
         ))}
       </CardContent>
