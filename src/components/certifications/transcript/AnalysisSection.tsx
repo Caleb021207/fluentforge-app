@@ -21,11 +21,21 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ assessment }) => {
   } = assessment;
 
   const categoryScores = [
-    { name: "Fluency", score: categories.fluency.score, comments: categories.fluency.comments },
-    { name: "Vocabulary", score: categories.vocabulary.score, comments: categories.vocabulary.comments },
-    { name: "Grammar", score: categories.grammar.score, comments: categories.grammar.comments },
-    { name: "Coherence", score: categories.coherence.score, comments: categories.coherence.comments },
-    { name: "Pronunciation", score: categories.pronunciation.score, comments: categories.pronunciation.comments }
+    { 
+      name: "Reading & Listening Comprehension", 
+      score: categories.readingListeningComprehension.score, 
+      comments: categories.readingListeningComprehension.comments 
+    },
+    { 
+      name: "Written Production", 
+      score: categories.writtenProduction.score, 
+      comments: categories.writtenProduction.comments 
+    },
+    { 
+      name: "Spoken Conversational Fluency", 
+      score: categories.spokenConversationalFluency.score, 
+      comments: categories.spokenConversationalFluency.comments 
+    }
   ];
 
   return (

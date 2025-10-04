@@ -6,11 +6,9 @@ export interface AssessmentCategory {
 
 export interface TranscriptAssessment {
   assessment: {
-    fluency: AssessmentCategory;
-    vocabulary: AssessmentCategory;
-    grammar: AssessmentCategory;
-    coherence: AssessmentCategory;
-    pronunciation: AssessmentCategory;
+    readingListeningComprehension: AssessmentCategory;
+    writtenProduction: AssessmentCategory;
+    spokenConversationalFluency: AssessmentCategory;
   };
   overallScore: number;
   cefrLevel: string;
