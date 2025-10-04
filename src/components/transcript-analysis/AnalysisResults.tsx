@@ -52,7 +52,10 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analyses, isLoading }
 
       {/* Recommendations */}
       {latestAnalysis.recommendations && (
-        <RecommendationsCard recommendations={latestAnalysis.recommendations} />
+        <RecommendationsCard 
+          recommendations={latestAnalysis.recommendations}
+          weaknesses={latestAnalysis.weaknesses}
+        />
       )}
 
       {/* All Analyses History */}

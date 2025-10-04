@@ -32,24 +32,9 @@ const TranscriptAnalysis = () => {
 
       if (error) throw error;
       
-      // Transform recommendations to match Analysis type
       return (data?.map(analysis => ({
         ...analysis,
         upload_date: analysis.created_at,
-        recommendations: Array.isArray(analysis.recommendations) && analysis.recommendations.length > 0
-          ? (typeof analysis.recommendations[0] === 'string' 
-              ? // Convert old string[] format to basic Recommendation[] format
-                (analysis.recommendations as string[]).map((rec, idx) => ({
-                  practice_type: 'text' as const,
-                  route: '/practice' as const,
-                  suggested_level: analysis.cefr_level || 'A1',
-                  title: `Recomendación ${idx + 1}`,
-                  recommendation_text: rec,
-                  suggested_focus: [],
-                  suggested_params: { level: analysis.cefr_level || 'A1' }
-                }))
-              : analysis.recommendations as any) // New Recommendation[] format
-          : null
       })) || []) as Analysis[];
     },
   });

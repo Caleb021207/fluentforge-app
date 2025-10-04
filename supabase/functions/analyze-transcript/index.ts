@@ -221,37 +221,21 @@ Return JSON with this exact structure:
   "test_provider": string | null,
   "strengths": string[],
   "weaknesses": string[],
-  "recommendations": [
-    {
-      "practice_type": "text"|"voice"|"pronunciation"|"combined",
-      "route": "/practice"|"/voice-chat"|"/pronunciation-practice",
-      "suggested_level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2",
-      "title": string (short, actionable title),
-      "recommendation_text": string (specific instruction mentioning the practice mode and what to do),
-      "suggested_focus": string[] (2-4 items, format: "skill: topic" e.g. "grammar: present simple"),
-      "suggested_params": {
-        "level": string (CEFR level),
-        "topic": string (optional, e.g. "daily-routines"),
-        "focus": string (optional, e.g. "present-simple")
-      }
-    }
-  ],
+  "recommendations": string[],
   "detailed_feedback": string,
   "progress_insights": string
 }
 
 CRITICAL RULES FOR RECOMMENDATIONS:
-- Generate 3-6 recommendations total
-- Include AT LEAST one recommendation for each major weakness area
-- Match practice_type to the skill being improved:
-  * Text practice → grammar, vocabulary, reading, writing weaknesses
-  * Voice practice → speaking fluency, listening, conversation weaknesses
-  * Pronunciation practice → pronunciation, phonetic, accent weaknesses
-- Set suggested_level based on CEFR level or slightly below for practice
-- Make recommendation_text ACTIONABLE and SPECIFIC (e.g., "Use Text Practice at A1 level. Ask the AI tutor for 10 fill-in-the-blank exercises on present simple verbs. Enable translations first, then try without.")
-- suggested_focus should be concrete (e.g., "grammar: subject-verb agreement", "vocabulary: food and cooking", "pronunciation: /th/ sound")
+- Generate 3-5 specific, actionable recommendations
+- Each recommendation MUST be directly tied to ONE identified weakness
+- Be concrete and practical (e.g., "Practice using past perfect tense in complex sentences to improve your storytelling" not just "improve grammar")
+- Focus on HOW to address the weakness with specific exercises or activities
+- Order by priority (most critical weaknesses first)
+- Keep each recommendation 1-2 sentences
+- Each recommendation should be a standalone string of advice
 
-Focus on actionable insights using our three platform features.`
+Focus on actionable insights that directly address the identified weaknesses.`
 
     console.log('Making request to OpenAI API...')
 
@@ -330,64 +314,13 @@ Focus on actionable insights using our three platform features.`
 
     console.log('Successfully parsed analysis:', parsedAnalysis)
 
-    // Validate and sanitize recommendations
-    const sanitizeRecommendation = (rec: any, detectedLevel: string) => {
-      const ROUTE_MAP: Record<string, string> = {
-        'text': '/practice',
-        'voice': '/voice-chat',
-        'pronunciation': '/pronunciation-practice',
-        'combined': '/practice'
-      };
-      
-      const VALID_LEVELS = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
-      
-      const practice_type = ['text', 'voice', 'pronunciation', 'combined'].includes(rec.practice_type) 
-        ? rec.practice_type 
-        : 'text';
-      
-      const route = rec.route && ['/practice', '/voice-chat', '/pronunciation-practice'].includes(rec.route)
-        ? rec.route
-        : ROUTE_MAP[practice_type];
-      
-      const suggested_level = VALID_LEVELS.has(rec.suggested_level) 
-        ? rec.suggested_level 
-        : detectedLevel || 'A1';
-      
-      return {
-        practice_type,
-        route,
-        suggested_level,
-        title: String(rec.title || 'Práctica recomendada').slice(0, 80),
-        recommendation_text: String(rec.recommendation_text || 'Practica con el tutor según tu nivel.').slice(0, 500),
-        suggested_focus: Array.isArray(rec.suggested_focus) 
-          ? rec.suggested_focus.slice(0, 4).map((f: any) => String(f).slice(0, 100))
-          : [],
-        suggested_params: {
-          level: suggested_level,
-          ...(rec.suggested_params?.topic ? { topic: String(rec.suggested_params.topic).slice(0, 50) } : {}),
-          ...(rec.suggested_params?.focus ? { focus: String(rec.suggested_params.focus).slice(0, 50) } : {})
-        }
-      };
-    };
-
-    // Apply recommendation sanitization
+    // Validate and sanitize recommendations (now just strings)
     if (parsedAnalysis.recommendations && Array.isArray(parsedAnalysis.recommendations)) {
-      parsedAnalysis.recommendations = parsedAnalysis.recommendations.map(
-        (rec: any) => sanitizeRecommendation(rec, parsedAnalysis.cefr_level)
-      );
+      parsedAnalysis.recommendations = parsedAnalysis.recommendations
+        .slice(0, 10)
+        .map((rec: any) => String(rec).slice(0, 500));
     } else {
-      // Fallback: create basic recommendations
-      parsedAnalysis.recommendations = [
-        {
-          practice_type: 'text',
-          route: '/practice',
-          suggested_level: parsedAnalysis.cefr_level || 'A1',
-          title: 'Comienza con práctica de texto',
-          recommendation_text: 'Usa el modo de Práctica de Texto para mejorar tu gramática y vocabulario.',
-          suggested_focus: ['grammar', 'vocabulary'],
-          suggested_params: { level: parsedAnalysis.cefr_level || 'A1' }
-        }
-      ];
+      parsedAnalysis.recommendations = [];
     }
 
     return new Response(
