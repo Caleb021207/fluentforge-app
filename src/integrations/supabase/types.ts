@@ -1358,13 +1358,12 @@ export type Database = {
           file_type: string
           file_url: string | null
           id: string
-          listening_score: number | null
           overall_score: number | null
           progress_insights: string | null
           raw_extracted_data: Json | null
-          reading_score: number | null
+          reading_listening_score: number | null
           recommendations: string[] | null
-          speaking_score: number | null
+          spoken_fluency_score: number | null
           strengths: string[] | null
           test_date: string | null
           test_provider: string | null
@@ -1372,7 +1371,7 @@ export type Database = {
           upload_date: string
           user_id: string
           weaknesses: string[] | null
-          writing_score: number | null
+          written_production_score: number | null
         }
         Insert: {
           analysis_status?: string
@@ -1383,13 +1382,12 @@ export type Database = {
           file_type: string
           file_url?: string | null
           id?: string
-          listening_score?: number | null
           overall_score?: number | null
           progress_insights?: string | null
           raw_extracted_data?: Json | null
-          reading_score?: number | null
+          reading_listening_score?: number | null
           recommendations?: string[] | null
-          speaking_score?: number | null
+          spoken_fluency_score?: number | null
           strengths?: string[] | null
           test_date?: string | null
           test_provider?: string | null
@@ -1397,7 +1395,7 @@ export type Database = {
           upload_date?: string
           user_id: string
           weaknesses?: string[] | null
-          writing_score?: number | null
+          written_production_score?: number | null
         }
         Update: {
           analysis_status?: string
@@ -1408,13 +1406,12 @@ export type Database = {
           file_type?: string
           file_url?: string | null
           id?: string
-          listening_score?: number | null
           overall_score?: number | null
           progress_insights?: string | null
           raw_extracted_data?: Json | null
-          reading_score?: number | null
+          reading_listening_score?: number | null
           recommendations?: string[] | null
-          speaking_score?: number | null
+          spoken_fluency_score?: number | null
           strengths?: string[] | null
           test_date?: string | null
           test_provider?: string | null
@@ -1422,7 +1419,7 @@ export type Database = {
           upload_date?: string
           user_id?: string
           weaknesses?: string[] | null
-          writing_score?: number | null
+          written_production_score?: number | null
         }
         Relationships: []
       }

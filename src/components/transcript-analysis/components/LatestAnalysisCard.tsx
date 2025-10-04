@@ -34,7 +34,7 @@ const LatestAnalysisCard: React.FC<LatestAnalysisCardProps> = ({ analysis }) => 
         </p>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-3xl font-bold mb-2">{analysis.overall_score || 'N/A'}%</div>
             <Badge className={getCEFRColor(analysis.cefr_level)}>
@@ -42,31 +42,24 @@ const LatestAnalysisCard: React.FC<LatestAnalysisCardProps> = ({ analysis }) => 
             </Badge>
           </div>
           
-          {analysis.reading_score !== null && (
+          {analysis.reading_listening_score !== null && (
             <div className="text-center">
-              <div className="text-lg font-semibold">{t("reading")}</div>
-              <div className="text-2xl font-bold">{analysis.reading_score}%</div>
+              <div className="text-lg font-semibold">Reading & Listening</div>
+              <div className="text-2xl font-bold">{analysis.reading_listening_score}%</div>
             </div>
           )}
           
-          {analysis.writing_score !== null && (
+          {analysis.written_production_score !== null && (
             <div className="text-center">
-              <div className="text-lg font-semibold">{t("writing")}</div>
-              <div className="text-2xl font-bold">{analysis.writing_score}%</div>
+              <div className="text-lg font-semibold">Written Production</div>
+              <div className="text-2xl font-bold">{analysis.written_production_score}%</div>
             </div>
           )}
           
-          {analysis.speaking_score !== null && (
+          {analysis.spoken_fluency_score !== null && (
             <div className="text-center">
-              <div className="text-lg font-semibold">{t("speaking")}</div>
-              <div className="text-2xl font-bold">{analysis.speaking_score}%</div>
-            </div>
-          )}
-          
-          {analysis.listening_score !== null && (
-            <div className="text-center">
-              <div className="text-lg font-semibold">{t("listening")}</div>
-              <div className="text-2xl font-bold">{analysis.listening_score}%</div>
+              <div className="text-lg font-semibold">Spoken Fluency</div>
+              <div className="text-2xl font-bold">{analysis.spoken_fluency_score}%</div>
             </div>
           )}
         </div>

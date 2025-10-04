@@ -174,11 +174,14 @@ serve(async (req) => {
         success: true
       })
 
-    const prompt = `Analyze this language learning test transcript/score report. Extract the following information:
+    const prompt = `Analyze this language learning test transcript/score report. Extract the following information based on our NEW three-section assessment structure:
 
 1. Overall Score (percentage or numerical)
 2. CEFR Level (A1, A2, B1, B2, C1, C2)
-3. Individual skill scores (Reading, Writing, Speaking, Listening) if available
+3. Section scores for our three assessment areas:
+   - Reading & Listening Comprehension (combined score)
+   - Written Production
+   - Spoken Conversational Fluency
 4. Test date if visible
 5. Test provider/institution
 6. Strengths demonstrated
@@ -188,10 +191,9 @@ serve(async (req) => {
 Please provide a detailed analysis in JSON format with these fields:
 - overall_score: number (0-100)
 - cefr_level: string
-- reading_score: number | null
-- writing_score: number | null
-- speaking_score: number | null
-- listening_score: number | null
+- reading_listening_score: number | null (combined comprehension score)
+- written_production_score: number | null
+- spoken_fluency_score: number | null
 - test_date: string | null (YYYY-MM-DD format)
 - test_provider: string | null
 - strengths: string[]
@@ -200,7 +202,7 @@ Please provide a detailed analysis in JSON format with these fields:
 - detailed_feedback: string
 - progress_insights: string
 
-Focus on actionable insights for language learning progress.`
+Focus on actionable insights for language learning progress based on these three core competencies.`
 
     console.log('Making request to OpenAI API...')
 
