@@ -23,8 +23,8 @@ const practiceTranslations: TranslationRecord = {
   clickPlayToHearPronunciation: "発音を聞くには再生をクリック",
   
   // Practice mode selection
-  startPracticing: "練習を始める",
-  practiceYourLanguageSkills: "語学力を練習する",
+  startPracticing: "練習を開始",
+  practiceYourLanguageSkills: "語学スキルを練習しましょう",
   choosePracticeMode: "練習モードを選択",
   typeAndChat: "AIチューターとタイプしてチャット",
   speakAndListen: "自然な会話で話し、聞く",
