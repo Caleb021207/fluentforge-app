@@ -25,7 +25,14 @@ const practiceTranslations: TranslationRecord = {
   writing: "نوشتن",
   speaking: "گفتار",
   listening: "شنیدن",
-  overallLevel: "سطح کلی"
+  overallLevel: "سطح کلی",
+  
+  // Practice mode selection
+  startPracticing: "شروع تمرین",
+  choosePracticeMode: "انتخاب حالت تمرین",
+  typeAndChat: "با مربی هوش مصنوعی خود تایپ کنید و گفتگو کنید",
+  speakAndListen: "در مکالمات طبیعی صحبت کنید و گوش دهید",
+  improvePronunciation: "تلفظ خود را با تمرینات هدفمند بهبود بخشید"
 };
 
 export default practiceTranslations;

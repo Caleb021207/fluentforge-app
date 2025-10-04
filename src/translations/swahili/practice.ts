@@ -83,7 +83,14 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "Usiwe na wasiwasi kuhusu kufanya makosa - ni sehemu ya kujifunza!",
   practiceGuideItem3: "Omba ufafanuzi ikiwa hufahamu kitu.",
   practiceGuideItem4: "Jaribu kutumia msamiati ambao umejifunza hivi karibuni.",
-  practiceDisclaimer: "AI yetu itajirekebisha kulingana na kiwango chako cha ujuzi na kukusaidia kuendelea hatua kwa hatua."
+  practiceDisclaimer: "AI yetu itajirekebisha kulingana na kiwango chako cha ujuzi na kukusaidia kuendelea hatua kwa hatua.",
+  
+  // Practice mode selection
+  startPracticing: "Anza Kufanya Mazoezi",
+  choosePracticeMode: "Chagua Hali ya Mazoezi",
+  typeAndChat: "Andika na uongee na mwalimu wako wa AI",
+  speakAndListen: "Zungumza na sikiliza katika mazungumzo ya asili",
+  improvePronunciation: "Boresha matamshi yako kwa mazoezi yaliyolengwa"
 };
 
 export default practiceTranslations;

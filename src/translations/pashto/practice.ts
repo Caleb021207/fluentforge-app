@@ -43,7 +43,14 @@ const practiceTranslations: TranslationRecord = {
   
   // Additional practice translations
   send: "ولېږئ",
-  practicePrompt: "سلام! زه غواړم انګلیسي تمرین وکړم. آیا تاسو کولی شئ زما د انګلیسي ګرامر، لغت، او کارونې په ښه کولو کې مرسته وکړئ؟"
+  practicePrompt: "سلام! زه غواړم انګلیسي تمرین وکړم. آیا تاسو کولی شئ زما د انګلیسي ګرامر، لغت، او کارونې په ښه کولو کې مرسته وکړئ؟",
+  
+  // Practice mode selection
+  startPracticing: "تمرین پیل کړئ",
+  choosePracticeMode: "د تمرین حالت غوره کړئ",
+  typeAndChat: "د خپل AI ښوونکي سره ټایپ او خبرې وکړئ",
+  speakAndListen: "په طبیعي خبرو کې خبرې او واورئ",
+  improvePronunciation: "د هدفمند تمریناتو سره خپل تلفظ ښه کړئ"
 };
 
 export default practiceTranslations;

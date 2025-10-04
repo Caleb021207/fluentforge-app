@@ -34,7 +34,14 @@ const practiceTranslations: TranslationRecord = {
   practiceConversation: "Latihan Percakapan",
   
   practicePrompt: "Halo! Saya ingin berlatih percakapan {{targetLanguage}}. Mohon bantu saya memperbaiki tata bahasa, kosakata, dan penggunaan {{targetLanguage}}. Bisakah kita mulai dengan percakapan dasar?",
-  chatPlaceholder: "Ketik pesan Anda untuk berlatih {{targetLanguage}}..."
+  chatPlaceholder: "Ketik pesan Anda untuk berlatih {{targetLanguage}}...",
+  
+  // Practice mode selection
+  startPracticing: "Mulai Berlatih",
+  choosePracticeMode: "Pilih Mode Latihan",
+  typeAndChat: "Ketik dan ngobrol dengan tutor AI Anda",
+  speakAndListen: "Berbicara dan mendengarkan dalam percakapan alami",
+  improvePronunciation: "Tingkatkan pelafalan Anda dengan latihan yang terarah"
 };
 
 export default practiceTranslations;

@@ -20,7 +20,6 @@ const practiceTranslations: TranslationRecord = {
   showTranslation: "Показати переклад",
   hideTranslation: "Сховати переклад",
   conversation: "Розмова",
-  startPracticing: "Почати практику",
   chatWithAI: "Спілкуйтеся з нашим мовним наставником ШІ",
   emptyStateMessage: "Почніть розмову з нашим мовним наставником ШІ",
   
@@ -72,7 +71,14 @@ const practiceTranslations: TranslationRecord = {
   speechRecognitionNotSupported: "Розпізнавання мовлення не підтримується у вашому браузері",
   noSpeechDetected: "Мовлення не виявлено",
   pleaseTryAgain: "Будь ласка, спробуйте ще раз",
-  send: "Надіслати"
+  send: "Надіслати",
+  
+  // Practice mode selection
+  startPracticing: "Почати практику",
+  choosePracticeMode: "Вибрати режим практики",
+  typeAndChat: "Друкуйте та спілкуйтеся зі своїм ШІ-репетитором",
+  speakAndListen: "Говоріть та слухайте у природних розмовах",
+  improvePronunciation: "Покращуйте свою вимову за допомогою цільових вправ"
 };
 
 export default practiceTranslations;
