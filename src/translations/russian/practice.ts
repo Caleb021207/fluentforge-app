@@ -31,7 +31,15 @@ const practiceTranslations: TranslationRecord = {
   chatPlaceholder: "Введите сообщение для практики {{targetLanguage}}...",
   practicePrompt: "Привет! Я хотел бы попрактиковаться в разговоре на {{targetLanguage}}. Пожалуйста, помогите мне исправить грамматику, словарный запас и использование {{targetLanguage}}. Давайте начнем с базового разговора?",
   responseSuggestions: "Предложения ответов",
-  clickPlayToHearPronunciation: "Нажмите воспроизведение, чтобы услышать произношение"
+  clickPlayToHearPronunciation: "Нажмите воспроизведение, чтобы услышать произношение",
+  
+  // Practice mode selection
+  startPracticing: "Начать практику",
+  practiceYourLanguageSkills: "Практикуйте свои языковые навыки",
+  choosePracticeMode: "Выберите режим практики",
+  typeAndChat: "Печатайте и общайтесь с вашим AI-репетитором",
+  speakAndListen: "Говорите и слушайте в естественных разговорах",
+  improvePronunciation: "Улучшите произношение с целенаправленными упражнениями"
 };
 
 export default practiceTranslations;

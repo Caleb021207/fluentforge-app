@@ -64,7 +64,15 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "Pa enkyete w pou fè erè - yo se yon pati nan aprantisaj!",
   practiceGuideItem3: "Mande klarifikasyon si ou pa konprann yon bagay.",
   practiceGuideItem4: "Eseye itilize vokabilè ou te aprann dènyèman.",
-  practiceDisclaimer: "AI nou an ap adapte ak nivo konpetans ou epi ede ou amelyore gradyèlman."
+  practiceDisclaimer: "AI nou an ap adapte ak nivo konpetans ou epi ede ou amelyore gradyèlman.",
+  
+  // Practice mode selection
+  startPracticing: "Kòmanse Pratike",
+  practiceYourLanguageSkills: "Pratike konpetans ou nan lang",
+  choosePracticeMode: "Chwazi Mòd Pratik",
+  typeAndChat: "Tape epi chate ak pwofesè AI ou",
+  speakAndListen: "Pale epi koute nan konvèsasyon natirèl",
+  improvePronunciation: "Amelyore pwononsyasyon ou ak egzèsis sible"
 };
 
 export default practiceTranslations;

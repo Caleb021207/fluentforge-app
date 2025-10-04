@@ -43,7 +43,15 @@ const practiceTranslations: TranslationRecord = {
   practiceDisclaimer: "আমাদের AI তোমার দক্ষতার স্তরের সাথে খাপ খাইয়ে নেবে এবং ধীরে ধীরে তোমাকে উন্নত করতে সাহায্য করবে।",
   
   // Additional necessary keys
-  send: "পাঠাও"
+  send: "পাঠাও",
+  
+  // Practice mode selection
+  startPracticing: "অনুশীলন শুরু করুন",
+  practiceYourLanguageSkills: "আপনার ভাষা দক্ষতা অনুশীলন করুন",
+  choosePracticeMode: "অনুশীলন মোড নির্বাচন করুন",
+  typeAndChat: "আপনার AI টিউটরের সাথে টাইপ এবং চ্যাট করুন",
+  speakAndListen: "প্রাকৃতিক কথোপকথনে কথা বলুন এবং শুনুন",
+  improvePronunciation: "লক্ষ্যযুক্ত অনুশীলনের সাথে আপনার উচ্চারণ উন্নত করুন"
 };
 
 export default practiceTranslations;

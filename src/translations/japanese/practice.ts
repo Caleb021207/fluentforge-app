@@ -20,7 +20,15 @@ const practiceTranslations: TranslationRecord = {
   chatPlaceholder: "{{targetLanguage}}を練習するためにメッセージを入力してください...",
   practicePrompt: "こんにちは！{{targetLanguage}}での会話を練習したいと思います。私の{{targetLanguage}}の文法、語彙、使用法を修正して手伝ってください。基本的な会話から始めませんか？",
   responseSuggestions: "応答の提案",
-  clickPlayToHearPronunciation: "発音を聞くには再生をクリック"
+  clickPlayToHearPronunciation: "発音を聞くには再生をクリック",
+  
+  // Practice mode selection
+  startPracticing: "練習を始める",
+  practiceYourLanguageSkills: "語学力を練習する",
+  choosePracticeMode: "練習モードを選択",
+  typeAndChat: "AIチューターとタイプしてチャット",
+  speakAndListen: "自然な会話で話し、聞く",
+  improvePronunciation: "ターゲットを絞った練習で発音を改善"
 };
 
 export default practiceTranslations;

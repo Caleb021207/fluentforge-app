@@ -138,7 +138,15 @@ const practiceTranslations: TranslationRecord = {
   writing: "लेखाइ",
   speaking: "बोलाइ",
   listening: "सुनाइ",
-  overallLevel: "समग्र स्तर"
+  overallLevel: "समग्र स्तर",
+  
+  // Practice mode selection
+  startPracticing: "अभ्यास सुरु गर्नुहोस्",
+  practiceYourLanguageSkills: "आफ्नो भाषा सीप अभ्यास गर्नुहोस्",
+  choosePracticeMode: "अभ्यास मोड छान्नुहोस्",
+  typeAndChat: "आफ्नो AI ट्युटरसँग टाइप र कुराकानी गर्नुहोस्",
+  speakAndListen: "प्राकृतिक कुराकानीमा बोल्नुहोस् र सुन्नुहोस्",
+  improvePronunciation: "लक्षित अभ्यासहरूसँग आफ्नो उच्चारण सुधार गर्नुहोस्"
 };
 
 export default practiceTranslations;

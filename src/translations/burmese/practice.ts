@@ -30,7 +30,15 @@ const practiceTranslations: TranslationRecord = {
   "discussCulturalTopics": "ယဉ်ကျေးမှုဆိုင်ရာ အကြောင်းအရာများ ဆွေးနွေးပါ",
   "startConversationIn": "{{language}} ဖြင့် စကားပြောစတင်ပါ",
   "practicePrompt": "မင်္ဂလာပါ! ကျွန်ုပ်သည် {{targetLanguage}} စကားပြောလေ့ကျင့်ချင်ပါသည်။ ကျွန်ုပ်၏ {{targetLanguage}} သဒ္ဒါ၊ ဝေါဟာရနှင့် အသုံးအနှုန်းကို ပြင်ဆင်ရန် ကူညီပေးပါ။ အခြေခံစကားပြောမှုဖြင့် စတင်နိုင်ပါသလား?",
-  "chatPlaceholder": "{{targetLanguage}} လေ့ကျင့်ရန် သင့်မက်ဆေ့ချ်ကို ရိုက်ထည့်ပါ..."
+  "chatPlaceholder": "{{targetLanguage}} လေ့ကျင့်ရန် သင့်မက်ဆေ့ချ်ကို ရိုက်ထည့်ပါ...",
+  
+  // Practice mode selection
+  startPracticing: "လေ့ကျင့်မှု စတင်ပါ",
+  practiceYourLanguageSkills: "သင့်ဘာသာစကား ကျွမ်းကျင်မှုများကို လေ့ကျင့်ပါ",
+  choosePracticeMode: "လေ့ကျင့်မှု မုဒ် ရွေးချယ်ပါ",
+  typeAndChat: "သင့် AI ဆရာနှင့် တိုက်ရိုက်နှင့် စကားပြောပါ",
+  speakAndListen: "သဘာဝ စကားပြောဆိုမှုများတွင် ပြောပြီး နားထောင်ပါ",
+  improvePronunciation: "ပစ်မှတ်ထားသော လေ့ကျင့်ခန်းများဖြင့် သင့်အသံထွက်ကို တိုးတက်စေပါ"
 };
 
 export default practiceTranslations;

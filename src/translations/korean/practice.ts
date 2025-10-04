@@ -113,7 +113,15 @@ const practiceTranslations: TranslationRecord = {
   speechRecognitionNotSupported: "음성 인식이 브라우저에서 지원되지 않습니다",
   noSpeechDetected: "음성이 감지되지 않음",
   pleaseTryAgain: "다시 시도해주세요",
-  processing: "처리 중..."
+  processing: "처리 중...",
+  
+  // Practice mode selection
+  startPracticing: "연습 시작하기",
+  practiceYourLanguageSkills: "언어 능력을 연습하세요",
+  choosePracticeMode: "연습 모드 선택",
+  typeAndChat: "AI 튜터와 타이핑하며 채팅하기",
+  speakAndListen: "자연스러운 대화로 말하고 듣기",
+  improvePronunciation: "목표 지향적 연습으로 발음 향상"
 };
 
 export default practiceTranslations;

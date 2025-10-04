@@ -65,7 +65,15 @@ const practiceTranslations: TranslationRecord = {
   "practiceTip2": "唔使擔心錯誤 — 犯錯係學習嘅一部分！",
   "practiceTip3": "如果有唔明白嘅地方，記得問清楚。",
   "practiceTip4": "嘗試使用你最近學到嘅詞彙。",
-  "practiceTip5": "我哋嘅AI會適應你嘅水平，並逐步幫助你進步。"
+  "practiceTip5": "我哋嘅AI會適應你嘅水平，並逐步幫助你進步。",
+  
+  // Practice mode selection
+  startPracticing: "開始練習",
+  practiceYourLanguageSkills: "練習你嘅語言技能",
+  choosePracticeMode: "選擇練習模式",
+  typeAndChat: "同你嘅AI導師打字同傾偈",
+  speakAndListen: "喺自然對話中講同聽",
+  improvePronunciation: "通過針對性練習改善發音"
 };
 
 export default practiceTranslations;

@@ -138,7 +138,15 @@ const practiceTranslations: TranslationRecord = {
   writing: "写作",
   speaking: "口语",
   listening: "听力",
-  overallLevel: "总体水平"
+  overallLevel: "总体水平",
+  
+  // Practice mode selection
+  startPracticing: "开始练习",
+  practiceYourLanguageSkills: "练习你的语言技能",
+  choosePracticeMode: "选择练习模式",
+  typeAndChat: "与您的AI导师打字聊天",
+  speakAndListen: "在自然对话中说话和聆听",
+  improvePronunciation: "通过有针对性的练习提高您的发音"
 };
 
 export default practiceTranslations;

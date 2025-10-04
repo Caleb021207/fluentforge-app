@@ -40,7 +40,15 @@ const practiceTranslations: TranslationRecord = {
   "practiceTip2": "ભૂલોની ચિંતા ન કરો - તે શીખવાની પ્રક્રિયાનો એક ભાગ છે!",
   "practiceTip3": "જો તમે કંઈક સમજતા ન હોવ તો સ્પષ્ટતા માંગો.",
   "practiceTip4": "તાજેતરમાં શીખેલા શબ્દભંડોળનો ઉપયોગ કરવાનો પ્રયાસ કરો.",
-  "practiceTip5": "તમારી ફ્લુએન્સી સુધારવા માટે નિયમિત રૂપે પ્રેક્ટિસ કરો."
+  "practiceTip5": "તમારી ફ્લુએન્સી સુધારવા માટે નિયમિત રૂપે પ્રેક્ટિસ કરો.",
+  
+  // Practice mode selection
+  startPracticing: "પ્રેક્ટિસ શરૂ કરો",
+  practiceYourLanguageSkills: "તમારી ભાષા કુશળતાનો અભ્યાસ કરો",
+  choosePracticeMode: "પ્રેક્ટિસ મોડ પસંદ કરો",
+  typeAndChat: "તમારા AI ટ્યુટર સાથે ટાઇપ કરો અને ચેટ કરો",
+  speakAndListen: "કુદરતી વાર્તાલાપમાં બોલો અને સાંભળો",
+  improvePronunciation: "લક્ષિત કસરતો સાથે તમારો ઉચ્ચાર સુધારો"
 };
 
 export default practiceTranslations;

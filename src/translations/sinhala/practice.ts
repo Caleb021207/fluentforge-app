@@ -31,7 +31,15 @@ const practiceTranslations: TranslationRecord = {
   "discussCulturalTopics": "සංස්කෘතික මාතෘකා සාකච්ඡා කරන්න",
   "startConversationIn": "{{language}} භාෂාවෙන් සංවාදය ආරම්භ කරන්න",
   "practicePrompt": "ආයුබෝවන්! මම {{targetLanguage}} සංවාද පුහුණු කිරීමට කැමතියි. කරුණාකර මගේ {{targetLanguage}} ව්‍යාකරණ, වචනමාලාව සහ භාවිතය නිවැරදි කිරීමට උදව් කරන්න. අපට මූලික සංවාදයකින් ආරම්භ කළ හැකිද?",
-  "chatPlaceholder": "{{targetLanguage}} පුහුණු කිරීමට ඔබේ පණිවිඩය ටයිප් කරන්න..."
+  "chatPlaceholder": "{{targetLanguage}} පුහුණු කිරීමට ඔබේ පණිවිඩය ටයිප් කරන්න...",
+  
+  // Practice mode selection
+  startPracticing: "පුහුණුවීම ආරම්භ කරන්න",
+  practiceYourLanguageSkills: "ඔබේ භාෂා කුසලතා පුහුණු කරන්න",
+  choosePracticeMode: "පුහුණුවීමේ ප්‍රකාරය තෝරන්න",
+  typeAndChat: "ඔබේ AI උපදේශක සමඟ ටයිප් කර කතා කරන්න",
+  speakAndListen: "ස්වාභාවික සංවාද වලදී කතා කර අසන්න",
+  improvePronunciation: "ඉලක්කගත අභ්‍යාස සමඟ ඔබේ උච්චාරණය වැඩිදියුණු කරන්න"
 };
 
 export default practiceTranslations;

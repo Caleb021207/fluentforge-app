@@ -75,6 +75,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Practice mode selection
   startPracticing: "Почати практику",
+  practiceYourLanguageSkills: "Практикуйте свої мовні навички",
   choosePracticeMode: "Вибрати режим практики",
   typeAndChat: "Друкуйте та спілкуйтеся зі своїм ШІ-репетитором",
   speakAndListen: "Говоріть та слухайте у природних розмовах",

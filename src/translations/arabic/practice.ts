@@ -138,7 +138,15 @@ const practiceTranslations: TranslationRecord = {
   writing: "الكتابة",
   speaking: "التحدث",
   listening: "الاستماع",
-  overallLevel: "المستوى العام"
+  overallLevel: "المستوى العام",
+  
+  // Practice mode selection
+  startPracticing: "ابدأ الممارسة",
+  practiceYourLanguageSkills: "مارس مهاراتك اللغوية",
+  choosePracticeMode: "اختر وضع الممارسة",
+  typeAndChat: "اكتب وتحدث مع مدرسك الذكي",
+  speakAndListen: "تحدث واستمع في محادثات طبيعية",
+  improvePronunciation: "حسّن نطقك بتمارين موجهة"
 };
 
 export default practiceTranslations;

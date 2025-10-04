@@ -47,6 +47,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Practice mode selection
   startPracticing: "تمرین پیل کړئ",
+  practiceYourLanguageSkills: "خپلې ژبې مهارتونه تمرین کړئ",
   choosePracticeMode: "د تمرین حالت غوره کړئ",
   typeAndChat: "د خپل AI ښوونکي سره ټایپ او خبرې وکړئ",
   speakAndListen: "په طبیعي خبرو کې خبرې او واورئ",

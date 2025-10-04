@@ -43,7 +43,15 @@ const practiceTranslations: TranslationRecord = {
   practiceDisclaimer: "AI anyị ga-adabara ọkwa nka gị ma nyere gị aka ka ị na-emepe emepe nwayọ nwayọ.",
   
   // Additional necessary keys
-  send: "Zipụ"
+  send: "Zipụ",
+  
+  // Practice mode selection
+  startPracticing: "Malite Omume",
+  practiceYourLanguageSkills: "Mee nka asụsụ gị",
+  choosePracticeMode: "Họrọ Ụdị Omume",
+  typeAndChat: "Pịnye ma gwa onye nkuzi AI gị",
+  speakAndListen: "Kwuo ma gee ntị na mkparịta ụka nkịtị",
+  improvePronunciation: "Meziwanye ụda olu gị site na mmega ahụ ezubere iche"
 };
 
 export default practiceTranslations;

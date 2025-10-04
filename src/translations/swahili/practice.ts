@@ -88,6 +88,7 @@ const practiceTranslations: TranslationRecord = {
   // Practice mode selection
   startPracticing: "Anza Kufanya Mazoezi",
   choosePracticeMode: "Chagua Hali ya Mazoezi",
+  practiceYourLanguageSkills: "Fanya mazoezi ya ujuzi wako wa lugha",
   typeAndChat: "Andika na uongee na mwalimu wako wa AI",
   speakAndListen: "Zungumza na sikiliza katika mazungumzo ya asili",
   improvePronunciation: "Boresha matamshi yako kwa mazoezi yaliyolengwa"

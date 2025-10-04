@@ -55,7 +55,15 @@ const practiceTranslations: TranslationRecord = {
   discussCulturalTopics: "सांस्कृतिक विषयों पर चर्चा करें",
   
   practicePrompt: "नमस्ते! मैं {{targetLanguage}} वार्तालाप का अभ्यास करना चाहता/चाहती हूं। कृपया मेरी {{targetLanguage}} व्याकरण, शब्दावली और उपयोग को सुधारने में मदद करें। क्या हम बुनियादी बातचीत से शुरू कर सकते हैं?",
-  chatPlaceholder: "{{targetLanguage}} का अभ्यास करने के लिए अपना संदेश टाइप करें..."
+  chatPlaceholder: "{{targetLanguage}} का अभ्यास करने के लिए अपना संदेश टाइप करें...",
+  
+  // Practice mode selection
+  startPracticing: "अभ्यास शुरू करें",
+  practiceYourLanguageSkills: "अपने भाषा कौशल का अभ्यास करें",
+  choosePracticeMode: "अभ्यास मोड चुनें",
+  typeAndChat: "अपने AI ट्यूटर के साथ टाइप करें और चैट करें",
+  speakAndListen: "प्राकृतिक बातचीत में बोलें और सुनें",
+  improvePronunciation: "लक्षित अभ्यासों के साथ अपने उच्चारण में सुधार करें"
 };
 
 export default practiceTranslations;

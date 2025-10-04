@@ -30,7 +30,15 @@ const practiceTranslations: TranslationRecord = {
   "discussCulturalTopics": "တၢ်တၢၣ်ပီၣ်တီၣ်ယာ်ဆဲးလၤတၢ်ဂ့ၢ်ခိၣ်တီတဖၣ်",
   "startConversationIn": "စးထီၣ်တၢ်ကတိၤလၢ {{language}}",
   "practicePrompt": "ဟဲလိၣ်! ယအဲၣ်ဒိးမၤလိတၢ်ကတိၤ {{targetLanguage}}. ဝံသးစူၤမၤစၢၤဘှီဘၣ်ယတၢ်ဖုတၢ်သဲစး, ဝီၢ်ဖု, ဒီးတၢ်သူ {{targetLanguage}}. ပဆိၣ်စးထီၣ်လၢအခီၣ်ထံးတၢ်ကတိၤသ့ဧါ?",
-  "chatPlaceholder": "ဒံးလီၤနတၢ်ကစီၣ်လၢကမၤလိ {{targetLanguage}}..."
+  "chatPlaceholder": "ဒံးလီၤနတၢ်ကစီၣ်လၢကမၤလိ {{targetLanguage}}...",
+  
+  // Practice mode selection
+  startPracticing: "မၤလိစးထီၣ်",
+  practiceYourLanguageSkills: "နသးတၢ်ကျိၤတၢ်လီၢ်မၤလိ",
+  choosePracticeMode: "ကျိးစၢၤတၢ်မၤလိအဂ့ၢ်",
+  typeAndChat: "ဒံးလီၤဒီးကတိၤလၢနAIတၢ်မၤတၢ်မိၢ်",
+  speakAndListen: "ကတိၤဒီးမၤနဲၣ်လၢအဂဲၤသးတၢ်ကတိၤ",
+  improvePronunciation: "ဖှိၣ်တီၣ်နတၢ်ပၤဆူတၢ်စီၤလၢတၢ်မၤလိတဖၣ်"
 };
 
 export default practiceTranslations;

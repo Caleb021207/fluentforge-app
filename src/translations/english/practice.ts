@@ -145,6 +145,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Practice mode selection
   startPracticing: "Start Practicing",
+  practiceYourLanguageSkills: "Practice your language skills",
   choosePracticeMode: "Choose Practice Mode",
   typeAndChat: "Type and chat with your AI tutor",
   speakAndListen: "Speak and listen in natural conversations",

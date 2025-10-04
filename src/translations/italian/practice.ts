@@ -44,7 +44,15 @@ const practiceTranslations: TranslationRecord = {
   "failedToSendMessage": "Impossibile inviare il messaggio. Per favore riprova.",
   "translationError": "Errore di traduzione",
   "failedToGetTranslation": "Impossibile ottenere la traduzione",
-  "networkConnectionIssue": "Problema di connessione di rete. Per favore riprova."
+  "networkConnectionIssue": "Problema di connessione di rete. Per favore riprova.",
+  
+  // Practice mode selection
+  startPracticing: "Inizia a Praticare",
+  practiceYourLanguageSkills: "Pratica le tue abilità linguistiche",
+  choosePracticeMode: "Scegli la Modalità di Pratica",
+  typeAndChat: "Digita e chatta con il tuo tutor AI",
+  speakAndListen: "Parla e ascolta in conversazioni naturali",
+  improvePronunciation: "Migliora la tua pronuncia con esercizi mirati"
 };
 
 export default practiceTranslations;

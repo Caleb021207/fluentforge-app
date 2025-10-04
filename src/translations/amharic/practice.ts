@@ -55,7 +55,15 @@ const practiceTranslations: TranslationRecord = {
   
   // New translations for voice chat
   practiceYourSpeaking: "የእኛን የላቀ AI የድምፅ ረዳት በመጠቀም የእንግሊዝኛ ንግግርዎን ይለማመዱ። ውስብስብ ርዕሶችን ይወያዩ፣ የንግግርዎን ያሻሽሉ፣ እንዲሁም ለሁሉም ደረጃዎች ጠቃሚ ግብረመልስ ያግኙ።",
-  aiModelUsing: "የAI ሞዴል: የOpenAI's GPT-4o-mini ይጠቀማል፣ ይህም ከፍተኛ ለሆነ የተፈጥሮ ድምፅ ውይይት እና የድምፅ ግምገማ የተሰለጠነ ነው"
+  aiModelUsing: "የAI ሞዴል: የOpenAI's GPT-4o-mini ይጠቀማል፣ ይህም ከፍተኛ ለሆነ የተፈጥሮ ድምፅ ውይይት እና የድምፅ ግምገማ የተሰለጠነ ነው",
+  
+  // Practice mode selection
+  startPracticing: "ልምምድ ይጀምሩ",
+  practiceYourLanguageSkills: "የቋንቋ ክህሎትዎን ይለማመዱ",
+  choosePracticeMode: "የልምምድ ሁነታ ይምረጡ",
+  typeAndChat: "ከAI አስተማሪዎ ጋር ይተይቡ እና ይውያዩ",
+  speakAndListen: "በተፈጥሮ ንግግሮች ይናገሩ እና ያዳምጡ",
+  improvePronunciation: "በተዘጋጁ ልምምዶች የአደረጃጀትዎን ያሻሽሉ"
 };
 
 export default practiceTranslations;

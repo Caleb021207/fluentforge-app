@@ -38,6 +38,7 @@ const practiceTranslations: TranslationRecord = {
   
   // Practice mode selection
   startPracticing: "Mulai Berlatih",
+  practiceYourLanguageSkills: "Latih kemampuan bahasa Anda",
   choosePracticeMode: "Pilih Mode Latihan",
   typeAndChat: "Ketik dan ngobrol dengan tutor AI Anda",
   speakAndListen: "Berbicara dan mendengarkan dalam percakapan alami",
