@@ -2,7 +2,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useLocalization } from "@/context/LocalizationContext";
 import { format } from "date-fns";
 import { Analysis } from "../types";
 
@@ -11,8 +10,6 @@ interface AnalysisHistoryCardProps {
 }
 
 const AnalysisHistoryCard: React.FC<AnalysisHistoryCardProps> = ({ analyses }) => {
-  const { t } = useLocalization();
-
   const getCEFRColor = (level: string | null) => {
     switch (level) {
       case 'C2': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
@@ -28,9 +25,9 @@ const AnalysisHistoryCard: React.FC<AnalysisHistoryCardProps> = ({ analyses }) =
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("analysisHistory")}</CardTitle>
+        <CardTitle>Analysis History</CardTitle>
         <p className="text-sm text-muted-foreground">
-          {t("yourPreviousAnalysisResults")}
+          Your {analyses.length - 1} previous analysis results
         </p>
       </CardHeader>
       <CardContent>

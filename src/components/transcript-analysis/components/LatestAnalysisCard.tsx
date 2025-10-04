@@ -2,7 +2,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useLocalization } from "@/context/LocalizationContext";
 import { format } from "date-fns";
 import { Analysis } from "../types";
 
@@ -11,8 +10,6 @@ interface LatestAnalysisCardProps {
 }
 
 const LatestAnalysisCard: React.FC<LatestAnalysisCardProps> = ({ analysis }) => {
-  const { t } = useLocalization();
-
   const getCEFRColor = (level: string | null) => {
     switch (level) {
       case 'C2': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
@@ -28,7 +25,7 @@ const LatestAnalysisCard: React.FC<LatestAnalysisCardProps> = ({ analysis }) => 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("latestAnalysisResults")}</CardTitle>
+        <CardTitle>Latest Analysis Results</CardTitle>
         <p className="text-sm text-muted-foreground">
           {format(new Date(analysis.upload_date), 'MMM d, yyyy')} - {analysis.file_name}
         </p>

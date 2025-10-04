@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
 import { Upload, FileImage, FileText, File } from "lucide-react";
 
 interface TranscriptUploadProps {
@@ -17,8 +16,7 @@ interface TranscriptUploadProps {
 const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-const { toast } = useToast();
-  const { t } = useLocalization();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -51,8 +49,8 @@ const { toast } = useToast();
     
     if (file.size > maxSize) {
       toast({
-        title: t("fileTooLarge") || "File too large",
-        description: t("fileMaxSize") || "Please upload a file smaller than 10MB.",
+        title: "File too large",
+        description: "Please upload a file smaller than 10MB.",
         variant: "destructive",
       });
       return;
@@ -60,8 +58,8 @@ const { toast } = useToast();
 
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: t("invalidFileType") || "Invalid file type",
-        description: t("supportedFileTypes") || "Please upload a JPEG, PNG, WebP, or PDF file.",
+        title: "Invalid file type",
+        description: "Please upload a JPEG, PNG, WebP, or PDF file.",
         variant: "destructive",
       });
       return;
@@ -72,8 +70,8 @@ const { toast } = useToast();
     if (!session) {
       await supabase.auth.signOut();
       toast({
-        title: t("sessionExpired") || "Session expired",
-        description: t("pleaseSignInAgain") || "Please sign in again to upload transcripts.",
+        title: "Session expired",
+        description: "Please sign in again to upload transcripts.",
         variant: "destructive",
       });
       setIsUploading(false);
@@ -168,8 +166,8 @@ const { toast } = useToast();
         } catch (error: any) {
           console.error('Analysis error:', error);
           toast({
-            title: t("analysisFailed") || "Analysis failed",
-            description: error.message || t("failedToAnalyzeTranscript") || "Failed to analyze transcript. Please try again.",
+            title: "Analysis failed",
+            description: error.message || "Failed to analyze transcript. Please try again.",
             variant: "destructive",
           });
         } finally {
@@ -183,14 +181,14 @@ const { toast } = useToast();
     } catch (error: any) {
       console.error('Upload error:', error);
       toast({
-        title: t("uploadFailed") || "Upload failed",
-        description: error.message || t("failedToUploadFile") || "Failed to upload file. Please try again.",
+        title: "Upload failed",
+        description: error.message || "Failed to upload file. Please try again.",
         variant: "destructive",
       });
       setIsUploading(false);
       setUploadProgress(0);
     }
-  }, [toast, onUploadSuccess, t]);
+  }, [toast, onUploadSuccess, navigate]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -211,17 +209,17 @@ const { toast } = useToast();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("uploadTestTranscript")}</CardTitle>
+        <CardTitle>Upload Test Transcript</CardTitle>
         <CardDescription>
-          {t("uploadLanguageTestScoreReport")}
+          Upload your language test score report (JPEG, PNG, WebP, or PDF) for AI analysis
         </CardDescription>
       </CardHeader>
       <CardContent>
         {!isAuthenticated && (
           <div className="mb-4 p-3 rounded-md border border-border bg-card">
-            <p className="text-sm">{t("pleaseSignInToUpload") || "Please sign in to upload transcripts."}</p>
+            <p className="text-sm">Please sign in to upload transcripts.</p>
             <div className="mt-2">
-              <Button size="sm" onClick={() => navigate('/auth')}>{t("signIn") || "Sign in"}</Button>
+              <Button size="sm" onClick={() => navigate('/auth')}>Sign in</Button>
             </div>
           </div>
         )}
@@ -239,38 +237,38 @@ const { toast } = useToast();
           
           {isUploading ? (
             <div className="space-y-4">
-              <p className="text-lg font-medium">{t("processingTranscript") || "Processing your transcript..."}</p>
+              <p className="text-lg font-medium">Processing your transcript...</p>
               <Progress value={uploadProgress} className="w-full" />
               <p className="text-sm text-gray-500">
-                {uploadProgress < 25 && (t("uploadingFile") || "Uploading file...")}
-                {uploadProgress >= 25 && uploadProgress < 50 && (t("fileUploadedPreparing") || "File uploaded, preparing analysis...")}
-                {uploadProgress >= 50 && uploadProgress < 75 && (t("analyzingWithAI") || "Analyzing with AI...")}
-                {uploadProgress >= 75 && uploadProgress < 90 && (t("extractingInsights") || "Extracting insights...")}
-                {uploadProgress >= 90 && (t("savingResults") || "Saving results...")}
+                {uploadProgress < 25 && "Uploading file..."}
+                {uploadProgress >= 25 && uploadProgress < 50 && "File uploaded, preparing analysis..."}
+                {uploadProgress >= 50 && uploadProgress < 75 && "Analyzing with AI..."}
+                {uploadProgress >= 75 && uploadProgress < 90 && "Extracting insights..."}
+                {uploadProgress >= 90 && "Saving results..."}
               </p>
             </div>
           ) : (
             <div>
               <p className="text-lg font-medium mb-2">
-                {isDragActive ? (t("dropTranscriptHere") || 'Drop your transcript here') : (t("dragDropOrClickToUpload") || 'Drag & drop or click to upload')}
+                {isDragActive ? 'Drop your transcript here' : 'Drag & drop or click to upload'}
               </p>
               <p className="text-sm text-gray-500 mb-4">
-                {t("supportsFileFormats")}
+                Supports JPEG, PNG, WebP, and PDF files up to 10MB
               </p>
               <Button variant="outline">
-                {t("selectFile")}
+                Select File
               </Button>
             </div>
           )}
         </div>
 
         <div className="mt-6 p-4 bg-card text-card-foreground rounded-lg border border-border">
-          <h4 className="font-medium mb-2">{t("whatOurAiCanAnalyze")}</h4>
+          <h4 className="font-medium mb-2">What our AI can analyze:</h4>
           <ul className="text-sm space-y-1">
-            <li>{t("overallScoresAndCefrLevels")}</li>
-            <li>{t("individualSkillBreakdowns")}</li>
-            <li>{t("strengthsAndAreasForImprovement")}</li>
-            <li>{t("progressTrackingOverTime")}</li>
+            <li>• Overall scores and CEFR levels</li>
+            <li>• Individual skill breakdowns (Reading, Writing, Speaking, Listening)</li>
+            <li>• Strengths and areas for improvement</li>
+            <li>• Progress tracking over time</li>
           </ul>
         </div>
       </CardContent>

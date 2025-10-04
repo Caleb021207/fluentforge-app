@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/context/LocalizationContext";
 import TranscriptUpload from "@/components/transcript-analysis/TranscriptUpload";
 import AnalysisResults from "@/components/transcript-analysis/AnalysisResults";
 import ProgressTimeline from "@/components/transcript-analysis/ProgressTimeline";
@@ -15,7 +14,6 @@ import { Brain, TrendingUp, Target, FileText } from "lucide-react";
 const TranscriptAnalysis = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const { toast } = useToast();
-  const { t } = useLocalization();
 
   // Fetch user's transcript analyses
   const { data: analyses, isLoading } = useQuery({
@@ -61,8 +59,8 @@ const TranscriptAnalysis = () => {
   const handleUploadSuccess = () => {
     setRefreshKey(prev => prev + 1);
     toast({
-      title: t("analysisComplete"),
-      description: t("transcriptAnalyzedSuccessfully"),
+      title: "Analysis Complete",
+      description: "Your transcript has been analyzed successfully",
     });
   };
 
@@ -73,10 +71,10 @@ const TranscriptAnalysis = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2 flex items-center gap-2 text-foreground">
           <Brain className="h-8 w-8 text-blue-600" />
-          {t("aiProgressAnalysis")}
+          AI Progress Analysis
         </h1>
         <p className="text-muted-foreground">
-          {t("uploadLanguageTestTranscripts")}
+          Upload your language test transcripts and get AI-powered insights to accelerate your learning progress.
         </p>
       </div>
 
@@ -85,7 +83,7 @@ const TranscriptAnalysis = () => {
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              {t("totalAnalyses")}
+              Total Analyses
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -97,7 +95,7 @@ const TranscriptAnalysis = () => {
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              {t("currentLevel")}
+              Current Level
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -109,7 +107,7 @@ const TranscriptAnalysis = () => {
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
               <Target className="h-5 w-5" />
-              {t("latestScore")}
+              Latest Score
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -122,9 +120,9 @@ const TranscriptAnalysis = () => {
 
       <Tabs defaultValue="upload" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="upload">{t("uploadAndAnalyze")}</TabsTrigger>
-          <TabsTrigger value="results">{t("analysisResults")}</TabsTrigger>
-          <TabsTrigger value="progress">{t("progressTimeline")}</TabsTrigger>
+          <TabsTrigger value="upload">Upload & Analyze</TabsTrigger>
+          <TabsTrigger value="results">Analysis Results</TabsTrigger>
+          <TabsTrigger value="progress">Progress Timeline</TabsTrigger>
         </TabsList>
 
         <TabsContent value="upload">

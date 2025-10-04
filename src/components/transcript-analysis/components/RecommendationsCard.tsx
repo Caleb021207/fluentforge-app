@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLocalization } from "@/context/LocalizationContext";
 import { Lightbulb } from "lucide-react";
 
 interface RecommendationsCardProps {
@@ -10,8 +9,6 @@ interface RecommendationsCardProps {
 }
 
 const RecommendationsCard: React.FC<RecommendationsCardProps> = ({ recommendations, weaknesses }) => {
-  const { t } = useLocalization();
-
   if (!recommendations || recommendations.length === 0) return null;
 
   return (
@@ -19,11 +16,11 @@ const RecommendationsCard: React.FC<RecommendationsCardProps> = ({ recommendatio
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-primary" />
-          {t("recommendationsForImprovement") || "Recomendaciones para Mejorar"}
+          Recommendations for Improvement
         </CardTitle>
         {weaknesses && weaknesses.length > 0 && (
           <p className="text-sm text-muted-foreground mt-2">
-            {t("basedOnIdentifiedWeaknesses") || "Basado en las áreas de mejora identificadas en tu análisis"}
+            Based on the areas for improvement identified in your analysis
           </p>
         )}
       </CardHeader>

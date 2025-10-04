@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLocalization } from "@/context/LocalizationContext";
 
 interface AnalysisBreakdownCardProps {
   strengths: string[] | null;
@@ -9,18 +8,16 @@ interface AnalysisBreakdownCardProps {
 }
 
 const AnalysisBreakdownCard: React.FC<AnalysisBreakdownCardProps> = ({ strengths, weaknesses }) => {
-  const { t } = useLocalization();
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("analysisBreakdown")}</CardTitle>
+        <CardTitle>Analysis Breakdown</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid md:grid-cols-2 gap-6">
           {strengths && (
             <div>
-              <h4 className="font-semibold mb-3 text-green-700">{t("strengths")}</h4>
+              <h4 className="font-semibold mb-3 text-green-700">Strengths</h4>
               <ul className="space-y-2">
                 {strengths.map((strength, index) => (
                   <li key={index} className="text-sm flex items-start">
@@ -34,7 +31,7 @@ const AnalysisBreakdownCard: React.FC<AnalysisBreakdownCardProps> = ({ strengths
           
           {weaknesses && (
             <div>
-              <h4 className="font-semibold mb-3 text-orange-700">{t("areasForImprovement")}</h4>
+              <h4 className="font-semibold mb-3 text-orange-700">Areas for Improvement</h4>
               <ul className="space-y-2">
                 {weaknesses.map((weakness, index) => (
                   <li key={index} className="text-sm flex items-start">

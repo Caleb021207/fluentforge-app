@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
 import { updateUserProfile } from "@/utils/profileUtils";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
 import AccessCodeInput from "./AccessCodeInput";
 
 interface UserInfoProps {
@@ -33,7 +32,6 @@ const UserInfo = ({
   const [isEditing, setIsEditing] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState(displayName);
   const [isSaving, setIsSaving] = useState(false);
-  const { t } = useLocalization();
 
   const handleEditToggle = () => {
     if (isEditing) {
@@ -61,15 +59,15 @@ const UserInfo = ({
         setIsEditing(false);
         
         toast({
-          title: t("success"),
-          description: t("profileInformationUpdated"),
+          title: "Success",
+          description: "Your profile information has been updated",
         });
       }
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
-        title: t("error"),
-        description: t("failedToUpdateProfile"),
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -90,14 +88,14 @@ const UserInfo = ({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>
-            {t("personalInformation")}
+            Personal Information
           </CardTitle>
           <Button
             variant="outline" 
             size="sm"
             onClick={handleEditToggle}
           >
-            {isEditing ? t("cancel") : t("edit")}
+            {isEditing ? "Cancel" : "Edit"}
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -113,14 +111,14 @@ const UserInfo = ({
 
           <div className="space-y-2">
             <Label htmlFor="displayName">
-              {t("displayName")}
+              Display Name
             </Label>
             {isEditing ? (
               <Input
                 id="displayName"
                 value={newDisplayName}
                 onChange={(e) => setNewDisplayName(e.target.value)}
-                placeholder={t("enterDisplayName")}
+                placeholder="Enter your display name"
               />
             ) : (
               <Input
@@ -141,12 +139,12 @@ const UserInfo = ({
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("saving")}
+                  Saving...
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-4 w-4" />
-                  {t("saveChanges")}
+                  Save Changes
                 </>
               )}
             </Button>
