@@ -45,6 +45,16 @@ const practiceTranslations: TranslationRecord = {
   recordYourselfTip: "Record yourself and compare with native speakers",
   bePatientTip: "Be patient - pronunciation improvement takes time",
   
+  // Platform-specific recommendations
+  textPractice: "Text Practice",
+  voicePractice: "Voice Practice",
+  combinedPractice: "Combined Practice",
+  startTextPractice: "Start Text Practice",
+  startVoicePractice: "Start Voice Practice",
+  startPronunciationPractice: "Start Pronunciation Practice",
+  startPractice: "Start Practice",
+  recommendationsBasedOnYourResults: "Personalized exercises based on your CEFR level and areas for improvement",
+  
   // Pronunciation exercise interface
   practiceExercise: "Practice Exercise",
   topic: "Topic",

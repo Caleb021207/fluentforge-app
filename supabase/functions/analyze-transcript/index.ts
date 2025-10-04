@@ -174,11 +174,33 @@ serve(async (req) => {
         success: true
       })
 
-    const prompt = `Analyze this language learning test transcript/score report. Extract the following information based on our NEW three-section assessment structure:
+    const prompt = `Analyze this language learning test transcript/score report.
 
-1. Overall Score (percentage or numerical)
+IMPORTANT: You must provide recommendations specific to our platform's practice features.
+
+Available practice modes on our platform:
+1. TEXT PRACTICE (route: /practice)
+   - Interactive chat with AI tutor at selected CEFR level (A1-C2)
+   - Toggle real-time translations of AI responses
+   - AI generates contextual recommendations during conversation
+   - Best for: grammar improvement, vocabulary building, reading comprehension, written production
+
+2. VOICE PRACTICE (route: /voice-chat)
+   - Speak naturally and AI responds with speech
+   - Real-time conversational practice at selected level
+   - Develops listening comprehension and spoken fluency simultaneously
+   - Best for: speaking confidence, pronunciation in context, listening comprehension, conversational flow
+
+3. PRONUNCIATION PRACTICE (route: /pronunciation-practice)
+   - Listen to individual words/phrases with translations
+   - Practice speaking with feedback
+   - Level-selectable (A1-C2)
+   - Best for: phonetic accuracy, word-level pronunciation, accent reduction, vocabulary acquisition
+
+Extract the following information based on our three-section assessment structure:
+1. Overall Score (percentage)
 2. CEFR Level (A1, A2, B1, B2, C1, C2)
-3. Section scores for our three assessment areas:
+3. Section scores:
    - Reading & Listening Comprehension (combined score)
    - Written Production
    - Spoken Conversational Fluency
@@ -186,23 +208,50 @@ serve(async (req) => {
 5. Test provider/institution
 6. Strengths demonstrated
 7. Areas needing improvement
-8. Specific recommendations for advancement
+8. PLATFORM-SPECIFIC RECOMMENDATIONS (3-6 recommendations)
 
-Please provide a detailed analysis in JSON format with these fields:
-- overall_score: number (0-100)
-- cefr_level: string
-- reading_listening_score: number | null (combined comprehension score)
-- written_production_score: number | null
-- spoken_fluency_score: number | null
-- test_date: string | null (YYYY-MM-DD format)
-- test_provider: string | null
-- strengths: string[]
-- weaknesses: string[]
-- recommendations: string[]
-- detailed_feedback: string
-- progress_insights: string
+Return JSON with this exact structure:
+{
+  "overall_score": number (0-100),
+  "cefr_level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2",
+  "reading_listening_score": number | null,
+  "written_production_score": number | null,
+  "spoken_fluency_score": number | null,
+  "test_date": string | null,
+  "test_provider": string | null,
+  "strengths": string[],
+  "weaknesses": string[],
+  "recommendations": [
+    {
+      "practice_type": "text"|"voice"|"pronunciation"|"combined",
+      "route": "/practice"|"/voice-chat"|"/pronunciation-practice",
+      "suggested_level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2",
+      "title": string (short, actionable title),
+      "recommendation_text": string (specific instruction mentioning the practice mode and what to do),
+      "suggested_focus": string[] (2-4 items, format: "skill: topic" e.g. "grammar: present simple"),
+      "suggested_params": {
+        "level": string (CEFR level),
+        "topic": string (optional, e.g. "daily-routines"),
+        "focus": string (optional, e.g. "present-simple")
+      }
+    }
+  ],
+  "detailed_feedback": string,
+  "progress_insights": string
+}
 
-Focus on actionable insights for language learning progress based on these three core competencies.`
+CRITICAL RULES FOR RECOMMENDATIONS:
+- Generate 3-6 recommendations total
+- Include AT LEAST one recommendation for each major weakness area
+- Match practice_type to the skill being improved:
+  * Text practice → grammar, vocabulary, reading, writing weaknesses
+  * Voice practice → speaking fluency, listening, conversation weaknesses
+  * Pronunciation practice → pronunciation, phonetic, accent weaknesses
+- Set suggested_level based on CEFR level or slightly below for practice
+- Make recommendation_text ACTIONABLE and SPECIFIC (e.g., "Use Text Practice at A1 level. Ask the AI tutor for 10 fill-in-the-blank exercises on present simple verbs. Enable translations first, then try without.")
+- suggested_focus should be concrete (e.g., "grammar: subject-verb agreement", "vocabulary: food and cooking", "pronunciation: /th/ sound")
+
+Focus on actionable insights using our three platform features.`
 
     console.log('Making request to OpenAI API...')
 
@@ -280,6 +329,66 @@ Focus on actionable insights for language learning progress based on these three
     }
 
     console.log('Successfully parsed analysis:', parsedAnalysis)
+
+    // Validate and sanitize recommendations
+    const sanitizeRecommendation = (rec: any, detectedLevel: string) => {
+      const ROUTE_MAP: Record<string, string> = {
+        'text': '/practice',
+        'voice': '/voice-chat',
+        'pronunciation': '/pronunciation-practice',
+        'combined': '/practice'
+      };
+      
+      const VALID_LEVELS = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
+      
+      const practice_type = ['text', 'voice', 'pronunciation', 'combined'].includes(rec.practice_type) 
+        ? rec.practice_type 
+        : 'text';
+      
+      const route = rec.route && ['/practice', '/voice-chat', '/pronunciation-practice'].includes(rec.route)
+        ? rec.route
+        : ROUTE_MAP[practice_type];
+      
+      const suggested_level = VALID_LEVELS.has(rec.suggested_level) 
+        ? rec.suggested_level 
+        : detectedLevel || 'A1';
+      
+      return {
+        practice_type,
+        route,
+        suggested_level,
+        title: String(rec.title || 'Práctica recomendada').slice(0, 80),
+        recommendation_text: String(rec.recommendation_text || 'Practica con el tutor según tu nivel.').slice(0, 500),
+        suggested_focus: Array.isArray(rec.suggested_focus) 
+          ? rec.suggested_focus.slice(0, 4).map((f: any) => String(f).slice(0, 100))
+          : [],
+        suggested_params: {
+          level: suggested_level,
+          ...(rec.suggested_params?.topic ? { topic: String(rec.suggested_params.topic).slice(0, 50) } : {}),
+          ...(rec.suggested_params?.focus ? { focus: String(rec.suggested_params.focus).slice(0, 50) } : {})
+        }
+      };
+    };
+
+    // Apply recommendation sanitization
+    if (parsedAnalysis.recommendations && Array.isArray(parsedAnalysis.recommendations)) {
+      parsedAnalysis.recommendations = parsedAnalysis.recommendations.map(
+        (rec: any) => sanitizeRecommendation(rec, parsedAnalysis.cefr_level)
+      );
+    } else {
+      // Fallback: create basic recommendations
+      parsedAnalysis.recommendations = [
+        {
+          practice_type: 'text',
+          route: '/practice',
+          suggested_level: parsedAnalysis.cefr_level || 'A1',
+          title: 'Comienza con práctica de texto',
+          recommendation_text: 'Usa el modo de Práctica de Texto para mejorar tu gramática y vocabulario.',
+          suggested_focus: ['grammar', 'vocabulary'],
+          suggested_params: { level: parsedAnalysis.cefr_level || 'A1' }
+        }
+      ];
+    }
 
     return new Response(
       JSON.stringify({

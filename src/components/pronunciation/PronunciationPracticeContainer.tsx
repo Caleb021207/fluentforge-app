@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import ComplexityDropdown from "./ComplexityDropdown";
 import PhraseDisplay from "./PhraseDisplay";
@@ -41,6 +41,28 @@ const PronunciationPracticeContainer = () => {
     levelDescriptions,
     targetLanguage
   } = usePronunciationExercise();
+  
+  // Read URL parameters for deep linking
+  const searchParams = new URLSearchParams(window.location.search);
+  const urlLevel = searchParams.get('level');
+  
+  useEffect(() => {
+    // Map URL level parameter to complexity
+    if (urlLevel) {
+      const levelMap: Record<string, string> = {
+        'A1': 'novice',
+        'A2': 'novice',
+        'B1': 'intermediate',
+        'B2': 'advanced',
+        'C1': 'advanced',
+        'C2': 'superior'
+      };
+      const mappedComplexity = levelMap[urlLevel];
+      if (mappedComplexity) {
+        setComplexity(mappedComplexity as any);
+      }
+    }
+  }, [urlLevel, setComplexity]);
 
   if (authLoading) {
     return <div className="flex items-center justify-center min-h-screen">

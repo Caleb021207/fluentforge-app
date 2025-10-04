@@ -6,6 +6,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import TranscriptUpload from "@/components/transcript-analysis/TranscriptUpload";
 import AnalysisResults from "@/components/transcript-analysis/AnalysisResults";
 import ProgressTimeline from "@/components/transcript-analysis/ProgressTimeline";
+import { Analysis } from "@/components/transcript-analysis/types";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,7 +31,17 @@ const TranscriptAnalysis = () => {
         .order('upload_date', { ascending: false });
 
       if (error) throw error;
-      return data;
+      
+      // Transform recommendations to match Analysis type
+      return (data?.map(analysis => ({
+        ...analysis,
+        upload_date: analysis.created_at,
+        recommendations: Array.isArray(analysis.recommendations) && analysis.recommendations.length > 0
+          ? (typeof analysis.recommendations[0] === 'string' 
+              ? null // Old string[] format, set to null
+              : analysis.recommendations as any) // New Recommendation[] format
+          : null
+      })) || []) as Analysis[];
     },
   });
 

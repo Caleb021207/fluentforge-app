@@ -31,6 +31,12 @@ const Practice = () => {
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
   const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
   
+  // Read URL parameters for deep linking
+  const searchParams = new URLSearchParams(window.location.search);
+  const urlLevel = searchParams.get('level');
+  const urlTopic = searchParams.get('topic');
+  const urlFocus = searchParams.get('focus');
+  
   useEffect(() => {
     const savedTargetLanguage = secureStorage.getItem("targetLanguage");
     const savedNativeLanguage = secureStorage.getItem("nativeLanguage");
@@ -45,20 +51,38 @@ const Practice = () => {
       }
     }
     
-    // Initialize conversation level from localStorage
-    const storedLevel = localStorage.getItem("conversationLevel");
-    if (storedLevel) {
-      setConversationLevel(storedLevel);
+    // Map URL level parameter to conversation level
+    if (urlLevel) {
+      const levelMap: Record<string, string> = {
+        'A1': 'basic',
+        'A2': 'basic',
+        'B1': 'intermediate',
+        'B2': 'advanced',
+        'C1': 'advanced',
+        'C2': 'advanced'
+      };
+      const mappedLevel = levelMap[urlLevel] || 'intermediate';
+      setConversationLevel(mappedLevel);
+      localStorage.setItem("conversationLevel", mappedLevel);
+    } else {
+      // Initialize conversation level from localStorage
+      const storedLevel = localStorage.getItem("conversationLevel");
+      if (storedLevel) {
+        setConversationLevel(storedLevel);
+      }
     }
     
     // Debug for Thai language - Fix the comparison to use lowercase comparison
     if (currentLanguage.toLowerCase() === 'thai') {
       console.log('Practice component initialized with Thai language:', {
         currentLanguage,
-        targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english")
+        targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english"),
+        urlLevel,
+        urlTopic,
+        urlFocus
       });
     }
-  }, [currentLanguage]);
+  }, [currentLanguage, urlLevel]);
   
   const handleLevelChange = (newLevel: string) => {
     setConversationLevel(newLevel);
