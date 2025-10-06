@@ -2,6 +2,7 @@
 import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
+  welcomeToLanguageLearning: "придавая словам голос",
   welcomeMessage: "Добро пожаловать в приложение для изучения языков Palavox!",
   pageNotFound: "Страница не найдена",
   networkConnectionIssue: "Проблема с сетевым подключением",

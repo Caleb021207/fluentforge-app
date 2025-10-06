@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const minimalTranslations: TranslationRecord = {
   // Home page
-  welcomeToLanguageLearning: "भाषा सीखने में आपका स्वागत है",
+  welcomeToLanguageLearning: "शब्दों को आवाज़ देना",
   yourPersonalAICompanion: "आपका व्यक्तिगत एआई साथी",
   swipeUpToGetStarted: "शुरू करने के लिए ऊपर स्वाइप करें",
   getStarted: "शुरू करें",

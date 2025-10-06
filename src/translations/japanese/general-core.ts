@@ -2,7 +2,7 @@
 import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
-  welcomeToLanguageLearning: "Palavoxへようこそ",
+  welcomeToLanguageLearning: "言葉に声を与える",
   yourPersonalAICompanion: "効果的な学習のためのあなた専用のAIコンパニオン",
   welcomeMessage: "Palavox言語学習アプリへようこそ！",
   pageNotFound: "ページが見つかりません",

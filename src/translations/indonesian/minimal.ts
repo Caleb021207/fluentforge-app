@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const minimalTranslations: TranslationRecord = {
   // Home page
-  welcomeToLanguageLearning: "Selamat datang di pembelajaran bahasa",
+  welcomeToLanguageLearning: "memberi suara pada kata-kata",
   yourPersonalAICompanion: "Pendamping AI pribadi Anda",
   swipeUpToGetStarted: "Geser ke atas untuk memulai",
   getStarted: "Mulai",

@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
   // Core translations
-  "welcomeToLanguageLearning": "Maligayang pagdating sa Palavox",
+  "welcomeToLanguageLearning": "bigyan ng tinig ang mga salita",
   "yourPersonalAICompanion": "Ang iyong personal na AI katulong para sa epektibong pag-aaral",
   "welcomeMessage": "Maligayang pagdating sa Lingua language learning app!",
   "pageNotFound": "Hindi nahanap ang page",

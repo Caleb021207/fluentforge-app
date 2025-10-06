@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const minimalTranslations: TranslationRecord = {
   // Home page
-  welcomeToLanguageLearning: "Karibu kwenye Kujifunza Lugha",
+  welcomeToLanguageLearning: "kuwapa maneno sauti",
   yourPersonalAICompanion: "Msaidizi wako wa AI binafsi",
   swipeUpToGetStarted: "Telezesha juu kuanza",
   getStarted: "Anza",

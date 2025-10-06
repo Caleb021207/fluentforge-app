@@ -84,7 +84,7 @@ const generalCoreTranslations: TranslationRecord = {
   expert: "专家",
   
   // Core translations
-  welcomeToLanguageLearning: "欢迎来到Palavox",
+  welcomeToLanguageLearning: "为文字赋予声音",
   yourPersonalAICompanion: "您的个人AI学习伙伴",
   welcomeMessage: "欢迎来到Lingua语言学习应用！",
   pageNotFound: "页面未找到",

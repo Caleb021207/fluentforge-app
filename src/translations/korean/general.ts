@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const generalTranslations: TranslationRecord = {
   // Welcome and core messages
-  welcomeToLanguageLearning: "Palavox에 오신 것을 환영합니다",
+  welcomeToLanguageLearning: "단어에 목소리를 부여하다",
   yourPersonalAICompanion: "AI 기반 개인 언어 학습 도우미. 오늘부터 유창함을 향한 여정을 시작하세요.",
   welcomeMessage: "Palavox 언어 학습 앱에 오신 것을 환영합니다!",
   

@@ -3,7 +3,7 @@ import { TranslationRecord } from "../types";
 
 const generalCoreTranslations: TranslationRecord = {
   // Core translations
-  welcomeToLanguageLearning: "Palavox වෙත සාදරයෙන් පිළිගනිමු",
+  welcomeToLanguageLearning: "වචනවලට හඬක් ලබා දීම",
   yourPersonalAICompanion: "ඵලදායී ඉගෙනීම සඳහා ඔබේ පෞද්ගලික AI සහකරු",
   welcomeMessage: "Lingua භාෂා ඉගෙනුම් යෙදුමට සාදරයෙන් පිළිගනිමු!",
   pageNotFound: "පිටුව හමු නොවීය",
