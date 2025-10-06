@@ -1530,10 +1530,6 @@ export type Database = {
         Args: { student_user_id: string }
         Returns: boolean
       }
-      is_user_enrolled_in_class: {
-        Args: { class_id_param: string }
-        Returns: boolean
-      }
       is_user_teacher_of_class: {
         Args: { class_id_param: string }
         Returns: boolean
