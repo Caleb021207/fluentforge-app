@@ -5,13 +5,21 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useClassroomText } from "@/hooks/useClassroomText";
+import { z } from "zod";
 
-// Define the interface for the response from join_classroom RPC
-interface ClassroomResponse {
+// Validation schema for class codes
+const classCodeSchema = z.string()
+  .trim()
+  .min(6, "Class code must be at least 6 characters")
+  .max(10, "Class code must be less than 10 characters")
+  .regex(/^[A-Z0-9]+$/, "Class code must contain only uppercase letters and numbers");
+
+// Define the interface for the response from process_access_code RPC
+interface AccessCodeResponse {
   success: boolean;
   message: string;
-  classroom_id?: string;
-  class_name?: string;
+  role?: string;
+  assignment?: string;
 }
 
 const JoinClassForm = () => {
@@ -22,12 +30,14 @@ const JoinClassForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedCode = classCode.trim();
+    const trimmedCode = classCode.trim().toUpperCase();
     
-    if (!trimmedCode) {
+    // Validate input
+    const validation = classCodeSchema.safeParse(trimmedCode);
+    if (!validation.success) {
       toast({
         title: classroomText.ERROR,
-        description: classroomText.ENTER_VALID_CODE,
+        description: validation.error.errors[0].message,
         variant: "destructive",
       });
       return;
@@ -46,19 +56,27 @@ const JoinClassForm = () => {
           description: "Please sign in to join a class",
           variant: "destructive",
         });
+        setIsLoading(false);
         return;
       }
 
       console.log('User authenticated:', session.user.id);
 
-      const { data, error } = await supabase.rpc('join_classroom', {
-        class_code: trimmedCode
+      // Log attempt for rate limiting
+      await supabase.from('access_code_attempts').insert({
+        user_id: session.user.id,
+        attempted_code: trimmedCode,
+        success: false
       });
 
-      console.log('Join classroom response:', { data, error });
+      const { data, error } = await supabase.rpc('process_access_code', {
+        p_code: trimmedCode
+      });
+
+      console.log('Process access code response:', { data, error });
 
       if (error) {
-        console.error('Error joining classroom:', error);
+        console.error('Error processing access code:', error);
         toast({
           title: classroomText.ERROR,
           description: error.message || classroomText.ERROR_JOINING,
@@ -68,23 +86,30 @@ const JoinClassForm = () => {
       }
 
       // Cast the data to the proper type
-      const response = data as unknown as ClassroomResponse;
+      const response = data as unknown as AccessCodeResponse;
 
       if (response && response.success) {
+        // Log successful attempt
+        await supabase.from('access_code_attempts').insert({
+          user_id: session.user.id,
+          attempted_code: trimmedCode,
+          success: true
+        });
+
         toast({
           title: classroomText.SUCCESS,
           description: response.message || classroomText.SUCCESS_JOINING,
         });
         
         setClassCode('');
-        console.log('Successfully joined classroom:', response.class_name);
+        console.log('Successfully joined class:', response.assignment);
         
         // Reload after a short delay to show the success message
         setTimeout(() => {
           window.location.reload();
         }, 1500);
       } else {
-        console.error('Join classroom failed:', data);
+        console.error('Join class failed:', data);
         toast({
           title: classroomText.ERROR,
           description: response?.message || classroomText.ERROR_JOINING,
@@ -92,7 +117,7 @@ const JoinClassForm = () => {
         });
       }
     } catch (error: any) {
-      console.error('Unexpected error joining classroom:', error);
+      console.error('Unexpected error joining class:', error);
       toast({
         title: classroomText.ERROR,
         description: "An unexpected error occurred",

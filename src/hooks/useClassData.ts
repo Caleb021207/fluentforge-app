@@ -5,11 +5,11 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 
 interface ClassData {
-  class_name: string;
+  name: string;
   teacher_email?: string;
   teacher_name?: string;
-  joined_at: string;
-  code: string;
+  enrolled_at: string;
+  class_code: string;
   metrics?: {
     text_practice_calls: number;
     premium_voice_calls: number;
@@ -38,49 +38,49 @@ export const useClassData = () => {
 
       console.log("Authenticated user:", session.session.user.id);
 
-      // Check if student is a member of a classroom
-      const { data: membershipData, error: membershipError } = await supabase
-        .from('classroom_memberships')
+      // Check if student is enrolled in a class
+      const { data: enrollmentData, error: enrollmentError } = await supabase
+        .from('student_enrollments')
         .select(`
-          classroom_id,
-          joined_at
+          class_id,
+          enrollment_date
         `)
         .eq('student_id', session.session.user.id)
         .maybeSingle();
 
-      if (membershipError) {
-        console.error('Membership lookup error:', membershipError);
-        throw membershipError;
+      if (enrollmentError) {
+        console.error('Enrollment lookup error:', enrollmentError);
+        throw enrollmentError;
       }
       
-      if (!membershipData) {
-        console.log("No classroom membership found for user");
+      if (!enrollmentData) {
+        console.log("No class enrollment found for user");
         setClassData(null);
         setIsLoading(false);
         return;
       }
 
-      console.log("Found classroom membership:", membershipData);
+      console.log("Found class enrollment:", enrollmentData);
 
-      // Get classroom details
-      const { data: classroomData, error: classroomError } = await supabase
-        .from('classroom_codes')
+      // Get class details
+      const { data: classData, error: classError } = await supabase
+        .from('classes')
         .select(`
           id,
-          class_name,
-          code,
+          name,
+          class_code,
           teacher_id
         `)
-        .eq('id', membershipData.classroom_id)
+        .eq('id', enrollmentData.class_id)
         .maybeSingle();
 
-      if (classroomError) {
-        console.error('Classroom lookup error:', classroomError);
-        throw classroomError;
+      if (classError) {
+        console.error('Class lookup error:', classError);
+        throw classError;
       }
 
-      if (!classroomData) {
-        console.log("No classroom found for membership");
+      if (!classData) {
+        console.log("No class found for enrollment");
         setClassData(null);
         setIsLoading(false);
         return;
@@ -90,11 +90,11 @@ export const useClassData = () => {
       let teacherName = undefined;
       let teacherEmail = undefined;
       
-      if (classroomData.teacher_id) {
+      if (classData.teacher_id) {
         const { data: teacherData } = await supabase
           .from('profiles')
           .select('display_name, email')
-          .eq('id', classroomData.teacher_id)
+          .eq('id', classData.teacher_id)
           .maybeSingle();
           
         if (teacherData) {
@@ -119,11 +119,11 @@ export const useClassData = () => {
       }
 
       const classInfo: ClassData = {
-        class_name: classroomData.class_name,
+        name: classData.name,
         teacher_name: teacherName,
         teacher_email: teacherEmail,
-        joined_at: new Date(membershipData.joined_at).toLocaleDateString(),
-        code: classroomData.code,
+        enrolled_at: new Date(enrollmentData.enrollment_date).toLocaleDateString(),
+        class_code: classData.class_code,
         metrics: metricsData || undefined
       };
 

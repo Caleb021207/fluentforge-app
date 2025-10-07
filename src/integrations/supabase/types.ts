@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_code_attempts: {
+        Row: {
+          attempted_code: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          success: boolean
+          user_id: string | null
+        }
+        Insert: {
+          attempted_code: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          attempted_code?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       access_codes: {
         Row: {
           active: boolean | null
@@ -343,89 +370,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      classroom_codes: {
-        Row: {
-          active: boolean
-          class_name: string
-          code: string
-          created_at: string
-          id: string
-          teacher_id: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          class_name: string
-          code: string
-          created_at?: string
-          id?: string
-          teacher_id: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          class_name?: string
-          code?: string
-          created_at?: string
-          id?: string
-          teacher_id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      classroom_memberships: {
-        Row: {
-          classroom_id: string
-          id: string
-          joined_at: string
-          student_id: string
-        }
-        Insert: {
-          classroom_id: string
-          id?: string
-          joined_at?: string
-          student_id: string
-        }
-        Update: {
-          classroom_id?: string
-          id?: string
-          joined_at?: string
-          student_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "classroom_memberships_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      classrooms: {
-        Row: {
-          created_at: string
-          id: string
-          join_code: string
-          name: string
-          teacher_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          join_code: string
-          name: string
-          teacher_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          join_code?: string
-          name?: string
-          teacher_id?: string
-        }
-        Relationships: []
       }
       district_settings: {
         Row: {
@@ -1462,6 +1406,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1487,10 +1452,6 @@ export type Database = {
       cleanup_old_phrases: {
         Args: { p_language: string; p_level: string }
         Returns: undefined
-      }
-      create_classroom: {
-        Args: { class_name: string }
-        Returns: Json
       }
       generate_access_code: {
         Args: {
@@ -1518,6 +1479,13 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: string[]
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       initialize_student_usage_limits: {
         Args: { target_student_id: string }
         Returns: undefined
@@ -1533,10 +1501,6 @@ export type Database = {
       is_user_teacher_of_class: {
         Args: { class_id_param: string }
         Returns: boolean
-      }
-      join_classroom: {
-        Args: { class_code: string }
-        Returns: Json
       }
       log_role_change_attempt: {
         Args: {
@@ -1572,6 +1536,7 @@ export type Database = {
       }
     }
     Enums: {
+      app_role: "admin" | "teacher" | "student" | "district"
       code_type: "district" | "school" | "teacher" | "class"
       district_consent_type:
         | "individual"
@@ -1704,6 +1669,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "teacher", "student", "district"],
       code_type: ["district", "school", "teacher", "class"],
       district_consent_type: [
         "individual",

@@ -108,7 +108,7 @@ const StudentClassView = () => {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-foreground">{classData.class_name}</CardTitle>
+        <CardTitle className="text-foreground">{classData.name}</CardTitle>
         <Button 
           variant="outline" 
           size="sm" 
@@ -125,11 +125,11 @@ const StudentClassView = () => {
       </CardHeader>
       
       <ClassInfo
-        className={classData.class_name}
+        className={classData.name}
         teacherName={classData.teacher_name}
         teacherEmail={classData.teacher_email}
-        joinedAt={classData.joined_at}
-        code={classData.code}
+        joinedAt={classData.enrolled_at}
+        code={classData.class_code}
       />
 
       <CardContent>

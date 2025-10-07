@@ -147,18 +147,18 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       content: msg.content
     }));
     
-    // Get classroom ID for current user
+    // Get class ID for current user
     let classroomId = null;
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       const { data } = await supabase
-        .from('classroom_memberships')
-        .select('classroom_id')
+        .from('student_enrollments')
+        .select('class_id')
         .eq('student_id', user.id)
         .limit(1);
       
       if (data && data.length > 0) {
-        classroomId = data[0].classroom_id;
+        classroomId = data[0].class_id;
       }
     }
     

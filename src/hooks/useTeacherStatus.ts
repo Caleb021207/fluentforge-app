@@ -20,11 +20,12 @@ export const useTeacherStatus = () => {
 
         console.log('Checking teacher role for user:', session.session.user.id);
         
-        // Since safe_is_teacher doesn't exist, we'll check if user has created any classrooms
+        // Check if user has teacher role in user_roles table
         const { data, error } = await supabase
-          .from('classroom_codes')
+          .from('user_roles')
           .select('id')
-          .eq('teacher_id', session.session.user.id)
+          .eq('user_id', session.session.user.id)
+          .eq('role', 'teacher')
           .limit(1);
         
         if (error) {
