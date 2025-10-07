@@ -111,10 +111,10 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                 variant="outline" 
                 className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
               >
-                <MessageSquare className="h-8 w-8 text-primary" />
-                <div className="text-center">
-                  <div className="font-semibold">{t("textPractice")}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
+                <MessageSquare className="h-8 w-8 text-primary flex-shrink-0" />
+                <div className="text-center w-full px-2">
+                  <div className="font-semibold whitespace-normal break-words">{t("textPractice")}</div>
+                  <div className="text-xs text-muted-foreground mt-1 whitespace-normal break-words">
                     {t("typeAndChat")}
                   </div>
                 </div>
@@ -126,10 +126,10 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                 variant="outline" 
                 className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
               >
-                <Mic className="h-8 w-8 text-primary" />
-                <div className="text-center">
-                  <div className="font-semibold">{t("voicePractice")}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
+                <Mic className="h-8 w-8 text-primary flex-shrink-0" />
+                <div className="text-center w-full px-2">
+                  <div className="font-semibold whitespace-normal break-words">{t("voicePractice")}</div>
+                  <div className="text-xs text-muted-foreground mt-1 whitespace-normal break-words">
                     {t("speakAndListen")}
                   </div>
                 </div>
@@ -141,10 +141,10 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                 variant="outline" 
                 className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
               >
-                <Volume2 className="h-8 w-8 text-primary" />
-                <div className="text-center">
-                  <div className="font-semibold">{t("pronunciationPractice")}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
+                <Volume2 className="h-8 w-8 text-primary flex-shrink-0" />
+                <div className="text-center w-full px-2">
+                  <div className="font-semibold whitespace-normal break-words">{t("pronunciationPractice")}</div>
+                  <div className="text-xs text-muted-foreground mt-1 whitespace-normal break-words">
                     {t("improvePronunciation")}
                   </div>
                 </div>
