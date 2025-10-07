@@ -61,7 +61,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         // Fetch most recent transcript analysis
         const { data: latestAnalysis } = await supabase
           .from('transcript_analyses')
-          .select('id, overall_score, cefr_level, reading_score, writing_score, speaking_score, listening_score, upload_date')
+          .select('id, overall_score, cefr_level, upload_date')
           .eq('user_id', profile.id)
           .order('upload_date', { ascending: false })
           .limit(1)
@@ -76,6 +76,28 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
     };
 
     fetchStudentData();
+
+    // Set up real-time subscription for enrollment changes
+    const enrollmentChannel = supabase
+      .channel('student_enrollment_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'student_enrollments',
+          filter: `student_id=eq.${profile.id}`
+        },
+        (payload) => {
+          console.log('Enrollment changed, refetching data:', payload);
+          fetchStudentData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(enrollmentChannel);
+    };
   }, [profile.id, profile.grade_level_id]);
 
   const totalPracticeSessions = usageMetrics.reduce((sum, metric) => sum + metric.practice_sessions, 0);

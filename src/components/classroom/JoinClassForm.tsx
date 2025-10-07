@@ -104,10 +104,7 @@ const JoinClassForm = () => {
         setClassCode('');
         console.log('Successfully joined class:', response.assignment);
         
-        // Reload after a short delay to show the success message
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        // No need to reload - real-time subscription will update automatically
       } else {
         console.error('Join class failed:', data);
         toast({
