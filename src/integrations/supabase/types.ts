@@ -1550,6 +1550,10 @@ export type Database = {
         Args: { target_student_id: string }
         Returns: undefined
       }
+      update_student_practice_counts: {
+        Args: { target_student_id: string }
+        Returns: undefined
+      }
       update_student_usage_aggregates: {
         Args: { target_student_id: string }
         Returns: undefined

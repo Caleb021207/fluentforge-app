@@ -21,6 +21,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
   const sessionIdRef = useRef<string | null>(null);
+  const sessionStartedRef = useRef<boolean>(false);
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
@@ -31,8 +32,66 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     sessionIdRef.current = crypto.randomUUID();
   }
 
+  // Track session start in usage_tracking
+  const trackSessionStart = async () => {
+    if (sessionStartedRef.current) return;
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      await supabase
+        .from('usage_tracking')
+        .insert({
+          student_id: user.id,
+          session_type: 'voice_practice',
+          session_id: sessionIdRef.current,
+          messages_count: 0,
+          minutes_used: 0
+        });
+      
+      sessionStartedRef.current = true;
+      console.log('Voice practice session started:', sessionIdRef.current);
+    } catch (error) {
+      console.error('Error tracking session start:', error);
+    }
+  };
+
+  // Track session end and update metrics
+  const trackSessionEnd = async () => {
+    if (!sessionStartedRef.current) return;
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Update session with final message count
+      await supabase
+        .from('usage_tracking')
+        .update({
+          ended_at: new Date().toISOString(),
+          messages_count: conversationHistory.length
+        })
+        .eq('session_id', sessionIdRef.current)
+        .eq('student_id', user.id);
+
+      // Trigger aggregation to update student_metrics
+      await supabase.rpc('update_student_practice_counts', {
+        target_student_id: user.id
+      });
+
+      console.log('Voice practice session ended:', sessionIdRef.current);
+      sessionStartedRef.current = false;
+    } catch (error) {
+      console.error('Error tracking session end:', error);
+    }
+  };
+
   const sendMessage = async (text: string, speakResponse: (text: string) => Promise<void>) => {
     if (!text.trim()) return;
+    
+    // Track session start on first message
+    await trackSessionStart();
     
     setIsLoading(true);
     
@@ -109,6 +168,13 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       ];
       
       setApiConversationHistory(data.updatedHistory || updatedHistory);
+
+      // Auto-analyze conversation after 4+ messages (silently in background)
+      const totalMessages = conversationHistory.length + 2; // +2 for user and AI messages just added
+      if (totalMessages >= 4) {
+        // Run analysis silently without showing toast
+        analyzeAfterMessages();
+      }
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -121,11 +187,55 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     }
   };
 
-  const clearConversation = () => {
+  // Auto-analyze conversation silently in background
+  const analyzeAfterMessages = async () => {
+    try {
+      const messagesToAnalyze = conversationHistory.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+      // Get class ID for current user
+      let classroomId = null;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from('student_enrollments')
+          .select('class_id')
+          .eq('student_id', user.id)
+          .limit(1);
+        
+        if (data && data.length > 0) {
+          classroomId = data[0].class_id;
+        }
+      }
+
+      // Silent analysis - no toast notifications
+      await analyzeConversation(messagesToAnalyze, {
+        sessionId: sessionIdRef.current || undefined,
+        classroomId: classroomId || undefined,
+        silent: true
+      });
+
+      console.log('Auto-analysis completed for session:', sessionIdRef.current);
+    } catch (error) {
+      console.error('Error in auto-analysis:', error);
+    }
+  };
+
+  const clearConversation = async () => {
+    // Track session end before clearing
+    await trackSessionEnd();
+    
     setConversationHistory([]);
     setApiConversationHistory([]);
     setGptResponse("");
     setTranslation("");
+    
+    // Reset session for next conversation
+    sessionIdRef.current = crypto.randomUUID();
+    sessionStartedRef.current = false;
+    
     toast({
       title: t("Success"),
       description: t("conversationHistoryCleared"),
