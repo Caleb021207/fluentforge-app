@@ -8,10 +8,9 @@ interface TestScore {
   id: string;
   overall_score: number | null;
   cefr_level: string | null;
-  reading_score: number | null;
-  writing_score: number | null;
-  speaking_score: number | null;
-  listening_score: number | null;
+  reading_listening_score: number | null;
+  written_production_score: number | null;
+  spoken_fluency_score: number | null;
   upload_date: string;
 }
 
@@ -84,30 +83,24 @@ const TestScoreCard = ({ testScore, title = "Latest Test Score", showDetails = t
         </div>
 
         {showDetails && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="text-center">
               <div className="text-lg font-semibold">
-                {testScore.reading_score ? Math.round(testScore.reading_score) : 'N/A'}
+                {testScore.reading_listening_score ? Math.round(testScore.reading_listening_score) : 'N/A'}
               </div>
-              <p className="text-xs text-muted-foreground">Reading</p>
+              <p className="text-xs text-muted-foreground">Comprehension (Auditory & Reading)</p>
             </div>
             <div className="text-center">
               <div className="text-lg font-semibold">
-                {testScore.writing_score ? Math.round(testScore.writing_score) : 'N/A'}
+                {testScore.written_production_score ? Math.round(testScore.written_production_score) : 'N/A'}
               </div>
-              <p className="text-xs text-muted-foreground">Writing</p>
+              <p className="text-xs text-muted-foreground">Written Production</p>
             </div>
             <div className="text-center">
               <div className="text-lg font-semibold">
-                {testScore.speaking_score ? Math.round(testScore.speaking_score) : 'N/A'}
+                {testScore.spoken_fluency_score ? Math.round(testScore.spoken_fluency_score) : 'N/A'}
               </div>
-              <p className="text-xs text-muted-foreground">Speaking</p>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-semibold">
-                {testScore.listening_score ? Math.round(testScore.listening_score) : 'N/A'}
-              </div>
-              <p className="text-xs text-muted-foreground">Listening</p>
+              <p className="text-xs text-muted-foreground">Conversational Fluency</p>
             </div>
           </div>
         )}
