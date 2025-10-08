@@ -21,6 +21,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
   const sessionIdRef = useRef<string | null>(null);
+  const usageTrackingRecordIdRef = useRef<string | null>(null); // Store DB record ID
   const sessionStartedRef = useRef<boolean>(false);
   const conversationHistoryRef = useRef<ConversationMessage[]>([]);
   const sessionStartTimeRef = useRef<number | null>(null);
@@ -93,7 +94,8 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         userId: user.id
       });
       
-      await supabase
+      // Capture the inserted record's ID
+      const { data, error } = await supabase
         .from('usage_tracking')
         .insert({
           student_id: user.id,
@@ -101,11 +103,22 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
           session_id: sessionIdRef.current,
           messages_count: 0,
           minutes_used: 0
-        });
+        })
+        .select('id')
+        .single();
+      
+      if (error) {
+        console.error('❌ Error inserting usage tracking:', error);
+        return;
+      }
+      
+      if (data?.id) {
+        usageTrackingRecordIdRef.current = data.id; // Store the DB record ID
+        console.log('✅ Voice practice session started with record ID:', data.id);
+      }
       
       sessionStartedRef.current = true;
       sessionEndedRef.current = false; // Reset ended flag
-      console.log('✅ Voice practice session started:', sessionIdRef.current);
     } catch (error) {
       console.error('❌ Error tracking session start:', error);
     }
@@ -164,18 +177,56 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       }
 
       // Update session with final message count and duration
-      const { error: updateError } = await supabase
-        .from('usage_tracking')
-        .update({
-          ended_at: new Date().toISOString(),
-          messages_count: history.length,
-          minutes_used: duration
-        })
-        .eq('session_id', sessionIdRef.current)
-        .eq('student_id', user.id);
+      let updateSuccess = false;
+      
+      // Try using the record ID first (most reliable)
+      if (usageTrackingRecordIdRef.current) {
+        const { data: updateData, error: updateError } = await supabase
+          .from('usage_tracking')
+          .update({
+            ended_at: new Date().toISOString(),
+            messages_count: history.length,
+            minutes_used: duration
+          })
+          .eq('id', usageTrackingRecordIdRef.current)
+          .select();
 
-      if (updateError) {
-        console.error('❌ Error updating session:', updateError);
+        if (updateError) {
+          console.error('❌ Error updating session by ID:', updateError);
+        } else if (updateData && updateData.length > 0) {
+          updateSuccess = true;
+          console.log('✅ Session updated using record ID');
+        } else {
+          console.warn('⚠️ No rows updated using record ID');
+        }
+      }
+      
+      // Fallback: try using session_id if record ID update didn't work
+      if (!updateSuccess && sessionIdRef.current) {
+        const { data: updateData, error: updateError } = await supabase
+          .from('usage_tracking')
+          .update({
+            ended_at: new Date().toISOString(),
+            messages_count: history.length,
+            minutes_used: duration
+          })
+          .eq('session_id', sessionIdRef.current)
+          .eq('student_id', user.id)
+          .is('ended_at', null)
+          .select();
+
+        if (updateError) {
+          console.error('❌ Error updating session by session_id:', updateError);
+        } else if (updateData && updateData.length > 0) {
+          updateSuccess = true;
+          console.log('✅ Session updated using session_id fallback');
+        } else {
+          console.error('❌ No rows updated - session record not found');
+        }
+      }
+      
+      if (!updateSuccess) {
+        console.error('❌ Failed to update session record');
       }
 
       // Trigger aggregation to update student_metrics
@@ -298,6 +349,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     
     // Reset session for next conversation
     sessionIdRef.current = crypto.randomUUID();
+    usageTrackingRecordIdRef.current = null; // Reset record ID
     sessionStartedRef.current = false;
     sessionEndedRef.current = false; // Reset ended flag
     sessionStartTimeRef.current = null; // Reset start time
