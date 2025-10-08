@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, TrendingUp, Calendar, AlertCircle, CheckCircle, BarChart, MessageSquare, Mic } from "lucide-react";
+import { Users, TrendingUp, Calendar, AlertCircle, CheckCircle, BarChart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getCEFRColor } from "@/components/transcript-analysis/utils/cefrUtils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,9 +20,6 @@ interface StudentMetrics {
   // Language metrics
   avg_grammar_accuracy: number | null;
   avg_conversation_complexity: number | null;
-  // Usage metrics
-  text_practice_calls: number;
-  premium_voice_calls: number;
   last_activity: string | null;
 }
 
@@ -109,7 +106,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
             // Get language metrics
             const { data: languageMetrics } = await supabase
               .from('student_metrics')
-              .select('avg_grammar_accuracy, avg_conversation_complexity, text_practice_calls, premium_voice_calls, last_activity')
+              .select('avg_grammar_accuracy, avg_conversation_complexity, last_activity')
               .eq('student_id', studentId)
               .maybeSingle();
 
@@ -123,8 +120,6 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
               upload_date: latestAnalysis?.upload_date || null,
               avg_grammar_accuracy: languageMetrics?.avg_grammar_accuracy || null,
               avg_conversation_complexity: languageMetrics?.avg_conversation_complexity || null,
-              text_practice_calls: languageMetrics?.text_practice_calls || 0,
-              premium_voice_calls: languageMetrics?.premium_voice_calls || 0,
               last_activity: languageMetrics?.last_activity || null
             });
           }
@@ -268,8 +263,6 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                     <TableHead className="text-right">Test Score</TableHead>
                     <TableHead className="text-right">Grammar</TableHead>
                     <TableHead className="text-right">Complexity</TableHead>
-                    <TableHead className="text-center"><MessageSquare className="h-4 w-4 inline" /> Text</TableHead>
-                    <TableHead className="text-center"><Mic className="h-4 w-4 inline" /> Voice</TableHead>
                     <TableHead>Last Activity</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -297,8 +290,6 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                       </TableCell>
                       <TableCell className="text-right">{formatScore(student.avg_grammar_accuracy)}</TableCell>
                       <TableCell className="text-right">{formatScore(student.avg_conversation_complexity)}</TableCell>
-                      <TableCell className="text-center">{student.text_practice_calls}</TableCell>
-                      <TableCell className="text-center">{student.premium_voice_calls}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {formatDate(student.last_activity)}
                       </TableCell>
