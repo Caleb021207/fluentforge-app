@@ -61,7 +61,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         // Fetch most recent transcript analysis
         const { data: latestAnalysis } = await supabase
           .from('transcript_analyses')
-          .select('id, overall_score, cefr_level, upload_date')
+          .select('id, overall_score, cefr_level, upload_date, reading_listening_score, written_production_score, spoken_fluency_score')
           .eq('user_id', profile.id)
           .order('upload_date', { ascending: false })
           .limit(1)
