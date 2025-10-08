@@ -106,9 +106,13 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
             // Get language metrics
             const { data: languageMetrics } = await supabase
               .from('student_metrics')
-              .select('avg_grammar_accuracy, avg_conversation_complexity, last_activity')
+              .select('avg_grammar_accuracy, avg_conversation_complexity')
               .eq('student_id', studentId)
               .maybeSingle();
+
+            // Get last login time from auth.users
+            const { data: lastSignIn } = await supabase
+              .rpc('get_user_last_sign_in', { user_id: studentId });
 
             allStudentMetrics.push({
               student_id: studentId,
@@ -120,7 +124,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
               upload_date: latestAnalysis?.upload_date || null,
               avg_grammar_accuracy: languageMetrics?.avg_grammar_accuracy || null,
               avg_conversation_complexity: languageMetrics?.avg_conversation_complexity || null,
-              last_activity: languageMetrics?.last_activity || null
+              last_activity: lastSignIn || null
             });
           }
         }
