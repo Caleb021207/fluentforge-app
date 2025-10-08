@@ -22,6 +22,10 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const [translation, setTranslation] = useState("");
   const sessionIdRef = useRef<string | null>(null);
   const sessionStartedRef = useRef<boolean>(false);
+  const conversationHistoryRef = useRef<ConversationMessage[]>([]);
+  const sessionStartTimeRef = useRef<number | null>(null);
+  const sessionEndedRef = useRef<boolean>(false);
+  const cleanupSetupRef = useRef<boolean>(false);
   const { toast } = useToast();
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
@@ -32,19 +36,47 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     sessionIdRef.current = crypto.randomUUID();
   }
 
+  // Update conversationHistoryRef whenever state changes
+  useEffect(() => {
+    conversationHistoryRef.current = conversationHistory;
+  }, [conversationHistory]);
+
   // Handle cleanup on unmount or page unload
   useEffect(() => {
+    if (cleanupSetupRef.current) return; // Only set up once
+    cleanupSetupRef.current = true;
+
     const handleBeforeUnload = () => {
-      trackSessionEnd();
+      if (sessionStartedRef.current && !sessionEndedRef.current) {
+        const history = conversationHistoryRef.current;
+        const duration = sessionStartTimeRef.current 
+          ? Math.ceil((Date.now() - sessionStartTimeRef.current) / 60000)
+          : 0;
+        
+        // Use beacon for guaranteed delivery
+        const data = {
+          session_id: sessionIdRef.current,
+          ended_at: new Date().toISOString(),
+          messages_count: history.length,
+          minutes_used: duration
+        };
+        
+        navigator.sendBeacon(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/track-session-end`,
+          JSON.stringify(data)
+        );
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      trackSessionEnd();
+      if (sessionStartedRef.current && !sessionEndedRef.current) {
+        trackSessionEndWithRefs();
+      }
     };
-  }, [conversationHistory]);
+  }, []); // Empty dependencies - only run once!
 
   // Track session start in usage_tracking
   const trackSessionStart = async () => {
@@ -54,6 +86,8 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      sessionStartTimeRef.current = Date.now(); // Record start time
+      
       await supabase
         .from('usage_tracking')
         .insert({
@@ -65,26 +99,33 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         });
       
       sessionStartedRef.current = true;
+      sessionEndedRef.current = false; // Reset ended flag
       console.log('Voice practice session started:', sessionIdRef.current);
     } catch (error) {
       console.error('Error tracking session start:', error);
     }
   };
 
-  // Track session end and update metrics
-  const trackSessionEnd = async () => {
-    if (!sessionStartedRef.current) return;
+  // Track session end and update metrics (uses refs for reliable cleanup)
+  const trackSessionEndWithRefs = async () => {
+    if (!sessionStartedRef.current || sessionEndedRef.current) return;
+    sessionEndedRef.current = true; // Mark as ended immediately to prevent double-calls
     
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      const history = conversationHistoryRef.current; // Use ref instead of state
+      const duration = sessionStartTimeRef.current 
+        ? Math.ceil((Date.now() - sessionStartTimeRef.current) / 60000)
+        : 0;
+
       // Check if there are at least 2 user messages to analyze
-      const userMessageCount = conversationHistory.filter(msg => msg.role === 'user').length;
+      const userMessageCount = history.filter(msg => msg.role === 'user').length;
       
       if (userMessageCount >= 2) {
         // Analyze conversation silently before ending session
-        const messagesToAnalyze = conversationHistory.map(msg => ({
+        const messagesToAnalyze = history.map(msg => ({
           role: msg.role,
           content: msg.content
         }));
@@ -111,12 +152,13 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         console.log('Conversation analyzed on session end:', sessionIdRef.current);
       }
 
-      // Update session with final message count
+      // Update session with final message count and duration
       await supabase
         .from('usage_tracking')
         .update({
           ended_at: new Date().toISOString(),
-          messages_count: conversationHistory.length
+          messages_count: history.length,
+          minutes_used: duration
         })
         .eq('session_id', sessionIdRef.current)
         .eq('student_id', user.id);
@@ -126,7 +168,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         target_student_id: user.id
       });
 
-      console.log('Voice practice session ended:', sessionIdRef.current);
+      console.log('Voice practice session ended:', sessionIdRef.current, 'Messages:', history.length, 'Minutes:', duration);
       sessionStartedRef.current = false;
     } catch (error) {
       console.error('Error tracking session end:', error);
@@ -228,7 +270,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
 
   const clearConversation = async () => {
     // Track session end before clearing
-    await trackSessionEnd();
+    await trackSessionEndWithRefs();
     
     setConversationHistory([]);
     setApiConversationHistory([]);
@@ -238,6 +280,8 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     // Reset session for next conversation
     sessionIdRef.current = crypto.randomUUID();
     sessionStartedRef.current = false;
+    sessionEndedRef.current = false; // Reset ended flag
+    sessionStartTimeRef.current = null; // Reset start time
     
     toast({
       title: t("Success"),
