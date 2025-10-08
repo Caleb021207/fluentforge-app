@@ -49,11 +49,13 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student }) => 
           <div className="text-sm text-muted-foreground">{student.student_email}</div>
         </div>
       </TableCell>
-      <TableCell>
-        {student.text_practice_calls || 0}
+      <TableCell className="text-center">
+        {student.certification_attempts || 0}
       </TableCell>
-      <TableCell>
-        {student.premium_voice_calls || 0}
+      <TableCell className="text-center">
+        {student.highest_certification_score > 0 
+          ? `${Math.round(student.highest_certification_score)}%` 
+          : '-'}
       </TableCell>
       <TableCell>
         {(student.avg_grammar_accuracy && student.avg_grammar_accuracy > 0) ? (

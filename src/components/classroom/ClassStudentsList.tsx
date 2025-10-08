@@ -43,17 +43,13 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
         throw metricsError;
       }
 
-      // Get user emails separately since we can't access auth.users directly
       const transformedData: StudentMetrics[] = (metricsData || []).map((student: any) => {
         return {
           student_id: student.student_id || null,
           student_name: student.profiles?.display_name || 'Unknown Student',
-          student_email: null, // We'll need to fetch this separately or use a different approach
+          student_email: null,
           text_practice_calls: student.text_practice_calls || 0,
           premium_voice_calls: student.premium_voice_calls || 0,
-          last_activity: student.last_activity || null,
-          
-          // Include these properties to satisfy TypeScript
           premium_voice_sessions: student.premium_voice_sessions || 0,
           premium_voice_minutes_used: student.premium_voice_minutes_used || 0,
           premium_voice_minutes_remaining: student.premium_voice_minutes_remaining || 0,
@@ -61,6 +57,10 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
           highest_certification_score: student.highest_certification_score || 0,
           completed_lessons: student.completed_lessons || 0,
           total_lessons: student.total_lessons || 0,
+          last_activity: student.last_activity || null,
+          avg_grammar_accuracy: student.avg_grammar_accuracy || 0,
+          avg_conversation_complexity: student.avg_conversation_complexity || 0,
+          language_metrics_count: student.language_metrics_count || 0,
         };
       });
 

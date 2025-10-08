@@ -54,8 +54,8 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
           ? Math.ceil((Date.now() - sessionStartTimeRef.current) / 60000)
           : 0;
         
-        // Use beacon for guaranteed delivery
         const data = {
+          record_id: usageTrackingRecordIdRef.current,
           session_id: sessionIdRef.current,
           ended_at: new Date().toISOString(),
           messages_count: history.length,
@@ -63,7 +63,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         };
         
         navigator.sendBeacon(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/track-session-end`,
+          `https://dukpljcweixxmpkiblwo.supabase.co/functions/v1/track-session-end`,
           JSON.stringify(data)
         );
       }
@@ -74,7 +74,13 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       if (sessionStartedRef.current && !sessionEndedRef.current) {
-        trackSessionEndWithRefs();
+        // Capture values before cleanup
+        trackSessionEnd(
+          usageTrackingRecordIdRef.current,
+          sessionIdRef.current,
+          conversationHistoryRef.current,
+          sessionStartTimeRef.current
+        );
       }
     };
   }, []); // Empty dependencies - only run once!
@@ -124,37 +130,33 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     }
   };
 
-  // Track session end and update metrics (uses refs for reliable cleanup)
-  const trackSessionEndWithRefs = async () => {
-    if (!sessionStartedRef.current || sessionEndedRef.current) return;
-    sessionEndedRef.current = true; // Mark as ended immediately to prevent double-calls
+  // Track session end with passed parameters (prevents race conditions)
+  const trackSessionEnd = async (
+    recordId: string | null,
+    sessionId: string | null,
+    history: ConversationMessage[],
+    startTime: number | null
+  ) => {
+    if (sessionEndedRef.current) return;
+    sessionEndedRef.current = true;
     
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const history = conversationHistoryRef.current; // Use ref instead of state
-      const duration = sessionStartTimeRef.current 
-        ? Math.ceil((Date.now() - sessionStartTimeRef.current) / 60000)
-        : 0;
+      const duration = startTime ? Math.ceil((Date.now() - startTime) / 60000) : 0;
 
-      console.log('📊 Ending session:', {
-        sessionId: sessionIdRef.current,
-        messagesCount: history.length,
-        duration
-      });
+      console.log('📊 Ending session:', { sessionId, messagesCount: history.length, duration });
 
       // Check if there are at least 2 user messages to analyze
       const userMessageCount = history.filter(msg => msg.role === 'user').length;
       
       if (userMessageCount >= 2) {
-        // Analyze conversation silently before ending session
         const messagesToAnalyze = history.map(msg => ({
           role: msg.role,
           content: msg.content
         }));
 
-        // Get class ID for current user
         let classroomId = null;
         const { data } = await supabase
           .from('student_enrollments')
@@ -166,21 +168,19 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
           classroomId = data[0].class_id;
         }
 
-        // Silent analysis - no toast notifications
         await analyzeConversation(messagesToAnalyze, {
-          sessionId: sessionIdRef.current || undefined,
+          sessionId: sessionId || undefined,
           classroomId: classroomId || undefined,
           silent: true
         });
 
-        console.log('✅ Conversation analyzed on session end:', sessionIdRef.current);
+        console.log('✅ Conversation analyzed on session end:', sessionId);
       }
 
       // Update session with final message count and duration
       let updateSuccess = false;
       
-      // Try using the record ID first (most reliable)
-      if (usageTrackingRecordIdRef.current) {
+      if (recordId) {
         const { data: updateData, error: updateError } = await supabase
           .from('usage_tracking')
           .update({
@@ -188,40 +188,14 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
             messages_count: history.length,
             minutes_used: duration
           })
-          .eq('id', usageTrackingRecordIdRef.current)
+          .eq('id', recordId)
           .select();
 
         if (updateError) {
-          console.error('❌ Error updating session by ID:', updateError);
+          console.error('❌ Error updating session:', updateError);
         } else if (updateData && updateData.length > 0) {
           updateSuccess = true;
-          console.log('✅ Session updated using record ID');
-        } else {
-          console.warn('⚠️ No rows updated using record ID');
-        }
-      }
-      
-      // Fallback: try using session_id if record ID update didn't work
-      if (!updateSuccess && sessionIdRef.current) {
-        const { data: updateData, error: updateError } = await supabase
-          .from('usage_tracking')
-          .update({
-            ended_at: new Date().toISOString(),
-            messages_count: history.length,
-            minutes_used: duration
-          })
-          .eq('session_id', sessionIdRef.current)
-          .eq('student_id', user.id)
-          .is('ended_at', null)
-          .select();
-
-        if (updateError) {
-          console.error('❌ Error updating session by session_id:', updateError);
-        } else if (updateData && updateData.length > 0) {
-          updateSuccess = true;
-          console.log('✅ Session updated using session_id fallback');
-        } else {
-          console.error('❌ No rows updated - session record not found');
+          console.log('✅ Session updated successfully');
         }
       }
       
@@ -229,16 +203,12 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         console.error('❌ Failed to update session record');
       }
 
-      // Trigger aggregation to update student_metrics
-      const { error: rpcError } = await supabase.rpc('update_student_practice_counts', {
+      // Trigger aggregation
+      await supabase.rpc('update_student_practice_counts', {
         target_student_id: user.id
       });
 
-      if (rpcError) {
-        console.error('❌ Error updating metrics:', rpcError);
-      }
-
-      console.log('✅ Session ended:', sessionIdRef.current, 'Messages:', history.length, 'Minutes:', duration);
+      console.log('✅ Session ended:', sessionId, 'Messages:', history.length, 'Minutes:', duration);
       sessionStartedRef.current = false;
     } catch (error) {
       console.error('❌ Error tracking session end:', error);
@@ -339,8 +309,14 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   };
 
   const clearConversation = async () => {
-    // Track session end before clearing
-    await trackSessionEndWithRefs();
+    // Capture current values before clearing
+    const currentRecordId = usageTrackingRecordIdRef.current;
+    const currentSessionId = sessionIdRef.current;
+    const currentHistory = conversationHistoryRef.current;
+    const currentStartTime = sessionStartTimeRef.current;
+    
+    // Track session end with captured values
+    await trackSessionEnd(currentRecordId, currentSessionId, currentHistory, currentStartTime);
     
     setConversationHistory([]);
     setApiConversationHistory([]);
@@ -349,10 +325,10 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     
     // Reset session for next conversation
     sessionIdRef.current = crypto.randomUUID();
-    usageTrackingRecordIdRef.current = null; // Reset record ID
+    usageTrackingRecordIdRef.current = null;
     sessionStartedRef.current = false;
-    sessionEndedRef.current = false; // Reset ended flag
-    sessionStartTimeRef.current = null; // Reset start time
+    sessionEndedRef.current = false;
+    sessionStartTimeRef.current = null;
     
     toast({
       title: t("Success"),

@@ -35,15 +35,15 @@ export const StudentMetricsTable = ({
               onSort={onSort}
             />
             <SortableTableHeader
-              field="text_practice_calls"
-              label={CLASSROOM_TEXT.PRACTICE_CALLS}
+              field="certification_attempts"
+              label="Cert Attempts"
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableTableHeader
-              field="premium_voice_calls"
-              label={CLASSROOM_TEXT.VOICE_PRACTICE_CALLS}
+              field="highest_certification_score"
+              label="Cert Score"
               currentSortField={sortField}
               sortDirection={sortDirection}
               onSort={onSort}
