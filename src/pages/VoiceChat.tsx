@@ -12,6 +12,9 @@ import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
 import { getLanguagePair } from "@/utils/languageUtils";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getEnglishOnlyMessage } from "@/utils/englishOnlyMessages";
+import { supabase } from "@/integrations/supabase/client";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import type { User } from "@supabase/supabase-js";
 
 // Importing components
 import VoiceChatHeader from "@/components/voice-chat/VoiceChatHeader";
@@ -37,6 +40,25 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   const { toast } = useToast();
   const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
   const [correctGrammar, setCorrectGrammar] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setIsCheckingAuth(false);
+    };
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Read URL parameters for deep linking
   const searchParams = new URLSearchParams(window.location.search);
@@ -129,6 +151,20 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   const handlePhraseClick = (phrase: string) => {
     handleSendTranscript(phrase);
   };
+
+  // Show loading state while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 flex items-center justify-center min-h-[50vh]">
+        <p className="text-muted-foreground">{t("loading") || "Loading..."}</p>
+      </div>
+    );
+  }
+
+  // Show auth prompt if not logged in
+  if (!user) {
+    return <AuthRequiredPrompt />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-4">
