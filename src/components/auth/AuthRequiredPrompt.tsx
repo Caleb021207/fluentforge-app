@@ -21,13 +21,13 @@ const AuthRequiredPrompt = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <Card className="p-6 bg-amber-50 border-amber-200">
+      <Card className="p-6">
         <div className="flex flex-col items-center text-center space-y-4">
-          <LogIn className="h-12 w-12 text-amber-600" />
-          <h2 className="text-xl font-semibold text-amber-800">
+          <LogIn className="h-12 w-12 text-primary" />
+          <h2 className="text-xl font-semibold">
             {t("loginRequired")}
           </h2>
-          <p className="text-amber-700">
+          <p className="text-muted-foreground">
             {t("loginRequiredDescription")}
           </p>
           <Button onClick={redirectToAuth} variant="accent">
