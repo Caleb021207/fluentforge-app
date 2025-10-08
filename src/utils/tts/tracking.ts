@@ -20,21 +20,10 @@ export async function trackTTSUsage(language: string, textLength: number): Promi
       return;
     }
 
-    console.log(`Tracking voice practice for user ${user.id}`);
+    console.log(`Tracking TTS API call for user ${user.id}`);
     
-    // Track in new usage_tracking table
-    const { error: trackingError } = await supabase.from('usage_tracking').insert({
-      student_id: user.id,
-      session_type: 'voice_practice',
-      messages_count: 1,
-      minutes_used: Math.ceil(textLength / 150) // Estimate 1 minute per 150 characters
-    });
-    
-    if (trackingError) {
-      console.error("Error inserting usage tracking:", trackingError);
-    }
-    
-    // Also track in legacy API calls table for backward compatibility
+    // Track API call (usage_tracking is managed by voice conversation hook)
+    // Only track the API call here for monitoring purposes
     const { error } = await supabase.from('api_calls_tracking').insert({
       user_id: user.id,
       service: 'tts',
@@ -46,22 +35,7 @@ export async function trackTTSUsage(language: string, textLength: number): Promi
       return;
     }
     
-    console.log("Voice practice usage tracked successfully");
-    
-    // Force recalculation of metrics
-    try {
-      const { error: recalcError } = await supabase.rpc('recalculate_student_metrics', {
-        target_student_id: user.id
-      });
-      
-      if (recalcError) {
-        console.error("Error recalculating metrics:", recalcError);
-      } else {
-        console.log("Student metrics recalculated successfully");
-      }
-    } catch (recalcErr) {
-      console.error("Exception in recalculating metrics:", recalcErr);
-    }
+    console.log("TTS API call tracked successfully");
     
   } catch (error) {
     console.error("Error tracking TTS usage:", error);
