@@ -88,6 +88,11 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
 
       sessionStartTimeRef.current = Date.now(); // Record start time
       
+      console.log('📊 Starting session:', {
+        sessionId: sessionIdRef.current,
+        userId: user.id
+      });
+      
       await supabase
         .from('usage_tracking')
         .insert({
@@ -100,9 +105,9 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       
       sessionStartedRef.current = true;
       sessionEndedRef.current = false; // Reset ended flag
-      console.log('Voice practice session started:', sessionIdRef.current);
+      console.log('✅ Voice practice session started:', sessionIdRef.current);
     } catch (error) {
-      console.error('Error tracking session start:', error);
+      console.error('❌ Error tracking session start:', error);
     }
   };
 
@@ -119,6 +124,12 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       const duration = sessionStartTimeRef.current 
         ? Math.ceil((Date.now() - sessionStartTimeRef.current) / 60000)
         : 0;
+
+      console.log('📊 Ending session:', {
+        sessionId: sessionIdRef.current,
+        messagesCount: history.length,
+        duration
+      });
 
       // Check if there are at least 2 user messages to analyze
       const userMessageCount = history.filter(msg => msg.role === 'user').length;
@@ -149,11 +160,11 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
           silent: true
         });
 
-        console.log('Conversation analyzed on session end:', sessionIdRef.current);
+        console.log('✅ Conversation analyzed on session end:', sessionIdRef.current);
       }
 
       // Update session with final message count and duration
-      await supabase
+      const { error: updateError } = await supabase
         .from('usage_tracking')
         .update({
           ended_at: new Date().toISOString(),
@@ -163,15 +174,23 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         .eq('session_id', sessionIdRef.current)
         .eq('student_id', user.id);
 
+      if (updateError) {
+        console.error('❌ Error updating session:', updateError);
+      }
+
       // Trigger aggregation to update student_metrics
-      await supabase.rpc('update_student_practice_counts', {
+      const { error: rpcError } = await supabase.rpc('update_student_practice_counts', {
         target_student_id: user.id
       });
 
-      console.log('Voice practice session ended:', sessionIdRef.current, 'Messages:', history.length, 'Minutes:', duration);
+      if (rpcError) {
+        console.error('❌ Error updating metrics:', rpcError);
+      }
+
+      console.log('✅ Session ended:', sessionIdRef.current, 'Messages:', history.length, 'Minutes:', duration);
       sessionStartedRef.current = false;
     } catch (error) {
-      console.error('Error tracking session end:', error);
+      console.error('❌ Error tracking session end:', error);
     }
   };
 

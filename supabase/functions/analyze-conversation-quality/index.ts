@@ -96,12 +96,11 @@ serve(async (req) => {
       );
     }
 
-    // Store metrics in database (optional - only if user is authenticated and classroomId is provided)
+    // Store metrics in database (optional - only if user is authenticated)
     if (userId !== "anonymous-or-current-user-id" && userId !== "anonymous") {
       try {
         const { error } = await supabase.from("student_language_metrics").insert({
           user_id: userId,
-          classroom_id: classroomId,
           session_id: sessionId,
           grammar_accuracy: metrics.grammarAccuracy,
           conversation_complexity: metrics.conversationComplexity,
