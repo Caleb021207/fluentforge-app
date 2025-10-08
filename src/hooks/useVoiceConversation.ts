@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
@@ -31,6 +31,20 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   if (!sessionIdRef.current) {
     sessionIdRef.current = crypto.randomUUID();
   }
+
+  // Handle cleanup on unmount or page unload
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      trackSessionEnd();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      trackSessionEnd();
+    };
+  }, [conversationHistory]);
 
   // Track session start in usage_tracking
   const trackSessionStart = async () => {
@@ -64,6 +78,38 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+
+      // Check if there are at least 2 user messages to analyze
+      const userMessageCount = conversationHistory.filter(msg => msg.role === 'user').length;
+      
+      if (userMessageCount >= 2) {
+        // Analyze conversation silently before ending session
+        const messagesToAnalyze = conversationHistory.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }));
+
+        // Get class ID for current user
+        let classroomId = null;
+        const { data } = await supabase
+          .from('student_enrollments')
+          .select('class_id')
+          .eq('student_id', user.id)
+          .limit(1);
+        
+        if (data && data.length > 0) {
+          classroomId = data[0].class_id;
+        }
+
+        // Silent analysis - no toast notifications
+        await analyzeConversation(messagesToAnalyze, {
+          sessionId: sessionIdRef.current || undefined,
+          classroomId: classroomId || undefined,
+          silent: true
+        });
+
+        console.log('Conversation analyzed on session end:', sessionIdRef.current);
+      }
 
       // Update session with final message count
       await supabase
@@ -168,13 +214,6 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       ];
       
       setApiConversationHistory(data.updatedHistory || updatedHistory);
-
-      // Auto-analyze conversation after 4+ messages (silently in background)
-      const totalMessages = conversationHistory.length + 2; // +2 for user and AI messages just added
-      if (totalMessages >= 4) {
-        // Run analysis silently without showing toast
-        analyzeAfterMessages();
-      }
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({
@@ -184,42 +223,6 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Auto-analyze conversation silently in background
-  const analyzeAfterMessages = async () => {
-    try {
-      const messagesToAnalyze = conversationHistory.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }));
-
-      // Get class ID for current user
-      let classroomId = null;
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data } = await supabase
-          .from('student_enrollments')
-          .select('class_id')
-          .eq('student_id', user.id)
-          .limit(1);
-        
-        if (data && data.length > 0) {
-          classroomId = data[0].class_id;
-        }
-      }
-
-      // Silent analysis - no toast notifications
-      await analyzeConversation(messagesToAnalyze, {
-        sessionId: sessionIdRef.current || undefined,
-        classroomId: classroomId || undefined,
-        silent: true
-      });
-
-      console.log('Auto-analysis completed for session:', sessionIdRef.current);
-    } catch (error) {
-      console.error('Error in auto-analysis:', error);
     }
   };
 
