@@ -7,7 +7,7 @@
 /**
  * Generate a secure key from a passphrase using PBKDF2
  */
-const generateKey = async (passphrase: string, salt: Uint8Array): Promise<CryptoKey> => {
+const generateKey = async (passphrase: string, salt: BufferSource): Promise<CryptoKey> => {
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
