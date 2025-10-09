@@ -182,10 +182,88 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
     setRemoveDialogOpen(true);
   };
 
-  const handleRemoveSuccess = () => {
-    // Refresh the data after removal
+  const handleRemoveSuccess = async () => {
+    // Close dialog and clear selection
+    setRemoveDialogOpen(false);
+    setSelectedStudent(null);
+    
+    // Refetch the data
     setIsLoading(true);
-    window.location.reload();
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      if (session.session) {
+        // Force a fresh fetch by calling the same logic
+        const { data: teacherClasses } = await supabase
+          .from('classes')
+          .select(`
+            id,
+            name,
+            class_code,
+            academic_year,
+            student_enrollments!inner (
+              student_id,
+              profiles!inner (
+                id,
+                display_name,
+                email
+              )
+            )
+          `)
+          .eq('teacher_id', teacherId);
+
+        // Process the data the same way
+        if (teacherClasses && teacherClasses.length > 0) {
+          const allStudentMetrics: StudentMetrics[] = [];
+          
+          for (const classData of teacherClasses) {
+            if (!classData.student_enrollments || classData.student_enrollments.length === 0) {
+              continue;
+            }
+
+            for (const enrollment of classData.student_enrollments) {
+              const studentId = enrollment.student_id;
+
+              const { data: latestAnalysis } = await supabase
+                .from('transcript_analyses')
+                .select('overall_score, cefr_level, upload_date')
+                .eq('user_id', studentId)
+                .order('upload_date', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+
+              const { data: languageMetrics } = await supabase
+                .from('student_metrics')
+                .select('avg_grammar_accuracy, avg_conversation_complexity')
+                .eq('student_id', studentId)
+                .maybeSingle();
+
+              const { data: lastSignIn } = await supabase
+                .rpc('get_user_last_sign_in', { user_id: studentId });
+
+              allStudentMetrics.push({
+                student_id: studentId,
+                student_name: enrollment.profiles.display_name || enrollment.profiles.email || 'Unknown',
+                student_email: enrollment.profiles.email || '',
+                class_id: classData.id,
+                class_name: classData.name,
+                overall_score: latestAnalysis?.overall_score || null,
+                cefr_level: latestAnalysis?.cefr_level || null,
+                upload_date: latestAnalysis?.upload_date || null,
+                avg_grammar_accuracy: languageMetrics?.avg_grammar_accuracy || null,
+                avg_conversation_complexity: languageMetrics?.avg_conversation_complexity || null,
+                last_activity: lastSignIn || null
+              });
+            }
+          }
+
+          setStudentMetrics(allStudentMetrics);
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formatDate = (dateString: string | null) => {
