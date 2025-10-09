@@ -109,6 +109,14 @@ const classroomTranslations: TranslationRecord = {
   "manage": "Gestionar",
   "invite": "Invitar",
   "share": "Compartir",
+  "actions": "Acciones",
+  "removeStudent": "Eliminar Estudiante",
+  "removeStudentFromClass": "Eliminar Estudiante de la Clase",
+  "confirmRemoveStudent": "¿Estás seguro de que quieres eliminar este estudiante de la clase?",
+  "studentWillLoseAccess": "El estudiante perderá acceso a esta clase.",
+  "removing": "Eliminando...",
+  "studentRemoved": "Estudiante eliminado exitosamente",
+  "errorRemovingStudent": "Error al eliminar estudiante",
   
   // Navigation and labels
   "classManagement": "Gestión de Clases",

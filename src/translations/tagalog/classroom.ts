@@ -7,7 +7,6 @@ const classroomTranslations: TranslationRecord = {
   "classCode": "Code ng Klase",
   "joinDate": "Petsa ng Pagsali",
   "students": "Mga Mag-aaral",
-  "actions": "Mga Aksyon",
   "joinClass": "Sumali sa Klase",
   "createClass": "Lumikha ng Klase",
   "enterClassCode": "Ilagay ang Code ng Klase",
@@ -25,7 +24,17 @@ const classroomTranslations: TranslationRecord = {
   "copyCode": "Kopyahin ang Code",
   "codeCopied": "Na-copy ang Code!",
   "yourClassCode": "Ang iyong code ng klase ay:",
-  "shareWithStudents": "Ibahagi ito sa iyong mga mag-aaral para makasali sila sa iyong klase."
+  "shareWithStudents": "Ibahagi ito sa iyong mga mag-aaral para makasali sila sa iyong klase.",
+  
+  // Student removal
+  "actions": "Mga Aksyon",
+  "removeStudent": "Alisin ang Mag-aaral",
+  "removeStudentFromClass": "Alisin ang Mag-aaral sa Klase",
+  "confirmRemoveStudent": "Sigurado ka bang gusto mong alisin ang mag-aaral na ito sa klase?",
+  "studentWillLoseAccess": "Mawawalan ng access ang mag-aaral sa klase na ito.",
+  "removing": "Inaalis...",
+  "studentRemoved": "Matagumpay na naalis ang mag-aaral",
+  "errorRemovingStudent": "Error sa pag-alis ng mag-aaral"
 };
 
 export default classroomTranslations;

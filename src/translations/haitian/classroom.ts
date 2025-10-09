@@ -18,7 +18,17 @@ const classroomTranslations: TranslationRecord = {
   teacherAccessRequired: "Aksè pwofesè obligatwa",
   unauthorized: "San otorizasyon",
   success: "Siksè",
-  error: "Erè"
+  error: "Erè",
+  
+  // Student removal
+  actions: "Aksyon",
+  removeStudent: "Retire elèv",
+  removeStudentFromClass: "Retire elèv nan klas",
+  confirmRemoveStudent: "Ou sèten ou vle retire elèv sa a nan klas la?",
+  studentWillLoseAccess: "Elèv la ap pèdi aksè nan klas sa a.",
+  removing: "Ap retire...",
+  studentRemoved: "Elèv retire avèk siksè",
+  errorRemovingStudent: "Erè pandan retire elèv"
 };
 
 export default classroomTranslations;

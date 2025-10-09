@@ -108,6 +108,8 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={handleSort}
+            classId={classId}
+            onStudentRemoved={fetchStudents}
           />
         )}
       </DialogContent>

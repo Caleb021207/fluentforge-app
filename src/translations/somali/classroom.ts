@@ -49,7 +49,17 @@ const classroomTranslations: TranslationRecord = {
   STUDENT_METRICS_REFRESHED: "Cabbirada ardayga si guul leh ayaa loo cusboonaysiiyay",
   ALL_METRICS_REFRESHED: "Dhammaan cabbirada si guul leh ayaa loo cusboonaysiiyay",
   FAILED_TO_REFRESH_METRICS: "Ku guuldareystay in la cusboonaysiiyo cabbirada",
-  REFRESHING: "Cusboonaysiinaya..."
+  REFRESHING: "Cusboonaysiinaya...",
+  
+  // Student removal
+  actions: "Ficillada",
+  removeStudent: "Ka saar Ardayga",
+  removeStudentFromClass: "Ka saar Ardayga Fasalka",
+  confirmRemoveStudent: "Ma hubtaa inaad rabto inaad ka saarto ardaygan fasalka?",
+  studentWillLoseAccess: "Ardaygu wuxuu lumayaa helitaanka fasalkan.",
+  removing: "Ka saaraya...",
+  studentRemoved: "Ardayga si guul leh ayaa looga saaray",
+  errorRemovingStudent: "Khalad ka saarista ardayga"
 };
 
 export default classroomTranslations;

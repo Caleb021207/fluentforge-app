@@ -22,7 +22,17 @@ const classroomTranslations: TranslationRecord = {
   lastActive: "Ultima activitate",
   noClasses: "Nu aveți clase",
   noClassesJoined: "Nu v-ați alăturat niciunei clase",
-  createOrJoinClass: "Creați sau alăturați-vă unei clase"
+  createOrJoinClass: "Creați sau alăturați-vă unei clase",
+  
+  // Student removal
+  actions: "Acțiuni",
+  removeStudent: "Eliminați studentul",
+  removeStudentFromClass: "Eliminați studentul din clasă",
+  confirmRemoveStudent: "Sunteți sigur că doriți să eliminați acest student din clasă?",
+  studentWillLoseAccess: "Studentul va pierde accesul la această clasă.",
+  removing: "Se elimină...",
+  studentRemoved: "Student eliminat cu succes",
+  errorRemovingStudent: "Eroare la eliminarea studentului"
 };
 
 export default classroomTranslations;

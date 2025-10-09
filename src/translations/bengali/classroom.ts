@@ -49,7 +49,17 @@ const classroomTranslations: TranslationRecord = {
   STUDENT_METRICS_REFRESHED: "শিক্ষার্থীর মেট্রিক সফলভাবে রিফ্রেশ করা হয়েছে",
   ALL_METRICS_REFRESHED: "সমস্ত মেট্রিক সফলভাবে রিফ্রেশ করা হয়েছে",
   FAILED_TO_REFRESH_METRICS: "মেট্রিক রিফ্রেশ করতে ব্যর্থ হয়েছে",
-  REFRESHING: "রিফ্রেশ হচ্ছে..."
+  REFRESHING: "রিফ্রেশ হচ্ছে...",
+  
+  // Student removal
+  actions: "কার্যক্রম",
+  removeStudent: "শিক্ষার্থী সরান",
+  removeStudentFromClass: "ক্লাস থেকে শিক্ষার্থী সরান",
+  confirmRemoveStudent: "আপনি কি নিশ্চিত যে আপনি এই শিক্ষার্থীকে ক্লাস থেকে সরাতে চান?",
+  studentWillLoseAccess: "শিক্ষার্থী এই ক্লাসে অ্যাক্সেস হারাবে।",
+  removing: "সরানো হচ্ছে...",
+  studentRemoved: "শিক্ষার্থী সফলভাবে সরানো হয়েছে",
+  errorRemovingStudent: "শিক্ষার্থী সরাতে ত্রুটি"
 };
 
 export default classroomTranslations;

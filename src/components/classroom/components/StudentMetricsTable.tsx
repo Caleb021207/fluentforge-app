@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Table, TableHeader, TableBody } from "@/components/ui/table";
+import { Table, TableHeader, TableBody, TableHead, TableRow } from "@/components/ui/table";
 import { SortableTableHeader } from './SortableTableHeader';
 import { StudentTableRow } from './StudentTableRow';
 import { StudentMetrics, SortField, SortDirection } from '@/components/classroom/types/studentTypes';
@@ -12,6 +12,8 @@ interface StudentMetricsTableProps {
   sortField: SortField;
   sortDirection: SortDirection;
   onSort: (field: SortField) => void;
+  classId?: string;
+  onStudentRemoved?: () => void;
 }
 
 export const StudentMetricsTable = ({
@@ -19,6 +21,8 @@ export const StudentMetricsTable = ({
   sortField,
   sortDirection,
   onSort,
+  classId,
+  onStudentRemoved
 }: StudentMetricsTableProps) => {
   const { t } = useLocalization();
   
@@ -26,7 +30,7 @@ export const StudentMetricsTable = ({
     <div className="max-h-[600px] overflow-auto">
       <Table>
         <TableHeader>
-          <tr>
+          <TableRow>
             <SortableTableHeader
               field="student_name"
               label={CLASSROOM_TEXT.NAME}
@@ -69,13 +73,18 @@ export const StudentMetricsTable = ({
               sortDirection={sortDirection}
               onSort={onSort}
             />
-          </tr>
+            {classId && onStudentRemoved && (
+              <TableHead className="text-center">{t("actions")}</TableHead>
+            )}
+          </TableRow>
         </TableHeader>
         <TableBody>
           {students.map((student, index) => (
             <StudentTableRow 
               key={student.student_id || index} 
-              student={student} 
+              student={student}
+              classId={classId}
+              onRemoved={onStudentRemoved}
             />
           ))}
         </TableBody>

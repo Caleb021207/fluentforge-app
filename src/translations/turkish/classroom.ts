@@ -22,7 +22,17 @@ const classroomTranslations: TranslationRecord = {
   lastActive: "Son Aktif",
   noClasses: "Hiç sınıfınız yok",
   noClassesJoined: "Katıldığınız hiç sınıf yok",
-  createOrJoinClass: "Sınıf oluşturun veya bir sınıfa katılın"
+  createOrJoinClass: "Sınıf oluşturun veya bir sınıfa katılın",
+  
+  // Student removal
+  actions: "İşlemler",
+  removeStudent: "Öğrenciyi Kaldır",
+  removeStudentFromClass: "Öğrenciyi Sınıftan Kaldır",
+  confirmRemoveStudent: "Bu öğrenciyi sınıftan kaldırmak istediğinizden emin misiniz?",
+  studentWillLoseAccess: "Öğrenci bu sınıfa erişimini kaybedecek.",
+  removing: "Kaldırılıyor...",
+  studentRemoved: "Öğrenci başarıyla kaldırıldı",
+  errorRemovingStudent: "Öğrenci kaldırılırken hata"
 };
 
 export default classroomTranslations;

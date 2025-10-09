@@ -43,7 +43,17 @@ const classroomTranslations: TranslationRecord = {
   joinedClass: "ክፍልን ተቀላቅለዋል",
   successfullyJoinedClass: "ክፍልን በተሳካ ሁኔታ ተቀላቅለዋል",
   invalidClassCode: "ልክ ያልሆነ የክፍል ኮድ",
-  pleaseCheckCode: "እባክዎን ኮዱን ይፈትሹ እና እንደገና ይሞክሩ"
+  pleaseCheckCode: "እባክዎን ኮዱን ይፈትሹ እና እንደገና ይሞክሩ",
+  
+  // Student removal
+  actions: "ድርጊቶች",
+  removeStudent: "ተማሪን ያስወግዱ",
+  removeStudentFromClass: "ተማሪን ከክፍል ያስወግዱ",
+  confirmRemoveStudent: "ይህን ተማሪ ከክፍል ማስወገድ እርግጠኛ ነዎት?",
+  studentWillLoseAccess: "ተማሪው ለዚህ ክፍል መዳረሻ ያጣል።",
+  removing: "በማስወገድ ላይ...",
+  studentRemoved: "ተማሪ በተሳካ ሁኔታ ተወግዷል",
+  errorRemovingStudent: "ተማሪን በማስወገድ ላይ ስህተት"
 };
 
 export default classroomTranslations;

@@ -43,7 +43,17 @@ const classroomTranslations: TranslationRecord = {
   joinedClass: "Darapọ̀ Mọ́ Kíláàsì",
   successfullyJoinedClass: "Darapọ̀ mọ́ kíláàsì ní àṣeyọrí",
   invalidClassCode: "Kóòdù Kíláàsì Àìtọ́",
-  pleaseCheckCode: "Jọ̀wọ́ ṣe àyẹ̀wò kóòdù kí o sì gbìyànjú lẹ́ẹ̀kan si"
+  pleaseCheckCode: "Jọ̀wọ́ ṣe àyẹ̀wò kóòdù kí o sì gbìyànjú lẹ́ẹ̀kan si",
+  
+  // Student removal
+  actions: "Àwọn Ìgbésẹ̀",
+  removeStudent: "Yọ Akẹ́kọ̀ọ́ Kúrò",
+  removeStudentFromClass: "Yọ Akẹ́kọ̀ọ́ Kúrò Nínú Kíláàsì",
+  confirmRemoveStudent: "Ṣé ó dájú pé o fẹ́ yọ akẹ́kọ̀ọ́ yìí kúrò nínú kíláàsì?",
+  studentWillLoseAccess: "Akẹ́kọ̀ọ́ yóò pàdánù ìwọlé sí kíláàsì yìí.",
+  removing: "Ń yọ kúrò...",
+  studentRemoved: "Akẹ́kọ̀ọ́ ti yọ kúrò ní àṣeyọrí",
+  errorRemovingStudent: "Àṣìṣe ní yíyọ akẹ́kọ̀ọ́ kúrò"
 };
 
 export default classroomTranslations;

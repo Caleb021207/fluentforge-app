@@ -1,16 +1,22 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { StudentMetrics } from '@/components/classroom/types/studentTypes';
+import { RemoveStudentDialog } from './RemoveStudentDialog';
 
 interface StudentTableRowProps {
   student: StudentMetrics;
+  classId?: string;
+  onRemoved?: () => void;
 }
 
-export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student }) => {
+export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student, classId, onRemoved }) => {
   const { t } = useLocalization();
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
   // Format date if available
   const formatDate = (dateString: string | null) => {
@@ -84,6 +90,28 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student }) => 
       <TableCell>
         {formatDate(student.last_activity)}
       </TableCell>
+      {classId && onRemoved && (
+        <TableCell className="text-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowRemoveDialog(true)}
+            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+          {student.student_id && (
+            <RemoveStudentDialog
+              open={showRemoveDialog}
+              onOpenChange={setShowRemoveDialog}
+              studentId={student.student_id}
+              studentName={student.student_name || 'Unknown Student'}
+              classId={classId}
+              onRemoved={onRemoved}
+            />
+          )}
+        </TableCell>
+      )}
     </TableRow>
   );
 };

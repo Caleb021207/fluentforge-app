@@ -49,7 +49,17 @@ const classroomTranslations: TranslationRecord = {
   STUDENT_METRICS_REFRESHED: "Emegharịala metrics nke nwata akwụkwọ nke ọma",
   ALL_METRICS_REFRESHED: "Emegharịala metrics niile nke ọma",
   FAILED_TO_REFRESH_METRICS: "Ọdighi mma imegharịa metrics",
-  REFRESHING: "Na-emegharị..."
+  REFRESHING: "Na-emegharị...",
+  
+  // Student removal
+  actions: "Omume",
+  removeStudent: "Wepụ Nwata Akwụkwọ",
+  removeStudentFromClass: "Wepụ Nwata Akwụkwọ na Klaasị",
+  confirmRemoveStudent: "Ị ji n'aka na ịchọrọ iwepụ nwata akwụkwọ a na klaasị?",
+  studentWillLoseAccess: "Nwata akwụkwọ ga-efunahụ ohere ịbanye klaasị a.",
+  removing: "Na-ewepụ...",
+  studentRemoved: "Ewepụla nwata akwụkwọ nke ọma",
+  errorRemovingStudent: "Nsogbu na-ewepụ nwata akwụkwọ"
 };
 
 export default classroomTranslations;

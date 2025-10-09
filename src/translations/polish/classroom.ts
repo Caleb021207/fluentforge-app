@@ -22,7 +22,17 @@ const classroomTranslations: TranslationRecord = {
   lastActive: "Ostatnio aktywny",
   noClasses: "Nie masz żadnych klas",
   noClassesJoined: "Nie dołączyłeś do żadnej klasy",
-  createOrJoinClass: "Utwórz lub dołącz do klasy"
+  createOrJoinClass: "Utwórz lub dołącz do klasy",
+  
+  // Student removal
+  actions: "Akcje",
+  removeStudent: "Usuń ucznia",
+  removeStudentFromClass: "Usuń ucznia z klasy",
+  confirmRemoveStudent: "Czy na pewno chcesz usunąć tego ucznia z klasy?",
+  studentWillLoseAccess: "Uczeń straci dostęp do tej klasy.",
+  removing: "Usuwanie...",
+  studentRemoved: "Uczeń został pomyślnie usunięty",
+  errorRemovingStudent: "Błąd podczas usuwania ucznia"
 };
 
 export default classroomTranslations;
