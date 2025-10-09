@@ -204,6 +204,9 @@ const uiElementsTranslations: TranslationRecord = {
   good: "Good",
   fair: "Fair",
   needsImprovement: "Needs Improvement",
+  
+  // Compliance
+  cipaCompliance: "CIPA Compliant",
 };
 
 export default uiElementsTranslations;
