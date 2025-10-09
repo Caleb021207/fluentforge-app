@@ -243,6 +243,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
             clearConversation={clearConversation}
             analyzeCurrentConversation={analyzeCurrentConversation}
             practice={practice}
+            isAnalyzing={isAnalyzing}
           />
         </Card>
 

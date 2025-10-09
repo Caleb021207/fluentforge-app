@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
-import { HelpCircle } from "lucide-react";
+import { BarChart3, Loader2 } from "lucide-react";
 import HintButton from "@/components/practice/HintButton";
 import { VoiceChatControlsProps } from "@/types/voiceChat";
 
@@ -12,7 +12,8 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
   sessionIdRef,
   clearConversation,
   analyzeCurrentConversation,
-  practice
+  practice,
+  isAnalyzing
 }) => {
   const { t } = useLocalization();
 
@@ -27,6 +28,28 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
         }))} 
         className="px-6 py-3 text-base font-semibold"
       />
+      
+      {conversationHistory.length >= 4 && (
+        <Button
+          onClick={analyzeCurrentConversation}
+          disabled={isAnalyzing}
+          variant="outline"
+          size="sm"
+          className="px-6 py-3 text-base font-semibold"
+        >
+          {isAnalyzing ? (
+            <>
+              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+              {t("analyzing")}
+            </>
+          ) : (
+            <>
+              <BarChart3 className="h-5 w-5 mr-2" />
+              {t("analyzeConversation")}
+            </>
+          )}
+        </Button>
+      )}
       
       {conversationHistory.length > 0 && (
         <Button

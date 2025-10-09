@@ -43,6 +43,7 @@ export interface VoiceChatControlsProps {
   clearConversation: () => void;
   analyzeCurrentConversation: () => void;
   practice: string;
+  isAnalyzing?: boolean;
 }
 
 export interface ConversationStartersProps {

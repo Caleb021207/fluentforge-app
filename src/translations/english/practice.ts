@@ -135,6 +135,8 @@ const practiceTranslations: TranslationRecord = {
   clickPlayToHearPronunciation: "Click play to hear pronunciation",
   startConversationForSuggestions: "Start a conversation to see suggestions",
   getResponseSuggestions: "Get response suggestions",
+  analyzeConversation: "Analyze Conversation",
+  analyzing: "Analyzing",
   
   // Skill names (standardized)
   reading: "Reading",

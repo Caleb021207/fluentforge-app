@@ -132,6 +132,8 @@ const practiceTranslations: TranslationRecord = {
   clickPlayToHearPronunciation: "उच्चारण सुन्न प्ले मा क्लिक गर्नुहोस्",
   startConversationForSuggestions: "सुझावहरू हेर्न कुराकानी सुरु गर्नुहोस्",
   getResponseSuggestions: "जवाफ सुझावहरू प्राप्त गर्नुहोस्",
+  analyzeConversation: "कुराकानी विश्लेषण गर्नुहोस्",
+  analyzing: "विश्लेषण गर्दै",
   
   // Skill names (standardized)
   reading: "पढाइ",
