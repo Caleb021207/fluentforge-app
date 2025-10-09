@@ -317,10 +317,10 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                       </TableCell>
                       <TableCell className="text-center">
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
                           onClick={() => handleRemoveClick(student.student_id, student.student_name, student.class_id)}
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          className="h-8 w-8 p-0 border-2 border-destructive/50 bg-destructive/5 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all"
                         >
                           <X className="h-4 w-4" />
                         </Button>
