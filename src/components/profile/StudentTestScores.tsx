@@ -2,16 +2,19 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, TrendingUp, Calendar, AlertCircle, CheckCircle, BarChart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, TrendingUp, Calendar, AlertCircle, CheckCircle, BarChart, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getCEFRColor } from "@/components/transcript-analysis/utils/cefrUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { RemoveStudentDialog } from "@/components/classroom/components/RemoveStudentDialog";
 
 interface StudentMetrics {
   student_id: string;
   student_name: string;
   student_email: string;
+  class_id: string;
   class_name: string;
   // Test scores
   overall_score: number | null;
@@ -41,6 +44,8 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
   const [classAverages, setClassAverages] = useState<ClassAverages | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<{ id: string; name: string; classId: string } | null>(null);
 
   useEffect(() => {
     const fetchStudentData = async () => {
@@ -118,6 +123,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
               student_id: studentId,
               student_name: enrollment.profiles.display_name || enrollment.profiles.email || 'Unknown',
               student_email: enrollment.profiles.email || '',
+              class_id: classData.id,
               class_name: classData.name,
               overall_score: latestAnalysis?.overall_score || null,
               cefr_level: latestAnalysis?.cefr_level || null,
@@ -170,6 +176,17 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
 
     fetchStudentData();
   }, [teacherId, onDataUpdate]);
+
+  const handleRemoveClick = (studentId: string, studentName: string, classId: string) => {
+    setSelectedStudent({ id: studentId, name: studentName, classId });
+    setRemoveDialogOpen(true);
+  };
+
+  const handleRemoveSuccess = () => {
+    // Refresh the data after removal
+    setIsLoading(true);
+    window.location.reload();
+  };
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No activity';
@@ -268,6 +285,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                     <TableHead className="text-right">Grammar</TableHead>
                     <TableHead className="text-right">Complexity</TableHead>
                     <TableHead>Last Activity</TableHead>
+                    <TableHead className="text-center w-20">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -297,6 +315,16 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                       <TableCell className="text-sm text-muted-foreground">
                         {formatDate(student.last_activity)}
                       </TableCell>
+                      <TableCell className="text-center">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveClick(student.student_id, student.student_name, student.class_id)}
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -315,6 +343,18 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
           )}
         </CardContent>
       </Card>
+
+      {/* Remove Student Dialog */}
+      {selectedStudent && (
+        <RemoveStudentDialog
+          open={removeDialogOpen}
+          onOpenChange={setRemoveDialogOpen}
+          studentId={selectedStudent.id}
+          studentName={selectedStudent.name}
+          classId={selectedStudent.classId}
+          onRemoved={handleRemoveSuccess}
+        />
+      )}
     </div>
   );
 };
