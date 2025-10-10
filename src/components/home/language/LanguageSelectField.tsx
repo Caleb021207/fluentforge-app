@@ -30,7 +30,7 @@ const LanguageSelectField = ({
         <SelectTrigger id={id} className="w-full">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent className="z-50">
+        <SelectContent className="z-50 max-h-[400px] overflow-y-auto">
           {Object.entries(options).map(([value, label]) => (
             <SelectItem 
               key={value} 
