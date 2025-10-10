@@ -30,14 +30,14 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
       <Button
         onClick={onClick}
         disabled={isLoading || disabled}
-        className="gap-2"
+        className="gap-3 text-xl md:text-2xl px-8 py-6 min-h-[60px]"
         size="lg"
         variant="success"
       >
         {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="h-6 w-6 animate-spin" />
         ) : (
-          <MessageSquare className="h-4 w-4" />
+          <MessageSquare className="h-6 w-6" />
         )}
         {t("startConversationIn", { language: displayLanguage })}
       </Button>

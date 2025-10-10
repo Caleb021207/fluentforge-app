@@ -18,8 +18,8 @@ const TranslationContent: React.FC<TranslationContentProps> = ({
   onPlayTranslationAudio,
 }) => {
   return (
-    <div className="flex justify-between items-start">
-      <p className={`text-sm ${role === "user" ? "text-primary-foreground/90" : "text-accent-foreground"}`}>
+    <div className="flex justify-between items-start gap-3">
+      <p className={`text-base md:text-lg ${role === "user" ? "text-primary-foreground/90" : "text-accent-foreground"}`}>
         {translation}
       </p>
       

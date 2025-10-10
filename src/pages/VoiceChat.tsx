@@ -173,17 +173,17 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
       <div className="flex flex-col gap-8">
         {/* Conversation Settings Card */}
         <Card>
-          <CardContent className="p-6 space-y-6">
+          <CardContent className="p-8 space-y-8">
             {/* Conversation Level Selector */}
             <div className="flex items-center justify-between">
-              <Label htmlFor="conversation-level" className="text-lg font-medium">
+              <Label htmlFor="conversation-level" className="text-lg md:text-xl font-medium">
                 {t("conversationLevel") || "Conversation Level"}
               </Label>
               <Select value={conversationLevel} onValueChange={handleLevelChange}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-56 text-lg md:text-xl h-14">
                   <SelectValue placeholder={t("selectLevel") || "Select level"} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="text-lg md:text-xl">
                   <SelectItem value="basic">
                     {t("basicLevel") || "Basic (A1-A2)"}
                   </SelectItem>
@@ -199,19 +199,20 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
 
             {/* Grammar Correction Toggle */}
             <div className="flex items-center justify-between">
-              <Label htmlFor="grammar-correction" className="text-lg font-medium">
+              <Label htmlFor="grammar-correction" className="text-lg md:text-xl font-medium">
                 {t("correctGrammar") || "Grammar Correction"}
               </Label>
               <Switch
                 id="grammar-correction"
                 checked={correctGrammar}
                 onCheckedChange={toggleGrammarCorrection}
+                className="scale-125"
               />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="p-8">
+        <Card className="p-10">
           <div className="flex justify-center mb-8">
             <VoiceRecognitionControls
               isListening={isListening}

@@ -16,22 +16,22 @@ const VoiceRecognitionControls: React.FC<VoiceRecognitionControlsProps> = ({
   const { t } = useLocalization();
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 md:gap-6">
       <Button
         onClick={toggleListening}
         variant={isListening ? "destructive" : "default"}
         size="lg"
         disabled={isLoading || isSpeaking}
-        className="px-10 py-7 text-xl"
+        className="px-12 py-8 text-xl md:text-2xl"
       >
         {isListening ? (
           <>
-            <MicOff className="h-6 w-6 mr-3" />
+            <MicOff className="h-7 w-7 mr-3" />
             {t("stopListening")}
           </>
         ) : (
           <>
-            <Mic className="h-6 w-6 mr-3" />
+            <Mic className="h-7 w-7 mr-3" />
             {t("startSpeaking")}
           </>
         )}
@@ -43,9 +43,9 @@ const VoiceRecognitionControls: React.FC<VoiceRecognitionControlsProps> = ({
           variant="default"
           size="lg"
           disabled={isLoading || isSpeaking || !transcript.trim()}
-          className="px-10 py-7 text-xl"
+          className="px-12 py-8 text-xl md:text-2xl"
         >
-          <Send className="h-6 w-6 mr-3" />
+          <Send className="h-7 w-7 mr-3" />
           {t("send")}
         </Button>
       )}

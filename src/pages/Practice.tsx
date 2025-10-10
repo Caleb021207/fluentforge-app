@@ -147,18 +147,18 @@ const Practice = () => {
     <div className="max-w-4xl mx-auto p-4">
       <PracticeHeader targetLanguage={targetLanguage} />
       
-      <Card className="mb-6">
-        <CardContent className="p-4 space-y-4">
+      <Card className="mb-8">
+        <CardContent className="p-6 space-y-6">
           {/* Conversation Level Selector */}
           <div className="flex items-center justify-between">
-            <Label htmlFor="conversation-level" className="text-sm font-medium">
+            <Label htmlFor="conversation-level" className="text-lg md:text-xl font-medium">
               {t("conversationLevel") || "Conversation Level"}
             </Label>
             <Select value={conversationLevel} onValueChange={handleLevelChange}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-56 text-lg md:text-xl h-14">
                 <SelectValue placeholder={t("selectLevel") || "Select level"} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="text-lg md:text-xl">
                 <SelectItem value="basic">
                   {t("basicLevel") || "Basic (A1-A2)"}
                 </SelectItem>
@@ -174,19 +174,20 @@ const Practice = () => {
 
           {/* Grammar Correction Toggle */}
           <div className="flex items-center justify-between">
-            <Label htmlFor="grammar-correction" className="text-sm font-medium">
+            <Label htmlFor="grammar-correction" className="text-lg md:text-xl font-medium">
               {t("correctGrammar") || "Grammar Correction"}
             </Label>
             <Switch
               id="grammar-correction"
               checked={correctGrammar}
               onCheckedChange={toggleGrammarCorrection}
+              className="scale-125"
             />
           </div>
         </CardContent>
       </Card>
       
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-6">
         <div className="flex space-x-4 items-center">
           <PracticePromptButton
             onClick={sendLanguageLearningPrompt}
@@ -198,9 +199,9 @@ const Practice = () => {
         <Button 
           variant="outline" 
           onClick={clearConversation}
-          className="flex items-center gap-2"
+          className="flex items-center gap-3 text-lg md:text-xl px-6 py-4 h-auto"
         >
-          <Trash className="h-4 w-4" />
+          <Trash className="h-6 w-6" />
           {t("clearConversation")}
         </Button>
       </div>

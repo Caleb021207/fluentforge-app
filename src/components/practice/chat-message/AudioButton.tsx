@@ -24,13 +24,13 @@ const AudioButton: React.FC<AudioButtonProps> = ({
       variant="ghost" 
       size="sm"
       disabled={isLoading || isPlaying}
-      className="ml-2 -mt-1 p-1 h-auto"
+      className="ml-3 -mt-1 p-2 h-auto"
       aria-label={ariaLabel}
     >
       {isLoading || isPlaying ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <Loader2 className="h-6 w-6 animate-spin" />
       ) : (
-        <Volume2 className={`h-4 w-4 ${isTranslation ? "text-gray-500" : ""}`} />
+        <Volume2 className={`h-6 w-6 ${isTranslation ? "text-gray-500" : ""}`} />
       )}
     </Button>
   );

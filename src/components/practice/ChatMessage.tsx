@@ -126,7 +126,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const nativeLanguage = getNativeLanguage(currentLanguage);
   
   return (
-    <div className={`flex ${role === "user" ? "justify-end" : "justify-start"} mb-4`}>
+    <div className={`flex ${role === "user" ? "justify-end" : "justify-start"} mb-6`}>
       <ChatMessageBubble
         role={role}
         safeContent={safeContent}

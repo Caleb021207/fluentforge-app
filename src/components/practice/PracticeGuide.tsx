@@ -24,23 +24,23 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
       animate="visible"
       variants={staggeredContainer(0.1, 0.2)}
     >
-      <Card className="p-6 border border-border">
+      <Card className="p-8 border border-border">
         <motion.h2 
-          className="text-xl font-semibold mb-4 text-foreground"
+          className="text-2xl md:text-3xl font-semibold mb-6 text-foreground"
           variants={slideInRight}
         >
           {t("practiceGuide", { language: learningLanguage })}
         </motion.h2>
         
         <motion.p 
-          className="mb-4 text-foreground"
+          className="mb-6 text-lg md:text-xl text-foreground"
           variants={slideInRight}
         >
           {t("practiceGuideDescription", { language: learningLanguage })}
         </motion.p>
         
         <motion.ul 
-          className="space-y-3"
+          className="space-y-4"
           variants={staggeredContainer(0.05)}
         >
           {[
@@ -55,8 +55,8 @@ const PracticeGuide: React.FC<PracticeGuideProps> = ({ targetLanguage }) => {
               className="flex items-start"
               variants={slideInRight}
             >
-              <span className="text-accent mr-2">•</span>
-              <span className="text-foreground">{tip}</span>
+              <span className="text-accent mr-3 text-xl">•</span>
+              <span className="text-foreground text-lg md:text-xl">{tip}</span>
             </motion.li>
           ))}
         </motion.ul>

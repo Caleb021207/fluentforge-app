@@ -9,14 +9,14 @@ const VoiceChatHeader: React.FC<VoiceChatHeaderProps> = () => {
   const { native, practice } = getLanguagePair(currentLanguage);
 
   return (
-    <div className="mb-10">
-      <h1 className="text-5xl font-bold text-foreground mb-6">
+    <div className="mb-10 md:mb-12">
+      <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
         {t("unlimitedVoicePractice")}
       </h1>
-      <p className="text-xl text-foreground mb-6">
+      <p className="text-xl md:text-2xl text-foreground mb-6">
         {t("practiceDescription")}
       </p>
-      <p className="text-base text-muted-foreground mb-2">
+      <p className="text-lg md:text-xl text-muted-foreground mb-2">
         <strong>{t("aiModelInfo")}</strong>
       </p>
     </div>

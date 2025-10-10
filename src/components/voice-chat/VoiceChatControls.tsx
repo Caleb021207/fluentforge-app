@@ -18,7 +18,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
   const { t } = useLocalization();
 
   return (
-    <div className="mt-4 flex items-center justify-end space-x-3">
+    <div className="mt-6 flex items-center justify-end space-x-4">
       <HintButton 
         targetLanguage={practice}
         messages={apiConversationHistory.map(msg => ({ 
@@ -26,7 +26,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
           content: msg.content, 
           translation: undefined 
         }))} 
-        className="px-6 py-3 text-base font-semibold"
+        className="px-8 py-4 text-lg md:text-xl font-semibold"
       />
       
       {conversationHistory.length >= 4 && (
@@ -35,16 +35,16 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
           disabled={isAnalyzing}
           variant="outline"
           size="sm"
-          className="px-6 py-3 text-base font-semibold"
+          className="px-8 py-4 text-lg md:text-xl font-semibold"
         >
           {isAnalyzing ? (
             <>
-              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+              <Loader2 className="h-6 w-6 mr-2 animate-spin" />
               {t("analyzing")}
             </>
           ) : (
             <>
-              <BarChart3 className="h-5 w-5 mr-2" />
+              <BarChart3 className="h-6 w-6 mr-2" />
               {t("analyzeConversation")}
             </>
           )}
@@ -56,6 +56,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
           onClick={clearConversation}
           variant="outline"
           size="sm"
+          className="px-8 py-4 text-lg md:text-xl"
         >
           {t("clearConversation")}
         </Button>

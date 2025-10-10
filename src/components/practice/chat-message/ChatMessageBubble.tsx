@@ -41,7 +41,7 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   
   return (
     <div
-      className={`max-w-[80%] rounded-lg p-4 ${
+      className={`max-w-[80%] rounded-lg p-6 md:p-8 ${
         role === "user"
           ? "bg-primary text-primary-foreground"
           : "bg-accent text-accent-foreground dark:bg-accent/80"

@@ -20,16 +20,16 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
 
   // Auto-scroll disabled for better UX during rapid conversations
 
-  return <Card className="overflow-hidden mb-8">
-      <ScrollArea className="h-[600px] p-6">
+  return <Card className="overflow-hidden mb-10">
+      <ScrollArea className="h-[600px] p-8">
         {messages.length === 0 ? <div className="flex flex-col items-center justify-center h-full text-center">
-            <p className="text-lg text-muted-foreground mb-6">
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8">
               {t("startSpeakingToSeeTranscript")}
             </p>
-            <p className="text-base text-muted-foreground max-w-md">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-md">
               {t("clickMicrophoneToStartRecording")}
             </p>
-          </div> : <div className="space-y-6">
+          </div> : <div className="space-y-8">
             {messages.map((message, index) => {
           // Filter out system messages or convert them to assistant messages
           if (message.role === "system") {
@@ -39,11 +39,11 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
           return <ChatMessage key={index} role={message.role as "user" | "assistant"} content={message.content} translation={message.translation as TranslationType} onPlayAudio={onPlayAudio} />;
         })}
             
-            {isLoading && <div className="flex justify-center my-4">
-                <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.4s]" />
+            {isLoading && <div className="flex justify-center my-6">
+                <div className="flex space-x-3">
+                  <div className="w-3 h-3 bg-muted-foreground rounded-full animate-bounce" />
+                  <div className="w-3 h-3 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.2s]" />
+                  <div className="w-3 h-3 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.4s]" />
                 </div>
               </div>}
             
