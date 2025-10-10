@@ -61,27 +61,27 @@ const LessonView = ({ lesson, onClose, onComplete }: LessonViewProps) => {
             <span className="sr-only">Back to Lessons</span>
           </Button>
           <div className="text-center pt-6 sm:pt-8">
-            <CardTitle className="text-xl sm:text-2xl font-bold">{lesson.title}</CardTitle>
-            <p className="text-muted-foreground mt-2 text-xs sm:text-sm">{lesson.description}</p>
+            <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-bold">{lesson.title}</CardTitle>
+            <p className="text-muted-foreground mt-3 text-base sm:text-lg md:text-xl">{lesson.description}</p>
           </div>
-          <div className="mt-4">
-            <div className="flex justify-between text-xs sm:text-sm mb-2">
+          <div className="mt-6">
+            <div className="flex justify-between text-base sm:text-lg md:text-xl mb-3">
               <span>Progress</span>
               <span>{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress} className="h-3" />
           </div>
         </CardHeader>
         <CardContent className="p-3 sm:p-6">
           {currentChallenge && (
             <>
-              <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <h3 className="text-base sm:text-lg font-semibold">
+              <div className="flex justify-between items-center mb-6 sm:mb-8">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">
                   Challenge {currentStep + 1}/{lesson.challenges.length}
                 </h3>
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <Award className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500" />
-                  <span className="font-medium text-xs sm:text-sm">{currentChallenge.xpReward} XP</span>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Award className="h-6 w-6 sm:h-7 sm:w-7 text-yellow-500" />
+                  <span className="font-medium text-base sm:text-lg md:text-xl">{currentChallenge.xpReward} XP</span>
                 </div>
               </div>
               

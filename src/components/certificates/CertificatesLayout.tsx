@@ -34,7 +34,7 @@ const CertificatesLayout = ({
   
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">{t("certificationProgress")}</h1>
+      <h1 className="text-4xl md:text-5xl font-bold text-gray-900">{t("certificationProgress")}</h1>
       
       <OverallCertificate compositeScore={compositeScore} />
       
@@ -48,7 +48,7 @@ const CertificatesLayout = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-base md:text-lg">
               {currentLanguage === "english" 
                 ? "Assess your Spanish reading comprehension skills." 
                 : "Assess your English reading comprehension skills."}
@@ -80,7 +80,7 @@ const CertificatesLayout = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-base md:text-lg">
               {currentLanguage === "english" 
                 ? "Test your Spanish writing skills with prompts at various levels." 
                 : "Test your English writing skills with prompts at various levels."}
@@ -100,7 +100,7 @@ const CertificatesLayout = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-base md:text-lg">
               {currentLanguage === "english" 
                 ? "Test your Spanish speaking fluency through a conversation." 
                 : "Test your English speaking fluency through a conversation."}

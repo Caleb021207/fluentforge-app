@@ -27,8 +27,8 @@ const TestStartPrompt = ({
   }, []);
 
   return (
-    <div className="bg-gray-50 rounded-lg p-6 text-center">
-      <p className="text-gray-500 mb-4">{t("readyToTest")}</p>
+    <div className="bg-gray-50 rounded-lg p-8 text-center">
+      <p className="text-gray-500 text-lg md:text-xl mb-6">{t("readyToTest")}</p>
       
       {!hasStudyMaterials && (
         <Alert variant="warning" className="mb-4">
@@ -42,16 +42,16 @@ const TestStartPrompt = ({
       <Button 
         onClick={onStart} 
         disabled={isLoading || !isLoggedIn || !microphoneAccess || !hasStudyMaterials}
-        className="bg-blue-500 hover:bg-blue-600"
+        className="bg-blue-500 hover:bg-blue-600 text-lg md:text-xl px-8 py-6"
       >
         {isLoading ? t("processing") : t("startTest")}
       </Button>
       
       {!isLoggedIn && (
-        <p className="text-sm text-red-400 mt-3">{t("pleaseLoginToTakeTest")}</p>
+        <p className="text-base md:text-lg text-red-400 mt-4">{t("pleaseLoginToTakeTest")}</p>
       )}
       {!microphoneAccess && (
-        <p className="text-sm text-red-400 mt-3">{t("microphoneAccessRequired")}</p>
+        <p className="text-base md:text-lg text-red-400 mt-4">{t("microphoneAccessRequired")}</p>
       )}
     </div>
   );

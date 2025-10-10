@@ -25,31 +25,31 @@ const LessonsList: React.FC<LessonsListProps> = ({
   return (
     <div className="flex flex-col space-y-4 max-w-md mx-auto w-full">
       {lessons.map((lesson) => (
-        <div key={lesson.id} className="bg-white rounded-lg shadow p-4">
+        <div key={lesson.id} className="bg-white rounded-lg shadow p-6">
           <div className="flex items-start">
-            <div className="text-primary text-xl mr-3">{lesson.icon}</div>
+            <div className="text-primary text-2xl md:text-3xl mr-4">{lesson.icon}</div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-1">{lesson.title}</h3>
-              <div className="text-sm text-gray-600 mb-2">
-                <span className="inline-block mr-3 bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs">
+              <h3 className="text-xl md:text-2xl font-semibold mb-2">{lesson.title}</h3>
+              <div className="text-base md:text-lg text-gray-600 mb-3">
+                <span className="inline-block mr-3 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm md:text-base">
                   {lesson.difficulty || "Easy"}
                 </span>
                 <span>{lesson.duration}</span>
               </div>
-              <p className="text-sm text-gray-700 mb-3">{lesson.description}</p>
+              <p className="text-base md:text-lg text-gray-700 mb-4">{lesson.description}</p>
               
               {lesson.challenges && lesson.challenges.length > 0 && (
-                <div className="mb-3">
-                  <h4 className="text-sm font-medium mb-2">Challenges:</h4>
+                <div className="mb-4">
+                  <h4 className="text-base md:text-lg font-medium mb-3">Challenges:</h4>
                   <div>
                     {lesson.challenges.map((challenge, idx) => (
-                      <div key={idx} className="flex items-center mb-1">
+                      <div key={idx} className="flex items-center mb-2">
                         <div className="flex-1 flex items-center">
-                          <span className="text-green-500 mr-2">✓</span>
-                          <span className="text-sm">{challenge.description}</span>
+                          <span className="text-green-500 mr-3 text-lg">✓</span>
+                          <span className="text-base md:text-lg">{challenge.description}</span>
                         </div>
                         {challenge.xpReward && (
-                          <span className="text-yellow-600 font-medium text-xs">+{challenge.xpReward} XP</span>
+                          <span className="text-yellow-600 font-medium text-sm md:text-base">+{challenge.xpReward} XP</span>
                         )}
                       </div>
                     ))}
@@ -59,13 +59,13 @@ const LessonsList: React.FC<LessonsListProps> = ({
               
               <div className="flex items-center justify-between">
                 <div className="flex-1 mr-4">
-                  <div className="flex justify-between text-xs text-gray-500 mb-1">
+                  <div className="flex justify-between text-sm md:text-base text-gray-500 mb-2">
                     <span>Progress</span>
                     <span>{lesson.progress || 0}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div 
-                      className="bg-primary h-1.5 rounded-full" 
+                      className="bg-primary h-2.5 rounded-full" 
                       style={{ width: `${lesson.progress || 0}%` }}
                     ></div>
                   </div>
@@ -73,7 +73,7 @@ const LessonsList: React.FC<LessonsListProps> = ({
                 
                 <button 
                   onClick={() => onSelectLesson(lesson.id)} 
-                  className="bg-gray-900 text-white text-sm px-4 py-1.5 rounded-md hover:bg-gray-800"
+                  className="bg-gray-900 text-white text-base md:text-lg px-6 py-3 rounded-md hover:bg-gray-800"
                 >
                   Start {lesson.progress ? "(" + lesson.progress + "% XP)" : "(50 XP)"}
                 </button>

@@ -147,17 +147,18 @@ const ReadingCertification = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-base md:text-lg">
               {getTestDescription()}
             </p>
             {!level && (
-              <div className="space-y-2 mb-4">
-                <p className="font-medium">Choose a specific level test:</p>
-                <div className="flex flex-wrap gap-2">
+              <div className="space-y-3 mb-6">
+                <p className="font-medium text-base md:text-lg">Choose a specific level test:</p>
+                <div className="flex flex-wrap gap-3">
                   {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((levelOption) => (
                     <Button 
                       key={levelOption}
-                      variant="outline" 
+                      variant="outline"
+                      className="text-base md:text-lg px-6 py-4"
                       onClick={() => navigate(`/certificates/reading/${levelOption.toLowerCase()}`)}
                     >
                       {levelOption} Test
@@ -166,7 +167,7 @@ const ReadingCertification = () => {
                 </div>
               </div>
             )}
-            <Button onClick={handleStart}>
+            <Button onClick={handleStart} className="text-lg md:text-xl px-8 py-6">
               Start {level ? `${level.toUpperCase()} Test` : "Test"}
             </Button>
           </div>
@@ -187,44 +188,44 @@ const ReadingCertification = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-medium text-lg mb-2">Your Results</h3>
-              <div className="mb-2">
+            <div className="p-6 bg-blue-50 rounded-lg">
+              <h3 className="font-medium text-xl md:text-2xl mb-3">Your Results</h3>
+              <div className="mb-3 text-base md:text-lg">
                 <span className="font-medium">Score:</span> {score}%
               </div>
-              <div className="mb-2">
+              <div className="mb-3 text-base md:text-lg">
                 <span className="font-medium">CEFR Level:</span> {achievedLevel}
               </div>
-              <p className="text-sm text-gray-700 mt-2">{levelDescription}</p>
+              <p className="text-base md:text-lg text-gray-700 mt-3">{levelDescription}</p>
             </div>
 
             {levelRecommendations && (
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-medium text-lg mb-3">Your Reading Profile</h3>
+              <div className="p-6 bg-blue-50 rounded-lg">
+                <h3 className="font-medium text-xl md:text-2xl mb-4">Your Reading Profile</h3>
                 
-                <div className="mb-4">
-                  <h4 className="font-medium text-md mb-2">Strengths:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
+                <div className="mb-6">
+                  <h4 className="font-medium text-lg md:text-xl mb-3">Strengths:</h4>
+                  <ul className="list-disc pl-5 space-y-2">
                     {levelRecommendations.strengths.map((strength: string, i: number) => (
-                      <li key={i} className="text-gray-700">{strength}</li>
+                      <li key={i} className="text-gray-700 text-base md:text-lg">{strength}</li>
                     ))}
                   </ul>
                 </div>
                 
-                <div className="mb-4">
-                  <h4 className="font-medium text-md mb-2">Areas for Improvement:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
+                <div className="mb-6">
+                  <h4 className="font-medium text-lg md:text-xl mb-3">Areas for Improvement:</h4>
+                  <ul className="list-disc pl-5 space-y-2">
                     {levelRecommendations.weaknesses.map((weakness: string, i: number) => (
-                      <li key={i} className="text-gray-700">{weakness}</li>
+                      <li key={i} className="text-gray-700 text-base md:text-lg">{weakness}</li>
                     ))}
                   </ul>
                 </div>
                 
-                <div className="mb-2">
-                  <h4 className="font-medium text-md mb-2">Recommendations:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
+                <div className="mb-3">
+                  <h4 className="font-medium text-lg md:text-xl mb-3">Recommendations:</h4>
+                  <ul className="list-disc pl-5 space-y-2">
                     {levelRecommendations.recommendations.map((recommendation: string, i: number) => (
-                      <li key={i} className="text-gray-700">{recommendation}</li>
+                      <li key={i} className="text-gray-700 text-base md:text-lg">{recommendation}</li>
                     ))}
                   </ul>
                 </div>
@@ -232,8 +233,8 @@ const ReadingCertification = () => {
             )}
             
             <div className="flex gap-3">
-              <Button onClick={handleStart}>Take Test Again</Button>
-              <Button variant="outline" onClick={() => navigate('/certificates')}>Back to Certificates</Button>
+              <Button onClick={handleStart} className="text-lg md:text-xl px-6 py-4">Take Test Again</Button>
+              <Button variant="outline" onClick={() => navigate('/certificates')} className="text-lg md:text-xl px-6 py-4">Back to Certificates</Button>
             </div>
           </div>
         </CardContent>

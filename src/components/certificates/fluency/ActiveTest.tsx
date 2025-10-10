@@ -18,22 +18,22 @@ const ActiveTest = ({
 }: ActiveTestProps) => {
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
+      <div className="flex justify-between items-center p-6 bg-blue-50 rounded-lg">
         <div className="flex items-center">
           {conversationStatus === "connected" ? (
-            <Mic className="h-5 w-5 text-green-500 mr-2 animate-pulse" />
+            <Mic className="h-7 w-7 text-green-500 mr-3 animate-pulse" />
           ) : (
-            <MicOff className="h-5 w-5 text-red-500 mr-2" />
+            <MicOff className="h-7 w-7 text-red-500 mr-3" />
           )}
-          <span className="font-medium">
+          <span className="font-medium text-lg md:text-xl">
             {conversationStatus === "connected" 
               ? "Speak in Spanish to the AI tutor" 
               : "Connecting to AI tutor..."}
           </span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold">{formatTime(timeRemaining)}</div>
-          <div className="text-xs text-gray-500">remaining</div>
+          <div className="text-2xl md:text-3xl font-bold">{formatTime(timeRemaining)}</div>
+          <div className="text-sm md:text-base text-gray-500">remaining</div>
         </div>
       </div>
       
@@ -41,7 +41,8 @@ const ActiveTest = ({
       
       <div className="flex justify-between">
         <Button 
-          variant="outline" 
+          variant="outline"
+          className="text-base md:text-lg px-6 py-6"
           onClick={() => {
             if (window.confirm("Are you sure you want to end the test early?")) {
               onEndEarly();
@@ -50,7 +51,7 @@ const ActiveTest = ({
         >
           End Test Early
         </Button>
-        <div className="text-sm text-gray-500 pt-2">
+        <div className="text-base md:text-lg text-gray-500 pt-2">
           Test will automatically end in {formatTime(timeRemaining)}
         </div>
       </div>

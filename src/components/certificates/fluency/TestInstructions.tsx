@@ -12,7 +12,7 @@ const TestInstructions = () => {
         currentLanguage === "korean" || currentLanguage === "indonesian") {
       // For Spanish/Portuguese/Korean/Indonesian speakers learning English
       return (
-        <ul className="text-sm text-gray-600 space-y-1 pl-6 list-disc">
+        <ul className="text-base md:text-lg text-gray-600 space-y-2 pl-6 list-disc">
           <li>{t("speakNaturallyInEnglish")}</li>
           <li>{t("answerTutorQuestions")}</li>
           <li>{t("keepConversationFlowing")}</li>
@@ -23,7 +23,7 @@ const TestInstructions = () => {
     } else {
       // For English speakers learning Spanish/Portuguese/Korean/Indonesian
       return (
-        <ul className="text-sm text-gray-600 space-y-1 pl-6 list-disc">
+        <ul className="text-base md:text-lg text-gray-600 space-y-2 pl-6 list-disc">
           <li>{t("speakNaturallyInTargetLanguage")}</li>
           <li>{t("answerTutorQuestions")}</li>
           <li>{t("keepConversationFlowing")}</li>
@@ -35,10 +35,10 @@ const TestInstructions = () => {
   };
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="flex items-center mb-2">
-        <Info className="h-4 w-4 text-blue-500 mr-2" />
-        <h3 className="text-sm font-medium">{t("testInstructions")}</h3>
+    <div className="bg-gray-50 rounded-lg p-6">
+      <div className="flex items-center mb-3">
+        <Info className="h-6 w-6 text-blue-500 mr-3" />
+        <h3 className="text-lg md:text-xl font-medium">{t("testInstructions")}</h3>
       </div>
       {getInstructions()}
     </div>
