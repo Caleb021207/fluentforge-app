@@ -20,16 +20,16 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
 
   // Auto-scroll disabled for better UX during rapid conversations
 
-  return <Card className="overflow-hidden mb-6">
-      <ScrollArea className="h-[500px] p-4">
+  return <Card className="overflow-hidden mb-8">
+      <ScrollArea className="h-[600px] p-6">
         {messages.length === 0 ? <div className="flex flex-col items-center justify-center h-full text-center">
-            <p className="text-muted-foreground mb-4">
+            <p className="text-lg text-muted-foreground mb-6">
               {t("startSpeakingToSeeTranscript")}
             </p>
-            <p className="text-sm text-muted-foreground max-w-md">
+            <p className="text-base text-muted-foreground max-w-md">
               {t("clickMicrophoneToStartRecording")}
             </p>
-          </div> : <div className="space-y-4">
+          </div> : <div className="space-y-6">
             {messages.map((message, index) => {
           // Filter out system messages or convert them to assistant messages
           if (message.role === "system") {

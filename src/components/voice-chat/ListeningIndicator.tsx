@@ -9,7 +9,7 @@ const ListeningIndicator: React.FC<ListeningIndicatorProps> = ({ isListening }) 
   if (!isListening) return null;
 
   return (
-    <div className="text-sm text-muted-foreground animate-pulse mb-4">
+    <div className="text-base text-muted-foreground animate-pulse mb-6">
       {t("listeningNow")}...
     </div>
   );

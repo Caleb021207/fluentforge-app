@@ -9,11 +9,11 @@ const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ transcript, isLis
   if (!transcript) return null;
 
   return (
-    <div className="mb-6">
-      <h3 className="font-medium mb-2 text-foreground">
+    <div className="mb-8">
+      <h3 className="text-lg font-medium mb-3 text-foreground">
         {t("youSaid")}:
       </h3>
-      <div className="bg-muted rounded-lg p-4 text-foreground">
+      <div className="bg-muted rounded-lg p-6 text-lg text-foreground">
         {transcript}
       </div>
     </div>

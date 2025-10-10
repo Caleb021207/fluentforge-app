@@ -18,20 +18,20 @@ const ConversationStarters: React.FC<ConversationStartersProps> = ({
 
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg">{t("conversationStarters")}</CardTitle>
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl">{t("conversationStarters")}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-base text-muted-foreground mb-6">
           {t("tryThesePhrases")}
         </p>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {defaultPhrases.map((phrase, index) => (
             <Button
               key={index}
               variant="outline"
               size="sm"
-              className="w-full justify-start text-left h-auto py-2 font-normal"
+              className="w-full justify-start text-left h-auto py-3 text-base font-normal"
               onClick={() => onPhraseClick(phrase)}
             >
               {phrase}

@@ -167,16 +167,16 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-6">
       <VoiceChatHeader />
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         {/* Conversation Settings Card */}
         <Card>
-          <CardContent className="p-4 space-y-4">
+          <CardContent className="p-6 space-y-6">
             {/* Conversation Level Selector */}
             <div className="flex items-center justify-between">
-              <Label htmlFor="conversation-level" className="text-sm font-medium">
+              <Label htmlFor="conversation-level" className="text-lg font-medium">
                 {t("conversationLevel") || "Conversation Level"}
               </Label>
               <Select value={conversationLevel} onValueChange={handleLevelChange}>
@@ -199,7 +199,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
 
             {/* Grammar Correction Toggle */}
             <div className="flex items-center justify-between">
-              <Label htmlFor="grammar-correction" className="text-sm font-medium">
+              <Label htmlFor="grammar-correction" className="text-lg font-medium">
                 {t("correctGrammar") || "Grammar Correction"}
               </Label>
               <Switch
@@ -211,8 +211,8 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
           </CardContent>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex justify-center mb-6">
+        <Card className="p-8">
+          <div className="flex justify-center mb-8">
             <VoiceRecognitionControls
               isListening={isListening}
               isLoading={isLoading}

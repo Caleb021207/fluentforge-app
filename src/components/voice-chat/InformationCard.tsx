@@ -6,14 +6,14 @@ const InformationCard: React.FC = () => {
     t
   } = useLocalization();
   return <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg">{t("practiceWithVoiceChat")}</CardTitle>
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl">{t("practiceWithVoiceChat")}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-base text-muted-foreground mb-6">
           {t("voiceChatTips")}
         </p>
-        <ul className="space-y-2 text-sm">
+        <ul className="space-y-3 text-base">
           <li className="flex items-start">
             <span className="text-accent mr-2">•</span>
             <span>{t("voiceTip1")}</span>
