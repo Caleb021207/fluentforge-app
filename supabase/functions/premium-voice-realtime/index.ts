@@ -72,10 +72,11 @@ serve(async (req) => {
       }
 
       openAISocket = new WebSocket(
-        "wss://api.openai.com/v1/realtime?model=gpt-realtime",
+        "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01",
         {
           headers: {
-            "Authorization": `Bearer ${openaiApiKey}`
+            "Authorization": `Bearer ${openaiApiKey}`,
+            "OpenAI-Beta": "realtime=v1"
           }
         }
       );
@@ -86,6 +87,36 @@ serve(async (req) => {
 
       openAISocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        
+        // When session is created, send configuration
+        if (data.type === 'session.created') {
+          console.log('Session created, configuring...');
+          const systemPrompt = `You are a helpful language tutor helping a ${nativeLanguage} speaker practice ${targetLanguage}. As soon as you connect, greet the student warmly in ${targetLanguage} and ask them an engaging question to start the conversation. Speak clearly at a moderate pace. Provide gentle corrections when needed, and you may occasionally explain errors briefly in ${nativeLanguage} if the error is significant. Always be supportive, encouraging, and patient. Keep the conversation flowing naturally.`;
+          
+          openAISocket!.send(JSON.stringify({
+            type: 'session.update',
+            session: {
+              modalities: ['text', 'audio'],
+              instructions: systemPrompt,
+              voice: 'sage',
+              input_audio_format: 'pcm16',
+              output_audio_format: 'pcm16',
+              input_audio_transcription: {
+                model: 'whisper-1'
+              },
+              turn_detection: {
+                type: 'server_vad',
+                threshold: 0.5,
+                prefix_padding_ms: 300,
+                silence_duration_ms: 1000
+              },
+              temperature: 0.8,
+              max_response_output_tokens: 'inf'
+            }
+          }));
+          sessionConfigured = true;
+          console.log('Session configured with language-aware instructions');
+        }
         
         // Check time limit every response
         const currentMinutes = Math.ceil((Date.now() - sessionStartTime) / 60000);
@@ -140,35 +171,6 @@ serve(async (req) => {
           nativeLanguage = data.nativeLanguage;
           targetLanguage = data.targetLanguage;
           console.log(`Session initialized: native=${nativeLanguage}, target=${targetLanguage}`);
-          
-          // Configure session with language-aware instructions
-          const systemPrompt = `You are a helpful language tutor helping a ${nativeLanguage} speaker practice ${targetLanguage}. As soon as you connect, greet the student warmly in ${targetLanguage} and ask them an engaging question to start the conversation. Speak clearly at a moderate pace. Provide gentle corrections when needed, and you may occasionally explain errors briefly in ${nativeLanguage} if the error is significant. Always be supportive, encouraging, and patient. Keep the conversation flowing naturally.`;
-          
-          if (openAISocket && openAISocket.readyState === WebSocket.OPEN) {
-            openAISocket.send(JSON.stringify({
-              type: 'session.update',
-              session: {
-                modalities: ['text', 'audio'],
-                instructions: systemPrompt,
-                voice: 'sage',
-                input_audio_format: 'pcm16',
-                output_audio_format: 'pcm16',
-                input_audio_transcription: {
-                  model: 'whisper-1'
-                },
-                turn_detection: {
-                  type: 'server_vad',
-                  threshold: 0.5,
-                  prefix_padding_ms: 300,
-                  silence_duration_ms: 1000
-                },
-                temperature: 0.8,
-                max_response_output_tokens: 'inf'
-              }
-            }));
-            sessionConfigured = true;
-            console.log('Session configured with language-aware instructions');
-          }
           return;
         }
         
