@@ -2,6 +2,23 @@
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
+  unlimitedVoicePractice: "प्रीमियम वॉइस प्रैक्टिस",
+  howToUse: "प्रीमियम वॉइस प्रैक्टिस का उपयोग कैसे करें",
+  step1: "शुरू करने के लिए 'प्रीमियम सेशन शुरू करें' पर क्लिक करें",
+  step2: "अनुरोध किए जाने पर माइक्रोफ़ोन एक्सेस की अनुमति दें",
+  step3: "AI ट्यूटर आपका स्वागत करेगा और पहला प्रश्न पूछेगा",
+  step4: "{{targetLanguage}} में स्वाभाविक और स्पष्ट रूप से बोलें",
+  step5: "AI प्रतिक्रिया देगा और आपकी गलतियों को सुधारने में मदद करेगा",
+  step6: "अपने टाइमर पर नज़र रखें - इस महीने आपके पास 15 मिनट हैं",
+  step7: "समाप्त होने पर 'सेशन समाप्त करें' पर क्लिक करें",
+  tips: "सर्वोत्तम अनुभव के लिए युक्तियाँ",
+  tip1: "बेहतर ऑडियो गुणवत्ता के लिए हेडफ़ोन का उपयोग करें",
+  tip2: "एक शांत वातावरण खोजें",
+  tip3: "गलतियाँ करने से न डरें!",
+  practiceConversational: "GPT-4o-mini Realtime के साथ संवादात्मक {{targetLanguage}} का अभ्यास करें",
+  minutesRemaining: "इस महीने शेष मिनट",
+  poweredBy: "GPT-4o-mini Realtime द्वारा संचालित",
+  conversation: "बातचीत",
   premiumVoiceTitle: "प्रीमियम वॉइस चैट",
   premiumVoiceChat: "प्रीमियम वॉइस चैट",
   premiumVoiceChatBenefits: "प्रीमियम वॉइस के लाभ",

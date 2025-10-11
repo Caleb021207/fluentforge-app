@@ -178,11 +178,18 @@ export class RealtimeChat {
   private ws: WebSocket | null = null;
   private audioContext: AudioContext | null = null;
   private recorder: AudioRecorder | null = null;
+  private nativeLanguage: string;
+  private targetLanguage: string;
 
   constructor(
     private onMessage: (message: any) => void,
-    private onSpeakingChange: (speaking: boolean) => void
-  ) {}
+    private onSpeakingChange: (speaking: boolean) => void,
+    nativeLanguage: string = 'english',
+    targetLanguage: string = 'english'
+  ) {
+    this.nativeLanguage = nativeLanguage;
+    this.targetLanguage = targetLanguage;
+  }
 
   async init() {
     try {
@@ -198,6 +205,12 @@ export class RealtimeChat {
 
       this.ws.onopen = () => {
         console.log('Connected to premium voice service');
+        // Send initialization with language parameters
+        this.ws?.send(JSON.stringify({
+          type: 'init',
+          nativeLanguage: this.nativeLanguage,
+          targetLanguage: this.targetLanguage
+        }));
         this.startRecording();
       };
 

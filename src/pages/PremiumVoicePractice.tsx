@@ -1,13 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Sparkles } from "lucide-react";
+import { Mic, MicOff, Sparkles, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { useLocalization } from "@/context/LocalizationContext";
+import { secureStorage } from "@/utils/security/dataEncryption";
 
 const PremiumVoicePractice = () => {
   const { toast } = useToast();
+  const { t, currentLanguage } = useLocalization();
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState<Array<{ role: string; text: string }>>([]);
@@ -15,6 +18,10 @@ const PremiumVoicePractice = () => {
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession } = useUsageLimits();
+
+  // Get language preferences
+  const nativeLanguage = currentLanguage;
+  const targetLanguage = secureStorage.getItem("targetLanguage") || (currentLanguage === "english" ? "spanish" : "english");
 
   useEffect(() => {
     return () => {
@@ -69,7 +76,7 @@ const PremiumVoicePractice = () => {
         return;
       }
 
-      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking);
+      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking, nativeLanguage, targetLanguage);
       await chatRef.current.init();
       setIsConnected(true);
       setElapsedSeconds(0);
@@ -121,17 +128,43 @@ const PremiumVoicePractice = () => {
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Sparkles className="w-8 h-8 text-primary" />
-          <h1 className="text-4xl font-bold">Premium Voice Practice</h1>
+          <h1 className="text-4xl font-bold">{t("premiumVoice.unlimitedVoicePractice")}</h1>
         </div>
         <p className="text-muted-foreground">
-          Practice conversational English with GPT-4o Realtime
+          {t("premiumVoice.practiceConversational", { targetLanguage })}
         </p>
         <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
           <span className="text-sm font-medium">
-            {premiumVoiceMinutesRemaining} minutes remaining this month
+            {premiumVoiceMinutesRemaining} {t("premiumVoice.minutesRemaining")}
           </span>
         </div>
       </div>
+
+      <Card className="p-6 mb-6 bg-muted/50">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+          <div>
+            <h2 className="text-lg font-semibold mb-3">{t("premiumVoice.howToUse")}</h2>
+            <ol className="space-y-2 text-sm text-muted-foreground">
+              <li>1. {t("premiumVoice.step1")}</li>
+              <li>2. {t("premiumVoice.step2")}</li>
+              <li>3. {t("premiumVoice.step3")}</li>
+              <li>4. {t("premiumVoice.step4", { targetLanguage })}</li>
+              <li>5. {t("premiumVoice.step5")}</li>
+              <li>6. {t("premiumVoice.step6")}</li>
+              <li>7. {t("premiumVoice.step7")}</li>
+            </ol>
+            <div className="mt-4 pt-4 border-t">
+              <p className="text-sm font-medium mb-2">{t("premiumVoice.tips")}</p>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li>• {t("premiumVoice.tip1")}</li>
+                <li>• {t("premiumVoice.tip2")}</li>
+                <li>• {t("premiumVoice.tip3")}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       <Card className="p-8 mb-6">
         <div className="flex flex-col items-center gap-6">
@@ -180,14 +213,14 @@ const PremiumVoicePractice = () => {
 
           <div className="text-xs text-muted-foreground flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
-            Powered by GPT-4o Realtime
+            {t("premiumVoice.poweredBy")}
           </div>
         </div>
       </Card>
 
       {transcript.length > 0 && (
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Conversation</h2>
+          <h2 className="text-xl font-semibold mb-4">{t("premiumVoice.conversation")}</h2>
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {transcript.map((item, index) => (
               <div

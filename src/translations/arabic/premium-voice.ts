@@ -2,6 +2,23 @@
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
+  unlimitedVoicePractice: "الممارسة الصوتية المتميزة",
+  howToUse: "كيفية استخدام الممارسة الصوتية المتميزة",
+  step1: "انقر على 'بدء جلسة مميزة' للبدء",
+  step2: "اسمح بالوصول إلى الميكروفون عند المطالبة",
+  step3: "سيحييك مدرس الذكاء الاصطناعي ويطرح السؤال الأول",
+  step4: "تحدث بشكل طبيعي وواضح بـ {{targetLanguage}}",
+  step5: "سيستجيب الذكاء الاصطناعي ويساعد في تصحيح أخطائك",
+  step6: "راقب المؤقت - لديك 15 دقيقة هذا الشهر",
+  step7: "انقر على 'إنهاء الجلسة' عند الانتهاء",
+  tips: "نصائح لأفضل تجربة",
+  tip1: "استخدم سماعات الرأس لجودة صوت أفضل",
+  tip2: "ابحث عن بيئة هادئة",
+  tip3: "لا تخف من ارتكاب الأخطاء!",
+  practiceConversational: "مارس {{targetLanguage}} المحادثة مع GPT-4o-mini Realtime",
+  minutesRemaining: "دقيقة متبقية هذا الشهر",
+  poweredBy: "مدعوم بواسطة GPT-4o-mini Realtime",
+  conversation: "محادثة",
   premiumVoiceChat: "الدردشة الصوتية المتميزة",
   premiumVoiceChatBenefits: "فوائد الدردشة الصوتية المتميزة",
   cefrA1Description: "مبتدئ - الجمل والتعبيرات الأساسية",
