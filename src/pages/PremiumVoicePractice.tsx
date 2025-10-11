@@ -5,8 +5,10 @@ import { Mic, MicOff, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { useLocalization } from "@/context/LocalizationContext";
 
 const PremiumVoicePractice = () => {
+  const { t } = useLocalization();
   const { toast } = useToast();
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -43,14 +45,17 @@ const PremiumVoicePractice = () => {
       setTranscript(prev => [...prev, { role: 'user', text: event.transcript }]);
     } else if (event.type === 'time_warning') {
       toast({
-        title: "Time Warning",
-        description: `${event.minutes_remaining} minute${event.minutes_remaining > 1 ? 's' : ''} remaining`,
+        title: t('premiumVoiceChat.timeWarning'),
+        description: t('premiumVoiceChat.minutesRemainingWarning', { 
+          minutes: String(event.minutes_remaining),
+          plural: event.minutes_remaining > 1 ? 's' : ''
+        }),
         variant: "default",
       });
     } else if (event.type === 'time_limit_reached') {
       toast({
-        title: "Session Ended",
-        description: "Your 15-minute premium session has ended",
+        title: t('premiumVoiceChat.sessionEnded'),
+        description: t('premiumVoiceChat.premiumSessionEndedMessage'),
         variant: "default",
       });
       endConversation();
@@ -62,8 +67,8 @@ const PremiumVoicePractice = () => {
       const canStart = await checkCanStartPremiumVoiceSession() as any;
       if (!canStart?.allowed) {
         toast({
-          title: "Limit Reached",
-          description: `You've used all ${canStart?.minutes_limit || 15} minutes this month. Resets on the 1st.`,
+          title: t('premiumVoiceChat.limitReached'),
+          description: t('premiumVoiceChat.monthlyLimitMessage', { minutes: String(canStart?.minutes_limit || 15) }),
           variant: "destructive",
         });
         return;
@@ -79,13 +84,13 @@ const PremiumVoicePractice = () => {
       }, 1000);
       
       toast({
-        title: "Connected",
-        description: "Premium voice practice is ready. Start speaking!",
+        title: t('premiumVoiceChat.connected'),
+        description: t('premiumVoiceChat.premiumVoiceReady'),
       });
     } catch (error) {
       console.error('Error starting conversation:', error);
       toast({
-        title: "Error",
+        title: t('premiumVoiceChat.error'),
         description: error instanceof Error ? error.message : 'Failed to start conversation',
         variant: "destructive",
       });
@@ -115,8 +120,11 @@ const PremiumVoicePractice = () => {
     setIsSpeaking(false);
     
     toast({
-      title: "Session Saved",
-      description: `Used ${minutesUsed} minute${minutesUsed !== 1 ? 's' : ''} this session`,
+      title: t('premiumVoiceChat.sessionSaved'),
+      description: t('premiumVoiceChat.usedMinutesMessage', { 
+        minutes: String(minutesUsed),
+        plural: minutesUsed !== 1 ? 's' : ''
+      }),
     });
   };
 
@@ -133,15 +141,18 @@ const PremiumVoicePractice = () => {
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Sparkles className="w-8 h-8 text-primary" />
-          <h1 className="text-4xl font-bold">Premium Voice Practice</h1>
+          <h1 className="text-4xl font-bold">{t('premiumVoiceChat.premiumVoicePractice')}</h1>
         </div>
         <p className="text-muted-foreground">
-          Practice conversational English with GPT-4o Realtime
+          {t('premiumVoiceChat.practiceConversationalEnglish')}
         </p>
         <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
           <span className="text-sm font-medium">
-            {premiumVoiceMinutesRemaining} minutes remaining this month
+            {t('premiumVoiceChat.minutesRemainingThisMonth', { minutes: String(premiumVoiceMinutesRemaining) })}
           </span>
+        </div>
+        <div className="mt-4 text-sm text-muted-foreground max-w-2xl mx-auto">
+          {t('premiumVoiceChat.premiumVoiceInstructions')}
         </div>
       </div>
 
@@ -153,7 +164,7 @@ const PremiumVoicePractice = () => {
                 {formatTime(elapsedSeconds)}
               </div>
               <div className="text-sm text-muted-foreground">
-                {minutesRemaining} minutes left
+                {t('premiumVoiceChat.minutesLeft', { minutes: String(minutesRemaining) })}
               </div>
             </div>
           )}
@@ -177,7 +188,7 @@ const PremiumVoicePractice = () => {
               size="lg"
               className="px-8"
             >
-              Start Premium Session
+              {t('premiumVoiceChat.startPremiumSession')}
             </Button>
           ) : (
             <Button 
@@ -186,20 +197,20 @@ const PremiumVoicePractice = () => {
               variant="secondary"
               className="px-8"
             >
-              End Session
+              {t('premiumVoiceChat.endSession')}
             </Button>
           )}
 
           <div className="text-xs text-muted-foreground flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
-            Powered by GPT-4o Realtime
+            {t('premiumVoiceChat.poweredByGPT4oRealtime')}
           </div>
         </div>
       </Card>
 
       {transcript.length > 0 && (
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Conversation</h2>
+          <h2 className="text-xl font-semibold mb-4">{t('premiumVoiceChat.conversation')}</h2>
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {transcript.map((item, index) => (
               <div
@@ -211,7 +222,7 @@ const PremiumVoicePractice = () => {
                 }`}
               >
                 <div className="text-xs text-muted-foreground mb-1 font-medium">
-                  {item.role === 'user' ? 'You' : 'AI Tutor'}
+                  {item.role === 'user' ? t('premiumVoiceChat.you') : t('premiumVoiceChat.aiTutor')}
                 </div>
                 <div className="text-sm">{item.text}</div>
               </div>
