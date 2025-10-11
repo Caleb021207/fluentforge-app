@@ -239,27 +239,43 @@ export class RealtimeChat {
         throw new Error("Not authenticated");
       }
 
-      // WebSocket connections require auth token in URL since headers aren't supported
-      const wsUrl = `wss://dukpljcweixxmpkiblwo.supabase.co/functions/v1/realtime-chat?nativeLanguage=${this.nativeLanguage}&targetLanguage=${this.targetLanguage}&authorization=${session.access_token}`;
+      console.log("Connecting to WebSocket...");
+      
+      // CORRECT WebSocket URL - must use .functions.supabase.co
+      const wsUrl = `wss://dukpljcweixxmpkiblwo.functions.supabase.co/realtime-chat?nativeLanguage=${encodeURIComponent(this.nativeLanguage)}&targetLanguage=${encodeURIComponent(this.targetLanguage)}&authorization=${encodeURIComponent(session.access_token)}`;
+      
+      console.log("WebSocket URL:", wsUrl.replace(session.access_token, '[REDACTED]'));
       
       this.ws = new WebSocket(wsUrl);
 
-      this.ws.onopen = () => {
-        console.log("WebSocket connected");
-        this.startAudioRecording();
-      };
+      // Return a promise that resolves when connected or rejects on error
+      return new Promise<void>((resolve, reject) => {
+        if (!this.ws) {
+          reject(new Error("WebSocket not initialized"));
+          return;
+        }
 
-      this.ws.onmessage = this.handleMessage;
+        this.ws.onopen = () => {
+          console.log("✅ WebSocket connected successfully!");
+          this.startAudioRecording();
+          resolve();
+        };
 
-      this.ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        throw new Error("WebSocket connection failed");
-      };
+        this.ws.onerror = (error) => {
+          console.error("❌ WebSocket error:", error);
+          reject(new Error("Failed to connect to voice service. Please check your internet connection and try again."));
+        };
 
-      this.ws.onclose = () => {
-        console.log("WebSocket closed");
-        this.cleanup();
-      };
+        this.ws.onclose = (event) => {
+          console.log("WebSocket closed:", event.code, event.reason);
+          if (event.code !== 1000) {
+            reject(new Error(`Connection closed unexpectedly: ${event.reason || 'Unknown error'}`));
+          }
+          this.cleanup();
+        };
+
+        this.ws.onmessage = this.handleMessage;
+      });
 
     } catch (error) {
       console.error("Error initializing chat:", error);
