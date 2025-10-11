@@ -1,68 +1,54 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
 serve(async (req) => {
-  console.log("🔥 REQUEST RECEIVED");
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
 
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
+  try {
+    const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_KEY) {
+      throw new Error('OPENAI_API_KEY not configured');
+    }
+
+    console.log("🚀 Creating ephemeral token...");
+
+    const response = await fetch("https://api.openai.com/v1/realtime/sessions", {
+      method: "POST",
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*",
+        "Authorization": `Bearer ${OPENAI_KEY}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        model: "gpt-4o-realtime-preview-2024-12-17",
+        voice: "sage",
+        instructions: "You are a helpful language learning assistant. Engage in natural conversation to help users practice speaking.",
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("❌ OpenAI error:", error);
+      throw new Error(`Failed to create session: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("✅ Ephemeral token created");
+
+    return new Response(JSON.stringify(data), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error("❌ Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
-
-  const upgrade = req.headers.get("upgrade") || "";
-  if (upgrade.toLowerCase() !== "websocket") {
-    return new Response("Expected WebSocket", { status: 400 });
-  }
-
-  const { socket, response } = Deno.upgradeWebSocket(req);
-
-  const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY");
-  
-  socket.onopen = () => {
-    console.log("✅ CLIENT CONNECTED");
-    
-    const openai = new WebSocket(
-      "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17",
-      { headers: { 
-        Authorization: `Bearer ${OPENAI_KEY}`,
-        "OpenAI-Beta": "realtime=v1"
-      }}
-    );
-
-    openai.onopen = () => console.log("✅ OPENAI CONNECTED");
-    
-    openai.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      
-      if (data.type === "session.created") {
-        console.log("📝 CONFIGURING");
-        openai.send(JSON.stringify({
-          type: "session.update",
-          session: {
-            modalities: ["audio"],
-            voice: "sage",
-            input_audio_format: "pcm16",
-            output_audio_format: "pcm16",
-            turn_detection: { type: "server_vad" }
-          }
-        }));
-      }
-      
-      if (socket.readyState === 1) socket.send(e.data);
-    };
-    
-    openai.onerror = (e) => console.error("❌ OPENAI ERROR", e);
-    openai.onclose = () => socket.close();
-
-    socket.onmessage = (e) => {
-      if (openai.readyState === 1) openai.send(e.data);
-    };
-    
-    socket.onclose = () => openai.close();
-  };
-
-  return response;
 });

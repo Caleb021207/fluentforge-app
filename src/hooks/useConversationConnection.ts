@@ -4,83 +4,102 @@ import { supabase } from '@/integrations/supabase/client';
 export const useConversationConnection = ({ onSpeakingChange }: any) => {
   const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
-  const wsRef = useRef<WebSocket | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const pcRef = useRef<RTCPeerConnection | null>(null);
+  const dcRef = useRef<RTCDataChannel | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const startConversation = useCallback(async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) throw new Error("Not authenticated");
+    try {
+      console.log("🚀 Getting ephemeral token...");
+      
+      const { data, error } = await supabase.functions.invoke('realtime-chat');
+      
+      if (error) throw error;
+      if (!data?.client_secret?.value) throw new Error("No token received");
 
-    console.log("🚀 CONNECTING");
-    
-    const ws = new WebSocket(
-      `wss://dukpljcweixxmpkiblwo.functions.supabase.co/realtime-chat`
-    );
-    wsRef.current = ws;
+      const token = data.client_secret.value;
+      console.log("✅ Token received");
 
-    return new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error("Timeout")), 10000);
+      const pc = new RTCPeerConnection();
+      pcRef.current = pc;
 
-      ws.onopen = async () => {
-        clearTimeout(timeout);
-        console.log("✅ CONNECTED");
+      if (!audioRef.current) {
+        audioRef.current = document.createElement("audio");
+        audioRef.current.autoplay = true;
+      }
 
-        // Start mic
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 24000, channelCount: 1 }});
-        streamRef.current = stream;
-        
-        const ctx = new AudioContext({ sampleRate: 24000 });
-        audioContextRef.current = ctx;
-        const source = ctx.createMediaStreamSource(stream);
-        const processor = ctx.createScriptProcessor(4096, 1, 1);
-        
-        processor.onaudioprocess = (e) => {
-          const float32 = e.inputBuffer.getChannelData(0);
-          const int16 = new Int16Array(float32.length);
-          for (let i = 0; i < float32.length; i++) {
-            int16[i] = Math.max(-32768, Math.min(32767, float32[i] * 32768));
-          }
-          const base64 = btoa(String.fromCharCode(...new Uint8Array(int16.buffer)));
-          ws.send(JSON.stringify({ type: 'input_audio_buffer.append', audio: base64 }));
-        };
-        
-        source.connect(processor);
-        processor.connect(ctx.destination);
-
-        setIsConnected(true);
-        resolve();
+      pc.ontrack = (e) => {
+        console.log("🎵 Audio track received");
+        if (audioRef.current) {
+          audioRef.current.srcObject = e.streams[0];
+        }
       };
 
-      ws.onerror = () => {
-        clearTimeout(timeout);
-        reject(new Error("Connection failed"));
-      };
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: { sampleRate: 24000, channelCount: 1 } 
+      });
+      pc.addTrack(stream.getTracks()[0]);
 
-      ws.onmessage = (e) => {
-        const data = JSON.parse(e.data);
-        
-        if (data.type === 'response.audio.delta') onSpeakingChange(true);
-        if (data.type === 'response.audio.done') onSpeakingChange(false);
-        
-        if (data.type === 'response.audio_transcript.delta') {
+      const dc = pc.createDataChannel("oai-events");
+      dcRef.current = dc;
+
+      dc.addEventListener("message", (e) => {
+        const event = JSON.parse(e.data);
+        console.log("📨 Event:", event.type);
+
+        if (event.type === 'response.audio.delta') onSpeakingChange(true);
+        if (event.type === 'response.audio.done') onSpeakingChange(false);
+
+        if (event.type === 'response.audio_transcript.delta') {
           setMessages(prev => {
             const last = prev[prev.length - 1];
             if (last?.role === 'assistant') {
-              return [...prev.slice(0, -1), { ...last, text: last.text + data.delta }];
+              return [...prev.slice(0, -1), { ...last, text: last.text + event.delta }];
             }
-            return [...prev, { role: 'assistant', text: data.delta }];
+            return [...prev, { role: 'assistant', text: event.delta }];
           });
         }
-      };
-    });
+      });
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      const sdpResponse = await fetch(
+        `https://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17`,
+        {
+          method: "POST",
+          body: offer.sdp,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/sdp"
+          },
+        }
+      );
+
+      if (!sdpResponse.ok) {
+        throw new Error(`SDP exchange failed: ${sdpResponse.status}`);
+      }
+
+      const answerSdp = await sdpResponse.text();
+      await pc.setRemoteDescription({
+        type: "answer",
+        sdp: answerSdp,
+      });
+
+      console.log("✅ WebRTC connected");
+      setIsConnected(true);
+    } catch (error) {
+      console.error("❌ Connection error:", error);
+      throw error;
+    }
   }, [onSpeakingChange]);
 
   const endConversation = useCallback(() => {
-    streamRef.current?.getTracks().forEach(t => t.stop());
-    audioContextRef.current?.close();
-    wsRef.current?.close();
+    dcRef.current?.close();
+    pcRef.current?.close();
+    audioRef.current = null;
     setIsConnected(false);
+    setMessages([]);
   }, []);
 
   return { isConnected, messages, startConversation, endConversation };
