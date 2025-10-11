@@ -6,5 +6,5 @@ verify_jwt = true
 [functions.record-certification-usage]
 verify_jwt = true
 
-[functions.premium-voice-realtime]
+[functions.get-realtime-token]
 verify_jwt = true

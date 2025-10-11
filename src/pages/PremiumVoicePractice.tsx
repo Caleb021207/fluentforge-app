@@ -66,15 +66,10 @@ const PremiumVoicePractice = () => {
 
   const startConversation = async () => {
     try {
-      const canStart = await checkCanStartPremiumVoiceSession() as any;
-      if (!canStart?.allowed) {
-        toast({
-          title: "Limit Reached",
-          description: `You've used all ${canStart?.minutes_limit || 15} minutes this month. Resets on the 1st.`,
-          variant: "destructive",
-        });
-        return;
-      }
+      toast({
+        title: "Connecting...",
+        description: "Setting up your voice session",
+      });
 
       chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking, nativeLanguage, targetLanguage);
       await chatRef.current.init();
@@ -86,13 +81,13 @@ const PremiumVoicePractice = () => {
       }, 1000);
       
       toast({
-        title: "Connected",
-        description: "Premium voice practice is ready. Start speaking!",
+        title: "Connected!",
+        description: "You can start speaking now. The AI will respond automatically.",
       });
     } catch (error) {
       console.error('Error starting conversation:', error);
       toast({
-        title: "Error",
+        title: "Connection Error",
         description: error instanceof Error ? error.message : 'Failed to start conversation',
         variant: "destructive",
       });
