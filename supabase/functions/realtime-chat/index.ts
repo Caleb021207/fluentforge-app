@@ -19,10 +19,9 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate user - try both header and query param
+    // Authenticate user
     let authHeader = req.headers.get("Authorization");
     
-    // If not in headers, check query params (for WebSocket connections)
     if (!authHeader) {
       const url = new URL(req.url);
       const token = url.searchParams.get("authorization");
@@ -32,6 +31,7 @@ serve(async (req) => {
     }
     
     if (!authHeader) {
+      console.error("No authorization provided");
       return new Response("Missing authorization", { status: 401 });
     }
 
@@ -47,36 +47,16 @@ serve(async (req) => {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    console.log("User authenticated:", user.id);
+    console.log("✅ User authenticated:", user.id);
 
-    // Get native and target languages from query params
+    // Get languages from query params
     const url = new URL(req.url);
     const nativeLanguage = url.searchParams.get("nativeLanguage") || "english";
     const targetLanguage = url.searchParams.get("targetLanguage") || "english";
 
-    // Check usage limits
-    const { data: usageLimits, error: usageError } = await supabase
-      .from("student_usage_limits")
-      .select("*")
-      .eq("student_id", user.id)
-      .eq("academic_year", `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`)
-      .single();
+    console.log(`Languages: native=${nativeLanguage}, target=${targetLanguage}`);
 
-    if (usageError && usageError.code !== "PGRST116") {
-      console.error("Usage check error:", usageError);
-      return new Response("Error checking usage limits", { status: 500 });
-    }
-
-    if (usageLimits) {
-      const minutesUsed = usageLimits.premium_voice_minutes_used_current_month || 0;
-      const minutesLimit = usageLimits.premium_voice_minutes_monthly_limit || 120;
-
-      if (minutesUsed >= minutesLimit) {
-        return new Response("Monthly premium voice limit reached", { status: 403 });
-      }
-    }
-
-    // Create session tracking
+    // Track session start
     const sessionStartTime = Date.now();
     const { data: sessionData, error: insertError } = await supabase
       .from("usage_tracking")
@@ -88,22 +68,23 @@ serve(async (req) => {
       .single();
 
     if (insertError) {
-      console.error("Session tracking insert error:", insertError);
-      return new Response(`Error creating session: ${insertError.message}`, { status: 500, headers: corsHeaders });
+      console.error("Session tracking error:", insertError);
     }
 
     const sessionId = sessionData?.id;
-    console.log("Session created:", sessionId);
+    console.log("📊 Session created:", sessionId);
 
     // Upgrade to WebSocket
     const { socket, response } = Deno.upgradeWebSocket(req);
 
-    // Connect to OpenAI
+    // Connect to OpenAI Realtime API
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
       throw new Error("OPENAI_API_KEY not configured");
     }
 
+    console.log("🔌 Connecting to OpenAI Realtime API...");
+    
     const openAISocket = new WebSocket(
       "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17",
       {
@@ -116,18 +97,18 @@ serve(async (req) => {
 
     let sessionConfigured = false;
 
-    // Handle OpenAI connection
+    // OpenAI connection handlers
     openAISocket.onopen = () => {
-      console.log("Connected to OpenAI");
+      console.log("✅ Connected to OpenAI");
     };
 
     openAISocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       
-      // Send session configuration after receiving session.created
+      // Configure session after connection
       if (data.type === "session.created" && !sessionConfigured) {
         sessionConfigured = true;
-        console.log("Session created, sending configuration");
+        console.log("📝 Configuring session...");
         
         const sessionConfig = {
           type: "session.update",
@@ -152,32 +133,32 @@ serve(async (req) => {
         };
 
         openAISocket.send(JSON.stringify(sessionConfig));
-        console.log("Session configuration sent");
+        console.log("✅ Session configured");
       }
 
-      // Relay all messages to client
+      // Relay all OpenAI messages to client
       if (socket.readyState === WebSocket.OPEN) {
         socket.send(event.data);
       }
     };
 
     openAISocket.onerror = (error) => {
-      console.error("OpenAI WebSocket error:", error);
+      console.error("❌ OpenAI WebSocket error:", error);
       if (socket.readyState === WebSocket.OPEN) {
         socket.close(1011, "OpenAI connection error");
       }
     };
 
     openAISocket.onclose = () => {
-      console.log("OpenAI connection closed");
+      console.log("🔌 OpenAI connection closed");
       if (socket.readyState === WebSocket.OPEN) {
         socket.close();
       }
     };
 
-    // Handle client messages
+    // Client connection handlers
     socket.onopen = () => {
-      console.log("Client connected");
+      console.log("✅ Client connected");
     };
 
     socket.onmessage = (event) => {
@@ -188,9 +169,8 @@ serve(async (req) => {
     };
 
     socket.onclose = async () => {
-      console.log("Client disconnected");
+      console.log("🔌 Client disconnected");
       
-      // Close OpenAI connection
       if (openAISocket.readyState === WebSocket.OPEN) {
         openAISocket.close();
       }
@@ -208,12 +188,12 @@ serve(async (req) => {
           })
           .eq("id", sessionId);
 
-        console.log(`Session ${sessionId} ended. Minutes used: ${minutesUsed}`);
+        console.log(`📊 Session ended. Minutes: ${minutesUsed}`);
       }
     };
 
     socket.onerror = (error) => {
-      console.error("Client WebSocket error:", error);
+      console.error("❌ Client WebSocket error:", error);
       if (openAISocket.readyState === WebSocket.OPEN) {
         openAISocket.close();
       }
@@ -221,7 +201,7 @@ serve(async (req) => {
 
     return response;
   } catch (error) {
-    console.error("WebSocket setup error:", error);
+    console.error("❌ Setup error:", error);
     return new Response(`Error: ${error.message}`, { status: 500, headers: corsHeaders });
   }
 });

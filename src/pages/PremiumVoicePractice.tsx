@@ -3,111 +3,85 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Lightbulb } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { RealtimeChat } from "@/utils/RealtimeAudioManager";
+import { useConversationConnection } from "@/hooks/useConversationConnection";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useLocalization } from "@/context/LocalizationContext";
 import { secureStorage } from "@/utils/security/dataEncryption";
 
 const PremiumVoicePractice = () => {
   const { toast } = useToast();
-  const { t, currentLanguage } = useLocalization();
-  const [isConnected, setIsConnected] = useState(false);
+  const { currentLanguage } = useLocalization();
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [transcript, setTranscript] = useState<Array<{ role: string; text: string }>>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
-  const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession } = useUsageLimits();
+  const { premiumVoiceMinutesRemaining } = useUsageLimits();
 
   // Get language preferences
   const nativeLanguage = currentLanguage;
   const targetLanguage = secureStorage.getItem("targetLanguage") || (currentLanguage === "english" ? "spanish" : "english");
+
+  // Use the new conversation connection hook
+  const {
+    isConnected,
+    messages,
+    startConversation: startConnection,
+    endConversation: endConnection,
+  } = useConversationConnection({
+    nativeLanguage,
+    targetLanguage,
+    onSpeakingChange: setIsSpeaking,
+  });
 
   useEffect(() => {
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
-      chatRef.current?.disconnect();
     };
   }, []);
 
-  const handleMessage = (event: any) => {
-    console.log('Received message:', event);
-    
-    // Update transcript from messages array if available
-    if (event.messages && Array.isArray(event.messages)) {
-      setTranscript(event.messages);
-    }
-    
-    if (event.type === 'time_warning') {
-      toast({
-        title: "Time Warning",
-        description: `${event.minutes_remaining} minute${event.minutes_remaining > 1 ? 's' : ''} remaining`,
-        variant: "default",
-      });
-    } else if (event.type === 'time_limit_reached') {
-      toast({
-        title: "Session Ended",
-        description: "Your 15-minute premium session has ended",
-        variant: "default",
-      });
-      endConversation();
-    }
-  };
-
   const startConversation = async () => {
     try {
-      console.log("Starting conversation...");
+      console.log("🚀 Starting conversation...");
       
       toast({
         title: "Connecting...",
         description: "Setting up your voice session",
       });
 
-      const chat = new RealtimeChat(handleMessage, setIsSpeaking, nativeLanguage, targetLanguage);
-      chatRef.current = chat;
+      await startConnection();
       
-      await chat.init();
-      
-      setIsConnected(true);
       setElapsedSeconds(0);
-      
       timerRef.current = window.setInterval(() => {
         setElapsedSeconds(prev => prev + 1);
       }, 1000);
       
       toast({
         title: "Connected!",
-        description: "You can start speaking now. The AI will respond automatically.",
+        description: "Start speaking now. The AI will respond automatically.",
       });
       
-      console.log("✅ Conversation started successfully!");
+      console.log("✅ Conversation started!");
     } catch (error) {
-      console.error('❌ Error starting conversation:', error);
-      setIsConnected(false);
-      
-      if (chatRef.current) {
-        chatRef.current.disconnect();
-        chatRef.current = null;
-      }
+      console.error('❌ Error:', error);
       
       toast({
         title: "Connection Error",
-        description: error instanceof Error ? error.message : 'Failed to start conversation. Please try again.',
+        description: error instanceof Error ? error.message : 'Failed to start conversation',
         variant: "destructive",
       });
     }
   };
 
   const endConversation = () => {
+    console.log("🛑 Ending conversation...");
+    
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    chatRef.current?.disconnect();
-    setIsConnected(false);
-    setIsSpeaking(false);
+    
+    endConnection();
     
     const minutesUsed = Math.ceil(elapsedSeconds / 60);
     toast({
@@ -213,23 +187,23 @@ const PremiumVoicePractice = () => {
         </div>
       </Card>
 
-      {transcript.length > 0 && (
+      {messages.length > 0 && (
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Conversation</h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
-            {transcript.map((item, index) => (
+            {messages.map((message, index) => (
               <div
                 key={index}
                 className={`p-3 rounded-lg ${
-                  item.role === 'user'
+                  message.role === 'user'
                     ? 'bg-primary/10 ml-8'
                     : 'bg-muted mr-8'
                 }`}
               >
                 <div className="text-xs text-muted-foreground mb-1 font-medium">
-                  {item.role === 'user' ? 'You' : 'AI'}
+                  {message.role === 'user' ? 'You' : 'AI'}
                 </div>
-                <div className="text-sm">{item.text}</div>
+                <div className="text-sm">{message.text}</div>
               </div>
             ))}
           </div>
