@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "Sera ya Vidakuzi",
   accessibilityStatement: "Taarifa ya Ufikiraji",
   pronunciationPractice: "Mazoezi ya Matamshi",
+  premiumVoicePractice: "Mazoezi ya Sauti ya Premium",
   aiAnalysis: "Uchambuzi wa AI"
 };
 

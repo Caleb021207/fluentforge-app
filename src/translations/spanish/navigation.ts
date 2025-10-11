@@ -29,6 +29,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "Política de Cookies",
   accessibilityStatement: "Declaración de Accesibilidad",
   pronunciationPractice: "Práctica de Pronunciación",
+  premiumVoicePractice: "Práctica de Voz Premium",
   aiAnalysis: "Análisis de IA"
 };
 

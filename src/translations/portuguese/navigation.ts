@@ -11,6 +11,7 @@ const navigationTranslations: TranslationRecord = {
   lessons: "Lições",
   voiceChat: "Chat de Voz",
   pronunciationPractice: "Prática de Pronúncia",
+  premiumVoicePractice: "Prática de Voz Premium",
   premiumVoice: "Voz Premium",
   transcriptAnalysis: "Análise de Transcrição",
   aiAnalysis: "Análise IA",

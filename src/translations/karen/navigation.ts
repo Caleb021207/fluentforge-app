@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "ကူကီမူဝါါ်",
   accessibilityStatement: "တၢ်ဘၣ်နိါ်ကံါ်ဖံး",
   pronunciationPractice: "ကံါ်အွံါ်လါဃၤကုၣ်ဒါး",
+  premiumVoicePractice: "ပရီမီယံ အသံလေ့ကျင့်ခန်း",
   aiAnalysis: "AI ကံါ်ခွဲစီး"
 };
 

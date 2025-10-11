@@ -56,6 +56,7 @@ const navigationTranslations: TranslationRecord = {
   
   // Advanced features
   pronunciationPractice: "उच्चारण अभ्यास",
+  premiumVoicePractice: "प्रिमियम आवाज अभ्यास",
   aiAnalysis: "AI विश्लेषण",
   transcriptAnalysis: "ट्रान्सक्रिप्ट विश्लेषण",
   

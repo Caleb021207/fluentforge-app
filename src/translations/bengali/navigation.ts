@@ -28,7 +28,8 @@ const navigationTranslations: TranslationRecord = {
   privacyPolicy: "গোপনীয়তা নীতি",
   cookiePolicy: "কুকি নীতি",
   accessibilityStatement: "অ্যাক্সেসিবিলিটি বিবৃতি",
-  pronunciationPractice: "উচ্চারণ অনুশীলন"
+  pronunciationPractice: "উচ্চারণ অনুশীলন",
+  premiumVoicePractice: "প্রিমিয়াম ভয়েস অনুশীলন"
 };
 
 export default navigationTranslations;

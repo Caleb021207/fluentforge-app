@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "쿠키 정책",
   accessibilityStatement: "접근성 명세",
   pronunciationPractice: "발음 연습",
+  premiumVoicePractice: "프리미엄 음성 연습",
   aiAnalysis: "AI 분석"
 };
 

@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "کوکی پالیسی",
   accessibilityStatement: "رسائی کا بیان",
   pronunciationPractice: "تلفظ کی مشق",
+  premiumVoicePractice: "پریمیم آواز کی مشق",
   aiAnalysis: "AI تجزیہ"
 };
 

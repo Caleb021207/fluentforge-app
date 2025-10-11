@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "ናይ ኩኪ ፖሊሲ",
   accessibilityStatement: "ተበጻሕነት መግለጺ",
   pronunciationPractice: "ኣዘራርባ ልምምድ",
+  premiumVoicePractice: "ፕሪሚየም ድምጺ ልምምድ",
   aiAnalysis: "AI ትንተና"
 };
 

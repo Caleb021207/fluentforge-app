@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "ကွတ်ကီမူဝါဒ",
   accessibilityStatement: "အသုံးပြုနိုင်မှုကြေညာချက်",
   pronunciationPractice: "အသံထွက်လေ့ကျင့်ခန်း",
+  premiumVoicePractice: "ပရီမီယံ အသံလေ့ကျင့်ခန်း",
   aiAnalysis: "AI ခွဲခြမ်းစိတ်ဖြာခြင်း"
 };
 

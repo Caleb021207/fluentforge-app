@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "Polityka plików cookie",
   accessibilityStatement: "Oświadczenie o dostępności",
   pronunciationPractice: "Praktyka wymowy",
+  premiumVoicePractice: "Premium praktyka głosowa",
   aiAnalysis: "Analiza AI"
 };
 

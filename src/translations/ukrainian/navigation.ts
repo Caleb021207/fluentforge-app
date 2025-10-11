@@ -29,6 +29,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "Політика використання файлів cookie",
   accessibilityStatement: "Заява про доступність",
   pronunciationPractice: "Практика вимови",
+  premiumVoicePractice: "Преміум голосова практика",
   aiAnalysis: "ШІ аналіз"
 };
 

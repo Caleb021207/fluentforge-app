@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "นโยบายคุกกี้",
   accessibilityStatement: "คำแถลงการเข้าถึง",
   pronunciationPractice: "การฝึกการออกเสียง",
+  premiumVoicePractice: "การฝึกเสียงพรีเมียม",
   aiAnalysis: "การวิเคราะห์ AI"
 };
 

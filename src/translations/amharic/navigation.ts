@@ -28,7 +28,8 @@ const navigationTranslations: TranslationRecord = {
   privacyPolicy: "የግላዊነት ፖሊሲ",
   cookiePolicy: "የኩኪ ፖሊሲ",
   accessibilityStatement: "የተደራሽነት መግለጫ",
-  pronunciationPractice: "የአነባበብ ልምምድ"
+  pronunciationPractice: "የአነባበብ ልምምድ",
+  premiumVoicePractice: "ፕሪሚየም የድምፅ ልምምድ",
 };
 
 export default navigationTranslations;

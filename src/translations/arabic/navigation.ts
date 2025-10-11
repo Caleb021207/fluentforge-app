@@ -29,7 +29,8 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "سياسة ملفات تعريف الارتباط",
   accessibilityStatement: "بيان إمكانية الوصول",
   pronunciationPractice: "ممارسة النطق",
-  aiAnalysis: "تحليل الذكاء الاصطناعي"
+  aiAnalysis: "تحليل الذكاء الاصطناعي",
+  premiumVoicePractice: "ممارسة صوتية مميزة"
 };
 
 export default navigationTranslations;

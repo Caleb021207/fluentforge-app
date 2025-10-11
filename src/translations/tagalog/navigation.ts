@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "Patakaran sa Cookie",
   accessibilityStatement: "Pahayag ng Accessibility",
   pronunciationPractice: "Pagsasanay sa Pagbigkas",
+  premiumVoicePractice: "Premium na Pagsasanay sa Boses",
   aiAnalysis: "AI Analysis"
 };
 

@@ -28,6 +28,7 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "Chính sách cookie",
   accessibilityStatement: "Tuyên bố về khả năng tiếp cận",
   pronunciationPractice: "Thực hành phát âm",
+  premiumVoicePractice: "Thực hành giọng nói cao cấp",
   aiAnalysis: "Phân tích AI"
 };
 

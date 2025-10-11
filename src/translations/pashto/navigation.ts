@@ -28,7 +28,8 @@ const navigationTranslations: TranslationRecord = {
   privacyPolicy: "د محرمیت پالیسي",
   cookiePolicy: "د کوکۍ پالیسي",
   accessibilityStatement: "د لاسرسي بیان",
-  pronunciationPractice: "د تلفظ تمرین"
+  pronunciationPractice: "د تلفظ تمرین",
+  premiumVoicePractice: "پریمیم غږ تمرین"
 };
 
 export default navigationTranslations;
