@@ -35,20 +35,12 @@ const PremiumVoicePractice = () => {
   const handleMessage = (event: any) => {
     console.log('Received message:', event);
     
-    if (event.type === 'response.audio_transcript.delta') {
-      setTranscript(prev => {
-        const last = prev[prev.length - 1];
-        if (last?.role === 'assistant') {
-          return [
-            ...prev.slice(0, -1),
-            { ...last, text: last.text + event.delta }
-          ];
-        }
-        return [...prev, { role: 'assistant', text: event.delta }];
-      });
-    } else if (event.type === 'conversation.item.input_audio_transcription.completed') {
-      setTranscript(prev => [...prev, { role: 'user', text: event.transcript }]);
-    } else if (event.type === 'time_warning') {
+    // Update transcript from messages array if available
+    if (event.messages && Array.isArray(event.messages)) {
+      setTranscript(event.messages);
+    }
+    
+    if (event.type === 'time_warning') {
       toast({
         title: "Time Warning",
         description: `${event.minutes_remaining} minute${event.minutes_remaining > 1 ? 's' : ''} remaining`,

@@ -1,5 +1,150 @@
 import { supabase } from "@/integrations/supabase/client";
 
+// Audio encoding utility
+export const encodeAudioForAPI = (float32Array: Float32Array): string => {
+  const int16Array = new Int16Array(float32Array.length);
+  for (let i = 0; i < float32Array.length; i++) {
+    const s = Math.max(-1, Math.min(1, float32Array[i]));
+    int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+  }
+  
+  const uint8Array = new Uint8Array(int16Array.buffer);
+  let binary = '';
+  const chunkSize = 0x8000;
+  
+  for (let i = 0; i < uint8Array.length; i += chunkSize) {
+    const chunk = uint8Array.subarray(i, Math.min(i + chunkSize, uint8Array.length));
+    binary += String.fromCharCode.apply(null, Array.from(chunk));
+  }
+  
+  return btoa(binary);
+};
+
+// WAV conversion utility
+const createWavFromPCM = (pcmData: Uint8Array): Uint8Array => {
+  const int16Data = new Int16Array(pcmData.length / 2);
+  for (let i = 0; i < pcmData.length; i += 2) {
+    int16Data[i / 2] = (pcmData[i + 1] << 8) | pcmData[i];
+  }
+  
+  const wavHeader = new ArrayBuffer(44);
+  const view = new DataView(wavHeader);
+  
+  const sampleRate = 24000;
+  const numChannels = 1;
+  const bitsPerSample = 16;
+  const blockAlign = (numChannels * bitsPerSample) / 8;
+  const byteRate = sampleRate * blockAlign;
+  
+  view.setUint32(0, 0x52494646, false);
+  view.setUint32(4, 36 + int16Data.byteLength, true);
+  view.setUint32(8, 0x57415645, false);
+  
+  view.setUint32(12, 0x666d7420, false);
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bitsPerSample, true);
+  
+  view.setUint32(36, 0x64617461, false);
+  view.setUint32(40, int16Data.byteLength, true);
+  
+  const wavArray = new Uint8Array(44 + int16Data.byteLength);
+  wavArray.set(new Uint8Array(wavHeader), 0);
+  wavArray.set(new Uint8Array(int16Data.buffer), 44);
+  
+  return wavArray;
+};
+
+// Audio queue for sequential playback
+class AudioQueue {
+  private queue: Uint8Array[] = [];
+  private isPlaying = false;
+  private audioContext: AudioContext;
+  private buffer: Uint8Array[] = [];
+  private bufferThreshold = 9600; // 200ms at 24kHz, 16-bit
+
+  constructor(audioContext: AudioContext) {
+    this.audioContext = audioContext;
+  }
+
+  addChunk(audioData: Uint8Array) {
+    this.buffer.push(audioData);
+    
+    const totalBuffered = this.buffer.reduce((sum, chunk) => sum + chunk.length, 0);
+    
+    if (totalBuffered >= this.bufferThreshold) {
+      const combined = new Uint8Array(totalBuffered);
+      let offset = 0;
+      for (const chunk of this.buffer) {
+        combined.set(chunk, offset);
+        offset += chunk.length;
+      }
+      
+      this.queue.push(combined);
+      this.buffer = [];
+      
+      if (!this.isPlaying) {
+        this.playNext();
+      }
+    }
+  }
+
+  private async playNext() {
+    if (this.queue.length === 0) {
+      this.isPlaying = false;
+      return;
+    }
+
+    this.isPlaying = true;
+    const audioData = this.queue.shift()!;
+
+    try {
+      const wavData = createWavFromPCM(audioData);
+      const arrayBuffer = wavData.buffer.slice(0) as ArrayBuffer;
+      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      
+      const source = this.audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(this.audioContext.destination);
+      
+      source.onended = () => this.playNext();
+      source.start(0);
+    } catch (error) {
+      console.error('Error playing audio:', error);
+      this.playNext();
+    }
+  }
+
+  flush() {
+    if (this.buffer.length > 0) {
+      const totalBuffered = this.buffer.reduce((sum, chunk) => sum + chunk.length, 0);
+      const combined = new Uint8Array(totalBuffered);
+      let offset = 0;
+      for (const chunk of this.buffer) {
+        combined.set(chunk, offset);
+        offset += chunk.length;
+      }
+      this.queue.push(combined);
+      this.buffer = [];
+      
+      if (!this.isPlaying) {
+        this.playNext();
+      }
+    }
+  }
+
+  clear() {
+    this.queue = [];
+    this.buffer = [];
+    this.isPlaying = false;
+  }
+}
+
+// Audio recorder class
 export class AudioRecorder {
   private stream: MediaStream | null = null;
   private audioContext: AudioContext | null = null;
@@ -60,13 +205,18 @@ export class AudioRecorder {
   }
 }
 
+// Main RealtimeChat class
 export class RealtimeChat {
-  private pc: RTCPeerConnection | null = null;
-  private dc: RTCDataChannel | null = null;
-  private audioEl: HTMLAudioElement;
+  private ws: WebSocket | null = null;
+  private audioRecorder: AudioRecorder | null = null;
+  private audioQueue: AudioQueue;
+  private audioContext: AudioContext;
   private nativeLanguage: string;
   private targetLanguage: string;
   private sessionStartTime: number = 0;
+  private sequenceCounter = 0;
+  private pendingUserMessageIndex: number | null = null;
+  private messages: any[] = [];
 
   constructor(
     private onMessage: (message: any) => void,
@@ -74,8 +224,8 @@ export class RealtimeChat {
     nativeLanguage: string = 'english',
     targetLanguage: string = 'english'
   ) {
-    this.audioEl = document.createElement("audio");
-    this.audioEl.autoplay = true;
+    this.audioContext = new AudioContext({ sampleRate: 24000 });
+    this.audioQueue = new AudioQueue(this.audioContext);
     this.nativeLanguage = nativeLanguage;
     this.targetLanguage = targetLanguage;
   }
@@ -84,88 +234,31 @@ export class RealtimeChat {
     try {
       this.sessionStartTime = Date.now();
       
-      // Get ephemeral token from our Supabase Edge Function
-      const { data: tokenData, error: tokenError } = await supabase.functions.invoke("get-realtime-token", {
-        body: { 
-          nativeLanguage: this.nativeLanguage,
-          targetLanguage: this.targetLanguage 
-        }
-      });
-
-      if (tokenError || !tokenData?.client_secret?.value) {
-        throw new Error(tokenError?.message || "Failed to get ephemeral token");
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error("Not authenticated");
       }
 
-      const EPHEMERAL_KEY = tokenData.client_secret.value;
-      console.log("Got ephemeral token");
+      const wsUrl = `wss://dukpljcweixxmpkiblwo.supabase.co/functions/v1/realtime-chat?nativeLanguage=${this.nativeLanguage}&targetLanguage=${this.targetLanguage}`;
+      
+      this.ws = new WebSocket(wsUrl);
 
-      // Create peer connection
-      this.pc = new RTCPeerConnection();
-
-      // Set up remote audio
-      this.pc.ontrack = e => {
-        console.log("Received remote audio track");
-        this.audioEl.srcObject = e.streams[0];
+      this.ws.onopen = () => {
+        console.log("WebSocket connected");
+        this.startAudioRecording();
       };
 
-      // Add local audio track
-      const ms = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.pc.addTrack(ms.getTracks()[0]);
-      console.log("Added local audio track");
+      this.ws.onmessage = this.handleMessage;
 
-      // Set up data channel
-      this.dc = this.pc.createDataChannel("oai-events");
-      
-      this.dc.addEventListener("open", () => {
-        console.log("Data channel opened");
-      });
-
-      this.dc.addEventListener("message", (e) => {
-        const event = JSON.parse(e.data);
-        console.log("Received event:", event.type);
-        
-        if (event.type === 'response.audio_transcript.delta' || 
-            event.type === 'conversation.item.input_audio_transcription.completed') {
-          console.log("Transcript:", event.delta || event.transcript);
-        }
-        
-        if (event.type === 'response.audio.delta') {
-          this.onSpeakingChange(true);
-        } else if (event.type === 'response.audio.done') {
-          this.onSpeakingChange(false);
-        }
-        
-        this.onMessage(event);
-      });
-
-      // Create and set local description
-      const offer = await this.pc.createOffer();
-      await this.pc.setLocalDescription(offer);
-      console.log("Created offer");
-
-      // Connect to OpenAI's Realtime API
-      const baseUrl = "https://api.openai.com/v1/realtime";
-      const model = "gpt-4o-realtime-preview-2024-12-17";
-      const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
-        method: "POST",
-        body: offer.sdp,
-        headers: {
-          Authorization: `Bearer ${EPHEMERAL_KEY}`,
-          "Content-Type": "application/sdp"
-        },
-      });
-
-      if (!sdpResponse.ok) {
-        throw new Error(`Failed to connect: ${await sdpResponse.text()}`);
-      }
-
-      const answer = {
-        type: "answer" as RTCSdpType,
-        sdp: await sdpResponse.text(),
+      this.ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        throw new Error("WebSocket connection failed");
       };
-      
-      await this.pc.setRemoteDescription(answer);
-      console.log("WebRTC connection established");
+
+      this.ws.onclose = () => {
+        console.log("WebSocket closed");
+        this.cleanup();
+      };
 
     } catch (error) {
       console.error("Error initializing chat:", error);
@@ -173,9 +266,95 @@ export class RealtimeChat {
     }
   }
 
+  private startAudioRecording() {
+    this.audioRecorder = new AudioRecorder((audioData) => {
+      if (this.ws?.readyState === WebSocket.OPEN) {
+        const encoded = encodeAudioForAPI(audioData);
+        this.ws.send(JSON.stringify({
+          type: 'input_audio_buffer.append',
+          audio: encoded
+        }));
+      }
+    });
+
+    this.audioRecorder.start().catch(error => {
+      console.error("Error starting audio recording:", error);
+    });
+  }
+
+  private handleMessage = (event: MessageEvent) => {
+    const data = JSON.parse(event.data);
+    console.log("Received:", data.type);
+
+    switch (data.type) {
+      case 'session.created':
+        console.log("Session created successfully");
+        break;
+
+      case 'session.updated':
+        console.log("Session configuration updated");
+        break;
+
+      case 'response.created':
+        const userSequence = this.sequenceCounter++;
+        this.pendingUserMessageIndex = this.messages.length;
+        this.messages.push({
+          role: 'user',
+          text: '[Transcribing...]',
+          sequence: userSequence
+        });
+        break;
+
+      case 'conversation.item.input_audio_transcription.completed':
+        if (this.pendingUserMessageIndex !== null) {
+          this.messages[this.pendingUserMessageIndex] = {
+            ...this.messages[this.pendingUserMessageIndex],
+            text: data.transcript
+          };
+          this.pendingUserMessageIndex = null;
+        }
+        break;
+
+      case 'response.audio.delta':
+        const binaryString = atob(data.delta);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        this.audioQueue.addChunk(bytes);
+        this.onSpeakingChange(true);
+        break;
+
+      case 'response.audio.done':
+        this.audioQueue.flush();
+        this.onSpeakingChange(false);
+        break;
+
+      case 'response.audio_transcript.delta':
+        const lastMsg = this.messages[this.messages.length - 1];
+        if (lastMsg?.role === 'assistant' && lastMsg.responseId === data.response_id) {
+          lastMsg.text += data.delta;
+        } else {
+          this.messages.push({
+            role: 'assistant',
+            text: data.delta,
+            sequence: this.sequenceCounter++,
+            responseId: data.response_id
+          });
+        }
+        break;
+
+      case 'error':
+        console.error("OpenAI error:", data);
+        break;
+    }
+
+    this.onMessage({ ...data, messages: this.messages });
+  };
+
   async sendMessage(text: string) {
-    if (!this.dc || this.dc.readyState !== 'open') {
-      throw new Error('Data channel not ready');
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      throw new Error('WebSocket not connected');
     }
 
     const event = {
@@ -192,16 +371,20 @@ export class RealtimeChat {
       }
     };
 
-    this.dc.send(JSON.stringify(event));
-    this.dc.send(JSON.stringify({type: 'response.create'}));
+    this.ws.send(JSON.stringify(event));
+    this.ws.send(JSON.stringify({type: 'response.create'}));
+  }
+
+  private cleanup() {
+    this.audioRecorder?.stop();
+    this.audioQueue.clear();
   }
 
   disconnect() {
     const minutesUsed = Math.ceil((Date.now() - this.sessionStartTime) / 60000);
     console.log(`Session ended. Minutes used: ${minutesUsed}`);
     
-    this.dc?.close();
-    this.pc?.close();
-    this.audioEl.srcObject = null;
+    this.cleanup();
+    this.ws?.close();
   }
 }
