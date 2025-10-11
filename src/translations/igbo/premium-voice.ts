@@ -16,7 +16,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   phrase5: "Gwa m banyere akwụkwọ ma ọ bụ ihe nkiri kacha amasị gị.",
   phrase6: "Gịnị ka i mere n'izu gara aga?",
   phrase7: "Gịnị bụ atụmatụ gị maka echi?",
-  phrase8: "Kedu ka... si asụ n'asụsụ Bekee/Spanish?"
+  phrase8: "Kedu ka... si asụ n'asụsụ Bekee/Spanish?",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Mmemme Olu Premium",
+  practiceConversationalEnglish: "Mụọ asụsụ Bekee nke mkparịta ụka site na GPT-4o Realtime",
+  minutesRemainingThisMonth: "Nkeji {{minutes}} fọdụrụ n'ọnwa a",
+  startPremiumSession: "Malite Nnọkọ Premium",
+  endSession: "Kwụsị Nnọkọ",
+  poweredByGPT4oRealtime: "GPT-4o Realtime na-akwado ya",
+  conversation: "Mkparịta ụka",
+  you: "Gị",
+  aiTutor: "Onye nkụzi AI",
+  minutesLeft: "Nkeji {{minutes}} fọdụrụ",
+  connected: "Ejikọtara",
+  premiumVoiceReady: "Mmemme olu premium dị njikere. Malite ikwu okwu!",
+  limitReached: "Oke Eruru",
+  monthlyLimitMessage: "I jirila nkeji {{minutes}} niile nke ọnwa a. Ọ ga-atọghachi na 1st.",
+  sessionSaved: "E chekwara Nnọkọ",
+  usedMinutesMessage: "Ejiri nkeji {{minutes}} na nnọkọ a",
+  timeWarning: "Ịdọ aka na ntị Oge",
+  minutesRemainingWarning: "Nkeji {{minutes}} fọdụrụ",
+  sessionEnded: "Nnọkọ Kwụsịrị",
+  premiumSessionEndedMessage: "Nnọkọ premium gị nke nkeji 15 akwụsịla",
+  premiumVoiceInstructions: "E mere atụmatụ njirimara a maka mkparịta ụka na-enweghị nsogbu, nke na-agbanwe agbanwe. Ị na-enweta nkeji 15 nke omume kwa ọnwa. Naanị pịa bọtịnụ ahụ wee sị 'Ndewo, kedu ka ị mere?' Onye nkụzi AI ga-enyere gị aka mụọ nkà ikwu okwu Bekee gị. Ọ bụrụ na ọ dị mkpa, ọ nwekwara ike inyere gị aka n'asụsụ nne gị."
 };
 
 export default premiumVoiceTranslations;

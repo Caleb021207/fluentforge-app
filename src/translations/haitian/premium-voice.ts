@@ -14,7 +14,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   phrase3: "Èske ou ka rekòmande yon bon restoran?",
   phrase4: "Ki sa ki pasiyon ou ak enterè ou yo?",
   phrase5: "Pale m de liv osinon fim ou pi renmen.",
-  phrase6: "Kisa ou te fè wikenn pase a?"
+  phrase6: "Kisa ou te fè wikenn pase a?",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Pratik Vwa Premium",
+  practiceConversationalEnglish: "Pratike angle konvèsasyonèl ak GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} minit ki rete mwa sa a",
+  startPremiumSession: "Kòmanse Sesyon Premium",
+  endSession: "Fini Sesyon",
+  poweredByGPT4oRealtime: "Sipòte pa GPT-4o Realtime",
+  conversation: "Konvèsasyon",
+  you: "Ou",
+  aiTutor: "Pwofesè AI",
+  minutesLeft: "{{minutes}} minit ki rete",
+  connected: "Konekte",
+  premiumVoiceReady: "Pratik vwa premium pare. Kòmanse pale!",
+  limitReached: "Limit Rive",
+  monthlyLimitMessage: "Ou itilize tout {{minutes}} minit mwa sa a. Li pral remèt sou 1ye a.",
+  sessionSaved: "Sesyon Anrejistre",
+  usedMinutesMessage: "Itilize {{minutes}} minit nan sesyon sa a",
+  timeWarning: "Avètisman Tan",
+  minutesRemainingWarning: "{{minutes}} minit ki rete",
+  sessionEnded: "Sesyon Fini",
+  premiumSessionEndedMessage: "Sesyon premium 15 minit ou a fini",
+  premiumVoiceInstructions: "Karakteristik sa a fèt pou konvèsasyon flui, dinamik. Ou gen 15 minit pratik chak mwa. Jis peze bouton an epi di 'Bonjou, kijan ou ye?' Pwofesè AI a ap ede w pratike kapasite pale angle ou yo. Si sa nesesè, li ka ede w tou nan lang natif natal ou."
 };
 
 export default premiumVoiceTranslations;

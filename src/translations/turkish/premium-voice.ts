@@ -15,7 +15,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   practiceWithRealVoice: "Gerçek Sesle Pratik Yapın",
   voiceRecognitionSystem: "Ses Tanıma Sistemi",
   speakNaturally: "Doğal Konuşun",
-  listenToExamples: "Örnekleri Dinleyin"
+  listenToExamples: "Örnekleri Dinleyin",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Premium Ses Pratiği",
+  practiceConversationalEnglish: "GPT-4o Realtime ile konuşma İngilizcesi pratik yapın",
+  minutesRemainingThisMonth: "Bu ay {{minutes}} dakika kaldı",
+  startPremiumSession: "Premium Oturumu Başlat",
+  endSession: "Oturumu Sonlandır",
+  poweredByGPT4oRealtime: "GPT-4o Realtime tarafından desteklenmektedir",
+  conversation: "Konuşma",
+  you: "Siz",
+  aiTutor: "AI Öğretmen",
+  minutesLeft: "{{minutes}} dakika kaldı",
+  connected: "Bağlandı",
+  premiumVoiceReady: "Premium ses pratiği hazır. Konuşmaya başlayın!",
+  limitReached: "Limite Ulaşıldı",
+  monthlyLimitMessage: "Bu ayki {{minutes}} dakikanın tamamını kullandınız. 1'inde sıfırlanır.",
+  sessionSaved: "Oturum Kaydedildi",
+  usedMinutesMessage: "Bu oturumda {{minutes}} dakika kullanıldı",
+  timeWarning: "Zaman Uyarısı",
+  minutesRemainingWarning: "{{minutes}} dakika kaldı",
+  sessionEnded: "Oturum Sona Erdi",
+  premiumSessionEndedMessage: "15 dakikalık premium oturumunuz sona erdi",
+  premiumVoiceInstructions: "Bu özellik akıcı, dinamik konuşmalar için tasarlanmıştır. Ayda 15 dakika pratik yapabilirsiniz. Sadece butona basın ve 'Merhaba, nasılsınız?' deyin. AI öğretmen İngilizce konuşma becerilerinizi geliştirmenize yardımcı olacak. Gerekirse, ana dilinizde de size yardımcı olabilir."
 };
 
 export default premiumVoiceTranslations;

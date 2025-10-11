@@ -15,7 +15,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   practiceWithRealVoice: "Ćwicz z prawdziwym głosem",
   voiceRecognitionSystem: "System rozpoznawania głosu",
   speakNaturally: "Mów naturalnie",
-  listenToExamples: "Posłuchaj przykładów"
+  listenToExamples: "Posłuchaj przykładów",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Praktyka głosowa premium",
+  practiceConversationalEnglish: "Ćwicz konwersacyjny angielski z GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} minut pozostało w tym miesiącu",
+  startPremiumSession: "Rozpocznij sesję premium",
+  endSession: "Zakończ sesję",
+  poweredByGPT4oRealtime: "Zasilane przez GPT-4o Realtime",
+  conversation: "Rozmowa",
+  you: "Ty",
+  aiTutor: "Tutor AI",
+  minutesLeft: "{{minutes}} minut pozostało",
+  connected: "Połączono",
+  premiumVoiceReady: "Praktyka głosowa premium jest gotowa. Zacznij mówić!",
+  limitReached: "Osiągnięto limit",
+  monthlyLimitMessage: "Wykorzystałeś wszystkie {{minutes}} minut w tym miesiącu. Odnowienie 1. dnia.",
+  sessionSaved: "Sesja zapisana",
+  usedMinutesMessage: "Wykorzystano {{minutes}} minut w tej sesji",
+  timeWarning: "Ostrzeżenie czasowe",
+  minutesRemainingWarning: "{{minutes}} minut pozostało",
+  sessionEnded: "Sesja zakończona",
+  premiumSessionEndedMessage: "Twoja 15-minutowa sesja premium zakończyła się",
+  premiumVoiceInstructions: "Ta funkcja jest przeznaczona do płynnych, dynamicznych rozmów. Otrzymujesz 15 minut ćwiczeń miesięcznie. Po prostu naciśnij przycisk i powiedz 'Cześć, jak się masz?' Tutor AI pomoże ci ćwiczyć umiejętności mówienia po angielsku. W razie potrzeby może również pomóc ci w twoim ojczystym języku."
 };
 
 export default premiumVoiceTranslations;

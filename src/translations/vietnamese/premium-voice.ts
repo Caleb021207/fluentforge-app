@@ -21,7 +21,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   loginRequired: "Yêu cầu đăng nhập",
   pleaseLoginToAccessPremiumFeature: "Vui lòng đăng nhập để truy cập tính năng chat giọng nói cao cấp",
   startVoiceChat: "Bắt đầu chat giọng nói",
-  stopVoiceChat: "Dừng chat giọng nói"
+  stopVoiceChat: "Dừng chat giọng nói",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Luyện Tập Giọng Nói Cao Cấp",
+  practiceConversationalEnglish: "Luyện tập tiếng Anh giao tiếp với GPT-4o Realtime",
+  minutesRemainingThisMonth: "Còn {{minutes}} phút trong tháng này",
+  startPremiumSession: "Bắt Đầu Phiên Cao Cấp",
+  endSession: "Kết Thúc Phiên",
+  poweredByGPT4oRealtime: "Được hỗ trợ bởi GPT-4o Realtime",
+  conversation: "Hội Thoại",
+  you: "Bạn",
+  aiTutor: "Gia Sư AI",
+  minutesLeft: "Còn {{minutes}} phút",
+  connected: "Đã Kết Nối",
+  premiumVoiceReady: "Luyện tập giọng nói cao cấp đã sẵn sàng. Bắt đầu nói!",
+  limitReached: "Đã Đạt Giới Hạn",
+  monthlyLimitMessage: "Bạn đã sử dụng hết {{minutes}} phút trong tháng này. Đặt lại vào ngày 1.",
+  sessionSaved: "Phiên Đã Lưu",
+  usedMinutesMessage: "Đã sử dụng {{minutes}} phút trong phiên này",
+  timeWarning: "Cảnh Báo Thời Gian",
+  minutesRemainingWarning: "Còn {{minutes}} phút",
+  sessionEnded: "Phiên Đã Kết Thúc",
+  premiumSessionEndedMessage: "Phiên cao cấp 15 phút của bạn đã kết thúc",
+  premiumVoiceInstructions: "Tính năng này được thiết kế cho các cuộc hội thoại trôi chảy, năng động. Bạn có 15 phút luyện tập mỗi tháng. Chỉ cần nhấn nút và nói 'Xin chào, bạn khỏe không?' Gia sư AI sẽ giúp bạn luyện tập kỹ năng nói tiếng Anh. Nếu cần, nó cũng có thể hỗ trợ bạn bằng ngôn ngữ mẹ đẻ của bạn."
 };
 
 export default premiumVoiceTranslations;

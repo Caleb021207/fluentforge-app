@@ -21,7 +21,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   loginRequired: "ログインが必要です",
   pleaseLoginToAccessPremiumFeature: "プレミアム音声チャット機能にアクセスするにはログインしてください",
   startVoiceChat: "音声チャットを開始",
-  stopVoiceChat: "音声チャットを停止"
+  stopVoiceChat: "音声チャットを停止",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "プレミアム音声練習",
+  practiceConversationalEnglish: "GPT-4o Realtimeで英会話の練習",
+  minutesRemainingThisMonth: "今月残り{{minutes}}分",
+  startPremiumSession: "プレミアムセッションを開始",
+  endSession: "セッションを終了",
+  poweredByGPT4oRealtime: "GPT-4o Realtimeで動作",
+  conversation: "会話",
+  you: "あなた",
+  aiTutor: "AIチューター",
+  minutesLeft: "残り{{minutes}}分",
+  connected: "接続済み",
+  premiumVoiceReady: "プレミアム音声練習の準備ができました。話し始めてください！",
+  limitReached: "制限に達しました",
+  monthlyLimitMessage: "今月の{{minutes}}分をすべて使用しました。1日にリセットされます。",
+  sessionSaved: "セッションを保存しました",
+  usedMinutesMessage: "このセッションで{{minutes}}分使用しました",
+  timeWarning: "時間警告",
+  minutesRemainingWarning: "残り{{minutes}}分",
+  sessionEnded: "セッション終了",
+  premiumSessionEndedMessage: "15分間のプレミアムセッションが終了しました",
+  premiumVoiceInstructions: "この機能は、流暢でダイナミックな会話のために設計されています。月に15分の練習時間があります。ボタンを押して「こんにちは、お元気ですか？」と言うだけです。AIチューターが英語のスピーキングスキルの練習をお手伝いします。必要に応じて、母国語でもサポートできます。"
 };
 
 export default premiumVoiceTranslations;
