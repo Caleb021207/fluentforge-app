@@ -2,23 +2,6 @@
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
-  unlimitedVoicePractice: "Безлимитная голосовая практика",
-  howToUse: "Как использовать премиум голосовую практику",
-  step1: "Нажмите 'Начать премиум сессию' для начала",
-  step2: "Разрешите доступ к микрофону при запросе",
-  step3: "ИИ-наставник поприветствует вас и задаст первый вопрос",
-  step4: "Говорите естественно и четко на {{targetLanguage}}",
-  step5: "ИИ ответит и поможет исправить ошибки",
-  step6: "Следите за таймером - в этом месяце у вас 15 минут",
-  step7: "Нажмите 'Завершить сессию' по окончании",
-  tips: "Советы для лучшего опыта",
-  tip1: "Используйте наушники для лучшего качества звука",
-  tip2: "Найдите тихое место",
-  tip3: "Не бойтесь ошибаться!",
-  practiceConversational: "Практикуйте разговорный {{targetLanguage}} с GPT-4o-mini Realtime",
-  minutesRemaining: "минут осталось в этом месяце",
-  poweredBy: "Работает на GPT-4o-mini Realtime",
-  conversation: "Разговор",
   premiumVoiceChat: "Премиум голосовой чат",
   premiumVoiceChatBenefits: "Преимущества премиум-голоса",
   textConversationPractice: "Практика текстовых разговоров",

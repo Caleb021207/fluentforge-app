@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Sparkles, Info } from "lucide-react";
+import { Mic, MicOff, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
-import { useLocalization } from "@/context/LocalizationContext";
-import { secureStorage } from "@/utils/security/dataEncryption";
 
 const PremiumVoicePractice = () => {
   const { toast } = useToast();
-  const { t, currentLanguage } = useLocalization();
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState<Array<{ role: string; text: string }>>([]);
@@ -18,10 +15,6 @@ const PremiumVoicePractice = () => {
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession } = useUsageLimits();
-
-  // Get language preferences
-  const nativeLanguage = currentLanguage;
-  const targetLanguage = secureStorage.getItem("targetLanguage") || (currentLanguage === "english" ? "spanish" : "english");
 
   useEffect(() => {
     return () => {
@@ -76,7 +69,7 @@ const PremiumVoicePractice = () => {
         return;
       }
 
-      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking, nativeLanguage, targetLanguage);
+      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking);
       await chatRef.current.init();
       setIsConnected(true);
       setElapsedSeconds(0);
@@ -124,17 +117,23 @@ const PremiumVoicePractice = () => {
   const minutesRemaining = premiumVoiceMinutesRemaining - Math.ceil(elapsedSeconds / 60);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <div className="mb-6 text-center">
-        <h1 className="text-3xl font-bold mb-2">Premium Voice Practice</h1>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="mb-8 text-center">
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Sparkles className="w-8 h-8 text-primary" />
+          <h1 className="text-4xl font-bold">Premium Voice Practice</h1>
+        </div>
+        <p className="text-muted-foreground">
+          Practice conversational English with GPT-4o Realtime
+        </p>
+        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
           <span className="text-sm font-medium">
-            {premiumVoiceMinutesRemaining} minutes remaining
+            {premiumVoiceMinutesRemaining} minutes remaining this month
           </span>
         </div>
       </div>
 
-      <Card className="p-8 mb-6 bg-gradient-to-br from-primary/5 to-primary/10">
+      <Card className="p-8 mb-6">
         <div className="flex flex-col items-center gap-6">
           {isConnected && (
             <div className="text-center">
@@ -148,11 +147,11 @@ const PremiumVoicePractice = () => {
           )}
 
           <div className={`relative ${isSpeaking ? 'animate-pulse' : ''}`}>
-            <div className="w-32 h-32 rounded-full bg-primary/20 flex items-center justify-center">
+            <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
               {isConnected ? (
-                <MicOff className="w-16 h-16 text-primary" />
+                <MicOff className="w-12 h-12 text-primary" />
               ) : (
-                <Mic className="w-16 h-16 text-primary" />
+                <Mic className="w-12 h-12 text-primary" />
               )}
             </div>
             {isSpeaking && (
@@ -164,42 +163,43 @@ const PremiumVoicePractice = () => {
             <Button 
               onClick={startConversation}
               size="lg"
-              className="px-8 py-6 text-lg"
+              className="px-8"
             >
-              Start Voice Session
+              Start Premium Session
             </Button>
           ) : (
             <Button 
               onClick={endConversation}
               size="lg"
               variant="secondary"
-              className="px-8 py-6 text-lg"
+              className="px-8"
             >
               End Session
             </Button>
           )}
 
-          <div className="text-xs text-muted-foreground">
-            Powered by GPT Realtime
+          <div className="text-xs text-muted-foreground flex items-center gap-1">
+            <Sparkles className="w-3 h-3" />
+            Powered by GPT-4o Realtime
           </div>
         </div>
       </Card>
 
       {transcript.length > 0 && (
         <Card className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Conversation</h2>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <h2 className="text-xl font-semibold mb-4">Conversation</h2>
+          <div className="space-y-4 max-h-96 overflow-y-auto">
             {transcript.map((item, index) => (
               <div
                 key={index}
-                className={`p-3 rounded-lg ${
+                className={`p-4 rounded-lg ${
                   item.role === 'user'
                     ? 'bg-primary/10 ml-8'
-                    : 'bg-muted mr-8'
+                    : 'bg-secondary mr-8'
                 }`}
               >
                 <div className="text-xs text-muted-foreground mb-1 font-medium">
-                  {item.role === 'user' ? 'You' : 'AI'}
+                  {item.role === 'user' ? 'You' : 'AI Tutor'}
                 </div>
                 <div className="text-sm">{item.text}</div>
               </div>

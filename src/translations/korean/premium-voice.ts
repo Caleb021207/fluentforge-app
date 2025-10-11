@@ -2,23 +2,6 @@
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
-  unlimitedVoicePractice: "무제한 음성 연습",
-  howToUse: "프리미엄 음성 연습 사용 방법",
-  step1: "'프리미엄 세션 시작'을 클릭하여 시작",
-  step2: "메시지가 표시되면 마이크 액세스 허용",
-  step3: "AI 튜터가 인사하고 첫 번째 질문을 합니다",
-  step4: "{{targetLanguage}}로 자연스럽고 명확하게 말하세요",
-  step5: "AI가 응답하고 실수를 수정하는 데 도움을 줍니다",
-  step6: "타이머를 확인하세요 - 이번 달에 15분이 있습니다",
-  step7: "완료되면 '세션 종료'를 클릭하세요",
-  tips: "최상의 경험을 위한 팁",
-  tip1: "더 나은 오디오 품질을 위해 헤드폰 사용",
-  tip2: "조용한 환경 찾기",
-  tip3: "실수하는 것을 두려워하지 마세요!",
-  practiceConversational: "GPT-4o-mini Realtime으로 대화형 {{targetLanguage}} 연습",
-  minutesRemaining: "이번 달 남은 시간(분)",
-  poweredBy: "GPT-4o-mini Realtime 제공",
-  conversation: "대화",
   premiumVoiceChat: "프리미엄 음성 채팅",
   premiumVoiceChatBenefits: "프리미엄 음성 혜택",
   cefrA1Description: "초급자 - 기본 구문과 표현",

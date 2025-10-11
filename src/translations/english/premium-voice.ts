@@ -2,32 +2,9 @@
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
-  // Premium voice chat features
   premiumVoiceChat: "Premium Voice Chat",
-  unlimitedVoicePractice: "Premium Voice Practice",
   premiumVoiceChatBenefits: "Premium Voice Benefits",
   textConversationPractice: "Text Conversation Practice",
-  
-  // Instructions
-  howToUse: "How to Use Premium Voice Practice",
-  step1: "Click 'Start Premium Session' to begin",
-  step2: "Allow microphone access when prompted",
-  step3: "The AI tutor will greet you and ask the first question",
-  step4: "Speak naturally and clearly in {{targetLanguage}}",
-  step5: "The AI will respond and help correct your mistakes",
-  step6: "Watch your timer - you have 15 minutes this month",
-  step7: "Click 'End Session' when finished",
-  tips: "Tips for Best Experience",
-  tip1: "Use headphones for better audio quality",
-  tip2: "Find a quiet environment",
-  tip3: "Don't be afraid to make mistakes!",
-  
-  // General
-  practiceConversational: "Practice conversational {{targetLanguage}} with GPT Realtime",
-  minutesRemaining: "minutes remaining this month",
-  poweredBy: "Powered by GPT Realtime",
-  conversation: "Conversation",
-  
   cefrA1Description: "Beginner - Basic phrases and expressions",
   cefrA2Description: "Elementary - Simple everyday communication",
   cefrB1Description: "Intermediate - Can discuss familiar topics",

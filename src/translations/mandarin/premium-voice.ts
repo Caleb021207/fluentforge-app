@@ -1,22 +1,6 @@
 import { TranslationRecord } from "../types";
 
 const premiumVoiceTranslations: TranslationRecord = {
-  unlimitedVoicePractice: "无限语音练习",
-  howToUse: "如何使用高级语音练习",
-  step1: "点击'开始高级会话'开始",
-  step2: "在提示时允许麦克风访问",
-  step3: "AI导师将向您问好并提出第一个问题",
-  step4: "用{{targetLanguage}}自然清晰地说话",
-  step5: "AI会回应并帮助纠正您的错误",
-  step6: "注意您的计时器 - 本月您有15分钟",
-  step7: "完成后点击'结束会话'",
-  tips: "获得最佳体验的提示",
-  tip1: "使用耳机以获得更好的音频质量",
-  tip2: "找一个安静的环境",
-  tip3: "不要害怕犯错！",
-  practiceConversational: "使用GPT-4o-mini Realtime练习对话{{targetLanguage}}",
-  poweredBy: "由GPT-4o-mini Realtime提供支持",
-  conversation: "对话",
   premiumVoiceChat: "高级语音聊天",
   premiumVoiceChatIntro: "与高级AI导师进行自然语音对话，练习英语！AI将帮助您纠正语法、词汇和发音。",
   weeklyPracticeTime: "高级语音聊天每周允许10分钟的练习时间。您的时间在每周一上午6:00（中部时间）重置。",

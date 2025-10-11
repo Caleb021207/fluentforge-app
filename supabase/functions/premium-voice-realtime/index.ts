@@ -56,9 +56,6 @@ serve(async (req) => {
     let sessionStartTime = Date.now();
     let sessionId = crypto.randomUUID();
     let minutesUsed = 0;
-    let nativeLanguage = 'english';
-    let targetLanguage = 'english';
-    let sessionConfigured = false;
 
     socket.onopen = async () => {
       console.log('Client connected');
@@ -72,16 +69,39 @@ serve(async (req) => {
       }
 
       openAISocket = new WebSocket(
-        "wss://api.openai.com/v1/realtime?model=gpt-realtime",
+        "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17",
         {
           headers: {
-            "Authorization": `Bearer ${openaiApiKey}`
+            "Authorization": `Bearer ${openaiApiKey}`,
+            "OpenAI-Beta": "realtime=v1"
           }
         }
       );
 
       openAISocket.onopen = () => {
         console.log('Connected to OpenAI');
+        // Send session configuration after connection
+        openAISocket?.send(JSON.stringify({
+          type: 'session.update',
+          session: {
+            modalities: ['text', 'audio'],
+            instructions: 'You are a helpful English language tutor. Speak clearly and at a moderate pace. Help students practice their English conversation skills by asking engaging questions and providing gentle corrections when needed.',
+            voice: 'sage',
+            input_audio_format: 'pcm16',
+            output_audio_format: 'pcm16',
+            input_audio_transcription: {
+              model: 'whisper-1'
+            },
+            turn_detection: {
+              type: 'server_vad',
+              threshold: 0.5,
+              prefix_padding_ms: 300,
+              silence_duration_ms: 1000
+            },
+            temperature: 0.8,
+            max_response_output_tokens: 'inf'
+          }
+        }));
       };
 
       openAISocket.onmessage = (event) => {
@@ -132,56 +152,8 @@ serve(async (req) => {
     };
 
     socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        
-        // Handle initialization with language parameters
-        if (data.type === 'init' && data.nativeLanguage && data.targetLanguage) {
-          nativeLanguage = data.nativeLanguage;
-          targetLanguage = data.targetLanguage;
-          console.log(`Session initialized: native=${nativeLanguage}, target=${targetLanguage}`);
-          
-          // Configure session with language-aware instructions
-          const systemPrompt = `You are a helpful language tutor helping a ${nativeLanguage} speaker practice ${targetLanguage}. As soon as you connect, greet the student warmly in ${targetLanguage} and ask them an engaging question to start the conversation. Speak clearly at a moderate pace. Provide gentle corrections when needed, and you may occasionally explain errors briefly in ${nativeLanguage} if the error is significant. Always be supportive, encouraging, and patient. Keep the conversation flowing naturally.`;
-          
-          if (openAISocket && openAISocket.readyState === WebSocket.OPEN) {
-            openAISocket.send(JSON.stringify({
-              type: 'session.update',
-              session: {
-                modalities: ['text', 'audio'],
-                instructions: systemPrompt,
-                voice: 'sage',
-                input_audio_format: 'pcm16',
-                output_audio_format: 'pcm16',
-                input_audio_transcription: {
-                  model: 'whisper-1'
-                },
-                turn_detection: {
-                  type: 'server_vad',
-                  threshold: 0.5,
-                  prefix_padding_ms: 300,
-                  silence_duration_ms: 1000
-                },
-                temperature: 0.8,
-                max_response_output_tokens: 'inf'
-              }
-            }));
-            sessionConfigured = true;
-            console.log('Session configured with language-aware instructions');
-          }
-          return;
-        }
-        
-        // Forward other messages to OpenAI
-        if (openAISocket && openAISocket.readyState === WebSocket.OPEN && sessionConfigured) {
-          openAISocket.send(event.data);
-        }
-      } catch (error) {
-        console.error('Error processing message:', error);
-        // If not JSON, forward as-is
-        if (openAISocket && openAISocket.readyState === WebSocket.OPEN) {
-          openAISocket.send(event.data);
-        }
+      if (openAISocket && openAISocket.readyState === WebSocket.OPEN) {
+        openAISocket.send(event.data);
       }
     };
 
