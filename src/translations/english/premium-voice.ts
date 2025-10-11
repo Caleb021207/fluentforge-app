@@ -23,9 +23,9 @@ const premiumVoiceTranslations: TranslationRecord = {
   tip3: "Don't be afraid to make mistakes!",
   
   // General
-  practiceConversational: "Practice conversational {{targetLanguage}} with GPT-4o-mini Realtime",
+  practiceConversational: "Practice conversational {{targetLanguage}} with GPT Realtime",
   minutesRemaining: "minutes remaining this month",
-  poweredBy: "Powered by GPT-4o-mini Realtime",
+  poweredBy: "Powered by GPT Realtime",
   conversation: "Conversation",
   
   cefrA1Description: "Beginner - Basic phrases and expressions",

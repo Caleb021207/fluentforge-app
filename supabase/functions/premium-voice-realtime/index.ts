@@ -72,11 +72,10 @@ serve(async (req) => {
       }
 
       openAISocket = new WebSocket(
-        "wss://api.openai.com/v1/realtime?model=gpt-4o-mini-realtime-preview-2024-12-17",
+        "wss://api.openai.com/v1/realtime?model=gpt-realtime",
         {
           headers: {
-            "Authorization": `Bearer ${openaiApiKey}`,
-            "OpenAI-Beta": "realtime=v1"
+            "Authorization": `Bearer ${openaiApiKey}`
           }
         }
       );
