@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Sparkles, Info } from "lucide-react";
+import { Mic, MicOff, Lightbulb } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
@@ -181,6 +181,33 @@ const PremiumVoicePractice = () => {
 
           <div className="text-xs text-muted-foreground">
             Powered by GPT Realtime
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6 mb-6 bg-muted/30">
+        <div className="flex items-start gap-3">
+          <Lightbulb className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <h2 className="text-lg font-semibold mb-3">Quick Tips</h2>
+            <div className="grid md:grid-cols-2 gap-3 text-sm text-muted-foreground">
+              <div>
+                <span className="font-medium text-foreground">🎧 Use headphones</span>
+                <p>Better audio quality and prevents echo</p>
+              </div>
+              <div>
+                <span className="font-medium text-foreground">🤫 Quiet space</span>
+                <p>Find a quiet environment for best results</p>
+              </div>
+              <div>
+                <span className="font-medium text-foreground">💬 Speak clearly</span>
+                <p>Natural pace, clear pronunciation</p>
+              </div>
+              <div>
+                <span className="font-medium text-foreground">✨ Make mistakes</span>
+                <p>Don&apos;t worry - AI will help you improve</p>
+              </div>
+            </div>
           </div>
         </div>
       </Card>
