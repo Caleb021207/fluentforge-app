@@ -13,6 +13,7 @@ import PronunciationPracticeContainer from "@/components/pronunciation/Pronuncia
 import VoiceChat from "@/pages/VoiceChat";
 import Settings from "@/pages/Settings";
 import CertificationCodeTester from "@/pages/CertificationCodeTester";
+import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/analysis" element={<TranscriptAnalysis />} />
           <Route path="/code-tester" element={<CertificationCodeTester />} />
+          <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
         </Routes>
         <Toaster />
       </NewLayout>

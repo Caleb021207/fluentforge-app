@@ -26,6 +26,7 @@ interface UsageCheckResult {
 export const useUsageLimits = () => {
   const [usageLimits, setUsageLimits] = useState<UsageLimits | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [premiumVoiceMinutesRemaining, setPremiumVoiceMinutesRemaining] = useState(15);
   const { toast } = useToast();
 
   const fetchUsageLimits = async () => {
@@ -79,6 +80,12 @@ export const useUsageLimits = () => {
           isWithinTimeRestrictions: true
         });
       }
+      
+      // Set premium voice minutes
+      const premiumLimit = limits.premium_voice_minutes_monthly_limit || 15;
+      const premiumUsed = limits.premium_voice_minutes_used_current_month || 0;
+      setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
+      
     } catch (error) {
       console.error('Error in fetchUsageLimits:', error);
     } finally {
@@ -269,6 +276,38 @@ export const useUsageLimits = () => {
     }
   };
 
+  const checkCanStartPremiumVoiceSession = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      throw new Error('Not authenticated');
+    }
+
+    const { data, error } = await supabase.rpc('can_start_premium_voice_session', {
+      target_student_id: user.id
+    });
+
+    if (error) {
+      console.error('Error checking premium voice session:', error);
+      throw error;
+    }
+
+    return data;
+  };
+
+  const trackPremiumVoiceSession = async (sessionId: string, minutesUsed: number) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    await supabase.from('usage_tracking').insert({
+      student_id: user.id,
+      session_id: sessionId,
+      session_type: 'premium_voice_practice',
+      minutes_used: minutesUsed
+    });
+
+    await fetchUsageLimits();
+  };
+
   useEffect(() => {
     fetchUsageLimits();
   }, []);
@@ -276,10 +315,13 @@ export const useUsageLimits = () => {
   return {
     usageLimits,
     isLoading,
+    premiumVoiceMinutesRemaining,
     checkCanStartVoiceSession,
     trackVoiceSession,
     trackTextMessage,
     trackCertificationAttempt,
+    checkCanStartPremiumVoiceSession,
+    trackPremiumVoiceSession,
     refreshLimits: fetchUsageLimits
   };
 };

@@ -1021,6 +1021,8 @@ export type Database = {
           id: string
           last_reset_month: string | null
           last_reset_semester: string | null
+          premium_voice_minutes_monthly_limit: number | null
+          premium_voice_minutes_used_current_month: number | null
           student_id: string
           text_messages_monthly_limit: number | null
           text_messages_used_current_month: number
@@ -1038,6 +1040,8 @@ export type Database = {
           id?: string
           last_reset_month?: string | null
           last_reset_semester?: string | null
+          premium_voice_minutes_monthly_limit?: number | null
+          premium_voice_minutes_used_current_month?: number | null
           student_id: string
           text_messages_monthly_limit?: number | null
           text_messages_used_current_month?: number
@@ -1055,6 +1059,8 @@ export type Database = {
           id?: string
           last_reset_month?: string | null
           last_reset_semester?: string | null
+          premium_voice_minutes_monthly_limit?: number | null
+          premium_voice_minutes_used_current_month?: number | null
           student_id?: string
           text_messages_monthly_limit?: number | null
           text_messages_used_current_month?: number
@@ -1435,6 +1441,10 @@ export type Database = {
       auth_user_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      can_start_premium_voice_session: {
+        Args: { target_student_id: string }
+        Returns: Json
       }
       can_start_voice_session: {
         Args: { target_student_id: string }
