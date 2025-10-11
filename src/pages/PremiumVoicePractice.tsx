@@ -124,49 +124,17 @@ const PremiumVoicePractice = () => {
   const minutesRemaining = premiumVoiceMinutesRemaining - Math.ceil(elapsedSeconds / 60);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-8 text-center">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Sparkles className="w-8 h-8 text-primary" />
-          <h1 className="text-4xl font-bold">{t("premiumVoice.unlimitedVoicePractice")}</h1>
-        </div>
-        <p className="text-muted-foreground">
-          {t("premiumVoice.practiceConversational", { targetLanguage })}
-        </p>
-        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+    <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <div className="mb-6 text-center">
+        <h1 className="text-3xl font-bold mb-2">Premium Voice Practice</h1>
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
           <span className="text-sm font-medium">
-            {premiumVoiceMinutesRemaining} {t("premiumVoice.minutesRemaining")}
+            {premiumVoiceMinutesRemaining} minutes remaining
           </span>
         </div>
       </div>
 
-      <Card className="p-6 mb-6 bg-muted/50">
-        <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-          <div>
-            <h2 className="text-lg font-semibold mb-3">{t("premiumVoice.howToUse")}</h2>
-            <ol className="space-y-2 text-sm text-muted-foreground">
-              <li>1. {t("premiumVoice.step1")}</li>
-              <li>2. {t("premiumVoice.step2")}</li>
-              <li>3. {t("premiumVoice.step3")}</li>
-              <li>4. {t("premiumVoice.step4", { targetLanguage })}</li>
-              <li>5. {t("premiumVoice.step5")}</li>
-              <li>6. {t("premiumVoice.step6")}</li>
-              <li>7. {t("premiumVoice.step7")}</li>
-            </ol>
-            <div className="mt-4 pt-4 border-t">
-              <p className="text-sm font-medium mb-2">{t("premiumVoice.tips")}</p>
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                <li>• {t("premiumVoice.tip1")}</li>
-                <li>• {t("premiumVoice.tip2")}</li>
-                <li>• {t("premiumVoice.tip3")}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      <Card className="p-8 mb-6">
+      <Card className="p-8 mb-6 bg-gradient-to-br from-primary/5 to-primary/10">
         <div className="flex flex-col items-center gap-6">
           {isConnected && (
             <div className="text-center">
@@ -180,11 +148,11 @@ const PremiumVoicePractice = () => {
           )}
 
           <div className={`relative ${isSpeaking ? 'animate-pulse' : ''}`}>
-            <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
+            <div className="w-32 h-32 rounded-full bg-primary/20 flex items-center justify-center">
               {isConnected ? (
-                <MicOff className="w-12 h-12 text-primary" />
+                <MicOff className="w-16 h-16 text-primary" />
               ) : (
-                <Mic className="w-12 h-12 text-primary" />
+                <Mic className="w-16 h-16 text-primary" />
               )}
             </div>
             {isSpeaking && (
@@ -196,43 +164,42 @@ const PremiumVoicePractice = () => {
             <Button 
               onClick={startConversation}
               size="lg"
-              className="px-8"
+              className="px-8 py-6 text-lg"
             >
-              Start Premium Session
+              Start Voice Session
             </Button>
           ) : (
             <Button 
               onClick={endConversation}
               size="lg"
               variant="secondary"
-              className="px-8"
+              className="px-8 py-6 text-lg"
             >
               End Session
             </Button>
           )}
 
-          <div className="text-xs text-muted-foreground flex items-center gap-1">
-            <Sparkles className="w-3 h-3" />
-            {t("premiumVoice.poweredBy")}
+          <div className="text-xs text-muted-foreground">
+            Powered by GPT Realtime
           </div>
         </div>
       </Card>
 
       {transcript.length > 0 && (
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">{t("premiumVoice.conversation")}</h2>
-          <div className="space-y-4 max-h-96 overflow-y-auto">
+          <h2 className="text-lg font-semibold mb-4">Conversation</h2>
+          <div className="space-y-3 max-h-96 overflow-y-auto">
             {transcript.map((item, index) => (
               <div
                 key={index}
-                className={`p-4 rounded-lg ${
+                className={`p-3 rounded-lg ${
                   item.role === 'user'
                     ? 'bg-primary/10 ml-8'
-                    : 'bg-secondary mr-8'
+                    : 'bg-muted mr-8'
                 }`}
               >
                 <div className="text-xs text-muted-foreground mb-1 font-medium">
-                  {item.role === 'user' ? 'You' : 'AI Tutor'}
+                  {item.role === 'user' ? 'You' : 'AI'}
                 </div>
                 <div className="text-sm">{item.text}</div>
               </div>
