@@ -35,6 +35,29 @@ const premiumVoiceTranslations: TranslationRecord = {
   returningTomorrow: "ਕੱਲ੍ਹ ਦੁਬਾਰਾ ਚੈੱਕ ਕਰੋ!",
   upgradeForUnlimited: "ਅਸੀਮਿਤ ਪਹੁੰਚ ਲਈ ਅੱਪਗ੍ਰੇਡ ਕਰੋ",
   failedToStartSession: "ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "ਪ੍ਰੀਮੀਅਮ ਵੌਇਸ ਅਭਿਆਸ",
+  practiceConversationalEnglish: "GPT-4o Realtime ਨਾਲ ਗੱਲਬਾਤ ਅੰਗਰੇਜ਼ੀ ਦਾ ਅਭਿਆਸ ਕਰੋ",
+  minutesRemainingThisMonth: "ਇਸ ਮਹੀਨੇ {{minutes}} ਮਿੰਟ ਬਾਕੀ",
+  startPremiumSession: "ਪ੍ਰੀਮੀਅਮ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ",
+  endSession: "ਸੈਸ਼ਨ ਖਤਮ ਕਰੋ",
+  poweredByGPT4oRealtime: "GPT-4o Realtime ਦੁਆਰਾ ਸੰਚਾਲਿਤ",
+  conversation: "ਗੱਲਬਾਤ",
+  you: "ਤੁਸੀਂ",
+  aiTutor: "AI ਟਿਊਟਰ",
+  minutesLeft: "{{minutes}} ਮਿੰਟ ਬਾਕੀ",
+  connected: "ਕਨੈਕਟ ਕੀਤਾ",
+  premiumVoiceReady: "ਪ੍ਰੀਮੀਅਮ ਵੌਇਸ ਅਭਿਆਸ ਤਿਆਰ ਹੈ। ਬੋਲਣਾ ਸ਼ੁਰੂ ਕਰੋ!",
+  limitReached: "ਸੀਮਾ ਪੂਰੀ ਹੋਈ",
+  monthlyLimitMessage: "ਤੁਸੀਂ ਇਸ ਮਹੀਨੇ ਦੇ ਸਾਰੇ {{minutes}} ਮਿੰਟ ਵਰਤ ਲਏ ਹਨ। 1 ਤਰੀਕ ਨੂੰ ਰੀਸੈੱਟ ਹੋਵੇਗਾ।",
+  sessionSaved: "ਸੈਸ਼ਨ ਸੁਰੱਖਿਅਤ ਕੀਤਾ",
+  usedMinutesMessage: "ਇਸ ਸੈਸ਼ਨ ਵਿੱਚ {{minutes}} ਮਿੰਟ ਵਰਤੇ",
+  timeWarning: "ਸਮਾਂ ਚੇਤਾਵਨੀ",
+  minutesRemainingWarning: "{{minutes}} ਮਿੰਟ ਬਾਕੀ",
+  sessionEnded: "ਸੈਸ਼ਨ ਖਤਮ ਹੋਇਆ",
+  premiumSessionEndedMessage: "ਤੁਹਾਡਾ 15 ਮਿੰਟ ਦਾ ਪ੍ਰੀਮੀਅਮ ਸੈਸ਼ਨ ਖਤਮ ਹੋ ਗਿਆ ਹੈ",
+  premiumVoiceInstructions: "ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਸਹਿਜ, ਗਤੀਸ਼ੀਲ ਗੱਲਬਾਤ ਲਈ ਤਿਆਰ ਕੀਤੀ ਗਈ ਹੈ। ਤੁਹਾਨੂੰ ਹਰ ਮਹੀਨੇ 15 ਮਿੰਟ ਦਾ ਅਭਿਆਸ ਮਿਲਦਾ ਹੈ। ਸਿਰਫ਼ ਬਟਨ ਦਬਾਓ ਅਤੇ ਕਹੋ 'ਹੈਲੋ, ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?' AI ਟਿਊਟਰ ਤੁਹਾਡੀ ਅੰਗਰੇਜ਼ੀ ਬੋਲਣ ਦੀਆਂ ਹੁਨਰਾਂ ਦਾ ਅਭਿਆਸ ਕਰਨ ਵਿੱਚ ਮਦਦ ਕਰੇਗਾ। ਜੇ ਲੋੜ ਹੋਵੇ, ਇਹ ਤੁਹਾਡੀ ਮਾਤਭਾਸ਼ਾ ਵਿੱਚ ਵੀ ਤੁਹਾਡੀ ਮਦਦ ਕਰ ਸਕਦਾ ਹੈ।",
 };
 
 export default premiumVoiceTranslations;

@@ -35,6 +35,29 @@ const premiumVoiceTranslations: TranslationRecord = {
   returningTomorrow: "કાલે ફરીથી તપાસો!",
   upgradeForUnlimited: "અમર્યાદિત ઍક્સેસ માટે અપગ્રેડ કરો",
   failedToStartSession: "સેશન શરૂ કરવામાં નિષ્ફળ",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "પ્રીમિયમ વૉઇસ પ્રેક્ટિસ",
+  practiceConversationalEnglish: "GPT-4o Realtime સાથે વાર્તાલાપ અંગ્રેજીનો અભ્યાસ કરો",
+  minutesRemainingThisMonth: "આ મહિને {{minutes}} મિનિટ બાકી",
+  startPremiumSession: "પ્રીમિયમ સત્ર શરૂ કરો",
+  endSession: "સત્ર સમાપ્ત કરો",
+  poweredByGPT4oRealtime: "GPT-4o Realtime દ્વારા સંચાલિત",
+  conversation: "વાર્તાલાપ",
+  you: "તમે",
+  aiTutor: "AI શિક્ષક",
+  minutesLeft: "{{minutes}} મિનિટ બાકી",
+  connected: "જોડાયેલ",
+  premiumVoiceReady: "પ્રીમિયમ વૉઇસ પ્રેક્ટિસ તૈયાર છે. બોલવાનું શરૂ કરો!",
+  limitReached: "મર્યાદા પહોંચી",
+  monthlyLimitMessage: "તમે આ મહિનાના તમામ {{minutes}} મિનિટનો ઉપયોગ કર્યો છે. તે 1લીએ રીસેટ થશે.",
+  sessionSaved: "સત્ર સાચવાયું",
+  usedMinutesMessage: "આ સત્રમાં {{minutes}} મિનિટનો ઉપયોગ કર્યો",
+  timeWarning: "સમય ચેતવણી",
+  minutesRemainingWarning: "{{minutes}} મિનિટ બાકી",
+  sessionEnded: "સત્ર સમાપ્ત",
+  premiumSessionEndedMessage: "તમારું 15-મિનિટનું પ્રીમિયમ સત્ર સમાપ્ત થયું છે",
+  premiumVoiceInstructions: "આ સુવિધા પ્રવાહી, ગતિશીલ વાર્તાલાપ માટે ડિઝાઇન કરવામાં આવી છે. તમને દર મહિને 15 મિનિટની પ્રેક્ટિસ મળે છે. ફક્ત બટન દબાવો અને કહો 'હેલો, તમે કેવા છો?' AI શિક્ષક તમને તમારી અંગ્રેજી બોલવાની કૌશલ્યની પ્રેક્ટિસ કરવામાં મદદ કરશે. જરૂર પડે તો, તે તમારી માતૃભાષામાં પણ તમને મદદ કરી શકે છે.",
 };
 
 export default premiumVoiceTranslations;

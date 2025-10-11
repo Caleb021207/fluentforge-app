@@ -52,6 +52,29 @@ const premiumVoiceTranslations: TranslationRecord = {
   portugueseAdvancedVoice: "Portuguese Advanced Voice",
   portugueseAdvancedVoiceChat: "Portuguese Advanced Voice Chat",
   advancedVoiceDescription: "Practice with advanced voice technology specifically optimized for {{language}} speakers",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Premium Voice Practice",
+  practiceConversationalEnglish: "Practice conversational English with GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} minutes remaining this month",
+  startPremiumSession: "Start Premium Session",
+  endSession: "End Session",
+  poweredByGPT4oRealtime: "Powered by GPT-4o Realtime",
+  conversation: "Conversation",
+  you: "You",
+  aiTutor: "AI Tutor",
+  minutesLeft: "{{minutes}} minutes left",
+  connected: "Connected",
+  premiumVoiceReady: "Premium voice practice is ready. Start speaking!",
+  limitReached: "Limit Reached",
+  monthlyLimitMessage: "You've used all {{minutes}} minutes this month. Resets on the 1st.",
+  sessionSaved: "Session Saved",
+  usedMinutesMessage: "Used {{minutes}} minute{{plural}} this session",
+  timeWarning: "Time Warning",
+  minutesRemainingWarning: "{{minutes}} minute{{plural}} remaining",
+  sessionEnded: "Session Ended",
+  premiumSessionEndedMessage: "Your 15-minute premium session has ended",
+  premiumVoiceInstructions: "This feature is designed for fluid, dynamic conversations. You get 15 minutes of practice per month. Simply hit the button and say 'Hello, how are you?' The AI tutor will help you practice your English speaking skills. If needed, it can also assist you in your native language.",
 };
 
 export default premiumVoiceTranslations;

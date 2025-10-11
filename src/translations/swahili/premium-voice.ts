@@ -73,7 +73,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   startVoiceChat: "Anza Mazungumzo ya Sauti",
   stopVoiceChat: "Simamisha Mazungumzo ya Sauti",
   explainer: "Tumia AI yetu iliyofundishwa hadi {level} kuimarisha ujuzi wako wa lugha na mazungumzo ya maisha halisi",
-  networkConnectionIssue: "Kuna shida ya muunganisho wa mtandao. Tafadhali hakikisha una muunganisho imara wa mtandao"
+  networkConnectionIssue: "Kuna shida ya muunganisho wa mtandao. Tafadhali hakikisha una muunganisho imara wa mtandao",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Mazoezi ya Sauti ya Premium",
+  practiceConversationalEnglish: "Fanya mazoezi ya Kiingereza cha mazungumzo na GPT-4o Realtime",
+  minutesRemainingThisMonth: "Dakika {{minutes}} zimesalia mwezi huu",
+  startPremiumSession: "Anza Kikao cha Premium",
+  endSession: "Maliza Kikao",
+  poweredByGPT4oRealtime: "Inaendeshwa na GPT-4o Realtime",
+  conversation: "Mazungumzo",
+  you: "Wewe",
+  aiTutor: "Mwalimu wa AI",
+  minutesLeft: "Dakika {{minutes}} zimesalia",
+  connected: "Imeunganishwa",
+  premiumVoiceReady: "Mazoezi ya sauti ya premium yako tayari. Anza kuzungumza!",
+  limitReached: "Kikomo Kimefikiwa",
+  monthlyLimitMessage: "Umetumia dakika {{minutes}} zote za mwezi huu. Itarejeshwa tarehe 1.",
+  sessionSaved: "Kikao Kimehifadhiwa",
+  usedMinutesMessage: "Umetumia dakika {{minutes}} katika kikao hiki",
+  timeWarning: "Onyo la Muda",
+  minutesRemainingWarning: "Dakika {{minutes}} zimesalia",
+  sessionEnded: "Kikao Kimeisha",
+  premiumSessionEndedMessage: "Kikao chako cha premium cha dakika 15 kimeisha",
+  premiumVoiceInstructions: "Kipengele hiki kimeundwa kwa mazungumzo yenye mtiririko na yenye nguvu. Unapata dakika 15 za mazoezi kwa mwezi. Bonyeza kitufe tu na useme 'Habari, u hali gani?' Mwalimu wa AI atakusaidia kufanya mazoezi ya stadi za kuzungumza Kiingereza. Ikihitajika, anaweza pia kukusaidia kwa lugha yako ya asili.",
 };
 
 export default premiumVoiceTranslations;

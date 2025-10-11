@@ -14,7 +14,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   phrase3: "നല്ലൊരു റെസ്റ്റോറന്റ് ശുപാർശ ചെയ്യാമോ?",
   phrase4: "നിങ്ങളുടെ ഹോബികളും താൽപ്പര്യങ്ങളും എന്തൊക്കെയാണ്?",
   phrase5: "നിങ്ങളുടെ പ്രിയപ്പെട്ട പുസ്തകം അല്ലെങ്കിൽ സിനിമയെ കുറിച്ച് പറയൂ.",
-  phrase6: "കഴിഞ്ഞ ആഴ്ചാന്ത്യം നിങ്ങൾ എന്ത് ചെയ്തു?"
+  phrase6: "കഴിഞ്ഞ ആഴ്ചാന്ത്യം നിങ്ങൾ എന്ത് ചെയ്തു?",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "പ്രീമിയം വോയ്‌സ് പ്രാക്ടീസ്",
+  practiceConversationalEnglish: "GPT-4o Realtime ഉപയോഗിച്ച് സംഭാഷണ ഇംഗ്ലീഷ് പരിശീലിക്കുക",
+  minutesRemainingThisMonth: "ഈ മാസം {{minutes}} മിനിറ്റ് ശേഷിക്കുന്നു",
+  startPremiumSession: "പ്രീമിയം സെഷൻ ആരംഭിക്കുക",
+  endSession: "സെഷൻ അവസാനിപ്പിക്കുക",
+  poweredByGPT4oRealtime: "GPT-4o Realtime പവർ ചെയ്യുന്നത്",
+  conversation: "സംഭാഷണം",
+  you: "നിങ്ങൾ",
+  aiTutor: "AI അദ്ധ്യാപകൻ",
+  minutesLeft: "{{minutes}} മിനിറ്റ് ശേഷിക്കുന്നു",
+  connected: "കണക്റ്റ് ചെയ്തു",
+  premiumVoiceReady: "പ്രീമിയം വോയ്‌സ് പ്രാക്ടീസ് തയ്യാറാണ്. സംസാരിക്കാൻ ആരംഭിക്കുക!",
+  limitReached: "പരിധി എത്തി",
+  monthlyLimitMessage: "നിങ്ങൾ ഈ മാസത്തെ എല്ലാ {{minutes}} മിനിറ്റും ഉപയോഗിച്ചു. 1-ന് പുനഃസജ്ജമാക്കും.",
+  sessionSaved: "സെഷൻ സംരക്ഷിച്ചു",
+  usedMinutesMessage: "ഈ സെഷനിൽ {{minutes}} മിനിറ്റ് ഉപയോഗിച്ചു",
+  timeWarning: "സമയ മുന്നറിയിപ്പ്",
+  minutesRemainingWarning: "{{minutes}} മിനിറ്റ് ശേഷിക്കുന്നു",
+  sessionEnded: "സെഷൻ അവസാനിച്ചു",
+  premiumSessionEndedMessage: "നിങ്ങളുടെ 15 മിനിറ്റ് പ്രീമിയം സെഷൻ അവസാനിച്ചു",
+  premiumVoiceInstructions: "ഈ ഫീച്ചർ സുഗമവും ചലനാത്മകവുമായ സംഭാഷണങ്ങൾക്കായി രൂപകൽപ്പന ചെയ്തിരിക്കുന്നു. നിങ്ങൾക്ക് പ്രതിമാസം 15 മിനിറ്റ് പരിശീലനം ലഭിക്കും. ബട്ടൺ അമർത്തി 'ഹലോ, നിങ്ങൾ എങ്ങനെയുണ്ട്?' എന്ന് പറയുക. AI അദ്ധ്യാപകൻ നിങ്ങളുടെ ഇംഗ്ലീഷ് സംസാര നൈപുണ്യം പരിശീലിപ്പിക്കാൻ സഹായിക്കും. ആവശ്യമെങ്കിൽ, അത് നിങ്ങളുടെ മാതൃഭാഷയിലും നിങ്ങളെ സഹായിക്കാൻ കഴിയും.",
 };
 
 export default premiumVoiceTranslations;

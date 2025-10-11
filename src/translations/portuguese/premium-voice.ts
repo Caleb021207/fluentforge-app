@@ -52,7 +52,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   spanishAdvancedVoiceChat: "Chat de Voz Avançada em Espanhol",
   portugueseAdvancedVoice: "Voz Avançada em Português",
   portugueseAdvancedVoiceChat: "Chat de Voz Avançada em Português",
-  advancedVoiceDescription: "Pratique com tecnologia de voz avançada especificamente otimizada para falantes de {{language}}"
+  advancedVoiceDescription: "Pratique com tecnologia de voz avançada especificamente otimizada para falantes de {{language}}",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Prática de Voz Premium",
+  practiceConversationalEnglish: "Pratique inglês conversacional com GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} minutos restantes este mês",
+  startPremiumSession: "Iniciar Sessão Premium",
+  endSession: "Encerrar Sessão",
+  poweredByGPT4oRealtime: "Desenvolvido por GPT-4o Realtime",
+  conversation: "Conversa",
+  you: "Você",
+  aiTutor: "Tutor IA",
+  minutesLeft: "{{minutes}} minutos restantes",
+  connected: "Conectado",
+  premiumVoiceReady: "A prática de voz premium está pronta. Comece a falar!",
+  limitReached: "Limite Atingido",
+  monthlyLimitMessage: "Você usou todos os {{minutes}} minutos deste mês. Reinicia no dia 1.",
+  sessionSaved: "Sessão Salva",
+  usedMinutesMessage: "Usou {{minutes}} minuto{{plural}} nesta sessão",
+  timeWarning: "Aviso de Tempo",
+  minutesRemainingWarning: "{{minutes}} minuto{{plural}} restante{{plural}}",
+  sessionEnded: "Sessão Encerrada",
+  premiumSessionEndedMessage: "Sua sessão premium de 15 minutos terminou",
+  premiumVoiceInstructions: "Este recurso foi projetado para conversas fluidas e dinâmicas. Você tem 15 minutos de prática por mês. Simplesmente pressione o botão e diga 'Olá, como você está?' O tutor de IA irá ajudá-lo a praticar suas habilidades de fala em inglês. Se necessário, também pode ajudá-lo em seu idioma nativo.",
 };
 
 export default premiumVoiceTranslations;

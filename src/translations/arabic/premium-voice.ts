@@ -44,7 +44,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   startChatting: "بدء الدردشة",
   
   // Added missing key
-  premiumSessionLimitReached: "تم الوصول إلى حد الجلسة المتميزة"
+  premiumSessionLimitReached: "تم الوصول إلى حد الجلسة المتميزة",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "ممارسة الصوت المميزة",
+  practiceConversationalEnglish: "تدرب على الإنجليزية المحادثة مع GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} دقيقة متبقية هذا الشهر",
+  startPremiumSession: "بدء جلسة مميزة",
+  endSession: "إنهاء الجلسة",
+  poweredByGPT4oRealtime: "مدعوم بواسطة GPT-4o Realtime",
+  conversation: "محادثة",
+  you: "أنت",
+  aiTutor: "معلم الذكاء الاصطناعي",
+  minutesLeft: "{{minutes}} دقيقة متبقية",
+  connected: "متصل",
+  premiumVoiceReady: "ممارسة الصوت المميزة جاهزة. ابدأ بالتحدث!",
+  limitReached: "تم الوصول إلى الحد الأقصى",
+  monthlyLimitMessage: "لقد استخدمت جميع {{minutes}} دقيقة هذا الشهر. يتم إعادة التعيين في اليوم الأول.",
+  sessionSaved: "تم حفظ الجلسة",
+  usedMinutesMessage: "تم استخدام {{minutes}} دقيقة في هذه الجلسة",
+  timeWarning: "تحذير الوقت",
+  minutesRemainingWarning: "{{minutes}} دقيقة متبقية",
+  sessionEnded: "انتهت الجلسة",
+  premiumSessionEndedMessage: "انتهت جلستك المميزة التي مدتها 15 دقيقة",
+  premiumVoiceInstructions: "تم تصميم هذه الميزة للمحادثات السلسة والديناميكية. تحصل على 15 دقيقة من التدريب شهريًا. ما عليك سوى الضغط على الزر وقول 'مرحبًا، كيف حالك؟' سيساعدك معلم الذكاء الاصطناعي على ممارسة مهارات التحدث بالإنجليزية. إذا لزم الأمر، يمكنه أيضًا مساعدتك بلغتك الأم.",
 };
 
 export default premiumVoiceTranslations;

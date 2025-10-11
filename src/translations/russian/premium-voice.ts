@@ -134,7 +134,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   allowMicAccess: "Разрешите доступ к микрофону для использования голосового чата",
   networkConnectionIssue: "Проблема с сетевым подключением",
   login: "Войти",
-  success: "Успех"
+  success: "Успех",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Премиум голосовая практика",
+  practiceConversationalEnglish: "Практикуйте разговорный английский с GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} минут осталось в этом месяце",
+  startPremiumSession: "Начать премиум сессию",
+  endSession: "Завершить сессию",
+  poweredByGPT4oRealtime: "Работает на GPT-4o Realtime",
+  conversation: "Разговор",
+  you: "Вы",
+  aiTutor: "ИИ репетитор",
+  minutesLeft: "{{minutes}} минут осталось",
+  connected: "Подключено",
+  premiumVoiceReady: "Премиум голосовая практика готова. Начните говорить!",
+  limitReached: "Лимит достигнут",
+  monthlyLimitMessage: "Вы использовали все {{minutes}} минут в этом месяце. Сброс 1-го числа.",
+  sessionSaved: "Сессия сохранена",
+  usedMinutesMessage: "Использовано {{minutes}} минут{{plural}} в этой сессии",
+  timeWarning: "Предупреждение о времени",
+  minutesRemainingWarning: "{{minutes}} минут{{plural}} осталось",
+  sessionEnded: "Сессия завершена",
+  premiumSessionEndedMessage: "Ваша 15-минутная премиум сессия завершена",
+  premiumVoiceInstructions: "Эта функция предназначена для плавных, динамичных разговоров. Вы получаете 15 минут практики в месяц. Просто нажмите кнопку и скажите 'Привет, как дела?' ИИ репетитор поможет вам практиковать навыки разговорной речи на английском. При необходимости он также может помочь вам на вашем родном языке.",
 };
 
 export default premiumVoiceTranslations;

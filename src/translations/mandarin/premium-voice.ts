@@ -158,7 +158,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   login: "登录",
   stopVoiceChat: "停止语音聊天",
   Success: "成功",
-  premiumSessionLimitReached: "已达到高级会话限制"
+  premiumSessionLimitReached: "已达到高级会话限制",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "高级语音练习",
+  practiceConversationalEnglish: "使用 GPT-4o Realtime 练习英语会话",
+  minutesRemainingThisMonth: "本月剩余 {{minutes}} 分钟",
+  startPremiumSession: "开始高级会话",
+  endSession: "结束会话",
+  poweredByGPT4oRealtime: "由 GPT-4o Realtime 提供支持",
+  conversation: "对话",
+  you: "你",
+  aiTutor: "AI 导师",
+  minutesLeft: "剩余 {{minutes}} 分钟",
+  connected: "已连接",
+  premiumVoiceReady: "高级语音练习已就绪。开始说话吧！",
+  limitReached: "已达限额",
+  monthlyLimitMessage: "您已用完本月所有 {{minutes}} 分钟。将在1日重置。",
+  sessionSaved: "会话已保存",
+  usedMinutesMessage: "本次会话使用了 {{minutes}} 分钟",
+  timeWarning: "时间警告",
+  minutesRemainingWarning: "剩余 {{minutes}} 分钟",
+  sessionEnded: "会话已结束",
+  premiumSessionEndedMessage: "您的15分钟高级会话已结束",
+  premiumVoiceInstructions: "此功能专为流畅的动态对话而设计。您每月可获得15分钟的练习时间。只需点击按钮并说'你好，你好吗？'AI 导师将帮助您练习英语口语技能。如有需要，它还可以用您的母语为您提供帮助。"
 };
 
 export default premiumVoiceTranslations;

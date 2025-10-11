@@ -70,7 +70,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   premiumSessionLimitReached: "Batas Sesi Premium Tercapai",
   
   // Added key to fix inconsistency with failedToStartSession
-  failedToStartSession: "Gagal memulai sesi"
+  failedToStartSession: "Gagal memulai sesi",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Latihan Suara Premium",
+  practiceConversationalEnglish: "Latih bahasa Inggris percakapan dengan GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} menit tersisa bulan ini",
+  startPremiumSession: "Mulai Sesi Premium",
+  endSession: "Akhiri Sesi",
+  poweredByGPT4oRealtime: "Didukung oleh GPT-4o Realtime",
+  conversation: "Percakapan",
+  you: "Anda",
+  aiTutor: "Tutor AI",
+  minutesLeft: "{{minutes}} menit tersisa",
+  connected: "Terhubung",
+  premiumVoiceReady: "Latihan suara premium siap. Mulai berbicara!",
+  limitReached: "Batas Tercapai",
+  monthlyLimitMessage: "Anda telah menggunakan semua {{minutes}} menit bulan ini. Reset pada tanggal 1.",
+  sessionSaved: "Sesi Tersimpan",
+  usedMinutesMessage: "Menggunakan {{minutes}} menit dalam sesi ini",
+  timeWarning: "Peringatan Waktu",
+  minutesRemainingWarning: "{{minutes}} menit tersisa",
+  sessionEnded: "Sesi Berakhir",
+  premiumSessionEndedMessage: "Sesi premium 15 menit Anda telah berakhir",
+  premiumVoiceInstructions: "Fitur ini dirancang untuk percakapan yang lancar dan dinamis. Anda mendapatkan 15 menit latihan per bulan. Cukup tekan tombol dan katakan 'Halo, apa kabar?' Tutor AI akan membantu Anda melatih keterampilan berbicara bahasa Inggris. Jika diperlukan, ia juga dapat membantu Anda dalam bahasa asli Anda.",
 };
 
 export default premiumVoiceTranslations;

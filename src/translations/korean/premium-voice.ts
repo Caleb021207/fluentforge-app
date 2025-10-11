@@ -44,7 +44,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   startChatting: "채팅 시작하기",
   
   // Added missing key
-  premiumSessionLimitReached: "프리미엄 세션 제한에 도달했습니다"
+  premiumSessionLimitReached: "프리미엄 세션 제한에 도달했습니다",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "프리미엄 음성 연습",
+  practiceConversationalEnglish: "GPT-4o Realtime으로 회화 영어 연습하기",
+  minutesRemainingThisMonth: "이번 달 {{minutes}}분 남음",
+  startPremiumSession: "프리미엄 세션 시작",
+  endSession: "세션 종료",
+  poweredByGPT4oRealtime: "GPT-4o Realtime 제공",
+  conversation: "대화",
+  you: "당신",
+  aiTutor: "AI 튜터",
+  minutesLeft: "{{minutes}}분 남음",
+  connected: "연결됨",
+  premiumVoiceReady: "프리미엄 음성 연습이 준비되었습니다. 말하기 시작하세요!",
+  limitReached: "한도 도달",
+  monthlyLimitMessage: "이번 달 {{minutes}}분을 모두 사용했습니다. 1일에 재설정됩니다.",
+  sessionSaved: "세션 저장됨",
+  usedMinutesMessage: "이번 세션에서 {{minutes}}분 사용",
+  timeWarning: "시간 경고",
+  minutesRemainingWarning: "{{minutes}}분 남음",
+  sessionEnded: "세션 종료",
+  premiumSessionEndedMessage: "15분 프리미엄 세션이 종료되었습니다",
+  premiumVoiceInstructions: "이 기능은 유창하고 역동적인 대화를 위해 설계되었습니다. 한 달에 15분의 연습 시간이 주어집니다. 버튼을 누르고 '안녕하세요, 어떻게 지내세요?'라고 말하기만 하면 됩니다. AI 튜터가 영어 말하기 기술을 연습하는 데 도움을 줄 것입니다. 필요한 경우 모국어로도 도움을 받을 수 있습니다.",
 };
 
 export default premiumVoiceTranslations;

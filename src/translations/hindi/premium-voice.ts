@@ -50,7 +50,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   voiceChatEnded: "वॉइस चैट समाप्त हुई",
   timeLimit10MinReached: "10 मिनट की समय सीमा पूरी हो गई है",
   speaking: "बोल रहा है...",
-  startChatting: "चैट शुरू करें"
+  startChatting: "चैट शुरू करें",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "प्रीमियम वॉइस अभ्यास",
+  practiceConversationalEnglish: "GPT-4o Realtime के साथ संवादात्मक अंग्रेजी का अभ्यास करें",
+  minutesRemainingThisMonth: "इस महीने {{minutes}} मिनट शेष",
+  startPremiumSession: "प्रीमियम सत्र शुरू करें",
+  endSession: "सत्र समाप्त करें",
+  poweredByGPT4oRealtime: "GPT-4o Realtime द्वारा संचालित",
+  conversation: "बातचीत",
+  you: "आप",
+  aiTutor: "AI ट्यूटर",
+  minutesLeft: "{{minutes}} मिनट शेष",
+  connected: "जुड़ा हुआ",
+  premiumVoiceReady: "प्रीमियम वॉइस अभ्यास तैयार है। बोलना शुरू करें!",
+  limitReached: "सीमा पूर्ण",
+  monthlyLimitMessage: "आपने इस महीने के सभी {{minutes}} मिनट का उपयोग कर लिया है। 1 तारीख को रीसेट होता है।",
+  sessionSaved: "सत्र सहेजा गया",
+  usedMinutesMessage: "इस सत्र में {{minutes}} मिनट का उपयोग किया",
+  timeWarning: "समय चेतावनी",
+  minutesRemainingWarning: "{{minutes}} मिनट शेष",
+  sessionEnded: "सत्र समाप्त",
+  premiumSessionEndedMessage: "आपका 15 मिनट का प्रीमियम सत्र समाप्त हो गया है",
+  premiumVoiceInstructions: "यह सुविधा सहज, गतिशील बातचीत के लिए डिज़ाइन की गई है। आपको प्रति माह 15 मिनट का अभ्यास मिलता है। बस बटन दबाएं और कहें 'हैलो, आप कैसे हैं?' AI ट्यूटर आपके अंग्रेजी बोलने के कौशल का अभ्यास करने में मदद करेगा। यदि आवश्यक हो, तो यह आपकी मातृभाषा में भी आपकी सहायता कर सकता है।",
 };
 
 export default premiumVoiceTranslations;

@@ -45,7 +45,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   startChatting: "Commencer à discuter",
   
   // Added missing key
-  premiumSessionLimitReached: "Limite de Session Premium Atteinte"
+  premiumSessionLimitReached: "Limite de Session Premium Atteinte",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Pratique Vocale Premium",
+  practiceConversationalEnglish: "Pratiquez l'anglais conversationnel avec GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} minutes restantes ce mois-ci",
+  startPremiumSession: "Démarrer la Session Premium",
+  endSession: "Terminer la Session",
+  poweredByGPT4oRealtime: "Propulsé par GPT-4o Realtime",
+  conversation: "Conversation",
+  you: "Vous",
+  aiTutor: "Tuteur IA",
+  minutesLeft: "{{minutes}} minutes restantes",
+  connected: "Connecté",
+  premiumVoiceReady: "La pratique vocale premium est prête. Commencez à parler !",
+  limitReached: "Limite Atteinte",
+  monthlyLimitMessage: "Vous avez utilisé toutes les {{minutes}} minutes de ce mois. Réinitialisation le 1er.",
+  sessionSaved: "Session Enregistrée",
+  usedMinutesMessage: "Utilisé {{minutes}} minute{{plural}} cette session",
+  timeWarning: "Avertissement de Temps",
+  minutesRemainingWarning: "{{minutes}} minute{{plural}} restante{{plural}}",
+  sessionEnded: "Session Terminée",
+  premiumSessionEndedMessage: "Votre session premium de 15 minutes est terminée",
+  premiumVoiceInstructions: "Cette fonctionnalité est conçue pour des conversations fluides et dynamiques. Vous disposez de 15 minutes de pratique par mois. Appuyez simplement sur le bouton et dites 'Bonjour, comment allez-vous ?' Le tuteur IA vous aidera à pratiquer vos compétences orales en anglais. Si nécessaire, il peut également vous assister dans votre langue maternelle.",
 };
 
 export default premiumVoiceTranslations;

@@ -67,7 +67,30 @@ const premiumVoiceTranslations: TranslationRecord = {
   betterAccent: "Краще сприйняття акценту та розуміння",
   goingPlaces: "Просувайтеся далі з преміум-функціями",
   error: "Помилка",
-  success: "Успіх"
+  success: "Успіх",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "Преміум голосова практика",
+  practiceConversationalEnglish: "Практикуйте розмовну англійську з GPT-4o Realtime",
+  minutesRemainingThisMonth: "{{minutes}} хвилин залишилося цього місяця",
+  startPremiumSession: "Почати преміум сесію",
+  endSession: "Завершити сесію",
+  poweredByGPT4oRealtime: "Працює на GPT-4o Realtime",
+  conversation: "Розмова",
+  you: "Ви",
+  aiTutor: "ШІ репетитор",
+  minutesLeft: "{{minutes}} хвилин залишилося",
+  connected: "Підключено",
+  premiumVoiceReady: "Преміум голосова практика готова. Почніть говорити!",
+  limitReached: "Ліміт досягнуто",
+  monthlyLimitMessage: "Ви використали всі {{minutes}} хвилин цього місяця. Скидання 1-го числа.",
+  sessionSaved: "Сесію збережено",
+  usedMinutesMessage: "Використано {{minutes}} хвилин у цій сесії",
+  timeWarning: "Попередження про час",
+  minutesRemainingWarning: "{{minutes}} хвилин залишилося",
+  sessionEnded: "Сесію завершено",
+  premiumSessionEndedMessage: "Ваша 15-хвилинна преміум сесія завершена",
+  premiumVoiceInstructions: "Ця функція призначена для плавних, динамічних розмов. Ви отримуєте 15 хвилин практики на місяць. Просто натисніть кнопку і скажіть 'Привіт, як справи?' ШІ репетитор допоможе вам практикувати навички розмовної англійської. За потреби він також може допомогти вам вашою рідною мовою.",
 };
 
 export default premiumVoiceTranslations;

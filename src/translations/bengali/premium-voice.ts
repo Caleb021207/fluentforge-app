@@ -15,8 +15,31 @@ const premiumVoiceTranslations: TranslationRecord = {
   phrase4: "তোমার শখ ও আগ্রহ কী?",
   phrase5: "তোমার প্রিয় বই বা সিনেমা সম্পর্কে বলো।",
   phrase6: "গত সপ্তাহান্তে তুমি কী করেছিলে?",
-  phrase7: "আগামীকাল তোমার কী পরিকল্পনা?",
-  phrase8: "... কীভাবে ইংরেজি/স্প্যানিশে বলা হয়?"
+  phrase7: "আগামীকালের জন্য তোমার কি পরিকল্পনা আছে?",
+  phrase8: "ইংরেজি/স্প্যানিশে ... কে কিভাবে বলে?",
+  
+  // Premium Voice Practice Page
+  premiumVoicePractice: "প্রিমিয়াম ভয়েস অনুশীলন",
+  practiceConversationalEnglish: "GPT-4o Realtime এর সাথে কথোপকথন ইংরেজি অনুশীলন করুন",
+  minutesRemainingThisMonth: "এই মাসে {{minutes}} মিনিট অবশিষ্ট",
+  startPremiumSession: "প্রিমিয়াম সেশন শুরু করুন",
+  endSession: "সেশন শেষ করুন",
+  poweredByGPT4oRealtime: "GPT-4o Realtime দ্বারা চালিত",
+  conversation: "কথোপকথন",
+  you: "আপনি",
+  aiTutor: "AI শিক্ষক",
+  minutesLeft: "{{minutes}} মিনিট বাকি",
+  connected: "সংযুক্ত",
+  premiumVoiceReady: "প্রিমিয়াম ভয়েস অনুশীলন প্রস্তুত। কথা বলা শুরু করুন!",
+  limitReached: "সীমা পৌঁছেছে",
+  monthlyLimitMessage: "আপনি এই মাসের সমস্ত {{minutes}} মিনিট ব্যবহার করেছেন। ১ তারিখে রিসেট হবে।",
+  sessionSaved: "সেশন সংরক্ষিত",
+  usedMinutesMessage: "এই সেশনে {{minutes}} মিনিট ব্যবহৃত হয়েছে",
+  timeWarning: "সময় সতর্কতা",
+  minutesRemainingWarning: "{{minutes}} মিনিট অবশিষ্ট",
+  sessionEnded: "সেশন শেষ",
+  premiumSessionEndedMessage: "আপনার 15 মিনিটের প্রিমিয়াম সেশন শেষ হয়েছে",
+  premiumVoiceInstructions: "এই বৈশিষ্ট্যটি তরল, গতিশীল কথোপকথনের জন্য ডিজাইন করা হয়েছে। আপনি প্রতি মাসে 15 মিনিট অনুশীলন পান। শুধু বাটন চাপুন এবং বলুন 'হ্যালো, আপনি কেমন আছেন?' AI শিক্ষক আপনার ইংরেজি কথা বলার দক্ষতা অনুশীলনে সাহায্য করবে। প্রয়োজনে, এটি আপনার মাতৃভাষায়ও সহায়তা করতে পারে।"
 };
 
 export default premiumVoiceTranslations;
