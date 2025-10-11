@@ -19,8 +19,18 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate user
-    const authHeader = req.headers.get("Authorization");
+    // Authenticate user - try both header and query param
+    let authHeader = req.headers.get("Authorization");
+    
+    // If not in headers, check query params (for WebSocket connections)
+    if (!authHeader) {
+      const url = new URL(req.url);
+      const token = url.searchParams.get("authorization");
+      if (token) {
+        authHeader = `Bearer ${token}`;
+      }
+    }
+    
     if (!authHeader) {
       return new Response("Missing authorization", { status: 401 });
     }
@@ -68,15 +78,19 @@ serve(async (req) => {
 
     // Create session tracking
     const sessionStartTime = Date.now();
-    const { data: sessionData } = await supabase
+    const { data: sessionData, error: insertError } = await supabase
       .from("usage_tracking")
       .insert({
         student_id: user.id,
         session_type: "voice_practice",
-        created_at: new Date().toISOString(),
       })
       .select()
       .single();
+
+    if (insertError) {
+      console.error("Session tracking insert error:", insertError);
+      return new Response(`Error creating session: ${insertError.message}`, { status: 500, headers: corsHeaders });
+    }
 
     const sessionId = sessionData?.id;
     console.log("Session created:", sessionId);

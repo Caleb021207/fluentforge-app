@@ -239,7 +239,8 @@ export class RealtimeChat {
         throw new Error("Not authenticated");
       }
 
-      const wsUrl = `wss://dukpljcweixxmpkiblwo.supabase.co/functions/v1/realtime-chat?nativeLanguage=${this.nativeLanguage}&targetLanguage=${this.targetLanguage}`;
+      // WebSocket connections require auth token in URL since headers aren't supported
+      const wsUrl = `wss://dukpljcweixxmpkiblwo.supabase.co/functions/v1/realtime-chat?nativeLanguage=${this.nativeLanguage}&targetLanguage=${this.targetLanguage}&authorization=${session.access_token}`;
       
       this.ws = new WebSocket(wsUrl);
 
