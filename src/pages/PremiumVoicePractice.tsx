@@ -14,7 +14,7 @@ const PremiumVoicePractice = () => {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
-  const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession } = useUsageLimits();
+  const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession, trackPremiumVoiceSession } = useUsageLimits();
 
   useEffect(() => {
     return () => {
@@ -92,16 +92,28 @@ const PremiumVoicePractice = () => {
     }
   };
 
-  const endConversation = () => {
+  const endConversation = async () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+
+    const minutesUsed = Math.ceil(elapsedSeconds / 60);
+    
+    // Track usage before disconnecting
+    if (chatRef.current && minutesUsed > 0) {
+      try {
+        const sessionId = crypto.randomUUID();
+        await trackPremiumVoiceSession(sessionId, minutesUsed);
+      } catch (error) {
+        console.error('Error tracking session:', error);
+      }
+    }
+    
     chatRef.current?.disconnect();
     setIsConnected(false);
     setIsSpeaking(false);
     
-    const minutesUsed = Math.ceil(elapsedSeconds / 60);
     toast({
       title: "Session Saved",
       description: `Used ${minutesUsed} minute${minutesUsed !== 1 ? 's' : ''} this session`,

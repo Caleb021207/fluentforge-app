@@ -175,85 +175,134 @@ export const playAudioData = async (audioContext: AudioContext, audioData: Uint8
 };
 
 export class RealtimeChat {
-  private ws: WebSocket | null = null;
-  private audioContext: AudioContext | null = null;
-  private recorder: AudioRecorder | null = null;
+  private pc: RTCPeerConnection | null = null;
+  private dc: RTCDataChannel | null = null;
+  private audioEl: HTMLAudioElement;
+  private sessionStartTime: number = 0;
 
   constructor(
     private onMessage: (message: any) => void,
     private onSpeakingChange: (speaking: boolean) => void
-  ) {}
+  ) {
+    this.audioEl = document.createElement("audio");
+    this.audioEl.autoplay = true;
+  }
 
   async init() {
     try {
-      this.audioContext = new AudioContext({ sampleRate: 24000 });
-
+      console.log("🚀 Getting ephemeral token...");
+      
+      // Get ephemeral token from edge function
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         throw new Error('Not authenticated');
       }
 
-      const wsUrl = `wss://dukpljcweixxmpkiblwo.supabase.co/functions/v1/premium-voice-realtime`;
-      this.ws = new WebSocket(wsUrl);
+      const response = await fetch(
+        `https://dukpljcweixxmpkiblwo.functions.supabase.co/premium-voice-realtime`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
 
-      this.ws.onopen = () => {
-        console.log('Connected to premium voice service');
-        this.startRecording();
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to get token');
+      }
+
+      const data = await response.json();
+      
+      if (!data?.client_secret?.value) {
+        throw new Error("No token received");
+      }
+
+      const token = data.client_secret.value;
+      this.sessionStartTime = data.session_start;
+      console.log("✅ Token received");
+
+      // Create peer connection
+      this.pc = new RTCPeerConnection();
+
+      // Set up audio playback
+      this.pc.ontrack = (e) => {
+        console.log("🎵 Audio track received");
+        this.audioEl.srcObject = e.streams[0];
       };
 
-      this.ws.onmessage = async (event) => {
-        const data = JSON.parse(event.data);
-        
-        if (data.type === 'response.audio.delta') {
-          const binaryString = atob(data.delta);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-          }
-          await playAudioData(this.audioContext!, bytes);
+      // Add local audio track
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: { 
+          sampleRate: 24000, 
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        } 
+      });
+      this.pc.addTrack(stream.getTracks()[0]);
+
+      // Set up data channel for events
+      this.dc = this.pc.createDataChannel("oai-events");
+
+      this.dc.addEventListener("message", (e) => {
+        const event = JSON.parse(e.data);
+        console.log("📨 Event:", event.type);
+
+        if (event.type === 'response.audio.delta') {
           this.onSpeakingChange(true);
-        } else if (data.type === 'response.audio.done') {
+        } else if (event.type === 'response.audio.done') {
           this.onSpeakingChange(false);
         }
-        
-        this.onMessage(data);
-      };
 
-      this.ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-      };
+        this.onMessage(event);
+      });
 
-      this.ws.onclose = () => {
-        console.log('Disconnected');
-        this.stopRecording();
-      };
+      // Create and set local description
+      const offer = await this.pc.createOffer();
+      await this.pc.setLocalDescription(offer);
+
+      // Exchange SDP with OpenAI
+      const sdpResponse = await fetch(
+        `https://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17`,
+        {
+          method: "POST",
+          body: offer.sdp,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/sdp"
+          },
+        }
+      );
+
+      if (!sdpResponse.ok) {
+        throw new Error(`SDP exchange failed: ${sdpResponse.status}`);
+      }
+
+      const answerSdp = await sdpResponse.text();
+      await this.pc.setRemoteDescription({
+        type: "answer",
+        sdp: answerSdp,
+      });
+
+      console.log("✅ WebRTC connected");
     } catch (error) {
       console.error('Error initializing:', error);
       throw error;
     }
   }
 
-  private async startRecording() {
-    this.recorder = new AudioRecorder((audioData) => {
-      if (this.ws?.readyState === WebSocket.OPEN) {
-        const encoded = encodeAudioForAPI(audioData);
-        this.ws.send(JSON.stringify({
-          type: 'input_audio_buffer.append',
-          audio: encoded
-        }));
-      }
-    });
-    await this.recorder.start();
-  }
-
-  private stopRecording() {
-    this.recorder?.stop();
-    this.recorder = null;
+  async getSessionDuration(): Promise<number> {
+    if (!this.sessionStartTime) return 0;
+    return Math.ceil((Date.now() - this.sessionStartTime) / 1000 / 60); // minutes
   }
 
   disconnect() {
-    this.stopRecording();
-    this.ws?.close();
-    this.audioContext?.close();
+    this.dc?.close();
+    this.pc?.close();
+    this.audioEl.srcObject = null;
   }
 }
