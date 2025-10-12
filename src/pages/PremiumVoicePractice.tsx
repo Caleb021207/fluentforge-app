@@ -154,6 +154,12 @@ const PremiumVoicePractice = () => {
         </div>
       </div>
 
+      <Card className="p-6 mb-4 bg-primary/5 border-primary/20">
+        <p className="text-sm text-center">
+          <strong>Supported Languages:</strong> English, Spanish, French, German, Italian, Japanese, Korean, Mandarin, Cantonese, Russian, Arabic, Hindi, Turkish, Polish
+        </p>
+      </Card>
+
       <Card className="p-8 mb-6">
         <div className="flex flex-col items-center gap-6">
           {isConnected && (
