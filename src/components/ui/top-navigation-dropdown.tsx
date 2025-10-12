@@ -9,6 +9,7 @@ interface NavigationItem {
   label: string;
   path: string;
   icon?: React.ReactNode;
+  disabled?: boolean;
 }
 
 interface TopNavigationDropdownProps {
@@ -28,7 +29,8 @@ export const TopNavigationDropdown = ({
 
   const currentItem = items.find(item => item.path === currentPath);
 
-  const handleItemClick = (path: string) => {
+  const handleItemClick = (path: string, disabled?: boolean) => {
+    if (disabled) return;
     onNavigate(path);
     setIsOpen(false);
   };
@@ -80,12 +82,14 @@ export const TopNavigationDropdown = ({
                       initial={{ opacity: 0, y: -20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      onClick={() => handleItemClick(item.path)}
+                      onClick={() => handleItemClick(item.path, item.disabled)}
+                      disabled={item.disabled}
                       className={cn(
                         "flex flex-col items-center gap-2 p-4 rounded-xl transition-colors",
                         "hover:bg-accent hover:text-accent-foreground",
                         "border border-transparent hover:border-accent",
-                        currentPath === item.path && "bg-accent text-accent-foreground border-accent"
+                        currentPath === item.path && "bg-accent text-accent-foreground border-accent",
+                        item.disabled && "opacity-40 cursor-not-allowed hover:bg-transparent hover:border-transparent"
                       )}
                     >
                       {item.icon && (

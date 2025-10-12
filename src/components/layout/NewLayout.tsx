@@ -8,6 +8,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import LogoutButton from "@/components/auth/LogoutButton";
 import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles } from "lucide-react";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 
 interface NewLayoutProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   const location = useLocation();
   const { t } = useLocalization();
   const [user, setUser] = useState<User | null>(null);
+  const { usageLimits, premiumVoiceMinutesRemaining } = useUsageLimits();
 
   useEffect(() => {
     // Get initial session
@@ -35,12 +37,15 @@ const NewLayout = ({ children }: NewLayoutProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const voiceChatDisabled = usageLimits.voiceMinutesRemaining <= 0;
+  const premiumVoiceDisabled = premiumVoiceMinutesRemaining <= 0;
+
   const navigationItems = [
     { label: t("home") || "Home", path: "/", icon: <Home className="w-4 h-4" /> },
     { label: t("practice") || "Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
-    { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" /> },
+    { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" />, disabled: voiceChatDisabled },
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
-    { label: t("premiumVoicePractice") || "Premium Voice", path: "/premium-voice-practice", icon: <Sparkles className="w-4 h-4" /> },
+    { label: t("premiumVoicePractice") || "Premium Voice", path: "/premium-voice-practice", icon: <Sparkles className="w-4 h-4" />, disabled: premiumVoiceDisabled },
     { label: t("aiAnalysis") || "AI Analysis", path: "/analysis", icon: <Brain className="w-4 h-4" /> },
     { label: t("profile") || "Profile", path: "/profile", icon: <UserIcon className="w-4 h-4" /> },
     { label: t("settings") || "Settings", path: "/settings", icon: <Settings className="w-4 h-4" /> },
