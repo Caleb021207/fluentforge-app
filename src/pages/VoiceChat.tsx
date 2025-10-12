@@ -174,29 +174,6 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
         {/* Conversation Settings Card */}
         <Card>
           <CardContent className="p-8 space-y-8">
-            {/* Conversation Level Selector */}
-            <div className="flex items-center justify-between">
-              <Label htmlFor="conversation-level" className="text-lg md:text-xl font-medium">
-                {t("conversationLevel") || "Conversation Level"}
-              </Label>
-              <Select value={conversationLevel} onValueChange={handleLevelChange}>
-                <SelectTrigger className="w-56 text-lg md:text-xl h-14">
-                  <SelectValue placeholder={t("selectLevel") || "Select level"} />
-                </SelectTrigger>
-                <SelectContent className="text-lg md:text-xl">
-                  <SelectItem value="basic">
-                    {t("basicLevel") || "Basic (A1-A2)"}
-                  </SelectItem>
-                  <SelectItem value="intermediate">
-                    {t("intermediateLevel") || "Intermediate (B1)"}
-                  </SelectItem>
-                  <SelectItem value="advanced">
-                    {t("advancedLevel") || "Advanced (B2-C1)"}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Grammar Correction Toggle */}
             <div className="flex items-center justify-between">
               <Label htmlFor="grammar-correction" className="text-lg md:text-xl font-medium">
