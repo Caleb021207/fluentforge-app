@@ -200,10 +200,6 @@ const PremiumVoicePractice = () => {
             </Button>
           )}
 
-          <div className="text-xs text-muted-foreground flex items-center gap-1">
-            <Sparkles className="w-3 h-3" />
-            {t('poweredByGPT4oRealtime')}
-          </div>
         </div>
       </Card>
     </div>

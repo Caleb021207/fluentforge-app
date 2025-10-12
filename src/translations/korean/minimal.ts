@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "언어 학습에 오신 것을 환영합니다",
   yourPersonalAICompanion: "당신의 개인 AI 동반자",
+  startPracticing: "연습 시작하기",
+  practiceYourLanguageSkills: "언어 능력을 연습하세요",
   swipeUpToGetStarted: "시작하려면 위로 스와이프하세요",
   selectNativeLanguage: "모국어 선택",
   iSpeak: "저는 다음 언어를 사용합니다",

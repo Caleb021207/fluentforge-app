@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "به یادگیری زبان خوش آمدید",
   yourPersonalAICompanion: "همراه هوش مصنوعی شخصی شما",
+  startPracticing: "شروع تمرین",
+  practiceYourLanguageSkills: "مهارت‌های زبانی خود را تمرین کنید",
   swipeUpToGetStarted: "برای شروع به بالا بکشید",
   getStarted: "شروع کنید",
   selectYourLanguagePreferences: "ترجیحات زبان خود را انتخاب کنید",

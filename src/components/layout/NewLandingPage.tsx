@@ -137,7 +137,7 @@ const NewLandingPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+          className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight pb-2"
         >
           {t("welcomeToLanguageLearning")}
         </motion.h1>

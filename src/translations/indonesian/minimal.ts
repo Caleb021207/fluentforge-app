@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "memberi suara pada kata-kata",
   yourPersonalAICompanion: "Pendamping AI pribadi Anda",
+  startPracticing: "Mulai Berlatih",
+  practiceYourLanguageSkills: "Latih keterampilan bahasa Anda",
   swipeUpToGetStarted: "Geser ke atas untuk memulai",
   getStarted: "Mulai",
   selectYourLanguagePreferences: "Pilih preferensi bahasa Anda",

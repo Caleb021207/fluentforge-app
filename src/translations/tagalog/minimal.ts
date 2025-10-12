@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Maligayang pagdating sa pagkatuto ng wika",
   yourPersonalAICompanion: "Ang iyong personal na AI na katuwang sa pag-aaral ng wika",
+  startPracticing: "Magsimula ng Pagsasanay",
+  practiceYourLanguageSkills: "Magsanay ng iyong mga kasanayan sa wika",
   swipeUpToGetStarted: "Mag-swipe pataas upang magsimula",
   getStarted: "Magsimula",
   selectYourLanguagePreferences: "Piliin ang inyong mga kagustuhan sa wika",

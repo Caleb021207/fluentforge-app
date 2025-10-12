@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Dil öğrenmeye hoş geldiniz",
   yourPersonalAICompanion: "Kişisel yapay zeka dil öğrenme yardımcınız",
+  startPracticing: "Uygulamaya Başla",
+  practiceYourLanguageSkills: "Dil becerilerini uygula",
   swipeUpToGetStarted: "Başlamak için yukarı kaydırın",
   getStarted: "Başla",
   selectYourLanguagePreferences: "Dil tercihlerinizi seçin",

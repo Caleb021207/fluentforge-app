@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Bienvenido al aprendizaje de idiomas",
   yourPersonalAICompanion: "Tu compañero personal de IA",
+  startPracticing: "Comenzar a practicar",
+  practiceYourLanguageSkills: "Practica tus habilidades lingüísticas",
   swipeUpToGetStarted: "Desliza hacia arriba para comenzar",
   selectNativeLanguage: "Selecciona idioma nativo",
   iSpeak: "Yo hablo",

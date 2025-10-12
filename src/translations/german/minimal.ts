@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Willkommen beim Sprachenlernen",
   yourPersonalAICompanion: "Dein persönlicher KI-Assistent für das Sprachenlernen",
+  startPracticing: "Beginne zu üben",
+  practiceYourLanguageSkills: "Übe deine Sprachkenntnisse",
   swipeUpToGetStarted: "Nach oben wischen, um zu starten",
   getStarted: "Loslegen",
   selectYourLanguagePreferences: "Wähle deine Spracheinstellungen",

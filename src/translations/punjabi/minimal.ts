@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "ਭਾਸ਼ਾ ਸਿੱਖਣ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ",
   yourPersonalAICompanion: "ਤੁਹਾਡਾ ਨਿੱਜੀ AI ਸਾਥੀ",
+  startPracticing: "ਅਭਿਆਸ ਸ਼ੁਰੂ ਕਰੋ",
+  practiceYourLanguageSkills: "ਆਪਣੀ ਭਾਸ਼ਾ ਦੇ ਹੁਨਰਾਂ ਦਾ ਅਭਿਆਸ ਕਰੋ",
   swipeUpToGetStarted: "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਉੱਪਰ ਸਵਾਈਪ ਕਰੋ",
   getStarted: "ਸ਼ੁਰੂ ਕਰੋ",
   selectYourLanguagePreferences: "ਆਪਣੀ ਭਾਸ਼ਾ ਪਸੰਦਾਂ ਚੁਣੋ",

@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "د ژبې زده کړې ته ښه راغلاست",
   yourPersonalAICompanion: "ستاسو شخصي مصنوعي ذهانت ملګری",
+  startPracticing: "تمرین پیل کړئ",
+  practiceYourLanguageSkills: "خپلې ژبې مهارتونه تمرین کړئ",
   swipeUpToGetStarted: "د پیل لپاره پورته سوایپ کړئ",
   getStarted: "پیل کړئ",
   selectYourLanguagePreferences: "خپلې ژبنۍ خوښې انتخاب کړئ",

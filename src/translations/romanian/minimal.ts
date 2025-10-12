@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Bine ai venit la învățarea limbilor",
   yourPersonalAICompanion: "Asistentul tău AI personal pentru învățarea limbilor",
+  startPracticing: "Începe să exersezi",
+  practiceYourLanguageSkills: "Exersează-ți abilitățile lingvistice",
   swipeUpToGetStarted: "Glisează în sus pentru a începe",
   getStarted: "Începe",
   selectYourLanguagePreferences: "Selectează preferințele lingvistice",

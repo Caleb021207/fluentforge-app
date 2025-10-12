@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "歡迎嚟到語言學習",
   yourPersonalAICompanion: "你嘅個人AI夥伴",
+  startPracticing: "開始練習",
+  practiceYourLanguageSkills: "練習你的語言技能",
   swipeUpToGetStarted: "向上滑開始",
   selectNativeLanguage: "揀你嘅母語",
   iSpeak: "我識講",

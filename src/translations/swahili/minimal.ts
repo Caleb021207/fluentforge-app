@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "kuwapa maneno sauti",
   yourPersonalAICompanion: "Msaidizi wako wa AI binafsi",
+  startPracticing: "Anza Kujifunza",
+  practiceYourLanguageSkills: "Jifunze ujuzi wako wa lugha",
   swipeUpToGetStarted: "Telezesha juu kuanza",
   getStarted: "Anza",
   selectYourLanguagePreferences: "Chagua mapendeleo yako ya lugha",

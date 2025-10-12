@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "እንኳን ወደ ቋንቋ መማር በደህና መጡ",
   yourPersonalAICompanion: "የእርስዎ የግል AI ረዳት ለቋንቋ መማር",
+  startPracticing: "ልምምድ ጀምር",
+  practiceYourLanguageSkills: "የቋንቋ ችሎታዎችዎን ይለማመዱ",
   swipeUpToGetStarted: "ለመጀመር ወደ ላይ ይሸብብሩ",
   getStarted: "ጀምር",
   selectYourLanguagePreferences: "የቋንቋ ምርጫዎችዎን ይምረጡ",

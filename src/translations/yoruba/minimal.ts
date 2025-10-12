@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Kaabọ si Kọ́ ẹ̀kọ́ Èdè",
   yourPersonalAICompanion: "Ẹlẹ́rọ AI tirẹ̀ fún ìmọ̀ èdè",
+  startPracticing: "Bẹ̀rẹ̀ Àdáṣe",
+  practiceYourLanguageSkills: "Ṣe àkọ́kọ́ àwọn ọgbọ́n èdè rẹ",
   swipeUpToGetStarted: "Fà s'ókè láti bẹ̀rẹ̀",
   getStarted: "Bẹ̀rẹ̀",
   selectYourLanguagePreferences: "Yan àwọn ààyè èdè rẹ",

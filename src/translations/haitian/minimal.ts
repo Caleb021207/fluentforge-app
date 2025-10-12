@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Byenveni nan aprantisaj lang",
   yourPersonalAICompanion: "Asistan AI pèsonèl ou pou aprann lang",
+  startPracticing: "Kòmanse pratike",
+  practiceYourLanguageSkills: "Pratike kapasite ou nan lang",
   swipeUpToGetStarted: "Glise anlè pou kòmanse",
   getStarted: "Kòmanse",
   selectYourLanguagePreferences: "Chwazi preferans lang ou yo",

@@ -8,6 +8,8 @@ const landingAuthTranslations: TranslationRecord = {
   signUp: "Registrarse",
   welcomeToLanguageLearning: "Bienvenido al Aprendizaje de Idiomas",
   yourPersonalAICompanion: "Tu Compañero Personal de IA para el Dominio del Idioma",
+  startPracticing: "Comenzar a practicar",
+  practiceYourLanguageSkills: "Practica tus habilidades lingüísticas",
   
   // Auth Flow
   signInToContinue: "Inicia sesión para continuar",

@@ -5,6 +5,8 @@ const minimalTranslations: TranslationRecord = {
   // Home page
   welcomeToLanguageLearning: "Ku soo dhawoow Barashada Luuqadda",
   yourPersonalAICompanion: "Kaaliyahaaga AI ee Barashada Luuqadda",
+  startPracticing: "Bilow Tababbarka",
+  practiceYourLanguageSkills: "Ku tababbaro xirfadahaaga luuqadda",
   swipeUpToGetStarted: "Iska rog kor si aad u bilowdo",
   getStarted: "Bilow",
   selectYourLanguagePreferences: "Dooro doorashooyinka luuqaddaada",
