@@ -44,7 +44,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} minut{{plural}} rămas{{plural}}",
   sessionEnded: "Sesiune încheiată",
   premiumSessionEndedMessage: "Sesiunea ta premium de 15 minute s-a încheiat",
-  premiumVoiceInstructions: "Această funcție este concepută pentru conversații fluide și dinamice. Primești 15 minute de practică pe lună. Pur și simplu apasă butonul și spune 'Bună, ce mai faci?' Tutorele AI te va ajuta să exersezi abilitățile de vorbire în limba engleză. Dacă este necesar, te poate ajuta și în limba ta maternă."
+  premiumVoiceInstructions: "Această funcție este concepută pentru conversații fluide și dinamice. Primești 15 minute de practică pe lună. Pur și simplu apasă butonul și spune 'Bună, ce mai faci?' Tutorele AI te va ajuta să exersezi abilitățile de vorbire în limba engleză. Dacă este necesar, te poate ajuta și în limba ta maternă.",
+  languageSupportDisclaimer: "Notă: Româna ar putea să nu fie complet susținută la nivel de vorbitor nativ. AI funcționează cel mai bine în limba engleză.",
 };
 
 export default premiumVoiceTranslations;

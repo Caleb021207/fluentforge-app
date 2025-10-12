@@ -69,6 +69,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Session Terminée",
   premiumSessionEndedMessage: "Votre session premium de 15 minutes est terminée",
   premiumVoiceInstructions: "Cette fonctionnalité est conçue pour des conversations fluides et dynamiques. Vous disposez de 15 minutes de pratique par mois. Appuyez simplement sur le bouton et dites 'Bonjour, comment allez-vous ?' Le tuteur IA vous aidera à pratiquer vos compétences orales en anglais. Si nécessaire, il peut également vous assister dans votre langue maternelle.",
+  languageSupportDisclaimer: "Remarque : Le français peut ne pas être entièrement pris en charge au niveau d'un locuteur natif. L'IA fonctionne mieux en anglais.",
 };
 
 export default premiumVoiceTranslations;

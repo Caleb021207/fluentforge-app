@@ -37,7 +37,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} minit ki rete",
   sessionEnded: "Sesyon Fini",
   premiumSessionEndedMessage: "Sesyon premium 15 minit ou a fini",
-  premiumVoiceInstructions: "Karakteristik sa a fèt pou konvèsasyon flui, dinamik. Ou gen 15 minit pratik chak mwa. Jis peze bouton an epi di 'Bonjou, kijan ou ye?' Pwofesè AI a ap ede w pratike kapasite pale angle ou yo. Si sa nesesè, li ka ede w tou nan lang natif natal ou."
+  premiumVoiceInstructions: "Karakteristik sa a fèt pou konvèsasyon flui, dinamik. Ou gen 15 minit pratik chak mwa. Jis peze bouton an epi di 'Bonjou, kijan ou ye?' Pwofesè AI a ap ede w pratike kapasite pale angle ou yo. Si sa nesesè, li ka ede w tou nan lang natif natal ou.",
+  languageSupportDisclaimer: "Nòt: Kreyòl ayisyen ka pa konplètman sipòte nan nivo natif natal. AI travay pi byen an Angle.",
 };
 
 export default premiumVoiceTranslations;

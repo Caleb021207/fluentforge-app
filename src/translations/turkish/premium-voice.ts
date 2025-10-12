@@ -38,7 +38,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} dakika kaldı",
   sessionEnded: "Oturum Sona Erdi",
   premiumSessionEndedMessage: "15 dakikalık premium oturumunuz sona erdi",
-  premiumVoiceInstructions: "Bu özellik akıcı, dinamik konuşmalar için tasarlanmıştır. Ayda 15 dakika pratik yapabilirsiniz. Sadece butona basın ve 'Merhaba, nasılsınız?' deyin. AI öğretmen İngilizce konuşma becerilerinizi geliştirmenize yardımcı olacak. Gerekirse, ana dilinizde de size yardımcı olabilir."
+  premiumVoiceInstructions: "Bu özellik akıcı, dinamik konuşmalar için tasarlanmıştır. Ayda 15 dakika pratik yapabilirsiniz. Sadece butona basın ve 'Merhaba, nasılsınız?' deyin. AI öğretmen İngilizce konuşma becerilerinizi geliştirmenize yardımcı olacak. Gerekirse, ana dilinizde de size yardımcı olabilir.",
+  languageSupportDisclaimer: "Not: Türkçe, ana dil seviyesinde tam olarak desteklenmeyebilir. AI İngilizce'de en iyi şekilde çalışır.",
 };
 
 export default premiumVoiceTranslations;

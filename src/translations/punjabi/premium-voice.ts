@@ -58,6 +58,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "ਸੈਸ਼ਨ ਖਤਮ ਹੋਇਆ",
   premiumSessionEndedMessage: "ਤੁਹਾਡਾ 15 ਮਿੰਟ ਦਾ ਪ੍ਰੀਮੀਅਮ ਸੈਸ਼ਨ ਖਤਮ ਹੋ ਗਿਆ ਹੈ",
   premiumVoiceInstructions: "ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਸਹਿਜ, ਗਤੀਸ਼ੀਲ ਗੱਲਬਾਤ ਲਈ ਤਿਆਰ ਕੀਤੀ ਗਈ ਹੈ। ਤੁਹਾਨੂੰ ਹਰ ਮਹੀਨੇ 15 ਮਿੰਟ ਦਾ ਅਭਿਆਸ ਮਿਲਦਾ ਹੈ। ਸਿਰਫ਼ ਬਟਨ ਦਬਾਓ ਅਤੇ ਕਹੋ 'ਹੈਲੋ, ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?' AI ਟਿਊਟਰ ਤੁਹਾਡੀ ਅੰਗਰੇਜ਼ੀ ਬੋਲਣ ਦੀਆਂ ਹੁਨਰਾਂ ਦਾ ਅਭਿਆਸ ਕਰਨ ਵਿੱਚ ਮਦਦ ਕਰੇਗਾ। ਜੇ ਲੋੜ ਹੋਵੇ, ਇਹ ਤੁਹਾਡੀ ਮਾਤਭਾਸ਼ਾ ਵਿੱਚ ਵੀ ਤੁਹਾਡੀ ਮਦਦ ਕਰ ਸਕਦਾ ਹੈ।",
+  languageSupportDisclaimer: "ਨੋਟ: ਪੰਜਾਬੀ ਮੂਲ ਬੋਲਣ ਵਾਲੇ ਦੇ ਪੱਧਰ 'ਤੇ ਪੂਰੀ ਤਰ੍ਹਾਂ ਸਮਰਥਿਤ ਨਹੀਂ ਹੋ ਸਕਦੀ। AI ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਸਭ ਤੋਂ ਵਧੀਆ ਕੰਮ ਕਰਦਾ ਹੈ।",
 };
 
 export default premiumVoiceTranslations;

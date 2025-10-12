@@ -68,6 +68,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "세션 종료",
   premiumSessionEndedMessage: "15분 프리미엄 세션이 종료되었습니다",
   premiumVoiceInstructions: "이 기능은 유창하고 역동적인 대화를 위해 설계되었습니다. 한 달에 15분의 연습 시간이 주어집니다. 버튼을 누르고 '안녕하세요, 어떻게 지내세요?'라고 말하기만 하면 됩니다. AI 튜터가 영어 말하기 기술을 연습하는 데 도움을 줄 것입니다. 필요한 경우 모국어로도 도움을 받을 수 있습니다.",
+  languageSupportDisclaimer: "참고: 한국어는 원어민 수준에서 완전히 지원되지 않을 수 있습니다. AI는 영어에서 가장 잘 작동합니다.",
 };
 
 export default premiumVoiceTranslations;

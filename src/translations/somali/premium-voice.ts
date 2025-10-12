@@ -39,7 +39,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} daqiiqo ayaa ka haray",
   sessionEnded: "Fadhigii Wuu Dhamaaday",
   premiumSessionEndedMessage: "Fadhigaaga premium-ka ah ee 15 daqiiqo wuu dhamaaday",
-  premiumVoiceInstructions: "Astaamahan waxaa loogu talagalay wadahadallo socodka leh oo firfircoon. Waxaad heshaa 15 daqiiqo oo tababbaro ah bishii. Kaliya riix batoonka oo dheh 'Salaamu calaykum, sidee tahay?' Macalin AI ayaa kaa caawin doona inaad ku tababbarto xirfadaha hadalka Ingiriiska. Haddii loo baahdo, wuxuu kaa caawin karaa luqadda hooyo ee."
+  premiumVoiceInstructions: "Astaamahan waxaa loogu talagalay wadahadallo socodka leh oo firfircoon. Waxaad heshaa 15 daqiiqo oo tababbaro ah bishii. Kaliya riix batoonka oo dheh 'Salaamu calaykum, sidee tahay?' Macalin AI ayaa kaa caawin doona inaad ku tababbarto xirfadaha hadalka Ingiriiska. Haddii loo baahdo, wuxuu kaa caawin karaa luqadda hooyo ee.",
+  languageSupportDisclaimer: "Xusuusin: Af-Soomaaliga laga yaabo inaysan si buuxda u taageerin heerka hadal-hayaha asaliga ah. AI wuxuu si fiican uga shaqeeyaa Ingiriisiga.",
 };
 
 export default premiumVoiceTranslations;

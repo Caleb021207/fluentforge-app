@@ -23,6 +23,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "เซสชันสิ้นสุดแล้ว",
   premiumSessionEndedMessage: "เซสชันพรีเมียม 15 นาทีของคุณสิ้นสุดแล้ว",
   premiumVoiceInstructions: "ฟีเจอร์นี้ออกแบบมาสำหรับการสนทนาที่ลื่นไหลและมีพลวัต คุณมีเวลาฝึก 15 นาทีต่อเดือน เพียงกดปุ่มและพูดว่า 'สวัสดี สบายดีไหม?' ติวเตอร์ AI จะช่วยคุณฝึกทักษะการพูดภาษาอังกฤษ หากจำเป็น ระบบก็สามารถช่วยเหลือคุณในภาษาแม่ของคุณได้",
+  languageSupportDisclaimer: "หมายเหตุ: ภาษาไทยอาจไม่ได้รับการสนับสนุนอย่างเต็มที่ในระดับเจ้าของภาษา AI ทำงานได้ดีที่สุดในภาษาอังกฤษ",
 };
 
 export default premiumVoiceTranslations;

@@ -155,8 +155,8 @@ const PremiumVoicePractice = () => {
       </div>
 
       {!['en', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'zh', 'yue', 'ru', 'ar', 'hi', 'tr', 'pl'].includes(currentLanguage) && t('languageSupportDisclaimer') && (
-        <Card className="p-4 mb-4 bg-yellow-500/10 border-yellow-500/20">
-          <p className="text-sm text-center text-yellow-700 dark:text-yellow-300">
+        <Card className="p-4 mb-4 bg-primary/10 border-primary/20">
+          <p className="text-sm text-center">
             {t('languageSupportDisclaimer')}
           </p>
         </Card>

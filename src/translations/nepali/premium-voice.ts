@@ -57,6 +57,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "सत्र समाप्त भयो",
   premiumSessionEndedMessage: "तपाईंको १५ मिनेटको प्रिमियम सत्र समाप्त भयो",
   premiumVoiceInstructions: "यो सुविधा तरल, गतिशील कुराकानीको लागि डिजाइन गरिएको छ। तपाईंलाई महिनामा १५ मिनेट अभ्यास मिल्छ। केवल बटन थिच्नुहोस् र 'नमस्ते, तपाईं कस्तो हुनुहुन्छ?' भन्नुहोस्। AI शिक्षकले तपाईंलाई अंग्रेजी बोल्ने सीप अभ्यास गर्न मद्दत गर्नेछ। आवश्यक भएमा, यसले तपाईंको मातृभाषामा पनि मद्दत गर्न सक्छ।",
+  languageSupportDisclaimer: "नोट: नेपाली मातृभाषा स्तरमा पूर्ण रूपमा समर्थित नहुन सक्छ। AI अंग्रेजीमा राम्रो काम गर्छ।",
 };
 
 export default premiumVoiceTranslations;

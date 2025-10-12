@@ -47,7 +47,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "剩餘 {{minutes}} 分鐘",
   sessionEnded: "會話已結束",
   premiumSessionEndedMessage: "您的15分鐘高級會話已結束",
-  premiumVoiceInstructions: "此功能專為流暢的動態對話而設計。您每月可獲得15分鐘的練習時間。只需點擊按鈕並說「你好，你好嗎？」AI 導師將幫助您練習英語口語技能。如有需要，它還可以用您的母語為您提供幫助。"
+  premiumVoiceInstructions: "此功能專為流暢的動態對話而設計。您每月可獲得15分鐘的練習時間。只需點擊按鈕並說「你好，你好嗎？」AI 導師將幫助您練習英語口語技能。如有需要，它還可以用您的母語為您提供幫助。",
+  languageSupportDisclaimer: "注意：粵語可能未能完全支援母語水平。AI 以英語運作得最好。",
 };
 
 export default premiumVoiceTranslations;

@@ -181,7 +181,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "剩余 {{minutes}} 分钟",
   sessionEnded: "会话已结束",
   premiumSessionEndedMessage: "您的15分钟高级会话已结束",
-  premiumVoiceInstructions: "此功能专为流畅的动态对话而设计。您每月可获得15分钟的练习时间。只需点击按钮并说'你好，你好吗？'AI 导师将帮助您练习英语口语技能。如有需要，它还可以用您的母语为您提供帮助。"
+  premiumVoiceInstructions: "此功能专为流畅的动态对话而设计。您每月可获得15分钟的练习时间。只需点击按钮并说'你好，你好吗？'AI 导师将帮助您练习英语口语技能。如有需要，它还可以用您的母语为您提供帮助。",
+  languageSupportDisclaimer: "注意：普通话可能未能完全支持母语水平。AI 以英语运作得最好。",
 };
 
 export default premiumVoiceTranslations;

@@ -39,7 +39,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} ደቂቃዎች ይቀራሉ",
   sessionEnded: "ክፍለጊዜ አብቅቷል",
   premiumSessionEndedMessage: "የእርስዎ የ15 ደቂቃ ፕሪሚየም ክፍለጊዜ አብቅቷል",
-  premiumVoiceInstructions: "ይህ ባህሪ ለተፈጥሮአዊ፣ ተለዋዋጭ ውይይቶች ተዘጋጅቷል። በወር 15 ደቂቃዎች ልምምድ ያገኛሉ። ብቻ ቁልፉን ይጫኑ እና 'ሰላም፣ እንዴት ነዎት?' ይበሉ። AI አስተማሪው የእንግሊዝኛ ንግግር ችሎታዎን እንዲለማመዱ ይረዳዎታል። አስፈላጊ ከሆነ በእርስዎ የአፍ መፍቻ ቋንቋም ሊረዳዎት ይችላል።"
+  premiumVoiceInstructions: "ይህ ባህሪ ለተፈጥሮአዊ፣ ተለዋዋጭ ውይይቶች ተዘጋጅቷል። በወር 15 ደቂቃዎች ልምምድ ያገኛሉ። ብቻ ቁልፉን ይጫኑ እና 'ሰላም፣ እንዴት ነዎት?' ይበሉ። AI አስተማሪው የእንግሊዝኛ ንግግር ችሎታዎን እንዲለማመዱ ይረዳዎታል። አስፈላጊ ከሆነ በእርስዎ የአፍ መፍቻ ቋንቋም ሊረዳዎት ይችላል።",
+  languageSupportDisclaimer: "ማስታወሻ: አማርኛ በአፍ መፍቻ ተናጋሪ ደረጃ ሙሉ በሙሉ ላይደገፍ ይችላል። AI በእንግሊዝኛ በተሻለ ይሰራል።",
 };
 
 export default premiumVoiceTranslations;

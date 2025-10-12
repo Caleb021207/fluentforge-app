@@ -97,6 +97,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Kikao Kimeisha",
   premiumSessionEndedMessage: "Kikao chako cha premium cha dakika 15 kimeisha",
   premiumVoiceInstructions: "Kipengele hiki kimeundwa kwa mazungumzo yenye mtiririko na yenye nguvu. Unapata dakika 15 za mazoezi kwa mwezi. Bonyeza kitufe tu na useme 'Habari, u hali gani?' Mwalimu wa AI atakusaidia kufanya mazoezi ya stadi za kuzungumza Kiingereza. Ikihitajika, anaweza pia kukusaidia kwa lugha yako ya asili.",
+  languageSupportDisclaimer: "Kumbuka: Kiswahili kinaweza kisitumike kikamilifu kwa kiwango cha msemaji wa asili. AI inafanya kazi vizuri zaidi kwa Kiingereza.",
 };
 
 export default premiumVoiceTranslations;

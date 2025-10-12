@@ -44,7 +44,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "残り{{minutes}}分",
   sessionEnded: "セッション終了",
   premiumSessionEndedMessage: "15分間のプレミアムセッションが終了しました",
-  premiumVoiceInstructions: "この機能は、流暢でダイナミックな会話のために設計されています。月に15分の練習時間があります。ボタンを押して「こんにちは、お元気ですか？」と言うだけです。AIチューターが英語のスピーキングスキルの練習をお手伝いします。必要に応じて、母国語でもサポートできます。"
+  premiumVoiceInstructions: "この機能は、流暢でダイナミックな会話のために設計されています。月に15分の練習時間があります。ボタンを押して「こんにちは、お元気ですか？」と言うだけです。AIチューターが英語のスピーキングスキルの練習をお手伝いします。必要に応じて、母国語でもサポートできます。",
+  languageSupportDisclaimer: "注：日本語はネイティブスピーカーレベルで完全にサポートされていない場合があります。AIは英語で最もよく動作します。",
 };
 
 export default premiumVoiceTranslations;

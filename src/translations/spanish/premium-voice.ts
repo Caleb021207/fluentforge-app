@@ -34,7 +34,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} minuto{{plural}} restante{{plural}}",
   sessionEnded: "Sesión Finalizada",
   premiumSessionEndedMessage: "Tu sesión premium de 15 minutos ha terminado",
-  premiumVoiceInstructions: "Esta función está diseñada para conversaciones fluidas y dinámicas. Obtienes 15 minutos de práctica por mes. Simplemente presiona el botón y di 'Hola, ¿cómo estás?' El tutor de IA te ayudará a practicar tus habilidades de habla en inglés. Si es necesario, también puede asistirte en tu idioma nativo."
+  premiumVoiceInstructions: "Esta función está diseñada para conversaciones fluidas y dinámicas. Obtienes 15 minutos de práctica por mes. Simplemente presiona el botón y di 'Hola, ¿cómo estás?' El tutor de IA te ayudará a practicar tus habilidades de habla en inglés. Si es necesario, también puede asistirte en tu idioma nativo.",
+  languageSupportDisclaimer: "Nota: El español puede no estar completamente soportado a nivel de hablante nativo. La IA funciona mejor en inglés.",
 };
 
 export default premiumVoiceTranslations;

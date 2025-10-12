@@ -39,7 +39,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} minuto natitira",
   sessionEnded: "Natapos ang Session",
   premiumSessionEndedMessage: "Natapos na ang iyong 15-minutong premium session",
-  premiumVoiceInstructions: "Ang feature na ito ay dinisenyo para sa maayos at dynamic na pag-uusap. Mayroon kang 15 minuto ng pagsasanay bawat buwan. Pindutin lang ang button at sabihin 'Hello, kamusta ka?' Tutulungan ka ng AI tutor na magsanay ng iyong English speaking skills. Kung kinakailangan, maaari ka rin nitong tulungan sa iyong katutubong wika."
+  premiumVoiceInstructions: "Ang feature na ito ay dinisenyo para sa maayos at dynamic na pag-uusap. Mayroon kang 15 minuto ng pagsasanay bawat buwan. Pindutin lang ang button at sabihin 'Hello, kamusta ka?' Tutulungan ka ng AI tutor na magsanay ng iyong English speaking skills. Kung kinakailangan, maaari ka rin nitong tulungan sa iyong katutubong wika.",
+  languageSupportDisclaimer: "Paalala: Ang Tagalog ay maaaring hindi ganap na suportado sa antas ng katutubong nagsasalita. Ang AI ay pinakamahusay na gumagana sa Ingles.",
 };
 
 export default premiumVoiceTranslations;

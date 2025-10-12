@@ -39,7 +39,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "Nkeji {{minutes}} fọdụrụ",
   sessionEnded: "Nnọkọ Kwụsịrị",
   premiumSessionEndedMessage: "Nnọkọ premium gị nke nkeji 15 akwụsịla",
-  premiumVoiceInstructions: "E mere atụmatụ njirimara a maka mkparịta ụka na-enweghị nsogbu, nke na-agbanwe agbanwe. Ị na-enweta nkeji 15 nke omume kwa ọnwa. Naanị pịa bọtịnụ ahụ wee sị 'Ndewo, kedu ka ị mere?' Onye nkụzi AI ga-enyere gị aka mụọ nkà ikwu okwu Bekee gị. Ọ bụrụ na ọ dị mkpa, ọ nwekwara ike inyere gị aka n'asụsụ nne gị."
+  premiumVoiceInstructions: "E mere atụmatụ njirimara a maka mkparịta ụka na-enweghị nsogbu, nke na-agbanwe agbanwe. Ị na-enweta nkeji 15 nke omume kwa ọnwa. Naanị pịa bọtịnụ ahụ wee sị 'Ndewo, kedu ka ị mere?' Onye nkụzi AI ga-enyere gị aka mụọ nkà ikwu okwu Bekee gị. Ọ bụrụ na ọ dị mkpa, ọ nwekwara ike inyere gị aka n'asụsụ nne gị.",
+  languageSupportDisclaimer: "Nrịbama: Enwere ike na akwado Igbo kpamkpam na ọkwa onye nwe obodo. AI na-arụ ọrụ nke ọma na Bekee.",
 };
 
 export default premiumVoiceTranslations;
