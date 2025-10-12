@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User, AlertCircle, MessageSquare, Mic, Volume2 } from "lucide-react";
+import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User, AlertCircle, MessageSquare, Mic, Volume2, Sparkles } from "lucide-react";
 import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import TestScoreCard from "./TestScoreCard";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 
 interface StudentProfileProps {
   profile: ExtendedUserProfile;
@@ -18,6 +19,7 @@ interface StudentProfileProps {
 
 const StudentProfile = ({ profile }: StudentProfileProps) => {
   const { t } = useLocalization();
+  const { usageLimits, premiumVoiceMinutesRemaining } = useUsageLimits();
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
   const [grades, setGrades] = useState<StudentGrade[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
@@ -216,6 +218,61 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         </CardContent>
       </Card>
 
+      {/* Monthly Usage Limits */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="h-5 w-5" />
+            {t("monthlyUsageLimits") || "Monthly Usage Limits"}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 bg-muted/50 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Mic className="h-5 w-5 text-primary" />
+                <h4 className="font-medium">{t("voicePractice") || "Voice Practice"}</h4>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t("minutesRemaining") || "Minutes Remaining"}</span>
+                  <span className="text-lg font-bold text-primary">
+                    {usageLimits?.voiceMinutesRemaining || 0} / {usageLimits?.voiceMinutesLimit || 400}
+                  </span>
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2">
+                  <div 
+                    className="bg-primary h-2 rounded-full transition-all" 
+                    style={{ width: `${((usageLimits?.voiceMinutesRemaining || 0) / (usageLimits?.voiceMinutesLimit || 400)) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <h4 className="font-medium">{t("premiumVoicePractice") || "Premium Voice Practice"}</h4>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t("minutesRemaining") || "Minutes Remaining"}</span>
+                  <span className="text-lg font-bold text-primary">
+                    {premiumVoiceMinutesRemaining} / 15
+                  </span>
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2">
+                  <div 
+                    className="bg-primary h-2 rounded-full transition-all" 
+                    style={{ width: `${(premiumVoiceMinutesRemaining / 15) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Academic Performance & Usage */}
       <Card>
         <CardHeader>
@@ -236,7 +293,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{Math.round(totalVoiceChatMinutes)}</div>
-              <p className="text-sm text-muted-foreground">{t("voiceChatMinutes")}</p>
+              <p className="text-sm text-muted-foreground">{t("totalMinutesPracticed") || "Total Minutes Practiced"}</p>
             </div>
           </div>
 

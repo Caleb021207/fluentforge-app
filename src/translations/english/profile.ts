@@ -54,6 +54,9 @@ const profileTranslations: TranslationRecord = {
   strengths: "Strengths",
   areasForImprovement: "Areas for Improvement",
   recommendations: "Recommendations",
+  monthlyUsageLimits: "Monthly Usage Limits",
+  minutesRemaining: "Minutes Remaining",
+  totalMinutesPracticed: "Total Minutes Practiced"
 };
 
 export default profileTranslations;
