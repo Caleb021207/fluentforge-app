@@ -73,11 +73,16 @@ serve(async (req) => {
     const data = await response.json();
     console.log("✅ Ephemeral token created for user:", user.id);
 
-    // Return token to client
+    // Generate session ID for tracking
+    const sessionId = crypto.randomUUID();
+    const sessionStart = Date.now();
+
+    // Return token to client with session tracking info
     return new Response(JSON.stringify({
       ...data,
       user_id: user.id,
-      session_start: Date.now()
+      session_id: sessionId,
+      session_start: sessionStart
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

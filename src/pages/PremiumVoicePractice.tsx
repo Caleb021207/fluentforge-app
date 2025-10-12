@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useLocalization } from "@/context/LocalizationContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const PremiumVoicePractice = () => {
   const { t, currentLanguage } = useLocalization();
@@ -14,6 +15,7 @@ const PremiumVoicePractice = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession, trackPremiumVoiceSession } = useUsageLimits();
@@ -71,6 +73,11 @@ const PremiumVoicePractice = () => {
 
       chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking);
       await chatRef.current.init();
+      
+      // Generate and store session ID
+      const newSessionId = crypto.randomUUID();
+      setSessionId(newSessionId);
+      
       setIsConnected(true);
       setElapsedSeconds(0);
       
@@ -102,33 +109,68 @@ const PremiumVoicePractice = () => {
     }
 
     const minutesUsed = Math.ceil(elapsedSeconds / 60);
-    console.log('Ending premium voice conversation:', { elapsedSeconds, minutesUsed });
+    console.log('Ending premium voice conversation:', { elapsedSeconds, minutesUsed, sessionId });
     
-    // Track usage before disconnecting
-    if (chatRef.current && minutesUsed > 0) {
-      try {
-        const sessionId = crypto.randomUUID();
-        console.log('Tracking premium voice session with ID:', sessionId);
-        await trackPremiumVoiceSession(sessionId, minutesUsed);
-        console.log('Premium voice session tracked successfully');
-      } catch (error) {
-        console.error('Error tracking premium voice session:', error);
-        toast({
-          title: t('error'),
-          description: 'Failed to save your session usage',
-          variant: "destructive",
-        });
-      }
-    } else {
-      console.log('Skipping tracking - no chat or zero minutes:', { 
-        hasChatRef: !!chatRef.current, 
-        minutesUsed 
+    // Track usage with fallback mechanisms
+    if (chatRef.current && minutesUsed > 0 && sessionId) {
+      // Primary: Client-side tracking
+      trackPremiumVoiceSession(sessionId, minutesUsed).catch(async (error) => {
+        console.error('❌ Client-side tracking failed:', error);
+        
+        // Fallback 1: Server-side tracking via edge function
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session) throw new Error('No session');
+          
+          const response = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/track-premium-voice-session`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${session.access_token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ session_id: sessionId, minutes_used: minutesUsed })
+            }
+          );
+          
+          if (!response.ok) throw new Error('Server tracking failed');
+          console.log('✅ Session tracked via server fallback');
+        } catch (serverError) {
+          console.error('❌ Server fallback failed:', serverError);
+          
+          // Fallback 2: sendBeacon for best-effort tracking
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+              const beaconData = new Blob(
+                [JSON.stringify({ session_id: sessionId, minutes_used: minutesUsed })],
+                { type: 'application/json' }
+              );
+              
+              navigator.sendBeacon(
+                `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/track-premium-voice-session`,
+                beaconData
+              );
+              console.log('📡 Beacon sent as last resort');
+            }
+          } catch (beaconError) {
+            console.error('❌ Beacon also failed:', beaconError);
+          }
+          
+          toast({
+            title: t('error'),
+            description: 'Failed to save session. Will retry automatically.',
+            variant: "destructive",
+          });
+        }
       });
     }
     
     chatRef.current?.disconnect();
     setIsConnected(false);
     setIsSpeaking(false);
+    setSessionId(null);
     
     toast({
       title: t('sessionSaved'),

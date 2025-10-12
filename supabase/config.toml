@@ -8,3 +8,6 @@ verify_jwt = true
 
 [functions.premium-voice-realtime]
 verify_jwt = false
+
+[functions.track-premium-voice-session]
+verify_jwt = false
