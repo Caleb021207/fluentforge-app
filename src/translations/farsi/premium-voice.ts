@@ -1,0 +1,28 @@
+
+import { TranslationRecord } from "../types";
+
+const premiumVoiceTranslations: TranslationRecord = {
+  premiumVoicePractice: "تمرین صدای ممتاز",
+  practiceConversationalEnglish: "انگلیسی محاوره‌ای را با GPT-4o Realtime تمرین کنید",
+  minutesRemainingThisMonth: "{{minutes}} دقیقه باقی‌مانده در این ماه",
+  startPremiumSession: "شروع جلسه ممتاز",
+  endSession: "پایان جلسه",
+  poweredByGPT4oRealtime: "قدرت‌گرفته از GPT-4o Realtime",
+  conversation: "مکالمه",
+  you: "شما",
+  aiTutor: "معلم هوش مصنوعی",
+  minutesLeft: "{{minutes}} دقیقه باقی‌مانده",
+  connected: "متصل شد",
+  premiumVoiceReady: "تمرین صدای ممتاز آماده است. شروع به صحبت کنید!",
+  limitReached: "محدودیت رسیده",
+  monthlyLimitMessage: "شما همه {{minutes}} دقیقه این ماه را استفاده کرده‌اید. در تاریخ ۱ بازنشانی می‌شود.",
+  sessionSaved: "جلسه ذخیره شد",
+  usedMinutesMessage: "{{minutes}} دقیقه در این جلسه استفاده شد",
+  timeWarning: "هشدار زمان",
+  minutesRemainingWarning: "{{minutes}} دقیقه باقی‌مانده",
+  sessionEnded: "جلسه پایان یافت",
+  premiumSessionEndedMessage: "جلسه ممتاز ۱۵ دقیقه‌ای شما پایان یافت",
+  premiumVoiceInstructions: "این ویژگی برای مکالمات روان و پویا طراحی شده است. شما ۱۵ دقیقه تمرین در ماه دارید. فقط دکمه را فشار دهید و بگویید 'سلام، حالت چطوره؟' معلم هوش مصنوعی به شما کمک می‌کند مهارت‌های مکالمه انگلیسی را تمرین کنید. در صورت نیاز، می‌تواند به زبان مادری شما نیز کمک کند.",
+};
+
+export default premiumVoiceTranslations;

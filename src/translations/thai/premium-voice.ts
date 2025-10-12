@@ -1,0 +1,28 @@
+
+import { TranslationRecord } from "../types";
+
+const premiumVoiceTranslations: TranslationRecord = {
+  premiumVoicePractice: "การฝึกเสียงพรีเมียม",
+  practiceConversationalEnglish: "ฝึกภาษาอังกฤษสนทนากับ GPT-4o Realtime",
+  minutesRemainingThisMonth: "เหลืออีก {{minutes}} นาทีในเดือนนี้",
+  startPremiumSession: "เริ่มเซสชันพรีเมียม",
+  endSession: "จบเซสชัน",
+  poweredByGPT4oRealtime: "ขับเคลื่อนโดย GPT-4o Realtime",
+  conversation: "การสนทนา",
+  you: "คุณ",
+  aiTutor: "ติวเตอร์ AI",
+  minutesLeft: "เหลืออีก {{minutes}} นาที",
+  connected: "เชื่อมต่อแล้ว",
+  premiumVoiceReady: "การฝึกเสียงพรีเมียมพร้อมแล้ว เริ่มพูดได้เลย!",
+  limitReached: "ถึงขีดจำกัดแล้ว",
+  monthlyLimitMessage: "คุณใช้ {{minutes}} นาทีทั้งหมดของเดือนนี้แล้ว รีเซ็ตวันที่ 1",
+  sessionSaved: "บันทึกเซสชันแล้ว",
+  usedMinutesMessage: "ใช้ {{minutes}} นาทีในเซสชันนี้",
+  timeWarning: "เตือนเวลา",
+  minutesRemainingWarning: "เหลืออีก {{minutes}} นาที",
+  sessionEnded: "เซสชันสิ้นสุดแล้ว",
+  premiumSessionEndedMessage: "เซสชันพรีเมียม 15 นาทีของคุณสิ้นสุดแล้ว",
+  premiumVoiceInstructions: "ฟีเจอร์นี้ออกแบบมาสำหรับการสนทนาที่ลื่นไหลและมีพลวัต คุณมีเวลาฝึก 15 นาทีต่อเดือน เพียงกดปุ่มและพูดว่า 'สวัสดี สบายดีไหม?' ติวเตอร์ AI จะช่วยคุณฝึกทักษะการพูดภาษาอังกฤษ หากจำเป็น ระบบก็สามารถช่วยเหลือคุณในภาษาแม่ของคุณได้",
+};
+
+export default premiumVoiceTranslations;
