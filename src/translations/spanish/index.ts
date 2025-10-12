@@ -9,6 +9,7 @@ import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
 import pronunciationTranslations from "./pronunciation";
+import premiumVoiceTranslations from "./premium-voice";
 
 // Prioritize minimal translations
 const spanishTranslations: TranslationRecord = {
@@ -21,6 +22,7 @@ const spanishTranslations: TranslationRecord = {
   ...languagesTranslations,
   ...navigationTranslations,
   ...pronunciationTranslations,
+  ...premiumVoiceTranslations,
   ...minimalTranslations, // Override with minimal translations
 };
 

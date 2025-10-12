@@ -8,6 +8,7 @@ import authTranslations from "./auth";
 import languageSelectionTranslations from "./language-selection";
 import navigationTranslations from "./navigation";
 import pronunciationTranslations from "./pronunciation";
+import premiumVoiceTranslations from "./premium-voice";
 
 const russianTranslations: TranslationRecord = {
   ...generalCoreTranslations,
@@ -18,6 +19,7 @@ const russianTranslations: TranslationRecord = {
   ...languageSelectionTranslations,
   ...navigationTranslations,
   ...pronunciationTranslations,
+  ...premiumVoiceTranslations,
   ...minimalTranslations,
 };
 
