@@ -102,15 +102,28 @@ const PremiumVoicePractice = () => {
     }
 
     const minutesUsed = Math.ceil(elapsedSeconds / 60);
+    console.log('Ending premium voice conversation:', { elapsedSeconds, minutesUsed });
     
     // Track usage before disconnecting
     if (chatRef.current && minutesUsed > 0) {
       try {
         const sessionId = crypto.randomUUID();
+        console.log('Tracking premium voice session with ID:', sessionId);
         await trackPremiumVoiceSession(sessionId, minutesUsed);
+        console.log('Premium voice session tracked successfully');
       } catch (error) {
-        console.error('Error tracking session:', error);
+        console.error('Error tracking premium voice session:', error);
+        toast({
+          title: t('error'),
+          description: 'Failed to save your session usage',
+          variant: "destructive",
+        });
       }
+    } else {
+      console.log('Skipping tracking - no chat or zero minutes:', { 
+        hasChatRef: !!chatRef.current, 
+        minutesUsed 
+      });
     }
     
     chatRef.current?.disconnect();

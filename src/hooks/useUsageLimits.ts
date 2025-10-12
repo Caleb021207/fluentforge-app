@@ -308,17 +308,38 @@ export const useUsageLimits = () => {
   };
 
   const trackPremiumVoiceSession = async (sessionId: string, minutesUsed: number) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      console.log('Tracking premium voice session:', { sessionId, minutesUsed });
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error('No user found for tracking premium voice session');
+        throw new Error('User not authenticated');
+      }
 
-    await supabase.from('usage_tracking').insert({
-      student_id: user.id,
-      session_id: sessionId,
-      session_type: 'premium_voice_practice',
-      minutes_used: minutesUsed
-    });
+      const { data, error } = await supabase.from('usage_tracking').insert({
+        student_id: user.id,
+        session_id: sessionId,
+        session_type: 'premium_voice_practice',
+        minutes_used: minutesUsed
+      }).select();
 
-    await fetchUsageLimits();
+      if (error) {
+        console.error('Error inserting premium voice tracking:', error);
+        throw error;
+      }
+
+      console.log('Premium voice session tracked successfully:', data);
+      await fetchUsageLimits();
+    } catch (error) {
+      console.error('Error in trackPremiumVoiceSession:', error);
+      toast({
+        title: "Tracking Error",
+        description: "Failed to track your session usage. Please contact support if this persists.",
+        variant: "destructive"
+      });
+      throw error;
+    }
   };
 
   useEffect(() => {
