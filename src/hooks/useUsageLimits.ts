@@ -164,17 +164,20 @@ export const useUsageLimits = () => {
       await fetchUsageLimits();
 
       // Show warning if approaching limit
+      const limit = usageLimits?.voiceMinutesLimit || 100;
       const newUsed = (usageLimits?.voiceMinutesUsed || 0) + minutesUsed;
-      if (newUsed >= 350 && newUsed < 400) {
+      const warningThreshold = Math.floor(limit * 0.85); // 85% of limit
+      
+      if (newUsed >= warningThreshold && newUsed < limit) {
         toast({
           title: "Voice Usage Warning",
-          description: `You've used ${newUsed} of 400 minutes this month. Consider pacing your usage.`,
+          description: `You've used ${newUsed} of ${limit} minutes this month. Consider pacing your usage.`,
           variant: "default"
         });
-      } else if (newUsed >= 400) {
+      } else if (newUsed >= limit) {
         toast({
           title: "Monthly Limit Reached",
-          description: "You've reached your 400-minute monthly voice practice limit.",
+          description: `You've reached your ${limit}-minute monthly voice practice limit.`,
           variant: "destructive"
         });
       }

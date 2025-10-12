@@ -237,13 +237,13 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">{t("minutesRemaining") || "Minutes Remaining"}</span>
                   <span className="text-lg font-bold text-primary">
-                    {usageLimits?.voiceMinutesRemaining || 0} / {usageLimits?.voiceMinutesLimit || 400}
+                    {usageLimits?.voiceMinutesRemaining || 0} / {usageLimits?.voiceMinutesLimit || 100}
                   </span>
                 </div>
                 <div className="w-full bg-secondary rounded-full h-2">
                   <div 
                     className="bg-primary h-2 rounded-full transition-all" 
-                    style={{ width: `${((usageLimits?.voiceMinutesRemaining || 0) / (usageLimits?.voiceMinutesLimit || 400)) * 100}%` }}
+                    style={{ width: `${((usageLimits?.voiceMinutesRemaining || 0) / (usageLimits?.voiceMinutesLimit || 100)) * 100}%` }}
                   />
                 </div>
               </div>
