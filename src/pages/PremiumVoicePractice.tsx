@@ -45,8 +45,8 @@ const PremiumVoicePractice = () => {
       setTranscript(prev => [...prev, { role: 'user', text: event.transcript }]);
     } else if (event.type === 'time_warning') {
       toast({
-        title: t('premiumVoiceChat.timeWarning'),
-        description: t('premiumVoiceChat.minutesRemainingWarning', { 
+        title: t('timeWarning'),
+        description: t('minutesRemainingWarning', { 
           minutes: String(event.minutes_remaining),
           plural: event.minutes_remaining > 1 ? 's' : ''
         }),
@@ -54,8 +54,8 @@ const PremiumVoicePractice = () => {
       });
     } else if (event.type === 'time_limit_reached') {
       toast({
-        title: t('premiumVoiceChat.sessionEnded'),
-        description: t('premiumVoiceChat.premiumSessionEndedMessage'),
+        title: t('sessionEnded'),
+        description: t('premiumSessionEndedMessage'),
         variant: "default",
       });
       endConversation();
@@ -67,8 +67,8 @@ const PremiumVoicePractice = () => {
       const canStart = await checkCanStartPremiumVoiceSession() as any;
       if (!canStart?.allowed) {
         toast({
-          title: t('premiumVoiceChat.limitReached'),
-          description: t('premiumVoiceChat.monthlyLimitMessage', { minutes: String(canStart?.minutes_limit || 15) }),
+          title: t('limitReached'),
+          description: t('monthlyLimitMessage', { minutes: String(canStart?.minutes_limit || 15) }),
           variant: "destructive",
         });
         return;
@@ -84,13 +84,13 @@ const PremiumVoicePractice = () => {
       }, 1000);
       
       toast({
-        title: t('premiumVoiceChat.connected'),
-        description: t('premiumVoiceChat.premiumVoiceReady'),
+        title: t('connected'),
+        description: t('premiumVoiceReady'),
       });
     } catch (error) {
       console.error('Error starting conversation:', error);
       toast({
-        title: t('premiumVoiceChat.error'),
+        title: 'Error',
         description: error instanceof Error ? error.message : 'Failed to start conversation',
         variant: "destructive",
       });
@@ -120,8 +120,8 @@ const PremiumVoicePractice = () => {
     setIsSpeaking(false);
     
     toast({
-      title: t('premiumVoiceChat.sessionSaved'),
-      description: t('premiumVoiceChat.usedMinutesMessage', { 
+      title: t('sessionSaved'),
+      description: t('usedMinutesMessage', { 
         minutes: String(minutesUsed),
         plural: minutesUsed !== 1 ? 's' : ''
       }),
@@ -141,18 +141,18 @@ const PremiumVoicePractice = () => {
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Sparkles className="w-8 h-8 text-primary" />
-          <h1 className="text-4xl font-bold">{t('premiumVoiceChat.premiumVoicePractice')}</h1>
+          <h1 className="text-4xl font-bold">{t('premiumVoicePractice')}</h1>
         </div>
         <p className="text-muted-foreground">
-          {t('premiumVoiceChat.practiceConversationalEnglish')}
+          {t('practiceConversationalEnglish')}
         </p>
         <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
           <span className="text-sm font-medium">
-            {t('premiumVoiceChat.minutesRemainingThisMonth', { minutes: String(premiumVoiceMinutesRemaining) })}
+            {t('minutesRemainingThisMonth', { minutes: String(premiumVoiceMinutesRemaining) })}
           </span>
         </div>
         <div className="mt-4 text-sm text-muted-foreground max-w-2xl mx-auto">
-          {t('premiumVoiceChat.premiumVoiceInstructions')}
+          {t('premiumVoiceInstructions')}
         </div>
       </div>
 
@@ -164,7 +164,7 @@ const PremiumVoicePractice = () => {
                 {formatTime(elapsedSeconds)}
               </div>
               <div className="text-sm text-muted-foreground">
-                {t('premiumVoiceChat.minutesLeft', { minutes: String(minutesRemaining) })}
+                {t('minutesLeft', { minutes: String(minutesRemaining) })}
               </div>
             </div>
           )}
@@ -188,7 +188,7 @@ const PremiumVoicePractice = () => {
               size="lg"
               className="px-8"
             >
-              {t('premiumVoiceChat.startPremiumSession')}
+              {t('startPremiumSession')}
             </Button>
           ) : (
             <Button 
@@ -197,20 +197,20 @@ const PremiumVoicePractice = () => {
               variant="secondary"
               className="px-8"
             >
-              {t('premiumVoiceChat.endSession')}
+              {t('endSession')}
             </Button>
           )}
 
           <div className="text-xs text-muted-foreground flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
-            {t('premiumVoiceChat.poweredByGPT4oRealtime')}
+            {t('poweredByGPT4oRealtime')}
           </div>
         </div>
       </Card>
 
       {transcript.length > 0 && (
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">{t('premiumVoiceChat.conversation')}</h2>
+          <h2 className="text-xl font-semibold mb-4">{t('conversation')}</h2>
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {transcript.map((item, index) => (
               <div
@@ -222,7 +222,7 @@ const PremiumVoicePractice = () => {
                 }`}
               >
                 <div className="text-xs text-muted-foreground mb-1 font-medium">
-                  {item.role === 'user' ? t('premiumVoiceChat.you') : t('premiumVoiceChat.aiTutor')}
+                  {item.role === 'user' ? t('you') : t('aiTutor')}
                 </div>
                 <div className="text-sm">{item.text}</div>
               </div>
