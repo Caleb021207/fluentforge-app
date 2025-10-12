@@ -6,7 +6,7 @@ import { useUsageLimits } from '@/hooks/useUsageLimits';
 import { Clock, MessageSquare, Award } from 'lucide-react';
 
 export const UsageDashboard = () => {
-  const { usageLimits, isLoading } = useUsageLimits();
+  const { usageLimits, isLoading, premiumVoiceMinutesRemaining } = useUsageLimits();
 
   if (isLoading) {
     return (
@@ -39,6 +39,7 @@ export const UsageDashboard = () => {
   }
 
   const voiceUsagePercent = (usageLimits.voiceMinutesUsed / usageLimits.voiceMinutesLimit) * 100;
+  const premiumVoiceUsagePercent = (usageLimits.premiumVoiceMinutesUsed / usageLimits.premiumVoiceMinutesLimit) * 100;
   const certUsagePercent = (usageLimits.certificationAttemptsUsed / usageLimits.certificationAttemptsLimit) * 100;
 
   const getUsageStatus = (percent: number) => {
@@ -49,10 +50,11 @@ export const UsageDashboard = () => {
   };
 
   const voiceStatus = getUsageStatus(voiceUsagePercent);
+  const premiumVoiceStatus = getUsageStatus(premiumVoiceUsagePercent);
   const certStatus = getUsageStatus(certUsagePercent);
 
   return (
-    <div className="grid gap-4 md:grid-cols-1">
+    <div className="grid gap-4 md:grid-cols-2">
       {/* Voice Practice Usage */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -71,6 +73,29 @@ export const UsageDashboard = () => {
             <Badge variant={voiceStatus.variant}>{voiceStatus.label}</Badge>
             <span className="text-xs text-muted-foreground">
               {Math.round(voiceUsagePercent)}% used
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Premium Voice Practice Usage */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Premium Voice Practice</CardTitle>
+          <Clock className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">
+            {premiumVoiceMinutesRemaining} min
+          </div>
+          <p className="text-xs text-muted-foreground mb-2">
+            {usageLimits.premiumVoiceMinutesUsed} of {usageLimits.premiumVoiceMinutesLimit} used this month
+          </p>
+          <Progress value={premiumVoiceUsagePercent} className="h-2" />
+          <div className="flex justify-between items-center mt-2">
+            <Badge variant={premiumVoiceStatus.variant}>{premiumVoiceStatus.label}</Badge>
+            <span className="text-xs text-muted-foreground">
+              {Math.round(premiumVoiceUsagePercent)}% used
             </span>
           </div>
         </CardContent>

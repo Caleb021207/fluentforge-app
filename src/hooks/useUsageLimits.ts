@@ -6,6 +6,9 @@ interface UsageLimits {
   voiceMinutesLimit: number;
   voiceMinutesUsed: number;
   voiceMinutesRemaining: number;
+  premiumVoiceMinutesLimit: number;
+  premiumVoiceMinutesUsed: number;
+  premiumVoiceMinutesRemaining: number;
   textMessagesUsed: number;
   certificationAttemptsUsed: number;
   certificationAttemptsLimit: number;
@@ -59,32 +62,39 @@ export const useUsageLimits = () => {
           .single();
 
         if (newLimits) {
+          const premiumLimit = newLimits.premium_voice_minutes_monthly_limit || 15;
+          const premiumUsed = newLimits.premium_voice_minutes_used_current_month || 0;
           setUsageLimits({
             voiceMinutesLimit: newLimits.voice_minutes_monthly_limit,
             voiceMinutesUsed: newLimits.voice_minutes_used_current_month,
             voiceMinutesRemaining: newLimits.voice_minutes_monthly_limit - newLimits.voice_minutes_used_current_month,
+            premiumVoiceMinutesLimit: premiumLimit,
+            premiumVoiceMinutesUsed: premiumUsed,
+            premiumVoiceMinutesRemaining: premiumLimit - premiumUsed,
             textMessagesUsed: newLimits.text_messages_used_current_month,
             certificationAttemptsUsed: newLimits.certification_attempts_used_current_semester,
             certificationAttemptsLimit: newLimits.certification_attempts_semester_limit,
             isWithinTimeRestrictions: true
           });
+          setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
         }
       } else {
+        const premiumLimit = limits.premium_voice_minutes_monthly_limit || 15;
+        const premiumUsed = limits.premium_voice_minutes_used_current_month || 0;
         setUsageLimits({
           voiceMinutesLimit: limits.voice_minutes_monthly_limit,
           voiceMinutesUsed: limits.voice_minutes_used_current_month,
           voiceMinutesRemaining: limits.voice_minutes_monthly_limit - limits.voice_minutes_used_current_month,
+          premiumVoiceMinutesLimit: premiumLimit,
+          premiumVoiceMinutesUsed: premiumUsed,
+          premiumVoiceMinutesRemaining: premiumLimit - premiumUsed,
           textMessagesUsed: limits.text_messages_used_current_month,
           certificationAttemptsUsed: limits.certification_attempts_used_current_semester,
           certificationAttemptsLimit: limits.certification_attempts_semester_limit,
           isWithinTimeRestrictions: true
         });
+        setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
       }
-      
-      // Set premium voice minutes
-      const premiumLimit = limits.premium_voice_minutes_monthly_limit || 15;
-      const premiumUsed = limits.premium_voice_minutes_used_current_month || 0;
-      setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
       
     } catch (error) {
       console.error('Error in fetchUsageLimits:', error);
