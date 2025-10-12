@@ -166,13 +166,11 @@ const minimalTranslations: TranslationRecord = {
   settings: "Configuración",
   
   // Quick practice links
-  startPracticing: "Comienza a Practicar",
   choosePracticeMode: "Elige tu modo de práctica preferido",
   typeAndChat: "Escribe y chatea",
   voicePractice: "Práctica de Voz",
   speakAndListen: "Habla y escucha",
   improvePronunciation: "Mejora tu pronunciación",
-  practiceYourLanguageSkills: "Practica tus habilidades lingüísticas",
   
   // Transcript Analysis - NEW TRANSLATIONS
   progressOverview: "Progress Overview",
