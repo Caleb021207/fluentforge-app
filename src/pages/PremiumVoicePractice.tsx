@@ -8,7 +8,7 @@ import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useLocalization } from "@/context/LocalizationContext";
 
 const PremiumVoicePractice = () => {
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
   const { toast } = useToast();
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -154,11 +154,13 @@ const PremiumVoicePractice = () => {
         </div>
       </div>
 
-      <Card className="p-6 mb-4 bg-primary/5 border-primary/20">
-        <p className="text-sm text-center">
-          <strong>Supported Languages:</strong> English, Spanish, French, German, Italian, Japanese, Korean, Mandarin, Cantonese, Russian, Arabic, Hindi, Turkish, Polish
-        </p>
-      </Card>
+      {!['en', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'zh', 'yue', 'ru', 'ar', 'hi', 'tr', 'pl'].includes(currentLanguage) && t('languageSupportDisclaimer') && (
+        <Card className="p-4 mb-4 bg-yellow-500/10 border-yellow-500/20">
+          <p className="text-sm text-center text-yellow-700 dark:text-yellow-300">
+            {t('languageSupportDisclaimer')}
+          </p>
+        </Card>
+      )}
 
       <Card className="p-8 mb-6">
         <div className="flex flex-col items-center gap-6">

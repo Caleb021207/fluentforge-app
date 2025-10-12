@@ -23,6 +23,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "ناسته پای ته ورسیده",
   premiumSessionEndedMessage: "ستاسو د ۱۵ منټو پریمیم ناسته پای ته ورسیده",
   premiumVoiceInstructions: "دا ځانګړتیا د روانو، متحرکو خبرو اترو لپاره ډیزاین شوی. تاسو په میاشت کې ۱۵ منټې تمرین لرئ. یوازې تڼۍ فشار کړئ او ووایئ 'سلام، څنګه یاست؟' AI ښوونکی به تاسو سره د انګلیسي خبرو کولو مهارتونو تمرین کولو کې مرسته وکړي. که اړتیا وي، دا کولی شي ستاسو په مورنۍ ژبه کې هم مرسته وکړي.",
+  languageSupportDisclaimer: "یادونه: پښتو ممکن په مورني ژبې کچه بشپړ ملاتړ نه شي. AI په انګلیسي کې غوره کار کوي.",
 };
 
 export default premiumVoiceTranslations;

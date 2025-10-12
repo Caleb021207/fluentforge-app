@@ -23,6 +23,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Sitzung beendet",
   premiumSessionEndedMessage: "Deine 15-minütige Premium-Sitzung ist beendet",
   premiumVoiceInstructions: "Diese Funktion ist für flüssige, dynamische Gespräche konzipiert. Du erhältst 15 Minuten Übung pro Monat. Drücke einfach den Button und sag 'Hallo, wie geht's dir?' Der KI-Tutor hilft dir, deine Englisch-Sprechfähigkeiten zu üben. Falls nötig, kann er dich auch in deiner Muttersprache unterstützen.",
+  languageSupportDisclaimer: "Hinweis: Deutsch wird möglicherweise nicht vollständig auf Muttersprachler-Niveau unterstützt. Die KI funktioniert am besten auf Englisch.",
 };
 
 export default premiumVoiceTranslations;

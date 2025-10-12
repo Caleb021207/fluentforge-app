@@ -38,7 +38,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "{{minutes}} minut pozostało",
   sessionEnded: "Sesja zakończona",
   premiumSessionEndedMessage: "Twoja 15-minutowa sesja premium zakończyła się",
-  premiumVoiceInstructions: "Ta funkcja jest przeznaczona do płynnych, dynamicznych rozmów. Otrzymujesz 15 minut ćwiczeń miesięcznie. Po prostu naciśnij przycisk i powiedz 'Cześć, jak się masz?' Tutor AI pomoże ci ćwiczyć umiejętności mówienia po angielsku. W razie potrzeby może również pomóc ci w twoim ojczystym języku."
+  premiumVoiceInstructions: "Ta funkcja jest przeznaczona do płynnych, dynamicznych rozmów. Otrzymujesz 15 minut ćwiczeń miesięcznie. Po prostu naciśnij przycisk i powiedz 'Cześć, jak się masz?' Tutor AI pomoże ci ćwiczyć umiejętności mówienia po angielsku. W razie potrzeby może również pomóc ci w twoim ojczystym języku.",
+  languageSupportDisclaimer: "Uwaga: Polski może nie być w pełni obsługiwany na poziomie native speakera. AI działa najlepiej w języku angielskim.",
 };
 
 export default premiumVoiceTranslations;

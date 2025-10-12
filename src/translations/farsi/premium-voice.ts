@@ -23,6 +23,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "جلسه پایان یافت",
   premiumSessionEndedMessage: "جلسه ممتاز ۱۵ دقیقه‌ای شما پایان یافت",
   premiumVoiceInstructions: "این ویژگی برای مکالمات روان و پویا طراحی شده است. شما ۱۵ دقیقه تمرین در ماه دارید. فقط دکمه را فشار دهید و بگویید 'سلام، حالت چطوره؟' معلم هوش مصنوعی به شما کمک می‌کند مهارت‌های مکالمه انگلیسی را تمرین کنید. در صورت نیاز، می‌تواند به زبان مادری شما نیز کمک کند.",
+  languageSupportDisclaimer: "توجه: فارسی ممکن است به طور کامل در سطح زبان مادری پشتیبانی نشود. هوش مصنوعی در انگلیسی بهتر کار می‌کند.",
 };
 
 export default premiumVoiceTranslations;

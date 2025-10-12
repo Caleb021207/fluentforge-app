@@ -44,7 +44,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "Còn {{minutes}} phút",
   sessionEnded: "Phiên Đã Kết Thúc",
   premiumSessionEndedMessage: "Phiên cao cấp 15 phút của bạn đã kết thúc",
-  premiumVoiceInstructions: "Tính năng này được thiết kế cho các cuộc hội thoại trôi chảy, năng động. Bạn có 15 phút luyện tập mỗi tháng. Chỉ cần nhấn nút và nói 'Xin chào, bạn khỏe không?' Gia sư AI sẽ giúp bạn luyện tập kỹ năng nói tiếng Anh. Nếu cần, nó cũng có thể hỗ trợ bạn bằng ngôn ngữ mẹ đẻ của bạn."
+  premiumVoiceInstructions: "Tính năng này được thiết kế cho các cuộc hội thoại trôi chảy, năng động. Bạn có 15 phút luyện tập mỗi tháng. Chỉ cần nhấn nút và nói 'Xin chào, bạn khỏe không?' Gia sư AI sẽ giúp bạn luyện tập kỹ năng nói tiếng Anh. Nếu cần, nó cũng có thể hỗ trợ bạn bằng ngôn ngữ mẹ đẻ của bạn.",
+  languageSupportDisclaimer: "Lưu ý: Tiếng Việt có thể không được hỗ trợ đầy đủ ở trình độ người bản ngữ. AI hoạt động tốt nhất bằng tiếng Anh.",
 };
 
 export default premiumVoiceTranslations;

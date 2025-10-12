@@ -28,7 +28,8 @@ const premiumVoiceTranslations: TranslationRecord = {
   minutesRemainingWarning: "Ìṣẹ́jú {{minutes}} kù",
   sessionEnded: "Ìpàdé Ti Parí",
   premiumSessionEndedMessage: "Ìpàdé premium ìṣẹ́jú 15 rẹ ti parí",
-  premiumVoiceInstructions: "A ṣe àpẹẹrẹ ẹ̀rọ yìí fún àwọn ìsọ̀rọ̀ tó ń lọ láìdúró tó sì lágbára. O ní ìṣẹ́jú 15 tí o lè fi ṣe àdáṣe ní oṣooṣù. Kan tẹ bọ́tìnnì náà kí o sọ pé 'Ẹ káàárọ̀, ṣé dáadáa ni?' Olùkọ́ AI yóò ràn ọ́ lọ́wọ́ láti ṣe àkọ́kọ́ ìmọ̀ sísọ Gẹ̀ẹ́sì rẹ. Tí ó bá ṣe pàtàkì, ó lè tún ràn ọ́ lọ́wọ́ ní èdè abínibí rẹ."
+  premiumVoiceInstructions: "A ṣe àpẹẹrẹ ẹ̀rọ yìí fún àwọn ìsọ̀rọ̀ tó ń lọ láìdúró tó sì lágbára. O ní ìṣẹ́jú 15 tí o lè fi ṣe àdáṣe ní oṣooṣù. Kan tẹ bọ́tìnnì náà kí o sọ pé 'Ẹ káàárọ̀, ṣé dáadáa ni?' Olùkọ́ AI yóò ràn ọ́ lọ́wọ́ láti ṣe àkọ́kọ́ ìmọ̀ sísọ Gẹ̀ẹ́sì rẹ. Tí ó bá ṣe pàtàkì, ó lè tún ràn ọ́ lọ́wọ́ ní èdè abínibí rẹ.",
+  languageSupportDisclaimer: "Àkíyèsí: Yorùbá lè má ní àtìlẹ́yìn pípé ní ipò ẹni abínibí. AI ń ṣiṣẹ́ dáadáa jù ní Gẹ̀ẹ́sì.",
 };
 
 export default premiumVoiceTranslations;

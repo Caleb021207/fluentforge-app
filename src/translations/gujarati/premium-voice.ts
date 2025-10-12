@@ -58,6 +58,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "સત્ર સમાપ્ત",
   premiumSessionEndedMessage: "તમારું 15-મિનિટનું પ્રીમિયમ સત્ર સમાપ્ત થયું છે",
   premiumVoiceInstructions: "આ સુવિધા પ્રવાહી, ગતિશીલ વાર્તાલાપ માટે ડિઝાઇન કરવામાં આવી છે. તમને દર મહિને 15 મિનિટની પ્રેક્ટિસ મળે છે. ફક્ત બટન દબાવો અને કહો 'હેલો, તમે કેવા છો?' AI શિક્ષક તમને તમારી અંગ્રેજી બોલવાની કૌશલ્યની પ્રેક્ટિસ કરવામાં મદદ કરશે. જરૂર પડે તો, તે તમારી માતૃભાષામાં પણ તમને મદદ કરી શકે છે.",
+  languageSupportDisclaimer: "નોંધ: ગુજરાતી મૂળ ભાષાના સ્તરે સંપૂર્ણપણે સમર્થિત ન હોઈ શકે. AI અંગ્રેજીમાં શ્રેષ્ઠ કામ કરે છે.",
 };
 
 export default premiumVoiceTranslations;
