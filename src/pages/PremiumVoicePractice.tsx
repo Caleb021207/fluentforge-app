@@ -12,8 +12,8 @@ const PremiumVoicePractice = () => {
   const { toast } = useToast();
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [transcript, setTranscript] = useState<Array<{ role: string; text: string }>>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [isStarting, setIsStarting] = useState(false);
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession, trackPremiumVoiceSession } = useUsageLimits();
@@ -30,20 +30,7 @@ const PremiumVoicePractice = () => {
   const handleMessage = (event: any) => {
     console.log('Received message:', event);
     
-    if (event.type === 'response.audio_transcript.delta') {
-      setTranscript(prev => {
-        const last = prev[prev.length - 1];
-        if (last?.role === 'assistant') {
-          return [
-            ...prev.slice(0, -1),
-            { ...last, text: last.text + event.delta }
-          ];
-        }
-        return [...prev, { role: 'assistant', text: event.delta }];
-      });
-    } else if (event.type === 'conversation.item.input_audio_transcription.completed') {
-      setTranscript(prev => [...prev, { role: 'user', text: event.transcript }]);
-    } else if (event.type === 'time_warning') {
+    if (event.type === 'time_warning') {
       toast({
         title: t('timeWarning'),
         description: t('minutesRemainingWarning', { 
@@ -63,6 +50,13 @@ const PremiumVoicePractice = () => {
   };
 
   const startConversation = async () => {
+    // Prevent concurrent calls
+    if (isStarting || isConnected) {
+      console.log('Already starting or connected, ignoring request');
+      return;
+    }
+
+    setIsStarting(true);
     try {
       const canStart = await checkCanStartPremiumVoiceSession() as any;
       if (!canStart?.allowed) {
@@ -71,6 +65,7 @@ const PremiumVoicePractice = () => {
           description: t('monthlyLimitMessage', { minutes: String(canStart?.minutes_limit || 15) }),
           variant: "destructive",
         });
+        setIsStarting(false);
         return;
       }
 
@@ -94,6 +89,9 @@ const PremiumVoicePractice = () => {
         description: error instanceof Error ? error.message : 'Failed to start conversation',
         variant: "destructive",
       });
+      setIsConnected(false);
+    } finally {
+      setIsStarting(false);
     }
   };
 
@@ -187,8 +185,9 @@ const PremiumVoicePractice = () => {
               onClick={startConversation}
               size="lg"
               className="px-8"
+              disabled={isStarting}
             >
-              {t('startPremiumSession')}
+              {isStarting ? 'Connecting...' : t('startPremiumSession')}
             </Button>
           ) : (
             <Button 
@@ -207,29 +206,6 @@ const PremiumVoicePractice = () => {
           </div>
         </div>
       </Card>
-
-      {transcript.length > 0 && (
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">{t('conversation')}</h2>
-          <div className="space-y-4 max-h-96 overflow-y-auto">
-            {transcript.map((item, index) => (
-              <div
-                key={index}
-                className={`p-4 rounded-lg ${
-                  item.role === 'user'
-                    ? 'bg-primary/10 ml-8'
-                    : 'bg-secondary mr-8'
-                }`}
-              >
-                <div className="text-xs text-muted-foreground mb-1 font-medium">
-                  {item.role === 'user' ? t('you') : t('aiTutor')}
-                </div>
-                <div className="text-sm">{item.text}</div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
     </div>
   );
 };
