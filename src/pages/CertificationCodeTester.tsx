@@ -122,7 +122,7 @@ const CertificationCodeTester = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold">Certification Code System Tester</h1>
+        <h1 className="text-2xl font-bold">Certification Code System Tester</h1>
         <p className="text-muted-foreground mt-2">
           Test the end-to-end certification code verification and usage recording system
         </p>

@@ -32,7 +32,7 @@ const Progress = () => {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">{t("aiProgressAnalysis")}</h1>
+        <h1 className="text-2xl font-bold mb-2">{t("aiProgressAnalysis")}</h1>
         <p className="text-muted-foreground">
           {t("uploadLanguageTestTranscripts")}
         </p>
@@ -44,7 +44,7 @@ const Progress = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">{t("totalAnalyses")}</p>
-                <p className="text-2xl font-bold">3</p>
+                <p className="text-xl font-bold">3</p>
               </div>
               <BarChart3 className="h-8 w-8 text-primary" />
             </div>
@@ -56,7 +56,7 @@ const Progress = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">{t("currentLevel")}</p>
-                <p className="text-2xl font-bold">B2</p>
+                <p className="text-xl font-bold">B2</p>
               </div>
               <TrendingUp className="h-8 w-8 text-primary" />
             </div>
@@ -68,7 +68,7 @@ const Progress = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">{t("latestScore")}</p>
-                <p className="text-2xl font-bold">57%</p>
+                <p className="text-xl font-bold">57%</p>
               </div>
               <FileText className="h-8 w-8 text-primary" />
             </div>

@@ -80,9 +80,9 @@ const ExampleDataPage = () => {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6">Example Data Generator</h1>
+        <h1 className="text-2xl font-bold mb-4">Example Data Generator</h1>
         
-        <div className="mb-6">
+        <div className="mb-4">
           <p className="text-gray-700 mb-4">
             This tool adds example data for the Example@gmail.com profile, which will populate:
           </p>

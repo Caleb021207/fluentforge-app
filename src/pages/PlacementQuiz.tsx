@@ -108,7 +108,7 @@ const PlacementQuiz = () => {
         >
           <Card className="bg-white shadow-lg">
             <CardHeader className="bg-gradient-to-r from-lingua-primary to-lingua-secondary text-white rounded-t-lg">
-              <CardTitle className="text-3xl font-bold">Language Placement Quiz</CardTitle>
+              <CardTitle className="text-2xl font-bold">Language Placement Quiz</CardTitle>
               <CardDescription className="text-white opacity-90">
                 Discover your current language proficiency level
               </CardDescription>
@@ -170,7 +170,7 @@ const PlacementQuiz = () => {
           className="space-y-6"
         >
           <div className="space-y-4">
-            <h1 className="text-2xl font-bold text-lingua-text">Placement Quiz</h1>
+            <h1 className="text-xl font-bold text-lingua-text">Placement Quiz</h1>
             <Progress value={progress} className="h-2" />
             <p className="text-sm text-gray-600">
               Question {currentQuestionIndex + 1} of {quizQuestions.length}
@@ -209,7 +209,7 @@ const PlacementQuiz = () => {
         >
           <Card className="bg-white shadow-lg">
             <CardHeader className="bg-gradient-to-r from-lingua-primary to-lingua-secondary text-white rounded-t-lg">
-              <CardTitle className="text-3xl font-bold">Your Results</CardTitle>
+              <CardTitle className="text-2xl font-bold">Your Results</CardTitle>
               <CardDescription className="text-white opacity-90">
                 Based on your answers to the placement quiz
               </CardDescription>
@@ -220,7 +220,7 @@ const PlacementQuiz = () => {
                   <div className="flex items-center justify-center w-24 h-24 rounded-full bg-lingua-primary text-white text-4xl font-bold mb-4">
                     {recommendedLevel}
                   </div>
-                  <h2 className="text-2xl font-bold mb-2">Your level: {recommendedLevel}</h2>
+                  <h2 className="text-xl font-bold mb-2">Your level: {recommendedLevel}</h2>
                   <p className="text-center text-gray-600 max-w-md">{levelDescription}</p>
                 </div>
                 

@@ -68,9 +68,9 @@ const TranscriptAnalysis = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2 flex items-center gap-2 text-foreground">
-          <Brain className="h-8 w-8 text-blue-600" />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-2 flex items-center gap-2 text-foreground">
+          <Brain className="h-6 w-6 text-primary" />
           AI Progress Analysis
         </h1>
         <p className="text-muted-foreground">
@@ -80,38 +80,38 @@ const TranscriptAnalysis = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
               <FileText className="h-5 w-5" />
               Total Analyses
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyses?.length || 0}</div>
+            <div className="text-xl font-bold">{analyses?.length || 0}</div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
               Current Level
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{latestAnalysis?.cefr_level || 'N/A'}</div>
+            <div className="text-xl font-bold">{latestAnalysis?.cefr_level || 'N/A'}</div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
               <Target className="h-5 w-5" />
               Latest Score
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-xl font-bold">
               {latestAnalysis?.overall_score ? `${latestAnalysis.overall_score}%` : 'N/A'}
             </div>
           </CardContent>
