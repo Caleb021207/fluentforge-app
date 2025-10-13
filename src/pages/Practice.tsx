@@ -147,25 +147,24 @@ const Practice = () => {
     <div className="max-w-4xl mx-auto p-4">
       <PracticeHeader targetLanguage={targetLanguage} />
       
-      <Card className="mb-8">
-        <CardContent className="p-6 space-y-6">
+      <Card className="mb-6">
+        <CardContent className="p-4 space-y-4">
           {/* Grammar Correction Toggle */}
           <div className="flex items-center justify-between">
-            <Label htmlFor="grammar-correction" className="text-lg md:text-xl font-medium">
+            <Label htmlFor="grammar-correction" className="text-base font-medium">
               {t("correctGrammar") || "Grammar Correction"}
             </Label>
             <Switch
               id="grammar-correction"
               checked={correctGrammar}
               onCheckedChange={toggleGrammarCorrection}
-              className="scale-125"
             />
           </div>
         </CardContent>
       </Card>
       
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex space-x-4 items-center">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex space-x-3 items-center">
           <PracticePromptButton
             onClick={sendLanguageLearningPrompt}
             isLoading={chatLoading}
@@ -176,9 +175,9 @@ const Practice = () => {
         <Button 
           variant="outline" 
           onClick={clearConversation}
-          className="flex items-center gap-3 text-lg md:text-xl px-6 py-4 h-auto"
+          className="flex items-center gap-2"
         >
-          <Trash className="h-6 w-6" />
+          <Trash className="h-4 w-4" />
           {t("clearConversation")}
         </Button>
       </div>

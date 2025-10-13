@@ -170,27 +170,26 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
     <div className="max-w-4xl mx-auto p-4">
       <VoiceChatHeader />
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
         {/* Conversation Settings Card */}
         <Card>
-          <CardContent className="p-8 space-y-8">
+          <CardContent className="p-4 space-y-4">
             {/* Grammar Correction Toggle */}
             <div className="flex items-center justify-between">
-              <Label htmlFor="grammar-correction" className="text-lg md:text-xl font-medium">
+              <Label htmlFor="grammar-correction" className="text-base font-medium">
                 {t("correctGrammar") || "Grammar Correction"}
               </Label>
               <Switch
                 id="grammar-correction"
                 checked={correctGrammar}
                 onCheckedChange={toggleGrammarCorrection}
-                className="scale-125"
               />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="p-10">
-          <div className="flex justify-center mb-8">
+        <Card className="p-6">
+          <div className="flex justify-center mb-6">
             <VoiceRecognitionControls
               isListening={isListening}
               isLoading={isLoading}
