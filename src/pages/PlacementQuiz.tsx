@@ -100,7 +100,7 @@ const PlacementQuiz = () => {
 
   if (quizState === "intro") {
     return (
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -160,7 +160,7 @@ const PlacementQuiz = () => {
 
   if (quizState === "quiz" && quizQuestions.length > 0) {
     return (
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-4">
         <motion.div
           key={currentQuestionIndex}
           initial={{ opacity: 0, x: 20 }}
@@ -201,7 +201,7 @@ const PlacementQuiz = () => {
     const startingLevelDescription = getLevelDescription(startingLevel);
     
     return (
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -252,7 +252,7 @@ const PlacementQuiz = () => {
 
   // Loading state
   return (
-    <div className="max-w-3xl mx-auto p-6 flex justify-center items-center min-h-[50vh]">
+    <div className="max-w-4xl mx-auto p-4 flex justify-center items-center min-h-[50vh]">
       <p>Loading quiz questions...</p>
     </div>
   );
