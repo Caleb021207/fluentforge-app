@@ -16,6 +16,7 @@ const PremiumVoicePractice = () => {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [provider, setProvider] = useState<'gpt' | 'gemini'>('gpt');
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession, trackPremiumVoiceSession } = useUsageLimits();
@@ -51,7 +52,7 @@ const PremiumVoicePractice = () => {
     }
   };
 
-  const startConversation = async () => {
+  const startConversation = async (selectedProvider: 'gpt' | 'gemini') => {
     // Prevent concurrent calls
     if (isStarting || isConnected) {
       console.log('Already starting or connected, ignoring request');
@@ -59,6 +60,7 @@ const PremiumVoicePractice = () => {
     }
 
     setIsStarting(true);
+    setProvider(selectedProvider);
     try {
       const canStart = await checkCanStartPremiumVoiceSession() as any;
       if (!canStart?.allowed) {
@@ -71,7 +73,7 @@ const PremiumVoicePractice = () => {
         return;
       }
 
-      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking);
+      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking, selectedProvider);
       await chatRef.current.init();
       
       // Generate and store session ID
@@ -217,54 +219,114 @@ const PremiumVoicePractice = () => {
         </Card>
       )}
 
-      <Card className="p-6 mb-6">
-        <div className="flex flex-col items-center gap-6">
-          {isConnected && (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <div className="flex flex-col items-center gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">
-                {formatTime(elapsedSeconds)}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {t('minutesLeft', { minutes: String(minutesRemaining) })}
-              </div>
+              <h3 className="text-lg font-semibold mb-2">GPT-4o Realtime</h3>
+              <p className="text-sm text-muted-foreground">OpenAI's latest voice model</p>
             </div>
-          )}
 
-          <div className={`relative ${isSpeaking ? 'animate-pulse' : ''}`}>
-            <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
-              {isConnected ? (
-                <MicOff className="w-12 h-12 text-primary" />
-              ) : (
-                <Mic className="w-12 h-12 text-primary" />
+            {isConnected && provider === 'gpt' && (
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary mb-2">
+                  {formatTime(elapsedSeconds)}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t('minutesLeft', { minutes: String(minutesRemaining) })}
+                </div>
+              </div>
+            )}
+
+            <div className={`relative ${isSpeaking && provider === 'gpt' ? 'animate-pulse' : ''}`}>
+              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
+                {isConnected && provider === 'gpt' ? (
+                  <MicOff className="w-12 h-12 text-primary" />
+                ) : (
+                  <Mic className="w-12 h-12 text-primary" />
+                )}
+              </div>
+              {isSpeaking && provider === 'gpt' && (
+                <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
               )}
             </div>
-            {isSpeaking && (
-              <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+
+            {!isConnected || provider !== 'gpt' ? (
+              <Button 
+                onClick={() => startConversation('gpt')}
+                size="lg"
+                className="px-8"
+                disabled={isStarting || (isConnected && provider !== 'gpt')}
+              >
+                {isStarting && provider === 'gpt' ? 'Connecting...' : 'Start GPT Session'}
+              </Button>
+            ) : (
+              <Button 
+                onClick={endConversation}
+                size="lg"
+                variant="secondary"
+                className="px-8"
+              >
+                {t('endSession')}
+              </Button>
             )}
           </div>
+        </Card>
 
-          {!isConnected ? (
-            <Button 
-              onClick={startConversation}
-              size="lg"
-              className="px-8"
-              disabled={isStarting}
-            >
-              {isStarting ? 'Connecting...' : t('startPremiumSession')}
-            </Button>
-          ) : (
-            <Button 
-              onClick={endConversation}
-              size="lg"
-              variant="secondary"
-              className="px-8"
-            >
-              {t('endSession')}
-            </Button>
-          )}
+        <Card className="p-6 border-2 border-primary/30">
+          <div className="flex flex-col items-center gap-6">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold mb-2">Gemini 2.0 Flash</h3>
+              <p className="text-sm text-muted-foreground">Google's experimental voice model</p>
+              <span className="inline-block mt-2 px-2 py-1 bg-primary/10 text-primary text-xs rounded">TESTING</span>
+            </div>
 
-        </div>
-      </Card>
+            {isConnected && provider === 'gemini' && (
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary mb-2">
+                  {formatTime(elapsedSeconds)}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t('minutesLeft', { minutes: String(minutesRemaining) })}
+                </div>
+              </div>
+            )}
+
+            <div className={`relative ${isSpeaking && provider === 'gemini' ? 'animate-pulse' : ''}`}>
+              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
+                {isConnected && provider === 'gemini' ? (
+                  <MicOff className="w-12 h-12 text-primary" />
+                ) : (
+                  <Mic className="w-12 h-12 text-primary" />
+                )}
+              </div>
+              {isSpeaking && provider === 'gemini' && (
+                <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+              )}
+            </div>
+
+            {!isConnected || provider !== 'gemini' ? (
+              <Button 
+                onClick={() => startConversation('gemini')}
+                size="lg"
+                className="px-8"
+                disabled={isStarting || (isConnected && provider !== 'gemini')}
+              >
+                {isStarting && provider === 'gemini' ? 'Connecting...' : 'Start Gemini Session'}
+              </Button>
+            ) : (
+              <Button 
+                onClick={endConversation}
+                size="lg"
+                variant="secondary"
+                className="px-8"
+              >
+                {t('endSession')}
+              </Button>
+            )}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };
