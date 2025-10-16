@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.track-premium-voice-session]
 verify_jwt = false
+
+[functions.custom-realtime-conversation]
+verify_jwt = false
+
+[functions.gemini-voice-realtime]
+verify_jwt = false
