@@ -123,36 +123,71 @@ Encourage the learner and gently correct major mistakes.`;
     const aiResponse = gptData.choices[0].message.content;
     console.log(`AI Response: "${aiResponse}"`);
 
-    // Step 3: Synthesize speech with OpenAI TTS
-    console.log('Step 3: Synthesizing speech with OpenAI TTS...');
+    // Step 3: Synthesize speech with Azure TTS
+    console.log('Step 3: Synthesizing speech with Azure TTS...');
     
-    // Use alloy voice for all languages (it's multilingual)
-    const voice = 'alloy';
-    console.log(`Using OpenAI TTS voice: ${voice}`);
+    const azureSpeechKey = Deno.env.get('AZURE_SPEECH_KEY');
+    const azureRegion = Deno.env.get('AZURE_REGION') || 'eastus';
+    
+    if (!azureSpeechKey) {
+      throw new Error('Azure Speech key not configured');
+    }
 
-    const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'tts-1',
-        voice: voice,
-        input: aiResponse,
-        speed: 1.0,
-      }),
-    });
+    // Map languages to Azure voices
+    const azureVoiceMap: Record<string, string> = {
+      'es': 'es-ES-ElviraNeural',
+      'en': 'en-US-AriaNeural',
+      'pt': 'pt-BR-FranciscaNeural',
+      'fr': 'fr-FR-DeniseNeural',
+      'de': 'de-DE-KatjaNeural',
+      'it': 'it-IT-ElsaNeural',
+      'ja': 'ja-JP-NanamiNeural',
+      'ko': 'ko-KR-SunHiNeural',
+      'zh': 'zh-CN-XiaoxiaoNeural',
+      'ru': 'ru-RU-SvetlanaNeural',
+      'ar': 'ar-SA-ZariyahNeural',
+      'hi': 'hi-IN-SwaraNeural',
+    };
 
-    if (!ttsResponse.ok) {
-      const errorText = await ttsResponse.text();
-      console.error('OpenAI TTS error:', errorText);
-      throw new Error(`TTS generation failed: ${errorText}`);
+    const azureVoice = azureVoiceMap[whisperLanguageCode] || 'en-US-AriaNeural';
+    console.log(`Using Azure TTS voice: ${azureVoice}`);
+
+    // Create SSML for Azure
+    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${whisperLanguageCode}'>
+      <voice name='${azureVoice}'>${aiResponse}</voice>
+    </speak>`;
+
+    const azureTtsResponse = await fetch(
+      `https://${azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`,
+      {
+        method: 'POST',
+        headers: {
+          'Ocp-Apim-Subscription-Key': azureSpeechKey,
+          'Content-Type': 'application/ssml+xml',
+          'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',
+        },
+        body: ssml,
+      }
+    );
+
+    if (!azureTtsResponse.ok) {
+      const errorText = await azureTtsResponse.text();
+      console.error('Azure TTS error:', errorText);
+      throw new Error(`Azure TTS failed: ${errorText}`);
     }
 
     // Convert audio to base64
-    const audioArrayBuffer = await ttsResponse.arrayBuffer();
-    const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(audioArrayBuffer)));
+    const audioArrayBuffer = await azureTtsResponse.arrayBuffer();
+    const bytes = new Uint8Array(audioArrayBuffer);
+    let binary = '';
+    const chunkSize = 0x8000;
+    
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.subarray(i, Math.min(i + chunkSize, bytes.length));
+      binary += String.fromCharCode.apply(null, Array.from(chunk));
+    }
+    
+    const audioBase64 = btoa(binary);
 
     console.log('Successfully generated response with audio');
 

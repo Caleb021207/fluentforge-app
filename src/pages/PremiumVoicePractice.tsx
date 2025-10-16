@@ -329,7 +329,7 @@ const PremiumVoicePractice = () => {
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="p-6">
           <div className="flex flex-col items-center gap-6">
             <div className="text-center">
@@ -383,65 +383,11 @@ const PremiumVoicePractice = () => {
           </div>
         </Card>
 
-        <Card className="p-6 border-2 border-primary/30">
-          <div className="flex flex-col items-center gap-6">
-            <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Gemini 2.0 Flash</h3>
-              <p className="text-sm text-muted-foreground">Google's experimental voice model</p>
-              <span className="inline-block mt-2 px-2 py-1 bg-primary/10 text-primary text-xs rounded">TESTING</span>
-            </div>
-
-            {isConnected && provider === 'gemini' && (
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {formatTime(elapsedSeconds)}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {t('minutesLeft', { minutes: String(minutesRemaining) })}
-                </div>
-              </div>
-            )}
-
-            <div className={`relative ${isSpeaking && provider === 'gemini' ? 'animate-pulse' : ''}`}>
-              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
-                {isConnected && provider === 'gemini' ? (
-                  <MicOff className="w-12 h-12 text-primary" />
-                ) : (
-                  <Mic className="w-12 h-12 text-primary" />
-                )}
-              </div>
-              {isSpeaking && provider === 'gemini' && (
-                <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
-              )}
-            </div>
-
-            {!isConnected || provider !== 'gemini' ? (
-              <Button 
-                onClick={() => startConversation('gemini')}
-                size="lg"
-                className="px-8"
-                disabled={isStarting || (isConnected && provider !== 'gemini')}
-              >
-                {isStarting && provider === 'gemini' ? 'Connecting...' : 'Start Gemini Session'}
-              </Button>
-            ) : (
-              <Button 
-                onClick={endConversation}
-                size="lg"
-                variant="secondary"
-                className="px-8"
-              >
-                {t('endSession')}
-              </Button>
-            )}
-          </div>
-        </Card>
-
         <Card className="p-6 border-2 border-blue-500/30">
           <div className="flex flex-col items-center gap-6">
             <div className="text-center">
               <h3 className="text-lg font-semibold mb-2">Custom Realtime AI</h3>
-              <p className="text-sm text-muted-foreground">Whisper + GPT-4o-mini + Polly</p>
+              <p className="text-sm text-muted-foreground">Whisper + GPT-4o-mini + Azure</p>
               <span className="inline-block mt-2 px-2 py-1 bg-blue-500/10 text-blue-500 text-xs rounded">FALLBACK</span>
             </div>
 
