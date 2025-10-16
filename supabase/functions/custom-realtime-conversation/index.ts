@@ -37,6 +37,25 @@ serve(async (req) => {
 
     console.log(`Custom realtime request - Target: ${targetLanguage}, User: ${userLanguage}`);
 
+    // Map language names to Whisper language codes
+    const languageCodeMap: Record<string, string> = {
+      'spanish': 'es',
+      'english': 'en',
+      'portuguese': 'pt',
+      'french': 'fr',
+      'german': 'de',
+      'italian': 'it',
+      'japanese': 'ja',
+      'korean': 'ko',
+      'mandarin': 'zh',
+      'russian': 'ru',
+      'arabic': 'ar',
+      'hindi': 'hi',
+    };
+
+    const whisperLanguageCode = languageCodeMap[targetLanguage.toLowerCase()] || 'en';
+    console.log(`Using Whisper language code: ${whisperLanguageCode} for ${targetLanguage}`);
+
     // Step 1: Transcribe audio using Whisper
     console.log('Step 1: Transcribing audio with Whisper...');
     const transcribeResponse = await fetch(
@@ -49,7 +68,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({ 
           audio,
-          language: targetLanguage === 'english' ? 'en' : targetLanguage.substring(0, 2)
+          language: whisperLanguageCode
         }),
       }
     );
