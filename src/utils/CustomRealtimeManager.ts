@@ -23,9 +23,11 @@ export class CustomRealtimeManager {
   private conversationHistory: ConversationMessage[] = [];
   private onStateChange: (state: ConversationState) => void;
   private onMessage: (message: { role: string; content: string }) => void;
+  private onError: (error: string) => void;
   private targetLanguage: string;
   private userLanguage: string;
   private stream: MediaStream | null = null;
+  private isSessionActive: boolean = false;
   
   // VAD settings
   private readonly SILENCE_THRESHOLD = 0.01;
@@ -37,12 +39,14 @@ export class CustomRealtimeManager {
     targetLanguage: string,
     userLanguage: string,
     onStateChange: (state: ConversationState) => void,
-    onMessage: (message: { role: string; content: string }) => void
+    onMessage: (message: { role: string; content: string }) => void,
+    onError: (error: string) => void
   ) {
     this.targetLanguage = targetLanguage;
     this.userLanguage = userLanguage;
     this.onStateChange = onStateChange;
     this.onMessage = onMessage;
+    this.onError = onError;
   }
 
   async initialize(): Promise<void> {
@@ -59,16 +63,23 @@ export class CustomRealtimeManager {
       });
 
       this.audioContext = new AudioContext({ sampleRate: 24000 });
+      this.isSessionActive = true;
       console.log('CustomRealtimeManager initialized');
     } catch (error) {
       console.error('Failed to initialize audio:', error);
+      this.onError('Microphone access denied or unavailable');
       throw new Error('Microphone access denied or unavailable');
     }
   }
 
   async startListening(): Promise<void> {
-    if (this.state !== 'idle' || !this.stream) {
-      console.warn('Cannot start listening in current state:', this.state);
+    if (!this.isSessionActive || !this.stream) {
+      console.warn('Cannot start listening - session not active or no stream');
+      return;
+    }
+    
+    if (this.state === 'listening') {
+      console.warn('Already listening');
       return;
     }
 
@@ -167,7 +178,11 @@ export class CustomRealtimeManager {
   private async processRecording(): Promise<void> {
     if (this.audioChunks.length === 0) {
       console.warn('No audio chunks to process');
-      this.setState('idle');
+      if (this.isSessionActive) {
+        await this.startListening();
+      } else {
+        this.setState('idle');
+      }
       return;
     }
 
@@ -200,7 +215,16 @@ export class CustomRealtimeManager {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Backend error:', error);
+        this.onError('Failed to process audio. Please try again.');
+        if (this.isSessionActive) {
+          await this.startListening();
+        } else {
+          this.setState('idle');
+        }
+        return;
+      }
 
       const response = data as CustomRealtimeResponse;
       
@@ -219,8 +243,12 @@ export class CustomRealtimeManager {
 
     } catch (error) {
       console.error('Error processing recording:', error);
-      this.setState('idle');
-      throw error;
+      this.onError(error instanceof Error ? error.message : 'Unknown error occurred');
+      if (this.isSessionActive) {
+        await this.startListening();
+      } else {
+        this.setState('idle');
+      }
     }
   }
 
@@ -254,13 +282,22 @@ export class CustomRealtimeManager {
 
       console.log('Audio playback completed');
       
-      // Return to idle state after speaking
-      this.setState('idle');
+      // Auto-continue: start listening again if session is active
+      if (this.isSessionActive) {
+        console.log('Auto-continuing conversation...');
+        await this.startListening();
+      } else {
+        this.setState('idle');
+      }
 
     } catch (error) {
       console.error('Error playing audio:', error);
-      this.setState('idle');
-      throw error;
+      this.onError('Failed to play audio');
+      if (this.isSessionActive) {
+        await this.startListening();
+      } else {
+        this.setState('idle');
+      }
     }
   }
 
@@ -275,6 +312,7 @@ export class CustomRealtimeManager {
   }
 
   disconnect(): void {
+    this.isSessionActive = false;
     this.stopListening();
     
     if (this.stream) {

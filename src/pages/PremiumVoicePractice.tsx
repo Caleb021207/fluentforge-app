@@ -133,6 +133,13 @@ const PremiumVoicePractice = () => {
         (state) => setCustomState(state),
         (message) => {
           setCustomMessages(prev => [...prev, message]);
+        },
+        (error) => {
+          toast({
+            title: t("error"),
+            description: error,
+            variant: "destructive",
+          });
         }
       );
 

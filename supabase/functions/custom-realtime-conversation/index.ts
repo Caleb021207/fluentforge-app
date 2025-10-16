@@ -1,6 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { PollyClient, SynthesizeSpeechCommand } from "npm:@aws-sdk/client-polly@3.470.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -124,56 +123,36 @@ Encourage the learner and gently correct major mistakes.`;
     const aiResponse = gptData.choices[0].message.content;
     console.log(`AI Response: "${aiResponse}"`);
 
-    // Step 3: Synthesize speech with Amazon Polly
-    console.log('Step 3: Synthesizing speech with Amazon Polly...');
-    const pollyClient = new PollyClient({
-      region: Deno.env.get('AWS_REGION') || 'us-east-1',
-      credentials: {
-        accessKeyId: Deno.env.get('AWS_ACCESS_KEY_ID')!,
-        secretAccessKey: Deno.env.get('AWS_SECRET_ACCESS_KEY')!,
+    // Step 3: Synthesize speech with OpenAI TTS
+    console.log('Step 3: Synthesizing speech with OpenAI TTS...');
+    
+    // Use alloy voice for all languages (it's multilingual)
+    const voice = 'alloy';
+    console.log(`Using OpenAI TTS voice: ${voice}`);
+
+    const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        model: 'tts-1',
+        voice: voice,
+        input: aiResponse,
+        speed: 1.0,
+      }),
     });
 
-    const voiceId = VOICE_MAP[targetLanguage.toLowerCase()] || 'Joanna';
-    console.log(`Using Polly voice: ${voiceId}`);
-
-    const command = new SynthesizeSpeechCommand({
-      Text: aiResponse,
-      OutputFormat: 'mp3',
-      VoiceId: voiceId,
-      Engine: 'neural',
-    });
-
-    const pollyResponse = await pollyClient.send(command);
-    
-    if (!pollyResponse.AudioStream) {
-      throw new Error('No audio stream received from Polly');
+    if (!ttsResponse.ok) {
+      const errorText = await ttsResponse.text();
+      console.error('OpenAI TTS error:', errorText);
+      throw new Error(`TTS generation failed: ${errorText}`);
     }
 
-    // Convert audio stream to base64
-    const chunks: Uint8Array[] = [];
-    for await (const chunk of pollyResponse.AudioStream) {
-      chunks.push(chunk);
-    }
-    
-    const audioBuffer = new Uint8Array(
-      chunks.reduce((acc, chunk) => acc + chunk.length, 0)
-    );
-    let offset = 0;
-    for (const chunk of chunks) {
-      audioBuffer.set(chunk, offset);
-      offset += chunk.length;
-    }
-
-    // Convert to base64
-    let binary = '';
-    const chunkSize = 0x8000;
-    for (let i = 0; i < audioBuffer.length; i += chunkSize) {
-      const chunkEnd = Math.min(i + chunkSize, audioBuffer.length);
-      const chunkArray = audioBuffer.subarray(i, chunkEnd);
-      binary += String.fromCharCode.apply(null, Array.from(chunkArray));
-    }
-    const audioBase64 = btoa(binary);
+    // Convert audio to base64
+    const audioArrayBuffer = await ttsResponse.arrayBuffer();
+    const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(audioArrayBuffer)));
 
     console.log('Successfully generated response with audio');
 
