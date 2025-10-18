@@ -102,15 +102,22 @@ BILINGUAL CONVERSATION APPROACH:
 - Mix languages naturally to facilitate understanding and learning
 - Keep responses to 2-3 sentences
 
-EXAMPLES OF NATURAL BILINGUAL SUPPORT:
-- User: "What does 'grocery store' mean?" → "A grocery store es donde compras comida - where you buy food. It's like a supermarket."
-- User: "I don't understand 'weather'" → "'Weather' significa el clima - if it's sunny, rainy, hot, or cold outside."
-- User speaks in ${userLanguage} → Respond in ${userLanguage}, then optionally continue in English
+CRITICAL FORMATTING REQUIREMENT:
+You MUST wrap each language segment in tags for proper pronunciation:
+- Wrap English text in [EN]...[/EN]
+- Wrap ${userLanguage} text in [${languageCodeMap[userLanguage.toLowerCase()] || 'native'}]...[/${languageCodeMap[userLanguage.toLowerCase()] || 'native'}]
+- Always use these tags, even for single-language responses
+
+EXAMPLES:
+- "[EN]A grocery store[/EN] [es]es donde compras comida[/es] [EN]- where you buy food.[/EN]"
+- "[EN]Weather[/EN] [es]significa el clima[/es] [EN]- if it's sunny, rainy, or cold.[/EN]"
+- "[es]Claro, puedo ayudarte con eso.[/es]"
+- "[EN]That's great! How was your day?[/EN]"
 
 GRAMMAR HELP:
 - Naturally rephrase if user makes major mistakes
 - Don't constantly correct - prioritize flow and confidence
-- Example: User: "I go yesterday store" → "Oh, you went to the store yesterday? That's great!"
+- Example: User: "I go yesterday store" → "[EN]Oh, you went to the store yesterday? That's great![/EN]"
 
 Your goal: Help users learn English through natural, supportive bilingual conversation.`;
 
@@ -168,39 +175,86 @@ Your goal: Help users learn English through natural, supportive bilingual conver
       'ru': 'ru-RU-SvetlanaNeural',
       'ar': 'ar-SA-ZariyahNeural',
       'hi': 'hi-IN-SwaraNeural',
+      'ur': 'ur-PK-UzmaNeural',
+      'bn': 'bn-IN-TanishaaNeural',
+      'gu': 'gu-IN-DhwaniNeural',
+      'pa': 'pa-IN-GurpreetNeural',
+      'ne': 'ne-NP-HemkalaNeural',
+      'th': 'th-TH-PremwadeeNeural',
     };
 
-    // Detect language of AI response and select appropriate voice
-    const detectLanguage = (text: string): string => {
-      // Check for non-Latin scripts
-      if (/[\u0600-\u06FF]/.test(text)) return 'ar'; // Arabic/Farsi/Urdu
-      if (/[\u0900-\u097F]/.test(text)) return 'hi'; // Hindi
-      if (/[\u0980-\u09FF]/.test(text)) return 'bn'; // Bengali
-      if (/[\u4E00-\u9FFF]/.test(text)) return 'zh'; // Chinese
-      if (/[\u0A80-\u0AFF]/.test(text)) return 'gu'; // Gujarati
-      if (/[\u0A00-\u0A7F]/.test(text)) return 'pa'; // Punjabi
-      if (/[\u0900-\u097F]/.test(text)) return 'ne'; // Nepali (Devanagari)
-      if (/[\u0E00-\u0E7F]/.test(text)) return 'th'; // Thai
-      
-      // For Latin-script languages, use simple keyword detection
-      const lowerText = text.toLowerCase();
-      if (/\b(el|la|los|las|un|una|es|son|está|están|de|del|por|para|con|sin|muy|más|pero|porque|cuando|donde|quién|qué|cómo)\b/.test(lowerText)) return 'es';
-      if (/\b(o|a|os|as|um|uma|é|são|está|estão|de|do|da|por|para|com|sem|muito|mais|mas|porque|quando|onde|quem|que|como)\b/.test(lowerText)) return 'pt';
-      if (/\b(le|la|les|un|une|est|sont|de|du|par|pour|avec|sans|très|plus|mais|parce|quand|où|qui|que|comment)\b/.test(lowerText)) return 'fr';
-      if (/\b(der|die|das|ein|eine|ist|sind|von|für|mit|ohne|sehr|mehr|aber|weil|wenn|wo|wer|was|wie)\b/.test(lowerText)) return 'de';
-      if (/\b(il|lo|la|un|una|è|sono|di|per|con|senza|molto|più|ma|perché|quando|dove|chi|che|come)\b/.test(lowerText)) return 'it';
-      
-      return 'en'; // Default to English
+    // Map language codes to full locale codes for SSML
+    const localeMap: Record<string, string> = {
+      'es': 'es-ES',
+      'en': 'en-US',
+      'pt': 'pt-BR',
+      'fr': 'fr-FR',
+      'de': 'de-DE',
+      'it': 'it-IT',
+      'ja': 'ja-JP',
+      'ko': 'ko-KR',
+      'zh': 'zh-CN',
+      'ru': 'ru-RU',
+      'ar': 'ar-SA',
+      'hi': 'hi-IN',
+      'ur': 'ur-PK',
+      'bn': 'bn-IN',
+      'gu': 'gu-IN',
+      'pa': 'pa-IN',
+      'ne': 'ne-NP',
+      'th': 'th-TH',
     };
 
-    const detectedLang = detectLanguage(aiResponse);
-    const azureVoice = azureVoiceMap[detectedLang] || 'en-US-AriaNeural';
-    console.log(`Detected language: ${detectedLang}, using Azure voice: ${azureVoice}`);
+    // Parse language tags from AI response
+    const parseLanguageTags = (text: string): Array<{ lang: string; text: string }> => {
+      const segments: Array<{ lang: string; text: string }> = [];
+      const tagPattern = /\[([a-z]{2})\](.*?)\[\/\1\]/gs;
+      let lastIndex = 0;
+      let match;
 
-    // Create SSML for Azure with detected language
-    const langCode = detectedLang === 'zh' ? 'zh-CN' : detectedLang === 'ar' ? 'ar-SA' : detectedLang === 'pt' ? 'pt-BR' : detectedLang === 'hi' ? 'hi-IN' : detectedLang === 'bn' ? 'bn-IN' : detectedLang === 'gu' ? 'gu-IN' : detectedLang === 'pa' ? 'pa-IN' : detectedLang === 'ne' ? 'ne-NP' : detectedLang === 'th' ? 'th-TH' : detectedLang;
-    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${langCode}'>
-      <voice name='${azureVoice}'>${aiResponse}</voice>
+      while ((match = tagPattern.exec(text)) !== null) {
+        // Add any untagged text before this match as English (default)
+        if (match.index > lastIndex) {
+          const untaggedText = text.slice(lastIndex, match.index).trim();
+          if (untaggedText) {
+            segments.push({ lang: 'en', text: untaggedText });
+          }
+        }
+
+        segments.push({ lang: match[1], text: match[2].trim() });
+        lastIndex = match.index + match[0].length;
+      }
+
+      // Add any remaining untagged text as English
+      if (lastIndex < text.length) {
+        const remainingText = text.slice(lastIndex).trim();
+        if (remainingText) {
+          segments.push({ lang: 'en', text: remainingText });
+        }
+      }
+
+      // If no tags found, treat entire response as English
+      if (segments.length === 0) {
+        segments.push({ lang: 'en', text: text.trim() });
+      }
+
+      return segments;
+    };
+
+    const segments = parseLanguageTags(aiResponse);
+    console.log(`Parsed ${segments.length} language segments:`, segments.map(s => `${s.lang}: "${s.text.substring(0, 30)}..."`));
+
+    // Build multi-voice SSML
+    const voiceElements = segments
+      .map(segment => {
+        const voice = azureVoiceMap[segment.lang] || 'en-US-AriaNeural';
+        const locale = localeMap[segment.lang] || 'en-US';
+        return `<voice name='${voice}' xml:lang='${locale}'>${segment.text}</voice>`;
+      })
+      .join(' ');
+
+    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
+      ${voiceElements}
     </speak>`;
 
     const azureTtsResponse = await fetch(
