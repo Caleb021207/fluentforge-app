@@ -98,15 +98,16 @@ CONVERSATION STYLE:
 - Speak naturally and conversationally in English
 - Keep responses to 2-3 sentences
 - Be engaging and encouraging
-- If the user seems confused or asks for help, briefly explain in ${userLanguage}
-- If the user speaks in ${userLanguage}, acknowledge it and gently guide back to English
+- IMPORTANT: If the user asks you to explain something in ${userLanguage}, respond FULLY in ${userLanguage}
+- If the user says they didn't understand, you can repeat your point in ${userLanguage}
+- If the user speaks in ${userLanguage}, you can respond in ${userLanguage} to help them, then optionally guide back to English
 
 GRAMMAR HELP:
 - Naturally rephrase if user makes major grammar mistakes
 - Don't constantly correct - prioritize flow over perfection
 - Example: User: "I go yesterday store" → You: "Oh, you went to the store yesterday? That's great!"
 
-Your goal is natural English conversation practice, not formal teaching.`;
+Your goal is natural English conversation practice with native language support when needed.`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -164,12 +165,36 @@ Your goal is natural English conversation practice, not formal teaching.`;
       'hi': 'hi-IN-SwaraNeural',
     };
 
-    // Always speak in English for conversational practice
-    const azureVoice = 'en-US-AriaNeural';
-    console.log(`Using English TTS voice (user can request ${userLanguage} if needed)`);
+    // Detect language of AI response and select appropriate voice
+    const detectLanguage = (text: string): string => {
+      // Check for non-Latin scripts
+      if (/[\u0600-\u06FF]/.test(text)) return 'ar'; // Arabic/Farsi/Urdu
+      if (/[\u0900-\u097F]/.test(text)) return 'hi'; // Hindi
+      if (/[\u0980-\u09FF]/.test(text)) return 'bn'; // Bengali
+      if (/[\u4E00-\u9FFF]/.test(text)) return 'zh'; // Chinese
+      if (/[\u0A80-\u0AFF]/.test(text)) return 'gu'; // Gujarati
+      if (/[\u0A00-\u0A7F]/.test(text)) return 'pa'; // Punjabi
+      if (/[\u0900-\u097F]/.test(text)) return 'ne'; // Nepali (Devanagari)
+      if (/[\u0E00-\u0E7F]/.test(text)) return 'th'; // Thai
+      
+      // For Latin-script languages, use simple keyword detection
+      const lowerText = text.toLowerCase();
+      if (/\b(el|la|los|las|un|una|es|son|está|están|de|del|por|para|con|sin|muy|más|pero|porque|cuando|donde|quién|qué|cómo)\b/.test(lowerText)) return 'es';
+      if (/\b(o|a|os|as|um|uma|é|são|está|estão|de|do|da|por|para|com|sem|muito|mais|mas|porque|quando|onde|quem|que|como)\b/.test(lowerText)) return 'pt';
+      if (/\b(le|la|les|un|une|est|sont|de|du|par|pour|avec|sans|très|plus|mais|parce|quand|où|qui|que|comment)\b/.test(lowerText)) return 'fr';
+      if (/\b(der|die|das|ein|eine|ist|sind|von|für|mit|ohne|sehr|mehr|aber|weil|wenn|wo|wer|was|wie)\b/.test(lowerText)) return 'de';
+      if (/\b(il|lo|la|un|una|è|sono|di|per|con|senza|molto|più|ma|perché|quando|dove|chi|che|come)\b/.test(lowerText)) return 'it';
+      
+      return 'en'; // Default to English
+    };
 
-    // Create SSML for Azure (always English)
-    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en'>
+    const detectedLang = detectLanguage(aiResponse);
+    const azureVoice = azureVoiceMap[detectedLang] || 'en-US-AriaNeural';
+    console.log(`Detected language: ${detectedLang}, using Azure voice: ${azureVoice}`);
+
+    // Create SSML for Azure with detected language
+    const langCode = detectedLang === 'zh' ? 'zh-CN' : detectedLang === 'ar' ? 'ar-SA' : detectedLang === 'pt' ? 'pt-BR' : detectedLang === 'hi' ? 'hi-IN' : detectedLang === 'bn' ? 'bn-IN' : detectedLang === 'gu' ? 'gu-IN' : detectedLang === 'pa' ? 'pa-IN' : detectedLang === 'ne' ? 'ne-NP' : detectedLang === 'th' ? 'th-TH' : detectedLang;
+    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${langCode}'>
       <voice name='${azureVoice}'>${aiResponse}</voice>
     </speak>`;
 
