@@ -52,8 +52,9 @@ serve(async (req) => {
       'hindi': 'hi',
     };
 
-    const whisperLanguageCode = languageCodeMap[targetLanguage.toLowerCase()] || 'en';
-    console.log(`Using Whisper language code: ${whisperLanguageCode} for ${targetLanguage}`);
+    // Always transcribe as English since that's the conversation language
+    const whisperLanguageCode = 'en';
+    console.log(`Using Whisper for English transcription (user native: ${userLanguage})`);
 
     // Step 1: Transcribe audio using Whisper
     console.log('Step 1: Transcribing audio with Whisper...');
@@ -88,10 +89,24 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
-    const systemPrompt = `You are a friendly language tutor helping a ${userLanguage} speaker practice ${targetLanguage}. 
-Keep responses conversational, natural, and around 2-3 sentences. 
-Speak in ${targetLanguage} unless the user needs help understanding, then provide brief translations in ${userLanguage}.
-Encourage the learner and gently correct major mistakes.`;
+    const systemPrompt = `You are a friendly conversational AI helping users practice spoken English.
+
+PRIMARY LANGUAGE: English - Conduct the conversation naturally in English.
+USER'S NATIVE LANGUAGE: ${userLanguage}
+
+CONVERSATION STYLE:
+- Speak naturally and conversationally in English
+- Keep responses to 2-3 sentences
+- Be engaging and encouraging
+- If the user seems confused or asks for help, briefly explain in ${userLanguage}
+- If the user speaks in ${userLanguage}, acknowledge it and gently guide back to English
+
+GRAMMAR HELP:
+- Naturally rephrase if user makes major grammar mistakes
+- Don't constantly correct - prioritize flow over perfection
+- Example: User: "I go yesterday store" → You: "Oh, you went to the store yesterday? That's great!"
+
+Your goal is natural English conversation practice, not formal teaching.`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -149,11 +164,12 @@ Encourage the learner and gently correct major mistakes.`;
       'hi': 'hi-IN-SwaraNeural',
     };
 
-    const azureVoice = azureVoiceMap[whisperLanguageCode] || 'en-US-AriaNeural';
-    console.log(`Using Azure TTS voice: ${azureVoice}`);
+    // Always speak in English for conversational practice
+    const azureVoice = 'en-US-AriaNeural';
+    console.log(`Using English TTS voice (user can request ${userLanguage} if needed)`);
 
-    // Create SSML for Azure
-    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${whisperLanguageCode}'>
+    // Create SSML for Azure (always English)
+    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en'>
       <voice name='${azureVoice}'>${aiResponse}</voice>
     </speak>`;
 

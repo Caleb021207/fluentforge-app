@@ -7,6 +7,7 @@ import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
+import { getLanguagePair } from "@/utils/languageUtils";
 
 const PremiumVoicePractice = () => {
   const { t, currentLanguage } = useLocalization();
@@ -126,10 +127,11 @@ const PremiumVoicePractice = () => {
     setIsStarting(true);
     try {
       const { CustomRealtimeManager } = await import("@/utils/CustomRealtimeManager");
+      const { native } = getLanguagePair(currentLanguage);
       
       const manager = new CustomRealtimeManager(
-        'spanish',
         'english',
+        native.toLowerCase(),
         (state) => setCustomState(state),
         (message) => {
           setCustomMessages(prev => [...prev, message]);
