@@ -23,15 +23,15 @@ const SafetyPolicy = () => {
       <div className="flex flex-wrap gap-3 mb-6">
         <Badge className="bg-green-100 text-green-800 hover:bg-green-100 flex items-center gap-2 py-2 px-4">
           <Shield className="h-4 w-4" />
+          COPPA Compliant: Paper Consent Process ✅
+        </Badge>
+        <Badge className="bg-green-100 text-green-800 hover:bg-green-100 flex items-center gap-2 py-2 px-4">
+          <Shield className="h-4 w-4" />
           CIPA Compliant: Active Filtering ✅
         </Badge>
-        <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 flex items-center gap-2 py-2 px-4">
-          <Lock className="h-4 w-4" />
-          FERPA Compliance: In Progress ⚠️
-        </Badge>
         <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 flex items-center gap-2 py-2 px-4">
-          <Shield className="h-4 w-4" />
-          External Audit: Planned 📅
+          <Lock className="h-4 w-4" />
+          FERPA: Core Systems Implemented 🔄
         </Badge>
       </div>
 

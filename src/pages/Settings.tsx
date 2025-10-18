@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Shield, FileText, TrendingUp } from "lucide-react";
+import { Shield, FileText, TrendingUp, Lock } from "lucide-react";
 import ParentalControls from "@/components/compliance/ParentalControls";
 import { UsageDashboard } from "@/components/usage/UsageDashboard";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +38,16 @@ const Settings = () => {
             <CardDescription>Manage safety and privacy settings</CardDescription>
           </div>
         </CardHeader>
-        <CardFooter className="flex justify-end">
+        <CardFooter className="flex justify-between">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1" 
+            onClick={() => navigate("/compliance")}
+          >
+            <Lock size={16} />
+            Compliance
+          </Button>
           <Button 
             variant="outline" 
             size="sm" 

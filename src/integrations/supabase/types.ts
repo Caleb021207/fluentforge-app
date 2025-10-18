@@ -41,6 +41,33 @@ export type Database = {
         }
         Relationships: []
       }
+      access_code_rate_limits: {
+        Row: {
+          attempt_count: number | null
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          user_id: string | null
+          window_start: string
+        }
+        Insert: {
+          attempt_count?: number | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          user_id?: string | null
+          window_start?: string
+        }
+        Update: {
+          attempt_count?: number | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          user_id?: string | null
+          window_start?: string
+        }
+        Relationships: []
+      }
       access_codes: {
         Row: {
           active: boolean | null
@@ -371,6 +398,207 @@ export type Database = {
           },
         ]
       }
+      compliance_status: {
+        Row: {
+          action_items: Json | null
+          compliance_score: number | null
+          compliance_type: string
+          created_at: string
+          findings: Json | null
+          id: string
+          last_audit_date: string | null
+          next_audit_date: string | null
+          notes: string | null
+          responsible_party: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          action_items?: Json | null
+          compliance_score?: number | null
+          compliance_type: string
+          created_at?: string
+          findings?: Json | null
+          id?: string
+          last_audit_date?: string | null
+          next_audit_date?: string | null
+          notes?: string | null
+          responsible_party?: string | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          action_items?: Json | null
+          compliance_score?: number | null
+          compliance_type?: string
+          created_at?: string
+          findings?: Json | null
+          id?: string
+          last_audit_date?: string | null
+          next_audit_date?: string | null
+          notes?: string | null
+          responsible_party?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      data_breach_notifications: {
+        Row: {
+          affected_data_types: string[]
+          affected_user_count: number | null
+          affected_user_ids: string[] | null
+          authority_report_date: string | null
+          breach_date: string
+          breach_description: string
+          breach_type: string
+          created_at: string
+          created_by: string | null
+          discovery_date: string
+          id: string
+          mitigation_steps: string
+          notification_date: string | null
+          notification_method: string | null
+          notification_sent: boolean | null
+          reported_to_authorities: boolean | null
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affected_data_types: string[]
+          affected_user_count?: number | null
+          affected_user_ids?: string[] | null
+          authority_report_date?: string | null
+          breach_date: string
+          breach_description: string
+          breach_type: string
+          created_at?: string
+          created_by?: string | null
+          discovery_date?: string
+          id?: string
+          mitigation_steps: string
+          notification_date?: string | null
+          notification_method?: string | null
+          notification_sent?: boolean | null
+          reported_to_authorities?: boolean | null
+          severity: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affected_data_types?: string[]
+          affected_user_count?: number | null
+          affected_user_ids?: string[] | null
+          authority_report_date?: string | null
+          breach_date?: string
+          breach_description?: string
+          breach_type?: string
+          created_at?: string
+          created_by?: string | null
+          discovery_date?: string
+          id?: string
+          mitigation_steps?: string
+          notification_date?: string | null
+          notification_method?: string | null
+          notification_sent?: boolean | null
+          reported_to_authorities?: boolean | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      data_export_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          export_expires_at: string | null
+          export_file_url: string | null
+          file_format: string | null
+          id: string
+          request_type: string
+          requested_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          export_expires_at?: string | null
+          export_file_url?: string | null
+          file_format?: string | null
+          id?: string
+          request_type: string
+          requested_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          export_expires_at?: string | null
+          export_file_url?: string | null
+          file_format?: string | null
+          id?: string
+          request_type?: string
+          requested_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      data_retention_logs: {
+        Row: {
+          created_at: string
+          data_summary: Json | null
+          deletion_executed_date: string | null
+          deletion_reason: string
+          deletion_scheduled_date: string
+          id: string
+          record_id: string
+          retention_period_days: number
+          retention_policy: string
+          table_name: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          data_summary?: Json | null
+          deletion_executed_date?: string | null
+          deletion_reason: string
+          deletion_scheduled_date: string
+          id?: string
+          record_id: string
+          retention_period_days: number
+          retention_policy: string
+          table_name: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          data_summary?: Json | null
+          deletion_executed_date?: string | null
+          deletion_reason?: string
+          deletion_scheduled_date?: string
+          id?: string
+          record_id?: string
+          retention_period_days?: number
+          retention_policy?: string
+          table_name?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       district_settings: {
         Row: {
           consent_type: Database["public"]["Enums"]["district_consent_type"]
@@ -462,6 +690,51 @@ export type Database = {
           },
         ]
       }
+      educational_interest_access_logs: {
+        Row: {
+          access_granted: boolean
+          access_type: string
+          accessed_user_id: string
+          accessor_user_id: string
+          created_at: string
+          data_accessed: string
+          denial_reason: string | null
+          educational_justification: string
+          id: string
+          ip_address: unknown | null
+          legitimate_interest_verified: boolean
+          user_agent: string | null
+        }
+        Insert: {
+          access_granted: boolean
+          access_type: string
+          accessed_user_id: string
+          accessor_user_id: string
+          created_at?: string
+          data_accessed: string
+          denial_reason?: string | null
+          educational_justification: string
+          id?: string
+          ip_address?: unknown | null
+          legitimate_interest_verified?: boolean
+          user_agent?: string | null
+        }
+        Update: {
+          access_granted?: boolean
+          access_type?: string
+          accessed_user_id?: string
+          accessor_user_id?: string
+          created_at?: string
+          data_accessed?: string
+          denial_reason?: string | null
+          educational_justification?: string
+          id?: string
+          ip_address?: unknown | null
+          legitimate_interest_verified?: boolean
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       email_captures: {
         Row: {
           captured_at: string
@@ -489,6 +762,57 @@ export type Database = {
           ip_address?: unknown | null
           source?: string | null
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      emergency_data_purge_logs: {
+        Row: {
+          affected_tables: string[]
+          affected_user_ids: string[]
+          created_at: string
+          error_details: string | null
+          id: string
+          initiated_by: string
+          purge_completed_at: string | null
+          purge_reason: string
+          purge_started_at: string
+          purge_type: string
+          records_deleted: number
+          status: string
+          updated_at: string
+          verification_hash: string | null
+        }
+        Insert: {
+          affected_tables: string[]
+          affected_user_ids: string[]
+          created_at?: string
+          error_details?: string | null
+          id?: string
+          initiated_by: string
+          purge_completed_at?: string | null
+          purge_reason: string
+          purge_started_at?: string
+          purge_type: string
+          records_deleted?: number
+          status?: string
+          updated_at?: string
+          verification_hash?: string | null
+        }
+        Update: {
+          affected_tables?: string[]
+          affected_user_ids?: string[]
+          created_at?: string
+          error_details?: string | null
+          id?: string
+          initiated_by?: string
+          purge_completed_at?: string | null
+          purge_reason?: string
+          purge_started_at?: string
+          purge_type?: string
+          records_deleted?: number
+          status?: string
+          updated_at?: string
+          verification_hash?: string | null
         }
         Relationships: []
       }
@@ -523,6 +847,93 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      parental_consent_records: {
+        Row: {
+          academic_year: string
+          consent_date: string | null
+          consent_granted: boolean
+          consent_type: string
+          created_at: string
+          id: string
+          notes: string | null
+          paper_form_date: string | null
+          paper_form_received: boolean | null
+          parent_email: string | null
+          parent_name: string
+          parent_phone: string | null
+          recorded_by: string | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year: string
+          consent_date?: string | null
+          consent_granted?: boolean
+          consent_type: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paper_form_date?: string | null
+          paper_form_received?: boolean | null
+          parent_email?: string | null
+          parent_name: string
+          parent_phone?: string | null
+          recorded_by?: string | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: string
+          consent_date?: string | null
+          consent_granted?: boolean
+          consent_type?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paper_form_date?: string | null
+          paper_form_received?: boolean | null
+          parent_email?: string | null
+          parent_name?: string
+          parent_phone?: string | null
+          recorded_by?: string | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      privacy_notice_acknowledgments: {
+        Row: {
+          academic_year: string
+          acknowledged_at: string
+          acknowledgment_method: string
+          created_at: string
+          id: string
+          notice_type: string
+          notice_version: string
+          user_id: string
+        }
+        Insert: {
+          academic_year: string
+          acknowledged_at?: string
+          acknowledgment_method: string
+          created_at?: string
+          id?: string
+          notice_type: string
+          notice_version: string
+          user_id: string
+        }
+        Update: {
+          academic_year?: string
+          acknowledged_at?: string
+          acknowledgment_method?: string
+          created_at?: string
+          id?: string
+          notice_type?: string
+          notice_version?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -1450,6 +1861,15 @@ export type Database = {
         Args: { target_student_id: string }
         Returns: Json
       }
+      check_access_code_rate_limit: {
+        Args: {
+          p_ip_address?: unknown
+          p_max_attempts?: number
+          p_user_id?: string
+          p_window_minutes?: number
+        }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           p_action_type: string
@@ -1500,6 +1920,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_valid_parental_consent: {
+        Args: { p_consent_type?: string; p_student_id: string }
+        Returns: boolean
+      }
       initialize_student_usage_limits: {
         Args: { target_student_id: string }
         Returns: undefined
@@ -1534,6 +1958,18 @@ export type Database = {
       }
       is_user_teacher_of_class: {
         Args: { class_id_param: string }
+        Returns: boolean
+      }
+      log_educational_access: {
+        Args: {
+          p_access_type: string
+          p_accessed_user_id: string
+          p_accessor_user_id: string
+          p_data_accessed: string
+          p_ip_address?: unknown
+          p_justification: string
+          p_user_agent?: string
+        }
         Returns: boolean
       }
       log_role_change_attempt: {
