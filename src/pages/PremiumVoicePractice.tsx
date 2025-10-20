@@ -303,6 +303,14 @@ const PremiumVoicePractice = () => {
 
   const minutesRemaining = premiumVoiceMinutesRemaining - Math.ceil(elapsedSeconds / 60);
 
+  // Auto-end session when time runs out
+  useEffect(() => {
+    if (isConnected && minutesRemaining <= 0) {
+      console.log('Time limit reached, auto-ending session');
+      endConversation();
+    }
+  }, [minutesRemaining, isConnected]);
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-6 text-center">
@@ -368,7 +376,7 @@ const PremiumVoicePractice = () => {
                 onClick={() => startConversation('gpt')}
                 size="lg"
                 className="px-8"
-                disabled={isStarting || (isConnected && provider !== 'gpt')}
+                disabled={isStarting || (isConnected && provider !== 'gpt') || premiumVoiceMinutesRemaining <= 0}
               >
                 {isStarting && provider === 'gpt' ? 'Connecting...' : 'Start GPT Session'}
               </Button>
@@ -378,6 +386,7 @@ const PremiumVoicePractice = () => {
                 size="lg"
                 variant="secondary"
                 className="px-8"
+                disabled={minutesRemaining <= 0}
               >
                 {t('endSession')}
               </Button>
@@ -435,7 +444,7 @@ const PremiumVoicePractice = () => {
                 onClick={startCustomSession}
                 size="lg"
                 className="px-8 bg-blue-500 hover:bg-blue-600"
-                disabled={isStarting}
+                disabled={isStarting || premiumVoiceMinutesRemaining <= 0}
               >
                 {isStarting ? 'Connecting...' : 'Start Custom Session'}
               </Button>
