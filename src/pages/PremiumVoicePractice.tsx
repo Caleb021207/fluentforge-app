@@ -444,7 +444,7 @@ const PremiumVoicePractice = () => {
                 onClick={startCustomSession}
                 size="lg"
                 className="px-8 bg-blue-500 hover:bg-blue-600"
-                disabled={isStarting || premiumVoiceMinutesRemaining <= 0}
+                disabled={isStarting}
               >
                 {isStarting ? 'Connecting...' : 'Start Custom Session'}
               </Button>

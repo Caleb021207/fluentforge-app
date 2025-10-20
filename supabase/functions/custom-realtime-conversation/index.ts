@@ -52,9 +52,9 @@ serve(async (req) => {
       'hindi': 'hi',
     };
 
-    // Always transcribe as English since that's the conversation language
-    const whisperLanguageCode = 'en';
-    console.log(`Using Whisper for English transcription (user native: ${userLanguage})`);
+    // Use user's native language for transcription to understand when they speak in their language
+    const whisperLanguageCode = languageCodeMap[userLanguage.toLowerCase()] || 'en';
+    console.log(`Using Whisper language code: ${whisperLanguageCode} (user native: ${userLanguage})`);
 
     // Step 1: Transcribe audio using Whisper
     console.log('Step 1: Transcribing audio with Whisper...');
@@ -148,8 +148,16 @@ Your goal: Help users learn English through natural, supportive bilingual conver
     }
 
     const gptData = await gptResponse.json();
-    const aiResponse = gptData.choices[0].message.content;
-    console.log(`AI Response: "${aiResponse}"`);
+    const aiResponseWithTags = gptData.choices[0].message.content;
+    console.log(`AI Response with tags: "${aiResponseWithTags}"`);
+
+    // Strip language tags for display (but keep the tagged version for TTS)
+    const stripLanguageTags = (text: string): string => {
+      return text.replace(/\[([a-z]{2})\]/g, '').replace(/\[\/([a-z]{2})\]/g, '');
+    };
+    
+    const aiResponse = stripLanguageTags(aiResponseWithTags);
+    console.log(`AI Response (cleaned): "${aiResponse}"`);
 
     // Step 3: Synthesize speech with Azure TTS
     console.log('Step 3: Synthesizing speech with Azure TTS...');
@@ -241,7 +249,7 @@ Your goal: Help users learn English through natural, supportive bilingual conver
       return segments;
     };
 
-    const segments = parseLanguageTags(aiResponse);
+    const segments = parseLanguageTags(aiResponseWithTags);
     console.log(`Parsed ${segments.length} language segments:`, segments.map(s => `${s.lang}: "${s.text.substring(0, 30)}..."`));
 
     // Build multi-voice SSML
