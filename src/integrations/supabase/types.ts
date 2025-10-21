@@ -116,42 +116,6 @@ export type Database = {
         }
         Relationships: []
       }
-      achievements: {
-        Row: {
-          category: string
-          created_at: string
-          description: string
-          icon: string
-          id: string
-          name: string
-          requirement_type: string
-          requirement_value: number
-          xp_reward: number
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          description: string
-          icon: string
-          id?: string
-          name: string
-          requirement_type: string
-          requirement_value: number
-          xp_reward?: number
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          description?: string
-          icon?: string
-          id?: string
-          name?: string
-          requirement_type?: string
-          requirement_value?: number
-          xp_reward?: number
-        }
-        Relationships: []
-      }
       admin_override_logs: {
         Row: {
           admin_id: string
@@ -354,41 +318,6 @@ export type Database = {
           },
         ]
       }
-      class_members: {
-        Row: {
-          class_id: string
-          created_at: string
-          id: string
-          joined_at: string
-          role: string
-          user_id: string
-        }
-        Insert: {
-          class_id: string
-          created_at?: string
-          id?: string
-          joined_at?: string
-          role?: string
-          user_id: string
-        }
-        Update: {
-          class_id?: string
-          created_at?: string
-          id?: string
-          joined_at?: string
-          role?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_members_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       classes: {
         Row: {
           academic_year: string
@@ -511,75 +440,6 @@ export type Database = {
           responsible_party?: string | null
           status?: string
           updated_at?: string
-        }
-        Relationships: []
-      }
-      courses: {
-        Row: {
-          cefr_max: string | null
-          cefr_min: string | null
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          cefr_max?: string | null
-          cefr_min?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          cefr_max?: string | null
-          cefr_min?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      daily_quests: {
-        Row: {
-          completed: boolean
-          created_at: string
-          current_value: number
-          id: string
-          quest_date: string
-          quest_type: string
-          target_value: number
-          updated_at: string
-          user_id: string
-          xp_reward: number
-        }
-        Insert: {
-          completed?: boolean
-          created_at?: string
-          current_value?: number
-          id?: string
-          quest_date?: string
-          quest_type: string
-          target_value: number
-          updated_at?: string
-          user_id: string
-          xp_reward: number
-        }
-        Update: {
-          completed?: boolean
-          created_at?: string
-          current_value?: number
-          id?: string
-          quest_date?: string
-          quest_type?: string
-          target_value?: number
-          updated_at?: string
-          user_id?: string
-          xp_reward?: number
         }
         Relationships: []
       }
@@ -956,94 +816,6 @@ export type Database = {
         }
         Relationships: []
       }
-      exercise_attempts: {
-        Row: {
-          created_at: string
-          duration_ms: number | null
-          exercise_id: string
-          id: string
-          meta: Json | null
-          outcome: string
-          score: number | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          duration_ms?: number | null
-          exercise_id: string
-          id?: string
-          meta?: Json | null
-          outcome: string
-          score?: number | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          duration_ms?: number | null
-          exercise_id?: string
-          id?: string
-          meta?: Json | null
-          outcome?: string
-          score?: number | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "exercise_attempts_exercise_id_fkey"
-            columns: ["exercise_id"]
-            isOneToOne: false
-            referencedRelation: "exercises"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      exercises: {
-        Row: {
-          cefr_tag: string | null
-          created_at: string
-          grammar_point: string | null
-          id: string
-          idx: number
-          lesson_id: string
-          payload: Json
-          topic: string | null
-          type: string
-          version: string | null
-        }
-        Insert: {
-          cefr_tag?: string | null
-          created_at?: string
-          grammar_point?: string | null
-          id?: string
-          idx: number
-          lesson_id: string
-          payload: Json
-          topic?: string | null
-          type: string
-          version?: string | null
-        }
-        Update: {
-          cefr_tag?: string | null
-          created_at?: string
-          grammar_point?: string | null
-          id?: string
-          idx?: number
-          lesson_id?: string
-          payload?: Json
-          topic?: string | null
-          type?: string
-          version?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "exercises_lesson_id_fkey"
-            columns: ["lesson_id"]
-            isOneToOne: false
-            referencedRelation: "lessons"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       grade_levels: {
         Row: {
           created_at: string
@@ -1072,44 +844,6 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      lessons: {
-        Row: {
-          created_at: string
-          estimated_minutes: number | null
-          exercise_count: number | null
-          id: string
-          idx: number
-          skill_id: string
-          title: string
-        }
-        Insert: {
-          created_at?: string
-          estimated_minutes?: number | null
-          exercise_count?: number | null
-          id?: string
-          idx: number
-          skill_id: string
-          title: string
-        }
-        Update: {
-          created_at?: string
-          estimated_minutes?: number | null
-          exercise_count?: number | null
-          id?: string
-          idx?: number
-          skill_id?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "lessons_skill_id_fkey"
-            columns: ["skill_id"]
-            isOneToOne: false
-            referencedRelation: "skills"
             referencedColumns: ["id"]
           },
         ]
@@ -1509,50 +1243,6 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
-      }
-      skills: {
-        Row: {
-          cefr_target: string | null
-          created_at: string
-          description: string | null
-          grammar_point: string | null
-          id: string
-          idx: number
-          title: string
-          unit_id: string
-          vocab_theme: string | null
-        }
-        Insert: {
-          cefr_target?: string | null
-          created_at?: string
-          description?: string | null
-          grammar_point?: string | null
-          id?: string
-          idx: number
-          title: string
-          unit_id: string
-          vocab_theme?: string | null
-        }
-        Update: {
-          cefr_target?: string | null
-          created_at?: string
-          description?: string | null
-          grammar_point?: string | null
-          id?: string
-          idx?: number
-          title?: string
-          unit_id?: string
-          vocab_theme?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "skills_unit_id_fkey"
-            columns: ["unit_id"]
-            isOneToOne: false
-            referencedRelation: "units"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       student_enrollments: {
         Row: {
@@ -2094,44 +1784,6 @@ export type Database = {
         }
         Relationships: []
       }
-      units: {
-        Row: {
-          cefr_target: string | null
-          course_id: string
-          created_at: string
-          description: string | null
-          id: string
-          idx: number
-          title: string
-        }
-        Insert: {
-          cefr_target?: string | null
-          course_id: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          idx: number
-          title: string
-        }
-        Update: {
-          cefr_target?: string | null
-          course_id?: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          idx?: number
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "units_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       usage_tracking: {
         Row: {
           academic_year: string
@@ -2171,80 +1823,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_achievements: {
-        Row: {
-          achievement_id: string
-          id: string
-          unlocked_at: string
-          user_id: string
-        }
-        Insert: {
-          achievement_id: string
-          id?: string
-          unlocked_at?: string
-          user_id: string
-        }
-        Update: {
-          achievement_id?: string
-          id?: string
-          unlocked_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_achievements_achievement_id_fkey"
-            columns: ["achievement_id"]
-            isOneToOne: false
-            referencedRelation: "achievements"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_progression: {
-        Row: {
-          certifications_completed: number
-          created_at: string
-          current_level: number
-          current_streak_days: number
-          id: string
-          last_activity_date: string | null
-          lessons_completed: number
-          longest_streak_days: number
-          total_xp: number
-          updated_at: string
-          user_id: string
-          voice_sessions_completed: number
-        }
-        Insert: {
-          certifications_completed?: number
-          created_at?: string
-          current_level?: number
-          current_streak_days?: number
-          id?: string
-          last_activity_date?: string | null
-          lessons_completed?: number
-          longest_streak_days?: number
-          total_xp?: number
-          updated_at?: string
-          user_id: string
-          voice_sessions_completed?: number
-        }
-        Update: {
-          certifications_completed?: number
-          created_at?: string
-          current_level?: number
-          current_streak_days?: number
-          id?: string
-          last_activity_date?: string | null
-          lessons_completed?: number
-          longest_streak_days?: number
-          total_xp?: number
-          updated_at?: string
-          user_id?: string
-          voice_sessions_completed?: number
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           created_at: string
@@ -2262,86 +1840,6 @@ export type Database = {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_skill_progress: {
-        Row: {
-          last_practiced_at: string | null
-          mastery: number | null
-          skill_id: string
-          user_id: string
-        }
-        Insert: {
-          last_practiced_at?: string | null
-          mastery?: number | null
-          skill_id: string
-          user_id: string
-        }
-        Update: {
-          last_practiced_at?: string | null
-          mastery?: number | null
-          skill_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_skill_progress_skill_id_fkey"
-            columns: ["skill_id"]
-            isOneToOne: false
-            referencedRelation: "skills"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_wordbank: {
-        Row: {
-          cefr_tag: string | null
-          created_at: string
-          display: string
-          first_seen_at: string | null
-          ipa: string | null
-          language: string | null
-          last_reviewed_at: string | null
-          lemma: string
-          next_review_at: string | null
-          review_count: number | null
-          srs_bucket: number | null
-          strength: number | null
-          translation: string
-          user_id: string
-        }
-        Insert: {
-          cefr_tag?: string | null
-          created_at?: string
-          display: string
-          first_seen_at?: string | null
-          ipa?: string | null
-          language?: string | null
-          last_reviewed_at?: string | null
-          lemma: string
-          next_review_at?: string | null
-          review_count?: number | null
-          srs_bucket?: number | null
-          strength?: number | null
-          translation: string
-          user_id: string
-        }
-        Update: {
-          cefr_tag?: string | null
-          created_at?: string
-          display?: string
-          first_seen_at?: string | null
-          ipa?: string | null
-          language?: string | null
-          last_reviewed_at?: string | null
-          lemma?: string
-          next_review_at?: string | null
-          review_count?: number | null
-          srs_bucket?: number | null
-          strength?: number | null
-          translation?: string
           user_id?: string
         }
         Relationships: []

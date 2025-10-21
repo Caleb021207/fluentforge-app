@@ -76,28 +76,4 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-const InteractiveCard = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <Card
-    ref={ref}
-    className={cn("hover-lift cursor-pointer transition-all duration-300", className)}
-    {...props}
-  />
-))
-InteractiveCard.displayName = "InteractiveCard"
-
-const GlassCard = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <Card
-    ref={ref}
-    className={cn("glass", className)}
-    {...props}
-  />
-))
-GlassCard.displayName = "GlassCard"
-
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, InteractiveCard, GlassCard }
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }

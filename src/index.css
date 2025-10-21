@@ -147,38 +147,6 @@
     margin-bottom: 0.75em;
   }
 
-  /* Gradient utilities */
-  .gradient-text {
-    @apply bg-gradient-to-r from-[#A3D5FF] to-[#57D8A1] bg-clip-text text-transparent;
-  }
-  
-  /* Glassmorphism effects */
-  .glass {
-    @apply bg-white/80 dark:bg-[#1D2B40]/80 backdrop-blur-lg border border-white/20;
-  }
-  
-  /* Smooth hover lift */
-  .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
-  }
-  
-  /* Glow effects */
-  .glow-accent {
-    @apply shadow-lg shadow-[#A3D5FF]/20;
-  }
-  
-  .glow-teal {
-    @apply shadow-lg shadow-[#57D8A1]/20;
-  }
-
-  .glow-success {
-    @apply shadow-lg shadow-green-500/30;
-  }
-
-  .glow-error {
-    @apply shadow-lg shadow-red-500/30;
-  }
-
   /* Scale up buttons globally */
   button:not([role="switch"]) {
     @apply text-base;

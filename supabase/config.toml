@@ -17,15 +17,3 @@ verify_jwt = false
 
 [functions.gemini-voice-realtime]
 verify_jwt = false
-
-[functions.seed-course-data]
-verify_jwt = true
-
-[functions.award-xp]
-verify_jwt = true
-
-[functions.check-streak]
-verify_jwt = true
-
-[functions.get-leaderboard-data]
-verify_jwt = true

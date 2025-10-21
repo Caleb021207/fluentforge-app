@@ -7,11 +7,8 @@ import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import LogoutButton from "@/components/auth/LogoutButton";
-import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles, Trophy, BookOpen } from "lucide-react";
+import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles } from "lucide-react";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
-import { useGamification } from "@/hooks/useGamification";
-import XPProgressBar from "@/components/gamification/XPProgressBar";
-import { motion } from "framer-motion";
 
 interface NewLayoutProps {
   children: React.ReactNode;
@@ -23,7 +20,6 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   const { t } = useLocalization();
   const [user, setUser] = useState<User | null>(null);
   const { usageLimits, premiumVoiceMinutesRemaining } = useUsageLimits();
-  const { progression } = useGamification();
 
   useEffect(() => {
     // Get initial session
@@ -45,15 +41,11 @@ const NewLayout = ({ children }: NewLayoutProps) => {
 
   const navigationItems = [
     { label: t("home") || "Home", path: "/", icon: <Home className="w-4 h-4" /> },
-    { label: t("lessons") || "Lessons", path: "/lessons", icon: <BookOpen className="w-4 h-4" /> },
-    { label: "Learn", path: "/learn", icon: <Brain className="w-4 h-4" /> },
-    { label: "Word Bank", path: "/word-bank", icon: <BookOpen className="w-4 h-4" /> },
     { label: t("practice") || "Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
     { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" />, disabled: voiceChatDisabled },
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
     { label: t("premiumVoicePractice") || "Premium Voice", path: "/premium-voice-practice", icon: <Sparkles className="w-4 h-4" /> },
     { label: t("aiAnalysis") || "AI Analysis", path: "/analysis", icon: <Brain className="w-4 h-4" /> },
-    { label: "Leaderboard", path: "/leaderboard", icon: <Trophy className="w-4 h-4" /> },
     { label: t("profile") || "Profile", path: "/profile", icon: <UserIcon className="w-4 h-4" /> },
     { label: t("settings") || "Settings", path: "/settings", icon: <Settings className="w-4 h-4" /> },
   ];
@@ -63,47 +55,27 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Top Bar */}
-      <div className="bg-card/80 backdrop-blur-lg border-b sticky top-0 z-30 shadow-sm">
+      <div className="bg-card border-b sticky top-0 z-30">
         {/* User Info Bar */}
         {user && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="px-4 py-3 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 flex justify-between items-center text-sm gap-4"
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <Sparkles className="w-4 h-4 text-primary" />
+          <div className="px-4 py-2 bg-muted/30 flex justify-between items-center text-sm">
+            <div className="flex items-center gap-2">
               <span className="text-muted-foreground">{t("signedInAs")}</span>
-              <span className="font-semibold truncate max-w-[200px]">{user.email}</span>
+              <span className="font-medium truncate max-w-[200px]">{user.email}</span>
             </div>
-            {progression && (
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                className="flex-1 max-w-xs origin-left"
-              >
-                <XPProgressBar totalXP={progression.total_xp} />
-              </motion.div>
-            )}
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <LogoutButton iconOnly />
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Navigation Bar */}
-        <div className="px-4 py-4 flex items-center justify-between">
+        <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-2xl font-bold gradient-text"
-            >
-              Palavox
-            </motion.h1>
+            <h1 className="text-xl font-bold text-primary">Palavox</h1>
             {user && (
               <TopNavigationDropdown
                 items={navigationItems}
