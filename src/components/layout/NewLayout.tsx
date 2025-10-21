@@ -7,7 +7,7 @@ import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import LogoutButton from "@/components/auth/LogoutButton";
-import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles, Trophy, BookOpen } from "lucide-react";
+import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles } from "lucide-react";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useGamification } from "@/hooks/useGamification";
 import XPProgressBar from "@/components/gamification/XPProgressBar";
@@ -50,7 +50,6 @@ const NewLayout = ({ children }: NewLayoutProps) => {
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
     { label: t("premiumVoicePractice") || "Premium Voice", path: "/premium-voice-practice", icon: <Sparkles className="w-4 h-4" /> },
     { label: t("aiAnalysis") || "AI Analysis", path: "/analysis", icon: <Brain className="w-4 h-4" /> },
-    { label: "Leaderboard", path: "/leaderboard", icon: <Trophy className="w-4 h-4" /> },
     { label: t("profile") || "Profile", path: "/profile", icon: <UserIcon className="w-4 h-4" /> },
     { label: t("settings") || "Settings", path: "/settings", icon: <Settings className="w-4 h-4" /> },
   ];
