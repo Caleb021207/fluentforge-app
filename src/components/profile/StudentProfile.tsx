@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { InteractiveCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User, AlertCircle, MessageSquare, Mic, Volume2, Sparkles } from "lucide-react";
@@ -119,17 +119,15 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
   return (
     <div className="space-y-6">
       {/* Quick Practice Links - Top Priority for Easy Access */}
-      <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <InteractiveCard className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-2">
             <Star className="h-5 w-5 text-primary" />
-            {t("startPracticing")}
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
+            <h3 className="text-lg font-semibold">{t("startPracticing")}</h3>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
             {t("choosePracticeMode")}
           </p>
-        </CardHeader>
-        <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link to="/practice" className="block">
               <Button 
@@ -176,8 +174,8 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               </Button>
             </Link>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
 
       {/* Test Scores - Second Priority */}
       <TestScoreCard testScore={latestTestScore} />
@@ -186,14 +184,12 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
       <LeaderboardSection />
 
       {/* Student Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <GraduationCap className="h-5 w-5" />
-            {t("studentProfile")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <GraduationCap className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold">{t("studentProfile")}</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">{t("school")}</p>
@@ -214,23 +210,21 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           </div>
           
           {profile.school?.district && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-4">
               <MapPin className="h-4 w-4" />
               {profile.school.district}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
 
       {/* Monthly Usage Limits */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            {t("monthlyUsageLimits") || "Monthly Usage Limits"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Clock className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold">{t("monthlyUsageLimits") || "Monthly Usage Limits"}</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-muted/50 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
@@ -274,18 +268,16 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
 
       {/* Academic Performance & Usage */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Star className="h-5 w-5" />
-            {t("learningActivity")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Star className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold">{t("learningActivity")}</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{enrollments.length}</div>
@@ -321,18 +313,16 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
 
       {/* Current Classes with Teacher Info */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5" />
-            {t("currentClassesAndTeachers")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <BookOpen className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold">{t("currentClassesAndTeachers")}</h3>
+          </div>
           {enrollments.length > 0 ? (
             <div className="grid gap-4">
               {enrollments.map((enrollment) => (
@@ -384,8 +374,8 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
     </div>
   );
 };

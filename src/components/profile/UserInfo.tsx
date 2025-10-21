@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { InteractiveCard } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -85,20 +85,19 @@ const UserInfo = ({
   return (
     <div className="space-y-6">
       {/* Personal Information Card */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>
-            Personal Information
-          </CardTitle>
-          <Button
-            variant="outline" 
-            size="sm"
-            onClick={handleEditToggle}
-          >
-            {isEditing ? "Cancel" : "Edit"}
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Personal Information</h3>
+            <Button
+              variant="outline" 
+              size="sm"
+              onClick={handleEditToggle}
+            >
+              {isEditing ? "Cancel" : "Edit"}
+            </Button>
+          </div>
+          <div className="space-y-4">
           <div className="flex flex-col items-center space-y-4 mb-6">
             <div className="relative w-32 h-32 rounded-full overflow-hidden bg-muted">
               <div className="w-full h-full flex items-center justify-center">
@@ -149,8 +148,9 @@ const UserInfo = ({
               )}
             </Button>
           )}
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </InteractiveCard>
 
       {/* Access Code Input */}
       <AccessCodeInput 
