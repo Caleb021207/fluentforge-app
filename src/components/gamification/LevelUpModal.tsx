@@ -15,10 +15,19 @@ interface LevelUpModalProps {
 const LevelUpModal = ({ open, onClose, oldLevel, newLevel, totalXP }: LevelUpModalProps) => {
   const tier = getLevelTier(newLevel);
   const colorGradient = getLevelColor(newLevel);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setShowConfetti(true);
+    }
+  }, [open]);
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+    <>
+      <ConfettiExplosion trigger={showConfetti} />
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-md">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -49,12 +58,13 @@ const LevelUpModal = ({ open, onClose, oldLevel, newLevel, totalXP }: LevelUpMod
             <p className="text-xs text-muted-foreground mt-1">{totalXP} Total XP</p>
           </div>
 
-          <Button onClick={onClose} className="w-full" size="lg">
-            Continue Learning
+          <Button onClick={onClose} className="w-full" size="lg" variant="celebration">
+            Continue Learning ✨
           </Button>
         </motion.div>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
 

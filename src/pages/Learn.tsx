@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/card';
+import { Card, InteractiveCard, GlassCard } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Lock, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
+import { GradientBlob } from '@/components/ui/decorative-elements';
+import { staggerList, slideInUp } from '@/lib/animations';
 import type { Unit, Skill, UserSkillProgress } from '@/types/exercises';
+import { cn } from '@/lib/utils';
 
 const Learn = () => {
   const { isAuthenticated } = useAuthGuard();
@@ -112,7 +115,13 @@ const Learn = () => {
   if (loading) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <Skeleton className="h-96" />
+        <motion.div variants={staggerList} initial="hidden" animate="visible" className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <motion.div key={i} variants={slideInUp}>
+              <Skeleton className="h-32 w-full" />
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     );
   }
@@ -141,31 +150,47 @@ const Learn = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Learning Path</h1>
-        <p className="text-muted-foreground">Follow the structured path to mastery</p>
-      </div>
+    <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+      <GradientBlob className="top-20 left-10" />
+      <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
+      
+      <div className="container mx-auto py-8 px-4 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-4xl font-bold mb-2 gradient-text">Learning Path</h1>
+          <p className="text-muted-foreground text-lg">Follow the structured path to mastery</p>
+        </motion.div>
 
-      <div className="grid md:grid-cols-4 gap-6">
-        {/* Units sidebar */}
-        <div className="md:col-span-1 space-y-2">
-          {units.map(unit => (
-            <Button
-              key={unit.id}
-              variant={selectedUnitId === unit.id ? 'default' : 'outline'}
-              className="w-full justify-start"
-              onClick={() => setSelectedUnitId(unit.id)}
-            >
-              <div className="flex flex-col items-start w-full">
-                <span className="font-semibold">{unit.title}</span>
-                {unit.cefr_target && (
-                  <span className="text-xs opacity-70">{unit.cefr_target}</span>
-                )}
-              </div>
-            </Button>
-          ))}
-        </div>
+        <div className="grid md:grid-cols-4 gap-6">
+          {/* Units sidebar */}
+          <motion.div 
+            variants={staggerList}
+            initial="hidden"
+            animate="visible"
+            className="md:col-span-1 space-y-2"
+          >
+            {units.map((unit, index) => (
+              <motion.div key={unit.id} variants={slideInUp}>
+                <InteractiveCard
+                  className={cn(
+                    "p-4 cursor-pointer transition-all duration-300",
+                    selectedUnitId === unit.id && "bg-accent/20 border-accent glow-accent"
+                  )}
+                  onClick={() => setSelectedUnitId(unit.id)}
+                >
+                  <div className="flex flex-col items-start w-full">
+                    <span className="font-semibold">{unit.title}</span>
+                    {unit.cefr_target && (
+                      <span className="text-xs opacity-70">{unit.cefr_target}</span>
+                    )}
+                  </div>
+                </InteractiveCard>
+              </motion.div>
+            ))}
+          </motion.div>
 
         {/* Skills roadmap */}
         <div className="md:col-span-3">
@@ -187,14 +212,16 @@ const Learn = () => {
                   return (
                     <motion.div
                       key={skill.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
+                      variants={slideInUp}
+                      whileHover={unlocked ? { scale: 1.02, y: -5 } : {}}
+                      whileTap={unlocked ? { scale: 0.98 } : {}}
                     >
-                      <Card 
-                        className={`p-6 transition-all duration-300 hover:shadow-lg ${
-                          !unlocked ? 'opacity-60 cursor-not-allowed' : 'hover:scale-[1.02] cursor-pointer'
-                        } ${completed ? 'border-green-500/50 bg-green-500/5' : ''}`}
+                      <InteractiveCard 
+                        className={cn(
+                          "p-6 transition-all duration-300",
+                          !unlocked && 'opacity-60',
+                          completed && 'ring-2 ring-green-500/50 glow-success bg-gradient-to-br from-card to-green-500/5'
+                        )}
                       >
                         <div className="flex items-start gap-4">
                           <motion.div 
@@ -249,8 +276,9 @@ const Learn = () => {
                                 onClick={() => handleStartLesson(skill.id)}
                                 disabled={!unlocked}
                                 size="lg"
+                                variant={completed ? "success" : unlocked ? "gradient" : "secondary"}
                               >
-                                {completed ? '🔄 Practice Again' : '▶️ Start'}
+                                {completed ? '🔄 Practice Again' : unlocked ? '▶️ Start' : '🔒 Locked'}
                               </Button>
                             </motion.div>
                           </div>
@@ -259,9 +287,22 @@ const Learn = () => {
                             <div className="mt-3">
                               <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
                                 <span>Mastery</span>
-                                <span>{Math.round(mastery)}%</span>
+                                <motion.span
+                                  key={mastery}
+                                  initial={{ scale: 1.2, color: "#57D8A1" }}
+                                  animate={{ scale: 1, color: "inherit" }}
+                                >
+                                  {Math.round(mastery)}%
+                                </motion.span>
                               </div>
-                              <Progress value={mastery} className="h-2" />
+                              <Progress 
+                                value={mastery} 
+                                className="h-2" 
+                                indicatorClassName={cn(
+                                  "transition-all duration-500",
+                                  mastery >= 80 && "bg-gradient-to-r from-green-500 to-green-600"
+                                )}
+                              />
                             </div>
                           )}
                         </div>
@@ -273,6 +314,7 @@ const Learn = () => {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>

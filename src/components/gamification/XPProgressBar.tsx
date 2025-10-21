@@ -1,6 +1,8 @@
 import { Progress } from "@/components/ui/progress";
 import { Star } from "lucide-react";
 import { getLevelInfo, getLevelColor } from "@/utils/levelSystem";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface XPProgressBarProps {
   totalXP: number;
@@ -13,9 +15,13 @@ const XPProgressBar = ({ totalXP, showDetails = false }: XPProgressBarProps) => 
 
   return (
     <div className="flex items-center gap-3">
-      <div className={`flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br ${colorGradient} flex-shrink-0`}>
+      <motion.div 
+        className={cn("flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br flex-shrink-0", colorGradient)}
+        animate={{ rotate: [0, 5, -5, 0] }}
+        transition={{ repeat: Infinity, duration: 3 }}
+      >
         <Star className="w-5 h-5 text-white" />
-      </div>
+      </motion.div>
       
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
@@ -26,7 +32,11 @@ const XPProgressBar = ({ totalXP, showDetails = false }: XPProgressBarProps) => 
             </span>
           )}
         </div>
-        <Progress value={levelInfo.progressPercent} className="h-2" />
+        <Progress 
+          value={levelInfo.progressPercent} 
+          className="h-2" 
+          indicatorClassName="bg-gradient-to-r from-[#A3D5FF] to-[#57D8A1] transition-all duration-500"
+        />
         {showDetails && (
           <p className="text-xs text-muted-foreground mt-1">
             {levelInfo.xpToNextLevel} XP to next level
