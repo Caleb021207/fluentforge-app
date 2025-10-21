@@ -36,6 +36,15 @@
 
     --radius: 0.5rem;
 
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 67% 13%) 0%, hsl(217 50% 25%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(209 100% 82%) 0%, hsl(158 58% 59%) 100%);
+    --gradient-vibrant: linear-gradient(135deg, hsl(209 100% 70%) 0%, hsl(158 58% 59%) 50%, hsl(280 80% 70%) 100%);
+    
+    /* Shadows with glow */
+    --shadow-glow-accent: 0 0 20px hsl(209 100% 82% / 0.3);
+    --shadow-glow-primary: 0 0 20px hsl(217 67% 13% / 0.2);
+
     --sidebar-background: 210 60% 98%;  /* #F7F9FC - Soft gray */
     --sidebar-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
     --sidebar-primary: 217 67% 13%;  /* #0B1C36 - Primary navy */
@@ -75,6 +84,15 @@
     --input: 217 30% 26%;  /* Darker input border */
     --ring: 209 100% 82%;  /* #A3D5FF - Sky blue */
     
+    /* Gradients for dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(209 100% 82%) 0%, hsl(158 58% 59%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(158 58% 59%) 0%, hsl(209 100% 70%) 100%);
+    --gradient-vibrant: linear-gradient(135deg, hsl(209 100% 70%) 0%, hsl(158 58% 59%) 50%, hsl(280 80% 70%) 100%);
+    
+    /* Shadows with glow for dark mode */
+    --shadow-glow-accent: 0 0 30px hsl(158 58% 59% / 0.4);
+    --shadow-glow-primary: 0 0 30px hsl(209 100% 82% / 0.3);
+    
     --sidebar-background: 217 37% 18%;  /* #1D2B40 - Darker navy */
     --sidebar-foreground: 0 0% 100%;  /* WHITE - for better contrast */
     --sidebar-primary: 209 100% 82%;  /* #A3D5FF - Sky blue */
@@ -88,6 +106,36 @@
   /* Global focus style */
   :focus-visible {
     @apply outline-none ring-2 ring-accent ring-offset-2;
+  }
+  
+  /* Gradient text utility */
+  .gradient-text {
+    background: var(--gradient-vibrant);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Glass effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .glass {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Glow effect */
+  .glow-accent {
+    box-shadow: var(--shadow-glow-accent);
+  }
+  
+  .glow-primary {
+    box-shadow: var(--shadow-glow-primary);
   }
 }
 
