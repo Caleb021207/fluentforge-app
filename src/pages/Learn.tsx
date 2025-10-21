@@ -307,7 +307,7 @@ const Learn = () => {
                           )}
                         </div>
                       </div>
-                      </Card>
+                      </InteractiveCard>
                     </motion.div>
                   );
                 })}

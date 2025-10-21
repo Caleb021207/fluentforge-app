@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trophy, Sparkles } from "lucide-react";
 import { getLevelTier, getLevelColor } from "@/utils/levelSystem";
 import { motion } from "framer-motion";
+import ConfettiExplosion from "@/components/ui/confetti";
 
 interface LevelUpModalProps {
   open: boolean;
