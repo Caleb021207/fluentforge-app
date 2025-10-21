@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Check, X } from 'lucide-react';
+import { Check, X, BookmarkPlus } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { Exercise, TransformPayload } from '@/types/exercises';
 
 interface Props {
   exercise: Exercise;
   onComplete: (outcome: 'correct' | 'partial' | 'incorrect', score: number) => void;
+  onSaveWord?: (word: { lemma: string; display: string; translation: string }) => void;
 }
 
-const TransformExercise = ({ exercise, onComplete }: Props) => {
+const TransformExercise = ({ exercise, onComplete, onSaveWord }: Props) => {
   const payload = exercise.payload as TransformPayload;
   const [userAnswer, setUserAnswer] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -70,7 +72,11 @@ const TransformExercise = ({ exercise, onComplete }: Props) => {
             </Button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-4"
+          >
             <div className="text-center">
               {isCorrect ? (
                 <div className="flex items-center justify-center gap-2 text-green-600">
@@ -92,7 +98,28 @@ const TransformExercise = ({ exercise, onComplete }: Props) => {
                 </div>
               )}
             </div>
-          </div>
+            
+            {onSaveWord && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  // Extract key words from the solution
+                  const words = payload.solutions[0].split(' ');
+                  words.forEach(word => {
+                    onSaveWord({
+                      lemma: word.toLowerCase(),
+                      display: word,
+                      translation: ''
+                    });
+                  });
+                }}
+              >
+                <BookmarkPlus className="w-4 h-4 mr-2" />
+                Save Key Words
+              </Button>
+            )}
+          </motion.div>
         )}
       </Card>
     </div>

@@ -5,9 +5,11 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Volume2, Trash2, CheckCircle2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Volume2, Trash2, CheckCircle2, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { motion } from 'framer-motion';
 import type { WordBankEntry } from '@/types/exercises';
 
 const WordBank = () => {
@@ -19,6 +21,8 @@ const WordBank = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [cefrFilter, setCefrFilter] = useState<string | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -238,9 +242,55 @@ const WordBank = () => {
           <TabsTrigger value="due">Due for Review ({dueWords.length})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="mt-6">
+        <TabsContent value="all" className="mt-6 space-y-4">
+          {/* Search and filters */}
+          <div className="flex gap-4 items-center">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search words..."
+                className="pl-10"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant={cefrFilter === null ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setCefrFilter(null)}
+              >
+                All
+              </Button>
+              {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
+                <Button
+                  key={level}
+                  variant={cefrFilter === level ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setCefrFilter(level)}
+                >
+                  {level}
+                </Button>
+              ))}
+            </div>
+          </div>
+          
+          
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {words.map(word => (
+            {words
+              .filter(word => {
+                const matchesSearch = word.display.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  word.translation.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCefr = cefrFilter === null || word.cefr_tag === cefrFilter;
+                return matchesSearch && matchesCefr;
+              })
+              .map((word, index) => (
+              <motion.div
+                key={word.lemma}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
               <Card key={word.lemma} className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div>
@@ -282,6 +332,7 @@ const WordBank = () => {
                   Reviews: {word.review_count}
                 </div>
               </Card>
+              </motion.div>
             ))}
           </div>
 

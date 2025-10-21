@@ -13,15 +13,19 @@ import ClozeExercise from '@/components/exercises/ClozeExercise';
 import ReorderExercise from '@/components/exercises/ReorderExercise';
 import TransformExercise from '@/components/exercises/TransformExercise';
 import GuidedConvoTextExercise from '@/components/exercises/GuidedConvoTextExercise';
+import GuidedConvoVoiceExercise from '@/components/exercises/GuidedConvoVoiceExercise';
+import LevelUpModal from '@/components/gamification/LevelUpModal';
 import type { Exercise, Lesson } from '@/types/exercises';
 import { Skeleton } from '@/components/ui/skeleton';
+import { motion, AnimatePresence } from 'framer-motion';
+import { getXPReward } from '@/utils/levelSystem';
 
 const LessonPlayer = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthGuard();
   const { toast } = useToast();
-  const { awardXP } = useGamification();
+  const { awardXP, showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -79,17 +83,10 @@ const LessonPlayer = () => {
         duration_ms: 0
       });
 
-      // Award XP based on exercise type
-      const xpMap: Record<string, number> = {
-        flashcard: 5,
-        cloze: 10,
-        reorder: 10,
-        transform: 10,
-        guided_convo_text: 15,
-        guided_convo_voice: 15
-      };
-
-      const xp = outcome === 'correct' ? xpMap[currentExercise.type] || 5 : 0;
+      // Award XP using levelSystem utility
+      const xp = outcome === 'correct' 
+        ? getXPReward('lesson', { difficulty: 'Medium', score })
+        : 0;
       setEarnedXP(prev => prev + xp);
 
       // Update skill mastery
@@ -123,15 +120,17 @@ const LessonPlayer = () => {
       }
 
       if (currentIndex < exercises.length - 1) {
-        setCurrentIndex(prev => prev + 1);
+        setTimeout(() => setCurrentIndex(prev => prev + 1), 800);
       } else {
-        // Lesson complete
-        await awardXP('lesson', { difficulty: 'Medium' });
-        toast({
-          title: '🎉 Lesson Complete!',
-          description: `You earned ${earnedXP + xp} XP!`
-        });
-        navigate('/learn');
+        // Lesson complete - award bonus XP
+        setTimeout(async () => {
+          await awardXP('lesson', { difficulty: 'Medium' });
+          toast({
+            title: '🎉 Lesson Complete!',
+            description: `You earned ${earnedXP + xp} XP!`
+          });
+          setTimeout(() => navigate('/learn'), 2000);
+        }, 1500);
       }
     } catch (error) {
       console.error('Error submitting attempt:', error);
@@ -187,7 +186,17 @@ const LessonPlayer = () => {
   const progress = ((currentIndex + 1) / exercises.length) * 100;
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-4xl">
+    <>
+      {levelUpData && (
+        <LevelUpModal
+          open={showLevelUpModal}
+          onClose={() => setShowLevelUpModal(false)}
+          oldLevel={levelUpData.oldLevel}
+          newLevel={levelUpData.newLevel}
+          totalXP={progression?.total_xp || 0}
+        />
+      )}
+      <div className="container mx-auto py-8 px-4 max-w-4xl">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <Button variant="ghost" onClick={() => navigate('/learn')}>
@@ -212,7 +221,15 @@ const LessonPlayer = () => {
         </div>
       </div>
 
-      <Card className="p-6">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className="p-6">
         {currentExercise.type === 'flashcard' && (
           <FlashcardExercise
             exercise={currentExercise}
@@ -224,6 +241,7 @@ const LessonPlayer = () => {
           <ClozeExercise
             exercise={currentExercise}
             onComplete={submitAttempt}
+            onSaveWord={handleSaveWord}
           />
         )}
         {currentExercise.type === 'reorder' && (
@@ -236,6 +254,7 @@ const LessonPlayer = () => {
           <TransformExercise
             exercise={currentExercise}
             onComplete={submitAttempt}
+            onSaveWord={handleSaveWord}
           />
         )}
         {currentExercise.type === 'guided_convo_text' && (
@@ -244,8 +263,17 @@ const LessonPlayer = () => {
             onComplete={submitAttempt}
           />
         )}
-      </Card>
+        {currentExercise.type === 'guided_convo_voice' && (
+          <GuidedConvoVoiceExercise
+            exercise={currentExercise}
+            onComplete={submitAttempt}
+          />
+        )}
+          </Card>
+        </motion.div>
+      </AnimatePresence>
     </div>
+    </>
   );
 };
 

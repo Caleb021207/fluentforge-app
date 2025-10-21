@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Check, X } from 'lucide-react';
+import { Check, X, BookmarkPlus } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { Exercise, ClozePayload } from '@/types/exercises';
 
 interface Props {
   exercise: Exercise;
   onComplete: (outcome: 'correct' | 'partial' | 'incorrect', score: number) => void;
+  onSaveWord?: (word: { lemma: string; display: string; translation: string }) => void;
 }
 
-const ClozeExercise = ({ exercise, onComplete }: Props) => {
+const ClozeExercise = ({ exercise, onComplete, onSaveWord }: Props) => {
   const payload = exercise.payload as ClozePayload;
   const [userAnswer, setUserAnswer] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -74,24 +76,43 @@ const ClozeExercise = ({ exercise, onComplete }: Props) => {
             </Button>
           </div>
         ) : (
-          <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center space-y-4"
+          >
             {isCorrect ? (
               <div className="flex items-center justify-center gap-2 text-green-600">
                 <Check className="w-6 h-6" />
                 <span className="text-lg font-semibold">Correct!</span>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center justify-center gap-2 text-red-600">
                   <X className="w-6 h-6" />
                   <span className="text-lg font-semibold">Not quite</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Correct answer: {payload.answer[0]}
+                  Correct answer: <span className="font-bold">{payload.answer[0]}</span>
                 </p>
               </div>
             )}
-          </div>
+            
+            {onSaveWord && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onSaveWord({
+                  lemma: payload.answer[0],
+                  display: payload.answer[0],
+                  translation: payload.hint || ''
+                })}
+              >
+                <BookmarkPlus className="w-4 h-4 mr-2" />
+                Save Word
+              </Button>
+            )}
+          </motion.div>
         )}
       </Card>
     </div>
