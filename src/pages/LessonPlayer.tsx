@@ -12,6 +12,7 @@ import FlashcardExercise from '@/components/exercises/FlashcardExercise';
 import ClozeExercise from '@/components/exercises/ClozeExercise';
 import ReorderExercise from '@/components/exercises/ReorderExercise';
 import TransformExercise from '@/components/exercises/TransformExercise';
+import GuidedConvoTextExercise from '@/components/exercises/GuidedConvoTextExercise';
 import type { Exercise, Lesson } from '@/types/exercises';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -233,6 +234,12 @@ const LessonPlayer = () => {
         )}
         {currentExercise.type === 'transform' && (
           <TransformExercise
+            exercise={currentExercise}
+            onComplete={submitAttempt}
+          />
+        )}
+        {currentExercise.type === 'guided_convo_text' && (
+          <GuidedConvoTextExercise
             exercise={currentExercise}
             onComplete={submitAttempt}
           />
