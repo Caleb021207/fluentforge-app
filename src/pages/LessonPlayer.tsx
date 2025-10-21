@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, BookmarkPlus } from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useGamification } from '@/hooks/useGamification';
 import FlashcardExercise from '@/components/exercises/FlashcardExercise';
@@ -15,10 +15,12 @@ import TransformExercise from '@/components/exercises/TransformExercise';
 import GuidedConvoTextExercise from '@/components/exercises/GuidedConvoTextExercise';
 import GuidedConvoVoiceExercise from '@/components/exercises/GuidedConvoVoiceExercise';
 import LevelUpModal from '@/components/gamification/LevelUpModal';
+import XPNotification from '@/components/ui/xp-notification';
 import type { Exercise, Lesson } from '@/types/exercises';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getXPReward } from '@/utils/levelSystem';
+import { GradientBlob } from '@/components/ui/decorative-elements';
 
 const LessonPlayer = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -32,6 +34,8 @@ const LessonPlayer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [earnedXP, setEarnedXP] = useState(0);
+  const [showXPNotification, setShowXPNotification] = useState(false);
+  const [lastXPGain, setLastXPGain] = useState(0);
 
   useEffect(() => {
     if (isAuthenticated && lessonId) {
@@ -88,6 +92,12 @@ const LessonPlayer = () => {
         ? getXPReward('lesson', { difficulty: 'Medium', score })
         : 0;
       setEarnedXP(prev => prev + xp);
+      
+      if (xp > 0) {
+        setLastXPGain(xp);
+        setShowXPNotification(true);
+        setTimeout(() => setShowXPNotification(false), 2000);
+      }
 
       // Update skill mastery
       if (lesson) {
@@ -187,6 +197,7 @@ const LessonPlayer = () => {
 
   return (
     <>
+      <XPNotification show={showXPNotification} amount={lastXPGain} />
       {levelUpData && (
         <LevelUpModal
           open={showLevelUpModal}
@@ -196,40 +207,59 @@ const LessonPlayer = () => {
           totalXP={progression?.total_xp || 0}
         />
       )}
-      <div className="container mx-auto py-8 px-4 max-w-4xl">
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <Button variant="ghost" onClick={() => navigate('/learn')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-          <div className="text-sm text-muted-foreground">
-            {currentIndex + 1} / {exercises.length}
-          </div>
-        </div>
+      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+        <GradientBlob className="top-20 left-10" />
+        <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
+        
+        <div className="container mx-auto py-8 px-4 max-w-4xl relative z-10">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <Button variant="outline" onClick={() => navigate('/learn')}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+              <div className="text-sm font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                {currentIndex + 1} / {exercises.length}
+              </div>
+            </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">{lesson.title}</h1>
-            {currentExercise?.cefr_tag && (
-              <span className="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full">
-                {currentExercise.cefr_tag}
-              </span>
-            )}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <h1 className="text-3xl font-bold gradient-text">{lesson.title}</h1>
+                {currentExercise?.cefr_tag && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="text-sm bg-gradient-to-r from-primary to-accent text-white px-4 py-1.5 rounded-full font-semibold shadow-lg"
+                  >
+                    {currentExercise.cefr_tag}
+                  </motion.span>
+                )}
+              </div>
+              <div className="relative h-3 bg-muted/50 rounded-full overflow-hidden backdrop-blur-sm">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  className="h-full bg-gradient-to-r from-palavox-accent via-palavox-teal to-green-500 shadow-lg"
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                />
+              </div>
+            </motion.div>
           </div>
-          <Progress value={progress} className="h-2" />
-        </div>
-      </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Card className="p-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, x: 50, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -50, scale: 0.95 }}
+              transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
+            >
+              <Card className="p-8 glass shadow-2xl">
         {currentExercise.type === 'flashcard' && (
           <FlashcardExercise
             exercise={currentExercise}
@@ -269,10 +299,11 @@ const LessonPlayer = () => {
             onComplete={submitAttempt}
           />
         )}
-          </Card>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+              </Card>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
     </>
   );
 };

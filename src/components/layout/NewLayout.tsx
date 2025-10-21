@@ -11,6 +11,7 @@ import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, S
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useGamification } from "@/hooks/useGamification";
 import XPProgressBar from "@/components/gamification/XPProgressBar";
+import { motion } from "framer-motion";
 
 interface NewLayoutProps {
   children: React.ReactNode;
@@ -62,32 +63,47 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background text-foreground">
       {/* Top Bar */}
-      <div className="bg-card border-b sticky top-0 z-30">
+      <div className="bg-card/80 backdrop-blur-lg border-b sticky top-0 z-30 shadow-sm">
         {/* User Info Bar */}
         {user && (
-          <div className="px-4 py-2 bg-muted/30 flex justify-between items-center text-sm gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="px-4 py-3 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 flex justify-between items-center text-sm gap-4"
+          >
             <div className="flex items-center gap-2 min-w-0">
+              <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-muted-foreground">{t("signedInAs")}</span>
-              <span className="font-medium truncate max-w-[200px]">{user.email}</span>
+              <span className="font-semibold truncate max-w-[200px]">{user.email}</span>
             </div>
             {progression && (
-              <div className="flex-1 max-w-xs">
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                className="flex-1 max-w-xs origin-left"
+              >
                 <XPProgressBar totalXP={progression.total_xp} />
-              </div>
+              </motion.div>
             )}
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <LogoutButton iconOnly />
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Navigation Bar */}
-        <div className="px-4 py-3 flex items-center justify-between">
+        <div className="px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-primary">Palavox</h1>
+            <motion.h1
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-2xl font-bold gradient-text"
+            >
+              Palavox
+            </motion.h1>
             {user && (
               <TopNavigationDropdown
                 items={navigationItems}
