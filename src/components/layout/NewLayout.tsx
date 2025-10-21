@@ -117,8 +117,8 @@ const NewLayout = ({ children }: NewLayoutProps) => {
         </div>
       </div>
 
-      {/* Main Content - Add top margin to account for fixed dropdown */}
-      <main className="container mx-auto px-4 py-6">
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 py-6">
         {children}
       </main>
     </div>

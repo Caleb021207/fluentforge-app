@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { InteractiveCard } from '@/components/ui/card';
 import { LanguageMetrics } from '@/types/chat';
 import { useLocalization } from '@/context/LocalizationContext';
 import { Award, BarChart } from 'lucide-react';
@@ -82,70 +82,62 @@ const AccuracyRecommendations: React.FC<AccuracyRecommendationsProps> = ({ metri
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-md flex items-center">
-            <Award className="h-4 w-4 mr-2" />
-            {t("grammarRecommendations")}
-          </CardTitle>
-          <CardDescription>
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Award className="h-4 w-4 text-primary" />
+            <h4 className="text-md font-semibold">{t("grammarRecommendations")}</h4>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
             {t("basedOnYourGrammarScore", { score: String(Math.round(metrics.grammarAccuracy)) })}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </p>
           <ul className="list-disc pl-4 space-y-2">
             {getGrammarRecommendations(metrics.grammarAccuracy).map((rec, i) => (
               <li key={i} className="text-sm">{rec}</li>
             ))}
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-md flex items-center">
-            <BarChart className="h-4 w-4 mr-2" />
-            {t("complexityRecommendations")}
-          </CardTitle>
-          <CardDescription>
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <BarChart className="h-4 w-4 text-primary" />
+            <h4 className="text-md font-semibold">{t("complexityRecommendations")}</h4>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
             {t("basedOnYourComplexityScore", { score: String(Math.round(metrics.conversationComplexity)) })}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </p>
           <ul className="list-disc pl-4 space-y-2">
             {getComplexityRecommendations(metrics.conversationComplexity).map((rec, i) => (
               <li key={i} className="text-sm">{rec}</li>
             ))}
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
 
       {metrics.vocabularyDiversity !== undefined && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-md flex items-center">
-              <Award className="h-4 w-4 mr-2" />
-              {t("vocabularyRecommendations")}
-            </CardTitle>
-            <CardDescription>
+        <InteractiveCard>
+          <div className="p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <Award className="h-4 w-4 text-primary" />
+              <h4 className="text-md font-semibold">{t("vocabularyRecommendations")}</h4>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
               {t("basedOnYourVocabularyScore", { score: String(Math.round(metrics.vocabularyDiversity)) })}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
             <ul className="list-disc pl-4 space-y-2">
               {getVocabularyRecommendations(metrics.vocabularyDiversity).map((rec, i) => (
                 <li key={i} className="text-sm">{rec}</li>
               ))}
             </ul>
-          </CardContent>
-        </Card>
+          </div>
+        </InteractiveCard>
       )}
 
-      <Card className="md:col-span-2">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-md">{t("generalImprovementTips")}</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <InteractiveCard className="md:col-span-2">
+        <div className="p-6">
+          <h4 className="text-md font-semibold mb-4">{t("generalImprovementTips")}</h4>
           <ul className="list-disc pl-4 space-y-2">
             <li className="text-sm">{t("practiceRegularly")}</li>
             <li className="text-sm">{t("engageInDiverseTopics")}</li>
@@ -153,8 +145,8 @@ const AccuracyRecommendations: React.FC<AccuracyRecommendationsProps> = ({ metri
             <li className="text-sm">{t("setSpecificGoals")}</li>
             <li className="text-sm">{t("useVariedPracticeFormats")}</li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
     </div>
   );
 };

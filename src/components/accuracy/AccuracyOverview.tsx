@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { InteractiveCard } from "@/components/ui/card";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faComments, faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import { Progress } from "@/components/ui/progress";
@@ -35,19 +35,18 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
     }
   };
   
-  // Removed pronunciation accuracy card
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            {t("grammarAccuracy")}
-          </CardTitle>
-          <div className={`rounded-full p-1 ${getScoreColor(metrics.grammarAccuracy)}`}>
-            <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-sm font-medium">
+              {t("grammarAccuracy")}
+            </h4>
+            <div className={`rounded-full p-1 ${getScoreColor(metrics.grammarAccuracy)}`}>
+              <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />
+            </div>
           </div>
-        </CardHeader>
-        <CardContent>
           <div className="text-2xl font-bold">{metrics.grammarAccuracy?.toFixed(1)}%</div>
           <p className="text-xs text-muted-foreground">
             {getScoreDescription(metrics.grammarAccuracy, "grammar")}
@@ -57,19 +56,19 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
             className="mt-2"
             indicatorClassName={getScoreColorClass(metrics.grammarAccuracy)}
           />
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
       
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            {t("conversationComplexity")}
-          </CardTitle>
-          <div className={`rounded-full p-1 ${getScoreColor(metrics.conversationComplexity)}`}>
-            <FontAwesomeIcon icon={faComments} className="h-4 w-4" />
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-sm font-medium">
+              {t("conversationComplexity")}
+            </h4>
+            <div className={`rounded-full p-1 ${getScoreColor(metrics.conversationComplexity)}`}>
+              <FontAwesomeIcon icon={faComments} className="h-4 w-4" />
+            </div>
           </div>
-        </CardHeader>
-        <CardContent>
           <div className="text-2xl font-bold">{metrics.conversationComplexity?.toFixed(1)}%</div>
           <p className="text-xs text-muted-foreground">
             {getScoreDescription(metrics.conversationComplexity, "complexity")}
@@ -79,20 +78,20 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
             className="mt-2"
             indicatorClassName={getScoreColorClass(metrics.conversationComplexity)}
           />
-        </CardContent>
-      </Card>
+        </div>
+      </InteractiveCard>
       
       {metrics.vocabularyDiversity !== undefined && (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t("vocabularyDiversity")}
-            </CardTitle>
-            <div className={`rounded-full p-1 ${getScoreColor(metrics.vocabularyDiversity)}`}>
-              <FontAwesomeIcon icon={faBookOpen} className="h-4 w-4" />
+        <InteractiveCard>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-medium">
+                {t("vocabularyDiversity")}
+              </h4>
+              <div className={`rounded-full p-1 ${getScoreColor(metrics.vocabularyDiversity)}`}>
+                <FontAwesomeIcon icon={faBookOpen} className="h-4 w-4" />
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
             <div className="text-2xl font-bold">{metrics.vocabularyDiversity?.toFixed(1)}%</div>
             <p className="text-xs text-muted-foreground">
               {getScoreDescription(metrics.vocabularyDiversity, "vocabulary")}
@@ -102,8 +101,8 @@ const AccuracyOverview = ({ metrics }: { metrics: LanguageMetrics }) => {
               className="mt-2"
               indicatorClassName={getScoreColorClass(metrics.vocabularyDiversity)}
             />
-          </CardContent>
-        </Card>
+          </div>
+        </InteractiveCard>
       )}
     </div>
   );
