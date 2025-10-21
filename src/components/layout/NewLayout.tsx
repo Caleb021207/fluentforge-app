@@ -7,8 +7,10 @@ import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import LogoutButton from "@/components/auth/LogoutButton";
-import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles } from "lucide-react";
+import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles, Trophy } from "lucide-react";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { useGamification } from "@/hooks/useGamification";
+import XPProgressBar from "@/components/gamification/XPProgressBar";
 
 interface NewLayoutProps {
   children: React.ReactNode;
@@ -20,6 +22,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   const { t } = useLocalization();
   const [user, setUser] = useState<User | null>(null);
   const { usageLimits, premiumVoiceMinutesRemaining } = useUsageLimits();
+  const { progression } = useGamification();
 
   useEffect(() => {
     // Get initial session
@@ -46,6 +49,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
     { label: t("premiumVoicePractice") || "Premium Voice", path: "/premium-voice-practice", icon: <Sparkles className="w-4 h-4" /> },
     { label: t("aiAnalysis") || "AI Analysis", path: "/analysis", icon: <Brain className="w-4 h-4" /> },
+    { label: "Leaderboard", path: "/leaderboard", icon: <Trophy className="w-4 h-4" /> },
     { label: t("profile") || "Profile", path: "/profile", icon: <UserIcon className="w-4 h-4" /> },
     { label: t("settings") || "Settings", path: "/settings", icon: <Settings className="w-4 h-4" /> },
   ];
@@ -60,11 +64,16 @@ const NewLayout = ({ children }: NewLayoutProps) => {
       <div className="bg-card border-b sticky top-0 z-30">
         {/* User Info Bar */}
         {user && (
-          <div className="px-4 py-2 bg-muted/30 flex justify-between items-center text-sm">
-            <div className="flex items-center gap-2">
+          <div className="px-4 py-2 bg-muted/30 flex justify-between items-center text-sm gap-4">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="text-muted-foreground">{t("signedInAs")}</span>
               <span className="font-medium truncate max-w-[200px]">{user.email}</span>
             </div>
+            {progression && (
+              <div className="flex-1 max-w-xs">
+                <XPProgressBar totalXP={progression.total_xp} />
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <LogoutButton iconOnly />

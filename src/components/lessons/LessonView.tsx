@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,8 @@ import { Progress } from '@/components/ui/progress';
 import VocabularyLesson from './VocabularyLesson';
 import { useToast } from '@/components/ui/use-toast';
 import { Award, ArrowLeft, Volume2 } from 'lucide-react';
+import { useGamification } from '@/hooks/useGamification';
+import LevelUpModal from '@/components/gamification/LevelUpModal';
 
 interface LessonViewProps {
   onClose: () => void;
@@ -30,12 +31,16 @@ const LessonView = ({ lesson, onClose, onComplete }: LessonViewProps) => {
   const [progress, setProgress] = useState(0);
   const { toast } = useToast();
   const [earnedXP, setEarnedXP] = useState(0);
+  const { awardXP, showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
 
-  const handleComplete = (xpEarned: number) => {
+  const handleComplete = async (xpEarned: number) => {
     setEarnedXP((prev) => prev + xpEarned);
     setProgress((prev) => prev + (100 / lesson.challenges.length));
     
     if (currentStep === lesson.challenges.length - 1) {
+      // Award XP for completing the lesson
+      await awardXP('lesson', { difficulty: 'Medium' });
+      
       toast({
         title: "Lesson Complete! 🎉",
         description: `You've earned ${earnedXP + xpEarned} XP points!`,
@@ -96,6 +101,16 @@ const LessonView = ({ lesson, onClose, onComplete }: LessonViewProps) => {
           )}
         </CardContent>
       </Card>
+
+      {showLevelUpModal && levelUpData && (
+        <LevelUpModal
+          open={showLevelUpModal}
+          onClose={() => setShowLevelUpModal(false)}
+          oldLevel={levelUpData.oldLevel}
+          newLevel={levelUpData.newLevel}
+          totalXP={progression?.total_xp || 0}
+        />
+      )}
     </div>
   );
 };

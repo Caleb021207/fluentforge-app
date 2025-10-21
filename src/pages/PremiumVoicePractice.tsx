@@ -8,6 +8,8 @@ import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getLanguagePair } from "@/utils/languageUtils";
+import { useGamification } from "@/hooks/useGamification";
+import LevelUpModal from "@/components/gamification/LevelUpModal";
 
 const PremiumVoicePractice = () => {
   const { t, currentLanguage } = useLocalization();
@@ -30,6 +32,8 @@ const PremiumVoicePractice = () => {
   const customTimerRef = useRef<number | null>(null);
   
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession, trackPremiumVoiceSession } = useUsageLimits();
+  const { awardXP, showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
+  const sessionStartTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
@@ -224,6 +228,11 @@ const PremiumVoicePractice = () => {
 
     const minutesUsed = Math.ceil(elapsedSeconds / 60);
     console.log('Ending premium voice conversation:', { elapsedSeconds, minutesUsed, sessionId });
+    
+    // Award XP for completing voice session
+    if (minutesUsed > 0) {
+      await awardXP('voice', { minutes: minutesUsed });
+    }
     
     // Track usage with fallback mechanisms
     if (chatRef.current && minutesUsed > 0 && sessionId) {
@@ -477,6 +486,16 @@ const PremiumVoicePractice = () => {
           </div>
         </Card>
       </div>
+
+      {showLevelUpModal && levelUpData && (
+        <LevelUpModal
+          open={showLevelUpModal}
+          onClose={() => setShowLevelUpModal(false)}
+          oldLevel={levelUpData.oldLevel}
+          newLevel={levelUpData.newLevel}
+          totalXP={progression?.total_xp || 0}
+        />
+      )}
     </div>
   );
 };

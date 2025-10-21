@@ -116,6 +116,42 @@ export type Database = {
         }
         Relationships: []
       }
+      achievements: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+          xp_reward: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+          xp_reward?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          requirement_type?: string
+          requirement_value?: number
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       admin_override_logs: {
         Row: {
           admin_id: string
@@ -440,6 +476,45 @@ export type Database = {
           responsible_party?: string | null
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      daily_quests: {
+        Row: {
+          completed: boolean
+          created_at: string
+          current_value: number
+          id: string
+          quest_date: string
+          quest_type: string
+          target_value: number
+          updated_at: string
+          user_id: string
+          xp_reward: number
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          current_value?: number
+          id?: string
+          quest_date?: string
+          quest_type: string
+          target_value: number
+          updated_at?: string
+          user_id: string
+          xp_reward: number
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          current_value?: number
+          id?: string
+          quest_date?: string
+          quest_type?: string
+          target_value?: number
+          updated_at?: string
+          user_id?: string
+          xp_reward?: number
         }
         Relationships: []
       }
@@ -1820,6 +1895,80 @@ export type Database = {
           session_type?: string
           started_at?: string
           student_id?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_progression: {
+        Row: {
+          certifications_completed: number
+          created_at: string
+          current_level: number
+          current_streak_days: number
+          id: string
+          last_activity_date: string | null
+          lessons_completed: number
+          longest_streak_days: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+          voice_sessions_completed: number
+        }
+        Insert: {
+          certifications_completed?: number
+          created_at?: string
+          current_level?: number
+          current_streak_days?: number
+          id?: string
+          last_activity_date?: string | null
+          lessons_completed?: number
+          longest_streak_days?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+          voice_sessions_completed?: number
+        }
+        Update: {
+          certifications_completed?: number
+          created_at?: string
+          current_level?: number
+          current_streak_days?: number
+          id?: string
+          last_activity_date?: string | null
+          lessons_completed?: number
+          longest_streak_days?: number
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+          voice_sessions_completed?: number
         }
         Relationships: []
       }
