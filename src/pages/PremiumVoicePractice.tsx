@@ -506,18 +506,19 @@ const PremiumVoicePractice = () => {
               </div>
             )}
           </div>
-        </Card>
-      </div>
+          </InteractiveCard>
+        </motion.div>
 
-      {showLevelUpModal && levelUpData && (
-        <LevelUpModal
-          open={showLevelUpModal}
-          onClose={() => setShowLevelUpModal(false)}
-          oldLevel={levelUpData.oldLevel}
-          newLevel={levelUpData.newLevel}
-          totalXP={progression?.total_xp || 0}
-        />
-      )}
+        {showLevelUpModal && levelUpData && (
+          <LevelUpModal
+            open={showLevelUpModal}
+            onClose={() => setShowLevelUpModal(false)}
+            oldLevel={levelUpData.oldLevel}
+            newLevel={levelUpData.newLevel}
+            totalXP={progression?.total_xp || 0}
+          />
+        )}
+      </div>
     </div>
   );
 };
