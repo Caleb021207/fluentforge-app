@@ -22,11 +22,8 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Leaderboard Section */}
-      <LeaderboardSection />
-
       {/* Student Test Scores - Top Priority */}
-      <StudentTestScores
+      <StudentTestScores 
         teacherId={profile.id} 
         onDataUpdate={(average, count) => {
           setClassAverage(average);
@@ -36,6 +33,9 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
 
       {/* Access Code Management */}
       <CodeManagement userRole="teacher" userSchool={profile.school?.name} />
+
+      {/* Leaderboard Section */}
+      <LeaderboardSection />
 
       {/* Teacher Overview */}
       <Card>
