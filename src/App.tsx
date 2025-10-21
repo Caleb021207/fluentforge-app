@@ -16,6 +16,8 @@ import CertificationCodeTester from "@/pages/CertificationCodeTester";
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import SafetyPolicy from "@/pages/SafetyPolicy";
 import Leaderboard from "@/pages/Leaderboard";
+import Learn from "@/pages/Learn";
+import LessonPlayer from "@/pages/LessonPlayer";
 
 function App() {
   return (
