@@ -57,10 +57,10 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Top Bar */}
-      <div className="bg-card border-b sticky top-0 z-30">
+      <div className="bg-card/95 backdrop-blur-sm border-b sticky top-0 z-30 shadow-sm">
         {/* User Info Bar */}
         {user && (
-          <div className="px-4 py-2 bg-muted/30 flex justify-between items-center text-sm">
+          <div className="px-4 py-2.5 bg-muted/20 flex justify-between items-center text-sm">
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">{t("signedInAs")}</span>
               <span className="font-medium truncate max-w-[200px]">{user.email}</span>
@@ -73,9 +73,11 @@ const NewLayout = ({ children }: NewLayoutProps) => {
         )}
 
         {/* Navigation Bar */}
-        <div className="px-4 py-3 flex items-center justify-between">
+        <div className="px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-primary">Palavox</h1>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Palavox
+            </h1>
             {user && (
               <TopNavigationDropdown
                 items={navigationItems}
@@ -93,8 +95,8 @@ const NewLayout = ({ children }: NewLayoutProps) => {
         </div>
       </div>
 
-      {/* Main Content - Add top margin to account for fixed dropdown */}
-      <main className="container mx-auto px-4 py-6">
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
         {children}
       </main>
     </div>

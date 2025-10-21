@@ -4,7 +4,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { getLanguageDisplayName } from "@/utils/languageUtils";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/lib/animations";
-import { MessageSquare, Sparkles } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 interface PracticeHeaderProps {
   targetLanguage: string;
@@ -20,32 +20,31 @@ const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage }) => {
   
   return (
     <motion.div 
-      className="mb-8 text-center relative"
+      className="mb-10 text-center"
       initial="hidden"
       animate="visible"
       variants={fadeIn}
     >
-      {/* Decorative elements */}
       <motion.div
-        className="absolute -top-4 left-1/2 transform -translate-x-1/2"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="inline-flex items-center justify-center gap-3 mb-4"
+        variants={fadeIn}
       >
-        <Sparkles className="w-8 h-8 text-accent opacity-50" />
+        <div className="p-3 bg-accent/10 rounded-xl">
+          <MessageSquare className="w-8 h-8 text-accent" />
+        </div>
       </motion.div>
       
       <motion.h1 
-        className="text-4xl md:text-5xl font-bold mb-3 gradient-text flex items-center justify-center gap-3"
+        className="text-4xl md:text-5xl font-bold mb-3 text-foreground"
         variants={fadeIn}
       >
-        <MessageSquare className="w-10 h-10" />
         {learningLanguage} {t("textPractice")}
       </motion.h1>
       <motion.p 
-        className="text-xl md:text-2xl text-muted-foreground"
+        className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto"
         variants={fadeIn}
       >
-        {t("startChatting")} 🚀
+        {t("startChatting")}
       </motion.p>
     </motion.div>
   );

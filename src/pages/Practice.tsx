@@ -150,16 +150,16 @@ const Practice = () => {
       className="max-w-4xl mx-auto p-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
     >
       <PracticeHeader targetLanguage={targetLanguage} />
       
-      <InteractiveCard className="mb-6 glass">
-        <CardContent className="p-4 space-y-4">
+      <InteractiveCard className="mb-6 card-elevated">
+        <CardContent className="p-6">
           {/* Grammar Correction Toggle */}
           <div className="flex items-center justify-between">
             <Label htmlFor="grammar-correction" className="text-base font-medium">
-              {t("correctGrammar") || "Grammar Correction"} ✨
+              {t("correctGrammar") || "Grammar Correction"}
             </Label>
             <Switch
               id="grammar-correction"

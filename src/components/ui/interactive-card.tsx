@@ -4,19 +4,17 @@ import { cn } from "@/lib/utils"
 
 interface InteractiveCardProps extends Omit<HTMLMotionProps<"div">, "ref"> {
   hoverScale?: number;
-  glowOnHover?: boolean;
 }
 
 const InteractiveCard = React.forwardRef<HTMLDivElement, InteractiveCardProps>(
-  ({ className, hoverScale = 1.02, glowOnHover = true, children, ...props }, ref) => {
+  ({ className, hoverScale = 1.01, children, ...props }, ref) => {
     return (
       <motion.div
         ref={ref}
-        whileHover={{ scale: hoverScale }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: hoverScale, y: -4 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
         className={cn(
-          "rounded-lg border bg-card text-card-foreground shadow-sm transition-shadow duration-300",
-          glowOnHover && "hover:glow-accent",
+          "rounded-xl border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-shadow duration-200",
           className
         )}
         {...props}
