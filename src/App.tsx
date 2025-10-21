@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
@@ -15,6 +14,10 @@ import Settings from "@/pages/Settings";
 import CertificationCodeTester from "@/pages/CertificationCodeTester";
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import SafetyPolicy from "@/pages/SafetyPolicy";
+import Leaderboard from "@/pages/Leaderboard";
+import Learn from "@/pages/Learn";
+import LessonPlayer from "@/pages/LessonPlayer";
+import WordBank from "@/pages/WordBank";
 
 function App() {
   return (
@@ -31,6 +34,11 @@ function App() {
           <Route path="/code-tester" element={<CertificationCodeTester />} />
           <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
           <Route path="/safety-policy" element={<SafetyPolicy />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/lessons" element={<Lessons />} />
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/lesson/:lessonId" element={<LessonPlayer />} />
+          <Route path="/word-bank" element={<WordBank />} />
         </Routes>
         <Toaster />
       </NewLayout>

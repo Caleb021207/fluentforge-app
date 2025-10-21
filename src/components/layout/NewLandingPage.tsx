@@ -93,11 +93,14 @@ const NewLandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Subtle Background Accent */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl" />
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, var(--primary) 2px, transparent 2px),
+                           radial-gradient(circle at 75% 75%, var(--accent) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px, 40px 40px'
+        }} />
       </div>
 
       {/* Main Content */}
@@ -134,7 +137,7 @@ const NewLandingPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-4xl md:text-6xl font-bold mb-4 text-foreground leading-tight"
+          className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight pb-2"
         >
           {t("welcomeToLanguageLearning")}
         </motion.h1>
@@ -157,8 +160,8 @@ const NewLandingPage = () => {
         >
           {/* Primary CTA - Start Practicing */}
           <motion.button
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               if (isSignedIn) {
                 navigate('/practice');
@@ -166,7 +169,7 @@ const NewLandingPage = () => {
                 setIsPanelOpen(true);
               }
             }}
-            className="px-12 py-5 bg-primary text-primary-foreground rounded-xl font-semibold text-xl shadow-lg hover:shadow-xl transition-all"
+            className="px-12 py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all"
           >
             {t("startPracticing")}
           </motion.button>
@@ -197,24 +200,24 @@ const NewLandingPage = () => {
 
           <div className="flex gap-4 justify-center">
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 setIsLogin(true);
                 setIsAuthDialogOpen(true);
               }}
-              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium shadow-sm hover:shadow-md transition-all"
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium"
             >
               {t("signIn")}
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 setIsLogin(false);
                 setIsAuthDialogOpen(true);
               }}
-              className="px-6 py-3 bg-accent text-accent-foreground rounded-lg font-medium shadow-sm hover:shadow-md transition-all"
+              className="px-6 py-3 bg-accent text-accent-foreground rounded-lg font-medium"
             >
               {t("signUp")}
             </motion.button>

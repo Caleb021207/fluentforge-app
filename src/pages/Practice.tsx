@@ -12,8 +12,6 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { InteractiveCard } from "@/components/ui/interactive-card";
-import { motion } from "framer-motion";
 import { Trash } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
@@ -146,16 +144,11 @@ const Practice = () => {
   }
 
   return (
-    <motion.div 
-      className="max-w-4xl mx-auto p-4"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-    >
+    <div className="max-w-4xl mx-auto p-4">
       <PracticeHeader targetLanguage={targetLanguage} />
       
-      <InteractiveCard className="mb-6 card-elevated">
-        <CardContent className="p-6">
+      <Card className="mb-6">
+        <CardContent className="p-4 space-y-4">
           {/* Grammar Correction Toggle */}
           <div className="flex items-center justify-between">
             <Label htmlFor="grammar-correction" className="text-base font-medium">
@@ -168,7 +161,7 @@ const Practice = () => {
             />
           </div>
         </CardContent>
-      </InteractiveCard>
+      </Card>
       
       <div className="flex justify-between items-center mb-4">
         <div className="flex space-x-3 items-center">
@@ -200,7 +193,7 @@ const Practice = () => {
       />
 
       <PracticeGuide targetLanguage={targetLanguage} />
-    </motion.div>
+    </div>
   );
 };
 
