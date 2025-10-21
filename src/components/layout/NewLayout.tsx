@@ -45,9 +45,6 @@ const NewLayout = ({ children }: NewLayoutProps) => {
 
   const navigationItems = [
     { label: t("home") || "Home", path: "/", icon: <Home className="w-4 h-4" /> },
-    { label: t("lessons") || "Lessons", path: "/lessons", icon: <BookOpen className="w-4 h-4" /> },
-    { label: "Learn", path: "/learn", icon: <Brain className="w-4 h-4" /> },
-    { label: "Word Bank", path: "/word-bank", icon: <BookOpen className="w-4 h-4" /> },
     { label: t("practice") || "Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
     { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" />, disabled: voiceChatDisabled },
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },

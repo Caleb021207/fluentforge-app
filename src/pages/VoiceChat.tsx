@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { InteractiveCard } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,6 +15,9 @@ import { getEnglishOnlyMessage } from "@/utils/englishOnlyMessages";
 import { supabase } from "@/integrations/supabase/client";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import type { User } from "@supabase/supabase-js";
+import { motion } from "framer-motion";
+import { GradientBlob } from "@/components/ui/decorative-elements";
+import { Sparkles } from "lucide-react";
 
 // Importing components
 import VoiceChatHeader from "@/components/voice-chat/VoiceChatHeader";
@@ -167,28 +170,49 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <VoiceChatHeader />
+    <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+      <GradientBlob className="top-20 left-10" />
+      <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
+      
+      <div className="max-w-4xl mx-auto p-4 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <VoiceChatHeader />
+        </motion.div>
 
-      <div className="flex flex-col gap-6">
-        {/* Conversation Settings Card */}
-        <Card>
-          <CardContent className="p-4 space-y-4">
-            {/* Grammar Correction Toggle */}
-            <div className="flex items-center justify-between">
-              <Label htmlFor="grammar-correction" className="text-base font-medium">
-                {t("correctGrammar") || "Grammar Correction"}
-              </Label>
-              <Switch
-                id="grammar-correction"
-                checked={correctGrammar}
-                onCheckedChange={toggleGrammarCorrection}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col gap-6">
+          {/* Conversation Settings Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <InteractiveCard className="glass">
+              <CardContent className="p-4 space-y-4">
+                {/* Grammar Correction Toggle */}
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="grammar-correction" className="text-base font-medium flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    {t("correctGrammar") || "Grammar Correction"}
+                  </Label>
+                  <Switch
+                    id="grammar-correction"
+                    checked={correctGrammar}
+                    onCheckedChange={toggleGrammarCorrection}
+                  />
+                </div>
+              </CardContent>
+            </InteractiveCard>
+          </motion.div>
 
-        <Card className="p-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <InteractiveCard className="p-6 glass">
           <div className="flex justify-center mb-6">
             <VoiceRecognitionControls
               isListening={isListening}
@@ -220,28 +244,41 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
             clearConversation={clearConversation}
             analyzeCurrentConversation={analyzeCurrentConversation}
             practice={practice}
-            isAnalyzing={isAnalyzing}
-          />
-        </Card>
+              isAnalyzing={isAnalyzing}
+            />
+          </InteractiveCard>
+        </motion.div>
 
         {/* Language Metrics Panel */}
         {metrics && (
-          <LanguageMetricsPanel
-            metrics={metrics}
-            isExpanded={isExpanded}
-            onToggle={togglePanel}
-            isLoading={isAnalyzing}
-            onAnalyze={analyzeCurrentConversation}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <LanguageMetricsPanel
+              metrics={metrics}
+              isExpanded={isExpanded}
+              onToggle={togglePanel}
+              isLoading={isAnalyzing}
+              onAnalyze={analyzeCurrentConversation}
+            />
+          </motion.div>
         )}
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           <ConversationStarters 
             onPhraseClick={handlePhraseClick}
             targetLanguage={practice}
           />
           
           <InformationCard />
+        </motion.div>
         </div>
       </div>
     </div>

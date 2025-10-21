@@ -11,11 +11,13 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Trash } from "lucide-react";
+import { InteractiveCard } from "@/components/ui/card";
+import { Trash, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
 import { secureStorage } from "@/utils/security/dataEncryption";
+import { motion } from "framer-motion";
+import { GradientBlob } from "@/components/ui/decorative-elements";
 
 // Create an interface that matches the Message structure from useChatMessages
 interface MessageWithTranslationType {
@@ -144,55 +146,89 @@ const Practice = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <PracticeHeader targetLanguage={targetLanguage} />
+    <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+      <GradientBlob className="top-20 left-10" />
+      <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
-      <Card className="mb-6">
-        <CardContent className="p-4 space-y-4">
-          {/* Grammar Correction Toggle */}
-          <div className="flex items-center justify-between">
-            <Label htmlFor="grammar-correction" className="text-base font-medium">
-              {t("correctGrammar") || "Grammar Correction"}
-            </Label>
-            <Switch
-              id="grammar-correction"
-              checked={correctGrammar}
-              onCheckedChange={toggleGrammarCorrection}
+      <div className="max-w-4xl mx-auto p-4 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <PracticeHeader targetLanguage={targetLanguage} />
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <InteractiveCard className="mb-6 glass">
+            <div className="p-4 space-y-4">
+              {/* Grammar Correction Toggle */}
+              <div className="flex items-center justify-between">
+                <Label htmlFor="grammar-correction" className="text-base font-medium flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  {t("correctGrammar") || "Grammar Correction"}
+                </Label>
+                <Switch
+                  id="grammar-correction"
+                  checked={correctGrammar}
+                  onCheckedChange={toggleGrammarCorrection}
+                />
+              </div>
+            </div>
+          </InteractiveCard>
+        </motion.div>
+      
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="flex justify-between items-center mb-4"
+        >
+          <div className="flex space-x-3 items-center">
+            <PracticePromptButton
+              onClick={sendLanguageLearningPrompt}
+              isLoading={chatLoading}
+              targetLanguage={targetLanguage}
             />
           </div>
-        </CardContent>
-      </Card>
-      
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex space-x-3 items-center">
-          <PracticePromptButton
-            onClick={sendLanguageLearningPrompt}
+          
+          <Button 
+            variant="outline" 
+            onClick={clearConversation}
+            className="flex items-center gap-2 hover:shadow-lg transition-all"
+          >
+            <Trash className="h-4 w-4" />
+            {t("clearConversation")}
+          </Button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <ChatContainer
+            messages={compatibleMessages}
+            input={input}
+            setInput={setInput}
+            handleSubmit={handleSubmit}
             isLoading={chatLoading}
+            getPlaceholderText={getPlaceholderText}
             targetLanguage={targetLanguage}
           />
-        </div>
-        
-        <Button 
-          variant="outline" 
-          onClick={clearConversation}
-          className="flex items-center gap-2"
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
         >
-          <Trash className="h-4 w-4" />
-          {t("clearConversation")}
-        </Button>
+          <PracticeGuide targetLanguage={targetLanguage} />
+        </motion.div>
       </div>
-
-      <ChatContainer
-        messages={compatibleMessages}
-        input={input}
-        setInput={setInput}
-        handleSubmit={handleSubmit}
-        isLoading={chatLoading}
-        getPlaceholderText={getPlaceholderText}
-        targetLanguage={targetLanguage}
-      />
-
-      <PracticeGuide targetLanguage={targetLanguage} />
     </div>
   );
 };
