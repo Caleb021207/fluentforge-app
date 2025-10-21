@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all duration-300",
         ghost: "hover:bg-accent/20 hover:text-accent-foreground transition-all duration-300",
         link: "text-primary underline-offset-4 hover:underline transition-all duration-300",
-        success: "bg-green-600 text-white hover:bg-green-700 hover:shadow-lg hover:scale-105 transition-all duration-300",
+        success: "bg-palavox-teal text-white hover:bg-palavox-teal/90 hover:shadow-lg hover:scale-105 transition-all duration-300",
         accent: "bg-accent text-accent-foreground hover:bg-accent/90 dark:bg-palavox-teal dark:text-white dark:hover:bg-palavox-teal/90 transition-all duration-300",
         gradient: "bg-gradient-to-r from-[#A3D5FF] to-[#57D8A1] text-white hover:shadow-lg hover:scale-105 transition-all duration-300",
         celebration: "bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 text-white hover:scale-110 hover:shadow-xl transition-all duration-300",
