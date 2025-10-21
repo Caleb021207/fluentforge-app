@@ -3,11 +3,9 @@ import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trophy, Flame, BookOpen, Crown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import XPProgressBar from "@/components/gamification/XPProgressBar";
 
 interface LeaderboardEntry {
   rank: number;
@@ -26,20 +24,19 @@ const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState<'xp' | 'streak' | 'lessons'>('xp');
-  const [scope, setScope] = useState<'global' | 'school' | 'class'>('global');
   const [userRank, setUserRank] = useState<number | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchLeaderboard();
     }
-  }, [isAuthenticated, type, scope]);
+  }, [isAuthenticated, type]);
 
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
-        body: { type, scope, limit: 50 },
+        body: { type, scope: 'class', limit: 50 },
       });
 
       if (error) throw error;
@@ -77,21 +74,8 @@ const Leaderboard = () => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Leaderboard</h1>
-        <p className="text-muted-foreground">Compete with other learners and climb the ranks!</p>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <Select value={scope} onValueChange={(v: any) => setScope(v)}>
-          <SelectTrigger className="w-full md:w-[200px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="global">Global</SelectItem>
-            <SelectItem value="school">My School</SelectItem>
-            <SelectItem value="class">My Class</SelectItem>
-          </SelectContent>
-        </Select>
+        <h1 className="text-4xl font-bold mb-2">Class Leaderboard</h1>
+        <p className="text-muted-foreground">Compete with classmates and climb the ranks!</p>
       </div>
 
       <Tabs value={type} onValueChange={(v: any) => setType(v)} className="w-full">
