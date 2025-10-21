@@ -1,10 +1,14 @@
-
 import CertificatesDataProvider from "@/components/certificates/CertificatesDataProvider";
 import CertificatesLayout from "@/components/certificates/CertificatesLayout";
+import { GradientBlob } from "@/components/ui/decorative-elements";
 
 const Certificates = () => {
   return (
-    <CertificatesDataProvider>
+    <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+      <GradientBlob className="top-20 left-10" />
+      <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
+      <div className="relative z-10">
+        <CertificatesDataProvider>
       {({ 
         normalizedAttempts, 
         highestScores, 
@@ -31,6 +35,8 @@ const Certificates = () => {
         />
       )}
     </CertificatesDataProvider>
+      </div>
+    </div>
   );
 };
 
