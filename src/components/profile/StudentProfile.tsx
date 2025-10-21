@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import TestScoreCard from "./TestScoreCard";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { LeaderboardSection } from "./LeaderboardSection";
 
 interface StudentProfileProps {
   profile: ExtendedUserProfile;
@@ -180,6 +181,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
       {/* Test Scores - Second Priority */}
       <TestScoreCard testScore={latestTestScore} />
+
+      {/* Leaderboard Section */}
+      <LeaderboardSection />
 
       {/* Student Overview */}
       <Card>

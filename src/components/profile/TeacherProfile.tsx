@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import CodeManagement from "@/components/admin/CodeManagement";
 import StudentTestScores from "./StudentTestScores";
 import { useLocalization } from "@/context/LocalizationContext";
+import { LeaderboardSection } from "./LeaderboardSection";
 
 interface TeacherProfileProps {
   profile: ExtendedUserProfile;
@@ -21,8 +22,11 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Leaderboard Section */}
+      <LeaderboardSection />
+
       {/* Student Test Scores - Top Priority */}
-      <StudentTestScores 
+      <StudentTestScores
         teacherId={profile.id} 
         onDataUpdate={(average, count) => {
           setClassAverage(average);

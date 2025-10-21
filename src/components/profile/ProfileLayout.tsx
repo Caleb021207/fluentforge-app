@@ -6,7 +6,6 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileDebugPanel from "./ProfileDebugPanel";
 import UserInfo from "./UserInfo";
 import RoleSpecificProfile from "./RoleSpecificProfile";
-import { LeaderboardSection } from "./LeaderboardSection";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
 
@@ -47,9 +46,6 @@ const ProfileLayout = ({ user, profile, debugInfo, onProfileUpdate }: ProfileLay
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <LeaderboardSection />
-        </motion.div>
       </div>
     </div>
   );
