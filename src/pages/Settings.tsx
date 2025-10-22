@@ -14,13 +14,6 @@ const Settings = () => {
   
   const documentLinks = [
     {
-      title: "Compliance Center",
-      description: "FERPA, COPPA, and data protection management",
-      icon: <Lock className="w-5 h-5" />,
-      path: "/compliance",
-      badge: "K-12 Compliant"
-    },
-    {
       title: "Terms of Service",
       description: "Read our terms and conditions",
       icon: <FileText className="w-5 h-5" />,
@@ -34,7 +27,7 @@ const Settings = () => {
       path: "https://palavox.org/eula",
       external: true
     }
-  ];
+  ] as const;
   
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
@@ -127,13 +120,6 @@ const Settings = () => {
                           <CardDescription className="mt-1.5 text-sm">
                             {doc.description}
                           </CardDescription>
-                          {doc.badge && (
-                            <div className="mt-3">
-                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
-                                {doc.badge}
-                              </span>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
