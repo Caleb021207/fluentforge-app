@@ -27,7 +27,9 @@ const Settings = () => {
               <Sparkles className="w-10 h-10 md:w-12 md:h-12" />
               Settings
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground">Manage your account and preferences</p>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+              Manage your account and preferences
+            </p>
           </div>
         </motion.div>
         
@@ -38,11 +40,15 @@ const Settings = () => {
           transition={{ delay: 0.1 }}
         >
           <InteractiveCard className="w-full mb-6 glass">
-            <CardHeader className="flex flex-row items-center gap-2">
-              <TrendingUp size={20} className="text-primary" />
-              <div>
-                <CardTitle>Usage Limits</CardTitle>
-                <CardDescription>Monitor your daily AI usage and remaining quota</CardDescription>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-primary" />
+                <div>
+                  <CardTitle className="text-2xl font-bold">Usage Limits</CardTitle>
+                  <CardDescription className="text-base mt-1">
+                    Monitor your daily AI usage and remaining quota
+                  </CardDescription>
+                </div>
               </div>
             </CardHeader>
           </InteractiveCard>
@@ -64,30 +70,32 @@ const Settings = () => {
           transition={{ delay: 0.3 }}
         >
           <InteractiveCard className="w-full glass">
-            <CardHeader className="flex flex-row items-center gap-2">
-              <Shield size={20} className="text-primary" />
-              <div>
-                <CardTitle>Parental Controls</CardTitle>
-                <CardDescription>Manage safety and privacy settings</CardDescription>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <Shield className="w-6 h-6 text-primary" />
+                <div>
+                  <CardTitle className="text-2xl font-bold">Parental Controls</CardTitle>
+                  <CardDescription className="text-base mt-1">
+                    Manage safety and privacy settings
+                  </CardDescription>
+                </div>
               </div>
             </CardHeader>
-            <CardFooter className="flex justify-between">
+            <CardFooter className="flex flex-wrap gap-3 justify-center sm:justify-between">
               <Button 
                 variant="outline" 
-                size="sm" 
-                className="flex items-center gap-1 hover:shadow-lg transition-all" 
+                className="flex items-center gap-2 hover:shadow-lg transition-all" 
                 onClick={() => navigate("/compliance")}
               >
-                <Lock size={16} />
+                <Lock className="w-4 h-4" />
                 Compliance
               </Button>
               <Button 
                 variant="outline" 
-                size="sm" 
-                className="flex items-center gap-1 hover:shadow-lg transition-all" 
+                className="flex items-center gap-2 hover:shadow-lg transition-all" 
                 onClick={() => navigate("/safety-policy")}
               >
-                <FileText size={16} />
+                <FileText className="w-4 h-4" />
                 Safety Policy
               </Button>
             </CardFooter>
