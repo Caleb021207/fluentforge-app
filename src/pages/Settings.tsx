@@ -1,115 +1,177 @@
 
 import React from "react";
-import { Shield, FileText, TrendingUp, Lock, Sparkles } from "lucide-react";
-import ParentalControls from "@/components/compliance/ParentalControls";
+import { FileText, TrendingUp, Shield, Lock, BookOpen, Sparkles, ExternalLink } from "lucide-react";
 import { UsageDashboard } from "@/components/usage/UsageDashboard";
 import { useNavigate } from "react-router-dom";
-import { InteractiveCard, Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { InteractiveCard, Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
+import { Separator } from "@/components/ui/separator";
 
 const Settings = () => {
   const navigate = useNavigate();
+  
+  const documentLinks = [
+    {
+      title: "Safety & Privacy Policy",
+      description: "Review our comprehensive safety and privacy guidelines",
+      icon: <Shield className="w-5 h-5" />,
+      path: "/safety-policy",
+      badge: "COPPA & CIPA Compliant"
+    },
+    {
+      title: "Compliance Center",
+      description: "FERPA, COPPA, and data protection management",
+      icon: <Lock className="w-5 h-5" />,
+      path: "/compliance",
+      badge: "K-12 Compliant"
+    },
+    {
+      title: "Terms of Service",
+      description: "Read our terms and conditions",
+      icon: <FileText className="w-5 h-5" />,
+      path: "https://palavox.org/terms",
+      external: true
+    },
+    {
+      title: "End User License Agreement",
+      description: "Review the EULA for using Palavox",
+      icon: <BookOpen className="w-5 h-5" />,
+      path: "https://palavox.org/eula",
+      external: true
+    }
+  ];
   
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
-      <div className="max-w-4xl mx-auto p-4 relative z-10">
+      <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="mb-8 text-center">
+          <div className="mb-10 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center justify-center gap-3">
               <Sparkles className="w-10 h-10 md:w-12 md:h-12" />
               Settings
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-              Manage your account and preferences
+              Manage your usage and access important documents
             </p>
           </div>
         </motion.div>
         
         {/* Usage Limits Section */}
-        <motion.div
+        <motion.section
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          className="mb-8"
         >
-          <InteractiveCard className="w-full mb-6 glass">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-6 h-6 text-primary" />
-                <div>
-                  <CardTitle className="text-2xl font-bold">Usage Limits</CardTitle>
-                  <CardDescription className="text-base mt-1">
-                    Monitor your daily AI usage and remaining quota
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </InteractiveCard>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-6"
-        >
+          <div className="mb-4">
+            <div className="flex items-center gap-3 mb-2">
+              <TrendingUp className="w-7 h-7 text-primary" />
+              <h2 className="text-2xl md:text-3xl font-bold gradient-text">Usage Dashboard</h2>
+            </div>
+            <p className="text-base md:text-lg text-muted-foreground ml-10">
+              Track your AI usage and remaining daily quota
+            </p>
+          </div>
+          
           <UsageDashboard />
-        </motion.div>
+        </motion.section>
+
+        <Separator className="my-10" />
         
-        {/* Parental Controls Section */}
-        <motion.div
+        {/* Documents & Compliance Section */}
+        <motion.section
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <InteractiveCard className="w-full glass">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <Shield className="w-6 h-6 text-primary" />
-                <div>
-                  <CardTitle className="text-2xl font-bold">Parental Controls</CardTitle>
-                  <CardDescription className="text-base mt-1">
-                    Manage safety and privacy settings
-                  </CardDescription>
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-2">
+              <FileText className="w-7 h-7 text-primary" />
+              <h2 className="text-2xl md:text-3xl font-bold gradient-text">Legal & Compliance</h2>
+            </div>
+            <p className="text-base md:text-lg text-muted-foreground ml-10">
+              Access official policies, terms, and compliance documentation
+            </p>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2">
+            {documentLinks.map((doc, index) => (
+              <motion.div
+                key={doc.title}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
+              >
+                <InteractiveCard 
+                  className="glass h-full cursor-pointer hover:shadow-xl transition-all duration-300"
+                  onClick={() => {
+                    if (doc.external) {
+                      window.open(doc.path, '_blank', 'noopener,noreferrer');
+                    } else {
+                      navigate(doc.path);
+                    }
+                  }}
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-3 flex-1">
+                        <div className="p-2 rounded-lg bg-primary/10 text-primary mt-1">
+                          {doc.icon}
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-lg font-bold flex items-center gap-2">
+                            {doc.title}
+                            {doc.external && <ExternalLink className="w-4 h-4 text-muted-foreground" />}
+                          </CardTitle>
+                          <CardDescription className="mt-1.5 text-sm">
+                            {doc.description}
+                          </CardDescription>
+                          {doc.badge && (
+                            <div className="mt-3">
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
+                                {doc.badge}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                </InteractiveCard>
+              </motion.div>
+            ))}
+          </div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-6"
+          >
+            <Card className="glass border-primary/20">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <Shield className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                  <div className="text-sm text-muted-foreground">
+                    <p className="font-medium text-foreground mb-1">Your Data is Protected</p>
+                    <p>
+                      Palavox is committed to protecting student privacy and maintaining compliance with FERPA, COPPA, and CIPA regulations. 
+                      We collect minimal data and never share personal information with third parties.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardFooter className="flex flex-wrap gap-3 justify-center sm:justify-between">
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2 hover:shadow-lg transition-all" 
-                onClick={() => navigate("/compliance")}
-              >
-                <Lock className="w-4 h-4" />
-                Compliance
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2 hover:shadow-lg transition-all" 
-                onClick={() => navigate("/safety-policy")}
-              >
-                <FileText className="w-4 h-4" />
-                Safety Policy
-              </Button>
-            </CardFooter>
-          </InteractiveCard>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-4"
-        >
-          <ParentalControls />
-        </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.section>
       </div>
     </div>
   );
