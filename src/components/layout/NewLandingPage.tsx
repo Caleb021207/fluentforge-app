@@ -82,7 +82,16 @@ const NewLandingPage = () => {
       });
       
       setIsPanelOpen(false);
-      window.location.reload();
+      
+      // If user is not signed in, show auth dialog after toast
+      if (!isSignedIn) {
+        setTimeout(() => {
+          setIsLogin(true);
+          setIsAuthDialogOpen(true);
+        }, 1000);
+      } else {
+        window.location.reload();
+      }
     } else {
       toast({
         title: t("pleaseSelectBothLanguages"),
