@@ -23,7 +23,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Sessione Terminata",
   premiumSessionEndedMessage: "La tua sessione premium di 15 minuti è terminata",
   premiumVoiceInstructions: "Questa funzione è progettata per conversazioni fluide e dinamiche. Hai 15 minuti di pratica al mese. Premi semplicemente il pulsante e di' 'Ciao, come stai?' Il tutor IA ti aiuterà a praticare le tue abilità di conversazione in inglese. Se necessario, può anche assisterti nella tua lingua madre.",
-  languageSupportDisclaimer: "Nota: L'italiano potrebbe non essere completamente supportato al livello di un madrelingua. L'IA funziona meglio in inglese.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime supporta oltre 20 lingue. Sebbene ottimizzato per l'inglese, fornisce conversazioni naturali nella tua lingua.",
+  customLanguageSupport: "Custom Realtime AI supporta oltre 99 lingue. Questo sistema utilizza modelli multilingue specializzati tra cui Whisper (riconoscimento vocale), GPT-4o-mini (conversazione) e Azure TTS (sintesi vocale).",
+  recommendedForYourLanguage: "Consigliato per la tua lingua",
+  multilingualSupport: "MULTILINGUE",
 };
 
 export default premiumVoiceTranslations;

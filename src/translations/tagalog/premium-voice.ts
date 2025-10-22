@@ -40,7 +40,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Natapos ang Session",
   premiumSessionEndedMessage: "Natapos na ang iyong 15-minutong premium session",
   premiumVoiceInstructions: "Ang feature na ito ay dinisenyo para sa maayos at dynamic na pag-uusap. Mayroon kang 15 minuto ng pagsasanay bawat buwan. Pindutin lang ang button at sabihin 'Hello, kamusta ka?' Tutulungan ka ng AI tutor na magsanay ng iyong English speaking skills. Kung kinakailangan, maaari ka rin nitong tulungan sa iyong katutubong wika.",
-  languageSupportDisclaimer: "Paalala: Ang Tagalog ay maaaring hindi ganap na suportado sa antas ng katutubong nagsasalita. Ang AI ay pinakamahusay na gumagana sa Ingles.",
+  
+  // Language support messages
+  gptLanguageSupport: "Sinusuportahan ng GPT-4o Realtime ang 20+ na wika. Bagaman na-optimize para sa Ingles, nagbibigay ito ng natural na pag-uusap sa iyong wika.",
+  customLanguageSupport: "Sinusuportahan ng Custom Realtime AI ang 99+ na wika. Gumagamit ang system na ito ng specialized na multilingual models kabilang ang Whisper (speech recognition), GPT-4o-mini (conversation), at Azure TTS (voice synthesis).",
+  recommendedForYourLanguage: "Inirerekomenda para sa iyong wika",
+  multilingualSupport: "MULTILINGUAL",
 };
 
 export default premiumVoiceTranslations;

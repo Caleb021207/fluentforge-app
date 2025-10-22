@@ -29,7 +29,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Ìpàdé Ti Parí",
   premiumSessionEndedMessage: "Ìpàdé premium ìṣẹ́jú 15 rẹ ti parí",
   premiumVoiceInstructions: "A ṣe àpẹẹrẹ ẹ̀rọ yìí fún àwọn ìsọ̀rọ̀ tó ń lọ láìdúró tó sì lágbára. O ní ìṣẹ́jú 15 tí o lè fi ṣe àdáṣe ní oṣooṣù. Kan tẹ bọ́tìnnì náà kí o sọ pé 'Ẹ káàárọ̀, ṣé dáadáa ni?' Olùkọ́ AI yóò ràn ọ́ lọ́wọ́ láti ṣe àkọ́kọ́ ìmọ̀ sísọ Gẹ̀ẹ́sì rẹ. Tí ó bá ṣe pàtàkì, ó lè tún ràn ọ́ lọ́wọ́ ní èdè abínibí rẹ.",
-  languageSupportDisclaimer: "Àkíyèsí: Yorùbá lè má ní àtìlẹ́yìn pípé ní ipò ẹni abínibí. AI ń ṣiṣẹ́ dáadáa jù ní Gẹ̀ẹ́sì.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime ń ṣe àtìlẹ́yìn fún àwọn èdè tó ju 20 lọ. Bí ó tilẹ̀ jẹ́ pé a ṣe é dáadáa fún Gẹ̀ẹ́sì, ó ń pèsè àwọn ìsọ̀rọ̀ àdáni ní èdè rẹ.",
+  customLanguageSupport: "Custom Realtime AI ń ṣe àtìlẹ́yìn fún àwọn èdè tó ju 99 lọ. Ètò yìí ń lo àwọn àpẹẹrẹ oníèdè púpọ̀ pàtàkì tí ó wà nínú Whisper (ìdánimọ̀ ohùn), GPT-4o-mini (ìsọ̀rọ̀), àti Azure TTS (ìṣẹ̀dá ohùn).",
+  recommendedForYourLanguage: "A ṣe ìbá fún èdè rẹ",
+  multilingualSupport: "ONÍÈDÈ PÚPỌ̀",
 };
 
 export default premiumVoiceTranslations;

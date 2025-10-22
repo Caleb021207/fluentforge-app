@@ -38,7 +38,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Sesyon Fini",
   premiumSessionEndedMessage: "Sesyon premium 15 minit ou a fini",
   premiumVoiceInstructions: "Karakteristik sa a fèt pou konvèsasyon flui, dinamik. Ou gen 15 minit pratik chak mwa. Jis peze bouton an epi di 'Bonjou, kijan ou ye?' Pwofesè AI a ap ede w pratike kapasite pale angle ou yo. Si sa nesesè, li ka ede w tou nan lang natif natal ou.",
-  languageSupportDisclaimer: "Nòt: Kreyòl ayisyen ka pa konplètman sipòte nan nivo natif natal. AI travay pi byen an Angle.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime sipòte plis pase 20 lang. Menm si li optimize pou angle, li bay konvèsasyon natirèl nan lang ou.",
+  customLanguageSupport: "Custom Realtime AI sipòte plis pase 99 lang. Sistèm sa a itilize modèl multileng espesyalize ki gen ladan Whisper (rekonesans vwa), GPT-4o-mini (konvèsasyon), ak Azure TTS (sentèz vwa).",
+  recommendedForYourLanguage: "Rekòmande pou lang ou",
+  multilingualSupport: "MULTILENG",
 };
 
 export default premiumVoiceTranslations;

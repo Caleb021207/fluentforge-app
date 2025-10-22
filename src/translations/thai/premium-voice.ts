@@ -23,7 +23,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "เซสชันสิ้นสุดแล้ว",
   premiumSessionEndedMessage: "เซสชันพรีเมียม 15 นาทีของคุณสิ้นสุดแล้ว",
   premiumVoiceInstructions: "ฟีเจอร์นี้ออกแบบมาสำหรับการสนทนาที่ลื่นไหลและมีพลวัต คุณมีเวลาฝึก 15 นาทีต่อเดือน เพียงกดปุ่มและพูดว่า 'สวัสดี สบายดีไหม?' ติวเตอร์ AI จะช่วยคุณฝึกทักษะการพูดภาษาอังกฤษ หากจำเป็น ระบบก็สามารถช่วยเหลือคุณในภาษาแม่ของคุณได้",
-  languageSupportDisclaimer: "หมายเหตุ: ภาษาไทยอาจไม่ได้รับการสนับสนุนอย่างเต็มที่ในระดับเจ้าของภาษา AI ทำงานได้ดีที่สุดในภาษาอังกฤษ",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime รองรับภาษามากกว่า 20 ภาษา แม้ว่าจะถูกปรับให้เหมาะกับภาษาอังกฤษ แต่ก็ให้การสนทนาที่เป็นธรรมชาติในภาษาของคุณ",
+  customLanguageSupport: "Custom Realtime AI รองรับภาษามากกว่า 99 ภาษา ระบบนี้ใช้โมเดลหลายภาษาเฉพาะทาง รวมถึง Whisper (การรู้จำเสียง), GPT-4o-mini (การสนทนา) และ Azure TTS (การสังเคราะห์เสียง)",
+  recommendedForYourLanguage: "แนะนำสำหรับภาษาของคุณ",
+  multilingualSupport: "หลายภาษา",
 };
 
 export default premiumVoiceTranslations;

@@ -23,7 +23,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "جلسه پایان یافت",
   premiumSessionEndedMessage: "جلسه ممتاز ۱۵ دقیقه‌ای شما پایان یافت",
   premiumVoiceInstructions: "این ویژگی برای مکالمات روان و پویا طراحی شده است. شما ۱۵ دقیقه تمرین در ماه دارید. فقط دکمه را فشار دهید و بگویید 'سلام، حالت چطوره؟' معلم هوش مصنوعی به شما کمک می‌کند مهارت‌های مکالمه انگلیسی را تمرین کنید. در صورت نیاز، می‌تواند به زبان مادری شما نیز کمک کند.",
-  languageSupportDisclaimer: "توجه: فارسی ممکن است به طور کامل در سطح زبان مادری پشتیبانی نشود. هوش مصنوعی در انگلیسی بهتر کار می‌کند.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime از بیش از ۲۰ زبان پشتیبانی می‌کند. در حالی که برای انگلیسی بهینه شده است، مکالمات طبیعی به زبان شما ارائه می‌دهد.",
+  customLanguageSupport: "Custom Realtime AI از بیش از ۹۹ زبان پشتیبانی می‌کند. این سیستم از مدل‌های چندزبانه تخصصی از جمله Whisper (تشخیص گفتار)، GPT-4o-mini (مکالمه) و Azure TTS (سنتز گفتار) استفاده می‌کند.",
+  recommendedForYourLanguage: "توصیه شده برای زبان شما",
+  multilingualSupport: "چندزبانه",
 };
 
 export default premiumVoiceTranslations;

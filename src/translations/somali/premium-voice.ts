@@ -40,7 +40,11 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Fadhigii Wuu Dhamaaday",
   premiumSessionEndedMessage: "Fadhigaaga premium-ka ah ee 15 daqiiqo wuu dhamaaday",
   premiumVoiceInstructions: "Astaamahan waxaa loogu talagalay wadahadallo socodka leh oo firfircoon. Waxaad heshaa 15 daqiiqo oo tababbaro ah bishii. Kaliya riix batoonka oo dheh 'Salaamu calaykum, sidee tahay?' Macalin AI ayaa kaa caawin doona inaad ku tababbarto xirfadaha hadalka Ingiriiska. Haddii loo baahdo, wuxuu kaa caawin karaa luqadda hooyo ee.",
-  languageSupportDisclaimer: "Xusuusin: Af-Soomaaliga laga yaabo inaysan si buuxda u taageerin heerka hadal-hayaha asaliga ah. AI wuxuu si fiican uga shaqeeyaa Ingiriisiga.",
+  
+  gptLanguageSupport: "GPT-4o Realtime wuxuu taageeraa 20+ luqadood. In kasta oo loo habeeyey Ingiriisiga, wuxuu bixiyaa wadahadal dabiici ah luqaddaada.",
+  customLanguageSupport: "Custom Realtime AI wuxuu taageeraa 99+ luqadood. Nidaamkan wuxuu isticmaalaa moodooyinka luqadaha badan oo gaar ah oo ay ku jiraan Whisper (aqoonsiga codka), GPT-4o-mini (wadahadalka), iyo Azure TTS (isku darka codka).",
+  recommendedForYourLanguage: "Waxaa lagu taliyey luqaddaada",
+  multilingualSupport: "LUQADO BADAN",
 };
 
 export default premiumVoiceTranslations;

@@ -45,7 +45,11 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Sesiune încheiată",
   premiumSessionEndedMessage: "Sesiunea ta premium de 15 minute s-a încheiat",
   premiumVoiceInstructions: "Această funcție este concepută pentru conversații fluide și dinamice. Primești 15 minute de practică pe lună. Pur și simplu apasă butonul și spune 'Bună, ce mai faci?' Tutorele AI te va ajuta să exersezi abilitățile de vorbire în limba engleză. Dacă este necesar, te poate ajuta și în limba ta maternă.",
-  languageSupportDisclaimer: "Notă: Româna ar putea să nu fie complet susținută la nivel de vorbitor nativ. AI funcționează cel mai bine în limba engleză.",
+  
+  gptLanguageSupport: "GPT-4o Realtime suportă peste 20 de limbi. Deși optimizat pentru limba engleză, oferă conversații naturale în limba ta.",
+  customLanguageSupport: "Custom Realtime AI suportă peste 99 de limbi. Acest sistem folosește modele multilingve specializate, inclusiv Whisper (recunoaștere vocală), GPT-4o-mini (conversație) și Azure TTS (sinteză vocală).",
+  recommendedForYourLanguage: "Recomandat pentru limba ta",
+  multilingualSupport: "MULTILINGV",
 };
 
 export default premiumVoiceTranslations;

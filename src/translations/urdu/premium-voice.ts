@@ -34,7 +34,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "سیشن ختم ہوگیا",
   premiumSessionEndedMessage: "آپ کا 15 منٹ کا پریمیم سیشن ختم ہوگیا ہے",
   premiumVoiceInstructions: "یہ خصوصیت روانی، متحرک گفتگو کے لیے ڈیزائن کی گئی ہے۔ آپ کو ہر مہینے 15 منٹ کی مشق ملتی ہے۔ صرف بٹن دبائیں اور کہیں 'ہیلو، آپ کیسے ہیں؟' AI ٹیوٹر آپ کی انگریزی بولنے کی مہارت کی مشق میں مدد کرے گا۔ ضرورت پڑنے پر، یہ آپ کی مادری زبان میں بھی آپ کی مدد کر سکتا ہے۔",
-  languageSupportDisclaimer: "نوٹ: اردو مادری زبان کی سطح پر مکمل طور پر معاون نہیں ہو سکتی۔ AI انگریزی میں بہترین کام کرتا ہے۔",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime 20+ زبانوں کی حمایت کرتا ہے۔ اگرچہ انگریزی کے لیے بہتر بنایا گیا ہے، یہ آپ کی زبان میں قدرتی گفتگو فراہم کرتا ہے۔",
+  customLanguageSupport: "Custom Realtime AI 99+ زبانوں کی حمایت کرتا ہے۔ یہ نظام خصوصی کثیر لسانی ماڈلز استعمال کرتا ہے بشمول Whisper (تقریر کی شناخت)، GPT-4o-mini (گفتگو)، اور Azure TTS (آواز کی ترکیب)۔",
+  recommendedForYourLanguage: "آپ کی زبان کے لیے تجویز کردہ",
+  multilingualSupport: "کثیر لسانی",
 };
 
 export default premiumVoiceTranslations;

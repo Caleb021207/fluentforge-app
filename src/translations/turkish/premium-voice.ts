@@ -39,7 +39,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Oturum Sona Erdi",
   premiumSessionEndedMessage: "15 dakikalık premium oturumunuz sona erdi",
   premiumVoiceInstructions: "Bu özellik akıcı, dinamik konuşmalar için tasarlanmıştır. Ayda 15 dakika pratik yapabilirsiniz. Sadece butona basın ve 'Merhaba, nasılsınız?' deyin. AI öğretmen İngilizce konuşma becerilerinizi geliştirmenize yardımcı olacak. Gerekirse, ana dilinizde de size yardımcı olabilir.",
-  languageSupportDisclaimer: "Not: Türkçe, ana dil seviyesinde tam olarak desteklenmeyebilir. AI İngilizce'de en iyi şekilde çalışır.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime 20'den fazla dili destekler. İngilizce için optimize edilmiş olsa da, dilinizde doğal konuşmalar sağlar.",
+  customLanguageSupport: "Custom Realtime AI 99'dan fazla dili destekler. Bu sistem Whisper (konuşma tanıma), GPT-4o-mini (konuşma) ve Azure TTS (konuşma sentezi) dahil olmak üzere özel çok dilli modeller kullanır.",
+  recommendedForYourLanguage: "Diliniz için önerilir",
+  multilingualSupport: "ÇOK DİLLİ",
 };
 
 export default premiumVoiceTranslations;

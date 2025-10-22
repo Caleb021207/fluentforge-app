@@ -322,6 +322,20 @@ const PremiumVoicePractice = () => {
     }
   }, [minutesRemaining, isConnected]);
 
+  // Helper function to determine language support
+  const getLanguageSupport = (lang: string) => {
+    const gptOptimalLanguages = ['en', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'zh', 'yue', 'ru', 'ar', 'hi', 'tr', 'pl', 'pt', 'nl'];
+    
+    return {
+      gptSupported: gptOptimalLanguages.includes(lang),
+      customSupported: true, // Custom AI supports all platform languages
+      recommendGpt: gptOptimalLanguages.includes(lang),
+      recommendCustom: !gptOptimalLanguages.includes(lang)
+    };
+  };
+
+  const languageSupport = getLanguageSupport(currentLanguage);
+
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       <GradientBlob className="top-20 left-10" />
@@ -351,19 +365,44 @@ const PremiumVoicePractice = () => {
           </div>
         </motion.div>
 
-        {!['en', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'zh', 'yue', 'ru', 'ar', 'hi', 'tr', 'pl'].includes(currentLanguage) && t('languageSupportDisclaimer') && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1 }}
-          >
-            <InteractiveCard className="p-4 mb-4 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
-              <p className="text-sm text-center">
-                {t('languageSupportDisclaimer')}
-              </p>
-            </InteractiveCard>
-          </motion.div>
-        )}
+        {/* Language support information */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          className="mb-6"
+        >
+          <InteractiveCard className="p-6 bg-gradient-to-r from-primary/5 to-accent/5 border-primary/10">
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <h4 className="font-semibold">GPT-4o Realtime</h4>
+                  {languageSupport.recommendGpt && (
+                    <span className="px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full">
+                      {t('recommendedForYourLanguage')}
+                    </span>
+                  )}
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  {t('gptLanguageSupport')}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <h4 className="font-semibold">Custom Realtime AI</h4>
+                  {languageSupport.recommendCustom && (
+                    <span className="px-2 py-0.5 bg-blue-500/20 text-blue-500 text-xs rounded-full">
+                      {t('recommendedForYourLanguage')}
+                    </span>
+                  )}
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  {t('customLanguageSupport')}
+                </p>
+              </div>
+            </div>
+          </InteractiveCard>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -374,7 +413,14 @@ const PremiumVoicePractice = () => {
           <InteractiveCard className="p-6 glass">
           <div className="flex flex-col items-center gap-6">
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">GPT-4o Realtime</h3>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <h3 className="text-lg font-semibold">GPT-4o Realtime</h3>
+                {languageSupport.recommendGpt && (
+                  <span className="px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full">
+                    {t('recommendedForYourLanguage')}
+                  </span>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">OpenAI's latest voice model</p>
             </div>
 
@@ -428,9 +474,16 @@ const PremiumVoicePractice = () => {
           <InteractiveCard className="p-6 border-2 border-blue-500/30 glass">
           <div className="flex flex-col items-center gap-6">
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Custom Realtime AI</h3>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <h3 className="text-lg font-semibold">Custom Realtime AI</h3>
+                {languageSupport.recommendCustom && (
+                  <span className="px-2 py-0.5 bg-blue-500/20 text-blue-500 text-xs rounded-full">
+                    {t('recommendedForYourLanguage')}
+                  </span>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">Whisper + GPT-4o-mini + Azure</p>
-              <span className="inline-block mt-2 px-2 py-1 bg-blue-500/10 text-blue-500 text-xs rounded">FALLBACK</span>
+              <span className="inline-block mt-2 px-2 py-1 bg-blue-500/10 text-blue-500 text-xs rounded">{t('multilingualSupport')}</span>
             </div>
 
             {customSessionId && (

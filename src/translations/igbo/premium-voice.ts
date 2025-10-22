@@ -40,7 +40,11 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Nnọkọ Kwụsịrị",
   premiumSessionEndedMessage: "Nnọkọ premium gị nke nkeji 15 akwụsịla",
   premiumVoiceInstructions: "E mere atụmatụ njirimara a maka mkparịta ụka na-enweghị nsogbu, nke na-agbanwe agbanwe. Ị na-enweta nkeji 15 nke omume kwa ọnwa. Naanị pịa bọtịnụ ahụ wee sị 'Ndewo, kedu ka ị mere?' Onye nkụzi AI ga-enyere gị aka mụọ nkà ikwu okwu Bekee gị. Ọ bụrụ na ọ dị mkpa, ọ nwekwara ike inyere gị aka n'asụsụ nne gị.",
-  languageSupportDisclaimer: "Nrịbama: Enwere ike na akwado Igbo kpamkpam na ọkwa onye nwe obodo. AI na-arụ ọrụ nke ọma na Bekee.",
+  
+  gptLanguageSupport: "GPT-4o Realtime na-akwado asụsụ 20+. Ọ bụ ezie na e mere ya nke ọma na Bekee, ọ na-enye mkparịta ụka nke okike n'asụsụ gị.",
+  customLanguageSupport: "Custom Realtime AI na-akwado asụsụ 99+. Sistemu a na-eji ụdị ọtụtụ asụsụ pụrụ iche gụnyere Whisper (nchọpụta okwu), GPT-4o-mini (mkparịta ụka), na Azure TTS (njikọ olu).",
+  recommendedForYourLanguage: "A na-atụ aro maka asụsụ gị",
+  multilingualSupport: "ỌTỤTỤ ASỤSỤ",
 };
 
 export default premiumVoiceTranslations;

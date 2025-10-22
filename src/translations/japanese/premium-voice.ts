@@ -45,7 +45,11 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "セッション終了",
   premiumSessionEndedMessage: "15分間のプレミアムセッションが終了しました",
   premiumVoiceInstructions: "この機能は、流暢でダイナミックな会話のために設計されています。月に15分の練習時間があります。ボタンを押して「こんにちは、お元気ですか？」と言うだけです。AIチューターが英語のスピーキングスキルの練習をお手伝いします。必要に応じて、母国語でもサポートできます。",
-  languageSupportDisclaimer: "注：日本語はネイティブスピーカーレベルで完全にサポートされていない場合があります。AIは英語で最もよく動作します。",
+  
+  gptLanguageSupport: "GPT-4o Realtimeは20以上の言語をサポートしています。英語向けに最適化されていますが、あなたの言語で自然な会話を提供します。",
+  customLanguageSupport: "Custom Realtime AIは99以上の言語をサポートしています。このシステムは、Whisper（音声認識）、GPT-4o-mini（会話）、Azure TTS（音声合成）を含む専門的な多言語モデルを使用しています。",
+  recommendedForYourLanguage: "あなたの言語におすすめ",
+  multilingualSupport: "多言語対応",
 };
 
 export default premiumVoiceTranslations;

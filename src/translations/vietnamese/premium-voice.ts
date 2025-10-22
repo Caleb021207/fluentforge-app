@@ -45,7 +45,11 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Phiên Đã Kết Thúc",
   premiumSessionEndedMessage: "Phiên cao cấp 15 phút của bạn đã kết thúc",
   premiumVoiceInstructions: "Tính năng này được thiết kế cho các cuộc hội thoại trôi chảy, năng động. Bạn có 15 phút luyện tập mỗi tháng. Chỉ cần nhấn nút và nói 'Xin chào, bạn khỏe không?' Gia sư AI sẽ giúp bạn luyện tập kỹ năng nói tiếng Anh. Nếu cần, nó cũng có thể hỗ trợ bạn bằng ngôn ngữ mẹ đẻ của bạn.",
-  languageSupportDisclaimer: "Lưu ý: Tiếng Việt có thể không được hỗ trợ đầy đủ ở trình độ người bản ngữ. AI hoạt động tốt nhất bằng tiếng Anh.",
+  
+  gptLanguageSupport: "GPT-4o Realtime hỗ trợ hơn 20 ngôn ngữ. Mặc dù được tối ưu hóa cho tiếng Anh, nó cung cấp các cuộc hội thoại tự nhiên bằng ngôn ngữ của bạn.",
+  customLanguageSupport: "Custom Realtime AI hỗ trợ hơn 99 ngôn ngữ. Hệ thống này sử dụng các mô hình đa ngôn ngữ chuyên biệt bao gồm Whisper (nhận dạng giọng nói), GPT-4o-mini (hội thoại) và Azure TTS (tổng hợp giọng nói).",
+  recommendedForYourLanguage: "Được đề xuất cho ngôn ngữ của bạn",
+  multilingualSupport: "ĐA NGÔN NGỮ",
 };
 
 export default premiumVoiceTranslations;
