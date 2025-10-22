@@ -370,33 +370,25 @@ const PremiumVoicePractice = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-6"
+          className="mb-8"
         >
-          <InteractiveCard className="p-6 bg-gradient-to-r from-primary/5 to-accent/5 border-primary/10">
-            <div className="grid md:grid-cols-2 gap-4 text-sm">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-semibold">GPT-4o Realtime</h4>
-                  {languageSupport.recommendGpt && (
-                    <span className="px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full">
-                      {t('recommendedForYourLanguage')}
-                    </span>
-                  )}
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
+          <InteractiveCard className="overflow-hidden border-0 shadow-xl">
+            <div className="grid md:grid-cols-2 divide-x divide-border/50">
+              <div className="p-6 space-y-3 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent">
+                <h4 className="font-semibold text-lg flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                  GPT-4o Realtime
+                </h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {t('gptLanguageSupport')}
                 </p>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-semibold">Custom Realtime AI</h4>
-                  {languageSupport.recommendCustom && (
-                    <span className="px-2 py-0.5 bg-blue-500/20 text-blue-500 text-xs rounded-full">
-                      {t('recommendedForYourLanguage')}
-                    </span>
-                  )}
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
+              <div className="p-6 space-y-3 bg-gradient-to-br from-accent/5 via-accent/3 to-transparent">
+                <h4 className="font-semibold text-lg flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-accent" />
+                  Custom Realtime AI
+                </h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {t('customLanguageSupport')}
                 </p>
               </div>
@@ -410,17 +402,10 @@ const PremiumVoicePractice = () => {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <InteractiveCard className="p-6 glass">
+          <InteractiveCard className="p-6 glass border-primary/20 hover:border-primary/40 transition-colors">
           <div className="flex flex-col items-center gap-6">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold">GPT-4o Realtime</h3>
-                {languageSupport.recommendGpt && (
-                  <span className="px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full">
-                    {t('recommendedForYourLanguage')}
-                  </span>
-                )}
-              </div>
+            <div className="text-center space-y-1">
+              <h3 className="text-xl font-semibold gradient-text">GPT-4o Realtime</h3>
               <p className="text-sm text-muted-foreground">OpenAI's latest voice model</p>
             </div>
 
@@ -471,19 +456,17 @@ const PremiumVoicePractice = () => {
           </div>
           </InteractiveCard>
 
-          <InteractiveCard className="p-6 border-2 border-blue-500/30 glass">
+          <InteractiveCard className="p-6 glass border-accent/20 hover:border-accent/40 transition-colors">
           <div className="flex flex-col items-center gap-6">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold">Custom Realtime AI</h3>
-                {languageSupport.recommendCustom && (
-                  <span className="px-2 py-0.5 bg-blue-500/20 text-blue-500 text-xs rounded-full">
-                    {t('recommendedForYourLanguage')}
-                  </span>
-                )}
+            <div className="text-center space-y-2">
+              <h3 className="text-xl font-semibold gradient-text">Custom Realtime AI</h3>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/30">
+                <Sparkles className="w-3.5 h-3.5 text-accent" />
+                <span className="text-xs font-semibold text-foreground">
+                  {t('multilingualSupport')}
+                </span>
               </div>
-              <p className="text-sm text-muted-foreground">Whisper + GPT-4o-mini + Azure</p>
-              <span className="inline-block mt-2 px-2 py-1 bg-blue-500/10 text-blue-500 text-xs rounded">{t('multilingualSupport')}</span>
+              <p className="text-sm text-muted-foreground">Whisper + GPT-4o-mini + Azure TTS</p>
             </div>
 
             {customSessionId && (
