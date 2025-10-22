@@ -341,7 +341,7 @@ const PremiumVoicePractice = () => {
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
-      <div className="max-w-4xl mx-auto p-4 relative z-10">
+      <div className="max-w-4xl mx-auto p-4 relative">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

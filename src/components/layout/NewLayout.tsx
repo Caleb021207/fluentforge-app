@@ -93,13 +93,14 @@ const NewLayout = ({ children }: NewLayoutProps) => {
         {/* Navigation Bar */}
         <div className="px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <motion.h1
+            <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="text-2xl font-bold gradient-text"
+              onClick={() => navigate("/")}
+              className="text-2xl font-bold gradient-text cursor-pointer hover:opacity-80 transition-opacity"
             >
               Palavox
-            </motion.h1>
+            </motion.button>
             {user && (
               <TopNavigationDropdown
                 items={navigationItems}
