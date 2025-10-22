@@ -34,7 +34,10 @@ const CertificatesLayout = ({
   
   return (
     <div className="space-y-6">
-      <h1 className="text-4xl md:text-5xl font-bold text-gray-900">{t("certificationProgress")}</h1>
+      <div className="text-center mb-10">
+        <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">{t("certificationProgress")}</h1>
+        <p className="text-xl md:text-2xl text-muted-foreground">{t("trackYourProgress")}</p>
+      </div>
       
       <OverallCertificate compositeScore={compositeScore} />
       

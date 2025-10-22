@@ -210,10 +210,10 @@ const AuthenticatedAccuracy = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("accuracyMetrics")}</h1>
-          <p className="text-muted-foreground">{t("accuracyMetricsDescription")}</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div className="text-center md:text-left">
+          <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-2">{t("accuracyMetrics")}</h1>
+          <p className="text-xl md:text-2xl text-muted-foreground">{t("accuracyMetricsDescription")}</p>
         </div>
         <Button 
           onClick={latestMetrics ? fetchAccuracyData : generateAccuracyMetrics} 

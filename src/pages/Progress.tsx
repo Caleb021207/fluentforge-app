@@ -50,11 +50,11 @@ const Progress = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-4xl mx-auto p-4 relative z-10"
       >
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary to-palavox-teal bg-clip-text text-transparent">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
             {t("aiProgressAnalysis")}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-xl md:text-2xl text-muted-foreground">
             {t("uploadLanguageTestTranscripts")}
           </p>
         </div>

@@ -76,14 +76,14 @@ const TranscriptAnalysis = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
+          className="mb-8 text-center"
         >
-          <h1 className="text-3xl font-bold mb-2 flex items-center gap-2 gradient-text">
-            <Brain className="h-7 w-7 text-primary" />
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center justify-center gap-3">
+            <Brain className="h-10 w-10 md:h-12 md:h-12 text-primary" />
             AI Progress Analysis
           </h1>
-          <p className="text-muted-foreground flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-primary" />
+          <p className="text-xl md:text-2xl text-muted-foreground flex items-center justify-center gap-2">
+            <Sparkles className="w-5 h-5 text-primary" />
             Upload your language test transcripts and get AI-powered insights to accelerate your learning progress.
           </p>
         </motion.div>

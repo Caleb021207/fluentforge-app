@@ -19,13 +19,13 @@ const PracticeHeader: React.FC<PracticeHeaderProps> = ({ targetLanguage }) => {
   
   return (
     <motion.div 
-      className="mb-8 text-center"
+      className="mb-10 text-center"
       initial="hidden"
       animate="visible"
       variants={fadeIn}
     >
       <motion.h1 
-        className="text-4xl md:text-5xl font-bold mb-3 text-foreground"
+        className="text-4xl md:text-5xl font-bold mb-4 gradient-text"
         variants={fadeIn}
       >
         {learningLanguage} {t("textPractice")}

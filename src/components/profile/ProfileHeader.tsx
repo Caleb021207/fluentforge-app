@@ -13,13 +13,13 @@ interface ProfileHeaderProps {
 
 const ProfileHeader = ({ user, profile, showDebug, onToggleDebug }: ProfileHeaderProps) => {
   return (
-    <div className="flex items-center gap-3 mb-6">
-      <User className="h-8 w-8" />
-      <div className="flex-1">
-        <h1 className="text-3xl font-bold">
+    <div className="flex items-center gap-3 mb-8 justify-center md:justify-start">
+      <User className="h-10 w-10 md:h-12 md:w-12 text-primary" />
+      <div className="flex-1 text-center md:text-left">
+        <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-2">
           My Profile
         </h1>
-        <p className="text-foreground">
+        <p className="text-lg md:text-xl text-muted-foreground">
           {profile.display_name || user.email} • {profile.role}
         </p>
       </div>

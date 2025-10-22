@@ -18,12 +18,12 @@ const Classroom = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-4xl mx-auto p-4 relative z-10"
       >
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-2 flex items-center gap-2 bg-gradient-to-r from-primary to-palavox-teal bg-clip-text text-transparent">
-            <Users className="h-6 w-6 text-primary" />
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center justify-center gap-3">
+            <Users className="h-10 w-10 md:h-12 md:w-12" />
             {t("classManagement")}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-xl md:text-2xl text-muted-foreground">
             {t("manageClassesAndTrackProgress")}
           </p>
         </div>

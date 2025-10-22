@@ -22,10 +22,13 @@ const Settings = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-3xl font-bold mb-6 gradient-text flex items-center gap-2">
-            <Sparkles className="w-7 h-7 text-primary" />
-            Settings
-          </h1>
+          <div className="mb-8 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center justify-center gap-3">
+              <Sparkles className="w-10 h-10 md:w-12 md:h-12" />
+              Settings
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground">Manage your account and preferences</p>
+          </div>
         </motion.div>
         
         {/* Usage Limits Section */}
