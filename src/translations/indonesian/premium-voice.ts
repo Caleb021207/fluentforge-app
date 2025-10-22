@@ -94,7 +94,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Sesi Berakhir",
   premiumSessionEndedMessage: "Sesi premium 15 menit Anda telah berakhir",
   premiumVoiceInstructions: "Fitur ini dirancang untuk percakapan yang lancar dan dinamis. Anda mendapatkan 15 menit latihan per bulan. Cukup tekan tombol dan katakan 'Halo, apa kabar?' Tutor AI akan membantu Anda melatih keterampilan berbicara bahasa Inggris. Jika diperlukan, ia juga dapat membantu Anda dalam bahasa asli Anda.",
-  languageSupportDisclaimer: "Catatan: Bahasa Indonesia mungkin tidak sepenuhnya didukung pada tingkat penutur asli. AI bekerja paling baik dalam bahasa Inggris.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime mendukung 20+ bahasa. Meskipun dioptimalkan untuk bahasa Inggris, ini menyediakan percakapan alami dalam bahasa Anda.",
+  customLanguageSupport: "Custom Realtime AI mendukung 99+ bahasa. Sistem ini menggunakan model multibahasa khusus termasuk Whisper (pengenalan ucapan), GPT-4o-mini (percakapan), dan Azure TTS (sintesis suara).",
+  recommendedForYourLanguage: "Direkomendasikan untuk bahasa Anda",
+  multilingualSupport: "MULTIBAHASA",
 };
 
 export default premiumVoiceTranslations;

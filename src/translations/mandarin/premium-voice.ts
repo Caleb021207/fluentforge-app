@@ -182,7 +182,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "会话已结束",
   premiumSessionEndedMessage: "您的15分钟高级会话已结束",
   premiumVoiceInstructions: "此功能专为流畅的动态对话而设计。您每月可获得15分钟的练习时间。只需点击按钮并说'你好，你好吗？'AI 导师将帮助您练习英语口语技能。如有需要，它还可以用您的母语为您提供帮助。",
-  languageSupportDisclaimer: "注意：普通话可能未能完全支持母语水平。AI 以英语运作得最好。",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime 支持 20 多种语言。虽然针对英语进行了优化，但它能以您的语言提供自然对话。",
+  customLanguageSupport: "Custom Realtime AI 支持 99 多种语言。此系统使用专门的多语言模型，包括 Whisper（语音识别）、GPT-4o-mini（对话）和 Azure TTS（语音合成）。",
+  recommendedForYourLanguage: "推荐用于您的语言",
+  multilingualSupport: "多语言",
 };
 
 export default premiumVoiceTranslations;

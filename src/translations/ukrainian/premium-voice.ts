@@ -91,7 +91,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Сесію завершено",
   premiumSessionEndedMessage: "Ваша 15-хвилинна преміум сесія завершена",
   premiumVoiceInstructions: "Ця функція призначена для плавних, динамічних розмов. Ви отримуєте 15 хвилин практики на місяць. Просто натисніть кнопку і скажіть 'Привіт, як справи?' ШІ репетитор допоможе вам практикувати навички розмовної англійської. За потреби він також може допомогти вам вашою рідною мовою.",
-  languageSupportDisclaimer: "Примітка: Українська може не повністю підтримуватися на рівні носія мови. ШІ працює найкраще англійською мовою.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime підтримує понад 20 мов. Хоча оптимізовано для англійської, він забезпечує природні розмови вашою мовою.",
+  customLanguageSupport: "Custom Realtime AI підтримує понад 99 мов. Ця система використовує спеціалізовані багатомовні моделі, включаючи Whisper (розпізнавання мовлення), GPT-4o-mini (розмова) та Azure TTS (синтез мовлення).",
+  recommendedForYourLanguage: "Рекомендовано для вашої мови",
+  multilingualSupport: "БАГАТОМОВНИЙ",
 };
 
 export default premiumVoiceTranslations;

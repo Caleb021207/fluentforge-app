@@ -68,7 +68,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "세션 종료",
   premiumSessionEndedMessage: "15분 프리미엄 세션이 종료되었습니다",
   premiumVoiceInstructions: "이 기능은 유창하고 역동적인 대화를 위해 설계되었습니다. 한 달에 15분의 연습 시간이 주어집니다. 버튼을 누르고 '안녕하세요, 어떻게 지내세요?'라고 말하기만 하면 됩니다. AI 튜터가 영어 말하기 기술을 연습하는 데 도움을 줄 것입니다. 필요한 경우 모국어로도 도움을 받을 수 있습니다.",
-  languageSupportDisclaimer: "참고: 한국어는 원어민 수준에서 완전히 지원되지 않을 수 있습니다. AI는 영어에서 가장 잘 작동합니다.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime은 20개 이상의 언어를 지원합니다. 영어에 최적화되어 있지만 귀하의 언어로 자연스러운 대화를 제공합니다.",
+  customLanguageSupport: "Custom Realtime AI는 99개 이상의 언어를 지원합니다. 이 시스템은 Whisper(음성 인식), GPT-4o-mini(대화) 및 Azure TTS(음성 합성)를 포함한 전문 다국어 모델을 사용합니다.",
+  recommendedForYourLanguage: "귀하의 언어에 권장",
+  multilingualSupport: "다국어",
 };
 
 export default premiumVoiceTranslations;

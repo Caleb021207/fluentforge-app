@@ -97,7 +97,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   sessionEnded: "Kikao Kimeisha",
   premiumSessionEndedMessage: "Kikao chako cha premium cha dakika 15 kimeisha",
   premiumVoiceInstructions: "Kipengele hiki kimeundwa kwa mazungumzo yenye mtiririko na yenye nguvu. Unapata dakika 15 za mazoezi kwa mwezi. Bonyeza kitufe tu na useme 'Habari, u hali gani?' Mwalimu wa AI atakusaidia kufanya mazoezi ya stadi za kuzungumza Kiingereza. Ikihitajika, anaweza pia kukusaidia kwa lugha yako ya asili.",
-  languageSupportDisclaimer: "Kumbuka: Kiswahili kinaweza kisitumike kikamilifu kwa kiwango cha msemaji wa asili. AI inafanya kazi vizuri zaidi kwa Kiingereza.",
+  
+  // Language support messages
+  gptLanguageSupport: "GPT-4o Realtime inasaidia lugha 20+. Ingawa imeboreshwa kwa Kiingereza, inatoa mazungumzo ya asili kwa lugha yako.",
+  customLanguageSupport: "Custom Realtime AI inasaidia lugha 99+. Mfumo huu unatumia miundo ya lugha nyingi maalum ikiwa ni pamoja na Whisper (utambuzi wa hotuba), GPT-4o-mini (mazungumzo), na Azure TTS (muundo wa sauti).",
+  recommendedForYourLanguage: "Inapendekezwa kwa lugha yako",
+  multilingualSupport: "LUGHA NYINGI",
 };
 
 export default premiumVoiceTranslations;
