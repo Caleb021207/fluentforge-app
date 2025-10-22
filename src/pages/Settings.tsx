@@ -14,13 +14,6 @@ const Settings = () => {
   
   const documentLinks = [
     {
-      title: "Safety & Privacy Policy",
-      description: "Review our comprehensive safety and privacy guidelines",
-      icon: <Shield className="w-5 h-5" />,
-      path: "/safety-policy",
-      badge: "COPPA & CIPA Compliant"
-    },
-    {
       title: "Compliance Center",
       description: "FERPA, COPPA, and data protection management",
       icon: <Lock className="w-5 h-5" />,

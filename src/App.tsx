@@ -12,7 +12,6 @@ import VoiceChat from "@/pages/VoiceChat";
 import Settings from "@/pages/Settings";
 import CertificationCodeTester from "@/pages/CertificationCodeTester";
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
-import SafetyPolicy from "@/pages/SafetyPolicy";
 
 function App() {
   return (
@@ -28,7 +27,6 @@ function App() {
           <Route path="/analysis" element={<TranscriptAnalysis />} />
           <Route path="/code-tester" element={<CertificationCodeTester />} />
           <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
-          <Route path="/safety-policy" element={<SafetyPolicy />} />
           
         </Routes>
         <Toaster />
