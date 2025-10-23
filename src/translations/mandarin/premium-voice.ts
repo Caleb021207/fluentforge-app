@@ -189,6 +189,16 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "推荐用于您的语言",
   multilingualSupport: "多语言",
   customRealtimeDisclaimer: "每次录音限制为 1 分钟。沉默 3 秒后，您的消息将自动发送。",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI 最新语音模型",
+  startGptSession: "开始 GPT 会话",
+  startCustomSession: "开始自定义会话",
+  exchanges: "交流",
+  stateListening: "聆听中",
+  stateProcessing: "处理中",
+  stateSpeaking: "说话中",
+  stateIdle: "空闲",
 };
 
 export default premiumVoiceTranslations;

@@ -75,6 +75,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "귀하의 언어에 권장",
   multilingualSupport: "다국어",
   customRealtimeDisclaimer: "각 녹음은 1분으로 제한됩니다. 3초간 침묵하면 메시지가 자동으로 전송됩니다.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI의 최신 음성 모델",
+  connecting: "연결 중...",
+  startGptSession: "GPT 세션 시작",
+  startCustomSession: "맞춤 세션 시작",
+  exchanges: "대화",
+  stateListening: "듣는 중",
+  stateProcessing: "처리 중",
+  stateSpeaking: "말하는 중",
+  stateIdle: "대기 중",
 };
 
 export default premiumVoiceTranslations;

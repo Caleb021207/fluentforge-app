@@ -409,7 +409,7 @@ const PremiumVoicePractice = () => {
           <div className="flex flex-col items-center gap-6">
             <div className="text-center space-y-1">
               <h3 className="text-xl font-semibold gradient-text">GPT-4o Realtime</h3>
-              <p className="text-sm text-muted-foreground">OpenAI's latest voice model</p>
+              <p className="text-sm text-muted-foreground">{t('openaiLatestVoiceModel')}</p>
             </div>
 
             {isConnected && provider === 'gpt' && (
@@ -443,7 +443,7 @@ const PremiumVoicePractice = () => {
                 className="px-8"
                 disabled={isStarting || (isConnected && provider !== 'gpt') || premiumVoiceMinutesRemaining <= 0}
               >
-                {isStarting && provider === 'gpt' ? 'Connecting...' : 'Start GPT Session'}
+                {isStarting && provider === 'gpt' ? t('connecting') : t('startGptSession')}
               </Button>
             ) : (
               <Button 
@@ -480,10 +480,10 @@ const PremiumVoicePractice = () => {
                   {formatTime(customElapsedSeconds)}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {customMessages.length / 2} exchanges
+                  {customMessages.length / 2} {t('exchanges')}
                 </div>
                 <div className="text-xs text-blue-500 mt-2">
-                  {customState}
+                  {t(`state${customState.charAt(0).toUpperCase() + customState.slice(1)}` as any)}
                 </div>
               </div>
             )}
@@ -518,7 +518,7 @@ const PremiumVoicePractice = () => {
                 className="px-8 bg-blue-500 hover:bg-blue-600"
                 disabled={isStarting}
               >
-                {isStarting ? 'Connecting...' : 'Start Custom Session'}
+                {isStarting ? t('connecting') : t('startCustomSession')}
               </Button>
             ) : (
               <div className="flex flex-col gap-2 w-full">

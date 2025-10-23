@@ -75,6 +75,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "موصى به للغتك",
   multilingualSupport: "متعدد اللغات",
   customRealtimeDisclaimer: "كل تسجيل محدود بدقيقة واحدة. بعد 3 ثوانٍ من الصمت، سيتم إرسال رسالتك تلقائيًا.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "أحدث نموذج صوتي من OpenAI",
+  connecting: "جاري الاتصال...",
+  startGptSession: "بدء جلسة GPT",
+  startCustomSession: "بدء جلسة مخصصة",
+  exchanges: "تبادلات",
+  stateListening: "استماع",
+  stateProcessing: "معالجة",
+  stateSpeaking: "يتحدث",
+  stateIdle: "خامل",
 };
 
 export default premiumVoiceTranslations;

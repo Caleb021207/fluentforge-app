@@ -51,6 +51,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "あなたの言語におすすめ",
   multilingualSupport: "多言語対応",
   customRealtimeDisclaimer: "各録音は1分に制限されています。3秒間の沈黙の後、メッセージが自動的に送信されます。",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI の最新音声モデル",
+  connecting: "接続中...",
+  startGptSession: "GPT セッションを開始",
+  startCustomSession: "カスタムセッションを開始",
+  exchanges: "やり取り",
+  stateListening: "聞いています",
+  stateProcessing: "処理中",
+  stateSpeaking: "話しています",
+  stateIdle: "待機中",
 };
 
 export default premiumVoiceTranslations;

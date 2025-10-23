@@ -76,6 +76,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "Recommandé pour votre langue",
   multilingualSupport: "MULTILINGUE",
   customRealtimeDisclaimer: "Chaque enregistrement est limité à 1 minute. Après 3 secondes de silence, votre message sera automatiquement envoyé.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "Dernier modèle vocal d'OpenAI",
+  connecting: "Connexion...",
+  startGptSession: "Démarrer Session GPT",
+  startCustomSession: "Démarrer Session Personnalisée",
+  exchanges: "échanges",
+  stateListening: "écoute",
+  stateProcessing: "traitement",
+  stateSpeaking: "parle",
+  stateIdle: "inactif",
 };
 
 export default premiumVoiceTranslations;
