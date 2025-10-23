@@ -45,6 +45,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI wuxuu taageeraa 99+ luqadood. Nidaamkan wuxuu isticmaalaa moodooyinka luqadaha badan oo gaar ah oo ay ku jiraan Whisper (aqoonsiga codka), GPT-4o-mini (wadahadalka), iyo Azure TTS (isku darka codka).",
   recommendedForYourLanguage: "Waxaa lagu taliyey luqaddaada",
   multilingualSupport: "LUQADO BADAN",
+  customRealtimeDisclaimer: "Duubista kasta waxaa xaddidan 1 daqiiqo. Ka dib 3 ilbiriqsi oo aamusnaan ah, fariintaada ayaa si toos ah loo diri doonaa.",
 };
 
 export default premiumVoiceTranslations;

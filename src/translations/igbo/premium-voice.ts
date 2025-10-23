@@ -45,6 +45,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI na-akwado asụsụ 99+. Sistemu a na-eji ụdị ọtụtụ asụsụ pụrụ iche gụnyere Whisper (nchọpụta okwu), GPT-4o-mini (mkparịta ụka), na Azure TTS (njikọ olu).",
   recommendedForYourLanguage: "A na-atụ aro maka asụsụ gị",
   multilingualSupport: "ỌTỤTỤ ASỤSỤ",
+  customRealtimeDisclaimer: "Ndekọ ọ bụla nwere oke nke 1 nkeji. Mgbe 3 sekọnd nke ịgbachi nkịtị gasịrị, ozi gị ga-eziga n'onwe ya.",
 };
 
 export default premiumVoiceTranslations;

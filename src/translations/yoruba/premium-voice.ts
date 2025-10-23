@@ -35,6 +35,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI ń ṣe àtìlẹ́yìn fún àwọn èdè tó ju 99 lọ. Ètò yìí ń lo àwọn àpẹẹrẹ oníèdè púpọ̀ pàtàkì tí ó wà nínú Whisper (ìdánimọ̀ ohùn), GPT-4o-mini (ìsọ̀rọ̀), àti Azure TTS (ìṣẹ̀dá ohùn).",
   recommendedForYourLanguage: "A ṣe ìbá fún èdè rẹ",
   multilingualSupport: "ONÍÈDÈ PÚPỌ̀",
+  customRealtimeDisclaimer: "Gbígbóhùn kọ̀ọ̀kan ní òdìwọ̀n ìṣẹ́jú 1. Lẹ́yìn ìṣẹ́jú ìsẹ́gun mẹ́ta tí kò sí ariwo, ifiránṣẹ́ rẹ yóò jẹ́ fífiránṣẹ́ láìṣètò.",
 };
 
 export default premiumVoiceTranslations;

@@ -469,7 +469,9 @@ const PremiumVoicePractice = () => {
                   {t('multilingualSupport')}
                 </span>
               </div>
-              
+              <p className="text-xs text-muted-foreground max-w-md">
+                {t('customRealtimeDisclaimer')}
+              </p>
             </div>
 
             {customSessionId && (
