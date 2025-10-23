@@ -138,6 +138,7 @@ const PremiumVoicePractice = () => {
       const manager = new CustomRealtimeManager(
         'english',
         native.toLowerCase(),
+        currentLanguage,
         (state) => setCustomState(state),
         (message) => {
           setCustomMessages(prev => [...prev, message]);

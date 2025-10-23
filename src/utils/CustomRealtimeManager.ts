@@ -26,6 +26,7 @@ export class CustomRealtimeManager {
   private onError: (error: string) => void;
   private targetLanguage: string;
   private userLanguage: string;
+  private userInterfaceLanguage: string;
   private stream: MediaStream | null = null;
   private isSessionActive: boolean = false;
   private currentAudio: HTMLAudioElement | null = null;
@@ -40,12 +41,14 @@ export class CustomRealtimeManager {
   constructor(
     targetLanguage: string,
     userLanguage: string,
+    userInterfaceLanguage: string,
     onStateChange: (state: ConversationState) => void,
     onMessage: (message: { role: string; content: string }) => void,
     onError: (error: string) => void
   ) {
     this.targetLanguage = targetLanguage;
     this.userLanguage = userLanguage;
+    this.userInterfaceLanguage = userInterfaceLanguage;
     this.onStateChange = onStateChange;
     this.onMessage = onMessage;
     this.onError = onError;
@@ -222,6 +225,7 @@ export class CustomRealtimeManager {
           conversationHistory: this.conversationHistory,
           targetLanguage: this.targetLanguage,
           userLanguage: this.userLanguage,
+          userInterfaceLanguage: this.userInterfaceLanguage,
         }
       });
 
