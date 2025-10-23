@@ -246,7 +246,7 @@ IMPORTANT: You must use the speak_bilingual function to structure your response 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'gpt-4o-mini',
         messages,
         max_tokens: 200,
         temperature: 0.8,
