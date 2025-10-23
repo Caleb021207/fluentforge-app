@@ -29,6 +29,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI له ۹۹+ ژبو ملاتړ کوي. دا سیسټم ځانګړي څو ژبني ماډلونه کاروي چې پکې Whisper (د غږ پیژندنه)، GPT-4o-mini (خبرې اترې)، او Azure TTS (د غږ ترکیب) شامل دي.",
   recommendedForYourLanguage: "ستاسو د ژبې لپاره وړاندیز شوی",
   multilingualSupport: "څو ژبنی",
+  customRealtimeDisclaimer: "هره ضبط ۱ دقیقې پورې محدوده ده. د ۳ ثانیو خاموشۍ وروسته، ستاسو پیغام په خپل ځان ولیږل کیږي.",
 };
 
 export default premiumVoiceTranslations;

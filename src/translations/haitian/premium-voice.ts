@@ -44,6 +44,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI sipòte plis pase 99 lang. Sistèm sa a itilize modèl multileng espesyalize ki gen ladan Whisper (rekonesans vwa), GPT-4o-mini (konvèsasyon), ak Azure TTS (sentèz vwa).",
   recommendedForYourLanguage: "Rekòmande pou lang ou",
   multilingualSupport: "MULTILENG",
+  customRealtimeDisclaimer: "Chak anrejistreman limite a 1 minit. Apre 3 segonn silans, mesaj ou ap voye otomatikman.",
 };
 
 export default premiumVoiceTranslations;

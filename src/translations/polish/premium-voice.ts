@@ -45,6 +45,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI obsługuje ponad 99 języków. Ten system wykorzystuje wyspecjalizowane wielojęzyczne modele, w tym Whisper (rozpoznawanie mowy), GPT-4o-mini (rozmowa) i Azure TTS (synteza mowy).",
   recommendedForYourLanguage: "Zalecane dla twojego języka",
   multilingualSupport: "WIELOJĘZYCZNY",
+  customRealtimeDisclaimer: "Każde nagranie jest ograniczone do 1 minuty. Po 3 sekundach ciszy wiadomość zostanie automatycznie wysłana.",
 };
 
 export default premiumVoiceTranslations;

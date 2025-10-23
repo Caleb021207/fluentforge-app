@@ -45,6 +45,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI ከ99 በላይ ቋንቋዎችን ይደግፋል። ይህ ስርዓት Whisper (የድምጽ ማወቂያ)፣ GPT-4o-mini (ውይይት) እና Azure TTS (የድምጽ ውህደት) ጨምሮ ልዩ የብዙ ቋንቋ ሞዴሎችን ይጠቀማል።",
   recommendedForYourLanguage: "ለእርስዎ ቋንቋ የሚመከር",
   multilingualSupport: "ብዙ ቋንቋ",
+  customRealtimeDisclaimer: "እያንዳንዱ ቅጂ ለ 1 ደቂቃ የተገደበ ነው። ከ 3 ሴኮንዶች ዝምታ በኋላ፣ መልእክትዎ በራስ-ሰር ይላካል።",
 };
 
 export default premiumVoiceTranslations;

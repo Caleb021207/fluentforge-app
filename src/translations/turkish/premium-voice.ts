@@ -45,6 +45,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI 99'dan fazla dili destekler. Bu sistem Whisper (konuşma tanıma), GPT-4o-mini (konuşma) ve Azure TTS (konuşma sentezi) dahil olmak üzere özel çok dilli modeller kullanır.",
   recommendedForYourLanguage: "Diliniz için önerilir",
   multilingualSupport: "ÇOK DİLLİ",
+  customRealtimeDisclaimer: "Her kayıt 1 dakika ile sınırlıdır. 3 saniye sessizlikten sonra mesajınız otomatik olarak gönderilecektir.",
 };
 
 export default premiumVoiceTranslations;

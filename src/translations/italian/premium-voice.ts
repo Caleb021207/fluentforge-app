@@ -29,6 +29,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI supporta oltre 99 lingue. Questo sistema utilizza modelli multilingue specializzati tra cui Whisper (riconoscimento vocale), GPT-4o-mini (conversazione) e Azure TTS (sintesi vocale).",
   recommendedForYourLanguage: "Consigliato per la tua lingua",
   multilingualSupport: "MULTILINGUE",
+  customRealtimeDisclaimer: "Ogni registrazione è limitata a 1 minuto. Dopo 3 secondi di silenzio, il tuo messaggio verrà inviato automaticamente.",
 };
 
 export default premiumVoiceTranslations;

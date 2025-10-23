@@ -64,6 +64,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI 99+ ਭਾਸ਼ਾਵਾਂ ਦਾ ਸਮਰਥਨ ਕਰਦਾ ਹੈ। ਇਹ ਸਿਸਟਮ Whisper (ਬੋਲੀ ਪਛਾਣ), GPT-4o-mini (ਗੱਲਬਾਤ), ਅਤੇ Azure TTS (ਆਵਾਜ਼ ਸੰਸ਼ਲੇਸ਼ਣ) ਸਮੇਤ ਵਿਸ਼ੇਸ਼ ਬਹੁਭਾਸ਼ੀ ਮਾਡਲਾਂ ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ।",
   recommendedForYourLanguage: "ਤੁਹਾਡੀ ਭਾਸ਼ਾ ਲਈ ਸਿਫ਼ਾਰਸ਼ ਕੀਤੀ",
   multilingualSupport: "ਬਹੁਭਾਸ਼ੀ",
+  customRealtimeDisclaimer: "ਹਰੇਕ ਰਿਕਾਰਡਿੰਗ 1 ਮਿੰਟ ਤੱਕ ਸੀਮਿਤ ਹੈ। 3 ਸਕਿੰਟ ਦੀ ਚੁੱਪ ਤੋਂ ਬਾਅਦ, ਤੁਹਾਡਾ ਸੰਦੇਸ਼ ਆਪਣੇ-ਆਪ ਭੇਜਿਆ ਜਾਵੇਗਾ।",
 };
 
 export default premiumVoiceTranslations;

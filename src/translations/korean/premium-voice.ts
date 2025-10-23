@@ -74,6 +74,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI는 99개 이상의 언어를 지원합니다. 이 시스템은 Whisper(음성 인식), GPT-4o-mini(대화) 및 Azure TTS(음성 합성)를 포함한 전문 다국어 모델을 사용합니다.",
   recommendedForYourLanguage: "귀하의 언어에 권장",
   multilingualSupport: "다국어",
+  customRealtimeDisclaimer: "각 녹음은 1분으로 제한됩니다. 3초간 침묵하면 메시지가 자동으로 전송됩니다.",
 };
 
 export default premiumVoiceTranslations;

@@ -50,6 +50,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI suportă peste 99 de limbi. Acest sistem folosește modele multilingve specializate, inclusiv Whisper (recunoaștere vocală), GPT-4o-mini (conversație) și Azure TTS (sinteză vocală).",
   recommendedForYourLanguage: "Recomandat pentru limba ta",
   multilingualSupport: "MULTILINGV",
+  customRealtimeDisclaimer: "Fiecare înregistrare este limitată la 1 minut. După 3 secunde de tăcere, mesajul tău va fi trimis automat.",
 };
 
 export default premiumVoiceTranslations;

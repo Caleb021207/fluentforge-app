@@ -103,6 +103,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI inasaidia lugha 99+. Mfumo huu unatumia miundo ya lugha nyingi maalum ikiwa ni pamoja na Whisper (utambuzi wa hotuba), GPT-4o-mini (mazungumzo), na Azure TTS (muundo wa sauti).",
   recommendedForYourLanguage: "Inapendekezwa kwa lugha yako",
   multilingualSupport: "LUGHA NYINGI",
+  customRealtimeDisclaimer: "Kila rekodi imewekwa kikomo cha dakika 1. Baada ya sekunde 3 za utulivu, ujumbe wako utatumwa kiotomatiki.",
 };
 
 export default premiumVoiceTranslations;

@@ -33,7 +33,7 @@ export class CustomRealtimeManager {
   // VAD settings
   private readonly SILENCE_THRESHOLD = 0.01;
   private readonly SILENCE_DURATION_MS = 3000;
-  private readonly MAX_RECORDING_DURATION_MS = 10000;
+  private readonly MAX_RECORDING_DURATION_MS = 60000; // 1 minute
   private recordingStartTime: number = 0;
 
   constructor(

@@ -50,6 +50,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI hỗ trợ hơn 99 ngôn ngữ. Hệ thống này sử dụng các mô hình đa ngôn ngữ chuyên biệt bao gồm Whisper (nhận dạng giọng nói), GPT-4o-mini (hội thoại) và Azure TTS (tổng hợp giọng nói).",
   recommendedForYourLanguage: "Được đề xuất cho ngôn ngữ của bạn",
   multilingualSupport: "ĐA NGÔN NGỮ",
+  customRealtimeDisclaimer: "Mỗi bản ghi được giới hạn 1 phút. Sau 3 giây im lặng, tin nhắn của bạn sẽ được gửi tự động.",
 };
 
 export default premiumVoiceTranslations;

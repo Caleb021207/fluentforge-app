@@ -54,6 +54,7 @@ const premiumVoiceTranslations: TranslationRecord = {
   customLanguageSupport: "Custom Realtime AI 支援超過 99 種語言。此系統使用專門的多語言模型，包括 Whisper（語音識別）、GPT-4o-mini（對話）和 Azure TTS（語音合成）。",
   recommendedForYourLanguage: "推薦用於您的語言",
   multilingualSupport: "多語言",
+  customRealtimeDisclaimer: "每次錄音限制為 1 分鐘。沉默 3 秒後，您的消息將自動發送。",
 };
 
 export default premiumVoiceTranslations;
