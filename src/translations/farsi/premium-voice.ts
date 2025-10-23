@@ -30,6 +30,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "توصیه شده برای زبان شما",
   multilingualSupport: "چندزبانه",
   customRealtimeDisclaimer: "هر ضبط محدود به ۱ دقیقه است. پس از ۳ ثانیه سکوت، پیام شما به طور خودکار ارسال خواهد شد.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "جدیدترین مدل صوتی OpenAI",
+  connecting: "در حال اتصال...",
+  startGptSession: "شروع جلسه GPT",
+  startCustomSession: "شروع جلسه سفارشی",
+  exchanges: "مبادلات",
+  stateListening: "گوش دادن",
+  stateProcessing: "پردازش",
+  stateSpeaking: "صحبت کردن",
+  stateIdle: "بیکار",
 };
 
 export default premiumVoiceTranslations;

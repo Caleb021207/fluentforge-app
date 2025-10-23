@@ -55,6 +55,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "推薦用於您的語言",
   multilingualSupport: "多語言",
   customRealtimeDisclaimer: "每次錄音限制為 1 分鐘。沉默 3 秒後，您的消息將自動發送。",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI 最新語音模型",
+  connecting: "連接中...",
+  startGptSession: "開始 GPT 會話",
+  startCustomSession: "開始自定義會話",
+  exchanges: "交流",
+  stateListening: "聆聽中",
+  stateProcessing: "處理中",
+  stateSpeaking: "說話中",
+  stateIdle: "空閒",
 };
 
 export default premiumVoiceTranslations;

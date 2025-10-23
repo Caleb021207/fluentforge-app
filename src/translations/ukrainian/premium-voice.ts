@@ -98,6 +98,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "Рекомендовано для вашої мови",
   multilingualSupport: "БАГАТОМОВНИЙ",
   customRealtimeDisclaimer: "Кожен запис обмежений 1 хвилиною. Після 3 секунд тиші ваше повідомлення буде автоматично надіслано.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "Найновіша голосова модель OpenAI",
+  connecting: "Підключення...",
+  startGptSession: "Почати GPT сесію",
+  startCustomSession: "Почати власну сесію",
+  exchanges: "обмінів",
+  stateListening: "слухає",
+  stateProcessing: "обробляє",
+  stateSpeaking: "говорить",
+  stateIdle: "очікування",
 };
 
 export default premiumVoiceTranslations;

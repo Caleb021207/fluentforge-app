@@ -41,6 +41,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "آپ کی زبان کے لیے تجویز کردہ",
   multilingualSupport: "کثیر لسانی",
   customRealtimeDisclaimer: "ہر ریکارڈنگ 1 منٹ تک محدود ہے۔ 3 سیکنڈ کی خاموشی کے بعد، آپ کا پیغام خودکار طور پر بھیج دیا جائے گا۔",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI کا تازہ ترین آواز ماڈل",
+  connecting: "منسلک ہو رہا ہے...",
+  startGptSession: "GPT سیشن شروع کریں",
+  startCustomSession: "حسب ضرورت سیشن شروع کریں",
+  exchanges: "تبادلے",
+  stateListening: "سن رہا ہے",
+  stateProcessing: "عملدرآمد ہو رہا ہے",
+  stateSpeaking: "بول رہا ہے",
+  stateIdle: "بیکار",
 };
 
 export default premiumVoiceTranslations;

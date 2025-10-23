@@ -101,6 +101,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "Direkomendasikan untuk bahasa Anda",
   multilingualSupport: "MULTIBAHASA",
   customRealtimeDisclaimer: "Setiap rekaman dibatasi hingga 1 menit. Setelah 3 detik keheningan, pesan Anda akan dikirim secara otomatis.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "Model suara terbaru OpenAI",
+  connecting: "Menghubungkan...",
+  startGptSession: "Mulai Sesi GPT",
+  startCustomSession: "Mulai Sesi Kustom",
+  exchanges: "pertukaran",
+  stateListening: "mendengarkan",
+  stateProcessing: "memproses",
+  stateSpeaking: "berbicara",
+  stateIdle: "tidak aktif",
 };
 
 export default premiumVoiceTranslations;

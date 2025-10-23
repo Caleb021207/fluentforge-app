@@ -30,6 +30,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "ستاسو د ژبې لپاره وړاندیز شوی",
   multilingualSupport: "څو ژبنی",
   customRealtimeDisclaimer: "هره ضبط ۱ دقیقې پورې محدوده ده. د ۳ ثانیو خاموشۍ وروسته، ستاسو پیغام په خپل ځان ولیږل کیږي.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "د OpenAI تازه غږ ماډل",
+  connecting: "اتصال کیږي...",
+  startGptSession: "GPT ناسته پیل کړئ",
+  startCustomSession: "دودیز ناسته پیل کړئ",
+  exchanges: "تبادلې",
+  stateListening: "اوریدل",
+  stateProcessing: "پروسس کول",
+  stateSpeaking: "خبرې کول",
+  stateIdle: "بیکار",
 };
 
 export default premiumVoiceTranslations;

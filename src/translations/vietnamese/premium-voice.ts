@@ -51,6 +51,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "Được đề xuất cho ngôn ngữ của bạn",
   multilingualSupport: "ĐA NGÔN NGỮ",
   customRealtimeDisclaimer: "Mỗi bản ghi được giới hạn 1 phút. Sau 3 giây im lặng, tin nhắn của bạn sẽ được gửi tự động.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "Mô hình giọng nói mới nhất của OpenAI",
+  connecting: "Đang kết nối...",
+  startGptSession: "Bắt đầu Phiên GPT",
+  startCustomSession: "Bắt đầu Phiên Tùy chỉnh",
+  exchanges: "trao đổi",
+  stateListening: "đang lắng nghe",
+  stateProcessing: "đang xử lý",
+  stateSpeaking: "đang nói",
+  stateIdle: "không hoạt động",
 };
 
 export default premiumVoiceTranslations;

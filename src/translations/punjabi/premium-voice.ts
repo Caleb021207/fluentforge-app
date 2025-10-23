@@ -65,6 +65,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "ਤੁਹਾਡੀ ਭਾਸ਼ਾ ਲਈ ਸਿਫ਼ਾਰਸ਼ ਕੀਤੀ",
   multilingualSupport: "ਬਹੁਭਾਸ਼ੀ",
   customRealtimeDisclaimer: "ਹਰੇਕ ਰਿਕਾਰਡਿੰਗ 1 ਮਿੰਟ ਤੱਕ ਸੀਮਿਤ ਹੈ। 3 ਸਕਿੰਟ ਦੀ ਚੁੱਪ ਤੋਂ ਬਾਅਦ, ਤੁਹਾਡਾ ਸੰਦੇਸ਼ ਆਪਣੇ-ਆਪ ਭੇਜਿਆ ਜਾਵੇਗਾ।",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI ਦਾ ਨਵੀਨਤਮ ਵਾਇਸ ਮਾਡਲ",
+  connecting: "ਕਨੈਕਟ ਹੋ ਰਿਹਾ ਹੈ...",
+  startGptSession: "GPT ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ",
+  startCustomSession: "ਕਸਟਮ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ",
+  exchanges: "ਵਟਾਂਦਰੇ",
+  stateListening: "ਸੁਣ ਰਿਹਾ ਹੈ",
+  stateProcessing: "ਪ੍ਰੋਸੈਸ ਕਰ ਰਿਹਾ ਹੈ",
+  stateSpeaking: "ਬੋਲ ਰਿਹਾ ਹੈ",
+  stateIdle: "ਨਿਸ਼ਕ੍ਰਿਇ",
 };
 
 export default premiumVoiceTranslations;

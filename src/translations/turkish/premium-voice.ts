@@ -46,6 +46,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "Diliniz için önerilir",
   multilingualSupport: "ÇOK DİLLİ",
   customRealtimeDisclaimer: "Her kayıt 1 dakika ile sınırlıdır. 3 saniye sessizlikten sonra mesajınız otomatik olarak gönderilecektir.",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI'nin en son ses modeli",
+  connecting: "Bağlanıyor...",
+  startGptSession: "GPT Oturumu Başlat",
+  startCustomSession: "Özel Oturum Başlat",
+  exchanges: "değişimler",
+  stateListening: "dinliyor",
+  stateProcessing: "işleniyor",
+  stateSpeaking: "konuşuyor",
+  stateIdle: "boşta",
 };
 
 export default premiumVoiceTranslations;

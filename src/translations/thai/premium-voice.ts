@@ -30,6 +30,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "แนะนำสำหรับภาษาของคุณ",
   multilingualSupport: "หลายภาษา",
   customRealtimeDisclaimer: "การบันทึกแต่ละครั้งมีขีดจำกัดที่ 1 นาที หลังจากเงียบ 3 วินาที ข้อความของคุณจะถูกส่งโดยอัตโนมัติ",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "โมเดลเสียงล่าสุดของ OpenAI",
+  connecting: "กำลังเชื่อมต่อ...",
+  startGptSession: "เริ่มเซสชัน GPT",
+  startCustomSession: "เริ่มเซสชันที่กำหนดเอง",
+  exchanges: "การสนทนา",
+  stateListening: "กำลังฟัง",
+  stateProcessing: "กำลังประมวลผล",
+  stateSpeaking: "กำลังพูด",
+  stateIdle: "ไม่ได้ใช้งาน",
 };
 
 export default premiumVoiceTranslations;

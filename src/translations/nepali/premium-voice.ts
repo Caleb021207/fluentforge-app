@@ -64,6 +64,17 @@ const premiumVoiceTranslations: TranslationRecord = {
   recommendedForYourLanguage: "तपाईंको भाषाको लागि सिफारिस गरिएको",
   multilingualSupport: "बहुभाषी",
   customRealtimeDisclaimer: "प्रत्येक रेकर्डिङ १ मिनेटमा सीमित छ। ३ सेकेन्ड मौनता पछि, तपाईंको सन्देश स्वचालित रूपमा पठाइनेछ।",
+  
+  // Voice practice page
+  openaiLatestVoiceModel: "OpenAI को नवीनतम आवाज मोडेल",
+  connecting: "जडान गरिँदैछ...",
+  startGptSession: "GPT सत्र सुरु गर्नुहोस्",
+  startCustomSession: "अनुकूलन सत्र सुरु गर्नुहोस्",
+  exchanges: "आदानप्रदान",
+  stateListening: "सुन्दै",
+  stateProcessing: "प्रशोधन गर्दै",
+  stateSpeaking: "बोल्दै",
+  stateIdle: "निष्क्रिय",
 };
 
 export default premiumVoiceTranslations;
