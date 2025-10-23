@@ -6,6 +6,34 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Normalize language names to 2-letter codes
+const normalizeLanguage = (lang: string): string => {
+  const normalized = lang.toLowerCase().trim();
+  const languageMap: Record<string, string> = {
+    'spanish': 'es',
+    'english': 'en',
+    'portuguese': 'pt',
+    'french': 'fr',
+    'german': 'de',
+    'italian': 'it',
+    'japanese': 'ja',
+    'korean': 'ko',
+    'mandarin': 'zh',
+    'chinese': 'zh',
+    'russian': 'ru',
+    'arabic': 'ar',
+    'hindi': 'hi',
+    'urdu': 'ur',
+    'bengali': 'bn',
+    'gujarati': 'gu',
+    'punjabi': 'pa',
+    'nepali': 'ne',
+    'thai': 'th',
+  };
+  
+  return languageMap[normalized] || normalized;
+};
+
 // Voice mapping for different languages
 const VOICE_MAP: Record<string, string> = {
   'spanish': 'Lucia',
@@ -89,6 +117,9 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
+    const nativeCode = normalizeLanguage(userLanguage);
+    console.log(`Normalized user language: ${userLanguage} -> ${nativeCode}`);
+
     const systemPrompt = `You are a bilingual conversational AI helping users learn and practice English.
 
 TARGET LANGUAGE: English (the language they're learning)
@@ -103,21 +134,22 @@ BILINGUAL CONVERSATION APPROACH:
 - Keep responses to 2-3 sentences
 
 CRITICAL FORMATTING REQUIREMENT:
-You MUST wrap each language segment in tags for proper pronunciation:
-- Wrap English text in [EN]...[/EN]
-- Wrap ${userLanguage} text in [${languageCodeMap[userLanguage.toLowerCase()] || 'native'}]...[/${languageCodeMap[userLanguage.toLowerCase()] || 'native'}]
+You MUST wrap each language segment in tags for proper voice selection (these tags will be REMOVED before speech):
+- Wrap English text in [en]...[/en]
+- Wrap ${userLanguage} text in [${nativeCode}]...[/${nativeCode}]
 - Always use these tags, even for single-language responses
+- IMPORTANT: These tags are ONLY for voice selection and will NOT be spoken
 
 EXAMPLES:
-- "[EN]A grocery store[/EN] [es]es donde compras comida[/es] [EN]- where you buy food.[/EN]"
-- "[EN]Weather[/EN] [es]significa el clima[/es] [EN]- if it's sunny, rainy, or cold.[/EN]"
-- "[es]Claro, puedo ayudarte con eso.[/es]"
-- "[EN]That's great! How was your day?[/EN]"
+- "[en]A grocery store[/en] [${nativeCode}]es donde compras comida[/${nativeCode}] [en]- where you buy food.[/en]"
+- "[en]Weather[/en] [${nativeCode}]significa el clima[/${nativeCode}] [en]- if it's sunny, rainy, or cold.[/en]"
+- "[${nativeCode}]Claro, puedo ayudarte con eso.[/${nativeCode}]"
+- "[en]That's great! How was your day?[/en]"
 
 GRAMMAR HELP:
 - Naturally rephrase if user makes major mistakes
 - Don't constantly correct - prioritize flow and confidence
-- Example: User: "I go yesterday store" → "[EN]Oh, you went to the store yesterday? That's great![/EN]"
+- Example: User: "I go yesterday store" → "[en]Oh, you went to the store yesterday? That's great![/en]"
 
 Your goal: Help users learn English through natural, supportive bilingual conversation.`;
 
@@ -151,9 +183,9 @@ Your goal: Help users learn English through natural, supportive bilingual conver
     const aiResponseWithTags = gptData.choices[0].message.content;
     console.log(`AI Response with tags: "${aiResponseWithTags}"`);
 
-    // Strip language tags for display (but keep the tagged version for TTS)
+    // Strip ALL language tags for display (handles any format: [en], [es], [native], etc.)
     const stripLanguageTags = (text: string): string => {
-      return text.replace(/\[([a-z]{2})\]/g, '').replace(/\[\/([a-z]{2})\]/g, '');
+      return text.replace(/\[[a-z]{2,10}\]/gi, '').replace(/\[\/[a-z]{2,10}\]/gi, '');
     };
     
     const aiResponse = stripLanguageTags(aiResponseWithTags);
@@ -213,23 +245,30 @@ Your goal: Help users learn English through natural, supportive bilingual conver
       'th': 'th-TH',
     };
 
-    // Parse language tags from AI response
+    // Parse language tags from AI response (handles any format)
     const parseLanguageTags = (text: string): Array<{ lang: string; text: string }> => {
       const segments: Array<{ lang: string; text: string }> = [];
-      const tagPattern = /\[([a-z]{2})\](.*?)\[\/\1\]/gs;
+      // Updated pattern to handle 2-10 letter codes (en, es, native, etc.)
+      const tagPattern = /\[([a-z]{2,10})\](.*?)\[\/\1\]/gis;
       let lastIndex = 0;
       let match;
+
+      console.log(`Parsing language tags from: "${text.substring(0, 100)}..."`);
 
       while ((match = tagPattern.exec(text)) !== null) {
         // Add any untagged text before this match as English (default)
         if (match.index > lastIndex) {
           const untaggedText = text.slice(lastIndex, match.index).trim();
           if (untaggedText) {
+            console.log(`Found untagged text (defaulting to English): "${untaggedText.substring(0, 30)}..."`);
             segments.push({ lang: 'en', text: untaggedText });
           }
         }
 
-        segments.push({ lang: match[1], text: match[2].trim() });
+        const langCode = normalizeLanguage(match[1]);
+        const content = match[2].trim();
+        console.log(`Found tagged segment: [${match[1]}] -> normalized to [${langCode}]: "${content.substring(0, 30)}..."`);
+        segments.push({ lang: langCode, text: content });
         lastIndex = match.index + match[0].length;
       }
 
@@ -237,12 +276,14 @@ Your goal: Help users learn English through natural, supportive bilingual conver
       if (lastIndex < text.length) {
         const remainingText = text.slice(lastIndex).trim();
         if (remainingText) {
+          console.log(`Found remaining untagged text (defaulting to English): "${remainingText.substring(0, 30)}..."`);
           segments.push({ lang: 'en', text: remainingText });
         }
       }
 
       // If no tags found, treat entire response as English
       if (segments.length === 0) {
+        console.log('No language tags found, treating entire response as English');
         segments.push({ lang: 'en', text: text.trim() });
       }
 
@@ -252,12 +293,21 @@ Your goal: Help users learn English through natural, supportive bilingual conver
     const segments = parseLanguageTags(aiResponseWithTags);
     console.log(`Parsed ${segments.length} language segments:`, segments.map(s => `${s.lang}: "${s.text.substring(0, 30)}..."`));
 
-    // Build multi-voice SSML
+    // Build multi-voice SSML with fallback handling
     const voiceElements = segments
       .map(segment => {
-        const voice = azureVoiceMap[segment.lang] || 'en-US-AriaNeural';
-        const locale = localeMap[segment.lang] || 'en-US';
-        return `<voice name='${voice}' xml:lang='${locale}'>${segment.text}</voice>`;
+        const voice = azureVoiceMap[segment.lang] || azureVoiceMap['en'] || 'en-US-AriaNeural';
+        const locale = localeMap[segment.lang] || localeMap['en'] || 'en-US';
+        
+        // Strip any remaining tags from the actual text content
+        const cleanText = segment.text.replace(/\[[^\]]+\]/g, '').trim();
+        
+        if (!azureVoiceMap[segment.lang]) {
+          console.warn(`⚠️ No voice found for language "${segment.lang}", falling back to English voice`);
+        }
+        
+        console.log(`Using voice "${voice}" (${locale}) for: "${cleanText.substring(0, 30)}..."`);
+        return `<voice name='${voice}' xml:lang='${locale}'>${cleanText}</voice>`;
       })
       .join(' ');
 
