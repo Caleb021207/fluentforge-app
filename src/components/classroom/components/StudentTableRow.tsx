@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { StudentMetrics } from '@/components/classroom/types/studentTypes';
 import { RemoveStudentDialog } from './RemoveStudentDialog';
-import { getACTFLLevelFromScore, getACTFLBadgeVariant } from "@/utils/actflLevelMapping";
 
 interface StudentTableRowProps {
   student: StudentMetrics;
@@ -19,9 +18,33 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student, class
   const { t } = useLocalization();
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
+  // Format date if available
   const formatDate = (dateString: string | null) => {
     if (!dateString) return t("never");
     return new Date(dateString).toLocaleDateString();
+  };
+
+  // Helper function to determine CEFR level based on score
+  const getCEFRLevel = (score: number) => {
+    if (score < 30) return 'A1';
+    if (score < 50) return 'A2';
+    if (score < 65) return 'B1';
+    if (score < 80) return 'B2';
+    if (score < 95) return 'C1';
+    return 'C2';
+  };
+
+  // Helper function to get badge color based on CEFR level
+  const getBadgeVariant = (level: string) => {
+    switch(level) {
+      case 'A1': return 'outline';
+      case 'A2': return 'secondary';
+      case 'B1': return 'default';
+      case 'B2': return 'default';
+      case 'C1': return 'secondary';
+      case 'C2': return 'secondary';
+      default: return 'outline';
+    }
   };
 
   return (
@@ -44,8 +67,8 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student, class
         {(student.avg_grammar_accuracy && student.avg_grammar_accuracy > 0) ? (
           <div className="flex items-center gap-2">
             {Math.round(student.avg_grammar_accuracy)}%
-            <Badge variant={getACTFLBadgeVariant(getACTFLLevelFromScore(student.avg_grammar_accuracy))}>
-              {getACTFLLevelFromScore(student.avg_grammar_accuracy)}
+            <Badge variant={getBadgeVariant(getCEFRLevel(student.avg_grammar_accuracy))}>
+              {getCEFRLevel(student.avg_grammar_accuracy)}
             </Badge>
           </div>
         ) : (
@@ -56,8 +79,8 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student, class
         {(student.avg_conversation_complexity && student.avg_conversation_complexity > 0) ? (
           <div className="flex items-center gap-2">
             {Math.round(student.avg_conversation_complexity)}%
-            <Badge variant={getACTFLBadgeVariant(getACTFLLevelFromScore(student.avg_conversation_complexity))}>
-              {getACTFLLevelFromScore(student.avg_conversation_complexity)}
+            <Badge variant={getBadgeVariant(getCEFRLevel(student.avg_conversation_complexity))}>
+              {getCEFRLevel(student.avg_conversation_complexity)}
             </Badge>
           </div>
         ) : (

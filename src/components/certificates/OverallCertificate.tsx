@@ -3,8 +3,8 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CertificationAttempt } from "@/types/supabase";
-import ACTFLLevelRubric from "./ACTFLLevelRubric";
-import ACTFLLevelDescriptions from "./ACTFLLevelDescriptions";
+import CEFRLevelRubric from "./CEFRLevelRubric";
+import CEFRLevelDescriptions from "./CEFRLevelDescriptions";
 import { useLocalization } from "@/context/LocalizationContext";
 
 interface OverallCertificateProps {
@@ -51,8 +51,8 @@ const OverallCertificate = ({ compositeScore }: OverallCertificateProps) => {
         </div>
         <Progress value={compositeScore.score} className="h-2" />
         
-        <ACTFLLevelRubric />
-        <ACTFLLevelDescriptions />
+        <CEFRLevelRubric />
+        <CEFRLevelDescriptions />
       </CardContent>
     </Card>
   );

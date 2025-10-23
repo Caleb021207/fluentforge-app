@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Calendar, Award } from "lucide-react";
-import { getACTFLColor } from "@/components/transcript-analysis/utils/actflUtils";
+import { getCEFRColor } from "@/components/transcript-analysis/utils/cefrUtils";
 
 interface TestScore {
   id: string;
@@ -68,13 +68,13 @@ const TestScoreCard = ({ testScore, title = "Latest Test Score", showDetails = t
           </div>
           <div className="text-center">
             {testScore.cefr_level ? (
-              <Badge className={getACTFLColor(testScore.cefr_level)}>
+              <Badge className={getCEFRColor(testScore.cefr_level)}>
                 {testScore.cefr_level}
               </Badge>
             ) : (
               <div className="text-muted-foreground">N/A</div>
             )}
-            <p className="text-sm text-muted-foreground mt-1">ACTFL Level</p>
+            <p className="text-sm text-muted-foreground mt-1">CEFR Level</p>
           </div>
           <div className="text-center flex items-center justify-center gap-1">
             <Calendar className="h-4 w-4" />

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { TranscriptAssessment, getACTFLColor, getACTFLDescription } from "../utils/assessmentUtils";
+import { TranscriptAssessment, getCEFRColor, getCEFRDescription } from "../utils/assessmentUtils";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,7 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ assessment }) => {
   const { 
     assessment: categories, 
     overallScore, 
-    actflLevel, 
+    cefrLevel, 
     strengths, 
     areasForImprovement,
     feedbackSummary
@@ -41,7 +41,7 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ assessment }) => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-start gap-6">
-        {/* Overall Score and ACTFL Level */}
+        {/* Overall Score and CEFR Level */}
         <Card className="w-full md:w-1/3">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Overall Assessment</CardTitle>
@@ -60,10 +60,10 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ assessment }) => {
                 </div>
                 
                 <div className="text-center mt-4">
-                  <Badge className={`text-lg py-1 px-3 ${getACTFLColor(actflLevel)}`}>
-                    {actflLevel}
+                  <Badge className={`text-lg py-1 px-3 ${getCEFRColor(cefrLevel)}`}>
+                    {cefrLevel}
                   </Badge>
-                  <p className="text-sm mt-2">{getACTFLDescription(actflLevel)}</p>
+                  <p className="text-sm mt-2">{getCEFRDescription(cefrLevel)}</p>
                 </div>
               </div>
             </div>
