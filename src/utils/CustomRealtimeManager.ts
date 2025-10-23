@@ -311,6 +311,11 @@ export class CustomRealtimeManager {
     return this.state;
   }
 
+  clearHistory(): void {
+    this.conversationHistory = [];
+    console.log('Conversation history cleared');
+  }
+
   disconnect(): void {
     this.isSessionActive = false;
     this.stopListening();

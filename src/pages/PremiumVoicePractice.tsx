@@ -154,6 +154,9 @@ const PremiumVoicePractice = () => {
       await manager.initialize();
       customChatRef.current = manager;
 
+      // Clear conversation history for fresh session
+      manager.clearHistory();
+
       const newSessionId = crypto.randomUUID();
       setCustomSessionId(newSessionId);
       setCustomElapsedSeconds(0);

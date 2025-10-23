@@ -73,7 +73,35 @@ const detectLanguage = (text: string, gptLang: string): string => {
     return 'ko';
   }
   
-  // Arabic detection
+  // Urdu detection (specific Urdu characters that don't exist in Arabic)
+  // Must check BEFORE Arabic to avoid misdetection
+  if (/[\u0679\u0688\u0691\u06BA\u06C1\u06C3]/.test(trimmed)) {
+    return 'ur';
+  }
+  
+  // Bengali detection (Bengali script)
+  if (/[\u0980-\u09FF]/.test(trimmed)) {
+    return 'bn';
+  }
+  
+  // Gujarati detection (Gujarati script)
+  if (/[\u0A80-\u0AFF]/.test(trimmed)) {
+    return 'gu';
+  }
+  
+  // Punjabi detection (Gurmukhi script)
+  if (/[\u0A00-\u0A7F]/.test(trimmed)) {
+    return 'pa';
+  }
+  
+  // Nepali detection (Devanagari with specific Nepali patterns)
+  // Check after Hindi since both use Devanagari
+  if (/[\u0900-\u097F]/.test(trimmed) && (gptLang === 'ne' || /नेपाल/.test(trimmed))) {
+    return 'ne';
+  }
+  
+  // Arabic detection (general Arabic script)
+  // Must come AFTER Urdu to avoid false positives
   if (/[\u0600-\u06ff]/.test(trimmed)) {
     return 'ar';
   }
