@@ -368,108 +368,18 @@ const PremiumVoicePractice = () => {
           </div>
         </motion.div>
 
-        {/* Language support information */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
-          <InteractiveCard className="overflow-hidden border-0 shadow-xl">
-            <div className="grid md:grid-cols-2 divide-x divide-border/50">
-              <div className="p-6 space-y-3 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent">
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  GPT-4o Realtime
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t('gptLanguageSupport')}
-                </p>
-              </div>
-              <div className="p-6 space-y-3 bg-gradient-to-br from-accent/5 via-accent/3 to-transparent">
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-accent" />
-                  Custom Realtime AI
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t('customLanguageSupport')}
-                </p>
-              </div>
-            </div>
-          </InteractiveCard>
-        </motion.div>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="max-w-md mx-auto"
         >
-          <InteractiveCard className="p-6 glass border-primary/20 hover:border-primary/40 transition-colors">
-          <div className="flex flex-col items-center gap-6">
-            <div className="text-center space-y-1">
-              <h3 className="text-xl font-semibold gradient-text">GPT-4o Realtime</h3>
-              <p className="text-sm text-muted-foreground">OpenAI's latest voice model</p>
-            </div>
 
-            {isConnected && provider === 'gpt' && (
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {formatTime(elapsedSeconds)}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {t('minutesLeft', { minutes: String(minutesRemaining) })}
-                </div>
-              </div>
-            )}
-
-            <div className={`relative ${isSpeaking && provider === 'gpt' ? 'animate-pulse' : ''}`}>
-              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
-                {isConnected && provider === 'gpt' ? (
-                  <MicOff className="w-12 h-12 text-primary" />
-                ) : (
-                  <Mic className="w-12 h-12 text-primary" />
-                )}
-              </div>
-              {isSpeaking && provider === 'gpt' && (
-                <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
-              )}
-            </div>
-
-            {!isConnected || provider !== 'gpt' ? (
-              <Button 
-                onClick={() => startConversation('gpt')}
-                size="lg"
-                className="px-8"
-                disabled={isStarting || (isConnected && provider !== 'gpt') || premiumVoiceMinutesRemaining <= 0}
-              >
-                {isStarting && provider === 'gpt' ? 'Connecting...' : 'Start GPT Session'}
-              </Button>
-            ) : (
-              <Button 
-                onClick={endConversation}
-                size="lg"
-                variant="secondary"
-                className="px-8"
-                disabled={minutesRemaining <= 0}
-              >
-                {t('endSession')}
-              </Button>
-            )}
-          </div>
-          </InteractiveCard>
-
-          <InteractiveCard className="p-6 glass border-accent/20 hover:border-accent/40 transition-colors">
+          <InteractiveCard className="p-8 glass border-primary/20 hover:border-primary/40 transition-colors">
           <div className="flex flex-col items-center gap-6">
             <div className="text-center space-y-2">
-              <h3 className="text-xl font-semibold gradient-text">Custom Realtime AI</h3>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/30">
-                <Sparkles className="w-3.5 h-3.5 text-accent" />
-                <span className="text-xs font-semibold text-foreground">
-                  {t('multilingualSupport')}
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground">Whisper + GPT-4o-mini + Azure TTS</p>
+              <h3 className="text-2xl font-semibold gradient-text">{t('realtimeVoicePractice')}</h3>
+              <p className="text-sm text-muted-foreground">AI-powered conversation practice</p>
             </div>
 
             {customSessionId && (
