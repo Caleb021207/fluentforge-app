@@ -133,25 +133,14 @@ BILINGUAL CONVERSATION APPROACH:
 - Mix languages naturally to facilitate understanding and learning
 - Keep responses to 2-3 sentences
 
-CRITICAL FORMATTING REQUIREMENT:
-You MUST wrap each language segment in tags for proper voice selection (these tags will be REMOVED before speech):
-- Wrap English text in [en]...[/en]
-- Wrap ${userLanguage} text in [${nativeCode}]...[/${nativeCode}]
-- Always use these tags, even for single-language responses
-- IMPORTANT: These tags are ONLY for voice selection and will NOT be spoken
-
-EXAMPLES:
-- "[en]A grocery store[/en] [${nativeCode}]es donde compras comida[/${nativeCode}] [en]- where you buy food.[/en]"
-- "[en]Weather[/en] [${nativeCode}]significa el clima[/${nativeCode}] [en]- if it's sunny, rainy, or cold.[/en]"
-- "[${nativeCode}]Claro, puedo ayudarte con eso.[/${nativeCode}]"
-- "[en]That's great! How was your day?[/en]"
-
 GRAMMAR HELP:
 - Naturally rephrase if user makes major mistakes
 - Don't constantly correct - prioritize flow and confidence
-- Example: User: "I go yesterday store" → "[en]Oh, you went to the store yesterday? That's great![/en]"
+- Example: User: "I go yesterday store" → "Oh, you went to the store yesterday? That's great!"
 
-Your goal: Help users learn English through natural, supportive bilingual conversation.`;
+Your goal: Help users learn English through natural, supportive bilingual conversation.
+
+IMPORTANT: You must use the speak_bilingual function to structure your response with explicit language codes for each segment.`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -170,6 +159,42 @@ Your goal: Help users learn English through natural, supportive bilingual conver
         messages,
         max_tokens: 200,
         temperature: 0.8,
+        tools: [
+          {
+            type: 'function',
+            function: {
+              name: 'speak_bilingual',
+              description: 'Structure a bilingual response with explicit language codes for proper voice synthesis',
+              parameters: {
+                type: 'object',
+                properties: {
+                  segments: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        lang: {
+                          type: 'string',
+                          description: 'ISO 639-1 language code (e.g., "en" for English, "es" for Spanish)',
+                        },
+                        text: {
+                          type: 'string',
+                          description: 'The text content in the specified language',
+                        },
+                      },
+                      required: ['lang', 'text'],
+                    },
+                  },
+                },
+                required: ['segments'],
+              },
+            },
+          },
+        ],
+        tool_choice: {
+          type: 'function',
+          function: { name: 'speak_bilingual' },
+        },
       }),
     });
 
@@ -180,16 +205,20 @@ Your goal: Help users learn English through natural, supportive bilingual conver
     }
 
     const gptData = await gptResponse.json();
-    const aiResponseWithTags = gptData.choices[0].message.content;
-    console.log(`AI Response with tags: "${aiResponseWithTags}"`);
-
-    // Strip ALL language tags for display (handles any format: [en], [es], [native], etc.)
-    const stripLanguageTags = (text: string): string => {
-      return text.replace(/\[[a-z]{2,10}\]/gi, '').replace(/\[\/[a-z]{2,10}\]/gi, '');
-    };
+    const toolCall = gptData.choices[0].message.tool_calls?.[0];
     
-    const aiResponse = stripLanguageTags(aiResponseWithTags);
-    console.log(`AI Response (cleaned): "${aiResponse}"`);
+    if (!toolCall || toolCall.function.name !== 'speak_bilingual') {
+      throw new Error('GPT did not return expected function call');
+    }
+
+    const functionArgs = JSON.parse(toolCall.function.arguments);
+    const segments = functionArgs.segments as Array<{ lang: string; text: string }>;
+    
+    console.log(`Received ${segments.length} structured segments from GPT:`, segments);
+
+    // Combine all text for display (no tags to strip)
+    const aiResponse = segments.map(s => s.text).join(' ');
+    console.log(`AI Response (combined): "${aiResponse}"`);
 
     // Step 3: Synthesize speech with Azure TTS
     console.log('Step 3: Synthesizing speech with Azure TTS...');
@@ -245,69 +274,26 @@ Your goal: Help users learn English through natural, supportive bilingual conver
       'th': 'th-TH',
     };
 
-    // Parse language tags from AI response (handles any format)
-    const parseLanguageTags = (text: string): Array<{ lang: string; text: string }> => {
-      const segments: Array<{ lang: string; text: string }> = [];
-      // Updated pattern to handle 2-10 letter codes (en, es, native, etc.)
-      const tagPattern = /\[([a-z]{2,10})\](.*?)\[\/\1\]/gis;
-      let lastIndex = 0;
-      let match;
-
-      console.log(`Parsing language tags from: "${text.substring(0, 100)}..."`);
-
-      while ((match = tagPattern.exec(text)) !== null) {
-        // Add any untagged text before this match as English (default)
-        if (match.index > lastIndex) {
-          const untaggedText = text.slice(lastIndex, match.index).trim();
-          if (untaggedText) {
-            console.log(`Found untagged text (defaulting to English): "${untaggedText.substring(0, 30)}..."`);
-            segments.push({ lang: 'en', text: untaggedText });
-          }
-        }
-
-        const langCode = normalizeLanguage(match[1]);
-        const content = match[2].trim();
-        console.log(`Found tagged segment: [${match[1]}] -> normalized to [${langCode}]: "${content.substring(0, 30)}..."`);
-        segments.push({ lang: langCode, text: content });
-        lastIndex = match.index + match[0].length;
-      }
-
-      // Add any remaining untagged text as English
-      if (lastIndex < text.length) {
-        const remainingText = text.slice(lastIndex).trim();
-        if (remainingText) {
-          console.log(`Found remaining untagged text (defaulting to English): "${remainingText.substring(0, 30)}..."`);
-          segments.push({ lang: 'en', text: remainingText });
-        }
-      }
-
-      // If no tags found, treat entire response as English
-      if (segments.length === 0) {
-        console.log('No language tags found, treating entire response as English');
-        segments.push({ lang: 'en', text: text.trim() });
-      }
-
-      return segments;
-    };
-
-    const segments = parseLanguageTags(aiResponseWithTags);
-    console.log(`Parsed ${segments.length} language segments:`, segments.map(s => `${s.lang}: "${s.text.substring(0, 30)}..."`));
+    // Normalize language codes in segments
+    const normalizedSegments = segments.map(segment => ({
+      lang: normalizeLanguage(segment.lang),
+      text: segment.text.trim(),
+    }));
+    
+    console.log(`Normalized segments:`, normalizedSegments.map(s => `${s.lang}: "${s.text.substring(0, 30)}..."`));
 
     // Build multi-voice SSML with fallback handling
-    const voiceElements = segments
+    const voiceElements = normalizedSegments
       .map(segment => {
         const voice = azureVoiceMap[segment.lang] || azureVoiceMap['en'] || 'en-US-AriaNeural';
         const locale = localeMap[segment.lang] || localeMap['en'] || 'en-US';
-        
-        // Strip any remaining tags from the actual text content
-        const cleanText = segment.text.replace(/\[[^\]]+\]/g, '').trim();
         
         if (!azureVoiceMap[segment.lang]) {
           console.warn(`⚠️ No voice found for language "${segment.lang}", falling back to English voice`);
         }
         
-        console.log(`Using voice "${voice}" (${locale}) for: "${cleanText.substring(0, 30)}..."`);
-        return `<voice name='${voice}' xml:lang='${locale}'>${cleanText}</voice>`;
+        console.log(`Using voice "${voice}" (${locale}) for: "${segment.text.substring(0, 30)}..."`);
+        return `<voice name='${voice}' xml:lang='${locale}'>${segment.text}</voice>`;
       })
       .join(' ');
 
