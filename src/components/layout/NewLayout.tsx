@@ -5,7 +5,7 @@ import { TopNavigationDropdown } from "@/components/ui/top-navigation-dropdown";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+
 import LogoutButton from "@/components/auth/LogoutButton";
 import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles } from "lucide-react";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
@@ -84,7 +84,6 @@ const NewLayout = ({ children }: NewLayoutProps) => {
               </motion.div>
             )}
             <div className="flex items-center gap-2">
-              <ThemeToggle />
               <LogoutButton iconOnly />
             </div>
           </motion.div>
@@ -110,11 +109,6 @@ const NewLayout = ({ children }: NewLayoutProps) => {
             )}
           </div>
           
-          {!user && (
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-            </div>
-          )}
         </div>
       </div>
 
