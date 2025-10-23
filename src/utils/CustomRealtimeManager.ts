@@ -28,6 +28,7 @@ export class CustomRealtimeManager {
   private userLanguage: string;
   private stream: MediaStream | null = null;
   private isSessionActive: boolean = false;
+  private currentAudio: HTMLAudioElement | null = null;
   
   // VAD settings
   private readonly SILENCE_THRESHOLD = 0.01;
@@ -266,18 +267,25 @@ export class CustomRealtimeManager {
       // Create audio element and play
       const audioBlob = new Blob([bytes], { type: 'audio/mp3' });
       const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
+      this.currentAudio = new Audio(audioUrl);
 
       await new Promise<void>((resolve, reject) => {
-        audio.onended = () => {
+        if (!this.currentAudio) {
+          reject(new Error('Audio element not created'));
+          return;
+        }
+        
+        this.currentAudio.onended = () => {
           URL.revokeObjectURL(audioUrl);
+          this.currentAudio = null;
           resolve();
         };
-        audio.onerror = (error) => {
+        this.currentAudio.onerror = (error) => {
           URL.revokeObjectURL(audioUrl);
+          this.currentAudio = null;
           reject(error);
         };
-        audio.play();
+        this.currentAudio.play();
       });
 
       console.log('Audio playback completed');
@@ -319,6 +327,14 @@ export class CustomRealtimeManager {
   disconnect(): void {
     this.isSessionActive = false;
     this.stopListening();
+    
+    // Stop currently playing audio
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.src = '';
+      this.currentAudio = null;
+      console.log('Stopped playing audio');
+    }
     
     if (this.stream) {
       this.stream.getTracks().forEach(track => track.stop());
