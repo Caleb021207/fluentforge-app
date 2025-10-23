@@ -31,10 +31,11 @@ export class CustomRealtimeManager {
   private currentAudio: HTMLAudioElement | null = null;
   
   // VAD settings
-  private readonly SILENCE_THRESHOLD = 0.01;
+  private readonly SILENCE_THRESHOLD = 0.05;
   private readonly SILENCE_DURATION_MS = 3000;
   private readonly MAX_RECORDING_DURATION_MS = 60000; // 1 minute
   private recordingStartTime: number = 0;
+  private hasDetectedSpeech: boolean = false;
 
   constructor(
     targetLanguage: string,
@@ -87,6 +88,7 @@ export class CustomRealtimeManager {
     this.setState('listening');
     this.audioChunks = [];
     this.recordingStartTime = Date.now();
+    this.hasDetectedSpeech = false;
 
     // Create MediaRecorder
     this.mediaRecorder = new MediaRecorder(this.stream, {
@@ -144,19 +146,26 @@ export class CustomRealtimeManager {
       }
       const rms = Math.sqrt(sum / bufferLength);
 
-      if (rms < this.SILENCE_THRESHOLD) {
-        // Silence detected
-        if (!this.silenceTimeout) {
-          this.silenceTimeout = setTimeout(() => {
-            console.log('Silence detected, stopping recording');
-            this.stopListening();
-          }, this.SILENCE_DURATION_MS);
+      if (rms >= this.SILENCE_THRESHOLD) {
+        // Speech detected
+        if (!this.hasDetectedSpeech) {
+          console.log('Speech detected, starting silence monitoring');
+          this.hasDetectedSpeech = true;
         }
-      } else {
-        // Voice detected, reset timer
+        
+        // Voice detected, reset silence timer
         if (this.silenceTimeout) {
           clearTimeout(this.silenceTimeout);
           this.silenceTimeout = null;
+        }
+      } else if (this.hasDetectedSpeech) {
+        // Silence detected AFTER speech has been detected
+        if (!this.silenceTimeout) {
+          console.log('Silence after speech, starting countdown');
+          this.silenceTimeout = setTimeout(() => {
+            console.log('Silence timeout reached, stopping recording');
+            this.stopListening();
+          }, this.SILENCE_DURATION_MS);
         }
       }
 
