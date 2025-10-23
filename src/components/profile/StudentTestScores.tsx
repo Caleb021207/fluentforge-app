@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Users, TrendingUp, Calendar, AlertCircle, CheckCircle, BarChart, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { getCEFRColor } from "@/components/transcript-analysis/utils/cefrUtils";
+import { getACTFLColor } from "@/components/transcript-analysis/utils/actflUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RemoveStudentDialog } from "@/components/classroom/components/RemoveStudentDialog";
@@ -382,7 +382,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                         <div className="flex items-center justify-end gap-2">
                           <span className="font-semibold">{formatScore(student.overall_score)}</span>
                           {student.cefr_level && (
-                            <Badge className={getCEFRColor(student.cefr_level)} variant="outline">
+                            <Badge className={getACTFLColor(student.cefr_level)} variant="outline">
                               {student.cefr_level}
                             </Badge>
                           )}

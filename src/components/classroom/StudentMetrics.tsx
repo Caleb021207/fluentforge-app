@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { useLocalization } from "@/context/LocalizationContext";
 import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { getACTFLLevelFromScore, getACTFLBadgeVariant } from "@/utils/actflLevelMapping";
 
 interface StudentMetricsProps {
   metrics: {
@@ -19,29 +19,6 @@ interface StudentMetricsProps {
 
 const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
   const { t } = useLocalization();
-  
-  // Helper function to determine CEFR level based on score
-  const getCEFRLevel = (score: number) => {
-    if (score < 30) return 'A1';
-    if (score < 50) return 'A2';
-    if (score < 65) return 'B1';
-    if (score < 80) return 'B2';
-    if (score < 95) return 'C1';
-    return 'C2';
-  };
-
-  // Helper function to get badge color based on CEFR level
-  const getBadgeVariant = (level: string) => {
-    switch(level) {
-      case 'A1': return 'outline';
-      case 'A2': return 'secondary';
-      case 'B1': return 'default';
-      case 'B2': return 'default';
-      case 'C1': return 'secondary';
-      case 'C2': return 'secondary';
-      default: return 'outline';
-    }
-  };
   
   return (
     <div className="mt-6 space-y-4 border-t pt-4">
@@ -77,9 +54,9 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
                   <span className="text-sm font-medium">{Math.round(metrics.avg_grammar_accuracy || 0)}%</span>
                   <Badge 
                     className="ml-2" 
-                    variant={getBadgeVariant(getCEFRLevel(metrics.avg_grammar_accuracy || 0))}
+                    variant={getACTFLBadgeVariant(getACTFLLevelFromScore(metrics.avg_grammar_accuracy || 0))}
                   >
-                    {getCEFRLevel(metrics.avg_grammar_accuracy || 0)}
+                    {getACTFLLevelFromScore(metrics.avg_grammar_accuracy || 0)}
                   </Badge>
                 </div>
               </div>
@@ -93,9 +70,9 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
                   <span className="text-sm font-medium">{Math.round(metrics.avg_conversation_complexity || 0)}%</span>
                   <Badge 
                     className="ml-2" 
-                    variant={getBadgeVariant(getCEFRLevel(metrics.avg_conversation_complexity || 0))}
+                    variant={getACTFLBadgeVariant(getACTFLLevelFromScore(metrics.avg_conversation_complexity || 0))}
                   >
-                    {getCEFRLevel(metrics.avg_conversation_complexity || 0)}
+                    {getACTFLLevelFromScore(metrics.avg_conversation_complexity || 0)}
                   </Badge>
                 </div>
               </div>
