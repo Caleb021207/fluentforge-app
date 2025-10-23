@@ -27,6 +27,7 @@ export class CustomRealtimeManager {
   private targetLanguage: string;
   private userLanguage: string;
   private userInterfaceLanguage: string;
+  private proficiencyLevel: string;
   private stream: MediaStream | null = null;
   private isSessionActive: boolean = false;
   private currentAudio: HTMLAudioElement | null = null;
@@ -42,6 +43,7 @@ export class CustomRealtimeManager {
     targetLanguage: string,
     userLanguage: string,
     userInterfaceLanguage: string,
+    proficiencyLevel: string,
     onStateChange: (state: ConversationState) => void,
     onMessage: (message: { role: string; content: string }) => void,
     onError: (error: string) => void
@@ -49,6 +51,7 @@ export class CustomRealtimeManager {
     this.targetLanguage = targetLanguage;
     this.userLanguage = userLanguage;
     this.userInterfaceLanguage = userInterfaceLanguage;
+    this.proficiencyLevel = proficiencyLevel;
     this.onStateChange = onStateChange;
     this.onMessage = onMessage;
     this.onError = onError;
@@ -247,6 +250,7 @@ export class CustomRealtimeManager {
           targetLanguage: this.targetLanguage,
           userLanguage: this.userLanguage,
           userInterfaceLanguage: this.userInterfaceLanguage,
+          proficiencyLevel: this.proficiencyLevel,
         }
       });
 

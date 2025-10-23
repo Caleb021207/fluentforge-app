@@ -139,6 +139,7 @@ const PremiumVoicePractice = () => {
         'english',
         native.toLowerCase(),
         currentLanguage,
+        'intermediate', // Default to intermediate level
         (state) => setCustomState(state),
         (message) => {
           setCustomMessages(prev => [...prev, message]);

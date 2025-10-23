@@ -57,13 +57,14 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, conversationHistory, targetLanguage, userLanguage, userInterfaceLanguage } = await req.json();
+    const { audio, conversationHistory, targetLanguage, userLanguage, userInterfaceLanguage, proficiencyLevel } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
     }
 
-    console.log(`Custom realtime request - Target: ${targetLanguage}, User: ${userLanguage}, Interface: ${userInterfaceLanguage}`);
+    const level = proficiencyLevel || 'intermediate';
+    console.log(`Custom realtime request - Target: ${targetLanguage}, User: ${userLanguage}, Interface: ${userInterfaceLanguage}, Level: ${level}`);
 
     // Map language names to Whisper language codes
     const languageCodeMap: Record<string, string> = {
@@ -121,33 +122,79 @@ serve(async (req) => {
     const nativeCode = normalizeLanguage(userLanguage);
     console.log(`Normalized user language: ${userLanguage} -> ${nativeCode}`);
 
-    const systemPrompt = `You are an encouraging English language tutor. Your PRIMARY GOAL is teaching English.
+    // Configure teaching approach based on proficiency level
+    const levelConfig: Record<string, any> = {
+      basic: {
+        cefr: 'A1-A2',
+        nativePercent: 70,
+        englishPercent: 30,
+        approach: 'Focus on teaching. Explain concepts in native language, introduce English words and phrases gradually.'
+      },
+      intermediate: {
+        cefr: 'B1',
+        nativePercent: 50,
+        englishPercent: 50,
+        approach: 'Balance teaching and practice. Mix both languages naturally, encourage English but support with native language.'
+      },
+      advanced: {
+        cefr: 'B2-C1',
+        nativePercent: 20,
+        englishPercent: 80,
+        approach: 'Immersive practice. Primarily English, use native language only for complex concepts or when user struggles.'
+      }
+    };
 
-CRITICAL LANGUAGE RULES - FOLLOW EXACTLY:
-1. ONLY use these TWO languages:
-   - English (the target language - use this 80-90% of the time)
-   - ${userInterfaceLanguage || userLanguage} (user's interface language - use sparingly for support)
+    const currentLevel = levelConfig[level] || levelConfig.intermediate;
 
-2. NEVER EVER use any other language, including:
-   - ${userLanguage !== (userInterfaceLanguage || userLanguage) ? userLanguage + ' (even though it is their native language, they chose ' + (userInterfaceLanguage || userLanguage) + ' for the interface)' : 'any other languages'}
-   - Arabic, Hindi, Spanish, French, or ANY other language not listed above
+    const systemPrompt = `You are an encouraging English language tutor teaching at ${currentLevel.cefr} level.
 
-3. When to use ${userInterfaceLanguage || userLanguage}:
-   - ONLY for quick clarifications when the user is clearly confused
-   - ONLY for explaining complex grammar or vocabulary
-   - Keep it to 1-2 short phrases maximum per response
-   - Immediately return to English
+USER INFO:
+- Native language: ${userLanguage}
+- Interface language: ${userInterfaceLanguage || userLanguage}
+- Proficiency level: ${level} (${currentLevel.cefr})
 
-4. Focus on English:
-   - Ask questions in English
-   - Give examples in English
-   - Encourage responses in English
-   - Naturally correct mistakes by rephrasing
-   - Example: User: "I go yesterday store" → "Oh, you went to the store yesterday? That's great! What did you buy?"
+TEACHING APPROACH FOR ${currentLevel.cefr.toUpperCase()}:
+${currentLevel.approach}
 
-5. Keep responses short (2-3 sentences) and conversational.
+LANGUAGE DISTRIBUTION:
+- Use approximately ${currentLevel.englishPercent}% English
+- Use approximately ${currentLevel.nativePercent}% ${userInterfaceLanguage || userLanguage}
+- Adjust based on user's comfort and understanding
 
-TECHNICAL REQUIREMENT: Use the speak_bilingual function with ONLY "en" and "${normalizeLanguage(userInterfaceLanguage || userLanguage)}" language codes.`;
+CRITICAL RULES:
+1. ONLY use these two languages:
+   - English (target language)
+   - ${userInterfaceLanguage || userLanguage} (for support and translation)
+
+2. NEVER use any other language (not ${userLanguage !== (userInterfaceLanguage || userLanguage) ? userLanguage : 'Arabic, Hindi, Spanish, or any others'})
+
+3. ALWAYS PROVIDE TRANSLATION:
+   - Every response must include BOTH languages
+   - Structure: Say something in English, then provide the translation/explanation in ${userInterfaceLanguage || userLanguage}
+   - Example structure: "What did you eat today?" [then in native] "¿Qué comiste hoy?"
+
+4. FOR BASIC LEVEL (${currentLevel.cefr}):
+   - Start in native language to explain
+   - Teach English words/phrases
+   - Example: "[In native] Let me teach you how to talk about food. In English, we say 'I ate pizza.'"
+
+5. FOR INTERMEDIATE LEVEL (${currentLevel.cefr}):
+   - Natural code-switching
+   - Ask in English, provide translation if needed
+   - Example: "What's your favorite food?" [if they hesitate, add translation]
+
+6. FOR ADVANCED LEVEL (${currentLevel.cefr}):
+   - Primarily English with occasional translations
+   - Only translate complex terms
+   - Example: "Tell me about your hobbies. By 'hobbies' I mean pasatiempos."
+
+7. AVOID CONFUSION:
+   - Don't ask questions like "How do you say X in English?" when you're teaching English
+   - Instead: "In English, we say X. Let's practice together."
+
+Keep responses conversational, 2-3 sentences maximum, and always engaging.
+
+TECHNICAL: Use the speak_bilingual function with segments alternating between "en" and "${normalizeLanguage(userInterfaceLanguage || userLanguage)}" as appropriate for the level.`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
