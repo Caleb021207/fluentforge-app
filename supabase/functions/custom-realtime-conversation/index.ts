@@ -34,6 +34,69 @@ const normalizeLanguage = (lang: string): string => {
   return languageMap[normalized] || normalized;
 };
 
+// Detect actual language from text content to override GPT's language choice
+const detectLanguage = (text: string, gptLang: string): string => {
+  const trimmed = text.trim();
+  
+  // Spanish detection: ¿ ¡ ñ and accented characters
+  if (/[¿¡ñáéíóúÁÉÍÓÚüÜ]/.test(trimmed)) {
+    return 'es';
+  }
+  
+  // French detection: accented characters specific to French
+  if (/[àâæçèéêëîïôùûüÿœÀÂÆÇÈÉÊËÎÏÔÙÛÜŸŒ]/.test(trimmed)) {
+    return 'fr';
+  }
+  
+  // Portuguese detection: ã õ ç and specific patterns
+  if (/[ãõçÃÕÇ]/.test(trimmed)) {
+    return 'pt';
+  }
+  
+  // German detection: ä ö ü ß
+  if (/[äöüßÄÖÜẞ]/.test(trimmed)) {
+    return 'de';
+  }
+  
+  // Chinese/Mandarin detection
+  if (/[\u4e00-\u9fff]/.test(trimmed)) {
+    return 'zh';
+  }
+  
+  // Japanese detection (Hiragana, Katakana, Kanji)
+  if (/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(trimmed)) {
+    return 'ja';
+  }
+  
+  // Korean detection (Hangul)
+  if (/[\uac00-\ud7af]/.test(trimmed)) {
+    return 'ko';
+  }
+  
+  // Arabic detection
+  if (/[\u0600-\u06ff]/.test(trimmed)) {
+    return 'ar';
+  }
+  
+  // Hindi detection (Devanagari script)
+  if (/[\u0900-\u097f]/.test(trimmed)) {
+    return 'hi';
+  }
+  
+  // Russian detection (Cyrillic)
+  if (/[\u0400-\u04ff]/.test(trimmed)) {
+    return 'ru';
+  }
+  
+  // Thai detection
+  if (/[\u0e00-\u0e7f]/.test(trimmed)) {
+    return 'th';
+  }
+  
+  // If no pattern matches, trust GPT's choice
+  return gptLang;
+};
+
 // Voice mapping for different languages
 const VOICE_MAP: Record<string, string> = {
   'spanish': 'Lucia',
@@ -216,8 +279,20 @@ IMPORTANT: You must use the speak_bilingual function to structure your response 
     
     console.log(`Received ${segments.length} structured segments from GPT:`, segments);
 
+    // Detect actual language from text content and override GPT's choice if needed
+    const detectedSegments = segments.map(segment => {
+      const detectedLang = detectLanguage(segment.text, segment.lang);
+      if (detectedLang !== segment.lang) {
+        console.log(`⚠️ Language override: GPT said "${segment.lang}" but detected "${detectedLang}" for text: "${segment.text.substring(0, 50)}..."`);
+      }
+      return {
+        lang: detectedLang,
+        text: segment.text
+      };
+    });
+
     // Combine all text for display (no tags to strip)
-    const aiResponse = segments.map(s => s.text).join(' ');
+    const aiResponse = detectedSegments.map(s => s.text).join(' ');
     console.log(`AI Response (combined): "${aiResponse}"`);
 
     // Step 3: Synthesize speech with Azure TTS
@@ -274,8 +349,8 @@ IMPORTANT: You must use the speak_bilingual function to structure your response 
       'th': 'th-TH',
     };
 
-    // Normalize language codes in segments
-    const normalizedSegments = segments.map(segment => ({
+    // Normalize language codes in segments (using detected languages)
+    const normalizedSegments = detectedSegments.map(segment => ({
       lang: normalizeLanguage(segment.lang),
       text: segment.text.trim(),
     }));
