@@ -469,7 +469,7 @@ const PremiumVoicePractice = () => {
                   {t('multilingualSupport')}
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground">Whisper + GPT-4o-mini + Azure TTS</p>
+              
             </div>
 
             {customSessionId && (
