@@ -31,12 +31,12 @@ export class CustomRealtimeManager {
   private isSessionActive: boolean = false;
   private currentAudio: HTMLAudioElement | null = null;
   
-  // VAD settings
-  private readonly SILENCE_THRESHOLD = 0.05;
-  private readonly SILENCE_DURATION_MS = 3000;
+  // Word-based VAD settings
+  private readonly SILENCE_AFTER_LAST_WORD_MS = 3000;
   private readonly MAX_RECORDING_DURATION_MS = 60000; // 1 minute
   private recordingStartTime: number = 0;
-  private hasDetectedSpeech: boolean = false;
+  private lastWordTimestamp: number = 0;
+  private vadRecognition: any = null; // SpeechRecognition for VAD only
 
   constructor(
     targetLanguage: string,
@@ -91,7 +91,7 @@ export class CustomRealtimeManager {
     this.setState('listening');
     this.audioChunks = [];
     this.recordingStartTime = Date.now();
-    this.hasDetectedSpeech = false;
+    this.lastWordTimestamp = 0;
 
     // Create MediaRecorder
     this.mediaRecorder = new MediaRecorder(this.stream, {
@@ -109,10 +109,10 @@ export class CustomRealtimeManager {
     };
 
     // Start recording
-    this.mediaRecorder.start(100); // Capture in 100ms chunks for VAD
+    this.mediaRecorder.start(100); // Capture in 100ms chunks
 
-    // Setup VAD monitoring
-    this.setupVAD();
+    // Setup word-based VAD monitoring
+    this.setupWordBasedVAD();
 
     // Safety timeout
     setTimeout(() => {
@@ -125,57 +125,70 @@ export class CustomRealtimeManager {
     console.log('Started listening...');
   }
 
-  private setupVAD(): void {
-    if (!this.audioContext || !this.stream) return;
+  private setupWordBasedVAD(): void {
+    // Use Web Speech API for word detection (VAD only, not for transcription)
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      console.warn('Speech Recognition not supported, falling back to timer-based stop');
+      // Fallback: just use a longer timeout
+      setTimeout(() => {
+        if (this.state === 'listening') {
+          console.log('Timeout reached, stopping recording');
+          this.stopListening();
+        }
+      }, 15000); // 15 seconds max
+      return;
+    }
 
-    const analyser = this.audioContext.createAnalyser();
-    const microphone = this.audioContext.createMediaStreamSource(this.stream);
-    analyser.fftSize = 2048;
-    microphone.connect(analyser);
+    this.vadRecognition = new SpeechRecognition();
+    this.vadRecognition.continuous = true;
+    this.vadRecognition.interimResults = true;
+    this.vadRecognition.lang = 'en-US';
 
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    const checkAudioLevel = () => {
-      if (this.state !== 'listening') return;
-
-      analyser.getByteTimeDomainData(dataArray);
+    this.vadRecognition.onresult = (event: any) => {
+      // Word detected! Update timestamp
+      const now = Date.now();
+      this.lastWordTimestamp = now;
       
-      // Calculate RMS
-      let sum = 0;
-      for (let i = 0; i < bufferLength; i++) {
-        const normalized = (dataArray[i] - 128) / 128;
-        sum += normalized * normalized;
-      }
-      const rms = Math.sqrt(sum / bufferLength);
+      console.log('Word detected at:', now);
 
-      if (rms >= this.SILENCE_THRESHOLD) {
-        // Speech detected
-        if (!this.hasDetectedSpeech) {
-          console.log('Speech detected, starting silence monitoring');
-          this.hasDetectedSpeech = true;
-        }
-        
-        // Voice detected, reset silence timer
-        if (this.silenceTimeout) {
-          clearTimeout(this.silenceTimeout);
-          this.silenceTimeout = null;
-        }
-      } else if (this.hasDetectedSpeech) {
-        // Silence detected AFTER speech has been detected
-        if (!this.silenceTimeout) {
-          console.log('Silence after speech, starting countdown');
-          this.silenceTimeout = setTimeout(() => {
-            console.log('Silence timeout reached, stopping recording');
-            this.stopListening();
-          }, this.SILENCE_DURATION_MS);
-        }
+      // Clear any existing silence timeout
+      if (this.silenceTimeout) {
+        clearTimeout(this.silenceTimeout);
+        this.silenceTimeout = null;
       }
 
-      requestAnimationFrame(checkAudioLevel);
+      // Start new silence timeout
+      this.silenceTimeout = setTimeout(() => {
+        const timeSinceLastWord = Date.now() - this.lastWordTimestamp;
+        console.log(`No words for ${timeSinceLastWord}ms, stopping recording`);
+        this.stopListening();
+      }, this.SILENCE_AFTER_LAST_WORD_MS);
     };
 
-    checkAudioLevel();
+    this.vadRecognition.onerror = (event: any) => {
+      // Ignore errors, this is just for VAD
+      console.log('VAD recognition error (non-critical):', event.error);
+    };
+
+    this.vadRecognition.onend = () => {
+      // Restart if still listening
+      if (this.state === 'listening' && this.vadRecognition) {
+        try {
+          this.vadRecognition.start();
+        } catch (e) {
+          // Ignore if already started
+        }
+      }
+    };
+
+    try {
+      this.vadRecognition.start();
+      console.log('Word-based VAD started');
+    } catch (error) {
+      console.warn('Could not start VAD recognition:', error);
+    }
   }
 
   private stopListening(): void {
@@ -185,6 +198,14 @@ export class CustomRealtimeManager {
     if (this.silenceTimeout) {
       clearTimeout(this.silenceTimeout);
       this.silenceTimeout = null;
+    }
+    if (this.vadRecognition) {
+      try {
+        this.vadRecognition.stop();
+      } catch (e) {
+        // Ignore if already stopped
+      }
+      this.vadRecognition = null;
     }
   }
 
