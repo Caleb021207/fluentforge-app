@@ -32,14 +32,35 @@ export const playTTS = async ({
   }
 
   try {
-    // Call the Supabase Edge Function (OpenAI TTS)
+    // Get current user ID
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    // Call the Supabase Edge Function (Azure TTS)
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: {
         text,
+        language,
         voice,
-        speechRate
+        speechRate,
+        userId: user?.id
       },
     });
+
+    // Check if we should use browser fallback due to limit
+    if (data?.useFallback) {
+      console.log("TTS limit reached, using browser fallback");
+      
+      // Use browser TTS as fallback
+      const browserTTS = useBrowserTTS();
+      if (browserTTS.isBrowserSupported) {
+        console.log("Falling back to browser TTS");
+        browserTTS.speak(text, language, onStart, onEnd, onError);
+        return null;
+      }
+      
+      onError?.("TTS limit reached and browser TTS not available");
+      return null;
+    }
 
     if (error || !data?.audioContent) {
       console.error("TTS error from Supabase:", error || "No audio content returned");
@@ -83,11 +104,15 @@ export const preloadTTS = async (text: string, language: string, speechRate = 1.
   }
 
   try {
+    const { data: { user } } = await supabase.auth.getUser();
+    
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: {
         text,
+        language,
         voice,
-        speechRate
+        speechRate,
+        userId: user?.id
       },
     });
 

@@ -5,10 +5,17 @@ interface ConversationMessage {
   content: string;
 }
 
+interface AudioSegment {
+  lang: string;
+  text: string;
+  audio: string;
+}
+
 interface CustomRealtimeResponse {
   userTranscript: string;
   aiResponse: string;
-  audioBase64: string;
+  audioSegments?: AudioSegment[];
+  audioBase64?: string;
   audioFormat: string;
 }
 
@@ -277,8 +284,12 @@ export class CustomRealtimeManager {
       this.onMessage({ role: 'user', content: response.userTranscript });
       this.onMessage({ role: 'assistant', content: response.aiResponse });
 
-      // Play AI response
-      await this.playAudio(response.audioBase64);
+      // Play AI response (supports both single audio and segments)
+      if (response.audioSegments && response.audioSegments.length > 0) {
+        await this.playAudioSegments(response.audioSegments);
+      } else if (response.audioBase64) {
+        await this.playAudio(response.audioBase64);
+      }
 
     } catch (error) {
       console.error('Error processing recording:', error);
@@ -291,41 +302,77 @@ export class CustomRealtimeManager {
     }
   }
 
-  private async playAudio(audioBase64: string): Promise<void> {
+  private async playAudioSegments(segments: AudioSegment[]): Promise<void> {
     this.setState('speaking');
 
     try {
-      // Decode base64 to audio buffer
-      const binaryString = atob(audioBase64);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+      // Play each segment sequentially
+      for (const segment of segments) {
+        console.log(`Playing audio segment (${segment.lang}): "${segment.text.substring(0, 30)}..."`);
+        await this.playAudioSegment(segment.audio);
       }
 
-      // Create audio element and play
-      const audioBlob = new Blob([bytes], { type: 'audio/mp3' });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      this.currentAudio = new Audio(audioUrl);
+      console.log('All audio segments played');
+      
+      // Auto-continue: start listening again if session is active
+      if (this.isSessionActive) {
+        console.log('Auto-continuing conversation...');
+        await this.startListening();
+      } else {
+        this.setState('idle');
+      }
 
-      await new Promise<void>((resolve, reject) => {
-        if (!this.currentAudio) {
-          reject(new Error('Audio element not created'));
-          return;
+    } catch (error) {
+      console.error('Error playing audio segments:', error);
+      this.onError('Failed to play audio');
+      if (this.isSessionActive) {
+        await this.startListening();
+      } else {
+        this.setState('idle');
+      }
+    }
+  }
+
+  private async playAudioSegment(audioBase64: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      try {
+        // Decode base64 to audio buffer
+        const binaryString = atob(audioBase64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
         }
-        
+
+        // Create audio element and play
+        const audioBlob = new Blob([bytes], { type: 'audio/mp3' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        this.currentAudio = new Audio(audioUrl);
+
         this.currentAudio.onended = () => {
           URL.revokeObjectURL(audioUrl);
           this.currentAudio = null;
           resolve();
         };
+        
         this.currentAudio.onerror = (error) => {
           URL.revokeObjectURL(audioUrl);
           this.currentAudio = null;
           reject(error);
         };
+        
         this.currentAudio.play();
-      });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 
+  private async playAudio(audioBase64: string): Promise<void> {
+    this.setState('speaking');
+
+    try {
+      await this.playAudioSegment(audioBase64);
+      
       console.log('Audio playback completed');
       
       // Auto-continue: start listening again if session is active

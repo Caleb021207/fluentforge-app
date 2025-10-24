@@ -282,8 +282,8 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
     const aiResponse = processedSegments.map(s => s.text).join(' ');
     console.log(`AI Response (combined): "${aiResponse}"`);
 
-    // Step 3: Synthesize speech with Azure TTS
-    console.log('Step 3: Synthesizing speech with Azure TTS...');
+    // Step 3: Synthesize speech with Azure TTS (separate audio per segment for proper voice switching)
+    console.log('Step 3: Synthesizing speech with Azure TTS (multi-voice)...');
     
     const azureSpeechKey = Deno.env.get('AZURE_SPEECH_KEY');
     const azureRegion = Deno.env.get('AZURE_REGION') || 'eastus';
@@ -341,64 +341,69 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
     
     console.log(`Normalized segments:`, normalizedSegments.map(s => `${s.lang}: "${s.text.substring(0, 30)}..."`));
 
-    // Build multi-voice SSML with fallback handling
-    const voiceElements = normalizedSegments
-      .map(segment => {
-        const voice = azureVoiceMap[segment.lang] || azureVoiceMap['en'] || 'en-US-AriaNeural';
-        const locale = localeMap[segment.lang] || localeMap['en'] || 'en-US';
-        
-        if (!azureVoiceMap[segment.lang]) {
-          console.warn(`⚠️ No voice found for language "${segment.lang}", falling back to English voice`);
-        }
-        
-        console.log(`Using voice "${voice}" (${locale}) for: "${segment.text.substring(0, 30)}..."`);
-        return `<voice name='${voice}' xml:lang='${locale}'>${segment.text}</voice>`;
-      })
-      .join(' ');
-
-    const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
-      ${voiceElements}
-    </speak>`;
-
-    const azureTtsResponse = await fetch(
-      `https://${azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`,
-      {
-        method: 'POST',
-        headers: {
-          'Ocp-Apim-Subscription-Key': azureSpeechKey,
-          'Content-Type': 'application/ssml+xml',
-          'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',
-        },
-        body: ssml,
+    // Generate separate audio for each segment to ensure proper voice switching
+    const audioSegments = [];
+    
+    for (const segment of normalizedSegments) {
+      const voice = azureVoiceMap[segment.lang] || azureVoiceMap['en'] || 'en-US-AriaNeural';
+      const locale = localeMap[segment.lang] || localeMap['en'] || 'en-US';
+      
+      if (!azureVoiceMap[segment.lang]) {
+        console.warn(`⚠️ No voice found for language "${segment.lang}", falling back to English voice`);
       }
-    );
+      
+      console.log(`Generating audio with voice "${voice}" (${locale}) for: "${segment.text.substring(0, 30)}..."`);
+      
+      const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${locale}'>
+        <voice name='${voice}'>${segment.text}</voice>
+      </speak>`;
 
-    if (!azureTtsResponse.ok) {
-      const errorText = await azureTtsResponse.text();
-      console.error('Azure TTS error:', errorText);
-      throw new Error(`Azure TTS failed: ${errorText}`);
+      const azureTtsResponse = await fetch(
+        `https://${azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`,
+        {
+          method: 'POST',
+          headers: {
+            'Ocp-Apim-Subscription-Key': azureSpeechKey,
+            'Content-Type': 'application/ssml+xml',
+            'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',
+          },
+          body: ssml,
+        }
+      );
+
+      if (!azureTtsResponse.ok) {
+        const errorText = await azureTtsResponse.text();
+        console.error(`Azure TTS error for segment (${segment.lang}):`, errorText);
+        throw new Error(`Azure TTS failed for segment: ${errorText}`);
+      }
+
+      // Convert audio to base64
+      const audioArrayBuffer = await azureTtsResponse.arrayBuffer();
+      const bytes = new Uint8Array(audioArrayBuffer);
+      let binary = '';
+      const chunkSize = 0x8000;
+      
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        const chunk = bytes.subarray(i, Math.min(i + chunkSize, bytes.length));
+        binary += String.fromCharCode.apply(null, Array.from(chunk));
+      }
+      
+      const audioBase64 = btoa(binary);
+      
+      audioSegments.push({
+        lang: segment.lang,
+        text: segment.text,
+        audio: audioBase64
+      });
     }
 
-    // Convert audio to base64
-    const audioArrayBuffer = await azureTtsResponse.arrayBuffer();
-    const bytes = new Uint8Array(audioArrayBuffer);
-    let binary = '';
-    const chunkSize = 0x8000;
-    
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-      const chunk = bytes.subarray(i, Math.min(i + chunkSize, bytes.length));
-      binary += String.fromCharCode.apply(null, Array.from(chunk));
-    }
-    
-    const audioBase64 = btoa(binary);
-
-    console.log('Successfully generated response with audio');
+    console.log(`Successfully generated ${audioSegments.length} audio segments`);
 
     return new Response(
       JSON.stringify({
         userTranscript,
         aiResponse,
-        audioBase64,
+        audioSegments,
         audioFormat: 'mp3',
       }),
       {

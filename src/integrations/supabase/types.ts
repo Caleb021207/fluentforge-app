@@ -19,7 +19,7 @@ export type Database = {
           attempted_code: string
           created_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           success: boolean
           user_id: string | null
         }
@@ -27,7 +27,7 @@ export type Database = {
           attempted_code: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean
           user_id?: string | null
         }
@@ -35,7 +35,7 @@ export type Database = {
           attempted_code?: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean
           user_id?: string | null
         }
@@ -46,7 +46,7 @@ export type Database = {
           attempt_count: number | null
           created_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_id: string | null
           window_start: string
         }
@@ -54,7 +54,7 @@ export type Database = {
           attempt_count?: number | null
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_id?: string | null
           window_start?: string
         }
@@ -62,7 +62,7 @@ export type Database = {
           attempt_count?: number | null
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_id?: string | null
           window_start?: string
         }
@@ -841,7 +841,7 @@ export type Database = {
           denial_reason: string | null
           educational_justification: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           legitimate_interest_verified: boolean
           user_agent: string | null
         }
@@ -855,7 +855,7 @@ export type Database = {
           denial_reason?: string | null
           educational_justification: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           legitimate_interest_verified?: boolean
           user_agent?: string | null
         }
@@ -869,7 +869,7 @@ export type Database = {
           denial_reason?: string | null
           educational_justification?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           legitimate_interest_verified?: boolean
           user_agent?: string | null
         }
@@ -881,7 +881,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           source: string | null
           user_agent: string | null
         }
@@ -890,7 +890,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           source?: string | null
           user_agent?: string | null
         }
@@ -899,7 +899,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           source?: string | null
           user_agent?: string | null
         }
@@ -1483,7 +1483,7 @@ export type Database = {
           created_at: string
           details: Json | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           success: boolean | null
           user_agent: string | null
           user_id: string | null
@@ -1493,7 +1493,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean | null
           user_agent?: string | null
           user_id?: string | null
@@ -1503,7 +1503,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean | null
           user_agent?: string | null
           user_id?: string | null
@@ -1744,9 +1744,13 @@ export type Database = {
           last_reset_semester: string | null
           premium_voice_minutes_monthly_limit: number | null
           premium_voice_minutes_used_current_month: number | null
+          stt_minutes_monthly_limit: number | null
+          stt_minutes_used_current_month: number | null
           student_id: string
           text_messages_monthly_limit: number | null
           text_messages_used_current_month: number
+          tts_minutes_monthly_limit: number | null
+          tts_minutes_used_current_month: number | null
           updated_at: string
           voice_minutes_monthly_limit: number
           voice_minutes_used_current_month: number
@@ -1763,9 +1767,13 @@ export type Database = {
           last_reset_semester?: string | null
           premium_voice_minutes_monthly_limit?: number | null
           premium_voice_minutes_used_current_month?: number | null
+          stt_minutes_monthly_limit?: number | null
+          stt_minutes_used_current_month?: number | null
           student_id: string
           text_messages_monthly_limit?: number | null
           text_messages_used_current_month?: number
+          tts_minutes_monthly_limit?: number | null
+          tts_minutes_used_current_month?: number | null
           updated_at?: string
           voice_minutes_monthly_limit?: number
           voice_minutes_used_current_month?: number
@@ -1782,9 +1790,13 @@ export type Database = {
           last_reset_semester?: string | null
           premium_voice_minutes_monthly_limit?: number | null
           premium_voice_minutes_used_current_month?: number | null
+          stt_minutes_monthly_limit?: number | null
+          stt_minutes_used_current_month?: number | null
           student_id?: string
           text_messages_monthly_limit?: number | null
           text_messages_used_current_month?: number
+          tts_minutes_monthly_limit?: number | null
+          tts_minutes_used_current_month?: number | null
           updated_at?: string
           voice_minutes_monthly_limit?: number
           voice_minutes_used_current_month?: number
@@ -2351,10 +2363,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      auth_user_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      auth_user_id: { Args: never; Returns: string }
       can_start_premium_voice_session: {
         Args: { target_student_id: string }
         Returns: Json
@@ -2411,10 +2420,7 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: string[]
       }
-      get_user_last_sign_in: {
-        Args: { user_id: string }
-        Returns: string
-      }
+      get_user_last_sign_in: { Args: { user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2438,10 +2444,7 @@ export type Database = {
         Args: { p_target_user_id: string; p_user_id: string }
         Returns: boolean
       }
-      is_admin_user: {
-        Args: { user_id: string }
-        Returns: boolean
-      }
+      is_admin_user: { Args: { user_id: string }; Returns: boolean }
       is_district_admin_of_class: {
         Args: { p_class_id: string; p_user_id: string }
         Returns: boolean
@@ -2482,22 +2485,16 @@ export type Database = {
         }
         Returns: undefined
       }
-      process_access_code: {
-        Args: Record<PropertyKey, never> | { p_code: string }
-        Returns: Json
-      }
+      process_access_code:
+        | { Args: { p_code: string }; Returns: Json }
+        | { Args: never; Returns: undefined }
       recalculate_student_metrics: {
         Args: { target_student_id: string }
         Returns: undefined
       }
-      reset_monthly_usage: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      reset_semester_usage: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      reset_monthly_usage: { Args: never; Returns: undefined }
+      reset_monthly_usage_limits: { Args: never; Returns: undefined }
+      reset_semester_usage: { Args: never; Returns: undefined }
       update_student_language_aggregate_metrics: {
         Args: { target_student_id: string }
         Returns: undefined

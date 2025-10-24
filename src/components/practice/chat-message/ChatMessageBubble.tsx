@@ -3,7 +3,6 @@ import React from "react";
 import SafetyWarning from "./SafetyWarning";
 import MessageContent from "./MessageContent";
 import TranslationSection from "./TranslationSection";
-import useMessageAudio from "./hooks/useMessageAudio";
 
 interface ChatMessageBubbleProps {
   role: "user" | "assistant";
@@ -14,7 +13,6 @@ interface ChatMessageBubbleProps {
   targetLanguage: string;
   nativeLanguage: string;
   currentLanguage: string;
-  onPlayAudio?: (text: string) => void;
 }
 
 const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
@@ -26,19 +24,7 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   targetLanguage,
   nativeLanguage,
   currentLanguage,
-  onPlayAudio
 }) => {
-  // Use our custom hook to manage audio state and playback
-  const {
-    contentAudio,
-    handlePlayAudio
-  } = useMessageAudio({
-    role,
-    content: safeContent,
-    targetLanguage,
-    onPlayAudio
-  });
-  
   return (
     <div
       className={`max-w-[80%] rounded-lg p-6 md:p-8 ${
@@ -52,9 +38,9 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
       <MessageContent
         role={role}
         content={safeContent}
-        isPlaying={contentAudio.isPlaying}
-        isLoading={contentAudio.isLoading}
-        onPlayAudio={role === "assistant" ? handlePlayAudio : undefined}
+        isPlaying={false}
+        isLoading={false}
+        onPlayAudio={undefined}
       />
       
       {showTranslation && (

@@ -50,10 +50,30 @@ serve(async (req) => {
       throw new Error('OpenAI API key is not configured');
     }
 
-    const { audio, language } = await req.json();
+    const { audio, language, userId, durationSeconds } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
+    }
+
+    // Check STT usage limits if userId is provided
+    if (userId) {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      );
+
+      const { data: limits, error: limitsError } = await supabaseClient
+        .from('student_usage_limits')
+        .select('stt_minutes_used_current_month, stt_minutes_monthly_limit')
+        .eq('student_id', userId)
+        .single();
+
+      if (limits && limits.stt_minutes_used_current_month >= limits.stt_minutes_monthly_limit) {
+        console.log(`STT limit reached for user ${userId}: ${limits.stt_minutes_used_current_month}/${limits.stt_minutes_monthly_limit}`);
+        throw new Error('Speech-to-text monthly limit reached. Voice features are temporarily unavailable.');
+      }
     }
 
     console.log("Received audio data, processing...");
@@ -91,6 +111,25 @@ serve(async (req) => {
 
     const result = await response.json();
     console.log("Transcription successful:", result.text);
+
+    // Track STT usage if userId is provided
+    if (userId && durationSeconds) {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      );
+
+      const estimatedMinutes = Math.ceil(durationSeconds / 60);
+      
+      await supabaseClient.rpc('increment_stt_usage', {
+        p_student_id: userId,
+        p_minutes: estimatedMinutes
+      }).then(({ error }) => {
+        if (error) console.error('Failed to track STT usage:', error);
+        else console.log(`Tracked ${estimatedMinutes} STT minutes for user ${userId}`);
+      });
+    }
 
     return new Response(
       JSON.stringify({ text: result.text }),

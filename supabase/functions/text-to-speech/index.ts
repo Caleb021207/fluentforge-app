@@ -47,10 +47,38 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice = 'alloy', language, speechRate = 1.0 } = await req.json();
+    const { text, voice = 'alloy', language, speechRate = 1.0, userId } = await req.json();
     
     if (!text) {
       throw new Error('Text is required');
+    }
+
+    // Check TTS usage limits if userId is provided
+    if (userId) {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      );
+
+      const { data: limits, error: limitsError } = await supabaseClient
+        .from('student_usage_limits')
+        .select('tts_minutes_used_current_month, tts_minutes_monthly_limit')
+        .eq('student_id', userId)
+        .single();
+
+      if (limits && limits.tts_minutes_used_current_month >= limits.tts_minutes_monthly_limit) {
+        console.log(`TTS limit reached for user ${userId}: ${limits.tts_minutes_used_current_month}/${limits.tts_minutes_monthly_limit}`);
+        return new Response(
+          JSON.stringify({ 
+            useFallback: true,
+            reason: 'TTS monthly limit reached',
+            minutesUsed: limits.tts_minutes_used_current_month,
+            minutesLimit: limits.tts_minutes_monthly_limit
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     const azureSpeechKey = Deno.env.get('AZURE_SPEECH_KEY');
@@ -132,6 +160,26 @@ serve(async (req) => {
     const base64Audio = btoa(binary);
 
     console.log("Successfully generated speech with Azure TTS");
+
+    // Track TTS usage if userId is provided
+    if (userId) {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      );
+
+      // Estimate duration: ~150 characters per minute of speech
+      const estimatedMinutes = Math.ceil(text.length / 150);
+      
+      await supabaseClient.rpc('increment_tts_usage', {
+        p_student_id: userId,
+        p_minutes: estimatedMinutes
+      }).then(({ error }) => {
+        if (error) console.error('Failed to track TTS usage:', error);
+        else console.log(`Tracked ${estimatedMinutes} TTS minutes for user ${userId}`);
+      });
+    }
 
     return new Response(
       JSON.stringify({ audioContent: base64Audio }),
