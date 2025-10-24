@@ -135,7 +135,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
         wasContentFiltered={wasContentFiltered}
         targetLanguage={targetLanguage}
         nativeLanguage={nativeLanguage}
-        onPlayAudio={onPlayAudio}
         currentLanguage={currentLanguage}
       />
     </div>

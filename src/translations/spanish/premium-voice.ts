@@ -36,6 +36,12 @@ const premiumVoiceTranslations: TranslationRecord = {
   premiumSessionEndedMessage: "Tu sesión premium de 15 minutos ha terminado",
   premiumVoiceInstructions: "Esta función está diseñada para conversaciones fluidas y dinámicas. Obtienes 15 minutos de práctica por mes. Simplemente presiona el botón y di 'Hola, ¿cómo estás?' El tutor de IA te ayudará a practicar tus habilidades de habla en inglés. Si es necesario, también puede asistirte en tu idioma nativo.",
   
+  // Usage limits
+  ttsLimitWarning: "Advertencia de Límite TTS",
+  ttsLimitReached: "Límite TTS Alcanzado",
+  sttLimitWarning: "Advertencia de Límite STT",
+  sttLimitReached: "Límite STT Alcanzado",
+  
   // Language support messages
   gptLanguageSupport: "GPT-4o Realtime admite más de 20 idiomas. Aunque está optimizado para inglés, proporciona conversaciones naturales en tu idioma.",
   customLanguageSupport: "Custom Realtime AI admite más de 99 idiomas. Este sistema utiliza modelos multilingües especializados que incluyen Whisper (reconocimiento de voz), GPT-4o-mini (conversación) y Azure TTS (síntesis de voz).",

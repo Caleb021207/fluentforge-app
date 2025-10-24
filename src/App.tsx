@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
+import { UsageLimitAlert } from "@/components/usage/UsageLimitAlert";
 import NewLayout from "@/components/layout/NewLayout";
 import NewLandingPage from "@/components/layout/NewLandingPage";
 import Practice from "@/pages/Practice";
@@ -16,6 +17,7 @@ import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 function App() {
   return (
     <Router>
+      <UsageLimitAlert />
       <NewLayout>
         <Routes>
           <Route path="/" element={<NewLandingPage />} />

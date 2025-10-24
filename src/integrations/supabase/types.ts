@@ -2432,6 +2432,14 @@ export type Database = {
         Args: { p_consent_type?: string; p_student_id: string }
         Returns: boolean
       }
+      increment_stt_usage: {
+        Args: { p_minutes: number; p_student_id: string }
+        Returns: undefined
+      }
+      increment_tts_usage: {
+        Args: { p_minutes: number; p_student_id: string }
+        Returns: undefined
+      }
       initialize_student_usage_limits: {
         Args: { target_student_id: string }
         Returns: undefined

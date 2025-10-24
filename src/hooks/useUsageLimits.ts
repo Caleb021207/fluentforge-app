@@ -12,6 +12,12 @@ interface UsageLimits {
   textMessagesUsed: number;
   certificationAttemptsUsed: number;
   certificationAttemptsLimit: number;
+  ttsMinutesLimit: number;
+  ttsMinutesUsed: number;
+  ttsMinutesRemaining: number;
+  sttMinutesLimit: number;
+  sttMinutesUsed: number;
+  sttMinutesRemaining: number;
   isWithinTimeRestrictions: boolean;
 }
 
@@ -74,6 +80,12 @@ export const useUsageLimits = () => {
             textMessagesUsed: newLimits.text_messages_used_current_month,
             certificationAttemptsUsed: newLimits.certification_attempts_used_current_semester,
             certificationAttemptsLimit: newLimits.certification_attempts_semester_limit,
+            ttsMinutesLimit: newLimits.tts_minutes_monthly_limit || 60,
+            ttsMinutesUsed: newLimits.tts_minutes_used_current_month || 0,
+            ttsMinutesRemaining: (newLimits.tts_minutes_monthly_limit || 60) - (newLimits.tts_minutes_used_current_month || 0),
+            sttMinutesLimit: newLimits.stt_minutes_monthly_limit || 120,
+            sttMinutesUsed: newLimits.stt_minutes_used_current_month || 0,
+            sttMinutesRemaining: (newLimits.stt_minutes_monthly_limit || 120) - (newLimits.stt_minutes_used_current_month || 0),
             isWithinTimeRestrictions: true
           });
           setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
@@ -91,6 +103,12 @@ export const useUsageLimits = () => {
           textMessagesUsed: limits.text_messages_used_current_month,
           certificationAttemptsUsed: limits.certification_attempts_used_current_semester,
           certificationAttemptsLimit: limits.certification_attempts_semester_limit,
+          ttsMinutesLimit: limits.tts_minutes_monthly_limit || 60,
+          ttsMinutesUsed: limits.tts_minutes_used_current_month || 0,
+          ttsMinutesRemaining: (limits.tts_minutes_monthly_limit || 60) - (limits.tts_minutes_used_current_month || 0),
+          sttMinutesLimit: limits.stt_minutes_monthly_limit || 120,
+          sttMinutesUsed: limits.stt_minutes_used_current_month || 0,
+          sttMinutesRemaining: (limits.stt_minutes_monthly_limit || 120) - (limits.stt_minutes_used_current_month || 0),
           isWithinTimeRestrictions: true
         });
         setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
