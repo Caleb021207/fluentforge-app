@@ -37,12 +37,12 @@ const VoiceRecognitionControls: React.FC<VoiceRecognitionControlsProps> = ({
         )}
       </Button>
       
-      {isListening && transcript && (
+      {transcript && transcript.trim() && (
         <Button
           onClick={() => handleSendTranscript(transcript)}
           variant="default"
           size="lg"
-          disabled={isLoading || isSpeaking || !transcript.trim()}
+          disabled={isLoading || isSpeaking}
           className="px-12 py-8 text-xl md:text-2xl"
         >
           <Send className="h-7 w-7 mr-3" />
