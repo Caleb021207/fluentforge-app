@@ -22,6 +22,7 @@ export interface PracticeInfoPanelProps {
 export interface TranscriptDisplayProps {
   transcript: string;
   isListening: boolean;
+  isTranscribing?: boolean;
 }
 
 export interface ListeningIndicatorProps {

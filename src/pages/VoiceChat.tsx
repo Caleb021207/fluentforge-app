@@ -130,7 +130,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   
   const { speakWithAzureTTS, isSpeaking } = useVoiceTTS({ practiceLanguage: practice });
   
-  const { isListening, transcript, toggleListening, handleSendTranscript } = useVoiceSpeechRecognition({
+  const { isListening, isTranscribing, transcript, toggleListening, handleSendTranscript } = useVoiceSpeechRecognition({
     targetLanguage: practice,
     onSendTranscript: (text) => sendMessage(text, speakWithAzureTTS),
     useWhisper: true,
@@ -228,7 +228,11 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
           
           <ListeningIndicator isListening={isListening} />
           
-          <TranscriptDisplay transcript={transcript} isListening={isListening} />
+          <TranscriptDisplay 
+            transcript={transcript} 
+            isListening={isListening}
+            isTranscribing={isTranscribing}
+          />
 
           {(conversationHistory.length > 0 || isLoading) && (
             <VoiceChatContainer 

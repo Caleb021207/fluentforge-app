@@ -23,6 +23,7 @@ export const useVoiceSpeechRecognition = ({
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isInitializing, setIsInitializing] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const { toast } = useToast();
   const { t } = useLocalization();
   
@@ -201,6 +202,8 @@ export const useVoiceSpeechRecognition = ({
 
       mediaRecorder.onstop = async () => {
         console.log('MediaRecorder stopped, processing audio...');
+        setIsTranscribing(true);
+        
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         const durationSeconds = audioChunksRef.current.length; // Rough estimate
         
@@ -212,6 +215,7 @@ export const useVoiceSpeechRecognition = ({
           try {
             const { data: { user } } = await supabase.auth.getUser();
             
+            console.log('Sending audio to Whisper API for transcription...');
             const { data, error } = await supabase.functions.invoke('transcribe-audio', {
               body: {
                 audio: base64Audio,
@@ -223,22 +227,25 @@ export const useVoiceSpeechRecognition = ({
 
             if (error) {
               console.error('Transcription error:', error);
-              // Fall back to browser API on error
               toast({
                 title: t("sttLimitReached") || "STT limit reached",
                 description: "Falling back to browser-based speech recognition",
                 variant: "default",
               });
+              setIsTranscribing(false);
               return;
             }
 
             if (data?.text) {
               const transcribedText = data.text.trim();
+              console.log('Transcription received:', transcribedText);
               setTranscript(transcribedText);
               finalTranscriptRef.current = transcribedText;
               if (onTranscriptChange) {
                 onTranscriptChange(transcribedText);
               }
+            } else {
+              console.warn('No transcription text received');
             }
           } catch (error) {
             console.error('Error transcribing audio:', error);
@@ -248,6 +255,7 @@ export const useVoiceSpeechRecognition = ({
               variant: "destructive",
             });
           } finally {
+            setIsTranscribing(false);
             setIsInitializing(false);
             if (streamRef.current) {
               streamRef.current.getTracks().forEach(track => track.stop());
@@ -351,6 +359,7 @@ export const useVoiceSpeechRecognition = ({
   return {
     isListening,
     isInitializing,
+    isTranscribing,
     transcript,
     toggleListening,
     handleSendTranscript,
