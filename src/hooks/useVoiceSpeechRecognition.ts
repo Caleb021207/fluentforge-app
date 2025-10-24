@@ -3,17 +3,22 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import { getSpeechSynthesisLanguageCode } from "@/utils/languageUtils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface UseVoiceSpeechRecognitionProps {
   targetLanguage: string;
   onTranscriptChange?: (transcript: string) => void;
   onSendTranscript?: (transcript: string) => void;
+  useWhisper?: boolean; // Whether to use Whisper STT instead of browser API
+  multilingualMode?: boolean; // Whether to enable multilingual support
 }
 
 export const useVoiceSpeechRecognition = ({ 
   targetLanguage,
   onTranscriptChange,
-  onSendTranscript
+  onSendTranscript,
+  useWhisper = true, // Default to Whisper
+  multilingualMode = true // Default to multilingual
 }: UseVoiceSpeechRecognitionProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -26,6 +31,9 @@ export const useVoiceSpeechRecognition = ({
   const isListeningRef = useRef<boolean>(false);
   const autoSendTimeoutRef = useRef<number | null>(null);
   const finalTranscriptRef = useRef<string>("");  // Accumulate finalized speech
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
   
   // Clean up function that properly stops recognition and clears timeouts
   const cleanUpRecognition = useCallback(() => {
@@ -38,6 +46,19 @@ export const useVoiceSpeechRecognition = ({
       }
     }
     
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (e) {
+        console.error("Error stopping media recorder:", e);
+      }
+    }
+
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    
     if (autoSendTimeoutRef.current) {
       window.clearTimeout(autoSendTimeoutRef.current);
       autoSendTimeoutRef.current = null;
@@ -46,7 +67,7 @@ export const useVoiceSpeechRecognition = ({
     isListeningRef.current = false;
     setIsListening(false);
   }, []);
-  
+
   // Initialize speech recognition with proper error handling
   const initRecognition = useCallback(() => {
     if (typeof window === "undefined") return null;
@@ -162,6 +183,118 @@ export const useVoiceSpeechRecognition = ({
     return recognition;
   }, [targetLanguage, toast, t, onTranscriptChange, onSendTranscript, cleanUpRecognition]);
 
+  // Start Whisper-based recording
+  const startWhisperRecording = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      
+      audioChunksRef.current = [];
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        console.log('MediaRecorder stopped, processing audio...');
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const durationSeconds = audioChunksRef.current.length; // Rough estimate
+        
+        // Convert to base64
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64Audio = (reader.result as string).split(',')[1];
+          
+          try {
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            const { data, error } = await supabase.functions.invoke('transcribe-audio', {
+              body: {
+                audio: base64Audio,
+                language: multilingualMode ? 'auto' : undefined,
+                userId: user?.id,
+                durationSeconds
+              }
+            });
+
+            if (error) {
+              console.error('Transcription error:', error);
+              // Fall back to browser API on error
+              toast({
+                title: t("sttLimitReached") || "STT limit reached",
+                description: "Falling back to browser-based speech recognition",
+                variant: "default",
+              });
+              return;
+            }
+
+            if (data?.text) {
+              const transcribedText = data.text.trim();
+              setTranscript(transcribedText);
+              finalTranscriptRef.current = transcribedText;
+              if (onTranscriptChange) {
+                onTranscriptChange(transcribedText);
+              }
+            }
+          } catch (error) {
+            console.error('Error transcribing audio:', error);
+            toast({
+              title: t("error"),
+              description: t("transcriptionFailed") || "Failed to transcribe audio",
+              variant: "destructive",
+            });
+          } finally {
+            setIsInitializing(false);
+            if (streamRef.current) {
+              streamRef.current.getTracks().forEach(track => track.stop());
+              streamRef.current = null;
+            }
+          }
+        };
+        
+        reader.readAsDataURL(audioBlob);
+      };
+
+      mediaRecorder.start();
+      isListeningRef.current = true;
+      setIsListening(true);
+      setIsInitializing(false);
+      
+      console.log('Whisper recording started');
+    } catch (error) {
+      console.error('Error starting Whisper recording:', error);
+      setIsInitializing(false);
+      toast({
+        title: t("error"),
+        description: t("microphoneAccessFailed") || "Microphone access failed",
+        variant: "destructive",
+      });
+    }
+  }, [multilingualMode, toast, t, onTranscriptChange]);
+
+  // Start browser-based recognition (fallback)
+  const startBrowserRecognition = useCallback(() => {
+    try {
+      cleanUpRecognition();
+      recognitionRef.current = initRecognition();
+      
+      if (recognitionRef.current) {
+        isListeningRef.current = true;
+        setIsListening(true);
+        recognitionRef.current.start();
+        setIsInitializing(false);
+        console.log('Browser recognition started');
+      }
+    } catch (error) {
+      console.error('Error starting browser recognition:', error);
+      setIsInitializing(false);
+    }
+  }, [initRecognition, cleanUpRecognition]);
+
   // Set up and clean up on mount/unmount
   useEffect(() => {
     return () => {
@@ -177,8 +310,7 @@ export const useVoiceSpeechRecognition = ({
     }
     
     if (isListening) {
-      console.log("Stopping recording - keeping transcript");
-      // Stop recording but DON'T clear transcript
+      console.log("Stopping recording");
       cleanUpRecognition();
     } else {
       console.log("Starting recording");
@@ -188,51 +320,10 @@ export const useVoiceSpeechRecognition = ({
       setTranscript("");
       finalTranscriptRef.current = "";
       
-      try {
-        // Clean up any existing instances first
-        cleanUpRecognition();
-        
-        // Initialize and start a new instance
-        recognitionRef.current = initRecognition();
-        
-        if (recognitionRef.current) {
-          isListeningRef.current = true;
-          setIsListening(true);
-          
-          // Explicitly catch start errors
-          try {
-            recognitionRef.current.start();
-          } catch (error) {
-            console.error("Error starting speech recognition:", error);
-            cleanUpRecognition();
-            setIsInitializing(false);
-            
-            toast({
-              title: t("error"),
-              description: t("microphoneAccessFailed"),
-              variant: "destructive",
-            });
-            return;
-          }
-          
-          // Set a timeout to clear initializing state if it gets stuck
-          setTimeout(() => {
-            setIsInitializing(false);
-          }, 1000);
-          
-        } else {
-          setIsInitializing(false);
-        }
-      } catch (error) {
-        console.error("Error setting up speech recognition:", error);
-        cleanUpRecognition();
-        setIsInitializing(false);
-        
-        toast({
-          title: t("error"),
-          description: t("microphoneAccessRequired"),
-          variant: "destructive",
-        });
+      if (useWhisper) {
+        startWhisperRecording();
+      } else {
+        startBrowserRecognition();
       }
     }
   };

@@ -88,11 +88,14 @@ serve(async (req) => {
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
     
-    // Use the provided language or default to 'es' for backward compatibility
-    const transcriptionLanguage = language || 'es';
-    formData.append('language', transcriptionLanguage);
-
-    console.log(`Sending to OpenAI Whisper API with language: ${transcriptionLanguage}...`);
+    // Support multilingual transcription by not specifying language (auto-detect)
+    // or use specific language when provided
+    if (language && language !== 'auto') {
+      formData.append('language', language);
+      console.log(`Sending to OpenAI Whisper API with language: ${language}...`);
+    } else {
+      console.log('Sending to OpenAI Whisper API with auto language detection (multilingual support)...');
+    }
 
     // Send to OpenAI
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {

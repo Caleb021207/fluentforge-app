@@ -132,7 +132,9 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   
   const { isListening, transcript, toggleListening, handleSendTranscript } = useVoiceSpeechRecognition({
     targetLanguage: practice,
-    onSendTranscript: (text) => sendMessage(text, speakWithAzureTTS)
+    onSendTranscript: (text) => sendMessage(text, speakWithAzureTTS),
+    useWhisper: true,
+    multilingualMode: true
   });
 
   // Initialize language metrics panel
