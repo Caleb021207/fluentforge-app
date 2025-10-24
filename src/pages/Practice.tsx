@@ -198,9 +198,10 @@ const Practice = () => {
           <Button 
             variant="outline" 
             onClick={clearConversation}
-            className="flex items-center gap-2 hover:shadow-lg transition-all"
+            className="flex items-center gap-3 px-6 py-6 text-lg hover:shadow-lg transition-all"
+            size="lg"
           >
-            <Trash className="h-4 w-4" />
+            <Trash className="h-5 w-5" />
             {t("clearConversation")}
           </Button>
         </motion.div>

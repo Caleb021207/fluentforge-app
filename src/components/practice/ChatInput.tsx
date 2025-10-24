@@ -72,12 +72,12 @@ export default function ChatInput({
         />
         <div className="absolute right-3 bottom-2">
           <Button 
-            size="sm" 
+            size="lg" 
             type="submit" 
             disabled={isLoading || value.trim().length === 0}
-            className="h-12 w-12 p-0"
+            className="h-14 w-14 p-0"
           >
-            <Send className="h-6 w-6" />
+            <Send className="h-7 w-7" />
             <span className="sr-only">{t("send")}</span>
           </Button>
         </div>
