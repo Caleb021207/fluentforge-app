@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, InteractiveCard } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Flame, BookOpen, Crown, Medal, Sparkles, Users, GraduationCap } from "lucide-react";
+import { Trophy, Flame, Crown, Medal, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,19 +23,18 @@ interface LeaderboardEntry {
 export const LeaderboardSection = () => {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [type, setType] = useState<'xp' | 'streak' | 'lessons'>('xp');
-  const [scope, setScope] = useState<'global' | 'school' | 'class'>('class');
+  const [type, setType] = useState<'xp' | 'streak'>('xp');
   const [userRank, setUserRank] = useState<number | null>(null);
 
   useEffect(() => {
     fetchLeaderboard();
-  }, [type, scope]);
+  }, [type]);
 
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
-        body: { type, scope, limit: 50 },
+        body: { type, scope: 'class', limit: 50 },
       });
 
       if (error) throw error;
@@ -68,74 +67,22 @@ export const LeaderboardSection = () => {
 
   const getValueDisplay = (entry: LeaderboardEntry) => {
     if (type === 'xp') return `${entry.total_xp.toLocaleString()} XP`;
-    if (type === 'streak') return `${entry.current_streak_days} days 🔥`;
-    return `${entry.lessons_completed} lessons`;
-  };
-
-  const getScopeTitle = () => {
-    if (scope === 'class') return 'Class Leaderboard';
-    if (scope === 'school') return 'School Leaderboard';
-    return 'Global Leaderboard';
-  };
-
-  const getScopeDescription = () => {
-    if (scope === 'class') return 'Compete with classmates and climb the ranks!';
-    if (scope === 'school') return 'See how you rank in your school!';
-    return 'Compete with learners worldwide!';
+    return `${entry.current_streak_days} days 🔥`;
   };
 
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2 gradient-text">{getScopeTitle()}</h2>
+        <h2 className="text-3xl font-bold mb-2 gradient-text">Class Leaderboard</h2>
         <p className="text-muted-foreground flex items-center justify-center gap-2">
           <Sparkles className="w-4 h-4 text-palavox-accent" />
-          {getScopeDescription()}
+          Compete with your classmates and climb the ranks!
           <Sparkles className="w-4 h-4 text-palavox-teal" />
         </p>
       </div>
 
-      {/* Scope Selector */}
-      <Card className="p-1 bg-background/60 backdrop-blur-sm">
-        <div className="grid grid-cols-3 gap-1">
-          <button
-            onClick={() => setScope('class')}
-            className={`px-4 py-2 rounded-md font-medium transition-all ${
-              scope === 'class'
-                ? 'bg-gradient-to-r from-palavox-accent to-palavox-teal text-white shadow-md'
-                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-            }`}
-          >
-            <Users className="w-4 h-4 inline mr-2" />
-            Class
-          </button>
-          <button
-            onClick={() => setScope('school')}
-            className={`px-4 py-2 rounded-md font-medium transition-all ${
-              scope === 'school'
-                ? 'bg-gradient-to-r from-palavox-accent to-palavox-teal text-white shadow-md'
-                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-            }`}
-          >
-            <GraduationCap className="w-4 h-4 inline mr-2" />
-            School
-          </button>
-          <button
-            onClick={() => setScope('global')}
-            className={`px-4 py-2 rounded-md font-medium transition-all ${
-              scope === 'global'
-                ? 'bg-gradient-to-r from-palavox-accent to-palavox-teal text-white shadow-md'
-                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-            }`}
-          >
-            <Trophy className="w-4 h-4 inline mr-2" />
-            Global
-          </button>
-        </div>
-      </Card>
-
       <Tabs value={type} onValueChange={(v: any) => setType(v)} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-background/60 backdrop-blur-sm p-1">
+        <TabsList className="grid w-full grid-cols-2 bg-background/60 backdrop-blur-sm p-1">
           <TabsTrigger value="xp" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-palavox-accent data-[state=active]:to-palavox-teal data-[state=active]:text-white transition-all">
             <Trophy className="w-4 h-4 mr-2" />
             XP
@@ -143,10 +90,6 @@ export const LeaderboardSection = () => {
           <TabsTrigger value="streak" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white transition-all">
             <Flame className="w-4 h-4 mr-2" />
             Streak
-          </TabsTrigger>
-          <TabsTrigger value="lessons" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all">
-            <BookOpen className="w-4 h-4 mr-2" />
-            Lessons
           </TabsTrigger>
         </TabsList>
 
