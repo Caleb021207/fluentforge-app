@@ -37,31 +37,26 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
             damping: 20,
             duration: 0.6 
           }}
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none"
+          className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
         >
-          <div className="flex flex-col items-center gap-4">
-            <div className="bg-[#7DD4C3] rounded-3xl p-6 shadow-xl">
-              <motion.img
-                src={xpPopupImage}
-                alt="Celebration"
-                className="w-48 h-auto"
-                animate={{
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 0.8,
-                  repeat: 2,
-                  ease: "easeInOut"
-                }}
-              />
-            </div>
-            <div className="flex flex-col items-center gap-2 bg-background/95 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-primary" />
-                <span className="text-3xl font-bold text-foreground">+{amount} XP</span>
-                <Sparkles className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-sm font-semibold text-muted-foreground">Amazing work!</span>
+          <div className="bg-[#7DD4C3] rounded-3xl p-8 shadow-2xl flex flex-col items-center gap-3">
+            <motion.img
+              src={xpPopupImage}
+              alt="Celebration"
+              className="w-40 h-auto"
+              animate={{
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 0.8,
+                repeat: 2,
+                ease: "easeInOut"
+              }}
+            />
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-white" />
+              <span className="text-3xl font-bold text-white">+{amount} XP</span>
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
           </div>
         </motion.div>
