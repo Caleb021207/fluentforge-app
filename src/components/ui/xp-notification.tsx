@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import ConfettiExplosion from "./confetti";
-import foxCelebrate from "@/assets/fox-celebrate.png";
+import foxCelebrate from "@/assets/fox-celebrate-party.png";
 
 interface XPNotificationProps {
   show: boolean;
@@ -39,27 +39,26 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
           }}
           className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none"
         >
-          <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 text-white font-bold px-8 py-6 rounded-2xl shadow-2xl flex flex-col items-center gap-3 border-4 border-white/30">
+          <div className="bg-[#7DD4C3] text-white font-bold px-8 py-6 rounded-2xl shadow-2xl flex flex-col items-center gap-3 border-4 border-white/40">
             <motion.img
               src={foxCelebrate}
               alt="Celebrating fox"
-              className="w-20 h-20"
+              className="w-32 h-32 -mt-2"
               animate={{
-                rotate: [0, -10, 10, -10, 0],
-                scale: [1, 1.1, 1, 1.1, 1],
+                scale: [1, 1.05, 1],
               }}
               transition={{
-                duration: 0.6,
-                repeat: 1,
+                duration: 0.8,
+                repeat: 2,
                 ease: "easeInOut"
               }}
             />
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-6 h-6" />
-              <span className="text-2xl font-extrabold">+{amount} XP</span>
-              <Sparkles className="w-6 h-6" />
+            <div className="flex items-center gap-2 -mt-2">
+              <Sparkles className="w-6 h-6 text-white drop-shadow-md" />
+              <span className="text-3xl font-extrabold text-white drop-shadow-md">+{amount} XP</span>
+              <Sparkles className="w-6 h-6 text-white drop-shadow-md" />
             </div>
-            <span className="text-sm font-semibold opacity-90">Great job!</span>
+            <span className="text-base font-bold opacity-95 text-white">Amazing work!</span>
           </div>
         </motion.div>
       </AnimatePresence>
