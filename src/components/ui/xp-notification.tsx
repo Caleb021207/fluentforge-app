@@ -43,7 +43,7 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
             <motion.img
               src={xpPopupImage}
               alt="Celebration"
-              className="w-auto h-auto"
+              className="w-64 h-auto"
               animate={{
                 scale: [1, 1.02, 1],
               }}
@@ -53,13 +53,13 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
                 ease: "easeInOut"
               }}
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-white drop-shadow-md" />
-                <span className="text-4xl font-extrabold text-white drop-shadow-lg">+{amount} XP</span>
-                <Sparkles className="w-6 h-6 text-white drop-shadow-md" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center pt-4">
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-white drop-shadow-md" />
+                <span className="text-2xl font-extrabold text-white drop-shadow-lg">+{amount} XP</span>
+                <Sparkles className="w-4 h-4 text-white drop-shadow-md" />
               </div>
-              <span className="text-lg font-bold text-white drop-shadow-md mt-2">Amazing work!</span>
+              <span className="text-sm font-bold text-white drop-shadow-md mt-1">Amazing work!</span>
             </div>
           </div>
         </motion.div>
