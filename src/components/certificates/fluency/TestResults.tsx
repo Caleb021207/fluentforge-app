@@ -81,27 +81,43 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
         });
       }
       
-      // Check if they've achieved functional or professional fluency
-      const reading = highestScores.reading?.score || 0;
-      const writing = highestScores.writing?.score || 0;
-      const speaking = highestScores.speaking?.score || 0;
-      const listening = highestScores.listening?.score || 0;
+      // Check if they've achieved functional or professional fluency by getting all scores
+      const { data: attempts, error: attemptsError } = await supabase
+        .from('certification_attempts')
+        .select('certification_type, score')
+        .eq('user_id', user.id)
+        .order('score', { ascending: false });
+      
+      if (!attemptsError && attempts) {
+        // Get highest score for each type
+        const highestScores: Record<string, number> = {};
+        attempts.forEach(attempt => {
+          if (!highestScores[attempt.certification_type] || attempt.score > highestScores[attempt.certification_type]) {
+            highestScores[attempt.certification_type] = attempt.score;
+          }
+        });
+        
+        const reading = highestScores.reading || 0;
+        const writing = highestScores.writing || 0;
+        const speaking = highestScores.speaking || speakingScore;
+        const listening = highestScores.listening || listeningScore;
 
-      // Award XP based on fluency level achievement
-      await supabase.functions.invoke('award-xp', {
-        body: {
-          xp_amount: 0, // Will be calculated in the edge function based on metadata
-          source: 'certification',
-          metadata: {
-            certificationScores: {
-              reading,
-              writing,
-              speaking,
-              listening
+        // Award XP based on fluency level achievement
+        await supabase.functions.invoke('award-xp', {
+          body: {
+            xp_amount: 0, // Will be calculated in the edge function based on metadata
+            source: 'certification',
+            metadata: {
+              certificationScores: {
+                reading,
+                writing,
+                speaking,
+                listening
+              }
             }
           }
-        }
-      });
+        });
+      }
 
       toast({
         title: "Scores submitted successfully",

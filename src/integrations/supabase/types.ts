@@ -2215,44 +2215,65 @@ export type Database = {
       user_progression: {
         Row: {
           certifications_completed: number
+          conversations_analyzed: number | null
           created_at: string
           current_level: number
           current_streak_days: number
+          exams_completed: number | null
           id: string
           last_activity_date: string | null
           lessons_completed: number
           longest_streak_days: number
+          premium_voice_messages: number | null
+          pronunciation_exercises: number | null
+          realtime_ai_messages: number | null
+          text_messages_sent: number | null
           total_xp: number
           updated_at: string
           user_id: string
+          voice_messages_sent: number | null
           voice_sessions_completed: number
         }
         Insert: {
           certifications_completed?: number
+          conversations_analyzed?: number | null
           created_at?: string
           current_level?: number
           current_streak_days?: number
+          exams_completed?: number | null
           id?: string
           last_activity_date?: string | null
           lessons_completed?: number
           longest_streak_days?: number
+          premium_voice_messages?: number | null
+          pronunciation_exercises?: number | null
+          realtime_ai_messages?: number | null
+          text_messages_sent?: number | null
           total_xp?: number
           updated_at?: string
           user_id: string
+          voice_messages_sent?: number | null
           voice_sessions_completed?: number
         }
         Update: {
           certifications_completed?: number
+          conversations_analyzed?: number | null
           created_at?: string
           current_level?: number
           current_streak_days?: number
+          exams_completed?: number | null
           id?: string
           last_activity_date?: string | null
           lessons_completed?: number
           longest_streak_days?: number
+          premium_voice_messages?: number | null
+          pronunciation_exercises?: number | null
+          realtime_ai_messages?: number | null
+          text_messages_sent?: number | null
           total_xp?: number
           updated_at?: string
           user_id?: string
+          voice_messages_sent?: number | null
           voice_sessions_completed?: number
         }
         Relationships: []
