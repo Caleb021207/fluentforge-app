@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useGamification } from "@/hooks/useGamification";
 import { Upload, FileImage, FileText, File } from "lucide-react";
 
 interface TranscriptUploadProps {
@@ -17,6 +18,7 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { toast } = useToast();
+  const { awardXP } = useGamification();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -161,6 +163,13 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
           if (dbError) throw dbError;
 
           setUploadProgress(100);
+          
+          // Award XP for exam analysis
+          console.log('📝 Awarding XP for exam analysis:', { examScore: analysisData.analysis.overall_score });
+          await awardXP('exam_analysis', {
+            examScore: analysisData.analysis.overall_score
+          });
+          
           onUploadSuccess();
 
         } catch (error: any) {

@@ -59,10 +59,7 @@ const TranscriptAnalysis = () => {
 
   const handleUploadSuccess = () => {
     setRefreshKey(prev => prev + 1);
-    toast({
-      title: "Analysis Complete",
-      description: "Your transcript has been analyzed successfully",
-    });
+    // XP notification will handle the success feedback
   };
 
   const latestAnalysis = analyses?.[0];

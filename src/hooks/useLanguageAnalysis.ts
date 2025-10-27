@@ -110,12 +110,6 @@ export function useLanguageAnalysis() {
           grammarAccuracy: combinedMetrics.grammarAccuracy,
           complexity: (combinedMetrics as any).vocabularyComplexity || (combinedMetrics as any).complexity || 50,
         });
-        
-        // Show success toast
-        toast({
-          title: "Analysis Complete",
-          description: "Your conversation has been analyzed successfully."
-        });
       }
       
       return combinedMetrics;
