@@ -21,6 +21,7 @@ import { GradientBlob } from "@/components/ui/decorative-elements";
 import XPNotification from "@/components/ui/xp-notification";
 import LevelUpModal from "@/components/gamification/LevelUpModal";
 import { useGamification } from "@/hooks/useGamification";
+import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 
 // Create an interface that matches the Message structure from useChatMessages
 interface MessageWithTranslationType {
@@ -35,9 +36,8 @@ const Practice = () => {
   const { toast } = useToast();
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
   const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
-  const [showXPNotification, setShowXPNotification] = useState(false);
-  const [lastXPGain, setLastXPGain] = useState(0);
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
+  const { showXPNotification, lastXPGain } = useLanguageAnalysis();
   
   // Read URL parameters for deep linking
   const searchParams = new URLSearchParams(window.location.search);
@@ -232,15 +232,7 @@ const Practice = () => {
             messages={compatibleMessages}
             input={input}
             setInput={setInput}
-            handleSubmit={async (e: React.FormEvent) => {
-              const xpResult = await handleSubmit(e);
-              // Show XP notification if XP was awarded and > 10
-              if (xpResult && xpResult.xp_awarded > 10) {
-                setLastXPGain(xpResult.xp_awarded);
-                setShowXPNotification(true);
-                setTimeout(() => setShowXPNotification(false), 3000);
-              }
-            }}
+            handleSubmit={handleSubmit}
             isLoading={chatLoading}
             getPlaceholderText={getPlaceholderText}
             targetLanguage={targetLanguage}
