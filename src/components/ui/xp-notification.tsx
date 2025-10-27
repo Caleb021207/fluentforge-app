@@ -39,27 +39,29 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
           }}
           className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none"
         >
-          <div className="relative">
-            <motion.img
-              src={xpPopupImage}
-              alt="Celebration"
-              className="w-64 h-auto"
-              animate={{
-                scale: [1, 1.02, 1],
-              }}
-              transition={{
-                duration: 0.8,
-                repeat: 2,
-                ease: "easeInOut"
-              }}
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-4">
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-white drop-shadow-md" />
-                <span className="text-2xl font-extrabold text-white drop-shadow-lg">+{amount} XP</span>
-                <Sparkles className="w-4 h-4 text-white drop-shadow-md" />
+          <div className="flex flex-col items-center gap-4">
+            <div className="bg-[#7DD4C3] rounded-3xl p-6 shadow-xl">
+              <motion.img
+                src={xpPopupImage}
+                alt="Celebration"
+                className="w-48 h-auto"
+                animate={{
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 0.8,
+                  repeat: 2,
+                  ease: "easeInOut"
+                }}
+              />
+            </div>
+            <div className="flex flex-col items-center gap-2 bg-background/95 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <span className="text-3xl font-bold text-foreground">+{amount} XP</span>
+                <Sparkles className="w-5 h-5 text-primary" />
               </div>
-              <span className="text-sm font-bold text-white drop-shadow-md mt-1">Amazing work!</span>
+              <span className="text-sm font-semibold text-muted-foreground">Amazing work!</span>
             </div>
           </div>
         </motion.div>
