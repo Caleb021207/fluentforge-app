@@ -18,6 +18,9 @@ import type { TranslationType } from "@/components/practice/hooks/useTranslation
 import { secureStorage } from "@/utils/security/dataEncryption";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
+import XPNotification from "@/components/ui/xp-notification";
+import LevelUpModal from "@/components/gamification/LevelUpModal";
+import { useGamification } from "@/hooks/useGamification";
 
 // Create an interface that matches the Message structure from useChatMessages
 interface MessageWithTranslationType {
@@ -32,6 +35,9 @@ const Practice = () => {
   const { toast } = useToast();
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
   const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
+  const [showXPNotification, setShowXPNotification] = useState(false);
+  const [lastXPGain, setLastXPGain] = useState(0);
+  const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   
   // Read URL parameters for deep linking
   const searchParams = new URLSearchParams(window.location.search);
@@ -146,7 +152,18 @@ const Practice = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+    <>
+      <XPNotification show={showXPNotification} amount={lastXPGain} />
+      {levelUpData && (
+        <LevelUpModal
+          open={showLevelUpModal}
+          onClose={() => setShowLevelUpModal(false)}
+          oldLevel={levelUpData.oldLevel}
+          newLevel={levelUpData.newLevel}
+          totalXP={progression?.total_xp || 0}
+        />
+      )}
+      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
@@ -215,7 +232,15 @@ const Practice = () => {
             messages={compatibleMessages}
             input={input}
             setInput={setInput}
-            handleSubmit={handleSubmit}
+            handleSubmit={async (e: React.FormEvent) => {
+              const xpResult = await handleSubmit(e);
+              // Show XP notification if XP was awarded and > 10
+              if (xpResult && xpResult.xp_awarded > 10) {
+                setLastXPGain(xpResult.xp_awarded);
+                setShowXPNotification(true);
+                setTimeout(() => setShowXPNotification(false), 3000);
+              }
+            }}
             isLoading={chatLoading}
             getPlaceholderText={getPlaceholderText}
             targetLanguage={targetLanguage}
@@ -227,10 +252,11 @@ const Practice = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <PracticeGuide targetLanguage={targetLanguage} />
+         <PracticeGuide targetLanguage={targetLanguage} />
         </motion.div>
       </div>
     </div>
+    </>
   );
 };
 

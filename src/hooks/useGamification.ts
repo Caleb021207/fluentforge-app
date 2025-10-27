@@ -108,11 +108,8 @@ export const useGamification = () => {
 
       if (error) throw error;
 
-      // Show XP toast
-      toast({
-        title: `+${xpAmount} XP`,
-        description: `Great job! Keep up the learning!`,
-      });
+      // Don't show toast for XP - will be handled by XPNotification component for XP > 10
+      // For XP <= 10, we don't show anything to avoid spam
 
       // Show level up modal if leveled up
       if (data.leveled_up) {

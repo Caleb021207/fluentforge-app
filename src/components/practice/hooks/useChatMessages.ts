@@ -115,7 +115,8 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
       setApiConversationHistory(updatedHistory);
       
       // Award XP for sending a text message
-      await awardXP('text_message');
+      const xpResult = await awardXP('text_message');
+      return xpResult;
     }
   };
   
