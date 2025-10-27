@@ -8,9 +8,10 @@ import ProgressTimeline from "@/components/transcript-analysis/ProgressTimeline"
 import { Analysis } from "@/components/transcript-analysis/types";
 import { InteractiveCard, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, TrendingUp, Target, FileText, Sparkles } from "lucide-react";
+import { Brain, TrendingUp, Target, FileText, Sparkles, Award } from "lucide-react";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
+import { getFluencyCertStatus, getCertDisplayName, getCertDisplayDescription } from "@/utils/fluencyCertification";
 
 const TranscriptAnalysis = () => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -63,6 +64,7 @@ const TranscriptAnalysis = () => {
   };
 
   const latestAnalysis = analyses?.[0];
+  const certStatus = getFluencyCertStatus(analyses);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
@@ -112,6 +114,15 @@ const TranscriptAnalysis = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold gradient-text">{latestAnalysis?.cefr_level || 'N/A'}</div>
+              {certStatus.level && (
+                <div className="mt-2 flex items-center gap-2">
+                  <Award className="h-4 w-4 text-primary" />
+                  <div className="text-xs">
+                    <div className="font-semibold text-foreground">{getCertDisplayName(certStatus.level)}</div>
+                    <div className="text-muted-foreground">{getCertDisplayDescription(certStatus.level)}</div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </InteractiveCard>
 

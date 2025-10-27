@@ -9,6 +9,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useGamification } from "@/hooks/useGamification";
 import { Upload, FileImage, FileText, File } from "lucide-react";
+import { checkCertAchievement } from "@/utils/fluencyCertification";
+import CertNotification from "@/components/ui/cert-notification";
+import { useState as useReactState } from "react";
 
 interface TranscriptUploadProps {
   onUploadSuccess: () => void;
@@ -21,6 +24,8 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
   const { awardXP } = useGamification();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showCertNotification, setShowCertNotification] = useReactState(false);
+  const [certType, setCertType] = useReactState<'functional' | 'professional' | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -164,11 +169,27 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
 
           setUploadProgress(100);
           
+          // Check for fluency certification achievement
+          const certAchieved = checkCertAchievement(
+            analysisData.analysis.cefr_level,
+            analysisData.analysis.overall_score
+          );
+          
           // Award XP for exam analysis
           console.log('📝 Awarding XP for exam analysis:', { examScore: analysisData.analysis.overall_score });
           await awardXP('exam_analysis', {
             examScore: analysisData.analysis.overall_score
           });
+          
+          // Show cert notification if achieved
+          if (certAchieved) {
+            console.log('🎓 Fluency certification achieved:', certAchieved);
+            setCertType(certAchieved);
+            setShowCertNotification(true);
+            setTimeout(() => {
+              setShowCertNotification(false);
+            }, 5000);
+          }
           
           onUploadSuccess();
 
@@ -216,7 +237,9 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
   };
 
   return (
-    <Card>
+    <>
+      <CertNotification show={showCertNotification} certType={certType} />
+      <Card>
       <CardHeader>
         <CardTitle>Upload Test Transcript</CardTitle>
         <CardDescription>
@@ -282,6 +305,7 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
         </div>
       </CardContent>
     </Card>
+    </>
   );
 };
 
