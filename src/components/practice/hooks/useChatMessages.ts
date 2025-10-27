@@ -5,6 +5,7 @@ import { useChatMessaging } from "./useChatMessaging";
 import { usePromptGenerator } from "./usePromptGenerator";
 import { useSessionManagement } from "./useSessionManagement";
 import { useToast } from "@/hooks/use-toast";
+import { useGamification } from "@/hooks/useGamification";
 import type { TranslationType } from "./useTranslationHandler";
 import type { ChatMessage } from "@/types/chat";
 
@@ -25,6 +26,7 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const { generateLanguageLearningPrompt } = usePromptGenerator();
   const { messageCount, setMessageCount } = useSessionManagement();
   const { toast } = useToast();
+  const { awardXP } = useGamification();
 
   // Load saved messages from session storage
   useEffect(() => {
@@ -111,6 +113,9 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
         { role: 'assistant' as const, content: response.content }
       ];
       setApiConversationHistory(updatedHistory);
+      
+      // Award XP for sending a text message
+      await awardXP('text_message');
     }
   };
   

@@ -96,8 +96,23 @@ serve(async (req) => {
       updates.lessons_completed = progression.lessons_completed + 1;
     } else if (source === 'certification') {
       updates.certifications_completed = progression.certifications_completed + 1;
-    } else if (source === 'voice') {
+    } else if (source === 'voice' || source === 'voice_message') {
       updates.voice_sessions_completed = progression.voice_sessions_completed + 1;
+      if (source === 'voice_message') {
+        updates.voice_messages_sent = (progression.voice_messages_sent || 0) + 1;
+      }
+    } else if (source === 'text_message') {
+      updates.text_messages_sent = (progression.text_messages_sent || 0) + 1;
+    } else if (source === 'pronunciation') {
+      updates.pronunciation_exercises = (progression.pronunciation_exercises || 0) + 1;
+    } else if (source === 'conversation_analysis') {
+      updates.conversations_analyzed = (progression.conversations_analyzed || 0) + 1;
+    } else if (source === 'exam_analysis') {
+      updates.exams_completed = (progression.exams_completed || 0) + 1;
+    } else if (source === 'premium_voice') {
+      updates.premium_voice_messages = (progression.premium_voice_messages || 0) + 1;
+    } else if (source === 'realtime_ai') {
+      updates.realtime_ai_messages = (progression.realtime_ai_messages || 0) + 1;
     }
 
     const { error: updateError } = await supabase

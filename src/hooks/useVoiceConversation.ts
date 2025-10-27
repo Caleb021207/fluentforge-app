@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { getLanguagePair } from "@/utils/languageUtils";
+import { useGamification } from "@/hooks/useGamification";
 import { Message } from "@/types/chat";
 
 type ConversationMessage = {
@@ -31,6 +32,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
   const { analyzeConversation } = useLanguageAnalysis();
+  const { awardXP } = useGamification();
 
   // Initialize the session ID
   if (!sessionIdRef.current) {
@@ -296,6 +298,9 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       ];
       
       setApiConversationHistory(data.updatedHistory || updatedHistory);
+      
+      // Award XP for sending a voice message
+      await awardXP('voice_message');
     } catch (error) {
       console.error('Error getting GPT response:', error);
       toast({

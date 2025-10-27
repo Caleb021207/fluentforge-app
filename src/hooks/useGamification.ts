@@ -77,8 +77,23 @@ export const useGamification = () => {
   };
 
   const awardXP = async (
-    activityType: 'lesson' | 'certification' | 'voice',
-    metadata?: { score?: number; difficulty?: string; minutes?: number }
+    activityType: 'lesson' | 'certification' | 'voice' | 'streak' | 'quest' | 
+                  'text_message' | 'voice_message' | 'pronunciation' | 
+                  'conversation_analysis' | 'exam_analysis' | 'premium_voice' | 'realtime_ai',
+    metadata?: { 
+      score?: number; 
+      difficulty?: string; 
+      minutes?: number;
+      complexity?: number;
+      grammarAccuracy?: number;
+      examScore?: number;
+      certificationScores?: {
+        reading: number;
+        writing: number;
+        speaking: number;
+        listening: number;
+      };
+    }
   ) => {
     try {
       const xpAmount = getXPReward(activityType, metadata);

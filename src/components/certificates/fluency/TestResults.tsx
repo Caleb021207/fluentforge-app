@@ -81,6 +81,28 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
         });
       }
       
+      // Check if they've achieved functional or professional fluency
+      const reading = highestScores.reading?.score || 0;
+      const writing = highestScores.writing?.score || 0;
+      const speaking = highestScores.speaking?.score || 0;
+      const listening = highestScores.listening?.score || 0;
+
+      // Award XP based on fluency level achievement
+      await supabase.functions.invoke('award-xp', {
+        body: {
+          xp_amount: 0, // Will be calculated in the edge function based on metadata
+          source: 'certification',
+          metadata: {
+            certificationScores: {
+              reading,
+              writing,
+              speaking,
+              listening
+            }
+          }
+        }
+      });
+
       toast({
         title: "Scores submitted successfully",
         description: "Your certificate scores have been updated",

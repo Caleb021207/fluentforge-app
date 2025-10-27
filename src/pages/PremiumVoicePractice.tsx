@@ -196,6 +196,11 @@ const PremiumVoicePractice = () => {
     const minutesUsed = Math.ceil(customElapsedSeconds / 60);
     console.log('Ending custom realtime session:', { customElapsedSeconds, minutesUsed, customSessionId });
 
+    // Award XP for custom realtime session
+    if (minutesUsed > 0 && customMessages.length > 0) {
+      await awardXP('realtime_ai');
+    }
+
     if (customChatRef.current && minutesUsed > 0 && customSessionId) {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -238,7 +243,7 @@ const PremiumVoicePractice = () => {
     
     // Award XP for completing voice session
     if (minutesUsed > 0) {
-      await awardXP('voice', { minutes: minutesUsed });
+      await awardXP('premium_voice');
     }
     
     // Track usage with fallback mechanisms

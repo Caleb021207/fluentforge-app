@@ -99,8 +99,23 @@ export function useLanguageAnalysis() {
 
       setLastMetrics(combinedMetrics);
       
-      // Optionally show success toast
+      // Award XP for conversation analysis based on quality
       if (!options.silent) {
+        const complexity = (combinedMetrics as any).vocabularyComplexity || (combinedMetrics as any).complexity || 50;
+        const grammarAccuracy = combinedMetrics.grammarAccuracy || 50;
+        
+        await supabase.functions.invoke('award-xp', {
+          body: {
+            xp_amount: Math.floor((complexity + grammarAccuracy) / 2),
+            source: 'conversation_analysis',
+            metadata: {
+              complexity,
+              grammarAccuracy
+            }
+          }
+        });
+        
+        // Show success toast
         toast({
           title: "Analysis Complete",
           description: "Your conversation has been analyzed successfully."
