@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { getXPReward, calculateLevelFromXP, getXPForLevel } from '../_shared/levelSystem.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -66,7 +67,11 @@ serve(async (req) => {
 
     const { xp_amount, source, metadata = {} }: AwardXPRequest = await req.json();
 
-    console.log(`Awarding ${xp_amount} XP to user ${user.id} from source: ${source}`);
+    // Recalculate XP using the comprehensive level system
+    const recalculatedXP = getXPReward(source, metadata);
+    const finalXP = recalculatedXP; // Use the recalculated XP
+
+    console.log(`Awarding ${finalXP} XP (original: ${xp_amount}, recalculated: ${recalculatedXP}) to user ${user.id} from source: ${source}`, metadata);
 
     // Get or create user progression - use admin client to bypass RLS
     let { data: progression, error: progError } = await supabaseAdmin
@@ -93,13 +98,10 @@ serve(async (req) => {
 
     const oldXP = progression.total_xp;
     const oldLevel = progression.current_level;
-    const newXP = oldXP + xp_amount;
+    const newXP = oldXP + finalXP;
 
-    // Calculate new level (Formula: 100 * level^1.5)
-    let newLevel = 1;
-    while (Math.floor(100 * Math.pow(newLevel + 1, 1.5)) <= newXP) {
-      newLevel++;
-    }
+    // Calculate new level using the shared level system
+    const newLevel = calculateLevelFromXP(newXP);
 
     const leveledUp = newLevel > oldLevel;
 
@@ -203,7 +205,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        xp_awarded: xp_amount,
+        xp_awarded: finalXP,
         new_total_xp: newXP,
         old_level: oldLevel,
         new_level: newLevel,

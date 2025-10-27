@@ -2,14 +2,16 @@
 import { useState } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useGamification } from './useGamification';
+import { useXPNotification } from '@/contexts/XPNotificationContext';
 import { Message, LanguageMetrics } from "@/types/chat";
 
 export function useLanguageAnalysis() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [lastMetrics, setLastMetrics] = useState<LanguageMetrics | null>(null);
-  const [showXPNotification, setShowXPNotification] = useState(false);
-  const [lastXPGain, setLastXPGain] = useState(0);
   const { toast } = useToast();
+  const { awardXP } = useGamification();
+  const { showXPNotification, lastXPGain } = useXPNotification();
 
   const analyzeConversation = async (
     messages: Message[], 
@@ -103,27 +105,11 @@ export function useLanguageAnalysis() {
       
       // Award XP for conversation analysis based on quality
       if (!options.silent) {
-        const complexity = (combinedMetrics as any).vocabularyComplexity || (combinedMetrics as any).complexity || 50;
-        const grammarAccuracy = combinedMetrics.grammarAccuracy || 50;
-        const xpAmount = Math.floor((complexity + grammarAccuracy) / 2);
-        
-        const { data: xpResult } = await supabase.functions.invoke('award-xp', {
-          body: {
-            xp_amount: xpAmount,
-            source: 'conversation_analysis',
-            metadata: {
-              complexity,
-              grammarAccuracy
-            }
-          }
+        console.log('📊 Awarding XP for conversation analysis:', combinedMetrics);
+        await awardXP('conversation_analysis', {
+          grammarAccuracy: combinedMetrics.grammarAccuracy,
+          complexity: (combinedMetrics as any).vocabularyComplexity || (combinedMetrics as any).complexity || 50,
         });
-        
-        // Show XP notification if XP > 10
-        if (xpResult && xpResult.xp_awarded > 10) {
-          setLastXPGain(xpResult.xp_awarded);
-          setShowXPNotification(true);
-          setTimeout(() => setShowXPNotification(false), 3000);
-        }
         
         // Show success toast
         toast({

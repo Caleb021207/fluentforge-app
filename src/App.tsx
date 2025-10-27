@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { UsageLimitAlert } from "@/components/usage/UsageLimitAlert";
+import { XPNotificationProvider } from "@/contexts/XPNotificationContext";
 import NewLayout from "@/components/layout/NewLayout";
 import NewLandingPage from "@/components/layout/NewLandingPage";
 import Practice from "@/pages/Practice";
@@ -17,22 +18,24 @@ import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 function App() {
   return (
     <Router>
-      <UsageLimitAlert />
-      <NewLayout>
-        <Routes>
-          <Route path="/" element={<NewLandingPage />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/voice-chat" element={<VoiceChat />} />
-          <Route path="/pronunciation-practice" element={<PronunciationPracticeContainer />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/analysis" element={<TranscriptAnalysis />} />
-          <Route path="/code-tester" element={<CertificationCodeTester />} />
-          <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
-          
-        </Routes>
-        <Toaster />
-      </NewLayout>
+      <XPNotificationProvider>
+        <UsageLimitAlert />
+        <NewLayout>
+          <Routes>
+            <Route path="/" element={<NewLandingPage />} />
+            <Route path="/practice" element={<Practice />} />
+            <Route path="/voice-chat" element={<VoiceChat />} />
+            <Route path="/pronunciation-practice" element={<PronunciationPracticeContainer />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/analysis" element={<TranscriptAnalysis />} />
+            <Route path="/code-tester" element={<CertificationCodeTester />} />
+            <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
+            
+          </Routes>
+          <Toaster />
+        </NewLayout>
+      </XPNotificationProvider>
     </Router>
   );
 }

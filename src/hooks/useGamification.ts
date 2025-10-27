@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { getXPReward } from '@/utils/levelSystem';
+import { useXPNotification } from '@/contexts/XPNotificationContext';
 import LevelUpModal from '@/components/gamification/LevelUpModal';
 
 interface UserProgression {
@@ -27,6 +28,7 @@ export const useGamification = () => {
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
   const [levelUpData, setLevelUpData] = useState<{ oldLevel: number; newLevel: number } | null>(null);
   const { toast } = useToast();
+  const { triggerXPNotification } = useXPNotification();
 
   useEffect(() => {
     fetchProgression();
@@ -87,6 +89,8 @@ export const useGamification = () => {
       complexity?: number;
       grammarAccuracy?: number;
       examScore?: number;
+      messageLength?: number;
+      vocabularyRichness?: number;
       certificationScores?: {
         reading: number;
         writing: number;
@@ -96,7 +100,9 @@ export const useGamification = () => {
     }
   ) => {
     try {
+      console.log('🎮 awardXP called:', { activityType, metadata });
       const xpAmount = getXPReward(activityType, metadata);
+      console.log('🎮 Calculated XP amount:', xpAmount);
 
       const { data, error } = await supabase.functions.invoke('award-xp', {
         body: {
@@ -108,11 +114,16 @@ export const useGamification = () => {
 
       if (error) throw error;
 
-      // Don't show toast for XP - will be handled by XPNotification component for XP > 10
-      // For XP <= 10, we don't show anything to avoid spam
+      console.log('🎮 XP awarded successfully:', data);
+
+      // Trigger XP notification through context
+      if (data.xp_awarded) {
+        triggerXPNotification(data.xp_awarded);
+      }
 
       // Show level up modal if leveled up
       if (data.leveled_up) {
+        console.log('🎮 Level up!', { oldLevel: data.old_level, newLevel: data.new_level });
         setLevelUpData({ oldLevel: data.old_level, newLevel: data.new_level });
         setShowLevelUpModal(true);
       }
@@ -133,7 +144,7 @@ export const useGamification = () => {
 
       return data;
     } catch (error) {
-      console.error('Error awarding XP:', error);
+      console.error('❌ Error awarding XP:', error);
       return null;
     }
   };

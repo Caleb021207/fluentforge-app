@@ -114,8 +114,15 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
       ];
       setApiConversationHistory(updatedHistory);
       
-      // Award XP for sending a text message
-      const xpResult = await awardXP('text_message');
+      // Award XP for sending a text message with metadata for better calculation
+      console.log('📝 Awarding XP for text message:', { 
+        messageLength: input.length,
+        grammarAccuracy: correctGrammar ? 100 : undefined 
+      });
+      const xpResult = await awardXP('text_message', {
+        messageLength: input.length,
+        grammarAccuracy: correctGrammar ? 100 : undefined
+      });
       return xpResult;
     }
   };

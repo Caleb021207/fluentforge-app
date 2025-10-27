@@ -21,7 +21,7 @@ import { Sparkles } from "lucide-react";
 import XPNotification from "@/components/ui/xp-notification";
 import LevelUpModal from "@/components/gamification/LevelUpModal";
 import { useGamification } from "@/hooks/useGamification";
-import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
+import { useXPNotification } from "@/contexts/XPNotificationContext";
 
 // Importing components
 import VoiceChatHeader from "@/components/voice-chat/VoiceChatHeader";
@@ -133,7 +133,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
           clearConversation, handleAnalyzeConversation, sessionIdRef } = useVoiceConversation(conversationLevel, correctGrammar);
   
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
-  const { showXPNotification, lastXPGain } = useLanguageAnalysis();
+  const { showXPNotification, lastXPGain } = useXPNotification();
   
   const { speakWithAzureTTS, isSpeaking } = useVoiceTTS({ practiceLanguage: practice });
   

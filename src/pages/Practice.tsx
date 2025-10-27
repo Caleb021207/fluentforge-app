@@ -21,7 +21,7 @@ import { GradientBlob } from "@/components/ui/decorative-elements";
 import XPNotification from "@/components/ui/xp-notification";
 import LevelUpModal from "@/components/gamification/LevelUpModal";
 import { useGamification } from "@/hooks/useGamification";
-import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
+import { useXPNotification } from "@/contexts/XPNotificationContext";
 
 // Create an interface that matches the Message structure from useChatMessages
 interface MessageWithTranslationType {
@@ -37,7 +37,7 @@ const Practice = () => {
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
   const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
-  const { showXPNotification, lastXPGain } = useLanguageAnalysis();
+  const { showXPNotification, lastXPGain } = useXPNotification();
   
   // Read URL parameters for deep linking
   const searchParams = new URLSearchParams(window.location.search);
