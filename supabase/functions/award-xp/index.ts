@@ -29,22 +29,32 @@ serve(async (req) => {
 
   try {
     const authHeader = req.headers.get('Authorization');
-    console.log('Authorization header present:', !!authHeader);
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'No authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Extract the JWT token from the Bearer token
+    const token = authHeader.replace('Bearer ', '');
     
+    // Create Supabase client with service role for bypassing RLS
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
+
+    // Create client for auth verification
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader! },
-        },
-      }
     );
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    console.log('Auth result - user:', !!user, 'error:', authError?.message);
+    // Verify the JWT token
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     
-    if (!user) {
+    if (!user || authError) {
       console.error('User authentication failed:', authError);
       return new Response(JSON.stringify({ error: 'Unauthorized', details: authError?.message }), {
         status: 401,
@@ -52,12 +62,14 @@ serve(async (req) => {
       });
     }
 
+    console.log(`Authenticated user: ${user.id}`);
+
     const { xp_amount, source, metadata = {} }: AwardXPRequest = await req.json();
 
     console.log(`Awarding ${xp_amount} XP to user ${user.id} from source: ${source}`);
 
-    // Get or create user progression
-    let { data: progression, error: progError } = await supabase
+    // Get or create user progression - use admin client to bypass RLS
+    let { data: progression, error: progError } = await supabaseAdmin
       .from('user_progression')
       .select('*')
       .eq('user_id', user.id)
@@ -65,7 +77,7 @@ serve(async (req) => {
 
     if (progError || !progression) {
       console.log('Creating new progression record for user');
-      const { data: newProg, error: createError } = await supabase
+      const { data: newProg, error: createError } = await supabaseAdmin
         .from('user_progression')
         .insert({
           user_id: user.id,
@@ -121,7 +133,7 @@ serve(async (req) => {
       updates.realtime_ai_messages = (progression.realtime_ai_messages || 0) + 1;
     }
 
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from('user_progression')
       .update(updates)
       .eq('user_id', user.id);
@@ -129,11 +141,11 @@ serve(async (req) => {
     if (updateError) throw updateError;
 
     // Check for achievement unlocks
-    const { data: allAchievements } = await supabase
+    const { data: allAchievements } = await supabaseAdmin
       .from('achievements')
       .select('*');
 
-    const { data: unlockedAchievements } = await supabase
+    const { data: unlockedAchievements } = await supabaseAdmin
       .from('user_achievements')
       .select('achievement_id')
       .eq('user_id', user.id);
@@ -174,7 +186,7 @@ serve(async (req) => {
       }
 
       if (unlocked) {
-        const { error: achError } = await supabase
+        const { error: achError } = await supabaseAdmin
           .from('user_achievements')
           .insert({
             user_id: user.id,

@@ -18,6 +18,10 @@ import type { User } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
 import { Sparkles } from "lucide-react";
+import XPNotification from "@/components/ui/xp-notification";
+import LevelUpModal from "@/components/gamification/LevelUpModal";
+import { useGamification } from "@/hooks/useGamification";
+import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 
 // Importing components
 import VoiceChatHeader from "@/components/voice-chat/VoiceChatHeader";
@@ -128,6 +132,9 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   const { conversationHistory, apiConversationHistory, isLoading, sendMessage, 
           clearConversation, handleAnalyzeConversation, sessionIdRef } = useVoiceConversation(conversationLevel, correctGrammar);
   
+  const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
+  const { showXPNotification, lastXPGain } = useLanguageAnalysis();
+  
   const { speakWithAzureTTS, isSpeaking } = useVoiceTTS({ practiceLanguage: practice });
   
   const { isListening, isTranscribing, transcript, toggleListening, handleSendTranscript } = useVoiceSpeechRecognition({
@@ -172,7 +179,18 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+    <>
+      <XPNotification show={showXPNotification} amount={lastXPGain} />
+      {levelUpData && (
+        <LevelUpModal
+          open={showLevelUpModal}
+          onClose={() => setShowLevelUpModal(false)}
+          oldLevel={levelUpData.oldLevel}
+          newLevel={levelUpData.newLevel}
+          totalXP={progression?.total_xp || 0}
+        />
+      )}
+      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
@@ -288,6 +306,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
