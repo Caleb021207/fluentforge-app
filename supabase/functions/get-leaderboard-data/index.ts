@@ -30,20 +30,84 @@ serve(async (req) => {
       });
     }
 
-    const url = new URL(req.url);
-    const type = url.searchParams.get('type') || 'xp'; // xp, streak, lessons
-    const scope = url.searchParams.get('scope') || 'global'; // global, school, class
-    const limit = parseInt(url.searchParams.get('limit') || '50');
+    // Parse request body
+    const requestBody = await req.json();
+    const type = requestBody.type || 'xp'; // xp, streak, lessons
+    const scope = requestBody.scope || 'global'; // global, school, class
+    const limit = parseInt(requestBody.limit || '50');
 
-    console.log(`Fetching leaderboard: type=${type}, scope=${scope}, limit=${limit}`);
+    console.log(`Fetching leaderboard: type=${type}, scope=${scope}, limit=${limit}, userId=${user.id}`);
 
     // Get user's profile for school/class info
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('school_id, role')
       .eq('id', user.id)
       .single();
 
+    console.log('User profile:', { profile, profileError });
+
+    // Get the user IDs to include in leaderboard
+    let userIds: string[] = [];
+
+    // Apply scope filtering
+    if (scope === 'school' && profile?.school_id) {
+      // Filter by school - need to join through profiles
+      const { data: schoolProfiles } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('school_id', profile.school_id);
+
+      userIds = schoolProfiles?.map(p => p.id) || [];
+      console.log('School scope - found user IDs:', userIds);
+    } else if (scope === 'class') {
+      // Get classes where user is the teacher
+      const { data: teacherClasses } = await supabase
+        .from('classes')
+        .select('id')
+        .eq('teacher_id', user.id);
+
+      console.log('Teacher classes:', teacherClasses);
+
+      // Get classes where user is a student
+      const { data: studentEnrollments } = await supabase
+        .from('student_enrollments')
+        .select('class_id')
+        .eq('student_id', user.id);
+
+      console.log('Student enrollments:', studentEnrollments);
+
+      // Combine all class IDs
+      const allClassIds = [
+        ...(teacherClasses?.map(c => c.id) || []),
+        ...(studentEnrollments?.map(e => e.class_id) || [])
+      ];
+
+      console.log('All class IDs:', allClassIds);
+
+      if (allClassIds.length > 0) {
+        // Get all students enrolled in these classes
+        const { data: classEnrollments } = await supabase
+          .from('student_enrollments')
+          .select('student_id')
+          .in('class_id', allClassIds);
+
+        userIds = classEnrollments?.map(e => e.student_id) || [];
+        
+        // Always include the current user
+        if (!userIds.includes(user.id)) {
+          userIds.push(user.id);
+        }
+
+        console.log('Class scope - found user IDs:', userIds);
+      } else {
+        // If no classes found, just return current user
+        userIds = [user.id];
+        console.log('No classes found, showing only current user');
+      }
+    }
+
+    // Build query
     let query = supabase
       .from('user_progression')
       .select(`
@@ -56,35 +120,8 @@ serve(async (req) => {
         )
       `);
 
-    // Apply scope filtering
-    if (scope === 'school' && profile?.school_id) {
-      // Filter by school - need to join through profiles
-      const { data: schoolProfiles } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('school_id', profile.school_id);
-
-      const userIds = schoolProfiles?.map(p => p.id) || [];
-      query = query.in('user_id', userIds);
-    } else if (scope === 'class') {
-      // Get students in user's classes
-      const { data: enrollments } = await supabase
-        .from('student_enrollments')
-        .select('student_id, class_id')
-        .in('class_id', [
-          ...(await supabase
-            .from('classes')
-            .select('id')
-            .eq('teacher_id', user.id)
-            .then(r => r.data?.map(c => c.id) || [])),
-          ...(await supabase
-            .from('student_enrollments')
-            .select('class_id')
-            .eq('student_id', user.id)
-            .then(r => r.data?.map(e => e.class_id) || [])),
-        ]);
-
-      const userIds = enrollments?.map(e => e.student_id) || [user.id];
+    // Apply user filtering if we have specific users
+    if (userIds.length > 0) {
       query = query.in('user_id', userIds);
     }
 

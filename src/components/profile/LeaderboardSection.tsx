@@ -33,9 +33,17 @@ export const LeaderboardSection = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
+      console.log('Fetching leaderboard with params:', { type, scope: 'class', limit: 50 });
+      
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
-        body: { type, scope: 'class', limit: 50 },
+        body: {
+          type,
+          scope: 'class',
+          limit: 50
+        }
       });
+
+      console.log('Leaderboard response:', { data, error });
 
       if (error) throw error;
 
