@@ -81,13 +81,14 @@ const Settings = () => {
             </p>
           </div>
           
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="flex justify-center">
             {documentLinks.map((doc, index) => (
               <motion.div
                 key={doc.title}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
+                className="max-w-md w-full"
               >
                 <InteractiveCard 
                   className="glass h-full cursor-pointer hover:shadow-xl transition-all duration-300"
