@@ -99,7 +99,10 @@ const practiceTranslations: TranslationRecord = {
   "analyzeConversation": "Phân tích cuộc trò chuyện",
   "analyzing": "Đang phân tích",
   "analysisLimitReached": "Đã đạt giới hạn phân tích",
-  "canOnlyAnalyzeOncePerSession": "Bạn chỉ có thể phân tích cuộc trò chuyện một lần mỗi phiên để ngăn chặn farming XP. Bắt đầu phiên thực hành mới để phân tích lại."
+  "canOnlyAnalyzeOncePerSession": "Bạn chỉ có thể phân tích cuộc trò chuyện một lần mỗi phiên để ngăn chặn farming XP. Bắt đầu phiên thực hành mới để phân tích lại.",
+  "conversationAnalysis": "Phân Tích Cuộc Trò Chuyện",
+  "grammarAccuracy": "Độ Chính Xác Ngữ Pháp",
+  "complexity": "Độ Phức Tạp"
 };
 
 export default practiceTranslations;

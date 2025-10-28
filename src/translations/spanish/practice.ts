@@ -145,6 +145,9 @@ const practiceTranslations: TranslationRecord = {
   analyzing: "Analizando",
   analysisLimitReached: "Límite de Análisis Alcanzado",
   canOnlyAnalyzeOncePerSession: "Solo puedes analizar la conversación una vez por sesión para evitar el farming de XP. Inicia una nueva sesión de práctica para analizar nuevamente.",
+  conversationAnalysis: "Análisis de Conversación",
+  grammarAccuracy: "Precisión Gramatical",
+  complexity: "Complejidad",
   
   // Skill names (standardized)
   reading: "Lectura",

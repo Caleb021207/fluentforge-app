@@ -171,13 +171,6 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     
     // Reset message count
     setMessageCount({ inputs: 0, outputs: 0 });
-    
-    // Show toast notification
-    toast({
-      title: t("success"),
-      description: t("conversationCleared"),
-      variant: "default",
-    });
   };
   
   const getPlaceholderText = useCallback(() => {

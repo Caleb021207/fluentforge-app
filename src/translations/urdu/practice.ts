@@ -49,7 +49,10 @@ const practiceTranslations: TranslationRecord = {
   analyzeConversation: "بات چیت کا تجزیہ کریں",
   analyzing: "تجزیہ ہو رہا ہے",
   analysisLimitReached: "تجزیہ کی حد پوری ہو گئی",
-  canOnlyAnalyzeOncePerSession: "XP فارمنگ کو روکنے کے لیے آپ ہر سیشن میں صرف ایک بار بات چیت کا تجزیہ کر سکتے ہیں۔ دوبارہ تجزیہ کرنے کے لیے نیا پریکٹس سیشن شروع کریں۔"
+  canOnlyAnalyzeOncePerSession: "XP فارمنگ کو روکنے کے لیے آپ ہر سیشن میں صرف ایک بار بات چیت کا تجزیہ کر سکتے ہیں۔ دوبارہ تجزیہ کرنے کے لیے نیا پریکٹس سیشن شروع کریں۔",
+  conversationAnalysis: "بات چیت کا تجزیہ",
+  grammarAccuracy: "گرامر کی درستگی",
+  complexity: "پیچیدگی"
 };
 
 export default practiceTranslations;

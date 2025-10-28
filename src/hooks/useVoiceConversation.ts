@@ -336,11 +336,6 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     sessionStartedRef.current = false;
     sessionEndedRef.current = false;
     sessionStartTimeRef.current = null;
-    
-    toast({
-      title: t("Success"),
-      description: t("conversationHistoryCleared"),
-    });
   };
 
   const handleAnalyzeConversation = async () => {

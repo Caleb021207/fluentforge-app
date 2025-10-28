@@ -60,7 +60,10 @@ const practiceTranslations: TranslationRecord = {
   "analyzeConversation": "วิเคราะห์การสนทนา",
   "analyzing": "กำลังวิเคราะห์",
   "analysisLimitReached": "ถึงขีดจำกัดการวิเคราะห์แล้ว",
-  "canOnlyAnalyzeOncePerSession": "คุณสามารถวิเคราะห์การสนทนาได้เพียงครั้งเดียวต่อเซสชันเพื่อป้องกันการฟาร์ม XP เริ่มเซสชันฝึกฝนใหม่เพื่อวิเคราะห์อีกครั้ง"
+  "canOnlyAnalyzeOncePerSession": "คุณสามารถวิเคราะห์การสนทนาได้เพียงครั้งเดียวต่อเซสชันเพื่อป้องกันการฟาร์ม XP เริ่มเซสชันฝึกฝนใหม่เพื่อวิเคราะห์อีกครั้ง",
+  "conversationAnalysis": "การวิเคราะห์การสนทนา",
+  "grammarAccuracy": "ความแม่นยำทางไวยากรณ์",
+  "complexity": "ความซับซ้อน"
 };
 
 export default practiceTranslations;

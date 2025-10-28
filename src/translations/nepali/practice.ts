@@ -136,6 +136,9 @@ const practiceTranslations: TranslationRecord = {
   analyzing: "विश्लेषण गर्दै",
   analysisLimitReached: "विश्लेषण सीमा पुगेको छ",
   canOnlyAnalyzeOncePerSession: "XP फार्मिङ रोक्न तपाईं प्रति सत्र एक पटक मात्र कुराकानी विश्लेषण गर्न सक्नुहुन्छ। फेरि विश्लेषण गर्न नयाँ अभ्यास सत्र सुरु गर्नुहोस्।",
+  conversationAnalysis: "कुराकानी विश्लेषण",
+  grammarAccuracy: "व्याकरण शुद्धता",
+  complexity: "जटिलता",
   
   // Skill names (standardized)
   reading: "पढाइ",
