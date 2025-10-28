@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { z } from "zod";
 import { Copy } from "lucide-react";
+import { getCurrentAcademicYear } from "@/utils/academicYearUtils";
 
 // Validation schema for class names
 const classNameSchema = z.string()
@@ -54,7 +55,7 @@ const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => 
         .from('classes')
         .insert({
           name: className,
-          academic_year: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
+          academic_year: getCurrentAcademicYear(),
           class_code: '' // Will be updated with the access code
         })
         .select()
