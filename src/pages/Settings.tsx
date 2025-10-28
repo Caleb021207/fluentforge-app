@@ -14,18 +14,11 @@ const Settings = () => {
   
   const documentLinks = [
     {
-      title: "Terms of Service",
-      description: "Read our terms and conditions",
+      title: "Terms of Service & EULA",
+      description: "Read our terms, conditions, and end user license agreement",
       icon: <FileText className="w-5 h-5" />,
-      path: "https://palavox.org/terms",
-      external: true
-    },
-    {
-      title: "End User License Agreement",
-      description: "Review the EULA for using Palavox",
-      icon: <BookOpen className="w-5 h-5" />,
-      path: "https://palavox.org/eula",
-      external: true
+      path: "/legal",
+      external: false
     }
   ] as const;
   
