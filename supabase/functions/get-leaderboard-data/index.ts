@@ -140,15 +140,7 @@ serve(async (req) => {
     // Build query
     let query = supabase
       .from('user_progression')
-      .select(`
-        *,
-        profiles:user_id (
-          id,
-          display_name,
-          avatar_url,
-          school_id
-        )
-      `);
+      .select('*');
 
     // Apply user filtering if we have specific users
     if (userIds.length > 0) {
@@ -166,21 +158,31 @@ serve(async (req) => {
 
     query = query.limit(limit);
 
-    const { data, error } = await query;
+    const { data: progressionData, error } = await query;
 
     if (error) {
       console.error('❌ Database query error:', error);
       throw error;
     }
 
-    console.log(`📊 Found ${data?.length || 0} leaderboard entries`);
+    console.log(`📊 Found ${progressionData?.length || 0} progression entries`);
+
+    // Get profiles separately
+    const userIdsInProgression = progressionData?.map(p => p.user_id) || [];
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, display_name, avatar_url')
+      .in('id', userIdsInProgression);
+
+    // Create a map of profiles
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
     // Format response with rank
-    const leaderboard = data?.map((entry, index) => ({
+    const leaderboard = progressionData?.map((entry, index) => ({
       rank: index + 1,
       user_id: entry.user_id,
-      display_name: entry.profiles?.display_name || 'Anonymous',
-      avatar_url: entry.profiles?.avatar_url,
+      display_name: profileMap.get(entry.user_id)?.display_name || 'Anonymous',
+      avatar_url: profileMap.get(entry.user_id)?.avatar_url,
       total_xp: entry.total_xp,
       current_level: entry.current_level,
       current_streak_days: entry.current_streak_days,
