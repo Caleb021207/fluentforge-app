@@ -127,7 +127,7 @@ const Practice = () => {
     return () => {
       clearConversation();
     };
-  }, [clearConversation]);
+  }, []);
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">

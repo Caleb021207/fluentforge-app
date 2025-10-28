@@ -169,7 +169,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
     return () => {
       clearConversation();
     };
-  }, [clearConversation]);
+  }, []);
 
   // Show loading state while checking authentication
   if (isCheckingAuth) {
