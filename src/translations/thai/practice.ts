@@ -54,7 +54,11 @@ const practiceTranslations: TranslationRecord = {
   "practiceTip2": "อย่ากลัวที่จะทำผิดพลาด - นั่นคือส่วนหนึ่งของการเรียนรู้!",
   "practiceTip3": "ขอคำอธิบายเพิ่มเติมหากคุณไม่เข้าใจบางสิ่ง",
   "practiceTip4": "พยายามใช้คำศัพท์ที่คุณเพิ่งเรียนรู้",
-  "practiceTip5": "ฝึกฝนอย่างสม่ำเสมอเพื่อพัฒนาความคล่องแคล่ว"
+  "practiceTip5": "ฝึกฝนอย่างสม่ำเสมอเพื่อพัฒนาความคล่องแคล่ว",
+  
+  // Analyze conversation
+  "analyzeConversation": "วิเคราะห์การสนทนา",
+  "analyzing": "กำลังวิเคราะห์"
 };
 
 export default practiceTranslations;

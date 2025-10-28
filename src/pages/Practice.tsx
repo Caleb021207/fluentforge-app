@@ -121,6 +121,13 @@ const Practice = () => {
     correctGrammar,
     toggleGrammarCorrection
   } = useChatMessages(conversationLevel);
+  
+  // Auto-clear conversation on unmount
+  useEffect(() => {
+    return () => {
+      clearConversation();
+    };
+  }, [clearConversation]);
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">

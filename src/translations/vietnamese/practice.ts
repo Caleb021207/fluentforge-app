@@ -94,6 +94,10 @@ const practiceTranslations: TranslationRecord = {
   
   // Adding the missing "Correct Grammar" translation
   "correctGrammar": "Sửa ngữ pháp",
+  
+  // Analyze conversation
+  "analyzeConversation": "Phân tích cuộc trò chuyện",
+  "analyzing": "Đang phân tích"
 };
 
 export default practiceTranslations;

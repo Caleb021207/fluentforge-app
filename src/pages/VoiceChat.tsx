@@ -163,6 +163,13 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   const handlePhraseClick = (phrase: string) => {
     handleSendTranscript(phrase);
   };
+  
+  // Auto-clear conversation on unmount
+  useEffect(() => {
+    return () => {
+      clearConversation();
+    };
+  }, [clearConversation]);
 
   // Show loading state while checking authentication
   if (isCheckingAuth) {

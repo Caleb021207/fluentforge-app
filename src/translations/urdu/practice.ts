@@ -43,7 +43,11 @@ const practiceTranslations: TranslationRecord = {
   
   // Add missing practice-related translations
   send: "بھیجیں",
-  practicePrompt: "السلام علیکم! میں انگریزی کی مشق کرنا چاہتا/چاہتی ہوں۔ کیا آپ میری انگریزی گرامر، لفظ اور استعمال میں بہتری لانے میں میری مدد کر سکتے ہیں؟"
+  practicePrompt: "السلام علیکم! میں انگریزی کی مشق کرنا چاہتا/چاہتی ہوں۔ کیا آپ میری انگریزی گرامر، لفظ اور استعمال میں بہتری لانے میں میری مدد کر سکتے ہیں؟",
+  
+  // Analyze conversation
+  analyzeConversation: "بات چیت کا تجزیہ کریں",
+  analyzing: "تجزیہ ہو رہا ہے"
 };
 
 export default practiceTranslations;
