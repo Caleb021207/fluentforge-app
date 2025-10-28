@@ -37,6 +37,7 @@ export class CustomRealtimeManager {
   private proficiencyLevel: string;
   private stream: MediaStream | null = null;
   private isSessionActive: boolean = false;
+  private isDisconnecting: boolean = false;
   private currentAudio: HTMLAudioElement | null = null;
   
   // Word-based VAD settings
@@ -324,7 +325,10 @@ export class CustomRealtimeManager {
 
     } catch (error) {
       console.error('Error playing audio segments:', error);
-      this.onError('Failed to play audio');
+      // Only show error if not disconnecting
+      if (!this.isDisconnecting && this.isSessionActive) {
+        this.onError('Failed to play audio');
+      }
       if (this.isSessionActive) {
         await this.startListening();
       } else {
@@ -385,7 +389,10 @@ export class CustomRealtimeManager {
 
     } catch (error) {
       console.error('Error playing audio:', error);
-      this.onError('Failed to play audio');
+      // Only show error if not disconnecting
+      if (!this.isDisconnecting && this.isSessionActive) {
+        this.onError('Failed to play audio');
+      }
       if (this.isSessionActive) {
         await this.startListening();
       } else {
@@ -410,6 +417,7 @@ export class CustomRealtimeManager {
   }
 
   disconnect(): void {
+    this.isDisconnecting = true;
     this.isSessionActive = false;
     this.stopListening();
     

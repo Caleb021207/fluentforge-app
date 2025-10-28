@@ -73,9 +73,9 @@ const PremiumVoicePractice = () => {
   };
 
   const startConversation = async (selectedProvider: 'gpt' | 'gemini') => {
-    // Prevent concurrent calls
-    if (isStarting || isConnected) {
-      console.log('Already starting or connected, ignoring request');
+    // Prevent concurrent calls - check both session states
+    if (isStarting || isConnected || customSessionId) {
+      console.log('Already starting or another session is active, ignoring request');
       return;
     }
 
@@ -125,8 +125,9 @@ const PremiumVoicePractice = () => {
   };
 
   const startCustomSession = async () => {
-    if (isStarting || customSessionId) {
-      console.log('Custom session already starting or active');
+    // Prevent concurrent calls - check both session states
+    if (isStarting || customSessionId || isConnected) {
+      console.log('Custom session already starting or another session is active');
       return;
     }
 
