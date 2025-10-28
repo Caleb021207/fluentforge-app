@@ -12,6 +12,8 @@ serve(async (req) => {
   }
 
   try {
+    console.log('🔍 Starting get-leaderboard-data function');
+    
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -22,13 +24,20 @@ serve(async (req) => {
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (!user || authError) {
+      console.error('❌ Authentication failed:', authError);
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: 'Unauthorized',
+        message: 'You must be logged in to view the leaderboard'
+      }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    console.log('✅ User authenticated:', user.id);
 
     // Parse request body
     const requestBody = await req.json();
@@ -138,7 +147,12 @@ serve(async (req) => {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      console.error('❌ Database query error:', error);
+      throw error;
+    }
+
+    console.log(`📊 Found ${data?.length || 0} leaderboard entries`);
 
     // Format response with rank
     const leaderboard = data?.map((entry, index) => ({
@@ -153,20 +167,34 @@ serve(async (req) => {
       is_current_user: entry.user_id === user.id,
     })) || [];
 
+    const userRankIndex = leaderboard.findIndex(e => e.is_current_user);
+    const userRank = userRankIndex >= 0 ? userRankIndex + 1 : null;
+
+    console.log(`✅ Returning ${leaderboard.length} entries, user rank: ${userRank}`);
+
     return new Response(
       JSON.stringify({
         success: true,
         leaderboard,
-        user_rank: leaderboard.findIndex(e => e.is_current_user) + 1 || null,
+        user_rank: userRank,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   } catch (error) {
-    console.error('Error in get-leaderboard-data:', error);
+    console.error('❌ Error in get-leaderboard-data:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        success: false,
+        error: error.message || 'An unexpected error occurred',
+        message: 'Failed to fetch leaderboard data'
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

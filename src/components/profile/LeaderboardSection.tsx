@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerList, slideInUp } from "@/lib/animations";
+import { useToast } from "@/hooks/use-toast";
 
 interface LeaderboardEntry {
   rank: number;
@@ -25,14 +26,28 @@ export const LeaderboardSection = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState<'xp' | 'streak'>('xp');
   const [userRank, setUserRank] = useState<number | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchLeaderboard();
   }, [type]);
 
   const fetchLeaderboard = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
+      
+      // Check if user is authenticated
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.error('No active session found');
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to view the leaderboard",
+          variant: "destructive"
+        });
+        return;
+      }
+
       console.log('Fetching leaderboard with params:', { type, scope: 'class', limit: 50 });
       
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
@@ -45,10 +60,34 @@ export const LeaderboardSection = () => {
 
       console.log('Leaderboard response:', { data, error });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Edge function error:', error);
+        toast({
+          title: "Failed to Load Leaderboard",
+          description: error.message || "Could not fetch leaderboard data",
+          variant: "destructive"
+        });
+        throw error;
+      }
 
-      setLeaderboardData(data.leaderboard || []);
-      setUserRank(data.user_rank);
+      if (data?.success) {
+        setLeaderboardData(data.leaderboard || []);
+        setUserRank(data.user_rank || null);
+        
+        if (data.leaderboard?.length === 0) {
+          toast({
+            title: "No Leaderboard Data",
+            description: "No students have earned XP yet",
+          });
+        }
+      } else {
+        console.error('Unexpected response format:', data);
+        toast({
+          title: "Error",
+          description: data?.message || "Unexpected response from server",
+          variant: "destructive"
+        });
+      }
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
     } finally {
