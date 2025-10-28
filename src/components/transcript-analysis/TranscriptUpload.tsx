@@ -12,6 +12,7 @@ import { Upload, FileImage, FileText, File } from "lucide-react";
 import { checkCertAchievement } from "@/utils/fluencyCertification";
 import CertNotification from "@/components/ui/cert-notification";
 import { useState as useReactState } from "react";
+import { useXPNotification } from "@/contexts/XPNotificationContext";
 
 interface TranscriptUploadProps {
   onUploadSuccess: () => void;
@@ -22,6 +23,7 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
   const [uploadProgress, setUploadProgress] = useState(0);
   const { toast } = useToast();
   const { awardXP } = useGamification();
+  const { triggerXPNotification } = useXPNotification();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showCertNotification, setShowCertNotification] = useReactState(false);
@@ -177,18 +179,25 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
           
           // Award XP for exam analysis
           console.log('📝 Awarding XP for exam analysis:', { examScore: analysisData.analysis.overall_score });
-          await awardXP('exam_analysis', {
+          const xpResult = await awardXP('exam_analysis', {
             examScore: analysisData.analysis.overall_score
           });
           
-          // Show cert notification if achieved
+          // Trigger XP notification
+          if (xpResult?.xpAwarded) {
+            triggerXPNotification(xpResult.xpAwarded);
+          }
+          
+          // Show cert notification if achieved (after a brief delay so XP shows first)
           if (certAchieved) {
             console.log('🎓 Fluency certification achieved:', certAchieved);
-            setCertType(certAchieved);
-            setShowCertNotification(true);
             setTimeout(() => {
-              setShowCertNotification(false);
-            }, 5000);
+              setCertType(certAchieved);
+              setShowCertNotification(true);
+              setTimeout(() => {
+                setShowCertNotification(false);
+              }, 5000);
+            }, 3500); // Show cert after XP notification (3s) + small buffer
           }
           
           onUploadSuccess();
