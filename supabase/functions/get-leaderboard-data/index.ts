@@ -14,41 +14,38 @@ serve(async (req) => {
   try {
     console.log('🔍 Starting get-leaderboard-data function');
     
-    // Extract JWT token from Authorization header
     const authHeader = req.headers.get('authorization');
-    console.log('📋 Authorization header present:', !!authHeader);
-    
     if (!authHeader) {
-      console.error('❌ No authorization header provided');
+      console.error('❌ No authorization header');
       return new Response(JSON.stringify({ 
         success: false,
         error: 'Unauthorized',
-        message: 'No authorization header provided'
+        message: 'No authorization header'
       }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Extract the JWT token (remove 'Bearer ' prefix)
-    const token = authHeader.replace('Bearer ', '');
-    console.log('🔑 Token extracted, length:', token.length);
-
-    // Create admin client to verify the token
-    const supabase = createClient(
+    // Create client with anon key for auth verification
+    const supabaseAuth = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: authHeader },
+        },
+      }
     );
 
-    // Verify the JWT token by passing it directly to getUser
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    // Verify user
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
     if (!user || authError) {
-      console.error('❌ Authentication failed:', authError?.message || 'Unknown error');
+      console.error('❌ Auth failed:', authError);
       return new Response(JSON.stringify({ 
         success: false,
         error: 'Unauthorized',
-        message: 'Invalid or expired authentication token'
+        message: 'Authentication failed'
       }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -56,6 +53,12 @@ serve(async (req) => {
     }
 
     console.log('✅ User authenticated:', user.id);
+
+    // Create admin client for database queries
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
 
     // Parse request body
     const requestBody = await req.json();
