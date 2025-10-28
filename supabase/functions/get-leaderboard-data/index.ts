@@ -14,7 +14,7 @@ serve(async (req) => {
   try {
     console.log('🔍 Starting get-leaderboard-data function');
     
-    // Extract authorization header
+    // Extract JWT token from Authorization header
     const authHeader = req.headers.get('authorization');
     console.log('📋 Authorization header present:', !!authHeader);
     
@@ -30,19 +30,19 @@ serve(async (req) => {
       });
     }
 
-    // Create authenticated Supabase client
-    const supabaseClient = createClient(
+    // Extract the JWT token (remove 'Bearer ' prefix)
+    const token = authHeader.replace('Bearer ', '');
+    console.log('🔑 Token extracted, length:', token.length);
+
+    // Create admin client to verify the token
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    // Verify user authentication
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    // Verify the JWT token by passing it directly to getUser
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
     if (!user || authError) {
       console.error('❌ Authentication failed:', authError?.message || 'Unknown error');
       return new Response(JSON.stringify({ 
@@ -56,12 +56,6 @@ serve(async (req) => {
     }
 
     console.log('✅ User authenticated:', user.id);
-
-    // Create admin client for database queries
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-    );
 
     // Parse request body
     const requestBody = await req.json();
