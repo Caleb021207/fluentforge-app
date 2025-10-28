@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { InteractiveCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, BookOpen, Calendar, MapPin, Star, Clock, User, AlertCircle, MessageSquare, Mic, Volume2, Sparkles } from "lucide-react";
+import { Clock, User, MessageSquare, Mic, Volume2, Sparkles, Star, BookOpen } from "lucide-react";
 import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -183,41 +183,6 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
       {/* Leaderboard Section */}
       <LeaderboardSection />
 
-      {/* Student Overview */}
-      <InteractiveCard>
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <GraduationCap className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">{t("studentProfile")}</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("school")}</p>
-              <p className="font-medium">{profile.school?.name || t("notAssigned")}</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("gradeLevel")}</p>
-              <p className="font-medium">{gradeLevel?.level_name || t("notAssigned")}</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("studentId")}</p>
-              <p className="font-medium">{profile.student_id || t("notAssigned")}</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("graduationYear")}</p>
-              <p className="font-medium">{profile.graduation_year || t("notSet")}</p>
-            </div>
-          </div>
-          
-          {profile.school?.district && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-4">
-              <MapPin className="h-4 w-4" />
-              {profile.school.district}
-            </div>
-          )}
-        </div>
-      </InteractiveCard>
-
       {/* Monthly Usage Limits */}
       <InteractiveCard>
         <div className="p-6">
@@ -268,51 +233,6 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
               </div>
             </div>
           </div>
-        </div>
-      </InteractiveCard>
-
-      {/* Academic Performance & Usage */}
-      <InteractiveCard>
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Star className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">{t("learningActivity")}</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{enrollments.length}</div>
-              <p className="text-sm text-muted-foreground">{t("activeClasses")}</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{totalPracticeSessions}</div>
-              <p className="text-sm text-muted-foreground">{t("practiceSessions")}</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{Math.round(totalVoiceChatMinutes)}</div>
-              <p className="text-sm text-muted-foreground">{t("totalMinutesPracticed") || "Total Minutes Practiced"}</p>
-            </div>
-          </div>
-
-          {grades.length > 0 && (
-            <div className="space-y-3">
-              <h4 className="font-medium">{t("recentGrades")}</h4>
-              <div className="space-y-2">
-                {grades.slice(0, 5).map((grade) => (
-                  <div key={grade.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                    <div>
-                      <p className="font-medium">{grade.assignment?.title}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {grade.assignment?.assignment_type} • {grade.points_earned}/{grade.assignment?.points_possible} {t("points")}
-                      </p>
-                    </div>
-                    <Badge variant={grade.grade_letter === 'A' || grade.grade_letter === 'A+' ? 'default' : 'secondary'}>
-                      {grade.grade_letter || t("pending")}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </InteractiveCard>
 
