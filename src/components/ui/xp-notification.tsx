@@ -25,15 +25,15 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
 
   return (
     <>
-      <ConfettiExplosion trigger={showConfetti} duration={3000} particleCount={50} />
+      <ConfettiExplosion trigger={showConfetti} duration={3000} particleCount={500} />
       <AnimatePresence>
         <motion.div
-          initial={{ opacity: 0, scale: 0.5, y: 50 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.5, y: -50 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
           transition={{ 
             type: "spring",
-            stiffness: 200,
+            stiffness: 260,
             damping: 20,
             duration: 0.6 
           }}
@@ -46,10 +46,11 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
               className="w-40 h-auto"
               animate={{
                 scale: [1, 1.05, 1],
+                rotate: [0, 3, -3, 0],
               }}
               transition={{
                 duration: 0.8,
-                repeat: 2,
+                repeat: 3,
                 ease: "easeInOut"
               }}
             />
