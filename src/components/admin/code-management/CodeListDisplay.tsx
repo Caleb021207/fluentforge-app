@@ -18,9 +18,10 @@ interface CodeListDisplayProps {
   codes: AccessCode[];
   isLoading: boolean;
   onCopyCode: (code: string) => void;
+  onDeleteCode?: (codeId: string) => void;
 }
 
-const CodeListDisplay = ({ codes, isLoading, onCopyCode }: CodeListDisplayProps) => {
+const CodeListDisplay = ({ codes, isLoading, onCopyCode, onDeleteCode }: CodeListDisplayProps) => {
   if (isLoading) {
     return <p>Loading codes...</p>;
   }
@@ -35,7 +36,8 @@ const CodeListDisplay = ({ codes, isLoading, onCopyCode }: CodeListDisplayProps)
         <CodeCard 
           key={code.id} 
           code={code} 
-          onCopyCode={onCopyCode} 
+          onCopyCode={onCopyCode}
+          onDeleteCode={onDeleteCode}
         />
       ))}
     </div>

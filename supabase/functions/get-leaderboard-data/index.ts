@@ -161,28 +161,37 @@ serve(async (req) => {
 
     console.log(`📊 Found ${progressionData?.length || 0} progression entries`);
 
-    // Get profiles separately
+    // Get profiles separately, including role to filter out teachers
     const userIdsInProgression = progressionData?.map(p => p.user_id) || [];
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('id, display_name, avatar_url')
+      .select('id, display_name, avatar_url, role')
       .in('id', userIdsInProgression);
 
     // Create a map of profiles
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
-    // Format response with rank
-    const leaderboard = progressionData?.map((entry, index) => ({
-      rank: index + 1,
-      user_id: entry.user_id,
-      display_name: profileMap.get(entry.user_id)?.display_name || 'Anonymous',
-      avatar_url: profileMap.get(entry.user_id)?.avatar_url,
-      total_xp: entry.total_xp,
-      current_level: entry.current_level,
-      current_streak_days: entry.current_streak_days,
-      lessons_completed: entry.lessons_completed,
-      is_current_user: entry.user_id === user.id,
-    })) || [];
+    // Format response with rank, excluding teachers
+    const leaderboard = progressionData?.map((entry, index) => {
+      const userProfile = profileMap.get(entry.user_id);
+      return {
+        rank: index + 1,
+        user_id: entry.user_id,
+        display_name: userProfile?.display_name || 'Anonymous',
+        avatar_url: userProfile?.avatar_url,
+        total_xp: entry.total_xp,
+        current_level: entry.current_level,
+        current_streak_days: entry.current_streak_days,
+        lessons_completed: entry.lessons_completed,
+        is_current_user: entry.user_id === user.id,
+        role: userProfile?.role,
+      };
+    }).filter(entry => entry.role !== 'teacher') || [];
+    
+    // Recalculate ranks after filtering
+    leaderboard.forEach((entry, index) => {
+      entry.rank = index + 1;
+    });
 
     const userRankIndex = leaderboard.findIndex(e => e.is_current_user);
     const userRank = userRankIndex >= 0 ? userRankIndex + 1 : null;

@@ -8,6 +8,7 @@ import { generateAccessCode, getUserAccessCodes } from "@/utils/accessCodeUtils"
 import { useLocalization } from "@/context/LocalizationContext";
 import CodeGenerationForm from "./code-management/CodeGenerationForm";
 import CodeListDisplay from "./code-management/CodeListDisplay";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AccessCode {
   id: string;
@@ -133,6 +134,31 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
     });
   };
 
+  const handleDeleteCode = async (codeId: string) => {
+    try {
+      const { error } = await supabase
+        .from('access_codes')
+        .delete()
+        .eq('id', codeId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Access code deleted successfully",
+      });
+      
+      loadCodes();
+    } catch (error) {
+      console.error('Error deleting code:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete access code",
+        variant: "destructive"
+      });
+    }
+  };
+
   const availableTypes = getAvailableCodeTypes();
 
   if (availableTypes.length === 0) {
@@ -196,6 +222,7 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
               codes={codes}
               isLoading={isLoading}
               onCopyCode={copyToClipboard}
+              onDeleteCode={handleDeleteCode}
             />
           </div>
         )}

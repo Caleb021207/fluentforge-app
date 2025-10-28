@@ -37,32 +37,6 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
       {/* Leaderboard Section */}
       <LeaderboardSection />
 
-      {/* Teacher Overview */}
-      <InteractiveCard>
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <BookOpen className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">{t("teacherProfile")}</h3>
-          </div>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("school")}</p>
-              <p className="font-medium">{profile.school?.name || t("notAssigned")}</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("role")}</p>
-              <Badge variant="default">{t("teacher")}</Badge>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("district")}</p>
-              <p className="font-medium">{profile.school?.district || t("notAssigned")}</p>
-            </div>
-          </div>
-          </div>
-        </div>
-      </InteractiveCard>
-
       {/* Teaching Overview */}
       <InteractiveCard>
         <div className="p-6">

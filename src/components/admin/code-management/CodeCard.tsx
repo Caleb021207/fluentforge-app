@@ -1,7 +1,18 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Calendar } from "lucide-react";
+import { Copy, Calendar, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface AccessCode {
   id: string;
@@ -18,9 +29,10 @@ interface AccessCode {
 interface CodeCardProps {
   code: AccessCode;
   onCopyCode: (code: string) => void;
+  onDeleteCode?: (codeId: string) => void;
 }
 
-const CodeCard = ({ code, onCopyCode }: CodeCardProps) => {
+const CodeCard = ({ code, onCopyCode, onDeleteCode }: CodeCardProps) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };
@@ -48,9 +60,37 @@ const CodeCard = ({ code, onCopyCode }: CodeCardProps) => {
             <Copy className="h-4 w-4" />
           </Button>
         </div>
-        <Badge variant={code.active ? "default" : "secondary"}>
-          {code.active ? "Active" : "Inactive"}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant={code.active ? "default" : "secondary"}>
+            {code.active ? "Active" : "Inactive"}
+          </Badge>
+          {onDeleteCode && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Access Code</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete the code "{code.code}"? This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => onDeleteCode(code.id)}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+        </div>
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
