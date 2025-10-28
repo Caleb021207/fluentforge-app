@@ -7,7 +7,6 @@ import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetri
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocalization } from "@/context/LocalizationContext";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { LeaderboardSection } from "./LeaderboardSection";
 
@@ -16,7 +15,6 @@ interface StudentProfileProps {
 }
 
 const StudentProfile = ({ profile }: StudentProfileProps) => {
-  const { t } = useLocalization();
   const { usageLimits, premiumVoiceMinutesRemaining } = useUsageLimits();
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
   const [grades, setGrades] = useState<StudentGrade[]>([]);
@@ -121,49 +119,51 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
       {/* Monthly Usage Limits */}
       <InteractiveCard>
         <div className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Clock className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">{t("monthlyUsageLimits") || "Monthly Usage Limits"}</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-muted/50 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <Mic className="h-5 w-5 text-primary" />
-                <h4 className="font-medium">{t("voicePractice") || "Voice Practice"}</h4>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">{t("minutesRemaining") || "Minutes Remaining"}</span>
-                  <span className="text-lg font-bold text-primary">
-                    {usageLimits?.voiceMinutesRemaining || 0} / {usageLimits?.voiceMinutesLimit || 100}
-                  </span>
-                </div>
-                <div className="w-full bg-secondary rounded-full h-2">
-                  <div 
-                    className="bg-primary h-2 rounded-full transition-all" 
-                    style={{ width: `${((usageLimits?.voiceMinutesRemaining || 0) / (usageLimits?.voiceMinutesLimit || 100)) * 100}%` }}
-                  />
-                </div>
-              </div>
+          <div className="mb-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Clock className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">Monthly Usage Limits</h3>
             </div>
-            
-            <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="h-5 w-5 text-primary" />
-                <h4 className="font-medium">{t("premiumVoicePractice") || "Premium Voice Practice"}</h4>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">{t("minutesRemaining") || "Minutes Remaining"}</span>
-                  <span className="text-lg font-bold text-primary">
-                    {premiumVoiceMinutesRemaining} / 15
-                  </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <Mic className="h-5 w-5 text-primary" />
+                  <h4 className="font-medium">Voice Practice</h4>
                 </div>
-                <div className="w-full bg-secondary rounded-full h-2">
-                  <div 
-                    className="bg-primary h-2 rounded-full transition-all" 
-                    style={{ width: `${(premiumVoiceMinutesRemaining / 15) * 100}%` }}
-                  />
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Minutes Remaining</span>
+                    <span className="text-lg font-bold text-primary">
+                      {usageLimits?.voiceMinutesRemaining || 0} / {usageLimits?.voiceMinutesLimit || 100}
+                    </span>
+                  </div>
+                  <div className="w-full bg-secondary rounded-full h-2">
+                    <div 
+                      className="bg-primary h-2 rounded-full transition-all" 
+                      style={{ width: `${((usageLimits?.voiceMinutesRemaining || 0) / (usageLimits?.voiceMinutesLimit || 100)) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <h4 className="font-medium">Premium Voice Practice</h4>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Minutes Remaining</span>
+                    <span className="text-lg font-bold text-primary">
+                      {premiumVoiceMinutesRemaining} / 15
+                    </span>
+                  </div>
+                  <div className="w-full bg-secondary rounded-full h-2">
+                    <div 
+                      className="bg-primary h-2 rounded-full transition-all" 
+                      style={{ width: `${(premiumVoiceMinutesRemaining / 15) * 100}%` }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -176,7 +176,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
         <div className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">{t("currentClassesAndTeachers")}</h3>
+            <h3 className="text-lg font-semibold">Current Classes & Teachers</h3>
           </div>
           {enrollments.length > 0 ? (
             <div className="grid gap-4">
@@ -184,9 +184,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                 <div key={enrollment.id} className="border rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="space-y-2">
-                      <h4 className="font-medium">{enrollment.class_info?.name || t("unnamedClass")}</h4>
+                      <h4 className="font-medium">{enrollment.class_info?.name || "Unnamed Class"}</h4>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{enrollment.class_info?.subject?.name || t("noSubject")}</span>
+                        <span>{enrollment.class_info?.subject?.name || "No Subject"}</span>
                         {enrollment.class_info?.period && (
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
@@ -201,13 +201,13 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                         <div className="flex items-center gap-2 text-sm">
                           <User className="h-3 w-3" />
                           <span className="font-medium">
-                            {t("teacher")}: {(enrollment.class_info as any).teacher.display_name || (enrollment.class_info as any).teacher.email}
+                            Teacher: {(enrollment.class_info as any).teacher.display_name || (enrollment.class_info as any).teacher.email}
                           </span>
                         </div>
                       )}
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">{enrollment.class_info?.class_code || t("noCode")}</Badge>
-                        <Badge variant="secondary">{enrollment.class_info?.academic_year || t("currentYear")}</Badge>
+                        <Badge variant="outline">{enrollment.class_info?.class_code || "No Code"}</Badge>
+                        <Badge variant="secondary">{enrollment.class_info?.academic_year || "Current Year"}</Badge>
                       </div>
                     </div>
                     {enrollment.final_grade && (
@@ -221,10 +221,10 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
             <div className="text-center py-8">
               <div className="space-y-3">
                 <BookOpen className="h-12 w-12 text-muted-foreground mx-auto" />
-                <h3 className="text-lg font-medium">{t("noClassesYet")}</h3>
-                <p className="text-muted-foreground">{t("haventJoinedClasses")}</p>
+                <h3 className="text-lg font-medium">No Classes Yet</h3>
+                <p className="text-muted-foreground">You haven't joined any classes</p>
                 <p className="text-sm text-muted-foreground">
-                  {t("askTeacherForClassCode")}
+                  Ask your teacher for a class code
                 </p>
               </div>
             </div>
