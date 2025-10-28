@@ -59,7 +59,7 @@ const CertNotification: React.FC<CertNotificationProps> = ({ show, certType }) =
               <img
                 src={certCelebration}
                 alt="Celebration"
-                className="w-64 h-auto drop-shadow-2xl"
+                className="w-64 h-auto"
               />
             </motion.div>
             
