@@ -163,7 +163,7 @@ const Practice = () => {
           totalXP={progression?.total_xp || 0}
         />
       )}
-      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 select-none" onContextMenu={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()}>
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
