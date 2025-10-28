@@ -21,19 +21,19 @@ export function createTTSCache() {
   }, CLEANUP_INTERVAL);
   
   return {
-    get: (text: string, language: string): string | undefined => {
-      const key = `${language}:${text}`;
+    get: (text: string, language: string, speechRate: number = 1.0): string | undefined => {
+      const key = `${language}:${speechRate}:${text}`;
       return cache.get(key);
     },
     
-    set: (text: string, language: string, audioBase64: string): void => {
-      const key = `${language}:${text}`;
+    set: (text: string, language: string, audioBase64: string, speechRate: number = 1.0): void => {
+      const key = `${language}:${speechRate}:${text}`;
       cache.set(key, audioBase64);
       expirationTimes.set(key, Date.now() + TTL_DURATION);
     },
     
-    has: (text: string, language: string): boolean => {
-      const key = `${language}:${text}`;
+    has: (text: string, language: string, speechRate: number = 1.0): boolean => {
+      const key = `${language}:${speechRate}:${text}`;
       return cache.has(key);
     },
     

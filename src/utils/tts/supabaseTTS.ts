@@ -23,11 +23,11 @@ export const playTTS = async ({
     return null;
   }
 
-  // Check for existing cached audio for this text
-  const cachedAudio = ttsCache.get(text, language);
+  // Check for existing cached audio for this text with this speech rate
+  const cachedAudio = ttsCache.get(text, language, speechRate);
 
   if (cachedAudio) {
-    console.log("Using cached audio for text:", text.substring(0, 40) + "...");
+    console.log("Using cached audio for text:", text.substring(0, 40) + "... at rate:", speechRate);
     return playAudioFromBase64(cachedAudio, onStart, onEnd, onError);
   }
 
@@ -77,8 +77,8 @@ export const playTTS = async ({
       return null;
     }
 
-    // Cache the audio for future requests
-    ttsCache.set(text, language, data.audioContent);
+    // Cache the audio for future requests with speech rate
+    ttsCache.set(text, language, data.audioContent, speechRate);
 
     // Track usage for analytics
     trackTTSUsage(language, text.length);
@@ -98,8 +98,8 @@ export const playTTS = async ({
 export const preloadTTS = async (text: string, language: string, speechRate = 1.0, voice = 'alloy') => {
   if (!text || text.trim() === "") return;
 
-  if (ttsCache.has(text, language)) {
-    console.log("Audio already preloaded for text:", text.substring(0, 40) + "...");
+  if (ttsCache.has(text, language, speechRate)) {
+    console.log("Audio already preloaded for text:", text.substring(0, 40) + "... at rate:", speechRate);
     return;
   }
 
@@ -121,8 +121,8 @@ export const preloadTTS = async (text: string, language: string, speechRate = 1.
       return;
     }
 
-    // Cache the audio
-    ttsCache.set(text, language, data.audioContent);
+    // Cache the audio with speech rate
+    ttsCache.set(text, language, data.audioContent, speechRate);
     console.log("Successfully preloaded audio for text:", text.substring(0, 40) + "...");
   } catch (err) {
     console.error("Preload TTS error:", err);
