@@ -122,10 +122,12 @@ serve(async (req) => {
 
       if (allClassIds.length > 0) {
         // Get all students enrolled in these classes
-        const { data: classEnrollments } = await supabase
+        const { data: classEnrollments, error: enrollError } = await supabase
           .from('student_enrollments')
           .select('student_id')
           .in('class_id', allClassIds);
+
+        console.log('Class enrollments query result:', { data: classEnrollments, error: enrollError });
 
         userIds = classEnrollments?.map(e => e.student_id) || [];
         
@@ -134,7 +136,7 @@ serve(async (req) => {
           userIds.push(user.id);
         }
 
-        console.log('Class scope - found user IDs:', userIds);
+        console.log('Class scope - found user IDs:', userIds.length, 'users:', userIds);
       } else {
         // If no classes found, just return current user
         userIds = [user.id];
@@ -171,13 +173,18 @@ serve(async (req) => {
     }
 
     console.log(`📊 Found ${progressionData?.length || 0} progression entries`);
+    console.log('Progression data user IDs:', progressionData?.map(p => p.user_id));
 
     // Get public profile data (no PII exposure)
     const userIdsInProgression = progressionData?.map(p => p.user_id) || [];
-    const { data: profiles } = await supabase
+    console.log('Fetching profile_public_data for:', userIdsInProgression.length, 'users');
+    
+    const { data: profiles, error: profileError } = await supabase
       .from('profile_public_data')
       .select('user_id, display_name, avatar_url, role')
       .in('user_id', userIdsInProgression);
+
+    console.log('Profile data fetched:', profiles?.length || 0, 'profiles, error:', profileError);
 
     // Create a map of profiles
     const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
