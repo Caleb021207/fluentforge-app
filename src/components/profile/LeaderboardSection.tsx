@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, InteractiveCard } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Flame, Crown, Medal, Sparkles } from "lucide-react";
+import { Flame, Crown, Medal, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,13 +23,12 @@ interface LeaderboardEntry {
 export const LeaderboardSection = () => {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [type, setType] = useState<'xp' | 'streak'>('xp');
   const [userRank, setUserRank] = useState<number | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     fetchLeaderboard();
-  }, [type]);
+  }, []);
 
   const fetchLeaderboard = async () => {
     try {
@@ -48,7 +46,7 @@ export const LeaderboardSection = () => {
         return;
       }
 
-      console.log('Fetching leaderboard with params:', { type, scope: 'class', limit: 50 });
+      console.log('Fetching leaderboard with params:', { type: 'xp', scope: 'class', limit: 50 });
       console.log('Session token exists:', !!session.access_token, 'Token length:', session.access_token?.length);
       
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
@@ -56,7 +54,7 @@ export const LeaderboardSection = () => {
           Authorization: `Bearer ${session.access_token}`
         },
         body: {
-          type,
+          type: 'xp',
           scope: 'class',
           limit: 50
         }
@@ -116,11 +114,6 @@ export const LeaderboardSection = () => {
   const topThree = leaderboardData.slice(0, 3);
   const restOfLeaderboard = leaderboardData.slice(3);
 
-  const getValueDisplay = (entry: LeaderboardEntry) => {
-    if (type === 'xp') return `${entry.total_xp.toLocaleString()} XP`;
-    return `${entry.current_streak_days} days 🔥`;
-  };
-
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -132,35 +125,23 @@ export const LeaderboardSection = () => {
         </p>
       </div>
 
-      <Tabs value={type} onValueChange={(v: any) => setType(v)} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 bg-background/60 backdrop-blur-sm p-1">
-          <TabsTrigger value="xp" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-palavox-accent data-[state=active]:to-palavox-teal data-[state=active]:text-white transition-all">
-            <Trophy className="w-4 h-4 mr-2" />
-            XP
-          </TabsTrigger>
-          <TabsTrigger value="streak" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white transition-all">
-            <Flame className="w-4 h-4 mr-2" />
-            Streak
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value={type} className="mt-6">
-          <AnimatePresence mode="wait">
-            {userRank && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-              >
-                <Card className="p-4 mb-6 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 border-primary/50 shadow-lg glow-accent">
-                  <p className="text-sm font-medium flex items-center justify-center gap-2">
-                    <Sparkles className="w-4 h-4 text-primary" />
-                    Your Rank: <span className="text-primary text-2xl font-bold">#{userRank}</span>
-                    <Sparkles className="w-4 h-4 text-primary" />
-                  </p>
-                </Card>
-              </motion.div>
-            )}
+      <div className="mt-6">
+        <AnimatePresence mode="wait">
+          {userRank && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <Card className="p-4 mb-6 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 border-primary/50 shadow-lg glow-accent">
+                <p className="text-sm font-medium flex items-center justify-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  Your Rank: <span className="text-primary text-2xl font-bold">#{userRank}</span>
+                  <Sparkles className="w-4 h-4 text-primary" />
+                </p>
+              </Card>
+            </motion.div>
+          )}
 
             {loading ? (
               <Card className="overflow-hidden">
@@ -178,7 +159,7 @@ export const LeaderboardSection = () => {
                 animate={{ opacity: 1, scale: 1 }}
               >
                 <Card className="p-12 text-center">
-                  <Trophy className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+                  <Crown className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
                   <p className="text-lg text-muted-foreground">
                     No data available yet. Be the first to make it on the leaderboard!
                   </p>
@@ -211,12 +192,15 @@ export const LeaderboardSection = () => {
                           <p className="font-bold text-white text-lg mb-1 drop-shadow-lg">
                             {topThree[1]?.display_name}
                           </p>
-                          <p className="text-white/90 text-sm font-semibold">
-                            {getValueDisplay(topThree[1])}
+                          <p className="text-white text-base font-bold mb-2">
+                            {topThree[1]?.total_xp.toLocaleString()} XP
                           </p>
-                          <div className="mt-4 pt-4 border-t border-white/20">
-                            <p className="text-white/70 text-xs">Level {topThree[1]?.current_level}</p>
-                          </div>
+                          {topThree[1]?.current_streak_days > 0 && (
+                            <p className="text-white/90 text-sm flex items-center justify-center gap-1">
+                              <Flame className="w-4 h-4 text-orange-300" />
+                              {topThree[1]?.current_streak_days} day streak
+                            </p>
+                          )}
                         </div>
                       </InteractiveCard>
                     </motion.div>
@@ -246,12 +230,15 @@ export const LeaderboardSection = () => {
                           <p className="font-bold text-white text-xl mb-1 drop-shadow-lg">
                             {topThree[0]?.display_name}
                           </p>
-                          <p className="text-white text-base font-bold">
-                            {getValueDisplay(topThree[0])}
+                          <p className="text-white text-lg font-bold mb-2">
+                            {topThree[0]?.total_xp.toLocaleString()} XP
                           </p>
-                          <div className="mt-4 pt-4 border-t border-white/20">
-                            <p className="text-white/80 text-sm">Level {topThree[0]?.current_level}</p>
-                          </div>
+                          {topThree[0]?.current_streak_days > 0 && (
+                            <p className="text-white text-base flex items-center justify-center gap-1">
+                              <Flame className="w-4 h-4 text-orange-300" />
+                              {topThree[0]?.current_streak_days} day streak
+                            </p>
+                          )}
                         </div>
                       </InteractiveCard>
                     </motion.div>
@@ -273,12 +260,15 @@ export const LeaderboardSection = () => {
                           <p className="font-bold text-white text-lg mb-1 drop-shadow-lg">
                             {topThree[2]?.display_name}
                           </p>
-                          <p className="text-white/90 text-sm font-semibold">
-                            {getValueDisplay(topThree[2])}
+                          <p className="text-white text-base font-bold mb-2">
+                            {topThree[2]?.total_xp.toLocaleString()} XP
                           </p>
-                          <div className="mt-4 pt-4 border-t border-white/20">
-                            <p className="text-white/70 text-xs">Level {topThree[2]?.current_level}</p>
-                          </div>
+                          {topThree[2]?.current_streak_days > 0 && (
+                            <p className="text-white/90 text-sm flex items-center justify-center gap-1">
+                              <Flame className="w-4 h-4 text-orange-300" />
+                              {topThree[2]?.current_streak_days} day streak
+                            </p>
+                          )}
                         </div>
                       </InteractiveCard>
                     </motion.div>
@@ -328,16 +318,18 @@ export const LeaderboardSection = () => {
                               </span>
                             )}
                           </p>
-                          <p className="text-sm text-muted-foreground flex items-center gap-1">
-                            <Sparkles className="w-3 h-3" />
-                            Level {entry.current_level}
+                          <p className="text-sm text-muted-foreground">
+                            {entry.total_xp.toLocaleString()} XP
                           </p>
                         </div>
 
                         <div className="text-right">
-                          <p className={`font-bold ${entry.is_current_user ? 'text-lg text-primary' : ''}`}>
-                            {getValueDisplay(entry)}
-                          </p>
+                          {entry.current_streak_days > 0 && (
+                            <p className={`font-bold flex items-center justify-end gap-1 ${entry.is_current_user ? 'text-lg text-primary' : 'text-orange-500'}`}>
+                              <Flame className="w-4 h-4" />
+                              {entry.current_streak_days}
+                            </p>
+                          )}
                         </div>
                       </motion.div>
                     ))}
@@ -345,9 +337,8 @@ export const LeaderboardSection = () => {
                 </Card>
               </>
             )}
-          </AnimatePresence>
-        </TabsContent>
-      </Tabs>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
