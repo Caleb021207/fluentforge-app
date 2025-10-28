@@ -11,6 +11,18 @@ export const useDynamicTTS = ({ language, speechRate = 1.0 }: UseDynamicTTSProps
   const [isLoading, setIsLoading] = useState(false);
   const [currentText, setCurrentText] = useState<string>("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastSpeechRateRef = useRef<number>(speechRate);
+  
+  // Stop audio when speech rate changes
+  useState(() => {
+    if (lastSpeechRateRef.current !== speechRate && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setIsPlaying(false);
+      setCurrentText("");
+    }
+    lastSpeechRateRef.current = speechRate;
+  });
   
   const playText = async (text: string) => {
     if (!text || text.trim() === '') {

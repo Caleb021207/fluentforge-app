@@ -13,15 +13,15 @@ const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
-    if (show && amount > 10) {
+    if (show && amount >= 50) {
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [show, amount]);
 
-  // Only show the popup for XP > 10
-  if (!show || amount <= 10) return null;
+  // Only show the popup for XP >= 50
+  if (!show || amount < 50) return null;
 
   return (
     <>

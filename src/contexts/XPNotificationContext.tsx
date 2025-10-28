@@ -15,7 +15,7 @@ export const XPNotificationProvider: React.FC<{ children: React.ReactNode }> = (
 
   const triggerXPNotification = useCallback((amount: number) => {
     console.log('🎯 XP Notification triggered:', amount);
-    if (amount > 10) {
+    if (amount >= 50) {
       setLastXPGain(amount);
       setShowXPNotification(true);
       setTimeout(() => {
