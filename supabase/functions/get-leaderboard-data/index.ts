@@ -27,19 +27,19 @@ serve(async (req) => {
       });
     }
 
-    // Create client with anon key for auth verification
-    const supabaseAuth = createClient(
+    // Extract JWT token from Authorization header
+    const token = authHeader.replace('Bearer ', '');
+    console.log('🔑 Token extracted, length:', token.length);
+
+    // Create admin client for auth verification and database queries
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    // Verify user
-    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
+    // Verify the JWT token by passing it directly
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
     if (!user || authError) {
       console.error('❌ Auth failed:', authError);
       return new Response(JSON.stringify({ 
@@ -53,12 +53,6 @@ serve(async (req) => {
     }
 
     console.log('✅ User authenticated:', user.id);
-
-    // Create admin client for database queries
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-    );
 
     // Parse request body
     const requestBody = await req.json();
