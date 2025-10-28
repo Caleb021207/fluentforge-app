@@ -45,6 +45,7 @@ export interface VoiceChatControlsProps {
   analyzeCurrentConversation: () => void;
   practice: string;
   isAnalyzing?: boolean;
+  hasAnalyzed?: boolean;
 }
 
 export interface ConversationStartersProps {

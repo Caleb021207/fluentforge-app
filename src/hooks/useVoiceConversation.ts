@@ -21,6 +21,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const [isLoading, setIsLoading] = useState(false);
   const [gptResponse, setGptResponse] = useState("");
   const [translation, setTranslation] = useState("");
+  const [hasAnalyzedConversation, setHasAnalyzedConversation] = useState(false);
   const sessionIdRef = useRef<string | null>(null);
   const usageTrackingRecordIdRef = useRef<string | null>(null); // Store DB record ID
   const sessionStartedRef = useRef<boolean>(false);
@@ -327,6 +328,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     setApiConversationHistory([]);
     setGptResponse("");
     setTranslation("");
+    setHasAnalyzedConversation(false);
     
     // Reset session for next conversation
     sessionIdRef.current = crypto.randomUUID();
@@ -342,6 +344,14 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   };
 
   const handleAnalyzeConversation = async () => {
+    if (hasAnalyzedConversation) {
+      toast({
+        description: t("canOnlyAnalyzeOncePerSession"),
+        variant: "default"
+      });
+      return;
+    }
+
     if (conversationHistory.length < 4) {
       toast({
         description: t("notEnoughMessagesToAnalyze"),
@@ -377,6 +387,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     });
     
     if (results) {
+      setHasAnalyzedConversation(true);
       toast({
         title: t("conversationAnalysisComplete"),
         description: `${t("grammarAccuracy")}: ${results.grammarAccuracy.toFixed(1)}, ${t("conversationComplexity")}: ${results.conversationComplexity.toFixed(1)}`,
@@ -391,6 +402,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     sendMessage,
     clearConversation,
     handleAnalyzeConversation,
-    sessionIdRef
+    sessionIdRef,
+    hasAnalyzedConversation
   };
 };

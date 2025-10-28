@@ -134,6 +134,8 @@ const practiceTranslations: TranslationRecord = {
   getResponseSuggestions: "जवाफ सुझावहरू प्राप्त गर्नुहोस्",
   analyzeConversation: "कुराकानी विश्लेषण गर्नुहोस्",
   analyzing: "विश्लेषण गर्दै",
+  analysisLimitReached: "विश्लेषण सीमा पुगेको छ",
+  canOnlyAnalyzeOncePerSession: "XP फार्मिङ रोक्न तपाईं प्रति सत्र एक पटक मात्र कुराकानी विश्लेषण गर्न सक्नुहुन्छ। फेरि विश्लेषण गर्न नयाँ अभ्यास सत्र सुरु गर्नुहोस्।",
   
   // Skill names (standardized)
   reading: "पढाइ",

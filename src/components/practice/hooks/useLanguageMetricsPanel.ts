@@ -8,6 +8,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 export const useLanguageMetricsPanel = (messages: Message[]) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [metrics, setMetrics] = useState<LanguageMetrics | null>(null);
+  const [hasAnalyzed, setHasAnalyzed] = useState(false);
   const { analyzeConversation, isAnalyzing } = useLanguageAnalysis();
   const { toast } = useToast();
   const { t } = useLocalization();
@@ -17,6 +18,15 @@ export const useLanguageMetricsPanel = (messages: Message[]) => {
   };
 
   const analyzeCurrentConversation = async () => {
+    if (hasAnalyzed) {
+      toast({
+        title: t("analysisLimitReached"),
+        description: t("canOnlyAnalyzeOncePerSession"),
+        variant: "default",
+      });
+      return;
+    }
+
     if (messages.length < 4) {
       const definitionsText = `
 ${t("needMoreMessagesToAnalyze")}
@@ -42,6 +52,7 @@ ${t("whatIsComplexity")} ${t("complexityDefinition")}
       
       if (result) {
         setMetrics(result);
+        setHasAnalyzed(true);
         
         // If panel is not expanded, expand it to show the results
         if (!isExpanded) {
@@ -63,6 +74,7 @@ ${t("whatIsComplexity")} ${t("complexityDefinition")}
     togglePanel,
     metrics,
     isAnalyzing,
-    analyzeCurrentConversation
+    analyzeCurrentConversation,
+    hasAnalyzed
   };
 };

@@ -134,6 +134,8 @@ const practiceTranslations: TranslationRecord = {
   getResponseSuggestions: "获取回复建议",
   analyzeConversation: "分析对话",
   analyzing: "分析中",
+  analysisLimitReached: "已达分析限制",
+  canOnlyAnalyzeOncePerSession: "每次会话只能分析一次对话，以防止刷经验值。开始新的练习会话以再次分析。",
   
   // Skill names (standardized)
   reading: "阅读",

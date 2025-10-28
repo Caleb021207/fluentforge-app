@@ -42,25 +42,54 @@ serve(async (req) => {
     // Extract only user messages for analysis
     const userMessages = messages.filter(msg => msg.role === "user").map(msg => msg.content);
 
-    // Format prompt for OpenAI
+    // Format prompt for OpenAI using STAMP/ACTFL framework criteria
     const analysisResponse = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content: `You are an expert language assessment system. Analyze the following messages from a language learner and provide an objective assessment of their grammar accuracy (0-100) and conversation complexity (0-100).
-            - Grammar accuracy: correctness of grammar, syntax, verb conjugations, etc.
-            - Conversation complexity: complexity of vocabulary, sentence structure, and concepts expressed.
-            DO NOT include any explanations, just return a JSON object with these scores and nothing else.
-            Example response format:
-            {"grammarAccuracy": 85, "conversationComplexity": 70}`,
+          content: `You are an expert language assessment system trained in STAMP (STAndards-based Measurement of Proficiency) and ACTFL (American Council on the Teaching of Foreign Languages) frameworks. Analyze the following messages from a language learner and provide an objective assessment of their grammar accuracy (0-100) and conversation complexity (0-100).
+
+ASSESSMENT CRITERIA:
+
+Grammar Accuracy (0-100):
+- 90-100: Near-native control; rare errors that don't impede communication
+- 80-89: Strong grammatical control with occasional errors in complex structures
+- 70-79: Good control of basic structures; some errors in advanced forms
+- 60-69: Adequate control of present tense and simple structures; frequent errors in complex tenses
+- 50-59: Basic grammatical control; errors are frequent but meaning is usually clear
+- 40-49: Limited control; errors regularly impede communication
+- Below 40: Minimal control; communication heavily impeded by errors
+
+Conversation Complexity (0-100) - Based on ACTFL/STAMP Proficiency Levels:
+- 90-100 (Superior/Distinguished): Abstract concepts, hypotheticals, nuanced arguments, extended discourse
+- 80-89 (Advanced High): Complex narration, explanation of abstract topics, persuasion with supporting detail
+- 70-79 (Advanced Mid): Detailed descriptions, past/future narration, expressing opinions with reasons
+- 60-69 (Advanced Low): Connected discourse on familiar topics, basic narration in multiple time frames
+- 50-59 (Intermediate High): Sentence-level discourse, some paragraph creation, comfortably handles routine situations
+- 40-49 (Intermediate Mid): Strings of sentences, can narrate and describe in present tense
+- 30-39 (Intermediate Low): Simple sentences, questions and statements about familiar topics
+- 20-29 (Novice High): Memorized phrases and simple combinations, limited vocabulary
+- Below 20 (Novice Mid/Low): Single words, lists, memorized phrases only
+
+Evaluate based on:
+- Vocabulary range and sophistication
+- Sentence structure complexity (simple vs compound vs complex sentences)
+- Time frame usage (present only vs multiple tenses)
+- Discourse level (word/phrase, sentence, paragraph, extended)
+- Topic handling (concrete vs abstract)
+- Communication strategies (circumlocution, self-correction, elaboration)
+
+DO NOT include any explanations, just return a JSON object with these scores and nothing else.
+Example response format:
+{"grammarAccuracy": 85, "conversationComplexity": 70}`,
         },
         {
           role: "user",
           content: "Language learner messages:\n" + userMessages.join("\n")
         },
       ],
-      max_tokens: 100,
+      max_tokens: 150,
       temperature: 0.3,
     });
 

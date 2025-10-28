@@ -137,6 +137,8 @@ const practiceTranslations: TranslationRecord = {
   getResponseSuggestions: "Get response suggestions",
   analyzeConversation: "Analyze Conversation",
   analyzing: "Analyzing",
+  analysisLimitReached: "Analysis Limit Reached",
+  canOnlyAnalyzeOncePerSession: "You can only analyze the conversation once per session to prevent XP farming. Start a new practice session to analyze again.",
   notEnoughMessages: "Not Enough Messages",
   needMoreMessagesToAnalyze: "You need at least 4 messages (2 exchanges) to analyze the conversation.",
   whatAreMessages: "What are messages?",

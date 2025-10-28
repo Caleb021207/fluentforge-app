@@ -42,7 +42,8 @@ export default function ChatContainer({
     togglePanel, 
     metrics, 
     isAnalyzing, 
-    analyzeCurrentConversation 
+    analyzeCurrentConversation,
+    hasAnalyzed
   } = useLanguageMetricsPanel(messages);
   
   // Auto-scroll disabled for better UX during rapid conversations
@@ -90,6 +91,7 @@ export default function ChatContainer({
         isExpanded={isExpanded}
         onToggle={togglePanel}
         onAnalyze={analyzeCurrentConversation}
+        hasAnalyzed={hasAnalyzed}
       />
     </div>
   );

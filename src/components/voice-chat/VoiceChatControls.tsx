@@ -13,7 +13,8 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
   clearConversation,
   analyzeCurrentConversation,
   practice,
-  isAnalyzing
+  isAnalyzing,
+  hasAnalyzed
 }) => {
   const { t } = useLocalization();
 
@@ -32,7 +33,7 @@ const VoiceChatControls: React.FC<VoiceChatControlsProps> = ({
       {conversationHistory.length >= 4 && (
         <Button
           onClick={analyzeCurrentConversation}
-          disabled={isAnalyzing}
+          disabled={isAnalyzing || hasAnalyzed}
           variant="outline"
           size="sm"
           className="px-8 py-4 text-lg md:text-xl font-semibold"

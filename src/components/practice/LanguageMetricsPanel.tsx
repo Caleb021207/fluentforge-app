@@ -10,6 +10,7 @@ interface LanguageMetricsPanelProps {
   isExpanded: boolean;
   onToggle: () => void;
   onAnalyze: () => void;
+  hasAnalyzed?: boolean;
 }
 
 const LanguageMetricsPanel: React.FC<LanguageMetricsPanelProps> = ({
@@ -17,7 +18,8 @@ const LanguageMetricsPanel: React.FC<LanguageMetricsPanelProps> = ({
   isLoading,
   isExpanded,
   onToggle,
-  onAnalyze
+  onAnalyze,
+  hasAnalyzed
 }) => {
   return (
     <Card>
@@ -29,7 +31,7 @@ const LanguageMetricsPanel: React.FC<LanguageMetricsPanelProps> = ({
           </CardTitle>
           <Button
             onClick={onAnalyze}
-            disabled={isLoading}
+            disabled={isLoading || hasAnalyzed}
             size="sm"
             variant="outline"
           >

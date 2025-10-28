@@ -130,7 +130,7 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
   
   // Initialize hooks
   const { conversationHistory, apiConversationHistory, isLoading, sendMessage, 
-          clearConversation, handleAnalyzeConversation, sessionIdRef } = useVoiceConversation(conversationLevel, correctGrammar);
+          clearConversation, handleAnalyzeConversation, sessionIdRef, hasAnalyzedConversation } = useVoiceConversation(conversationLevel, correctGrammar);
   
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   const { showXPNotification, lastXPGain } = useXPNotification();
@@ -275,7 +275,8 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
             clearConversation={clearConversation}
             analyzeCurrentConversation={analyzeCurrentConversation}
             practice={practice}
-              isAnalyzing={isAnalyzing}
+            isAnalyzing={isAnalyzing}
+            hasAnalyzed={hasAnalyzedConversation}
             />
           </InteractiveCard>
         </motion.div>

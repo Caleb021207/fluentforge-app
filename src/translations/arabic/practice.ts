@@ -134,6 +134,8 @@ const practiceTranslations: TranslationRecord = {
   getResponseSuggestions: "احصل على اقتراحات الرد",
   analyzeConversation: "تحليل المحادثة",
   analyzing: "جاري التحليل",
+  analysisLimitReached: "تم الوصول إلى حد التحليل",
+  canOnlyAnalyzeOncePerSession: "يمكنك تحليل المحادثة مرة واحدة فقط في كل جلسة لمنع تكديس النقاط. ابدأ جلسة تدريب جديدة للتحليل مرة أخرى.",
   
   // Skill names (standardized)
   reading: "القراءة",
