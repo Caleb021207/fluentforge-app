@@ -28,6 +28,39 @@ export const LeaderboardSection = () => {
 
   useEffect(() => {
     fetchLeaderboard();
+
+    // Set up real-time subscription for enrollment and progression changes
+    const channel = supabase
+      .channel('leaderboard_updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'student_enrollments'
+        },
+        (payload) => {
+          console.log('Enrollment changed, refreshing leaderboard:', payload);
+          fetchLeaderboard();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'user_progression'
+        },
+        (payload) => {
+          console.log('User progression updated, refreshing leaderboard:', payload);
+          fetchLeaderboard();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchLeaderboard = async () => {
