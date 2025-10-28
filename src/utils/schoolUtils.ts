@@ -9,7 +9,7 @@ export const getStudentEnrollments = async (studentId: string): Promise<StudentE
       .from('student_enrollments')
       .select(`
         *,
-        class_info:classes (
+        class_info:classes!inner (
           id,
           name,
           class_code,
@@ -30,7 +30,8 @@ export const getStudentEnrollments = async (studentId: string): Promise<StudentE
         )
       `)
       .eq('student_id', studentId)
-      .eq('status', 'active');
+      .eq('status', 'active')
+      .not('class_info', 'is', null);
 
     if (error) {
       console.error('Error fetching enrollments:', error);
@@ -39,8 +40,11 @@ export const getStudentEnrollments = async (studentId: string): Promise<StudentE
 
     console.log('Enrollment data retrieved:', data?.length || 0, 'enrollments');
     
+    // Filter out any enrollments where class_info is null (shouldn't happen with inner join but being safe)
+    const validEnrollments = (data || []).filter(item => item.class_info !== null);
+    
     // Cast the data to match our interface, ensuring status is properly typed
-    return (data || []).map(item => ({
+    return validEnrollments.map(item => ({
       ...item,
       status: item.status as 'active' | 'dropped' | 'completed'
     })) as StudentEnrollment[];

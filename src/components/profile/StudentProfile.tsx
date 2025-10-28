@@ -144,7 +144,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           </div>
           {enrollments.length > 0 ? (
             <div className="grid gap-4">
-              {enrollments.slice(0, 1).map((enrollment) => (
+              {enrollments.map((enrollment) => (
                 <div key={enrollment.id} className="border rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="space-y-2">
