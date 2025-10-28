@@ -1,15 +1,12 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { InteractiveCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Clock, User, MessageSquare, Mic, Volume2, Sparkles, Star, BookOpen } from "lucide-react";
+import { Clock, User, Mic, Sparkles, BookOpen } from "lucide-react";
 import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
-import TestScoreCard from "./TestScoreCard";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { LeaderboardSection } from "./LeaderboardSection";
@@ -118,68 +115,6 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Quick Practice Links - Top Priority for Easy Access */}
-      <InteractiveCard className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Star className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">{t("startPracticing")}</h3>
-          </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            {t("choosePracticeMode")}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link to="/practice" className="block">
-              <Button 
-                variant="outline" 
-                className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
-              >
-                <MessageSquare className="h-8 w-8 text-primary flex-shrink-0" />
-                <div className="text-center w-full px-2">
-                  <div className="font-semibold whitespace-normal break-words">{t("textPractice")}</div>
-                  <div className="text-xs text-muted-foreground mt-1 whitespace-normal break-words">
-                    {t("typeAndChat")}
-                  </div>
-                </div>
-              </Button>
-            </Link>
-            
-            <Link to="/voice-chat" className="block">
-              <Button 
-                variant="outline" 
-                className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
-              >
-                <Mic className="h-8 w-8 text-primary flex-shrink-0" />
-                <div className="text-center w-full px-2">
-                  <div className="font-semibold whitespace-normal break-words">{t("voicePractice")}</div>
-                  <div className="text-xs text-muted-foreground mt-1 whitespace-normal break-words">
-                    {t("speakAndListen")}
-                  </div>
-                </div>
-              </Button>
-            </Link>
-            
-            <Link to="/pronunciation-practice" className="block">
-              <Button 
-                variant="outline" 
-                className="w-full h-auto py-6 flex flex-col items-center gap-3 hover:bg-primary/10 hover:border-primary transition-all"
-              >
-                <Volume2 className="h-8 w-8 text-primary flex-shrink-0" />
-                <div className="text-center w-full px-2">
-                  <div className="font-semibold whitespace-normal break-words">{t("pronunciationPractice")}</div>
-                  <div className="text-xs text-muted-foreground mt-1 whitespace-normal break-words">
-                    {t("improvePronunciation")}
-                  </div>
-                </div>
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </InteractiveCard>
-
-      {/* Test Scores - Second Priority */}
-      <TestScoreCard testScore={latestTestScore} />
-
       {/* Leaderboard Section */}
       <LeaderboardSection />
 
@@ -245,7 +180,7 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           </div>
           {enrollments.length > 0 ? (
             <div className="grid gap-4">
-              {enrollments.map((enrollment) => (
+              {enrollments.slice(0, 1).map((enrollment) => (
                 <div key={enrollment.id} className="border rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="space-y-2">
