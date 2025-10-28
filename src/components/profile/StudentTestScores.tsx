@@ -53,35 +53,72 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
       try {
         console.log('Fetching comprehensive student data for teacher:', teacherId);
 
-        // Get teacher's classes with all enrolled students
-        const { data: teacherClasses, error: classError } = await supabase
+        // Get teacher's classes
+        const { data: rawClasses, error: classError } = await supabase
           .from('classes')
-          .select(`
-            id,
-            name,
-            class_code,
-            academic_year,
-            student_enrollments!inner (
-              student_id,
-              profiles:student_id (
-                id,
-                display_name,
-                email
-              )
-            )
-          `)
+          .select('id, name, class_code, academic_year')
           .eq('teacher_id', teacherId);
 
-        console.log('Teacher classes:', teacherClasses);
+        console.log('Teacher classes:', rawClasses);
         console.log('Class fetch error:', classError);
 
-        if (!teacherClasses || teacherClasses.length === 0) {
+        if (!rawClasses || rawClasses.length === 0) {
           console.log('No classes assigned to this teacher');
           setStudentMetrics([]);
           setIsLoading(false);
           setDebugInfo({ teacherClasses: 0, totalEnrollments: 0 });
           return;
         }
+
+        // Get all student enrollments for these classes
+        const classIds = rawClasses.map(c => c.id);
+        const { data: enrollments, error: enrollError } = await supabase
+          .from('student_enrollments')
+          .select('student_id, class_id, status')
+          .in('class_id', classIds)
+          .eq('status', 'active');
+
+        console.log('Student enrollments:', enrollments);
+        console.log('Enrollment fetch error:', enrollError);
+
+        if (!enrollments || enrollments.length === 0) {
+          console.log('No students enrolled in classes');
+          setStudentMetrics([]);
+          setIsLoading(false);
+          setDebugInfo({ teacherClasses: rawClasses.length, totalEnrollments: 0 });
+          return;
+        }
+
+        // Get student profiles
+        const studentIds = [...new Set(enrollments.map(e => e.student_id))];
+        const { data: profiles, error: profileError } = await supabase
+          .from('profiles')
+          .select('id, display_name, email')
+          .in('id', studentIds);
+
+        console.log('Student profiles:', profiles);
+        console.log('Profile fetch error:', profileError);
+
+        // Create a map for easy lookup
+        const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+        const enrollmentsByClass = new Map();
+        
+        enrollments.forEach(e => {
+          if (!enrollmentsByClass.has(e.class_id)) {
+            enrollmentsByClass.set(e.class_id, []);
+          }
+          enrollmentsByClass.get(e.class_id).push({
+            student_id: e.student_id,
+            profiles: profileMap.get(e.student_id)
+          });
+        });
+
+        // Attach enrollments to classes with proper typing
+        const teacherClasses = rawClasses.map(cls => ({
+          ...cls,
+          student_enrollments: enrollmentsByClass.get(cls.id) || []
+        }));
+
 
         setDebugInfo({
           teacherClasses: teacherClasses.length,
