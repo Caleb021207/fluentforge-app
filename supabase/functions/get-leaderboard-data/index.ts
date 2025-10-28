@@ -31,16 +31,16 @@ serve(async (req) => {
     const token = authHeader.replace('Bearer ', '');
     console.log('🔑 Token extracted, length:', token.length);
 
-    // Create admin client for auth verification and database queries
-    const supabase = createClient(
+    // Create admin client ONLY for auth verification
+    const adminClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
     // Verify the JWT token by passing it directly
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user }, error: authError } = await adminClient.auth.getUser(token);
     
-    if (!user || authError) {
+    if (authError || !user) {
       console.error('❌ Auth failed:', authError);
       return new Response(JSON.stringify({ 
         success: false,
@@ -51,6 +51,17 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Create user client with JWT to respect RLS and prevent PII exposure
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: authHeader },
+        },
+      }
+    );
 
     console.log('✅ User authenticated:', user.id);
 
@@ -76,13 +87,13 @@ serve(async (req) => {
 
     // Apply scope filtering
     if (scope === 'school' && profile?.school_id) {
-      // Filter by school - need to join through profiles
+      // Filter by school - use public data to avoid PII exposure
       const { data: schoolProfiles } = await supabase
-        .from('profiles')
-        .select('id')
+        .from('profile_public_data')
+        .select('user_id')
         .eq('school_id', profile.school_id);
 
-      userIds = schoolProfiles?.map(p => p.id) || [];
+      userIds = schoolProfiles?.map(p => p.user_id) || [];
       console.log('School scope - found user IDs:', userIds);
     } else if (scope === 'class') {
       // Get classes where user is the teacher
@@ -161,15 +172,15 @@ serve(async (req) => {
 
     console.log(`📊 Found ${progressionData?.length || 0} progression entries`);
 
-    // Get profiles separately, including role to filter out teachers
+    // Get public profile data (no PII exposure)
     const userIdsInProgression = progressionData?.map(p => p.user_id) || [];
     const { data: profiles } = await supabase
-      .from('profiles')
-      .select('id, display_name, avatar_url, role')
-      .in('id', userIdsInProgression);
+      .from('profile_public_data')
+      .select('user_id, display_name, avatar_url, role')
+      .in('user_id', userIdsInProgression);
 
     // Create a map of profiles
-    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
 
     // Format response with rank, excluding teachers
     const leaderboard = progressionData?.map((entry, index) => {
