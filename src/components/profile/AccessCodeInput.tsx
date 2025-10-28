@@ -46,7 +46,11 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
         setCode("");
         
         console.log('Access code processed successfully, triggering profile update...');
-        onCodeProcessed();
+        
+        // Force a full page reload to ensure all data refreshes
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         toast({
           title: t("error"),

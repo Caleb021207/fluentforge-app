@@ -63,7 +63,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
             academic_year,
             student_enrollments!inner (
               student_id,
-              profiles!inner (
+              profiles:student_id (
                 id,
                 display_name,
                 email
@@ -121,8 +121,8 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
 
             allStudentMetrics.push({
               student_id: studentId,
-              student_name: enrollment.profiles.display_name || enrollment.profiles.email || 'Unknown',
-              student_email: enrollment.profiles.email || '',
+              student_name: (enrollment as any).profiles?.display_name || (enrollment as any).profiles?.email || 'Unknown',
+              student_email: (enrollment as any).profiles?.email || '',
               class_id: classData.id,
               class_name: classData.name,
               overall_score: latestAnalysis?.overall_score || null,
@@ -202,7 +202,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
             academic_year,
             student_enrollments!inner (
               student_id,
-              profiles!inner (
+              profiles:student_id (
                 id,
                 display_name,
                 email
@@ -242,8 +242,8 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
 
               allStudentMetrics.push({
                 student_id: studentId,
-                student_name: enrollment.profiles.display_name || enrollment.profiles.email || 'Unknown',
-                student_email: enrollment.profiles.email || '',
+                student_name: (enrollment as any).profiles?.display_name || (enrollment as any).profiles?.email || 'Unknown',
+                student_email: (enrollment as any).profiles?.email || '',
                 class_id: classData.id,
                 class_name: classData.name,
                 overall_score: latestAnalysis?.overall_score || null,
