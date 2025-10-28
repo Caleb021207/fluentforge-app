@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { playTTS } from "@/utils/tts";
 
 interface UseDynamicTTSProps {
@@ -11,18 +11,16 @@ export const useDynamicTTS = ({ language, speechRate = 1.0 }: UseDynamicTTSProps
   const [isLoading, setIsLoading] = useState(false);
   const [currentText, setCurrentText] = useState<string>("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const lastSpeechRateRef = useRef<number>(speechRate);
   
   // Stop audio when speech rate changes
-  useState(() => {
-    if (lastSpeechRateRef.current !== speechRate && audioRef.current) {
+  useEffect(() => {
+    if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
       setIsPlaying(false);
       setCurrentText("");
     }
-    lastSpeechRateRef.current = speechRate;
-  });
+  }, [speechRate]);
   
   const playText = async (text: string) => {
     if (!text || text.trim() === '') {
