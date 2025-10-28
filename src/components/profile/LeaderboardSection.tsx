@@ -51,6 +51,9 @@ export const LeaderboardSection = () => {
       console.log('Fetching leaderboard with params:', { type, scope: 'class', limit: 50 });
       
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        },
         body: {
           type,
           scope: 'class',
