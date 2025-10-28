@@ -137,6 +137,14 @@ const practiceTranslations: TranslationRecord = {
   getResponseSuggestions: "Get response suggestions",
   analyzeConversation: "Analyze Conversation",
   analyzing: "Analyzing",
+  notEnoughMessages: "Not Enough Messages",
+  needMoreMessagesToAnalyze: "You need at least 4 messages (2 exchanges) to analyze the conversation.",
+  whatAreMessages: "What are messages?",
+  messagesDefinition: "Each message is one exchange in the conversation (your message and the AI's response count as 2 messages).",
+  whatIsGrammarAccuracy: "What is grammar accuracy?",
+  grammarAccuracyDefinition: "A score (0-100%) measuring how correctly you use grammar, verb tenses, and sentence structure.",
+  whatIsComplexity: "What is conversation complexity?",
+  complexityDefinition: "A score (0-100%) measuring the sophistication of your vocabulary and sentence patterns.",
   
   // Skill names (standardized)
   reading: "Reading",

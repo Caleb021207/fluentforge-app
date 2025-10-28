@@ -11,18 +11,21 @@ interface PhraseDisplayProps {
   phrase: string;
   translation: string;
   topic?: string;
+  speechRate?: number;
 }
 
 const PhraseDisplay: React.FC<PhraseDisplayProps> = ({ 
   phrase, 
   translation, 
-  topic 
+  topic,
+  speechRate = 1.0
 }) => {
   const { t, currentLanguage } = useLocalization();
   const targetLanguage = getTargetLanguage(currentLanguage);
   
   const tts = useDynamicTTS({
-    language: targetLanguage
+    language: targetLanguage,
+    speechRate
   });
 
   const handlePlayPhrase = () => {
@@ -60,7 +63,7 @@ const PhraseDisplay: React.FC<PhraseDisplayProps> = ({
           </Button>
         </div>
         
-        <WordByWordTTS phrase={phrase} />
+        <WordByWordTTS phrase={phrase} speechRate={speechRate} />
       </div>
     </div>
   );

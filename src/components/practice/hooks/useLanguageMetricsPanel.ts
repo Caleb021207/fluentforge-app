@@ -18,10 +18,21 @@ export const useLanguageMetricsPanel = (messages: Message[]) => {
 
   const analyzeCurrentConversation = async () => {
     if (messages.length < 4) {
+      const definitionsText = `
+${t("needMoreMessagesToAnalyze")}
+
+${t("whatAreMessages")} ${t("messagesDefinition")}
+
+${t("whatIsGrammarAccuracy")} ${t("grammarAccuracyDefinition")}
+
+${t("whatIsComplexity")} ${t("complexityDefinition")}
+      `.trim();
+      
       toast({
         title: t("notEnoughMessages"),
-        description: t("needMoreMessagesToAnalyze"),
-        variant: "default"
+        description: definitionsText,
+        variant: "default",
+        duration: 10000
       });
       return;
     }

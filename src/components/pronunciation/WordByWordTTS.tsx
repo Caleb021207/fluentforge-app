@@ -8,15 +8,17 @@ import { getTargetLanguage } from "@/utils/languageConstants";
 
 interface WordByWordTTSProps {
   phrase: string;
+  speechRate?: number;
 }
 
-const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase }) => {
+const WordByWordTTS: React.FC<WordByWordTTSProps> = ({ phrase, speechRate = 1.0 }) => {
   const { t, currentLanguage } = useLocalization();
   const targetLanguage = getTargetLanguage(currentLanguage);
   const words = phrase.split(/\s+/);
   
   const tts = useDynamicTTS({
-    language: targetLanguage
+    language: targetLanguage,
+    speechRate
   });
   
   const handleWordClick = (word: string) => {

@@ -9,6 +9,8 @@ import PronunciationInstructions from "./PronunciationInstructions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, ChevronLeft, Volume2 } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 import { usePronunciationExercise } from "./hooks/usePronunciationExercise";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
@@ -19,6 +21,7 @@ import { motion } from "framer-motion";
 const PronunciationPracticeContainer = () => {
   const { isLoading: authLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
+  const [speechRate, setSpeechRate] = React.useState(1.0);
   const {
     complexity,
     setComplexity,
@@ -191,11 +194,31 @@ const PronunciationPracticeContainer = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* Speech Rate Slider */}
+            <div className="space-y-2 bg-muted/30 p-4 rounded-lg">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="speech-rate" className="text-sm font-medium">
+                  {t("speechRate")}
+                </Label>
+                <span className="text-sm text-muted-foreground">{speechRate.toFixed(1)}x</span>
+              </div>
+              <Slider
+                id="speech-rate"
+                min={0.5}
+                max={1.5}
+                step={0.1}
+                value={[speechRate]}
+                onValueChange={(value) => setSpeechRate(value[0])}
+                className="w-full"
+              />
+            </div>
+
             {currentExercise && (
               <PhraseDisplay 
                 phrase={currentExercise.phrase}
                 translation={currentExercise.translation}
                 topic={currentExercise.topic}
+                speechRate={speechRate}
               />
             )}
 

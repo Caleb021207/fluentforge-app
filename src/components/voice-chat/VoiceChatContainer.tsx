@@ -6,6 +6,8 @@ import { useLocalization } from "@/context/LocalizationContext";
 import ChatMessage from "@/components/practice/ChatMessage";
 import { VoiceChatContainerProps } from "@/types/voiceChat";
 import { TranslationType } from "@/types/chat";
+import { Button } from "@/components/ui/button";
+import { Volume2 } from "lucide-react";
 const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
   messages,
   isLoading,
@@ -34,9 +36,47 @@ const VoiceChatContainer: React.FC<VoiceChatContainerProps> = ({
           // Filter out system messages or convert them to assistant messages
           if (message.role === "system") {
             // Skip system messages or convert them to assistant messages
-            return <ChatMessage key={index} role="assistant" content={message.content} translation={message.translation as TranslationType} onPlayAudio={onPlayAudio} />;
+            return (
+              <div key={index} className="relative group">
+                <ChatMessage 
+                  role="assistant" 
+                  content={message.content} 
+                  translation={message.translation as TranslationType} 
+                  onPlayAudio={onPlayAudio} 
+                />
+                {onPlayAudio && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => onPlayAudio(message.content)}
+                  >
+                    <Volume2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            );
           }
-          return <ChatMessage key={index} role={message.role as "user" | "assistant"} content={message.content} translation={message.translation as TranslationType} onPlayAudio={onPlayAudio} />;
+          return (
+            <div key={index} className="relative group">
+              <ChatMessage 
+                role={message.role as "user" | "assistant"} 
+                content={message.content} 
+                translation={message.translation as TranslationType} 
+                onPlayAudio={onPlayAudio} 
+              />
+              {message.role === "assistant" && onPlayAudio && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => onPlayAudio(message.content)}
+                >
+                  <Volume2 className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          );
         })}
             
             {isLoading && <div className="flex justify-center my-6">
