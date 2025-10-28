@@ -49,6 +49,7 @@ export const LeaderboardSection = () => {
       }
 
       console.log('Fetching leaderboard with params:', { type, scope: 'class', limit: 50 });
+      console.log('Session token exists:', !!session.access_token, 'Token length:', session.access_token?.length);
       
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
         headers: {

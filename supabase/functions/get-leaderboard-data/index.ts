@@ -14,23 +14,41 @@ serve(async (req) => {
   try {
     console.log('🔍 Starting get-leaderboard-data function');
     
-    const supabase = createClient(
+    // Extract authorization header
+    const authHeader = req.headers.get('authorization');
+    console.log('📋 Authorization header present:', !!authHeader);
+    
+    if (!authHeader) {
+      console.error('❌ No authorization header provided');
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: 'Unauthorized',
+        message: 'No authorization header provided'
+      }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Create authenticated Supabase client
+    const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
         global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
+          headers: { Authorization: authHeader },
         },
       }
     );
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Verify user authentication
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     if (!user || authError) {
-      console.error('❌ Authentication failed:', authError);
+      console.error('❌ Authentication failed:', authError?.message || 'Unknown error');
       return new Response(JSON.stringify({ 
         success: false,
         error: 'Unauthorized',
-        message: 'You must be logged in to view the leaderboard'
+        message: 'Invalid or expired authentication token'
       }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -38,6 +56,12 @@ serve(async (req) => {
     }
 
     console.log('✅ User authenticated:', user.id);
+
+    // Create admin client for database queries
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
 
     // Parse request body
     const requestBody = await req.json();
