@@ -168,42 +168,46 @@ export const LeaderboardSection = () => {
             ) : (
               <>
                 {/* Top 3 Podium */}
-                {topThree.length >= 3 && (
+                {topThree.length > 0 && (
                   <motion.div
                     variants={staggerList}
                     initial="hidden"
                     animate="visible"
                     className="grid grid-cols-3 gap-4 mb-8"
                   >
-                    {/* 2nd Place */}
-                    <motion.div variants={slideInUp} className="pt-12">
-                      <InteractiveCard className={`p-6 text-center bg-gradient-to-br ${getRankGradient(2)} relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm" />
-                        <div className="relative z-10">
-                          <div className="flex justify-center mb-3">
-                            {getRankIcon(2)}
-                          </div>
-                          <Avatar className="w-16 h-16 mx-auto mb-3 ring-4 ring-white/50">
-                            <AvatarImage src={topThree[1]?.avatar_url} />
-                            <AvatarFallback className="bg-white text-gray-700 font-bold">
-                              {topThree[1]?.display_name?.charAt(0)?.toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <p className="font-bold text-white text-lg mb-1 drop-shadow-lg">
-                            {topThree[1]?.display_name}
-                          </p>
-                          <p className="text-white text-base font-bold mb-2">
-                            {topThree[1]?.total_xp.toLocaleString()} XP
-                          </p>
-                          {topThree[1]?.current_streak_days > 0 && (
-                            <p className="text-white/90 text-sm flex items-center justify-center gap-1">
-                              <Flame className="w-4 h-4 text-orange-300" />
-                              {topThree[1]?.current_streak_days} day streak
+                    {/* 2nd Place (or empty) */}
+                    {topThree.length >= 2 ? (
+                      <motion.div variants={slideInUp} className="pt-12">
+                        <InteractiveCard className={`p-6 text-center bg-gradient-to-br ${getRankGradient(2)} relative overflow-hidden`}>
+                          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm" />
+                          <div className="relative z-10">
+                            <div className="flex justify-center mb-3">
+                              {getRankIcon(2)}
+                            </div>
+                            <Avatar className="w-16 h-16 mx-auto mb-3 ring-4 ring-white/50">
+                              <AvatarImage src={topThree[1]?.avatar_url} />
+                              <AvatarFallback className="bg-white text-gray-700 font-bold">
+                                {topThree[1]?.display_name?.charAt(0)?.toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <p className="font-bold text-white text-lg mb-1 drop-shadow-lg">
+                              {topThree[1]?.display_name}
                             </p>
-                          )}
-                        </div>
-                      </InteractiveCard>
-                    </motion.div>
+                            <p className="text-white text-base font-bold mb-2">
+                              {topThree[1]?.total_xp.toLocaleString()} XP
+                            </p>
+                            {topThree[1]?.current_streak_days > 0 && (
+                              <p className="text-white/90 text-sm flex items-center justify-center gap-1">
+                                <Flame className="w-4 h-4 text-orange-300" />
+                                {topThree[1]?.current_streak_days} day streak
+                              </p>
+                            )}
+                          </div>
+                        </InteractiveCard>
+                      </motion.div>
+                    ) : (
+                      <div className="pt-12" />
+                    )}
 
                     {/* 1st Place */}
                     <motion.div variants={slideInUp}>
@@ -243,51 +247,55 @@ export const LeaderboardSection = () => {
                       </InteractiveCard>
                     </motion.div>
 
-                    {/* 3rd Place */}
-                    <motion.div variants={slideInUp} className="pt-12">
-                      <InteractiveCard className={`p-6 text-center bg-gradient-to-br ${getRankGradient(3)} relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm" />
-                        <div className="relative z-10">
-                          <div className="flex justify-center mb-3">
-                            {getRankIcon(3)}
-                          </div>
-                          <Avatar className="w-16 h-16 mx-auto mb-3 ring-4 ring-white/50">
-                            <AvatarImage src={topThree[2]?.avatar_url} />
-                            <AvatarFallback className="bg-white text-amber-700 font-bold">
-                              {topThree[2]?.display_name?.charAt(0)?.toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <p className="font-bold text-white text-lg mb-1 drop-shadow-lg">
-                            {topThree[2]?.display_name}
-                          </p>
-                          <p className="text-white text-base font-bold mb-2">
-                            {topThree[2]?.total_xp.toLocaleString()} XP
-                          </p>
-                          {topThree[2]?.current_streak_days > 0 && (
-                            <p className="text-white/90 text-sm flex items-center justify-center gap-1">
-                              <Flame className="w-4 h-4 text-orange-300" />
-                              {topThree[2]?.current_streak_days} day streak
+                    {/* 3rd Place (or empty) */}
+                    {topThree.length >= 3 ? (
+                      <motion.div variants={slideInUp} className="pt-12">
+                        <InteractiveCard className={`p-6 text-center bg-gradient-to-br ${getRankGradient(3)} relative overflow-hidden`}>
+                          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm" />
+                          <div className="relative z-10">
+                            <div className="flex justify-center mb-3">
+                              {getRankIcon(3)}
+                            </div>
+                            <Avatar className="w-16 h-16 mx-auto mb-3 ring-4 ring-white/50">
+                              <AvatarImage src={topThree[2]?.avatar_url} />
+                              <AvatarFallback className="bg-white text-amber-700 font-bold">
+                                {topThree[2]?.display_name?.charAt(0)?.toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <p className="font-bold text-white text-lg mb-1 drop-shadow-lg">
+                              {topThree[2]?.display_name}
                             </p>
-                          )}
-                        </div>
-                      </InteractiveCard>
-                    </motion.div>
+                            <p className="text-white text-base font-bold mb-2">
+                              {topThree[2]?.total_xp.toLocaleString()} XP
+                            </p>
+                            {topThree[2]?.current_streak_days > 0 && (
+                              <p className="text-white/90 text-sm flex items-center justify-center gap-1">
+                                <Flame className="w-4 h-4 text-orange-300" />
+                                {topThree[2]?.current_streak_days} day streak
+                              </p>
+                            )}
+                          </div>
+                        </InteractiveCard>
+                      </motion.div>
+                    ) : (
+                      <div className="pt-12" />
+                    )}
                   </motion.div>
                 )}
 
                 {/* Rest of Leaderboard */}
-                <Card className="overflow-hidden glass">
-                  <motion.div 
-                    variants={staggerList}
-                    initial="hidden"
-                    animate="visible"
-                    className="divide-y divide-border/50"
-                  >
-                    {restOfLeaderboard.map((entry, index) => (
+                {restOfLeaderboard.length > 0 && (
+                  <Card className="overflow-hidden glass">
+                    <motion.div 
+                      variants={staggerList}
+                      initial="hidden"
+                      animate="visible"
+                      className="divide-y divide-border/50"
+                    >
+                      {restOfLeaderboard.map((entry) => (
                       <motion.div
                         key={entry.user_id}
                         variants={slideInUp}
-                        custom={index}
                         className={`p-4 flex items-center gap-4 hover:bg-accent/10 transition-all duration-300 ${
                           entry.is_current_user ? 'bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 shadow-inner glow-accent' : ''
                         }`}
@@ -332,9 +340,10 @@ export const LeaderboardSection = () => {
                           )}
                         </div>
                       </motion.div>
-                    ))}
-                  </motion.div>
-                </Card>
+                      ))}
+                    </motion.div>
+                  </Card>
+                )}
               </>
             )}
         </AnimatePresence>
