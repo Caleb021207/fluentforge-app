@@ -2,24 +2,23 @@
 import { useState, useEffect } from "react";
 import { InteractiveCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, User, Mic, Sparkles, BookOpen } from "lucide-react";
+import { User, Sparkles, BookOpen } from "lucide-react";
 import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
-import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { LeaderboardSection } from "./LeaderboardSection";
+import { getFluencyCertStatus, getCertDisplayName, getCertDisplayDescription } from "@/utils/fluencyCertification";
 
 interface StudentProfileProps {
   profile: ExtendedUserProfile;
 }
 
 const StudentProfile = ({ profile }: StudentProfileProps) => {
-  const { usageLimits, premiumVoiceMinutesRemaining } = useUsageLimits();
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
   const [grades, setGrades] = useState<StudentGrade[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<StudentUsageMetrics[]>([]);
-  const [latestTestScore, setLatestTestScore] = useState<any>(null);
+  const [allAnalyses, setAllAnalyses] = useState<any[]>([]);
   const [gradeLevel, setGradeLevel] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -56,16 +55,14 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           setGradeLevel(gradeLevelData);
         }
 
-        // Fetch most recent transcript analysis
-        const { data: latestAnalysis } = await supabase
+        // Fetch all transcript analyses for certification status
+        const { data: allAnalysesData } = await supabase
           .from('transcript_analyses')
-          .select('id, overall_score, cefr_level, upload_date, reading_listening_score, written_production_score, spoken_fluency_score')
+          .select('cefr_level, overall_score')
           .eq('user_id', profile.id)
-          .order('upload_date', { ascending: false })
-          .limit(1)
-          .maybeSingle();
+          .order('upload_date', { ascending: false });
 
-        setLatestTestScore(latestAnalysis);
+        setAllAnalyses(allAnalysesData || []);
       } catch (error) {
         console.error('Error fetching student data:', error);
       } finally {
@@ -98,8 +95,8 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
     };
   }, [profile.id, profile.grade_level_id]);
 
-  const totalPracticeSessions = usageMetrics.reduce((sum, metric) => sum + metric.practice_sessions, 0);
-  const totalVoiceChatMinutes = usageMetrics.reduce((sum, metric) => sum + metric.voice_chat_minutes, 0);
+  const certStatus = getFluencyCertStatus(allAnalyses);
+  const hasCertification = certStatus.level !== null;
 
   if (isLoading) {
     return (
@@ -116,60 +113,27 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
       {/* Leaderboard Section */}
       <LeaderboardSection />
 
-      {/* Monthly Usage Limits */}
-      <InteractiveCard>
-        <div className="p-6">
-          <div className="mb-4">
+      {/* Fluency Certification */}
+      {hasCertification && (
+        <InteractiveCard>
+          <div className="p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Clock className="h-5 w-5 text-primary" />
-              <h3 className="text-lg font-semibold">Monthly Usage Limits</h3>
+              <Sparkles className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">Fluency Certification</h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Mic className="h-5 w-5 text-primary" />
-                  <h4 className="font-medium">Voice Practice</h4>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Minutes Remaining</span>
-                    <span className="text-lg font-bold text-primary">
-                      {usageLimits?.voiceMinutesRemaining || 0} / {usageLimits?.voiceMinutesLimit || 100}
-                    </span>
-                  </div>
-                  <div className="w-full bg-secondary rounded-full h-2">
-                    <div 
-                      className="bg-primary h-2 rounded-full transition-all" 
-                      style={{ width: `${((usageLimits?.voiceMinutesRemaining || 0) / (usageLimits?.voiceMinutesLimit || 100)) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  <h4 className="font-medium">Premium Voice Practice</h4>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Minutes Remaining</span>
-                    <span className="text-lg font-bold text-primary">
-                      {premiumVoiceMinutesRemaining} / 15
-                    </span>
-                  </div>
-                  <div className="w-full bg-secondary rounded-full h-2">
-                    <div 
-                      className="bg-primary h-2 rounded-full transition-all" 
-                      style={{ width: `${(premiumVoiceMinutesRemaining / 15) * 100}%` }}
-                    />
-                  </div>
-                </div>
+            <div className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-primary/20">
+              <div className="text-center space-y-2">
+                <h4 className="text-2xl font-bold text-primary">
+                  {getCertDisplayName(certStatus.level)}
+                </h4>
+                <p className="text-muted-foreground">
+                  {getCertDisplayDescription(certStatus.level)}
+                </p>
               </div>
             </div>
           </div>
-        </div>
-      </InteractiveCard>
+        </InteractiveCard>
+      )}
 
       {/* Current Classes with Teacher Info */}
       <InteractiveCard>
@@ -187,14 +151,8 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
                       <h4 className="font-medium">{enrollment.class_info?.name || "Unnamed Class"}</h4>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span>{enrollment.class_info?.subject?.name || "No Subject"}</span>
-                        {enrollment.class_info?.period && (
-                          <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {enrollment.class_info.period}
-                          </span>
-                        )}
                         {enrollment.class_info?.room_number && (
-                          <span>{enrollment.class_info.room_number}</span>
+                          <span>Room: {enrollment.class_info.room_number}</span>
                         )}
                       </div>
                       {(enrollment.class_info as any)?.teacher && (
