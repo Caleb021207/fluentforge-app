@@ -179,12 +179,12 @@ serve(async (req) => {
     const userIdsInProgression = progressionData?.map(p => p.user_id) || [];
     console.log('Fetching profile_public_data for:', userIdsInProgression.length, 'users');
     
-    const { data: profiles, error: profileError } = await supabase
+    const { data: profiles, error: profilesError } = await supabase
       .from('profile_public_data')
       .select('user_id, display_name, avatar_url, role')
       .in('user_id', userIdsInProgression);
 
-    console.log('Profile data fetched:', profiles?.length || 0, 'profiles, error:', profileError);
+    console.log('Profile data fetched:', profiles?.length || 0, 'profiles, error:', profilesError);
 
     // Create a map of profiles
     const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
