@@ -38,7 +38,16 @@ const practiceTranslations: TranslationRecord = {
   practiceGuideItem2: "Hata yapmaktan korkma – bu öğrenmenin bir parçasıdır!",
   practiceGuideItem3: "Anlamadığın bir şey varsa açıklama iste.",
   practiceGuideItem4: "Yeni öğrendiğin kelimeleri kullanmaya çalış.",
-  practiceDisclaimer: "Yapay zekâmız senin seviyene göre uyum sağlar ve zamanla gelişmene yardımcı olur."
+  practiceDisclaimer: "Yapay zekâmız senin seviyene göre uyum sağlar ve zamanla gelişmene yardımcı olur.",
+  
+  // Analyze conversation
+  analyzeConversation: "Konuşmayı Analiz Et",
+  analyzing: "Analiz ediliyor",
+  analysisLimitReached: "Analiz Limiti Ulaşıldı",
+  canOnlyAnalyzeOncePerSession: "XP farming'i önlemek için her oturumda sadece bir kez konuşmayı analiz edebilirsiniz. Tekrar analiz etmek için yeni bir pratik oturumu başlatın.",
+  conversationAnalysis: "Konuşma Analizi",
+  grammarAccuracy: "Dilbilgisi Doğruluğu",
+  complexity: "Karmaşıklık"
 };
 
 export default practiceTranslations;
