@@ -22,6 +22,49 @@ const authTranslations: TranslationRecord = {
   mustAgreeToTerms: "جاری رکھنے کے لیے شرائط و ضوابط سے اتفاق کرنا ہوگا",
   invalidEmail: "غلط ای میل فارمیٹ",
   passwordTooShort: "پاس ورڈ کم از کم 8 حروف کا ہونا چاہیے",
+  loginRequired: "لاگ ان ضروری ہے",
+  loginRequiredDescription: "اس خصوصیت تک رسائی کے لیے براہ کرم سائن ان کریں",
+  pleaseLoginToAccessFeature: "اس خصوصیت تک رسائی کے لیے براہ کرم لاگ ان کریں",
+  
+  // Compliance dialogs
+  educationalDataPrivacyConsent: "تعلیمی ڈیٹا پرائیویسی کی رضامندی",
+  ferpaConsentDescription: "فیملی ایجوکیشنل رائٹس اینڈ پرائیویسی ایکٹ (FERPA) کے تحت، ہمیں کچھ تعلیمی معلومات جمع کرنے اور شیئر کرنے کے لیے آپ کی رضامندی کی ضرورت ہے۔",
+  whatIsFerpa: "FERPA کیا ہے؟",
+  ferpaExplanation: "FERPA ایک وفاقی قانون ہے جو طالب علم کی تعلیمی ریکارڈز کی رازداری کی حفاظت کرتا ہے۔ یہ والدین کو اپنے بچوں کی تعلیمی ریکارڈز کے حوالے سے کچھ حقوق دیتا ہے۔ یہ حقوق طالب علم کو منتقل ہو جاتے ہیں جب وہ 18 سال کی عمر تک پہنچ جاتے ہیں یا کسی پوسٹ سیکنڈری تعلیمی ادارے میں داخل ہوتے ہیں۔",
+  dataWeCollect: "ہم جو ڈیٹا جمع کرتے ہیں",
+  assessmentResults: "زبان کی تشخیص کے نتائج",
+  progressData: "سیکھنے کی پیشرفت کا ڈیٹا",
+  practiceHistory: "مشق کی تاریخ اور کارکردگی",
+  certificationsEarned: "حاصل کردہ سرٹیفیکیشنز",
+  dataCollectionNote: "نوٹ: Palavox صرف تعلیمی مقاصد کے لیے کم سے کم، گمنام ڈیٹا جمع کرتا ہے۔",
+  directoryInformation: "ڈائریکٹری معلومات",
+  directoryInfoDescription: "اسکول محدود معلومات (جیسے گریڈ لیول یا سیکھنے کی زبان) کو تعلیمی مقاصد کے لیے شیئر کرنے کی اجازت دے سکتے ہیں۔ Palavox کوئی بھی طالب علم کا ڈیٹا بیرونی طور پر شیئر نہیں کرتا۔",
+  yourName: "آپ کا نام",
+  yourEmail: "آپ کا ای میل پتہ",
+  languagesStudied: "آپ جو زبانیں سیکھ رہے ہیں",
+  learningProgress: "سیکھنے کی پیشرفت",
+  achievements: "کامیابیاں اور سرٹیفکیٹس",
+  consentCheckbox: "میں اپنے تعلیمی ڈیٹا کی جمع آوری اور استعمال کے لیے رضامندی دیتا ہوں جیسا کہ اوپر بیان کیا گیا ہے۔ میں سمجھتا ہوں کہ میں اپنی پروفائل کی ترتیبات کے ذریعے کسی بھی وقت اس رضامندی کو منسوخ کر سکتا ہوں۔",
+  consentRequired: "اس ایپلیکیشن کی تمام خصوصیات استعمال کرنے کے لیے رضامندی ضروری ہے۔ رضامندی کے بغیر، کچھ خصوصیات محدود ہوں گی۔",
+  savePreferences: "ترجیحات محفوظ کریں",
+  
+  // District consent
+  districtConsentTitle: "SCBOE طالب علم ضابطہ اخلاق",
+  districtConsentDescription: "یہ ایپلیکیشن شیلبی کاؤنٹی اسکولز طالب علم ضابطہ اخلاق کے تحت استعمال کے لیے منظور شدہ ہے۔",
+  byContinyuingYouAcknowledge: "جاری رکھ کر، آپ تسلیم کرتے ہیں:",
+  compliesWithCipaFerpa: "یہ پلیٹ فارم CIPA اور FERPA کی ضروریات کی تعمیل کرتا ہے",
+  governedByScboe: "استعمال SCBOE کی قابل قبول استعمال کی پالیسیوں کے تحت ہے",
+  parentsOptOut: "والدین تحریری طور پر اسکول کو مطلع کر کے آپٹ آؤٹ کر سکتے ہیں",
+  acceptScboeTerms: "میں SCBOE طالب علم ضابطہ اخلاق کے تحت استعمال کی شرائط قبول کرتا ہوں",
+  consentRequiredMsg: "رضامندی ضروری ہے",
+  pleaseAcceptTerms: "جاری رکھنے کے لیے براہ کرم شرائط قبول کریں",
+  districtConsentSuccess: "ڈسٹرکٹ کی رضامندی کامیابی سے ریکارڈ کی گئی",
+  failedToRecordConsent: "رضامندی ریکارڈ کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔",
+  
+  // Common
+  success: "کامیابی",
+  error: "خرابی",
+  continue: "جاری رکھیں",
 };
 
 export default authTranslations;

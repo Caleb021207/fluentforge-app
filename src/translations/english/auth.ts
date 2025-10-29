@@ -71,6 +71,46 @@ const authTranslations: TranslationRecord = {
   // Header translations
   signedInAs: "Signed in as",
   loggedInAs: "Logged in as",
+  
+  // Compliance dialogs
+  educationalDataPrivacyConsent: "Educational Data Privacy Consent",
+  ferpaConsentDescription: "Under the Family Educational Rights and Privacy Act (FERPA), we need your consent to collect and share certain educational information.",
+  whatIsFerpa: "What is FERPA?",
+  ferpaExplanation: "FERPA is a federal law that protects the privacy of student education records. It gives parents certain rights with respect to their children's education records. These rights transfer to the student when they reach the age of 18 or attend a post-secondary educational institution.",
+  dataWeCollect: "Data We Collect",
+  assessmentResults: "Language assessment results",
+  progressData: "Learning progress data",
+  practiceHistory: "Practice history and performance",
+  certificationsEarned: "Certifications earned",
+  dataCollectionNote: "Note: Palavox collects minimal, anonymized data for educational purposes only.",
+  directoryInformation: "Directory Information",
+  directoryInfoDescription: "Schools may allow limited information (like grade level or learning language) to be shared for educational purposes. Palavox does not share any student data externally.",
+  yourName: "Your name",
+  yourEmail: "Your email address",
+  languagesStudied: "Languages you're studying",
+  learningProgress: "Learning progress",
+  achievements: "Achievements and certificates",
+  consentCheckbox: "I consent to the collection and use of my educational data as described above. I understand I can revoke this consent at any time through my profile settings.",
+  consentRequired: "Consent is required to use all features of this application. Without consent, certain features will be limited.",
+  savePreferences: "Save Preferences",
+  
+  // District consent
+  districtConsentTitle: "SCBOE Student Code of Conduct",
+  districtConsentDescription: "This application is approved for use under the Shelby County Schools Student Code of Conduct.",
+  byContinyuingYouAcknowledge: "By continuing, you acknowledge:",
+  compliesWithCipaFerpa: "This platform complies with CIPA and FERPA requirements",
+  governedByScboe: "Usage is governed by SCBOE's acceptable use policies",
+  parentsOptOut: "Parents may opt-out by notifying the school in writing",
+  acceptScboeTerms: "I accept the terms of use under the SCBOE Student Code of Conduct",
+  consentRequiredMsg: "Consent Required",
+  pleaseAcceptTerms: "Please accept the terms to continue",
+  districtConsentSuccess: "District consent recorded successfully",
+  failedToRecordConsent: "Failed to record consent. Please try again.",
+  
+  // Common
+  success: "Success",
+  error: "Error",
+  continue: "Continue",
 };
 
 export default authTranslations;

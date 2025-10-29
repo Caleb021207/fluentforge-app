@@ -28,8 +28,6 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
   onOpenChange,
   onComplete
 }) => {
-  // We'll still use the localization hook, but we'll use a fixed set of English strings 
-  // rather than translated ones for compliance content
   const { t } = useLocalization();
   const [consentGiven, setConsentGiven] = useState(false);
   const [directoryPreferences, setDirectoryPreferences] = useState<DirectoryPreference>({
@@ -62,28 +60,28 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
     onComplete();
   };
   
-  // Fixed English strings for compliance content
+  // Use localized strings for compliance content
   const complianceStrings = {
-    dialogTitle: "Educational Data Privacy Consent",
-    dialogDescription: "Under the Family Educational Rights and Privacy Act (FERPA), we need your consent to collect and share certain educational information.",
-    whatIsFerpa: "What is FERPA?",
-    ferpaExplanation: "FERPA is a federal law that protects the privacy of student education records. It gives parents certain rights with respect to their children's education records. These rights transfer to the student when they reach the age of 18 or attend a post-secondary educational institution.",
-    dataWeCollect: "Data We Collect",
-    assessmentResults: "Language assessment results",
-    progressData: "Learning progress data",
-    practiceHistory: "Practice history and performance",
-    certificationsEarned: "Certifications earned",
-    dataCollectionNote: "Note: Palavox collects minimal, anonymized data for educational purposes only.",
-    directoryInformation: "Directory Information",
-    directoryInfoDescription: "Schools may allow limited information (like grade level or learning language) to be shared for educational purposes. Palavox does not share any student data externally.",
-    yourName: "Your name",
-    yourEmail: "Your email address",
-    languagesStudied: "Languages you're studying",
-    learningProgress: "Learning progress",
-    achievements: "Achievements and certificates",
-    consentCheckbox: "I consent to the collection and use of my educational data as described above. I understand I can revoke this consent at any time through my profile settings.",
-    consentRequired: "Consent is required to use all features of this application. Without consent, certain features will be limited.",
-    savePreferences: "Save Preferences"
+    dialogTitle: t("educationalDataPrivacyConsent"),
+    dialogDescription: t("ferpaConsentDescription"),
+    whatIsFerpa: t("whatIsFerpa"),
+    ferpaExplanation: t("ferpaExplanation"),
+    dataWeCollect: t("dataWeCollect"),
+    assessmentResults: t("assessmentResults"),
+    progressData: t("progressData"),
+    practiceHistory: t("practiceHistory"),
+    certificationsEarned: t("certificationsEarned"),
+    dataCollectionNote: t("dataCollectionNote"),
+    directoryInformation: t("directoryInformation"),
+    directoryInfoDescription: t("directoryInfoDescription"),
+    yourName: t("yourName"),
+    yourEmail: t("yourEmail"),
+    languagesStudied: t("languagesStudied"),
+    learningProgress: t("learningProgress"),
+    achievements: t("achievements"),
+    consentCheckbox: t("consentCheckbox"),
+    consentRequired: t("consentRequired"),
+    savePreferences: t("savePreferences")
   };
   
   return (

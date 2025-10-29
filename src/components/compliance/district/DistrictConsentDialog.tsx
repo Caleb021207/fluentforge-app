@@ -35,8 +35,8 @@ const DistrictConsentDialog: React.FC<Props> = ({
   const handleSubmit = async () => {
     if (!accepted) {
       toast({
-        title: "Consent Required",
-        description: "Please accept the terms to continue",
+        title: t("consentRequiredMsg"),
+        description: t("pleaseAcceptTerms"),
         variant: "destructive"
       });
       return;
@@ -59,8 +59,8 @@ const DistrictConsentDialog: React.FC<Props> = ({
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "District consent recorded successfully"
+        title: t("success"),
+        description: t("districtConsentSuccess")
       });
       
       onComplete();
@@ -68,8 +68,8 @@ const DistrictConsentDialog: React.FC<Props> = ({
     } catch (error) {
       console.error('Error providing consent:', error);
       toast({
-        title: "Error",
-        description: "Failed to record consent. Please try again.",
+        title: t("error"),
+        description: t("failedToRecordConsent"),
         variant: "destructive"
       });
     }
@@ -79,19 +79,19 @@ const DistrictConsentDialog: React.FC<Props> = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>SCBOE Student Code of Conduct</DialogTitle>
+          <DialogTitle>{t("districtConsentTitle")}</DialogTitle>
           <DialogDescription>
-            This application is approved for use under the Shelby County Schools Student Code of Conduct.
+            {t("districtConsentDescription")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="text-sm space-y-2">
-            <p>By continuing, you acknowledge:</p>
+            <p>{t("byContinyuingYouAcknowledge")}</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>This platform complies with CIPA and FERPA requirements</li>
-              <li>Usage is governed by SCBOE's acceptable use policies</li>
-              <li>Parents may opt-out by notifying the school in writing</li>
+              <li>{t("compliesWithCipaFerpa")}</li>
+              <li>{t("governedByScboe")}</li>
+              <li>{t("parentsOptOut")}</li>
             </ul>
           </div>
 
@@ -102,14 +102,14 @@ const DistrictConsentDialog: React.FC<Props> = ({
               onCheckedChange={(checked) => setAccepted(checked as boolean)} 
             />
             <Label htmlFor="consent">
-              I accept the terms of use under the SCBOE Student Code of Conduct
+              {t("acceptScboeTerms")}
             </Label>
           </div>
         </div>
 
         <DialogFooter>
           <Button onClick={handleSubmit} disabled={!accepted}>
-            Continue
+            {t("continue")}
           </Button>
         </DialogFooter>
       </DialogContent>
