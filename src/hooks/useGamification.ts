@@ -62,6 +62,9 @@ export const useGamification = () => {
 
   const checkStreak = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data, error } = await supabase.functions.invoke('check-streak');
       
       if (error) throw error;
