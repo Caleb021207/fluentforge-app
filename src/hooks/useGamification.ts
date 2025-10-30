@@ -67,25 +67,33 @@ export const useGamification = () => {
 
   const checkStreak = async () => {
     try {
-      // Get current session to ensure auth token is available
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log('No active session, skipping streak check');
+      // Verify user is authenticated first
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        console.log('No authenticated user, skipping streak check');
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke('check-streak', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
+      // Get current session to ensure auth token is available
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        console.log('No valid session token, skipping streak check');
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('check-streak');
       
       if (error) {
         console.error('Streak check error:', error);
+        // Don't throw on 401 errors during initialization
+        if (error.message?.includes('401')) {
+          console.log('Authentication not ready, will retry later');
+          return;
+        }
         throw error;
       }
 
-      if (data.streak_bonus_xp > 0) {
+      if (data?.streak_bonus_xp > 0) {
         toast({
           title: `🔥 ${data.current_streak} Day Streak!`,
           description: `+${data.streak_bonus_xp} bonus XP for maintaining your streak!`,
