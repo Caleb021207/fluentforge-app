@@ -31,17 +31,25 @@ export const useGamification = () => {
   const { triggerXPNotification } = useXPNotification();
 
   useEffect(() => {
+    let hasCheckedStreak = false;
+    
     const initializeProgression = async () => {
       await fetchProgression();
-      
-      // Delay streak check to ensure auth session is fully established
-      // This prevents 401 errors during initial app load
-      setTimeout(async () => {
-        await checkStreak();
-      }, 2000); // 2 second delay
     };
     
+    // Listen for auth state to be ready before checking streak
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user && !hasCheckedStreak) {
+        hasCheckedStreak = true;
+        await checkStreak();
+      }
+    });
+    
     initializeProgression();
+    
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchProgression = async () => {
