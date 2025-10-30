@@ -1,5 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import OpenAI from "https://esm.sh/openai@4.20.1";
 import { corsHeaders, filterProhibitedContent } from "./config.ts";
 import { generateHints } from "./hints.ts";
@@ -47,6 +48,37 @@ serve(async (req) => {
   }
 
   try {
+    // Verify authentication
+    const authorization = req.headers.get('Authorization');
+    if (!authorization) {
+      console.error('No authorization header provided');
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: { headers: { Authorization: authorization } },
+        auth: { persistSession: false }
+      }
+    );
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    
+    if (userError || !user) {
+      console.error('Invalid user token:', userError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication token' }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`Authenticated request from user: ${user.id}`);
+
     // Get request data
     const requestData = await req.json();
     const { 
@@ -72,8 +104,8 @@ serve(async (req) => {
     
     console.log(`Validated languages: User language: ${userLanguage}, Target language: ${targetLanguage}`);
 
-    // Log the access for FERPA compliance
-    logDataAccess("anonymous", "language_practice", "language_learning");
+    // Log the access for FERPA compliance with actual user ID
+    logDataAccess(user.id, "language_practice", "language_learning");
 
     console.log(`Received message: ${message} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation} Grammar correction: ${correctGrammar} Conversation level: ${conversationLevel} Conversation history length: ${conversationHistory.length}`);
 
