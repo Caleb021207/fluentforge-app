@@ -5,6 +5,7 @@ import { useChatApi } from "./useChatApi";
 import type { MessageCount } from "@/types/chat";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 
 export const useMessageHandler = (setMessageCount: (count: MessageCount) => void) => {
   const {
@@ -21,6 +22,7 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
   const { sendChatMessage } = useChatApi();
   const { toast } = useToast();
   const { t } = useLocalization();
+  const { checkCanSendTextMessage, trackTextMessage } = useUsageLimits();
 
   // Process the message queue
   const processQueue = async () => {
@@ -64,6 +66,12 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
   const handleMessage = async (input: string) => {
     if (!input.trim()) return;
     
+    // Check text message limit before sending
+    const canSend = await checkCanSendTextMessage();
+    if (!canSend.allowed) {
+      return; // Don't send if limit reached
+    }
+    
     // Add user message immediately for better UX
     addUserMessage(input);
     
@@ -75,6 +83,8 @@ export const useMessageHandler = (setMessageCount: (count: MessageCount) => void
       
       if (assistantMessage) {
         addAssistantMessage(assistantMessage);
+        // Track the message after successful send
+        await trackTextMessage();
       }
     } catch (error) {
       console.error('Failed to handle message:', error);

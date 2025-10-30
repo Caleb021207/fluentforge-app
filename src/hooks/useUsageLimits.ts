@@ -27,6 +27,9 @@ interface UsageCheckResult {
   minutesRemaining?: number;
   minutesUsed?: number;
   minutesLimit?: number;
+  messagesUsed?: number;
+  messagesLimit?: number;
+  messagesRemaining?: number;
   allowedDays?: number[];
   startTime?: string;
   endTime?: string;
@@ -215,6 +218,58 @@ export const useUsageLimits = () => {
     }
   };
 
+  const checkCanSendTextMessage = async (): Promise<UsageCheckResult> => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        return {
+          allowed: false,
+          reason: "Authentication required"
+        };
+      }
+
+      const { data, error } = await supabase
+        .rpc('can_send_text_message', { p_student_id: user.id });
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        const result = data[0];
+        
+        if (!result.can_send) {
+          toast({
+            title: "Message Limit Reached",
+            description: `You've reached your monthly limit of ${result.messages_limit} messages.`,
+            variant: "destructive",
+            duration: 5000,
+          });
+        }
+        
+        return {
+          allowed: result.can_send,
+          reason: result.reason,
+          messagesUsed: result.messages_used,
+          messagesLimit: result.messages_limit,
+          messagesRemaining: result.messages_remaining
+        };
+      }
+
+      return { allowed: true };
+    } catch (error) {
+      console.error('Error checking text message limit:', error);
+      toast({
+        title: "Error",
+        description: "Could not verify message limits. Please try again.",
+        variant: "destructive",
+      });
+      return {
+        allowed: false,
+        reason: "Could not verify limits"
+      };
+    }
+  };
+
   const trackTextMessage = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -223,11 +278,12 @@ export const useUsageLimits = () => {
       // Get current usage first
       const { data: currentLimits } = await supabase
         .from('student_usage_limits')
-        .select('text_messages_used_current_month')
+        .select('text_messages_used_current_month, text_messages_monthly_limit')
         .eq('student_id', user.id)
         .single();
 
       const newMessageCount = (currentLimits?.text_messages_used_current_month || 0) + 1;
+      const textLimit = currentLimits?.text_messages_monthly_limit || 1500;
 
       // Update text message count
       const { error } = await supabase
@@ -243,13 +299,13 @@ export const useUsageLimits = () => {
         return;
       }
 
-      // Check for high usage alert (5000+ messages)
-      const newCount = (usageLimits?.textMessagesUsed || 0) + 1;
-      if (newCount === 5000) {
+      // Show warning at 80% usage
+      const warningThreshold = Math.floor(textLimit * 0.8);
+      if (newMessageCount === warningThreshold) {
         toast({
-          title: "High Text Usage Alert",
-          description: "You've sent 5,000 messages this month. Your teacher has been notified.",
-          variant: "default"
+          title: "High Text Message Usage",
+          description: `You've used ${newMessageCount} of ${textLimit} monthly messages.`,
+          duration: 5000,
         });
       }
 
@@ -370,6 +426,7 @@ export const useUsageLimits = () => {
     premiumVoiceMinutesRemaining,
     checkCanStartVoiceSession,
     trackVoiceSession,
+    checkCanSendTextMessage,
     trackTextMessage,
     trackCertificationAttempt,
     checkCanStartPremiumVoiceSession,
