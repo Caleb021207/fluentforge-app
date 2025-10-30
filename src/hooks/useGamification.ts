@@ -31,8 +31,13 @@ export const useGamification = () => {
   const { triggerXPNotification } = useXPNotification();
 
   useEffect(() => {
-    fetchProgression();
-    checkStreak();
+    const initializeProgression = async () => {
+      await fetchProgression();
+      // Only check streak after progression is loaded and user is confirmed
+      await checkStreak();
+    };
+    
+    initializeProgression();
   }, []);
 
   const fetchProgression = async () => {
