@@ -33,8 +33,12 @@ export const useGamification = () => {
   useEffect(() => {
     const initializeProgression = async () => {
       await fetchProgression();
-      // Only check streak after progression is loaded and user is confirmed
-      await checkStreak();
+      
+      // Delay streak check to ensure auth session is fully established
+      // This prevents 401 errors during initial app load
+      setTimeout(async () => {
+        await checkStreak();
+      }, 2000); // 2 second delay
     };
     
     initializeProgression();
