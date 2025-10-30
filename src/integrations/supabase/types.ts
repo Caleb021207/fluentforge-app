@@ -2423,6 +2423,16 @@ export type Database = {
         Args: { enrollment_class_id: string; enrollment_student_id: string }
         Returns: boolean
       }
+      can_send_text_message: {
+        Args: { p_student_id: string }
+        Returns: {
+          can_send: boolean
+          messages_limit: number
+          messages_remaining: number
+          messages_used: number
+          reason: string
+        }[]
+      }
       can_start_premium_voice_session: {
         Args: { target_student_id: string }
         Returns: Json
