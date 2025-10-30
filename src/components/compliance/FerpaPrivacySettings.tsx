@@ -11,6 +11,7 @@ import {
   getFerpaDirectoryPreferences,
   setFerpaDirectoryPreferences
 } from "@/utils/safety/ferpaCompliance";
+import { supabase } from "@/integrations/supabase/client";
 
 // Import our components
 import FerpaInfoSection from "./ferpa/FerpaInfoSection";
@@ -22,14 +23,29 @@ const FerpaPrivacySettings = () => {
   const { t } = useLocalization();
   const { toast } = useToast();
   
-  const [consentGiven, setConsentGiven] = useState(getFerpaConsentStatus());
+  const [consentGiven, setConsentGiven] = useState(false);
   const [directoryPreferences, setDirectoryPreferences] = useState<DirectoryPreference>(getFerpaDirectoryPreferences() as DirectoryPreference);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    // Load initial values from localStorage
-    setConsentGiven(getFerpaConsentStatus());
-    setDirectoryPreferences(getFerpaDirectoryPreferences() as DirectoryPreference);
+    // Load initial values from database and localStorage
+    const loadData = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const hasConsent = await getFerpaConsentStatus(supabase, user.id);
+          setConsentGiven(hasConsent);
+        }
+        setDirectoryPreferences(getFerpaDirectoryPreferences() as DirectoryPreference);
+      } catch (error) {
+        console.error('Error loading FERPA preferences:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadData();
   }, []);
   
   const handleConsentChange = (checked: boolean) => {
@@ -43,24 +59,45 @@ const FerpaPrivacySettings = () => {
     }));
   };
   
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     setIsSaving(true);
     
-    // Simulate API call with a timeout
-    setTimeout(() => {
-      // Save FERPA consent status
-      setFerpaConsentStatus(consentGiven);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("No authenticated user found");
+      }
+
+      // Save FERPA consent to database
+      const success = await setFerpaConsentStatus(
+        supabase,
+        user.id,
+        consentGiven,
+        user.email || 'Self',
+        user.email
+      );
       
-      // Save directory information preferences
+      if (!success) {
+        throw new Error("Failed to save consent");
+      }
+      
+      // Save directory information preferences (localStorage)
       setFerpaDirectoryPreferences(directoryPreferences);
       
       toast({
         title: t("preferencesUpdated") || "Privacy preferences updated",
         description: t("privacySettingsSaved") || "Your privacy and data sharing preferences have been saved.",
       });
-      
+    } catch (error) {
+      console.error('Error saving FERPA preferences:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save your preferences. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsSaving(false);
-    }, 700);
+    }
   };
   
   const handleDownloadData = () => {
@@ -73,6 +110,16 @@ const FerpaPrivacySettings = () => {
     });
   };
   
+  if (isLoading) {
+    return (
+      <Card className="w-full">
+        <CardContent className="py-8 text-center">
+          <p>Loading FERPA preferences...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full">
       <CardHeader>

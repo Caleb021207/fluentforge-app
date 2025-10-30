@@ -24,23 +24,68 @@ export const isFerpaProtectedData = (dataType: string): boolean => {
 };
 
 /**
- * Gets the FERPA consent status for a user
- * Returns true if the user has provided FERPA consent
+ * Gets the FERPA consent status for a user from the database
+ * Returns a promise that resolves to true if the user has provided FERPA consent
  */
-export const getFerpaConsentStatus = (): boolean => {
-  return localStorage.getItem("ferpaConsent") === "true";
+export const getFerpaConsentStatus = async (supabase: any, userId: string): Promise<boolean> => {
+  const currentYear = new Date().getFullYear();
+  const academicYear = `${currentYear}-${currentYear + 1}`;
+  
+  const { data, error } = await supabase
+    .from('parental_consent_records')
+    .select('consent_granted')
+    .eq('student_id', userId)
+    .eq('academic_year', academicYear)
+    .eq('consent_type', 'ferpa_release')
+    .maybeSingle();
+  
+  if (error) {
+    console.error('Error fetching FERPA consent status:', error);
+    return false;
+  }
+  
+  return data?.consent_granted || false;
 };
 
 /**
- * Sets the FERPA consent status for a user
+ * Sets the FERPA consent status for a user in the database
  */
-export const setFerpaConsentStatus = (hasConsent: boolean): void => {
-  localStorage.setItem("ferpaConsent", hasConsent ? "true" : "false");
+export const setFerpaConsentStatus = async (
+  supabase: any, 
+  userId: string, 
+  hasConsent: boolean,
+  parentName: string = 'Self',
+  parentEmail?: string
+): Promise<boolean> => {
+  const currentYear = new Date().getFullYear();
+  const academicYear = `${currentYear}-${currentYear + 1}`;
+  
+  const { error } = await supabase
+    .from('parental_consent_records')
+    .insert({
+      student_id: userId,
+      parent_name: parentName,
+      parent_email: parentEmail,
+      consent_type: 'ferpa_release',
+      consent_granted: hasConsent,
+      consent_date: new Date().toISOString(),
+      academic_year: academicYear,
+      recorded_by: userId
+    });
+  
+  if (error) {
+    console.error('Error saving FERPA consent:', error);
+    return false;
+  }
+  
+  return true;
 };
 
 /**
- * Gets the user's FERPA directory information sharing preferences
+ * Gets the user's FERPA directory information sharing preferences from localStorage
  * Returns an object with boolean values for each directory information category
+ * Note: Directory preferences are still stored in localStorage as they're UI preferences,
+ * not critical consent data
  */
 export const getFerpaDirectoryPreferences = (): DirectoryPreference => {
   const savedPrefs = localStorage.getItem("ferpaDirectoryPreferences");
@@ -101,14 +146,15 @@ export const logDataAccess = (userId: string, dataType: string, accessedBy: stri
  * Checks if user is allowed to access specific educational data
  * based on FERPA compliance rules and consent status
  */
-export const canAccessEducationalData = (
+export const canAccessEducationalData = async (
+  supabase: any,
   dataType: string, 
   userRole: 'student' | 'parent' | 'educator' | 'administrator' | 'third_party',
   studentId?: string, 
   requestorId?: string
-): boolean => {
-  // Get consent status - in production, this would come from a database
-  const hasConsent = getFerpaConsentStatus();
+): Promise<boolean> => {
+  // Get consent status from database
+  const hasConsent = studentId ? await getFerpaConsentStatus(supabase, studentId) : false;
   
   // Check if the data type is protected by FERPA
   const isProtectedData = isFerpaProtectedData(dataType);

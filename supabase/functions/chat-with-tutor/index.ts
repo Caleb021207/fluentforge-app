@@ -91,6 +91,89 @@ serve(async (req) => {
       correctGrammar = false // Flag to control grammar correction
     } = requestData;
 
+    // ===== INPUT VALIDATION =====
+    // Validate message exists and is a string
+    if (!message || typeof message !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Invalid message format' }), 
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+
+    // Trim and check for empty messages
+    const trimmedMessage = message.trim();
+    if (trimmedMessage.length === 0) {
+      return new Response(
+        JSON.stringify({ error: 'Message cannot be empty' }), 
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+
+    // Enforce maximum message length to prevent API abuse
+    const MAX_MESSAGE_LENGTH = 2000;
+    if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
+      return new Response(
+        JSON.stringify({ 
+          error: `Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.` 
+        }), 
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+
+    // Validate and limit conversation history
+    if (!Array.isArray(conversationHistory)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid conversation history format' }), 
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+
+    // Limit conversation history to last 20 messages to prevent memory issues
+    const MAX_HISTORY_LENGTH = 20;
+    const limitedHistory = conversationHistory.length > MAX_HISTORY_LENGTH
+      ? conversationHistory.slice(-MAX_HISTORY_LENGTH)
+      : conversationHistory;
+
+    // Validate each history item
+    for (const item of limitedHistory) {
+      if (!item.role || !item.content || typeof item.content !== 'string') {
+        return new Response(
+          JSON.stringify({ error: 'Invalid conversation history format' }), 
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, "Content-Type": "application/json" } 
+          }
+        );
+      }
+    }
+
+    // Basic prompt injection detection (log suspicious patterns)
+    const suspiciousPatterns = [
+      /ignore (all |previous )?instructions/i,
+      /system prompt/i,
+      /repeat (your|the) instructions/i,
+      /<script/i,
+      /javascript:/i
+    ];
+
+    if (suspiciousPatterns.some(pattern => pattern.test(trimmedMessage))) {
+      console.warn(`Potential prompt injection detected from user ${user.id}:`, trimmedMessage.substring(0, 100));
+      // Log but still process - most are false positives
+    }
+    // ===== END INPUT VALIDATION =====
+
     // Validate language parameters
     const userLanguage = validateLanguage(rawUserLanguage);
     let targetLanguage = validateLanguage(rawTargetLanguage);
@@ -107,13 +190,13 @@ serve(async (req) => {
     // Log the access for FERPA compliance with actual user ID
     logDataAccess(user.id, "language_practice", "language_learning");
 
-    console.log(`Received message: ${message} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation} Grammar correction: ${correctGrammar} Conversation level: ${conversationLevel} Conversation history length: ${conversationHistory.length}`);
+    console.log(`Received message: ${trimmedMessage.substring(0, 100)} Request type: ${requestType} User language: ${userLanguage} Target language: ${targetLanguage} Request translation: ${requestData.requestTranslation} Grammar correction: ${correctGrammar} Conversation level: ${conversationLevel} Conversation history length: ${limitedHistory.length}`);
 
     // Handle hint requests
     if (requestType === 'hint') {
       try {
         const suggestions = await generateHints(
-          conversationHistory,
+          limitedHistory,
           targetLanguage || "spanish", // Default if still undefined
           userLanguage || "english"
         );
@@ -172,7 +255,7 @@ serve(async (req) => {
     }
 
     // If no specific requestType is provided, proceed with conversation handling
-    const input = message;
+    const input = trimmedMessage;
 
     // Step 1: Filter Prohibited Content
     const { filtered, reason } = await filterProhibitedContent(input);
@@ -269,7 +352,7 @@ Always respond in ${targetLangDisplay}. If asked to translate or explain grammar
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemMessage },
-        ...conversationHistory,
+        ...limitedHistory,
         { role: "user", content: input },
       ],
       max_tokens: 800,
@@ -300,12 +383,12 @@ Always respond in ${targetLangDisplay}. If asked to translate or explain grammar
       }
     }
 
-    // Update conversation history
+    // Update conversation history (limited to prevent unbounded growth)
     const updatedHistory = [
-      ...conversationHistory,
+      ...limitedHistory,
       { role: "user", content: input },
       { role: "assistant", content },
-    ];
+    ].slice(-MAX_HISTORY_LENGTH);
 
     // Return the response
     return new Response(

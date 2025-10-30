@@ -16,6 +16,8 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { setFerpaConsentStatus, setFerpaDirectoryPreferences } from "@/utils/safety/ferpaCompliance";
 import { DirectoryPreference } from "./ferpa/DirectoryPreferencesSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface FerpaConsentFormProps {
   isOpen: boolean;
@@ -29,7 +31,9 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
   onComplete
 }) => {
   const { t } = useLocalization();
+  const { toast } = useToast();
   const [consentGiven, setConsentGiven] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [directoryPreferences, setDirectoryPreferences] = useState<DirectoryPreference>({
     name: false,
     email: false,
@@ -49,15 +53,59 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
     }));
   };
   
-  const handleSubmit = () => {
-    // Save FERPA consent status
-    setFerpaConsentStatus(consentGiven);
+  const handleSubmit = async () => {
+    if (!consentGiven) {
+      toast({
+        title: "Consent Required",
+        description: "You must provide consent to continue using the application.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
     
-    // Save directory information preferences
-    setFerpaDirectoryPreferences(directoryPreferences);
-    
-    // Close the dialog and notify parent component
-    onComplete();
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("No authenticated user found");
+      }
+
+      // Save FERPA consent to database
+      const success = await setFerpaConsentStatus(
+        supabase,
+        user.id,
+        consentGiven,
+        user.email || 'Self',
+        user.email
+      );
+      
+      if (!success) {
+        throw new Error("Failed to save consent to database");
+      }
+      
+      // Save directory information preferences (localStorage for UI preferences)
+      setFerpaDirectoryPreferences(directoryPreferences);
+      
+      toast({
+        title: "Preferences Saved",
+        description: "Your FERPA consent and preferences have been recorded.",
+      });
+      
+      // Close the dialog and notify parent component
+      onComplete();
+    } catch (error) {
+      console.error('Error saving FERPA consent:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save your preferences. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   // Use localized strings for compliance content
@@ -200,8 +248,9 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
           <Button 
             onClick={handleSubmit}
             className="w-full"
+            disabled={!consentGiven || isSubmitting}
           >
-            {complianceStrings.savePreferences}
+            {isSubmitting ? "Saving..." : complianceStrings.savePreferences}
           </Button>
         </DialogFooter>
       </DialogContent>
