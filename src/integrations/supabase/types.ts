@@ -2419,6 +2419,10 @@ export type Database = {
     }
     Functions: {
       auth_user_id: { Args: never; Returns: string }
+      can_see_enrollment: {
+        Args: { enrollment_class_id: string; enrollment_student_id: string }
+        Returns: boolean
+      }
       can_start_premium_voice_session: {
         Args: { target_student_id: string }
         Returns: Json
@@ -2508,6 +2512,10 @@ export type Database = {
         Returns: boolean
       }
       is_admin_user: { Args: { user_id: string }; Returns: boolean }
+      is_class_member: {
+        Args: { _class_id: string; _user_id: string }
+        Returns: boolean
+      }
       is_district_admin_of_class: {
         Args: { p_class_id: string; p_user_id: string }
         Returns: boolean
