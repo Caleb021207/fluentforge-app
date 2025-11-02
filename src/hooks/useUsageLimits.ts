@@ -3,15 +3,32 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface UsageLimits {
+  // Voice practice limits (Whisper STT - minute-based, 120/month)
   voiceMinutesLimit: number;
   voiceMinutesUsed: number;
   voiceMinutesRemaining: number;
+  
+  // Premium voice practice limits (Custom Realtime - minute-based, 15/month)
   premiumVoiceMinutesLimit: number;
   premiumVoiceMinutesUsed: number;
   premiumVoiceMinutesRemaining: number;
-  textMessagesUsed: number;
+  
+  // TTS tokens (across all features - token-based, 1M/month)
+  ttsTokensLimit: number;
+  ttsTokensUsed: number;
+  ttsTokensRemaining: number;
+  
+  // Text practice tokens (token-based, 2M/month)
+  textPracticeTokensLimit: number;
+  textPracticeTokensUsed: number;
+  textPracticeTokensRemaining: number;
+  
+  // Certification limits
   certificationAttemptsUsed: number;
   certificationAttemptsLimit: number;
+  
+  // Legacy fields (deprecated)
+  textMessagesUsed: number;
   ttsMinutesLimit: number;
   ttsMinutesUsed: number;
   ttsMinutesRemaining: number;
@@ -73,6 +90,11 @@ export const useUsageLimits = () => {
         if (newLimits) {
           const premiumLimit = newLimits.premium_voice_minutes_monthly_limit || 15;
           const premiumUsed = newLimits.premium_voice_minutes_used_current_month || 0;
+          const ttsTokensLimit = newLimits.tts_tokens_monthly_limit || 1000000;
+          const ttsTokensUsed = newLimits.tts_tokens_used_current_month || 0;
+          const textPracticeTokensLimit = newLimits.text_practice_tokens_monthly_limit || 2000000;
+          const textPracticeTokensUsed = newLimits.text_practice_tokens_used_current_month || 0;
+          
           setUsageLimits({
             voiceMinutesLimit: newLimits.voice_minutes_monthly_limit,
             voiceMinutesUsed: newLimits.voice_minutes_used_current_month,
@@ -80,6 +102,12 @@ export const useUsageLimits = () => {
             premiumVoiceMinutesLimit: premiumLimit,
             premiumVoiceMinutesUsed: premiumUsed,
             premiumVoiceMinutesRemaining: premiumLimit - premiumUsed,
+            ttsTokensLimit,
+            ttsTokensUsed,
+            ttsTokensRemaining: ttsTokensLimit - ttsTokensUsed,
+            textPracticeTokensLimit,
+            textPracticeTokensUsed,
+            textPracticeTokensRemaining: textPracticeTokensLimit - textPracticeTokensUsed,
             textMessagesUsed: newLimits.text_messages_used_current_month,
             certificationAttemptsUsed: newLimits.certification_attempts_used_current_semester,
             certificationAttemptsLimit: newLimits.certification_attempts_semester_limit,
@@ -96,6 +124,11 @@ export const useUsageLimits = () => {
       } else {
         const premiumLimit = limits.premium_voice_minutes_monthly_limit || 15;
         const premiumUsed = limits.premium_voice_minutes_used_current_month || 0;
+        const ttsTokensLimit = limits.tts_tokens_monthly_limit || 1000000;
+        const ttsTokensUsed = limits.tts_tokens_used_current_month || 0;
+        const textPracticeTokensLimit = limits.text_practice_tokens_monthly_limit || 2000000;
+        const textPracticeTokensUsed = limits.text_practice_tokens_used_current_month || 0;
+        
         setUsageLimits({
           voiceMinutesLimit: limits.voice_minutes_monthly_limit,
           voiceMinutesUsed: limits.voice_minutes_used_current_month,
@@ -103,6 +136,12 @@ export const useUsageLimits = () => {
           premiumVoiceMinutesLimit: premiumLimit,
           premiumVoiceMinutesUsed: premiumUsed,
           premiumVoiceMinutesRemaining: premiumLimit - premiumUsed,
+          ttsTokensLimit,
+          ttsTokensUsed,
+          ttsTokensRemaining: ttsTokensLimit - ttsTokensUsed,
+          textPracticeTokensLimit,
+          textPracticeTokensUsed,
+          textPracticeTokensRemaining: textPracticeTokensLimit - textPracticeTokensUsed,
           textMessagesUsed: limits.text_messages_used_current_month,
           certificationAttemptsUsed: limits.certification_attempts_used_current_semester,
           certificationAttemptsLimit: limits.certification_attempts_semester_limit,

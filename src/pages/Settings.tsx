@@ -1,7 +1,7 @@
 
 import React from "react";
 import { FileText, TrendingUp, Shield, Lock, BookOpen, Sparkles, ExternalLink } from "lucide-react";
-import { UsageDashboard } from "@/components/usage/UsageDashboard";
+import { TokenUsageLimits } from "@/components/usage/TokenUsageLimits";
 import { useNavigate } from "react-router-dom";
 import { InteractiveCard, Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,6 @@ const Settings = () => {
           </div>
         </motion.div>
         
-        {/* Usage Limits Section */}
         <motion.section
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,11 +55,11 @@ const Settings = () => {
               <h2 className="text-2xl md:text-3xl font-bold gradient-text">Usage Dashboard</h2>
             </div>
             <p className="text-base md:text-lg text-muted-foreground ml-10">
-              Track your AI usage and remaining daily quota
+              Track your monthly usage limits and remaining quota
             </p>
           </div>
           
-          <UsageDashboard />
+          <TokenUsageLimits />
         </motion.section>
 
         <Separator className="my-10" />

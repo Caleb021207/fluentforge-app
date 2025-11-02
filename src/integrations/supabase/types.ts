@@ -1783,8 +1783,12 @@ export type Database = {
           student_id: string
           text_messages_monthly_limit: number | null
           text_messages_used_current_month: number
+          text_practice_tokens_monthly_limit: number | null
+          text_practice_tokens_used_current_month: number | null
           tts_minutes_monthly_limit: number | null
           tts_minutes_used_current_month: number | null
+          tts_tokens_monthly_limit: number | null
+          tts_tokens_used_current_month: number | null
           updated_at: string
           voice_minutes_monthly_limit: number
           voice_minutes_used_current_month: number
@@ -1806,8 +1810,12 @@ export type Database = {
           student_id: string
           text_messages_monthly_limit?: number | null
           text_messages_used_current_month?: number
+          text_practice_tokens_monthly_limit?: number | null
+          text_practice_tokens_used_current_month?: number | null
           tts_minutes_monthly_limit?: number | null
           tts_minutes_used_current_month?: number | null
+          tts_tokens_monthly_limit?: number | null
+          tts_tokens_used_current_month?: number | null
           updated_at?: string
           voice_minutes_monthly_limit?: number
           voice_minutes_used_current_month?: number
@@ -1829,8 +1837,12 @@ export type Database = {
           student_id?: string
           text_messages_monthly_limit?: number | null
           text_messages_used_current_month?: number
+          text_practice_tokens_monthly_limit?: number | null
+          text_practice_tokens_used_current_month?: number | null
           tts_minutes_monthly_limit?: number | null
           tts_minutes_used_current_month?: number | null
+          tts_tokens_monthly_limit?: number | null
+          tts_tokens_used_current_month?: number | null
           updated_at?: string
           voice_minutes_monthly_limit?: number
           voice_minutes_used_current_month?: number
@@ -2503,6 +2515,14 @@ export type Database = {
       }
       increment_stt_usage: {
         Args: { p_minutes: number; p_student_id: string }
+        Returns: undefined
+      }
+      increment_text_practice_token_usage: {
+        Args: { p_tokens: number; p_user_id: string }
+        Returns: undefined
+      }
+      increment_tts_token_usage: {
+        Args: { p_tokens: number; p_user_id: string }
         Returns: undefined
       }
       increment_tts_usage: {
