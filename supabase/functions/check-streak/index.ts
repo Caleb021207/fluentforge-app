@@ -12,29 +12,43 @@ serve(async (req) => {
   }
 
   try {
+    // Get the JWT from the Authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'No authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Create Supabase client for database operations (uses user's JWT for RLS)
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
         global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
+          headers: { Authorization: authHeader },
         },
       }
     );
 
-    // JWT verification is handled by Supabase - user is already authenticated
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    // If no user, something is wrong with the JWT token
-    if (!user) {
-      throw new Error('Unable to get user from token');
+    // Since verify_jwt=true, Supabase has already verified the JWT
+    // Extract user ID from the verified JWT
+    const jwt = authHeader.replace('Bearer ', '');
+    const payload = JSON.parse(atob(jwt.split('.')[1]));
+    const userId = payload.sub;
+
+    if (!userId) {
+      throw new Error('Unable to extract user ID from JWT');
     }
+
+    console.log('Processing streak check for user:', userId);
 
     // Get user progression
     const { data: progression, error: progError } = await supabase
       .from('user_progression')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .single();
 
     if (progError || !progression) {
@@ -42,7 +56,7 @@ serve(async (req) => {
       const { data: newProg, error: createError } = await supabase
         .from('user_progression')
         .insert({
-          user_id: user.id,
+          user_id: userId,
           last_activity_date: new Date().toISOString().split('T')[0],
           current_streak_days: 1,
           longest_streak_days: 1,
@@ -115,7 +129,7 @@ serve(async (req) => {
         longest_streak_days: longestStreak,
         updated_at: new Date().toISOString(),
       })
-      .eq('user_id', user.id);
+      .eq('user_id', userId);
 
     if (updateError) throw updateError;
 
@@ -126,7 +140,7 @@ serve(async (req) => {
         .update({
           total_xp: progression.total_xp + streakBonusXP,
         })
-        .eq('user_id', user.id);
+        .eq('user_id', userId);
 
       if (xpError) console.error('Error awarding streak bonus XP:', xpError);
     }
