@@ -25,7 +25,7 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.check-streak]
-verify_jwt = true
+verify_jwt = false
 
 [functions.get-leaderboard-data]
 verify_jwt = true
