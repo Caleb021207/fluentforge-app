@@ -175,34 +175,7 @@ export const useProfileData = () => {
   };
 
   useEffect(() => {
-    // Set up auth state listener to handle session changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('🔔 Auth state change:', event, 'Session:', !!session);
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
-        await fetchUserData();
-      } else if (event === 'SIGNED_OUT') {
-        setState({
-          user: null,
-          profile: null,
-          isLoading: false,
-          authError: false,
-          debugInfo: null
-        });
-      }
-    });
-
-    // Also check for existing session immediately
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        fetchUserData();
-      } else {
-        setState(prev => ({ ...prev, isLoading: false }));
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    fetchUserData();
   }, []);
 
   return {
