@@ -92,41 +92,46 @@ serve(async (req) => {
     } = requestData;
 
     // ===== INPUT VALIDATION =====
-    // Validate message exists and is a string
-    if (!message || typeof message !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Invalid message format' }), 
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
-        }
-      );
-    }
+    // Skip message validation for hint requests (they only need conversationHistory)
+    let trimmedMessage = "";
+    
+    if (requestType !== 'hint') {
+      // Validate message exists and is a string
+      if (!message || typeof message !== 'string') {
+        return new Response(
+          JSON.stringify({ error: 'Invalid message format' }), 
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, "Content-Type": "application/json" } 
+          }
+        );
+      }
 
-    // Trim and check for empty messages
-    const trimmedMessage = message.trim();
-    if (trimmedMessage.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Message cannot be empty' }), 
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
-        }
-      );
-    }
+      // Trim and check for empty messages
+      trimmedMessage = message.trim();
+      if (trimmedMessage.length === 0) {
+        return new Response(
+          JSON.stringify({ error: 'Message cannot be empty' }), 
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, "Content-Type": "application/json" } 
+          }
+        );
+      }
 
-    // Enforce maximum message length to prevent API abuse
-    const MAX_MESSAGE_LENGTH = 2000;
-    if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
-      return new Response(
-        JSON.stringify({ 
-          error: `Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.` 
-        }), 
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
-        }
-      );
+      // Enforce maximum message length to prevent API abuse
+      const MAX_MESSAGE_LENGTH = 2000;
+      if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
+        return new Response(
+          JSON.stringify({ 
+            error: `Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.` 
+          }), 
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, "Content-Type": "application/json" } 
+          }
+        );
+      }
     }
 
     // Validate and limit conversation history
