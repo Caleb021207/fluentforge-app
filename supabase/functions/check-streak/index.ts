@@ -22,12 +22,12 @@ serve(async (req) => {
       }
     );
 
+    // JWT verification is handled by Supabase - user is already authenticated
     const { data: { user } } = await supabase.auth.getUser();
+    
+    // If no user, something is wrong with the JWT token
     if (!user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      throw new Error('Unable to get user from token');
     }
 
     // Get user progression
