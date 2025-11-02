@@ -1,89 +1,193 @@
+export interface ConversationStarter {
+  targetPhrase: string;
+  translations: Record<string, string>;
+}
+
 /**
- * Get conversation starter phrases in the target language (the language being learned)
- * This ensures learners practice in their target language, not their native language
+ * Get conversation starter phrases with translations
+ * Limited to 5 starters to prevent abuse
  */
-export const getTargetLanguagePhrases = (targetLanguage: string): string[] => {
+export const getConversationStarters = (targetLanguage: string): ConversationStarter[] => {
   const language = targetLanguage.toLowerCase();
   
-  // Spanish phrases
+  // Spanish phrases (5 starters)
   if (language === 'spanish' || language === 'español') {
     return [
-      "Hola, ¿cómo estás hoy?",
-      "¿Cómo está el clima donde estás?",
-      "¿Puedes recomendar un buen restaurante?",
-      "¿Cuáles son tus pasatiempos e intereses?",
-      "Cuéntame sobre tu libro o película favorita.",
-      "¿Qué hiciste el fin de semana pasado?",
-      "¿Cuáles son tus planes para mañana?",
-      "¿Cómo se dice... en inglés?"
+      {
+        targetPhrase: "Hola, ¿cómo estás hoy?",
+        translations: {
+          english: "Hello, how are you today?",
+          spanish: "Hola, ¿cómo estás hoy?",
+          french: "Bonjour, comment allez-vous aujourd'hui?",
+          german: "Hallo, wie geht es dir heute?",
+          italian: "Ciao, come stai oggi?",
+          portuguese: "Olá, como você está hoje?"
+        }
+      },
+      {
+        targetPhrase: "¿Qué hiciste el fin de semana pasado?",
+        translations: {
+          english: "What did you do last weekend?",
+          spanish: "¿Qué hiciste el fin de semana pasado?",
+          french: "Qu'avez-vous fait le week-end dernier?",
+          german: "Was hast du letztes Wochenende gemacht?",
+          italian: "Cosa hai fatto lo scorso fine settimana?",
+          portuguese: "O que você fez no fim de semana passado?"
+        }
+      },
+      {
+        targetPhrase: "¿Puedes recomendar un buen restaurante?",
+        translations: {
+          english: "Can you recommend a good restaurant?",
+          spanish: "¿Puedes recomendar un buen restaurante?",
+          french: "Pouvez-vous recommander un bon restaurant?",
+          german: "Kannst du ein gutes Restaurant empfehlen?",
+          italian: "Puoi consigliare un buon ristorante?",
+          portuguese: "Você pode recomendar um bom restaurante?"
+        }
+      },
+      {
+        targetPhrase: "Cuéntame sobre tu película favorita",
+        translations: {
+          english: "Tell me about your favorite movie",
+          spanish: "Cuéntame sobre tu película favorita",
+          french: "Parlez-moi de votre film préféré",
+          german: "Erzähl mir von deinem Lieblingsfilm",
+          italian: "Parlami del tuo film preferito",
+          portuguese: "Me conte sobre seu filme favorito"
+        }
+      },
+      {
+        targetPhrase: "¿Cuáles son tus pasatiempos?",
+        translations: {
+          english: "What are your hobbies?",
+          spanish: "¿Cuáles son tus pasatiempos?",
+          french: "Quels sont vos passe-temps?",
+          german: "Was sind deine Hobbys?",
+          italian: "Quali sono i tuoi hobby?",
+          portuguese: "Quais são seus hobbies?"
+        }
+      }
     ];
   }
   
-  // French phrases
+  // French phrases (5 starters)
   if (language === 'french' || language === 'français') {
     return [
-      "Bonjour, comment allez-vous aujourd'hui?",
-      "Quel temps fait-il chez vous?",
-      "Pouvez-vous recommander un bon restaurant?",
-      "Quels sont vos passe-temps et intérêts?",
-      "Parlez-moi de votre livre ou film préféré.",
-      "Qu'avez-vous fait le week-end dernier?",
-      "Quels sont vos projets pour demain?",
-      "Comment dit-on... en anglais?"
+      {
+        targetPhrase: "Bonjour, comment allez-vous aujourd'hui?",
+        translations: {
+          english: "Hello, how are you today?",
+          spanish: "Hola, ¿cómo estás hoy?",
+          french: "Bonjour, comment allez-vous aujourd'hui?",
+          german: "Hallo, wie geht es dir heute?",
+          italian: "Ciao, come stai oggi?",
+          portuguese: "Olá, como você está hoje?"
+        }
+      },
+      {
+        targetPhrase: "Qu'avez-vous fait le week-end dernier?",
+        translations: {
+          english: "What did you do last weekend?",
+          spanish: "¿Qué hiciste el fin de semana pasado?",
+          french: "Qu'avez-vous fait le week-end dernier?",
+          german: "Was hast du letztes Wochenende gemacht?",
+          italian: "Cosa hai fatto lo scorso fine settimana?",
+          portuguese: "O que você fez no fim de semana passado?"
+        }
+      },
+      {
+        targetPhrase: "Pouvez-vous recommander un bon restaurant?",
+        translations: {
+          english: "Can you recommend a good restaurant?",
+          spanish: "¿Puedes recomendar un buen restaurante?",
+          french: "Pouvez-vous recommander un bon restaurant?",
+          german: "Kannst du ein gutes Restaurant empfehlen?",
+          italian: "Puoi consigliare un buon ristorante?",
+          portuguese: "Você pode recomendar um bom restaurante?"
+        }
+      },
+      {
+        targetPhrase: "Parlez-moi de votre film préféré",
+        translations: {
+          english: "Tell me about your favorite movie",
+          spanish: "Cuéntame sobre tu película favorita",
+          french: "Parlez-moi de votre film préféré",
+          german: "Erzähl mir von deinem Lieblingsfilm",
+          italian: "Parlami del tuo film preferito",
+          portuguese: "Me conte sobre seu filme favorito"
+        }
+      },
+      {
+        targetPhrase: "Quels sont vos passe-temps?",
+        translations: {
+          english: "What are your hobbies?",
+          spanish: "¿Cuáles son tus pasatiempos?",
+          french: "Quels sont vos passe-temps?",
+          german: "Was sind deine Hobbys?",
+          italian: "Quali sono i tuoi hobby?",
+          portuguese: "Quais são seus hobbies?"
+        }
+      }
     ];
   }
   
-  // German phrases
-  if (language === 'german' || language === 'deutsch') {
-    return [
-      "Hallo, wie geht es dir heute?",
-      "Wie ist das Wetter bei dir?",
-      "Kannst du ein gutes Restaurant empfehlen?",
-      "Was sind deine Hobbys und Interessen?",
-      "Erzähl mir von deinem Lieblingsbuch oder Film.",
-      "Was hast du letztes Wochenende gemacht?",
-      "Was sind deine Pläne für morgen?",
-      "Wie sagt man... auf Englisch?"
-    ];
-  }
-  
-  // Italian phrases
-  if (language === 'italian' || language === 'italiano') {
-    return [
-      "Ciao, come stai oggi?",
-      "Com'è il tempo da te?",
-      "Puoi consigliare un buon ristorante?",
-      "Quali sono i tuoi hobby e interessi?",
-      "Parlami del tuo libro o film preferito.",
-      "Cosa hai fatto lo scorso fine settimana?",
-      "Quali sono i tuoi piani per domani?",
-      "Come si dice... in inglese?"
-    ];
-  }
-  
-  // Portuguese phrases
-  if (language === 'portuguese' || language === 'português') {
-    return [
-      "Olá, como você está hoje?",
-      "Como está o tempo aí?",
-      "Você pode recomendar um bom restaurante?",
-      "Quais são seus hobbies e interesses?",
-      "Me conte sobre seu livro ou filme favorito.",
-      "O que você fez no fim de semana passado?",
-      "Quais são seus planos para amanhã?",
-      "Como se diz... em inglês?"
-    ];
-  }
-  
-  // Default to English phrases as fallback
+  // Default to English phrases as fallback (5 starters)
   return [
-    "Hello, how are you today?",
-    "What's the weather like where you are?",
-    "Can you recommend a good restaurant?",
-    "What are your hobbies and interests?",
-    "Tell me about your favorite book or movie.",
-    "What did you do last weekend?",
-    "What are your plans for tomorrow?",
-    "How do you say... in Spanish/English?"
+    {
+      targetPhrase: "Hello, how are you today?",
+      translations: {
+        english: "Hello, how are you today?",
+        spanish: "Hola, ¿cómo estás hoy?",
+        french: "Bonjour, comment allez-vous aujourd'hui?",
+        german: "Hallo, wie geht es dir heute?",
+        italian: "Ciao, come stai oggi?",
+        portuguese: "Olá, como você está hoje?"
+      }
+    },
+    {
+      targetPhrase: "What did you do last weekend?",
+      translations: {
+        english: "What did you do last weekend?",
+        spanish: "¿Qué hiciste el fin de semana pasado?",
+        french: "Qu'avez-vous fait le week-end dernier?",
+        german: "Was hast du letztes Wochenende gemacht?",
+        italian: "Cosa hai fatto lo scorso fine settimana?",
+        portuguese: "O que você fez no fim de semana passado?"
+      }
+    },
+    {
+      targetPhrase: "Can you recommend a good restaurant?",
+      translations: {
+        english: "Can you recommend a good restaurant?",
+        spanish: "¿Puedes recomendar un buen restaurante?",
+        french: "Pouvez-vous recommander un bon restaurant?",
+        german: "Kannst du ein gutes Restaurant empfehlen?",
+        italian: "Puoi consigliare un buon ristorante?",
+        portuguese: "Você pode recomendar um bom restaurante?"
+      }
+    },
+    {
+      targetPhrase: "Tell me about your favorite movie",
+      translations: {
+        english: "Tell me about your favorite movie",
+        spanish: "Cuéntame sobre tu película favorita",
+        french: "Parlez-moi de votre film préféré",
+        german: "Erzähl mir von deinem Lieblingsfilm",
+        italian: "Parlami del tuo film preferito",
+        portuguese: "Me conte sobre seu filme favorito"
+      }
+    },
+    {
+      targetPhrase: "What are your hobbies?",
+      translations: {
+        english: "What are your hobbies?",
+        spanish: "¿Cuáles son tus pasatiempos?",
+        french: "Quels sont vos passe-temps?",
+        german: "Was sind deine Hobbys?",
+        italian: "Quali sono i tuoi hobby?",
+        portuguese: "Quais são seus hobbies?"
+      }
+    }
   ];
 };

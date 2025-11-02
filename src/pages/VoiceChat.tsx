@@ -307,6 +307,8 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
           <ConversationStarters 
             onPhraseClick={handlePhraseClick}
             targetLanguage={practice}
+            isLoading={isLoading}
+            hasMessages={conversationHistory.length > 0}
           />
           
           <InformationCard />
