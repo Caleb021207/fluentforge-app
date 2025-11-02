@@ -103,7 +103,8 @@ export const useChatService = () => {
       
       return {
         content: data.content,
-        translation: data.translation
+        translation: data.translation,
+        usingFallbackModel: data.usingFallbackModel
       };
       
     } catch (error) {

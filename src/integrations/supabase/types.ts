@@ -2456,6 +2456,22 @@ export type Database = {
         Args: { target_student_id: string }
         Returns: Json
       }
+      can_use_azure_tts: {
+        Args: { p_student_id: string }
+        Returns: {
+          can_use: boolean
+          tokens_limit: number
+          tokens_remaining: number
+        }[]
+      }
+      can_use_whisper_stt: {
+        Args: { p_student_id: string }
+        Returns: {
+          can_use: boolean
+          minutes_limit: number
+          minutes_remaining: number
+        }[]
+      }
       check_access_code_rate_limit: {
         Args: {
           p_ip_address?: unknown

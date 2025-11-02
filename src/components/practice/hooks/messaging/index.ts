@@ -44,7 +44,8 @@ export const useChatMessaging = () => {
       // Return the data with processed translation
       return {
         content: response.content,
-        translation: processedTranslation
+        translation: processedTranslation,
+        usingFallbackModel: response.usingFallbackModel
       };
       
     } catch (error) {

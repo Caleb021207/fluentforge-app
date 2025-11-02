@@ -53,7 +53,7 @@ serve(async (req) => {
       throw new Error('Text is required');
     }
 
-    // Check TTS usage limits if userId is provided (check voice_minutes)
+    // Check TTS token usage limits if userId is provided
     if (userId) {
       const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
       const supabaseClient = createClient(
@@ -63,18 +63,18 @@ serve(async (req) => {
 
       const { data: limits, error: limitsError } = await supabaseClient
         .from('student_usage_limits')
-        .select('voice_minutes_used_current_month, voice_minutes_monthly_limit')
-        .eq('user_id', userId)
+        .select('tts_tokens_used_current_month, tts_tokens_monthly_limit')
+        .eq('student_id', userId)
         .single();
 
-      if (limits && limits.voice_minutes_used_current_month >= limits.voice_minutes_monthly_limit) {
-        console.log(`Voice practice limit reached for user ${userId}: ${limits.voice_minutes_used_current_month}/${limits.voice_minutes_monthly_limit}`);
+      if (limits && limits.tts_tokens_used_current_month >= limits.tts_tokens_monthly_limit) {
+        console.log(`TTS token limit reached for user ${userId}: ${limits.tts_tokens_used_current_month}/${limits.tts_tokens_monthly_limit}`);
         return new Response(
           JSON.stringify({ 
             useFallback: true,
-            reason: 'Voice practice monthly limit reached',
-            minutesUsed: limits.voice_minutes_used_current_month,
-            minutesLimit: limits.voice_minutes_monthly_limit
+            reason: 'TTS monthly token limit reached',
+            tokensUsed: limits.tts_tokens_used_current_month,
+            tokensLimit: limits.tts_tokens_monthly_limit
           }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
@@ -161,7 +161,7 @@ serve(async (req) => {
 
     console.log("Successfully generated speech with Azure TTS");
 
-    // Track TTS usage if userId is provided (track to voice_minutes_used_current_month)
+    // Track TTS token usage if userId is provided
     if (userId) {
       const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
       const supabaseClient = createClient(
@@ -169,8 +169,8 @@ serve(async (req) => {
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       );
 
-      // Estimate duration: ~150 characters per minute of speech
-      const estimatedMinutes = Math.ceil(text.length / 150);
+      // Estimate tokens: approximately 4 characters = 1 token
+      const estimatedTokens = Math.ceil(text.length / 4);
       
       try {
         // Track to api_calls_tracking for logging
@@ -182,12 +182,12 @@ serve(async (req) => {
             user_id: userId
           });
 
-        // Update voice practice minutes used (same field as custom realtime)
-        await supabaseClient.rpc('increment_voice_usage', {
+        // Update TTS token usage
+        await supabaseClient.rpc('increment_tts_token_usage', {
           p_user_id: userId,
-          p_minutes: estimatedMinutes
+          p_tokens: estimatedTokens
         });
-        console.log(`✅ Tracked ${estimatedMinutes} minute(s) of TTS usage to voice practice for user ${userId}`);
+        console.log(`✅ Tracked ${estimatedTokens} token(s) of TTS usage for user ${userId}`);
       } catch (trackError) {
         console.error('Error tracking TTS usage:', trackError);
         // Don't fail the request if tracking fails

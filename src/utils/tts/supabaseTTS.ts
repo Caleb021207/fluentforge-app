@@ -2,8 +2,8 @@
 import { supabase } from "@/integrations/supabase/client";
 import { ttsCache } from "./cache";
 import { useBrowserTTS } from "./browserTTS";
-import { trackTTSUsage } from "./tracking";
 import type { TTSOptions } from "./types";
+import { toast } from "sonner";
 
 /**
  * Play audio using Supabase Edge Function TTS (OpenAI)
@@ -48,7 +48,12 @@ export const playTTS = async ({
 
     // Check if we should use browser fallback due to limit
     if (data?.useFallback) {
-      console.log("TTS limit reached, using browser fallback");
+      console.log("TTS token limit reached, using browser fallback");
+      
+      // Show toast notification to user
+      toast.info("Switched to Cloud TTS", {
+        description: "You've reached your monthly Azure TTS token limit. Now using browser text-to-speech."
+      });
       
       // Use browser TTS as fallback
       const browserTTS = useBrowserTTS();
@@ -80,10 +85,7 @@ export const playTTS = async ({
     // Cache the audio for future requests with speech rate
     ttsCache.set(text, language, data.audioContent, speechRate);
 
-    // Track usage for analytics
-    trackTTSUsage(language, text.length);
-
-    // Play the audio
+    // Play the audio (tracking is done in the edge function)
     return playAudioFromBase64(data.audioContent, onStart, onEnd, onError);
   } catch (err: any) {
     console.error("TTS error:", err);

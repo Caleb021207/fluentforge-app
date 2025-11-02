@@ -103,6 +103,14 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     const response = await sendChatMessageWithCorrection(input);
     
     if (response) {
+      // Show toast if using fallback model
+      if (response.usingFallbackModel) {
+        toast({
+          title: "Using Economy Model",
+          description: "You've reached your monthly text practice token limit. Now using GPT-3.5 for cost-effective practice.",
+        });
+      }
+      
       // Add assistant response to the chat
       const assistantMessage: Message = {
         role: "assistant",

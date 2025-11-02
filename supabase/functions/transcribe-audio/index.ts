@@ -72,7 +72,15 @@ serve(async (req) => {
 
       if (limits && limits.stt_minutes_used_current_month >= limits.stt_minutes_monthly_limit) {
         console.log(`STT limit reached for user ${userId}: ${limits.stt_minutes_used_current_month}/${limits.stt_minutes_monthly_limit}`);
-        throw new Error('Speech-to-text monthly limit reached. Voice features are temporarily unavailable.');
+        return new Response(
+          JSON.stringify({ 
+            useFallback: true,
+            reason: 'STT monthly limit reached',
+            minutesUsed: limits.stt_minutes_used_current_month,
+            minutesLimit: limits.stt_minutes_monthly_limit
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
     }
 

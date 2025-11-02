@@ -56,7 +56,7 @@ export const TokenUsageLimits = () => {
     },
     {
       icon: Mic,
-      title: "Custom Realtime",
+      title: "Advanced Voice",
       subtitle: accountTier === 'standard' ? "Premium Feature" : "Advanced AI Conversation",
       used: usageLimits?.premiumVoiceMinutesUsed || 0,
       limit: usageLimits?.premiumVoiceMinutesLimit || 0,

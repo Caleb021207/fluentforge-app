@@ -146,6 +146,7 @@ serve(async (req) => {
     }
 
     // Check text practice token limits (skip for hint requests)
+    let usingFallbackModel = false;
     if (requestType !== 'hint') {
       try {
         const { data: limitCheck, error: limitError } = await supabaseClient.rpc(
@@ -156,18 +157,8 @@ serve(async (req) => {
         if (limitError) {
           console.error('Error checking text practice limits:', limitError);
         } else if (limitCheck && limitCheck.length > 0 && !limitCheck[0].can_send) {
-          return new Response(
-            JSON.stringify({ 
-              error: 'Text practice limit reached',
-              reason: limitCheck[0].reason,
-              messagesUsed: limitCheck[0].messages_used,
-              messagesLimit: limitCheck[0].messages_limit
-            }), 
-            { 
-              status: 429, 
-              headers: { ...corsHeaders, "Content-Type": "application/json" } 
-            }
-          );
+          console.log('User has reached text practice limit, switching to cheaper model fallback:', limitCheck[0]);
+          usingFallbackModel = true;
         }
       } catch (limitCheckError) {
         console.error('Failed to check usage limits:', limitCheckError);
@@ -382,9 +373,13 @@ Always respond in ${targetLangDisplay}. If asked to translate or explain grammar
 
     console.log(`Grammar correction enabled: ${correctGrammar}, Conversation level: ${conversationLevel} (${currentLevel.cefr})`);
 
+    // Use cheaper model if limit is reached
+    const modelToUse = usingFallbackModel ? "gpt-3.5-turbo" : "gpt-4o-mini";
+    console.log(`Using model: ${modelToUse}${usingFallbackModel ? ' (fallback due to token limit)' : ''}`);
+
     // Call OpenAI for conversation response
     const chatResponse = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: modelToUse,
       messages: [
         { role: "system", content: systemMessage },
         ...limitedHistory,
@@ -462,6 +457,7 @@ Always respond in ${targetLangDisplay}. If asked to translate or explain grammar
         content,
         translation,
         updatedHistory,
+        usingFallbackModel,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

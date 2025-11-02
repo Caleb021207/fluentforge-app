@@ -187,6 +187,24 @@ export const useVoiceSpeechRecognition = ({
   // Start Whisper-based recording
   const startWhisperRecording = useCallback(async () => {
     try {
+      // Check Whisper STT limits before starting
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.id) {
+        const { data: limitsData } = await supabase
+          .rpc('can_use_whisper_stt', { p_student_id: user.id })
+          .single();
+        
+        if (limitsData && !limitsData.can_use) {
+          console.log('Whisper STT limit reached, using browser fallback');
+          toast({
+            title: "Switched to Browser Speech Recognition",
+            description: "You've reached your monthly Whisper STT limit. Now using browser speech recognition.",
+          });
+          startBrowserRecognition();
+          return;
+        }
+      }
+      
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
       
@@ -225,14 +243,15 @@ export const useVoiceSpeechRecognition = ({
               }
             });
 
-            if (error) {
-              console.error('Transcription error:', error);
+            if (error || data?.useFallback) {
+              console.error('Transcription error or limit reached:', error || data);
               toast({
-                title: t("sttLimitReached") || "STT limit reached",
-                description: "Falling back to browser-based speech recognition",
-                variant: "default",
+                title: "Switched to Browser Speech Recognition",
+                description: "You've reached your monthly Whisper STT limit. Now using browser speech recognition.",
               });
               setIsTranscribing(false);
+              // Switch to browser recognition for future requests
+              startBrowserRecognition();
               return;
             }
 
