@@ -294,8 +294,8 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
 
     // Map languages to Azure voices
     const azureVoiceMap: Record<string, string> = {
-      'es': 'es-ES-ElviraNeural',
-      'en': 'en-US-AriaNeural',
+      'es': 'es-MX-DaliaNeural', // Mexican Spanish (neutral Latin American accent)
+      'en': 'en-US-JennyNeural',
       'pt': 'pt-BR-FranciscaNeural',
       'fr': 'fr-FR-DeniseNeural',
       'de': 'de-DE-KatjaNeural',
@@ -316,7 +316,7 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
 
     // Map language codes to full locale codes for SSML
     const localeMap: Record<string, string> = {
-      'es': 'es-ES',
+      'es': 'es-MX', // Mexican Spanish locale
       'en': 'en-US',
       'pt': 'pt-BR',
       'fr': 'fr-FR',
