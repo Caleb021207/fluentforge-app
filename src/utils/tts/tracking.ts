@@ -2,7 +2,11 @@
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Track TTS usage in the database - updates both API tracking and usage limits
+ * Track TTS usage in the database
+ * This tracks ALL TTS usage to voice_minutes_used_current_month
+ * (unlimited voice practice, custom realtime, pronunciation practice, etc.)
+ * @param language The language being spoken
+ * @param textLength The length of the text being spoken
  */
 export async function trackTTSUsage(language: string, textLength: number): Promise<void> {
   try {
@@ -25,43 +29,31 @@ export async function trackTTSUsage(language: string, textLength: number): Promi
     // Track API call for monitoring purposes
     const { error: apiError } = await supabase.from('api_calls_tracking').insert({
       user_id: user.id,
-      service: 'tts',
-      endpoint: 'voice_practice'
+      service: 'azure_tts',
+      endpoint: 'text-to-speech'
     });
     
     if (apiError) {
       console.error("Error inserting API tracking record:", apiError);
     }
     
-    // Calculate minutes used (rough estimate: 150 words per minute, average 5 chars per word)
-    const estimatedWords = textLength / 5;
-    const minutesUsed = Math.max(0.1, estimatedWords / 150); // Minimum 0.1 minutes (6 seconds)
+    // Calculate minutes used (rough estimate: 150 characters per minute of speech)
+    const estimatedMinutes = Math.ceil(textLength / 150);
     
-    console.log(`Estimated TTS minutes: ${minutesUsed.toFixed(2)} for ${textLength} characters`);
+    console.log(`Estimated TTS minutes: ${estimatedMinutes} for ${textLength} characters`);
     
-    // Update TTS usage limits
-    const { data: currentLimits } = await supabase
-      .from('student_usage_limits')
-      .select('tts_minutes_used_current_month')
-      .eq('student_id', user.id)
-      .single();
+    // Update voice practice usage limits (same field as custom realtime)
+    const { error: rpcError } = await supabase.rpc('increment_voice_usage', {
+      p_user_id: user.id,
+      p_minutes: estimatedMinutes
+    });
     
-    const newUsage = (currentLimits?.tts_minutes_used_current_month || 0) + minutesUsed;
-    
-    const { error: updateError } = await supabase
-      .from('student_usage_limits')
-      .update({
-        tts_minutes_used_current_month: newUsage,
-        updated_at: new Date().toISOString()
-      })
-      .eq('student_id', user.id);
-    
-    if (updateError) {
-      console.error("Error updating TTS usage limits:", updateError);
+    if (rpcError) {
+      console.error("Error updating voice practice usage limits:", rpcError);
       return;
     }
     
-    console.log(`TTS usage tracked successfully: ${minutesUsed.toFixed(2)} minutes added (total: ${newUsage.toFixed(2)})`);
+    console.log(`✅ TTS usage tracked successfully: ${estimatedMinutes} minute(s) added to voice practice for user ${user.id}`);
     
   } catch (error) {
     console.error("Error tracking TTS usage:", error);
