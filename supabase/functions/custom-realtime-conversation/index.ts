@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -97,6 +98,26 @@ serve(async (req) => {
     
     if (!audio) {
       throw new Error('No audio data provided');
+    }
+
+    // Get user ID for tracking
+    const authHeader = req.headers.get('Authorization');
+    let userId: string | null = null;
+    
+    if (authHeader) {
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+        {
+          global: {
+            headers: { Authorization: authHeader },
+          },
+        }
+      );
+      
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      userId = user?.id || null;
+      console.log('User ID for tracking:', userId);
     }
 
     const level = proficiencyLevel || 'intermediate';
@@ -530,6 +551,40 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
     const totalWords = aiResponse.split(/\s+/).length;
     const estimatedMinutes = Math.ceil(totalWords / 150);
     console.log(`Estimated TTS usage: ${estimatedMinutes} minute(s) for ${totalWords} words`);
+
+    // Track Azure TTS usage in student_usage_limits if user is authenticated
+    if (userId && estimatedMinutes > 0) {
+      try {
+        const supabaseClient = createClient(
+          Deno.env.get('SUPABASE_URL') ?? '',
+          Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+        );
+
+        // Track in api_calls_tracking for logging
+        await supabaseClient
+          .from('api_calls_tracking')
+          .insert({
+            service: 'azure_tts',
+            endpoint: 'custom-realtime-conversation',
+            user_id: userId
+          });
+
+        // Update voice practice minutes used (Azure TTS)
+        const { error: updateError } = await supabaseClient.rpc('increment_voice_usage', {
+          p_user_id: userId,
+          p_minutes: estimatedMinutes
+        });
+
+        if (updateError) {
+          console.error('Error updating voice practice usage:', updateError);
+        } else {
+          console.log(`✅ Tracked ${estimatedMinutes} minute(s) of Azure TTS usage for user ${userId}`);
+        }
+      } catch (trackingError) {
+        console.error('Error tracking TTS usage:', trackingError);
+        // Don't fail the request if tracking fails
+      }
+    }
 
     return new Response(
       JSON.stringify({
