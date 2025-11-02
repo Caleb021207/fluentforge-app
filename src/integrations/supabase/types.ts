@@ -2509,6 +2509,10 @@ export type Database = {
         Args: { p_minutes: number; p_student_id: string }
         Returns: undefined
       }
+      increment_voice_usage: {
+        Args: { p_minutes: number; p_user_id: string }
+        Returns: undefined
+      }
       initialize_student_usage_limits: {
         Args: { target_student_id: string }
         Returns: undefined
