@@ -209,10 +209,9 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'gpt-5-mini-2025-08-07',
         messages,
-        max_tokens: 200,
-        temperature: 0.8,
+        max_completion_tokens: 200,
         tools: [
           {
             type: 'function',
