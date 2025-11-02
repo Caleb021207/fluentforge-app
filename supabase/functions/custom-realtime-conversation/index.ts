@@ -57,6 +57,8 @@ serve(async (req) => {
   }
 
   try {
+    // JWT is verified by Supabase at edge layer (verify_jwt = true in config.toml)
+    // If this code runs, the user has been authenticated
     const { audio, conversationHistory, targetLanguage, userLanguage, userInterfaceLanguage, proficiencyLevel } = await req.json();
     
     if (!audio) {

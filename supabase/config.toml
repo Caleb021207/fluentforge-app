@@ -7,16 +7,16 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.premium-voice-realtime]
-verify_jwt = false
+verify_jwt = true
 
 [functions.track-premium-voice-session]
-verify_jwt = false
+verify_jwt = true
 
 [functions.custom-realtime-conversation]
-verify_jwt = false
+verify_jwt = true
 
 [functions.gemini-voice-realtime]
-verify_jwt = false
+verify_jwt = true
 
 [functions.seed-course-data]
 verify_jwt = true

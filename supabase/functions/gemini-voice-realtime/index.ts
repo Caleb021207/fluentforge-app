@@ -13,19 +13,17 @@ serve(async (req) => {
   }
 
   try {
-    // Get authorization token
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
-      return new Response('Unauthorized', { status: 401 });
-    }
-
-    // Verify user and check usage limits
+    // JWT is verified by Supabase at edge layer (verify_jwt = true in config.toml)
+    // Get authenticated user from request
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const authHeader = req.headers.get('authorization')!;
+    
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       console.error('Auth error:', authError);
