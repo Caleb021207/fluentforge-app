@@ -1244,6 +1244,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_tier: Database["public"]["Enums"]["account_tier"] | null
           avatar_url: string | null
           created_at: string
           display_name: string | null
@@ -1260,6 +1261,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          account_tier?: Database["public"]["Enums"]["account_tier"] | null
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
@@ -1276,6 +1278,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          account_tier?: Database["public"]["Enums"]["account_tier"] | null
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
@@ -2537,6 +2540,13 @@ export type Database = {
         Args: { target_student_id: string }
         Returns: undefined
       }
+      initialize_student_usage_limits_with_tier: {
+        Args: {
+          p_account_tier: Database["public"]["Enums"]["account_tier"]
+          p_student_id: string
+        }
+        Returns: undefined
+      }
       is_admin_of_class_school: {
         Args: { p_class_id: string; p_user_id: string }
         Returns: boolean
@@ -2614,6 +2624,7 @@ export type Database = {
       }
     }
     Enums: {
+      account_tier: "standard" | "premium"
       app_role: "admin" | "teacher" | "student" | "district"
       code_type: "district" | "school" | "teacher" | "class"
       district_consent_type:
@@ -2747,6 +2758,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_tier: ["standard", "premium"],
       app_role: ["admin", "teacher", "student", "district"],
       code_type: ["district", "school", "teacher", "class"],
       district_consent_type: [
