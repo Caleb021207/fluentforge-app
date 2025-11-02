@@ -31,25 +31,13 @@ export const useGamification = () => {
   const { triggerXPNotification } = useXPNotification();
 
   useEffect(() => {
-    let hasCheckedStreak = false;
-    
     const initializeProgression = async () => {
       await fetchProgression();
+      // Only check streak after progression is loaded and user is confirmed
+      await checkStreak();
     };
-    
-    // Listen for auth state to be ready before checking streak
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user && !hasCheckedStreak) {
-        hasCheckedStreak = true;
-        await checkStreak();
-      }
-    });
     
     initializeProgression();
-    
-    return () => {
-      subscription.unsubscribe();
-    };
   }, []);
 
   const fetchProgression = async () => {
@@ -79,33 +67,25 @@ export const useGamification = () => {
 
   const checkStreak = async () => {
     try {
-      // Verify user is authenticated first
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) {
-        console.log('No authenticated user, skipping streak check');
-        return;
-      }
-
       // Get current session to ensure auth token is available
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        console.log('No valid session token, skipping streak check');
+      if (!session) {
+        console.log('No active session, skipping streak check');
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke('check-streak');
+      const { data, error } = await supabase.functions.invoke('check-streak', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
       
       if (error) {
         console.error('Streak check error:', error);
-        // Don't throw on 401 errors during initialization
-        if (error.message?.includes('401')) {
-          console.log('Authentication not ready, will retry later');
-          return;
-        }
         throw error;
       }
 
-      if (data?.streak_bonus_xp > 0) {
+      if (data.streak_bonus_xp > 0) {
         toast({
           title: `🔥 ${data.current_streak} Day Streak!`,
           description: `+${data.streak_bonus_xp} bonus XP for maintaining your streak!`,
