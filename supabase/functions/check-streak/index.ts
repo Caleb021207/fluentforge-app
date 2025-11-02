@@ -34,15 +34,27 @@ serve(async (req) => {
 
     // Since verify_jwt=true, Supabase has already verified the JWT
     // Extract user ID from the verified JWT
-    const jwt = authHeader.replace('Bearer ', '');
-    const payload = JSON.parse(atob(jwt.split('.')[1]));
-    const userId = payload.sub;
-
-    if (!userId) {
-      throw new Error('Unable to extract user ID from JWT');
+    let userId: string;
+    try {
+      const jwt = authHeader.replace('Bearer ', '').trim();
+      const parts = jwt.split('.');
+      
+      if (parts.length !== 3) {
+        throw new Error('Invalid JWT format');
+      }
+      
+      const payload = JSON.parse(atob(parts[1]));
+      userId = payload.sub;
+      
+      if (!userId) {
+        throw new Error('No sub claim in JWT');
+      }
+      
+      console.log('Processing streak check for user:', userId);
+    } catch (jwtError) {
+      console.error('JWT decode error:', jwtError);
+      throw new Error(`Unable to extract user ID from JWT: ${jwtError.message}`);
     }
-
-    console.log('Processing streak check for user:', userId);
 
     // Get user progression
     const { data: progression, error: progError } = await supabase
