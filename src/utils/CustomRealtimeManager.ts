@@ -273,7 +273,7 @@ export class CustomRealtimeManager {
         return;
       }
 
-      const response = data as CustomRealtimeResponse;
+      const response = data as CustomRealtimeResponse & { ttsMinutesUsed?: number };
       
       // Add messages to history
       this.conversationHistory.push(
@@ -284,6 +284,22 @@ export class CustomRealtimeManager {
       // Notify UI
       this.onMessage({ role: 'user', content: response.userTranscript });
       this.onMessage({ role: 'assistant', content: response.aiResponse });
+
+      // Track TTS usage
+      if (response.ttsMinutesUsed && response.ttsMinutesUsed > 0) {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            await supabase.rpc('increment_tts_usage', {
+              p_student_id: user.id,
+              p_minutes: response.ttsMinutesUsed
+            });
+            console.log(`Tracked ${response.ttsMinutesUsed} TTS minute(s) for user ${user.id}`);
+          }
+        } catch (error) {
+          console.error('Failed to track TTS usage:', error);
+        }
+      }
 
       // Play AI response (supports both single audio and segments)
       if (response.audioSegments && response.audioSegments.length > 0) {

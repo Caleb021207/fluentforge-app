@@ -270,11 +270,23 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
     
     console.log(`Received ${segments.length} structured segments from GPT:`, segments);
 
-    // Trust GPT-4o's language detection completely
-    const processedSegments = segments.map(segment => ({
-      lang: normalizeLanguage(segment.lang),
-      text: segment.text.trim()
-    }));
+    // Don't trust GPT-4o's language detection - verify by checking the text content
+    const processedSegments = segments.map(segment => {
+      const text = segment.text.trim();
+      let detectedLang = normalizeLanguage(segment.lang);
+      
+      // Simple heuristic: if text contains Spanish-specific patterns, mark as Spanish
+      const spanishPatterns = /[¿¡]|está|estoy|gracias|hola|cómo|qué|dónde|cuándo|por qué|bueno|muy|mucho|poco|todo|nada|sí|no\b/i;
+      if (detectedLang === 'en' && spanishPatterns.test(text)) {
+        console.log(`⚠️ Correcting language: GPT said "en" but text appears to be Spanish: "${text.substring(0, 50)}..."`);
+        detectedLang = 'es';
+      }
+      
+      return {
+        lang: detectedLang,
+        text: text
+      };
+    });
 
     console.log(`GPT-4o language segments:`, processedSegments.map(s => `${s.lang}: "${s.text.substring(0, 30)}..."`));
 
@@ -399,12 +411,18 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
 
     console.log(`Successfully generated ${audioSegments.length} audio segments`);
 
+    // Calculate total TTS duration (rough estimate: 150 words per minute for audio)
+    const totalWords = aiResponse.split(/\s+/).length;
+    const estimatedMinutes = Math.ceil(totalWords / 150);
+    console.log(`Estimated TTS usage: ${estimatedMinutes} minute(s) for ${totalWords} words`);
+
     return new Response(
       JSON.stringify({
         userTranscript,
         aiResponse,
         audioSegments,
         audioFormat: 'mp3',
+        ttsMinutesUsed: estimatedMinutes,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
