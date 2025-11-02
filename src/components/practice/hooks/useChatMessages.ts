@@ -6,6 +6,7 @@ import { usePromptGenerator } from "./usePromptGenerator";
 import { useSessionManagement } from "./useSessionManagement";
 import { useToast } from "@/hooks/use-toast";
 import { useGamification } from "@/hooks/useGamification";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 import type { TranslationType } from "./useTranslationHandler";
 import type { ChatMessage } from "@/types/chat";
 
@@ -27,6 +28,7 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const { messageCount, setMessageCount } = useSessionManagement();
   const { toast } = useToast();
   const { awardXP } = useGamification();
+  const { checkCanSendTextMessage, trackTextMessage, usageLimits, refreshLimits } = useUsageLimits();
 
   // Load saved messages from session storage
   useEffect(() => {
@@ -77,10 +79,14 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     
     if (!input.trim()) return;
     
-    // Check session limits - simplified check since we removed checkSessionLimits
-    const isAllowed = true; // Simplifying for now, could be enhanced later
-    if (!isAllowed) {
-      console.log('Session limits exceeded');
+    // Check text practice token limits before sending
+    const limitCheck = await checkCanSendTextMessage();
+    if (!limitCheck.allowed) {
+      toast({
+        title: "Text Practice Limit Reached",
+        description: `You've used all ${limitCheck.messagesLimit || 0} text practice messages this month.`,
+        variant: "destructive",
+      });
       return;
     }
     
@@ -113,6 +119,12 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
         { role: 'assistant' as const, content: response.content }
       ];
       setApiConversationHistory(updatedHistory);
+      
+      // Track text practice usage - CRITICAL for limit enforcement
+      await trackTextMessage();
+      
+      // Refresh usage limits to get updated counts
+      await refreshLimits();
       
       // Award XP for sending a text message with metadata for better calculation
       console.log('📝 Awarding XP for text message:', { 

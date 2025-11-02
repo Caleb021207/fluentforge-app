@@ -100,6 +100,56 @@ export const UsageDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Text Practice Tokens Usage */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Text Practice</CardTitle>
+          <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">
+            {usageLimits.textPracticeTokensRemaining.toLocaleString()}
+          </div>
+          <p className="text-xs text-muted-foreground mb-2">
+            {usageLimits.textPracticeTokensUsed.toLocaleString()} of {usageLimits.textPracticeTokensLimit.toLocaleString()} tokens used this month
+          </p>
+          <Progress value={(usageLimits.textPracticeTokensUsed / usageLimits.textPracticeTokensLimit) * 100} className="h-2" />
+          <div className="flex justify-between items-center mt-2">
+            <Badge variant={getUsageStatus((usageLimits.textPracticeTokensUsed / usageLimits.textPracticeTokensLimit) * 100).variant}>
+              {getUsageStatus((usageLimits.textPracticeTokensUsed / usageLimits.textPracticeTokensLimit) * 100).label}
+            </Badge>
+            <span className="text-xs text-muted-foreground">
+              {Math.round((usageLimits.textPracticeTokensUsed / usageLimits.textPracticeTokensLimit) * 100)}% used
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* TTS Tokens Usage */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Text-to-Speech</CardTitle>
+          <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">
+            {usageLimits.ttsTokensRemaining.toLocaleString()}
+          </div>
+          <p className="text-xs text-muted-foreground mb-2">
+            {usageLimits.ttsTokensUsed.toLocaleString()} of {usageLimits.ttsTokensLimit.toLocaleString()} tokens used this month
+          </p>
+          <Progress value={(usageLimits.ttsTokensUsed / usageLimits.ttsTokensLimit) * 100} className="h-2" />
+          <div className="flex justify-between items-center mt-2">
+            <Badge variant={getUsageStatus((usageLimits.ttsTokensUsed / usageLimits.ttsTokensLimit) * 100).variant}>
+              {getUsageStatus((usageLimits.ttsTokensUsed / usageLimits.ttsTokensLimit) * 100).label}
+            </Badge>
+            <span className="text-xs text-muted-foreground">
+              {Math.round((usageLimits.ttsTokensUsed / usageLimits.ttsTokensLimit) * 100)}% used
+            </span>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

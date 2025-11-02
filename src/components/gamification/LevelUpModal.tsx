@@ -18,17 +18,25 @@ const LevelUpModal = ({ open, onClose, oldLevel, newLevel, totalXP }: LevelUpMod
   const tier = getLevelTier(newLevel);
   const colorGradient = getLevelColor(newLevel);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (open) {
-      setShowConfetti(true);
+      // Small delay to ensure everything is mounted
+      const timer = setTimeout(() => {
+        setReady(true);
+        setShowConfetti(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    } else {
+      setReady(false);
     }
   }, [open]);
 
   return (
     <>
       <ConfettiExplosion trigger={showConfetti} />
-      <Dialog open={open} onOpenChange={onClose}>
+      <Dialog open={open && ready} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-md">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}

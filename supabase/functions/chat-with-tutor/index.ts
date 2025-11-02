@@ -145,6 +145,36 @@ serve(async (req) => {
       );
     }
 
+    // Check text practice token limits (skip for hint requests)
+    if (requestType !== 'hint') {
+      try {
+        const { data: limitCheck, error: limitError } = await supabaseClient.rpc(
+          'can_send_text_message',
+          { p_student_id: user.id }
+        );
+
+        if (limitError) {
+          console.error('Error checking text practice limits:', limitError);
+        } else if (limitCheck && limitCheck.length > 0 && !limitCheck[0].can_send) {
+          return new Response(
+            JSON.stringify({ 
+              error: 'Text practice limit reached',
+              reason: limitCheck[0].reason,
+              messagesUsed: limitCheck[0].messages_used,
+              messagesLimit: limitCheck[0].messages_limit
+            }), 
+            { 
+              status: 429, 
+              headers: { ...corsHeaders, "Content-Type": "application/json" } 
+            }
+          );
+        }
+      } catch (limitCheckError) {
+        console.error('Failed to check usage limits:', limitCheckError);
+        // Continue with request even if limit check fails
+      }
+    }
+
     // Limit conversation history to last 20 messages to prevent memory issues
     const MAX_HISTORY_LENGTH = 20;
     const limitedHistory = conversationHistory.length > MAX_HISTORY_LENGTH
@@ -365,6 +395,7 @@ Always respond in ${targetLangDisplay}. If asked to translate or explain grammar
 
     const content = chatResponse.choices[0].message.content;
     let translation = "";
+    let totalTokensUsed = chatResponse.usage?.total_tokens || 0;
 
     // Generate translation if needed
     if (userLanguage && userLanguage !== targetLanguage) {
@@ -382,10 +413,40 @@ Always respond in ${targetLangDisplay}. If asked to translate or explain grammar
         });
         
         translation = translationResponse.choices[0].message.content || "";
+        totalTokensUsed += translationResponse.usage?.total_tokens || 0;
         console.log(`Generated translation from ${targetLanguage} to ${userLanguage}: ${translation.substring(0, 50)}...`);
       } catch (translationError) {
         console.error("Translation error:", translationError);
       }
+    }
+
+    // Track text practice token usage
+    try {
+      console.log(`Tracking ${totalTokensUsed} tokens for user ${user.id}`);
+      
+      // Create admin client for tracking
+      const supabaseAdmin = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        { auth: { persistSession: false } }
+      );
+
+      const { error: trackingError } = await supabaseAdmin.rpc(
+        'increment_text_practice_token_usage',
+        { 
+          p_user_id: user.id, 
+          p_tokens: totalTokensUsed 
+        }
+      );
+
+      if (trackingError) {
+        console.error('Failed to track text practice tokens:', trackingError);
+      } else {
+        console.log(`Successfully tracked ${totalTokensUsed} tokens for user ${user.id}`);
+      }
+    } catch (trackingError) {
+      console.error('Error tracking text practice usage:', trackingError);
+      // Don't fail the request if tracking fails
     }
 
     // Update conversation history (limited to prevent unbounded growth)

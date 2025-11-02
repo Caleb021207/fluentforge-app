@@ -11,17 +11,25 @@ interface XPNotificationProps {
 
 const XPNotification: React.FC<XPNotificationProps> = ({ show, amount }) => {
   const [showConfetti, setShowConfetti] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Preload image when component mounts
+  useEffect(() => {
+    const img = new Image();
+    img.src = xpPopupImage;
+    img.onload = () => setImageLoaded(true);
+  }, []);
 
   useEffect(() => {
-    if (show && amount >= 50) {
+    if (show && amount >= 50 && imageLoaded) {
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), 3000);
       return () => clearTimeout(timer);
     }
-  }, [show, amount]);
+  }, [show, amount, imageLoaded]);
 
-  // Only show the popup for XP >= 50
-  if (!show || amount < 50) return null;
+  // Only show the popup for XP >= 50 and when image is loaded
+  if (!show || amount < 50 || !imageLoaded) return null;
 
   return (
     <>
