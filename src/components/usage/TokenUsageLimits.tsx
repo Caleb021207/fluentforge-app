@@ -1,9 +1,8 @@
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { MessageSquare, Mic, Volume2, Clock, Crown, Shield } from "lucide-react";
+import { MessageSquare, Mic, Volume2, Clock, Crown } from "lucide-react";
 
 export const TokenUsageLimits = () => {
   const { usageLimits, isLoading } = useUsageLimits();
@@ -35,26 +34,7 @@ export const TokenUsageLimits = () => {
   };
 
   const accountTier = usageLimits.accountTier || 'premium';
-  const tierConfig = {
-    standard: {
-      icon: Shield,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50 dark:bg-blue-950',
-      label: 'Standard',
-      monthlyCost: '$2.57'
-    },
-    premium: {
-      icon: Crown,
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-50 dark:bg-amber-950',
-      label: 'Premium',
-      monthlyCost: '$4.02'
-    }
-  };
   
-  const currentTier = tierConfig[accountTier];
-  const TierIcon = currentTier.icon;
-
   const limits = [
     {
       icon: Volume2,
@@ -96,30 +76,6 @@ export const TokenUsageLimits = () => {
 
   return (
     <div className="space-y-6">
-      {/* Account Tier Badge */}
-      <Card className={currentTier.bgColor}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <TierIcon className={`h-6 w-6 ${currentTier.color}`} />
-              <div>
-                <CardTitle className="text-lg">
-                  {currentTier.label} Account
-                </CardTitle>
-                <CardDescription>
-                  {accountTier === 'standard' 
-                    ? 'Essential features for language learning' 
-                    : 'Full access to all premium features'}
-                </CardDescription>
-              </div>
-            </div>
-            <Badge variant={accountTier === 'premium' ? 'default' : 'secondary'} className="text-sm px-3 py-1">
-              {currentTier.monthlyCost}/month
-            </Badge>
-          </div>
-        </CardHeader>
-      </Card>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {limits.map((limit, index) => {
           const percentage = limit.limit > 0 ? (limit.used / limit.limit) * 100 : 0;
