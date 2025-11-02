@@ -57,7 +57,15 @@ const settingsTranslations: TranslationRecord = {
   settingsSaved: "设置已保存",
   failedToSaveSettings: "保存设置失败",
   passwordChanged: "密码已更改",
-  failedToChangePassword: "更改密码失败"
+  failedToChangePassword: "更改密码失败",
+  
+  // Account tier
+  accountTier: "账户等级",
+  standardTier: "标准版",
+  premiumTier: "高级版",
+  tierFeatures: "等级功能",
+  upgradeRequired: "需要升级",
+  premiumFeatureOnly: "此功能仅适用于高级账户"
 };
 
 export default settingsTranslations;

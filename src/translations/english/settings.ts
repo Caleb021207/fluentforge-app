@@ -78,7 +78,15 @@ const settingsTranslations: TranslationRecord = {
   passwordChanged: "Password changed successfully",
   passwordError: "Error changing password",
   profileUpdated: "Profile updated successfully",
-  profileError: "Error updating profile"
+  profileError: "Error updating profile",
+  
+  // Account tier
+  accountTier: "Account Tier",
+  standardTier: "Standard",
+  premiumTier: "Premium",
+  tierFeatures: "Tier Features",
+  upgradeRequired: "Upgrade Required",
+  premiumFeatureOnly: "This feature is only available for Premium accounts"
 };
 
 export default settingsTranslations;

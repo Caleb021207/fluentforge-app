@@ -3,22 +3,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface UsageLimits {
-  // Voice practice limits (Whisper STT - minute-based, 120/month)
+  // Account tier
+  accountTier: 'standard' | 'premium';
+  
+  // Voice practice limits (Whisper STT - minute-based)
   voiceMinutesLimit: number;
   voiceMinutesUsed: number;
   voiceMinutesRemaining: number;
   
-  // Premium voice practice limits (Custom Realtime - minute-based, 15/month)
+  // Premium voice practice limits (Custom Realtime - minute-based)
   premiumVoiceMinutesLimit: number;
   premiumVoiceMinutesUsed: number;
   premiumVoiceMinutesRemaining: number;
   
-  // TTS tokens (across all features - token-based, 1M/month)
+  // TTS tokens (across all features - token-based)
   ttsTokensLimit: number;
   ttsTokensUsed: number;
   ttsTokensRemaining: number;
   
-  // Text practice tokens (token-based, 2M/month)
+  // Text practice tokens (token-based)
   textPracticeTokensLimit: number;
   textPracticeTokensUsed: number;
   textPracticeTokensRemaining: number;
@@ -63,10 +66,19 @@ export const useUsageLimits = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // Fetch profile to get account_tier
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('account_tier')
+        .eq('id', user.id)
+        .single();
+      
+      const accountTier = profile?.account_tier || 'premium';
+
       const { data: limits, error } = await supabase
         .from('student_usage_limits')
         .select('*')
-        .eq('student_id', user.id)
+        .eq('user_id', user.id)
         .single();
 
       if (error && error.code !== 'PGRST116') {
@@ -75,27 +87,29 @@ export const useUsageLimits = () => {
       }
 
       if (!limits) {
-        // Initialize limits for new user
-        await supabase.rpc('initialize_student_usage_limits', {
-          target_student_id: user.id
+        // Initialize limits for new user with their tier
+        await supabase.rpc('initialize_student_usage_limits_with_tier', {
+          p_student_id: user.id,
+          p_account_tier: accountTier
         });
         
         // Fetch again after initialization
         const { data: newLimits } = await supabase
           .from('student_usage_limits')
           .select('*')
-          .eq('student_id', user.id)
+          .eq('user_id', user.id)
           .single();
 
         if (newLimits) {
-          const premiumLimit = newLimits.premium_voice_minutes_monthly_limit || 15;
+          const premiumLimit = newLimits.premium_voice_minutes_monthly_limit || 0;
           const premiumUsed = newLimits.premium_voice_minutes_used_current_month || 0;
-          const ttsTokensLimit = newLimits.tts_tokens_monthly_limit || 1000000;
+          const ttsTokensLimit = newLimits.tts_tokens_monthly_limit || 0;
           const ttsTokensUsed = newLimits.tts_tokens_used_current_month || 0;
-          const textPracticeTokensLimit = newLimits.text_practice_tokens_monthly_limit || 2000000;
+          const textPracticeTokensLimit = newLimits.text_practice_tokens_monthly_limit || 0;
           const textPracticeTokensUsed = newLimits.text_practice_tokens_used_current_month || 0;
           
           setUsageLimits({
+            accountTier,
             voiceMinutesLimit: newLimits.voice_minutes_monthly_limit,
             voiceMinutesUsed: newLimits.voice_minutes_used_current_month,
             voiceMinutesRemaining: newLimits.voice_minutes_monthly_limit - newLimits.voice_minutes_used_current_month,
@@ -122,14 +136,15 @@ export const useUsageLimits = () => {
           setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
         }
       } else {
-        const premiumLimit = limits.premium_voice_minutes_monthly_limit || 15;
+        const premiumLimit = limits.premium_voice_minutes_monthly_limit || 0;
         const premiumUsed = limits.premium_voice_minutes_used_current_month || 0;
-        const ttsTokensLimit = limits.tts_tokens_monthly_limit || 1000000;
+        const ttsTokensLimit = limits.tts_tokens_monthly_limit || 0;
         const ttsTokensUsed = limits.tts_tokens_used_current_month || 0;
-        const textPracticeTokensLimit = limits.text_practice_tokens_monthly_limit || 2000000;
+        const textPracticeTokensLimit = limits.text_practice_tokens_monthly_limit || 0;
         const textPracticeTokensUsed = limits.text_practice_tokens_used_current_month || 0;
         
         setUsageLimits({
+          accountTier,
           voiceMinutesLimit: limits.voice_minutes_monthly_limit,
           voiceMinutesUsed: limits.voice_minutes_used_current_month,
           voiceMinutesRemaining: limits.voice_minutes_monthly_limit - limits.voice_minutes_used_current_month,
