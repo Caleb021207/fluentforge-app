@@ -1795,6 +1795,8 @@ export type Database = {
           updated_at: string
           voice_minutes_monthly_limit: number
           voice_minutes_used_current_month: number
+          whisper_stt_minutes_monthly_limit: number | null
+          whisper_stt_minutes_used_current_month: number | null
         }
         Insert: {
           academic_year?: string
@@ -1822,6 +1824,8 @@ export type Database = {
           updated_at?: string
           voice_minutes_monthly_limit?: number
           voice_minutes_used_current_month?: number
+          whisper_stt_minutes_monthly_limit?: number | null
+          whisper_stt_minutes_used_current_month?: number | null
         }
         Update: {
           academic_year?: string
@@ -1849,6 +1853,8 @@ export type Database = {
           updated_at?: string
           voice_minutes_monthly_limit?: number
           voice_minutes_used_current_month?: number
+          whisper_stt_minutes_monthly_limit?: number | null
+          whisper_stt_minutes_used_current_month?: number | null
         }
         Relationships: []
       }

@@ -67,8 +67,8 @@ export const TokenUsageLimits = () => {
       icon: Clock,
       title: "Whisper STT",
       subtitle: "Speech-to-text transcription",
-      used: usageLimits?.voiceMinutesUsed || 0,
-      limit: usageLimits?.voiceMinutesLimit || 0,
+      used: usageLimits?.whisperSTTMinutesUsed || 0,
+      limit: usageLimits?.whisperSTTMinutesLimit || 0,
       type: "minutes",
       isPremiumOnly: false
     }

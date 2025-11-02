@@ -38,7 +38,7 @@ export const UsageDashboard = () => {
     );
   }
 
-  const voiceUsagePercent = (usageLimits.voiceMinutesUsed / usageLimits.voiceMinutesLimit) * 100;
+  const whisperSTTUsagePercent = (usageLimits.whisperSTTMinutesUsed / usageLimits.whisperSTTMinutesLimit) * 100;
   const premiumVoiceUsagePercent = (usageLimits.premiumVoiceMinutesUsed / usageLimits.premiumVoiceMinutesLimit) * 100;
   const certUsagePercent = (usageLimits.certificationAttemptsUsed / usageLimits.certificationAttemptsLimit) * 100;
 
@@ -49,30 +49,30 @@ export const UsageDashboard = () => {
     return { variant: 'outline' as const, label: 'Low' };
   };
 
-  const voiceStatus = getUsageStatus(voiceUsagePercent);
+  const whisperSTTStatus = getUsageStatus(whisperSTTUsagePercent);
   const premiumVoiceStatus = getUsageStatus(premiumVoiceUsagePercent);
   const certStatus = getUsageStatus(certUsagePercent);
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {/* Voice Practice Usage */}
+      {/* Whisper STT Usage */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Voice Practice</CardTitle>
+          <CardTitle className="text-sm font-medium">Whisper STT</CardTitle>
           <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {usageLimits.voiceMinutesRemaining} min
+            {usageLimits.whisperSTTMinutesRemaining} min
           </div>
           <p className="text-xs text-muted-foreground mb-2">
-            {usageLimits.voiceMinutesUsed} of {usageLimits.voiceMinutesLimit} used this month
+            {usageLimits.whisperSTTMinutesUsed} of {usageLimits.whisperSTTMinutesLimit} used this month
           </p>
-          <Progress value={voiceUsagePercent} className="h-2" />
+          <Progress value={whisperSTTUsagePercent} className="h-2" />
           <div className="flex justify-between items-center mt-2">
-            <Badge variant={voiceStatus.variant}>{voiceStatus.label}</Badge>
+            <Badge variant={whisperSTTStatus.variant}>{whisperSTTStatus.label}</Badge>
             <span className="text-xs text-muted-foreground">
-              {Math.round(voiceUsagePercent)}% used
+              {Math.round(whisperSTTUsagePercent)}% used
             </span>
           </div>
         </CardContent>

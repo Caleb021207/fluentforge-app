@@ -41,7 +41,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const voiceChatDisabled = (usageLimits?.voiceMinutesRemaining ?? 100) <= 0;
+  const voiceChatDisabled = (usageLimits?.whisperSTTMinutesRemaining ?? 180) <= 0;
 
   const navigationItems = [
     { label: t("home") || "Home", path: "/", icon: <Home className="w-4 h-4" /> },

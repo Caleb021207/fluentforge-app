@@ -6,12 +6,12 @@ interface UsageLimits {
   // Account tier
   accountTier: 'standard' | 'premium';
   
-  // Voice practice limits (Whisper STT - minute-based)
-  voiceMinutesLimit: number;
-  voiceMinutesUsed: number;
-  voiceMinutesRemaining: number;
+  // Whisper STT limits (minute-based)
+  whisperSTTMinutesLimit: number;
+  whisperSTTMinutesUsed: number;
+  whisperSTTMinutesRemaining: number;
   
-  // Premium voice practice limits (Custom Realtime - minute-based)
+  // Premium voice practice limits (Advanced Voice - minute-based)
   premiumVoiceMinutesLimit: number;
   premiumVoiceMinutesUsed: number;
   premiumVoiceMinutesRemaining: number;
@@ -29,16 +29,6 @@ interface UsageLimits {
   // Certification limits
   certificationAttemptsUsed: number;
   certificationAttemptsLimit: number;
-  
-  // Legacy fields (deprecated)
-  textMessagesUsed: number;
-  ttsMinutesLimit: number;
-  ttsMinutesUsed: number;
-  ttsMinutesRemaining: number;
-  sttMinutesLimit: number;
-  sttMinutesUsed: number;
-  sttMinutesRemaining: number;
-  isWithinTimeRestrictions: boolean;
 }
 
 interface UsageCheckResult {
@@ -107,12 +97,14 @@ export const useUsageLimits = () => {
           const ttsTokensUsed = newLimits.tts_tokens_used_current_month || 0;
           const textPracticeTokensLimit = newLimits.text_practice_tokens_monthly_limit || 0;
           const textPracticeTokensUsed = newLimits.text_practice_tokens_used_current_month || 0;
+          const whisperSTTLimit = newLimits.whisper_stt_minutes_monthly_limit || 180;
+          const whisperSTTUsed = newLimits.whisper_stt_minutes_used_current_month || 0;
           
           setUsageLimits({
             accountTier,
-            voiceMinutesLimit: newLimits.voice_minutes_monthly_limit,
-            voiceMinutesUsed: newLimits.voice_minutes_used_current_month,
-            voiceMinutesRemaining: newLimits.voice_minutes_monthly_limit - newLimits.voice_minutes_used_current_month,
+            whisperSTTMinutesLimit: whisperSTTLimit,
+            whisperSTTMinutesUsed: whisperSTTUsed,
+            whisperSTTMinutesRemaining: whisperSTTLimit - whisperSTTUsed,
             premiumVoiceMinutesLimit: premiumLimit,
             premiumVoiceMinutesUsed: premiumUsed,
             premiumVoiceMinutesRemaining: premiumLimit - premiumUsed,
@@ -122,16 +114,8 @@ export const useUsageLimits = () => {
             textPracticeTokensLimit,
             textPracticeTokensUsed,
             textPracticeTokensRemaining: textPracticeTokensLimit - textPracticeTokensUsed,
-            textMessagesUsed: newLimits.text_messages_used_current_month,
             certificationAttemptsUsed: newLimits.certification_attempts_used_current_semester,
-            certificationAttemptsLimit: newLimits.certification_attempts_semester_limit,
-            ttsMinutesLimit: newLimits.tts_minutes_monthly_limit || 60,
-            ttsMinutesUsed: newLimits.tts_minutes_used_current_month || 0,
-            ttsMinutesRemaining: (newLimits.tts_minutes_monthly_limit || 60) - (newLimits.tts_minutes_used_current_month || 0),
-            sttMinutesLimit: newLimits.stt_minutes_monthly_limit || 120,
-            sttMinutesUsed: newLimits.stt_minutes_used_current_month || 0,
-            sttMinutesRemaining: (newLimits.stt_minutes_monthly_limit || 120) - (newLimits.stt_minutes_used_current_month || 0),
-            isWithinTimeRestrictions: true
+            certificationAttemptsLimit: newLimits.certification_attempts_semester_limit
           });
           setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
         }
@@ -142,12 +126,14 @@ export const useUsageLimits = () => {
         const ttsTokensUsed = limits.tts_tokens_used_current_month || 0;
         const textPracticeTokensLimit = limits.text_practice_tokens_monthly_limit || 0;
         const textPracticeTokensUsed = limits.text_practice_tokens_used_current_month || 0;
+        const whisperSTTLimit = limits.whisper_stt_minutes_monthly_limit || 180;
+        const whisperSTTUsed = limits.whisper_stt_minutes_used_current_month || 0;
         
         setUsageLimits({
           accountTier,
-          voiceMinutesLimit: limits.voice_minutes_monthly_limit,
-          voiceMinutesUsed: limits.voice_minutes_used_current_month,
-          voiceMinutesRemaining: limits.voice_minutes_monthly_limit - limits.voice_minutes_used_current_month,
+          whisperSTTMinutesLimit: whisperSTTLimit,
+          whisperSTTMinutesUsed: whisperSTTUsed,
+          whisperSTTMinutesRemaining: whisperSTTLimit - whisperSTTUsed,
           premiumVoiceMinutesLimit: premiumLimit,
           premiumVoiceMinutesUsed: premiumUsed,
           premiumVoiceMinutesRemaining: premiumLimit - premiumUsed,
@@ -157,16 +143,8 @@ export const useUsageLimits = () => {
           textPracticeTokensLimit,
           textPracticeTokensUsed,
           textPracticeTokensRemaining: textPracticeTokensLimit - textPracticeTokensUsed,
-          textMessagesUsed: limits.text_messages_used_current_month,
           certificationAttemptsUsed: limits.certification_attempts_used_current_semester,
-          certificationAttemptsLimit: limits.certification_attempts_semester_limit,
-          ttsMinutesLimit: limits.tts_minutes_monthly_limit || 60,
-          ttsMinutesUsed: limits.tts_minutes_used_current_month || 0,
-          ttsMinutesRemaining: (limits.tts_minutes_monthly_limit || 60) - (limits.tts_minutes_used_current_month || 0),
-          sttMinutesLimit: limits.stt_minutes_monthly_limit || 120,
-          sttMinutesUsed: limits.stt_minutes_used_current_month || 0,
-          sttMinutesRemaining: (limits.stt_minutes_monthly_limit || 120) - (limits.stt_minutes_used_current_month || 0),
-          isWithinTimeRestrictions: true
+          certificationAttemptsLimit: limits.certification_attempts_semester_limit
         });
         setPremiumVoiceMinutesRemaining(premiumLimit - premiumUsed);
       }
@@ -249,20 +227,20 @@ export const useUsageLimits = () => {
       await fetchUsageLimits();
 
       // Show warning if approaching limit
-      const limit = usageLimits?.voiceMinutesLimit || 100;
-      const newUsed = (usageLimits?.voiceMinutesUsed || 0) + minutesUsed;
+      const limit = usageLimits?.whisperSTTMinutesLimit || 180;
+      const newUsed = (usageLimits?.whisperSTTMinutesUsed || 0) + minutesUsed;
       const warningThreshold = Math.floor(limit * 0.85); // 85% of limit
       
       if (newUsed >= warningThreshold && newUsed < limit) {
         toast({
-          title: "Voice Usage Warning",
+          title: "Whisper STT Usage Warning",
           description: `You've used ${newUsed} of ${limit} minutes this month. Consider pacing your usage.`,
           variant: "default"
         });
       } else if (newUsed >= limit) {
         toast({
           title: "Monthly Limit Reached",
-          description: `You've reached your ${limit}-minute monthly voice practice limit.`,
+          description: `You've reached your ${limit}-minute monthly Whisper STT limit.`,
           variant: "destructive"
         });
       }
