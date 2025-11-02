@@ -259,26 +259,58 @@ TECHNICAL: Use the speak_bilingual function with segments alternating between "e
     }
 
     const gptData = await gptResponse.json();
+    console.log('GPT Response structure:', { 
+      hasToolCalls: !!gptData.choices[0].message.tool_calls,
+      hasContent: !!gptData.choices[0].message.content 
+    });
+    
+    let segments: Array<{ lang: string; text: string }>;
+    
     const toolCall = gptData.choices[0].message.tool_calls?.[0];
     
-    if (!toolCall || toolCall.function.name !== 'speak_bilingual') {
-      throw new Error('GPT did not return expected function call');
+    if (toolCall && toolCall.function.name === 'speak_bilingual') {
+      // Original tool call path
+      const functionArgs = JSON.parse(toolCall.function.arguments);
+      segments = functionArgs.segments;
+      console.log(`Received ${segments.length} structured segments from GPT:`, segments);
+    } else {
+      // Fallback: parse the text response
+      console.warn('GPT did not use speak_bilingual tool, falling back to text response');
+      
+      const textResponse = gptData.choices[0].message.content || '';
+      console.log('Text response:', textResponse);
+      
+      // Simple heuristic: if it contains Spanish patterns, create segments
+      const spanishPatterns = /[¿¡]|está|estoy|gracias|hola|cómo|qué|por favor|bueno/i;
+      const hasSpanish = spanishPatterns.test(textResponse);
+      
+      if (hasSpanish) {
+        // Try to split by periods or newlines
+        const parts = textResponse.split(/[.\n]+/).filter(s => s.trim());
+        segments = parts.map(part => {
+          const isSpanish = spanishPatterns.test(part);
+          return {
+            lang: isSpanish ? 'es' : 'en',
+            text: part.trim()
+          };
+        });
+      } else {
+        // Just English
+        segments = [{ lang: 'en', text: textResponse }];
+      }
+      
+      console.log('Fallback segments:', segments);
     }
 
-    const functionArgs = JSON.parse(toolCall.function.arguments);
-    const segments = functionArgs.segments as Array<{ lang: string; text: string }>;
-    
-    console.log(`Received ${segments.length} structured segments from GPT:`, segments);
-
-    // Don't trust GPT-4o's language detection - verify by checking the text content
+    // Process all segments (from either tool call or fallback)
     const processedSegments = segments.map(segment => {
       const text = segment.text.trim();
       let detectedLang = normalizeLanguage(segment.lang);
       
-      // Simple heuristic: if text contains Spanish-specific patterns, mark as Spanish
+      // Verify language detection
       const spanishPatterns = /[¿¡]|está|estoy|gracias|hola|cómo|qué|dónde|cuándo|por qué|bueno|muy|mucho|poco|todo|nada|sí|no\b/i;
       if (detectedLang === 'en' && spanishPatterns.test(text)) {
-        console.log(`⚠️ Correcting language: GPT said "en" but text appears to be Spanish: "${text.substring(0, 50)}..."`);
+        console.log(`⚠️ Correcting language: detected "en" but text appears to be Spanish: "${text.substring(0, 50)}..."`);
         detectedLang = 'es';
       }
       
