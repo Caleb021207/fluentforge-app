@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
 import { ConversationStartersProps } from "@/types/voiceChat";
 import { getTargetLanguagePhrases } from "@/utils/conversationStarterUtils";
@@ -27,15 +26,13 @@ const ConversationStarters: React.FC<ConversationStartersProps> = ({
         </p>
         <div className="space-y-3">
           {defaultPhrases.map((phrase, index) => (
-            <Button
+            <div
               key={index}
-              variant="outline"
-              size="sm"
-              className="w-full justify-start text-left h-auto py-3 text-base font-normal"
+              className="w-full text-left py-3 px-4 rounded-md border border-border/50 hover:border-border hover:bg-accent/50 transition-colors cursor-pointer text-base"
               onClick={() => onPhraseClick(phrase)}
             >
               {phrase}
-            </Button>
+            </div>
           ))}
         </div>
       </CardContent>

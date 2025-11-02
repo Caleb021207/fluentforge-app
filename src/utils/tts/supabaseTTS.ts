@@ -6,6 +6,42 @@ import type { TTSOptions } from "./types";
 import { toast } from "sonner";
 
 /**
+ * Retry helper with exponential backoff for throttled requests
+ */
+const retryWithBackoff = async <T>(
+  fn: () => Promise<T>,
+  maxRetries = 3,
+  initialDelay = 1000
+): Promise<T> => {
+  let lastError: any;
+  
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      lastError = error;
+      
+      // Check if it's a throttling error
+      const isThrottled = error?.message?.includes("Throttled") || 
+                         error?.message?.includes("throttled") ||
+                         error?.message?.includes("429") ||
+                         error?.message?.includes("500");
+      
+      if (isThrottled && attempt < maxRetries - 1) {
+        const delay = initialDelay * Math.pow(2, attempt);
+        console.log(`TTS throttled, retrying in ${delay}ms (attempt ${attempt + 1}/${maxRetries})`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      
+      throw error;
+    }
+  }
+  
+  throw lastError;
+};
+
+/**
  * Play audio using Supabase Edge Function TTS (OpenAI)
  */
 export const playTTS = async ({
@@ -35,15 +71,17 @@ export const playTTS = async ({
     // Get current user ID
     const { data: { user } } = await supabase.auth.getUser();
     
-    // Call the Supabase Edge Function (Azure TTS)
-    const { data, error } = await supabase.functions.invoke("text-to-speech", {
-      body: {
-        text,
-        language,
-        voice,
-        speechRate,
-        userId: user?.id
-      },
+    // Call the Supabase Edge Function with retry logic for throttling
+    const { data, error } = await retryWithBackoff(async () => {
+      return await supabase.functions.invoke("text-to-speech", {
+        body: {
+          text,
+          language,
+          voice,
+          speechRate,
+          userId: user?.id
+        },
+      });
     });
 
     // Check if we should use browser fallback due to limit
@@ -108,14 +146,16 @@ export const preloadTTS = async (text: string, language: string, speechRate = 1.
   try {
     const { data: { user } } = await supabase.auth.getUser();
     
-    const { data, error } = await supabase.functions.invoke("text-to-speech", {
-      body: {
-        text,
-        language,
-        voice,
-        speechRate,
-        userId: user?.id
-      },
+    const { data, error } = await retryWithBackoff(async () => {
+      return await supabase.functions.invoke("text-to-speech", {
+        body: {
+          text,
+          language,
+          voice,
+          speechRate,
+          userId: user?.id
+        },
+      });
     });
 
     if (error || !data?.audioContent) {
