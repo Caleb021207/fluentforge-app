@@ -325,6 +325,12 @@ export class CustomRealtimeManager {
     try {
       // Play each segment sequentially
       for (const segment of segments) {
+        // Check if session is still active before playing each segment
+        if (!this.isSessionActive || this.isDisconnecting) {
+          console.log('Session ended, stopping audio playback');
+          return;
+        }
+        
         console.log(`Playing audio segment (${segment.lang}): "${segment.text.substring(0, 30)}..."`);
         await this.playAudioSegment(segment.audio);
       }
