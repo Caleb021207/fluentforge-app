@@ -78,7 +78,7 @@ export const useUsageLimits = () => {
       const { data: limits, error } = await supabase
         .from('student_usage_limits')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('student_id', user.id)
         .single();
 
       if (error && error.code !== 'PGRST116') {
@@ -97,7 +97,7 @@ export const useUsageLimits = () => {
         const { data: newLimits } = await supabase
           .from('student_usage_limits')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('student_id', user.id)
           .single();
 
         if (newLimits) {
