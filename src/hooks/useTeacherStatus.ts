@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const useTeacherStatus = () => {
   const [isTeacher, setIsTeacher] = useState(false);
+  const [teacherId, setTeacherId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -14,6 +15,7 @@ export const useTeacherStatus = () => {
         if (!session.session) {
           console.log('No authenticated session found');
           setIsTeacher(false);
+          setTeacherId(null);
           setIsLoading(false);
           return;
         }
@@ -33,11 +35,14 @@ export const useTeacherStatus = () => {
           throw error;
         }
 
-        console.log('Teacher role check result:', !!data && data.length > 0);
-        setIsTeacher(!!data && data.length > 0);
+        const hasTeacherRole = !!data && data.length > 0;
+        console.log('Teacher role check result:', hasTeacherRole);
+        setIsTeacher(hasTeacherRole);
+        setTeacherId(hasTeacherRole ? session.session.user.id : null);
       } catch (error) {
         console.error('Error checking teacher status:', error);
         setIsTeacher(false);
+        setTeacherId(null);
       } finally {
         setIsLoading(false);
       }
@@ -46,5 +51,5 @@ export const useTeacherStatus = () => {
     checkTeacherStatus();
   }, []);
 
-  return { isTeacher, isLoading };
+  return { isTeacher, teacherId, isLoading };
 };

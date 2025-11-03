@@ -19,7 +19,11 @@ const profileTranslations: TranslationRecord = {
   accountSettings: "Hesap Ayarları",
   privacySettings: "Gizlilik Ayarları",
   deleteAccount: "Hesabı Sil",
-  dangerZone: "Tehlikeli Bölge"
+  dangerZone: "Tehlikeli Bölge",
+  viewClassMetrics: "Sınıf Metriklerini Görüntüle",
+  classAnalytics: "Sınıf Analitiği",
+  viewDetailedClassMetrics: "Detaylı analitik ve öğrenci performans metriklerini görüntüle",
+  backToProfile: "Profile Geri Dön",
 };
 
 export default profileTranslations;

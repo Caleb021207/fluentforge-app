@@ -2,13 +2,15 @@
 import { useState, useEffect } from "react";
 import { InteractiveCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, BarChart3, GraduationCap } from "lucide-react";
+import { BookOpen, Users, BarChart3, GraduationCap, TrendingUp } from "lucide-react";
 import { ExtendedUserProfile } from "@/types/school";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import CodeManagement from "@/components/admin/CodeManagement";
 import StudentTestScores from "./StudentTestScores";
 import { useLocalization } from "@/context/LocalizationContext";
 import { LeaderboardSection } from "./LeaderboardSection";
+import { useNavigate } from "react-router-dom";
 
 interface TeacherProfileProps {
   profile: ExtendedUserProfile;
@@ -16,12 +18,37 @@ interface TeacherProfileProps {
 
 const TeacherProfile = ({ profile }: TeacherProfileProps) => {
   const { t } = useLocalization();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [classAverage, setClassAverage] = useState<number | null>(null);
   const [studentCount, setStudentCount] = useState<number>(0);
 
   return (
     <div className="space-y-6">
+      {/* View Class Metrics Button */}
+      <InteractiveCard>
+        <div className="p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                {t("classAnalytics")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("viewDetailedClassMetrics")}
+              </p>
+            </div>
+            <Button
+              onClick={() => navigate("/class-metrics")}
+              className="w-full sm:w-auto"
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              {t("viewClassMetrics")}
+            </Button>
+          </div>
+        </div>
+      </InteractiveCard>
+
       {/* Student Test Scores - Top Priority */}
       <StudentTestScores 
         teacherId={profile.id} 

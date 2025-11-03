@@ -20,6 +20,10 @@ const profileTranslations: TranslationRecord = {
   saveChanges: "تبدیلیاں محفوظ کریں",
   changesSaved: "تبدیلیاں محفوظ کر لی گئیں",
   errorSavingChanges: "تبدیلیاں محفوظ کرنے میں خرابی",
+  viewClassMetrics: "کلاس میٹرکس دیکھیں",
+  classAnalytics: "کلاس تجزیہ",
+  viewDetailedClassMetrics: "تفصیلی تجزیہ اور طالب علم کی کارکردگی کے میٹرکس دیکھیں",
+  backToProfile: "پروفائل پر واپس جائیں",
 };
 
 export default profileTranslations;

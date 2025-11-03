@@ -24,7 +24,11 @@ const profileTranslations: TranslationRecord = {
   deleteAccount: "Видалити обліковий запис",
   learningLanguage: "Мова навчання",
   completeGoal: "Завершити ціль",
-  goalComplete: "Ціль завершено"
+  goalComplete: "Ціль завершено",
+  viewClassMetrics: "Переглянути метрики класу",
+  classAnalytics: "Аналітика класу",
+  viewDetailedClassMetrics: "Переглянути детальну аналітику та метрики успішності студентів",
+  backToProfile: "Повернутися до профілю",
 };
 
 export default profileTranslations;

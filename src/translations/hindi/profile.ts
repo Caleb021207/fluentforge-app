@@ -14,6 +14,10 @@ const profileTranslations: TranslationRecord = {
   minutesLearned: "मिनट सीखे",
   daysStreak: "दिनों की स्ट्रीक",
   xpEarned: "अर्जित XP",
+  viewClassMetrics: "कक्षा मेट्रिक्स देखें",
+  classAnalytics: "कक्षा विश्लेषण",
+  viewDetailedClassMetrics: "विस्तृत विश्लेषण और छात्र प्रदर्शन मेट्रिक्स देखें",
+  backToProfile: "प्रोफाइल पर वापस जाएं",
 };
 
 export default profileTranslations;

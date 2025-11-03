@@ -24,7 +24,11 @@ const profileTranslations: TranslationRecord = {
   deleteAccount: "Hapus Akun",
   learningLanguage: "Bahasa yang Dipelajari",
   completeGoal: "Selesaikan Target",
-  goalComplete: "Target Selesai"
+  goalComplete: "Target Selesai",
+  viewClassMetrics: "Lihat Metrik Kelas",
+  classAnalytics: "Analitik Kelas",
+  viewDetailedClassMetrics: "Lihat analitik terperinci dan metrik kinerja siswa",
+  backToProfile: "Kembali ke Profil",
 };
 
 export default profileTranslations;
