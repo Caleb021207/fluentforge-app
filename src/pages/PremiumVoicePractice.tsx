@@ -12,9 +12,6 @@ import { useGamification } from "@/hooks/useGamification";
 import LevelUpModal from "@/components/gamification/LevelUpModal";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
-import { useLanguageMetricsPanel } from "@/components/practice/hooks/useLanguageMetricsPanel";
-import LanguageMetricsPanel from "@/components/practice/LanguageMetricsPanel";
-import type { Message } from "@/types/chat";
 
 const PremiumVoicePractice = () => {
   const { t, currentLanguage } = useLocalization();
@@ -39,22 +36,6 @@ const PremiumVoicePractice = () => {
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession, trackPremiumVoiceSession } = useUsageLimits();
   const { awardXP, showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   const sessionStartTimeRef = useRef<number | null>(null);
-
-  // Convert customMessages to Message format for analysis
-  const messagesForAnalysis: Message[] = customMessages.map(msg => ({
-    role: msg.role as "user" | "assistant",
-    content: msg.content,
-    translation: undefined
-  }));
-
-  const {
-    metrics,
-    isAnalyzing,
-    hasAnalyzed,
-    isExpanded,
-    togglePanel,
-    analyzeCurrentConversation
-  } = useLanguageMetricsPanel(messagesForAnalysis);
 
   useEffect(() => {
     return () => {
@@ -576,25 +557,6 @@ const PremiumVoicePractice = () => {
           </div>
           </InteractiveCard>
         </motion.div>
-
-        {/* Language Metrics Analysis Panel */}
-        {customMessages.length >= 4 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-8"
-          >
-            <LanguageMetricsPanel
-              metrics={metrics}
-              isLoading={isAnalyzing}
-              isExpanded={isExpanded}
-              onToggle={togglePanel}
-              onAnalyze={analyzeCurrentConversation}
-              hasAnalyzed={hasAnalyzed}
-            />
-          </motion.div>
-        )}
 
         {showLevelUpModal && levelUpData && (
           <LevelUpModal
