@@ -5,7 +5,7 @@ import { ArrowLeft, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import CertificateDisplay from "@/components/certificates/CertificateDisplay";
-import { getFluencyCertStatus } from "@/utils/fluencyCertification";
+import { getCurrentFluencyCertStatus } from "@/utils/fluencyCertification";
 import { GradientBlob } from "@/components/ui/decorative-elements";
 import { toast } from "sonner";
 
@@ -48,7 +48,7 @@ const Certificate = () => {
     },
   });
 
-  const certStatus = getFluencyCertStatus(analyses);
+  const certStatus = getCurrentFluencyCertStatus(analyses);
   
   // Get the date when the cert level was first achieved
   const achievementDate = analyses?.find(a => {

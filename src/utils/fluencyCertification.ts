@@ -71,7 +71,7 @@ export const checkCertAchievement = (
 };
 
 /**
- * Get fluency cert status from analyses history
+ * Get fluency cert status from analyses history (DEPRECATED - use getCurrentFluencyCertStatus)
  */
 export const getFluencyCertStatus = (
   analyses: Array<{ cefr_level: string | null; overall_score: number | null }> | undefined
@@ -108,6 +108,31 @@ export const getFluencyCertStatus = (
   return {
     hasFunctional,
     hasProfessional,
+    level,
+  };
+};
+
+/**
+ * Get fluency cert status based on CURRENT level (latest analysis only)
+ */
+export const getCurrentFluencyCertStatus = (
+  analyses: Array<{ cefr_level: string | null; overall_score: number | null }> | undefined
+): FluencyCertStatus => {
+  if (!analyses || analyses.length === 0) {
+    return {
+      hasFunctional: false,
+      hasProfessional: false,
+      level: null,
+    };
+  }
+  
+  // Only check the most recent analysis (assumes array is sorted by date desc)
+  const latestAnalysis = analyses[0];
+  const level = checkCertAchievement(latestAnalysis.cefr_level, latestAnalysis.overall_score);
+  
+  return {
+    hasFunctional: level === 'functional' || level === 'professional',
+    hasProfessional: level === 'professional',
     level,
   };
 };
