@@ -186,13 +186,14 @@ const Practice = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          whileHover={{ scale: 1.01 }}
         >
-          <InteractiveCard className="mb-6 glass">
-            <div className="p-4 space-y-4">
+          <InteractiveCard className="mb-6 glass overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50 border-primary/20">
+            <div className="p-6 space-y-4">
               {/* Grammar Correction Toggle */}
               <div className="flex items-center justify-between">
-                <Label htmlFor="grammar-correction" className="text-base font-medium flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-primary" />
+                <Label htmlFor="grammar-correction" className="text-base font-semibold flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-primary" />
                   {t("correctGrammar") || "Grammar Correction"}
                 </Label>
                 <Switch
@@ -209,25 +210,31 @@ const Practice = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="flex justify-between items-center mb-4"
+          className="flex justify-between items-center mb-4 gap-4"
         >
-          <div className="flex space-x-3 items-center">
+          <motion.div 
+            className="flex space-x-3 items-center"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
             <PracticePromptButton
               onClick={sendLanguageLearningPrompt}
               isLoading={chatLoading}
               targetLanguage={targetLanguage}
             />
-          </div>
+          </motion.div>
           
-          <Button 
-            variant="outline" 
-            onClick={clearConversation}
-            className="flex items-center gap-3 px-6 py-6 text-lg hover:shadow-lg transition-all"
-            size="lg"
-          >
-            <Trash className="h-5 w-5" />
-            {t("clearConversation")}
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button 
+              variant="outline" 
+              onClick={clearConversation}
+              className="flex items-center gap-3 px-6 py-6 text-lg hover:shadow-xl hover:border-primary/50 transition-all bg-gradient-to-r from-card/80 to-card"
+              size="lg"
+            >
+              <Trash className="h-5 w-5" />
+              {t("clearConversation")}
+            </Button>
+          </motion.div>
         </motion.div>
 
         <motion.div

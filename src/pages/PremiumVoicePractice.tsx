@@ -383,9 +383,13 @@ const PremiumVoicePractice = () => {
           transition={{ delay: 0.1 }}
           className="mb-8"
         >
-          <InteractiveCard className="overflow-hidden border-0 shadow-xl">
+          <InteractiveCard className="overflow-hidden border-primary/30 shadow-2xl bg-gradient-to-br from-card/50 via-card to-card/50">
             <div className="grid md:grid-cols-2 divide-x divide-border/50">
-              <div className="p-6 space-y-3 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent">
+              <motion.div 
+                className="p-6 space-y-3 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
                 <h4 className="font-semibold text-lg flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-primary" />
                   GPT-4o Realtime
@@ -393,8 +397,12 @@ const PremiumVoicePractice = () => {
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {t('gptLanguageSupport')}
                 </p>
-              </div>
-              <div className="p-6 space-y-3 bg-gradient-to-br from-accent/5 via-accent/3 to-transparent">
+              </motion.div>
+              <motion.div 
+                className="p-6 space-y-3 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
                 <h4 className="font-semibold text-lg flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-accent" />
                   Custom Realtime AI
@@ -402,7 +410,7 @@ const PremiumVoicePractice = () => {
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {t('customLanguageSupport')}
                 </p>
-              </div>
+              </motion.div>
             </div>
           </InteractiveCard>
         </motion.div>
@@ -413,42 +421,51 @@ const PremiumVoicePractice = () => {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <InteractiveCard className="p-6 glass border-primary/20 hover:border-primary/40 transition-colors">
+          <motion.div whileHover={{ scale: 1.02, y: -5 }} transition={{ duration: 0.3 }}>
+            <InteractiveCard className="p-8 glass border-primary/30 hover:border-primary/50 transition-all shadow-xl overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50">
           <div className="flex flex-col items-center gap-6">
             <div className="text-center space-y-1">
-              <h3 className="text-xl font-semibold gradient-text">GPT-4o Realtime</h3>
+              <h3 className="text-2xl font-bold gradient-text">GPT-4o Realtime</h3>
               <p className="text-sm text-muted-foreground">{t('openaiLatestVoiceModel')}</p>
             </div>
 
             {isConnected && provider === 'gpt' && (
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">
+              <motion.div 
+                className="text-center"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+              >
+                <div className="text-4xl font-bold text-primary mb-2">
                   {formatTime(elapsedSeconds)}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {t('minutesLeft', { minutes: String(minutesRemaining) })}
                 </div>
-              </div>
+              </motion.div>
             )}
 
-            <div className={`relative ${isSpeaking && provider === 'gpt' ? 'animate-pulse' : ''}`}>
-              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
+            <motion.div 
+              className={`relative ${isSpeaking && provider === 'gpt' ? 'animate-pulse' : ''}`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center shadow-lg">
                 {isConnected && provider === 'gpt' ? (
-                  <MicOff className="w-12 h-12 text-primary" />
+                  <MicOff className="w-14 h-14 text-primary" />
                 ) : (
-                  <Mic className="w-12 h-12 text-primary" />
+                  <Mic className="w-14 h-14 text-primary" />
                 )}
               </div>
               {isSpeaking && provider === 'gpt' && (
                 <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
               )}
-            </div>
+            </motion.div>
 
             {!isConnected || provider !== 'gpt' ? (
               <Button 
                 onClick={() => startConversation('gpt')}
                 size="lg"
-                className="px-8"
+                className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
                 disabled={isStarting || (isConnected && provider !== 'gpt') || premiumVoiceMinutesRemaining <= 0}
               >
                 {isStarting && provider === 'gpt' ? t('connecting') : t('startGptSession')}
@@ -458,83 +475,96 @@ const PremiumVoicePractice = () => {
                 onClick={endConversation}
                 size="lg"
                 variant="secondary"
-                className="px-8"
+                className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
                 disabled={minutesRemaining <= 0}
               >
                 {t('endSession')}
               </Button>
             )}
           </div>
-          </InteractiveCard>
+            </InteractiveCard>
+          </motion.div>
 
-          <InteractiveCard className="p-6 glass border-accent/20 hover:border-accent/40 transition-colors">
+          <motion.div whileHover={{ scale: 1.02, y: -5 }} transition={{ duration: 0.3 }}>
+            <InteractiveCard className="p-8 glass border-accent/30 hover:border-accent/50 transition-all shadow-xl overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50">
           <div className="flex flex-col items-center gap-6">
             <div className="text-center space-y-2">
-              <h3 className="text-xl font-semibold gradient-text">Custom Realtime AI</h3>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/30">
-                <Sparkles className="w-3.5 h-3.5 text-accent" />
-                <span className="text-xs font-semibold text-foreground">
+              <h3 className="text-2xl font-bold gradient-text">Custom Realtime AI</h3>
+              <motion.div 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/30"
+                whileHover={{ scale: 1.05 }}
+              >
+                <Sparkles className="w-4 h-4 text-accent" />
+                <span className="text-sm font-semibold text-foreground">
                   {t('multilingualSupport')}
                 </span>
-              </div>
-              <p className="text-xs text-muted-foreground max-w-md">
+              </motion.div>
+              <p className="text-sm text-muted-foreground max-w-md">
                 {t('customRealtimeDisclaimer')}
               </p>
             </div>
 
             {customSessionId && (
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-500 mb-2">
+              <motion.div 
+                className="text-center"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+              >
+                <div className="text-4xl font-bold text-accent mb-2">
                   {formatTime(customElapsedSeconds)}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {customMessages.length / 2} {t('exchanges')}
                 </div>
-                <div className="text-xs text-blue-500 mt-2">
+                <div className="text-xs text-accent mt-2 font-medium">
                   {t(`state${customState.charAt(0).toUpperCase() + customState.slice(1)}` as any)}
                 </div>
-              </div>
+              </motion.div>
             )}
 
-            <div className={`relative ${customState === 'listening' ? 'animate-pulse' : ''}`}>
-              <div className={`w-24 h-24 rounded-full flex items-center justify-center ${
-                customState === 'listening' ? 'bg-blue-500/20' :
-                customState === 'processing' ? 'bg-yellow-500/20' :
-                customState === 'speaking' ? 'bg-green-500/20' :
-                'bg-primary/20'
+            <motion.div 
+              className={`relative ${customState === 'listening' ? 'animate-pulse' : ''}`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className={`w-28 h-28 rounded-full flex items-center justify-center shadow-lg ${
+                customState === 'listening' ? 'bg-gradient-to-br from-accent/30 to-accent/10' :
+                customState === 'processing' ? 'bg-gradient-to-br from-primary/30 to-primary/10' :
+                customState === 'speaking' ? 'bg-gradient-to-br from-green-500/30 to-green-500/10' :
+                'bg-gradient-to-br from-primary/30 to-primary/10'
               }`}>
                 {customSessionId ? (
-                  <MicOff className={`w-12 h-12 ${
-                    customState === 'listening' ? 'text-blue-500' :
-                    customState === 'processing' ? 'text-yellow-500' :
+                  <MicOff className={`w-14 h-14 ${
+                    customState === 'listening' ? 'text-accent' :
+                    customState === 'processing' ? 'text-primary' :
                     customState === 'speaking' ? 'text-green-500' :
                     'text-primary'
                   }`} />
                 ) : (
-                  <Mic className="w-12 h-12 text-blue-500" />
+                  <Mic className="w-14 h-14 text-accent" />
                 )}
               </div>
               {customState === 'listening' && (
-                <div className="absolute inset-0 rounded-full bg-blue-500/30 animate-ping" />
+                <div className="absolute inset-0 rounded-full bg-accent/30 animate-ping" />
               )}
-            </div>
+            </motion.div>
 
             {!customSessionId ? (
               <Button 
                 onClick={startCustomSession}
                 size="lg"
-                className="px-8 bg-blue-500 hover:bg-blue-600"
+                className="px-10 py-6 text-lg bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 shadow-lg hover:shadow-xl transition-all"
                 disabled={isStarting}
               >
                 {isStarting ? t('connecting') : t('startCustomSession')}
               </Button>
             ) : (
-              <div className="flex flex-col gap-2 w-full">
+              <div className="flex flex-col gap-3 w-full">
                 <Button 
                   onClick={endCustomSession}
                   size="lg"
                   variant="secondary"
-                  className="px-8"
+                  className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
                 >
                   End Session
                 </Button>
@@ -547,7 +577,7 @@ const PremiumVoicePractice = () => {
                     }}
                     size="sm"
                     variant="outline"
-                    className="px-4"
+                    className="px-6 hover:bg-accent/10 transition-all"
                   >
                     Continue Speaking
                   </Button>
@@ -556,6 +586,7 @@ const PremiumVoicePractice = () => {
             )}
           </div>
           </InteractiveCard>
+          </motion.div>
         </motion.div>
 
         {showLevelUpModal && levelUpData && (

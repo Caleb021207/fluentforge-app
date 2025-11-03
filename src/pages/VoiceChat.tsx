@@ -215,13 +215,14 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
+            whileHover={{ scale: 1.01 }}
           >
-            <InteractiveCard className="glass">
-              <CardContent className="p-4 space-y-4">
+            <InteractiveCard className="glass overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50 border-primary/20">
+              <CardContent className="p-6 space-y-4">
                 {/* Grammar Correction Toggle */}
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="grammar-correction" className="text-base font-medium flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-primary" />
+                  <Label htmlFor="grammar-correction" className="text-base font-semibold flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
                     {t("correctGrammar") || "Grammar Correction"}
                   </Label>
                   <Switch
@@ -238,8 +239,9 @@ const VoiceChat: React.FC<VoiceChatProps> = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
+            whileHover={{ scale: 1.005 }}
           >
-            <InteractiveCard className="p-6 glass">
+            <InteractiveCard className="p-6 glass overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50 border-primary/20 shadow-xl">
           <div className="flex justify-center mb-6">
             <VoiceRecognitionControls
               isListening={isListening}

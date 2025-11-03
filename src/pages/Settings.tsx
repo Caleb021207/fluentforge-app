@@ -33,13 +33,23 @@ const Settings = () => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="mb-10 text-center flex flex-col items-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center gap-3">
-              <Sparkles className="w-10 h-10 md:w-12 md:h-12" />
+            <motion.h1 
+              className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center gap-3 justify-center"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Sparkles className="w-10 h-10 md:w-12 md:h-12 text-primary" />
               Settings
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl text-muted-foreground max-w-2xl"
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+            >
               Manage your usage and access important documents
-            </p>
+            </motion.p>
           </div>
         </motion.div>
         
@@ -90,7 +100,7 @@ const Settings = () => {
                 className="max-w-md w-full"
               >
                 <InteractiveCard 
-                  className="glass h-full cursor-pointer hover:shadow-xl transition-all duration-300"
+                  className="glass h-full cursor-pointer hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50 border-primary/20 hover:border-primary/40"
                   onClick={() => {
                     if (doc.external) {
                       window.open(doc.path, '_blank', 'noopener,noreferrer');
