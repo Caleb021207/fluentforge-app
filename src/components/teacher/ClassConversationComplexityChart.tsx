@@ -45,12 +45,12 @@ const ClassConversationComplexityChart: React.FC<ClassConversationComplexityChar
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <Card className="glass border-palavox-teal/20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-palavox-teal/5 via-transparent to-cyan-500/5 pointer-events-none" />
+      <Card className="glass border-orange-500/20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/10 pointer-events-none" />
         <CardHeader className="relative z-10">
           <CardTitle className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-br from-palavox-teal/20 to-cyan-500/20 rounded-lg">
-              <MessageSquare className="h-5 w-5 text-palavox-teal" />
+            <div className="p-2 bg-gradient-to-br from-orange-500/20 to-amber-500/20 rounded-lg">
+              <MessageSquare className="h-5 w-5 text-orange-500" />
             </div>
             {t("classComplexityTrends")}
           </CardTitle>
@@ -63,8 +63,8 @@ const ClassConversationComplexityChart: React.FC<ClassConversationComplexityChar
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="complexityGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--palavox-teal))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--palavox-teal))" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
@@ -81,14 +81,14 @@ const ClassConversationComplexityChart: React.FC<ClassConversationComplexityChar
               <Tooltip 
                 contentStyle={{ 
                   background: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
+                  border: '1px solid rgb(249 115 22 / 0.5)',
                   borderRadius: '8px'
                 }}
               />
               <Area 
                 type="monotone" 
                 dataKey="avgComplexity" 
-                stroke="hsl(var(--palavox-teal))" 
+                stroke="#f97316" 
                 fill="url(#complexityGradient)"
                 strokeWidth={3}
                 name={t("conversationComplexity")}

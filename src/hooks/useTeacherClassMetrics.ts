@@ -59,13 +59,13 @@ export const useTeacherClassMetrics = (teacherId: string | undefined) => {
         };
       }
 
-      // Fetch certification attempts
+      // Fetch test scores from transcript analyses
       const { data: certAttempts, error: certError } = await supabase
-        .from('certification_attempts')
-        .select('user_id, score, completed_at')
+        .from('transcript_analyses')
+        .select('user_id, overall_score, upload_date')
         .in('user_id', studentIds)
-        .not('completed_at', 'is', null)
-        .order('completed_at', { ascending: true });
+        .not('overall_score', 'is', null)
+        .order('upload_date', { ascending: true });
 
       if (certError) throw certError;
 
@@ -81,11 +81,11 @@ export const useTeacherClassMetrics = (teacherId: string | undefined) => {
       // Aggregate score progression by date
       const scoreByDate = new Map<string, { total: number; count: number }>();
       certAttempts?.forEach(attempt => {
-        if (attempt.completed_at) {
-          const date = new Date(attempt.completed_at).toLocaleDateString();
+        if (attempt.upload_date) {
+          const date = new Date(attempt.upload_date).toLocaleDateString();
           const existing = scoreByDate.get(date) || { total: 0, count: 0 };
           scoreByDate.set(date, {
-            total: existing.total + Number(attempt.score),
+            total: existing.total + Number(attempt.overall_score),
             count: existing.count + 1,
           });
         }

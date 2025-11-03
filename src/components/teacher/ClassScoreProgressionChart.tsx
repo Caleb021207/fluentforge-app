@@ -43,12 +43,12 @@ const ClassScoreProgressionChart: React.FC<ClassScoreProgressionChartProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <Card className="glass border-primary/20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+      <Card className="glass border-green-500/20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 pointer-events-none" />
         <CardHeader className="relative z-10">
           <CardTitle className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
-              <TrendingUp className="h-5 w-5 text-primary" />
+            <div className="p-2 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg">
+              <TrendingUp className="h-5 w-5 text-green-500" />
             </div>
             {t("classScoreProgression")}
           </CardTitle>
@@ -61,8 +61,8 @@ const ClassScoreProgressionChart: React.FC<ClassScoreProgressionChartProps> = ({
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
@@ -79,14 +79,14 @@ const ClassScoreProgressionChart: React.FC<ClassScoreProgressionChartProps> = ({
               <Tooltip 
                 contentStyle={{ 
                   background: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
+                  border: '1px solid rgb(34 197 94 / 0.5)',
                   borderRadius: '8px'
                 }}
               />
               <Area 
                 type="monotone" 
                 dataKey="avgScore" 
-                stroke="hsl(var(--primary))" 
+                stroke="#10b981" 
                 fill="url(#scoreGradient)"
                 strokeWidth={3}
                 name={t("averageClassScore")}

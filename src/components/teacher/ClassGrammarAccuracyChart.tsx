@@ -45,12 +45,12 @@ const ClassGrammarAccuracyChart: React.FC<ClassGrammarAccuracyChartProps> = ({ d
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
     >
-      <Card className="glass border-palavox-accent/20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-palavox-accent/5 via-transparent to-purple-500/5 pointer-events-none" />
+      <Card className="glass border-purple-500/20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none" />
         <CardHeader className="relative z-10">
           <CardTitle className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-br from-palavox-accent/20 to-purple-500/20 rounded-lg">
-              <BookOpen className="h-5 w-5 text-palavox-accent" />
+            <div className="p-2 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg">
+              <BookOpen className="h-5 w-5 text-purple-500" />
             </div>
             {t("classGrammarTrends")}
           </CardTitle>
@@ -63,8 +63,8 @@ const ClassGrammarAccuracyChart: React.FC<ClassGrammarAccuracyChartProps> = ({ d
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="grammarGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--palavox-accent))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--palavox-accent))" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
@@ -81,14 +81,14 @@ const ClassGrammarAccuracyChart: React.FC<ClassGrammarAccuracyChartProps> = ({ d
               <Tooltip 
                 contentStyle={{ 
                   background: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
+                  border: '1px solid rgb(168 85 247 / 0.5)',
                   borderRadius: '8px'
                 }}
               />
               <Area 
                 type="monotone" 
                 dataKey="avgGrammar" 
-                stroke="hsl(var(--palavox-accent))" 
+                stroke="#a855f7" 
                 fill="url(#grammarGradient)"
                 strokeWidth={3}
                 name={t("grammarAccuracy")}
