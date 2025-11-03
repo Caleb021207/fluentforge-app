@@ -209,6 +209,18 @@ const uiElementsTranslations: TranslationRecord = {
   
   // Compliance
   cipaCompliance: "CIPA Compliant",
+  
+  // Class-wide metrics (Teacher view)
+  classWideMetrics: "Class-Wide Metrics",
+  studentsAcrossClasses: "{count} students across {classCount} classes",
+  classScoreProgression: "Class Test Score Progression",
+  classGrammarTrends: "Class Grammar Accuracy Trends",
+  classComplexityTrends: "Class Conversation Complexity Trends",
+  classPronunciationTrends: "Class Pronunciation Accuracy Trends",
+  yourPersonalMetrics: "Your Personal Metrics",
+  averageClassScore: "Average Class Score",
+  noClassDataYet: "No class data available yet. Students need to complete practice sessions.",
+  across: "across",
 };
 
 export default uiElementsTranslations;

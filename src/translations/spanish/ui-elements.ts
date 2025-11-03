@@ -240,6 +240,18 @@ const uiElementsTranslations: TranslationRecord = {
   reviewPastConversations: "Revisa conversaciones pasadas para identificar patrones de errores",
   setSpecificGoals: "Establece metas específicas para mejorar en cada sesión de práctica",
   useVariedPracticeFormats: "Usa tanto práctica de texto como de voz para mejorar diferentes habilidades",
+  
+  // Class-wide metrics (Teacher view)
+  classWideMetrics: "Métricas de Toda la Clase",
+  studentsAcrossClasses: "{count} estudiantes en {classCount} clases",
+  classScoreProgression: "Progresión de Puntuaciones de la Clase",
+  classGrammarTrends: "Tendencias de Precisión Gramatical de la Clase",
+  classComplexityTrends: "Tendencias de Complejidad de Conversación de la Clase",
+  classPronunciationTrends: "Tendencias de Precisión de Pronunciación de la Clase",
+  yourPersonalMetrics: "Tus Métricas Personales",
+  averageClassScore: "Puntuación Promedio de la Clase",
+  noClassDataYet: "No hay datos de la clase disponibles aún. Los estudiantes deben completar sesiones de práctica.",
+  across: "en",
 };
 
 export default uiElementsTranslations;
