@@ -103,14 +103,65 @@ const NewLandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Pattern */}
+      {/* Enhanced Background Pattern with animations */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25% 25%, var(--primary) 2px, transparent 2px),
-                           radial-gradient(circle at 75% 75%, var(--accent) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px, 40px 40px'
-        }} />
+        <motion.div
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, var(--primary) 2px, transparent 2px),
+                             radial-gradient(circle at 75% 75%, var(--accent) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px, 40px 40px'
+          }}
+        />
       </div>
+
+      {/* Animated floating orbs */}
+      <motion.div
+        animate={{
+          y: [0, -20, 0],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          y: [0, 20, 0],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1
+        }}
+        className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.4, 0.2]
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2
+        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-palavox-teal/10 rounded-full blur-3xl"
+      />
 
       {/* Main Content */}
       <motion.div
@@ -119,36 +170,71 @@ const NewLandingPage = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className="text-center space-y-8 max-w-2xl mx-auto relative z-10"
       >
-        {/* Logo */}
+        {/* Logo with enhanced animation */}
         <motion.div
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex justify-center mb-8"
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "backOut" }}
+          className="flex justify-center mb-8 relative"
         >
-          {theme === "dark" ? (
-            <img 
-              src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
-              alt="Palavox Logo" 
-              className="w-80 h-80 md:w-96 md:h-96 object-contain"
+          <motion.div
+            animate={{
+              y: [0, -10, 0],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="relative"
+          >
+            {/* Glow effect behind logo */}
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.6, 0.3]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute inset-0 bg-primary/30 rounded-full blur-3xl"
             />
-          ) : (
-            <img 
-              src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
-              alt="Palavox Logo" 
-              className="w-80 h-80 md:w-96 md:h-96 object-contain"
-            />
-          )}
+            {theme === "dark" ? (
+              <img 
+                src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
+                alt="Palavox Logo" 
+                className="w-80 h-80 md:w-96 md:h-96 object-contain relative z-10"
+              />
+            ) : (
+              <img 
+                src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
+                alt="Palavox Logo" 
+                className="w-80 h-80 md:w-96 md:h-96 object-contain relative z-10"
+              />
+            )}
+          </motion.div>
         </motion.div>
 
-        {/* Title */}
+        {/* Title with gradient animation */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight pb-2"
+          className="relative"
         >
-          {t("welcomeToLanguageLearning")}
+          <span className="text-4xl md:text-6xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary via-palavox-teal to-accent bg-clip-text text-transparent leading-tight pb-2 inline-block">
+            {t("welcomeToLanguageLearning")}
+          </span>
+          {/* Animated underline */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="h-1 bg-gradient-to-r from-primary via-palavox-teal to-accent rounded-full mx-auto mt-4"
+            style={{ width: '60%' }}
+          />
         </motion.h1>
 
         <motion.p
@@ -160,33 +246,66 @@ const NewLandingPage = () => {
           {t("yourPersonalAICompanion")}
         </motion.p>
 
-        {/* Call to Action Buttons */}
+        {/* Call to Action Buttons with enhanced animations */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
           className="flex flex-col items-center gap-6 mt-12"
         >
-          {/* Primary CTA - Start Practicing */}
-          <motion.button
+          {/* Primary CTA with particle effect on hover */}
+          <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              if (isSignedIn) {
-                navigate('/practice');
-              } else {
-                setIsPanelOpen(true);
-              }
-            }}
-            className="px-12 py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all"
+            className="relative"
           >
-            {t("startPracticing")}
-          </motion.button>
+            <motion.button
+              onClick={() => {
+                if (isSignedIn) {
+                  navigate('/practice');
+                } else {
+                  setIsPanelOpen(true);
+                }
+              }}
+              className="relative px-12 py-5 bg-gradient-to-r from-primary via-palavox-teal to-accent text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-2xl transition-all overflow-hidden group"
+            >
+              {/* Animated shine effect */}
+              <motion.div
+                animate={{
+                  x: ['-100%', '200%'],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'linear',
+                }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
+              />
+              <span className="relative z-10 flex items-center gap-2">
+                🚀 {t("startPracticing")}
+              </span>
+            </motion.button>
+          </motion.div>
 
-          {/* Secondary info */}
-          <p className="text-sm text-muted-foreground">
+          {/* Secondary info with animated icon */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="text-sm text-muted-foreground flex items-center gap-2"
+          >
+            <motion.span
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            >
+              ✨
+            </motion.span>
             {t("practiceYourLanguageSkills")}
-          </p>
+          </motion.p>
         </motion.div>
       </motion.div>
 
