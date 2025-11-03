@@ -8,7 +8,7 @@ import PronunciationFeedback from "./PronunciationFeedback";
 import PronunciationInstructions from "./PronunciationInstructions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, ChevronLeft, Volume2 } from "lucide-react";
+import { RefreshCw, ChevronLeft, Volume2, Target, BookOpen, Headphones, Mic, Trophy, Sparkles, Zap } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { usePronunciationExercise } from "./hooks/usePronunciationExercise";
@@ -101,20 +101,9 @@ const PronunciationPracticeContainer = () => {
               transition={{ duration: 0.5, ease: "backOut" }}
               className="inline-flex items-center justify-center gap-3 mb-4"
             >
-              <motion.div
-                animate={{ 
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.1, 1.1, 1]
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-                className="p-3 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20"
-              >
+              <div className="p-3 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20">
                 <Volume2 className="w-10 h-10 md:w-12 md:h-12 text-primary" />
-              </motion.div>
+              </div>
             </motion.div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
               {t("pronunciationPractice")}
@@ -148,7 +137,7 @@ const PronunciationPracticeContainer = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none opacity-0 hover:opacity-100 transition-opacity" />
                 <CardHeader className="relative z-10">
                   <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">🎯</span>
+                    <Target className="h-5 w-5 text-primary" />
                     {t("selectComplexityLevel")}
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
@@ -170,7 +159,7 @@ const PronunciationPracticeContainer = () => {
                 >
                   <div className="mb-6 p-4 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl border border-blue-500/20">
                     <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-                      <span className="text-xl">📚</span>
+                      <BookOpen className="h-5 w-5 text-blue-600" />
                       {levelDescriptions[complexity].title} - {levelDescriptions[complexity].actflLabel}
                     </h3>
                     <p className="text-sm text-muted-foreground mb-2">
@@ -189,12 +178,13 @@ const PronunciationPracticeContainer = () => {
                     >
                       {isGenerating ? (
                         <span className="flex items-center gap-2">
-                          <span className="animate-spin">⚡</span>
+                          <RefreshCw className="h-5 w-5 animate-spin" />
                           {t("generatingExercise")}
                         </span>
                       ) : (
                         <span className="flex items-center gap-2">
-                          🚀 {t("startExercise")}
+                          <Sparkles className="h-5 w-5" />
+                          {t("startExercise")}
                         </span>
                       )}
                     </Button>
@@ -222,18 +212,18 @@ const PronunciationPracticeContainer = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent pointer-events-none opacity-0 hover:opacity-100 transition-opacity" />
                 <CardHeader className="relative z-10">
                   <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">💡</span>
+                    <Headphones className="h-5 w-5 text-green-600" />
                     {t("pronunciationPracticeTips")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="relative z-10">
                   <ul className="space-y-4">
                     {[
-                      { icon: "👂", text: t("listenCarefullyTip") },
-                      { icon: "🎵", text: t("payAttentionToStressTip") },
-                      { icon: "🔄", text: t("practiceDifficultSoundsTip") },
-                      { icon: "🎙️", text: t("recordYourselfTip") },
-                      { icon: "💪", text: t("bePatientTip") }
+                      { icon: Mic, text: t("listenCarefullyTip") },
+                      { icon: Volume2, text: t("payAttentionToStressTip") },
+                      { icon: RefreshCw, text: t("practiceDifficultSoundsTip") },
+                      { icon: Mic, text: t("recordYourselfTip") },
+                      { icon: Trophy, text: t("bePatientTip") }
                     ].map((tip, idx) => (
                       <motion.li
                         key={idx}
@@ -242,7 +232,7 @@ const PronunciationPracticeContainer = () => {
                         transition={{ delay: 0.6 + idx * 0.1 }}
                         className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-green-500/10 to-transparent hover:from-green-500/20 transition-all group"
                       >
-                        <span className="text-xl group-hover:scale-110 transition-transform">{tip.icon}</span>
+                        <tip.icon className="h-5 w-5 text-green-600 group-hover:scale-110 transition-transform flex-shrink-0 mt-0.5" />
                         <span className="text-sm flex-1">{tip.text}</span>
                       </motion.li>
                     ))}
@@ -275,7 +265,7 @@ const PronunciationPracticeContainer = () => {
                       </Button>
                     </motion.div>
                     <span className="text-lg flex items-center gap-2">
-                      <span className="text-xl">🎯</span>
+                      <Target className="h-5 w-5 text-primary" />
                       {t("practiceExercise")}
                     </span>
                   </div>
@@ -289,7 +279,6 @@ const PronunciationPracticeContainer = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6 relative z-10">
-                {/* Speech Rate Slider */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -297,7 +286,7 @@ const PronunciationPracticeContainer = () => {
                 >
                   <div className="flex items-center justify-between">
                     <Label htmlFor="speech-rate" className="text-sm font-medium flex items-center gap-2">
-                      <span className="text-lg">⚡</span>
+                      <Zap className="h-4 w-4 text-purple-600" />
                       {t("speechRate")}
                     </Label>
                     <motion.span
@@ -353,7 +342,8 @@ const PronunciationPracticeContainer = () => {
                       className="w-full py-6 text-base font-semibold border-2 hover:bg-primary/10 transition-all"
                     >
                       <span className="flex items-center gap-2">
-                        🔄 {t("tryAgain")}
+                        <RefreshCw className="h-4 w-4" />
+                        {t("tryAgain")}
                       </span>
                     </Button>
                   </motion.div>
@@ -370,7 +360,8 @@ const PronunciationPracticeContainer = () => {
                         </span>
                       ) : (
                         <span className="flex items-center gap-2">
-                          ✨ {t("newPhrase")}
+                          <Sparkles className="h-4 w-4" />
+                          {t("newPhrase")}
                         </span>
                       )}
                     </Button>

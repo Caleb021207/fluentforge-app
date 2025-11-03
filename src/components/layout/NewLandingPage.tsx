@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Sparkles, Target, BookOpen, Headphones, Mic, Trophy } from "lucide-react";
 import { useTheme } from 'next-themes';
 import { useNavigate } from 'react-router-dom';
 import { SwipeUpPanel } from '@/components/ui/swipe-up-panel';
@@ -170,51 +171,26 @@ const NewLandingPage = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className="text-center space-y-8 max-w-2xl mx-auto relative z-10"
       >
-        {/* Logo with enhanced animation */}
+        {/* Logo with entrance animation only */}
         <motion.div
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ scale: 0.5, opacity: 0, y: 30 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "backOut" }}
           className="flex justify-center mb-8 relative"
         >
-          <motion.div
-            animate={{
-              y: [0, -10, 0],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="relative"
-          >
-            {/* Glow effect behind logo */}
-            <motion.div
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.6, 0.3]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="absolute inset-0 bg-primary/30 rounded-full blur-3xl"
+          {theme === "dark" ? (
+            <img 
+              src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
+              alt="Palavox Logo" 
+              className="w-80 h-80 md:w-96 md:h-96 object-contain relative z-10"
             />
-            {theme === "dark" ? (
-              <img 
-                src="/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png" 
-                alt="Palavox Logo" 
-                className="w-80 h-80 md:w-96 md:h-96 object-contain relative z-10"
-              />
-            ) : (
-              <img 
-                src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
-                alt="Palavox Logo" 
-                className="w-80 h-80 md:w-96 md:h-96 object-contain relative z-10"
-              />
-            )}
-          </motion.div>
+          ) : (
+            <img 
+              src="/lovable-uploads/6ec27db4-fc32-4cfe-a326-919be83e5960.png" 
+              alt="Palavox Logo" 
+              className="w-80 h-80 md:w-96 md:h-96 object-contain relative z-10"
+            />
+          )}
         </motion.div>
 
         {/* Title with gradient animation */}
@@ -282,7 +258,8 @@ const NewLandingPage = () => {
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
               />
               <span className="relative z-10 flex items-center gap-2">
-                🚀 {t("startPracticing")}
+                <Sparkles className="h-5 w-5" />
+                {t("startPracticing")}
               </span>
             </motion.button>
           </motion.div>
@@ -294,16 +271,6 @@ const NewLandingPage = () => {
             transition={{ delay: 1 }}
             className="text-sm text-muted-foreground flex items-center gap-2"
           >
-            <motion.span
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "reverse"
-              }}
-            >
-              ✨
-            </motion.span>
             {t("practiceYourLanguageSkills")}
           </motion.p>
         </motion.div>
