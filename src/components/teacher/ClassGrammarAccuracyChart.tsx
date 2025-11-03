@@ -31,55 +31,65 @@ const ClassGrammarAccuracyChart: React.FC<ClassGrammarAccuracyChartProps> = ({ d
   }
 
   return (
-    <Card className="glass">
+    <Card className="glass border-primary/20">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookOpen className="h-5 w-5 text-primary" />
           {t("classGrammarTrends")}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={{
-          avgGrammar: { theme: { light: "hsl(var(--palavox-accent))", dark: "hsl(var(--palavox-accent))" } }
-        }}>
+      <CardContent className="pt-6">
+        <ChartContainer 
+          config={{
+            avgGrammar: { 
+              label: t("grammarAccuracy"),
+              theme: { light: "hsl(var(--palavox-accent))", dark: "hsl(var(--palavox-accent))" } 
+            }
+          }}
+          className="h-[300px] w-full"
+        >
           <LineChart 
             data={data} 
-            margin={{ top: 5, right: 30, left: 20, bottom: 25 }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <defs>
+              <linearGradient id="grammarGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--palavox-accent))" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="hsl(var(--palavox-accent))" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" vertical={false} />
             <XAxis 
               dataKey="date" 
-              tick={{ fontSize: 12 }}
-              height={60}
-              tickMargin={10}
-              className="text-muted-foreground"
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              tickLine={false}
+              axisLine={false}
             />
             <YAxis 
               domain={[0, 100]} 
-              tickCount={6} 
-              tick={{ fontSize: 12 }}
-              width={60}
-              tickMargin={10}
-              className="text-muted-foreground"
-              label={{ 
-                value: t("grammarAccuracy"), 
-                angle: -90, 
-                position: 'insideLeft',
-                style: { textAnchor: 'middle' },
-                dy: 50,
-                dx: -30 
-              }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              tickLine={false}
+              axisLine={false}
             />
             <Tooltip content={<ChartTooltipContent />} />
-            <Legend verticalAlign="bottom" height={36} />
             <Line
               name={t("grammarAccuracy")}
               type="monotone"
               dataKey="avgGrammar"
               stroke="hsl(var(--palavox-accent))"
               strokeWidth={3}
-              dot={{ r: 5, fill: "hsl(var(--palavox-accent))" }}
-              activeDot={{ r: 7 }}
+              dot={{ 
+                r: 4, 
+                fill: "hsl(var(--palavox-accent))",
+                strokeWidth: 2,
+                stroke: "hsl(var(--background))"
+              }}
+              activeDot={{ 
+                r: 6,
+                fill: "hsl(var(--palavox-accent))",
+                strokeWidth: 2,
+                stroke: "hsl(var(--background))"
+              }}
             />
           </LineChart>
         </ChartContainer>

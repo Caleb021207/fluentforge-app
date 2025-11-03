@@ -31,55 +31,65 @@ const ClassScoreProgressionChart: React.FC<ClassScoreProgressionChartProps> = ({
   }
 
   return (
-    <Card className="glass">
+    <Card className="glass border-primary/20">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-primary" />
           {t("classScoreProgression")}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={{
-          avgScore: { theme: { light: "hsl(var(--primary))", dark: "hsl(var(--primary))" } }
-        }}>
+      <CardContent className="pt-6">
+        <ChartContainer 
+          config={{
+            avgScore: { 
+              label: t("averageClassScore"),
+              theme: { light: "hsl(var(--primary))", dark: "hsl(var(--primary))" } 
+            }
+          }}
+          className="h-[300px] w-full"
+        >
           <LineChart 
             data={data} 
-            margin={{ top: 5, right: 30, left: 20, bottom: 25 }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <defs>
+              <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" vertical={false} />
             <XAxis 
               dataKey="date" 
-              tick={{ fontSize: 12 }}
-              height={60}
-              tickMargin={10}
-              className="text-muted-foreground"
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              tickLine={false}
+              axisLine={false}
             />
             <YAxis 
               domain={[0, 100]} 
-              tickCount={6} 
-              tick={{ fontSize: 12 }}
-              width={60}
-              tickMargin={10}
-              className="text-muted-foreground"
-              label={{ 
-                value: t("averageClassScore"), 
-                angle: -90, 
-                position: 'insideLeft',
-                style: { textAnchor: 'middle' },
-                dy: 50,
-                dx: -30 
-              }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              tickLine={false}
+              axisLine={false}
             />
             <Tooltip content={<ChartTooltipContent />} />
-            <Legend verticalAlign="bottom" height={36} />
             <Line
               name={t("averageClassScore")}
               type="monotone"
               dataKey="avgScore"
               stroke="hsl(var(--primary))"
               strokeWidth={3}
-              dot={{ r: 5, fill: "hsl(var(--primary))" }}
-              activeDot={{ r: 7 }}
+              dot={{ 
+                r: 4, 
+                fill: "hsl(var(--primary))",
+                strokeWidth: 2,
+                stroke: "hsl(var(--background))"
+              }}
+              activeDot={{ 
+                r: 6,
+                fill: "hsl(var(--primary))",
+                strokeWidth: 2,
+                stroke: "hsl(var(--background))"
+              }}
             />
           </LineChart>
         </ChartContainer>
