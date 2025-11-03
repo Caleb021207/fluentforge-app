@@ -7,12 +7,15 @@ import ProgressTimeline from "@/components/transcript-analysis/ProgressTimeline"
 import { Analysis } from "@/components/transcript-analysis/types";
 import { InteractiveCard, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Target, FileText, Award, Zap, LineChart } from "lucide-react";
+import { TrendingUp, Target, FileText, Award, Zap, LineChart, FileCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { getFluencyCertStatus, getCertDisplayName, getCertDisplayDescription } from "@/utils/fluencyCertification";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const StudentAnalysisView = () => {
   const [refreshKey, setRefreshKey] = useState(0);
+  const navigate = useNavigate();
 
   // Fetch user's transcript analyses
   const { data: analyses, isLoading } = useQuery({
@@ -205,6 +208,25 @@ const StudentAnalysisView = () => {
           </TabsContent>
         </Tabs>
       </motion.div>
+
+      {/* Certificate Button */}
+      {certStatus.level && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="flex justify-center"
+        >
+          <Button
+            onClick={() => navigate('/certificate')}
+            size="lg"
+            className="gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+          >
+            <FileCheck className="w-5 h-5" />
+            View My Certificate
+          </Button>
+        </motion.div>
+      )}
     </div>
   );
 };

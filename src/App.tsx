@@ -16,6 +16,7 @@ import Legal from "@/pages/Legal";
 import CertificationCodeTester from "@/pages/CertificationCodeTester";
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import ClassMetrics from "@/pages/ClassMetrics";
+import Certificate from "@/pages/Certificate";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/code-tester" element={<CertificationCodeTester />} />
             <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
             <Route path="/class-metrics" element={<ClassMetrics />} />
+            <Route path="/certificate" element={<Certificate />} />
             
           </Routes>
           <Toaster />
