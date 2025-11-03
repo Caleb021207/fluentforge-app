@@ -32,12 +32,12 @@ const Settings = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="mb-10 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center justify-center gap-3">
+          <div className="mb-10 text-center flex flex-col items-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text flex items-center gap-3">
               <Sparkles className="w-10 h-10 md:w-12 md:h-12" />
               Settings
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
               Manage your usage and access important documents
             </p>
           </div>
