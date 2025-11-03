@@ -8,9 +8,12 @@ import CertificateDisplay from "@/components/certificates/CertificateDisplay";
 import { getCurrentFluencyCertStatus } from "@/utils/fluencyCertification";
 import { GradientBlob } from "@/components/ui/decorative-elements";
 import { toast } from "sonner";
+import { toPng } from "html-to-image";
+import { useRef } from "react";
 
 const Certificate = () => {
   const navigate = useNavigate();
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   // Fetch user profile for name
   const { data: profile } = useQuery({
@@ -65,10 +68,36 @@ const Certificate = () => {
     ? new Date(achievementDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  const handleDownload = () => {
-    toast.info("Download functionality coming soon!", {
-      description: "We're working on PDF export for your certificate."
-    });
+  const handleDownload = async () => {
+    if (!certificateRef.current) return;
+    
+    try {
+      toast.info("Generating certificate...", {
+        description: "Please wait while we prepare your download."
+      });
+
+      const dataUrl = await toPng(certificateRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: '#ffffff',
+      });
+
+      const link = document.createElement('a');
+      const userName = profile?.display_name || profile?.email || 'Student';
+      const levelName = certStatus.level === 'professional' ? 'Professional' : 'Functional';
+      link.download = `Palavox-Certificate-${userName}-${levelName}-Fluency.png`;
+      link.href = dataUrl;
+      link.click();
+
+      toast.success("Certificate downloaded!", {
+        description: "Your certificate has been saved to your device."
+      });
+    } catch (error) {
+      console.error('Error generating certificate:', error);
+      toast.error("Download failed", {
+        description: "There was an error generating your certificate. Please try again."
+      });
+    }
   };
 
   if (isLoading) {
@@ -117,11 +146,13 @@ const Certificate = () => {
           </div>
 
           {/* Certificate */}
-          <CertificateDisplay
-            userName={profile?.display_name || profile?.email || 'Student'}
-            certLevel={certStatus.level}
-            achievementDate={formattedDate}
-          />
+          <div ref={certificateRef}>
+            <CertificateDisplay
+              userName={profile?.display_name || profile?.email || 'Student'}
+              certLevel={certStatus.level}
+              achievementDate={formattedDate}
+            />
+          </div>
         </motion.div>
       </div>
     </div>
