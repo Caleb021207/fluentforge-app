@@ -739,6 +739,42 @@ export type Database = {
         }
         Relationships: []
       }
+      directory_information_preferences: {
+        Row: {
+          academic_year: string
+          created_at: string
+          id: string
+          opt_out_date: string | null
+          opted_out: boolean
+          parent_email: string | null
+          parent_name: string | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year: string
+          created_at?: string
+          id?: string
+          opt_out_date?: string | null
+          opted_out?: boolean
+          parent_email?: string | null
+          parent_name?: string | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: string
+          created_at?: string
+          id?: string
+          opt_out_date?: string | null
+          opted_out?: boolean
+          parent_email?: string | null
+          parent_name?: string | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       district_settings: {
         Row: {
           consent_type: Database["public"]["Enums"]["district_consent_type"]
@@ -829,6 +865,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      educational_data_access_audit: {
+        Row: {
+          access_granted: boolean
+          access_type: string
+          accessed_at: string
+          accessed_user_id: string
+          accessor_user_id: string
+          data_accessed: string | null
+          data_category: string
+          denial_reason: string | null
+          educational_justification: string
+          id: string
+          ip_address: unknown
+          legitimate_interest_verified: boolean
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          access_granted?: boolean
+          access_type: string
+          accessed_at?: string
+          accessed_user_id: string
+          accessor_user_id: string
+          data_accessed?: string | null
+          data_category: string
+          denial_reason?: string | null
+          educational_justification: string
+          id?: string
+          ip_address?: unknown
+          legitimate_interest_verified?: boolean
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          access_granted?: boolean
+          access_type?: string
+          accessed_at?: string
+          accessed_user_id?: string
+          accessor_user_id?: string
+          data_accessed?: string | null
+          data_category?: string
+          denial_reason?: string | null
+          educational_justification?: string
+          id?: string
+          ip_address?: unknown
+          legitimate_interest_verified?: boolean
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
       }
       educational_interest_access_logs: {
         Row: {
@@ -2613,6 +2700,19 @@ export type Database = {
           p_user_agent?: string
         }
         Returns: boolean
+      }
+      log_educational_data_access: {
+        Args: {
+          p_access_type: string
+          p_accessed_user_id: string
+          p_data_accessed: string
+          p_data_category: string
+          p_ip_address?: unknown
+          p_justification: string
+          p_session_id?: string
+          p_user_agent?: string
+        }
+        Returns: Json
       }
       log_role_change_attempt: {
         Args: {
