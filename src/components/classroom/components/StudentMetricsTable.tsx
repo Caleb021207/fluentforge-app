@@ -67,6 +67,13 @@ export const StudentMetricsTable = ({
               onSort={onSort}
             />
             <SortableTableHeader
+              field="avg_pronunciation_accuracy"
+              label={t("pronunciationAccuracy")}
+              currentSortField={sortField}
+              sortDirection={sortDirection}
+              onSort={onSort}
+            />
+            <SortableTableHeader
               field="last_activity"
               label={CLASSROOM_TEXT.LAST_ACTIVITY}
               currentSortField={sortField}

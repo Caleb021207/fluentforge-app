@@ -193,6 +193,29 @@ export const usePronunciationExercise = () => {
       console.log("Pronunciation analysis result:", analysisResult);
       setFeedback(analysisResult);
       
+      // Persist pronunciation score to database
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { error: insertError } = await supabase
+            .from('student_language_metrics')
+            .insert({
+              user_id: user.id,
+              session_id: `pronunciation-${Date.now()}`,
+              pronunciation_accuracy: analysisResult.accuracyScore,
+              grammar_accuracy: null,
+              conversation_complexity: null,
+              message_count: 1
+            });
+          
+          if (insertError) {
+            console.error("Error saving pronunciation score:", insertError);
+          }
+        }
+      } catch (error) {
+        console.error("Error persisting pronunciation score:", error);
+      }
+      
       // Analyze conversation for metrics if enough messages
       if (messages.length >= 4) {
         await analyzeConversation([...messages, userMessage], {

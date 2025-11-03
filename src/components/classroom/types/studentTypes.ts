@@ -15,6 +15,7 @@ export interface StudentMetrics {
   last_activity: string | null;
   avg_grammar_accuracy?: number;
   avg_conversation_complexity?: number;
+  avg_pronunciation_accuracy?: number;
   language_metrics_count?: number;
 }
 

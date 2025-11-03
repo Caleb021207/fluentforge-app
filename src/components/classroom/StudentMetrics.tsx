@@ -13,6 +13,7 @@ interface StudentMetricsProps {
     last_activity: string | null;
     avg_grammar_accuracy?: number;
     avg_conversation_complexity?: number;
+    avg_pronunciation_accuracy?: number;
     language_metrics_count?: number;
   };
 }
@@ -101,6 +102,24 @@ const StudentMetrics = ({ metrics }: StudentMetricsProps) => {
               </div>
               <Progress value={metrics.avg_conversation_complexity || 0} className="h-2" />
             </div>
+            
+            {metrics.avg_pronunciation_accuracy !== undefined && metrics.avg_pronunciation_accuracy > 0 && (
+              <div>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm">{t("pronunciationAccuracy")}</span>
+                  <div className="flex items-center">
+                    <span className="text-sm font-medium">{Math.round(metrics.avg_pronunciation_accuracy || 0)}%</span>
+                    <Badge 
+                      className="ml-2" 
+                      variant={getBadgeVariant(getCEFRLevel(metrics.avg_pronunciation_accuracy || 0))}
+                    >
+                      {getCEFRLevel(metrics.avg_pronunciation_accuracy || 0)}
+                    </Badge>
+                  </div>
+                </div>
+                <Progress value={metrics.avg_pronunciation_accuracy || 0} className="h-2" />
+              </div>
+            )}
             
             <div className="text-xs text-muted-foreground">
               {t("basedOnConversations", { count: String(metrics.language_metrics_count) })}

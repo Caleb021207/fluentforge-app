@@ -88,6 +88,18 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({ student, class
         )}
       </TableCell>
       <TableCell>
+        {(student.avg_pronunciation_accuracy && student.avg_pronunciation_accuracy > 0) ? (
+          <div className="flex items-center gap-2">
+            {Math.round(student.avg_pronunciation_accuracy)}%
+            <Badge variant={getBadgeVariant(getCEFRLevel(student.avg_pronunciation_accuracy))}>
+              {getCEFRLevel(student.avg_pronunciation_accuracy)}
+            </Badge>
+          </div>
+        ) : (
+          <span className="text-muted-foreground text-sm">{t("noData")}</span>
+        )}
+      </TableCell>
+      <TableCell>
         {formatDate(student.last_activity)}
       </TableCell>
       {classId && onRemoved && (

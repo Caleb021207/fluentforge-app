@@ -60,6 +60,7 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
           last_activity: student.last_activity || null,
           avg_grammar_accuracy: student.avg_grammar_accuracy || 0,
           avg_conversation_complexity: student.avg_conversation_complexity || 0,
+          avg_pronunciation_accuracy: student.avg_pronunciation_accuracy || 0,
           language_metrics_count: student.language_metrics_count || 0,
         };
       });
