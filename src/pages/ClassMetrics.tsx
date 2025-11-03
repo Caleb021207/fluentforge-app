@@ -8,7 +8,6 @@ import { useLocalization } from "@/context/LocalizationContext";
 import ClassScoreProgressionChart from "@/components/teacher/ClassScoreProgressionChart";
 import ClassGrammarAccuracyChart from "@/components/teacher/ClassGrammarAccuracyChart";
 import ClassConversationComplexityChart from "@/components/teacher/ClassConversationComplexityChart";
-import ClassPronunciationAccuracyChart from "@/components/teacher/ClassPronunciationAccuracyChart";
 import StudentTestScores from "@/components/profile/StudentTestScores";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
@@ -52,10 +51,6 @@ const ClassMetrics = () => {
   
   const avgComplexity = metrics?.complexityTrends?.length
     ? Math.round(metrics.complexityTrends.reduce((sum, item) => sum + item.avgComplexity, 0) / metrics.complexityTrends.length)
-    : null;
-
-  const avgPronunciation = metrics?.pronunciationTrends?.length
-    ? Math.round(metrics.pronunciationTrends.reduce((sum, item) => sum + item.avgPronunciation, 0) / metrics.pronunciationTrends.length)
     : null;
 
   return (
@@ -168,8 +163,6 @@ const ClassMetrics = () => {
             <ClassGrammarAccuracyChart data={metrics?.grammarTrends || []} />
             <ClassConversationComplexityChart data={metrics?.complexityTrends || []} />
           </div>
-          
-          <ClassPronunciationAccuracyChart data={metrics?.pronunciationTrends || []} />
         </motion.div>
 
         {/* Student Roster & Performance */}
