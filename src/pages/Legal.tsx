@@ -50,325 +50,440 @@ const Legal = () => {
               <div className="prose prose-sm max-w-none dark:prose-invert text-foreground">
                 <div className="text-center mb-8">
                   <h1 className="text-3xl font-bold mb-2">PALAVOX</h1>
-                  <h2 className="text-2xl font-semibold">Palavox Legal Documents</h2>
                 </div>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">End‑User License Agreement (EULA)</h2>
-                <p className="text-sm text-muted-foreground mb-6">Last Updated: October 22, 2025</p>
+                {/* EULA Section */}
+                <h2 className="text-2xl font-bold mb-4">1. End-User License Agreement (EULA)</h2>
+                <p className="text-sm text-muted-foreground mb-6">Last Updated: November 2, 2025</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">1. Definitions</h3>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>"Software" refers to the Palavox language learning and testing platform, including all associated websites, mobile applications, data, code, documentation, content, and services.</li>
-                  <li>"User" or "You" refers to any individual or entity that downloads, accesses, or uses the Software, including students, teachers, school administrators and parents.</li>
-                  <li>"Licensee" refers to the individual or entity accepting this EULA. By downloading, installing, or using the Software, you accept and agree to be bound by this EULA.</li>
-                  <li>"Company" refers to Palavox, owned and operated by Caleb Jaworski, 2024‑2025.</li>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>"Software"</strong> – The Palavox language-learning and testing platform, including all websites, mobile applications, underlying code, documentation, and services.</li>
+                  <li><strong>"User" / "You"</strong> – Any individual or entity who downloads, accesses, or uses the Software (students, parents/guardians, teachers, school administrators, etc.).</li>
+                  <li><strong>"Licensee"</strong> – The party accepting this EULA. By installing or using the Software, you agree to these terms.</li>
+                  <li><strong>"Company"</strong> – Palavox, operated by Palavox, LLC, a limited-liability company, and its authorized affiliates.</li>
                 </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">2. Grant of License</h3>
-                <p className="mb-3"><strong>Non‑Exclusive License.</strong> Subject to compliance with this EULA, the Company grants the Licensee a personal, non‑transferable, non‑exclusive, revocable license to access and use the Software for educational purposes. No title or ownership is transferred to the Licensee.</p>
-                <p className="mb-3"><strong>Permitted Uses.</strong> The Software may be used to provide language instruction, assessment, and certification for K‑12 learners. You may access the Software through a web browser or an approved client application.</p>
-                <p className="mb-3"><strong>Prohibited Uses.</strong> You shall not:</p>
-                <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li>Copy, modify, distribute, sell, sublicense, or commercially exploit the Software without prior written consent.</li>
-                  <li>Reverse‑engineer, decompile, disassemble or otherwise attempt to discover source code or underlying algorithms.</li>
-                  <li>Circumvent any security or technical protection measures.</li>
-                  <li>Use the Software for non‑educational, illegal, or harmful purposes, including distributing test questions publicly or aiding cheating.</li>
-                </ul>
+                <p className="mb-3"><strong>Non-exclusive license</strong> – Subject to this EULA, we grant you a limited, non-transferable, non-exclusive, revocable license to access and use the Software solely for educational purposes.</p>
+                <p className="mb-3"><strong>Permitted uses</strong> – You may use the Software for language instruction, assessment, and certification in an educational context via a web browser or approved app.</p>
+                <p className="mb-3"><strong>Prohibited uses</strong> – You must not:</p>
+                <ol className="list-decimal pl-6 space-y-2 mb-4">
+                  <li>Copy, modify, distribute, or sell any part of the Software without our prior written consent.</li>
+                  <li>Reverse-engineer, decompile, or attempt to discover source code or algorithms.</li>
+                  <li>Circumvent security or technical measures.</li>
+                  <li>Use the Software for non-educational, illegal, harmful, or abusive purposes (e.g., publicly posting test items or aiding cheating).</li>
+                </ol>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">3. Intellectual Property Rights</h3>
-                <p className="mb-3"><strong>Ownership.</strong> The Software, including its source code, architecture, content (test passages, questions, prompts, audio, UI designs), trademarks, and logos are the exclusive property of the Company and its licensors. Your use of the Software does not confer ownership rights.</p>
-                <p className="mb-3"><strong>User Content.</strong> You retain ownership of any original responses, recordings, or materials you create. By submitting User Content, you grant the Company a worldwide, royalty‑free license to use, reproduce, and display such content solely to operate and improve the Software.</p>
-                <p className="mb-3"><strong>Feedback.</strong> If you submit feedback, comments or suggestions, you grant the Company a perpetual, irrevocable, royalty‑free right to use such feedback without obligation.</p>
+                <p className="mb-3">All Software components (source code, architecture, content, trademarks, logos) are owned by Palavox or our licensors. Your use does not grant you ownership.</p>
+                <p className="mb-3"><strong>User content</strong> – You retain ownership of any responses, recordings, or materials you create. You grant Palavox a limited, non-exclusive license to process and display such content solely to provide educational services.</p>
+                <p className="mb-3"><strong>Feedback</strong> – Any feedback you submit may be used by Palavox, royalty-free, to improve our services.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">4. Term and Termination</h3>
-                <p className="mb-3"><strong>Term.</strong> This license is effective until terminated. You may terminate it at any time by deleting your account and ceasing all use of the Software. The Company may suspend or terminate your license for breach of this EULA or the Terms of Service.</p>
-                <p className="mb-3"><strong>Effect of Termination.</strong> Upon termination, your right to use the Software ceases. Your data will be retained or deleted according to our Privacy Policy. Sections relating to Intellectual Property, Disclaimers, Limitation of Liability, and Governing Law survive termination.</p>
+                <p className="mb-4">This license is effective until terminated. You may terminate by deleting your account and ceasing all use. We may suspend or terminate your license if you breach this EULA or our Terms of Service. Sections on intellectual property, liability, and governing law survive termination.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">5. Disclaimers</h3>
-                <p className="mb-3"><strong>No Warranty.</strong> The Software is provided "as is" and "as available" without warranties of any kind. The Company disclaims all warranties, express or implied, including merchantability, fitness for a particular purpose and non‑infringement. We do not guarantee uninterrupted service or error‑free content.</p>
-                <p className="mb-3"><strong>No Guarantee of Outcomes.</strong> Language proficiency scores generated by the Software are assessments and do not guarantee admission to educational programs, employment, or other outcomes.</p>
+                <p className="mb-3"><strong>No warranty</strong> – The Software is provided "as is" and "as available" without any warranties (express or implied). We do not guarantee uninterrupted operation or error-free content.</p>
+                <p className="mb-3"><strong>No guaranteed outcomes</strong> – Scores are assessments only and do not guarantee educational placement, employment, or admission.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">6. Limitation of Liability</h3>
-                <p className="mb-4">To the maximum extent permitted by law, the Company shall not be liable for any indirect, incidental, special, consequential or punitive damages arising out of or relating to your use of the Software. In no event shall the Company's aggregate liability exceed the greater of $100 or the amount you paid for use of the Software during the twelve months preceding the claim.</p>
+                <p className="mb-4">To the extent permitted by law, Palavox is not liable for indirect, incidental, or consequential damages. Our total liability will not exceed the greater of US $100 or the amount you paid to use the Software during the prior twelve months.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">7. Governing Law and Dispute Resolution</h3>
-                <p className="mb-4">This EULA is governed by the laws of the State of Alabama, USA, without regard to conflict-of-laws principles. Any dispute arising under this EULA shall be resolved through informal negotiation, followed by mediation or binding arbitration in Jackson County, Alabama. The prevailing party is entitled to recover reasonable attorney's fees and costs.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">7. Governing Law & Dispute Resolution</h3>
+                <p className="mb-4">This EULA is governed by Alabama law, without regard to conflict-of-law principles. Disputes are subject to informal negotiation; if unresolved, mediation or binding arbitration will occur in Pike County, Alabama. The prevailing party may recover reasonable attorney's fees.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">8. Entire Agreement</h3>
-                <p className="mb-4">This EULA constitutes the entire agreement between you and the Company regarding the Software, superseding all prior understandings. If any provision is held invalid, the remaining provisions remain in full force.</p>
+                <p className="mb-4">This EULA, together with our Terms of Service and Privacy Policy, constitutes the entire agreement between you and Palavox.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">9. Contact</h3>
-                <p className="mb-4">For questions regarding this EULA, contact info@palavox.org.</p>
+                <p className="mb-4">All inquiries should be directed to <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a>.</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">Terms of Service (ToS)</h2>
-                <p className="text-sm text-muted-foreground mb-6">Last Updated: October 22, 2025</p>
+                {/* Terms of Service Section */}
+                <h2 className="text-2xl font-bold mb-4">2. Terms of Service (ToS)</h2>
+                <p className="text-sm text-muted-foreground mb-6">Last Updated: November 2, 2025</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">1. Acceptance</h3>
-                <p className="mb-4">By accessing or using the Palavox platform, you agree to these Terms of Service. If you do not agree, do not use the platform. These Terms apply to all Users, including students, teachers, parents, school administrators, and visitors.</p>
+                <p className="mb-4">By using Palavox, you agree to these Terms. If you disagree, do not use the platform.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">2. Accounts and Eligibility</h3>
-                <p className="mb-3"><strong>Minimum Age.</strong> To create an account, you must be at least eight (8) years old. If you are under 13, a parent or legal guardian must provide consent and supervise your use of the platform. This requirement aligns with the Children's Online Privacy Protection Act (COPPA), which requires verifiable parental consent before collecting personal information from children under 13.</p>
-                <p className="mb-3"><strong>Registration.</strong> You must provide a valid email address and create a password. All information provided must be accurate and kept up to date.</p>
-                <p className="mb-3"><strong>Account Security.</strong> You are responsible for maintaining the confidentiality of your account credentials. Notify us immediately of any unauthorized use.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">2. Accounts & Eligibility</h3>
+                <p className="mb-3"><strong>Minimum age</strong> – You must be at least 8 years old. If under 13, a parent or guardian must provide verifiable consent and supervise use (COPPA).</p>
+                <p className="mb-3"><strong>Registration</strong> – Provide a valid email and password. Keep your information current.</p>
+                <p className="mb-3"><strong>Security</strong> – You are responsible for safeguarding your login. Notify us immediately of any unauthorized use.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">3. User Responsibilities</h3>
-                <p className="mb-3"><strong>Educational Use.</strong> The platform is for educational language practice, assessment, and certification. You agree not to use the platform for commercial purposes or any non‑educational activity.</p>
-                <p className="mb-3"><strong>Content.</strong> Do not upload or submit content that is unlawful, obscene, defamatory, harassing, hate speech, or otherwise inappropriate. The platform uses content filtering and moderation to block obscene or harmful content and to comply with the Children's Internet Protection Act (CIPA).</p>
-                <p className="mb-3"><strong>Prohibited Conduct.</strong> Users shall not:</p>
-                <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li>Cheat, share test answers or certification codes, or use bots to complete assessments.</li>
-                  <li>Attempt to circumvent security measures or interfere with the platform's operation.</li>
-                  <li>Impersonate another person or provide false information.</li>
-                  <li>Attempt to gain unauthorized access to other users' accounts or data.</li>
-                  <li>Share personal information of children under 13 without parental consent.</li>
-                </ul>
-                <p className="mb-3"><strong>Teacher and Admin Obligations.</strong> Teachers and school administrators must ensure that students use the platform in accordance with school policies and applicable law, including FERPA and CIPA requirements. They must not provide students with access to inappropriate material and must ensure proper parental consent for minors.</p>
+                <p className="mb-3"><strong>Educational use only</strong> – Use Palavox for legitimate language learning, testing, or teaching purposes.</p>
+                <p className="mb-3"><strong>Content standards</strong> – Do not upload content that is unlawful, obscene, defamatory, harassing, hateful, or violates copyright or privacy. We employ safety filters to comply with CIPA and other laws.</p>
+                <p className="mb-3"><strong>Prohibited conduct</strong> – Cheating, sharing answers, using bots, or misrepresenting identity is prohibited. Attempting to circumvent security measures is also prohibited.</p>
+                <p className="mb-3"><strong>Teacher & admin obligations</strong> – Teachers and administrators must ensure use aligns with FERPA, COPPA, and CIPA, obtain necessary parental consent, and supervise students.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">4. Platform Features</h3>
-                <p className="mb-3"><strong>Testing and Assessment.</strong> The platform offers multi‑phase tests covering comprehension (reading and listening), writing, and conversational fluency. Scores are aligned to the Common European Framework of Reference (CEFR) and other frameworks (STAMP and ACTFL). The tests may adapt in difficulty based on user performance.</p>
-                <p className="mb-3"><strong>Learning Modules.</strong> Users may access practice lessons, flashcards, sentence‑building exercises, and guided conversations. As part of the gamified curriculum, users earn points and achievements.</p>
-                <p className="mb-3"><strong>Voice and Translation.</strong> The platform integrates voice synthesis and transcription (using third‑party services) to provide spoken feedback and translations.</p>
-                <p className="mb-3"><strong>Data Usage.</strong> See the Privacy Policy for details on data collection and usage.</p>
+                <p className="mb-3"><strong>Testing & Assessment</strong> – Palavox includes a comprehensive testing suite built around CEFR, ACTFL, and STAMP frameworks. Students can complete adaptive multi-phase assessments covering reading, listening, writing, pronunciation, and conversational fluency, all evaluated by AI with detailed performance reports. Tests automatically adjust difficulty based on learner responses, ensuring accurate proficiency mapping and measurable growth over time.</p>
+                
+                <p className="mb-3"><strong>Conversational Practice</strong> – Students can engage in AI-powered text and voice conversations that adapt to their proficiency level (A1–C1).</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>Text Practice</strong> enables grammar-corrected bilingual conversations with live translation and XP rewards, subject to each plan's monthly token limits.</li>
+                  <li><strong>Voice Chat</strong> enables students to speak freely using Whisper STT for transcription and Azure TTS for realistic audio feedback.</li>
+                  <li><strong>Premium Voice Chat (GPT-4o Realtime)</strong> offers natural, low-latency voice interaction for immersive speaking practice.</li>
+                  <li><strong>Pronunciation Practice</strong> provides word-by-word accuracy scoring and targeted phrase repetition.</li>
+                </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">5. Payment (if applicable)</h3>
-                <p className="mb-4">Currently the platform is free for schools and educational institutions. If pricing changes, you will be notified at least 60 days in advance.</p>
+                <p className="mb-3"><strong>Learning Modules</strong> – Includes interactive lessons, vocabulary flashcards, guided conversation prompts, and grammar reinforcement activities. Each module rewards users with XP and streak progress to encourage consistent learning habits. Progress automatically syncs across sessions and devices.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">6. Suspension and Termination</h3>
-                <p className="mb-4">We may suspend or terminate your account for violations of these Terms, including prohibited conduct, abuse, or fraud. Teachers and administrators may suspend student accounts at their discretion. Upon termination, you remain liable for obligations incurred prior to termination.</p>
+                <p className="mb-3"><strong>Progress Tracking & Analytics</strong> – Every learner has access to a personal analytics dashboard that displays CEFR-aligned progress metrics, skill growth charts, and XP milestones. Teachers and administrators can view aggregated data across students, classes, and schools to monitor engagement and improvement in real time.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">7. Disclaimers and Limitation of Liability</h3>
-                <p className="mb-3"><strong>Service "As Is."</strong> We do not guarantee that the platform will operate without interruption or error. We are not responsible for third‑party services' availability (e.g., OpenAI, Azure, Google, Stripe). The platform may contain errors or inaccuracies.</p>
-                <p className="mb-3"><strong>No Liability for Decisions.</strong> We are not liable for any decisions made by schools or third parties based on test scores or certifications. We do not guarantee admission or placement outcomes.</p>
-                <p className="mb-3"><strong>Limitation.</strong> Our total liability to you will not exceed $100 or the fees you paid to us in the past twelve months.</p>
+                <p className="mb-3"><strong>Gamification System</strong> – A robust gamified learning layer motivates users through:</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>XP points for every completed activity</li>
+                  <li>Daily streaks and milestone achievements</li>
+                  <li>Level-up animations and celebratory modals</li>
+                  <li>Leaderboards for friendly classroom competition</li>
+                </ul>
+
+                <p className="mb-3"><strong>Voice & Translation Infrastructure</strong> – All AI voices and transcriptions are powered by:</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>Azure Neural TTS (Text-to-Speech):</strong> lifelike multilingual voices across all supported languages</li>
+                  <li><strong>OpenAI Whisper (Speech-to-Text):</strong> native pronunciation support and high-accuracy multilingual transcription</li>
+                  <li><strong>OpenAI GPT-4o / GPT-4o-mini:</strong> advanced conversational models for adaptive feedback</li>
+                </ul>
+
+                <p className="mb-4">The system automatically switches to browser-based fallback modes when token or time limits are reached. Fallback maintains functionality at reduced priority and may have lower quality, higher latency, or feature differences until monthly limits reset.</p>
+
+                <p className="mb-3"><strong>Security & Compliance</strong> – Built with education-first privacy in mind:</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>FERPA / COPPA / CIPA-compliant data handling</li>
+                  <li>Encrypted storage for all sensitive student data</li>
+                  <li>Parental consent logging and audit trails</li>
+                  <li>Role-based access controls for teachers, admins, and districts</li>
+                  <li>Rate limiting and RLS policies to prevent data abuse</li>
+                  <li>Palavox aims to conform to WCAG 2.1 AA and will remediate accessibility issues reported by districts.</li>
+                </ul>
+
+                <p className="mb-3"><strong>Usage Limits (Monthly Reset)</strong></p>
+                <p className="mb-2"><strong>Standard Tier:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>22.5K TTS tokens (~150 minutes)</li>
+                  <li>150K Text Practice tokens</li>
+                  <li>120 minutes Whisper STT</li>
+                  <li>Premium Voice: Disabled</li>
+                </ul>
+
+                <p className="mb-2"><strong>Premium Tier:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>33.75K TTS tokens (~225 minutes)</li>
+                  <li>300K Text Practice tokens</li>
+                  <li>180 minutes Whisper STT</li>
+                  <li>15 minutes Premium Voice (Realtime)</li>
+                </ul>
+
+                <p className="mb-4">All limits reset monthly and include real-time tracking with usage alerts at 90% capacity. When limits are reached, Palavox automatically falls back to free in-browser speech options to maintain an uninterrupted learning experience.</p>
+
+                <h3 className="text-xl font-semibold mt-6 mb-3">5. Payments, Pricing & Licensing</h3>
+                <p className="mb-4">Palavox operates on an annual academic-year license (9 months of student access, invoiced for 12 months to cover ongoing support and infrastructure). Student access runs August–May; year-round admin access, support, maintenance, and compliance operations are included in the annual price—therefore invoicing is annual (12 months). Districts may mix Standard and Premium student seats as needed.</p>
+
+                <p className="mb-3"><strong>Overages and add-ons</strong> – If an organization anticipates higher usage, Palavox may offer additional token/minute bundles or plan upgrades by written agreement. Fallback processing remains available as described in the Platform Features section but may operate at reduced priority or quality.</p>
+
+                <p className="mb-3"><strong>Standard Plan:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>$70 per student per academic year</li>
+                  <li>Includes text and voice practice (GPT-4o-mini + Azure TTS)</li>
+                  <li>22.5K TTS tokens (~150 minutes/month)</li>
+                  <li>150K Text Practice tokens/month</li>
+                  <li>120 minutes Whisper STT/month</li>
+                  <li>Access to all practice and progress-tracking features</li>
+                </ul>
+
+                <p className="mb-3"><strong>Premium Plan:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>$100 per student per academic year</li>
+                  <li>Adds GPT-4o Realtime "Advanced Voice" conversation (15 minutes/month)</li>
+                  <li>33.75K TTS tokens (~225 minutes/month)</li>
+                  <li>300K Text Practice tokens/month</li>
+                  <li>180 minutes Whisper STT/month</li>
+                  <li>Priority support and additional analytics tools</li>
+                </ul>
+
+                <p className="mb-4"><strong>Assessment add-ons</strong> – Certification tests (Reading, Writing, or Speaking) may be purchased separately at the then-current published price or by written agreement for districtwide bundles.</p>
+
+                <p className="mb-3"><strong>Billing Terms:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>Invoiced annually at the start of each school year</li>
+                  <li>Payment due within 30 days of invoice date</li>
+                  <li>Renewal each July for following school year</li>
+                  <li>Multi-year and district-wide pricing available upon request</li>
+                  <li>Late payments accrue 1.5%/month (where permitted) or the maximum allowed by law.</li>
+                  <li>Refunds are limited to service unavailability exceeding the SLA; otherwise fees are non-refundable once access codes are issued.</li>
+                </ul>
+
+                <p className="mb-4"><strong>Pilot Programs</strong> – Pilot implementations are available at a reduced cost for initial evaluation periods (typically one quarter or semester). Pilots include all Premium Plan features, administrative onboarding, and full technical support.</p>
+
+                <p className="mb-4">Refunds or credits are issued only according to Palavox's published refund policy.</p>
+
+                <h3 className="text-xl font-semibold mt-6 mb-3">6. Suspension & Termination</h3>
+                <p className="mb-4">Palavox may suspend or terminate accounts for violations of these Terms or for fraud or abuse. Termination does not waive prior obligations.</p>
+
+                <h3 className="text-xl font-semibold mt-6 mb-3">7. Disclaimers & Limitation of Liability</h3>
+                <p className="mb-4">The Software is provided "as is" without warranties. We do not guarantee outcomes. Our liability is limited as described in the EULA.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">8. Indemnification</h3>
-                <p className="mb-4">You agree to indemnify and hold harmless the Company and its officers, employees, and affiliates from any claims or damages arising out of your use of the platform, violation of these Terms, or violation of any rights of others.</p>
+                <p className="mb-4"><strong>Indemnification</strong> – You agree to indemnify and hold harmless Palavox from third-party claims arising from your violation of these Terms or applicable law. Palavox will indemnify and hold you harmless from third-party claims alleging (a) that the Palavox platform, as provided by Palavox, infringes a U.S. intellectual-property right, or (b) a data breach caused by Palavox's failure to implement the security measures described in the Privacy Policy or required by applicable law. Each party's indemnity is conditioned on prompt written notice, reasonable cooperation, and sole control of the defense and settlement by the indemnifying party.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">9. Modifications</h3>
-                <p className="mb-4">We may modify these Terms. Material changes will be notified by email and on our website at least 30 days before the effective date. Continued use after the effective date constitutes acceptance of the new Terms.</p>
+                <p className="mb-4">We may update these Terms. Material changes will be posted and emailed at least 30 days before taking effect. Continued use constitutes acceptance.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">10. Governing Law</h3>
-                <p className="mb-4">These Terms are governed by the laws of the State of Alabama, USA, without regard to conflict-of-laws principles. Disputes shall be resolved as described in the EULA.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">10. Dispute Resolution</h3>
+                <p className="mb-4">Before filing a claim, the parties will attempt in good faith to resolve the dispute through informal discussions for 30 days. If unresolved, the dispute shall be submitted to mediation, and if still unresolved, to binding arbitration in Pike County, Alabama. Either party may seek injunctive relief in a court of competent jurisdiction to prevent misuse of confidential information or intellectual property.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">11. Contact</h3>
-                <p className="mb-4">For support or questions, email info@palavox.org.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">11. Governing Law & Contact</h3>
+                <p className="mb-4">Governed by Alabama law. Questions: <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a>.</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">Privacy Policy</h2>
-                <p className="text-sm text-muted-foreground mb-6">Effective Date: October 22, 2025</p>
+                {/* Privacy Policy Section */}
+                <h2 className="text-2xl font-bold mb-4">3. Privacy Policy</h2>
+                <p className="text-sm text-muted-foreground mb-6">Effective Date: November 2, 2025</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">1. Scope</h3>
-                <p className="mb-4">This Privacy Policy describes how Palavox collects, uses, shares, and protects personal information. It applies to all users (students, parents, teachers, administrators, and visitors) of the platform.</p>
+                <p className="mb-4">This Privacy Policy applies to all users (students, parents, teachers, administrators, visitors) and explains what information we collect, how we use it, and your rights.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">2. Information We Collect</h3>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li><strong>Account Information.</strong> We collect your email address and, optionally, a display name when you create an account.</li>
-                  <li><strong>Usage and Performance Data.</strong> This includes language preferences, test responses, audio recordings, written submissions, progress metrics, duration of sessions, number of attempts, scores, and certification data.</li>
-                  <li><strong>Device and Connection Information.</strong> We collect IP addresses, browser type, and device identifiers for security, troubleshooting, and analytics.</li>
-                  <li><strong>Cookies and Similar Technologies.</strong> We use cookies or local storage to maintain your session and track aggregate usage metrics. For details, see our Cookie Policy.</li>
+                  <li><strong>Account Information</strong> – Email address and, optionally, a display name.</li>
+                  <li><strong>Educational Data</strong> – Test responses, assignments, progress metrics, session durations, scores.</li>
+                  <li><strong>Technical Data</strong> – IP address, browser type, device identifiers, and usage statistics (e.g., page views, lesson completions).</li>
+                  <li><strong>Cookies & Local Storage</strong> – Used for session authentication, preferences, and aggregated analytics (no third-party ad cookies).</li>
                 </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">3. How We Use Data</h3>
-                <p className="mb-3"><strong>Platform Operation and Improvement.</strong> We use your data to deliver language assessment and learning services, personalize content based on your CEFR level, and improve our products.</p>
-                <p className="mb-3"><strong>Scoring and Feedback.</strong> Your responses and recordings are processed by automated systems (including AI models) to generate scores and feedback. The scoring uses a framework based on STAMP methodology and CEFR alignment.</p>
-                <p className="mb-3"><strong>Analytics.</strong> Aggregated and de‑identified data may be used for analytics to improve content, measure performance, and produce aggregated statistics.</p>
-                <p className="mb-3"><strong>Communication.</strong> We may use your email to send account notifications, test results, updates about changes to our policies, or necessary disclosures.</p>
+                <p className="mb-3"><strong>Platform delivery & improvement</strong> – To operate the platform, personalize learning experiences, provide scores and feedback, and improve our services. AI models process responses to generate results; we do not use children's identifiable data for AI training without separate consent (see below). For adult users, Palavox does not use identifiable content to train models without separate, opt-in consent. We do not allow our vendors to use Palavox customer content to train their foundation models.</p>
+                <p className="mb-3"><strong>Communication</strong> – To send account notices, test results, product updates, or policy changes.</p>
+                <p className="mb-3"><strong>Aggregated analytics</strong> – We may analyze de-identified, aggregated data to improve content and measure performance.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">4. Educational Records & FERPA</h3>
-                <p className="mb-3">Palavox is used by educational institutions and collects education records. Under FERPA, parents (or eligible students age 18+) have the following rights:</p>
-                <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li><strong>Access to Education Records:</strong> Schools must allow parents to inspect and review their child's education records within 45 calendar days of a request. Palavox assists schools by providing secure portals for this purpose.</li>
-                  <li><strong>Amendment of Records:</strong> Parents may request corrections of inaccurate or misleading records. If a school denies the request, parents may insert a statement into the record explaining their disagreement.</li>
-                  <li><strong>Consent to Disclosure:</strong> Schools generally may not disclose personally identifiable information (PII) without written parental consent, except to school officials with a legitimate educational interest or in other limited circumstances. "Directory information" may be disclosed unless parents opt out. Palavox does not independently designate or disclose directory information.</li>
-                </ul>
-                <p className="mb-4">Palavox stores education records on behalf of schools and operates under their direct control. Our access to records is limited to fulfilling educational services.</p>
+                <p className="mb-3">Palavox acts as a school official under FERPA. We process educational records under the school's direct control for authorized educational purposes. We use de-identified or aggregated data (removing direct and indirect identifiers) for improvement and analytics. We do not re-identify de-identified data.</p>
+                <p className="mb-4">Schools control disclosure of personally identifiable information (PII) and must obtain parental consent where required.</p>
+                <p className="mb-4"><strong>De-identification methodology</strong> – When we use de-identified data for improvement or analytics, we remove direct identifiers (names, emails, IP addresses, device IDs) and mask or generalize quasi-identifiers (timestamps, locations, school identifiers) using aggregation, hashing, tokenization, and date/geo bucketing. We also apply minimum group sizes for reports and suppress small-n results to reduce re-identification risk. We do not attempt to re-identify de-identified data, and our subprocessors strictly prohibit doing so as well.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">5. Children's Privacy (COPPA)</h3>
-                <p className="mb-4">Palavox does not knowingly collect personal information from children under 13 without verifiable parental consent. COPPA requires operators to obtain verifiable parental consent before collecting personal information from children under 13. When Palavox is used in schools, the school may provide consent on behalf of parents when acting as the parent's agent for educational use. Parents may review, delete, and refuse further collection of their child's information at any time. If consent is not obtained in a reasonable time after notice, we delete the data.</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>We do not collect personal information from children under 13 without verifiable parental consent.</li>
+                  <li><strong>AI Training Consent (Minors)</strong> – We do not use a child's identifiable personal information to train or improve AI models beyond generating scores and feedback without separate, opt-in parental consent that clearly explains the purpose and scope. If consent is not given, we will not use identifiable information for training; only de-identified data may be used. Parents may revoke consent at any time, and revocation will apply to future processing.</li>
+                  <li><strong>Data minimization</strong> – We minimize the data we collect to what is necessary for educational purposes and process audio in real time for minors without storing any recordings.</li>
+                </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">6. CIPA Support</h3>
-                <p className="mb-4">For schools receiving E‑Rate funding, CIPA requires them to adopt an Internet safety policy and implement a technology protection measure that blocks access to content that is obscene, child pornography, or harmful to minors. Palavox supports compliance with safety filters and teacher controls but does not replace the school's own filtering obligations.</p>
+                <p className="mb-4">Palavox supports compliance with the Children's Internet Protection Act by providing content-filtering tools and safety controls, but schools retain responsibility for internet safety policies and filtering of obscene or harmful content.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">7. Data Sharing</h3>
-                <p className="mb-3"><strong>With Schools.</strong> We share students' test results and progress metrics with the respective schools and teachers to enable educational evaluation.</p>
-                <p className="mb-3"><strong>With Parents/Guardians.</strong> Parents can access their child's data through the school or the parent portal with proper authorization.</p>
-                <p className="mb-3"><strong>With Service Providers.</strong> We share data with third‑party AI providers (e.g., OpenAI, Azure, Google) solely to process user responses and generate scores. We require these providers to adhere to data security obligations and not to use data for unrelated purposes.</p>
-                <p className="mb-3"><strong>With Law Enforcement.</strong> We may disclose data as required by law or to protect our rights or safety. When disclosing under FERPA exceptions, we ensure compliance with § 99.31 and its conditions.</p>
-                <p className="mb-3"><strong>Directory Information.</strong> Schools may designate certain data as "directory information" and disclose it without consent unless parents opt out. Palavox does not independently designate or disclose directory information.</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>With schools</strong> – We share test results and progress metrics with the respective schools and teachers under the school's direct control.</li>
+                  <li><strong>With parents/guardians</strong> – Parents can access their child's data via school-managed portals when authorized.</li>
+                  <li><strong>With service providers</strong> – We use a limited number of vetted subprocessors only to deliver Palavox services. Subprocessors must process data solely for Palavox's purposes, maintain confidentiality, and delete or de-identify data promptly after service delivery. Current subprocessors are OpenAI (GPT-4o/mini & Whisper), Microsoft Azure (Neural TTS), and Supabase (auth/database).</li>
+                  <li><strong>Subprocessor retention and training</strong> – OpenAI retains API input/output logs for up to 30 days solely for abuse monitoring and then deletes them; OpenAI does not use our content to train its models. Microsoft Azure processes audio/text to deliver requested outputs and does not retain customer content after response generation. Supabase hosts authentication/database under Palavox's control and follows Palavox's deletion schedule. While we require prompt deletion by contract wherever feasible, we cannot compel vendors beyond their published policies.</li>
+                  <li>We maintain an up-to-date subprocessor list at [upon request]. We will provide 30 days' notice before adding or replacing a subprocessor, except for urgent risk or continuity reasons.</li>
+                  <li><strong>For legal requirements</strong> – We may disclose data if required by law or to protect rights or safety.</li>
+                  <li><strong>No sale of personal data</strong> – We do not sell or rent user data.</li>
+                </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">8. Data Retention</h3>
-                <p className="mb-4">Test responses, transcripts, and progress metrics are retained as required by FERPA and school agreements. Audio recordings are retained for evaluation, review, and improvement for a limited period before deletion. Users may request deletion of their data through their school.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">8. Data Retention and Deletion</h3>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>Account Information</strong> – Retained until you delete your account, plus 90 days for support and secure backup erasure.</li>
+                  <li><strong>Test Responses and Educational Records</strong> – Retained for up to 3 years, or shorter if a school contract requires less, to support accreditation, re-evaluation, and audits. Deleted or de-identified after that period.</li>
+                  <li><strong>Usage Metrics</strong> – Retained for 2 years for analytics and improvement, then aggregated or deleted.</li>
+                  <li><strong>Audio Recordings</strong> – Minors' audio is processed in real time and not stored. Adults may opt-in to storage for portfolio features (off by default).</li>
+                  <li><strong>Certification Data</strong> – Retained for up to 5 years to enable verification of credentials, then deleted unless required by law or school policy.</li>
+                  <li><strong>Annual review</strong> – We conduct an annual retention review and shorten schedules where feasible. All deletions use NIST 800-88-aligned secure erasure.</li>
+                </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">9. Security Measures</h3>
-                <p className="mb-4">We use industry‑standard encryption (AES‑256 at rest and TLS 1.3 in transit) and role‑based access control (RLS) to protect data. Access to student records is audited. We follow the U.S. Department of Education's guidelines for safeguarding PII and maintain confidentiality with service providers.</p>
+                <p className="mb-3">We maintain a Written Information Security Program (WISP) that includes:</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li>Encryption (AES-256 at rest, TLS 1.3 in transit).</li>
+                  <li>Role-based access control (RLS), least privilege, and logging of access to educational records.</li>
+                  <li><strong>Testing and risk management</strong> – Annual risk assessments, periodic penetration tests, vulnerability scanning, and documented remediation.</li>
+                  <li><strong>Workforce safeguards</strong> – Employee background checks where permitted, confidentiality agreements, and annual privacy/security training.</li>
+                  <li><strong>Breach notification</strong> – If a data breach involving personal information occurs, we will notify affected schools and users within 72 hours of confirming the incident, with details of the incident, data affected, and steps taken. We will coordinate with schools to meet any additional state or federal notice requirements.</li>
+                  <li>Fallback speech features rely on browser-based or cloud processing and are subject to the same access-control principles; access to education records is logged and periodically reviewed.</li>
+                  <li><strong>Vendor management / Subprocessor limits</strong> – We perform security and privacy due diligence on all subprocessors and review their policies annually. While we cannot compel third-party vendors beyond their published retention and deletion practices, our goal is to formalize written agreements wherever feasible requiring data minimization, confidentiality, and prompt deletion after service delivery. Current subprocessors retain data for 30 days or less, and Microsoft Azure does not retain content.</li>
+                  <li><strong>Data Location</strong> – All data is stored in US-based regions with US-based backups.</li>
+                </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">10. International Users and GDPR</h3>
-                <p className="mb-4">For international users (e.g., in the European Economic Area), we adhere to local data protection laws and may enter into Standard Contractual Clauses where personal data is transferred to the U.S. Data subjects outside the U.S. may have additional rights, including the right to be forgotten and data portability.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">10. International Users (GDPR and Other Laws)</h3>
+                <p className="mb-3">For users in the EEA and other jurisdictions, we rely on Standard Contractual Clauses and other lawful bases to transfer data to the U.S. We honor rights to access, rectify, erase, or port personal data. You can exercise these rights via <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a>.</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>Transfers</strong> – For EEA/UK users, we rely on Standard Contractual Clauses and other lawful bases to transfer data to the U.S.</li>
+                  <li><strong>Rights</strong> – You may request access, rectification, erasure, restriction, objection, or portability by emailing <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a>. We respond within 30 days, or explain any lawful extension.</li>
+                  <li><strong>DPO contact</strong> – Our data protection contact (DPO function) is reachable at <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a> for GDPR inquiries.</li>
+                  <li><strong>Complaint</strong> – EEA/UK users may also lodge a complaint with their data protection authority.</li>
+                </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">11. Your Rights</h3>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li><strong>Access and Correction:</strong> You may request to review and correct your personal information.</li>
-                  <li><strong>Opt‑Out:</strong> You may request that your data not be used for analytics or research, subject to legal and contractual requirements.</li>
-                  <li><strong>Deletion:</strong> You may request deletion of your personal information to the extent permitted by law. Some data may be retained for record‑keeping and compliance.</li>
-                  <li><strong>Directory Information Opt‑Out:</strong> Parents may opt out of the disclosure of directory information by notifying their child's school.</li>
+                  <li><strong>Access & correction</strong> – You may request to view or correct your personal information.</li>
+                  <li><strong>Opt-out of analytics</strong> – You may request that your data not be used for analytics, subject to legal or contractual obligations.</li>
+                  <li><strong>Deletion</strong> – You may request deletion of personal information where permitted by law. Some data may need to be retained for educational or legal compliance.</li>
+                  <li><strong>Directory information opt-out</strong> – Parents can opt out of disclosure of directory information by notifying the school.</li>
                 </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">12. Changes to this Policy</h3>
-                <p className="mb-4">We may update this Privacy Policy. Material changes will be communicated via email and on our website. Continued use of the platform constitutes acceptance of the new policy.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">12. Changes to This Policy</h3>
+                <p className="mb-4">Material changes will be emailed and posted at least 30 days before they take effect. Continued use after the effective date constitutes acceptance.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">13. Contact Us</h3>
-                <p className="mb-4">For questions about this Privacy Policy or to exercise data rights, contact info@palavox.org.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">13. Contact</h3>
+                <p className="mb-4">Questions about this Privacy Policy or data rights should be sent to <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a> (DPO contact).</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">School Service Agreement</h2>
-                <p className="text-sm text-muted-foreground mb-6">Last Updated: October 22, 2025</p>
-                <p className="mb-4">This Agreement ("Agreement") is between Palavox ("Service Provider") and the school or educational institution accepting these terms ("School"). It sets out the conditions under which Palavox provides language assessment and learning services.</p>
+                {/* School Service Agreement Section */}
+                <h2 className="text-2xl font-bold mb-4">4. School Service Agreement</h2>
+                <p className="text-sm text-muted-foreground mb-6">Last Updated: November 2, 2025</p>
+                <p className="mb-4">This Agreement governs use of Palavox by schools and educational institutions.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">1. Scope of Services</h3>
-                <p className="mb-4">Palavox offers an AI‑powered platform for language learning and certification. The Services include test administration, scoring, analytics, and classroom management tools.</p>
+                <p className="mb-4">Palavox provides an AI-powered platform for language learning and certification, including test administration, scoring, analytics, gamified lessons, text and voice practice, pronunciation practice, premium real-time AI voice (Premium plan), progress tracking, class management tools, and support for multi-language user interfaces.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">2. FERPA & Data Processing</h3>
-                <p className="mb-3"><strong>Data Processor Role.</strong> Palavox acts as the School's data processor and a "school official" under the School's direct control. We use student data only to provide and improve the Services. We will not redisclose personally identifiable information from education records except as permitted under FERPA (e.g., to authorized school officials with legitimate educational interests).</p>
-                <p className="mb-3"><strong>Security.</strong> We implement encryption, role‑based access controls, and row‑level security to ensure that only authorized personnel have access. We maintain a security audit log and allow schools to audit our compliance.</p>
-                <p className="mb-3"><strong>Access, Amendment, and Disclosure.</strong> Palavox will assist the School in fulfilling FERPA requests, including providing access to records within 45 days and recording amendments or statements of disagreement.</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>Data processor role</strong> – Palavox acts as the School's data processor and a "school official" with a legitimate educational interest. We use student data only to deliver educational services and improve them with de-identified data.</li>
+                  <li><strong>Security</strong> – We implement encryption, role-based access control, audit logs, annual risk assessments, and a WISP as outlined in the Privacy Policy. Schools may audit our compliance. Upon reasonable prior notice, Palavox will provide security and privacy documentation (e.g., WISP summary, third-party audit summaries, penetration-test attestation) to support the School's compliance reviews.</li>
+                  <li><strong>Access, Amendment & Disclosure</strong> – We assist schools in responding to record requests, ensuring access within 45 days and recording amendments or statements of disagreement. Palavox will assist the School in fulfilling parent/eligible student requests within FERPA timelines and will apply School-directed corrections or append statements of disagreement as instructed.</li>
+                </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">3. Responsibilities of the School</h3>
-                <p className="mb-3"><strong>Parental Consent.</strong> The School must obtain all necessary parental consent under COPPA and FERPA before allowing students under 13 to use the platform.</p>
-                <p className="mb-3"><strong>Internet Safety.</strong> If the School receives E‑Rate funding, it must ensure that an Internet safety policy and filtering measures are in place to block obscene or harmful content as required by CIPA.</p>
-                <p className="mb-3"><strong>Account Supervision.</strong> The School shall manage teacher and student accounts, monitor usage, and provide support to users.</p>
-                <p className="mb-3"><strong>Certification Codes.</strong> The School will issue certification codes and track usage. Misuse or unauthorized sharing of certification codes must be addressed promptly.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">3. School Responsibilities</h3>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>Parental consent</strong> – Schools must obtain verifiable parental consent under COPPA and FERPA for students under 13.</li>
+                  <li><strong>Internet safety</strong> – If receiving E-Rate funding, schools must implement content filtering as required by CIPA; Palavox provides tools but does not replace these obligations.</li>
+                  <li><strong>Account supervision</strong> – Schools manage teacher and student accounts and monitor usage.</li>
+                  <li><strong>Certification codes</strong> – Schools issue and track test codes; misuse must be addressed promptly.</li>
+                </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">4. Confidentiality and Disclosure</h3>
-                <p className="mb-3"><strong>Confidentiality.</strong> Both parties will maintain the confidentiality of education records and other proprietary information. Neither party will disclose confidential information to third parties except as required by law.</p>
-                <p className="mb-3"><strong>Directory Information.</strong> Schools may designate certain information as directory information. Palavox will not disclose directory information unless instructed by the School and only after parents have been given the opportunity to opt out.</p>
-                <p className="mb-3"><strong>Sub‑processors.</strong> Palavox may engage sub‑processors (e.g., AI providers) under written agreements that require them to implement equivalent data protection.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">4. Confidentiality & Disclosure</h3>
+                <p className="mb-4">Both parties agree to maintain confidentiality of education records. Palavox does not disclose directory information unless instructed by the school, and only after parents have an opportunity to opt out. Subprocessors are bound by contracts to adhere to equivalent data protections and delete data after service delivery.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">5. Term and Termination</h3>
-                <p className="mb-4">This Agreement remains in effect for one year or until terminated by either party. Either party may terminate for material breach. Upon termination, Palavox will assist the School in transferring or deleting student data in accordance with FERPA.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">5. Term & Termination</h3>
+                <p className="mb-4">This Agreement remains in effect for one year or until terminated by either party. This agreement automatically renews annually unless the district gives 45 days written notice. Either party may terminate for material breach. On termination, Palavox will assist with data transfer or deletion per FERPA.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">6. Indemnity and Liability</h3>
-                <p className="mb-4">Each party indemnifies the other against third‑party claims arising from its breach of this Agreement or violation of applicable laws. Neither party shall be liable for indirect or consequential damages.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">6. Indemnity & Liability</h3>
+                <p className="mb-4">Each party indemnifies the other for third-party claims arising from its breach or legal violations. Neither party is liable for indirect or consequential damages.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">7. Notices</h3>
-                <p className="mb-4">All notices under this Agreement must be provided in writing to the contacts designated by each party.</p>
+                <p className="mb-4">Notices must be in writing to the designated contacts of each party.</p>
+
+                <h3 className="text-xl font-semibold mt-6 mb-3">8. Export Controls</h3>
+                <p className="mb-4">User represents they are not on U.S. restricted lists; no export to embargoed countries.</p>
+
+                <h3 className="text-xl font-semibold mt-6 mb-3">9. Service Levels</h3>
+                <p className="mb-4">Palavox targets 99.5% monthly uptime excluding scheduled maintenance (≤4 hrs/mo with 48-hr notice). P1 incidents (platform down) receive initial response within 4 business hours; other tickets within 1 business day.</p>
+
+                <h3 className="text-xl font-semibold mt-6 mb-3">10. Assignment</h3>
+                <p className="mb-4">Palavox may assign this Agreement in connection with a merger, acquisition, or sale of assets.</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">FERPA Compliance Statement</h2>
-                <p className="mb-4">Palavox is committed to protecting the privacy of student education records in accordance with the Family Educational Rights and Privacy Act (FERPA) and applicable state laws. Key elements of our FERPA compliance program include:</p>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">Access Rights</h3>
-                <p className="mb-4">We work with schools to ensure parents may inspect and review their child's education records within 45 days of a request. Our platform provides secure portals for parents, where authorized by the school, to access records.</p>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">Amendment Rights</h3>
-                <p className="mb-4">We support schools in responding to requests to correct or amend records that parents believe are inaccurate or misleading. If a record is not amended, parents can insert a statement of disagreement, which we attach to the record.</p>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">Consent for Disclosure</h3>
-                <p className="mb-4">We do not share personally identifiable information from education records without written consent, except as permitted by FERPA. Schools may disclose PII to school officials with legitimate educational interests, contractors and service providers under the direct control of the school, or new schools in which the student seeks to enroll. We assist schools in tracking consent and documenting disclosures.</p>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">Directory Information</h3>
-                <p className="mb-4">We do not designate directory information on our own. Schools determine what constitutes directory information and notify parents of the right to opt out.</p>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">Security Measures</h3>
-                <p className="mb-4">Our database uses encryption at rest and in transit, role‑based access control, audit logs, and row‑level security. We restrict access to authorized school officials with legitimate educational interests.</p>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">Record of Disclosures</h3>
-                <p className="mb-4">We maintain logs of disclosures of education records as required by FERPA so that parents or eligible students may review the record of disclosures.</p>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">Training and Awareness</h3>
-                <p className="mb-4">Employees handling education records receive annual training on FERPA requirements and privacy best practices. We require confidentiality agreements from employees and contractors with access to student data.</p>
-                <p className="mb-4">For questions about our FERPA compliance, contact info@palavox.org.</p>
+                {/* FERPA Compliance Statement */}
+                <h2 className="text-2xl font-bold mb-4">5. FERPA Compliance Statement</h2>
+                <p className="mb-4">Palavox is committed to protecting the privacy of student education records in accordance with FERPA and state laws.</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>Access rights</strong> – We work with schools to enable parents to review their child's education records within 45 days of a request via secure portals.</li>
+                  <li><strong>Amendment rights</strong> – We support schools in correcting inaccurate or misleading records. If a record is not corrected, parents may include a statement of disagreement.</li>
+                  <li><strong>Consent for disclosure</strong> – Palavox does not share PII from education records without written parental consent, except to school officials with legitimate educational interests or in compliance with FERPA exceptions.</li>
+                  <li><strong>Directory information</strong> – We do not designate directory information; schools determine and notify parents of directory information and opt-out rights.</li>
+                  <li><strong>Security</strong> – Our database uses AES-256 encryption, TLS 1.3, role-based access controls, audit logs, and de-identification for improvement.</li>
+                  <li><strong>Record of disclosures</strong> – We maintain logs of disclosures so parents or eligible students can review them.</li>
+                  <li><strong>Training & awareness</strong> – Employees handling education records receive annual training on FERPA and privacy best practices and sign confidentiality agreements.</li>
+                </ul>
+                <p className="mb-4">For FERPA questions, contact <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a>.</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">COPPA Notice (Parental Consent Requirements)</h2>
-                <p className="mb-4">Palavox complies with the Children's Online Privacy Protection Act (COPPA). We do not knowingly collect personal information from children under 13 unless a parent or guardian has provided verifiable parental consent.</p>
+                {/* COPPA Notice */}
+                <h2 className="text-2xl font-bold mb-4">6. COPPA Notice</h2>
+                <p className="mb-4">Palavox complies with the Children's Online Privacy Protection Act (COPPA). We do not knowingly collect personal information from children under 13 without verifiable parental consent.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">1. Information We Collect from Children</h3>
-                <p className="mb-4">With parental consent, we collect: email address, language preferences, audio recordings of spoken responses, written test answers, and session usage statistics. We may also collect parent contact information for consent purposes. We do not request names, addresses, or other unnecessary personal identifiers.</p>
+                <p className="mb-4">With parental consent, we collect email (for login), language preferences, test responses, and usage statistics. We do not collect names, addresses, or unnecessary identifiers.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">2. How We Use Children's Information</h3>
-                <p className="mb-4">We use children's information only to provide language learning and assessment services, generate scores, and deliver feedback. We do not disclose personal information to third parties except to service providers under contract who process information solely to provide services to us.</p>
+                <p className="mb-4">Solely to provide language learning, generate scores, and deliver feedback. We do not disclose personal information to third parties except subprocessors that support platform operation (e.g., OpenAI, Azure).</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">3. Parental Rights</h3>
-                <p className="mb-3">Parents have the right to:</p>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li><strong>Review and Request Deletion.</strong> Parents may review their child's personal information, request deletion, and refuse to permit further collection or use of the child's information.</li>
-                  <li><strong>Consent.</strong> We require verifiable parental consent before collecting any personal information from children under 13. Exceptions include collecting a parent's contact information solely to provide notice or collecting persistent identifiers solely for internal operations.</li>
-                  <li><strong>Choice.</strong> Parents may consent to collection of information but refuse disclosure to third parties. We will comply with their choices.</li>
+                  <li>Parents may review and delete their child's personal information at any time and refuse further collection.</li>
+                  <li>Separate consent is required for non-integral uses like AI training. If not provided, such uses do not occur.</li>
                 </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">4. How to Provide Consent</h3>
-                <p className="mb-4">We allow schools and parents to provide consent using methods recommended by the FTC, including email plus (parent responds to notice via email), paper forms, or video calls. If consent is not obtained, we delete the child's information.</p>
+                <p className="mb-4">Schools or parents may provide consent via email plus verification, signed paper form, or video call. If consent is not obtained within a reasonable period after notice, we delete the child's information.</p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">5. Contact for COPPA Questions</h3>
-                <p className="mb-4">For questions about COPPA compliance or to exercise parental rights, email info@palavox.org.</p>
+                <h3 className="text-xl font-semibold mt-6 mb-3">5. Contact</h3>
+                <p className="mb-4">For COPPA questions or to exercise rights, email <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a>.</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">Cookie Policy</h2>
+                {/* Cookie Policy */}
+                <h2 className="text-2xl font-bold mb-4">7. Cookie Policy</h2>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">1. What Are Cookies?</h3>
-                <p className="mb-4">Cookies are small text files stored on your device when you visit websites. We use cookies and similar technologies (e.g., local storage) to provide and improve the Palavox platform.</p>
+                <p className="mb-4">Small text files stored on your device. We use them to operate and improve Palavox.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">2. How We Use Cookies</h3>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li><strong>Essential Cookies.</strong> These cookies are necessary for the platform to function. They authenticate users and maintain sessions.</li>
-                  <li><strong>Analytics Cookies.</strong> We use first-party analytics to understand how users engage with the platform. These cookies collect aggregated, anonymous data.</li>
-                  <li><strong>Functionality Cookies.</strong> These cookies remember your language and interface preferences.</li>
-                  <li><strong>No Advertising Cookies.</strong> We do not use cookies for targeted advertising.</li>
+                  <li><strong>Essential cookies</strong> – Authenticate users and maintain sessions.</li>
+                  <li><strong>Analytics cookies</strong> – Collect anonymized usage statistics to improve our services.</li>
+                  <li><strong>Functionality cookies</strong> – Remember preferences such as language and interface settings.</li>
+                  <li><strong>No advertising cookies</strong> – We do not use cookies for third-party marketing or targeted advertising.</li>
                 </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">3. Managing Cookies</h3>
-                <p className="mb-4">You can manage cookie preferences through your browser settings. However, disabling essential cookies may affect your ability to use the platform. By using our platform, you consent to the use of cookies as described in this policy.</p>
+                <p className="mb-4">You can adjust browser settings to decline cookies. Disabling essential cookies may limit platform functionality. By using Palavox, you consent to our use of cookies as described.</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">Acceptable Use Policy</h2>
+                {/* Acceptable Use Policy */}
+                <h2 className="text-2xl font-bold mb-4">8. Acceptable Use Policy (AUP)</h2>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">1. Purpose</h3>
-                <p className="mb-4">This Acceptable Use Policy sets standards for the proper use of the Palavox platform to ensure a safe and productive environment.</p>
+                <p className="mb-4">To ensure a safe, ethical, and productive environment.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">2. Permitted Uses</h3>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li><strong>Educational Activities.</strong> Using the platform for language learning, practice, and assessment.</li>
-                  <li><strong>Academic Research.</strong> Teachers and researchers may use anonymized data for educational research with appropriate permissions.</li>
-                  <li><strong>Parent Engagement.</strong> Parents may access their child's progress and participate in consent processes.</li>
+                  <li>Educational activities (language learning, testing, practice).</li>
+                  <li>Approved educational research with anonymized data.</li>
+                  <li>Parent engagement with proper authorization.</li>
                 </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">3. Prohibited Conduct</h3>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
-                  <li><strong>Unlawful Activities.</strong> Using the platform in violation of any applicable law or regulation, including but not limited to copyright laws and privacy regulations.</li>
-                  <li><strong>Content Violations.</strong> Uploading, posting, or sharing content that is obscene, violent, defamatory, harassing, hate speech, pornographic, or otherwise harmful. Schools must block access to content that is obscene, harmful to minors or considered child pornography when subject to CIPA. Palavox supports safety filters but does not replace the school's legal duty.</li>
-                  <li><strong>Cheating and Academic Misconduct.</strong> Sharing answers, test questions, or certification codes; using bots or external help during assessments; or collaborating on individual assessments.</li>
-                  <li><strong>Security Violations.</strong> Attempting to circumvent security measures, introduce malware, or access accounts without authorization.</li>
-                  <li><strong>Data Misuse.</strong> Collecting personal information about other users, redisclosing test content, or misusing personal data.</li>
-                  <li><strong>Misrepresentation.</strong> Impersonating another person or misrepresenting your affiliation.</li>
-                  <li><strong>Commercial Use.</strong> Selling, licensing, or otherwise commercializing platform access or content without authorization.</li>
+                  <li><strong>Unlawful activities</strong> – Violating any applicable law, including copyright or privacy laws.</li>
+                  <li><strong>Content violations</strong> – Uploading or sharing obscene, violent, hateful, harassing, or pornographic content. Schools receiving E-Rate funding must block obscene or harmful content; Palavox provides filters but does not replace school filtering responsibilities.</li>
+                  <li><strong>Cheating & misconduct</strong> – Sharing answers, using bots, or collaborating on individual assessments.</li>
+                  <li><strong>Security violations</strong> – Circumventing security measures, introducing malware, or accessing accounts without authorization.</li>
+                  <li><strong>Data misuse</strong> – Collecting or redisclosing personal information or test content without authorization.</li>
+                  <li><strong>Misrepresentation</strong> – Impersonating others or misrepresenting affiliation.</li>
+                  <li><strong>Commercial use</strong> – Selling or licensing platform content without authorization.</li>
                 </ul>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">4. Enforcement</h3>
-                <p className="mb-4">Violation of this policy may result in suspension or termination of your account and notification of your school or legal authorities. Repeat violations may result in permanent bans.</p>
+                <p className="mb-4">Violations may result in suspension or termination of your account, notification of the school, or reporting to legal authorities. Repeat violations can lead to permanent bans.</p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-3">5. Reporting</h3>
-                <p className="mb-4">Users should report violations or concerns by contacting info@palavox.org or through the in‑app report feature.</p>
+                <p className="mb-4">Report concerns to <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a> or via the in-app report feature.</p>
 
                 <Separator className="my-8" />
 
-                <h2 className="text-2xl font-bold mb-4">Legal Citations Appendix</h2>
-                <p className="mb-3">For transparency and verifiability, the following references informed our policies:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li><strong>FERPA</strong> – Family Educational Rights and Privacy Act, 20 U.S.C. § 1232g; 34 C.F.R. Part 99. See the U.S. Department of Education's Student Privacy Policy Office guidance on parental rights to inspect records within 45 days, amend records, and control disclosure of personally identifiable information.</li>
-                  <li><strong>COPPA</strong> – Children's Online Privacy Protection Act, 15 U.S.C. § 6501–6506; 16 C.F.R. Part 312 (FTC COPPA Rule). See the FTC's guidance for verifiable parental consent methods and parental rights.</li>
-                  <li><strong>CIPA</strong> – Children's Internet Protection Act, 47 U.S.C. § 254(h)(5). Schools receiving E‑Rate funds must adopt an Internet safety policy and deploy a technology protection measure blocking access to obscene, child-pornographic, or harmful-to-minors content.</li>
-                  <li><strong>Directory Information</strong> – Schools determine what constitutes directory information and notify parents of their right to opt out. See 34 C.F.R. § 99.37.</li>
-                  <li><strong>FTC & DoE Guidance</strong> – Additional guidance from the U.S. Federal Trade Commission and U.S. Department of Education on COPPA and FERPA compliance.</li>
+                {/* Legal Citations Appendix */}
+                <h2 className="text-2xl font-bold mb-4">9. Legal Citations Appendix</h2>
+                <p className="mb-3">This appendix references the primary laws and guidance informing our policies:</p>
+                <ul className="list-disc pl-6 space-y-2 mb-4">
+                  <li><strong>COPPA</strong> – 15 U.S.C. §§ 6501–6506; 16 C.F.R. Part 312. See FTC's guidance for verifiable parental consent and limitations on non-integral data uses (2025 amendments).</li>
+                  <li><strong>FERPA</strong> – 20 U.S.C. § 1232g; 34 C.F.R. Part 99. DoE guidance on third-party service providers and parental rights.</li>
+                  <li><strong>CIPA</strong> – 47 U.S.C. § 254(h)(5). Schools receiving E-Rate funds must block access to obscene or harmful content.</li>
+                  <li><strong>GDPR</strong> – Regulation (EU) 2016/679 for international users.</li>
+                  <li><strong>Student Privacy Policy Office</strong> – DoE resources on data privacy best practices.</li>
+                  <li><strong>FTC COPPA Final Rule (2025)</strong> – Separate consent for non-integral uses and updated security requirements.</li>
                 </ul>
               </div>
             </CardContent>
