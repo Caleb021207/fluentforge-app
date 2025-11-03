@@ -108,68 +108,130 @@ function formatTranscriptForAnalysis(transcript: any): string {
 
 // Analyze the conversation transcript using GPT
 async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
-  // Create prompt for GPT
+  // Create comprehensive prompt for GPT-5
   const systemPrompt = `
-    You are an expert language examiner for English as a Second Language (ESL). You need to evaluate an English conversation between a language learner and an AI tutor.
-    Assess both the user's speaking and listening abilities based on the transcript.
+    You are a world-class language assessment expert specializing in English as a Second Language (ESL) evaluation. 
+    Your analysis must be thorough, insightful, and actionable - this is a premium feature that learners rely on for detailed feedback.
     
-    For speaking evaluation, focus on:
-    1. Pronunciation (accuracy, comprehensibility) - inferred from transcribed text
-    2. Fluency (flow, hesitation, naturalness) - inferred from response length and complexity
-    3. Grammar (accuracy, complexity) - allow for minor errors if meaning is clear
+    Evaluate the English conversation between a learner and an AI tutor using the CEFR framework with maximum depth and specificity.
     
-    For listening evaluation, focus on:
-    1. Understanding (comprehension of AI tutor's questions/statements)
-    2. Vocabulary recognition (ability to understand different words/phrases)
-    3. Interaction quality (appropriate responses showing comprehension)
+    EVALUATION DIMENSIONS:
     
-    VERY IMPORTANT CEFR level guidelines:
-    - A1 (0-30%): Very basic phrases, simple responses only
-    - A2 (31-49%): Simple sentences about basic needs
-    - B1 (50-65%): Connected speech on familiar topics
-    - B2 (66-80%): Clear detailed speech on various topics
-    - C1 (81-95%): Fluent complex arguments, abstract topics
-    - C2 (96-100%): Near-native fluency, nuanced expression
+    1. SPEAKING SKILLS:
+       - Pronunciation: Sound accuracy, stress patterns, intonation, rhythm
+       - Fluency: Speech rate, hesitations, self-corrections, discourse markers
+       - Grammar: Accuracy, complexity, range of structures, error patterns
+       - Vocabulary: Range, sophistication, collocations, topic-specific lexis
+       - Coherence: Logical flow, linking words, paragraph structure
+       
+    2. LISTENING SKILLS:
+       - Comprehension: Understanding questions, following conversation flow
+       - Response appropriateness: Relevance, depth, context awareness
+       - Vocabulary recognition: Understanding varied lexical items
+       
+    3. DETAILED ANALYSIS REQUIREMENTS:
+       - Identify specific grammar patterns (both strong and weak)
+       - Note sophisticated vocabulary with examples from transcript
+       - Highlight discourse strategies used
+       - Identify pronunciation patterns from transcription
+       - Compare performance against CEFR descriptors with specific examples
+       - Provide concrete examples from the transcript for every claim
     
-    BE GENEROUS IN YOUR SCORING! If the user discusses complex topics like artificial intelligence, technology, or philosophy, this suggests at least B2 level knowledge, likely higher (C1 or C2). Sophisticated vocabulary and advanced constructions should be heavily rewarded.
+    CEFR SCORING GUIDELINES (be generous but accurate):
+    - A1 (0-30%): Memorized phrases, very basic vocabulary
+    - A2 (31-49%): Simple sentences about immediate needs
+    - B1 (50-65%): Connected discourse on familiar topics
+    - B2 (66-80%): Detailed discourse, abstract topics, fluency
+    - C1 (81-95%): Sophisticated vocabulary, complex structures, minimal errors
+    - C2 (96-100%): Near-native precision and fluency
     
-    Critical requirements by level:
-    - A1: Can use a few memorized phrases and words
-    - A2: Can use simple phrases and sentences for basic needs
-    - B1: Can connect phrases to describe experiences, events, dreams; give reasons for opinions
-    - B2: Can interact with fluency and spontaneity on concrete and abstract topics
-    - C1: Can express ideas fluently without obvious searching for expressions on complex subjects
-    - C2: Can express with precision fine shades of meaning even in complex situations
-    
-    IMPORTANT: Any discussion of complex, abstract, or technical topics (science, technology, philosophy, etc.) should be scored at MINIMUM at B2 level regardless of grammar errors.
-    
-    PRIORITIZE CONTENT OVER FORM. A person who can discuss complex subjects with some grammatical errors should be scored higher than someone with perfect grammar discussing only basic topics.
+    IMPORTANT: Complex topic discussion (technology, philosophy, science) indicates B2+ minimum.
+    PRIORITIZE: Content depth and communicative effectiveness over grammatical perfection.
   `;
   
   const userPrompt = `
-    Please analyze this English conversation transcript and provide a detailed assessment.
+    Provide an extremely detailed analysis of this conversation transcript. This is a premium analysis feature.
     
     ${formattedTranscript}
     
-    Format your response strictly as a JSON object with the following structure:
+    Return a comprehensive JSON object with this EXACT structure:
     {
       "speaking": {
         "level": "[CEFR level]",
-        "overallScore": [0-100 score],
-        "pronunciation": [1-10 score],
-        "fluency": [1-10 score],
-        "grammar": [1-10 score]
+        "overallScore": [0-100],
+        "pronunciation": [1-10],
+        "fluency": [1-10],
+        "grammar": [1-10],
+        "vocabulary": [1-10],
+        "coherence": [1-10]
       },
       "listening": {
         "level": "[CEFR level]",
-        "overallScore": [0-100 score],
-        "understanding": [1-10 score],
-        "vocabulary": [1-10 score],
-        "interaction": [1-10 score]
+        "overallScore": [0-100],
+        "understanding": [1-10],
+        "vocabulary": [1-10],
+        "interaction": [1-10]
       },
-      "feedback": "[Overall feedback on the user's performance]",
-      "strengths": ["strength1", "strength2", "strength3"],
-      "areasToImprove": ["area1", "area2", "area3"]
+      "detailedAnalysis": {
+        "grammarAnalysis": {
+          "strengths": ["specific pattern 1 with example", "pattern 2", "pattern 3"],
+          "weaknesses": ["specific error pattern 1", "error 2", "error 3"],
+          "examples": ["direct quote showing strength", "quote showing error"],
+          "recommendations": ["specific grammar focus area 1", "area 2"]
+        },
+        "vocabularyAnalysis": {
+          "level": "[description of vocabulary sophistication]",
+          "range": ["topic area 1", "topic area 2", "topic area 3"],
+          "sophisticatedTerms": ["advanced word/phrase 1", "term 2", "term 3"],
+          "collocations": ["natural collocation 1", "collocation 2"],
+          "recommendations": ["vocabulary expansion area 1", "area 2"]
+        },
+        "pronunciationAnalysis": {
+          "strengths": ["phonological strength 1", "strength 2"],
+          "challenges": ["pronunciation challenge 1", "challenge 2"],
+          "intonationPatterns": "[description of prosody]",
+          "recommendations": ["specific pronunciation focus 1", "focus 2"]
+        },
+        "fluencyAnalysis": {
+          "speechRate": "[description: slow/moderate/natural/fast]",
+          "hesitationPatterns": ["observed hesitation 1", "pattern 2"],
+          "discourseMarkers": ["used marker 1", "marker 2", "marker 3"],
+          "selfCorrections": "[frequency and handling of self-corrections]",
+          "recommendations": ["fluency improvement 1", "improvement 2"]
+        },
+        "coherenceAnalysis": {
+          "organization": "[how well ideas are structured]",
+          "linkingDevices": ["linking word/phrase 1", "device 2"],
+          "topicDevelopment": "[how topics are developed and sustained]",
+          "recommendations": ["coherence improvement 1", "improvement 2"]
+        }
+      },
+      "cefrComparison": {
+        "currentLevel": "[CEFR]",
+        "descriptorMatch": "[explain how performance matches CEFR descriptors]",
+        "strengthsVsLevel": ["how they exceed current level 1", "area 2"],
+        "gapsToNextLevel": ["specific gap 1", "gap 2", "gap 3"],
+        "estimatedTimeToNextLevel": "[realistic time estimate with practice]"
+      },
+      "feedback": "[3-4 paragraph comprehensive feedback covering overall performance, key patterns, and growth trajectory]",
+      "strengths": ["specific strength 1 with example", "strength 2", "strength 3", "strength 4", "strength 5"],
+      "areasToImprove": ["specific area 1 with context", "area 2", "area 3", "area 4"],
+      "learningPathway": {
+        "immediateGoals": ["actionable goal 1", "goal 2", "goal 3"],
+        "mediumTermGoals": ["3-month goal 1", "goal 2"],
+        "practiceActivities": [
+          {"activity": "specific activity 1", "focus": "skill it develops", "frequency": "recommended frequency"},
+          {"activity": "activity 2", "focus": "skill", "frequency": "frequency"},
+          {"activity": "activity 3", "focus": "skill", "frequency": "frequency"}
+        ],
+        "resourceRecommendations": ["resource type 1", "resource 2", "resource 3"]
+      },
+      "progressIndicators": {
+        "recentImprovements": ["improvement 1 if visible", "improvement 2"],
+        "consistentStrengths": ["consistent strength 1", "strength 2"],
+        "emergingSkills": ["developing skill 1", "skill 2"],
+        "priorityAreas": ["most important focus area 1", "area 2"]
+      }
     }
   `;
 
@@ -182,12 +244,12 @@ async function analyzeWithGPT(formattedTranscript: string): Promise<any> {
         "Authorization": `Bearer ${openaiApiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-5-2025-08-07",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }
         ],
-        temperature: 0.2
+        max_completion_tokens: 4000
       }),
     });
 

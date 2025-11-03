@@ -114,14 +114,7 @@ const LatestAnalysisCard: React.FC<LatestAnalysisCardProps> = ({ analysis }) => 
                   <div className="text-2xl font-bold text-foreground">{skill.score}%</div>
                 </div>
                 <div className="text-sm font-medium text-foreground mb-2">{skill.title}</div>
-                <div className="relative">
-                  <Progress value={skill.score} className="h-2" />
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    animate={{ x: ['-100%', '100%'] }}
-                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                  />
-                </div>
+                <Progress value={skill.score} className="h-2" />
               </motion.div>
             )
           ))}

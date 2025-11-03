@@ -9,6 +9,8 @@ import DetailedAnalysisCard from "./components/DetailedAnalysisCard";
 import AnalysisBreakdownCard from "./components/AnalysisBreakdownCard";
 import RecommendationsCard from "./components/RecommendationsCard";
 import AnalysisHistoryCard from "./components/AnalysisHistoryCard";
+import CEFRComparisonCard from "./components/CEFRComparisonCard";
+import LearningPathwayCard from "./components/LearningPathwayCard";
 
 interface AnalysisResultsProps {
   analyses: Analysis[] | undefined;
@@ -34,21 +36,37 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analyses, isLoading }
       {/* What our AI can analyze */}
       <AnalysisCapabilitiesCard />
 
-      {/* Detailed Analysis */}
-      {latestAnalysis.detailed_feedback && (
-        <DetailedAnalysisCard feedback={latestAnalysis.detailed_feedback} />
+      {/* CEFR Comparison - New comprehensive section */}
+      {latestAnalysis.cefr_comparison && (
+        <CEFRComparisonCard cefrComparison={latestAnalysis.cefr_comparison} />
       )}
 
-      {/* Strengths and Weaknesses */}
-      {(latestAnalysis.strengths || latestAnalysis.weaknesses) && (
+      {/* Detailed Analysis - Enhanced with comprehensive breakdown */}
+      {latestAnalysis.detailed_feedback && (
+        <DetailedAnalysisCard 
+          feedback={latestAnalysis.detailed_feedback}
+          detailedAnalysis={latestAnalysis.detailed_analysis}
+        />
+      )}
+
+      {/* Learning Pathway - New comprehensive section */}
+      {(latestAnalysis.learning_pathway || latestAnalysis.progress_indicators) && (
+        <LearningPathwayCard 
+          learningPathway={latestAnalysis.learning_pathway}
+          progressIndicators={latestAnalysis.progress_indicators}
+        />
+      )}
+
+      {/* Strengths and Weaknesses - Legacy fallback */}
+      {!latestAnalysis.detailed_analysis && (latestAnalysis.strengths || latestAnalysis.weaknesses) && (
         <AnalysisBreakdownCard 
           strengths={latestAnalysis.strengths} 
           weaknesses={latestAnalysis.weaknesses} 
         />
       )}
 
-      {/* Recommendations */}
-      {latestAnalysis.recommendations && (
+      {/* Recommendations - Legacy fallback */}
+      {!latestAnalysis.learning_pathway && latestAnalysis.recommendations && (
         <RecommendationsCard 
           recommendations={latestAnalysis.recommendations}
           weaknesses={latestAnalysis.weaknesses}
