@@ -335,51 +335,14 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
 
   return (
     <div className="space-y-6">
-      {/* Class Averages Overview */}
-      {classAverages && classAverages.total_students > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart className="h-5 w-5" />
-              Class Averages
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-primary/5 rounded-lg">
-                <div className="text-2xl font-bold text-primary">
-                  {classAverages.total_students}
-                </div>
-                <p className="text-sm text-muted-foreground">Total Students</p>
-              </div>
-              <div className="text-center p-4 bg-primary/5 rounded-lg">
-                <div className="text-2xl font-bold text-primary">
-                  {formatScore(classAverages.overall_score)}
-                </div>
-                <p className="text-sm text-muted-foreground">Avg Test Score</p>
-              </div>
-              <div className="text-center p-4 bg-primary/5 rounded-lg">
-                <div className="text-2xl font-bold text-primary">
-                  {formatScore(classAverages.grammar_accuracy)}
-                </div>
-                <p className="text-sm text-muted-foreground">Avg Grammar</p>
-              </div>
-              <div className="text-center p-4 bg-primary/5 rounded-lg">
-                <div className="text-2xl font-bold text-primary">
-                  {formatScore(classAverages.conversation_complexity)}
-                </div>
-                <p className="text-sm text-muted-foreground">Avg Complexity</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Student Roster Table */}
-      <Card>
-        <CardHeader>
+      <Card className="glass border-primary/20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+        <CardHeader className="relative z-10">
           <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+            <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+              <Users className="h-5 w-5 text-primary" />
+            </div>
             Student Roster & Performance
           </CardTitle>
           {debugInfo && (
@@ -388,36 +351,48 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
             </div>
           )}
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           {studentMetrics.length > 0 ? (
-            <div className="rounded-md border">
+            <div className="rounded-lg border border-border/50 overflow-hidden bg-card/50 backdrop-blur-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Student</TableHead>
-                    <TableHead>Class</TableHead>
-                    <TableHead className="text-right">Test Score</TableHead>
-                    <TableHead className="text-right">Grammar</TableHead>
-                    <TableHead className="text-right">Complexity</TableHead>
-                    <TableHead>Last Activity</TableHead>
-                    <TableHead className="text-center w-20">Actions</TableHead>
+                  <TableRow className="bg-muted/50 hover:bg-muted/50">
+                    <TableHead className="font-semibold">Student</TableHead>
+                    <TableHead className="font-semibold">Class</TableHead>
+                    <TableHead className="text-right font-semibold">Test Score</TableHead>
+                    <TableHead className="text-right font-semibold">Grammar</TableHead>
+                    <TableHead className="text-right font-semibold">Complexity</TableHead>
+                    <TableHead className="font-semibold">Last Activity</TableHead>
+                    <TableHead className="text-center w-20 font-semibold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {studentMetrics
                     .sort((a, b) => (b.overall_score || 0) - (a.overall_score || 0))
-                    .map((student) => (
-                    <TableRow key={student.student_id}>
+                    .map((student, index) => (
+                    <TableRow 
+                      key={student.student_id}
+                      className="hover:bg-primary/5 transition-colors"
+                    >
                       <TableCell>
-                        <div>
-                          <div className="font-medium">{student.student_name}</div>
-                          <div className="text-sm text-muted-foreground">{student.student_email}</div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center font-semibold text-primary">
+                            {student.student_name.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="font-medium text-foreground">{student.student_name}</div>
+                            <div className="text-sm text-muted-foreground">{student.student_email}</div>
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm">{student.class_name}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="bg-primary/5 border-primary/20">
+                          {student.class_name}
+                        </Badge>
+                      </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <span className="font-semibold">{formatScore(student.overall_score)}</span>
+                          <span className="font-bold text-lg text-foreground">{formatScore(student.overall_score)}</span>
                           {student.cefr_level && (
                             <Badge className={getCEFRColor(student.cefr_level)} variant="outline">
                               {student.cefr_level}
@@ -425,8 +400,12 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">{formatScore(student.avg_grammar_accuracy)}</TableCell>
-                      <TableCell className="text-right">{formatScore(student.avg_conversation_complexity)}</TableCell>
+                      <TableCell className="text-right">
+                        <span className="font-semibold text-foreground">{formatScore(student.avg_grammar_accuracy)}</span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <span className="font-semibold text-foreground">{formatScore(student.avg_conversation_complexity)}</span>
+                      </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {formatDate(student.last_activity)}
                       </TableCell>
@@ -435,7 +414,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
                           variant="outline"
                           size="sm"
                           onClick={() => handleRemoveClick(student.student_id, student.student_name, student.class_id)}
-                          className="h-8 w-8 p-0 border-2 border-destructive/50 bg-destructive/5 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all"
+                          className="h-8 w-8 p-0 border-2 border-destructive/30 bg-destructive/5 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all hover:scale-110"
                         >
                           <X className="h-4 w-4" />
                         </Button>
