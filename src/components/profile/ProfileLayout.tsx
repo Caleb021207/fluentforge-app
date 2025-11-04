@@ -1,9 +1,7 @@
 
-import { useState } from "react";
 import { ExtendedUserProfile } from "@/types/school";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import ProfileHeader from "./ProfileHeader";
-import ProfileDebugPanel from "./ProfileDebugPanel";
 import UserInfo from "./UserInfo";
 import RoleSpecificProfile from "./RoleSpecificProfile";
 import { motion } from "framer-motion";
@@ -17,8 +15,6 @@ interface ProfileLayoutProps {
 }
 
 const ProfileLayout = ({ user, profile, debugInfo, onProfileUpdate }: ProfileLayoutProps) => {
-  const [showDebug, setShowDebug] = useState(false);
-
   const handleProfileDataUpdate = (data: any) => {
     // This would need to be passed up to update the profile state
     // For now, we'll just trigger a refresh
@@ -36,18 +32,8 @@ const ProfileLayout = ({ user, profile, debugInfo, onProfileUpdate }: ProfileLay
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <ProfileHeader user={user} profile={profile} showDebug={showDebug} onToggleDebug={() => setShowDebug(!showDebug)} />
+          <ProfileHeader user={user} profile={profile} />
         </motion.div>
-
-        {showDebug && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }} 
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <ProfileDebugPanel debugInfo={debugInfo} />
-          </motion.div>
-        )}
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
