@@ -12,6 +12,7 @@ import { useGamification } from "@/hooks/useGamification";
 import LevelUpModal from "@/components/gamification/LevelUpModal";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const PremiumVoicePractice = () => {
   const { t, currentLanguage } = useLocalization();
@@ -22,6 +23,7 @@ const PremiumVoicePractice = () => {
   const [isStarting, setIsStarting] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [provider, setProvider] = useState<'gpt' | 'gemini'>('gpt');
+  const [selectedMode, setSelectedMode] = useState<'gpt' | 'custom'>('gpt');
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
   
@@ -376,216 +378,241 @@ const PremiumVoicePractice = () => {
           </div>
         </motion.div>
 
-        {/* Language support information */}
+        {/* Mode selector */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
+          className="mb-8 max-w-md mx-auto"
+        >
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              Select Practice Mode
+            </label>
+            <Select 
+              value={selectedMode} 
+              onValueChange={(value: 'gpt' | 'custom') => {
+                if (!isConnected && !customSessionId) {
+                  setSelectedMode(value);
+                }
+              }}
+              disabled={isConnected || customSessionId !== null}
+            >
+              <SelectTrigger className="w-full h-14 text-lg border-2 hover:border-primary/50 transition-colors">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover">
+                <SelectItem value="gpt" className="text-lg py-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    GPT-4o Realtime
+                  </div>
+                </SelectItem>
+                <SelectItem value="custom" className="text-lg py-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-accent" />
+                    Custom Realtime AI
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </motion.div>
+
+        {/* Language support information */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 }}
           className="mb-8"
         >
           <InteractiveCard className="overflow-hidden border-primary/30 shadow-2xl bg-gradient-to-br from-card/50 via-card to-card/50">
-            <div className="grid md:grid-cols-2 divide-x divide-border/50">
-              <motion.div 
-                className="p-6 space-y-3 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  GPT-4o Realtime
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t('gptLanguageSupport')}
+            <div className={`p-6 space-y-3 ${selectedMode === 'gpt' ? 'bg-gradient-to-br from-primary/10 via-primary/5 to-transparent' : 'bg-gradient-to-br from-accent/10 via-accent/5 to-transparent'}`}>
+              <h4 className="font-semibold text-lg flex items-center gap-2">
+                <Sparkles className={`w-5 h-5 ${selectedMode === 'gpt' ? 'text-primary' : 'text-accent'}`} />
+                {selectedMode === 'gpt' ? 'GPT-4o Realtime' : 'Custom Realtime AI'}
+              </h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {selectedMode === 'gpt' ? t('gptLanguageSupport') : t('customLanguageSupport')}
+              </p>
+              {selectedMode === 'custom' && (
+                <p className="text-sm text-muted-foreground max-w-md">
+                  {t('customRealtimeDisclaimer')}
                 </p>
-              </motion.div>
-              <motion.div 
-                className="p-6 space-y-3 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-accent" />
-                  Custom Realtime AI
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t('customLanguageSupport')}
-                </p>
-              </motion.div>
+              )}
             </div>
           </InteractiveCard>
         </motion.div>
 
+        {/* Single session interface based on selected mode */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="max-w-2xl mx-auto"
         >
           <motion.div whileHover={{ scale: 1.02, y: -5 }} transition={{ duration: 0.3 }}>
-            <InteractiveCard className="p-8 glass border-primary/30 hover:border-primary/50 transition-all shadow-xl overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50">
-          <div className="flex flex-col items-center gap-6">
-            <div className="text-center space-y-1">
-              <h3 className="text-2xl font-bold gradient-text">GPT-4o Realtime</h3>
-              <p className="text-sm text-muted-foreground">{t('openaiLatestVoiceModel')}</p>
-            </div>
+            {selectedMode === 'gpt' ? (
+              <InteractiveCard className="p-8 glass border-primary/30 hover:border-primary/50 transition-all shadow-xl overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50">
+                <div className="flex flex-col items-center gap-6">
+                  <div className="text-center space-y-1">
+                    <h3 className="text-2xl font-bold gradient-text">GPT-4o Realtime</h3>
+                    <p className="text-sm text-muted-foreground">{t('openaiLatestVoiceModel')}</p>
+                  </div>
 
-            {isConnected && provider === 'gpt' && (
-              <motion.div 
-                className="text-center"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-              >
-                <div className="text-4xl font-bold text-primary mb-2">
-                  {formatTime(elapsedSeconds)}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {t('minutesLeft', { minutes: String(minutesRemaining) })}
-                </div>
-              </motion.div>
-            )}
+                  {isConnected && provider === 'gpt' && (
+                    <motion.div 
+                      className="text-center"
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                    >
+                      <div className="text-4xl font-bold text-primary mb-2">
+                        {formatTime(elapsedSeconds)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {t('minutesLeft', { minutes: String(minutesRemaining) })}
+                      </div>
+                    </motion.div>
+                  )}
 
-            <motion.div 
-              className={`relative ${isSpeaking && provider === 'gpt' ? 'animate-pulse' : ''}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center shadow-lg">
-                {isConnected && provider === 'gpt' ? (
-                  <MicOff className="w-14 h-14 text-primary" />
-                ) : (
-                  <Mic className="w-14 h-14 text-primary" />
-                )}
-              </div>
-              {isSpeaking && provider === 'gpt' && (
-                <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
-              )}
-            </motion.div>
-
-            {!isConnected || provider !== 'gpt' ? (
-              <Button 
-                onClick={() => startConversation('gpt')}
-                size="lg"
-                className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-                disabled={isStarting || (isConnected && provider !== 'gpt') || premiumVoiceMinutesRemaining <= 0}
-              >
-                {isStarting && provider === 'gpt' ? t('connecting') : t('startGptSession')}
-              </Button>
-            ) : (
-              <Button 
-                onClick={endConversation}
-                size="lg"
-                variant="secondary"
-                className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-                disabled={minutesRemaining <= 0}
-              >
-                {t('endSession')}
-              </Button>
-            )}
-          </div>
-            </InteractiveCard>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.02, y: -5 }} transition={{ duration: 0.3 }}>
-            <InteractiveCard className="p-8 glass border-accent/30 hover:border-accent/50 transition-all shadow-xl overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50">
-          <div className="flex flex-col items-center gap-6">
-            <div className="text-center space-y-2">
-              <h3 className="text-2xl font-bold gradient-text">Custom Realtime AI</h3>
-              <motion.div 
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/30"
-                whileHover={{ scale: 1.05 }}
-              >
-                <Sparkles className="w-4 h-4 text-accent" />
-                <span className="text-sm font-semibold text-foreground">
-                  {t('multilingualSupport')}
-                </span>
-              </motion.div>
-              <p className="text-sm text-muted-foreground max-w-md">
-                {t('customRealtimeDisclaimer')}
-              </p>
-            </div>
-
-            {customSessionId && (
-              <motion.div 
-                className="text-center"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-              >
-                <div className="text-4xl font-bold text-accent mb-2">
-                  {formatTime(customElapsedSeconds)}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {customMessages.length / 2} {t('exchanges')}
-                </div>
-                <div className="text-xs text-accent mt-2 font-medium">
-                  {t(`state${customState.charAt(0).toUpperCase() + customState.slice(1)}` as any)}
-                </div>
-              </motion.div>
-            )}
-
-            <motion.div 
-              className={`relative ${customState === 'listening' ? 'animate-pulse' : ''}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className={`w-28 h-28 rounded-full flex items-center justify-center shadow-lg ${
-                customState === 'listening' ? 'bg-gradient-to-br from-accent/30 to-accent/10' :
-                customState === 'processing' ? 'bg-gradient-to-br from-primary/30 to-primary/10' :
-                customState === 'speaking' ? 'bg-gradient-to-br from-green-500/30 to-green-500/10' :
-                'bg-gradient-to-br from-primary/30 to-primary/10'
-              }`}>
-                {customSessionId ? (
-                  <MicOff className={`w-14 h-14 ${
-                    customState === 'listening' ? 'text-accent' :
-                    customState === 'processing' ? 'text-primary' :
-                    customState === 'speaking' ? 'text-green-500' :
-                    'text-primary'
-                  }`} />
-                ) : (
-                  <Mic className="w-14 h-14 text-accent" />
-                )}
-              </div>
-              {customState === 'listening' && (
-                <div className="absolute inset-0 rounded-full bg-accent/30 animate-ping" />
-              )}
-            </motion.div>
-
-            {!customSessionId ? (
-              <Button 
-                onClick={startCustomSession}
-                size="lg"
-                className="px-10 py-6 text-lg bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 shadow-lg hover:shadow-xl transition-all"
-                disabled={isStarting}
-              >
-                {isStarting ? t('connecting') : t('startCustomSession')}
-              </Button>
-            ) : (
-              <div className="flex flex-col gap-3 w-full">
-                <Button 
-                  onClick={endCustomSession}
-                  size="lg"
-                  variant="secondary"
-                  className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-                >
-                  End Session
-                </Button>
-                {customState === 'idle' && (
-                  <Button 
-                    onClick={async () => {
-                      if (customChatRef.current) {
-                        await customChatRef.current.startListening();
-                      }
-                    }}
-                    size="sm"
-                    variant="outline"
-                    className="px-6 hover:bg-accent/10 transition-all"
+                  <motion.div 
+                    className={`relative ${isSpeaking && provider === 'gpt' ? 'animate-pulse' : ''}`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    Continue Speaking
-                  </Button>
-                )}
-              </div>
+                    <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center shadow-lg">
+                      {isConnected && provider === 'gpt' ? (
+                        <MicOff className="w-14 h-14 text-primary" />
+                      ) : (
+                        <Mic className="w-14 h-14 text-primary" />
+                      )}
+                    </div>
+                    {isSpeaking && provider === 'gpt' && (
+                      <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+                    )}
+                  </motion.div>
+
+                  {!isConnected || provider !== 'gpt' ? (
+                    <Button 
+                      onClick={() => startConversation('gpt')}
+                      size="lg"
+                      className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                      disabled={isStarting || (isConnected && provider !== 'gpt') || premiumVoiceMinutesRemaining <= 0}
+                    >
+                      {isStarting && provider === 'gpt' ? t('connecting') : t('startGptSession')}
+                    </Button>
+                  ) : (
+                    <Button 
+                      onClick={endConversation}
+                      size="lg"
+                      variant="secondary"
+                      className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                      disabled={minutesRemaining <= 0}
+                    >
+                      {t('endSession')}
+                    </Button>
+                  )}
+                </div>
+              </InteractiveCard>
+            ) : (
+              <InteractiveCard className="p-8 glass border-accent/30 hover:border-accent/50 transition-all shadow-xl overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50">
+                <div className="flex flex-col items-center gap-6">
+                  <div className="text-center space-y-2">
+                    <h3 className="text-2xl font-bold gradient-text">Custom Realtime AI</h3>
+                    <motion.div 
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/30"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <Sparkles className="w-4 h-4 text-accent" />
+                      <span className="text-sm font-semibold text-foreground">
+                        {t('multilingualSupport')}
+                      </span>
+                    </motion.div>
+                  </div>
+
+                  {customSessionId && (
+                    <motion.div 
+                      className="text-center"
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                    >
+                      <div className="text-4xl font-bold text-accent mb-2">
+                        {formatTime(customElapsedSeconds)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {customMessages.length / 2} {t('exchanges')}
+                      </div>
+                      <div className="text-xs text-accent mt-2 font-medium">
+                        {t(`state${customState.charAt(0).toUpperCase() + customState.slice(1)}` as any)}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  <motion.div 
+                    className={`relative ${customState === 'listening' ? 'animate-pulse' : ''}`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <div className={`w-28 h-28 rounded-full flex items-center justify-center shadow-lg ${
+                      customState === 'listening' ? 'bg-gradient-to-br from-accent/30 to-accent/10' :
+                      customState === 'processing' ? 'bg-gradient-to-br from-primary/30 to-primary/10' :
+                      customState === 'speaking' ? 'bg-gradient-to-br from-green-500/30 to-green-500/10' :
+                      'bg-gradient-to-br from-primary/30 to-primary/10'
+                    }`}>
+                      {customSessionId ? (
+                        <MicOff className={`w-14 h-14 ${
+                          customState === 'listening' ? 'text-accent' :
+                          customState === 'processing' ? 'text-primary' :
+                          customState === 'speaking' ? 'text-green-500' :
+                          'text-primary'
+                        }`} />
+                      ) : (
+                        <Mic className="w-14 h-14 text-accent" />
+                      )}
+                    </div>
+                    {customState === 'listening' && (
+                      <div className="absolute inset-0 rounded-full bg-accent/30 animate-ping" />
+                    )}
+                  </motion.div>
+
+                  {!customSessionId ? (
+                    <Button 
+                      onClick={startCustomSession}
+                      size="lg"
+                      className="px-10 py-6 text-lg bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 shadow-lg hover:shadow-xl transition-all"
+                      disabled={isStarting}
+                    >
+                      {isStarting ? t('connecting') : t('startCustomSession')}
+                    </Button>
+                  ) : (
+                    <div className="flex flex-col gap-3 w-full">
+                      <Button 
+                        onClick={endCustomSession}
+                        size="lg"
+                        variant="secondary"
+                        className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                      >
+                        End Session
+                      </Button>
+                      {customState === 'idle' && (
+                        <Button 
+                          onClick={async () => {
+                            if (customChatRef.current) {
+                              await customChatRef.current.startListening();
+                            }
+                          }}
+                          size="sm"
+                          variant="outline"
+                          className="px-6 hover:bg-accent/10 transition-all"
+                        >
+                          Continue Speaking
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </InteractiveCard>
             )}
-          </div>
-          </InteractiveCard>
           </motion.div>
         </motion.div>
 
