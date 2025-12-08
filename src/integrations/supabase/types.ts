@@ -2394,6 +2394,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      anonymize_old_ip_addresses: { Args: never; Returns: undefined }
       auth_user_id: { Args: never; Returns: string }
       can_see_enrollment: {
         Args: { enrollment_class_id: string; enrollment_student_id: string }
@@ -2590,9 +2591,18 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_transcript_access: {
+        Args: {
+          p_access_type?: string
+          p_student_id: string
+          p_transcript_id: string
+        }
+        Returns: undefined
+      }
       process_access_code:
         | { Args: { p_code: string }; Returns: Json }
         | { Args: never; Returns: undefined }
+      purge_old_audit_logs: { Args: never; Returns: undefined }
       recalculate_student_metrics: {
         Args: { target_student_id: string }
         Returns: undefined
