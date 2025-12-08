@@ -3,10 +3,6 @@ export interface School {
   name: string;
   district?: string;
   district_id?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  principal_name?: string;
   created_at: string;
   updated_at: string;
 }

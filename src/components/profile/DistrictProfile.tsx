@@ -259,11 +259,6 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
                       <p className="text-sm text-muted-foreground">
                         {schoolData.total_students} {t("students")} • {schoolData.total_classes} {t("classes")}
                       </p>
-                      {schoolData.school.principal_name && (
-                        <p className="text-sm text-muted-foreground">
-                          {t("principal")}: {schoolData.school.principal_name}
-                        </p>
-                      )}
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold">

@@ -3,10 +3,8 @@ import React from 'react';
 import { Shield } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ComplianceDashboard from "@/components/compliance/ComplianceDashboard";
-import ParentalConsentManager from "@/components/compliance/ParentalConsentManager";
 import DataBreachForm from "@/components/compliance/DataBreachForm";
 import DataExportManager from "@/components/compliance/DataExportManager";
-import DirectoryInfoOptOut from "@/components/compliance/DirectoryInfoOptOut";
 import DataAccessAuditLog from "@/components/compliance/DataAccessAuditLog";
 
 const Compliance = () => {
@@ -23,10 +21,8 @@ const Compliance = () => {
       </div>
 
       <Tabs defaultValue="dashboard" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="consent">Parental Consent</TabsTrigger>
-          <TabsTrigger value="directory">Directory Info</TabsTrigger>
           <TabsTrigger value="audit">Access Audit</TabsTrigger>
           <TabsTrigger value="export">Data Export</TabsTrigger>
           <TabsTrigger value="breach">Data Breach</TabsTrigger>
@@ -34,14 +30,6 @@ const Compliance = () => {
 
         <TabsContent value="dashboard">
           <ComplianceDashboard />
-        </TabsContent>
-
-        <TabsContent value="consent">
-          <ParentalConsentManager />
-        </TabsContent>
-
-        <TabsContent value="directory">
-          <DirectoryInfoOptOut />
         </TabsContent>
 
         <TabsContent value="audit">

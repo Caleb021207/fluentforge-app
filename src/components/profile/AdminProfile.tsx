@@ -97,12 +97,8 @@ const AdminProfile = ({ profile }: AdminProfileProps) => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("schoolAddress")}</p>
-              <p className="text-sm">{schoolData.school.address || t("notProvided")}</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t("principal")}</p>
-              <p className="text-sm">{schoolData.school.principal_name || t("notAssigned")}</p>
+              <p className="text-sm text-muted-foreground">{t("district")}</p>
+              <p className="text-sm">{schoolData.school.district || t("notAssigned")}</p>
             </div>
           </div>
         </CardContent>

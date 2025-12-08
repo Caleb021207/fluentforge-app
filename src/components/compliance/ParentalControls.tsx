@@ -1,24 +1,21 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/context/LocalizationContext";
-import { Lock, Shield, BookOpen, Clock } from "lucide-react";
+import { Lock, Shield, Clock } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   getSafetyMode, 
   setSafetyMode, 
   getDailyTimeLimit, 
   areParentalControlsLocked,
-  setParentalControlsLock,
-  getParentalDataConsentStatus,
-  setParentalDataConsentStatus
+  setParentalControlsLock
 } from "@/utils/safety";
 
 // Import refactored components
 import SafetyTabContent from "./parental/SafetyTabContent";
 import TimeControlsTabContent from "./parental/TimeControlsTabContent";
-import PrivacyTabContent from "./parental/PrivacyTabContent";
 import PinProtection from "./parental/PinProtection";
 import PinChangeForm from "./parental/PinChangeForm";
 
@@ -31,8 +28,7 @@ const ParentalControls = () => {
   const [error, setError] = useState<string | null>(null);
   const [safetyMode, setSafetyModeState] = useState<'strict' | 'standard'>(getSafetyMode());
   const [timedUsage, setTimedUsage] = useState(getDailyTimeLimit() > 0);
-  const [dailyTimeLimit, setDailyTimeLimit] = useState(getDailyTimeLimit() || 60); // minutes
-  const [parentalDataConsent, setParentalDataConsentState] = useState(getParentalDataConsentStatus());
+  const [dailyTimeLimit, setDailyTimeLimit] = useState(getDailyTimeLimit() || 60);
   
   const storedPin = localStorage.getItem("parentalPin") || "0000";
   
@@ -68,7 +64,6 @@ const ParentalControls = () => {
     setConfirmPin("");
     setError(t("pinUpdated"));
     
-    // Clear error message after 3 seconds
     setTimeout(() => setError(null), 3000);
   };
   
@@ -93,11 +88,6 @@ const ParentalControls = () => {
     } else {
       localStorage.setItem("dailyTimeLimit", dailyTimeLimit.toString());
     }
-  };
-  
-  const handleParentalDataConsentChange = (checked: boolean) => {
-    setParentalDataConsentState(checked);
-    setParentalDataConsentStatus(checked);
   };
 
   return (
@@ -131,10 +121,6 @@ const ParentalControls = () => {
                 <Clock className="mr-2 h-4 w-4" />
                 <span>{t("timeControls") || "Time Controls"}</span>
               </TabsTrigger>
-              <TabsTrigger value="privacy" className="flex items-center">
-                <BookOpen className="mr-2 h-4 w-4" />
-                <span>{t("dataPrivacy") || "Data Privacy"}</span>
-              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="safety">
@@ -150,13 +136,6 @@ const ParentalControls = () => {
                 dailyTimeLimit={dailyTimeLimit}
                 onTimedUsageChange={handleTimedUsageChange}
                 onTimeLimitChange={handleTimeLimitChange}
-              />
-            </TabsContent>
-            
-            <TabsContent value="privacy">
-              <PrivacyTabContent
-                parentalDataConsent={parentalDataConsent}
-                onParentalDataConsentChange={handleParentalDataConsentChange}
               />
             </TabsContent>
             
