@@ -2541,6 +2541,10 @@ export type Database = {
         Args: { p_target_user_id: string; p_user_id: string }
         Returns: boolean
       }
+      is_school_admin_of_profile: {
+        Args: { target_school_id: string }
+        Returns: boolean
+      }
       is_student_enrolled_in_class: {
         Args: { p_class_id: string; p_student_id: string }
         Returns: boolean
