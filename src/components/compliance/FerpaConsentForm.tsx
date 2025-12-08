@@ -13,10 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, Info } from "lucide-react";
 import { useLocalization } from "@/context/LocalizationContext";
-import { setFerpaConsentStatus, setFerpaDirectoryPreferences } from "@/utils/safety/ferpaCompliance";
-import { DirectoryPreference } from "./ferpa/DirectoryPreferencesSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface FerpaConsentFormProps {
@@ -34,23 +31,9 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
   const { toast } = useToast();
   const [consentGiven, setConsentGiven] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [directoryPreferences, setDirectoryPreferences] = useState<DirectoryPreference>({
-    name: false,
-    email: false,
-    language: false,
-    progress: false,
-    achievements: false
-  });
   
   const handleToggleConsent = () => {
     setConsentGiven(!consentGiven);
-  };
-  
-  const handleToggleDirectoryItem = (item: string) => {
-    setDirectoryPreferences(prev => ({
-      ...prev,
-      [item]: !prev[item as keyof typeof prev]
-    }));
   };
   
   const handleSubmit = async () => {
@@ -66,35 +49,15 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
     setIsSubmitting(true);
     
     try {
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error("No authenticated user found");
-      }
-
-      // Save FERPA consent to database
-      const success = await setFerpaConsentStatus(
-        supabase,
-        user.id,
-        consentGiven,
-        user.email || 'Self',
-        user.email
-      );
-      
-      if (!success) {
-        throw new Error("Failed to save consent to database");
-      }
-      
-      // Save directory information preferences (localStorage for UI preferences)
-      setFerpaDirectoryPreferences(directoryPreferences);
+      // Store consent acknowledgment locally
+      // Note: Parental consent is obtained in-person through teachers/schools
+      localStorage.setItem("ferpaConsentAcknowledged", "true");
       
       toast({
         title: "Preferences Saved",
-        description: "Your FERPA consent and preferences have been recorded.",
+        description: "Your FERPA acknowledgment has been recorded.",
       });
       
-      // Close the dialog and notify parent component
       onComplete();
     } catch (error) {
       console.error('Error saving FERPA consent:', error);
@@ -108,7 +71,6 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
     }
   };
   
-  // Use localized strings for compliance content
   const complianceStrings = {
     dialogTitle: t("educationalDataPrivacyConsent"),
     dialogDescription: t("ferpaConsentDescription"),
@@ -120,13 +82,6 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
     practiceHistory: t("practiceHistory"),
     certificationsEarned: t("certificationsEarned"),
     dataCollectionNote: t("dataCollectionNote"),
-    directoryInformation: t("directoryInformation"),
-    directoryInfoDescription: t("directoryInfoDescription"),
-    yourName: t("yourName"),
-    yourEmail: t("yourEmail"),
-    languagesStudied: t("languagesStudied"),
-    learningProgress: t("learningProgress"),
-    achievements: t("achievements"),
     consentCheckbox: t("consentCheckbox"),
     consentRequired: t("consentRequired"),
     savePreferences: t("savePreferences")
@@ -164,59 +119,13 @@ const FerpaConsentForm: React.FC<FerpaConsentFormProps> = ({
               </ul>
               <p className="text-xs text-gray-500 italic mt-2">{complianceStrings.dataCollectionNote}</p>
             </div>
-            
-            <div className="border-t pt-4">
-              <div className="font-medium mb-2.5">{complianceStrings.directoryInformation}</div>
-              <p className="text-sm mb-3">
-                {complianceStrings.directoryInfoDescription}
+
+            <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-md text-sm">
+              <p className="font-medium text-yellow-800 mb-1">Parental Consent</p>
+              <p className="text-yellow-700">
+                Parental consent for student data is obtained in-person through your school or district. 
+                Contact your teacher or administrator for consent documentation.
               </p>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 mt-4">
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="directory-name" 
-                    checked={directoryPreferences.name}
-                    onCheckedChange={() => handleToggleDirectoryItem('name')}
-                  />
-                  <Label htmlFor="directory-name" className="text-sm">{complianceStrings.yourName}</Label>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="directory-email" 
-                    checked={directoryPreferences.email}
-                    onCheckedChange={() => handleToggleDirectoryItem('email')}
-                  />
-                  <Label htmlFor="directory-email" className="text-sm">{complianceStrings.yourEmail}</Label>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="directory-language" 
-                    checked={directoryPreferences.language}
-                    onCheckedChange={() => handleToggleDirectoryItem('language')}
-                  />
-                  <Label htmlFor="directory-language" className="text-sm">{complianceStrings.languagesStudied}</Label>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="directory-progress" 
-                    checked={directoryPreferences.progress}
-                    onCheckedChange={() => handleToggleDirectoryItem('progress')}
-                  />
-                  <Label htmlFor="directory-progress" className="text-sm">{complianceStrings.learningProgress}</Label>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="directory-achievements" 
-                    checked={directoryPreferences.achievements}
-                    onCheckedChange={() => handleToggleDirectoryItem('achievements')}
-                  />
-                  <Label htmlFor="directory-achievements" className="text-sm">{complianceStrings.achievements}</Label>
-                </div>
-              </div>
             </div>
             
             <div className="pt-4 border-t">

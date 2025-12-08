@@ -739,42 +739,6 @@ export type Database = {
         }
         Relationships: []
       }
-      directory_information_preferences: {
-        Row: {
-          academic_year: string
-          created_at: string
-          id: string
-          opt_out_date: string | null
-          opted_out: boolean
-          parent_email: string | null
-          parent_name: string | null
-          student_id: string
-          updated_at: string
-        }
-        Insert: {
-          academic_year: string
-          created_at?: string
-          id?: string
-          opt_out_date?: string | null
-          opted_out?: boolean
-          parent_email?: string | null
-          parent_name?: string | null
-          student_id: string
-          updated_at?: string
-        }
-        Update: {
-          academic_year?: string
-          created_at?: string
-          id?: string
-          opt_out_date?: string | null
-          opted_out?: boolean
-          parent_email?: string | null
-          parent_name?: string | null
-          student_id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       district_settings: {
         Row: {
           consent_type: Database["public"]["Enums"]["district_consent_type"]
@@ -958,36 +922,6 @@ export type Database = {
           id?: string
           ip_address?: unknown
           legitimate_interest_verified?: boolean
-          user_agent?: string | null
-        }
-        Relationships: []
-      }
-      email_captures: {
-        Row: {
-          captured_at: string
-          created_at: string
-          email: string
-          id: string
-          ip_address: unknown
-          source: string | null
-          user_agent: string | null
-        }
-        Insert: {
-          captured_at?: string
-          created_at?: string
-          email: string
-          id?: string
-          ip_address?: unknown
-          source?: string | null
-          user_agent?: string | null
-        }
-        Update: {
-          captured_at?: string
-          created_at?: string
-          email?: string
-          id?: string
-          ip_address?: unknown
-          source?: string | null
           user_agent?: string | null
         }
         Relationships: []
@@ -1200,60 +1134,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      parental_consent_records: {
-        Row: {
-          academic_year: string
-          consent_date: string | null
-          consent_granted: boolean
-          consent_type: string
-          created_at: string
-          id: string
-          notes: string | null
-          paper_form_date: string | null
-          paper_form_received: boolean | null
-          parent_email: string | null
-          parent_name: string
-          parent_phone: string | null
-          recorded_by: string | null
-          student_id: string
-          updated_at: string
-        }
-        Insert: {
-          academic_year: string
-          consent_date?: string | null
-          consent_granted?: boolean
-          consent_type: string
-          created_at?: string
-          id?: string
-          notes?: string | null
-          paper_form_date?: string | null
-          paper_form_received?: boolean | null
-          parent_email?: string | null
-          parent_name: string
-          parent_phone?: string | null
-          recorded_by?: string | null
-          student_id: string
-          updated_at?: string
-        }
-        Update: {
-          academic_year?: string
-          consent_date?: string | null
-          consent_granted?: boolean
-          consent_type?: string
-          created_at?: string
-          id?: string
-          notes?: string | null
-          paper_form_date?: string | null
-          paper_form_received?: boolean | null
-          parent_email?: string | null
-          parent_name?: string
-          parent_phone?: string | null
-          recorded_by?: string | null
-          student_id?: string
-          updated_at?: string
-        }
-        Relationships: []
       }
       privacy_notice_acknowledgments: {
         Row: {
@@ -1563,39 +1443,27 @@ export type Database = {
       }
       schools: {
         Row: {
-          address: string | null
           created_at: string
           district: string | null
           district_id: string | null
-          email: string | null
           id: string
           name: string
-          phone: string | null
-          principal_name: string | null
           updated_at: string
         }
         Insert: {
-          address?: string | null
           created_at?: string
           district?: string | null
           district_id?: string | null
-          email?: string | null
           id?: string
           name: string
-          phone?: string | null
-          principal_name?: string | null
           updated_at?: string
         }
         Update: {
-          address?: string | null
           created_at?: string
           district?: string | null
           district_id?: string | null
-          email?: string | null
           id?: string
           name?: string
-          phone?: string | null
-          principal_name?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -2619,10 +2487,6 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
-        Returns: boolean
-      }
-      has_valid_parental_consent: {
-        Args: { p_consent_type?: string; p_student_id: string }
         Returns: boolean
       }
       increment_stt_usage: {

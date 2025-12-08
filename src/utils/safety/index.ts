@@ -35,10 +35,6 @@ export {
 export { 
   ferpaProtectedDataTypes,
   isFerpaProtectedData,
-  getFerpaConsentStatus,
-  setFerpaConsentStatus,
-  getFerpaDirectoryPreferences,
-  setFerpaDirectoryPreferences,
   logDataAccess,
   canAccessEducationalData
 } from './ferpaCompliance';
