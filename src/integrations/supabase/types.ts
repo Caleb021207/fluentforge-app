@@ -2529,6 +2529,10 @@ export type Database = {
         Args: { p_target_user_id: string; p_user_id: string }
         Returns: boolean
       }
+      is_admin_of_user_school: {
+        Args: { admin_user_id: string; target_user_id: string }
+        Returns: boolean
+      }
       is_admin_user: { Args: { user_id: string }; Returns: boolean }
       is_class_member: {
         Args: { _class_id: string; _user_id: string }
