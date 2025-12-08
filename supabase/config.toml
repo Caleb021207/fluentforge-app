@@ -15,9 +15,6 @@ verify_jwt = false
 [functions.custom-realtime-conversation]
 verify_jwt = false
 
-[functions.gemini-voice-realtime]
-verify_jwt = false
-
 [functions.seed-course-data]
 verify_jwt = true
 
@@ -32,4 +29,3 @@ verify_jwt = true
 
 [functions.initialize-student-progression]
 verify_jwt = true
-

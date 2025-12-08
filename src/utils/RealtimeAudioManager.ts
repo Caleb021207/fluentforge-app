@@ -179,16 +179,13 @@ export class RealtimeChat {
   private dc: RTCDataChannel | null = null;
   private audioEl: HTMLAudioElement;
   private sessionStartTime: number = 0;
-  private provider: 'gpt' | 'gemini';
 
   constructor(
     private onMessage: (message: any) => void,
-    private onSpeakingChange: (speaking: boolean) => void,
-    provider: 'gpt' | 'gemini' = 'gpt'
+    private onSpeakingChange: (speaking: boolean) => void
   ) {
     this.audioEl = document.createElement("audio");
     this.audioEl.autoplay = true;
-    this.provider = provider;
   }
 
   async init() {
@@ -201,9 +198,7 @@ export class RealtimeChat {
         throw new Error('Not authenticated');
       }
 
-      const endpoint = this.provider === 'gemini' 
-        ? 'gemini-voice-realtime' 
-        : 'premium-voice-realtime';
+      const endpoint = 'premium-voice-realtime';
 
       const response = await fetch(
         `https://dukpljcweixxmpkiblwo.functions.supabase.co/${endpoint}`,
