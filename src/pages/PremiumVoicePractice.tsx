@@ -22,7 +22,7 @@ const PremiumVoicePractice = () => {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [provider, setProvider] = useState<'gpt' | 'gemini'>('gpt');
+  const [provider, setProvider] = useState<'gpt'>('gpt');
   const [selectedMode, setSelectedMode] = useState<'gpt' | 'custom'>('gpt');
   const chatRef = useRef<RealtimeChat | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -74,7 +74,7 @@ const PremiumVoicePractice = () => {
     }
   };
 
-  const startConversation = async (selectedProvider: 'gpt' | 'gemini') => {
+  const startConversation = async () => {
     // Prevent concurrent calls - check both session states
     if (isStarting || isConnected || customSessionId) {
       console.log('Already starting or another session is active, ignoring request');
@@ -82,7 +82,7 @@ const PremiumVoicePractice = () => {
     }
 
     setIsStarting(true);
-    setProvider(selectedProvider);
+    setProvider('gpt');
     try {
       const canStart = await checkCanStartPremiumVoiceSession() as any;
       if (!canStart?.allowed) {
@@ -95,7 +95,7 @@ const PremiumVoicePractice = () => {
         return;
       }
 
-      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking, selectedProvider);
+      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking);
       await chatRef.current.init();
       
       // Generate and store session ID
@@ -494,7 +494,7 @@ const PremiumVoicePractice = () => {
 
                   {!isConnected || provider !== 'gpt' ? (
                     <Button 
-                      onClick={() => startConversation('gpt')}
+                      onClick={() => startConversation()}
                       size="lg"
                       className="px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
                       disabled={isStarting || (isConnected && provider !== 'gpt') || premiumVoiceMinutesRemaining <= 0}
