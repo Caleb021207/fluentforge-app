@@ -13,7 +13,7 @@ import PronunciationPracticeContainer from "@/components/pronunciation/Pronuncia
 import VoiceChat from "@/pages/VoiceChat";
 import Settings from "@/pages/Settings";
 import Legal from "@/pages/Legal";
-import CertificationCodeTester from "@/pages/CertificationCodeTester";
+
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import ClassMetrics from "@/pages/ClassMetrics";
 import Certificate from "@/pages/Certificate";
@@ -33,7 +33,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/legal" element={<Legal />} />
             <Route path="/analysis" element={<TranscriptAnalysis />} />
-            <Route path="/code-tester" element={<CertificationCodeTester />} />
+            
             <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
             <Route path="/class-metrics" element={<ClassMetrics />} />
             <Route path="/certificate" element={<Certificate />} />
