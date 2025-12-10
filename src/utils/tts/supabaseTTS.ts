@@ -89,7 +89,7 @@ export const playTTS = async ({
       console.log("TTS token limit reached, using browser fallback");
       
       // Show toast notification to user
-      toast.info("Switched to Cloud TTS", {
+      toast.info("Switched to Browser TTS", {
         description: "You've reached your monthly Azure TTS token limit. Now using browser text-to-speech."
       });
       

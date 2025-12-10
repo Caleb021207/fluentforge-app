@@ -2604,8 +2604,8 @@ export type Database = {
         Returns: undefined
       }
       process_access_code:
-        | { Args: { p_code: string }; Returns: Json }
         | { Args: never; Returns: undefined }
+        | { Args: { p_code: string }; Returns: Json }
       purge_old_audit_logs: { Args: never; Returns: undefined }
       recalculate_student_metrics: {
         Args: { target_student_id: string }
