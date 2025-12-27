@@ -24,7 +24,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ChatContainer from "@/components/practice/ChatContainer";
-import { useChatMessages } from "@/components/practice/hooks/useChatMessages";
+import { useChallengeChat } from "@/components/practice/hooks/useChallengeChat";
 
 interface ChallengeState {
   submissionId: string;
@@ -52,7 +52,7 @@ const ChallengeMode = () => {
   const [startTime] = useState<Date>(new Date());
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Use the existing chat messages hook with the assignment's CEFR level
+  // Use the challenge-specific chat hook with MANDATORY CEFR level from assignment
   const {
     messages,
     input,
@@ -60,7 +60,12 @@ const ChallengeMode = () => {
     handleSubmit: handleChatSubmit,
     isLoading,
     getPlaceholderText,
-  } = useChatMessages(state?.assignment.cefr_level?.toLowerCase() || 'intermediate');
+    cefrLevel,
+    topicPrompt: assignmentTopicPrompt,
+  } = useChallengeChat({
+    cefrLevel: state?.assignment.cefr_level || 'B1',
+    topicPrompt: state?.assignment.topic_prompt || ''
+  });
 
   // Redirect if no assignment state
   useEffect(() => {
@@ -260,6 +265,8 @@ const ChallengeMode = () => {
             isLoading={isLoading}
             getPlaceholderText={getPlaceholderText}
             bilingualMode={false}
+            cefrLevel={cefrLevel}
+            assignmentTopic={assignmentTopicPrompt}
           />
         </div>
       </div>

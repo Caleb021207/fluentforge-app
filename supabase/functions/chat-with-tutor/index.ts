@@ -89,7 +89,8 @@ serve(async (req) => {
       conversationHistory = [],
       conversationLevel = "intermediate",  // Conversation level setting (basic/intermediate/advanced)
       cefrLevel = null, // Direct CEFR level override (A1, A2, B1, B2, C1, C2)
-      correctGrammar = false // Flag to control grammar correction
+      correctGrammar = false, // Flag to control grammar correction
+      assignmentTopic = "" // Assignment topic for contextual hints
     } = requestData;
 
     // ===== INPUT VALIDATION =====
@@ -222,10 +223,19 @@ serve(async (req) => {
     // Handle hint requests
     if (requestType === 'hint') {
       try {
+        // Determine effective CEFR level for hints
+        const hintCefrLevel = cefrLevel || 
+          (conversationLevel === 'basic' ? 'A1' : 
+           conversationLevel === 'advanced' ? 'C1' : 'B1');
+        
+        console.log(`[hint request] CEFR=${hintCefrLevel}, topic="${(assignmentTopic || '').substring(0, 50)}..."`);
+        
         const suggestions = await generateHints(
           limitedHistory,
-          targetLanguage || "spanish", // Default if still undefined
-          userLanguage || "english"
+          targetLanguage || "spanish",
+          userLanguage || "english",
+          hintCefrLevel,
+          assignmentTopic || ""
         );
         
         return new Response(
