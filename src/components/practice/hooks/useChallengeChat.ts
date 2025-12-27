@@ -16,6 +16,8 @@ interface Message {
 interface ChallengeChatOptions {
   cefrLevel: string;  // MANDATORY - the assignment's CEFR level (A1, A2, B1, etc.)
   topicPrompt: string; // The assignment's topic/task description
+  submissionId?: string; // For progress persistence
+  initialMessages?: Message[] | null; // For restoring progress
 }
 
 /**
@@ -23,8 +25,9 @@ interface ChallengeChatOptions {
  * 1. Uses the EXACT CEFR level from the assignment (no overrides from student proficiency)
  * 2. Generates an AI opening message based on the assignment topic
  * 3. Keeps conversation focused on the assignment topic
+ * 4. Supports progress persistence
  */
-export const useChallengeChat = ({ cefrLevel, topicPrompt }: ChallengeChatOptions) => {
+export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initialMessages }: ChallengeChatOptions) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: 'user' | 'assistant' | 'system'; content: string}[]>([]);
@@ -36,15 +39,34 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt }: ChallengeChatOption
   
   const currentSessionIdRef = useRef<string | null>(null);
   const hasGeneratedOpening = useRef(false);
+  const hasRestoredMessages = useRef(false);
 
   // Normalize CEFR level (e.g., "A2/B1" -> "A2", "B1+" -> "B1")
   const normalizedCefrLevel = cefrLevel.toUpperCase().split('/')[0].replace('+', '').trim();
   
   console.log(`[useChallengeChat] Initialized with CEFR=${normalizedCefrLevel}, topic="${topicPrompt.substring(0, 50)}..."`);
 
+  // Restore messages from initial state (from database)
+  useEffect(() => {
+    if (initialMessages && initialMessages.length > 0 && !hasRestoredMessages.current) {
+      hasRestoredMessages.current = true;
+      hasGeneratedOpening.current = true; // Don't generate new opening if we're restoring
+      setMessages(initialMessages);
+      
+      // Rebuild API conversation history from restored messages
+      const history = initialMessages.map(m => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content
+      }));
+      setApiConversationHistory(history);
+      
+      console.log(`[useChallengeChat] Restored ${initialMessages.length} messages from database`);
+    }
+  }, [initialMessages]);
+
   // Generate an AI opening message when the chat starts
   const generateOpeningMessage = useCallback(async () => {
-    if (hasGeneratedOpening.current || !topicPrompt) return;
+    if (hasGeneratedOpening.current || !topicPrompt || hasRestoredMessages.current) return;
     hasGeneratedOpening.current = true;
     
     setIsGeneratingOpening(true);
@@ -103,8 +125,10 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt }: ChallengeChatOption
       const newSessionId = await startSession('challenge_mode');
       currentSessionIdRef.current = newSessionId;
       
-      // Generate the opening message after session is ready
-      await generateOpeningMessage();
+      // Only generate opening if we haven't restored messages
+      if (!hasRestoredMessages.current) {
+        await generateOpeningMessage();
+      }
     };
     initSession();
   }, [generateOpeningMessage]);
@@ -202,6 +226,7 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt }: ChallengeChatOption
   
   return {
     messages,
+    setMessages, // Expose for external restoration
     input,
     setInput,
     isLoading: isLoading || isGeneratingOpening,
