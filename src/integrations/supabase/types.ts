@@ -1168,6 +1168,60 @@ export type Database = {
         }
         Relationships: []
       }
+      personalized_flashcards: {
+        Row: {
+          category: string
+          cefr_level: string | null
+          created_at: string
+          definition: string
+          example: string | null
+          id: string
+          last_reviewed: string | null
+          mastery_level: number
+          next_due: string | null
+          review_count: number
+          source_session_id: string | null
+          source_type: string
+          student_id: string
+          term: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          cefr_level?: string | null
+          created_at?: string
+          definition: string
+          example?: string | null
+          id?: string
+          last_reviewed?: string | null
+          mastery_level?: number
+          next_due?: string | null
+          review_count?: number
+          source_session_id?: string | null
+          source_type?: string
+          student_id: string
+          term: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          cefr_level?: string | null
+          created_at?: string
+          definition?: string
+          example?: string | null
+          id?: string
+          last_reviewed?: string | null
+          mastery_level?: number
+          next_due?: string | null
+          review_count?: number
+          source_session_id?: string | null
+          source_type?: string
+          student_id?: string
+          term?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       privacy_notice_acknowledgments: {
         Row: {
           academic_year: string
@@ -2737,6 +2791,10 @@ export type Database = {
       reset_monthly_usage: { Args: never; Returns: undefined }
       reset_monthly_usage_limits: { Args: never; Returns: undefined }
       reset_semester_usage: { Args: never; Returns: undefined }
+      update_flashcard_mastery: {
+        Args: { p_flashcard_id: string; p_quality: number }
+        Returns: undefined
+      }
       update_student_language_aggregate_metrics: {
         Args: { target_student_id: string }
         Returns: undefined
