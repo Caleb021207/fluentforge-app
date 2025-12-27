@@ -15,6 +15,8 @@ interface ChatInputProps {
   placeholder: string;
   messages: Message[];
   targetLanguage: string;
+  cefrLevel?: string;
+  assignmentTopic?: string;
 }
 
 export default function ChatInput({
@@ -24,7 +26,9 @@ export default function ChatInput({
   onSubmit,
   placeholder,
   messages,
-  targetLanguage
+  targetLanguage,
+  cefrLevel,
+  assignmentTopic
 }: ChatInputProps) {
   const { t } = useLocalization();
   const [rows, setRows] = useState(1);
@@ -86,6 +90,8 @@ export default function ChatInput({
         <HintButton 
           targetLanguage={targetLanguage}
           messages={messages}
+          cefrLevel={cefrLevel}
+          assignmentTopic={assignmentTopic}
         />
       </div>
     </form>

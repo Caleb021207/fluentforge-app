@@ -23,9 +23,17 @@ interface HintButtonProps {
   targetLanguage: string;
   messages: Message[];
   className?: string;
+  cefrLevel?: string;  // Optional CEFR level for level-appropriate hints
+  assignmentTopic?: string;  // Optional assignment topic for contextual hints
 }
 
-export default function HintButton({ targetLanguage, messages, className }: HintButtonProps) {
+export default function HintButton({ 
+  targetLanguage, 
+  messages, 
+  className,
+  cefrLevel,
+  assignmentTopic
+}: HintButtonProps) {
   const [open, setOpen] = useState(false);
   const [hints, setHints] = useState<SuggestionCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +52,9 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
       console.log("Fetching hints with params:", {
         targetLanguage,
         userLanguage: currentLanguage || 'english',
-        messageCount: recentMessages.length
+        messageCount: recentMessages.length,
+        cefrLevel: cefrLevel || 'B1',
+        assignmentTopic: assignmentTopic || ''
       });
       
       const { data, error } = await supabase.functions.invoke("chat-with-tutor", {
@@ -52,7 +62,9 @@ export default function HintButton({ targetLanguage, messages, className }: Hint
           conversationHistory: recentMessages,
           requestType: 'hint',
           targetLanguage,
-          userLanguage: currentLanguage || 'english', // Use current UI language
+          userLanguage: currentLanguage || 'english',
+          cefrLevel: cefrLevel || null,
+          assignmentTopic: assignmentTopic || ''
         }
       });
       

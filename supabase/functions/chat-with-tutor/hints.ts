@@ -22,9 +22,16 @@ export interface ConversationHints {
 export async function generateHints(
   conversationHistory: { role: string; content: string }[],
   targetLanguage: string = "spanish",
-  userLanguage: string = "english"
+  userLanguage: string = "english",
+  cefrLevel: string = "B1",
+  assignmentTopic: string = ""
 ): Promise<SuggestionCategory[]> {
   try {
+    // Normalize CEFR level
+    const normalizedLevel = cefrLevel.toUpperCase().split('/')[0].replace('+', '').trim() || 'B1';
+    
+    console.log(`[hints] Generating hints: CEFR=${normalizedLevel}, topic="${assignmentTopic.substring(0, 50)}...", lang=${targetLanguage}`);
+    
     // Default hints in case of failure
     const defaultHints: SuggestionCategory[] = [
       {
@@ -49,35 +56,79 @@ export async function generateHints(
     // Prepare the conversation context
     const limitedHistory = conversationHistory.slice(-6); // Last 6 messages for context
     
+    // CEFR level vocabulary and complexity guidance
+    const levelGuidance: Record<string, { complexity: string; examples: string }> = {
+      'A1': {
+        complexity: 'VERY SIMPLE: Use only the 300 most common words. Short phrases (3-5 words). Present tense only. No idioms.',
+        examples: 'Examples: "Hola", "Sí", "No", "Me gusta", "Tengo", "Quiero"'
+      },
+      'A2': {
+        complexity: 'SIMPLE: Use the 500 most common words. Short sentences (5-8 words). Present and simple past. Basic connectors (y, pero, porque).',
+        examples: 'Examples: "Hoy fui a...", "Me gusta porque...", "Fue muy divertido"'
+      },
+      'B1': {
+        complexity: 'MODERATE: Use the 1500 most common words. Medium sentences. Past, present, future tenses. Some expressions.',
+        examples: 'Examples: "Me gustaría saber...", "¿Podrías explicar...?", "Creo que..."'
+      },
+      'B2': {
+        complexity: 'INTERMEDIATE: Use broader vocabulary. Complex sentences with subordinate clauses. Conditional and subjunctive.',
+        examples: 'Examples: "Si hubiera sabido...", "Me parece interesante que...", "A pesar de que..."'
+      },
+      'C1': {
+        complexity: 'ADVANCED: Use sophisticated vocabulary including idioms and nuanced expressions. Native-like complexity.',
+        examples: 'Examples: "No cabe duda de que...", "Dicho sea de paso...", "En lo que a mí respecta..."'
+      },
+      'C2': {
+        complexity: 'NATIVE-LIKE: Use any vocabulary including regional expressions, slang, and cultural references.',
+        examples: 'Examples: Complex idiomatic expressions, literary references, subtle humor'
+      }
+    };
+    
+    const currentLevelGuidance = levelGuidance[normalizedLevel] || levelGuidance['B1'];
+    
+    // Build topic-specific instruction
+    const topicInstruction = assignmentTopic 
+      ? `The user is working on this specific task: "${assignmentTopic}". Generate hints that DIRECTLY help them complete this task.`
+      : '';
+    
     // Generate dynamic hints based on conversation
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content: `You are a language learning assistant that suggests helpful phrases for the next response. 
-          Given a conversation in ${targetLanguage}, generate 3 categories of suggestions with 3-4 phrases each that the user might want to say next.
-          The phrases should be appropriate to the conversation context and at a CEFR B1 level.
-          
-          IMPORTANT: For each phrase, provide BOTH the phrase in ${targetLanguage} AND its translation in ${userLanguage}.
-          
-          Format your response as JSON with this structure:
-          {
-            "categories": [
-              {
-                "title": "Category name in ${userLanguage}",
-                "suggestions": [
-                  {
-                    "phrase": "phrase in ${targetLanguage}",
-                    "translation": "translation in ${userLanguage}"
-                  },
-                  ...
-                ]
-              },
-              ...
-            ]
-          }
-          Make the categories relevant to the conversation. For example: questions, reactions, opinions, requests, etc.`,
+          content: `You are a language learning assistant that suggests helpful phrases for a student at CEFR ${normalizedLevel} level.
+
+CRITICAL LANGUAGE LEVEL REQUIREMENTS:
+${currentLevelGuidance.complexity}
+${currentLevelGuidance.examples}
+
+${topicInstruction}
+
+Given the conversation in ${targetLanguage}, generate 3 categories of suggestions with 3-4 phrases each that the user might want to say next.
+
+REQUIREMENTS:
+1. ALL phrases MUST be appropriate for CEFR ${normalizedLevel} level - do NOT use vocabulary or structures above this level
+2. Phrases should be DIRECTLY relevant to what was just discussed in the conversation
+3. ${assignmentTopic ? `Phrases should help the user complete their task: "${assignmentTopic}"` : 'Phrases should be contextually appropriate'}
+4. For each phrase, provide BOTH the phrase in ${targetLanguage} AND its translation in ${userLanguage}
+
+Format your response as JSON with this structure:
+{
+  "categories": [
+    {
+      "title": "Category name in ${userLanguage}",
+      "suggestions": [
+        {
+          "phrase": "phrase in ${targetLanguage}",
+          "translation": "translation in ${userLanguage}"
+        }
+      ]
+    }
+  ]
+}
+
+Make category titles specific to the conversation context (e.g., "Describing your day", "Asking follow-up questions", "Sharing opinions").`
         },
         ...limitedHistory.map(msg => ({ 
           role: msg.role as "user" | "assistant" | "system", 
@@ -95,22 +146,22 @@ export async function generateHints(
       
       // Validate the structure
       if (
-        !content ||
         parsedContent &&
         parsedContent.categories &&
         Array.isArray(parsedContent.categories) &&
         parsedContent.categories.length > 0
       ) {
+        console.log(`[hints] Successfully generated ${parsedContent.categories.length} categories for CEFR ${normalizedLevel}`);
         return parsedContent.categories;
       }
     } catch (e) {
-      console.error("Failed to parse hints response:", e);
+      console.error("[hints] Failed to parse hints response:", e);
     }
     
     // Fallback to default hints on failure
     return defaultHints;
   } catch (error) {
-    console.error("Error generating hints:", error);
+    console.error("[hints] Error generating hints:", error);
     
     // Fallback to default hints on error
     return [

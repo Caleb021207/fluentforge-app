@@ -26,6 +26,8 @@ interface ChatContainerProps {
   getPlaceholderText: () => string;
   targetLanguage?: string;
   bilingualMode?: boolean;
+  cefrLevel?: string;
+  assignmentTopic?: string;
 }
 
 export default function ChatContainer({
@@ -36,7 +38,9 @@ export default function ChatContainer({
   isLoading,
   getPlaceholderText,
   targetLanguage = "spanish",
-  bilingualMode = false
+  bilingualMode = false,
+  cefrLevel,
+  assignmentTopic
 }: ChatContainerProps) {
   const { t } = useLocalization();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -85,6 +89,8 @@ export default function ChatContainer({
             placeholder={getPlaceholderText()}
             messages={messages}
             targetLanguage={targetLanguage}
+            cefrLevel={cefrLevel}
+            assignmentTopic={assignmentTopic}
           />
         </div>
       </Card>
