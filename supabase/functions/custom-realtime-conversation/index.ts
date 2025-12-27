@@ -94,7 +94,7 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, conversationHistory, targetLanguage, userLanguage, userInterfaceLanguage, proficiencyLevel } = await req.json();
+    const { audio, conversationHistory, targetLanguage, userLanguage, userInterfaceLanguage, proficiencyLevel, cefrLevel } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
@@ -120,8 +120,10 @@ serve(async (req) => {
       console.log('User ID for tracking:', userId);
     }
 
-    const level = proficiencyLevel || 'intermediate';
-    console.log(`Custom realtime request - Target: ${targetLanguage}, User: ${userLanguage}, Interface: ${userInterfaceLanguage}, Level: ${level}`);
+    // Determine effective CEFR level from direct cefrLevel or proficiencyLevel setting
+    const levelTocefrMap: Record<string, string> = { 'basic': 'A1', 'intermediate': 'B1', 'advanced': 'C1' };
+    const effectiveCefrLevel = cefrLevel?.toUpperCase().split('/')[0].replace('+', '') || levelTocefrMap[level] || 'B1';
+    console.log(`Custom realtime request - Target: ${targetLanguage}, User: ${userLanguage}, Interface: ${userInterfaceLanguage}, Level: ${level}, CEFR: ${effectiveCefrLevel}`);
 
     // Map language names to Whisper language codes
     const languageCodeMap: Record<string, string> = {
@@ -198,38 +200,30 @@ serve(async (req) => {
     const nativeCode = normalizeLanguage(userLanguage);
     console.log(`Normalized user language: ${userLanguage} -> ${nativeCode}`);
 
-    // Configure teaching approach based on proficiency level
-    const levelConfig: Record<string, any> = {
-      basic: {
-        cefr: 'A1-A2',
-        nativePercent: 70,
-        englishPercent: 30,
-        approach: 'Focus on teaching. Explain concepts in native language, introduce English words and phrases gradually.'
-      },
-      intermediate: {
-        cefr: 'B1',
-        nativePercent: 50,
-        englishPercent: 50,
-        approach: 'Balance teaching and practice. Mix both languages naturally, encourage English but support with native language.'
-      },
-      advanced: {
-        cefr: 'B2-C1',
-        nativePercent: 20,
-        englishPercent: 80,
-        approach: 'Immersive practice. Primarily English, use native language only for complex concepts or when user struggles.'
-      }
+    // CEFR-based behavior configuration (adaptive proficiency)
+    const CEFR_BEHAVIOR: Record<string, {
+      nativePercent: number;
+      englishPercent: number;
+      approach: string;
+    }> = {
+      'A1': { nativePercent: 60, englishPercent: 40, approach: 'Focus on teaching. Explain concepts in native language, introduce target words and phrases gradually. Use very simple vocabulary.' },
+      'A2': { nativePercent: 45, englishPercent: 55, approach: 'Teaching with practice. Mix both languages, emphasize simple structures and common vocabulary.' },
+      'B1': { nativePercent: 25, englishPercent: 75, approach: 'Balance teaching and practice. Mix both languages naturally, encourage target language but support with native language.' },
+      'B2': { nativePercent: 12, englishPercent: 88, approach: 'Immersive practice. Primarily target language, use native language only for complex concepts.' },
+      'C1': { nativePercent: 5, englishPercent: 95, approach: 'Near-immersion. Use target language almost exclusively, advanced vocabulary and structures.' },
+      'C2': { nativePercent: 2, englishPercent: 98, approach: 'Full immersion. Native-like interaction, nuanced expressions, cultural references.' }
     };
 
-    const currentLevel = levelConfig[level] || levelConfig.intermediate;
+    const currentLevel = CEFR_BEHAVIOR[effectiveCefrLevel] || CEFR_BEHAVIOR['B1'];
 
-    const systemPrompt = `You are an encouraging English language tutor teaching at ${currentLevel.cefr} level.
+    const systemPrompt = `You are an encouraging ${targetLanguage || 'English'} language tutor teaching at CEFR ${effectiveCefrLevel} level.
 
 USER INFO:
 - Native language: ${userLanguage}
 - Interface language: ${userInterfaceLanguage || userLanguage}
-- Proficiency level: ${level} (${currentLevel.cefr})
+- Proficiency level: ${effectiveCefrLevel}
 
-TEACHING APPROACH FOR ${currentLevel.cefr.toUpperCase()}:
+TEACHING APPROACH FOR ${effectiveCefrLevel}:
 ${currentLevel.approach}
 
 LANGUAGE DISTRIBUTION:

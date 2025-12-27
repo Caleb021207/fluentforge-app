@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useGamification } from "@/hooks/useGamification";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useConversationProfiling } from "@/hooks/useConversationProfiling";
+import { useStudentProficiency } from "@/hooks/useStudentProficiency";
 import { supabase } from "@/integrations/supabase/client";
 import type { TranslationType } from "./useTranslationHandler";
 import type { ChatMessage } from "@/types/chat";
@@ -32,6 +33,7 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const { awardXP } = useGamification();
   const { checkCanSendTextMessage, trackTextMessage, usageLimits, refreshLimits } = useUsageLimits();
   const { triggerProfiling } = useConversationProfiling();
+  const { proficiency } = useStudentProficiency(conversationLevel);
   
   // Track if profiling has been triggered for current session
   const profilingTriggeredRef = useRef(false);
@@ -198,11 +200,12 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     }
   };
   
-  // Modified send function that includes grammar correction preference and conversation history
+  // Modified send function that includes grammar correction preference, conversation history, and proficiency
   const sendChatMessageWithCorrection = async (message: string) => {
     try {
-      // Pass the correctGrammar flag and conversation history for context, plus conversation level
-      return await sendChatMessage(message, correctGrammar, apiConversationHistory, conversationLevel);
+      // Pass the correctGrammar flag, conversation history, level, and CEFR level
+      const effectiveCefrLevel = proficiency?.cefrLevel || null;
+      return await sendChatMessage(message, correctGrammar, apiConversationHistory, conversationLevel, effectiveCefrLevel);
     } catch (error) {
       console.error("Error sending message with correction flag:", error);
       return null;

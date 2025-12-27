@@ -45,6 +45,64 @@ serve(async (req) => {
       );
     }
 
+    // Get request body for proficiency info
+    const requestBody = await req.json().catch(() => ({}));
+    const { cefrLevel, userLanguage, targetLanguage } = requestBody;
+    
+    // CEFR-based behavior configuration
+    const LEVEL_BEHAVIOR: Record<string, { nativeLanguageRatio: number; explanationStyle: string }> = {
+      'A1': { nativeLanguageRatio: 0.6, explanationStyle: 'native_heavy' },
+      'A2': { nativeLanguageRatio: 0.45, explanationStyle: 'native_heavy' },
+      'B1': { nativeLanguageRatio: 0.25, explanationStyle: 'mixed' },
+      'B2': { nativeLanguageRatio: 0.12, explanationStyle: 'target_heavy' },
+      'C1': { nativeLanguageRatio: 0.05, explanationStyle: 'target_only' },
+      'C2': { nativeLanguageRatio: 0.02, explanationStyle: 'target_only' }
+    };
+    
+    const effectiveLevel = cefrLevel?.toUpperCase().split('/')[0].replace('+', '') || 'B1';
+    const levelConfig = LEVEL_BEHAVIOR[effectiveLevel] || LEVEL_BEHAVIOR['B1'];
+    const nativePercent = Math.round(levelConfig.nativeLanguageRatio * 100);
+    const targetLang = targetLanguage || 'English';
+    const nativeLang = userLanguage || 'their native language';
+    
+    // Build adaptive instructions based on proficiency
+    let languageGuidance = '';
+    if (levelConfig.explanationStyle === 'native_heavy') {
+      languageGuidance = `Use ${nativeLang} for approximately ${nativePercent}% of your responses. Always provide translations for new vocabulary. Explain grammar in ${nativeLang}.`;
+    } else if (levelConfig.explanationStyle === 'mixed') {
+      languageGuidance = `Use ${targetLang} for most responses (~${100 - nativePercent}%). Provide ${nativeLang} support for complex explanations.`;
+    } else if (levelConfig.explanationStyle === 'target_heavy') {
+      languageGuidance = `Use ${targetLang} for ${100 - nativePercent}% of responses. Only use ${nativeLang} for critical clarifications.`;
+    } else {
+      languageGuidance = `Use ${targetLang} almost exclusively. Only use ${nativeLang} if absolutely critical for comprehension.`;
+    }
+    
+    const adaptiveInstructions = `You are an encouraging ${targetLang} language tutor at CEFR ${effectiveLevel} level.
+
+LANGUAGE SUPPORT:
+${languageGuidance}
+
+CORE PRINCIPLES:
+- Speak primarily in ${targetLang} based on the language ratio above
+- Keep conversations flowing naturally
+- Use simple ${targetLang} explanations when students struggle
+- Ask engaging questions to encourage ${targetLang} practice
+
+WHEN TO USE NATIVE LANGUAGE:
+Only use ${nativeLang} when:
+1. The student explicitly asks for translation/clarification and seems genuinely confused
+2. A critical grammar concept needs explanation and ${targetLang} explanations haven't worked
+3. Safety or urgent clarification is needed
+
+IMPORTANT: After any native language clarification:
+- Keep it brief (1-2 sentences max)
+- Immediately redirect back to ${targetLang}
+- Resume the ${targetLang} conversation naturally
+
+Your job is to maximize ${targetLang} practice time while being supportive when genuine confusion arises.`;
+
+    console.log(`Premium voice session: CEFR=${effectiveLevel}, nativeRatio=${levelConfig.nativeLanguageRatio}`);
+
     // Get ephemeral token from OpenAI
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openaiApiKey) {
@@ -60,7 +118,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "gpt-realtime-2025-08-28",
         voice: "sage",
-        instructions: "You are an encouraging English language tutor. Your PRIMARY GOAL is to maintain conversation in English as much as possible.\n\nCORE PRINCIPLES:\n- Always speak in English by default\n- Keep conversations flowing naturally in English\n- Use simple English explanations when students struggle\n- Ask engaging questions to encourage English practice\n\nWHEN TO USE NATIVE LANGUAGE (RARE):\nOnly use the student's native language when:\n1. The student explicitly asks for translation/clarification and seems genuinely confused\n2. A critical grammar concept needs explanation and English explanations haven't worked\n3. Safety or urgent clarification is needed\n\nIMPORTANT: After any native language clarification:\n- Keep it brief (1-2 sentences max)\n- Immediately redirect back to English\n- Say something like 'Now let's continue in English...'\n- Resume the English conversation naturally\n\nYour job is to maximize English practice time while being supportive when genuine confusion arises.",
+        instructions: adaptiveInstructions,
       }),
     });
 
