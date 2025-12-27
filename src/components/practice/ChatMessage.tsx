@@ -13,9 +13,10 @@ interface ChatMessageProps {
   content: string;
   translation?: string | TranslationType;
   onPlayAudio?: (text: string) => void;
+  bilingualMode?: boolean;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, onPlayAudio, bilingualMode = false }) => {
   const { currentLanguage } = useLocalization();
   
   // Enhanced logging for specific translations
@@ -136,6 +137,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
         targetLanguage={targetLanguage}
         nativeLanguage={nativeLanguage}
         currentLanguage={currentLanguage}
+        showBilingualOutput={bilingualMode}
+        nativeContent={bilingualMode ? safeTranslation : undefined}
       />
     </div>
   );

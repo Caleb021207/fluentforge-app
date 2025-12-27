@@ -95,6 +95,19 @@ const practiceTranslations: TranslationRecord = {
   showTranslation: "Show translation",
   hideTranslation: "Hide translation",
   
+  // Bilingual output
+  bilingualMode: "Bilingual Mode",
+  bilingualModeEnabled: "Bilingual mode enabled",
+  bilingualModeDisabled: "Bilingual mode disabled",
+  showBothLanguages: "Show both languages",
+  showBothLanguagesDescription: "Display both target and native language in responses",
+  
+  // Grammar feedback
+  showGrammarFeedback: "Show Grammar Feedback",
+  hideGrammarFeedback: "Hide Grammar Feedback",
+  grammarCorrect: "Grammar: Great job!",
+  grammarFeedback: "Grammar Feedback",
+  
   // Progress and analysis
   aiProgressAnalysis: "AI Progress Analysis",
   uploadLanguageTestTranscripts: "Upload language test transcripts",

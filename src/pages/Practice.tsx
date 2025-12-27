@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InteractiveCard } from "@/components/ui/card";
-import { Trash, Sparkles } from "lucide-react";
+import { Trash, Sparkles, Languages } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
 import { secureStorage } from "@/utils/security/dataEncryption";
@@ -36,6 +36,7 @@ const Practice = () => {
   const { toast } = useToast();
   const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
   const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
+  const [bilingualMode, setBilingualMode] = useState<boolean>(false);
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   const { showXPNotification, lastXPGain } = useXPNotification();
   
@@ -92,6 +93,14 @@ const Practice = () => {
     }
   }, [currentLanguage, urlLevel]);
   
+  // Load bilingual mode preference
+  useEffect(() => {
+    const savedBilingualMode = localStorage.getItem('bilingualMode');
+    if (savedBilingualMode) {
+      setBilingualMode(savedBilingualMode === 'true');
+    }
+  }, []);
+  
   const handleLevelChange = (newLevel: string) => {
     setConversationLevel(newLevel);
     localStorage.setItem("conversationLevel", newLevel);
@@ -105,6 +114,20 @@ const Practice = () => {
     toast({
       title: t("conversationLevelUpdated") || "Conversation Level Updated",
       description: `${t("levelSetTo") || "Level set to"} ${levelNames[newLevel as keyof typeof levelNames]}`,
+      variant: "default",
+    });
+  };
+  
+  const toggleBilingualMode = () => {
+    const newValue = !bilingualMode;
+    setBilingualMode(newValue);
+    localStorage.setItem('bilingualMode', String(newValue));
+    
+    toast({
+      title: newValue ? (t("bilingualModeEnabled") || "Bilingual mode enabled") : (t("bilingualModeDisabled") || "Bilingual mode disabled"),
+      description: newValue 
+        ? (t("showBothLanguagesDescription") || "AI responses will show both target and native language")
+        : "AI responses will show target language with translation dropdown",
       variant: "default",
     });
   };
@@ -202,6 +225,24 @@ const Practice = () => {
                   onCheckedChange={toggleGrammarCorrection}
                 />
               </div>
+              
+              {/* Bilingual Mode Toggle */}
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="bilingual-mode" className="text-base font-semibold flex items-center gap-2">
+                    <Languages className="w-5 h-5 text-primary" />
+                    {t("bilingualMode") || "Bilingual Mode"}
+                  </Label>
+                  <span className="text-xs text-muted-foreground">
+                    {t("showBothLanguagesDescription") || "Display both target and native language in responses"}
+                  </span>
+                </div>
+                <Switch
+                  id="bilingual-mode"
+                  checked={bilingualMode}
+                  onCheckedChange={toggleBilingualMode}
+                />
+              </div>
             </div>
           </InteractiveCard>
         </motion.div>
@@ -250,6 +291,7 @@ const Practice = () => {
             isLoading={chatLoading}
             getPlaceholderText={getPlaceholderText}
             targetLanguage={targetLanguage}
+            bilingualMode={bilingualMode}
           />
         </motion.div>
 
