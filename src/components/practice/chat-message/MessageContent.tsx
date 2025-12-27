@@ -3,7 +3,7 @@ import React from "react";
 import AudioButton from "./AudioButton";
 
 interface MessageContentProps {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
   isPlaying: boolean;
   isLoading: boolean;

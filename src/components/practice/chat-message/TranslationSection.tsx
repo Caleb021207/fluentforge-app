@@ -7,7 +7,7 @@ import type { TranslationType } from "../hooks/useTranslationHandler";
 
 interface TranslationSectionProps {
   showTranslation: boolean;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   translation: string;
   currentLanguage: string;
   isTranslationPlaying: boolean;

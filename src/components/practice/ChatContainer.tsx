@@ -9,11 +9,12 @@ import LoadingIndicator from "./LoadingIndicator";
 import LanguageMetricsPanel from "./LanguageMetricsPanel";
 import { useLanguageMetricsPanel } from "./hooks/useLanguageMetricsPanel";
 import { useLocalization } from "@/context/LocalizationContext";
+import type { TranslationType } from "./hooks/translation/types";
 
 interface Message {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
-  translation?: string;
+  translation?: TranslationType;
 }
 
 interface ChatContainerProps {
