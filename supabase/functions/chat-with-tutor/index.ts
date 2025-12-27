@@ -95,10 +95,10 @@ serve(async (req) => {
     } = requestData;
 
     // ===== INPUT VALIDATION =====
-    // Skip message validation for hint requests (they only need conversationHistory)
+    // Skip message validation for hint requests and opening_message requests (they don't need a user message)
     let trimmedMessage = "";
     
-    if (requestType !== 'hint') {
+    if (requestType !== 'hint' && requestType !== 'opening_message') {
       // Validate message exists and is a string
       if (!message || typeof message !== 'string') {
         return new Response(
