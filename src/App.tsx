@@ -18,6 +18,7 @@ import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import ClassMetrics from "@/pages/ClassMetrics";
 import Certificate from "@/pages/Certificate";
 import PersonalFlashcards from "@/pages/PersonalFlashcards";
+import ChallengeMode from "@/pages/ChallengeMode";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/class-metrics" element={<ClassMetrics />} />
             <Route path="/certificate" element={<Certificate />} />
             <Route path="/personal-flashcards" element={<PersonalFlashcards />} />
+            <Route path="/challenge-mode" element={<ChallengeMode />} />
             
           </Routes>
           <Toaster />
