@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useChatMessaging } from "./useChatMessaging";
 import { usePromptGenerator } from "./usePromptGenerator";
@@ -7,6 +7,8 @@ import { useSessionManagement } from "./useSessionManagement";
 import { useToast } from "@/hooks/use-toast";
 import { useGamification } from "@/hooks/useGamification";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { useConversationProfiling } from "@/hooks/useConversationProfiling";
+import { supabase } from "@/integrations/supabase/client";
 import type { TranslationType } from "./useTranslationHandler";
 import type { ChatMessage } from "@/types/chat";
 
@@ -25,10 +27,24 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const { t, currentLanguage } = useLocalization();
   const { isLoading, hasError, sendChatMessage, retryLastMessage, extractStringFromTranslation } = useChatMessaging();
   const { generateLanguageLearningPrompt } = usePromptGenerator();
-  const { messageCount, setMessageCount } = useSessionManagement();
+  const { messageCount, setMessageCount, startSession, sessionId } = useSessionManagement();
   const { toast } = useToast();
   const { awardXP } = useGamification();
   const { checkCanSendTextMessage, trackTextMessage, usageLimits, refreshLimits } = useUsageLimits();
+  const { triggerProfiling } = useConversationProfiling();
+  
+  // Track if profiling has been triggered for current session
+  const profilingTriggeredRef = useRef(false);
+  const currentSessionIdRef = useRef<string | null>(null);
+
+  // Initialize session on mount
+  useEffect(() => {
+    const initSession = async () => {
+      const newSessionId = await startSession('text_practice');
+      currentSessionIdRef.current = newSessionId;
+    };
+    initSession();
+  }, []);
 
   // Load saved messages from session storage
   useEffect(() => {
@@ -73,6 +89,41 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
       sessionStorage.setItem('apiConversationHistory', JSON.stringify(apiConversationHistory));
     }
   }, [apiConversationHistory]);
+
+  // Trigger profiling when component unmounts or conversation ends
+  const triggerProfilingIfNeeded = useCallback(async () => {
+    if (profilingTriggeredRef.current || messages.length < 4) return;
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      profilingTriggeredRef.current = true;
+      
+      // Format messages for profiling
+      const formattedMessages = messages.map(m => ({
+        role: m.role,
+        content: m.content
+      }));
+      
+      await triggerProfiling({
+        studentId: user.id,
+        sessionId: currentSessionIdRef.current || `session_${Date.now()}`,
+        messages: formattedMessages,
+        topic: 'text_practice',
+        targetLevel: conversationLevel
+      });
+    } catch (error) {
+      console.error('Error triggering profiling:', error);
+    }
+  }, [messages, conversationLevel, triggerProfiling]);
+
+  // Trigger profiling on unmount
+  useEffect(() => {
+    return () => {
+      triggerProfilingIfNeeded();
+    };
+  }, [triggerProfilingIfNeeded]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,14 +234,22 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     await handleSubmit(fakeEvent);
   };
   
-  const clearConversation = () => {
+  const clearConversation = async () => {
+    // Trigger profiling before clearing
+    await triggerProfilingIfNeeded();
+    
     setMessages([]);
     setApiConversationHistory([]);
     sessionStorage.removeItem('chatMessages');
     sessionStorage.removeItem('apiConversationHistory');
     
-    // Reset message count
+    // Reset message count and profiling flag
     setMessageCount({ inputs: 0, outputs: 0 });
+    profilingTriggeredRef.current = false;
+    
+    // Start new session
+    const newSessionId = await startSession('text_practice');
+    currentSessionIdRef.current = newSessionId;
   };
   
   const getPlaceholderText = useCallback(() => {

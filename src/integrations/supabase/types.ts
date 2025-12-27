@@ -1135,6 +1135,39 @@ export type Database = {
           },
         ]
       }
+      parental_consent_records: {
+        Row: {
+          academic_year: string
+          consent_date: string | null
+          consent_type: string
+          consented: boolean | null
+          created_at: string | null
+          id: string
+          recorded_by: string | null
+          student_id: string
+        }
+        Insert: {
+          academic_year?: string
+          consent_date?: string | null
+          consent_type: string
+          consented?: boolean | null
+          created_at?: string | null
+          id?: string
+          recorded_by?: string | null
+          student_id: string
+        }
+        Update: {
+          academic_year?: string
+          consent_date?: string | null
+          consent_type?: string
+          consented?: boolean | null
+          created_at?: string | null
+          id?: string
+          recorded_by?: string | null
+          student_id?: string
+        }
+        Relationships: []
+      }
       privacy_notice_acknowledgments: {
         Row: {
           academic_year: string
@@ -1553,6 +1586,45 @@ export type Database = {
           },
         ]
       }
+      student_conversation_memory: {
+        Row: {
+          cefr_level_demonstrated: string | null
+          conversation_summary: string | null
+          created_at: string | null
+          grammar_issues_found: Json | null
+          id: string
+          message_count: number | null
+          session_id: string
+          student_id: string
+          topic: string | null
+          vocabulary_used: string[] | null
+        }
+        Insert: {
+          cefr_level_demonstrated?: string | null
+          conversation_summary?: string | null
+          created_at?: string | null
+          grammar_issues_found?: Json | null
+          id?: string
+          message_count?: number | null
+          session_id: string
+          student_id: string
+          topic?: string | null
+          vocabulary_used?: string[] | null
+        }
+        Update: {
+          cefr_level_demonstrated?: string | null
+          conversation_summary?: string | null
+          created_at?: string | null
+          grammar_issues_found?: Json | null
+          id?: string
+          message_count?: number | null
+          session_id?: string
+          student_id?: string
+          topic?: string | null
+          vocabulary_used?: string[] | null
+        }
+        Relationships: []
+      }
       student_enrollments: {
         Row: {
           class_id: string | null
@@ -1681,6 +1753,57 @@ export type Database = {
           pronunciation_accuracy?: number | null
           session_id?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      student_learning_profiles: {
+        Row: {
+          academic_year: string
+          created_at: string | null
+          enabled_at: string | null
+          enabled_by: string | null
+          estimated_actfl_level: string | null
+          estimated_cefr_level: string | null
+          grammar_weaknesses: Json | null
+          id: string
+          last_updated: string | null
+          primary_struggles: Json | null
+          profiling_enabled: boolean | null
+          strengths: Json | null
+          student_id: string
+          vocabulary_gaps: string[] | null
+        }
+        Insert: {
+          academic_year?: string
+          created_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          estimated_actfl_level?: string | null
+          estimated_cefr_level?: string | null
+          grammar_weaknesses?: Json | null
+          id?: string
+          last_updated?: string | null
+          primary_struggles?: Json | null
+          profiling_enabled?: boolean | null
+          strengths?: Json | null
+          student_id: string
+          vocabulary_gaps?: string[] | null
+        }
+        Update: {
+          academic_year?: string
+          created_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          estimated_actfl_level?: string | null
+          estimated_cefr_level?: string | null
+          grammar_weaknesses?: Json | null
+          id?: string
+          last_updated?: string | null
+          primary_struggles?: Json | null
+          profiling_enabled?: boolean | null
+          strengths?: Json | null
+          student_id?: string
+          vocabulary_gaps?: string[] | null
         }
         Relationships: []
       }
