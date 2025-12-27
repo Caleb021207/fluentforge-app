@@ -21,7 +21,6 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const openaiKey = Deno.env.get('OPENAI_API_KEY');
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -46,108 +45,46 @@ serve(async (req) => {
       throw new Error('Assignment not found');
     }
 
-    const transcript = submission.transcript || [];
     const messageCount = submission.message_count || 0;
     const minMessages = assignment.min_messages || 10;
 
-    // Calculate base score components
+    // COMPLETION-BASED SCORING
+    // 100% if met or exceeded minimum messages
+    // Proportional score if submitted early
     let score = 0;
-    let feedback: any = {
-      topicRelevance: 0,
-      grammarAccuracy: 0,
-      levelAppropriateness: 0,
-      conversationFlow: 0,
-      details: []
-    };
+    let feedback: any = {};
 
-    // If OpenAI key is available, use AI grading
-    if (openaiKey) {
-      try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${openaiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [
-              {
-                role: 'system',
-                content: `You are a language learning assessment expert. Grade this conversation based on:
-1. Topic Relevance (0-25): How well did the student stay on topic "${assignment.topic_prompt}"?
-2. Grammar Accuracy (0-25): Correctness of grammar for ${assignment.cefr_level || 'B1'} level
-3. Level Appropriateness (0-25): Did they use vocabulary/structures appropriate for ${assignment.cefr_level || 'B1'}?
-4. Conversation Flow (0-25): Natural flow, turn-taking, responsiveness
-
-Respond in JSON format:
-{
-  "topicRelevance": <number 0-25>,
-  "grammarAccuracy": <number 0-25>,
-  "levelAppropriateness": <number 0-25>,
-  "conversationFlow": <number 0-25>,
-  "totalScore": <number 0-100>,
-  "strengths": ["<strength1>", "<strength2>"],
-  "improvements": ["<area1>", "<area2>"],
-  "summary": "<brief overall assessment>"
-}`
-              },
-              {
-                role: 'user',
-                content: `Grade this conversation:\n\n${JSON.stringify(transcript, null, 2)}`
-              }
-            ],
-            max_tokens: 500,
-            temperature: 0.3
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const content = data.choices[0]?.message?.content || '';
-          
-          try {
-            // Parse JSON from response
-            const jsonMatch = content.match(/\{[\s\S]*\}/);
-            if (jsonMatch) {
-              feedback = JSON.parse(jsonMatch[0]);
-              score = feedback.totalScore || 
-                (feedback.topicRelevance + feedback.grammarAccuracy + 
-                 feedback.levelAppropriateness + feedback.conversationFlow);
-            }
-          } catch (parseError) {
-            console.error('Error parsing AI response:', parseError);
-          }
-        }
-      } catch (aiError) {
-        console.error('OpenAI API error:', aiError);
-      }
-    }
-
-    // Fallback scoring if AI grading failed
-    if (score === 0) {
-      // Simple heuristic scoring
-      const messageScore = Math.min((messageCount / minMessages) * 25, 25);
-      const lengthBonus = transcript.length > minMessages * 1.5 ? 10 : 0;
-      score = Math.round(50 + messageScore + lengthBonus); // Base 50 + up to 35 bonus
-      
+    if (messageCount >= minMessages) {
+      // Full completion - 100%
+      score = 100;
       feedback = {
-        topicRelevance: 15,
-        grammarAccuracy: 15,
-        levelAppropriateness: 15,
-        conversationFlow: Math.round(messageScore),
-        summary: "Your conversation has been automatically scored based on length and engagement.",
-        strengths: ["Completed the assignment", messageCount >= minMessages ? "Met message requirement" : "Made good progress"],
-        improvements: ["Continue practicing to improve fluency"]
+        status: 'completed',
+        summary: 'Great job! You successfully completed the conversation assignment.',
+        messagesMet: true,
+        messagesRequired: minMessages,
+        messagesSubmitted: messageCount
+      };
+    } else {
+      // Partial completion - proportional score
+      score = Math.round((messageCount / minMessages) * 100);
+      feedback = {
+        status: 'partial',
+        summary: `You submitted ${messageCount} out of ${minMessages} required messages. Keep practicing!`,
+        messagesMet: false,
+        messagesRequired: minMessages,
+        messagesSubmitted: messageCount
       };
     }
 
-    // Calculate XP (67% of exam XP which is ~150, so ~100 XP max)
-    const examXP = 150;
-    const assignmentBaseXP = Math.round(examXP * 0.67);
-    const completionXP = Math.round(assignmentBaseXP * 0.5); // 50 XP for completing
-    const performanceXP = Math.round((assignmentBaseXP * 0.5) * (score / 100)); // Up to 50 XP based on score
-    const totalXP = completionXP + performanceXP;
+    // XP Calculation:
+    // Base: 50 XP for participation
+    // Completion bonus: 50 XP for full completion
+    // Total max: 100 XP
+    const baseXP = 50;
+    const completionBonus = messageCount >= minMessages ? 50 : Math.round(50 * (messageCount / minMessages));
+    const totalXP = baseXP + completionBonus;
+
+    console.log(`[grade-assignment] Submission ${submissionId}: messages=${messageCount}/${minMessages}, score=${score}%, XP=${totalXP}`);
 
     // Update submission with grades
     const { error: updateError } = await supabase

@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   MessageSquare, 
   Mic, 
-  Clock, 
   Users, 
   Trash2, 
-  Calendar 
+  Calendar,
+  Eye,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { format } from 'date-fns';
 import { TeacherAssignment, StudentSubmission } from '@/hooks/useTeacherAssignments';
+import SubmissionTranscriptModal from './SubmissionTranscriptModal';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface AssignmentsListProps {
   assignments: TeacherAssignment[];
@@ -24,6 +28,9 @@ const AssignmentsList = ({
   submissions, 
   onDeleteAssignment 
 }: AssignmentsListProps) => {
+  const [selectedSubmission, setSelectedSubmission] = useState<StudentSubmission | null>(null);
+  const [expandedAssignments, setExpandedAssignments] = useState<Set<string>>(new Set());
+
   const getSubmissionStats = (assignmentId: string) => {
     const assignmentSubs = submissions.filter(s => s.assignment_id === assignmentId);
     const completed = assignmentSubs.filter(s => s.status === 'completed' || s.status === 'graded').length;
@@ -32,7 +39,19 @@ const AssignmentsList = ({
       .filter(s => s.ai_score !== null)
       .reduce((acc, s, _, arr) => acc + (s.ai_score! / arr.length), 0);
     
-    return { total: assignmentSubs.length, completed, inProgress, avgScore };
+    return { total: assignmentSubs.length, completed, inProgress, avgScore, submissions: assignmentSubs };
+  };
+
+  const toggleExpanded = (assignmentId: string) => {
+    setExpandedAssignments(prev => {
+      const next = new Set(prev);
+      if (next.has(assignmentId)) {
+        next.delete(assignmentId);
+      } else {
+        next.add(assignmentId);
+      }
+      return next;
+    });
   };
 
   if (assignments.length === 0) {
@@ -50,6 +69,7 @@ const AssignmentsList = ({
       {assignments.map((assignment) => {
         const stats = getSubmissionStats(assignment.id);
         const isVoice = assignment.assignment_mode === 'voice_practice';
+        const isExpanded = expandedAssignments.has(assignment.id);
         
         return (
           <Card key={assignment.id} className="glass">
@@ -90,10 +110,6 @@ const AssignmentsList = ({
                   <MessageSquare className="h-3 w-3" />
                   <span>{assignment.min_messages} min messages</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  <span>{assignment.max_duration_minutes} min max</span>
-                </div>
                 {assignment.due_date && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
@@ -102,30 +118,93 @@ const AssignmentsList = ({
                 )}
               </div>
 
-              <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">
-                      {stats.completed} / {stats.total} completed
-                    </span>
+              <div className="mt-4 pt-3 border-t border-border/50">
+                <Collapsible open={isExpanded} onOpenChange={() => toggleExpanded(assignment.id)}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">
+                          {stats.completed} / {stats.total} completed
+                        </span>
+                      </div>
+                      {stats.inProgress > 0 && (
+                        <Badge variant="outline" className="text-xs">
+                          {stats.inProgress} in progress
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    {stats.total > 0 && (
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="gap-1">
+                          <Eye className="h-4 w-4" />
+                          View Submissions
+                          {isExpanded ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                    )}
                   </div>
-                  {stats.inProgress > 0 && (
-                    <Badge variant="outline" className="text-xs">
-                      {stats.inProgress} in progress
-                    </Badge>
-                  )}
-                </div>
-                {stats.avgScore > 0 && (
-                  <div className="text-sm">
-                    Avg: <span className="font-semibold">{Math.round(stats.avgScore)}%</span>
-                  </div>
-                )}
+
+                  <CollapsibleContent className="mt-3">
+                    <div className="bg-muted/30 rounded-lg p-3 space-y-2">
+                      <div className="text-xs font-medium text-muted-foreground mb-2">
+                        Student Submissions
+                      </div>
+                      {stats.submissions.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">No submissions yet</p>
+                      ) : (
+                        stats.submissions.map((sub) => (
+                          <div 
+                            key={sub.id} 
+                            className="flex items-center justify-between bg-background/50 rounded-md px-3 py-2"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Badge 
+                                variant={sub.status === 'graded' || sub.status === 'completed' ? 'default' : 'secondary'}
+                                className={`text-xs ${sub.status === 'graded' ? 'bg-green-600' : ''}`}
+                              >
+                                {sub.status}
+                              </Badge>
+                              <span className="text-sm">
+                                {sub.message_count || 0} messages
+                              </span>
+                              {sub.completed_at && (
+                                <span className="text-xs text-muted-foreground">
+                                  {format(new Date(sub.completed_at), 'MMM d, h:mm a')}
+                                </span>
+                              )}
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setSelectedSubmission(sub)}
+                              className="gap-1"
+                            >
+                              <Eye className="h-3 w-3" />
+                              Transcript
+                            </Button>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
             </CardContent>
           </Card>
         );
       })}
+
+      <SubmissionTranscriptModal
+        submission={selectedSubmission}
+        isOpen={selectedSubmission !== null}
+        onClose={() => setSelectedSubmission(null)}
+      />
     </div>
   );
 };

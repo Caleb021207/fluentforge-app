@@ -23,9 +23,11 @@ export interface StudentSubmission {
   student_id: string;
   status: string;
   ai_score: number | null;
+  ai_feedback: unknown;
   xp_awarded: number;
   message_count: number;
   completed_at: string | null;
+  transcript: unknown;
   student_name?: string;
 }
 
