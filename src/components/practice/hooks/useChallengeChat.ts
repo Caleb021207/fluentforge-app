@@ -21,33 +21,93 @@ interface ChallengeChatOptions {
 /**
  * useChallengeChat - A specialized hook for Challenge Mode that:
  * 1. Uses the EXACT CEFR level from the assignment (no overrides from student proficiency)
- * 2. Passes the assignment topic for contextual hints
- * 3. Disables session storage persistence (assignments are one-time)
+ * 2. Generates an AI opening message based on the assignment topic
+ * 3. Keeps conversation focused on the assignment topic
  */
 export const useChallengeChat = ({ cefrLevel, topicPrompt }: ChallengeChatOptions) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: 'user' | 'assistant' | 'system'; content: string}[]>([]);
+  const [isGeneratingOpening, setIsGeneratingOpening] = useState(false);
   const { t, currentLanguage } = useLocalization();
   const { isLoading, hasError, sendChatMessage, extractStringFromTranslation } = useChatMessaging();
   const { startSession, sessionId } = useSessionManagement();
   const { toast } = useToast();
   
   const currentSessionIdRef = useRef<string | null>(null);
+  const hasGeneratedOpening = useRef(false);
 
   // Normalize CEFR level (e.g., "A2/B1" -> "A2", "B1+" -> "B1")
   const normalizedCefrLevel = cefrLevel.toUpperCase().split('/')[0].replace('+', '').trim();
   
   console.log(`[useChallengeChat] Initialized with CEFR=${normalizedCefrLevel}, topic="${topicPrompt.substring(0, 50)}..."`);
 
-  // Initialize session on mount
+  // Generate an AI opening message when the chat starts
+  const generateOpeningMessage = useCallback(async () => {
+    if (hasGeneratedOpening.current || !topicPrompt) return;
+    hasGeneratedOpening.current = true;
+    
+    setIsGeneratingOpening(true);
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        console.error('[useChallengeChat] No auth session for opening message');
+        return;
+      }
+
+      const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
+      const userLanguage = localStorage.getItem("nativeLanguage") || "english";
+
+      console.log(`[useChallengeChat] Generating opening message for topic: "${topicPrompt.substring(0, 50)}..."`);
+
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+        body: {
+          requestType: 'opening_message',
+          userLanguage,
+          targetLanguage,
+          cefrLevel: normalizedCefrLevel,
+          assignmentTopic: topicPrompt
+        }
+      });
+
+      if (error) {
+        console.error('[useChallengeChat] Error generating opening message:', error);
+        return;
+      }
+
+      if (data?.content) {
+        const openingMessage: Message = {
+          role: "assistant",
+          content: data.content,
+          translation: data.translation || undefined
+        };
+        
+        setMessages([openingMessage]);
+        setApiConversationHistory([
+          { role: 'assistant', content: data.content }
+        ]);
+        
+        console.log(`[useChallengeChat] Opening message generated successfully`);
+      }
+    } catch (error) {
+      console.error('[useChallengeChat] Failed to generate opening message:', error);
+    } finally {
+      setIsGeneratingOpening(false);
+    }
+  }, [topicPrompt, normalizedCefrLevel]);
+
+  // Initialize session and generate opening message on mount
   useEffect(() => {
     const initSession = async () => {
       const newSessionId = await startSession('challenge_mode');
       currentSessionIdRef.current = newSessionId;
+      
+      // Generate the opening message after session is ready
+      await generateOpeningMessage();
     };
     initSession();
-  }, []);
+  }, [generateOpeningMessage]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,18 +146,43 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt }: ChallengeChatOption
     }
   };
   
-  // Send function that ALWAYS uses the assignment's CEFR level
+  // Send function that ALWAYS uses the assignment's CEFR level and topic
   const sendChatMessageForChallenge = async (message: string) => {
     try {
-      // CRITICAL: Always pass the assignment's CEFR level, never let it be overridden
-      console.log(`[useChallengeChat] Sending message with CEFR=${normalizedCefrLevel}`);
-      return await sendChatMessage(
-        message, 
-        false, // Don't correct grammar in challenge mode
-        apiConversationHistory, 
-        normalizedCefrLevel.toLowerCase(), // conversationLevel
-        normalizedCefrLevel // cefrLevel - this takes priority
-      );
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        console.error('[useChallengeChat] No auth session');
+        return null;
+      }
+
+      const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
+      const userLanguage = localStorage.getItem("nativeLanguage") || "english";
+
+      // CRITICAL: Always pass the assignment's CEFR level and topic
+      console.log(`[useChallengeChat] Sending message with CEFR=${normalizedCefrLevel}, topic="${topicPrompt.substring(0, 30)}..."`);
+      
+      const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+        body: {
+          message,
+          userLanguage,
+          targetLanguage,
+          conversationHistory: apiConversationHistory,
+          conversationLevel: normalizedCefrLevel.toLowerCase(),
+          cefrLevel: normalizedCefrLevel,
+          assignmentTopic: topicPrompt, // Pass topic to keep conversation focused
+          correctGrammar: false
+        }
+      });
+
+      if (error) {
+        console.error('[useChallengeChat] Chat error:', error);
+        return null;
+      }
+
+      return {
+        content: data.content || '',
+        translation: data.translation || ''
+      };
     } catch (error) {
       console.error("[useChallengeChat] Error sending message:", error);
       return null;
@@ -119,7 +204,7 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt }: ChallengeChatOption
     messages,
     input,
     setInput,
-    isLoading,
+    isLoading: isLoading || isGeneratingOpening,
     hasError,
     handleSubmit,
     getPlaceholderText,

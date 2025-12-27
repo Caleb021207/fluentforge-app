@@ -90,7 +90,8 @@ serve(async (req) => {
       conversationLevel = "intermediate",  // Conversation level setting (basic/intermediate/advanced)
       cefrLevel = null, // Direct CEFR level override (A1, A2, B1, B2, C1, C2)
       correctGrammar = false, // Flag to control grammar correction
-      assignmentTopic = "" // Assignment topic for contextual hints
+      assignmentTopic = "", // Assignment topic for contextual hints
+      isOpeningMessage = false // Whether this is an AI-generated opening message for an assignment
     } = requestData;
 
     // ===== INPUT VALIDATION =====
@@ -291,6 +292,95 @@ serve(async (req) => {
       );
     }
 
+    // Handle opening message requests for Challenge Mode assignments
+    if (requestType === 'opening_message') {
+      // Determine effective CEFR level for opening message
+      const conversationToLevelMap: Record<string, string> = {
+        'basic': 'A1',
+        'intermediate': 'B1',
+        'advanced': 'C1'
+      };
+      const effectiveCefrLevel = cefrLevel 
+        ? cefrLevel.toUpperCase().split('/')[0].replace('+', '') 
+        : conversationToLevelMap[conversationLevel] || 'B1';
+      
+      const isBeginnerLevel = ['A1', 'A2'].includes(effectiveCefrLevel);
+      const targetLangDisplay = getLanguageDisplayName(targetLanguage);
+      const userLangDisplay = getLanguageDisplayName(userLanguage);
+      
+      const openingPrompt = `You are a friendly ${targetLangDisplay} language tutor starting a conversation with a student at CEFR ${effectiveCefrLevel} level.
+
+ASSIGNMENT TOPIC: "${assignmentTopic}"
+
+Your task: Generate a friendly, natural opening message that:
+1. Greets the student warmly in ${targetLangDisplay}
+2. Directly introduces the assignment topic
+3. Asks an opening question to get the conversation started on the topic
+4. Uses vocabulary and sentence structure appropriate for ${effectiveCefrLevel} level
+
+${isBeginnerLevel ? `Since this is ${effectiveCefrLevel} level:
+- Use very simple, short sentences (5-10 words max)
+- Include ${userLangDisplay} translations in parentheses for key phrases
+- Make the question easy to answer with basic vocabulary` : `Since this is ${effectiveCefrLevel} level:
+- Do NOT include inline parenthetical translations
+- Use natural, fluent ${targetLangDisplay}
+- The student can use the "Show translation" button if needed`}
+
+Be warm, encouraging, and get straight to the topic!`;
+
+      try {
+        const openingResponse = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: openingPrompt },
+            { role: "user", content: `Start the conversation about: ${assignmentTopic}` }
+          ],
+          max_tokens: 300,
+        });
+
+        const content = openingResponse.choices[0].message.content || "";
+        let translation = "";
+        
+        // Generate translation for the opening message
+        if (userLanguage && userLanguage !== targetLanguage) {
+          try {
+            const translationResponse = await openai.chat.completions.create({
+              model: "gpt-4o-mini",
+              messages: [
+                {
+                  role: "system",
+                  content: `Translate this ${targetLangDisplay} text to ${userLangDisplay}. Only provide the translation, nothing else.`,
+                },
+                { role: "user", content },
+              ],
+              max_tokens: 300,
+            });
+            translation = translationResponse.choices[0].message.content || "";
+          } catch (translationError) {
+            console.error("Opening message translation error:", translationError);
+          }
+        }
+
+        console.log(`Generated opening message for assignment topic: "${assignmentTopic?.substring(0, 50)}..." at ${effectiveCefrLevel} level`);
+
+        return new Response(
+          JSON.stringify({ content, translation }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      } catch (openingError) {
+        console.error("Error generating opening message:", openingError);
+        return new Response(
+          JSON.stringify({ error: "Failed to generate opening message" }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+    }
+
     // If no specific requestType is provided, proceed with conversation handling
     const input = trimmedMessage;
 
@@ -442,28 +532,35 @@ serve(async (req) => {
     const targetPercent = 100 - nativePercent;
     
     let nativeLanguageGuidance = '';
+    // For A1/A2 levels, include inline translations in parentheses
+    // For B1+ levels, do NOT include inline translations - the UI has a "Show translation" toggle
+    const isBeginnerLevel = ['A1', 'A2'].includes(effectiveCefrLevel);
+    
     if (currentLevel.explanationStyle === 'native_heavy') {
       nativeLanguageGuidance = `LANGUAGE SUPPORT - HIGH NATIVE LANGUAGE MODE (${nativePercent}% ${userLangDisplay}):
 - Use ${userLangDisplay} for ${nativePercent}% of your responses
-- ALWAYS provide ${userLangDisplay} translations for new vocabulary
+- ALWAYS provide ${userLangDisplay} translations for new vocabulary IN PARENTHESES like: "Hola (Hello)"
 - Explain grammar concepts primarily in ${userLangDisplay}
 - When the student seems confused, immediately switch to ${userLangDisplay}
-- Use short, simple ${targetLangDisplay} phrases with immediate translations`;
+- Use short, simple ${targetLangDisplay} phrases with immediate translations in parentheses`;
     } else if (currentLevel.explanationStyle === 'mixed') {
       nativeLanguageGuidance = `LANGUAGE SUPPORT - BALANCED MODE (${nativePercent}% ${userLangDisplay}):
 - Use ${targetLangDisplay} for most of your response (~${targetPercent}%)
 - Provide ${userLangDisplay} support for complex explanations
-- Translate new or difficult vocabulary
+- Translate new or difficult vocabulary ONLY when asked
+- Do NOT include inline parenthetical translations - the student can use the "Show translation" button
 - Mix languages naturally based on topic difficulty`;
     } else if (currentLevel.explanationStyle === 'target_heavy') {
       nativeLanguageGuidance = `LANGUAGE SUPPORT - IMMERSIVE MODE (${nativePercent}% ${userLangDisplay}):
 - Use ${targetLangDisplay} for ${targetPercent}% of your response
 - Only use ${userLangDisplay} for critical clarifications
+- Do NOT include inline parenthetical translations - the student can use the "Show translation" button
 - Challenge the student to understand from context`;
     } else {
       nativeLanguageGuidance = `LANGUAGE SUPPORT - FULL IMMERSION (${nativePercent}% ${userLangDisplay}):
 - Use ${targetLangDisplay} almost exclusively (${targetPercent}%+)
 - Only use ${userLangDisplay} if absolutely critical for comprehension
+- NEVER include inline parenthetical translations - the student is at an advanced level
 - Treat the student as near-native level`;
     }
     
@@ -512,6 +609,15 @@ Be specific, helpful, and encouraging. When in doubt, don't correct it.`
   : 
   `CONVERSATION MODE: Respond naturally in ${targetLangDisplay} at ${currentLevel.cefr} level. Do NOT provide grammar corrections unless specifically asked.`
 }
+
+${assignmentTopic ? `
+ASSIGNMENT CONTEXT (VERY IMPORTANT):
+The student is working on this specific assignment: "${assignmentTopic}"
+- ALWAYS keep the conversation focused on this topic
+- Guide the conversation back to this topic if the student strays
+- Help the student practice language skills directly related to this task
+- Do NOT let the conversation wander to unrelated topics
+` : ''}
 
 Always respond primarily in ${targetLangDisplay}, following the language mixing guidelines above based on the user's level. If asked to translate or explain grammar, provide clear answers.`;
 
