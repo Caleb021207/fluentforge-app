@@ -9,17 +9,43 @@ import ClassScoreProgressionChart from "@/components/teacher/ClassScoreProgressi
 import ClassGrammarAccuracyChart from "@/components/teacher/ClassGrammarAccuracyChart";
 import ClassConversationComplexityChart from "@/components/teacher/ClassConversationComplexityChart";
 import StudentTestScores from "@/components/profile/StudentTestScores";
+import TeacherAssignmentsView from "@/components/assignments/TeacherAssignmentsView";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { fadeIn, slideInUp, staggeredContainer } from "@/lib/animations";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const ClassMetrics = () => {
   const { t } = useLocalization();
   const navigate = useNavigate();
   const { isTeacher, teacherId, isLoading: teacherLoading } = useTeacherStatus();
   const { data: metrics, isLoading: metricsLoading } = useTeacherClassMetrics(teacherId);
+  const [classes, setClasses] = useState<any[]>([]);
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+
+  // Fetch teacher's classes
+  useEffect(() => {
+    const fetchClasses = async () => {
+      if (!teacherId) return;
+      
+      const { data } = await supabase
+        .from('classes')
+        .select('id, name, class_code')
+        .eq('teacher_id', teacherId)
+        .order('name');
+      
+      if (data && data.length > 0) {
+        setClasses(data);
+        setSelectedClassId(data[0].id);
+      }
+    };
+    
+    fetchClasses();
+  }, [teacherId]);
 
   if (teacherLoading || metricsLoading) {
     return (
@@ -52,6 +78,8 @@ const ClassMetrics = () => {
   const avgComplexity = metrics?.complexityTrends?.length
     ? Math.round(metrics.complexityTrends.reduce((sum, item) => sum + item.avgComplexity, 0) / metrics.complexityTrends.length)
     : null;
+
+  const selectedClass = classes.find(c => c.id === selectedClassId);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 p-4 md:p-8">
@@ -150,29 +178,98 @@ const ClassMetrics = () => {
           </Card>
         </motion.div>
 
-        {/* Class-Wide Performance Charts */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="space-y-6"
-        >
-          <ClassScoreProgressionChart data={metrics?.scoreProgression || []} />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ClassGrammarAccuracyChart data={metrics?.grammarTrends || []} />
-            <ClassConversationComplexityChart data={metrics?.complexityTrends || []} />
-          </div>
-        </motion.div>
+        {/* Tabs for Charts / Assignments */}
+        <Tabs defaultValue="metrics" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="metrics">Performance Metrics</TabsTrigger>
+            <TabsTrigger value="assignments">Assignments</TabsTrigger>
+          </TabsList>
 
-        {/* Student Roster & Performance */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          <StudentTestScores teacherId={teacherId || ""} onDataUpdate={() => {}} />
-        </motion.div>
+          <TabsContent value="metrics" className="space-y-6">
+            {/* Class-Wide Performance Charts */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="space-y-6"
+            >
+              <ClassScoreProgressionChart data={metrics?.scoreProgression || []} />
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <ClassGrammarAccuracyChart data={metrics?.grammarTrends || []} />
+                <ClassConversationComplexityChart data={metrics?.complexityTrends || []} />
+              </div>
+            </motion.div>
+
+            {/* Student Roster & Performance */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <StudentTestScores teacherId={teacherId || ""} onDataUpdate={() => {}} />
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="assignments" className="space-y-6">
+            {/* Class Selector */}
+            {classes.length > 0 && (
+              <Card className="glass border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-lg">Select Class</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {classes.map((cls) => (
+                      <Button
+                        key={cls.id}
+                        variant={selectedClassId === cls.id ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedClassId(cls.id)}
+                      >
+                        {cls.name}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Teacher Assignments View */}
+            {selectedClassId && selectedClass && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card className="glass border-primary/20">
+                  <CardContent className="pt-6">
+                    <TeacherAssignmentsView 
+                      classId={selectedClassId} 
+                      className={selectedClass.name}
+                    />
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+
+            {classes.length === 0 && (
+              <Card className="glass border-primary/20">
+                <CardContent className="py-12 text-center">
+                  <p className="text-muted-foreground">
+                    No classes found. Create a class first to add assignments.
+                  </p>
+                  <Button 
+                    className="mt-4"
+                    onClick={() => navigate("/teacher/classes")}
+                  >
+                    Manage Classes
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

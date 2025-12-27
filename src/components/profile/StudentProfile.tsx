@@ -1,14 +1,14 @@
-
 import { useState, useEffect } from "react";
 import { InteractiveCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { User, Sparkles, BookOpen } from "lucide-react";
+import { User, Sparkles, BookOpen, ClipboardList } from "lucide-react";
 import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetrics } from "@/types/school";
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { LeaderboardSection } from "./LeaderboardSection";
 import { getFluencyCertStatus, getCertDisplayName, getCertDisplayDescription } from "@/utils/fluencyCertification";
+import StudentAssignmentsView from "@/components/assignments/StudentAssignmentsView";
 
 interface StudentProfileProps {
   profile: ExtendedUserProfile;
@@ -110,6 +110,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Student Assignments Section - TOP PRIORITY */}
+      <StudentAssignmentsView />
+
       {/* Leaderboard Section */}
       <LeaderboardSection />
 
