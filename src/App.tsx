@@ -19,6 +19,7 @@ import ClassMetrics from "@/pages/ClassMetrics";
 import Certificate from "@/pages/Certificate";
 import PersonalFlashcards from "@/pages/PersonalFlashcards";
 import TeacherDashboard from "@/pages/TeacherDashboard";
+import TeacherClasses from "@/pages/TeacherClasses";
 import ChallengeMode from "@/pages/ChallengeMode";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path="/personal-flashcards" element={<PersonalFlashcards />} />
             <Route path="/challenge-mode" element={<ChallengeMode />} />
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+            <Route path="/teacher/classes" element={<TeacherClasses />} />
             
           </Routes>
           <Toaster />

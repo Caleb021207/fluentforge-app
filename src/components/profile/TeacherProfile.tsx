@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { InteractiveCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, BarChart3, GraduationCap, TrendingUp } from "lucide-react";
+import { BookOpen, Users, BarChart3, GraduationCap, TrendingUp, LayoutDashboard, FolderOpen, PlusCircle } from "lucide-react";
 import { ExtendedUserProfile } from "@/types/school";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,45 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Quick Actions for Teachers */}
+      <InteractiveCard>
+        <div className="p-6">
+          <h3 className="text-lg font-semibold flex items-center gap-2 mb-4">
+            <LayoutDashboard className="h-5 w-5 text-primary" />
+            Teacher Quick Actions
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Button
+              onClick={() => navigate("/teacher/dashboard")}
+              variant="outline"
+              className="h-auto py-4 flex flex-col items-center gap-2"
+            >
+              <BarChart3 className="h-6 w-6 text-primary" />
+              <span className="text-sm font-medium">Teacher Dashboard</span>
+              <span className="text-xs text-muted-foreground">View analytics & reports</span>
+            </Button>
+            <Button
+              onClick={() => navigate("/teacher/classes")}
+              variant="outline"
+              className="h-auto py-4 flex flex-col items-center gap-2"
+            >
+              <FolderOpen className="h-6 w-6 text-primary" />
+              <span className="text-sm font-medium">Manage Classes</span>
+              <span className="text-xs text-muted-foreground">View & organize classes</span>
+            </Button>
+            <Button
+              onClick={() => navigate("/class-metrics")}
+              variant="outline"
+              className="h-auto py-4 flex flex-col items-center gap-2"
+            >
+              <PlusCircle className="h-6 w-6 text-primary" />
+              <span className="text-sm font-medium">Create Assignment</span>
+              <span className="text-xs text-muted-foreground">Assign challenges</span>
+            </Button>
+          </div>
+        </div>
+      </InteractiveCard>
+
       {/* View Class Metrics Button */}
       <InteractiveCard>
         <div className="p-6">
