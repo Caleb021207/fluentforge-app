@@ -242,38 +242,133 @@ export type Database = {
         }
         Relationships: []
       }
+      assignment_submissions: {
+        Row: {
+          accepted_at: string | null
+          ai_feedback: Json | null
+          ai_score: number | null
+          assignment_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          expires_at: string | null
+          id: string
+          message_count: number | null
+          session_id: string | null
+          started_at: string | null
+          status: string | null
+          student_id: string
+          teacher_notes: string | null
+          teacher_override_score: number | null
+          transcript: Json | null
+          updated_at: string | null
+          xp_awarded: number | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          ai_feedback?: Json | null
+          ai_score?: number | null
+          assignment_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          expires_at?: string | null
+          id?: string
+          message_count?: number | null
+          session_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          student_id: string
+          teacher_notes?: string | null
+          teacher_override_score?: number | null
+          transcript?: Json | null
+          updated_at?: string | null
+          xp_awarded?: number | null
+        }
+        Update: {
+          accepted_at?: string | null
+          ai_feedback?: Json | null
+          ai_score?: number | null
+          assignment_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          expires_at?: string | null
+          id?: string
+          message_count?: number | null
+          session_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          student_id?: string
+          teacher_notes?: string | null
+          teacher_override_score?: number | null
+          transcript?: Json | null
+          updated_at?: string | null
+          xp_awarded?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignment_submissions_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assignments: {
         Row: {
+          assignment_mode: string | null
           assignment_type: string | null
+          cefr_level: string | null
           class_id: string | null
           created_at: string
           description: string | null
           due_date: string | null
+          grading_rubric: Json | null
+          grammar_requirements: string[] | null
           id: string
+          max_duration_minutes: number | null
+          min_messages: number | null
           points_possible: number
           title: string
+          topic_prompt: string | null
           updated_at: string
         }
         Insert: {
+          assignment_mode?: string | null
           assignment_type?: string | null
+          cefr_level?: string | null
           class_id?: string | null
           created_at?: string
           description?: string | null
           due_date?: string | null
+          grading_rubric?: Json | null
+          grammar_requirements?: string[] | null
           id?: string
+          max_duration_minutes?: number | null
+          min_messages?: number | null
           points_possible?: number
           title: string
+          topic_prompt?: string | null
           updated_at?: string
         }
         Update: {
+          assignment_mode?: string | null
           assignment_type?: string | null
+          cefr_level?: string | null
           class_id?: string | null
           created_at?: string
           description?: string | null
           due_date?: string | null
+          grading_rubric?: Json | null
+          grammar_requirements?: string[] | null
           id?: string
+          max_duration_minutes?: number | null
+          min_messages?: number | null
           points_possible?: number
           title?: string
+          topic_prompt?: string | null
           updated_at?: string
         }
         Relationships: [
