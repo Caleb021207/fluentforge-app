@@ -24,7 +24,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ChatContainer from "@/components/practice/ChatContainer";
-import { Message } from "@/types/chat";
 import { useChatMessages } from "@/components/practice/hooks/useChatMessages";
 
 interface ChallengeState {
@@ -47,12 +46,21 @@ const ChallengeMode = () => {
   const { toast } = useToast();
   const state = location.state as ChallengeState | null;
   
-  const [messages, setMessages] = useState<Message[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [startTime] = useState<Date>(new Date());
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Use the existing chat messages hook with the assignment's CEFR level
+  const {
+    messages,
+    input,
+    setInput,
+    handleSubmit: handleChatSubmit,
+    isLoading,
+    getPlaceholderText,
+  } = useChatMessages(state?.assignment.cefr_level?.toLowerCase() || 'intermediate');
 
   // Redirect if no assignment state
   useEffect(() => {
@@ -103,14 +111,14 @@ const ChallengeMode = () => {
       title: "Time's Up!",
       description: "Your conversation is being submitted automatically",
     });
-    handleSubmit();
+    handleAssignmentSubmit();
   };
 
   const userMessageCount = messages.filter(m => m.role === 'user').length;
   const progress = Math.min((userMessageCount / (state?.assignment.min_messages || 10)) * 100, 100);
   const canSubmit = userMessageCount >= (state?.assignment.min_messages || 10);
 
-  const handleSubmit = async () => {
+  const handleAssignmentSubmit = async () => {
     if (!state || isSubmitting) return;
     
     setIsSubmitting(true);
@@ -209,7 +217,7 @@ const ChallengeMode = () => {
             </div>
             <Button 
               size="sm"
-              onClick={handleSubmit}
+              onClick={handleAssignmentSubmit}
               disabled={!canSubmit || isSubmitting}
               className={canSubmit ? 'bg-green-600 hover:bg-green-700' : ''}
             >
@@ -246,10 +254,12 @@ const ChallengeMode = () => {
         <div className="h-[60vh]">
           <ChatContainer
             messages={messages}
-            setMessages={setMessages}
-            conversationLevel={state.assignment.cefr_level?.toLowerCase() || 'intermediate'}
+            input={input}
+            setInput={setInput}
+            handleSubmit={handleChatSubmit}
+            isLoading={isLoading}
+            getPlaceholderText={getPlaceholderText}
             bilingualMode={false}
-            correctGrammar={true}
           />
         </div>
       </div>

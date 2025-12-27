@@ -9,7 +9,7 @@ import type { ChatMessage as ChatMessageType } from "@/types/chat";
 import type { TranslationType } from "./hooks/useTranslationHandler";
 
 interface ChatMessageProps {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
   translation?: string | TranslationType;
   onPlayAudio?: (text: string) => void;

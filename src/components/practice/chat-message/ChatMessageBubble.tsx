@@ -15,7 +15,7 @@ interface GrammarFeedback {
 }
 
 interface ChatMessageBubbleProps {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   safeContent: string;
   safeTranslation: string;
   showTranslation: boolean;

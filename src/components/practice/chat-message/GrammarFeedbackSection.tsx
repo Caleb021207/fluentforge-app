@@ -16,7 +16,7 @@ interface GrammarFeedback {
 
 interface GrammarFeedbackSectionProps {
   feedback: GrammarFeedback | string | null;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
 }
 
 /**

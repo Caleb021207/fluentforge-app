@@ -3,7 +3,7 @@ import React from "react";
 import AudioButton from "./AudioButton";
 
 interface TranslationContentProps {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   translation: string;
   isTranslationPlaying: boolean;
   isTranslationLoading: boolean;
