@@ -87,7 +87,8 @@ serve(async (req) => {
       userLanguage: rawUserLanguage, 
       targetLanguage: rawTargetLanguage, 
       conversationHistory = [],
-      conversationLevel = "intermediate",  // Add conversation level with default
+      conversationLevel = "intermediate",  // Conversation level setting (basic/intermediate/advanced)
+      cefrLevel = null, // Direct CEFR level override (A1, A2, B1, B2, C1, C2)
       correctGrammar = false // Flag to control grammar correction
     } = requestData;
 
@@ -303,52 +304,167 @@ serve(async (req) => {
     const targetLangDisplay = getLanguageDisplayName(targetLanguage);
 
     // Step 2: Generate Reply from OpenAI with updated system message
-    // Modified to only correct grammar if explicitly requested
-    // Map conversation level to CEFR levels with native language flexibility
-    const levelMapping = {
-      basic: {
-        cefr: "A1-A2",
-        nativeLanguageRatio: 0.5, // 50% native language support for beginners
-        description: "Use simple vocabulary, short sentences, and basic grammar structures. Speak about everyday topics like family, food, weather, and daily routines.",
-        explanationStyle: "Provide explanations primarily in the user's native language. Use short, simple target language phrases with immediate translations."
+    // ADAPTIVE PROFICIENCY: Use direct CEFR level if provided, else map from conversationLevel
+    
+    // CEFR-based behavior configuration (matches src/utils/proficiencyMapping.ts)
+    const LEVEL_BEHAVIOR: Record<string, {
+      cefr: string;
+      nativeLanguageRatio: number;
+      responseComplexity: string;
+      sentenceLength: string;
+      vocabularyLevel: string;
+      grammarFocus: string[];
+      explanationStyle: string;
+    }> = {
+      'A1': {
+        cefr: 'A1',
+        nativeLanguageRatio: 0.6,
+        responseComplexity: 'simple',
+        sentenceLength: 'short',
+        vocabularyLevel: 'basic_500',
+        grammarFocus: ['present_simple', 'basic_questions', 'common_nouns'],
+        explanationStyle: 'native_heavy'
       },
-      intermediate: {
-        cefr: "B1", 
-        nativeLanguageRatio: 0.25, // 25% native language support
-        description: "Use more complex sentences with connecting words. Discuss opinions, experiences, plans, and abstract concepts. Include varied vocabulary and grammar structures.",
-        explanationStyle: "Use target language for most responses. Provide native language support only when clarifying complex concepts or when the user seems confused."
+      'A2': {
+        cefr: 'A2',
+        nativeLanguageRatio: 0.45,
+        responseComplexity: 'simple',
+        sentenceLength: 'short',
+        vocabularyLevel: 'elementary_1000',
+        grammarFocus: ['present_continuous', 'past_simple', 'basic_prepositions'],
+        explanationStyle: 'native_heavy'
       },
-      advanced: {
-        cefr: "B2-C1",
-        nativeLanguageRatio: 0.08, // 8% native language support - almost always target language
-        description: "Use sophisticated vocabulary, complex sentence structures, and nuanced expressions. Discuss complex topics, abstract ideas, and use idiomatic expressions appropriately.",
-        explanationStyle: "Use target language almost exclusively. Only use native language for highly technical or nuanced explanations if absolutely necessary."
+      'B1': {
+        cefr: 'B1',
+        nativeLanguageRatio: 0.25,
+        responseComplexity: 'moderate',
+        sentenceLength: 'medium',
+        vocabularyLevel: 'intermediate_2000',
+        grammarFocus: ['past_tenses', 'conditionals_type1', 'modal_verbs'],
+        explanationStyle: 'mixed'
+      },
+      'B2': {
+        cefr: 'B2',
+        nativeLanguageRatio: 0.12,
+        responseComplexity: 'complex',
+        sentenceLength: 'medium',
+        vocabularyLevel: 'upper_intermediate_4000',
+        grammarFocus: ['conditionals_type2_3', 'passive_voice', 'reported_speech'],
+        explanationStyle: 'target_heavy'
+      },
+      'C1': {
+        cefr: 'C1',
+        nativeLanguageRatio: 0.05,
+        responseComplexity: 'advanced',
+        sentenceLength: 'long',
+        vocabularyLevel: 'advanced_6000',
+        grammarFocus: ['complex_structures', 'nuanced_expressions', 'formal_registers'],
+        explanationStyle: 'target_only'
+      },
+      'C2': {
+        cefr: 'C2',
+        nativeLanguageRatio: 0.02,
+        responseComplexity: 'advanced',
+        sentenceLength: 'varied',
+        vocabularyLevel: 'native_like',
+        grammarFocus: ['stylistic_choices', 'idiomatic_expressions', 'register_switching'],
+        explanationStyle: 'target_only'
       }
     };
     
-    const currentLevel = levelMapping[conversationLevel as keyof typeof levelMapping] || levelMapping.intermediate;
+    // Determine effective CEFR level
+    const conversationToLevelMap: Record<string, string> = {
+      'basic': 'A1',
+      'intermediate': 'B1',
+      'advanced': 'C1'
+    };
+    
+    const effectiveCefrLevel = cefrLevel 
+      ? cefrLevel.toUpperCase().split('/')[0].replace('+', '') 
+      : conversationToLevelMap[conversationLevel] || 'B1';
+    
+    const currentLevel = LEVEL_BEHAVIOR[effectiveCefrLevel] || LEVEL_BEHAVIOR['B1'];
+    
+    console.log(`Adaptive proficiency: cefrLevel=${cefrLevel}, conversationLevel=${conversationLevel}, effective=${effectiveCefrLevel}`);
+    
+    // Build complexity guidance
+    let complexityGuidance = '';
+    switch (currentLevel.sentenceLength) {
+      case 'short':
+        complexityGuidance = 'Keep sentences SHORT (5-10 words max). Use simple Subject-Verb-Object structures.';
+        break;
+      case 'medium':
+        complexityGuidance = 'Use medium-length sentences (10-20 words). Include some compound sentences.';
+        break;
+      case 'long':
+        complexityGuidance = 'Use longer, more complex sentences with subordinate clauses.';
+        break;
+      case 'varied':
+        complexityGuidance = 'Vary sentence length naturally like a native speaker.';
+        break;
+    }
+    
+    // Vocabulary guidance
+    let vocabGuidance = '';
+    switch (currentLevel.vocabularyLevel) {
+      case 'basic_500':
+        vocabGuidance = 'ONLY use the 500 most common words. Avoid idioms and specialized vocabulary.';
+        break;
+      case 'elementary_1000':
+        vocabGuidance = 'Use vocabulary from the 1000 most common words. Introduce simple idioms with explanations.';
+        break;
+      case 'intermediate_2000':
+        vocabGuidance = 'Use vocabulary up to 2000 common words. Include some idiomatic expressions.';
+        break;
+      case 'upper_intermediate_4000':
+        vocabGuidance = 'Use broader vocabulary (4000+ words). Include idioms and phrasal verbs.';
+        break;
+      case 'advanced_6000':
+        vocabGuidance = 'Use advanced vocabulary freely. Include nuanced expressions and register variations.';
+        break;
+      case 'native_like':
+        vocabGuidance = 'Use vocabulary without restrictions. Include regional expressions and cultural references.';
+        break;
+    }
     
     // Build native language guidance based on proficiency level
-    const nativeLanguageGuidance = currentLevel.nativeLanguageRatio >= 0.4
-      ? `LANGUAGE MIXING - HIGH SUPPORT MODE:
-- You may use ${userLangDisplay} for approximately ${Math.round(currentLevel.nativeLanguageRatio * 100)}% of your response
-- Always provide ${userLangDisplay} translations for new or complex vocabulary
-- When explaining grammar, use ${userLangDisplay} as the primary language
-- If the user seems confused, switch to ${userLangDisplay} to clarify
-- ${currentLevel.explanationStyle}`
-      : currentLevel.nativeLanguageRatio >= 0.15
-      ? `LANGUAGE MIXING - MODERATE SUPPORT:
-- Use ${targetLangDisplay} for most of your response (about ${Math.round((1 - currentLevel.nativeLanguageRatio) * 100)}%)
-- Provide ${userLangDisplay} support only for complex explanations
-- ${currentLevel.explanationStyle}`
-      : `LANGUAGE MIXING - MINIMAL SUPPORT:
-- Use ${targetLangDisplay} for ${Math.round((1 - currentLevel.nativeLanguageRatio) * 100)}% or more of your response
-- Only use ${userLangDisplay} if critically necessary for comprehension
-- ${currentLevel.explanationStyle}`;
+    const nativePercent = Math.round(currentLevel.nativeLanguageRatio * 100);
+    const targetPercent = 100 - nativePercent;
+    
+    let nativeLanguageGuidance = '';
+    if (currentLevel.explanationStyle === 'native_heavy') {
+      nativeLanguageGuidance = `LANGUAGE SUPPORT - HIGH NATIVE LANGUAGE MODE (${nativePercent}% ${userLangDisplay}):
+- Use ${userLangDisplay} for ${nativePercent}% of your responses
+- ALWAYS provide ${userLangDisplay} translations for new vocabulary
+- Explain grammar concepts primarily in ${userLangDisplay}
+- When the student seems confused, immediately switch to ${userLangDisplay}
+- Use short, simple ${targetLangDisplay} phrases with immediate translations`;
+    } else if (currentLevel.explanationStyle === 'mixed') {
+      nativeLanguageGuidance = `LANGUAGE SUPPORT - BALANCED MODE (${nativePercent}% ${userLangDisplay}):
+- Use ${targetLangDisplay} for most of your response (~${targetPercent}%)
+- Provide ${userLangDisplay} support for complex explanations
+- Translate new or difficult vocabulary
+- Mix languages naturally based on topic difficulty`;
+    } else if (currentLevel.explanationStyle === 'target_heavy') {
+      nativeLanguageGuidance = `LANGUAGE SUPPORT - IMMERSIVE MODE (${nativePercent}% ${userLangDisplay}):
+- Use ${targetLangDisplay} for ${targetPercent}% of your response
+- Only use ${userLangDisplay} for critical clarifications
+- Challenge the student to understand from context`;
+    } else {
+      nativeLanguageGuidance = `LANGUAGE SUPPORT - FULL IMMERSION (${nativePercent}% ${userLangDisplay}):
+- Use ${targetLangDisplay} almost exclusively (${targetPercent}%+)
+- Only use ${userLangDisplay} if absolutely critical for comprehension
+- Treat the student as near-native level`;
+    }
     
     let systemMessage = `You are a patient and encouraging AI language tutor helping users practice ${targetLangDisplay}.
 The user's native language is ${userLangDisplay}.
-The user is at ${currentLevel.cefr} level. ${currentLevel.description}
+The user is at CEFR ${currentLevel.cefr} level.
+
+COMPLEXITY REQUIREMENTS:
+${complexityGuidance}
+${vocabGuidance}
+Grammar focus: ${currentLevel.grammarFocus.join(', ')}
 
 ${nativeLanguageGuidance}
 
@@ -380,14 +496,6 @@ ONLY correct these EXPLICIT errors:
 - Gender agreement errors that are clearly wrong
 - Mixing languages when the user is trying to speak in only one language
 
-Example of what TO correct:
-User: "hola how you esta hoy"
-You should note: "📝 Grammar note: Try 'Hola, ¿cómo estás hoy?' - 'how you' should be '¿cómo estás?' (with accent), and stay in Spanish throughout."
-
-Example of what NOT to correct:
-User: "I'm going to the church" (both "to church" and "to the church" can be correct)
-DO NOT correct this - it's a stylistic preference, not an error.
-
 If their message has NO explicit errors, write: "📝 Grammar note: Great job! No corrections needed."
 
 Be specific, helpful, and encouraging. When in doubt, don't correct it.` 
@@ -397,7 +505,7 @@ Be specific, helpful, and encouraging. When in doubt, don't correct it.`
 
 Always respond primarily in ${targetLangDisplay}, following the language mixing guidelines above based on the user's level. If asked to translate or explain grammar, provide clear answers.`;
 
-    console.log(`Grammar correction enabled: ${correctGrammar}, Conversation level: ${conversationLevel} (${currentLevel.cefr}), Native language ratio: ${currentLevel.nativeLanguageRatio}`);
+    console.log(`Grammar correction enabled: ${correctGrammar}, Effective CEFR: ${effectiveCefrLevel}, Native language ratio: ${currentLevel.nativeLanguageRatio}`);
 
     // Use cheaper model if limit is reached
     const modelToUse = usingFallbackModel ? "gpt-3.5-turbo" : "gpt-4o-mini";
