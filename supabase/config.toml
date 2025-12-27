@@ -35,3 +35,6 @@ verify_jwt = true
 
 [functions.generate-personalized-flashcards]
 verify_jwt = true
+
+[functions.grade-assignment]
+verify_jwt = true
