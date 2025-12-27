@@ -17,6 +17,7 @@ import Legal from "@/pages/Legal";
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import ClassMetrics from "@/pages/ClassMetrics";
 import Certificate from "@/pages/Certificate";
+import PersonalFlashcards from "@/pages/PersonalFlashcards";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
             <Route path="/class-metrics" element={<ClassMetrics />} />
             <Route path="/certificate" element={<Certificate />} />
+            <Route path="/personal-flashcards" element={<PersonalFlashcards />} />
             
           </Routes>
           <Toaster />
