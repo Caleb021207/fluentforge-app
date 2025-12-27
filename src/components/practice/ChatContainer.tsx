@@ -24,6 +24,7 @@ interface ChatContainerProps {
   isLoading: boolean;
   getPlaceholderText: () => string;
   targetLanguage?: string;
+  bilingualMode?: boolean;
 }
 
 export default function ChatContainer({
@@ -33,7 +34,8 @@ export default function ChatContainer({
   handleSubmit,
   isLoading,
   getPlaceholderText,
-  targetLanguage = "spanish"
+  targetLanguage = "spanish",
+  bilingualMode = false
 }: ChatContainerProps) {
   const { t } = useLocalization();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -62,6 +64,7 @@ export default function ChatContainer({
                   role={message.role}
                   content={message.content}
                   translation={message.translation}
+                  bilingualMode={bilingualMode}
                 />
               ))}
               

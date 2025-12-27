@@ -304,27 +304,53 @@ serve(async (req) => {
 
     // Step 2: Generate Reply from OpenAI with updated system message
     // Modified to only correct grammar if explicitly requested
-    // Map conversation level to CEFR levels and descriptions
+    // Map conversation level to CEFR levels with native language flexibility
     const levelMapping = {
       basic: {
         cefr: "A1-A2",
-        description: "Use simple vocabulary, short sentences, and basic grammar structures. Speak about everyday topics like family, food, weather, and daily routines."
+        nativeLanguageRatio: 0.5, // 50% native language support for beginners
+        description: "Use simple vocabulary, short sentences, and basic grammar structures. Speak about everyday topics like family, food, weather, and daily routines.",
+        explanationStyle: "Provide explanations primarily in the user's native language. Use short, simple target language phrases with immediate translations."
       },
       intermediate: {
         cefr: "B1", 
-        description: "Use more complex sentences with connecting words. Discuss opinions, experiences, plans, and abstract concepts. Include varied vocabulary and grammar structures."
+        nativeLanguageRatio: 0.25, // 25% native language support
+        description: "Use more complex sentences with connecting words. Discuss opinions, experiences, plans, and abstract concepts. Include varied vocabulary and grammar structures.",
+        explanationStyle: "Use target language for most responses. Provide native language support only when clarifying complex concepts or when the user seems confused."
       },
       advanced: {
         cefr: "B2-C1",
-        description: "Use sophisticated vocabulary, complex sentence structures, and nuanced expressions. Discuss complex topics, abstract ideas, and use idiomatic expressions appropriately."
+        nativeLanguageRatio: 0.08, // 8% native language support - almost always target language
+        description: "Use sophisticated vocabulary, complex sentence structures, and nuanced expressions. Discuss complex topics, abstract ideas, and use idiomatic expressions appropriately.",
+        explanationStyle: "Use target language almost exclusively. Only use native language for highly technical or nuanced explanations if absolutely necessary."
       }
     };
     
     const currentLevel = levelMapping[conversationLevel as keyof typeof levelMapping] || levelMapping.intermediate;
     
+    // Build native language guidance based on proficiency level
+    const nativeLanguageGuidance = currentLevel.nativeLanguageRatio >= 0.4
+      ? `LANGUAGE MIXING - HIGH SUPPORT MODE:
+- You may use ${userLangDisplay} for approximately ${Math.round(currentLevel.nativeLanguageRatio * 100)}% of your response
+- Always provide ${userLangDisplay} translations for new or complex vocabulary
+- When explaining grammar, use ${userLangDisplay} as the primary language
+- If the user seems confused, switch to ${userLangDisplay} to clarify
+- ${currentLevel.explanationStyle}`
+      : currentLevel.nativeLanguageRatio >= 0.15
+      ? `LANGUAGE MIXING - MODERATE SUPPORT:
+- Use ${targetLangDisplay} for most of your response (about ${Math.round((1 - currentLevel.nativeLanguageRatio) * 100)}%)
+- Provide ${userLangDisplay} support only for complex explanations
+- ${currentLevel.explanationStyle}`
+      : `LANGUAGE MIXING - MINIMAL SUPPORT:
+- Use ${targetLangDisplay} for ${Math.round((1 - currentLevel.nativeLanguageRatio) * 100)}% or more of your response
+- Only use ${userLangDisplay} if critically necessary for comprehension
+- ${currentLevel.explanationStyle}`;
+    
     let systemMessage = `You are a patient and encouraging AI language tutor helping users practice ${targetLangDisplay}.
 The user's native language is ${userLangDisplay}.
 The user is at ${currentLevel.cefr} level. ${currentLevel.description}
+
+${nativeLanguageGuidance}
 
     ${correctGrammar ? 
   `⚠️ GRAMMAR CORRECTION MODE ACTIVE ⚠️
@@ -369,9 +395,9 @@ Be specific, helpful, and encouraging. When in doubt, don't correct it.`
   `CONVERSATION MODE: Respond naturally in ${targetLangDisplay} at ${currentLevel.cefr} level. Do NOT provide grammar corrections unless specifically asked.`
 }
 
-Always respond in ${targetLangDisplay}. If asked to translate or explain grammar, provide clear answers.`;
+Always respond primarily in ${targetLangDisplay}, following the language mixing guidelines above based on the user's level. If asked to translate or explain grammar, provide clear answers.`;
 
-    console.log(`Grammar correction enabled: ${correctGrammar}, Conversation level: ${conversationLevel} (${currentLevel.cefr})`);
+    console.log(`Grammar correction enabled: ${correctGrammar}, Conversation level: ${conversationLevel} (${currentLevel.cefr}), Native language ratio: ${currentLevel.nativeLanguageRatio}`);
 
     // Use cheaper model if limit is reached
     const modelToUse = usingFallbackModel ? "gpt-3.5-turbo" : "gpt-4o-mini";
