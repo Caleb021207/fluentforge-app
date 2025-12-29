@@ -225,6 +225,11 @@ const uiElementsTranslations: TranslationRecord = {
   averageClassScore: "Average Class Score",
   noClassDataYet: "No class data available yet. Students need to complete practice sessions.",
   across: "across",
+  
+  // Access control
+  accessDenied: "Access Denied",
+  accessDeniedMessage: "You don't have permission to access this page.",
+  newNotifications: "new notifications",
 };
 
 export default uiElementsTranslations;
