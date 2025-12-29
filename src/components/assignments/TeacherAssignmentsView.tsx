@@ -76,6 +76,7 @@ const TeacherAssignmentsView = ({ classId, className }: TeacherAssignmentsViewPr
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         onCreateAssignment={handleCreateAssignment}
+        classId={classId}
       />
     </div>
   );

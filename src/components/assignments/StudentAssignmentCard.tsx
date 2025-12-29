@@ -16,24 +16,22 @@ import { AssignmentWithSubmission } from '@/hooks/useStudentAssignments';
 
 interface StudentAssignmentCardProps {
   assignment: AssignmentWithSubmission;
-  onAccept: (assignmentId: string) => void;
   onStart: (submissionId: string, assignment: AssignmentWithSubmission) => void;
 }
 
 const StudentAssignmentCard = ({ 
   assignment, 
-  onAccept, 
   onStart 
 }: StudentAssignmentCardProps) => {
   const isVoice = assignment.assignment_mode === 'voice_practice';
   const submission = assignment.submission;
   
   const getStatusBadge = () => {
-    if (!submission) return <Badge variant="secondary">New</Badge>;
+    if (!submission) return <Badge variant="secondary">Not Assigned</Badge>;
     
     switch (submission.status) {
       case 'pending':
-        return <Badge variant="outline">Accepted</Badge>;
+        return <Badge className="bg-primary/20 text-primary border-primary/30">Ready to Start</Badge>;
       case 'in_progress':
         return <Badge className="bg-yellow-500/20 text-yellow-600 border-yellow-500/30">In Progress</Badge>;
       case 'completed':
@@ -47,6 +45,7 @@ const StudentAssignmentCard = ({
 
   const isPastDue = assignment.due_date && new Date(assignment.due_date) < new Date();
   const canStart = submission && (submission.status === 'pending' || submission.status === 'in_progress');
+  const isCompleted = submission && (submission.status === 'completed' || submission.status === 'graded');
 
   return (
     <Card className="glass hover:shadow-lg transition-shadow">
@@ -99,7 +98,7 @@ const StudentAssignmentCard = ({
         </div>
 
         {/* Score display for completed assignments */}
-        {submission && (submission.status === 'completed' || submission.status === 'graded') && (
+        {isCompleted && (
           <div className="bg-primary/10 rounded-md p-3 mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -116,29 +115,17 @@ const StudentAssignmentCard = ({
           </div>
         )}
 
-        {/* Action buttons */}
-        <div className="flex gap-2">
-          {!submission && (
-            <Button 
-              onClick={() => onAccept(assignment.id)} 
-              className="flex-1"
-              disabled={isPastDue}
-            >
-              Accept Assignment
-            </Button>
-          )}
-          
-          {canStart && (
-            <Button 
-              onClick={() => onStart(submission.id, assignment)} 
-              className="flex-1"
-              disabled={isPastDue}
-            >
-              <Play className="mr-2 h-4 w-4" />
-              {submission.status === 'in_progress' ? 'Continue' : 'Start Challenge'}
-            </Button>
-          )}
-        </div>
+        {/* Action button - only Start/Continue, no Accept */}
+        {canStart && (
+          <Button 
+            onClick={() => onStart(submission.id, assignment)} 
+            className="w-full"
+            disabled={isPastDue}
+          >
+            <Play className="mr-2 h-4 w-4" />
+            {submission.status === 'in_progress' ? 'Continue Challenge' : 'Start Challenge'}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

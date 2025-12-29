@@ -37,13 +37,16 @@ const AssignmentsList = ({
 
   const getSubmissionStats = (assignmentId: string) => {
     const assignmentSubs = submissions.filter(s => s.assignment_id === assignmentId);
+    // Total is all students assigned (all submissions, regardless of status)
+    const total = assignmentSubs.length;
     const completed = assignmentSubs.filter(s => s.status === 'completed' || s.status === 'graded').length;
     const inProgress = assignmentSubs.filter(s => s.status === 'in_progress').length;
+    const notStarted = assignmentSubs.filter(s => s.status === 'pending').length;
     const avgScore = assignmentSubs
       .filter(s => s.ai_score !== null)
       .reduce((acc, s, _, arr) => acc + (s.ai_score! / arr.length), 0);
     
-    return { total: assignmentSubs.length, completed, inProgress, avgScore, submissions: assignmentSubs };
+    return { total, completed, inProgress, notStarted, avgScore, submissions: assignmentSubs };
   };
 
   const toggleExpanded = (assignmentId: string) => {
@@ -128,12 +131,17 @@ const AssignmentsList = ({
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">
+                        <span className="text-sm font-medium">
                           {stats.completed} / {stats.total} completed
                         </span>
                       </div>
-                      {stats.inProgress > 0 && (
+                      {stats.notStarted > 0 && (
                         <Badge variant="outline" className="text-xs">
+                          {stats.notStarted} not started
+                        </Badge>
+                      )}
+                      {stats.inProgress > 0 && (
+                        <Badge variant="outline" className="text-xs bg-yellow-500/10 border-yellow-500/30 text-yellow-600">
                           {stats.inProgress} in progress
                         </Badge>
                       )}

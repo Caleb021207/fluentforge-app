@@ -103,31 +103,7 @@ export const useStudentAssignments = () => {
     }
   };
 
-  const acceptAssignment = async (assignmentId: string) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      const { data, error } = await supabase
-        .from('assignment_submissions')
-        .insert({
-          assignment_id: assignmentId,
-          student_id: user.id,
-          status: 'pending',
-          accepted_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      await fetchAssignments();
-      return data;
-    } catch (err: any) {
-      console.error('Error accepting assignment:', err);
-      throw err;
-    }
-  };
+  // acceptAssignment removed - submissions are now auto-created by teachers
 
   const startAssignment = async (submissionId: string) => {
     try {
@@ -151,8 +127,9 @@ export const useStudentAssignments = () => {
     fetchAssignments();
   }, []);
 
+  // Count assignments that are assigned to this student (have a submission) and not completed
   const pendingCount = assignments.filter(a => 
-    !a.submission || a.submission.status === 'pending'
+    a.submission && (a.submission.status === 'pending' || a.submission.status === 'in_progress')
   ).length;
 
   return {
@@ -161,7 +138,6 @@ export const useStudentAssignments = () => {
     error,
     pendingCount,
     fetchAssignments,
-    acceptAssignment,
     startAssignment
   };
 };
