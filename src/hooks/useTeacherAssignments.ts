@@ -87,13 +87,17 @@ export const useTeacherAssignments = (classId?: string) => {
     due_date?: string;
     points_possible?: number;
     assignment_mode?: string;
+    assigned_student_ids?: string[];
   }) => {
     if (!classId) throw new Error('No class ID provided');
 
+    const { assigned_student_ids, ...assignmentFields } = assignmentData;
+
+    // Create the assignment
     const { data, error } = await supabase
       .from('assignments')
       .insert({
-        ...assignmentData,
+        ...assignmentFields,
         class_id: classId,
         assignment_type: 'conversation'
       })
@@ -101,6 +105,26 @@ export const useTeacherAssignments = (classId?: string) => {
       .single();
 
     if (error) throw error;
+
+    // Auto-create submissions for all assigned students
+    if (assigned_student_ids && assigned_student_ids.length > 0) {
+      const submissions = assigned_student_ids.map(studentId => ({
+        assignment_id: data.id,
+        student_id: studentId,
+        status: 'pending',
+        message_count: 0,
+        xp_awarded: 0
+      }));
+
+      const { error: submissionError } = await supabase
+        .from('assignment_submissions')
+        .insert(submissions);
+
+      if (submissionError) {
+        console.error('Error creating submissions:', submissionError);
+        // Don't throw - assignment was created, just log the error
+      }
+    }
 
     await fetchAssignments();
     return data;

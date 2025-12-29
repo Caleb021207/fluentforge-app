@@ -14,25 +14,8 @@ const StudentAssignmentsView = () => {
   const { 
     assignments, 
     isLoading, 
-    acceptAssignment, 
     startAssignment 
   } = useStudentAssignments();
-
-  const handleAccept = async (assignmentId: string) => {
-    try {
-      await acceptAssignment(assignmentId);
-      toast({
-        title: "Assignment Accepted",
-        description: "You can now start the challenge",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleStart = async (submissionId: string, assignment: AssignmentWithSubmission) => {
     try {
@@ -71,12 +54,15 @@ const StudentAssignmentsView = () => {
     );
   }
 
-  const pendingAssignments = assignments.filter(a => 
-    !a.submission || a.submission.status === 'pending' || a.submission.status === 'in_progress'
+  // Only show assignments where student has a submission (was assigned)
+  const assignedAssignments = assignments.filter(a => a.submission);
+  
+  const pendingAssignments = assignedAssignments.filter(a => 
+    a.submission!.status === 'pending' || a.submission!.status === 'in_progress'
   );
   
-  const completedAssignments = assignments.filter(a => 
-    a.submission && (a.submission.status === 'completed' || a.submission.status === 'graded')
+  const completedAssignments = assignedAssignments.filter(a => 
+    a.submission!.status === 'completed' || a.submission!.status === 'graded'
   );
 
   return (
@@ -88,7 +74,7 @@ const StudentAssignmentsView = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {assignments.length === 0 ? (
+        {assignedAssignments.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <ClipboardList className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>No assignments yet</p>
@@ -117,7 +103,6 @@ const StudentAssignmentsView = () => {
                   <StudentAssignmentCard
                     key={assignment.id}
                     assignment={assignment}
-                    onAccept={handleAccept}
                     onStart={handleStart}
                   />
                 ))
@@ -134,7 +119,6 @@ const StudentAssignmentsView = () => {
                   <StudentAssignmentCard
                     key={assignment.id}
                     assignment={assignment}
-                    onAccept={handleAccept}
                     onStart={handleStart}
                   />
                 ))

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -18,12 +20,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users, UserCheck } from "lucide-react";
+import { supabase } from '@/integrations/supabase/client';
 
 interface CreateAssignmentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreateAssignment: (data: AssignmentFormData) => Promise<void>;
+  classId: string;
+}
+
+interface StudentInfo {
+  id: string;
+  display_name: string | null;
+  email: string | null;
 }
 
 export interface AssignmentFormData {
@@ -37,6 +47,7 @@ export interface AssignmentFormData {
   due_date?: string;
   points_possible?: number;
   assignment_mode?: string;
+  assigned_student_ids?: string[];
 }
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -44,10 +55,15 @@ const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 const CreateAssignmentDialog = ({ 
   open, 
   onOpenChange, 
-  onCreateAssignment 
+  onCreateAssignment,
+  classId
 }: CreateAssignmentDialogProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [students, setStudents] = useState<StudentInfo[]>([]);
+  const [selectedStudents, setSelectedStudents] = useState<Set<string>>(new Set());
+  const [loadingStudents, setLoadingStudents] = useState(false);
+  
   const [formData, setFormData] = useState<AssignmentFormData>({
     title: '',
     description: '',
@@ -59,6 +75,65 @@ const CreateAssignmentDialog = ({
     points_possible: 100,
     assignment_mode: 'text_practice'
   });
+
+  // Fetch students in the class
+  useEffect(() => {
+    const fetchStudents = async () => {
+      if (!classId || !open) return;
+      
+      setLoadingStudents(true);
+      try {
+        const { data: enrollments, error } = await supabase
+          .from('student_enrollments')
+          .select('student_id')
+          .eq('class_id', classId)
+          .eq('status', 'active');
+
+        if (error) throw error;
+
+        if (enrollments && enrollments.length > 0) {
+          const studentIds = enrollments.map(e => e.student_id).filter(Boolean) as string[];
+          
+          const { data: profiles, error: profilesError } = await supabase
+            .from('profiles')
+            .select('id, display_name, email')
+            .in('id', studentIds);
+
+          if (profilesError) throw profilesError;
+
+          setStudents(profiles || []);
+          // Select all students by default
+          setSelectedStudents(new Set(studentIds));
+        }
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      } finally {
+        setLoadingStudents(false);
+      }
+    };
+
+    fetchStudents();
+  }, [classId, open]);
+
+  const toggleStudent = (studentId: string) => {
+    setSelectedStudents(prev => {
+      const next = new Set(prev);
+      if (next.has(studentId)) {
+        next.delete(studentId);
+      } else {
+        next.add(studentId);
+      }
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    if (selectedStudents.size === students.length) {
+      setSelectedStudents(new Set());
+    } else {
+      setSelectedStudents(new Set(students.map(s => s.id)));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,12 +147,24 @@ const CreateAssignmentDialog = ({
       return;
     }
 
+    if (selectedStudents.size === 0) {
+      toast({
+        title: "Validation Error",
+        description: "Please select at least one student",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await onCreateAssignment(formData);
+      await onCreateAssignment({
+        ...formData,
+        assigned_student_ids: Array.from(selectedStudents)
+      });
       toast({
         title: "Assignment Created",
-        description: "Students can now see and accept this assignment",
+        description: `Assigned to ${selectedStudents.size} student${selectedStudents.size !== 1 ? 's' : ''}`,
       });
       onOpenChange(false);
       setFormData({
@@ -91,6 +178,7 @@ const CreateAssignmentDialog = ({
         points_possible: 100,
         assignment_mode: 'text_practice'
       });
+      setSelectedStudents(new Set());
     } catch (error: any) {
       toast({
         title: "Error",
@@ -232,14 +320,74 @@ const CreateAssignmentDialog = ({
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          {/* Student Selection */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Assign to Students
+              </Label>
+              <Button 
+                type="button" 
+                variant="ghost" 
+                size="sm"
+                onClick={toggleAll}
+                className="text-xs"
+              >
+                {selectedStudents.size === students.length ? 'Deselect All' : 'Select All'}
+              </Button>
+            </div>
+            
+            {loadingStudents ? (
+              <div className="flex items-center justify-center py-4">
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <span className="text-sm text-muted-foreground">Loading students...</span>
+              </div>
+            ) : students.length === 0 ? (
+              <div className="text-center py-4 text-sm text-muted-foreground">
+                No students enrolled in this class
+              </div>
+            ) : (
+              <ScrollArea className="h-[150px] border rounded-md p-2">
+                <div className="space-y-2">
+                  {students.map(student => (
+                    <div 
+                      key={student.id}
+                      className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 cursor-pointer"
+                      onClick={() => toggleStudent(student.id)}
+                    >
+                      <Checkbox 
+                        checked={selectedStudents.has(student.id)}
+                        onCheckedChange={() => toggleStudent(student.id)}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">
+                          {student.display_name || student.email || 'Unknown Student'}
+                        </p>
+                        {student.display_name && student.email && (
+                          <p className="text-xs text-muted-foreground truncate">{student.email}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+            
+            <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <UserCheck className="h-3 w-3" />
+              {selectedStudents.size} of {students.length} students selected
+            </p>
+          </div>
+
+          <Button type="submit" className="w-full" disabled={isLoading || selectedStudents.size === 0}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Creating...
               </>
             ) : (
-              'Create Assignment'
+              `Create Assignment for ${selectedStudents.size} Student${selectedStudents.size !== 1 ? 's' : ''}`
             )}
           </Button>
         </form>
