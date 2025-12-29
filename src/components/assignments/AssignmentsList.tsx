@@ -10,7 +10,9 @@ import {
   Calendar,
   Eye,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 import { format } from 'date-fns';
 import { TeacherAssignment, StudentSubmission } from '@/hooks/useTeacherAssignments';
@@ -21,12 +23,14 @@ interface AssignmentsListProps {
   assignments: TeacherAssignment[];
   submissions: StudentSubmission[];
   onDeleteAssignment: (id: string) => void;
+  onRefresh?: () => void;
 }
 
 const AssignmentsList = ({ 
   assignments, 
   submissions, 
-  onDeleteAssignment 
+  onDeleteAssignment,
+  onRefresh
 }: AssignmentsListProps) => {
   const [selectedSubmission, setSelectedSubmission] = useState<StudentSubmission | null>(null);
   const [expandedAssignments, setExpandedAssignments] = useState<Set<string>>(new Set());
@@ -158,38 +162,60 @@ const AssignmentsList = ({
                       {stats.submissions.length === 0 ? (
                         <p className="text-sm text-muted-foreground">No submissions yet</p>
                       ) : (
-                        stats.submissions.map((sub) => (
-                          <div 
-                            key={sub.id} 
-                            className="flex items-center justify-between bg-background/50 rounded-md px-3 py-2"
-                          >
-                            <div className="flex items-center gap-3">
-                              <Badge 
-                                variant={sub.status === 'graded' || sub.status === 'completed' ? 'default' : 'secondary'}
-                                className={`text-xs ${sub.status === 'graded' ? 'bg-green-600' : ''}`}
-                              >
-                                {sub.status}
-                              </Badge>
-                              <span className="text-sm">
-                                {sub.message_count || 0} messages
-                              </span>
-                              {sub.completed_at && (
-                                <span className="text-xs text-muted-foreground">
-                                  {format(new Date(sub.completed_at), 'MMM d, h:mm a')}
-                                </span>
-                              )}
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setSelectedSubmission(sub)}
-                              className="gap-1"
+                        stats.submissions.map((sub) => {
+                          const isCompleted = sub.status === 'completed' || sub.ai_score === 100;
+                          const hasTeacherGrade = sub.teacher_override_score !== null;
+                          
+                          return (
+                            <div 
+                              key={sub.id} 
+                              className="flex items-center justify-between bg-background/50 rounded-md px-3 py-2"
                             >
-                              <Eye className="h-3 w-3" />
-                              Transcript
-                            </Button>
-                          </div>
-                        ))
+                              <div className="flex items-center gap-3">
+                                {/* Completion status */}
+                                <Badge 
+                                  variant={isCompleted ? 'default' : 'secondary'}
+                                  className={`text-xs flex items-center gap-1 ${isCompleted ? 'bg-green-600' : 'bg-orange-500'}`}
+                                >
+                                  {isCompleted ? (
+                                    <>
+                                      <CheckCircle className="h-3 w-3" />
+                                      Completed
+                                    </>
+                                  ) : (
+                                    <>
+                                      <XCircle className="h-3 w-3" />
+                                      Incomplete
+                                    </>
+                                  )}
+                                </Badge>
+                                {/* Teacher grade if present */}
+                                {hasTeacherGrade && (
+                                  <Badge variant="outline" className="text-xs">
+                                    Grade: {sub.teacher_override_score}%
+                                  </Badge>
+                                )}
+                                <span className="text-sm text-muted-foreground">
+                                  {sub.message_count || 0} msgs
+                                </span>
+                                {sub.completed_at && (
+                                  <span className="text-xs text-muted-foreground">
+                                    {format(new Date(sub.completed_at), 'MMM d, h:mm a')}
+                                  </span>
+                                )}
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedSubmission(sub)}
+                                className="gap-1"
+                              >
+                                <Eye className="h-3 w-3" />
+                                {hasTeacherGrade ? 'View' : 'Grade'}
+                              </Button>
+                            </div>
+                          );
+                        })
                       )}
                     </div>
                   </CollapsibleContent>
@@ -204,6 +230,10 @@ const AssignmentsList = ({
         submission={selectedSubmission}
         isOpen={selectedSubmission !== null}
         onClose={() => setSelectedSubmission(null)}
+        onGradeSaved={() => {
+          setSelectedSubmission(null);
+          onRefresh?.();
+        }}
       />
     </div>
   );

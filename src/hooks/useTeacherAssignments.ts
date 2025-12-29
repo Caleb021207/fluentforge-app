@@ -29,6 +29,8 @@ export interface StudentSubmission {
   completed_at: string | null;
   transcript: unknown;
   student_name?: string;
+  teacher_override_score: number | null;
+  teacher_notes: string | null;
 }
 
 export const useTeacherAssignments = (classId?: string) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,16 +6,22 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from 'date-fns';
-import { User, Bot, Calendar, MessageSquare, CheckCircle } from 'lucide-react';
+import { User, Bot, Calendar, MessageSquare, CheckCircle, XCircle, Save, Edit } from 'lucide-react';
 import { StudentSubmission } from '@/hooks/useTeacherAssignments';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface SubmissionTranscriptModalProps {
   submission: StudentSubmission | null;
   studentName?: string;
   isOpen: boolean;
   onClose: () => void;
+  onGradeSaved?: () => void;
 }
 
 interface TranscriptMessage {
@@ -28,13 +34,75 @@ const SubmissionTranscriptModal = ({
   submission,
   studentName,
   isOpen,
-  onClose
+  onClose,
+  onGradeSaved
 }: SubmissionTranscriptModalProps) => {
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [teacherScore, setTeacherScore] = useState<string>('');
+  const [teacherNotes, setTeacherNotes] = useState<string>('');
+  const [isSaving, setIsSaving] = useState(false);
+
   if (!submission) return null;
 
   const transcript = (Array.isArray(submission.transcript) ? submission.transcript : []) as TranscriptMessage[];
   const userMessages = transcript.filter(m => m.role === 'user').length;
   const feedback = submission.ai_feedback as Record<string, unknown> | null;
+  
+  // Determine completion status
+  const isCompleted = submission.status === 'completed' || submission.ai_score === 100;
+  const hasTeacherGrade = submission.teacher_override_score !== null;
+
+  const handleStartEditing = () => {
+    setTeacherScore(submission.teacher_override_score?.toString() || '');
+    setTeacherNotes(submission.teacher_notes || '');
+    setIsEditing(true);
+  };
+
+  const handleSaveGrade = async () => {
+    setIsSaving(true);
+    try {
+      const scoreValue = teacherScore.trim() ? parseFloat(teacherScore) : null;
+      
+      if (scoreValue !== null && (isNaN(scoreValue) || scoreValue < 0 || scoreValue > 100)) {
+        toast({
+          title: "Invalid Score",
+          description: "Score must be between 0 and 100",
+          variant: "destructive"
+        });
+        setIsSaving(false);
+        return;
+      }
+
+      const { error } = await supabase
+        .from('assignment_submissions')
+        .update({
+          teacher_override_score: scoreValue,
+          teacher_notes: teacherNotes.trim() || null,
+          status: 'graded'
+        })
+        .eq('id', submission.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Grade Saved",
+        description: "Teacher grade has been saved successfully"
+      });
+      
+      setIsEditing(false);
+      onGradeSaved?.();
+    } catch (error: any) {
+      console.error('Error saving grade:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save grade",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -64,15 +132,23 @@ const SubmissionTranscriptModal = ({
               {format(new Date(submission.completed_at), 'MMM d, yyyy h:mm a')}
             </Badge>
           )}
-          {submission.ai_score !== null && (
-            <Badge 
-              variant={submission.ai_score >= 100 ? "default" : "secondary"}
-              className={`flex items-center gap-1 ${submission.ai_score >= 100 ? 'bg-green-600' : ''}`}
-            >
-              <CheckCircle className="h-3 w-3" />
-              {submission.ai_score}%
-            </Badge>
-          )}
+          {/* Completion status badge */}
+          <Badge 
+            variant={isCompleted ? "default" : "secondary"}
+            className={`flex items-center gap-1 ${isCompleted ? 'bg-green-600' : 'bg-orange-500'}`}
+          >
+            {isCompleted ? (
+              <>
+                <CheckCircle className="h-3 w-3" />
+                Completed
+              </>
+            ) : (
+              <>
+                <XCircle className="h-3 w-3" />
+                Incomplete
+              </>
+            )}
+          </Badge>
         </div>
 
         {/* Transcript */}
@@ -121,12 +197,73 @@ const SubmissionTranscriptModal = ({
           </div>
         </ScrollArea>
 
-        {/* Feedback section */}
+        {/* Teacher grading section */}
+        <div className="pt-4 border-t border-border/50 space-y-3">
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-medium">Teacher Grade</h4>
+            {!isEditing && (
+              <Button variant="outline" size="sm" onClick={handleStartEditing} className="gap-1">
+                <Edit className="h-3 w-3" />
+                {hasTeacherGrade ? 'Edit Grade' : 'Add Grade'}
+              </Button>
+            )}
+          </div>
+
+          {isEditing ? (
+            <div className="space-y-3 bg-muted/30 rounded-lg p-3">
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium w-16">Score:</label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  placeholder="0-100"
+                  value={teacherScore}
+                  onChange={(e) => setTeacherScore(e.target.value)}
+                  className="w-24"
+                />
+                <span className="text-sm text-muted-foreground">/ 100</span>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">Notes:</label>
+                <Textarea
+                  placeholder="Add feedback for the student..."
+                  value={teacherNotes}
+                  onChange={(e) => setTeacherNotes(e.target.value)}
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleSaveGrade} disabled={isSaving} className="gap-1">
+                  <Save className="h-3 w-3" />
+                  {isSaving ? 'Saving...' : 'Save Grade'}
+                </Button>
+              </div>
+            </div>
+          ) : hasTeacherGrade ? (
+            <div className="bg-muted/30 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium">Score:</span>
+                <Badge className="bg-primary">{submission.teacher_override_score}%</Badge>
+              </div>
+              {submission.teacher_notes && (
+                <p className="text-sm text-muted-foreground">{submission.teacher_notes}</p>
+              )}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No teacher grade assigned yet.</p>
+          )}
+        </div>
+
+        {/* Completion Summary */}
         {feedback && typeof feedback === 'object' && (
-          <div className="pt-4 border-t border-border/50">
-            <h4 className="text-sm font-medium mb-2">Completion Summary</h4>
+          <div className="pt-3 border-t border-border/50">
+            <h4 className="text-sm font-medium mb-1">Completion Summary</h4>
             <p className="text-sm text-muted-foreground">
-              {(feedback as any).summary || 'Assignment completed.'}
+              {(feedback as any).summary || 'Assignment submitted.'}
             </p>
           </div>
         )}
