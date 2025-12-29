@@ -28,40 +28,71 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
     setIsLoading(true);
 
     try {
-      // Query student_metrics joined with classroom_memberships and profiles
+      // Get student IDs enrolled in this class
+      const { data: enrollments, error: enrollmentError } = await supabase
+        .from('student_enrollments')
+        .select('student_id')
+        .eq('class_id', classId);
+
+      if (enrollmentError) {
+        console.error("Error fetching enrollments:", enrollmentError);
+        throw enrollmentError;
+      }
+
+      if (!enrollments?.length) {
+        setStudents([]);
+        setIsLoading(false);
+        return;
+      }
+
+      const studentIds = enrollments.map(e => e.student_id).filter(Boolean) as string[];
+
+      // Fetch metrics and profiles for enrolled students
       const { data: metricsData, error: metricsError } = await supabase
         .from('student_metrics')
-        .select(`
-          *,
-          classroom_memberships!inner(classroom_id),
-          profiles(display_name)
-        `)
-        .eq('classroom_memberships.classroom_id', classId);
+        .select('*')
+        .in('student_id', studentIds);
+
+      // Fetch profiles separately
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, display_name, email')
+        .in('id', studentIds);
 
       if (metricsError) {
         console.error("Error fetching student metrics:", metricsError);
-        throw metricsError;
+      }
+      if (profilesError) {
+        console.error("Error fetching profiles:", profilesError);
       }
 
-      const transformedData: StudentMetrics[] = (metricsData || []).map((student: any) => {
+      // Create maps for easy lookup
+      const metricsMap = new Map((metricsData || []).map(m => [m.student_id, m]));
+      const profilesMap = new Map((profilesData || []).map(p => [p.id, p]));
+
+      // Build student list from enrollments
+      const transformedData: StudentMetrics[] = studentIds.map(studentId => {
+        const metrics = metricsMap.get(studentId);
+        const profile = profilesMap.get(studentId);
+        
         return {
-          student_id: student.student_id || null,
-          student_name: student.profiles?.display_name || 'Unknown Student',
-          student_email: null,
-          text_practice_calls: student.text_practice_calls || 0,
-          premium_voice_calls: student.premium_voice_calls || 0,
-          premium_voice_sessions: student.premium_voice_sessions || 0,
-          premium_voice_minutes_used: student.premium_voice_minutes_used || 0,
-          premium_voice_minutes_remaining: student.premium_voice_minutes_remaining || 0,
-          certification_attempts: student.certification_attempts || 0,
-          highest_certification_score: student.highest_certification_score || 0,
-          completed_lessons: student.completed_lessons || 0,
-          total_lessons: student.total_lessons || 0,
-          last_activity: student.last_activity || null,
-          avg_grammar_accuracy: student.avg_grammar_accuracy || 0,
-          avg_conversation_complexity: student.avg_conversation_complexity || 0,
-          avg_pronunciation_accuracy: student.avg_pronunciation_accuracy || 0,
-          language_metrics_count: student.language_metrics_count || 0,
+          student_id: studentId,
+          student_name: profile?.display_name || 'Unknown Student',
+          student_email: profile?.email || null,
+          text_practice_calls: metrics?.text_practice_calls || 0,
+          premium_voice_calls: metrics?.premium_voice_calls || 0,
+          premium_voice_sessions: 0,
+          premium_voice_minutes_used: 0,
+          premium_voice_minutes_remaining: 0,
+          certification_attempts: 0,
+          highest_certification_score: 0,
+          completed_lessons: 0,
+          total_lessons: 0,
+          last_activity: metrics?.last_activity || null,
+          avg_grammar_accuracy: metrics?.avg_grammar_accuracy || 0,
+          avg_conversation_complexity: metrics?.avg_conversation_complexity || 0,
+          avg_pronunciation_accuracy: 0,
+          language_metrics_count: metrics?.language_metrics_count || 0,
         };
       });
 
