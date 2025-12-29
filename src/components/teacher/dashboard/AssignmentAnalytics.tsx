@@ -182,8 +182,8 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Summary Cards - Responsive grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -191,12 +191,12 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
+                <div className="p-2 rounded-lg bg-primary/10 shrink-0">
                   <FileText className="h-5 w-5 text-primary" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-2xl font-bold">{summary?.totalAssignments || 0}</p>
-                  <p className="text-sm text-muted-foreground">{t("totalAssignments")}</p>
+                  <p className="text-sm text-muted-foreground truncate">{t("totalAssignments")}</p>
                 </div>
               </div>
             </CardContent>
@@ -211,12 +211,12 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-500/10">
+                <div className="p-2 rounded-lg bg-emerald-500/10 shrink-0">
                   <CheckCircle className="h-5 w-5 text-emerald-500" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-2xl font-bold">{summary?.completionRate || 0}%</p>
-                  <p className="text-sm text-muted-foreground">{t("completionRate")}</p>
+                  <p className="text-sm text-muted-foreground truncate">{t("completionRate")}</p>
                 </div>
               </div>
             </CardContent>
@@ -231,12 +231,12 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-amber-500/10">
+                <div className="p-2 rounded-lg bg-amber-500/10 shrink-0">
                   <TrendingUp className="h-5 w-5 text-amber-500" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-2xl font-bold">{summary?.averageScore || 0}%</p>
-                  <p className="text-sm text-muted-foreground">{t("averageScore")}</p>
+                  <p className="text-sm text-muted-foreground truncate">{t("averageScore")}</p>
                 </div>
               </div>
             </CardContent>
@@ -251,12 +251,12 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-violet-500/10">
+                <div className="p-2 rounded-lg bg-violet-500/10 shrink-0">
                   <Users className="h-5 w-5 text-violet-500" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-2xl font-bold">{summary?.totalSubmissions || 0}</p>
-                  <p className="text-sm text-muted-foreground">{t("totalSubmissions")}</p>
+                  <p className="text-sm text-muted-foreground truncate">{t("totalSubmissions")}</p>
                 </div>
               </div>
             </CardContent>
@@ -356,13 +356,13 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
                 <p className="text-center text-muted-foreground py-8">{t("noAssignmentsYet")}</p>
               ) : (
                 assignments.slice(0, 5).map(assignment => (
-                  <div key={assignment.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{assignment.title}</p>
-                        <Badge variant="outline">{assignment.className}</Badge>
+                  <div key={assignment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-3">
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-medium truncate">{assignment.title}</p>
+                        <Badge variant="outline" className="shrink-0">{assignment.className}</Badge>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                         {assignment.dueDate && (
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
@@ -375,12 +375,14 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
                         </span>
                       </div>
                     </div>
-                    <div className="text-right space-y-1">
-                      <p className="font-medium">{assignment.averageScore}%</p>
-                      <Progress 
-                        value={(assignment.completed / assignment.totalStudents) * 100} 
-                        className="w-24 h-2"
-                      />
+                    <div className="flex items-center gap-3 sm:text-right">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{assignment.averageScore}%</p>
+                        <Progress 
+                          value={assignment.totalStudents > 0 ? (assignment.completed / assignment.totalStudents) * 100 : 0} 
+                          className="w-20 sm:w-24 h-2"
+                        />
+                      </div>
                     </div>
                   </div>
                 ))

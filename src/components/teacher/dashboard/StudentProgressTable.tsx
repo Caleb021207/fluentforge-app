@@ -293,9 +293,9 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
+          {/* Filters - Responsive */}
+          <div className="flex flex-col gap-4">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t("searchStudents")}
@@ -304,95 +304,99 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
                 className="pl-9"
               />
             </div>
-            <Select value={classFilter} onValueChange={setClassFilter}>
-              <SelectTrigger className="w-[180px]">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder={t("filterByClass")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("allClasses")}</SelectItem>
-                {studentsData?.classes.map(c => (
-                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder={t("filterByStatus")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("allStatus")}</SelectItem>
-                <SelectItem value="active">{t("active")}</SelectItem>
-                <SelectItem value="at-risk">{t("atRisk")}</SelectItem>
-                <SelectItem value="inactive">{t("inactive")}</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Select value={classFilter} onValueChange={setClassFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder={t("filterByClass")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t("allClasses")}</SelectItem>
+                  {studentsData?.classes.map(c => (
+                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-[150px]">
+                  <SelectValue placeholder={t("filterByStatus")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t("allStatus")}</SelectItem>
+                  <SelectItem value="active">{t("active")}</SelectItem>
+                  <SelectItem value="at-risk">{t("atRisk")}</SelectItem>
+                  <SelectItem value="inactive">{t("inactive")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          {/* Table */}
+          {/* Table - Horizontal scroll on mobile */}
           <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableHeader field="displayName">{t("name")}</SortableHeader>
-                  <SortableHeader field="className">{t("class")}</SortableHeader>
-                  <SortableHeader field="cefrLevel">{t("level")}</SortableHeader>
-                  <SortableHeader field="completedAssignments">{t("assignments")}</SortableHeader>
-                  <SortableHeader field="averageScore">{t("avgScore")}</SortableHeader>
-                  <SortableHeader field="lastActive">{t("lastActive")}</SortableHeader>
-                  <TableHead>{t("status")}</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAndSortedStudents.length === 0 ? (
+            <div className="min-w-[800px]">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
-                      {t("noStudentsFound")}
-                    </TableCell>
+                    <SortableHeader field="displayName">{t("name")}</SortableHeader>
+                    <SortableHeader field="className">{t("class")}</SortableHeader>
+                    <SortableHeader field="cefrLevel">{t("level")}</SortableHeader>
+                    <SortableHeader field="completedAssignments">{t("assignments")}</SortableHeader>
+                    <SortableHeader field="averageScore">{t("avgScore")}</SortableHeader>
+                    <SortableHeader field="lastActive">{t("lastActive")}</SortableHeader>
+                    <TableHead>{t("status")}</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
-                ) : (
-                  filteredAndSortedStudents.map(student => (
-                    <TableRow key={`${student.id}-${student.classId}`} className="hover:bg-muted/50">
-                      <TableCell className="font-medium">{student.displayName}</TableCell>
-                      <TableCell>{student.className}</TableCell>
-                      <TableCell>
-                        {student.cefrLevel ? (
-                          <Badge variant="outline">{student.cefrLevel}</Badge>
-                        ) : (
-                          <span className="text-muted-foreground">—</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {student.completedAssignments}/{student.totalAssignments}
-                      </TableCell>
-                      <TableCell>
-                        <span className={student.averageScore >= 70 ? 'text-emerald-500' : student.averageScore >= 50 ? 'text-amber-500' : 'text-destructive'}>
-                          {student.averageScore}%
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        {student.lastActive ? (
-                          format(new Date(student.lastActive), 'MMM d, yyyy')
-                        ) : (
-                          <span className="text-muted-foreground">{t("never")}</span>
-                        )}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(student.status)}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onStudentSelect(student.id)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                </TableHeader>
+                <TableBody>
+                  {filteredAndSortedStudents.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                        {t("noStudentsFound")}
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    filteredAndSortedStudents.map(student => (
+                      <TableRow key={`${student.id}-${student.classId}`} className="hover:bg-muted/50">
+                        <TableCell className="font-medium">{student.displayName}</TableCell>
+                        <TableCell>{student.className}</TableCell>
+                        <TableCell>
+                          {student.cefrLevel ? (
+                            <Badge variant="outline">{student.cefrLevel}</Badge>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {student.completedAssignments}/{student.totalAssignments}
+                        </TableCell>
+                        <TableCell>
+                          <span className={student.averageScore >= 70 ? 'text-emerald-500' : student.averageScore >= 50 ? 'text-amber-500' : 'text-destructive'}>
+                            {student.averageScore}%
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {student.lastActive ? (
+                            format(new Date(student.lastActive), 'MMM d, yyyy')
+                          ) : (
+                            <span className="text-muted-foreground">{t("never")}</span>
+                          )}
+                        </TableCell>
+                        <TableCell>{getStatusBadge(student.status)}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onStudentSelect(student.id)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </CardContent>
       </Card>
