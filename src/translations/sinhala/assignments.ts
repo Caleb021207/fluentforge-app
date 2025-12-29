@@ -1,0 +1,8 @@
+import { TranslationRecord } from "../types";
+const assignmentsTranslations: TranslationRecord = {
+  notAssigned: "පවරා නැත", readyToStart: "ආරම්භ කිරීමට සූදානම්", inProgress: "ක්‍රියාත්මක වෙමින්", completed: "සම්පූර්ණයි", graded: "ශ්‍රේණිගත කළා",
+  yourTask: "ඔබේ කාර්යය", messagesRequired: "පණිවිඩ", minMax: "විනාඩි උපරිම", pts: "ලකුණු", due: "නියමිත දිනය", completedBadge: "සම්පූර්ණයි!", xpAwarded: "XP", continueChallenge: "අභියෝගය දිගටම කරගෙන යන්න", startChallenge: "අභියෝගය ආරම්භ කරන්න",
+  myAssignments: "මගේ පැවරුම්", noAssignmentsYet: "තවම පැවරුම් නැත", teacherWillAssign: "ඔබේ ගුරුවරයා මෙහි සංවාද අභියෝග පවරනු ඇත", toDo: "කළ යුතු", completedTab: "සම්පූර්ණයි", allCaughtUp: "සියල්ල අවසන්! බලාපොරොත්තු පැවරුම් නැත.", noCompletedYet: "තවම සම්පූර්ණ කළ පැවරුම් නැත.", loadingAssignments: "පැවරුම් පූරණය වෙමින්...", errorStarting: "දෝෂය",
+  noAssignment: "පැවරුමක් නැත", startFromProfile: "කරුණාකර ඔබේ පැතිකඩෙන් පැවරුම ආරම්භ කරන්න", messagesProgress: "පණිවිඩ", readyToSubmit: "ඉදිරිපත් කිරීමට සූදානම්!", moreToGo: "තවත් අවශ්‍යයි", submit: "ඉදිරිපත් කරන්න", leaveAssignment: "පැවරුමෙන් ඉවත් වන්නද?", progressSaved: "ඔබේ ප්‍රගතිය සුරකින ලදී!", youveSent: "ඔබ යැව්වේ", needMore: "තවත් අවශ්‍යයි", moreToSubmit: "ඉදිරිපත් කිරීමට", canContinueLater: "ඔබට පසුව දිගටම කරගෙන යා හැක.", continueAssignment: "පැවරුම දිගටම කරගෙන යන්න", saveAndExit: "සුරකා පිටවන්න", assignmentCompleted: "පැවරුම සම්පූර්ණයි! 🎉", greatWorkXp: "හොඳ වැඩක්! ඔබට ලැබුණා", submittedSuccessfully: "ඔබේ පැවරුම සාර්ථකව ඉදිරිපත් කරන ලදී", failedToSubmit: "ඉදිරිපත් කිරීම අසාර්ථකයි. කරුණාකර නැවත උත්සාහ කරන්න.", assignmentInProgress: "ඔබට ක්‍රියාත්මක පැවරුමක් ඇත. ඔබට පිටවීමට අවශ්‍ය බව විශ්වාසද?",
+};
+export default assignmentsTranslations;

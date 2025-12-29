@@ -1,0 +1,8 @@
+import { TranslationRecord } from "../types";
+const assignmentsTranslations: TranslationRecord = {
+  notAssigned: "تفویض نہیں", readyToStart: "شروع کرنے کو تیار", inProgress: "جاری", completed: "مکمل", graded: "درجہ دیا گیا",
+  yourTask: "آپ کا کام", messagesRequired: "پیغامات", minMax: "منٹ زیادہ سے زیادہ", pts: "پوائنٹس", due: "آخری تاریخ", completedBadge: "مکمل!", xpAwarded: "XP", continueChallenge: "چیلنج جاری رکھیں", startChallenge: "چیلنج شروع کریں",
+  myAssignments: "میرے اسائنمنٹس", noAssignmentsYet: "ابھی کوئی اسائنمنٹ نہیں", teacherWillAssign: "آپ کے استاد یہاں بات چیت کے چیلنجز دیں گے", toDo: "کرنا ہے", completedTab: "مکمل", allCaughtUp: "سب ہو گیا!", noCompletedYet: "ابھی کوئی مکمل اسائنمنٹ نہیں۔", loadingAssignments: "لوڈ ہو رہا ہے...", errorStarting: "خرابی",
+  noAssignment: "کوئی اسائنمنٹ نہیں", startFromProfile: "براہ کرم اپنے پروفائل سے اسائنمنٹ شروع کریں", messagesProgress: "پیغامات", readyToSubmit: "جمع کرانے کو تیار!", moreToGo: "مزید چاہیے", submit: "جمع کرائیں", leaveAssignment: "اسائنمنٹ چھوڑیں؟", progressSaved: "آپ کی پیشرفت محفوظ!", youveSent: "آپ نے بھیجا", needMore: "مزید چاہیے", moreToSubmit: "جمع کرانے کے لیے", canContinueLater: "آپ بعد میں جاری رکھ سکتے ہیں۔", continueAssignment: "اسائنمنٹ جاری رکھیں", saveAndExit: "محفوظ کریں اور باہر نکلیں", assignmentCompleted: "اسائنمنٹ مکمل! 🎉", greatWorkXp: "شاندار! آپ نے کمایا", submittedSuccessfully: "آپ کی اسائنمنٹ کامیابی سے جمع ہو گئی", failedToSubmit: "جمع کرانے میں ناکام۔ دوبارہ کوشش کریں۔", assignmentInProgress: "آپ کی اسائنمنٹ جاری ہے۔ کیا آپ واقعی جانا چاہتے ہیں؟",
+};
+export default assignmentsTranslations;

@@ -21,6 +21,7 @@ import classroomTranslations from "./classroom";
 import settingsTranslations from "./settings";
 import pronunciationTranslations from "./pronunciation";
 import teacherDashboardTranslations from "./teacher-dashboard";
+import assignmentsTranslations from "./assignments";
 
 // Combine all the translation categories
 const englishTranslations: TranslationRecord = {
@@ -45,6 +46,7 @@ const englishTranslations: TranslationRecord = {
   ...settingsTranslations,
   ...pronunciationTranslations,
   ...teacherDashboardTranslations,
+  ...assignmentsTranslations,
 };
 
 export default englishTranslations;

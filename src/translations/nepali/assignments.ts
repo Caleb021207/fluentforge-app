@@ -1,0 +1,8 @@
+import { TranslationRecord } from "../types";
+const assignmentsTranslations: TranslationRecord = {
+  notAssigned: "नियुक्त गरिएको छैन", readyToStart: "सुरु गर्न तयार", inProgress: "प्रगतिमा", completed: "पूरा भयो", graded: "ग्रेड दिइयो",
+  yourTask: "तपाईंको कार्य", messagesRequired: "सन्देशहरू", minMax: "मिनेट अधिकतम", pts: "अंक", due: "म्याद", completedBadge: "पूरा!", xpAwarded: "XP", continueChallenge: "चुनौती जारी राख्नुहोस्", startChallenge: "चुनौती सुरु गर्नुहोस्",
+  myAssignments: "मेरा कार्यहरू", noAssignmentsYet: "अहिलेसम्म कुनै कार्य छैन", teacherWillAssign: "तपाईंको शिक्षकले यहाँ कुराकानी चुनौतीहरू दिनुहुनेछ", toDo: "गर्नुपर्ने", completedTab: "पूरा भयो", allCaughtUp: "सबै भयो! कुनै पर्खिरहेको कार्य छैन।", noCompletedYet: "अहिलेसम्म कुनै पूरा भएको कार्य छैन।", loadingAssignments: "कार्यहरू लोड हुँदैछ...", errorStarting: "त्रुटि",
+  noAssignment: "कुनै कार्य छैन", startFromProfile: "कृपया आफ्नो प्रोफाइलबाट कार्य सुरु गर्नुहोस्", messagesProgress: "सन्देशहरू", readyToSubmit: "पेश गर्न तयार!", moreToGo: "थप चाहिन्छ", submit: "पेश गर्नुहोस्", leaveAssignment: "कार्य छोड्ने?", progressSaved: "तपाईंको प्रगति सुरक्षित!", youveSent: "तपाईंले पठाउनुभयो", needMore: "थप चाहिन्छ", moreToSubmit: "पेश गर्न", canContinueLater: "तपाईं पछि जारी राख्न सक्नुहुन्छ।", continueAssignment: "कार्य जारी राख्नुहोस्", saveAndExit: "सुरक्षित गर्नुहोस् र बाहिर निस्कनुहोस्", assignmentCompleted: "कार्य पूरा! 🎉", greatWorkXp: "राम्रो काम! तपाईंले कमाउनुभयो", submittedSuccessfully: "तपाईंको कार्य सफलतापूर्वक पेश भयो", failedToSubmit: "पेश गर्न असफल। कृपया फेरि प्रयास गर्नुहोस्।", assignmentInProgress: "तपाईंको प्रगतिमा एउटा कार्य छ। तपाईं निश्चित हुनुहुन्छ बाहिर निस्कन चाहनुहुन्छ?",
+};
+export default assignmentsTranslations;

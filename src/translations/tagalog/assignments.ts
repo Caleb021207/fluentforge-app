@@ -1,0 +1,8 @@
+import { TranslationRecord } from "../types";
+const assignmentsTranslations: TranslationRecord = {
+  notAssigned: "Hindi Nakatalaga", readyToStart: "Handang Magsimula", inProgress: "Kasalukuyang Ginagawa", completed: "Nakumpleto", graded: "Nai-grade",
+  yourTask: "Ang Iyong Gawain", messagesRequired: "mensahe", minMax: "min max", pts: "pts", due: "Takdang Petsa", completedBadge: "Nakumpleto!", xpAwarded: "XP", continueChallenge: "Ipagpatuloy ang Hamon", startChallenge: "Simulan ang Hamon",
+  myAssignments: "Aking mga Gawain", noAssignmentsYet: "Wala pang gawain", teacherWillAssign: "Ang iyong guro ay magtatakda ng mga hamon sa pakikipag-usap dito", toDo: "Gagawin", completedTab: "Nakumpleto", allCaughtUp: "Lahat ay tapos na! Walang nakabinbing gawain.", noCompletedYet: "Wala pang nakumpletong gawain.", loadingAssignments: "Naglo-load ng mga gawain...", errorStarting: "Error",
+  noAssignment: "Walang Gawain", startFromProfile: "Mangyaring simulan ang gawain mula sa iyong profile", messagesProgress: "mensahe", readyToSubmit: "Handang i-submit!", moreToGo: "pa ang kailangan", submit: "I-submit", leaveAssignment: "Umalis sa Gawain?", progressSaved: "Nai-save ang iyong progreso!", youveSent: "Naipadala mo", needMore: "kailangan pa", moreToSubmit: "upang i-submit", canContinueLater: "Maaari kang magpatuloy mamaya.", continueAssignment: "Ipagpatuloy ang Gawain", saveAndExit: "I-save at Lumabas", assignmentCompleted: "Nakumpleto ang Gawain! 🎉", greatWorkXp: "Mahusay! Nakuha mo", submittedSuccessfully: "Matagumpay na nai-submit ang iyong gawain", failedToSubmit: "Hindi nai-submit. Pakisubukang muli.", assignmentInProgress: "May gawain kang kasalukuyang ginagawa. Sigurado ka bang aalis?",
+};
+export default assignmentsTranslations;
