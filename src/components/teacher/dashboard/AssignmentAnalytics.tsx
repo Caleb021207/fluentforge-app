@@ -46,11 +46,11 @@ interface AssignmentData {
   averageDuration: number;
 }
 
-// Distinct, high-contrast colors for status distribution
+// Vibrant, high-contrast colors for status distribution
 const STATUS_COLORS = {
-  completed: '#22c55e',    // Green
-  inProgress: '#f59e0b',   // Amber
-  unopened: '#6b7280'      // Gray
+  completed: '#10b981',    // Emerald green - vibrant
+  inProgress: '#f59e0b',   // Amber/orange - warm
+  unopened: '#64748b'      // Slate gray - neutral
 };
 
 const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
@@ -295,13 +295,22 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
               {completionChartData.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={completionChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" fontSize={12} />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="completed" stackId="a" fill={STATUS_COLORS.completed} name={t("completed")} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="name" fontSize={12} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.2)',
+                        color: 'hsl(var(--card-foreground))'
+                      }}
+                      labelStyle={{ color: 'hsl(var(--foreground))' }}
+                    />
+                    <Bar dataKey="completed" stackId="a" fill={STATUS_COLORS.completed} name={t("completed")} radius={[0, 0, 0, 0]} />
                     <Bar dataKey="inProgress" stackId="a" fill={STATUS_COLORS.inProgress} name={t("inProgress")} />
-                    <Bar dataKey="unopened" stackId="a" fill={STATUS_COLORS.unopened} name={t("unopened")} />
+                    <Bar dataKey="unopened" stackId="a" fill={STATUS_COLORS.unopened} name={t("unopened")} radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
@@ -337,21 +346,28 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
                       cx="50%"
                       cy="50%"
                       innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={5}
+                      outerRadius={90}
+                      paddingAngle={3}
                       dataKey="value"
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      labelLine={{ stroke: 'hsl(var(--foreground))' }}
+                      labelLine={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1 }}
                     >
                       {statusDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color}
+                          stroke="hsl(var(--background))"
+                          strokeWidth={2}
+                        />
                       ))}
                     </Pie>
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--background))', 
+                        backgroundColor: 'hsl(var(--card))', 
                         border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.2)',
+                        color: 'hsl(var(--card-foreground))'
                       }}
                     />
                   </PieChart>
@@ -386,12 +402,18 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
               {assignments.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">{t("noAssignmentsYet")}</p>
               ) : (
-                assignments.slice(0, 5).map(assignment => (
-                  <div key={assignment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-3">
+                assignments.slice(0, 5).map((assignment, index) => (
+                  <motion.div 
+                    key={assignment.id} 
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 * index }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-primary/20 bg-gradient-to-r from-muted/50 to-transparent hover:from-primary/10 hover:to-accent/5 transition-all gap-3"
+                  >
                     <div className="space-y-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-medium truncate">{assignment.title}</p>
-                        <Badge variant="outline" className="shrink-0">{assignment.className}</Badge>
+                        <p className="font-semibold truncate">{assignment.title}</p>
+                        <Badge className="shrink-0 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">{assignment.className}</Badge>
                       </div>
                       <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                         {assignment.dueDate && (
@@ -407,15 +429,17 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 sm:text-right">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{assignment.averageScore}%</p>
+                      <div className="flex items-center gap-3">
+                        <span className={`font-bold text-lg ${assignment.averageScore >= 70 ? 'text-emerald-500' : assignment.averageScore >= 50 ? 'text-amber-500' : 'text-muted-foreground'}`}>
+                          {assignment.averageScore}%
+                        </span>
                         <Progress 
                           value={assignment.totalStudents > 0 ? (assignment.completed / assignment.totalStudents) * 100 : 0} 
-                          className="w-20 sm:w-24 h-2"
+                          className="w-24 h-2.5"
                         />
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               )}
             </div>
