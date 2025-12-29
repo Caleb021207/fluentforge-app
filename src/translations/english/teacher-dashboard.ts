@@ -4,6 +4,7 @@ const teacherDashboardTranslations: TranslationRecord = {
   // Dashboard header and tabs
   teacherDashboard: "Teacher Dashboard",
   teacherTools: "Teacher Tools",
+  manageClassesStudentsAssignments: "Classes, Students, Analytics & Assignments",
   manageClasses: "Manage Classes",
   newNotifications: "new notifications",
   classes: "Classes",
