@@ -3,10 +3,14 @@ import { TranslationRecord } from "../types";
 const teacherDashboardTranslations: TranslationRecord = {
   // Dashboard header and tabs
   teacherDashboard: "Teacher Dashboard",
+  teacherTools: "Teacher Tools",
+  manageClasses: "Manage Classes",
   newNotifications: "new notifications",
   classes: "Classes",
   overview: "Overview",
   myClasses: "My Classes",
+  students: "Students",
+  assignments: "Assignments",
   
   // Classes tab
   manageClassesDescription: "Create and manage your classes",

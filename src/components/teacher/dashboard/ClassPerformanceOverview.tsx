@@ -240,29 +240,33 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
       title: t("totalStudents"),
       value: stats?.totalStudents || 0,
       icon: Users,
-      color: 'text-blue-500',
-      bg: 'bg-blue-500/10'
+      gradient: 'from-blue-500/20 to-cyan-500/20',
+      iconColor: 'text-blue-500',
+      borderColor: 'border-blue-500/30'
     },
     {
       title: t("totalClasses"),
       value: stats?.totalClasses || 0,
       icon: GraduationCap,
-      color: 'text-emerald-500',
-      bg: 'bg-emerald-500/10'
+      gradient: 'from-emerald-500/20 to-green-500/20',
+      iconColor: 'text-emerald-500',
+      borderColor: 'border-emerald-500/30'
     },
     {
       title: t("completedAssignments"),
       value: stats?.completedAssignments || 0,
       icon: CheckCircle,
-      color: 'text-violet-500',
-      bg: 'bg-violet-500/10'
+      gradient: 'from-violet-500/20 to-purple-500/20',
+      iconColor: 'text-violet-500',
+      borderColor: 'border-violet-500/30'
     },
     {
       title: t("averageGrade"),
       value: `${stats?.averageGrade || 0}%`,
       icon: TrendingUp,
-      color: 'text-amber-500',
-      bg: 'bg-amber-500/10'
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      iconColor: 'text-amber-500',
+      borderColor: 'border-amber-500/30'
     }
   ];
 
@@ -273,11 +277,18 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card>
-          <CardContent className="py-12 text-center">
-            <GraduationCap className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <h3 className="text-lg font-semibold mb-2">{t("noClassesYet")}</h3>
-            <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
+        <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+          <CardContent className="py-16 text-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 mb-4"
+            >
+              <GraduationCap className="h-12 w-12 text-primary" />
+            </motion.div>
+            <h3 className="text-xl font-semibold mb-2">{t("noClassesYet")}</h3>
+            <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
               {t("noClassesYetDescription")}
             </p>
           </CardContent>
@@ -293,18 +304,19 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
         {statCards.map((stat, index) => (
           <motion.div
             key={stat.title}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
+            whileHover={{ scale: 1.02, y: -4 }}
           >
-            <Card>
+            <Card className={`glass ${stat.borderColor} bg-gradient-to-br ${stat.gradient} hover:shadow-lg transition-all duration-300`}>
               <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${stat.bg} shrink-0`}>
-                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.gradient} border ${stat.borderColor} backdrop-blur-sm shrink-0`}>
+                    <stat.icon className={`h-6 w-6 ${stat.iconColor}`} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-2xl font-bold">{stat.value}</p>
+                    <p className="text-3xl font-bold">{stat.value}</p>
                     <p className="text-sm text-muted-foreground truncate">{stat.title}</p>
                   </div>
                 </div>
@@ -321,13 +333,16 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.01 }}
           >
-            <Card className="border-amber-500/50 bg-amber-500/5">
+            <Card className="glass border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10">
               <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5 text-amber-500" />
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-amber-500/20 border border-amber-500/30">
+                    <AlertCircle className="h-6 w-6 text-amber-500" />
+                  </div>
                   <div>
-                    <p className="font-medium">{stats?.studentsNeedingAttention} {t("studentsNeedAttention")}</p>
+                    <p className="font-semibold text-lg">{stats?.studentsNeedingAttention} {t("studentsNeedAttention")}</p>
                     <p className="text-sm text-muted-foreground">{t("noActivityIn7Days")}</p>
                   </div>
                 </div>
@@ -341,13 +356,16 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
           <motion.div
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.01 }}
           >
-            <Card className="border-emerald-500/50 bg-emerald-500/5">
+            <Card className="glass border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-green-500/10">
               <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <Award className="h-5 w-5 text-emerald-500" />
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/30">
+                    <Award className="h-6 w-6 text-emerald-500" />
+                  </div>
                   <div>
-                    <p className="font-medium">{t("topPerformers")}</p>
+                    <p className="font-semibold text-lg">{t("topPerformers")}</p>
                     <p className="text-sm text-muted-foreground">
                       {stats.topPerformers.slice(0, 3).map(p => p.display_name || 'Student').join(', ')}
                     </p>

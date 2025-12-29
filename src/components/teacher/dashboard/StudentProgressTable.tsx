@@ -287,11 +287,16 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <Card>
+      <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>{t("studentProgress")}</span>
-            <Badge variant="outline">{filteredAndSortedStudents.length} {t("students")}</Badge>
+            <span className="flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30">
+                <Search className="h-5 w-5 text-primary" />
+              </div>
+              {t("studentProgress")}
+            </span>
+            <Badge variant="outline" className="text-sm px-3 py-1">{filteredAndSortedStudents.length} {t("students")}</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">

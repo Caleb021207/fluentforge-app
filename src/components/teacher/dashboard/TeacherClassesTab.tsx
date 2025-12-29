@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Users, Trash2, Copy, Check } from 'lucide-react';
+import { Plus, Users, Trash2, Copy, Check, FolderOpen, Sparkles, BookOpen, FileText } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useLocalization } from '@/context/LocalizationContext';
@@ -171,109 +171,147 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
     >
       {/* Header - Responsive */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="min-w-0">
-          <h2 className="text-xl sm:text-2xl font-bold truncate">{t("myClasses")}</h2>
-          <p className="text-muted-foreground text-sm">
-            {t("manageClassesDescription")}
-          </p>
+        <div className="min-w-0 flex items-center gap-3">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30">
+            <FolderOpen className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold">{t("myClasses")}</h2>
+            <p className="text-muted-foreground text-sm">
+              {t("manageClassesDescription")}
+            </p>
+          </div>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)} className="w-full sm:w-auto">
-          <Plus className="h-4 w-4 mr-2" />
-          {t("createClass")}
-        </Button>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button onClick={() => setCreateDialogOpen(true)} className="w-full sm:w-auto shadow-lg">
+            <Plus className="h-4 w-4 mr-2" />
+            {t("createClass")}
+          </Button>
+        </motion.div>
       </div>
 
       {/* Classes Grid */}
       {classes?.length === 0 ? (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground mb-4">
+        <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+          <CardContent className="py-16 text-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 mb-4"
+            >
+              <BookOpen className="h-12 w-12 text-primary" />
+            </motion.div>
+            <p className="text-muted-foreground mb-6 text-lg">
               {t("noClassesCreated")}
             </p>
-            <Button onClick={() => setCreateDialogOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              {t("createFirstClass")}
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button onClick={() => setCreateDialogOpen(true)} size="lg" className="shadow-lg">
+                <Sparkles className="h-4 w-4 mr-2" />
+                {t("createFirstClass")}
+              </Button>
+            </motion.div>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {classes?.map((cls) => (
-            <Card key={cls.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <CardTitle className="text-lg truncate">{cls.name}</CardTitle>
-                    <CardDescription>{cls.academic_year}</CardDescription>
+          {classes?.map((cls, index) => (
+            <motion.div
+              key={cls.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.02, y: -4 }}
+            >
+              <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1 flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-primary/20 border border-primary/30">
+                        <BookOpen className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="min-w-0">
+                        <CardTitle className="text-lg truncate">{cls.name}</CardTitle>
+                        <CardDescription>{cls.academic_year}</CardDescription>
+                      </div>
+                    </div>
+                    <Badge variant="default" className="shrink-0 bg-gradient-to-r from-emerald-500 to-green-500">{t("active")}</Badge>
                   </div>
-                  <Badge variant="default" className="shrink-0">{t("active")}</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between text-sm gap-2">
-                  <span className="text-muted-foreground shrink-0">{t("classCode")}:</span>
-                  <div className="flex items-center gap-1 min-w-0">
-                    <code className="bg-muted px-2 py-1 rounded text-xs font-mono truncate">
-                      {cls.class_code}
-                    </code>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between text-sm gap-2 p-3 rounded-lg bg-muted/50">
+                    <span className="text-muted-foreground shrink-0">{t("classCode")}:</span>
+                    <div className="flex items-center gap-1 min-w-0">
+                      <code className="bg-background/80 px-3 py-1.5 rounded-lg text-xs font-mono border truncate">
+                        {cls.class_code}
+                      </code>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 shrink-0 hover:bg-primary/20"
+                        onClick={() => copyClassCode(cls.class_code)}
+                      >
+                        {copiedCode === cls.class_code ? (
+                          <Check className="h-4 w-4 text-emerald-500" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-sm p-3 rounded-lg bg-muted/50">
+                    <span className="text-muted-foreground">{t("students")}:</span>
+                    <span className="font-semibold text-lg">{cls.student_count}</span>
+                  </div>
+
+                  {/* Action buttons - 2 column grid + delete */}
+                  <div className="grid grid-cols-2 gap-2 pt-2">
                     <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 shrink-0"
-                      onClick={() => copyClassCode(cls.class_code)}
+                      variant="outline"
+                      size="sm"
+                      className="border-primary/30 hover:bg-primary/10"
+                      onClick={() => setViewStudentsClass({ id: cls.id, name: cls.name })}
                     >
-                      {copiedCode === cls.class_code ? (
-                        <Check className="h-3 w-3 text-green-500" />
-                      ) : (
-                        <Copy className="h-3 w-3" />
-                      )}
+                      <Users className="h-4 w-4 mr-1" />
+                      <span className="truncate">{t("viewStudents")}</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-primary/30 hover:bg-primary/10"
+                      onClick={() => setSelectedClass(cls)}
+                    >
+                      <FileText className="h-4 w-4 mr-1" />
+                      <span className="truncate">{t("assignments")}</span>
                     </Button>
                   </div>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("students")}:</span>
-                  <span className="font-medium">{cls.student_count}</span>
-                </div>
-
-                {/* Action buttons - 2 column grid + delete */}
-                <div className="grid grid-cols-2 gap-2 pt-2">
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
-                    onClick={() => setViewStudentsClass({ id: cls.id, name: cls.name })}
+                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/30"
+                    onClick={() => deleteClassMutation.mutate(cls.id)}
                   >
-                    <Users className="h-4 w-4 mr-1" />
-                    <span className="truncate">{t("viewStudents")}</span>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    {t("deleteClass")}
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedClass(cls)}
-                  >
-                    <span className="truncate">{t("assignments")}</span>
-                  </Button>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => deleteClassMutation.mutate(cls.id)}
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  {t("deleteClass")}
-                </Button>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
       )}
 
       {/* Create Class Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent>
+        <DialogContent className="glass border-primary/20">
           <DialogHeader>
-            <DialogTitle>{t("createClass")}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-primary/20 border border-primary/30">
+                <Plus className="h-4 w-4 text-primary" />
+              </div>
+              {t("createClass")}
+            </DialogTitle>
             <DialogDescription>
               {t("createClassDescription")}
             </DialogDescription>
