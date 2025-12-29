@@ -277,40 +277,62 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Completion Bar Chart */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="lg:col-span-2"
         >
-          <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
-            <CardHeader>
+          <Card className="glass border-blue-500/20 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-500/10 pointer-events-none" />
+            <CardHeader className="relative z-10">
               <CardTitle className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-primary/20 border border-primary/30">
-                  <TrendingUp className="h-4 w-4 text-primary" />
+                <div className="p-2 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg border border-blue-500/30">
+                  <TrendingUp className="h-5 w-5 text-blue-500" />
                 </div>
                 {t("assignmentCompletion")}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               {completionChartData.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={completionChartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="name" fontSize={12} stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <BarChart data={completionChartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="completedGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#10b981" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="#10b981" stopOpacity={0.6}/>
+                      </linearGradient>
+                      <linearGradient id="inProgressGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f59e0b" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.6}/>
+                      </linearGradient>
+                      <linearGradient id="unopenedGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#64748b" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="#64748b" stopOpacity={0.6}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                    <XAxis 
+                      dataKey="name" 
+                      fontSize={12} 
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
+                    <YAxis 
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
+                        background: 'hsl(var(--card))', 
+                        border: '1px solid rgb(59 130 246 / 0.5)',
                         borderRadius: '12px',
-                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.2)',
-                        color: 'hsl(var(--card-foreground))'
+                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.3)'
                       }}
-                      labelStyle={{ color: 'hsl(var(--foreground))' }}
+                      cursor={{ fill: 'hsl(var(--muted))', opacity: 0.3 }}
                     />
-                    <Bar dataKey="completed" stackId="a" fill={STATUS_COLORS.completed} name={t("completed")} radius={[0, 0, 0, 0]} />
-                    <Bar dataKey="inProgress" stackId="a" fill={STATUS_COLORS.inProgress} name={t("inProgress")} />
-                    <Bar dataKey="unopened" stackId="a" fill={STATUS_COLORS.unopened} name={t("unopened")} radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="completed" stackId="a" fill="url(#completedGradient)" name={t("completed")} radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="inProgress" stackId="a" fill="url(#inProgressGradient)" name={t("inProgress")} />
+                    <Bar dataKey="unopened" stackId="a" fill="url(#unopenedGradient)" name={t("unopened")} radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
@@ -324,54 +346,74 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
 
         {/* Status Distribution Pie */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Card className="glass border-primary/20 bg-gradient-to-br from-violet-500/5 via-transparent to-purple-500/5">
-            <CardHeader>
+          <Card className="glass border-violet-500/20 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-purple-500/10 pointer-events-none" />
+            <CardHeader className="relative z-10">
               <CardTitle className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-violet-500/20 border border-violet-500/30">
-                  <CheckCircle className="h-4 w-4 text-violet-500" />
+                <div className="p-2 bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-lg border border-violet-500/30">
+                  <CheckCircle className="h-5 w-5 text-violet-500" />
                 </div>
                 {t("statusDistribution")}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               {statusDistribution.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={statusDistribution}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
-                      paddingAngle={3}
-                      dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      labelLine={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1 }}
-                    >
-                      {statusDistribution.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={entry.color}
-                          stroke="hsl(var(--background))"
-                          strokeWidth={2}
+                <div className="relative">
+                  <ResponsiveContainer width="100%" height={260}>
+                    <PieChart>
+                      <defs>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.3"/>
+                        </filter>
+                      </defs>
+                      <Pie
+                        data={statusDistribution}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={55}
+                        outerRadius={85}
+                        paddingAngle={4}
+                        dataKey="value"
+                        style={{ filter: 'url(#shadow)' }}
+                      >
+                        {statusDistribution.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={entry.color}
+                            stroke="hsl(var(--background))"
+                            strokeWidth={3}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{ 
+                          background: 'hsl(var(--card))', 
+                          border: '1px solid rgb(139 92 246 / 0.5)',
+                          borderRadius: '12px',
+                          boxShadow: '0 10px 40px -10px rgba(0,0,0,0.3)'
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {/* Legend */}
+                  <div className="flex flex-wrap justify-center gap-4 mt-2">
+                    {statusDistribution.map((entry, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: entry.color }}
                         />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '12px',
-                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.2)',
-                        color: 'hsl(var(--card-foreground))'
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+                        <span className="text-sm text-muted-foreground">
+                          {entry.name} ({entry.value})
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="h-[300px] flex items-center justify-center text-muted-foreground">
                   {t("noDataAvailable")}
@@ -384,20 +426,21 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
 
       {/* Assignment List */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-          <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-primary/20 border border-primary/30">
-                  <FileText className="h-4 w-4 text-primary" />
-                </div>
-                {t("recentAssignments")}
-              </CardTitle>
-            </CardHeader>
-          <CardContent>
+        <Card className="glass border-primary/20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+          <CardHeader className="relative z-10">
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg border border-primary/30">
+                <FileText className="h-5 w-5 text-primary" />
+              </div>
+              {t("recentAssignments")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative z-10">
             <div className="space-y-4">
               {assignments.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">{t("noAssignmentsYet")}</p>
