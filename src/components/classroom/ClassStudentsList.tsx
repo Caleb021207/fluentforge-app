@@ -8,6 +8,8 @@ import { StudentMetricsTable } from './components/StudentMetricsTable';
 import { useSortableData } from './hooks/useSortableData';
 import { StudentMetrics } from './types/studentTypes';
 import { RefreshMetricsButton } from './components/RefreshMetricsButton';
+import { ConsentRecordDialog } from './components/ConsentRecordDialog';
+import { StudentProfileViewer } from '@/components/teacher/dashboard/StudentProfileViewer';
 
 interface ClassStudentsListProps {
   classId: string;
@@ -21,6 +23,18 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
   const [students, setStudents] = React.useState<StudentMetrics[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const { sortedData, sortField, sortDirection, handleSort } = useSortableData(students);
+
+  // Lifted dialog state - render dialogs at this level to avoid nesting issues
+  const [consentDialogStudent, setConsentDialogStudent] = React.useState<{
+    studentId: string;
+    studentName: string;
+    currentConsent: boolean;
+  } | null>(null);
+  
+  const [profileViewerStudent, setProfileViewerStudent] = React.useState<{
+    studentId: string;
+    studentName: string;
+  } | null>(null);
 
   const fetchStudents = async () => {
     if (!open || !classId) return;
@@ -115,37 +129,74 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
   }, [classId, open, toast]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-7xl">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle>
-              {className} - {CLASSROOM_TEXT.STUDENTS}
-            </DialogTitle>
-            <RefreshMetricsButton 
-              classId={classId} 
-              onSuccess={fetchStudents} 
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-7xl">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <DialogTitle>
+                {className} - {CLASSROOM_TEXT.STUDENTS}
+              </DialogTitle>
+              <RefreshMetricsButton 
+                classId={classId} 
+                onSuccess={fetchStudents} 
+              />
+            </div>
+          </DialogHeader>
+          {isLoading ? (
+            <div className="py-8 text-center">Loading...</div>
+          ) : students.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">
+              {CLASSROOM_TEXT.NO_STUDENTS_IN_CLASS}
+            </div>
+          ) : (
+            <StudentMetricsTable
+              students={sortedData}
+              sortField={sortField}
+              sortDirection={sortDirection}
+              onSort={handleSort}
+              classId={classId}
+              onStudentRemoved={fetchStudents}
+              onOpenConsentDialog={(studentId, studentName, currentConsent) => {
+                setConsentDialogStudent({ studentId, studentName, currentConsent });
+              }}
+              onOpenProfileViewer={(studentId, studentName) => {
+                setProfileViewerStudent({ studentId, studentName });
+              }}
             />
-          </div>
-        </DialogHeader>
-        {isLoading ? (
-          <div className="py-8 text-center">Loading...</div>
-        ) : students.length === 0 ? (
-          <div className="py-8 text-center text-muted-foreground">
-            {CLASSROOM_TEXT.NO_STUDENTS_IN_CLASS}
-          </div>
-        ) : (
-          <StudentMetricsTable
-            students={sortedData}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            onSort={handleSort}
-            classId={classId}
-            onStudentRemoved={fetchStudents}
-          />
-        )}
-      </DialogContent>
-    </Dialog>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Consent Dialog - rendered outside the main dialog to fix click events */}
+      {consentDialogStudent && (
+        <ConsentRecordDialog
+          open={!!consentDialogStudent}
+          onOpenChange={(open) => {
+            if (!open) setConsentDialogStudent(null);
+          }}
+          studentId={consentDialogStudent.studentId}
+          studentName={consentDialogStudent.studentName}
+          currentConsent={consentDialogStudent.currentConsent}
+          onConsentUpdated={() => {
+            fetchStudents();
+            setConsentDialogStudent(null);
+          }}
+        />
+      )}
+
+      {/* Profile Viewer - rendered outside the main dialog */}
+      {profileViewerStudent && (
+        <StudentProfileViewer
+          open={!!profileViewerStudent}
+          onOpenChange={(open) => {
+            if (!open) setProfileViewerStudent(null);
+          }}
+          studentId={profileViewerStudent.studentId}
+          studentName={profileViewerStudent.studentName}
+        />
+      )}
+    </>
   );
 };
 

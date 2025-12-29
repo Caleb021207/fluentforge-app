@@ -106,6 +106,23 @@ const teacherDashboardTranslations: TranslationRecord = {
   // Misc
   creating: "Creating...",
   copied: "Copied!",
+  
+  // Student Profile Viewer
+  studentProfile: "Student Learning Profile",
+  aiAnalysisFor: "AI analysis for",
+  noProfileData: "No profile data yet",
+  profileDataWillAppear: "Profile data will appear after the student completes conversations with AI profiling enabled.",
+  estimatedLevel: "Estimated Level",
+  notYetDetermined: "Not yet determined",
+  strengths: "Strengths",
+  primaryStruggles: "Areas for Improvement",
+  grammarWeaknesses: "Grammar Patterns to Address",
+  vocabularyGaps: "Vocabulary to Practice",
+  recentConversations: "Recent Conversations",
+  generalConversation: "General conversation",
+  limitedProfileData: "Limited data available. More insights will appear as the student has more conversations.",
+  viewProfile: "View Profile",
+  recordConsent: "Record Consent",
 };
 
 export default teacherDashboardTranslations;

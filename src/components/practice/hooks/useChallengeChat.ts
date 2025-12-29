@@ -5,6 +5,7 @@ import { useChatMessaging } from "./messaging";
 import { useSessionManagement } from "./useSessionManagement";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useConversationProfiling } from "@/hooks/useConversationProfiling";
 import type { TranslationType } from "./translation/types";
 
 interface Message {
@@ -36,10 +37,12 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
   const { isLoading, hasError, sendChatMessage, extractStringFromTranslation } = useChatMessaging();
   const { startSession, sessionId } = useSessionManagement();
   const { toast } = useToast();
+  const { triggerProfiling } = useConversationProfiling();
   
   const currentSessionIdRef = useRef<string | null>(null);
   const hasGeneratedOpening = useRef(false);
   const hasRestoredMessages = useRef(false);
+  const profilingTriggeredRef = useRef(false);
 
   // Normalize CEFR level (e.g., "A2/B1" -> "A2", "B1+" -> "B1")
   const normalizedCefrLevel = cefrLevel.toUpperCase().split('/')[0].replace('+', '').trim();
@@ -118,6 +121,42 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
       setIsGeneratingOpening(false);
     }
   }, [topicPrompt, normalizedCefrLevel]);
+
+  // Trigger profiling when component unmounts
+  const triggerProfilingIfNeeded = useCallback(async () => {
+    if (profilingTriggeredRef.current || messages.length < 4) return;
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      profilingTriggeredRef.current = true;
+      
+      const formattedMessages = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+      
+      await triggerProfiling({
+        studentId: user.id,
+        sessionId: currentSessionIdRef.current || `challenge_${Date.now()}`,
+        messages: formattedMessages,
+        topic: topicPrompt,
+        targetLevel: normalizedCefrLevel
+      });
+      
+      console.log('✅ Challenge profiling triggered');
+    } catch (error) {
+      console.error('Error triggering challenge profiling:', error);
+    }
+  }, [messages, topicPrompt, normalizedCefrLevel, triggerProfiling]);
+
+  // Trigger profiling on unmount
+  useEffect(() => {
+    return () => {
+      triggerProfilingIfNeeded();
+    };
+  }, [triggerProfilingIfNeeded]);
 
   // Initialize session and generate opening message on mount
   useEffect(() => {

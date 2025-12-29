@@ -14,6 +14,8 @@ interface StudentMetricsTableProps {
   onSort: (field: SortField) => void;
   classId?: string;
   onStudentRemoved?: () => void;
+  onOpenConsentDialog?: (studentId: string, studentName: string, currentConsent: boolean) => void;
+  onOpenProfileViewer?: (studentId: string, studentName: string) => void;
 }
 
 export const StudentMetricsTable = ({
@@ -22,7 +24,9 @@ export const StudentMetricsTable = ({
   sortDirection,
   onSort,
   classId,
-  onStudentRemoved
+  onStudentRemoved,
+  onOpenConsentDialog,
+  onOpenProfileViewer
 }: StudentMetricsTableProps) => {
   const { t } = useLocalization();
   
@@ -112,6 +116,8 @@ export const StudentMetricsTable = ({
                   updateStatus(student.student_id, { hasConsent: consented });
                 }
               }}
+              onOpenConsentDialog={onOpenConsentDialog}
+              onOpenProfileViewer={onOpenProfileViewer}
             />
           ))}
         </TableBody>
