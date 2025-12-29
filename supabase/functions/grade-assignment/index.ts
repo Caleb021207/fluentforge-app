@@ -48,15 +48,19 @@ serve(async (req) => {
     const messageCount = submission.message_count || 0;
     const minMessages = assignment.min_messages || 10;
 
-    // COMPLETION-BASED SCORING
-    // 100% if met or exceeded minimum messages
-    // Proportional score if submitted early
-    let score = 0;
+    // COMPLETION-BASED SCORING (no harsh percentages)
+    // 100% if met or exceeded minimum messages = "Completed"
+    // null score if not met = "Incomplete" (teacher can manually grade)
+    let score: number | null = null;
+    let status = 'incomplete';
     let feedback: any = {};
+    let totalXP = 25; // Small participation XP for incomplete
 
     if (messageCount >= minMessages) {
       // Full completion - 100%
       score = 100;
+      status = 'completed';
+      totalXP = 100; // Full XP for completion
       feedback = {
         status: 'completed',
         summary: 'Great job! You successfully completed the conversation assignment.',
@@ -65,26 +69,17 @@ serve(async (req) => {
         messagesSubmitted: messageCount
       };
     } else {
-      // Partial completion - proportional score
-      score = Math.round((messageCount / minMessages) * 100);
+      // Incomplete - don't assign a harsh percentage score
       feedback = {
-        status: 'partial',
-        summary: `You submitted ${messageCount} out of ${minMessages} required messages. Keep practicing!`,
+        status: 'incomplete',
+        summary: `Submitted ${messageCount} of ${minMessages} required messages. Assignment incomplete.`,
         messagesMet: false,
         messagesRequired: minMessages,
         messagesSubmitted: messageCount
       };
     }
 
-    // XP Calculation:
-    // Base: 50 XP for participation
-    // Completion bonus: 50 XP for full completion
-    // Total max: 100 XP
-    const baseXP = 50;
-    const completionBonus = messageCount >= minMessages ? 50 : Math.round(50 * (messageCount / minMessages));
-    const totalXP = baseXP + completionBonus;
-
-    console.log(`[grade-assignment] Submission ${submissionId}: messages=${messageCount}/${minMessages}, score=${score}%, XP=${totalXP}`);
+    console.log(`[grade-assignment] Submission ${submissionId}: messages=${messageCount}/${minMessages}, status=${status}, XP=${totalXP}`);
 
     // Update submission with grades
     const { error: updateError } = await supabase
@@ -93,7 +88,7 @@ serve(async (req) => {
         ai_score: score,
         ai_feedback: feedback,
         xp_awarded: totalXP,
-        status: 'graded'
+        status: status
       })
       .eq('id', submissionId);
 
