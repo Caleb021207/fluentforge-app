@@ -40,13 +40,18 @@ interface AssignmentData {
   dueDate: string | null;
   totalStudents: number;
   completed: number;
-  pending: number;
-  overdue: number;
+  inProgress: number;
+  unopened: number;
   averageScore: number;
   averageDuration: number;
 }
 
-const COLORS = ['hsl(var(--primary))', 'hsl(var(--muted))', 'hsl(var(--destructive))'];
+// Distinct, high-contrast colors for status distribution
+const STATUS_COLORS = {
+  completed: '#22c55e',    // Green
+  inProgress: '#f59e0b',   // Amber
+  unopened: '#6b7280'      // Gray
+};
 
 const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
   const { t } = useLocalization();
@@ -95,16 +100,16 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
         .in('assignment_id', assignmentIds);
 
       // Build assignment data
-      const now = new Date();
       const assignmentData: AssignmentData[] = assignments.map(assignment => {
         const totalStudents = studentsPerClass.get(assignment.class_id!) || 0;
         const assignmentSubmissions = submissions?.filter(s => s.assignment_id === assignment.id) || [];
         
+        // Completed: status is 'completed'
         const completed = assignmentSubmissions.filter(s => s.status === 'completed').length;
-        const pending = assignmentSubmissions.filter(s => s.status === 'pending' || s.status === 'in_progress').length;
-        
-        const isOverdue = assignment.due_date && new Date(assignment.due_date) < now;
-        const overdue = isOverdue ? totalStudents - completed - pending : 0;
+        // In Progress: status is 'in_progress' or 'pending' (student has opened/started)
+        const inProgress = assignmentSubmissions.filter(s => s.status === 'pending' || s.status === 'in_progress').length;
+        // Unopened: students who haven't created a submission at all
+        const unopened = Math.max(0, totalStudents - completed - inProgress);
 
         const completedWithScores = assignmentSubmissions.filter(s => s.status === 'completed' && s.ai_score != null);
         const avgScore = completedWithScores.length > 0
@@ -123,8 +128,8 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           dueDate: assignment.due_date,
           totalStudents,
           completed,
-          pending,
-          overdue: Math.max(0, overdue),
+          inProgress,
+          unopened,
           averageScore: Math.round(avgScore),
           averageDuration: Math.round(avgDuration)
         };
@@ -170,14 +175,14 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
   const completionChartData = assignments.slice(0, 10).map(a => ({
     name: a.title.length > 15 ? a.title.substring(0, 15) + '...' : a.title,
     completed: a.completed,
-    pending: a.pending,
-    overdue: a.overdue
+    inProgress: a.inProgress,
+    unopened: a.unopened
   }));
 
   const statusDistribution = [
-    { name: t("completed"), value: assignments.reduce((sum, a) => sum + a.completed, 0) },
-    { name: t("pending"), value: assignments.reduce((sum, a) => sum + a.pending, 0) },
-    { name: t("overdue"), value: assignments.reduce((sum, a) => sum + a.overdue, 0) }
+    { name: t("completed"), value: assignments.reduce((sum, a) => sum + a.completed, 0), color: STATUS_COLORS.completed },
+    { name: t("inProgress"), value: assignments.reduce((sum, a) => sum + a.inProgress, 0), color: STATUS_COLORS.inProgress },
+    { name: t("unopened"), value: assignments.reduce((sum, a) => sum + a.unopened, 0), color: STATUS_COLORS.unopened }
   ].filter(d => d.value > 0);
 
   return (
@@ -285,9 +290,9 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
                     <XAxis dataKey="name" fontSize={12} />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="completed" stackId="a" fill="hsl(var(--primary))" name={t("completed")} />
-                    <Bar dataKey="pending" stackId="a" fill="hsl(var(--muted))" name={t("pending")} />
-                    <Bar dataKey="overdue" stackId="a" fill="hsl(var(--destructive))" name={t("overdue")} />
+                    <Bar dataKey="completed" stackId="a" fill={STATUS_COLORS.completed} name={t("completed")} />
+                    <Bar dataKey="inProgress" stackId="a" fill={STATUS_COLORS.inProgress} name={t("inProgress")} />
+                    <Bar dataKey="unopened" stackId="a" fill={STATUS_COLORS.unopened} name={t("unopened")} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
@@ -322,12 +327,19 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
                       paddingAngle={5}
                       dataKey="value"
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      labelLine={{ stroke: 'hsl(var(--foreground))' }}
                     >
-                      {statusDistribution.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      {statusDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--background))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
