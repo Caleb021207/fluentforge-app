@@ -1,0 +1,8 @@
+import { TranslationRecord } from "../types";
+const assignmentsTranslations: TranslationRecord = {
+  notAssigned: "नियुक्त नाही", readyToStart: "सुरू करण्यास तयार", inProgress: "प्रगतीत", completed: "पूर्ण", graded: "ग्रेड दिला",
+  yourTask: "तुमचे कार्य", messagesRequired: "संदेश", minMax: "मिनिट कमाल", pts: "गुण", due: "देय तारीख", completedBadge: "पूर्ण!", xpAwarded: "XP", continueChallenge: "आव्हान चालू ठेवा", startChallenge: "आव्हान सुरू करा",
+  myAssignments: "माझी कार्ये", noAssignmentsYet: "अद्याप कोणतेही कार्य नाही", teacherWillAssign: "तुमचे शिक्षक येथे संभाषण आव्हाने देतील", toDo: "करायचे", completedTab: "पूर्ण", allCaughtUp: "सर्व पूर्ण! कोणतेही प्रलंबित कार्य नाही.", noCompletedYet: "अद्याप पूर्ण केलेले कोणतेही कार्य नाही.", loadingAssignments: "कार्ये लोड होत आहेत...", errorStarting: "त्रुटी",
+  noAssignment: "कोणतेही कार्य नाही", startFromProfile: "कृपया तुमच्या प्रोफाइलवरून कार्य सुरू करा", messagesProgress: "संदेश", readyToSubmit: "सादर करण्यास तयार!", moreToGo: "आणखी हवे", submit: "सादर करा", leaveAssignment: "कार्य सोडायचे?", progressSaved: "तुमची प्रगती जतन झाली!", youveSent: "तुम्ही पाठवले", needMore: "आणखी हवे", moreToSubmit: "सादर करण्यासाठी", canContinueLater: "तुम्ही नंतर चालू ठेवू शकता.", continueAssignment: "कार्य चालू ठेवा", saveAndExit: "जतन करा आणि बाहेर पडा", assignmentCompleted: "कार्य पूर्ण! 🎉", greatWorkXp: "छान काम! तुम्ही कमावले", submittedSuccessfully: "तुमचे कार्य यशस्वीरित्या सादर झाले", failedToSubmit: "सादर करणे अयशस्वी. कृपया पुन्हा प्रयत्न करा.", assignmentInProgress: "तुमचे एक कार्य प्रगतीत आहे. तुम्हाला खरोखर बाहेर पडायचे आहे का?",
+};
+export default assignmentsTranslations;
