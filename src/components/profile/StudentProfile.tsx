@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { LeaderboardSection } from "./LeaderboardSection";
 import { getFluencyCertStatus, getCertDisplayName, getCertDisplayDescription } from "@/utils/fluencyCertification";
 import StudentAssignmentsView from "@/components/assignments/StudentAssignmentsView";
+import AssignmentPopup from "@/components/assignments/AssignmentPopup";
 
 interface StudentProfileProps {
   profile: ExtendedUserProfile;
@@ -110,6 +111,9 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Auto-popup for pending assignments */}
+      <AssignmentPopup />
+
       {/* Student Assignments Section - TOP PRIORITY */}
       <StudentAssignmentsView />
 
