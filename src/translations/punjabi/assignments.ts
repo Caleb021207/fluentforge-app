@@ -1,0 +1,8 @@
+import { TranslationRecord } from "../types";
+const assignmentsTranslations: TranslationRecord = {
+  notAssigned: "ਨਿਰਧਾਰਤ ਨਹੀਂ", readyToStart: "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਤਿਆਰ", inProgress: "ਚੱਲ ਰਿਹਾ ਹੈ", completed: "ਮੁਕੰਮਲ", graded: "ਗ੍ਰੇਡ ਦਿੱਤਾ",
+  yourTask: "ਤੁਹਾਡਾ ਕੰਮ", messagesRequired: "ਸੁਨੇਹੇ", minMax: "ਮਿੰਟ ਵੱਧ ਤੋਂ ਵੱਧ", pts: "ਅੰਕ", due: "ਆਖਰੀ ਤਾਰੀਖ", completedBadge: "ਮੁਕੰਮਲ!", xpAwarded: "XP", continueChallenge: "ਚੁਣੌਤੀ ਜਾਰੀ ਰੱਖੋ", startChallenge: "ਚੁਣੌਤੀ ਸ਼ੁਰੂ ਕਰੋ",
+  myAssignments: "ਮੇਰੇ ਕੰਮ", noAssignmentsYet: "ਅਜੇ ਕੋਈ ਕੰਮ ਨਹੀਂ", teacherWillAssign: "ਤੁਹਾਡਾ ਅਧਿਆਪਕ ਇੱਥੇ ਗੱਲਬਾਤ ਦੀਆਂ ਚੁਣੌਤੀਆਂ ਦੇਵੇਗਾ", toDo: "ਕਰਨਾ ਹੈ", completedTab: "ਮੁਕੰਮਲ", allCaughtUp: "ਸਭ ਹੋ ਗਿਆ! ਕੋਈ ਬਾਕੀ ਕੰਮ ਨਹੀਂ.", noCompletedYet: "ਅਜੇ ਕੋਈ ਮੁਕੰਮਲ ਕੰਮ ਨਹੀਂ.", loadingAssignments: "ਕੰਮ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...", errorStarting: "ਗਲਤੀ",
+  noAssignment: "ਕੋਈ ਕੰਮ ਨਹੀਂ", startFromProfile: "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਤੋਂ ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ", messagesProgress: "ਸੁਨੇਹੇ", readyToSubmit: "ਜਮ੍ਹਾਂ ਕਰਨ ਲਈ ਤਿਆਰ!", moreToGo: "ਹੋਰ ਚਾਹੀਦੇ", submit: "ਜਮ੍ਹਾਂ ਕਰੋ", leaveAssignment: "ਕੰਮ ਛੱਡੋ?", progressSaved: "ਤੁਹਾਡੀ ਤਰੱਕੀ ਸੁਰੱਖਿਅਤ!", youveSent: "ਤੁਸੀਂ ਭੇਜਿਆ", needMore: "ਹੋਰ ਚਾਹੀਦੇ", moreToSubmit: "ਜਮ੍ਹਾਂ ਕਰਨ ਲਈ", canContinueLater: "ਤੁਸੀਂ ਬਾਅਦ ਵਿੱਚ ਜਾਰੀ ਰੱਖ ਸਕਦੇ ਹੋ.", continueAssignment: "ਕੰਮ ਜਾਰੀ ਰੱਖੋ", saveAndExit: "ਸੇਵ ਕਰੋ ਅਤੇ ਬਾਹਰ ਜਾਓ", assignmentCompleted: "ਕੰਮ ਮੁਕੰਮਲ! 🎉", greatWorkXp: "ਵਧੀਆ ਕੰਮ! ਤੁਸੀਂ ਕਮਾਇਆ", submittedSuccessfully: "ਤੁਹਾਡਾ ਕੰਮ ਸਫਲਤਾਪੂਰਵਕ ਜਮ੍ਹਾਂ ਹੋ ਗਿਆ", failedToSubmit: "ਜਮ੍ਹਾਂ ਕਰਨ ਵਿੱਚ ਅਸਫਲ. ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.", assignmentInProgress: "ਤੁਹਾਡਾ ਇੱਕ ਕੰਮ ਚੱਲ ਰਿਹਾ ਹੈ. ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਬਾਹਰ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+};
+export default assignmentsTranslations;

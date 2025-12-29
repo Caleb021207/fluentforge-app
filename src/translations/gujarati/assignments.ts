@@ -1,0 +1,8 @@
+import { TranslationRecord } from "../types";
+const assignmentsTranslations: TranslationRecord = {
+  notAssigned: "સોંપાયેલ નથી", readyToStart: "શરૂ કરવા તૈયાર", inProgress: "પ્રગતિમાં", completed: "પૂર્ણ", graded: "ગ્રેડ આપ્યો",
+  yourTask: "તમારું કાર્ય", messagesRequired: "સંદેશાઓ", minMax: "મિનિટ મહત્તમ", pts: "પોઈન્ટ", due: "નિયત તારીખ", completedBadge: "પૂર્ણ!", xpAwarded: "XP", continueChallenge: "પડકાર ચાલુ રાખો", startChallenge: "પડકાર શરૂ કરો",
+  myAssignments: "મારા કાર્યો", noAssignmentsYet: "હજુ સુધી કોઈ કાર્ય નથી", teacherWillAssign: "તમારા શિક્ષક અહીં વાતચીત પડકારો આપશે", toDo: "કરવાનું", completedTab: "પૂર્ણ", allCaughtUp: "બધું થઈ ગયું! કોઈ બાકી કાર્ય નથી.", noCompletedYet: "હજુ સુધી કોઈ પૂર્ણ કાર્ય નથી.", loadingAssignments: "કાર્યો લોડ થઈ રહ્યા છે...", errorStarting: "ભૂલ",
+  noAssignment: "કોઈ કાર્ય નથી", startFromProfile: "કૃપા કરીને તમારા પ્રોફાઇલથી કાર્ય શરૂ કરો", messagesProgress: "સંદેશાઓ", readyToSubmit: "સબમિટ કરવા તૈયાર!", moreToGo: "વધુ જોઈએ", submit: "સબમિટ કરો", leaveAssignment: "કાર્ય છોડો?", progressSaved: "તમારી પ્રગતિ સાચવેલી છે!", youveSent: "તમે મોકલ્યું", needMore: "વધુ જોઈએ", moreToSubmit: "સબમિટ કરવા", canContinueLater: "તમે પછી ચાલુ રાખી શકો છો.", continueAssignment: "કાર્ય ચાલુ રાખો", saveAndExit: "સાચવો અને બહાર નીકળો", assignmentCompleted: "કાર્ય પૂર્ણ! 🎉", greatWorkXp: "સરસ કામ! તમે કમાયા", submittedSuccessfully: "તમારું કાર્ય સફળતાપૂર્વક સબમિટ થયું", failedToSubmit: "સબમિટ કરવામાં નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.", assignmentInProgress: "તમારું એક કાર્ય પ્રગતિમાં છે. શું તમે ખરેખર બહાર નીકળવા માંગો છો?",
+};
+export default assignmentsTranslations;
