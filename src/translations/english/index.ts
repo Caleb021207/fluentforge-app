@@ -20,6 +20,7 @@ import landingAuthTranslations from "./landing-auth";
 import classroomTranslations from "./classroom";
 import settingsTranslations from "./settings";
 import pronunciationTranslations from "./pronunciation";
+import teacherDashboardTranslations from "./teacher-dashboard";
 
 // Combine all the translation categories
 const englishTranslations: TranslationRecord = {
@@ -43,6 +44,7 @@ const englishTranslations: TranslationRecord = {
   ...classroomTranslations,
   ...settingsTranslations,
   ...pronunciationTranslations,
+  ...teacherDashboardTranslations,
 };
 
 export default englishTranslations;

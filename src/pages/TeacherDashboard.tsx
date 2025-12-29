@@ -81,34 +81,35 @@ const TeacherDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-4 sm:p-6 space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/profile')}
+            className="shrink-0"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <LayoutDashboard className="h-8 w-8 text-primary" />
-              {t("teacherDashboard")}
+          <div className="min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+              <LayoutDashboard className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" />
+              <span className="truncate">{t("teacherDashboard")}</span>
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm truncate">
               {profile?.display_name} • {profile?.school?.name}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           {unreadCount > 0 && (
-            <span className="bg-destructive text-destructive-foreground px-2 py-1 rounded-full text-xs font-medium">
+            <span className="bg-destructive text-destructive-foreground px-2 py-1 rounded-full text-xs font-medium shrink-0">
               {unreadCount} {t("newNotifications")}
             </span>
           )}
@@ -116,24 +117,24 @@ const TeacherDashboard = () => {
         </div>
       </motion.div>
 
-      {/* Dashboard Tabs - Now with 4 tabs */}
+      {/* Dashboard Tabs - Responsive grid */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-flex">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-auto lg:inline-flex">
+          <TabsTrigger value="overview" className="flex items-center gap-2 text-xs sm:text-sm">
             <TrendingUp className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("overview")}</span>
+            <span className="truncate">{t("overview")}</span>
           </TabsTrigger>
-          <TabsTrigger value="classes" className="flex items-center gap-2">
+          <TabsTrigger value="classes" className="flex items-center gap-2 text-xs sm:text-sm">
             <FolderOpen className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("classes") || "Classes"}</span>
+            <span className="truncate">{t("classes")}</span>
           </TabsTrigger>
-          <TabsTrigger value="students" className="flex items-center gap-2">
+          <TabsTrigger value="students" className="flex items-center gap-2 text-xs sm:text-sm">
             <Users className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("students")}</span>
+            <span className="truncate">{t("students")}</span>
           </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-2">
+          <TabsTrigger value="assignments" className="flex items-center gap-2 text-xs sm:text-sm">
             <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("assignments")}</span>
+            <span className="truncate">{t("assignments")}</span>
           </TabsTrigger>
         </TabsList>
 

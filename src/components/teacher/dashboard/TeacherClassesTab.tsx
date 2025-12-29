@@ -169,17 +169,17 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">{t("myClasses") || "My Classes"}</h2>
-          <p className="text-muted-foreground">
-            {t("manageClassesDescription") || "Create and manage your classes"}
+      {/* Header - Responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <h2 className="text-xl sm:text-2xl font-bold truncate">{t("myClasses")}</h2>
+          <p className="text-muted-foreground text-sm">
+            {t("manageClassesDescription")}
           </p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)}>
+        <Button onClick={() => setCreateDialogOpen(true)} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
-          {t("createClass") || "Create Class"}
+          {t("createClass")}
         </Button>
       </div>
 
@@ -188,38 +188,38 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground mb-4">
-              {t("noClassesCreated") || "You haven't created any classes yet"}
+              {t("noClassesCreated")}
             </p>
             <Button onClick={() => setCreateDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
-              {t("createFirstClass") || "Create Your First Class"}
+              {t("createFirstClass")}
             </Button>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {classes?.map((cls) => (
             <Card key={cls.id} className="hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-lg">{cls.name}</CardTitle>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="text-lg truncate">{cls.name}</CardTitle>
                     <CardDescription>{cls.academic_year}</CardDescription>
                   </div>
-                  <Badge variant="default">{t("active") || "Active"}</Badge>
+                  <Badge variant="default" className="shrink-0">{t("active")}</Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("classCode") || "Class Code"}:</span>
-                  <div className="flex items-center gap-2">
-                    <code className="bg-muted px-2 py-1 rounded text-xs font-mono">
+                <div className="flex items-center justify-between text-sm gap-2">
+                  <span className="text-muted-foreground shrink-0">{t("classCode")}:</span>
+                  <div className="flex items-center gap-1 min-w-0">
+                    <code className="bg-muted px-2 py-1 rounded text-xs font-mono truncate">
                       {cls.class_code}
                     </code>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-6 w-6 shrink-0"
                       onClick={() => copyClassCode(cls.class_code)}
                     >
                       {copiedCode === cls.class_code ? (
@@ -232,37 +232,37 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
                 </div>
                 
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("students") || "Students"}:</span>
+                  <span className="text-muted-foreground">{t("students")}:</span>
                   <span className="font-medium">{cls.student_count}</span>
                 </div>
 
-                <div className="flex gap-2 pt-2">
+                {/* Action buttons - 2 column grid + delete */}
+                <div className="grid grid-cols-2 gap-2 pt-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
                     onClick={() => setViewStudentsClass({ id: cls.id, name: cls.name })}
                   >
                     <Users className="h-4 w-4 mr-1" />
-                    {t("viewStudents") || "Students"}
+                    <span className="truncate">{t("viewStudents")}</span>
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
                     onClick={() => setSelectedClass(cls)}
                   >
-                    {t("assignments") || "Assignments"}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-destructive hover:text-destructive"
-                    onClick={() => deleteClassMutation.mutate(cls.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
+                    <span className="truncate">{t("assignments")}</span>
                   </Button>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                  onClick={() => deleteClassMutation.mutate(cls.id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  {t("deleteClass")}
+                </Button>
               </CardContent>
             </Card>
           ))}
@@ -273,31 +273,32 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("createClass") || "Create Class"}</DialogTitle>
+            <DialogTitle>{t("createClass")}</DialogTitle>
             <DialogDescription>
-              {t("createClassDescription") || "Enter a name for your new class"}
+              {t("createClassDescription")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="className">{t("className") || "Class Name"}</Label>
+              <Label htmlFor="className">{t("className")}</Label>
               <Input
                 id="className"
                 value={newClassName}
                 onChange={(e) => setNewClassName(e.target.value)}
-                placeholder={t("classNamePlaceholder") || "e.g., Spanish 101"}
+                placeholder={t("classNamePlaceholder")}
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-              {t("cancel") || "Cancel"}
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setCreateDialogOpen(false)} className="w-full sm:w-auto">
+              {t("cancel")}
             </Button>
             <Button
               onClick={() => createClassMutation.mutate(newClassName)}
               disabled={!newClassName.trim() || createClassMutation.isPending}
+              className="w-full sm:w-auto"
             >
-              {createClassMutation.isPending ? t("creating") || "Creating..." : t("create") || "Create"}
+              {createClassMutation.isPending ? t("creating") : t("create")}
             </Button>
           </DialogFooter>
         </DialogContent>

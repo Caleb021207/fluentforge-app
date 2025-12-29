@@ -266,10 +266,30 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
     }
   ];
 
+  // Show empty state when no classes
+  if (stats?.totalClasses === 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <Card>
+          <CardContent className="py-12 text-center">
+            <GraduationCap className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-lg font-semibold mb-2">{t("noClassesYet")}</h3>
+            <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
+              {t("noClassesYetDescription")}
+            </p>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Stats Grid - Responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat, index) => (
           <motion.div
             key={stat.title}
@@ -280,12 +300,12 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${stat.bg}`}>
+                  <div className={`p-2 rounded-lg ${stat.bg} shrink-0`}>
                     <stat.icon className={`h-5 w-5 ${stat.color}`} />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-2xl font-bold">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.title}</p>
+                    <p className="text-sm text-muted-foreground truncate">{stat.title}</p>
                   </div>
                 </div>
               </CardContent>
