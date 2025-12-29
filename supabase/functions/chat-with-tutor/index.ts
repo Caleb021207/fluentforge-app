@@ -79,6 +79,68 @@ serve(async (req) => {
 
     console.log(`Authenticated request from user: ${user.id}`);
 
+    // ===== FETCH STUDENT LEARNING PROFILE =====
+    // This data personalizes the AI tutor based on the student's profiled struggles
+    let studentProfile: {
+      estimated_cefr_level: string | null;
+      primary_struggles: any[] | null;
+      grammar_weaknesses: any[] | null;
+      vocabulary_gaps: string[] | null;
+      strengths: any[] | null;
+      profiling_enabled: boolean;
+    } | null = null;
+    
+    let recentConversationMemory: Array<{
+      conversation_summary: string | null;
+      grammar_issues_found: any[] | null;
+      topic: string | null;
+    }> = [];
+
+    try {
+      // Use admin client for fetching profile data
+      const supabaseAdmin = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        { auth: { persistSession: false } }
+      );
+
+      // Fetch student learning profile
+      const { data: profileData, error: profileError } = await supabaseAdmin
+        .from('student_learning_profiles')
+        .select('estimated_cefr_level, primary_struggles, grammar_weaknesses, vocabulary_gaps, strengths, profiling_enabled')
+        .eq('student_id', user.id)
+        .eq('profiling_enabled', true) // Only fetch if profiling is enabled
+        .single();
+
+      if (profileError && profileError.code !== 'PGRST116') { // PGRST116 = no rows found
+        console.error('Error fetching student profile:', profileError);
+      } else if (profileData) {
+        studentProfile = profileData;
+        console.log(`Loaded student profile for ${user.id}: CEFR=${profileData.estimated_cefr_level}, struggles=${JSON.stringify(profileData.primary_struggles)?.substring(0, 100)}`);
+      }
+
+      // Fetch recent conversation memory (last 3 sessions for context)
+      if (studentProfile) {
+        const { data: memoryData, error: memoryError } = await supabaseAdmin
+          .from('student_conversation_memory')
+          .select('conversation_summary, grammar_issues_found, topic')
+          .eq('student_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (memoryError) {
+          console.error('Error fetching conversation memory:', memoryError);
+        } else if (memoryData && memoryData.length > 0) {
+          recentConversationMemory = memoryData;
+          console.log(`Loaded ${memoryData.length} recent conversation memories for ${user.id}`);
+        }
+      }
+    } catch (profileFetchError) {
+      console.error('Failed to fetch student profile:', profileFetchError);
+      // Continue without profile data - non-critical
+    }
+    // ===== END FETCH STUDENT LEARNING PROFILE =====
+
     // Get request data
     const requestData = await req.json();
     const { 
@@ -621,7 +683,79 @@ The student is working on this specific assignment: "${assignmentTopic}"
 
 Always respond primarily in ${targetLangDisplay}, following the language mixing guidelines above based on the user's level. If asked to translate or explain grammar, provide clear answers.`;
 
-    console.log(`Grammar correction enabled: ${correctGrammar}, Effective CEFR: ${effectiveCefrLevel}, Native language ratio: ${currentLevel.nativeLanguageRatio}`);
+    // ===== INJECT STUDENT PROFILE INTO SYSTEM MESSAGE =====
+    if (studentProfile && studentProfile.profiling_enabled) {
+      let profileContext = `\n\n📊 PERSONALIZED STUDENT PROFILE (Use this to adapt your teaching):`;
+      
+      // Use profiled CEFR level if available and different from conversation setting
+      if (studentProfile.estimated_cefr_level) {
+        profileContext += `\n- Profiled proficiency: ${studentProfile.estimated_cefr_level} (based on conversation analysis)`;
+      }
+      
+      // Add struggles/weaknesses
+      if (studentProfile.primary_struggles && Array.isArray(studentProfile.primary_struggles) && studentProfile.primary_struggles.length > 0) {
+        const struggles = studentProfile.primary_struggles.slice(0, 5).map((s: any) => 
+          typeof s === 'string' ? s : (s.description || s.type || JSON.stringify(s))
+        ).join(', ');
+        profileContext += `\n- Primary struggles: ${struggles}`;
+        profileContext += `\n  → Naturally incorporate practice for these areas in your responses`;
+      }
+      
+      if (studentProfile.grammar_weaknesses && Array.isArray(studentProfile.grammar_weaknesses) && studentProfile.grammar_weaknesses.length > 0) {
+        const grammarIssues = studentProfile.grammar_weaknesses.slice(0, 5).map((g: any) => 
+          typeof g === 'string' ? g : (g.pattern || g.description || JSON.stringify(g))
+        ).join(', ');
+        profileContext += `\n- Grammar patterns to reinforce: ${grammarIssues}`;
+        profileContext += `\n  → When you see these errors, gently correct them and provide examples`;
+      }
+      
+      if (studentProfile.vocabulary_gaps && Array.isArray(studentProfile.vocabulary_gaps) && studentProfile.vocabulary_gaps.length > 0) {
+        const vocabGaps = studentProfile.vocabulary_gaps.slice(0, 10).join(', ');
+        profileContext += `\n- Vocabulary to practice: ${vocabGaps}`;
+      }
+      
+      // Add strengths for positive reinforcement
+      if (studentProfile.strengths && Array.isArray(studentProfile.strengths) && studentProfile.strengths.length > 0) {
+        const strengths = studentProfile.strengths.slice(0, 3).map((s: any) => 
+          typeof s === 'string' ? s : (s.description || JSON.stringify(s))
+        ).join(', ');
+        profileContext += `\n- Student strengths: ${strengths}`;
+        profileContext += `\n  → Build on these when introducing new concepts`;
+      }
+      
+      // Add recent conversation context
+      if (recentConversationMemory.length > 0) {
+        const recentTopics = recentConversationMemory
+          .filter(m => m.topic)
+          .map(m => m.topic)
+          .slice(0, 3);
+        
+        if (recentTopics.length > 0) {
+          profileContext += `\n- Recent conversation topics: ${recentTopics.join(', ')}`;
+          profileContext += `\n  → You can reference these if relevant to build continuity`;
+        }
+        
+        // Extract recent grammar issues that keep recurring
+        const recentGrammarIssues = recentConversationMemory
+          .flatMap(m => m.grammar_issues_found || [])
+          .slice(0, 5);
+        
+        if (recentGrammarIssues.length > 0) {
+          const issuesSummary = recentGrammarIssues.map((i: any) => 
+            typeof i === 'string' ? i : (i.pattern || i.description || JSON.stringify(i))
+          ).join(', ');
+          profileContext += `\n- Recurring issues from recent sessions: ${issuesSummary}`;
+        }
+      }
+      
+      profileContext += `\n\nIMPORTANT: Use this profile to personalize your responses. Address weaknesses naturally in conversation, don't explicitly say "I see from your profile..."`;
+      
+      systemMessage += profileContext;
+      console.log(`Injected student profile context (${profileContext.length} chars) for user ${user.id}`);
+    }
+    // ===== END INJECT STUDENT PROFILE =====
+
+    console.log(`Grammar correction enabled: ${correctGrammar}, Effective CEFR: ${effectiveCefrLevel}, Native language ratio: ${currentLevel.nativeLanguageRatio}, Profile injected: ${!!studentProfile}`);
 
     // Use cheaper model if limit is reached
     const modelToUse = usingFallbackModel ? "gpt-3.5-turbo" : "gpt-4o-mini";
