@@ -79,22 +79,24 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
       const classIds = classes.map(c => c.id);
       const classMap = new Map(classes.map(c => [c.id, c.name]));
 
-      // Get enrollments with student profiles
+      // Get enrollments
       const { data: enrollments } = await supabase
         .from('student_enrollments')
-        .select(`
-          student_id,
-          class_id,
-          profiles:student_id (
-            id,
-            display_name
-          )
-        `)
+        .select('student_id, class_id')
         .in('class_id', classIds);
 
       if (!enrollments?.length) return { students: [], classes };
 
       const studentIds = [...new Set(enrollments.map(e => e.student_id).filter(Boolean))] as string[];
+
+      // Get profiles separately (no FK relationship exists)
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, display_name')
+        .in('id', studentIds);
+
+      const profileMap = new Map(profiles?.map(p => [p.id, p.display_name]) || []);
+
 
       // Get assignments for classes
       const { data: assignments } = await supabase
@@ -143,7 +145,7 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
         if (!studentId || !classId || seenStudents.has(`${studentId}-${classId}`)) return;
         seenStudents.add(`${studentId}-${classId}`);
 
-        const profile = enrollment.profiles as any;
+        const displayName = profileMap.get(studentId);
         const classAssignmentIds = assignmentsByClass.get(classId) || [];
         const studentSubmissions = submissions?.filter(s => 
           s.student_id === studentId && classAssignmentIds.includes(s.assignment_id!)
@@ -165,7 +167,7 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
 
         studentProgress.push({
           id: studentId,
-          displayName: profile?.display_name || t("unknownStudent"),
+          displayName: displayName || t("unknownStudent"),
           className: classMap.get(classId) || t("unknownClass"),
           classId,
           cefrLevel: cefrMap.get(studentId) || null,
