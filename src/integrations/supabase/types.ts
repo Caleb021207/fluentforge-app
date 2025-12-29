@@ -2739,9 +2739,9 @@ export type Database = {
         Returns: string
       }
       get_class_student_metrics: {
-        Args: { target_classroom_id?: string }
+        Args: { target_class_id?: string }
         Returns: {
-          classroom_id: string
+          class_id: string
           last_activity: string
           premium_voice_calls: number
           student_email: string

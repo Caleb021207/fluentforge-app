@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { InteractiveCard } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, BarChart3, GraduationCap, TrendingUp, LayoutDashboard, FolderOpen, PlusCircle } from "lucide-react";
+import { Users, BarChart3, LayoutDashboard } from "lucide-react";
 import { ExtendedUserProfile } from "@/types/school";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import CodeManagement from "@/components/admin/CodeManagement";
 import StudentTestScores from "./StudentTestScores";
@@ -18,70 +16,31 @@ interface TeacherProfileProps {
 const TeacherProfile = ({ profile }: TeacherProfileProps) => {
   const { t } = useLocalization();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
   const [classAverage, setClassAverage] = useState<number | null>(null);
   const [studentCount, setStudentCount] = useState<number>(0);
 
   return (
     <div className="space-y-6">
-      {/* Quick Actions for Teachers */}
+      {/* Single Entry Point - Teacher Dashboard */}
       <InteractiveCard>
         <div className="p-6">
           <h3 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <LayoutDashboard className="h-5 w-5 text-primary" />
-            Teacher Quick Actions
+            {t("teacherTools") || "Teacher Tools"}
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button
               onClick={() => navigate("/teacher/dashboard")}
-              variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
+              size="lg"
+              className="flex-1 h-auto py-6"
             >
-              <BarChart3 className="h-6 w-6 text-primary" />
-              <span className="text-sm font-medium">Teacher Dashboard</span>
-              <span className="text-xs text-muted-foreground">View analytics & reports</span>
-            </Button>
-            <Button
-              onClick={() => navigate("/teacher/classes")}
-              variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
-            >
-              <FolderOpen className="h-6 w-6 text-primary" />
-              <span className="text-sm font-medium">Manage Classes</span>
-              <span className="text-xs text-muted-foreground">View & organize classes</span>
-            </Button>
-            <Button
-              onClick={() => navigate("/class-metrics")}
-              variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
-            >
-              <PlusCircle className="h-6 w-6 text-primary" />
-              <span className="text-sm font-medium">Create Assignment</span>
-              <span className="text-xs text-muted-foreground">Assign challenges</span>
-            </Button>
-          </div>
-        </div>
-      </InteractiveCard>
-
-      {/* View Class Metrics Button */}
-      <InteractiveCard>
-        <div className="p-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                {t("classAnalytics")}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {t("viewDetailedClassMetrics")}
-              </p>
-            </div>
-            <Button
-              onClick={() => navigate("/class-metrics")}
-              className="w-full sm:w-auto"
-            >
-              <BarChart3 className="h-4 w-4 mr-2" />
-              {t("viewClassMetrics")}
+              <div className="flex flex-col items-center gap-2">
+                <BarChart3 className="h-8 w-8" />
+                <span className="text-lg font-semibold">{t("teacherDashboard") || "Teacher Dashboard"}</span>
+                <span className="text-sm opacity-80">
+                  {t("manageClassesStudentsAssignments") || "Classes, Students, Analytics & Assignments"}
+                </span>
+              </div>
             </Button>
           </div>
         </div>

@@ -5,14 +5,15 @@ import {
   Users, 
   FileText, 
   TrendingUp,
-  ArrowLeft
+  ArrowLeft,
+  FolderOpen
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useLocalization } from '@/context/LocalizationContext';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import ClassPerformanceOverview from '@/components/teacher/dashboard/ClassPerformanceOverview';
@@ -20,6 +21,7 @@ import StudentProgressTable from '@/components/teacher/dashboard/StudentProgress
 import AssignmentAnalytics from '@/components/teacher/dashboard/AssignmentAnalytics';
 import StudentDetailModal from '@/components/teacher/dashboard/StudentDetailModal';
 import ExportReportButton from '@/components/teacher/dashboard/ExportReportButton';
+import TeacherClassesTab from '@/components/teacher/dashboard/TeacherClassesTab';
 import { useTeacherNotifications } from '@/hooks/useTeacherNotifications';
 
 const TeacherDashboard = () => {
@@ -51,7 +53,7 @@ const TeacherDashboard = () => {
     enabled: !!user?.id,
   });
 
-  const { notifications, unreadCount } = useTeacherNotifications(user?.id);
+  const { unreadCount } = useTeacherNotifications(user?.id);
 
   if (profileLoading) {
     return (
@@ -114,12 +116,16 @@ const TeacherDashboard = () => {
         </div>
       </motion.div>
 
-      {/* Dashboard Tabs */}
+      {/* Dashboard Tabs - Now with 4 tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-flex">
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-flex">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4" />
             <span className="hidden sm:inline">{t("overview")}</span>
+          </TabsTrigger>
+          <TabsTrigger value="classes" className="flex items-center gap-2">
+            <FolderOpen className="h-4 w-4" />
+            <span className="hidden sm:inline">{t("classes") || "Classes"}</span>
           </TabsTrigger>
           <TabsTrigger value="students" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
@@ -133,6 +139,10 @@ const TeacherDashboard = () => {
 
         <TabsContent value="overview" className="space-y-6">
           <ClassPerformanceOverview teacherId={user?.id} />
+        </TabsContent>
+
+        <TabsContent value="classes" className="space-y-6">
+          <TeacherClassesTab teacherId={user?.id} />
         </TabsContent>
 
         <TabsContent value="students" className="space-y-6">
