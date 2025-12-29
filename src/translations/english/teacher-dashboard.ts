@@ -52,8 +52,7 @@ const teacherDashboardTranslations: TranslationRecord = {
   averageScore: "Average Score",
   totalSubmissions: "Total Submissions",
   completed: "Completed",
-  pending: "Pending",
-  overdue: "Overdue",
+  unopened: "Unopened",
   
   // Overview tab
   totalStudents: "Total Students",
