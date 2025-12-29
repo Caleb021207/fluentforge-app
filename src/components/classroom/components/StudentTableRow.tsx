@@ -3,11 +3,10 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2, ShieldCheck } from "lucide-react";
+import { Trash2, ShieldCheck, Brain } from "lucide-react";
 import { StudentMetrics } from '@/components/classroom/types/studentTypes';
 import { RemoveStudentDialog } from './RemoveStudentDialog';
 import { StudentProfilingToggle } from './StudentProfilingToggle';
-import { ConsentRecordDialog } from './ConsentRecordDialog';
 
 interface ProfilingStatus {
   studentId: string;
@@ -22,6 +21,8 @@ interface StudentTableRowProps {
   profilingStatus?: ProfilingStatus;
   onProfilingUpdate?: (enabled: boolean) => void;
   onConsentUpdate?: (consented: boolean) => void;
+  onOpenConsentDialog?: (studentId: string, studentName: string, currentConsent: boolean) => void;
+  onOpenProfileViewer?: (studentId: string, studentName: string) => void;
 }
 
 export const StudentTableRow: React.FC<StudentTableRowProps> = ({ 
@@ -30,11 +31,12 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
   onRemoved,
   profilingStatus,
   onProfilingUpdate,
-  onConsentUpdate
+  onConsentUpdate,
+  onOpenConsentDialog,
+  onOpenProfileViewer
 }) => {
   const { t } = useLocalization();
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
-  const [showConsentDialog, setShowConsentDialog] = useState(false);
 
   // Format date if available
   const formatDate = (dateString: string | null) => {
@@ -65,6 +67,25 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
     }
   };
 
+  const handleOpenConsentDialog = () => {
+    if (student.student_id && onOpenConsentDialog) {
+      onOpenConsentDialog(
+        student.student_id,
+        student.student_name || 'Unknown Student',
+        profilingStatus?.hasConsent ?? false
+      );
+    }
+  };
+
+  const handleOpenProfileViewer = () => {
+    if (student.student_id && onOpenProfileViewer) {
+      onOpenProfileViewer(
+        student.student_id,
+        student.student_name || 'Unknown Student'
+      );
+    }
+  };
+
   return (
     <TableRow>
       <TableCell>
@@ -83,33 +104,33 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
               hasConsent={profilingStatus.hasConsent}
               onToggle={onProfilingUpdate}
             />
-            {!profilingStatus.hasConsent && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-6 text-xs px-2 gap-1"
-                onClick={() => setShowConsentDialog(true)}
-              >
-                <ShieldCheck className="h-3 w-3" />
-                Record Consent
-              </Button>
-            )}
+            <div className="flex gap-1">
+              {!profilingStatus.hasConsent && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 text-xs px-2 gap-1"
+                  onClick={handleOpenConsentDialog}
+                >
+                  <ShieldCheck className="h-3 w-3" />
+                  {t("recordConsent") || "Record Consent"}
+                </Button>
+              )}
+              {profilingStatus.profilingEnabled && profilingStatus.hasConsent && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 text-xs px-2 gap-1"
+                  onClick={handleOpenProfileViewer}
+                >
+                  <Brain className="h-3 w-3" />
+                  {t("viewProfile") || "View Profile"}
+                </Button>
+              )}
+            </div>
           </div>
         ) : (
           <span className="text-muted-foreground text-sm">-</span>
-        )}
-        
-        {student.student_id && (
-          <ConsentRecordDialog
-            open={showConsentDialog}
-            onOpenChange={setShowConsentDialog}
-            studentId={student.student_id}
-            studentName={student.student_name || 'Unknown Student'}
-            currentConsent={profilingStatus?.hasConsent ?? false}
-            onConsentUpdated={(consented) => {
-              onConsentUpdate?.(consented);
-            }}
-          />
         )}
       </TableCell>
       <TableCell className="text-center">

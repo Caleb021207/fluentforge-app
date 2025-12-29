@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
+import { useConversationProfiling } from "@/hooks/useConversationProfiling";
 import { getLanguagePair } from "@/utils/languageUtils";
 import { useGamification } from "@/hooks/useGamification";
 import { Message } from "@/types/chat";
@@ -33,6 +34,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
   const { analyzeConversation } = useLanguageAnalysis();
+  const { triggerProfiling } = useConversationProfiling();
   const { awardXP } = useGamification();
 
   // Initialize the session ID
@@ -171,11 +173,30 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
           classroomId = data[0].class_id;
         }
 
+        // Analyze conversation quality (stores in student_language_metrics)
         await analyzeConversation(messagesToAnalyze, {
           sessionId: sessionId || undefined,
           classroomId: classroomId || undefined,
           silent: true
         });
+
+        // Also trigger profiling (stores in student_learning_profiles)
+        if (history.length >= 4) {
+          try {
+            await supabase.functions.invoke('analyze-and-profile', {
+              body: {
+                studentId: user.id,
+                sessionId: sessionId || `voice_${Date.now()}`,
+                messages: messagesToAnalyze,
+                topic: 'Voice conversation practice',
+                targetLevel: conversationLevel
+              }
+            });
+            console.log('✅ Voice profiling triggered:', sessionId);
+          } catch (profilingError) {
+            console.error('❌ Error triggering voice profiling:', profilingError);
+          }
+        }
 
         console.log('✅ Conversation analyzed on session end:', sessionId);
       }
