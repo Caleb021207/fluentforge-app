@@ -192,15 +192,16 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.02, y: -4 }}
         >
-          <Card>
+          <Card className="glass border-primary/30 bg-gradient-to-br from-primary/10 to-accent/10 hover:shadow-lg transition-all">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-                  <FileText className="h-5 w-5 text-primary" />
+                <div className="p-3 rounded-xl bg-primary/20 border border-primary/30 shrink-0">
+                  <FileText className="h-6 w-6 text-primary" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-2xl font-bold">{summary?.totalAssignments || 0}</p>
+                  <p className="text-3xl font-bold">{summary?.totalAssignments || 0}</p>
                   <p className="text-sm text-muted-foreground truncate">{t("totalAssignments")}</p>
                 </div>
               </div>
@@ -212,15 +213,16 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          whileHover={{ scale: 1.02, y: -4 }}
         >
-          <Card>
+          <Card className="glass border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-green-500/10 hover:shadow-lg transition-all">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-500/10 shrink-0">
-                  <CheckCircle className="h-5 w-5 text-emerald-500" />
+                <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/30 shrink-0">
+                  <CheckCircle className="h-6 w-6 text-emerald-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-2xl font-bold">{summary?.completionRate || 0}%</p>
+                  <p className="text-3xl font-bold">{summary?.completionRate || 0}%</p>
                   <p className="text-sm text-muted-foreground truncate">{t("completionRate")}</p>
                 </div>
               </div>
@@ -232,15 +234,16 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
+          whileHover={{ scale: 1.02, y: -4 }}
         >
-          <Card>
+          <Card className="glass border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 hover:shadow-lg transition-all">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-amber-500/10 shrink-0">
-                  <TrendingUp className="h-5 w-5 text-amber-500" />
+                <div className="p-3 rounded-xl bg-amber-500/20 border border-amber-500/30 shrink-0">
+                  <TrendingUp className="h-6 w-6 text-amber-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-2xl font-bold">{summary?.averageScore || 0}%</p>
+                  <p className="text-3xl font-bold">{summary?.averageScore || 0}%</p>
                   <p className="text-sm text-muted-foreground truncate">{t("averageScore")}</p>
                 </div>
               </div>
@@ -252,15 +255,16 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          whileHover={{ scale: 1.02, y: -4 }}
         >
-          <Card>
+          <Card className="glass border-violet-500/30 bg-gradient-to-br from-violet-500/10 to-purple-500/10 hover:shadow-lg transition-all">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-violet-500/10 shrink-0">
-                  <Users className="h-5 w-5 text-violet-500" />
+                <div className="p-3 rounded-xl bg-violet-500/20 border border-violet-500/30 shrink-0">
+                  <Users className="h-6 w-6 text-violet-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-2xl font-bold">{summary?.totalSubmissions || 0}</p>
+                  <p className="text-3xl font-bold">{summary?.totalSubmissions || 0}</p>
                   <p className="text-sm text-muted-foreground truncate">{t("totalSubmissions")}</p>
                 </div>
               </div>
@@ -278,9 +282,14 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           transition={{ delay: 0.4 }}
           className="lg:col-span-2"
         >
-          <Card>
+          <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
             <CardHeader>
-              <CardTitle>{t("assignmentCompletion")}</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-primary/20 border border-primary/30">
+                  <TrendingUp className="h-4 w-4 text-primary" />
+                </div>
+                {t("assignmentCompletion")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {completionChartData.length > 0 ? (
@@ -310,9 +319,14 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Card>
+          <Card className="glass border-primary/20 bg-gradient-to-br from-violet-500/5 via-transparent to-purple-500/5">
             <CardHeader>
-              <CardTitle>{t("statusDistribution")}</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-violet-500/20 border border-violet-500/30">
+                  <CheckCircle className="h-4 w-4 text-violet-500" />
+                </div>
+                {t("statusDistribution")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {statusDistribution.length > 0 ? (
@@ -358,10 +372,15 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("recentAssignments")}</CardTitle>
-          </CardHeader>
+          <Card className="glass border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-primary/20 border border-primary/30">
+                  <FileText className="h-4 w-4 text-primary" />
+                </div>
+                {t("recentAssignments")}
+              </CardTitle>
+            </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {assignments.length === 0 ? (
