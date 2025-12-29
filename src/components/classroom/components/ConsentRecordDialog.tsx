@@ -98,20 +98,22 @@ export const ConsentRecordDialog: React.FC<ConsentRecordDialogProps> = ({
           <div className="space-y-2">
             <Label>Has parental consent been provided for AI profiling?</Label>
             <RadioGroup value={consent} onValueChange={setConsent} className="space-y-2">
-              <div className="flex items-center space-x-2 p-3 rounded-md border hover:bg-accent/50 cursor-pointer">
+              <label 
+                htmlFor="consent-yes" 
+                className="flex items-center space-x-3 p-3 rounded-md border hover:bg-accent/50 cursor-pointer"
+              >
                 <RadioGroupItem value="yes" id="consent-yes" />
-                <Label htmlFor="consent-yes" className="flex items-center gap-2 cursor-pointer flex-1">
-                  <ShieldCheck className="h-4 w-4 text-green-500" />
-                  Yes, consent has been provided
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 p-3 rounded-md border hover:bg-accent/50 cursor-pointer">
+                <ShieldCheck className="h-4 w-4 text-green-500" />
+                <span>Yes, consent has been provided</span>
+              </label>
+              <label 
+                htmlFor="consent-no" 
+                className="flex items-center space-x-3 p-3 rounded-md border hover:bg-accent/50 cursor-pointer"
+              >
                 <RadioGroupItem value="no" id="consent-no" />
-                <Label htmlFor="consent-no" className="flex items-center gap-2 cursor-pointer flex-1">
-                  <ShieldX className="h-4 w-4 text-destructive" />
-                  No consent / Opt-out
-                </Label>
-              </div>
+                <ShieldX className="h-4 w-4 text-destructive" />
+                <span>No consent / Opt-out</span>
+              </label>
             </RadioGroup>
           </div>
           
