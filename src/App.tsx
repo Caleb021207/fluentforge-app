@@ -15,11 +15,9 @@ import Settings from "@/pages/Settings";
 import Legal from "@/pages/Legal";
 
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
-import ClassMetrics from "@/pages/ClassMetrics";
 import Certificate from "@/pages/Certificate";
 import PersonalFlashcards from "@/pages/PersonalFlashcards";
 import TeacherDashboard from "@/pages/TeacherDashboard";
-import TeacherClasses from "@/pages/TeacherClasses";
 import ChallengeMode from "@/pages/ChallengeMode";
 
 function App() {
@@ -39,13 +37,13 @@ function App() {
             <Route path="/analysis" element={<TranscriptAnalysis />} />
             
             <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
-            <Route path="/class-metrics" element={<ClassMetrics />} />
             <Route path="/certificate" element={<Certificate />} />
             <Route path="/personal-flashcards" element={<PersonalFlashcards />} />
             <Route path="/challenge-mode" element={<ChallengeMode />} />
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
-            <Route path="/teacher/classes" element={<TeacherClasses />} />
-            
+            {/* Redirect legacy routes to unified dashboard */}
+            <Route path="/teacher/classes" element={<TeacherDashboard />} />
+            <Route path="/class-metrics" element={<TeacherDashboard />} />
           </Routes>
           <Toaster />
         </NewLayout>
