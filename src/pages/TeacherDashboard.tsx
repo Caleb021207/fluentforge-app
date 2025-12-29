@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  LayoutDashboard, 
   Users, 
   FileText, 
   TrendingUp,
@@ -24,6 +23,7 @@ import AssignmentAnalytics from '@/components/teacher/dashboard/AssignmentAnalyt
 import StudentDetailModal from '@/components/teacher/dashboard/StudentDetailModal';
 import ExportReportButton from '@/components/teacher/dashboard/ExportReportButton';
 import TeacherClassesTab from '@/components/teacher/dashboard/TeacherClassesTab';
+import NotificationDropdown from '@/components/teacher/dashboard/NotificationDropdown';
 import { useTeacherNotifications } from '@/hooks/useTeacherNotifications';
 
 const TeacherDashboard = () => {
@@ -55,7 +55,7 @@ const TeacherDashboard = () => {
     enabled: !!user?.id,
   });
 
-  const { unreadCount } = useTeacherNotifications(user?.id);
+  const { notifications, unreadCount, refetch: refetchNotifications } = useTeacherNotifications(user?.id);
 
   if (profileLoading) {
     return (
@@ -141,15 +141,11 @@ const TeacherDashboard = () => {
             transition={{ delay: 0.3 }}
             className="flex items-center gap-3 w-full lg:w-auto"
           >
-            {unreadCount > 0 && (
-              <motion.span 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="bg-gradient-to-r from-destructive to-destructive/80 text-destructive-foreground px-4 py-2 rounded-full text-sm font-semibold shadow-lg shrink-0"
-              >
-                {unreadCount} {t("newNotifications")}
-              </motion.span>
-            )}
+            <NotificationDropdown 
+              notifications={notifications}
+              unreadCount={unreadCount}
+              onMarkAllRead={refetchNotifications}
+            />
             <ExportReportButton teacherId={user?.id} />
           </motion.div>
         </motion.div>
