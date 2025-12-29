@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { InteractiveCard } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, BarChart3, TrendingUp } from "lucide-react";
-import { useLocalization } from "@/context/LocalizationContext";
+import { Upload, FileText, BarChart3, TrendingUp, Loader2 } from "lucide-react";
+import { useLocalization } from "@/contexts/LocalizationContext";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { useProgressData } from "@/hooks/useProgressData";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { GradientBlob } from "@/components/ui/decorative-elements";
 import { motion } from "framer-motion";
@@ -12,6 +13,7 @@ const Progress = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const { totalAnalyses, currentLevel, latestScore, isLoading: progressLoading } = useProgressData();
 
   if (isLoading) {
     return (
@@ -65,7 +67,11 @@ const Progress = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{t("totalAnalyses")}</p>
-                  <p className="text-xl font-bold">3</p>
+                  {progressLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  ) : (
+                    <p className="text-xl font-bold">{totalAnalyses}</p>
+                  )}
                 </div>
                 <BarChart3 className="h-8 w-8 text-primary" />
               </div>
@@ -77,7 +83,11 @@ const Progress = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{t("currentLevel")}</p>
-                  <p className="text-xl font-bold">B2</p>
+                  {progressLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  ) : (
+                    <p className="text-xl font-bold">{currentLevel || "—"}</p>
+                  )}
                 </div>
                 <TrendingUp className="h-8 w-8 text-primary" />
               </div>
@@ -89,7 +99,13 @@ const Progress = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{t("latestScore")}</p>
-                  <p className="text-xl font-bold">57%</p>
+                  {progressLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  ) : (
+                    <p className="text-xl font-bold">
+                      {latestScore !== null ? `${latestScore}%` : "—"}
+                    </p>
+                  )}
                 </div>
                 <FileText className="h-8 w-8 text-primary" />
               </div>
@@ -155,7 +171,10 @@ const Progress = () => {
             <div className="p-6">
               <h3 className="text-lg font-semibold mb-4">{t("analysisResults")}</h3>
               <p className="text-center text-muted-foreground py-8">
-                No analysis results yet. Upload a test transcript to get started.
+                {totalAnalyses === 0 
+                  ? "No analysis results yet. Upload a test transcript to get started."
+                  : `You have ${totalAnalyses} analysis${totalAnalyses !== 1 ? 'es' : ''} on record.`
+                }
               </p>
             </div>
           </InteractiveCard>

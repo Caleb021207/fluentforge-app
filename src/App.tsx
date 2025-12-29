@@ -20,6 +20,19 @@ import PersonalFlashcards from "@/pages/PersonalFlashcards";
 import TeacherDashboard from "@/pages/TeacherDashboard";
 import ChallengeMode from "@/pages/ChallengeMode";
 
+// Previously unrouted pages - now properly routed
+import Accuracy from "@/pages/Accuracy";
+import Certificates from "@/pages/Certificates";
+import Classroom from "@/pages/Classroom";
+import Compliance from "@/pages/Compliance";
+import SafetyPolicy from "@/pages/SafetyPolicy";
+import PlacementQuiz from "@/pages/PlacementQuiz";
+import LessonPlayer from "@/pages/LessonPlayer";
+import ReadingCertification from "@/pages/ReadingCertification";
+import WritingCertification from "@/pages/WritingCertification";
+import StudentClass from "@/pages/StudentClass";
+import PremiumVoice from "@/pages/PremiumVoice";
+
 function App() {
   return (
     <Router>
@@ -27,6 +40,7 @@ function App() {
         <UsageLimitAlert />
         <NewLayout>
           <Routes>
+            {/* Core pages */}
             <Route path="/" element={<NewLandingPage />} />
             <Route path="/practice" element={<Practice />} />
             <Route path="/voice-chat" element={<VoiceChat />} />
@@ -36,14 +50,38 @@ function App() {
             <Route path="/legal" element={<Legal />} />
             <Route path="/analysis" element={<TranscriptAnalysis />} />
             
+            {/* Practice & Learning */}
             <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
+            <Route path="/premium-voice" element={<PremiumVoice />} />
             <Route path="/certificate" element={<Certificate />} />
             <Route path="/personal-flashcards" element={<PersonalFlashcards />} />
             <Route path="/challenge-mode" element={<ChallengeMode />} />
+            
+            {/* Accuracy & Progress */}
+            <Route path="/accuracy" element={<Accuracy />} />
+            <Route path="/progress" element={<Progress />} />
+            
+            {/* Certifications */}
+            <Route path="/certificates" element={<Certificates />} />
+            <Route path="/reading-certification" element={<ReadingCertification />} />
+            <Route path="/reading-certification/:level" element={<ReadingCertification />} />
+            <Route path="/writing-certification" element={<WritingCertification />} />
+            
+            {/* Lessons & Placement */}
+            <Route path="/placement-quiz" element={<PlacementQuiz />} />
+            <Route path="/lessons/:lessonId" element={<LessonPlayer />} />
+            
+            {/* Classroom & Student */}
+            <Route path="/classroom" element={<Classroom />} />
+            <Route path="/student/class" element={<StudentClass />} />
+            <Route path="/student/class/:classId" element={<StudentClass />} />
+            
+            {/* Teacher Dashboard - unified entry point */}
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
-            {/* Redirect legacy routes to unified dashboard */}
-            <Route path="/teacher/classes" element={<TeacherDashboard />} />
-            <Route path="/class-metrics" element={<TeacherDashboard />} />
+            
+            {/* Admin/Compliance */}
+            <Route path="/compliance" element={<Compliance />} />
+            <Route path="/safety-policy" element={<SafetyPolicy />} />
           </Routes>
           <Toaster />
         </NewLayout>
