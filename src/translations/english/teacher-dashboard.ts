@@ -11,6 +11,9 @@ const teacherDashboardTranslations: TranslationRecord = {
   myClasses: "My Classes",
   students: "Students",
   assignments: "Assignments",
+  name: "Name",
+  class: "Class",
+  level: "Level",
   
   // Classes tab
   manageClassesDescription: "Create and manage your classes",
