@@ -23,9 +23,17 @@ export const useConversationProfiling = () => {
     targetLevel
   }: TriggerProfilingOptions) => {
     try {
+      console.log('[useConversationProfiling] 🎯 Called with:', {
+        studentId: studentId?.substring(0, 8) + '...',
+        sessionId,
+        messageCount: messages.length,
+        topic,
+        targetLevel
+      });
+
       // Only trigger if we have meaningful conversation (at least 4 messages)
       if (messages.length < 4) {
-        console.log('Skipping profiling: not enough messages');
+        console.log('[useConversationProfiling] ⏭️ Skipping: not enough messages');
         return { skipped: true, reason: 'Not enough messages' };
       }
 
@@ -34,8 +42,8 @@ export const useConversationProfiling = () => {
         m.content && m.content.trim().length > 0
       );
 
-      console.log('Triggering conversation profiling:', {
-        studentId,
+      console.log('[useConversationProfiling] 📤 Invoking analyze-and-profile edge function:', {
+        studentId: studentId?.substring(0, 8) + '...',
         sessionId,
         messageCount: conversationMessages.length
       });
@@ -51,14 +59,14 @@ export const useConversationProfiling = () => {
       });
 
       if (error) {
-        console.error('Error triggering profiling:', error);
+        console.error('[useConversationProfiling] ❌ Edge function error:', error);
         return { success: false, error: error.message };
       }
 
-      console.log('Profiling result:', data);
+      console.log('[useConversationProfiling] ✅ Profiling result:', data);
       return data;
     } catch (error: any) {
-      console.error('Error in triggerProfiling:', error);
+      console.error('[useConversationProfiling] ❌ Exception:', error);
       return { success: false, error: error.message };
     }
   }, []);
