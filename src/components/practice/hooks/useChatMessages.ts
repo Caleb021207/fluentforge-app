@@ -38,6 +38,8 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   // Track if profiling has been triggered for current session
   const profilingTriggeredRef = useRef(false);
   const currentSessionIdRef = useRef<string | null>(null);
+  const userMessageCountRef = useRef(0);
+  const PROFILING_INTERVAL = 6; // Trigger profiling every 6 user messages
 
   // Initialize session on mount
   useEffect(() => {
@@ -92,13 +94,27 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     }
   }, [apiConversationHistory]);
 
-  // Trigger profiling when component unmounts or conversation ends
-  const triggerProfilingIfNeeded = useCallback(async () => {
-    if (profilingTriggeredRef.current || messages.length < 4) return;
+  // Trigger profiling - can be called multiple times during a session
+  const triggerProfilingNow = useCallback(async (force: boolean = false) => {
+    // Only skip if already triggered AND not forcing
+    if (profilingTriggeredRef.current && !force) {
+      console.log('[Profiling] Skipping - already triggered this session');
+      return;
+    }
+    
+    if (messages.length < 4) {
+      console.log('[Profiling] Skipping - not enough messages:', messages.length);
+      return;
+    }
     
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        console.log('[Profiling] Skipping - no user');
+        return;
+      }
+      
+      console.log('[Profiling] 🚀 Triggering profiling for user:', user.id, 'messages:', messages.length);
       
       profilingTriggeredRef.current = true;
       
@@ -108,24 +124,37 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
         content: m.content
       }));
       
-      await triggerProfiling({
+      const result = await triggerProfiling({
         studentId: user.id,
         sessionId: currentSessionIdRef.current || `session_${Date.now()}`,
         messages: formattedMessages,
         topic: 'text_practice',
         targetLevel: conversationLevel
       });
+      
+      console.log('[Profiling] ✅ Result:', result);
     } catch (error) {
-      console.error('Error triggering profiling:', error);
+      console.error('[Profiling] ❌ Error:', error);
     }
   }, [messages, conversationLevel, triggerProfiling]);
 
-  // Trigger profiling on unmount
+  // Trigger profiling on unmount and page close
   useEffect(() => {
-    return () => {
-      triggerProfilingIfNeeded();
+    const handleBeforeUnload = () => {
+      // Use sendBeacon for reliable async on page close
+      if (messages.length >= 4 && currentSessionIdRef.current) {
+        console.log('[Profiling] Page unloading - triggering via beacon');
+        triggerProfilingNow(true);
+      }
     };
-  }, [triggerProfilingIfNeeded]);
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      triggerProfilingNow(true);
+    };
+  }, [triggerProfilingNow, messages.length]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -180,6 +209,18 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
         { role: 'assistant' as const, content: response.content }
       ];
       setApiConversationHistory(updatedHistory);
+      
+      // Track user message count for profiling intervals
+      userMessageCountRef.current++;
+      console.log('[Profiling] User message count:', userMessageCountRef.current);
+      
+      // Trigger profiling every N user messages
+      if (userMessageCountRef.current >= PROFILING_INTERVAL) {
+        console.log('[Profiling] 📊 Interval reached, triggering profiling...');
+        userMessageCountRef.current = 0;
+        profilingTriggeredRef.current = false; // Allow re-triggering
+        triggerProfilingNow(true);
+      }
       
       // Track text practice usage - CRITICAL for limit enforcement
       await trackTextMessage();
@@ -239,7 +280,7 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   
   const clearConversation = async () => {
     // Trigger profiling before clearing
-    await triggerProfilingIfNeeded();
+    await triggerProfilingNow(true);
     
     setMessages([]);
     setApiConversationHistory([]);
@@ -249,6 +290,7 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     // Reset message count and profiling flag
     setMessageCount({ inputs: 0, outputs: 0 });
     profilingTriggeredRef.current = false;
+    userMessageCountRef.current = 0;
     
     // Start new session
     const newSessionId = await startSession('text_practice');

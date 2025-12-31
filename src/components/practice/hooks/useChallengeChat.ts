@@ -43,6 +43,8 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
   const hasGeneratedOpening = useRef(false);
   const hasRestoredMessages = useRef(false);
   const profilingTriggeredRef = useRef(false);
+  const userMessageCountRef = useRef(0);
+  const PROFILING_INTERVAL = 6;
 
   // Normalize CEFR level (e.g., "A2/B1" -> "A2", "B1+" -> "B1")
   const normalizedCefrLevel = cefrLevel.toUpperCase().split('/')[0].replace('+', '').trim();
@@ -122,13 +124,26 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
     }
   }, [topicPrompt, normalizedCefrLevel]);
 
-  // Trigger profiling when component unmounts
-  const triggerProfilingIfNeeded = useCallback(async () => {
-    if (profilingTriggeredRef.current || messages.length < 4) return;
+  // Trigger profiling - can be called multiple times during a session
+  const triggerProfilingNow = useCallback(async (force: boolean = false) => {
+    if (profilingTriggeredRef.current && !force) {
+      console.log('[Challenge Profiling] Skipping - already triggered');
+      return;
+    }
+    
+    if (messages.length < 4) {
+      console.log('[Challenge Profiling] Skipping - not enough messages:', messages.length);
+      return;
+    }
     
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        console.log('[Challenge Profiling] Skipping - no user');
+        return;
+      }
+      
+      console.log('[Challenge Profiling] 🚀 Triggering for user:', user.id, 'messages:', messages.length);
       
       profilingTriggeredRef.current = true;
       
@@ -137,7 +152,7 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
         content: msg.content
       }));
       
-      await triggerProfiling({
+      const result = await triggerProfiling({
         studentId: user.id,
         sessionId: currentSessionIdRef.current || `challenge_${Date.now()}`,
         messages: formattedMessages,
@@ -145,18 +160,28 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
         targetLevel: normalizedCefrLevel
       });
       
-      console.log('✅ Challenge profiling triggered');
+      console.log('[Challenge Profiling] ✅ Result:', result);
     } catch (error) {
-      console.error('Error triggering challenge profiling:', error);
+      console.error('[Challenge Profiling] ❌ Error:', error);
     }
   }, [messages, topicPrompt, normalizedCefrLevel, triggerProfiling]);
 
-  // Trigger profiling on unmount
+  // Trigger profiling on unmount and page close
   useEffect(() => {
-    return () => {
-      triggerProfilingIfNeeded();
+    const handleBeforeUnload = () => {
+      if (messages.length >= 4 && currentSessionIdRef.current) {
+        console.log('[Challenge Profiling] Page unloading - triggering');
+        triggerProfilingNow(true);
+      }
     };
-  }, [triggerProfilingIfNeeded]);
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      triggerProfilingNow(true);
+    };
+  }, [triggerProfilingNow, messages.length]);
 
   // Initialize session and generate opening message on mount
   useEffect(() => {
@@ -206,6 +231,18 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
         { role: 'assistant' as const, content: response.content }
       ];
       setApiConversationHistory(updatedHistory);
+      
+      // Track user message count for profiling intervals
+      userMessageCountRef.current++;
+      console.log('[Challenge Profiling] User message count:', userMessageCountRef.current);
+      
+      // Trigger profiling every N user messages
+      if (userMessageCountRef.current >= PROFILING_INTERVAL) {
+        console.log('[Challenge Profiling] 📊 Interval reached, triggering...');
+        userMessageCountRef.current = 0;
+        profilingTriggeredRef.current = false;
+        triggerProfilingNow(true);
+      }
     }
   };
   
