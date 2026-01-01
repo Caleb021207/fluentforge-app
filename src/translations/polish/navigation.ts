@@ -31,7 +31,9 @@ const navigationTranslations: TranslationRecord = {
   premiumVoicePractice: "Premium praktyka głosowa",
   aiAnalysis: "Analiza AI",
   xpRewards: "XP i Nagrody",
+  xpRewardsTitle: "XP i Nagrody",
   assignments: "Zadania",
+  assignmentsTitle: "Zadania",
 };
 
 export default navigationTranslations;

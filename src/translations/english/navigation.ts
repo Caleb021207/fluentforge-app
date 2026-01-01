@@ -60,7 +60,9 @@ const navigationTranslations: TranslationRecord = {
   aiAnalysis: "AI Analysis",
   transcriptAnalysis: "Transcript Analysis",
   xpRewards: "XP & Rewards",
+  xpRewardsTitle: "XP & Rewards",
   assignments: "Assignments",
+  assignmentsTitle: "Assignments",
   
   // Breadcrumbs
   dashboard: "Dashboard",

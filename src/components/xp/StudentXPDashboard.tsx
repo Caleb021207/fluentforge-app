@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import AchievementCard from '@/components/gamification/AchievementCard';
 import AnimatedLoader from '@/components/ui/animated-loader';
+import { LeaderboardSection } from '@/components/profile/LeaderboardSection';
 
 interface UserProgression {
   total_xp: number;
@@ -210,6 +211,9 @@ const StudentXPDashboard = ({ progression }: StudentXPDashboardProps) => {
           )}
         </CardContent>
       </Card>
+
+      {/* Class Leaderboard */}
+      <LeaderboardSection />
     </div>
   );
 };

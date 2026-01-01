@@ -44,7 +44,7 @@ const Assignments = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold gradient-text">
-          {t("assignments") || "Assignments"}
+          {t("assignmentsTitle") || "Assignments"}
         </h1>
       </div>
 
