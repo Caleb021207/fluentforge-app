@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, ClipboardList } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { ClipboardList } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AnimatedLoader from '@/components/ui/animated-loader';
 import TeacherAssignmentsView from './TeacherAssignmentsView';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface ClassInfo {
   id: string;
@@ -81,37 +88,32 @@ const TeacherAssignmentsPage = ({ teacherId }: TeacherAssignmentsPageProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Class Selector */}
-      <Card className="glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Select Class
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-3">
-            {classes.map((cls) => (
-              <button
-                key={cls.id}
-                onClick={() => setSelectedClass(cls)}
-                className={`px-4 py-3 rounded-lg transition-all flex flex-col items-start ${
-                  selectedClass?.id === cls.id
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted hover:bg-muted/80'
-                }`}
-              >
-                <span className="font-medium">{cls.name}</span>
-                <span className={`text-xs ${
-                  selectedClass?.id === cls.id ? 'text-primary-foreground/70' : 'text-muted-foreground'
-                }`}>
-                  {cls.student_count} students
-                </span>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Header with Class Selector */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Assignments</h1>
+        {classes.length > 1 && (
+          <Select 
+            value={selectedClass?.id} 
+            onValueChange={(id) => setSelectedClass(classes.find(c => c.id === id) || null)}
+          >
+            <SelectTrigger className="w-[220px]">
+              <SelectValue placeholder="Select class" />
+            </SelectTrigger>
+            <SelectContent>
+              {classes.map((cls) => (
+                <SelectItem key={cls.id} value={cls.id}>
+                  {cls.name} ({cls.student_count} students)
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        {classes.length === 1 && (
+          <span className="text-muted-foreground">
+            {selectedClass?.name} • {selectedClass?.student_count} students
+          </span>
+        )}
+      </div>
 
       {/* Assignments for Selected Class */}
       {selectedClass && (

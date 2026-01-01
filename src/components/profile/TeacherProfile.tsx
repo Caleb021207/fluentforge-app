@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import CodeManagement from "@/components/admin/CodeManagement";
 import StudentTestScores from "./StudentTestScores";
 import { useLocalization } from "@/context/LocalizationContext";
-import { LeaderboardSection } from "./LeaderboardSection";
 import { useNavigate } from "react-router-dom";
 
 interface TeacherProfileProps {
@@ -57,9 +56,6 @@ const TeacherProfile = ({ profile }: TeacherProfileProps) => {
 
       {/* Access Code Management */}
       <CodeManagement userRole="teacher" userSchool={profile.school?.name} />
-
-      {/* Leaderboard Section */}
-      <LeaderboardSection />
 
       {/* Teaching Overview */}
       <InteractiveCard>
