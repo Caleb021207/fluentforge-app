@@ -6,7 +6,6 @@ import { ExtendedUserProfile, StudentEnrollment, StudentGrade, StudentUsageMetri
 import { getStudentEnrollments, getStudentGrades, getStudentUsageMetrics } from "@/utils/schoolUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
-import { LeaderboardSection } from "./LeaderboardSection";
 import { getFluencyCertStatus, getCertDisplayName, getCertDisplayDescription } from "@/utils/fluencyCertification";
 import StudentAssignmentsView from "@/components/assignments/StudentAssignmentsView";
 import AssignmentPopup from "@/components/assignments/AssignmentPopup";
@@ -116,9 +115,6 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
 
       {/* Student Assignments Section - TOP PRIORITY */}
       <StudentAssignmentsView />
-
-      {/* Leaderboard Section */}
-      <LeaderboardSection />
 
       {/* Fluency Certification */}
       {hasCertification && (

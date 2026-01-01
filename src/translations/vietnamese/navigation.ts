@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "Tuyên bố về khả năng tiếp cận",
   pronunciationPractice: "Thực hành phát âm",
   premiumVoicePractice: "Thực hành giọng nói cao cấp",
-  aiAnalysis: "Phân tích AI"
+  aiAnalysis: "Phân tích AI",
+  xpRewards: "XP & Phần thưởng",
+  xpRewardsTitle: "XP & Phần thưởng",
+  assignments: "Bài tập",
+  assignmentsTitle: "Bài tập"
 };
 
 export default navigationTranslations;

@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "Taarifa ya Ufikiraji",
   pronunciationPractice: "Mazoezi ya Matamshi",
   premiumVoicePractice: "Mazoezi ya Sauti ya Premium",
-  aiAnalysis: "Uchambuzi wa AI"
+  aiAnalysis: "Uchambuzi wa AI",
+  xpRewards: "XP na Tuzo",
+  xpRewardsTitle: "XP na Tuzo",
+  assignments: "Kazi",
+  assignmentsTitle: "Kazi"
 };
 
 export default navigationTranslations;

@@ -64,7 +64,13 @@ const navigationTranslations: TranslationRecord = {
   dashboard: "ड्यासबोर्ड",
   overview: "अवलोकन",
   details: "विवरणहरू",
-  results: "परिणामहरू"
+  results: "परिणामहरू",
+  
+  // XP and Assignments
+  xpRewards: "XP र पुरस्कारहरू",
+  xpRewardsTitle: "XP र पुरस्कारहरू",
+  assignments: "असाइनमेन्टहरू",
+  assignmentsTitle: "असाइनमेन्टहरू"
 };
 
 export default navigationTranslations;
