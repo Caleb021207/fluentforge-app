@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "အသုံးပြုနိုင်မှုကြေညာချက်",
   pronunciationPractice: "အသံထွက်လေ့ကျင့်ခန်း",
   premiumVoicePractice: "ပရီမီယံ အသံလေ့ကျင့်ခန်း",
-  aiAnalysis: "AI ခွဲခြမ်းစိတ်ဖြာခြင်း"
+  aiAnalysis: "AI ခွဲခြမ်းစိတ်ဖြာခြင်း",
+  xpRewards: "XP နှင့် ဆုများ",
+  xpRewardsTitle: "XP နှင့် ဆုများ",
+  assignments: "တာဝန်များ",
+  assignmentsTitle: "တာဝန်များ"
 };
 
 export default navigationTranslations;

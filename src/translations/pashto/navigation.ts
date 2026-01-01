@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "د کوکۍ پالیسي",
   accessibilityStatement: "د لاسرسي بیان",
   pronunciationPractice: "د تلفظ تمرین",
-  premiumVoicePractice: "پریمیم غږ تمرین"
+  premiumVoicePractice: "پریمیم غږ تمرین",
+  xpRewards: "XP او انعامونه",
+  xpRewardsTitle: "XP او انعامونه",
+  assignments: "دندې",
+  assignmentsTitle: "دندې"
 };
 
 export default navigationTranslations;

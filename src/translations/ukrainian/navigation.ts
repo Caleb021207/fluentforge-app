@@ -30,7 +30,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "Заява про доступність",
   pronunciationPractice: "Практика вимови",
   premiumVoicePractice: "Преміум голосова практика",
-  aiAnalysis: "ШІ аналіз"
+  aiAnalysis: "ШІ аналіз",
+  xpRewards: "XP та нагороди",
+  xpRewardsTitle: "XP та нагороди",
+  assignments: "Завдання",
+  assignmentsTitle: "Завдання"
 };
 
 export default navigationTranslations;

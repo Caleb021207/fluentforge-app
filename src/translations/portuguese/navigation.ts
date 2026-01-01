@@ -31,7 +31,11 @@ const navigationTranslations: TranslationRecord = {
   compliance: "Conformidade",
   translationManagement: "Gestão de Tradução",
   studentClass: "Turma de Estudante",
-  teacherClasses: "Turmas do Professor"
+  teacherClasses: "Turmas do Professor",
+  xpRewards: "XP e Recompensas",
+  xpRewardsTitle: "XP e Recompensas",
+  assignments: "Tarefas",
+  assignmentsTitle: "Tarefas"
 };
 
 export default navigationTranslations;

@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "တၢ်ဘၣ်နိါ်ကံါ်ဖံး",
   pronunciationPractice: "ကံါ်အွံါ်လါဃၤကုၣ်ဒါး",
   premiumVoicePractice: "ပရီမီယံ အသံလေ့ကျင့်ခန်း",
-  aiAnalysis: "AI ကံါ်ခွဲစီး"
+  aiAnalysis: "AI ကံါ်ခွဲစီး",
+  xpRewards: "XP ဒီးဆူၣ်ဖုးတၤ",
+  xpRewardsTitle: "XP ဒီးဆူၣ်ဖုးတၤ",
+  assignments: "တၢ်မၤစဲးအတၢ်",
+  assignmentsTitle: "တၢ်မၤစဲးအတၢ်"
 };
 
 export default navigationTranslations;

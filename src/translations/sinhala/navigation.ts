@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "ප්‍රවේශ්‍ය ප්‍රකාශනය",
   pronunciationPractice: "උච්චාරණ පුහුණුව",
   premiumVoicePractice: "ප්‍රිමියම් හඬ පුහුණුව",
-  aiAnalysis: "AI විශ්ලේෂණය"
+  aiAnalysis: "AI විශ්ලේෂණය",
+  xpRewards: "XP සහ ත්‍යාග",
+  xpRewardsTitle: "XP සහ ත්‍යාග",
+  assignments: "පැවරුම්",
+  assignmentsTitle: "පැවරුම්"
 };
 
 export default navigationTranslations;

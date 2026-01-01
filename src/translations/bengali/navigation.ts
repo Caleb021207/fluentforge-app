@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   cookiePolicy: "কুকি নীতি",
   accessibilityStatement: "অ্যাক্সেসিবিলিটি বিবৃতি",
   pronunciationPractice: "উচ্চারণ অনুশীলন",
-  premiumVoicePractice: "প্রিমিয়াম ভয়েস অনুশীলন"
+  premiumVoicePractice: "প্রিমিয়াম ভয়েস অনুশীলন",
+  xpRewards: "XP এবং পুরস্কার",
+  xpRewardsTitle: "XP এবং পুরস্কার",
+  assignments: "অ্যাসাইনমেন্ট",
+  assignmentsTitle: "অ্যাসাইনমেন্ট"
 };
 
 export default navigationTranslations;

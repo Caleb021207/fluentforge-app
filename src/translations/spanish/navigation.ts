@@ -30,7 +30,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "Declaración de Accesibilidad",
   pronunciationPractice: "Práctica de Pronunciación",
   premiumVoicePractice: "Práctica de Voz Premium",
-  aiAnalysis: "Análisis de IA"
+  aiAnalysis: "Análisis de IA",
+  xpRewards: "XP y Recompensas",
+  xpRewardsTitle: "XP y Recompensas",
+  assignments: "Tareas",
+  assignmentsTitle: "Tareas"
 };
 
 export default navigationTranslations;

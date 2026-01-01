@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "ተበጻሕነት መግለጺ",
   pronunciationPractice: "ኣዘራርባ ልምምድ",
   premiumVoicePractice: "ፕሪሚየም ድምጺ ልምምድ",
-  aiAnalysis: "AI ትንተና"
+  aiAnalysis: "AI ትንተና",
+  xpRewards: "XP ን ሽልማትን",
+  xpRewardsTitle: "XP ን ሽልማትን",
+  assignments: "ዕማማት",
+  assignmentsTitle: "ዕማማት"
 };
 
 export default navigationTranslations;

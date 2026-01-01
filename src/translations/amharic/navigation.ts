@@ -30,6 +30,10 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "የተደራሽነት መግለጫ",
   pronunciationPractice: "የአነባበብ ልምምድ",
   premiumVoicePractice: "ፕሪሚየም የድምፅ ልምምድ",
+  xpRewards: "XP እና ሽልማቶች",
+  xpRewardsTitle: "XP እና ሽልማቶች",
+  assignments: "ስራዎች",
+  assignmentsTitle: "ስራዎች"
 };
 
 export default navigationTranslations;

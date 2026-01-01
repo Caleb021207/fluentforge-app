@@ -30,7 +30,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "بيان إمكانية الوصول",
   pronunciationPractice: "ممارسة النطق",
   aiAnalysis: "تحليل الذكاء الاصطناعي",
-  premiumVoicePractice: "ممارسة صوتية مميزة"
+  premiumVoicePractice: "ممارسة صوتية مميزة",
+  xpRewards: "XP والمكافآت",
+  xpRewardsTitle: "XP والمكافآت",
+  assignments: "الواجبات",
+  assignmentsTitle: "الواجبات"
 };
 
 export default navigationTranslations;

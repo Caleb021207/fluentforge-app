@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "رسائی کا بیان",
   pronunciationPractice: "تلفظ کی مشق",
   premiumVoicePractice: "پریمیم آواز کی مشق",
-  aiAnalysis: "AI تجزیہ"
+  aiAnalysis: "AI تجزیہ",
+  xpRewards: "XP اور انعامات",
+  xpRewardsTitle: "XP اور انعامات",
+  assignments: "اسائنمنٹس",
+  assignmentsTitle: "اسائنمنٹس"
 };
 
 export default navigationTranslations;

@@ -29,7 +29,11 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "Pahayag ng Accessibility",
   pronunciationPractice: "Pagsasanay sa Pagbigkas",
   premiumVoicePractice: "Premium na Pagsasanay sa Boses",
-  aiAnalysis: "AI Analysis"
+  aiAnalysis: "AI Analysis",
+  xpRewards: "XP at Mga Gantimpala",
+  xpRewardsTitle: "XP at Mga Gantimpala",
+  assignments: "Mga Takdang-Aralin",
+  assignmentsTitle: "Mga Takdang-Aralin"
 };
 
 export default navigationTranslations;
