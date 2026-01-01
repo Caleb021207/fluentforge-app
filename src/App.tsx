@@ -19,6 +19,8 @@ import Certificate from "@/pages/Certificate";
 import PersonalFlashcards from "@/pages/PersonalFlashcards";
 import TeacherDashboard from "@/pages/TeacherDashboard";
 import ChallengeMode from "@/pages/ChallengeMode";
+import XPRewards from "@/pages/XPRewards";
+import Assignments from "@/pages/Assignments";
 
 // Previously unrouted pages - now properly routed
 import Accuracy from "@/pages/Accuracy";
@@ -49,6 +51,8 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/legal" element={<Legal />} />
             <Route path="/analysis" element={<TranscriptAnalysis />} />
+            <Route path="/xp" element={<XPRewards />} />
+            <Route path="/assignments" element={<Assignments />} />
             
             {/* Practice & Learning */}
             <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
