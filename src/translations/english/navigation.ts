@@ -59,6 +59,8 @@ const navigationTranslations: TranslationRecord = {
   premiumVoicePractice: "Premium Voice Practice",
   aiAnalysis: "AI Analysis",
   transcriptAnalysis: "Transcript Analysis",
+  xpRewards: "XP & Rewards",
+  assignments: "Assignments",
   
   // Breadcrumbs
   dashboard: "Dashboard",

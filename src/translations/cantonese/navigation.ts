@@ -30,7 +30,9 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "無障礙聲明",
   pronunciationPractice: "發音練習",
   premiumVoicePractice: "高級語音練習",
-  aiAnalysis: "AI分析"
+  aiAnalysis: "AI分析",
+  xpRewards: "經驗值同獎勵",
+  assignments: "功課",
 };
 
 export default navigationTranslations;

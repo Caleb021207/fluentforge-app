@@ -16,6 +16,8 @@ const navigationTranslations: TranslationRecord = {
   pronunciationPractice: "発音練習",
   premiumVoicePractice: "プレミアム音声練習",
   aiAnalysis: "AI分析",
+  xpRewards: "XP＆リワード",
+  assignments: "課題",
   premium: "プレミアム",
   register: "登録",
   certificates: "証明書",

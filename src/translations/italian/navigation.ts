@@ -29,7 +29,9 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "Dichiarazione di Accessibilità",
   pronunciationPractice: "Pratica di Pronuncia",
   premiumVoicePractice: "Pratica Vocale Premium",
-  aiAnalysis: "Analisi IA"
+  aiAnalysis: "Analisi IA",
+  xpRewards: "XP e Premi",
+  assignments: "Compiti",
 };
 
 export default navigationTranslations;

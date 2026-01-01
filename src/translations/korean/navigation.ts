@@ -29,7 +29,9 @@ const navigationTranslations: TranslationRecord = {
   accessibilityStatement: "접근성 명세",
   pronunciationPractice: "발음 연습",
   premiumVoicePractice: "프리미엄 음성 연습",
-  aiAnalysis: "AI 분석"
+  aiAnalysis: "AI 분석",
+  xpRewards: "XP 및 보상",
+  assignments: "과제",
 };
 
 export default navigationTranslations;
