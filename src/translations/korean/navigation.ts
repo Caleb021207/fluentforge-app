@@ -31,7 +31,9 @@ const navigationTranslations: TranslationRecord = {
   premiumVoicePractice: "프리미엄 음성 연습",
   aiAnalysis: "AI 분석",
   xpRewards: "XP 및 보상",
+  xpRewardsTitle: "XP 및 보상",
   assignments: "과제",
+  assignmentsTitle: "과제",
 };
 
 export default navigationTranslations;

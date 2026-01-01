@@ -32,7 +32,9 @@ const navigationTranslations: TranslationRecord = {
   premiumVoicePractice: "高級語音練習",
   aiAnalysis: "AI分析",
   xpRewards: "經驗值同獎勵",
+  xpRewardsTitle: "經驗值同獎勵",
   assignments: "功課",
+  assignmentsTitle: "功課",
 };
 
 export default navigationTranslations;
