@@ -51,7 +51,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "অনুশীলন মোড নির্বাচন করুন",
   typeAndChat: "আপনার AI টিউটরের সাথে টাইপ এবং চ্যাট করুন",
   speakAndListen: "প্রাকৃতিক কথোপকথনে কথা বলুন এবং শুনুন",
-  improvePronunciation: "লক্ষ্যযুক্ত অনুশীলনের সাথে আপনার উচ্চারণ উন্নত করুন"
+  improvePronunciation: "লক্ষ্যযুক্ত অনুশীলনের সাথে আপনার উচ্চারণ উন্নত করুন",
+  
+  // Bilingual output
+  bilingualMode: "দ্বিভাষিক মোড",
+  bilingualModeEnabled: "দ্বিভাষিক মোড সক্রিয়",
+  bilingualModeDisabled: "দ্বিভাষিক মোড নিষ্ক্রিয়",
+  showBothLanguages: "উভয় ভাষা দেখান",
+  showBothLanguagesDescription: "উত্তরে লক্ষ্য ভাষা এবং মাতৃভাষা উভয় প্রদর্শন করুন"
 };
 
 export default practiceTranslations;

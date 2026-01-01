@@ -153,7 +153,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "اختر وضع الممارسة",
   typeAndChat: "اكتب وتحدث مع مدرسك الذكي",
   speakAndListen: "تحدث واستمع في محادثات طبيعية",
-  improvePronunciation: "حسّن نطقك بتمارين موجهة"
+  improvePronunciation: "حسّن نطقك بتمارين موجهة",
+  
+  // Bilingual output
+  bilingualMode: "الوضع ثنائي اللغة",
+  bilingualModeEnabled: "تم تفعيل الوضع ثنائي اللغة",
+  bilingualModeDisabled: "تم إلغاء تفعيل الوضع ثنائي اللغة",
+  showBothLanguages: "عرض اللغتين",
+  showBothLanguagesDescription: "عرض اللغة المستهدفة واللغة الأم في الردود"
 };
 
 export default practiceTranslations;

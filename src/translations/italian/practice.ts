@@ -52,7 +52,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "Scegli la Modalità di Pratica",
   typeAndChat: "Digita e chatta con il tuo tutor AI",
   speakAndListen: "Parla e ascolta in conversazioni naturali",
-  improvePronunciation: "Migliora la tua pronuncia con esercizi mirati"
+  improvePronunciation: "Migliora la tua pronuncia con esercizi mirati",
+  
+  // Bilingual output
+  bilingualMode: "Modalità Bilingue",
+  bilingualModeEnabled: "Modalità bilingue attivata",
+  bilingualModeDisabled: "Modalità bilingue disattivata",
+  showBothLanguages: "Mostra entrambe le lingue",
+  showBothLanguagesDescription: "Visualizza sia la lingua obiettivo che la lingua madre nelle risposte"
 };
 
 export default practiceTranslations;

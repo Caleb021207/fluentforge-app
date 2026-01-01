@@ -28,7 +28,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "練習モードを選択",
   typeAndChat: "AIチューターとタイプしてチャット",
   speakAndListen: "自然な会話で話し、聞く",
-  improvePronunciation: "ターゲットを絞った練習で発音を改善"
+  improvePronunciation: "ターゲットを絞った練習で発音を改善",
+  
+  // Bilingual output
+  bilingualMode: "バイリンガルモード",
+  bilingualModeEnabled: "バイリンガルモードが有効になりました",
+  bilingualModeDisabled: "バイリンガルモードが無効になりました",
+  showBothLanguages: "両方の言語を表示",
+  showBothLanguagesDescription: "回答にターゲット言語と母語の両方を表示"
 };
 
 export default practiceTranslations;

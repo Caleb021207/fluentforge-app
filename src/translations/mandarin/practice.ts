@@ -153,7 +153,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "选择练习模式",
   typeAndChat: "与您的AI导师打字聊天",
   speakAndListen: "在自然对话中说话和聆听",
-  improvePronunciation: "通过有针对性的练习提高您的发音"
+  improvePronunciation: "通过有针对性的练习提高您的发音",
+  
+  // Bilingual output
+  bilingualMode: "双语模式",
+  bilingualModeEnabled: "双语模式已启用",
+  bilingualModeDisabled: "双语模式已禁用",
+  showBothLanguages: "显示两种语言",
+  showBothLanguagesDescription: "在回复中同时显示目标语言和母语"
 };
 
 export default practiceTranslations;

@@ -162,7 +162,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "Elige el Modo de Práctica",
   typeAndChat: "Escribe y chatea con tu tutor de IA",
   speakAndListen: "Habla y escucha en conversaciones naturales",
-  improvePronunciation: "Mejora tu pronunciación con ejercicios dirigidos"
+  improvePronunciation: "Mejora tu pronunciación con ejercicios dirigidos",
+  
+  // Bilingual output
+  bilingualMode: "Modo Bilingüe",
+  bilingualModeEnabled: "Modo bilingüe activado",
+  bilingualModeDisabled: "Modo bilingüe desactivado",
+  showBothLanguages: "Mostrar ambos idiomas",
+  showBothLanguagesDescription: "Mostrar tanto el idioma objetivo como el nativo en las respuestas"
 };
 
 export default practiceTranslations;

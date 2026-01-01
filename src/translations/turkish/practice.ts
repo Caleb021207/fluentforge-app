@@ -47,7 +47,22 @@ const practiceTranslations: TranslationRecord = {
   canOnlyAnalyzeOncePerSession: "XP farming'i önlemek için her oturumda sadece bir kez konuşmayı analiz edebilirsiniz. Tekrar analiz etmek için yeni bir pratik oturumu başlatın.",
   conversationAnalysis: "Konuşma Analizi",
   grammarAccuracy: "Dilbilgisi Doğruluğu",
-  complexity: "Karmaşıklık"
+  complexity: "Karmaşıklık",
+  
+  // Practice mode selection
+  startPracticing: "Pratik Yapmaya Başla",
+  practiceYourLanguageSkills: "Dil becerilerinizi pratik yapın",
+  choosePracticeMode: "Pratik Modu Seçin",
+  typeAndChat: "Yapay zekâ öğretmeninizle yazın ve sohbet edin",
+  speakAndListen: "Doğal konuşmalarda konuşun ve dinleyin",
+  improvePronunciation: "Hedefli alıştırmalarla telaffuzunuzu geliştirin",
+  
+  // Bilingual output
+  bilingualMode: "İki Dilli Mod",
+  bilingualModeEnabled: "İki dilli mod etkinleştirildi",
+  bilingualModeDisabled: "İki dilli mod devre dışı bırakıldı",
+  showBothLanguages: "Her iki dili göster",
+  showBothLanguagesDescription: "Yanıtlarda hem hedef dili hem de ana dili görüntüle"
 };
 
 export default practiceTranslations;

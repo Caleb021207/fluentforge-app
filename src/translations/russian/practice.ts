@@ -39,7 +39,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "Выберите режим практики",
   typeAndChat: "Печатайте и общайтесь с вашим AI-репетитором",
   speakAndListen: "Говорите и слушайте в естественных разговорах",
-  improvePronunciation: "Улучшите произношение с целенаправленными упражнениями"
+  improvePronunciation: "Улучшите произношение с целенаправленными упражнениями",
+  
+  // Bilingual output
+  bilingualMode: "Двуязычный режим",
+  bilingualModeEnabled: "Двуязычный режим включен",
+  bilingualModeDisabled: "Двуязычный режим выключен",
+  showBothLanguages: "Показать оба языка",
+  showBothLanguagesDescription: "Отображать целевой и родной язык в ответах"
 };
 
 export default practiceTranslations;

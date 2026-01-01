@@ -57,7 +57,22 @@ const practiceTranslations: TranslationRecord = {
   practiceTip2: "Nie przejmuj się błędami - są częścią procesu uczenia się!",
   practiceTip3: "Poproś o wyjaśnienie, jeśli czegoś nie rozumiesz.",
   practiceTip4: "Staraj się używać słownictwa, którego niedawno się nauczyłeś.",
-  practiceTip5: "Ćwicz regularnie, aby poprawić płynność."
+  practiceTip5: "Ćwicz regularnie, aby poprawić płynność.",
+  
+  // Practice mode selection
+  startPracticing: "Zacznij ćwiczyć",
+  practiceYourLanguageSkills: "Ćwicz swoje umiejętności językowe",
+  choosePracticeMode: "Wybierz tryb ćwiczeń",
+  typeAndChat: "Pisz i rozmawiaj ze swoim korepetytorem AI",
+  speakAndListen: "Mów i słuchaj w naturalnych rozmowach",
+  improvePronunciation: "Popraw wymowę dzięki ukierunkowanym ćwiczeniom",
+  
+  // Bilingual output
+  bilingualMode: "Tryb dwujęzyczny",
+  bilingualModeEnabled: "Tryb dwujęzyczny włączony",
+  bilingualModeDisabled: "Tryb dwujęzyczny wyłączony",
+  showBothLanguages: "Pokaż oba języki",
+  showBothLanguagesDescription: "Wyświetlaj język docelowy i ojczysty w odpowiedziach"
 };
 
 export default practiceTranslations;
