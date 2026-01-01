@@ -40,7 +40,22 @@ const practiceTranslations: TranslationRecord = {
   "speechRecognitionError": "Error sa Pagkilala ng Pananalita",
   "speechRecognitionNotSupported": "Hindi suportado ang pagkilala ng pananalita sa iyong browser",
   "noSpeechDetected": "Walang Nadetektang Pananalita",
-  "pleaseTryAgain": "Pakisubukan muli"
+  "pleaseTryAgain": "Pakisubukan muli",
+  
+  // Practice mode selection
+  startPracticing: "Magsimulang Magsanay",
+  practiceYourLanguageSkills: "Magsanay ng iyong mga kasanayan sa wika",
+  choosePracticeMode: "Pumili ng Mode ng Pagsasanay",
+  typeAndChat: "Mag-type at makipag-chat sa iyong AI tutor",
+  speakAndListen: "Magsalita at makinig sa natural na mga pag-uusap",
+  improvePronunciation: "Pagbutihin ang iyong pagbigkas sa pamamagitan ng mga target na pagsasanay",
+  
+  // Bilingual output
+  bilingualMode: "Dalawahang Wikang Mode",
+  bilingualModeEnabled: "Na-enable ang dalawahang wikang mode",
+  bilingualModeDisabled: "Na-disable ang dalawahang wikang mode",
+  showBothLanguages: "Ipakita ang parehong wika",
+  showBothLanguagesDescription: "Ipakita ang target na wika at sariling wika sa mga tugon"
 };
 
 export default practiceTranslations;

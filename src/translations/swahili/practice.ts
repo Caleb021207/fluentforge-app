@@ -91,7 +91,14 @@ const practiceTranslations: TranslationRecord = {
   practiceYourLanguageSkills: "Fanya mazoezi ya ujuzi wako wa lugha",
   typeAndChat: "Andika na uongee na mwalimu wako wa AI",
   speakAndListen: "Zungumza na sikiliza katika mazungumzo ya asili",
-  improvePronunciation: "Boresha matamshi yako kwa mazoezi yaliyolengwa"
+  improvePronunciation: "Boresha matamshi yako kwa mazoezi yaliyolengwa",
+  
+  // Bilingual output
+  bilingualMode: "Hali ya Lugha Mbili",
+  bilingualModeEnabled: "Hali ya lugha mbili imewashwa",
+  bilingualModeDisabled: "Hali ya lugha mbili imezimwa",
+  showBothLanguages: "Onyesha lugha zote mbili",
+  showBothLanguagesDescription: "Onyesha lugha ya lengo na lugha ya asili katika majibu"
 };
 
 export default practiceTranslations;

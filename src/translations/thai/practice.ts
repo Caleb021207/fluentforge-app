@@ -63,7 +63,22 @@ const practiceTranslations: TranslationRecord = {
   "canOnlyAnalyzeOncePerSession": "คุณสามารถวิเคราะห์การสนทนาได้เพียงครั้งเดียวต่อเซสชันเพื่อป้องกันการฟาร์ม XP เริ่มเซสชันฝึกฝนใหม่เพื่อวิเคราะห์อีกครั้ง",
   "conversationAnalysis": "การวิเคราะห์การสนทนา",
   "grammarAccuracy": "ความแม่นยำทางไวยากรณ์",
-  "complexity": "ความซับซ้อน"
+  "complexity": "ความซับซ้อน",
+  
+  // Practice mode selection
+  startPracticing: "เริ่มฝึกฝน",
+  practiceYourLanguageSkills: "ฝึกฝนทักษะภาษาของคุณ",
+  choosePracticeMode: "เลือกโหมดการฝึก",
+  typeAndChat: "พิมพ์และแชทกับผู้สอน AI ของคุณ",
+  speakAndListen: "พูดและฟังในการสนทนาที่เป็นธรรมชาติ",
+  improvePronunciation: "พัฒนาการออกเสียงของคุณด้วยการฝึกแบบเจาะจง",
+  
+  // Bilingual output
+  bilingualMode: "โหมดสองภาษา",
+  bilingualModeEnabled: "เปิดใช้งานโหมดสองภาษาแล้ว",
+  bilingualModeDisabled: "ปิดใช้งานโหมดสองภาษาแล้ว",
+  showBothLanguages: "แสดงทั้งสองภาษา",
+  showBothLanguagesDescription: "แสดงภาษาเป้าหมายและภาษาแม่ในคำตอบ"
 };
 
 export default practiceTranslations;

@@ -121,7 +121,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "연습 모드 선택",
   typeAndChat: "AI 튜터와 타이핑하며 채팅하기",
   speakAndListen: "자연스러운 대화로 말하고 듣기",
-  improvePronunciation: "목표 지향적 연습으로 발음 향상"
+  improvePronunciation: "목표 지향적 연습으로 발음 향상",
+  
+  // Bilingual output
+  bilingualMode: "이중 언어 모드",
+  bilingualModeEnabled: "이중 언어 모드 활성화됨",
+  bilingualModeDisabled: "이중 언어 모드 비활성화됨",
+  showBothLanguages: "두 언어 모두 표시",
+  showBothLanguagesDescription: "응답에서 대상 언어와 모국어를 모두 표시"
 };
 
 export default practiceTranslations;

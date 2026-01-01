@@ -162,7 +162,14 @@ const practiceTranslations: TranslationRecord = {
   choosePracticeMode: "Übungsmodus wählen",
   typeAndChat: "Tippen und chatten Sie mit Ihrem KI-Tutor",
   speakAndListen: "Sprechen und hören Sie in natürlichen Gesprächen",
-  improvePronunciation: "Verbessern Sie Ihre Aussprache mit gezielten Übungen"
+  improvePronunciation: "Verbessern Sie Ihre Aussprache mit gezielten Übungen",
+  
+  // Bilingual output
+  bilingualMode: "Zweisprachiger Modus",
+  bilingualModeEnabled: "Zweisprachiger Modus aktiviert",
+  bilingualModeDisabled: "Zweisprachiger Modus deaktiviert",
+  showBothLanguages: "Beide Sprachen anzeigen",
+  showBothLanguagesDescription: "Zielsprache und Muttersprache in Antworten anzeigen"
 };
 
 export default practiceTranslations;

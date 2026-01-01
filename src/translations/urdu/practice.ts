@@ -52,7 +52,22 @@ const practiceTranslations: TranslationRecord = {
   canOnlyAnalyzeOncePerSession: "XP فارمنگ کو روکنے کے لیے آپ ہر سیشن میں صرف ایک بار بات چیت کا تجزیہ کر سکتے ہیں۔ دوبارہ تجزیہ کرنے کے لیے نیا پریکٹس سیشن شروع کریں۔",
   conversationAnalysis: "بات چیت کا تجزیہ",
   grammarAccuracy: "گرامر کی درستگی",
-  complexity: "پیچیدگی"
+  complexity: "پیچیدگی",
+  
+  // Practice mode selection
+  startPracticing: "مشق شروع کریں",
+  practiceYourLanguageSkills: "اپنی زبان کی مہارتوں کی مشق کریں",
+  choosePracticeMode: "مشق کا موڈ منتخب کریں",
+  typeAndChat: "اپنے AI ٹیوٹر کے ساتھ ٹائپ کریں اور چیٹ کریں",
+  speakAndListen: "قدرتی گفتگو میں بولیں اور سنیں",
+  improvePronunciation: "ہدفی مشقوں سے اپنے تلفظ کو بہتر بنائیں",
+  
+  // Bilingual output
+  bilingualMode: "دو لسانی موڈ",
+  bilingualModeEnabled: "دو لسانی موڈ فعال",
+  bilingualModeDisabled: "دو لسانی موڈ غیر فعال",
+  showBothLanguages: "دونوں زبانیں دکھائیں",
+  showBothLanguagesDescription: "جوابات میں ہدف زبان اور مادری زبان دونوں دکھائیں"
 };
 
 export default practiceTranslations;

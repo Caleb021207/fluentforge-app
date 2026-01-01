@@ -102,7 +102,22 @@ const practiceTranslations: TranslationRecord = {
   "canOnlyAnalyzeOncePerSession": "Bạn chỉ có thể phân tích cuộc trò chuyện một lần mỗi phiên để ngăn chặn farming XP. Bắt đầu phiên thực hành mới để phân tích lại.",
   "conversationAnalysis": "Phân Tích Cuộc Trò Chuyện",
   "grammarAccuracy": "Độ Chính Xác Ngữ Pháp",
-  "complexity": "Độ Phức Tạp"
+  "complexity": "Độ Phức Tạp",
+  
+  // Practice mode selection
+  startPracticing: "Bắt đầu thực hành",
+  practiceYourLanguageSkills: "Thực hành kỹ năng ngôn ngữ của bạn",
+  choosePracticeMode: "Chọn chế độ thực hành",
+  typeAndChat: "Gõ và trò chuyện với gia sư AI của bạn",
+  speakAndListen: "Nói và nghe trong các cuộc trò chuyện tự nhiên",
+  improvePronunciation: "Cải thiện phát âm với các bài tập nhắm mục tiêu",
+  
+  // Bilingual output
+  bilingualMode: "Chế độ song ngữ",
+  bilingualModeEnabled: "Đã bật chế độ song ngữ",
+  bilingualModeDisabled: "Đã tắt chế độ song ngữ",
+  showBothLanguages: "Hiển thị cả hai ngôn ngữ",
+  showBothLanguagesDescription: "Hiển thị ngôn ngữ đích và ngôn ngữ mẹ đẻ trong câu trả lời"
 };
 
 export default practiceTranslations;
