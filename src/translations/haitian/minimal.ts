@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Sijè konplèks",
   superiorLevelShortDescription: "Tout fonksyon yo",
 
+  // Bilingual output toggle
+  bilingualMode: "Mòd bileng",
+  bilingualModeEnabled: "Mòd bileng aktive",
+  bilingualModeDisabled: "Mòd bileng dezaktive",
+  showBothLanguages: "Montre tou de lang yo",
+  showBothLanguagesDescription: "Montre anglè ak tradiksyon {{language}} nan repons AI yo",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

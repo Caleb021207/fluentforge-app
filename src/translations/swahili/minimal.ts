@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Mada changamano",
   superiorLevelShortDescription: "Kazi zote",
 
+  // Bilingual output toggle
+  bilingualMode: "Hali ya lugha mbili",
+  bilingualModeEnabled: "Hali ya lugha mbili imewashwa",
+  bilingualModeDisabled: "Hali ya lugha mbili imezimwa",
+  showBothLanguages: "Onyesha lugha zote mbili",
+  showBothLanguagesDescription: "Inaonyesha Kiingereza na tafsiri ya {{language}} katika majibu ya AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

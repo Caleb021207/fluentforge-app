@@ -231,6 +231,13 @@ const minimalTranslations: TranslationRecord = {
   profile: "个人资料",
   settings: "设置",
   
+  // Bilingual output toggle
+  bilingualMode: "双语模式",
+  bilingualModeEnabled: "双语模式已启用",
+  bilingualModeDisabled: "双语模式已禁用",
+  showBothLanguages: "显示两种语言",
+  showBothLanguagesDescription: "在AI回复中同时显示英语和{{language}}翻译",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

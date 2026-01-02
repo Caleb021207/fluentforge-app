@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "หัวข้อที่ซับซ้อน",
   superiorLevelShortDescription: "ฟังก์ชันทั้งหมด",
 
+  // Bilingual output toggle
+  bilingualMode: "โหมดสองภาษา",
+  bilingualModeEnabled: "เปิดใช้งานโหมดสองภาษาแล้ว",
+  bilingualModeDisabled: "ปิดใช้งานโหมดสองภาษาแล้ว",
+  showBothLanguages: "แสดงทั้งสองภาษา",
+  showBothLanguagesDescription: "แสดงภาษาอังกฤษและคำแปล{{language}}ในการตอบกลับของ AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

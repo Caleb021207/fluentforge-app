@@ -155,6 +155,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Sujets complexes",
   superiorLevelShortDescription: "Toute tâche",
   
+  // Bilingual output toggle
+  bilingualMode: "Mode bilingue",
+  bilingualModeEnabled: "Mode bilingue activé",
+  bilingualModeDisabled: "Mode bilingue désactivé",
+  showBothLanguages: "Afficher les deux langues",
+  showBothLanguagesDescription: "Affiche l'anglais et la traduction en {{language}} dans les réponses de l'IA",
+
   // Navigation
   home: "Accueil",
   textPractice: "Pratique",

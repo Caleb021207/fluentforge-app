@@ -231,6 +231,13 @@ const minimalTranslations: TranslationRecord = {
   profile: "Профіль",
   settings: "Налаштування",
   
+  // Bilingual output toggle
+  bilingualMode: "Двомовний режим",
+  bilingualModeEnabled: "Двомовний режим увімкнено",
+  bilingualModeDisabled: "Двомовний режим вимкнено",
+  showBothLanguages: "Показувати обидві мови",
+  showBothLanguagesDescription: "Показувати англійську та переклад на {{language}} у відповідях ШІ",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

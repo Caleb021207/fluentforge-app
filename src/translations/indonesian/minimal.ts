@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Topik kompleks",
   superiorLevelShortDescription: "Semua tugas",
 
+  // Bilingual output toggle
+  bilingualMode: "Mode dwibahasa",
+  bilingualModeEnabled: "Mode dwibahasa diaktifkan",
+  bilingualModeDisabled: "Mode dwibahasa dinonaktifkan",
+  showBothLanguages: "Tampilkan kedua bahasa",
+  showBothLanguagesDescription: "Menampilkan bahasa Inggris dan terjemahan {{language}} dalam respons AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

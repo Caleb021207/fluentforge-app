@@ -165,6 +165,13 @@ const minimalTranslations: TranslationRecord = {
   profile: "Профиль",
   settings: "Настройки",
   
+  // Bilingual output toggle
+  bilingualMode: "Двуязычный режим",
+  bilingualModeEnabled: "Двуязычный режим включен",
+  bilingualModeDisabled: "Двуязычный режим выключен",
+  showBothLanguages: "Показать оба языка",
+  showBothLanguagesDescription: "Показывать английский и перевод на {{language}} в ответах ИИ",
+
   // Transcript Analysis - NEW TRANSLATIONS
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

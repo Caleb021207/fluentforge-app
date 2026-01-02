@@ -148,6 +148,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "જટિલ વિષયો",
   superiorLevelShortDescription: "બધા કાર્યો",
 
+  // Bilingual output toggle
+  bilingualMode: "દ્વિભાષી મોડ",
+  bilingualModeEnabled: "દ્વિભાષી મોડ સક્રિય",
+  bilingualModeDisabled: "દ્વિભાષી મોડ નિષ્ક્રિય",
+  showBothLanguages: "બંને ભાષાઓ બતાવો",
+  showBothLanguagesDescription: "AI પ્રતિસાદમાં અંગ્રેજી અને {{language}} અનુવાદ બંને બતાવે છે",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

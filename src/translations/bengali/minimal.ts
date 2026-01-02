@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "জটিল বিষয়",
   superiorLevelShortDescription: "সব ফাংশন",
 
+  // Bilingual output toggle
+  bilingualMode: "দ্বিভাষিক মোড",
+  bilingualModeEnabled: "দ্বিভাষিক মোড সক্রিয়",
+  bilingualModeDisabled: "দ্বিভাষিক মোড নিষ্ক্রিয়",
+  showBothLanguages: "উভয় ভাষা দেখান",
+  showBothLanguagesDescription: "AI প্রতিক্রিয়াতে ইংরেজি এবং {{language}} অনুবাদ উভয়ই দেখায়",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",
