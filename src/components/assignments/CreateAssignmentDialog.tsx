@@ -238,35 +238,35 @@ const CreateAssignmentDialog = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="cefr_level">Target CEFR Level</Label>
-              <Select 
-                value={formData.cefr_level} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, cefr_level: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CEFR_LEVELS.map(level => (
-                    <SelectItem key={level} value={level}>{level}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <Select 
+              value={formData.cefr_level} 
+              onValueChange={(value) => setFormData(prev => ({ ...prev, cefr_level: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent position="popper" sideOffset={4}>
+                {CEFR_LEVELS.map(level => (
+                  <SelectItem key={level} value={level}>{level}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="assignment_mode">Mode</Label>
-              <Select 
-                value={formData.assignment_mode} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, assignment_mode: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="text_practice">Text Chat</SelectItem>
-                  <SelectItem value="voice_practice">Voice Chat</SelectItem>
-                </SelectContent>
-              </Select>
+            <Select 
+              value={formData.assignment_mode} 
+              onValueChange={(value) => setFormData(prev => ({ ...prev, assignment_mode: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent position="popper" sideOffset={4}>
+                <SelectItem value="text_practice">Text Chat</SelectItem>
+                <SelectItem value="voice_practice">Voice Chat</SelectItem>
+              </SelectContent>
+            </Select>
             </div>
           </div>
 
