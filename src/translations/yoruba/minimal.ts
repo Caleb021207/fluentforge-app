@@ -240,6 +240,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "Fi èdè méjèèjì hàn",
   showBothLanguagesDescription: "Ó ń fi Gẹ̀ẹ́sì àti ìtumọ̀ {{language}} hàn nínú àwọn ìdáhùn AI",
 
+  // Assignments
+  notAssigned: "Kò yàn", readyToStart: "Ṣetán láti bẹ̀rẹ̀", inProgress: "Ń lọ lọ́wọ́", completed: "Parí", graded: "Ti ṣe ìṣiro",
+  yourTask: "Iṣẹ́ rẹ", messagesRequired: "àwọn ifiránṣẹ́", minMax: "ìṣẹ́jú max", pts: "àmì", due: "Ọjọ́ Ìparí", completedBadge: "Parí!", xpAwarded: "XP", continueChallenge: "Tẹ̀síwájú Ìdánwò", startChallenge: "Bẹ̀rẹ̀ Ìdánwò",
+  myAssignments: "Àwọn Iṣẹ́ mi", noAssignmentsYet: "Kò sí iṣẹ́ kankan síbẹ̀", teacherWillAssign: "Olùkọ́ rẹ yóò yan àwọn ìdánwò ìjíròrò níbí", toDo: "Láti Ṣe", completedTab: "Parí", allCaughtUp: "Gbogbo rẹ̀ ti parí! Kò sí iṣẹ́ tó ń dúró.", noCompletedYet: "Kò sí iṣẹ́ tí a ti parí.", loadingAssignments: "Ń gbé àwọn iṣẹ́...", errorStarting: "Àṣìṣe",
+  noAssignment: "Kò sí Iṣẹ́", startFromProfile: "Jọ̀wọ́ bẹ̀rẹ̀ iṣẹ́ láti profaili rẹ", messagesProgress: "àwọn ifiránṣẹ́", readyToSubmit: "Ṣetán láti firánṣẹ́!", moreToGo: "síi nílò", submit: "Firánṣẹ́", leaveAssignment: "Kúrò nínú Iṣẹ́?", progressSaved: "A ti fi ìlọsíwájú rẹ pamọ́!", youveSent: "O ti ránṣẹ́", needMore: "síi nílò", moreToSubmit: "láti firánṣẹ́", canContinueLater: "O lè tẹ̀síwájú nígbà míì.", continueAssignment: "Tẹ̀síwájú Iṣẹ́", saveAndExit: "Fi pamọ́ àti Jáde", assignmentCompleted: "Iṣẹ́ Parí! 🎉", greatWorkXp: "Iṣẹ́ dára! O ti ṣègbé", submittedSuccessfully: "A ti fi iṣẹ́ rẹ ránṣẹ́ daradara", failedToSubmit: "Fífiránṣẹ́ kùnà. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kansi.", assignmentInProgress: "O ní iṣẹ́ kan tó ń lọ lọ́wọ́. Ṣé o dá ẹ lójú pé o fẹ́ jáde?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

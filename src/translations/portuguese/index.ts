@@ -14,6 +14,7 @@ import authTranslations from "./auth";
 import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
 import pronunciationTranslations from "./pronunciation";
+import assignmentsTranslations from "./assignments";
 
 // Combine all the translation categories
 const portugueseTranslations: TranslationRecord = {
@@ -31,6 +32,7 @@ const portugueseTranslations: TranslationRecord = {
   ...languagesTranslations,
   ...navigationTranslations,
   ...pronunciationTranslations,
+  ...assignmentsTranslations,
 };
 
 export default portugueseTranslations;

@@ -240,6 +240,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "Tus labada luuqadood",
   showBothLanguagesDescription: "Wuxuu muujiyaa Ingiriisiga iyo turjumaadda {{language}} ee jawaabaha AI",
 
+  // Assignments
+  notAssigned: "Lama meeleeyin", readyToStart: "Diyaar u ah Bilaabista", inProgress: "Socda", completed: "Dhammaatay", graded: "La qiimay",
+  yourTask: "Hawshaada", messagesRequired: "fariimood", minMax: "daqiiqo ugu badan", pts: "dhibcood", due: "Wakhtiga kama dambaysta", completedBadge: "Dhammaatay!", xpAwarded: "XP", continueChallenge: "Sii wad Caqabadda", startChallenge: "Bilow Caqabadda",
+  myAssignments: "Hawlahayga", noAssignmentsYet: "Wali ma jiraan hawlo", teacherWillAssign: "Macallimuhu wuxuu halkan ku meeleyn doonaa caqabadaha wada-hadalka", toDo: "La sameeyo", completedTab: "Dhammaatay", allCaughtUp: "Dhammaantood waa la dhammeeyey! Ma jiraan hawlo sugaya.", noCompletedYet: "Wali ma jiraan hawlo la dhammaystiray.", loadingAssignments: "Hawlaha waa la soo rarayaa...", errorStarting: "Khalad",
+  noAssignment: "Ma jirto Hawl", startFromProfile: "Fadlan ka bilow hawsha profile-kaaga", messagesProgress: "fariimood", readyToSubmit: "Diyaar u ah in la diro!", moreToGo: "wax dheeraad ah ayaa loo baahan yahay", submit: "Dir", leaveAssignment: "Ka tag Hawsha?", progressSaved: "Horumarkaaga waa la keydsaday!", youveSent: "Waad dirtay", needMore: "wax dheeraad ah ayaa loo baahan yahay", moreToSubmit: "in la diro", canContinueLater: "Waad sii wadi kartaa mar dambe.", continueAssignment: "Sii wad Hawsha", saveAndExit: "Keydi oo Ka bax", assignmentCompleted: "Hawsha Waa Dhammaatay! 🎉", greatWorkXp: "Shaqo wanaagsan! Waad heshay", submittedSuccessfully: "Hawshaada si guul leh ayaa loo diray", failedToSubmit: "Diridu waa fashilantay. Fadlan isku day mar kale.", assignmentInProgress: "Waxaad leedahay hawl socota. Ma hubtaa inaad rabto inaad ka baxdo?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

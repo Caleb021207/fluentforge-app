@@ -240,6 +240,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "แสดงทั้งสองภาษา",
   showBothLanguagesDescription: "แสดงภาษาอังกฤษและคำแปล{{language}}ในการตอบกลับของ AI",
 
+  // Assignments
+  notAssigned: "ยังไม่ได้มอบหมาย", readyToStart: "พร้อมเริ่ม", inProgress: "กำลังดำเนินการ", completed: "เสร็จแล้ว", graded: "ให้คะแนนแล้ว",
+  yourTask: "งานของคุณ", messagesRequired: "ข้อความ", minMax: "นาที สูงสุด", pts: "คะแนน", due: "กำหนดส่ง", completedBadge: "เสร็จแล้ว!", xpAwarded: "XP", continueChallenge: "ทำต่อ", startChallenge: "เริ่มความท้าทาย",
+  myAssignments: "งานของฉัน", noAssignmentsYet: "ยังไม่มีงาน", teacherWillAssign: "ครูจะมอบหมายความท้าทายการสนทนาที่นี่", toDo: "ต้องทำ", completedTab: "เสร็จแล้ว", allCaughtUp: "เสร็จหมดแล้ว! ไม่มีงานค้าง", noCompletedYet: "ยังไม่มีงานที่เสร็จ", loadingAssignments: "กำลังโหลดงาน...", errorStarting: "ข้อผิดพลาด",
+  noAssignment: "ไม่มีงาน", startFromProfile: "กรุณาเริ่มงานจากโปรไฟล์ของคุณ", messagesProgress: "ข้อความ", readyToSubmit: "พร้อมส่ง!", moreToGo: "ต้องการเพิ่ม", submit: "ส่ง", leaveAssignment: "ออกจากงาน?", progressSaved: "บันทึกความคืบหน้าแล้ว!", youveSent: "คุณส่งแล้ว", needMore: "ต้องการเพิ่ม", moreToSubmit: "เพื่อส่ง", canContinueLater: "คุณสามารถทำต่อได้ทีหลัง", continueAssignment: "ทำงานต่อ", saveAndExit: "บันทึกและออก", assignmentCompleted: "งานเสร็จแล้ว! 🎉", greatWorkXp: "เก่งมาก! คุณได้รับ", submittedSuccessfully: "ส่งงานสำเร็จแล้ว", failedToSubmit: "ส่งไม่สำเร็จ กรุณาลองใหม่", assignmentInProgress: "คุณมีงานที่กำลังทำอยู่ แน่ใจว่าต้องการออก?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

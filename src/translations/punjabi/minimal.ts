@@ -200,6 +200,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "ਦੋਵੇਂ ਭਾਸ਼ਾਵਾਂ ਦਿਖਾਓ",
   showBothLanguagesDescription: "AI ਜਵਾਬਾਂ ਵਿੱਚ ਅੰਗਰੇਜ਼ੀ ਅਤੇ {{language}} ਅਨੁਵਾਦ ਦੋਵੇਂ ਦਿਖਾਉਂਦਾ ਹੈ",
 
+  // Assignments
+  notAssigned: "ਨਹੀਂ ਸੌਂਪਿਆ", readyToStart: "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਤਿਆਰ", inProgress: "ਚੱਲ ਰਿਹਾ ਹੈ", completed: "ਪੂਰਾ", graded: "ਗ੍ਰੇਡ ਦਿੱਤਾ",
+  yourTask: "ਤੁਹਾਡਾ ਕੰਮ", messagesRequired: "ਸੁਨੇਹੇ", minMax: "ਮਿੰਟ ਵੱਧ ਤੋਂ ਵੱਧ", pts: "ਅੰਕ", due: "ਆਖਰੀ ਤਾਰੀਖ", completedBadge: "ਪੂਰਾ!", xpAwarded: "XP", continueChallenge: "ਚੁਣੌਤੀ ਜਾਰੀ ਰੱਖੋ", startChallenge: "ਚੁਣੌਤੀ ਸ਼ੁਰੂ ਕਰੋ",
+  myAssignments: "ਮੇਰੇ ਕੰਮ", noAssignmentsYet: "ਅਜੇ ਕੋਈ ਕੰਮ ਨਹੀਂ", teacherWillAssign: "ਤੁਹਾਡਾ ਅਧਿਆਪਕ ਇੱਥੇ ਗੱਲਬਾਤ ਦੀਆਂ ਚੁਣੌਤੀਆਂ ਸੌਂਪੇਗਾ", toDo: "ਕਰਨਾ ਹੈ", completedTab: "ਪੂਰਾ", allCaughtUp: "ਸਭ ਹੋ ਗਿਆ! ਕੋਈ ਬਕਾਇਆ ਕੰਮ ਨਹੀਂ.", noCompletedYet: "ਅਜੇ ਕੋਈ ਕੰਮ ਪੂਰਾ ਨਹੀਂ.", loadingAssignments: "ਕੰਮ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...", errorStarting: "ਗਲਤੀ",
+  noAssignment: "ਕੋਈ ਕੰਮ ਨਹੀਂ", startFromProfile: "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਤੋਂ ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ", messagesProgress: "ਸੁਨੇਹੇ", readyToSubmit: "ਜਮ੍ਹਾਂ ਕਰਨ ਲਈ ਤਿਆਰ!", moreToGo: "ਹੋਰ ਚਾਹੀਦਾ", submit: "ਜਮ੍ਹਾਂ ਕਰੋ", leaveAssignment: "ਕੰਮ ਛੱਡੋ?", progressSaved: "ਤੁਹਾਡੀ ਤਰੱਕੀ ਸੇਵ ਹੋ ਗਈ!", youveSent: "ਤੁਸੀਂ ਭੇਜਿਆ", needMore: "ਹੋਰ ਚਾਹੀਦਾ", moreToSubmit: "ਜਮ੍ਹਾਂ ਕਰਨ ਲਈ", canContinueLater: "ਤੁਸੀਂ ਬਾਅਦ ਵਿੱਚ ਜਾਰੀ ਰੱਖ ਸਕਦੇ ਹੋ.", continueAssignment: "ਕੰਮ ਜਾਰੀ ਰੱਖੋ", saveAndExit: "ਸੇਵ ਕਰੋ ਅਤੇ ਬਾਹਰ ਆਓ", assignmentCompleted: "ਕੰਮ ਪੂਰਾ! 🎉", greatWorkXp: "ਵਧੀਆ! ਤੁਸੀਂ ਕਮਾਇਆ", submittedSuccessfully: "ਤੁਹਾਡਾ ਕੰਮ ਸਫਲਤਾਪੂਰਵਕ ਜਮ੍ਹਾਂ ਹੋ ਗਿਆ", failedToSubmit: "ਜਮ੍ਹਾਂ ਕਰਨ ਵਿੱਚ ਅਸਫਲ. ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.", assignmentInProgress: "ਤੁਹਾਡਾ ਕੰਮ ਚੱਲ ਰਿਹਾ ਹੈ. ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਬਾਹਰ ਆਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",
