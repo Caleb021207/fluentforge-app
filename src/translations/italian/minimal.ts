@@ -240,6 +240,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "Mostra entrambe le lingue",
   showBothLanguagesDescription: "Mostra l'inglese e la traduzione in {{language}} nelle risposte dell'AI",
 
+  // Assignments
+  notAssigned: "Non assegnato", readyToStart: "Pronto per iniziare", inProgress: "In corso", completed: "Completato", graded: "Valutato",
+  yourTask: "Il tuo compito", messagesRequired: "messaggi", minMax: "min max", pts: "punti", due: "Scadenza", completedBadge: "Completato!", xpAwarded: "XP", continueChallenge: "Continua la sfida", startChallenge: "Inizia la sfida",
+  myAssignments: "I miei compiti", noAssignmentsYet: "Nessun compito ancora", teacherWillAssign: "Il tuo insegnante assegnerà sfide di conversazione qui", toDo: "Da fare", completedTab: "Completato", allCaughtUp: "Tutto fatto! Nessun compito in attesa.", noCompletedYet: "Nessun compito completato ancora.", loadingAssignments: "Caricamento compiti...", errorStarting: "Errore",
+  noAssignment: "Nessun compito", startFromProfile: "Per favore inizia un compito dal tuo profilo", messagesProgress: "messaggi", readyToSubmit: "Pronto per inviare!", moreToGo: "altri necessari", submit: "Invia", leaveAssignment: "Lasciare il compito?", progressSaved: "Il tuo progresso è stato salvato!", youveSent: "Hai inviato", needMore: "altri necessari", moreToSubmit: "per inviare", canContinueLater: "Puoi continuare più tardi.", continueAssignment: "Continua compito", saveAndExit: "Salva ed esci", assignmentCompleted: "Compito completato! 🎉", greatWorkXp: "Ottimo lavoro! Hai guadagnato", submittedSuccessfully: "Il tuo compito è stato inviato con successo", failedToSubmit: "Invio fallito. Per favore riprova.", assignmentInProgress: "Hai un compito in corso. Sei sicuro di voler uscire?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

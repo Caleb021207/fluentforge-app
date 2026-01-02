@@ -240,6 +240,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "Ipakita ang parehong wika",
   showBothLanguagesDescription: "Nagpapakita ng English at pagsasalin sa {{language}} sa mga tugon ng AI",
 
+  // Assignments
+  notAssigned: "Hindi itinalaga", readyToStart: "Handa nang Magsimula", inProgress: "Kasalukuyan", completed: "Natapos", graded: "May grado",
+  yourTask: "Ang Iyong Gawain", messagesRequired: "mga mensahe", minMax: "minuto max", pts: "pts", due: "Deadline", completedBadge: "Natapos!", xpAwarded: "XP", continueChallenge: "Ituloy ang Hamon", startChallenge: "Simulan ang Hamon",
+  myAssignments: "Mga Takda Ko", noAssignmentsYet: "Wala pang takda", teacherWillAssign: "Magbibigay ang guro mo ng mga conversation challenge dito", toDo: "Dapat Gawin", completedTab: "Natapos", allCaughtUp: "Tapos na lahat! Walang naghihintay na takda.", noCompletedYet: "Wala pang natapos na takda.", loadingAssignments: "Nilo-load ang mga takda...", errorStarting: "Error",
+  noAssignment: "Walang Takda", startFromProfile: "Pakisimulan ang takda mula sa iyong profile", messagesProgress: "mga mensahe", readyToSubmit: "Handa nang isumite!", moreToGo: "kailangan pa", submit: "Isumite", leaveAssignment: "Umalis sa Takda?", progressSaved: "Na-save ang iyong progreso!", youveSent: "Naipadala mo", needMore: "kailangan pa", moreToSubmit: "para isumite", canContinueLater: "Maaari kang magpatuloy sa ibang oras.", continueAssignment: "Ituloy ang Takda", saveAndExit: "I-save at Lumabas", assignmentCompleted: "Natapos ang Takda! 🎉", greatWorkXp: "Magaling! Nakuha mo", submittedSuccessfully: "Matagumpay na naisumite ang iyong takda", failedToSubmit: "Hindi naisumite. Pakisubukang muli.", assignmentInProgress: "Mayroon kang kasalukuyang takda. Sigurado ka bang gusto mong umalis?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

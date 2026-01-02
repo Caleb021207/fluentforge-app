@@ -155,6 +155,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "બંને ભાષાઓ બતાવો",
   showBothLanguagesDescription: "AI પ્રતિસાદમાં અંગ્રેજી અને {{language}} અનુવાદ બંને બતાવે છે",
 
+  // Assignments
+  notAssigned: "સોંપાયેલ નથી", readyToStart: "શરૂ કરવા તૈયાર", inProgress: "ચાલુ છે", completed: "પૂર્ણ", graded: "ગ્રેડ આપેલ",
+  yourTask: "તમારું કાર્ય", messagesRequired: "સંદેશાઓ", minMax: "મિનિટ મહત્તમ", pts: "પોઈન્ટ", due: "અંતિમ તારીખ", completedBadge: "પૂર્ણ!", xpAwarded: "XP", continueChallenge: "પડકાર ચાલુ રાખો", startChallenge: "પડકાર શરૂ કરો",
+  myAssignments: "મારા અસાઇનમેન્ટ", noAssignmentsYet: "હજુ સુધી કોઈ અસાઇનમેન્ટ નથી", teacherWillAssign: "તમારા શિક્ષક અહીં વાતચીત પડકારો સોંપશે", toDo: "કરવાનું", completedTab: "પૂર્ણ", allCaughtUp: "બધું થઈ ગયું! કોઈ બાકી અસાઇનમેન્ટ નથી.", noCompletedYet: "હજુ સુધી કોઈ પૂર્ણ અસાઇનમેન્ટ નથી.", loadingAssignments: "અસાઇનમેન્ટ લોડ થઈ રહ્યા છે...", errorStarting: "ભૂલ",
+  noAssignment: "કોઈ અસાઇનમેન્ટ નથી", startFromProfile: "કૃપા કરીને તમારી પ્રોફાઇલમાંથી અસાઇનમેન્ટ શરૂ કરો", messagesProgress: "સંદેશાઓ", readyToSubmit: "સબમિટ કરવા તૈયાર!", moreToGo: "વધુ જરૂરી", submit: "સબમિટ કરો", leaveAssignment: "અસાઇનમેન્ટ છોડો?", progressSaved: "તમારી પ્રગતિ સાચવવામાં આવી!", youveSent: "તમે મોકલ્યું", needMore: "વધુ જરૂરી", moreToSubmit: "સબમિટ કરવા", canContinueLater: "તમે પછી ચાલુ રાખી શકો છો.", continueAssignment: "અસાઇનમેન્ટ ચાલુ રાખો", saveAndExit: "સાચવો અને બહાર નીકળો", assignmentCompleted: "અસાઇનમેન્ટ પૂર્ણ! 🎉", greatWorkXp: "સરસ કામ! તમે મેળવ્યું", submittedSuccessfully: "તમારું અસાઇનમેન્ટ સફળતાપૂર્વક સબમિટ થયું", failedToSubmit: "સબમિટ કરવામાં નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.", assignmentInProgress: "તમારી પાસે ચાલુ અસાઇનમેન્ટ છે. શું તમે ખરેખર બહાર નીકળવા માંગો છો?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

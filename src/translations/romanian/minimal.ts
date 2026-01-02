@@ -240,6 +240,12 @@ const minimalTranslations: TranslationRecord = {
   showBothLanguages: "Afișează ambele limbi",
   showBothLanguagesDescription: "Afișează engleza și traducerea în {{language}} în răspunsurile AI",
 
+  // Assignments
+  notAssigned: "Neatribuit", readyToStart: "Gata de start", inProgress: "În progres", completed: "Finalizat", graded: "Notat",
+  yourTask: "Sarcina ta", messagesRequired: "mesaje", minMax: "min max", pts: "puncte", due: "Termen", completedBadge: "Finalizat!", xpAwarded: "XP", continueChallenge: "Continuă provocarea", startChallenge: "Începe provocarea",
+  myAssignments: "Temele mele", noAssignmentsYet: "Nicio temă încă", teacherWillAssign: "Profesorul tău va atribui provocări de conversație aici", toDo: "De făcut", completedTab: "Finalizat", allCaughtUp: "Totul e gata! Nicio temă în așteptare.", noCompletedYet: "Nicio temă finalizată încă.", loadingAssignments: "Se încarcă temele...", errorStarting: "Eroare",
+  noAssignment: "Nicio temă", startFromProfile: "Te rog să începi tema din profilul tău", messagesProgress: "mesaje", readyToSubmit: "Gata de trimis!", moreToGo: "mai sunt necesare", submit: "Trimite", leaveAssignment: "Părăsești tema?", progressSaved: "Progresul tău a fost salvat!", youveSent: "Ai trimis", needMore: "mai sunt necesare", moreToSubmit: "pentru a trimite", canContinueLater: "Poți continua mai târziu.", continueAssignment: "Continuă tema", saveAndExit: "Salvează și ieși", assignmentCompleted: "Temă finalizată! 🎉", greatWorkXp: "Bravo! Ai câștigat", submittedSuccessfully: "Tema ta a fost trimisă cu succes", failedToSubmit: "Trimiterea a eșuat. Te rog încearcă din nou.", assignmentInProgress: "Ai o temă în progres. Sigur vrei să ieși?",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",
