@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "موضوعات پیچیده",
   superiorLevelShortDescription: "همه وظایف",
 
+  // Bilingual output toggle
+  bilingualMode: "حالت دوزبانه",
+  bilingualModeEnabled: "حالت دوزبانه فعال شد",
+  bilingualModeDisabled: "حالت دوزبانه غیرفعال شد",
+  showBothLanguages: "نمایش هر دو زبان",
+  showBothLanguagesDescription: "نمایش انگلیسی و ترجمه {{language}} در پاسخ‌های هوش مصنوعی",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

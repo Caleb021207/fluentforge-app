@@ -172,6 +172,13 @@ const minimalTranslations: TranslationRecord = {
   speakAndListen: "Habla y escucha",
   improvePronunciation: "Mejora tu pronunciación",
   
+  // Bilingual output toggle
+  bilingualMode: "Modo bilingüe",
+  bilingualModeEnabled: "Modo bilingüe activado",
+  bilingualModeDisabled: "Modo bilingüe desactivado",
+  showBothLanguages: "Mostrar ambos idiomas",
+  showBothLanguagesDescription: "Muestra tanto inglés como la traducción en {{language}} en las respuestas de IA",
+
   // Transcript Analysis - NEW TRANSLATIONS
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

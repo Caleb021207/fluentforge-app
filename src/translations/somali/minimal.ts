@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Mowduucyada dhibka leh",
   superiorLevelShortDescription: "Dhammaan hawlaha",
 
+  // Bilingual output toggle
+  bilingualMode: "Qaabka labo-luuqadeed",
+  bilingualModeEnabled: "Qaabka labo-luuqadeed ayaa la damiyey",
+  bilingualModeDisabled: "Qaabka labo-luuqadeed ayaa la demiyey",
+  showBothLanguages: "Tus labada luuqadood",
+  showBothLanguagesDescription: "Wuxuu muujiyaa Ingiriisiga iyo turjumaadda {{language}} ee jawaabaha AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

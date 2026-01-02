@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Isiokwu mgbagwoju anya",
   superiorLevelShortDescription: "Ọrụ niile",
 
+  // Bilingual output toggle
+  bilingualMode: "Ọdịdị asụsụ abụọ",
+  bilingualModeEnabled: "A kanyere ọdịdị asụsụ abụọ",
+  bilingualModeDisabled: "A gbanyụrụ ọdịdị asụsụ abụọ",
+  showBothLanguages: "Gosi asụsụ abụọ ahụ",
+  showBothLanguagesDescription: "Ọ na-egosi Bekee na ntụgharị {{language}} na azịza AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

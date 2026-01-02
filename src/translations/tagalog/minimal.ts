@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Mga komplikadong paksa",
   superiorLevelShortDescription: "Lahat ng functions",
 
+  // Bilingual output toggle
+  bilingualMode: "Bilingual mode",
+  bilingualModeEnabled: "Na-enable ang bilingual mode",
+  bilingualModeDisabled: "Na-disable ang bilingual mode",
+  showBothLanguages: "Ipakita ang parehong wika",
+  showBothLanguagesDescription: "Nagpapakita ng English at pagsasalin sa {{language}} sa mga tugon ng AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

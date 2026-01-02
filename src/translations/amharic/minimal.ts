@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "ውስብስብ ርዕሶች",
   superiorLevelShortDescription: "ሁሉም ተግባራት",
 
+  // Bilingual output toggle
+  bilingualMode: "ሁለት ቋንቋ ሞድ",
+  bilingualModeEnabled: "ሁለት ቋንቋ ሞድ ነቅቷል",
+  bilingualModeDisabled: "ሁለት ቋንቋ ሞድ ተሰናክሏል",
+  showBothLanguages: "ሁለቱንም ቋንቋዎች አሳይ",
+  showBothLanguagesDescription: "በAI ምላሾች ውስጥ እንግሊዝኛ እና {{language}} ትርጉም ይታያል",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

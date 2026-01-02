@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Karmaşık konular",
   superiorLevelShortDescription: "Tüm işlevler",
 
+  // Bilingual output toggle
+  bilingualMode: "İki dilli mod",
+  bilingualModeEnabled: "İki dilli mod etkinleştirildi",
+  bilingualModeDisabled: "İki dilli mod devre dışı bırakıldı",
+  showBothLanguages: "Her iki dili de göster",
+  showBothLanguagesDescription: "AI yanıtlarında İngilizce ve {{language}} çevirisini gösterir",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

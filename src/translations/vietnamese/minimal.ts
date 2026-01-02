@@ -231,6 +231,13 @@ const minimalTranslations: TranslationRecord = {
   profile: "Hồ sơ",
   settings: "Cài đặt",
   
+  // Bilingual output toggle
+  bilingualMode: "Chế độ song ngữ",
+  bilingualModeEnabled: "Chế độ song ngữ đã bật",
+  bilingualModeDisabled: "Chế độ song ngữ đã tắt",
+  showBothLanguages: "Hiển thị cả hai ngôn ngữ",
+  showBothLanguagesDescription: "Hiển thị cả tiếng Anh và bản dịch {{language}} trong phản hồi AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

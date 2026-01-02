@@ -231,6 +231,13 @@ const minimalTranslations: TranslationRecord = {
   profile: "الملف الشخصي",
   settings: "الإعدادات",
   
+  // Bilingual output toggle
+  bilingualMode: "الوضع ثنائي اللغة",
+  bilingualModeEnabled: "تم تفعيل الوضع ثنائي اللغة",
+  bilingualModeDisabled: "تم إيقاف الوضع ثنائي اللغة",
+  showBothLanguages: "عرض اللغتين",
+  showBothLanguagesDescription: "يعرض الإنجليزية وترجمة {{language}} في ردود الذكاء الاصطناعي",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

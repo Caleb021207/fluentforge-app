@@ -231,6 +231,13 @@ const minimalTranslations: TranslationRecord = {
   profile: "프로필",
   settings: "설정",
   
+  // Bilingual output toggle
+  bilingualMode: "이중 언어 모드",
+  bilingualModeEnabled: "이중 언어 모드가 활성화되었습니다",
+  bilingualModeDisabled: "이중 언어 모드가 비활성화되었습니다",
+  showBothLanguages: "두 언어 모두 표시",
+  showBothLanguagesDescription: "AI 응답에 영어와 {{language}} 번역을 모두 표시합니다",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

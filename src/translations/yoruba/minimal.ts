@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Àwọn kókó tó ṣòro",
   superiorLevelShortDescription: "Gbogbo iṣẹ́",
 
+  // Bilingual output toggle
+  bilingualMode: "Ìṣe èdè méjì",
+  bilingualModeEnabled: "A ti tan ìṣe èdè méjì",
+  bilingualModeDisabled: "A ti pa ìṣe èdè méjì",
+  showBothLanguages: "Fi èdè méjèèjì hàn",
+  showBothLanguagesDescription: "Ó ń fi Gẹ̀ẹ́sì àti ìtumọ̀ {{language}} hàn nínú àwọn ìdáhùn AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

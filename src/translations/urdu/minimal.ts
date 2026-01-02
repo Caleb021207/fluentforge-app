@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "پیچیدہ موضوعات",
   superiorLevelShortDescription: "تمام کام",
 
+  // Bilingual output toggle
+  bilingualMode: "دو لسانی موڈ",
+  bilingualModeEnabled: "دو لسانی موڈ فعال",
+  bilingualModeDisabled: "دو لسانی موڈ غیر فعال",
+  showBothLanguages: "دونوں زبانیں دکھائیں",
+  showBothLanguagesDescription: "AI جوابات میں انگریزی اور {{language}} ترجمہ دونوں دکھاتا ہے",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

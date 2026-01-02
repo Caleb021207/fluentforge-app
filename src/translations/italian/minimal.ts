@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "Argomenti complessi",
   superiorLevelShortDescription: "Tutte le funzioni",
 
+  // Bilingual output toggle
+  bilingualMode: "Modalità bilingue",
+  bilingualModeEnabled: "Modalità bilingue attivata",
+  bilingualModeDisabled: "Modalità bilingue disattivata",
+  showBothLanguages: "Mostra entrambe le lingue",
+  showBothLanguagesDescription: "Mostra l'inglese e la traduzione in {{language}} nelle risposte dell'AI",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

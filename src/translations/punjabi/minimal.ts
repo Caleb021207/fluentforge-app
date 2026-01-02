@@ -193,6 +193,13 @@ const minimalTranslations: TranslationRecord = {
   // Missing placeholders
   "Type your message to practice english...": "ਅੰਗਰੇਜ਼ੀ ਅਭਿਆਸ ਲਈ ਆਪਣਾ ਸੁਨੇਹਾ ਲਿਖੋ...",
 
+  // Bilingual output toggle
+  bilingualMode: "ਦੋ-ਭਾਸ਼ੀ ਮੋਡ",
+  bilingualModeEnabled: "ਦੋ-ਭਾਸ਼ੀ ਮੋਡ ਚਾਲੂ",
+  bilingualModeDisabled: "ਦੋ-ਭਾਸ਼ੀ ਮੋਡ ਬੰਦ",
+  showBothLanguages: "ਦੋਵੇਂ ਭਾਸ਼ਾਵਾਂ ਦਿਖਾਓ",
+  showBothLanguagesDescription: "AI ਜਵਾਬਾਂ ਵਿੱਚ ਅੰਗਰੇਜ਼ੀ ਅਤੇ {{language}} ਅਨੁਵਾਦ ਦੋਵੇਂ ਦਿਖਾਉਂਦਾ ਹੈ",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

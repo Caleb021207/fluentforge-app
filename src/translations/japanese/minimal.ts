@@ -231,6 +231,13 @@ const minimalTranslations: TranslationRecord = {
   profile: "プロフィール",
   settings: "設定",
   
+  // Bilingual output toggle
+  bilingualMode: "バイリンガルモード",
+  bilingualModeEnabled: "バイリンガルモードが有効になりました",
+  bilingualModeDisabled: "バイリンガルモードが無効になりました",
+  showBothLanguages: "両言語を表示",
+  showBothLanguagesDescription: "AI応答に英語と{{language}}訳の両方を表示します",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",

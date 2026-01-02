@@ -233,6 +233,13 @@ const minimalTranslations: TranslationRecord = {
   advancedLevelShortDescription: "സങ്കീർണ്ണമായ വിഷയങ്ങൾ",
   superiorLevelShortDescription: "എല്ലാ പ്രവർത്തനങ്ങളും",
 
+  // Bilingual output toggle
+  bilingualMode: "ദ്വിഭാഷാ മോഡ്",
+  bilingualModeEnabled: "ദ്വിഭാഷാ മോഡ് പ്രവർത്തനക്ഷമമായി",
+  bilingualModeDisabled: "ദ്വിഭാഷാ മോഡ് പ്രവർത്തനരഹിതമായി",
+  showBothLanguages: "രണ്ട് ഭാഷകളും കാണിക്കുക",
+  showBothLanguagesDescription: "AI പ്രതികരണങ്ങളിൽ ഇംഗ്ലീഷും {{language}} പരിഭാഷയും കാണിക്കുന്നു",
+
   // Transcript Analysis - English placeholders as requested
   progressOverview: "Progress Overview",
   trackLanguageLearningJourney: "Track Language Learning Journey",
