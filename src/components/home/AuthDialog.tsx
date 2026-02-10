@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,7 +21,7 @@ interface AuthDialogProps {
   setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
-  handleEmailAuth: (e: React.FormEvent, passcode?: string) => void;
+  handleEmailAuth: (e: React.FormEvent) => void;
   isLoading: boolean;
   authError?: string | null;
   retryCount?: number;
@@ -42,19 +42,6 @@ const AuthDialog = ({
   retryCount = 0
 }: AuthDialogProps) => {
   const { t } = useLocalization();
-  const [passcode, setPasscode] = useState("");
-  const [passcodeError, setPasscodeError] = useState(false);
-  
-  // Reset passcode error when dialog opens/closes or login mode changes
-  useEffect(() => {
-    setPasscodeError(false);
-    setPasscode("");
-  }, [isOpen, isLogin]);
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleEmailAuth(e, passcode);
-  };
   
   const isNetworkError = authError?.includes("Connection") || 
                           authError?.includes("Network") || 
@@ -71,7 +58,7 @@ const AuthDialog = ({
               : t("createAccountToGetStarted")}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleEmailAuth} className="space-y-4">
           <div>
             <Input
               type="email"
@@ -93,29 +80,7 @@ const AuthDialog = ({
             />
           </div>
           
-          {!isLogin && (
-            <div>
-              <Input
-                type="password"
-                placeholder={t("accessPasscode")}
-                value={passcode}
-                onChange={(e) => {
-                  setPasscode(e.target.value);
-                  if (passcodeError) setPasscodeError(false);
-                }}
-                required
-                className={`text-sm ${passcodeError || authError ? 'border-red-500' : ''}`}
-              />
-              {(passcodeError || authError) && (
-                <div className="flex items-center mt-2 text-red-500 text-sm">
-                  <AlertCircle className="h-4 w-4 mr-1" />
-                  <span>{authError || t("incorrectPasscode")}</span>
-                </div>
-              )}
-            </div>
-          )}
-          
-          {isLogin && authError && (
+          {authError && (
             <div className="flex items-center mt-2 text-red-500 text-sm">
               {isNetworkError ? <RefreshCw className="h-4 w-4 mr-1 animate-spin" /> : <AlertCircle className="h-4 w-4 mr-1" />}
               <span>{authError}</span>
@@ -132,11 +97,7 @@ const AuthDialog = ({
           <Button
             type="button"
             variant="link"
-            onClick={() => {
-              setPasscode("");
-              setPasscodeError(false);
-              setIsLogin(!isLogin);
-            }}
+            onClick={() => setIsLogin(!isLogin)}
             className="w-full text-sm"
             disabled={isLoading}
           >

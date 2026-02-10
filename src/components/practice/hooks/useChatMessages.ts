@@ -7,7 +7,6 @@ import { useSessionManagement } from "./useSessionManagement";
 import { useToast } from "@/hooks/use-toast";
 import { useGamification } from "@/hooks/useGamification";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
-import { useConversationProfiling } from "@/hooks/useConversationProfiling";
 import { useStudentProficiency } from "@/hooks/useStudentProficiency";
 import { supabase } from "@/integrations/supabase/client";
 import type { TranslationType } from "./useTranslationHandler";
@@ -23,7 +22,6 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [correctGrammar, setCorrectGrammar] = useState<boolean>(false);
-  // Add conversation history for API context (similar to voice chat)
   const [apiConversationHistory, setApiConversationHistory] = useState<{role: 'user' | 'assistant' | 'system'; content: string}[]>([]);
   const { t, currentLanguage } = useLocalization();
   const { isLoading, hasError, sendChatMessage, retryLastMessage, extractStringFromTranslation } = useChatMessaging();
@@ -32,14 +30,9 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const { toast } = useToast();
   const { awardXP } = useGamification();
   const { checkCanSendTextMessage, trackTextMessage, usageLimits, refreshLimits } = useUsageLimits();
-  const { triggerProfiling } = useConversationProfiling();
   const { proficiency } = useStudentProficiency(conversationLevel);
   
-  // Track if profiling has been triggered for current session
-  const profilingTriggeredRef = useRef(false);
   const currentSessionIdRef = useRef<string | null>(null);
-  const userMessageCountRef = useRef(0);
-  const PROFILING_INTERVAL = 6; // Trigger profiling every 6 user messages
 
   // Initialize session on mount
   useEffect(() => {
@@ -93,68 +86,6 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
       sessionStorage.setItem('apiConversationHistory', JSON.stringify(apiConversationHistory));
     }
   }, [apiConversationHistory]);
-
-  // Trigger profiling - can be called multiple times during a session
-  const triggerProfilingNow = useCallback(async (force: boolean = false) => {
-    // Only skip if already triggered AND not forcing
-    if (profilingTriggeredRef.current && !force) {
-      console.log('[Profiling] Skipping - already triggered this session');
-      return;
-    }
-    
-    if (messages.length < 4) {
-      console.log('[Profiling] Skipping - not enough messages:', messages.length);
-      return;
-    }
-    
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        console.log('[Profiling] Skipping - no user');
-        return;
-      }
-      
-      console.log('[Profiling] 🚀 Triggering profiling for user:', user.id, 'messages:', messages.length);
-      
-      profilingTriggeredRef.current = true;
-      
-      // Format messages for profiling
-      const formattedMessages = messages.map(m => ({
-        role: m.role,
-        content: m.content
-      }));
-      
-      const result = await triggerProfiling({
-        studentId: user.id,
-        sessionId: currentSessionIdRef.current || `session_${Date.now()}`,
-        messages: formattedMessages,
-        topic: 'text_practice',
-        targetLevel: conversationLevel
-      });
-      
-      console.log('[Profiling] ✅ Result:', result);
-    } catch (error) {
-      console.error('[Profiling] ❌ Error:', error);
-    }
-  }, [messages, conversationLevel, triggerProfiling]);
-
-  // Trigger profiling on unmount and page close
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      // Use sendBeacon for reliable async on page close
-      if (messages.length >= 4 && currentSessionIdRef.current) {
-        console.log('[Profiling] Page unloading - triggering via beacon');
-        triggerProfilingNow(true);
-      }
-    };
-    
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      triggerProfilingNow(true);
-    };
-  }, [triggerProfilingNow, messages.length]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,25 +141,13 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
       ];
       setApiConversationHistory(updatedHistory);
       
-      // Track user message count for profiling intervals
-      userMessageCountRef.current++;
-      console.log('[Profiling] User message count:', userMessageCountRef.current);
-      
-      // Trigger profiling every N user messages
-      if (userMessageCountRef.current >= PROFILING_INTERVAL) {
-        console.log('[Profiling] 📊 Interval reached, triggering profiling...');
-        userMessageCountRef.current = 0;
-        profilingTriggeredRef.current = false; // Allow re-triggering
-        triggerProfilingNow(true);
-      }
-      
       // Track text practice usage - CRITICAL for limit enforcement
       await trackTextMessage();
       
       // Refresh usage limits to get updated counts
       await refreshLimits();
       
-      // Award XP for sending a text message with metadata for better calculation
+      // Award XP for sending a text message
       console.log('📝 Awarding XP for text message:', { 
         messageLength: input.length,
         grammarAccuracy: correctGrammar ? 100 : undefined 
@@ -244,7 +163,6 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   // Modified send function that includes grammar correction preference, conversation history, and proficiency
   const sendChatMessageWithCorrection = async (message: string) => {
     try {
-      // Pass the correctGrammar flag, conversation history, level, and CEFR level
       const effectiveCefrLevel = proficiency?.cefrLevel || null;
       return await sendChatMessage(message, correctGrammar, apiConversationHistory, conversationLevel, effectiveCefrLevel);
     } catch (error) {
@@ -266,31 +184,22 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   };
   
   const sendLanguageLearningPrompt = async () => {
-    // Generate appropriate prompt based on target language
     const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
     const prompt = generateLanguageLearningPrompt();
     
-    // Force replace the input with the generated prompt
     setInput(prompt);
     
-    // Simulate form submission
     const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
     await handleSubmit(fakeEvent);
   };
   
   const clearConversation = async () => {
-    // Trigger profiling before clearing
-    await triggerProfilingNow(true);
-    
     setMessages([]);
     setApiConversationHistory([]);
     sessionStorage.removeItem('chatMessages');
     sessionStorage.removeItem('apiConversationHistory');
     
-    // Reset message count and profiling flag
     setMessageCount({ inputs: 0, outputs: 0 });
-    profilingTriggeredRef.current = false;
-    userMessageCountRef.current = 0;
     
     // Start new session
     const newSessionId = await startSession('text_practice');

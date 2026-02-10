@@ -8,8 +8,6 @@ import { StudentMetricsTable } from './components/StudentMetricsTable';
 import { useSortableData } from './hooks/useSortableData';
 import { StudentMetrics } from './types/studentTypes';
 import { RefreshMetricsButton } from './components/RefreshMetricsButton';
-import { ConsentRecordDialog } from './components/ConsentRecordDialog';
-import { StudentProfileViewer } from '@/components/teacher/dashboard/StudentProfileViewer';
 
 interface ClassStudentsListProps {
   classId: string;
@@ -24,25 +22,12 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
   const [isLoading, setIsLoading] = React.useState(true);
   const { sortedData, sortField, sortDirection, handleSort } = useSortableData(students);
 
-  // Lifted dialog state - render dialogs at this level to avoid nesting issues
-  const [consentDialogStudent, setConsentDialogStudent] = React.useState<{
-    studentId: string;
-    studentName: string;
-    currentConsent: boolean;
-  } | null>(null);
-  
-  const [profileViewerStudent, setProfileViewerStudent] = React.useState<{
-    studentId: string;
-    studentName: string;
-  } | null>(null);
-
   const fetchStudents = async () => {
     if (!open || !classId) return;
     
     setIsLoading(true);
 
     try {
-      // Get student IDs enrolled in this class
       const { data: enrollments, error: enrollmentError } = await supabase
         .from('student_enrollments')
         .select('student_id')
@@ -61,30 +46,22 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
 
       const studentIds = enrollments.map(e => e.student_id).filter(Boolean) as string[];
 
-      // Fetch metrics and profiles for enrolled students
       const { data: metricsData, error: metricsError } = await supabase
         .from('student_metrics')
         .select('*')
         .in('student_id', studentIds);
 
-      // Fetch profiles separately
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select('id, display_name, email')
         .in('id', studentIds);
 
-      if (metricsError) {
-        console.error("Error fetching student metrics:", metricsError);
-      }
-      if (profilesError) {
-        console.error("Error fetching profiles:", profilesError);
-      }
+      if (metricsError) console.error("Error fetching student metrics:", metricsError);
+      if (profilesError) console.error("Error fetching profiles:", profilesError);
 
-      // Create maps for easy lookup
       const metricsMap = new Map((metricsData || []).map(m => [m.student_id, m]));
       const profilesMap = new Map((profilesData || []).map(p => [p.id, p]));
 
-      // Build student list from enrollments
       const transformedData: StudentMetrics[] = studentIds.map(studentId => {
         const metrics = metricsMap.get(studentId);
         const profile = profilesMap.get(studentId);
@@ -129,74 +106,37 @@ const ClassStudentsList = ({ classId, className, open, onOpenChange }: ClassStud
   }, [classId, open, toast]);
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-7xl">
-          <DialogHeader>
-            <div className="flex items-center justify-between">
-              <DialogTitle>
-                {className} - {CLASSROOM_TEXT.STUDENTS}
-              </DialogTitle>
-              <RefreshMetricsButton 
-                classId={classId} 
-                onSuccess={fetchStudents} 
-              />
-            </div>
-          </DialogHeader>
-          {isLoading ? (
-            <div className="py-8 text-center">Loading...</div>
-          ) : students.length === 0 ? (
-            <div className="py-8 text-center text-muted-foreground">
-              {CLASSROOM_TEXT.NO_STUDENTS_IN_CLASS}
-            </div>
-          ) : (
-            <StudentMetricsTable
-              students={sortedData}
-              sortField={sortField}
-              sortDirection={sortDirection}
-              onSort={handleSort}
-              classId={classId}
-              onStudentRemoved={fetchStudents}
-              onOpenConsentDialog={(studentId, studentName, currentConsent) => {
-                setConsentDialogStudent({ studentId, studentName, currentConsent });
-              }}
-              onOpenProfileViewer={(studentId, studentName) => {
-                setProfileViewerStudent({ studentId, studentName });
-              }}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-7xl">
+        <DialogHeader>
+          <div className="flex items-center justify-between">
+            <DialogTitle>
+              {className} - {CLASSROOM_TEXT.STUDENTS}
+            </DialogTitle>
+            <RefreshMetricsButton 
+              classId={classId} 
+              onSuccess={fetchStudents} 
             />
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Consent Dialog - rendered outside the main dialog to fix click events */}
-      {consentDialogStudent && (
-        <ConsentRecordDialog
-          open={!!consentDialogStudent}
-          onOpenChange={(open) => {
-            if (!open) setConsentDialogStudent(null);
-          }}
-          studentId={consentDialogStudent.studentId}
-          studentName={consentDialogStudent.studentName}
-          currentConsent={consentDialogStudent.currentConsent}
-          onConsentUpdated={() => {
-            fetchStudents();
-            setConsentDialogStudent(null);
-          }}
-        />
-      )}
-
-      {/* Profile Viewer - rendered outside the main dialog */}
-      {profileViewerStudent && (
-        <StudentProfileViewer
-          open={!!profileViewerStudent}
-          onOpenChange={(open) => {
-            if (!open) setProfileViewerStudent(null);
-          }}
-          studentId={profileViewerStudent.studentId}
-          studentName={profileViewerStudent.studentName}
-        />
-      )}
-    </>
+          </div>
+        </DialogHeader>
+        {isLoading ? (
+          <div className="py-8 text-center">Loading...</div>
+        ) : students.length === 0 ? (
+          <div className="py-8 text-center text-muted-foreground">
+            {CLASSROOM_TEXT.NO_STUDENTS_IN_CLASS}
+          </div>
+        ) : (
+          <StudentMetricsTable
+            students={sortedData}
+            sortField={sortField}
+            sortDirection={sortDirection}
+            onSort={handleSort}
+            classId={classId}
+            onStudentRemoved={fetchStudents}
+          />
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 

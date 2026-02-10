@@ -1,11 +1,10 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Table, TableHeader, TableBody, TableHead, TableRow } from "@/components/ui/table";
 import { SortableTableHeader } from './SortableTableHeader';
 import { StudentTableRow } from './StudentTableRow';
 import { StudentMetrics, SortField, SortDirection } from '@/components/classroom/types/studentTypes';
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { useLocalization } from "@/context/LocalizationContext";
-import { useStudentProfilingStatus } from "@/hooks/useStudentProfilingStatus";
 
 interface StudentMetricsTableProps {
   students: StudentMetrics[];
@@ -14,8 +13,6 @@ interface StudentMetricsTableProps {
   onSort: (field: SortField) => void;
   classId?: string;
   onStudentRemoved?: () => void;
-  onOpenConsentDialog?: (studentId: string, studentName: string, currentConsent: boolean) => void;
-  onOpenProfileViewer?: (studentId: string, studentName: string) => void;
 }
 
 export const StudentMetricsTable = ({
@@ -25,18 +22,8 @@ export const StudentMetricsTable = ({
   onSort,
   classId,
   onStudentRemoved,
-  onOpenConsentDialog,
-  onOpenProfileViewer
 }: StudentMetricsTableProps) => {
   const { t } = useLocalization();
-  
-  // Get student IDs for profiling status
-  const studentIds = useMemo(() => 
-    students.map(s => s.student_id).filter((id): id is string => id !== null),
-    [students]
-  );
-  
-  const { getStatus, updateStatus, isLoading: isLoadingProfiling } = useStudentProfilingStatus(studentIds);
   
   return (
     <div className="max-h-[600px] overflow-auto">
@@ -50,7 +37,6 @@ export const StudentMetricsTable = ({
               sortDirection={sortDirection}
               onSort={onSort}
             />
-            <TableHead className="text-center">AI Profiling</TableHead>
             <SortableTableHeader
               field="certification_attempts"
               label="Cert Attempts"
@@ -105,19 +91,6 @@ export const StudentMetricsTable = ({
               student={student}
               classId={classId}
               onRemoved={onStudentRemoved}
-              profilingStatus={student.student_id ? getStatus(student.student_id) : undefined}
-              onProfilingUpdate={(enabled) => {
-                if (student.student_id) {
-                  updateStatus(student.student_id, { profilingEnabled: enabled });
-                }
-              }}
-              onConsentUpdate={(consented) => {
-                if (student.student_id) {
-                  updateStatus(student.student_id, { hasConsent: consented });
-                }
-              }}
-              onOpenConsentDialog={onOpenConsentDialog}
-              onOpenProfileViewer={onOpenProfileViewer}
             />
           ))}
         </TableBody>
