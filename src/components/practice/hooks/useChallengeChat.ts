@@ -5,7 +5,6 @@ import { useChatMessaging } from "./messaging";
 import { useSessionManagement } from "./useSessionManagement";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useConversationProfiling } from "@/hooks/useConversationProfiling";
 import type { TranslationType } from "./translation/types";
 
 interface Message {
@@ -15,10 +14,10 @@ interface Message {
 }
 
 interface ChallengeChatOptions {
-  cefrLevel: string;  // MANDATORY - the assignment's CEFR level (A1, A2, B1, etc.)
-  topicPrompt: string; // The assignment's topic/task description
-  submissionId?: string; // For progress persistence
-  initialMessages?: Message[] | null; // For restoring progress
+  cefrLevel: string;
+  topicPrompt: string;
+  submissionId?: string;
+  initialMessages?: Message[] | null;
 }
 
 /**
@@ -37,16 +36,12 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
   const { isLoading, hasError, sendChatMessage, extractStringFromTranslation } = useChatMessaging();
   const { startSession, sessionId } = useSessionManagement();
   const { toast } = useToast();
-  const { triggerProfiling } = useConversationProfiling();
   
   const currentSessionIdRef = useRef<string | null>(null);
   const hasGeneratedOpening = useRef(false);
   const hasRestoredMessages = useRef(false);
-  const profilingTriggeredRef = useRef(false);
-  const userMessageCountRef = useRef(0);
-  const PROFILING_INTERVAL = 6;
 
-  // Normalize CEFR level (e.g., "A2/B1" -> "A2", "B1+" -> "B1")
+  // Normalize CEFR level
   const normalizedCefrLevel = cefrLevel.toUpperCase().split('/')[0].replace('+', '').trim();
   
   console.log(`[useChallengeChat] Initialized with CEFR=${normalizedCefrLevel}, topic="${topicPrompt.substring(0, 50)}..."`);
@@ -55,10 +50,9 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
   useEffect(() => {
     if (initialMessages && initialMessages.length > 0 && !hasRestoredMessages.current) {
       hasRestoredMessages.current = true;
-      hasGeneratedOpening.current = true; // Don't generate new opening if we're restoring
+      hasGeneratedOpening.current = true;
       setMessages(initialMessages);
       
-      // Rebuild API conversation history from restored messages
       const history = initialMessages.map(m => ({
         role: m.role as 'user' | 'assistant',
         content: m.content
@@ -86,8 +80,6 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
       const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
       const userLanguage = localStorage.getItem("nativeLanguage") || "english";
 
-      console.log(`[useChallengeChat] Generating opening message for topic: "${topicPrompt.substring(0, 50)}..."`);
-
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: {
           requestType: 'opening_message',
@@ -114,8 +106,6 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
         setApiConversationHistory([
           { role: 'assistant', content: data.content }
         ]);
-        
-        console.log(`[useChallengeChat] Opening message generated successfully`);
       }
     } catch (error) {
       console.error('[useChallengeChat] Failed to generate opening message:', error);
@@ -124,72 +114,12 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
     }
   }, [topicPrompt, normalizedCefrLevel]);
 
-  // Trigger profiling - can be called multiple times during a session
-  const triggerProfilingNow = useCallback(async (force: boolean = false) => {
-    if (profilingTriggeredRef.current && !force) {
-      console.log('[Challenge Profiling] Skipping - already triggered');
-      return;
-    }
-    
-    if (messages.length < 4) {
-      console.log('[Challenge Profiling] Skipping - not enough messages:', messages.length);
-      return;
-    }
-    
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        console.log('[Challenge Profiling] Skipping - no user');
-        return;
-      }
-      
-      console.log('[Challenge Profiling] 🚀 Triggering for user:', user.id, 'messages:', messages.length);
-      
-      profilingTriggeredRef.current = true;
-      
-      const formattedMessages = messages.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }));
-      
-      const result = await triggerProfiling({
-        studentId: user.id,
-        sessionId: currentSessionIdRef.current || `challenge_${Date.now()}`,
-        messages: formattedMessages,
-        topic: topicPrompt,
-        targetLevel: normalizedCefrLevel
-      });
-      
-      console.log('[Challenge Profiling] ✅ Result:', result);
-    } catch (error) {
-      console.error('[Challenge Profiling] ❌ Error:', error);
-    }
-  }, [messages, topicPrompt, normalizedCefrLevel, triggerProfiling]);
-
-  // Trigger profiling on unmount and page close
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (messages.length >= 4 && currentSessionIdRef.current) {
-        console.log('[Challenge Profiling] Page unloading - triggering');
-        triggerProfilingNow(true);
-      }
-    };
-    
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      triggerProfilingNow(true);
-    };
-  }, [triggerProfilingNow, messages.length]);
-
   // Initialize session and generate opening message on mount
   useEffect(() => {
     const initSession = async () => {
       const newSessionId = await startSession('challenge_mode');
       currentSessionIdRef.current = newSessionId;
       
-      // Only generate opening if we haven't restored messages
       if (!hasRestoredMessages.current) {
         await generateOpeningMessage();
       }
@@ -202,7 +132,6 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
     
     if (!input.trim()) return;
     
-    // Add user message to the chat
     const userMessage: Message = {
       role: "user",
       content: input
@@ -211,11 +140,9 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     
-    // Send message to API with MANDATORY CEFR level - NO OVERRIDE
     const response = await sendChatMessageForChallenge(input);
     
     if (response) {
-      // Add assistant response to the chat
       const assistantMessage: Message = {
         role: "assistant",
         content: response.content,
@@ -224,29 +151,15 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
       
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Update API conversation history to maintain context
       const updatedHistory = [
         ...apiConversationHistory,
         { role: 'user' as const, content: input },
         { role: 'assistant' as const, content: response.content }
       ];
       setApiConversationHistory(updatedHistory);
-      
-      // Track user message count for profiling intervals
-      userMessageCountRef.current++;
-      console.log('[Challenge Profiling] User message count:', userMessageCountRef.current);
-      
-      // Trigger profiling every N user messages
-      if (userMessageCountRef.current >= PROFILING_INTERVAL) {
-        console.log('[Challenge Profiling] 📊 Interval reached, triggering...');
-        userMessageCountRef.current = 0;
-        profilingTriggeredRef.current = false;
-        triggerProfilingNow(true);
-      }
     }
   };
   
-  // Send function that ALWAYS uses the assignment's CEFR level and topic
   const sendChatMessageForChallenge = async (message: string) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -258,9 +171,6 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
       const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
       const userLanguage = localStorage.getItem("nativeLanguage") || "english";
 
-      // CRITICAL: Always pass the assignment's CEFR level and topic
-      console.log(`[useChallengeChat] Sending message with CEFR=${normalizedCefrLevel}, topic="${topicPrompt.substring(0, 30)}..."`);
-      
       const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
         body: {
           message,
@@ -269,7 +179,7 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
           conversationHistory: apiConversationHistory,
           conversationLevel: normalizedCefrLevel.toLowerCase(),
           cefrLevel: normalizedCefrLevel,
-          assignmentTopic: topicPrompt, // Pass topic to keep conversation focused
+          assignmentTopic: topicPrompt,
           correctGrammar: false
         }
       });
@@ -294,7 +204,6 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
     return t("chatPlaceholder", { targetLanguage }) || `Type your message to practice ${targetLanguage}...`;
   }, [t]);
 
-  // Expose the assignment context for hints
   const getAssignmentContext = useCallback(() => ({
     cefrLevel: normalizedCefrLevel,
     topicPrompt
@@ -302,14 +211,13 @@ export const useChallengeChat = ({ cefrLevel, topicPrompt, submissionId, initial
   
   return {
     messages,
-    setMessages, // Expose for external restoration
+    setMessages,
     input,
     setInput,
     isLoading: isLoading || isGeneratingOpening,
     hasError,
     handleSubmit,
     getPlaceholderText,
-    // Challenge-specific exports
     cefrLevel: normalizedCefrLevel,
     topicPrompt,
     getAssignmentContext

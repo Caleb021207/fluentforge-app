@@ -3,48 +3,29 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { useLocalization } from "@/context/LocalizationContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2, ShieldCheck, Brain } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { StudentMetrics } from '@/components/classroom/types/studentTypes';
 import { RemoveStudentDialog } from './RemoveStudentDialog';
-import { StudentProfilingToggle } from './StudentProfilingToggle';
-
-interface ProfilingStatus {
-  studentId: string;
-  profilingEnabled: boolean;
-  hasConsent: boolean;
-}
 
 interface StudentTableRowProps {
   student: StudentMetrics;
   classId?: string;
   onRemoved?: () => void;
-  profilingStatus?: ProfilingStatus;
-  onProfilingUpdate?: (enabled: boolean) => void;
-  onConsentUpdate?: (consented: boolean) => void;
-  onOpenConsentDialog?: (studentId: string, studentName: string, currentConsent: boolean) => void;
-  onOpenProfileViewer?: (studentId: string, studentName: string) => void;
 }
 
 export const StudentTableRow: React.FC<StudentTableRowProps> = ({ 
   student, 
   classId, 
   onRemoved,
-  profilingStatus,
-  onProfilingUpdate,
-  onConsentUpdate,
-  onOpenConsentDialog,
-  onOpenProfileViewer
 }) => {
   const { t } = useLocalization();
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
-  // Format date if available
   const formatDate = (dateString: string | null) => {
     if (!dateString) return t("never");
     return new Date(dateString).toLocaleDateString();
   };
 
-  // Helper function to determine CEFR level based on score
   const getCEFRLevel = (score: number) => {
     if (score < 30) return 'A1';
     if (score < 50) return 'A2';
@@ -54,7 +35,6 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
     return 'C2';
   };
 
-  // Helper function to get badge color based on CEFR level
   const getBadgeVariant = (level: string) => {
     switch(level) {
       case 'A1': return 'outline';
@@ -67,25 +47,6 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
     }
   };
 
-  const handleOpenConsentDialog = () => {
-    if (student.student_id && onOpenConsentDialog) {
-      onOpenConsentDialog(
-        student.student_id,
-        student.student_name || 'Unknown Student',
-        profilingStatus?.hasConsent ?? false
-      );
-    }
-  };
-
-  const handleOpenProfileViewer = () => {
-    if (student.student_id && onOpenProfileViewer) {
-      onOpenProfileViewer(
-        student.student_id,
-        student.student_name || 'Unknown Student'
-      );
-    }
-  };
-
   return (
     <TableRow>
       <TableCell>
@@ -93,45 +54,6 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
           <div className="font-medium">{student.student_name || t("anonymous")}</div>
           <div className="text-sm text-muted-foreground">{student.student_email}</div>
         </div>
-      </TableCell>
-      <TableCell>
-        {student.student_id && profilingStatus ? (
-          <div className="flex flex-col gap-1">
-            <StudentProfilingToggle
-              studentId={student.student_id}
-              studentName={student.student_name || 'Unknown Student'}
-              initialEnabled={profilingStatus.profilingEnabled}
-              hasConsent={profilingStatus.hasConsent}
-              onToggle={onProfilingUpdate}
-            />
-            <div className="flex gap-1">
-              {!profilingStatus.hasConsent && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-6 text-xs px-2 gap-1"
-                  onClick={handleOpenConsentDialog}
-                >
-                  <ShieldCheck className="h-3 w-3" />
-                  {t("recordConsent") || "Record Consent"}
-                </Button>
-              )}
-              {profilingStatus.profilingEnabled && profilingStatus.hasConsent && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-6 text-xs px-2 gap-1"
-                  onClick={handleOpenProfileViewer}
-                >
-                  <Brain className="h-3 w-3" />
-                  {t("viewProfile") || "View Profile"}
-                </Button>
-              )}
-            </div>
-          </div>
-        ) : (
-          <span className="text-muted-foreground text-sm">-</span>
-        )}
       </TableCell>
       <TableCell className="text-center">
         {student.certification_attempts || 0}

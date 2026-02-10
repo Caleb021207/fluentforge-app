@@ -1,6 +1,6 @@
 /**
  * Hook to determine student's proficiency level from various sources
- * Priority: 1. Learning profile, 2. Certification history, 3. Conversation setting
+ * Priority: 1. Certification history, 2. Conversation setting
  */
 
 import { useState, useEffect, useCallback } from "react";
@@ -10,7 +10,7 @@ import { getLevelBehavior, conversationLevelToCEFR, LevelBehavior } from "@/util
 interface ProficiencyData {
   cefrLevel: string;
   actflLevel: string | null;
-  source: 'learning_profile' | 'certification' | 'setting' | 'default';
+  source: 'certification' | 'setting' | 'default';
   behavior: LevelBehavior;
 }
 
@@ -25,7 +25,6 @@ export const useStudentProficiency = (conversationLevelSetting: string = "interm
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        // Default to conversation setting for unauthenticated users
         const cefrLevel = conversationLevelToCEFR(conversationLevelSetting);
         setProficiency({
           cefrLevel,
@@ -36,28 +35,7 @@ export const useStudentProficiency = (conversationLevelSetting: string = "interm
         return;
       }
 
-      // 1. Try learning profile first (most accurate if profiling is enabled)
-      const { data: learningProfile } = await supabase
-        .from('student_learning_profiles')
-        .select('estimated_cefr_level, estimated_actfl_level, profiling_enabled')
-        .eq('student_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (learningProfile?.profiling_enabled && learningProfile.estimated_cefr_level) {
-        const cefrLevel = learningProfile.estimated_cefr_level.toUpperCase();
-        setProficiency({
-          cefrLevel,
-          actflLevel: learningProfile.estimated_actfl_level,
-          source: 'learning_profile',
-          behavior: getLevelBehavior(cefrLevel)
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // 2. Try certification history
+      // 1. Try certification history
       const { data: certifications } = await supabase
         .from('transcript_analyses')
         .select('cefr_level, overall_score')
@@ -66,13 +44,11 @@ export const useStudentProficiency = (conversationLevelSetting: string = "interm
         .limit(5);
 
       if (certifications && certifications.length > 0) {
-        // Get the most common CEFR level from recent analyses
         const validLevels = certifications
           .filter(c => c.cefr_level)
           .map(c => c.cefr_level!.toUpperCase());
         
         if (validLevels.length > 0) {
-          // Use most recent valid level
           const cefrLevel = validLevels[0];
           setProficiency({
             cefrLevel,
@@ -85,7 +61,7 @@ export const useStudentProficiency = (conversationLevelSetting: string = "interm
         }
       }
 
-      // 3. Fall back to conversation level setting
+      // 2. Fall back to conversation level setting
       const cefrLevel = conversationLevelToCEFR(conversationLevelSetting);
       setProficiency({
         cefrLevel,
@@ -96,7 +72,6 @@ export const useStudentProficiency = (conversationLevelSetting: string = "interm
 
     } catch (error) {
       console.error('Error fetching student proficiency:', error);
-      // Default on error
       const cefrLevel = conversationLevelToCEFR(conversationLevelSetting);
       setProficiency({
         cefrLevel,
