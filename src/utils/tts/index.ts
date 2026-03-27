@@ -13,6 +13,5 @@ export type { TTSOptions } from './types';
  * @returns The language code (en-US, es-ES, etc.)
  */
 export const getSpeechSynthesisLanguageCode = (language: string): string => {
-  const { languageCodeMap } = require('./constants');
   return languageCodeMap[language?.toLowerCase()] || 'en-US';
 };
