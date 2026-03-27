@@ -3,7 +3,25 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+};
+
+const getUserIdFromAuthHeader = (authHeader: string) => {
+  const jwt = authHeader.replace('Bearer ', '').trim();
+  const parts = jwt.split('.');
+
+  if (parts.length !== 3) {
+    throw new Error('Invalid JWT format');
+  }
+
+  const payload = JSON.parse(atob(parts[1]));
+  const userId = payload.sub;
+
+  if (!userId) {
+    throw new Error('No sub claim in JWT');
+  }
+
+  return userId as string;
 };
 
 serve(async (req) => {
@@ -12,7 +30,6 @@ serve(async (req) => {
   }
 
   try {
-    // Get the JWT from the Authorization header
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'No authorization header' }), {
@@ -21,7 +38,9 @@ serve(async (req) => {
       });
     }
 
-    // Create Supabase client for database operations (uses user's JWT for RLS)
+    const userId = getUserIdFromAuthHeader(authHeader);
+    const today = new Date().toISOString().split('T')[0];
+
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -32,56 +51,35 @@ serve(async (req) => {
       }
     );
 
-    // Since verify_jwt=true, Supabase has already verified the JWT
-    // Extract user ID from the verified JWT
-    let userId: string;
-    try {
-      const jwt = authHeader.replace('Bearer ', '').trim();
-      const parts = jwt.split('.');
-      
-      if (parts.length !== 3) {
-        throw new Error('Invalid JWT format');
-      }
-      
-      const payload = JSON.parse(atob(parts[1]));
-      userId = payload.sub;
-      
-      if (!userId) {
-        throw new Error('No sub claim in JWT');
-      }
-      
-      console.log('Processing streak check for user:', userId);
-    } catch (jwtError) {
-      console.error('JWT decode error:', jwtError);
-      throw new Error(`Unable to extract user ID from JWT: ${jwtError.message}`);
+    const { data: progression, error: progressionError } = await supabase
+      .from('user_progression')
+      .select('user_id, total_xp, current_streak, longest_streak, last_activity_date')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (progressionError) {
+      throw progressionError;
     }
 
-    // Get user progression
-    const { data: progression, error: progError } = await supabase
-      .from('user_progression')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
-
-    if (progError || !progression) {
-      console.log('No progression found, creating new record');
-      const { data: newProg, error: createError } = await supabase
+    if (!progression) {
+      const { error: createError } = await supabase
         .from('user_progression')
         .insert({
           user_id: userId,
-          last_activity_date: new Date().toISOString().split('T')[0],
-          current_streak_days: 1,
-          longest_streak_days: 1,
-        })
-        .select()
-        .single();
+          last_activity_date: today,
+          current_streak: 1,
+          longest_streak: 1,
+        });
 
-      if (createError) throw createError;
+      if (createError) {
+        throw createError;
+      }
 
       return new Response(
         JSON.stringify({
           success: true,
           current_streak: 1,
+          longest_streak: 1,
           streak_bonus_xp: 25,
           streak_continued: true,
         }),
@@ -91,15 +89,12 @@ serve(async (req) => {
       );
     }
 
-    const today = new Date().toISOString().split('T')[0];
-    const lastActivity = progression.last_activity_date;
-
-    // If already active today, no streak update needed
-    if (lastActivity === today) {
+    if (progression.last_activity_date === today) {
       return new Response(
         JSON.stringify({
           success: true,
-          current_streak: progression.current_streak_days,
+          current_streak: progression.current_streak ?? 0,
+          longest_streak: progression.longest_streak ?? 0,
           streak_bonus_xp: 0,
           streak_continued: false,
           already_active_today: true,
@@ -110,51 +105,38 @@ serve(async (req) => {
       );
     }
 
-    // Check if yesterday
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-    let newStreak: number;
+    const currentStreak = progression.current_streak ?? 0;
+    const savedLongestStreak = progression.longest_streak ?? 0;
+
+    let newStreak = 1;
     let streakContinued = false;
     let streakBonusXP = 0;
 
-    if (lastActivity === yesterdayStr) {
-      // Streak continues!
-      newStreak = progression.current_streak_days + 1;
+    if (progression.last_activity_date === yesterdayStr) {
+      newStreak = currentStreak + 1;
       streakContinued = true;
-      streakBonusXP = Math.min(25 + Math.floor(newStreak / 7) * 10, 100); // Max 100 XP
-    } else {
-      // Streak broken
-      newStreak = 1;
-      streakBonusXP = 0;
+      streakBonusXP = Math.min(25 + Math.floor(newStreak / 7) * 10, 100);
     }
 
-    const longestStreak = Math.max(newStreak, progression.longest_streak_days);
+    const longestStreak = Math.max(newStreak, savedLongestStreak);
 
-    // Update progression
     const { error: updateError } = await supabase
       .from('user_progression')
       .update({
         last_activity_date: today,
-        current_streak_days: newStreak,
-        longest_streak_days: longestStreak,
+        current_streak: newStreak,
+        longest_streak: longestStreak,
+        total_xp: (progression.total_xp ?? 0) + streakBonusXP,
         updated_at: new Date().toISOString(),
       })
       .eq('user_id', userId);
 
-    if (updateError) throw updateError;
-
-    // Award bonus XP if streak continued
-    if (streakBonusXP > 0) {
-      const { error: xpError } = await supabase
-        .from('user_progression')
-        .update({
-          total_xp: progression.total_xp + streakBonusXP,
-        })
-        .eq('user_id', userId);
-
-      if (xpError) console.error('Error awarding streak bonus XP:', xpError);
+    if (updateError) {
+      throw updateError;
     }
 
     return new Response(
@@ -171,8 +153,9 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error('Error in check-streak:', error);
+
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
