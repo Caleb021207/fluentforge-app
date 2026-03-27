@@ -153,7 +153,7 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
         
         const completedSubmissions = studentSubmissions.filter(s => s.status === 'completed');
         const avgScore = completedSubmissions.length > 0
-          ? completedSubmissions.reduce((sum, s) => sum + (s.ai_score || 0), 0) / completedSubmissions.length
+          ? completedSubmissions.reduce((sum, s) => sum + (s.score || 0), 0) / completedSubmissions.length
           : 0;
 
         const lastActive = activityMap.get(studentId);

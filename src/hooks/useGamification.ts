@@ -61,7 +61,15 @@ export const useGamification = () => {
       }
 
       if (data) {
-        setProgression(data);
+        setProgression({
+          ...data,
+          current_level: data.level ?? 1,
+          current_streak_days: data.current_streak ?? 0,
+          lessons_completed: 0,
+          certifications_completed: 0,
+          voice_sessions_completed: 0,
+        });
+      }
       }
     } catch (error) {
       console.error('Error fetching progression:', error);
