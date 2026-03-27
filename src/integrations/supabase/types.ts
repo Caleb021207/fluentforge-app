@@ -1453,36 +1453,51 @@ export type Database = {
       }
       user_progression: {
         Row: {
+          certifications_completed: number | null
           created_at: string
+          current_level: number | null
           current_streak: number | null
+          current_streak_days: number | null
           id: string
           last_activity_date: string | null
+          lessons_completed: number | null
           level: number | null
           longest_streak: number | null
+          longest_streak_days: number | null
           streak_multiplier: number | null
           total_xp: number | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          certifications_completed?: number | null
           created_at?: string
+          current_level?: number | null
           current_streak?: number | null
+          current_streak_days?: number | null
           id?: string
           last_activity_date?: string | null
+          lessons_completed?: number | null
           level?: number | null
           longest_streak?: number | null
+          longest_streak_days?: number | null
           streak_multiplier?: number | null
           total_xp?: number | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          certifications_completed?: number | null
           created_at?: string
+          current_level?: number | null
           current_streak?: number | null
+          current_streak_days?: number | null
           id?: string
           last_activity_date?: string | null
+          lessons_completed?: number | null
           level?: number | null
           longest_streak?: number | null
+          longest_streak_days?: number | null
           streak_multiplier?: number | null
           total_xp?: number | null
           updated_at?: string
