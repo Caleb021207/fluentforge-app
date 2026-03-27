@@ -128,7 +128,7 @@ const TeacherDashboard = () => {
                   </h1>
                   <p className="text-muted-foreground text-sm flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-primary" />
-                    {profile?.display_name} • {profile?.school?.name || t("teacherTools")}
+                    {profile?.display_name} • {(profile?.school as any)?.name || t("teacherTools")}
                   </p>
                 </div>
               </div>
