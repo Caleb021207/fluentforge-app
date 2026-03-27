@@ -171,7 +171,7 @@ const AssignmentsList = ({
                         <p className="text-sm text-muted-foreground">No submissions yet</p>
                       ) : (
                         stats.submissions.map((sub) => {
-                          const isCompleted = sub.status === 'completed' || sub.ai_score === 100;
+                          const isCompleted = sub.status === 'completed' || sub.score === 100;
                           const hasTeacherGrade = sub.teacher_override_score !== null;
                           
                           return (
