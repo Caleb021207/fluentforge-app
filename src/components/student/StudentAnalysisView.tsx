@@ -35,7 +35,7 @@ const StudentAnalysisView = () => {
       return (data?.map(analysis => ({
         ...analysis,
         upload_date: analysis.created_at,
-      })) || []) as Analysis[];
+      })) || []) as unknown as Analysis[];
     },
   });
 
