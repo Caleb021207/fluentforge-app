@@ -10,7 +10,7 @@ export interface TeacherAssignment {
   min_messages: number;
   assignment_mode: string;
   max_duration_minutes: number;
-  grammar_requirements: string[] | null;
+  grammar_requirements: any;
   due_date: string | null;
   points_possible: number;
   class_id: string;
