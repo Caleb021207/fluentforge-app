@@ -74,13 +74,8 @@ serve(async (req) => {
 
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
-    // Get learning profiles
-    const { data: learningProfiles } = await supabase
-      .from('student_learning_profiles')
-      .select('student_id, estimated_cefr_level, estimated_actfl_level')
-      .in('student_id', studentIds);
-
-    const learningMap = new Map(learningProfiles?.map(p => [p.student_id, p]) || []);
+    // Learning profiles removed - use empty map
+    const learningMap = new Map();
 
     // Get assignments
     const { data: assignments } = await supabase
