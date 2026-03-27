@@ -45,12 +45,12 @@ const SubmissionTranscriptModal = ({
 
   if (!submission) return null;
 
-  const transcript = (Array.isArray(submission.transcript) ? submission.transcript : []) as TranscriptMessage[];
+  const transcript = (Array.isArray((submission as any).messages) ? (submission as any).messages : []) as TranscriptMessage[];
   const userMessages = transcript.filter(m => m.role === 'user').length;
-  const feedback = submission.ai_feedback as Record<string, unknown> | null;
+  const feedback = (submission as any).teacher_notes as Record<string, unknown> | null;
   
   // Determine completion status
-  const isCompleted = submission.status === 'completed' || submission.ai_score === 100;
+  const isCompleted = submission.status === 'completed' || submission.score === 100;
   const hasTeacherGrade = submission.teacher_override_score !== null;
 
   const handleStartEditing = () => {
