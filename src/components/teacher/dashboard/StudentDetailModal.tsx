@@ -53,14 +53,8 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
         .eq('id', studentId)
         .single();
 
-      // Get learning profile
-      const { data: learningProfile } = await supabase
-        .from('student_learning_profiles')
-        .select('*')
-        .eq('student_id', studentId)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+      // Learning profile removed — no longer tracked
+      const learningProfile: any = null;
 
       // Get language metrics over time
       const { data: metrics } = await supabase
