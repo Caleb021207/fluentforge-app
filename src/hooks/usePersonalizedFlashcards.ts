@@ -13,9 +13,10 @@ export interface PersonalizedFlashcard {
   cefr_level: string | null;
   mastery_level: number;
   next_due: string;
-  last_reviewed: string | null;
-  review_count: number;
+  last_reviewed?: string | null;
+  review_count?: number;
   created_at: string;
+  updated_at?: string;
 }
 
 export const usePersonalizedFlashcards = () => {

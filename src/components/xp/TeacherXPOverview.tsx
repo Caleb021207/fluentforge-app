@@ -77,7 +77,7 @@ const TeacherXPOverview = () => {
         // Fetch XP data for these students
         const { data: xpData, error: xpError } = await supabase
           .from('user_progression')
-          .select('user_id, total_xp, current_level, current_streak_days')
+          .select('user_id, total_xp, level, current_streak')
           .in('user_id', studentIds)
           .order('total_xp', { ascending: false });
 

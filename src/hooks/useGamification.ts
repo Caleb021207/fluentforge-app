@@ -70,7 +70,6 @@ export const useGamification = () => {
           voice_sessions_completed: 0,
         });
       }
-      }
     } catch (error) {
       console.error('Error fetching progression:', error);
     } finally {
