@@ -96,11 +96,11 @@ export const useTeacherAssignments = (classId?: string) => {
     // Create the assignment
     const { data, error } = await supabase
       .from('assignments')
-      .insert({
+      .insert([{
         ...assignmentFields,
         class_id: classId,
         assignment_type: 'conversation'
-      })
+      }])
       .select()
       .single();
 

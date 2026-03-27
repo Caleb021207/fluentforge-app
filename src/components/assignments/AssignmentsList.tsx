@@ -206,9 +206,9 @@ const AssignmentsList = ({
                                 <span className="text-sm text-muted-foreground">
                                   {sub.message_count || 0} msgs
                                 </span>
-                                {sub.completed_at && (
+                                {sub.submitted_at && (
                                   <span className="text-xs text-muted-foreground">
-                                    {format(new Date(sub.completed_at), 'MMM d, h:mm a')}
+                                    {format(new Date(sub.submitted_at), 'MMM d, h:mm a')}
                                   </span>
                                 )}
                               </div>

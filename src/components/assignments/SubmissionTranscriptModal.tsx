@@ -126,10 +126,10 @@ const SubmissionTranscriptModal = ({
             <MessageSquare className="h-3 w-3" />
             {userMessages} messages
           </Badge>
-          {submission.completed_at && (
+          {submission.submitted_at && (
             <Badge variant="outline" className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              {format(new Date(submission.completed_at), 'MMM d, yyyy h:mm a')}
+              {format(new Date(submission.submitted_at), 'MMM d, yyyy h:mm a')}
             </Badge>
           )}
           {/* Completion status badge */}

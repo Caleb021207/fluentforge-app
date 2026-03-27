@@ -261,7 +261,7 @@ const TeacherXPOverview = () => {
                       {student.display_name || student.email?.split('@')[0] || 'Student'}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Level {student.current_level} • {student.current_streak_days} day streak
+                      Level {student.level} • {student.current_streak} day streak
                     </p>
                   </div>
                   <div className="text-right">
