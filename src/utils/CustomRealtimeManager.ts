@@ -26,7 +26,7 @@ export class CustomRealtimeManager {
   private audioContext: AudioContext | null = null;
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
-  private silenceTimeout: NodeJS.Timeout | null = null;
+  private silenceTimeout: ReturnType<typeof setTimeout> | null = null;
   private conversationHistory: ConversationMessage[] = [];
   private onStateChange: (state: ConversationState) => void;
   private onMessage: (message: { role: string; content: string }) => void;
