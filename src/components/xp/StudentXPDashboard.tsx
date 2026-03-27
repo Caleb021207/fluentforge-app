@@ -49,10 +49,9 @@ const StudentXPDashboard = ({ progression }: StudentXPDashboardProps) => {
         if (!user) return;
 
         // Fetch all achievements and user's unlocked achievements in parallel
-        const [achievementsRes, userAchievementsRes] = await Promise.all([
-          supabase.from('achievements').select('*').order('requirement_value'),
-          supabase.from('user_achievements').select('achievement_id, unlocked_at').eq('user_id', user.id)
-        ]);
+        // achievements and user_achievements tables don't exist yet — skip
+        const achievementsRes = { data: [] as any[] };
+        const userAchievementsRes = { data: [] as any[] };
 
         if (achievementsRes.data) setAchievements(achievementsRes.data);
         if (userAchievementsRes.data) setUserAchievements(userAchievementsRes.data);

@@ -52,13 +52,13 @@ export const useTeacherNotifications = (teacherId: string | undefined) => {
             id,
             student_id,
             assignment_id,
-            completed_at,
+            submitted_at,
             profiles:student_id (display_name)
           `)
           .in('assignment_id', assignmentIds)
           .eq('status', 'completed')
-          .gte('completed_at', sevenDaysAgo.toISOString())
-          .order('completed_at', { ascending: false })
+          .not('submitted_at', 'is', null)
+          .order('submitted_at', { ascending: false })
           .limit(10);
 
         recentSubmissions?.forEach(sub => {
@@ -71,7 +71,7 @@ export const useTeacherNotifications = (teacherId: string | undefined) => {
             studentName: profile?.display_name,
             assignmentId: sub.assignment_id!,
             assignmentTitle: assignmentMap.get(sub.assignment_id!),
-            createdAt: sub.completed_at!,
+            createdAt: sub.submitted_at!,
             read: false
           });
         });

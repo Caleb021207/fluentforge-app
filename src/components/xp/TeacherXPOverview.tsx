@@ -8,8 +8,8 @@ import { motion } from 'framer-motion';
 interface StudentXPData {
   user_id: string;
   total_xp: number;
-  current_level: number;
-  current_streak_days: number;
+  level: number;
+  current_streak: number;
   email?: string;
   display_name?: string;
 }
@@ -77,7 +77,7 @@ const TeacherXPOverview = () => {
         // Fetch XP data for these students
         const { data: xpData, error: xpError } = await supabase
           .from('user_progression')
-          .select('user_id, total_xp, current_level, current_streak_days')
+          .select('user_id, total_xp, level, current_streak')
           .in('user_id', studentIds)
           .order('total_xp', { ascending: false });
 
@@ -261,7 +261,7 @@ const TeacherXPOverview = () => {
                       {student.display_name || student.email?.split('@')[0] || 'Student'}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Level {student.current_level} • {student.current_streak_days} day streak
+                      Level {student.level} • {student.current_streak} day streak
                     </p>
                   </div>
                   <div className="text-right">

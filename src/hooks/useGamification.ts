@@ -8,10 +8,15 @@ import LevelUpModal from '@/components/gamification/LevelUpModal';
 interface UserProgression {
   total_xp: number;
   current_level: number;
+  level: number;
+  current_streak: number;
   current_streak_days: number;
+  longest_streak: number;
   lessons_completed: number;
   certifications_completed: number;
   voice_sessions_completed: number;
+  last_activity_date: string | null;
+  streak_multiplier: number;
 }
 
 interface Achievement {
@@ -56,7 +61,14 @@ export const useGamification = () => {
       }
 
       if (data) {
-        setProgression(data);
+        setProgression({
+          ...data,
+          current_level: data.level ?? 1,
+          current_streak_days: data.current_streak ?? 0,
+          lessons_completed: 0,
+          certifications_completed: 0,
+          voice_sessions_completed: 0,
+        });
       }
     } catch (error) {
       console.error('Error fetching progression:', error);

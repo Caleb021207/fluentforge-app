@@ -16,7 +16,6 @@ export {
 export {
   getSecureSetting,
   setSecureSetting,
-  checkRateLimit,
   logSecurityEvent
 } from './secureSettings';
 

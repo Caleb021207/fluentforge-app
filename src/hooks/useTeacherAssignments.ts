@@ -10,7 +10,7 @@ export interface TeacherAssignment {
   min_messages: number;
   assignment_mode: string;
   max_duration_minutes: number;
-  grammar_requirements: string[] | null;
+  grammar_requirements: any;
   due_date: string | null;
   points_possible: number;
   class_id: string;
@@ -22,15 +22,15 @@ export interface StudentSubmission {
   assignment_id: string;
   student_id: string;
   status: string;
-  ai_score: number | null;
-  ai_feedback: unknown;
-  xp_awarded: number;
+  score: number | null;
   message_count: number;
-  completed_at: string | null;
-  transcript: unknown;
+  submitted_at: string | null;
+  messages: any;
   student_name?: string;
   teacher_override_score: number | null;
   teacher_notes: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export const useTeacherAssignments = (classId?: string) => {
@@ -94,13 +94,17 @@ export const useTeacherAssignments = (classId?: string) => {
     const { assigned_student_ids, ...assignmentFields } = assignmentData;
 
     // Create the assignment
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
     const { data, error } = await supabase
       .from('assignments')
-      .insert({
+      .insert([{
         ...assignmentFields,
         class_id: classId,
+        teacher_id: user.id,
         assignment_type: 'conversation'
-      })
+      }])
       .select()
       .single();
 

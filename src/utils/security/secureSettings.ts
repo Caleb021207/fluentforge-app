@@ -1,115 +1,42 @@
 /**
- * Secure settings utilities for managing application configuration
+ * Secure settings utilities - stubbed since app_settings table doesn't exist
  */
 
-import { supabase } from "@/integrations/supabase/client";
-
-/**
- * Retrieves a secure setting from the database
- */
-export const getSecureSetting = async (key: string): Promise<string | null> => {
-  try {
-    const { data, error } = await supabase
-      .from('app_settings')
-      .select('setting_value')
-      .eq('setting_key', key)
-      .single();
-
-    if (error || !data) {
-      console.warn(`Setting '${key}' not found`);
-      return null;
-    }
-
-    return data.setting_value;
-  } catch (error) {
-    console.error('Error retrieving secure setting:', error);
-    return null;
-  }
+export const getSecureSetting = async (_key: string): Promise<string | null> => {
+  console.warn('getSecureSetting: app_settings table not available');
+  return null;
 };
 
-/**
- * Sets a secure setting in the database (admin only)
- */
 export const setSecureSetting = async (
-  key: string, 
-  value: string, 
-  encrypted: boolean = false
+  _key: string,
+  _value: string,
+  _encrypted: boolean = false
 ): Promise<boolean> => {
-  try {
-    const { error } = await supabase
-      .from('app_settings')
-      .upsert({
-        setting_key: key,
-        setting_value: value,
-        encrypted,
-        updated_at: new Date().toISOString()
-      });
-
-    if (error) {
-      console.error('Error setting secure setting:', error);
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error('Error setting secure setting:', error);
-    return false;
-  }
+  console.warn('setSecureSetting: app_settings table not available');
+  return false;
 };
 
-/**
- * Rate limiting utility
- */
-export const checkRateLimit = async (
-  actionType: string,
-  maxRequests: number = 10,
-  windowMinutes: number = 60
-): Promise<boolean> => {
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return false;
-
-    const { data, error } = await supabase.rpc('check_rate_limit', {
-      p_user_id: user.id,
-      p_action_type: actionType,
-      p_max_requests: maxRequests,
-      p_window_minutes: windowMinutes
-    });
-
-    if (error) {
-      console.error('Rate limit check error:', error);
-      return false;
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Rate limit check error:', error);
-    return false;
-  }
-};
-
-/**
- * Security audit logging
- */
 export const logSecurityEvent = async (
-  action: string,
-  details: Record<string, any> = {},
-  success: boolean = true
+  _eventType: string,
+  _details: Record<string, unknown> = {}
 ): Promise<void> => {
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    await supabase
-      .from('security_audit_log')
-      .insert({
-        user_id: user?.id || null,
-        action,
-        details,
-        success,
-        ip_address: null, // Client-side can't get real IP
-        user_agent: navigator.userAgent
-      });
-  } catch (error) {
-    console.error('Error logging security event:', error);
+  // Security audit log table not available - log to console only
+  console.log('Security event:', _eventType, _details);
+};
+
+export const secureStorage = {
+  setItem: (key: string, value: string) => {
+    try {
+      localStorage.setItem(key, btoa(value));
+    } catch { /* ignore */ }
+  },
+  getItem: (key: string): string | null => {
+    try {
+      const val = localStorage.getItem(key);
+      return val ? atob(val) : null;
+    } catch { return null; }
+  },
+  removeItem: (key: string) => {
+    localStorage.removeItem(key);
   }
 };

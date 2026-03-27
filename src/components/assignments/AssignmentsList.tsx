@@ -43,8 +43,8 @@ const AssignmentsList = ({
     const inProgress = assignmentSubs.filter(s => s.status === 'in_progress').length;
     const notStarted = assignmentSubs.filter(s => s.status === 'pending').length;
     const avgScore = assignmentSubs
-      .filter(s => s.ai_score !== null)
-      .reduce((acc, s, _, arr) => acc + (s.ai_score! / arr.length), 0);
+      .filter(s => s.score !== null)
+      .reduce((acc, s, _, arr) => acc + ((s.score ?? 0) / arr.length), 0);
     
     return { total, completed, inProgress, notStarted, avgScore, submissions: assignmentSubs };
   };
@@ -171,7 +171,7 @@ const AssignmentsList = ({
                         <p className="text-sm text-muted-foreground">No submissions yet</p>
                       ) : (
                         stats.submissions.map((sub) => {
-                          const isCompleted = sub.status === 'completed' || sub.ai_score === 100;
+                          const isCompleted = sub.status === 'completed' || sub.score === 100;
                           const hasTeacherGrade = sub.teacher_override_score !== null;
                           
                           return (
@@ -206,9 +206,9 @@ const AssignmentsList = ({
                                 <span className="text-sm text-muted-foreground">
                                   {sub.message_count || 0} msgs
                                 </span>
-                                {sub.completed_at && (
+                                {sub.submitted_at && (
                                   <span className="text-xs text-muted-foreground">
-                                    {format(new Date(sub.completed_at), 'MMM d, h:mm a')}
+                                    {format(new Date(sub.submitted_at), 'MMM d, h:mm a')}
                                   </span>
                                 )}
                               </div>

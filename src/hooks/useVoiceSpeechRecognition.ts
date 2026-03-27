@@ -191,10 +191,9 @@ export const useVoiceSpeechRecognition = ({
       const { data: { user } } = await supabase.auth.getUser();
       if (user?.id) {
         const { data: limitsData } = await supabase
-          .rpc('can_use_whisper_stt', { p_student_id: user.id })
-          .single();
+          .rpc('can_start_voice_session', { target_student_id: user.id });
         
-        if (limitsData && !limitsData.can_use) {
+        if (limitsData && !(limitsData as any).allowed) {
           console.log('Whisper STT limit reached, using browser fallback');
           toast({
             title: "Switched to Browser Speech Recognition",

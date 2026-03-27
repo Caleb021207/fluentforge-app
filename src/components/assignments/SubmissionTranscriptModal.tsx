@@ -45,12 +45,12 @@ const SubmissionTranscriptModal = ({
 
   if (!submission) return null;
 
-  const transcript = (Array.isArray(submission.transcript) ? submission.transcript : []) as TranscriptMessage[];
+  const transcript = (Array.isArray((submission as any).messages) ? (submission as any).messages : []) as TranscriptMessage[];
   const userMessages = transcript.filter(m => m.role === 'user').length;
-  const feedback = submission.ai_feedback as Record<string, unknown> | null;
+  const feedback = (submission as any).teacher_notes as Record<string, unknown> | null;
   
   // Determine completion status
-  const isCompleted = submission.status === 'completed' || submission.ai_score === 100;
+  const isCompleted = submission.status === 'completed' || submission.score === 100;
   const hasTeacherGrade = submission.teacher_override_score !== null;
 
   const handleStartEditing = () => {
@@ -126,10 +126,10 @@ const SubmissionTranscriptModal = ({
             <MessageSquare className="h-3 w-3" />
             {userMessages} messages
           </Badge>
-          {submission.completed_at && (
+          {submission.submitted_at && (
             <Badge variant="outline" className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              {format(new Date(submission.completed_at), 'MMM d, yyyy h:mm a')}
+              {format(new Date(submission.submitted_at), 'MMM d, yyyy h:mm a')}
             </Badge>
           )}
           {/* Completion status badge */}

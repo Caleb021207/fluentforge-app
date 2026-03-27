@@ -111,15 +111,13 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
         // Unopened: students who haven't created a submission at all
         const unopened = Math.max(0, totalStudents - completed - inProgress);
 
-        const completedWithScores = assignmentSubmissions.filter(s => s.status === 'completed' && s.ai_score != null);
+        const completedWithScores = assignmentSubmissions.filter(s => s.status === 'completed' && s.score != null);
         const avgScore = completedWithScores.length > 0
-          ? completedWithScores.reduce((sum, s) => sum + (s.ai_score || 0), 0) / completedWithScores.length
+          ? completedWithScores.reduce((sum, s) => sum + (s.score || 0), 0) / completedWithScores.length
           : 0;
 
-        const completedWithDuration = assignmentSubmissions.filter(s => s.status === 'completed' && s.duration_seconds);
-        const avgDuration = completedWithDuration.length > 0
-          ? completedWithDuration.reduce((sum, s) => sum + (s.duration_seconds || 0), 0) / completedWithDuration.length / 60
-          : 0;
+        // Duration not tracked — default to 0
+        const avgDuration = 0;
 
         return {
           id: assignment.id,

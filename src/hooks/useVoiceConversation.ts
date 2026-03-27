@@ -4,7 +4,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
-import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { getLanguagePair } from "@/utils/languageUtils";
 import { useGamification } from "@/hooks/useGamification";
 import { Message } from "@/types/chat";
@@ -34,7 +33,6 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const { t, currentLanguage } = useLocalization();
   const { native, practice } = getLanguagePair(currentLanguage);
   const { analyzeConversation } = useLanguageAnalysis();
-  const { awardXP } = useGamification();
   const { awardXP } = useGamification();
 
   // Initialize the session ID

@@ -10,7 +10,7 @@ export interface Assignment {
   min_messages: number;
   assignment_mode: string;
   max_duration_minutes: number;
-  grammar_requirements: string[] | null;
+  grammar_requirements: any;
   due_date: string | null;
   points_possible: number;
   class_id: string;
@@ -21,14 +21,15 @@ export interface AssignmentSubmission {
   id: string;
   assignment_id: string;
   student_id: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'graded';
-  accepted_at: string | null;
-  started_at: string | null;
-  completed_at: string | null;
-  ai_score: number | null;
-  ai_feedback: any;
-  xp_awarded: number;
+  status: string;
+  score: number | null;
+  teacher_override_score: number | null;
+  teacher_notes: string | null;
   message_count: number;
+  messages: any;
+  submitted_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AssignmentWithSubmission extends Assignment {

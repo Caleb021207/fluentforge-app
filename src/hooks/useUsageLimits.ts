@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface UsageLimits {
   // Account tier
-  accountTier: 'standard' | 'premium';
+  accountTier: string;
   
   // Whisper STT limits (minute-based)
   whisperSTTMinutesLimit: number;

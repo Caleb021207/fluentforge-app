@@ -35,27 +35,12 @@ const StudentAnalysisView = () => {
       return (data?.map(analysis => ({
         ...analysis,
         upload_date: analysis.created_at,
-      })) || []) as Analysis[];
+      })) || []) as unknown as Analysis[];
     },
   });
 
-  // Fetch progress milestones
-  const { data: milestones } = useQuery({
-    queryKey: ['progress-milestones', refreshKey],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      const { data, error } = await supabase
-        .from('progress_milestones')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('achievement_date', { ascending: false });
-
-      if (error) throw error;
-      return data;
-    },
-  });
+  // Milestones not tracked in current schema — pass empty array
+  const milestones: any[] = [];
 
   const handleUploadSuccess = () => {
     setRefreshKey(prev => prev + 1);

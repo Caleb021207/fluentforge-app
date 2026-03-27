@@ -53,14 +53,8 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
         .eq('id', studentId)
         .single();
 
-      // Get learning profile
-      const { data: learningProfile } = await supabase
-        .from('student_learning_profiles')
-        .select('*')
-        .eq('student_id', studentId)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+      // Learning profile removed — no longer tracked
+      const learningProfile: any = null;
 
       // Get language metrics over time
       const { data: metrics } = await supabase
@@ -120,7 +114,7 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
       // Calculate stats
       const completedSubmissions = submissions?.filter(s => s.status === 'completed') || [];
       const avgScore = completedSubmissions.length > 0
-        ? completedSubmissions.reduce((sum, s) => sum + (s.ai_score || 0), 0) / completedSubmissions.length
+        ? completedSubmissions.reduce((sum, s) => sum + ((s as any).score || 0), 0) / completedSubmissions.length
         : 0;
 
       return {
@@ -400,8 +394,8 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
                         <div>
                           <p className="font-medium">{submission.assignments?.title}</p>
                           <p className="text-sm text-muted-foreground">
-                            {submission.completed_at 
-                              ? format(new Date(submission.completed_at), 'MMM d, yyyy')
+                            {submission.submitted_at 
+                              ? format(new Date(submission.submitted_at), 'MMM d, yyyy')
                               : t("inProgress")}
                           </p>
                         </div>
@@ -409,12 +403,12 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
                           <Badge variant={submission.status === 'completed' ? 'default' : 'secondary'}>
                             {submission.status}
                           </Badge>
-                          {submission.ai_score != null && (
+                          {submission.score != null && (
                             <span className={`font-bold ${
-                              submission.ai_score >= 70 ? 'text-emerald-500' : 
-                              submission.ai_score >= 50 ? 'text-amber-500' : 'text-destructive'
+                              submission.score >= 70 ? 'text-emerald-500' : 
+                              submission.score >= 50 ? 'text-amber-500' : 'text-destructive'
                             }`}>
-                              {submission.ai_score}%
+                              {submission.score}%
                             </span>
                           )}
                         </div>

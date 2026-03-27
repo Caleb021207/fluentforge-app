@@ -105,10 +105,9 @@ const StudentAssignmentCard = ({
                 <CheckCircle className="h-5 w-5 text-primary" />
                 <span className="font-medium">Completed!</span>
               </div>
-              {submission.ai_score !== null && (
+              {submission.score !== null && (
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-primary">{Math.round(submission.ai_score)}%</p>
-                  <p className="text-xs text-muted-foreground">+{submission.xp_awarded} XP</p>
+                  <p className="text-2xl font-bold text-primary">{Math.round(submission.score)}%</p>
                 </div>
               )}
             </div>
