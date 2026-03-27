@@ -51,12 +51,16 @@ const GenerateCodeDialog = ({ open, onOpenChange }: GenerateCodeDialogProps) => 
 
     try {
       // First create the class in the classes table
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
       const { data: classData, error: classError } = await supabase
         .from('classes')
         .insert({
           name: className,
+          teacher_id: user.id,
           academic_year: getCurrentAcademicYear(),
-          class_code: '' // Will be updated with the access code
+          class_code: ''
         })
         .select()
         .single();

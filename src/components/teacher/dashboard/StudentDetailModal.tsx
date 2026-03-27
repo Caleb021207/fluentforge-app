@@ -394,8 +394,8 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
                         <div>
                           <p className="font-medium">{submission.assignments?.title}</p>
                           <p className="text-sm text-muted-foreground">
-                            {submission.completed_at 
-                              ? format(new Date(submission.completed_at), 'MMM d, yyyy')
+                            {submission.submitted_at 
+                              ? format(new Date(submission.submitted_at), 'MMM d, yyyy')
                               : t("inProgress")}
                           </p>
                         </div>
@@ -403,12 +403,12 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
                           <Badge variant={submission.status === 'completed' ? 'default' : 'secondary'}>
                             {submission.status}
                           </Badge>
-                          {submission.ai_score != null && (
+                          {submission.score != null && (
                             <span className={`font-bold ${
-                              submission.ai_score >= 70 ? 'text-emerald-500' : 
-                              submission.ai_score >= 50 ? 'text-amber-500' : 'text-destructive'
+                              submission.score >= 70 ? 'text-emerald-500' : 
+                              submission.score >= 50 ? 'text-amber-500' : 'text-destructive'
                             }`}>
-                              {submission.ai_score}%
+                              {submission.score}%
                             </span>
                           )}
                         </div>

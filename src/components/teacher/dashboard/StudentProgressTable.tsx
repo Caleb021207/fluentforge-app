@@ -114,17 +114,17 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
       const assignmentIds = assignments?.map(a => a.id) || [];
       const { data: submissions } = await supabase
         .from('assignment_submissions')
-        .select('student_id, assignment_id, ai_score, status')
+        .select('student_id, assignment_id, score, status')
         .in('student_id', studentIds)
         .in('assignment_id', assignmentIds);
 
-      // Get learning profiles for CEFR levels
-      const { data: learningProfiles } = await supabase
-        .from('student_learning_profiles')
-        .select('student_id, estimated_cefr_level')
-        .in('student_id', studentIds);
+      // CEFR levels from profiles instead of removed learning_profiles table
+      const { data: cefrProfiles } = await supabase
+        .from('profiles')
+        .select('id, target_level')
+        .in('id', studentIds);
 
-      const cefrMap = new Map(learningProfiles?.map(p => [p.student_id, p.estimated_cefr_level]) || []);
+      const cefrMap = new Map(cefrProfiles?.map(p => [p.id, p.target_level]) || []);
 
       // Get metrics for last activity
       const { data: metrics } = await supabase

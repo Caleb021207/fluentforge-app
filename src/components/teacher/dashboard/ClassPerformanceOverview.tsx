@@ -70,12 +70,12 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
       // Get submissions
       const { data: submissions } = await supabase
         .from('assignment_submissions')
-        .select('id, ai_score, status, student_id')
+        .select('id, score, status, student_id')
         .in('assignment_id', assignmentIds);
 
       const completedSubmissions = submissions?.filter(s => s.status === 'completed') || [];
       const avgGrade = completedSubmissions.length > 0
-        ? completedSubmissions.reduce((sum, s) => sum + (s.ai_score || 0), 0) / completedSubmissions.length
+        ? completedSubmissions.reduce((sum, s) => sum + (s.score || 0), 0) / completedSubmissions.length
         : 0;
 
       // Get student metrics for XP and activity
