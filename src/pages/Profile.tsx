@@ -38,9 +38,9 @@ const ProfilePage = () => {
     );
   }
 
-  // Check if user has a profile but no role assigned
-  if (!profile.role || profile.role.trim() === '') {
-    console.log('❌ Profile exists but no role assigned, role:', profile.role);
+  // Check if user has a profile but no role assigned or missing language setup
+  if (!profile.role || profile.role.trim() === '' || !profile.native_language || !profile.target_language) {
+    console.log('❌ Profile incomplete - role:', profile.role, 'native:', profile.native_language, 'target:', profile.target_language);
     return (
       <NoProfileState 
         user={user} 

@@ -128,24 +128,30 @@ export type Database = {
         Row: {
           api_type: string | null
           created_at: string
+          endpoint: string | null
           id: string
           metadata: Json | null
+          service: string | null
           tokens_used: number | null
           user_id: string
         }
         Insert: {
           api_type?: string | null
           created_at?: string
+          endpoint?: string | null
           id?: string
           metadata?: Json | null
+          service?: string | null
           tokens_used?: number | null
           user_id: string
         }
         Update: {
           api_type?: string | null
           created_at?: string
+          endpoint?: string | null
           id?: string
           metadata?: Json | null
+          service?: string | null
           tokens_used?: number | null
           user_id?: string
         }
@@ -1585,6 +1591,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_stt_usage: {
+        Args: { p_minutes: number; p_student_id: string }
+        Returns: undefined
+      }
+      increment_tts_token_usage: {
+        Args: { p_tokens: number; p_user_id: string }
+        Returns: undefined
       }
       increment_tts_usage: {
         Args: { p_minutes: number; p_student_id: string }
