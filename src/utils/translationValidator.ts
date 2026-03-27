@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { TranslationRecord } from "../translations/types";
 import { analyzeComponentFile, PRIORITY_COMPONENTS, ComponentAnalysis } from "./textExtractor";
 

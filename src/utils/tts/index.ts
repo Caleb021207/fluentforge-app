@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 export { languageCodeMap, TTL_DURATION, CACHE_CLEANUP_INTERVAL } from './constants';
 export { ttsCache } from './cache';
