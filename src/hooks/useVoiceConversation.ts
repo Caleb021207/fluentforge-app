@@ -66,7 +66,7 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         };
         
         navigator.sendBeacon(
-          `https://dukpljcweixxmpkiblwo.supabase.co/functions/v1/track-session-end`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/track-session-end`,
           JSON.stringify(data)
         );
       }

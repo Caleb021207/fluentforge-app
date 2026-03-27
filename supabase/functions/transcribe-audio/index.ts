@@ -1,53 +1,22 @@
-
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-// Process base64 in chunks to prevent memory issues
-function processBase64Chunks(base64String: string, chunkSize = 32768) {
-  const chunks: Uint8Array[] = [];
-  let position = 0;
-  
-  while (position < base64String.length) {
-    const chunk = base64String.slice(position, position + chunkSize);
-    const binaryChunk = atob(chunk);
-    const bytes = new Uint8Array(binaryChunk.length);
-    
-    for (let i = 0; i < binaryChunk.length; i++) {
-      bytes[i] = binaryChunk.charCodeAt(i);
-    }
-    
-    chunks.push(bytes);
-    position += chunkSize;
-  }
-
-  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-  const result = new Uint8Array(totalLength);
-  let offset = 0;
-
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
-  }
-
-  return result;
-}
-
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key is not configured');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY is not configured');
     }
 
     const { audio, language, userId, durationSeconds } = await req.json();
@@ -58,74 +27,86 @@ serve(async (req) => {
 
     // Check STT usage limits if userId is provided
     if (userId) {
-      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
       const supabaseClient = createClient(
         Deno.env.get('SUPABASE_URL') ?? '',
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       );
 
-      const { data: limits, error: limitsError } = await supabaseClient
+      const { data: limits } = await supabaseClient
         .from('student_usage_limits')
-        .select('stt_minutes_used_current_month, stt_minutes_monthly_limit')
+        .select('whisper_stt_minutes_used_current_month, whisper_stt_minutes_monthly_limit')
         .eq('student_id', userId)
         .single();
 
-      if (limits && limits.stt_minutes_used_current_month >= limits.stt_minutes_monthly_limit) {
-        console.log(`STT limit reached for user ${userId}: ${limits.stt_minutes_used_current_month}/${limits.stt_minutes_monthly_limit}`);
+      if (limits && limits.whisper_stt_minutes_used_current_month >= limits.whisper_stt_minutes_monthly_limit) {
+        console.log(`STT limit reached for user ${userId}`);
         return new Response(
           JSON.stringify({ 
             useFallback: true,
             reason: 'STT monthly limit reached',
-            minutesUsed: limits.stt_minutes_used_current_month,
-            minutesLimit: limits.stt_minutes_monthly_limit
+            minutesUsed: limits.whisper_stt_minutes_used_current_month,
+            minutesLimit: limits.whisper_stt_minutes_monthly_limit
           }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
     }
 
-    console.log("Received audio data, processing...");
-    console.log(`Language specified: ${language || 'none, will use default'}`);
-    
-    // Process audio in chunks
-    const binaryAudio = processBase64Chunks(audio);
-    
-    // Prepare form data
-    const formData = new FormData();
-    const blob = new Blob([binaryAudio], { type: 'audio/webm' });
-    formData.append('file', blob, 'audio.webm');
-    formData.append('model', 'whisper-1');
-    
-    // Support multilingual transcription by not specifying language (auto-detect)
-    // or use specific language when provided
-    if (language && language !== 'auto') {
-      formData.append('language', language);
-      console.log(`Sending to OpenAI Whisper API with language: ${language}...`);
-    } else {
-      console.log('Sending to OpenAI Whisper API with auto language detection (multilingual support)...');
-    }
+    console.log("Received audio data, processing with Lovable AI...");
+    console.log(`Language specified: ${language || 'auto-detect'}`);
 
-    // Send to OpenAI
-    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    const languageHint = language && language !== 'auto' 
+      ? `The audio is in ${language}. ` 
+      : '';
+
+    // Use Gemini's multimodal capability to transcribe audio
+    const response = await fetch(LOVABLE_AI_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
       },
-      body: formData,
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a speech-to-text transcription system. ${languageHint}Transcribe the audio exactly as spoken. Output ONLY the transcribed text with no extra commentary, labels, or formatting. If the audio is silent or unintelligible, output an empty string.`
+          },
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'input_audio',
+                input_audio: {
+                  data: audio,
+                  format: 'wav'
+                }
+              },
+              {
+                type: 'text',
+                text: 'Transcribe this audio exactly as spoken.'
+              }
+            ]
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.1,
+      }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("OpenAI API error:", errorText);
-      throw new Error(`OpenAI API error: ${errorText}`);
+      console.error("Lovable AI error:", errorText);
+      throw new Error(`Transcription failed: ${errorText}`);
     }
 
     const result = await response.json();
-    console.log("Transcription successful:", result.text);
+    const transcribedText = result.choices?.[0]?.message?.content?.trim() || '';
+    console.log("Transcription successful:", transcribedText);
 
     // Track STT usage if userId is provided
     if (userId && durationSeconds) {
-      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
       const supabaseClient = createClient(
         Deno.env.get('SUPABASE_URL') ?? '',
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -143,7 +124,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ text: result.text }),
+      JSON.stringify({ text: transcribedText }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

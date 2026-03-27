@@ -57,7 +57,7 @@ const voiceChatTranslations: TranslationRecord = {
   // Voice chat UI
   conversationHistory: "Conversation History",
   clearConversation: "Clear Conversation",
-  aiModelInfo: "AI Model: We're using OpenAI's GPT-4o-mini for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.",
+  aiModelInfo: "AI Model: We use advanced AI for natural language understanding and generation, with browser's built-in Speech Synthesis for voice responses.",
   
   // Voice chat timers
   voiceChatEnded: "Voice chat ended",
