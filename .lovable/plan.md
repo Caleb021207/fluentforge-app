@@ -1,100 +1,82 @@
 
 
-## Plan: Remove Student Profiling/Consent System + Remove Signup Passcode Barrier
+## Plan: Onboarding Wizard + Teacher Mass Signup
 
-### Part 1: Remove Signup Passcode Requirement
+### Overview
 
-The signup currently requires a passcode (hardcoded as "08132010") which blocks account creation. We'll remove this barrier entirely.
+After signup, users land on an onboarding wizard (replacing the current `NoProfileState` access-code-only screen). The wizard has 3 steps:
+1. **Select role** (Student or Teacher)
+2. **Select native & target language**
+3. **For teachers**: Option to bulk-create student accounts by entering a roster (emails + passwords). For students: just confirm and go.
 
-**Files to modify:**
+A new edge function `bulk-create-students` will use the Supabase Admin API to create student accounts, auto-assign them to the teacher's class, and return credentials.
 
-1. **`src/hooks/useAuthFlow.ts`** -- Remove the passcode verification block (lines 50-63), remove imports for `getSecureSetting`, `logSecurityEvent`, `secureStorage`. Simplify signup to just call `supabase.auth.signUp` directly without any passcode check.
+### Fix Build Error First
 
-2. **`src/components/home/AuthDialog.tsx`** -- Remove the passcode input field and related state (`passcode`, `passcodeError`). The signup form will only need email and password.
-
----
-
-### Part 2: Remove Student Profiling & Consent System
-
-**Files to delete (7 files):**
-
-| File | Reason |
-|------|--------|
-| `src/components/classroom/components/ConsentRecordDialog.tsx` | Consent recording UI |
-| `src/components/classroom/components/StudentProfilingToggle.tsx` | Profiling on/off toggle |
-| `src/hooks/useStudentProfilingStatus.ts` | Fetches profiling/consent status |
-| `src/hooks/useConversationProfiling.ts` | Triggers analyze-and-profile edge function |
-| `src/hooks/useDistrictConsent.ts` | District-level consent hook |
-| `src/components/teacher/dashboard/StudentProfileViewer.tsx` | Profile viewer dialog |
-| `supabase/functions/analyze-and-profile/index.ts` | Edge function that analyzes conversations and writes profiles |
-
-**Files to modify (7 files):**
-
-1. **`src/components/classroom/ClassStudentsList.tsx`**
-   - Remove imports of `ConsentRecordDialog` and `StudentProfileViewer`
-   - Remove `consentDialogStudent` and `profileViewerStudent` state
-   - Remove `onOpenConsentDialog` and `onOpenProfileViewer` props from `StudentMetricsTable`
-   - Remove the consent dialog and profile viewer rendering at the bottom
-
-2. **`src/components/classroom/components/StudentMetricsTable.tsx`**
-   - Remove `useStudentProfilingStatus` import and usage
-   - Remove "AI Profiling" table column header
-   - Remove `onOpenConsentDialog` and `onOpenProfileViewer` from props
-   - Remove `profilingStatus`, `onProfilingUpdate`, `onConsentUpdate` props passed to `StudentTableRow`
-
-3. **`src/components/classroom/components/StudentTableRow.tsx`**
-   - Remove `StudentProfilingToggle` import
-   - Remove all profiling-related props (`profilingStatus`, `onProfilingUpdate`, `onConsentUpdate`, `onOpenConsentDialog`, `onOpenProfileViewer`)
-   - Remove the entire "AI Profiling" table cell (the column with toggle, consent button, and view profile button)
-
-4. **`src/hooks/useVoiceConversation.ts`**
-   - Remove the `useConversationProfiling` import
-   - Remove the `triggerProfiling` usage
-   - Remove the block (lines ~183-199) that calls `analyze-and-profile` edge function after voice sessions
-
-5. **`src/components/practice/hooks/useChatMessages.ts`**
-   - Remove `useConversationProfiling` import and `triggerProfiling` usage
-   - Remove all profiling-related refs and constants (`profilingTriggeredRef`, `userMessageCountRef`, `PROFILING_INTERVAL`)
-   - Remove `triggerProfilingNow` callback and the `useEffect` that triggers profiling on unmount
-   - Remove profiling calls in `handleSubmit` and `clearConversation`
-
-6. **`src/components/practice/hooks/useChallengeChat.ts`**
-   - Same as useChatMessages: remove all profiling imports, refs, callbacks, and triggers
-
-7. **`src/hooks/useStudentProficiency.ts`**
-   - Remove the `student_learning_profiles` query (priority 1 source)
-   - Simplify to use certification history first, then fall back to conversation setting
-
-**Edge functions to modify (2 files):**
-
-8. **`supabase/functions/chat-with-tutor/index.ts`**
-   - Remove the block that fetches `student_learning_profiles` and `student_conversation_memory`
-   - Remove usage of `studentProfile` in the prompt -- AI starts fresh every conversation
-
-9. **`supabase/functions/generate-personalized-flashcards/index.ts`** (if it references learning profiles)
-   - Remove or simplify the `student_learning_profiles` query
-
-**Edge function to delete and undeploy:**
-- `supabase/functions/analyze-and-profile/` -- delete files and undeploy
+**`src/hooks/useVoiceConversation.ts`** line 38 — duplicate `const { awardXP } = useGamification();`. Remove the duplicate line.
 
 ---
 
-### Part 3: Database Cleanup
+### Part 1: Onboarding Wizard Component
 
-Drop tables that are no longer needed:
-- `student_learning_profiles`
-- `student_conversation_memory`
-- `parental_consent_records`
+**Create `src/components/onboarding/OnboardingWizard.tsx`**
+- 3-step wizard with progress indicator
+- **Step 1 - Role**: Two big cards — "I'm a Student" / "I'm a Teacher"
+- **Step 2 - Languages**: Reuse the existing `LanguageSelectField` components for native + target language selection
+- **Step 3a (Teacher)**: Shows a "Create Your Class" form (class name) + bulk student roster input (table with rows: name, email, password). Teacher can add/remove rows. A "Create Accounts" button calls the edge function.
+- **Step 3b (Student)**: Shows an access code input to join a class (optional, can skip)
+- On completion: updates the user's profile (role, native_language, target_language) and navigates to `/profile`
+
+**Modify `src/components/profile/NoProfileState.tsx`**
+- Replace the current access-code-only UI with the new `OnboardingWizard` component
+- Keep the `onProfileUpdate` callback
+
+**Modify `src/pages/Profile.tsx`**
+- No changes needed — it already renders `NoProfileState` when profile has no role
+
+---
+
+### Part 2: Edge Function for Bulk Student Creation
+
+**Create `supabase/functions/bulk-create-students/index.ts`**
+- Accepts: `{ students: [{ name, email, password }], class_id: string }`
+- Validates JWT — only authenticated teachers can call this
+- Uses `supabase.auth.admin.createUser()` for each student (with `email_confirm: true` so they can log in immediately)
+- Creates profile entries with role = "student", native/target language from teacher's settings
+- Enrolls each student in the teacher's class via `student_enrollments`
+- Returns list of created accounts (email + temporary password) so teacher can distribute
+
+---
+
+### Part 3: Profile Update on Wizard Completion
+
+**Modify `src/hooks/useAuthFlow.ts`** or create a helper
+- After the wizard, call `supabase.from('profiles').update({ role, native_language, target_language }).eq('id', user.id)`
+- For teachers, also create a class record in the `classes` table
+
+---
+
+### Part 4: Auto-confirm Email Signups
+
+Use `cloud--configure_auth` to enable auto-confirm for email signups so teachers and the bulk-created students can log in immediately without email verification.
+
+---
+
+### Database Changes
+
+**Migration**: Add a class creation step during onboarding — no new tables needed, existing `classes`, `student_enrollments`, and `profiles` tables cover everything.
 
 ---
 
 ### Summary
 
-| Action | Count |
-|--------|-------|
-| Files to delete | 7 (6 frontend + 1 edge function) |
-| Files to modify | 9 |
-| Edge functions to undeploy | 1 |
-| DB tables to drop | 3 |
-| Result | No passcode needed for signup, no AI memory between conversations, no profiling/consent UI |
+| Item | Action |
+|------|--------|
+| Fix duplicate `awardXP` | Remove line 38 in `useVoiceConversation.ts` |
+| `OnboardingWizard.tsx` | New component — 3-step role/language/roster wizard |
+| `NoProfileState.tsx` | Replace with onboarding wizard |
+| `bulk-create-students` edge function | New — uses admin API to create student accounts in bulk |
+| Auth config | Enable auto-confirm emails |
+| Files modified | 3 |
+| Files created | 2 |
 
