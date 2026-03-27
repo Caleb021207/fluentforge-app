@@ -43,8 +43,8 @@ const AssignmentsList = ({
     const inProgress = assignmentSubs.filter(s => s.status === 'in_progress').length;
     const notStarted = assignmentSubs.filter(s => s.status === 'pending').length;
     const avgScore = assignmentSubs
-      .filter(s => s.ai_score !== null)
-      .reduce((acc, s, _, arr) => acc + (s.ai_score! / arr.length), 0);
+      .filter(s => s.score !== null)
+      .reduce((acc, s, _, arr) => acc + ((s.score ?? 0) / arr.length), 0);
     
     return { total, completed, inProgress, notStarted, avgScore, submissions: assignmentSubs };
   };
