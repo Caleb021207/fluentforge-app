@@ -1,9 +1,7 @@
 
-import OpenAI from "https://esm.sh/openai@4.20.1";
-
-const openai = new OpenAI({
-  apiKey: Deno.env.get("OPENAI_API_KEY") || "",
-});
+const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY") || "";
+const MODEL = "google/gemini-2.5-flash";
 
 export interface SuggestionItem {
   phrase: string;
@@ -19,6 +17,28 @@ export interface ConversationHints {
   categories: SuggestionCategory[];
 }
 
+async function callLovableAI(messages: {role: string; content: string}[], jsonMode = false): Promise<string> {
+  const body: Record<string, unknown> = { model: MODEL, messages, max_tokens: 1200 };
+  if (jsonMode) body.response_format = { type: "json_object" };
+  
+  const resp = await fetch(LOVABLE_AI_URL, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  
+  if (!resp.ok) {
+    const text = await resp.text();
+    throw new Error(`Lovable AI error ${resp.status}: ${text}`);
+  }
+  
+  const data = await resp.json();
+  return data.choices[0].message.content || "";
+}
+
 export async function generateHints(
   conversationHistory: { role: string; content: string }[],
   targetLanguage: string = "spanish",
@@ -27,77 +47,35 @@ export async function generateHints(
   assignmentTopic: string = ""
 ): Promise<SuggestionCategory[]> {
   try {
-    // Normalize CEFR level
     const normalizedLevel = cefrLevel.toUpperCase().split('/')[0].replace('+', '').trim() || 'B1';
     
     console.log(`[hints] Generating hints: CEFR=${normalizedLevel}, topic="${assignmentTopic.substring(0, 50)}...", lang=${targetLanguage}`);
     
-    // Default hints in case of failure
     const defaultHints: SuggestionCategory[] = [
-      {
-        title: "Greetings",
-        suggestions: getDefaultHints(targetLanguage, "greetings", userLanguage),
-      },
-      {
-        title: "Questions",
-        suggestions: getDefaultHints(targetLanguage, "questions", userLanguage),
-      },
-      {
-        title: "Responses",
-        suggestions: getDefaultHints(targetLanguage, "responses", userLanguage),
-      },
+      { title: "Greetings", suggestions: getDefaultHints(targetLanguage, "greetings", userLanguage) },
+      { title: "Questions", suggestions: getDefaultHints(targetLanguage, "questions", userLanguage) },
+      { title: "Responses", suggestions: getDefaultHints(targetLanguage, "responses", userLanguage) },
     ];
 
-    // If there's no conversation history, return default hints
     if (!conversationHistory || conversationHistory.length === 0) {
       return defaultHints;
     }
 
-    // Prepare the conversation context
-    const limitedHistory = conversationHistory.slice(-6); // Last 6 messages for context
+    const limitedHistory = conversationHistory.slice(-6);
     
-    // CEFR level vocabulary and complexity guidance
     const levelGuidance: Record<string, { complexity: string; examples: string }> = {
-      'A1': {
-        complexity: 'VERY SIMPLE: Use only the 300 most common words. Short phrases (3-5 words). Present tense only. No idioms.',
-        examples: 'Examples: "Hola", "Sí", "No", "Me gusta", "Tengo", "Quiero"'
-      },
-      'A2': {
-        complexity: 'SIMPLE: Use the 500 most common words. Short sentences (5-8 words). Present and simple past. Basic connectors (y, pero, porque).',
-        examples: 'Examples: "Hoy fui a...", "Me gusta porque...", "Fue muy divertido"'
-      },
-      'B1': {
-        complexity: 'MODERATE: Use the 1500 most common words. Medium sentences. Past, present, future tenses. Some expressions.',
-        examples: 'Examples: "Me gustaría saber...", "¿Podrías explicar...?", "Creo que..."'
-      },
-      'B2': {
-        complexity: 'INTERMEDIATE: Use broader vocabulary. Complex sentences with subordinate clauses. Conditional and subjunctive.',
-        examples: 'Examples: "Si hubiera sabido...", "Me parece interesante que...", "A pesar de que..."'
-      },
-      'C1': {
-        complexity: 'ADVANCED: Use sophisticated vocabulary including idioms and nuanced expressions. Native-like complexity.',
-        examples: 'Examples: "No cabe duda de que...", "Dicho sea de paso...", "En lo que a mí respecta..."'
-      },
-      'C2': {
-        complexity: 'NATIVE-LIKE: Use any vocabulary including regional expressions, slang, and cultural references.',
-        examples: 'Examples: Complex idiomatic expressions, literary references, subtle humor'
-      }
+      'A1': { complexity: 'VERY SIMPLE: Use only the 300 most common words. Short phrases (3-5 words). Present tense only.', examples: 'Examples: "Hola", "Sí", "No", "Me gusta"' },
+      'A2': { complexity: 'SIMPLE: Use the 500 most common words. Short sentences (5-8 words).', examples: 'Examples: "Hoy fui a...", "Me gusta porque..."' },
+      'B1': { complexity: 'MODERATE: Use the 1500 most common words. Medium sentences.', examples: 'Examples: "Me gustaría saber...", "Creo que..."' },
+      'B2': { complexity: 'INTERMEDIATE: Use broader vocabulary. Complex sentences.', examples: 'Examples: "Si hubiera sabido...", "Me parece interesante que..."' },
+      'C1': { complexity: 'ADVANCED: Use sophisticated vocabulary including idioms.', examples: 'Examples: "No cabe duda de que...", "Dicho sea de paso..."' },
+      'C2': { complexity: 'NATIVE-LIKE: Use any vocabulary including regional expressions.', examples: 'Examples: Complex idiomatic expressions' }
     };
     
     const currentLevelGuidance = levelGuidance[normalizedLevel] || levelGuidance['B1'];
+    const topicInstruction = assignmentTopic ? `The user is working on: "${assignmentTopic}". Generate hints that help them complete this task.` : '';
     
-    // Build topic-specific instruction
-    const topicInstruction = assignmentTopic 
-      ? `The user is working on this specific task: "${assignmentTopic}". Generate hints that DIRECTLY help them complete this task.`
-      : '';
-    
-    // Generate dynamic hints based on conversation
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: `You are a language learning assistant that suggests helpful phrases for a student at CEFR ${normalizedLevel} level.
+    const systemContent = `You are a language learning assistant that suggests helpful phrases for a student at CEFR ${normalizedLevel} level.
 
 CRITICAL LANGUAGE LEVEL REQUIREMENTS:
 ${currentLevelGuidance.complexity}
@@ -105,84 +83,55 @@ ${currentLevelGuidance.examples}
 
 ${topicInstruction}
 
-Given the conversation in ${targetLanguage}, generate 3 categories of suggestions with 3-4 phrases each that the user might want to say next.
+Given the conversation in ${targetLanguage}, generate 3 categories of suggestions with 3-4 phrases each.
 
 REQUIREMENTS:
-1. ALL phrases MUST be appropriate for CEFR ${normalizedLevel} level - do NOT use vocabulary or structures above this level
-2. Phrases should be DIRECTLY relevant to what was just discussed in the conversation
-3. ${assignmentTopic ? `Phrases should help the user complete their task: "${assignmentTopic}"` : 'Phrases should be contextually appropriate'}
-4. For each phrase, provide BOTH the phrase in ${targetLanguage} AND its translation in ${userLanguage}
+1. ALL phrases MUST be appropriate for CEFR ${normalizedLevel} level
+2. Phrases should be relevant to the conversation
+3. For each phrase, provide BOTH the phrase in ${targetLanguage} AND its translation in ${userLanguage}
 
-Format your response as JSON with this structure:
+Format your response as JSON:
 {
   "categories": [
     {
       "title": "Category name in ${userLanguage}",
       "suggestions": [
-        {
-          "phrase": "phrase in ${targetLanguage}",
-          "translation": "translation in ${userLanguage}"
-        }
+        { "phrase": "phrase in ${targetLanguage}", "translation": "translation in ${userLanguage}" }
       ]
     }
   ]
-}
+}`;
 
-Make category titles specific to the conversation context (e.g., "Describing your day", "Asking follow-up questions", "Sharing opinions").`
-        },
-        ...limitedHistory.map(msg => ({ 
-          role: msg.role as "user" | "assistant" | "system", 
-          content: msg.content 
-        })),
-      ],
-      response_format: { type: "json_object" },
-      max_tokens: 1200,
-    });
+    const messages = [
+      { role: "system", content: systemContent },
+      ...limitedHistory.map(msg => ({ role: msg.role, content: msg.content })),
+    ];
 
-    const content = response.choices[0].message.content;
+    const content = await callLovableAI(messages, true);
     
     try {
-      const parsedContent = JSON.parse(content || "{}");
-      
-      // Validate the structure
-      if (
-        parsedContent &&
-        parsedContent.categories &&
-        Array.isArray(parsedContent.categories) &&
-        parsedContent.categories.length > 0
-      ) {
-        console.log(`[hints] Successfully generated ${parsedContent.categories.length} categories for CEFR ${normalizedLevel}`);
+      const parsedContent = JSON.parse(content);
+      if (parsedContent?.categories?.length > 0) {
+        console.log(`[hints] Successfully generated ${parsedContent.categories.length} categories`);
         return parsedContent.categories;
       }
     } catch (e) {
       console.error("[hints] Failed to parse hints response:", e);
     }
     
-    // Fallback to default hints on failure
     return defaultHints;
   } catch (error) {
     console.error("[hints] Error generating hints:", error);
-    
-    // Fallback to default hints on error
     return [
-      {
-        title: "Greetings",
-        suggestions: getDefaultHints(targetLanguage, "greetings", userLanguage),
-      },
-      {
-        title: "Questions",
-        suggestions: getDefaultHints(targetLanguage, "questions", userLanguage),
-      },
-      {
-        title: "Responses",
-        suggestions: getDefaultHints(targetLanguage, "responses", userLanguage),
-      },
+      { title: "Greetings", suggestions: getDefaultHints(targetLanguage, "greetings", userLanguage) },
+      { title: "Questions", suggestions: getDefaultHints(targetLanguage, "questions", userLanguage) },
+      { title: "Responses", suggestions: getDefaultHints(targetLanguage, "responses", userLanguage) },
     ];
   }
 }
 
 function getDefaultHints(language: string, category: string, userLanguage: string): SuggestionItem[] {
-  const hints = {
+  const hints: Record<string, Record<string, SuggestionItem[]>> = {
     spanish: {
       greetings: [
         { phrase: "¡Hola!", translation: "Hello!" },
@@ -223,26 +172,6 @@ function getDefaultHints(language: string, category: string, userLanguage: strin
         { phrase: "C'est intéressant", translation: "That's interesting" }
       ],
     },
-    portuguese: {
-      greetings: [
-        { phrase: "Olá!", translation: "Hello!" },
-        { phrase: "Bom dia!", translation: "Good morning!" },
-        { phrase: "Como está?", translation: "How are you?" },
-        { phrase: "Prazer em conhecê-lo", translation: "Nice to meet you" }
-      ],
-      questions: [
-        { phrase: "O que você fez hoje?", translation: "What did you do today?" },
-        { phrase: "Pode me ajudar?", translation: "Can you help me?" },
-        { phrase: "Como se diz...?", translation: "How do you say...?" },
-        { phrase: "O que significa...?", translation: "What does...mean?" }
-      ],
-      responses: [
-        { phrase: "Sim, eu concordo", translation: "Yes, I agree" },
-        { phrase: "Eu não entendo", translation: "I don't understand" },
-        { phrase: "Pode ser", translation: "It could be" },
-        { phrase: "Isso é interessante", translation: "That's interesting" }
-      ],
-    },
     english: {
       greetings: [
         { phrase: "Hello!", translation: "Hello!" },
@@ -265,9 +194,6 @@ function getDefaultHints(language: string, category: string, userLanguage: strin
     }
   };
   
-  // Default to Spanish or English if language not found
-  const languageHints = hints[language.toLowerCase() as keyof typeof hints] || 
-    (language.toLowerCase() === 'english' ? hints.english : hints.spanish);
-  
-  return languageHints[category as keyof typeof languageHints] || [];
+  const languageHints = hints[language.toLowerCase()] || hints.spanish;
+  return languageHints[category] || [];
 }
