@@ -31,7 +31,6 @@ export interface AssignmentSubmission {
   created_at: string;
   updated_at: string;
 }
-}
 
 export interface AssignmentWithSubmission extends Assignment {
   submission?: AssignmentSubmission;
