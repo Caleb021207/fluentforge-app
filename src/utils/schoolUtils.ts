@@ -47,7 +47,7 @@ export const getStudentEnrollments = async (studentId: string): Promise<StudentE
     return validEnrollments.map(item => ({
       ...item,
       status: item.status as 'active' | 'dropped' | 'completed'
-    })) as StudentEnrollment[];
+    })) as unknown as StudentEnrollment[];
   } catch (error) {
     console.error('Error in getStudentEnrollments:', error);
     return [];

@@ -94,11 +94,15 @@ export const useTeacherAssignments = (classId?: string) => {
     const { assigned_student_ids, ...assignmentFields } = assignmentData;
 
     // Create the assignment
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
     const { data, error } = await supabase
       .from('assignments')
       .insert([{
         ...assignmentFields,
         class_id: classId,
+        teacher_id: user.id,
         assignment_type: 'conversation'
       }])
       .select()
