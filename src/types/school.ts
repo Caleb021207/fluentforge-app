@@ -153,6 +153,9 @@ export interface ExtendedUserProfile {
   school_id: string | null;
   graduation_year: number | null;
   grade_level_id: string | null;
+  native_language: string | null;
+  target_language: string | null;
+  account_tier: string | null;
   school: School | null;
   district_associations?: DistrictUser[];
 }
