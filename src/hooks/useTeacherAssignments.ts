@@ -22,15 +22,15 @@ export interface StudentSubmission {
   assignment_id: string;
   student_id: string;
   status: string;
-  ai_score: number | null;
-  ai_feedback: unknown;
-  xp_awarded: number;
+  score: number | null;
   message_count: number;
-  completed_at: string | null;
-  transcript: unknown;
+  submitted_at: string | null;
+  messages: any;
   student_name?: string;
   teacher_override_score: number | null;
   teacher_notes: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export const useTeacherAssignments = (classId?: string) => {

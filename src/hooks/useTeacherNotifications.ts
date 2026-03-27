@@ -71,7 +71,7 @@ export const useTeacherNotifications = (teacherId: string | undefined) => {
             studentName: profile?.display_name,
             assignmentId: sub.assignment_id!,
             assignmentTitle: assignmentMap.get(sub.assignment_id!),
-            createdAt: sub.completed_at!,
+            createdAt: sub.submitted_at!,
             read: false
           });
         });

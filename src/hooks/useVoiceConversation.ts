@@ -4,7 +4,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
-import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { getLanguagePair } from "@/utils/languageUtils";
 import { useGamification } from "@/hooks/useGamification";
 import { Message } from "@/types/chat";

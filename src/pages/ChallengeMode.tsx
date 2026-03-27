@@ -92,13 +92,13 @@ const ChallengeMode = () => {
       try {
         const { data: submission } = await supabase
           .from('assignment_submissions')
-          .select('transcript, message_count')
+        .select('messages, message_count')
           .eq('id', state.submissionId)
           .single();
         
-        if (submission?.transcript && Array.isArray(submission.transcript) && submission.transcript.length > 0) {
+        if (submission?.messages && Array.isArray(submission.messages) && submission.messages.length > 0) {
           console.log('[ChallengeMode] Restoring progress:', submission.message_count, 'messages');
-          setRestoredMessages(submission.transcript);
+          setRestoredMessages(submission.messages as any);
         }
       } catch (error) {
         console.error('[ChallengeMode] Error restoring progress:', error);

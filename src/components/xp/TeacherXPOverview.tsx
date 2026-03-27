@@ -7,9 +7,11 @@ import { motion } from 'framer-motion';
 
 interface StudentXPData {
   user_id: string;
+interface StudentXPData {
+  user_id: string;
   total_xp: number;
-  current_level: number;
-  current_streak_days: number;
+  level: number;
+  current_streak: number;
   email?: string;
   display_name?: string;
 }

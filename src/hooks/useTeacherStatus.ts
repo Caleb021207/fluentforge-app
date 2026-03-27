@@ -27,7 +27,7 @@ export const useTeacherStatus = () => {
           .from('user_roles')
           .select('id')
           .eq('user_id', session.session.user.id)
-          .eq('role', 'teacher')
+          .eq('role', 'user' as any)
           .limit(1);
         
         if (error) {
