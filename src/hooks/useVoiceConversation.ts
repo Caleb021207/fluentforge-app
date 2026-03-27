@@ -35,7 +35,6 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
   const { native, practice } = getLanguagePair(currentLanguage);
   const { analyzeConversation } = useLanguageAnalysis();
   const { awardXP } = useGamification();
-  const { awardXP } = useGamification();
 
   // Initialize the session ID
   if (!sessionIdRef.current) {
