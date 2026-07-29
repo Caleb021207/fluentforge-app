@@ -157,7 +157,7 @@ const TeacherDashboard = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="glass border-primary/20 p-1.5 h-auto grid w-full grid-cols-2 sm:grid-cols-4 lg:w-auto lg:inline-flex gap-1">
+            <TabsList className="glass border-primary/20 p-1.5 h-auto grid w-full grid-cols-2 sm:grid-cols-3 lg:w-auto lg:inline-flex gap-1">
               <TabsTrigger 
                 value="overview" 
                 className="flex items-center gap-2 px-4 py-3 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/20 data-[state=active]:to-accent/20 data-[state=active]:border data-[state=active]:border-primary/30 transition-all"
@@ -186,7 +186,22 @@ const TeacherDashboard = () => {
                 <FileText className="h-4 w-4" />
                 <span className="font-medium">{t("assignments")}</span>
               </TabsTrigger>
+              <TabsTrigger 
+                value="curriculum" 
+                className="flex items-center gap-2 px-4 py-3 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/20 data-[state=active]:to-accent/20 data-[state=active]:border data-[state=active]:border-primary/30 transition-all"
+              >
+                <BookOpen className="h-4 w-4" />
+                <span className="font-medium">Curriculum</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="benchmarks" 
+                className="flex items-center gap-2 px-4 py-3 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/20 data-[state=active]:to-accent/20 data-[state=active]:border data-[state=active]:border-primary/30 transition-all"
+              >
+                <Target className="h-4 w-4" />
+                <span className="font-medium">Benchmarks</span>
+              </TabsTrigger>
             </TabsList>
+
 
             <TabsContent value="overview" className="space-y-6 mt-6">
               <ClassPerformanceOverview teacherId={user?.id} />
