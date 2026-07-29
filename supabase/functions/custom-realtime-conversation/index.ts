@@ -135,8 +135,11 @@ serve(async (req) => {
     const aiResponse = processedSegments.map(s => s.text).join(' ');
 
     // Step 3: Synthesize speech with Azure TTS
-    const azureSpeechKey = Deno.env.get('AZURE_SPEECH_KEY') || Deno.env.get('AWS_ACCESS_KEY_ID');
-    const azureRegion = Deno.env.get('AZURE_REGION') || Deno.env.get('AWS_REGION') || 'eastus';
+    // No cross-provider fallbacks: an AWS credential is not an Azure Speech key
+    // and silently substituting one leaks a credential to the wrong provider.
+    const azureSpeechKey = Deno.env.get('AZURE_SPEECH_KEY');
+    if (!azureSpeechKey) throw new Error('AZURE_SPEECH_KEY is not configured');
+    const azureRegion = Deno.env.get('AZURE_REGION') ?? 'eastus';
 
     if (!azureSpeechKey) {
       // Return text-only response if no TTS configured
