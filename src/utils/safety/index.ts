@@ -9,14 +9,14 @@ export {
   filterContent 
 } from './contentFilter';
 
-// Age verification
-export { 
+// Age verification (server-side COPPA gate)
+export {
   needsAgeVerification,
-  setAgeVerified,
-  getUserBirthYear,
-  setUserBirthYear,
-  getUserAge,
-  isUserChild
+  getAgeGateStatus,
+  verifyAge,
+  isUserChild,
+  getSafetyMode,
+  clearAgeGateCache
 } from './ageVerification';
 
 // Parental controls
