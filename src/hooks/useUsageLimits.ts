@@ -185,26 +185,12 @@ export const useUsageLimits = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Insert detailed tracking
-      const { error: trackingError } = await supabase
-        .from('usage_tracking')
-        .insert({
-          student_id: user.id,
-          session_type: 'voice_practice',
-          session_id: sessionId,
-          minutes_used: minutesUsed,
-          ended_at: new Date().toISOString()
-        });
-
-      if (trackingError) {
-        console.error('Error tracking voice session:', trackingError);
-        return;
-      }
-
-      // Quota counters are service-role only; the server derives the user from the JWT.
+      // Detailed tracking rows and quota counters are service-role only; the
+      // server derives the student from the JWT.
       const newUsage = (usageLimits?.voiceMinutesUsed || 0) + minutesUsed;
       await recordSessionUsage({
         session_type: 'voice_practice',
+        session_id: sessionId,
         minutes_used: minutesUsed,
         ended: true,
       });
