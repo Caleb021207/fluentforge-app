@@ -15,7 +15,7 @@ export {
   getAgeGateStatus,
   verifyAge,
   isUserChild,
-  getSafetyMode,
+  getSafetyMode as getAgeSafetyMode,
   clearAgeGateCache
 } from './ageVerification';
 
