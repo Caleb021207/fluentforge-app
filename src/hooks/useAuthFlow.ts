@@ -15,6 +15,36 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
 
+  const resetPassword = async () => {
+    const targetEmail = email.trim();
+    if (!targetEmail) {
+      setAuthError("Enter your email first, then request a password reset.");
+      return;
+    }
+
+    setAuthError(null);
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast({
+        title: t("resetPassword") || "Password reset sent",
+        description: "Check your email for the reset link.",
+      });
+    } catch (error: any) {
+      setAuthError(error.message || "Could not send the reset email.");
+      toast({
+        title: t("error"),
+        description: error.message || "Could not send the reset email.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
@@ -41,14 +71,15 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
       
       if (isLogin) {
         result = await supabase.auth.signInWithPassword({
-          email,
+          email: email.trim(),
           password,
         });
       } else {
         result = await supabase.auth.signUp({
-          email,
+          email: email.trim(),
           password,
           options: {
+            emailRedirectTo: window.location.origin,
             data: {
               native_language: localStorage.getItem("nativeLanguage") || undefined,
               target_language: localStorage.getItem("targetLanguage") || undefined,
@@ -67,6 +98,28 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
           setAuthError(result.error.message);
         }
         throw result.error;
+      }
+
+      const session = result.data?.session;
+      const identityCount = result.data?.user?.identities?.length ?? 0;
+
+      if (isLogin && !session) {
+        throw new Error("Sign-in did not create a session. Please try again or reset your password.");
+      }
+
+      if (!isLogin && !session) {
+        if (identityCount === 0) {
+          setIsLogin(true);
+          setAuthError("That email already has an account. Sign in with the original password or reset it.");
+          return;
+        }
+
+        toast({
+          title: t("accountCreated"),
+          description: "Check your email to finish signing in.",
+        });
+        setPassword("");
+        return;
       }
 
       // Reset states on success
@@ -108,6 +161,7 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
     setPassword,
     isLoading,
     handleEmailAuth,
+    resetPassword,
     authError,
     setAuthError,
     retryCount

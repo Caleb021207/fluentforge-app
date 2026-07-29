@@ -102,13 +102,11 @@ const NewLayout = ({ children }: NewLayoutProps) => {
             >
               Palavox
             </motion.button>
-            {user && (
-              <TopNavigationDropdown
-                items={navigationItems}
-                currentPath={location.pathname}
-                onNavigate={handleNavigate}
-              />
-            )}
+            <TopNavigationDropdown
+              items={navigationItems}
+              currentPath={location.pathname}
+              onNavigate={handleNavigate}
+            />
           </div>
           
         </div>

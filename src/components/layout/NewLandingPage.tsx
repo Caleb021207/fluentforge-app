@@ -57,6 +57,7 @@ const NewLandingPage = () => {
     setPassword,
     isLoading,
     handleEmailAuth,
+    resetPassword,
     authError,
     retryCount
   } = useAuthFlow(handleAuthSuccess);
@@ -331,6 +332,7 @@ const NewLandingPage = () => {
         password={password}
         setPassword={setPassword}
         handleEmailAuth={handleEmailAuth}
+        resetPassword={resetPassword}
         isLoading={isLoading}
         authError={authError}
         retryCount={retryCount}

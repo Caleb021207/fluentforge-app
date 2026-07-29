@@ -12,10 +12,10 @@ const AuthRequiredPrompt = () => {
   const navigate = useNavigate();
 
   const redirectToAuth = () => {
-    navigate("/auth");
+    navigate("/");
     toast({
-      title: t("loginRequired"),
-      description: t("redirectingToLogin")
+      title: "Auth is temporarily optional",
+      description: "You can keep browsing. Sign in from the home page when needed."
     });
   };
 
