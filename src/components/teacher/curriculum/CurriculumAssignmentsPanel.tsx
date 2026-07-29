@@ -24,7 +24,7 @@ interface Props {
 const CEFR_LEVELS = ["A1", "A2", "B1"];
 
 const CurriculumAssignmentsPanel: React.FC<Props> = ({ classId }) => {
-  const { courses, isLoading: curriculumLoading } = useCurriculum();
+  const { courses, loading: curriculumLoading } = useCurriculum();
   const { assignments, isLoading, create, remove } = useCurriculumAssignments(classId);
 
   const [target, setTarget] = useState<string>("");
