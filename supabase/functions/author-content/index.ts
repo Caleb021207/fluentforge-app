@@ -121,6 +121,9 @@ Deno.serve(async (req) => {
 
     // ---- (b)-(f) gauntlet ----
     for (const item of items) {
+      // The gauntlet branches on item type (e.g. flashcards are exempt from the
+      // comprehensible-input budget), so never trust the model's own label.
+      item.type = type;
       const { results, vector } = await runGauntlet(item, ctx, existing);
       const passedAll = results.passed_all as unknown as boolean;
       const reasons = failureReasons(results);

@@ -7,7 +7,7 @@ import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 
 import LogoutButton from "@/components/auth/LogoutButton";
-import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles, Trophy, ClipboardList } from "lucide-react";
+import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles, Trophy, ClipboardList, BookOpen, Layers } from "lucide-react";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useGamification } from "@/hooks/useGamification";
 import XPProgressBar from "@/components/gamification/XPProgressBar";
@@ -45,6 +45,8 @@ const NewLayout = ({ children }: NewLayoutProps) => {
 
   const navigationItems = [
     { label: t("home") || "Home", path: "/", icon: <Home className="w-4 h-4" /> },
+    { label: t("learn") || "Learn", path: "/learn", icon: <BookOpen className="w-4 h-4" /> },
+    { label: t("vocabReview") || "Review", path: "/review", icon: <Layers className="w-4 h-4" /> },
     { label: t("practice") || "Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
     { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" />, disabled: voiceChatDisabled },
     { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },

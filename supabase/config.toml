@@ -78,3 +78,12 @@ verify_jwt = true
 
 [functions.seed-curriculum]
 verify_jwt = false
+
+[functions.learn-lesson]
+verify_jwt = true
+
+[functions.submit-exercise]
+verify_jwt = true
+
+[functions.vocab-review]
+verify_jwt = true

@@ -284,6 +284,9 @@ function properNouns(originalText: string): Set<string> {
   return found;
 }
 
+/** Item types the comprehensible-input budget does not apply to. */
+export const INPUT_BUDGET_EXEMPT = new Set(["flashcard"]);
+
 export function inputBudgetGate(text: string, known: string[]): GateOutcome {
   if (!known.length) return { pass: true, detail: "No known-vocabulary baseline for this scope." };
   const knownSet = new Set(known.map((w) => w.toLowerCase()));
@@ -355,7 +358,15 @@ export async function runGauntlet(
   const surface = [item.prompt, ...item.options.map((o) => o.label)].join(" ");
   const results: GateResults = {};
 
-  results.input_budget = inputBudgetGate(surface, ctx.known_vocab);
+  // A vocabulary flashcard exists precisely to introduce a word the learner
+  // does not know yet, and its surface text is a handful of single-word
+  // options rather than connected input. Measuring it against the
+  // comprehensible-input budget rejects perfectly good cards, so the gate is
+  // waived for this item type (every other gate still applies).
+  results.input_budget = INPUT_BUDGET_EXEMPT.has(item.type)
+    ? { pass: true, detail: "Waived: single-word vocabulary items are not connected input." }
+    : inputBudgetGate(surface, ctx.known_vocab);
+
 
   const [level, solver, pedagogy, bias] = await Promise.all([
     levelGate(surface, ctx.cefr_level).catch((e) => ({ pass: false, detail: `level gate error: ${e.message}` })),

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { UsageLimitAlert } from "@/components/usage/UsageLimitAlert";
 import { XPNotificationProvider } from "@/contexts/XPNotificationContext";
@@ -18,7 +18,8 @@ import NotFound from "@/pages/NotFound";
 
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import Certificate from "@/pages/Certificate";
-import PersonalFlashcards from "@/pages/PersonalFlashcards";
+import Learn from "@/pages/Learn";
+import VocabReview from "@/pages/VocabReview";
 import TeacherDashboard from "@/pages/TeacherDashboard";
 import ChallengeMode from "@/pages/ChallengeMode";
 import XPRewards from "@/pages/XPRewards";
@@ -61,7 +62,10 @@ function App() {
             <Route path="/premium-voice-practice" element={<PremiumVoicePractice />} />
             <Route path="/premium-voice" element={<PremiumVoice />} />
             <Route path="/certificate" element={<Certificate />} />
-            <Route path="/personal-flashcards" element={<PersonalFlashcards />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/review" element={<VocabReview />} />
+            {/* Generated flashcards were replaced by the curriculum-backed FSRS deck. */}
+            <Route path="/personal-flashcards" element={<Navigate to="/review" replace />} />
             <Route path="/challenge-mode" element={<ChallengeMode />} />
             
             {/* Accuracy & Progress */}

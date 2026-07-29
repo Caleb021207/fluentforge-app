@@ -858,6 +858,67 @@ export type Database = {
         }
         Relationships: []
       }
+      exercise_attempts: {
+        Row: {
+          created_at: string
+          difficulty: number | null
+          exercise_id: string
+          id: string
+          is_correct: boolean
+          lesson_id: string | null
+          response_ms: number | null
+          selected_option_id: string | null
+          skill_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty?: number | null
+          exercise_id: string
+          id?: string
+          is_correct: boolean
+          lesson_id?: string | null
+          response_ms?: number | null
+          selected_option_id?: string | null
+          skill_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: number | null
+          exercise_id?: string
+          id?: string
+          is_correct?: boolean
+          lesson_id?: string | null
+          response_ms?: number | null
+          selected_option_id?: string | null
+          skill_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_attempts_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercise_attempts_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercise_attempts_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercise_options: {
         Row: {
           created_at: string
@@ -990,6 +1051,98 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learner_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          freeze_refilled_on: string | null
+          freezes_available: number
+          freezes_used: number
+          id: string
+          last_activity_date: string | null
+          last_freeze_used_on: string | null
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          freeze_refilled_on?: string | null
+          freezes_available?: number
+          freezes_used?: number
+          id?: string
+          last_activity_date?: string | null
+          last_freeze_used_on?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          freeze_refilled_on?: string | null
+          freezes_available?: number
+          freezes_used?: number
+          id?: string
+          last_activity_date?: string | null
+          last_freeze_used_on?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lesson_progress: {
+        Row: {
+          accuracy: number
+          attempts: number
+          completed_at: string | null
+          correct: number
+          created_at: string
+          id: string
+          last_exercise_id: string | null
+          lesson_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number
+          attempts?: number
+          completed_at?: string | null
+          correct?: number
+          created_at?: string
+          id?: string
+          last_exercise_id?: string | null
+          lesson_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy?: number
+          attempts?: number
+          completed_at?: string | null
+          correct?: number
+          created_at?: string
+          id?: string
+          last_exercise_id?: string | null
+          lesson_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
         ]
@@ -1378,6 +1531,56 @@ export type Database = {
             columns: ["district_id"]
             isOneToOne: false
             referencedRelation: "school_districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skill_mastery: {
+        Row: {
+          ability: number
+          attempts: number
+          correct: number
+          created_at: string
+          id: string
+          last_practiced_at: string | null
+          mastery: number
+          recent_window: Json
+          skill_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ability?: number
+          attempts?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          last_practiced_at?: string | null
+          mastery?: number
+          recent_window?: Json
+          skill_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ability?: number
+          attempts?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          last_practiced_at?: string | null
+          mastery?: number
+          recent_window?: Json
+          skill_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_mastery_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
             referencedColumns: ["id"]
           },
         ]
@@ -2027,6 +2230,68 @@ export type Database = {
         }
         Relationships: []
       }
+      vocab_card_state: {
+        Row: {
+          created_at: string
+          difficulty: number
+          due: string
+          elapsed_days: number
+          id: string
+          lapses: number
+          last_review: string | null
+          learning_steps: number
+          reps: number
+          scheduled_days: number
+          stability: number
+          state: number
+          updated_at: string
+          user_id: string
+          vocabulary_id: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty?: number
+          due?: string
+          elapsed_days?: number
+          id?: string
+          lapses?: number
+          last_review?: string | null
+          learning_steps?: number
+          reps?: number
+          scheduled_days?: number
+          stability?: number
+          state?: number
+          updated_at?: string
+          user_id: string
+          vocabulary_id: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: number
+          due?: string
+          elapsed_days?: number
+          id?: string
+          lapses?: number
+          last_review?: string | null
+          learning_steps?: number
+          reps?: number
+          scheduled_days?: number
+          stability?: number
+          state?: number
+          updated_at?: string
+          user_id?: string
+          vocabulary_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocab_card_state_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vocab_lesson_map: {
         Row: {
           created_at: string
@@ -2053,6 +2318,62 @@ export type Database = {
           },
           {
             foreignKeyName: "vocab_lesson_map_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vocab_review_log: {
+        Row: {
+          created_at: string
+          difficulty: number | null
+          due: string | null
+          elapsed_days: number | null
+          id: string
+          last_elapsed_days: number | null
+          rating: number
+          review: string
+          scheduled_days: number | null
+          stability: number | null
+          state: number
+          user_id: string
+          vocabulary_id: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty?: number | null
+          due?: string | null
+          elapsed_days?: number | null
+          id?: string
+          last_elapsed_days?: number | null
+          rating: number
+          review?: string
+          scheduled_days?: number | null
+          stability?: number | null
+          state: number
+          user_id: string
+          vocabulary_id: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: number | null
+          due?: string | null
+          elapsed_days?: number | null
+          id?: string
+          last_elapsed_days?: number | null
+          rating?: number
+          review?: string
+          scheduled_days?: number | null
+          stability?: number | null
+          state?: number
+          user_id?: string
+          vocabulary_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocab_review_log_vocabulary_id_fkey"
             columns: ["vocabulary_id"]
             isOneToOne: false
             referencedRelation: "vocabulary"
@@ -2112,6 +2433,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      xp_events: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          metadata: Json
+          ref_id: string | null
+          ref_type: string | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          metadata?: Json
+          ref_id?: string | null
+          ref_type?: string | null
+          source: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          metadata?: Json
+          ref_id?: string | null
+          ref_type?: string | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
