@@ -441,6 +441,79 @@ export type Database = {
           },
         ]
       }
+      class_curriculum_assignments: {
+        Row: {
+          class_id: string
+          created_at: string
+          due_date: string | null
+          group_label: string | null
+          id: string
+          instructions: string | null
+          lesson_id: string | null
+          target_cefr_levels: string[]
+          target_wida_max: number | null
+          target_wida_min: number | null
+          teacher_id: string
+          title: string
+          unit_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          due_date?: string | null
+          group_label?: string | null
+          id?: string
+          instructions?: string | null
+          lesson_id?: string | null
+          target_cefr_levels?: string[]
+          target_wida_max?: number | null
+          target_wida_min?: number | null
+          teacher_id: string
+          title: string
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          due_date?: string | null
+          group_label?: string | null
+          id?: string
+          instructions?: string | null
+          lesson_id?: string | null
+          target_cefr_levels?: string[]
+          target_wida_max?: number | null
+          target_wida_min?: number | null
+          teacher_id?: string
+          title?: string
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_curriculum_assignments_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_curriculum_assignments_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_curriculum_assignments_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       classes: {
         Row: {
           academic_year: string | null
@@ -1437,6 +1510,53 @@ export type Database = {
           phrase?: string
         }
         Relationships: []
+      }
+      roster_sync_connections: {
+        Row: {
+          config: Json
+          created_at: string
+          created_by: string | null
+          external_id: string | null
+          id: string
+          last_synced_at: string | null
+          provider: string
+          school_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          external_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          provider: string
+          school_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          external_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          provider?: string
+          school_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roster_sync_connections_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       school_certification_stats: {
         Row: {

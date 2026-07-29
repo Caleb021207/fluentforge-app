@@ -8,7 +8,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { useLearningPath } from "@/hooks/useLearningPath";
+import StudentHomePanel from "@/components/learner/StudentHomePanel";
 import { BookOpen, CheckCircle2, Lock, Layers, Sparkles } from "lucide-react";
+
 
 /** The learner's path through the persistent curriculum. */
 const Learn: React.FC = () => {
@@ -42,6 +44,9 @@ const Learn: React.FC = () => {
           Vocabulary review{dueReviews > 0 ? ` (${dueReviews} due)` : ""}
         </Button>
       </header>
+
+      <StudentHomePanel units={units} dueReviews={dueReviews} />
+
 
       {error && (
         <Card>
