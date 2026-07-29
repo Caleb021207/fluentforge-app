@@ -86,7 +86,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   welcomeToLanguageLearning: "为文字赋予声音",
   yourPersonalAICompanion: "您的个人AI学习伙伴",
-  welcomeMessage: "欢迎来到Lingua语言学习应用！",
+  welcomeMessage: "欢迎来到Palavox语言学习应用！",
   pageNotFound: "页面未找到",
   networkConnectionIssue: "网络连接问题",
   sessionExpired: "您的会话已过期。请重新登录。",

@@ -5,7 +5,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   "welcomeToLanguageLearning": "bigyan ng tinig ang mga salita",
   "yourPersonalAICompanion": "Ang iyong personal na AI katulong para sa epektibong pag-aaral",
-  "welcomeMessage": "Maligayang pagdating sa Lingua language learning app!",
+  "welcomeMessage": "Maligayang pagdating sa Palavox language learning app!",
   "pageNotFound": "Hindi nahanap ang page",
   "networkConnectionIssue": "May problema sa koneksyon sa network",
   "pleaseWait": "Pakihintay",

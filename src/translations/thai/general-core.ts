@@ -5,7 +5,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   welcomeToLanguageLearning: "ให้เสียงกับคำพูด",
   yourPersonalAICompanion: "AI ผู้ช่วยส่วนตัวของคุณสำหรับการเรียนรู้ที่มีประสิทธิภาพ",
-  welcomeMessage: "ยินดีต้อนรับสู่แอพเรียนภาษา LinguaLite!",
+  welcomeMessage: "ยินดีต้อนรับสู่แอพเรียนภาษา Palavox!",
   pageNotFound: "ไม่พบหน้านี้",
   networkConnectionIssue: "ปัญหาการเชื่อมต่อเครือข่าย",
   pleaseWait: "กรุณารอสักครู่",

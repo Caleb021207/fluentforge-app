@@ -5,7 +5,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   welcomeToLanguageLearning: "Palavox သို့ကြိုဆိုပါသည်",
   yourPersonalAICompanion: "ထိရောက်သောသင်ယူမှုအတွက် သင့်ကိုယ်ပိုင် AI လက်ထောက်",
-  welcomeMessage: "Lingua ဘာသာစကားသင်ယူရေး အပ်ပ်သို့ ကြိုဆိုပါသည်!",
+  welcomeMessage: "Palavox ဘာသာစကားသင်ယူရေး အပ်ပ်သို့ ကြိုဆိုပါသည်!",
   pageNotFound: "စာမျက်နှာရှာမတွေ့ပါ",
   networkConnectionIssue: "ကွန်ရက်ချိတ်ဆက်မှုပြဿနာ",
   pleaseWait: "ခဏစောင့်ပါ",

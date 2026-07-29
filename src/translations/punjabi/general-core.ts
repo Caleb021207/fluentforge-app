@@ -5,7 +5,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   welcomeToLanguageLearning: "Palavox ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ",
   yourPersonalAICompanion: "ਪ੍ਰਭਾਵਸ਼ਾਲੀ ਸਿੱਖਣ ਲਈ ਤੁਹਾਡਾ ਨਿੱਜੀ AI ਸਾਥੀ",
-  welcomeMessage: "Lingua ਭਾਸ਼ਾ ਸਿੱਖਣ ਐਪ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ!",
+  welcomeMessage: "Palavox ਭਾਸ਼ਾ ਸਿੱਖਣ ਐਪ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ!",
   pageNotFound: "ਪੰਨਾ ਨਹੀਂ ਮਿਲਿਆ",
   networkConnectionIssue: "ਨੈੱਟਵਰਕ ਕਨੈਕਸ਼ਨ ਸਮੱਸਿਆ",
   pleaseWait: "ਕਿਰਪਾ ਕਰਕੇ ਉਡੀਕ ਕਰੋ",
