@@ -187,7 +187,7 @@ export const useUsageLimits = () => {
 
       // Detailed tracking rows and quota counters are service-role only; the
       // server derives the student from the JWT.
-      const newUsage = (usageLimits?.voiceMinutesUsed || 0) + minutesUsed;
+      const newUsage = (usageLimits?.whisperSTTMinutesUsed || 0) + minutesUsed;
       await recordSessionUsage({
         session_type: 'voice_practice',
         session_id: sessionId,
@@ -280,8 +280,8 @@ export const useUsageLimits = () => {
       if (!user) return;
 
       const result = await consumeTextMessageQuota();
-      const newMessageCount = (usageLimits?.textMessagesUsed || 0) + 1;
-      const textLimit = usageLimits?.textMessagesLimit || 1500;
+      const newMessageCount = (usageLimits?.textPracticeTokensUsed || 0) + 1;
+      const textLimit = usageLimits?.textPracticeTokensLimit || 1500;
       if (!result?.success) {
         toast({
           title: "Message Limit Reached",
