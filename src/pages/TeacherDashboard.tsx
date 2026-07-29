@@ -27,6 +27,8 @@ import StudentDetailModal from '@/components/teacher/dashboard/StudentDetailModa
 import ExportReportButton from '@/components/teacher/dashboard/ExportReportButton';
 import TeacherClassesTab from '@/components/teacher/dashboard/TeacherClassesTab';
 import NotificationDropdown from '@/components/teacher/dashboard/NotificationDropdown';
+import ClassCurriculumTab from '@/components/teacher/curriculum/ClassCurriculumTab';
+import ClassBenchmarksTab from '@/components/teacher/curriculum/ClassBenchmarksTab';
 import { useTeacherNotifications } from '@/hooks/useTeacherNotifications';
 
 const TeacherDashboard = () => {
@@ -223,6 +225,14 @@ const TeacherDashboard = () => {
 
             <TabsContent value="assignments" className="space-y-6 mt-6">
               <AssignmentAnalytics teacherId={user?.id} />
+            </TabsContent>
+
+            <TabsContent value="curriculum" className="space-y-6 mt-6">
+              <ClassCurriculumTab teacherId={user?.id} />
+            </TabsContent>
+
+            <TabsContent value="benchmarks" className="space-y-6 mt-6">
+              <ClassBenchmarksTab teacherId={user?.id} />
             </TabsContent>
           </Tabs>
         </motion.div>
