@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, UserPlus, X } from "lucide-react";
 import { useClassRoster } from "@/hooks/useClassRoster";
-import { listRosterProviders } from "@/integrations/rostering";
+import { rosterProviders } from "@/integrations/rostering";
 
 interface Props {
   classId?: string;
@@ -115,9 +115,9 @@ const ClassRosterPanel: React.FC<Props> = ({ classId }) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-3">
-          {listRosterProviders().map((provider) => (
+          {rosterProviders.map((provider) => (
             <div key={provider.id} className="rounded-lg border p-3">
-              <p className="text-sm font-medium">{provider.name}</p>
+              <p className="text-sm font-medium">{provider.label}</p>
               <Badge variant="outline" className="mt-2">
                 {provider.configured ? "Connected" : "Not configured"}
               </Badge>
