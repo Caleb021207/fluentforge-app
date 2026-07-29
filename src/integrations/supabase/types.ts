@@ -1681,6 +1681,10 @@ export type Database = {
         Args: { target_student_id: string }
         Returns: undefined
       }
+      same_school_as: {
+        Args: { _target: string; _viewer: string }
+        Returns: boolean
+      }
       update_flashcard_mastery: {
         Args: { p_flashcard_id: string; p_quality: number }
         Returns: undefined
