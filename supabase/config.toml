@@ -1,1 +1,71 @@
 project_id = "afswfqougbfiqbkchoqj"
+
+# Functions that call paid provider APIs (Lovable AI, OpenAI, Azure Speech) or
+# write scores/usage require a valid end-user JWT at the gateway. They also
+# re-validate the JWT in code and enforce a per-user daily quota.
+
+[functions.chat-with-tutor]
+verify_jwt = true
+
+[functions.text-to-speech]
+verify_jwt = true
+
+[functions.transcribe-audio]
+verify_jwt = true
+
+[functions.analyze-conversation-quality]
+verify_jwt = true
+
+[functions.analyze-pronunciation]
+verify_jwt = true
+
+[functions.analyze-progress]
+verify_jwt = true
+
+[functions.analyze-speaking]
+verify_jwt = true
+
+[functions.analyze-transcript]
+verify_jwt = true
+
+[functions.generate-personalized-flashcards]
+verify_jwt = true
+
+[functions.generate-pronunciation-phrase]
+verify_jwt = true
+
+[functions.generate-study-recommendations]
+verify_jwt = true
+
+[functions.generate-teacher-report]
+verify_jwt = true
+
+[functions.grade-writing]
+verify_jwt = true
+
+[functions.grade-assignment]
+verify_jwt = true
+
+[functions.premium-voice-realtime]
+verify_jwt = true
+
+[functions.custom-realtime-conversation]
+verify_jwt = true
+
+[functions.record-certification-attempt]
+verify_jwt = true
+
+[functions.track-usage]
+verify_jwt = true
+
+[functions.verify-age]
+verify_jwt = true
+
+[functions.award-xp]
+verify_jwt = true
+
+[functions.bulk-create-students]
+verify_jwt = true
+
+[functions.seed-course-data]
+verify_jwt = true

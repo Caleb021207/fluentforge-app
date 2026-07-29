@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { corsHeaders } from "../_shared/cors.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
+import { buildCorsHeaders } from "../_shared/cors.ts";
+import { guardPaidRequest } from "../_shared/authGuard.ts";
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const supabaseUrl = Deno.env.get("SUPABASE_URL") as string;
@@ -81,6 +82,11 @@ async function analyzeWithAI(formattedTranscript: string): Promise<any> {
 }
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  const gate = await guardPaidRequest(req, corsHeaders, 'analyze-speaking', 50);
+  if (gate.error) return gate.error;
+
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
