@@ -19,7 +19,7 @@ const CIPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Filter className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Filter className="mr-2 h-5 w-5 text-primary" />
           {t("contentFiltering") || "Content Filtering"}
         </h2>
         <p className="mb-4">{t("cipaComplianceDescription") || "Palavox maintains a safe digital learning space through the following features:"}</p>
@@ -58,7 +58,7 @@ const CIPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <AlertTriangle className="mr-2 h-5 w-5 text-lingua-primary" />
+          <AlertTriangle className="mr-2 h-5 w-5 text-primary" />
           Reporting Inappropriate Content
         </h2>
         <p className="mb-2">If students encounter any content that seems inappropriate:</p>
@@ -75,7 +75,7 @@ const CIPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Eye className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Eye className="mr-2 h-5 w-5 text-primary" />
           Teacher & Administrator Oversight
         </h2>
         <p className="mb-2">Educators have multiple ways to monitor student activity:</p>
@@ -96,7 +96,7 @@ const CIPATabContent = () => {
       
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Users className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Users className="mr-2 h-5 w-5 text-primary" />
           {t("parentalControls") || "Parental & Educator Controls"}
         </h2>
         <ul className="list-disc pl-6 space-y-2">
@@ -110,7 +110,7 @@ const CIPATabContent = () => {
       
       <section>
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Shield className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Shield className="mr-2 h-5 w-5 text-primary" />
           {t("userSafetyTips") || "Student Safety Reminders"}
         </h2>
         <ul className="list-disc pl-6 space-y-2">

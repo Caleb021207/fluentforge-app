@@ -43,7 +43,7 @@ const generalTranslations: TranslationRecord = {
   sort: "Urutkan",
   all: "Semua",
   none: "Tidak Ada",
-  welcomeMessage: "Selamat datang di aplikasi pembelajaran bahasa Lingua!",
+  welcomeMessage: "Selamat datang di aplikasi pembelajaran bahasa Palavox!",
   pageNotFound: "Halaman tidak ditemukan",
   networkConnectionIssue: "Masalah koneksi jaringan",
   pleaseWait: "Mohon tunggu",

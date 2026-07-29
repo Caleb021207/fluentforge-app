@@ -42,6 +42,29 @@ export async function createCertificationAttempts(attempts: CertificationAttempt
   return data?.attempts ?? null;
 }
 
+/**
+ * Grade a reading/placement quiz server-side. The browser never computes the
+ * score: it submits the question text + chosen option index and the edge
+ * function scores it against an answer key that only exists on the server.
+ */
+export interface GradedQuizResult {
+  success: boolean;
+  score: number;
+  level: string;
+  correct: number;
+  graded: number;
+  skipped: number;
+  attempt_id: string | null;
+}
+
+export async function gradeQuiz(params: {
+  quiz_type: "reading" | "placement";
+  answers: Array<{ question: string; selected: number | null }>;
+  persist?: boolean;
+}) {
+  return invoke<GradedQuizResult>("grade-quiz", params);
+}
+
 export async function completeCertificationAttempts(
   updates: Array<{ id: string; score: number; level: string }>,
 ) {

@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { createCertificationAttempts } from "@/utils/serverWrites";
+import { gradeQuiz } from "@/utils/serverWrites";
 import { Question } from "./types/reading";
 import { READING_QUESTIONS } from "./data/readingQuestions";
 import { QuestionDisplay } from "./components/QuestionDisplay";
-import { calculateScore, determineLevel, getLevelDescription } from "./utils/scoreUtils";
+import { determineLevel, getLevelDescription } from "./utils/scoreUtils";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 import { BookOpen } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ const ReadingCertification = () => {
   const [isComplete, setIsComplete] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [levelRecommendations, setLevelRecommendations] = useState<any | null>(null);
+  const [result, setResult] = useState<{ score: number; level: string } | null>(null);
   const [testQuestions, setTestQuestions] = useState<Question[]>([]);
   const { toast } = useToast();
   const { level } = useParams<{ level?: string }>();
@@ -44,6 +45,7 @@ const ReadingCertification = () => {
     setSelectedAnswers([]);
     setIsComplete(false);
     setLevelRecommendations(null);
+    setResult(null);
   };
 
   const handleAnswerSelect = (value: string) => {
@@ -62,15 +64,9 @@ const ReadingCertification = () => {
   };
 
   const handleCompletion = async (answers: number[]) => {
-    const score = calculateScore(answers, testQuestions);
-    const level = determineLevel(score);
-    const recommendations = getRecommendationsForLevel('reading', level);
-    
-    setLevelRecommendations(recommendations);
-
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         toast({
           title: "Authentication Required",
@@ -80,15 +76,24 @@ const ReadingCertification = () => {
         return;
       }
 
-      const created = await createCertificationAttempts([
-        { certification_type: 'reading', score, level, completed: true },
-      ]);
-      if (!created) throw new Error('Failed to record reading assessment');
+      // Scoring happens server-side against an answer key the browser never sees.
+      const graded = await gradeQuiz({
+        quiz_type: "reading",
+        answers: testQuestions.map((q, i) => ({
+          question: q.text,
+          selected: answers[i] ?? null,
+        })),
+      });
 
+      if (!graded?.success) throw new Error("Failed to record reading assessment");
+
+      setResult({ score: graded.score, level: graded.level });
+      setLevelRecommendations(getRecommendationsForLevel('reading', graded.level));
       setIsComplete(true);
+
       toast({
         title: "Reading Assessment Complete",
-        description: `You achieved a score of ${score}% at level ${level}`,
+        description: `You achieved a score of ${graded.score}% at level ${graded.level}`,
       });
     } catch (error) {
       console.error("Error submitting reading assessment:", error);
@@ -99,6 +104,7 @@ const ReadingCertification = () => {
       });
     }
   };
+
 
   const getLevelTitle = () => {
     if (!level) return "Reading Certification Test";
@@ -170,8 +176,8 @@ const ReadingCertification = () => {
   }
 
   if (isComplete) {
-    const score = calculateScore(selectedAnswers, testQuestions);
-    const achievedLevel = determineLevel(score);
+    const score = result?.score ?? 0;
+    const achievedLevel = result?.level ?? determineLevel(score);
     const levelDescription = getLevelDescription(achievedLevel);
 
     return (

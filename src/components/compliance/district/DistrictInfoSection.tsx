@@ -17,7 +17,7 @@ const DistrictInfoSection = () => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Building2 className="h-5 w-5 text-lingua-primary" />
+          <Building2 className="h-5 w-5 text-primary" />
           {isDistrictSpecific ? districtName : "District Compliance Information"}
         </CardTitle>
         <CardDescription>
@@ -62,7 +62,7 @@ const DistrictInfoSection = () => {
             <p className="text-sm text-muted-foreground">
               <strong>For District Administrators:</strong> To customize this section for your district,
               including approval status and district-specific policies, please contact us at{" "}
-              <a href="mailto:sales@palavox.org" className="text-lingua-primary hover:underline">
+              <a href="mailto:sales@palavox.org" className="text-primary hover:underline">
                 sales@palavox.org
               </a>
             </p>

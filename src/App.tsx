@@ -14,6 +14,7 @@ import PronunciationPracticeContainer from "@/components/pronunciation/Pronuncia
 import VoiceChat from "@/pages/VoiceChat";
 import Settings from "@/pages/Settings";
 import Legal from "@/pages/Legal";
+import NotFound from "@/pages/NotFound";
 
 import PremiumVoicePractice from "@/pages/PremiumVoicePractice";
 import Certificate from "@/pages/Certificate";
@@ -87,6 +88,8 @@ function App() {
             {/* Admin/Compliance */}
             <Route path="/compliance" element={<Compliance />} />
             <Route path="/safety-policy" element={<SafetyPolicy />} />
+
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <AgeGate />
           <Toaster />

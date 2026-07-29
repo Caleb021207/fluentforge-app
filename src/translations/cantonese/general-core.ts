@@ -5,7 +5,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   welcomeToLanguageLearning: "歡迎來到Palavox",
   yourPersonalAICompanion: "你嘅個人AI學習夥伴",
-  welcomeMessage: "歡迎來到LinguaLite",
+  welcomeMessage: "歡迎來到Palavox",
   pageNotFound: "找唔到頁面",
   networkConnectionIssue: "網絡連接問題",
   pleaseWait: "請等等",

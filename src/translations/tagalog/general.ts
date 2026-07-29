@@ -46,7 +46,7 @@ const generalTranslations: TranslationRecord = {
   "loginRequiredForFeature": "Kailangan mong mag-login para magamit ang feature na ito.",
   
   // Other core translations
-  "welcomeMessage": "Maligayang pagdating sa Lingua language learning app!",
+  "welcomeMessage": "Maligayang pagdating sa Palavox language learning app!",
   "pageNotFound": "Hindi nahanap ang page",
   "networkConnectionIssue": "May problema sa koneksyon sa network",
   "sessionExpired": "Nag-expire na ang iyong session. Mangyaring mag-sign in muli.",

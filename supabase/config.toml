@@ -69,3 +69,6 @@ verify_jwt = true
 
 [functions.seed-course-data]
 verify_jwt = true
+
+[functions.grade-quiz]
+verify_jwt = true

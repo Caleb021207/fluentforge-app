@@ -5,7 +5,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   welcomeToLanguageLearning: "Worten eine Stimme geben",
   yourPersonalAICompanion: "Dein persönlicher KI-Lernbegleiter",
-  welcomeMessage: "Willkommen bei LinguaLite",
+  welcomeMessage: "Willkommen bei Palavox",
   pageNotFound: "Seite nicht gefunden",
   networkConnectionIssue: "Netzwerkverbindungsproblem",
   pleaseWait: "Bitte warten",
@@ -16,7 +16,7 @@ const generalCoreTranslations: TranslationRecord = {
   failedToCreateSession: "Sitzung konnte nicht erstellt werden",
   cefrB1Description: "Mittelstufe - Kann über vertraute Themen diskutieren",
   speechSynthesisNotSupported: "Sprachsynthese wird in deinem Browser nicht unterstützt",
-  "appName": "LinguaLite",
+  "appName": "Palavox",
   "tagline": "Sprachen einfach und kostenlos lernen",
   "getStarted": "Loslegen",
   "learnEnglish": "Englisch lernen",

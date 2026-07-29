@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, FileText, MessageCircle } from "lucide-react";
-import ConversationalFluency from "@/components/certificates/ConversationalFluencyTest";
 
 interface CertificatesLayoutProps {
   normalizedAttempts: CertificationAttempt[];
@@ -47,14 +46,12 @@ const CertificatesLayout = ({
           <CardHeader>
             <CardTitle className="flex items-center">
               <BookOpen className="mr-2 h-5 w-5" />
-              {currentLanguage === "english" ? "Spanish Reading Tests" : "English Reading Tests"}
+              Reading Tests
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-gray-600 text-base md:text-lg">
-              {currentLanguage === "english" 
-                ? "Assess your Spanish reading comprehension skills." 
-                : "Assess your English reading comprehension skills."}
+              Assess your reading comprehension in the language you are learning.
             </p>
             <div className="grid grid-cols-3 gap-2">
               {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((level) => (
@@ -79,14 +76,12 @@ const CertificatesLayout = ({
           <CardHeader>
             <CardTitle className="flex items-center">
               <FileText className="mr-2 h-5 w-5" />
-              {currentLanguage === "english" ? "Spanish Writing Tests" : "English Writing Tests"}
+              Writing Tests
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-gray-600 text-base md:text-lg">
-              {currentLanguage === "english" 
-                ? "Test your Spanish writing skills with prompts at various levels." 
-                : "Test your English writing skills with prompts at various levels."}
+              Test your writing skills with prompts at various CEFR levels.
             </p>
             <Button className="w-full" onClick={() => navigate('/certificates/writing')}>
               {t("startTest")}
@@ -99,16 +94,16 @@ const CertificatesLayout = ({
           <CardHeader>
             <CardTitle className="flex items-center">
               <MessageCircle className="mr-2 h-5 w-5" />
-              {currentLanguage === "english" ? "Spanish Speaking Test" : "English Speaking Test"}
+              Speaking Practice
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-gray-600 text-base md:text-lg">
-              {currentLanguage === "english" 
-                ? "Test your Spanish speaking fluency through a conversation." 
-                : "Test your English speaking fluency through a conversation."}
+              Practise and assess your speaking fluency in a live conversation.
             </p>
-            <ConversationalFluency onTestComplete={onTestComplete} />
+            <Button className="w-full" onClick={() => navigate('/premium-voice-practice')}>
+              {t("startTest")}
+            </Button>
           </CardContent>
         </Card>
       </div>

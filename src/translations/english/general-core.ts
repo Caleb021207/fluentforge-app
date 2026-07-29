@@ -5,7 +5,7 @@ const generalCoreTranslations: TranslationRecord = {
   // Core translations
   welcomeToLanguageLearning: "giving words a voice",
   yourPersonalAICompanion: "Your personal AI companion for effective learning",
-  welcomeMessage: "Welcome to the Lingua language learning app!",
+  welcomeMessage: "Welcome to Palavox!",
   pageNotFound: "Page not found",
   networkConnectionIssue: "Network connection issue",
   pleaseWait: "Please wait",
