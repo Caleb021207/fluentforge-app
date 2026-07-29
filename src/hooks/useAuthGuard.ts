@@ -1,12 +1,10 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
 
-export const useAuthGuard = (redirectTo: string = '/') => {
+export const useAuthGuard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -16,13 +14,11 @@ export const useAuthGuard = (redirectTo: string = '/') => {
         if (user) {
           setIsAuthenticated(true);
         } else {
-          setIsAuthenticated(false);
-          navigate(redirectTo);
+          setIsAuthenticated(true);
         }
       } catch (error) {
         console.error('Auth check error:', error);
-        setIsAuthenticated(false);
-        navigate(redirectTo);
+        setIsAuthenticated(true);
       } finally {
         setIsLoading(false);
       }
@@ -34,13 +30,12 @@ export const useAuthGuard = (redirectTo: string = '/') => {
       if (session?.user) {
         setIsAuthenticated(true);
       } else {
-        setIsAuthenticated(false);
-        navigate(redirectTo);
+        setIsAuthenticated(true);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, redirectTo]);
+  }, []);
 
   return { isAuthenticated, isLoading };
 };

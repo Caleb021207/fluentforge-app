@@ -38,6 +38,7 @@ import ReadingCertification from "@/pages/ReadingCertification";
 import WritingCertification from "@/pages/WritingCertification";
 import StudentClass from "@/pages/StudentClass";
 import PremiumVoice from "@/pages/PremiumVoice";
+import ResetPassword from "@/pages/ResetPassword";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             <Route path="/pronunciation-practice" element={<PronunciationPracticeContainer />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/legal" element={<Legal />} />
             <Route path="/analysis" element={<TranscriptAnalysis />} />
             <Route path="/xp" element={<XPRewards />} />

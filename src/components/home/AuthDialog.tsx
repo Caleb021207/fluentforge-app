@@ -22,6 +22,7 @@ interface AuthDialogProps {
   password: string;
   setPassword: (password: string) => void;
   handleEmailAuth: (e: React.FormEvent) => void;
+  resetPassword?: () => void;
   isLoading: boolean;
   authError?: string | null;
   retryCount?: number;
@@ -37,6 +38,7 @@ const AuthDialog = ({
   password,
   setPassword,
   handleEmailAuth,
+  resetPassword,
   isLoading,
   authError,
   retryCount = 0
@@ -105,6 +107,17 @@ const AuthDialog = ({
               ? t("dontHaveAccount") 
               : t("alreadyHaveAccount")}
           </Button>
+          {isLogin && resetPassword && (
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={resetPassword}
+              className="w-full text-sm"
+              disabled={isLoading}
+            >
+              {t("forgotPassword") || "Forgot password?"}
+            </Button>
+          )}
         </form>
       </DialogContent>
     </Dialog>
