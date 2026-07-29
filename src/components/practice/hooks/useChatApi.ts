@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { recordApiCall } from '@/utils/serverWrites';
 
 export const useChatApi = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,13 +11,7 @@ export const useChatApi = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        await supabase
-          .from('api_calls_tracking')
-          .insert({
-            service,
-            endpoint,
-            user_id: user.id
-          });
+        await recordApiCall({ api_type: service, service, endpoint });
       }
     } catch (error) {
       console.error('Error tracking API call:', error);
