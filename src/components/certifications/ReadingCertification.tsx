@@ -62,15 +62,9 @@ const ReadingCertification = () => {
   };
 
   const handleCompletion = async (answers: number[]) => {
-    const score = calculateScore(answers, testQuestions);
-    const level = determineLevel(score);
-    const recommendations = getRecommendationsForLevel('reading', level);
-    
-    setLevelRecommendations(recommendations);
-
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         toast({
           title: "Authentication Required",
@@ -80,15 +74,24 @@ const ReadingCertification = () => {
         return;
       }
 
-      const created = await createCertificationAttempts([
-        { certification_type: 'reading', score, level, completed: true },
-      ]);
-      if (!created) throw new Error('Failed to record reading assessment');
+      // Scoring happens server-side against an answer key the browser never sees.
+      const graded = await gradeQuiz({
+        quiz_type: "reading",
+        answers: testQuestions.map((q, i) => ({
+          question: q.text,
+          selected: answers[i] ?? null,
+        })),
+      });
 
+      if (!graded?.success) throw new Error("Failed to record reading assessment");
+
+      setResult({ score: graded.score, level: graded.level });
+      setLevelRecommendations(getRecommendationsForLevel('reading', graded.level));
       setIsComplete(true);
+
       toast({
         title: "Reading Assessment Complete",
-        description: `You achieved a score of ${score}% at level ${level}`,
+        description: `You achieved a score of ${graded.score}% at level ${graded.level}`,
       });
     } catch (error) {
       console.error("Error submitting reading assessment:", error);
@@ -99,6 +102,7 @@ const ReadingCertification = () => {
       });
     }
   };
+
 
   const getLevelTitle = () => {
     if (!level) return "Reading Certification Test";
