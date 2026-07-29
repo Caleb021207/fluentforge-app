@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { READING_QUESTIONS } from "@/components/certifications/data/readingQuestions";
 import { QuestionDisplay } from "@/components/certifications/components/QuestionDisplay";
-import { determineLevel, getLevelDescription } from "@/components/certifications/utils/scoreUtils";
+import { getLevelDescription } from "@/components/certifications/utils/scoreUtils";
+import { gradeQuiz } from "@/utils/serverWrites";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight, Award, BookOpen } from "lucide-react";
 
@@ -15,6 +16,7 @@ const PlacementQuiz = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [quizState, setQuizState] = useState<"intro" | "quiz" | "results">("intro");
   const [quizQuestions, setQuizQuestions] = useState<typeof READING_QUESTIONS>([]);
+  const [gradedResult, setGradedResult] = useState<{ score: number; level: string } | null>(null);
   
   useEffect(() => {
     // Select 2 questions from each level (A1, A2, B1, B2, C1, C2) to create a balanced quiz
@@ -53,25 +55,23 @@ const PlacementQuiz = () => {
     }
   };
 
-  const calculateResults = () => {
+  const calculateResults = async () => {
+    // Grading happens server-side; the browser never derives the score itself.
+    const graded = await gradeQuiz({
+      quiz_type: "placement",
+      answers: quizQuestions.map((q, i) => ({
+        question: q.text,
+        selected: selectedAnswers[i] ?? null,
+      })),
+      persist: false,
+    });
+    setGradedResult(graded ? { score: graded.score, level: graded.level } : null);
     setQuizState("results");
   };
 
-  const getScore = () => {
-    if (selectedAnswers.length === 0 || quizQuestions.length === 0) return 0;
-    
-    // Count correct answers
-    const correctAnswers = selectedAnswers.filter(
-      (answer, index) => answer === quizQuestions[index].correctAnswer
-    ).length;
-    
-    return Math.round((correctAnswers / quizQuestions.length) * 100);
-  };
+  const getScore = () => gradedResult?.score ?? 0;
 
-  const getRecommendedLevel = () => {
-    const score = getScore();
-    return determineLevel(score);
-  };
+  const getRecommendedLevel = () => gradedResult?.level ?? "A1";
 
   const getStartingLevel = () => {
     const recommendedLevel = getRecommendedLevel();
