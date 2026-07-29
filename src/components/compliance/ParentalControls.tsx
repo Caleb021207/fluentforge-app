@@ -94,7 +94,7 @@ const ParentalControls = () => {
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Shield size={20} className="text-lingua-primary" /> {t("parentalControls")}
+          <Shield size={20} className="text-primary" /> {t("parentalControls")}
         </CardTitle>
         <CardDescription>
           {t("parentalControlsDescription")}

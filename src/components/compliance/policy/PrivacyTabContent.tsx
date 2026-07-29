@@ -10,7 +10,7 @@ const PrivacyTabContent = () => {
     <div className="prose prose-slate max-w-none">
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Lock className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Lock className="mr-2 h-5 w-5 text-primary" />
           {t("dataPrivacyOverview") || "Data Privacy Overview"}
         </h2>
         <p>
@@ -21,7 +21,7 @@ const PrivacyTabContent = () => {
       
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Shield className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Shield className="mr-2 h-5 w-5 text-primary" />
           {t("dataSecurity") || "Data Security"}
         </h2>
         <ul className="list-disc pl-6 space-y-2">
@@ -50,7 +50,7 @@ const PrivacyTabContent = () => {
       
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Server className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Server className="mr-2 h-5 w-5 text-primary" />
           {t("dataRetention") || "Data Retention"}
         </h2>
         <ul className="list-disc pl-6 space-y-2">
@@ -71,7 +71,7 @@ const PrivacyTabContent = () => {
       
       <section>
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <FileText className="mr-2 h-5 w-5 text-lingua-primary" />
+          <FileText className="mr-2 h-5 w-5 text-primary" />
           {t("contactInfo") || "Need Full Documentation or Audit Info?"}
         </h2>
         <p>

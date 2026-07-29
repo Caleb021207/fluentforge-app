@@ -10,7 +10,7 @@ const generalCoreTranslations: TranslationRecord = {
   networkConnectionIssue: "ናይ መርበብ ርክብ ጸገም",
   pleaseWait: "በጃኹም ተጸበዩ",
   sessionExpired: "እዋኑ ዝሓለፎ ስልጠና። በጃኹም ከምብሓድሽ ተመዝገቡ።",
-  "appName": "LinguaLite",
+  "appName": "Palavox",
   "tagline": "ቋንቋታት ብቐሊሉን ብናጻን ተማሃሩ"
 };
 

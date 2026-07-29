@@ -12,15 +12,15 @@ const BenefitsList = () => {
       </h3>
       <ul className="space-y-2">
         <li className="flex items-start gap-2">
-          <Volume2 className="h-5 w-5 text-lingua-primary mt-0.5" />
+          <Volume2 className="h-5 w-5 text-primary mt-0.5" />
           <span>{t("benefitNaturalVoice")}</span>
         </li>
         <li className="flex items-start gap-2">
-          <Headphones className="h-5 w-5 text-lingua-primary mt-0.5" />
+          <Headphones className="h-5 w-5 text-primary mt-0.5" />
           <span>{t("benefitAccentPronunciation")}</span>
         </li>
         <li className="flex items-start gap-2">
-          <Clock className="h-5 w-5 text-lingua-primary mt-0.5" />
+          <Clock className="h-5 w-5 text-primary mt-0.5" />
           <span>{t("benefitRegularPractice")}</span>
         </li>
       </ul>

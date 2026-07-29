@@ -10,7 +10,7 @@ const generalCoreTranslations: TranslationRecord = {
   networkConnectionIssue: "ပှၢ်ဃၢ်တၢ်ဘျးစဲကိၢ်ကၠီ",
   pleaseWait: "ဝံသးစူၤအိၣ်ခိးဘူးဘၣ်",
   sessionExpired: "နတၢ်ရဲၣ်ကျဲၤကလီၤလံ. ဝံသးစူၤနုာ်လီၤကဒီးတဘျီ",
-  "appName": "LinguaLite",
+  "appName": "Palavox",
   "tagline": "မၤလိကျိာ်တဖၣ်ညီညီဒီးအလဲလၢၤနၢ်"
 };
 

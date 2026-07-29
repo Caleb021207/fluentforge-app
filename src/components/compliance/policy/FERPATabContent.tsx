@@ -19,7 +19,7 @@ const FERPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <BookOpen className="mr-2 h-5 w-5 text-lingua-primary" />
+          <BookOpen className="mr-2 h-5 w-5 text-primary" />
           {t("ferpaComplianceStatement") || "FERPA & Data Privacy"}
         </h2>
         <p>
@@ -30,7 +30,7 @@ const FERPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Database className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Database className="mr-2 h-5 w-5 text-primary" />
           What Data We Collect
         </h2>
         <div className="bg-muted/50 p-4 rounded-lg mb-4">
@@ -59,7 +59,7 @@ const FERPATabContent = () => {
       
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Lock className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Lock className="mr-2 h-5 w-5 text-primary" />
           {t("ferpaProtections") || "FERPA Protections"}
         </h2>
         <p>{t("ferpaProtectionsIntro") || "Palavox protects student data through the following safeguards:"}</p>
@@ -84,7 +84,7 @@ const FERPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Eye className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Eye className="mr-2 h-5 w-5 text-primary" />
           Data Access Audit Trail
         </h2>
         <p className="mb-2">FERPA requires educational institutions to maintain records of who accesses student data and why.</p>
@@ -114,23 +114,23 @@ const FERPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Clock className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Clock className="mr-2 h-5 w-5 text-primary" />
           Data Retention Timeline
         </h2>
         <div className="space-y-3">
-          <div className="border-l-4 border-lingua-primary pl-4">
+          <div className="border-l-4 border-primary pl-4">
             <h4 className="font-semibold">Session Data & Practice Metrics</h4>
             <p className="text-sm text-muted-foreground">
               Retained for current academic year + 1 year to track progress and improvement
             </p>
           </div>
-          <div className="border-l-4 border-lingua-primary pl-4">
+          <div className="border-l-4 border-primary pl-4">
             <h4 className="font-semibold">Certification Results</h4>
             <p className="text-sm text-muted-foreground">
               Retained for 3 years to maintain academic records and support transcripts
             </p>
           </div>
-          <div className="border-l-4 border-lingua-primary pl-4">
+          <div className="border-l-4 border-primary pl-4">
             <h4 className="font-semibold">Usage Statistics (Anonymized)</h4>
             <p className="text-sm text-muted-foreground">
               Aggregated after 90 days and retained indefinitely for platform improvements
@@ -141,7 +141,7 @@ const FERPATabContent = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <Trash2 className="mr-2 h-5 w-5 text-lingua-primary" />
+          <Trash2 className="mr-2 h-5 w-5 text-primary" />
           How to Request Data Deletion
         </h2>
         <p className="mb-2">
@@ -164,7 +164,7 @@ const FERPATabContent = () => {
       
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <CheckSquare className="mr-2 h-5 w-5 text-lingua-primary" />
+          <CheckSquare className="mr-2 h-5 w-5 text-primary" />
           {t("yourRightsUnderFerpa") || "Your Rights Under FERPA"}
         </h2>
         <p>{t("ferpaRightsIntro") || "Under the Family Educational Rights and Privacy Act, parents and eligible students have the right to:"}</p>
@@ -202,7 +202,7 @@ const FERPATabContent = () => {
       
       <section>
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <FileText className="mr-2 h-5 w-5 text-lingua-primary" />
+          <FileText className="mr-2 h-5 w-5 text-primary" />
           {t("needMore") || "Need More?"}
         </h2>
         <p>

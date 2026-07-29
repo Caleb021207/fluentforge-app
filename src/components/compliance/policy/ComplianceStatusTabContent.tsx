@@ -131,7 +131,7 @@ const ComplianceStatusTabContent = () => {
         <CardContent>
           <div className="w-full bg-muted rounded-full h-3">
             <div 
-              className="bg-lingua-primary h-3 rounded-full transition-all duration-500"
+              className="bg-primary h-3 rounded-full transition-all duration-500"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
@@ -184,10 +184,10 @@ const ComplianceStatusTabContent = () => {
           </p>
           <div className="space-y-1">
             <p className="text-sm font-medium">
-              General Inquiries: <a href="mailto:info@palavox.org" className="text-lingua-primary hover:underline">info@palavox.org</a>
+              General Inquiries: <a href="mailto:info@palavox.org" className="text-primary hover:underline">info@palavox.org</a>
             </p>
             <p className="text-sm font-medium">
-              District Sales & Demos: <a href="mailto:sales@palavox.org" className="text-lingua-primary hover:underline">sales@palavox.org</a>
+              District Sales & Demos: <a href="mailto:sales@palavox.org" className="text-primary hover:underline">sales@palavox.org</a>
             </p>
           </div>
         </CardContent>

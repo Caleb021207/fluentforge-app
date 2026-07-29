@@ -10,7 +10,7 @@ const generalCoreTranslations: TranslationRecord = {
   networkConnectionIssue: "નેટવર્ક કનેક્શન સમસ્યા",
   pleaseWait: "કૃપા કરીને રાહ જુઓ",
   sessionExpired: "તમારું સત્ર સમાપ્ત થયું છે. કૃપા કરીને ફરીથી લોગિન કરો.",
-  "appName": "LinguaLite",
+  "appName": "Palavox",
   "tagline": "ભાષાઓ સરળતાથી અને મફતમાં શીખો"
 };
 

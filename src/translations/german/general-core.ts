@@ -16,7 +16,7 @@ const generalCoreTranslations: TranslationRecord = {
   failedToCreateSession: "Sitzung konnte nicht erstellt werden",
   cefrB1Description: "Mittelstufe - Kann über vertraute Themen diskutieren",
   speechSynthesisNotSupported: "Sprachsynthese wird in deinem Browser nicht unterstützt",
-  "appName": "LinguaLite",
+  "appName": "Palavox",
   "tagline": "Sprachen einfach und kostenlos lernen",
   "getStarted": "Loslegen",
   "learnEnglish": "Englisch lernen",

@@ -107,7 +107,7 @@ const PlacementQuiz = () => {
           transition={{ duration: 0.5 }}
         >
           <Card className="bg-white shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-lingua-primary to-lingua-secondary text-white rounded-t-lg">
+            <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
               <CardTitle className="text-2xl font-bold">Language Placement Quiz</CardTitle>
               <CardDescription className="text-white opacity-90">
                 Discover your current language proficiency level
@@ -122,7 +122,7 @@ const PlacementQuiz = () => {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="bg-gray-50 p-4 rounded-lg flex gap-3">
                     <div className="mt-1">
-                      <BookOpen className="h-5 w-5 text-lingua-primary" />
+                      <BookOpen className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Quiz Format</h3>
@@ -134,7 +134,7 @@ const PlacementQuiz = () => {
                   
                   <div className="bg-gray-50 p-4 rounded-lg flex gap-3">
                     <div className="mt-1">
-                      <Award className="h-5 w-5 text-lingua-primary" />
+                      <Award className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Results</h3>
@@ -170,7 +170,7 @@ const PlacementQuiz = () => {
           className="space-y-6"
         >
           <div className="space-y-4">
-            <h1 className="text-xl font-bold text-lingua-text">Placement Quiz</h1>
+            <h1 className="text-xl font-bold text-foreground">Placement Quiz</h1>
             <Progress value={progress} className="h-2" />
             <p className="text-sm text-gray-600">
               Question {currentQuestionIndex + 1} of {quizQuestions.length}
@@ -208,7 +208,7 @@ const PlacementQuiz = () => {
           transition={{ duration: 0.5 }}
         >
           <Card className="bg-white shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-lingua-primary to-lingua-secondary text-white rounded-t-lg">
+            <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
               <CardTitle className="text-2xl font-bold">Your Results</CardTitle>
               <CardDescription className="text-white opacity-90">
                 Based on your answers to the placement quiz
@@ -217,7 +217,7 @@ const PlacementQuiz = () => {
             <CardContent className="pt-6 px-6">
               <div className="space-y-6">
                 <div className="flex flex-col items-center justify-center py-6">
-                  <div className="flex items-center justify-center w-24 h-24 rounded-full bg-lingua-primary text-white text-4xl font-bold mb-4">
+                  <div className="flex items-center justify-center w-24 h-24 rounded-full bg-primary text-white text-4xl font-bold mb-4">
                     {recommendedLevel}
                   </div>
                   <h2 className="text-xl font-bold mb-2">Your level: {recommendedLevel}</h2>
