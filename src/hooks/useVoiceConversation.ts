@@ -103,28 +103,8 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
         userId: user.id
       });
       
-      // Capture the inserted record's ID
-      const { data, error } = await supabase
-        .from('usage_tracking')
-        .insert({
-          student_id: user.id,
-          session_type: 'voice_practice',
-          session_id: sessionIdRef.current,
-          messages_count: 0,
-          minutes_used: 0
-        })
-        .select('id')
-        .single();
-      
-      if (error) {
-        console.error('❌ Error inserting usage tracking:', error);
-        return;
-      }
-      
-      if (data?.id) {
-        usageTrackingRecordIdRef.current = data.id; // Store the DB record ID
-        console.log('✅ Voice practice session started with record ID:', data.id);
-      }
+      // Usage rows are written server-side; the session id is our correlation key.
+      usageTrackingRecordIdRef.current = sessionIdRef.current;
       
       sessionStartedRef.current = true;
       sessionEndedRef.current = false; // Reset ended flag
@@ -186,15 +166,15 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
       let updateSuccess = false;
       
       if (recordId) {
-        const { data: updateData, error: updateError } = await supabase
-          .from('usage_tracking')
-          .update({
-            ended_at: new Date().toISOString(),
-            messages_count: history.length,
-            minutes_used: duration
-          })
-          .eq('id', recordId)
-          .select();
+        await recordSessionUsage({
+          session_type: 'voice_practice',
+          session_id: sessionId,
+          minutes_used: duration,
+          messages_count: history.length,
+          ended: true,
+        });
+        const updateData = [{ id: recordId }];
+        const updateError = null;
 
         if (updateError) {
           console.error('❌ Error updating session:', updateError);
