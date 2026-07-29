@@ -1,53 +1,87 @@
-
 /**
- * Age verification utilities
+ * Age verification (COPPA).
+ *
+ * The under-13 decision is made SERVER-SIDE by the `verify-age` edge function
+ * from the submitted birth year and stored on the profile
+ * (`birth_year`, `is_minor`, `parental_consent_granted`, `safety_mode`).
+ * Nothing here is authoritative — localStorage is only a UI cache so we don't
+ * re-prompt on every render. A user clearing storage just gets re-prompted;
+ * they cannot grant themselves adult status, because the profile trigger
+ * blocks clients from writing those columns.
  */
 
+import { fetchAgeGateStatus, submitAgeVerification, type AgeGateStatus } from "@/utils/serverWrites";
+
+const CACHE_KEY = "ageGateStatus";
+
+export type { AgeGateStatus };
+
 /**
- * Checks if the user needs to complete age verification
- * Now always returns false since we've removed age verification
+ * Reads the authoritative age-gate state from the server.
  */
-export const needsAgeVerification = (): boolean => {
-  return false;
+export const getAgeGateStatus = async (): Promise<AgeGateStatus | null> => {
+  const status = await fetchAgeGateStatus();
+  if (status) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(status));
+    } catch {
+      /* storage unavailable — ignore, the server remains the source of truth */
+    }
+  }
+  return status;
 };
 
 /**
- * Sets the age verification status
+ * True when the signed-in user has not yet completed server-side age verification.
  */
-export const setAgeVerified = (verified: boolean): void => {
-  localStorage.setItem("ageVerified", verified ? "true" : "false");
+export const needsAgeVerification = async (): Promise<boolean> => {
+  const status = await getAgeGateStatus();
+  // Fail closed for signed-in users we can't read: prompt again rather than skip.
+  return status ? status.needsVerification : false;
 };
 
 /**
- * Gets the user's birth year from local storage
+ * Submits a birth year (and parental consent when applicable) for server-side
+ * evaluation. Returns whether the user may use the service.
  */
-export const getUserBirthYear = (): string | null => {
-  return localStorage.getItem("userBirthYear");
+export const verifyAge = async (birthYear: number, parentalConsent: boolean) => {
+  const result = await submitAgeVerification(birthYear, parentalConsent);
+  try {
+    localStorage.removeItem(CACHE_KEY);
+  } catch {
+    /* ignore */
+  }
+  return result;
 };
 
 /**
- * Sets the user's birth year in local storage
- */
-export const setUserBirthYear = (year: string): void => {
-  localStorage.setItem("userBirthYear", year);
-};
-
-/**
- * Calculates user's age based on birth year
- * Returns null if birth year is not set
- */
-export const getUserAge = (): number | null => {
-  const birthYear = getUserBirthYear();
-  if (!birthYear) return null;
-  
-  const currentYear = new Date().getFullYear();
-  return currentYear - parseInt(birthYear);
-};
-
-/**
- * Checks if user is considered a child under COPPA (under 13)
+ * Cached view of whether the user is a COPPA minor (<13). Server-derived.
  */
 export const isUserChild = (): boolean => {
-  const age = getUserAge();
-  return age !== null && age < 13;
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    return cached ? Boolean(JSON.parse(cached).isMinor) : false;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Cached safety mode ('strict' for verified minors, 'standard' otherwise).
+ */
+export const getSafetyMode = (): "strict" | "standard" => {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    return JSON.parse(cached || "{}").safetyMode === "strict" ? "strict" : "standard";
+  } catch {
+    return "standard";
+  }
+};
+
+export const clearAgeGateCache = (): void => {
+  try {
+    localStorage.removeItem(CACHE_KEY);
+  } catch {
+    /* ignore */
+  }
 };
