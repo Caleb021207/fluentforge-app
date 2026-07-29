@@ -87,3 +87,6 @@ verify_jwt = true
 
 [functions.vocab-review]
 verify_jwt = true
+
+[functions.class-roster]
+verify_jwt = true
