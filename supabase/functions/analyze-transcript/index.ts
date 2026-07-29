@@ -89,6 +89,18 @@ serve(async (req) => {
       parsedAnalysis.recommendations = parsedAnalysis.recommendations.slice(0, 10).map((r: any) => typeof r === 'string' ? r.slice(0, 500) : String(r.recommendation_text || r).slice(0, 500));
     }
 
+    // Persist server-side: transcript_analyses holds a proficiency level/score,
+    // so it is not client-writable.
+    const { error: saveError } = await supabase.from('transcript_analyses').insert({
+      user_id: user.id,
+      cefr_level: parsedAnalysis.cefr_level ?? null,
+      overall_score: typeof parsedAnalysis.overall_score === 'number'
+        ? Math.min(100, Math.max(0, parsedAnalysis.overall_score))
+        : null,
+      analysis_data: parsedAnalysis,
+    });
+    if (saveError) console.error('Failed to persist transcript analysis:', saveError);
+
     return new Response(JSON.stringify({ success: true, analysis: parsedAnalysis }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error('Error:', error);
