@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { UsageLimitAlert } from "@/components/usage/UsageLimitAlert";
 import { XPNotificationProvider } from "@/contexts/XPNotificationContext";
+import AgeGate from "@/components/compliance/AgeGate";
 import NewLayout from "@/components/layout/NewLayout";
 import NewLandingPage from "@/components/layout/NewLandingPage";
 import Practice from "@/pages/Practice";
@@ -87,6 +88,7 @@ function App() {
             <Route path="/compliance" element={<Compliance />} />
             <Route path="/safety-policy" element={<SafetyPolicy />} />
           </Routes>
+          <AgeGate />
           <Toaster />
         </NewLayout>
       </XPNotificationProvider>
