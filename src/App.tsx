@@ -29,6 +29,7 @@ import Accuracy from "@/pages/Accuracy";
 import Certificates from "@/pages/Certificates";
 import Classroom from "@/pages/Classroom";
 import Compliance from "@/pages/Compliance";
+import Author from "@/pages/Author";
 import SafetyPolicy from "@/pages/SafetyPolicy";
 import PlacementQuiz from "@/pages/PlacementQuiz";
 import LessonPlayer from "@/pages/LessonPlayer";
@@ -87,6 +88,7 @@ function App() {
             
             {/* Admin/Compliance */}
             <Route path="/compliance" element={<Compliance />} />
+            <Route path="/author" element={<Author />} />
             <Route path="/safety-policy" element={<SafetyPolicy />} />
 
             <Route path="*" element={<NotFound />} />
