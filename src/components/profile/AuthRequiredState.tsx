@@ -1,11 +1,9 @@
 
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useLocalization } from "@/context/LocalizationContext";
 
 const AuthRequiredState = () => {
   const navigate = useNavigate();
-  const { t } = useLocalization();
 
   const handleSignIn = () => {
     navigate("/");
