@@ -157,6 +157,36 @@ export type Database = {
         }
         Relationships: []
       }
+      assets: {
+        Row: {
+          created_at: string
+          id: string
+          meta: Json
+          transcript: string | null
+          type: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meta?: Json
+          transcript?: string | null
+          type?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meta?: Json
+          transcript?: string | null
+          type?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       assignment_submissions: {
         Row: {
           assignment_id: string
@@ -277,6 +307,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      can_do_statements: {
+        Row: {
+          created_at: string
+          framework: string
+          id: string
+          level: string | null
+          skill_or_mode: string | null
+          statement: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          framework: string
+          id?: string
+          level?: string | null
+          skill_or_mode?: string | null
+          statement: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          framework?: string
+          id?: string
+          level?: string | null
+          skill_or_mode?: string | null
+          statement?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       certification_attempts: {
         Row: {
@@ -499,6 +559,74 @@ export type Database = {
           next_audit_date?: string | null
           notes?: string | null
           status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_can_do_map: {
+        Row: {
+          can_do_id: string
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          can_do_id: string
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          can_do_id?: string
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_can_do_map_can_do_id_fkey"
+            columns: ["can_do_id"]
+            isOneToOne: false
+            referencedRelation: "can_do_statements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          language: string
+          level_band: string | null
+          status: string
+          target_framework: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          language?: string
+          level_band?: string | null
+          status?: string
+          target_framework?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          language?: string
+          level_band?: string | null
+          status?: string
+          target_framework?: string
+          title?: string
           updated_at?: string
         }
         Relationships: []
@@ -730,6 +858,110 @@ export type Database = {
         }
         Relationships: []
       }
+      exercise_options: {
+        Row: {
+          created_at: string
+          exercise_id: string
+          id: string
+          is_correct: boolean
+          label: string
+          position: number
+          rationale: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          exercise_id: string
+          id?: string
+          is_correct?: boolean
+          label: string
+          position?: number
+          rationale?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string
+          id?: string
+          is_correct?: boolean
+          label?: string
+          position?: number
+          rationale?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_options_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercises: {
+        Row: {
+          created_at: string
+          difficulty: number | null
+          gate_results: Json
+          id: string
+          lesson_id: string
+          passage_id: string | null
+          position: number
+          prompt: string
+          receptive_productive: string | null
+          source_model: string | null
+          status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty?: number | null
+          gate_results?: Json
+          id?: string
+          lesson_id: string
+          passage_id?: string | null
+          position?: number
+          prompt: string
+          receptive_productive?: string | null
+          source_model?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: number | null
+          gate_results?: Json
+          id?: string
+          lesson_id?: string
+          passage_id?: string | null
+          position?: number
+          prompt?: string
+          receptive_productive?: string | null
+          source_model?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercises_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_passage_id_fkey"
+            columns: ["passage_id"]
+            isOneToOne: false
+            referencedRelation: "passages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       grade_levels: {
         Row: {
           created_at: string
@@ -758,6 +990,115 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lessons: {
+        Row: {
+          created_at: string
+          id: string
+          intro_md: string | null
+          position: number
+          skill_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intro_md?: string | null
+          position?: number
+          skill_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intro_md?: string | null
+          position?: number
+          skill_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      passages: {
+        Row: {
+          audio_asset_id: string | null
+          body: string
+          cefr_level: string | null
+          created_at: string
+          gate_results: Json
+          id: string
+          key_language_use: string | null
+          language: string
+          readability_grade: number | null
+          skill_type: string | null
+          source_model: string | null
+          status: string
+          title: string | null
+          topic: string | null
+          updated_at: string
+          wida_level: number | null
+          word_count: number | null
+        }
+        Insert: {
+          audio_asset_id?: string | null
+          body: string
+          cefr_level?: string | null
+          created_at?: string
+          gate_results?: Json
+          id?: string
+          key_language_use?: string | null
+          language?: string
+          readability_grade?: number | null
+          skill_type?: string | null
+          source_model?: string | null
+          status?: string
+          title?: string | null
+          topic?: string | null
+          updated_at?: string
+          wida_level?: number | null
+          word_count?: number | null
+        }
+        Update: {
+          audio_asset_id?: string | null
+          body?: string
+          cefr_level?: string | null
+          created_at?: string
+          gate_results?: Json
+          id?: string
+          key_language_use?: string | null
+          language?: string
+          readability_grade?: number | null
+          skill_type?: string | null
+          source_model?: string | null
+          status?: string
+          title?: string | null
+          topic?: string | null
+          updated_at?: string
+          wida_level?: number | null
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "passages_audio_asset_id_fkey"
+            columns: ["audio_asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
             referencedColumns: ["id"]
           },
         ]
@@ -1037,6 +1378,53 @@ export type Database = {
             columns: ["district_id"]
             isOneToOne: false
             referencedRelation: "school_districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skills: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          position: number
+          status: string
+          target_grammar_point: string | null
+          title: string
+          type: string
+          unit_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          position?: number
+          status?: string
+          target_grammar_point?: string | null
+          title: string
+          type: string
+          unit_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          position?: number
+          status?: string
+          target_grammar_point?: string | null
+          title?: string
+          type?: string
+          unit_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skills_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
             referencedColumns: ["id"]
           },
         ]
@@ -1442,6 +1830,65 @@ export type Database = {
         }
         Relationships: []
       }
+      units: {
+        Row: {
+          can_do_statement: string | null
+          cefr_level: string | null
+          content_objective: string | null
+          course_id: string
+          created_at: string
+          id: string
+          key_language_use: string | null
+          language_objective: string | null
+          position: number
+          status: string
+          theme: string | null
+          title: string
+          updated_at: string
+          wida_level: number | null
+        }
+        Insert: {
+          can_do_statement?: string | null
+          cefr_level?: string | null
+          content_objective?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          key_language_use?: string | null
+          language_objective?: string | null
+          position?: number
+          status?: string
+          theme?: string | null
+          title: string
+          updated_at?: string
+          wida_level?: number | null
+        }
+        Update: {
+          can_do_statement?: string | null
+          cefr_level?: string | null
+          content_objective?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          key_language_use?: string | null
+          language_objective?: string | null
+          position?: number
+          status?: string
+          theme?: string | null
+          title?: string
+          updated_at?: string
+          wida_level?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "units_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usage_counters: {
         Row: {
           bucket: string
@@ -1579,6 +2026,92 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      vocab_lesson_map: {
+        Row: {
+          created_at: string
+          lesson_id: string
+          vocabulary_id: string
+        }
+        Insert: {
+          created_at?: string
+          lesson_id: string
+          vocabulary_id: string
+        }
+        Update: {
+          created_at?: string
+          lesson_id?: string
+          vocabulary_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocab_lesson_map_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocab_lesson_map_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vocabulary: {
+        Row: {
+          audio_asset_id: string | null
+          cefr_level: string | null
+          created_at: string
+          example_sentence: string | null
+          frequency_rank: number | null
+          id: string
+          ipa: string | null
+          language: string
+          lemma: string
+          part_of_speech: string | null
+          translation_l1: string | null
+          updated_at: string
+        }
+        Insert: {
+          audio_asset_id?: string | null
+          cefr_level?: string | null
+          created_at?: string
+          example_sentence?: string | null
+          frequency_rank?: number | null
+          id?: string
+          ipa?: string | null
+          language?: string
+          lemma: string
+          part_of_speech?: string | null
+          translation_l1?: string | null
+          updated_at?: string
+        }
+        Update: {
+          audio_asset_id?: string | null
+          cefr_level?: string | null
+          created_at?: string
+          example_sentence?: string | null
+          frequency_rank?: number | null
+          id?: string
+          ipa?: string | null
+          language?: string
+          lemma?: string
+          part_of_speech?: string | null
+          translation_l1?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_audio_asset_id_fkey"
+            columns: ["audio_asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
