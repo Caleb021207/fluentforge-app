@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { createCertificationAttempts } from "@/utils/serverWrites";
 import { getRecommendationsForLevel } from "@/utils/cefrRecommendations";
 import { determineLevel } from "./utils/scoreUtils";
 
@@ -95,19 +96,10 @@ const WritingCertification = () => {
       });
 
       // Save the certification attempt
-      const { error: saveError } = await supabase
-        .from('certification_attempts')
-        .insert([
-          {
-            certification_type: 'writing',
-            score,
-            level,
-            completed_at: new Date().toISOString(),
-            user_id: user.id,
-          }
-        ]);
-
-      if (saveError) throw saveError;
+      const created = await createCertificationAttempts([
+        { certification_type: 'writing', score, level, completed: true },
+      ]);
+      if (!created) throw new Error('Failed to record writing assessment');
 
       setFeedback(feedback);
       toast({

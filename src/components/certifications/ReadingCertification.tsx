@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { createCertificationAttempts } from "@/utils/serverWrites";
 import { Question } from "./types/reading";
 import { READING_QUESTIONS } from "./data/readingQuestions";
 import { QuestionDisplay } from "./components/QuestionDisplay";
@@ -79,18 +80,10 @@ const ReadingCertification = () => {
         return;
       }
 
-      const { error } = await supabase
-        .from('certification_attempts')
-        .insert([
-          {
-            certification_type: 'reading',
-            score,
-            level,
-            user_id: user.id,
-          }
-        ]);
-
-      if (error) throw error;
+      const created = await createCertificationAttempts([
+        { certification_type: 'reading', score, level, completed: true },
+      ]);
+      if (!created) throw new Error('Failed to record reading assessment');
 
       setIsComplete(true);
       toast({

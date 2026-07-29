@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { saveCertificationTranscript } from "@/utils/serverWrites";
 
 interface TranscriptState {
   userMessages: any[];
@@ -31,20 +32,12 @@ export const useConversationTranscript = (attemptId: string | null) => {
     if (!attemptId) return null;
     
     try {
-      const { data: transcript, error } = await (supabase as any)
-        .from('certification_transcripts')
-        .insert([{
-          attempt_id: attemptId,
-          user_id: userId,
-          user_transcripts: transcriptState.userMessages,
-          ai_responses: transcriptState.aiResponses,
-          analysis_data: analysisData
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-      return transcript;
+      const result: any = await saveCertificationTranscript({
+        attempt_id: attemptId,
+        user_transcripts: transcriptState.userMessages,
+        ai_responses: transcriptState.aiResponses,
+      });
+      return result?.transcript ?? null;
     } catch (error) {
       console.error("Error saving transcript:", error);
       return null;
