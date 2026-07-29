@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { recordSessionUsage } from "@/utils/serverWrites";
 import { useLocalization } from "@/context/LocalizationContext";
 import { useLanguageAnalysis } from "@/hooks/useLanguageAnalysis";
 import { getLanguagePair } from "@/utils/languageUtils";

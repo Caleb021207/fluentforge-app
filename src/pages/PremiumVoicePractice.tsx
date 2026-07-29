@@ -5,6 +5,7 @@ import { Mic, MicOff, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { recordSessionUsage } from "@/utils/serverWrites";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getLanguagePair } from "@/utils/languageUtils";
