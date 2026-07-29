@@ -19,6 +19,7 @@ const ReadingCertification = () => {
   const [isComplete, setIsComplete] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [levelRecommendations, setLevelRecommendations] = useState<any | null>(null);
+  const [result, setResult] = useState<{ score: number; level: string } | null>(null);
   const [testQuestions, setTestQuestions] = useState<Question[]>([]);
   const { toast } = useToast();
   const { level } = useParams<{ level?: string }>();
@@ -44,6 +45,7 @@ const ReadingCertification = () => {
     setSelectedAnswers([]);
     setIsComplete(false);
     setLevelRecommendations(null);
+    setResult(null);
   };
 
   const handleAnswerSelect = (value: string) => {
@@ -174,8 +176,8 @@ const ReadingCertification = () => {
   }
 
   if (isComplete) {
-    const score = calculateScore(selectedAnswers, testQuestions);
-    const achievedLevel = determineLevel(score);
+    const score = result?.score ?? 0;
+    const achievedLevel = result?.level ?? determineLevel(score);
     const levelDescription = getLevelDescription(achievedLevel);
 
     return (
