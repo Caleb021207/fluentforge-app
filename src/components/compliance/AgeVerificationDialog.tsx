@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
+import { verifyAge } from "@/utils/safety/ageVerification";
 
 interface AgeVerificationDialogProps {
   isOpen: boolean;
@@ -90,30 +91,31 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
     setSelectedYearIndex(value[0]);
   };
   
-  const handleVerification = () => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleVerification = async () => {
     if (!birthYear) {
       setError(t("pleaseSelectBirthYear"));
       return;
     }
-    
-    const age = currentYear - parseInt(birthYear);
-    
-    if (age < 13 && !parentalConsent) {
-      setError(t("parentalConsentRequired"));
-      return;
+
+    setSubmitting(true);
+    try {
+      // The under-13 decision and the resulting safety mode are determined by the
+      // server from this birth year; the client cannot self-declare adult status.
+      const result = await verifyAge(parseInt(birthYear, 10), parentalConsent);
+
+      if (!result?.allowed) {
+        setError(t("parentalConsentRequired"));
+        return;
+      }
+
+      onOpenChange(false);
+    } finally {
+      setSubmitting(false);
     }
-    
-    localStorage.setItem("ageVerified", "true");
-    
-    if (age < 13) {
-      localStorage.setItem("safetyMode", "strict");
-    } else {
-      localStorage.setItem("safetyMode", "standard");
-    }
-    
-    onOpenChange(false);
   };
-  
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md max-w-[90vw] rounded-lg">
@@ -189,6 +191,7 @@ const AgeVerificationDialog = ({ isOpen, onOpenChange }: AgeVerificationDialogPr
           
           <Button 
             onClick={handleVerification}
+            disabled={submitting}
             className="w-full"
           >
             {t("continue")}
