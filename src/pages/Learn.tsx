@@ -45,6 +45,9 @@ const Learn: React.FC = () => {
         </Button>
       </header>
 
+      <StudentHomePanel units={units} dueReviews={dueReviews} />
+
+
       {error && (
         <Card>
           <CardContent className="pt-6 text-sm text-destructive">{error}</CardContent>
