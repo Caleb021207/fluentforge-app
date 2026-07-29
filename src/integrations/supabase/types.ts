@@ -837,16 +837,22 @@ export type Database = {
       profiles: {
         Row: {
           account_tier: string | null
+          age_verified_at: string | null
           avatar_url: string | null
+          birth_year: number | null
           created_at: string
           display_name: string | null
           email: string | null
           grade_level_id: string | null
           graduation_year: number | null
           id: string
+          is_minor: boolean
           learning_goal: string | null
           native_language: string | null
+          parental_consent_at: string | null
+          parental_consent_granted: boolean
           role: string | null
+          safety_mode: string
           school_id: string | null
           student_id: string | null
           target_date: string | null
@@ -856,16 +862,22 @@ export type Database = {
         }
         Insert: {
           account_tier?: string | null
+          age_verified_at?: string | null
           avatar_url?: string | null
+          birth_year?: number | null
           created_at?: string
           display_name?: string | null
           email?: string | null
           grade_level_id?: string | null
           graduation_year?: number | null
           id: string
+          is_minor?: boolean
           learning_goal?: string | null
           native_language?: string | null
+          parental_consent_at?: string | null
+          parental_consent_granted?: boolean
           role?: string | null
+          safety_mode?: string
           school_id?: string | null
           student_id?: string | null
           target_date?: string | null
@@ -875,16 +887,22 @@ export type Database = {
         }
         Update: {
           account_tier?: string | null
+          age_verified_at?: string | null
           avatar_url?: string | null
+          birth_year?: number | null
           created_at?: string
           display_name?: string | null
           email?: string | null
           grade_level_id?: string | null
           graduation_year?: number | null
           id?: string
+          is_minor?: boolean
           learning_goal?: string | null
           native_language?: string | null
+          parental_consent_at?: string | null
+          parental_consent_granted?: boolean
           role?: string | null
+          safety_mode?: string
           school_id?: string | null
           student_id?: string | null
           target_date?: string | null
@@ -1424,6 +1442,36 @@ export type Database = {
         }
         Relationships: []
       }
+      usage_counters: {
+        Row: {
+          bucket: string
+          count: number
+          created_at: string
+          day: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bucket: string
+          count?: number
+          created_at?: string
+          day?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bucket?: string
+          count?: number
+          created_at?: string
+          day?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       usage_tracking: {
         Row: {
           created_at: string
@@ -1564,6 +1612,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      consume_rate_limit: {
+        Args: { p_bucket: string; p_daily_limit: number; p_user_id: string }
+        Returns: boolean
+      }
       generate_access_code:
         | {
             Args: {
@@ -1616,10 +1668,22 @@ export type Database = {
         Args: { p_account_tier?: string; p_student_id: string }
         Returns: undefined
       }
+      is_teacher_of_class: {
+        Args: { _class: string; _teacher: string }
+        Returns: boolean
+      }
+      is_teacher_of_student: {
+        Args: { _student: string; _teacher: string }
+        Returns: boolean
+      }
       process_access_code: { Args: { p_code: string }; Returns: Json }
       recalculate_student_metrics: {
         Args: { target_student_id: string }
         Returns: undefined
+      }
+      same_school_as: {
+        Args: { _target: string; _viewer: string }
+        Returns: boolean
       }
       update_flashcard_mastery: {
         Args: { p_flashcard_id: string; p_quality: number }

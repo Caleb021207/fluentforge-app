@@ -1,6 +1,7 @@
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY") || "";
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+if (!LOVABLE_API_KEY) console.error("LOVABLE_API_KEY is not configured");
 const MODEL = "google/gemini-2.5-flash";
 
 export interface SuggestionItem {

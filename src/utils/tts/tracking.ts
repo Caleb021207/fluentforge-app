@@ -1,5 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { recordApiCall, recordSessionUsage } from "@/utils/serverWrites";
 
 /**
  * Track TTS usage in the database
@@ -26,27 +27,17 @@ export async function trackTTSUsage(language: string, textLength: number): Promi
 
     console.log(`Tracking TTS API call for user ${user.id}`);
     
-    // Track API call for monitoring purposes
-    const { error: apiError } = await supabase.from('api_calls_tracking').insert({
-      user_id: user.id,
-      service: 'azure_tts',
-      endpoint: 'text-to-speech'
-    });
-    
-    if (apiError) {
-      console.error("Error inserting API tracking record:", apiError);
-    }
+    // Track API call server-side (api_calls_tracking is service-role only)
+    await recordApiCall({ api_type: 'tts', service: 'azure_tts', endpoint: 'text-to-speech' });
     
     // Calculate minutes used (rough estimate: 150 characters per minute of speech)
     const estimatedMinutes = Math.ceil(textLength / 150);
     
     console.log(`Estimated TTS minutes: ${estimatedMinutes} for ${textLength} characters`);
     
-    // Update voice practice usage limits (same field as custom realtime)
-    const { error: rpcError } = await supabase.rpc('increment_voice_usage', {
-      p_user_id: user.id,
-      p_minutes: estimatedMinutes
-    });
+    // Usage counters are incremented server-side only.
+    await recordSessionUsage({ session_type: 'voice_practice', minutes_used: estimatedMinutes });
+    const rpcError = null;
     
     if (rpcError) {
       console.error("Error updating voice practice usage limits:", rpcError);

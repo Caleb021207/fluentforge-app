@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { recordSessionUsage } from '@/utils/serverWrites';
 
 interface ConversationMessage {
   role: 'user' | 'assistant';
@@ -288,14 +289,10 @@ export class CustomRealtimeManager {
       // Track TTS usage
       if (response.ttsMinutesUsed && response.ttsMinutesUsed > 0) {
         try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            await supabase.rpc('increment_tts_usage', {
-              p_student_id: user.id,
-              p_minutes: response.ttsMinutesUsed
-            });
-            console.log(`Tracked ${response.ttsMinutesUsed} TTS minute(s) for user ${user.id}`);
-          }
+          await recordSessionUsage({
+            session_type: 'premium_voice_practice',
+            minutes_used: response.ttsMinutesUsed,
+          });
         } catch (error) {
           console.error('Failed to track TTS usage:', error);
         }

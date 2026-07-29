@@ -1,11 +1,9 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { buildCorsHeaders } from "../_shared/cors.ts";
+import { guardPaidRequest } from "../_shared/authGuard.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 interface WordFeedback {
   word: string;
@@ -28,6 +26,11 @@ interface PronunciationAnalysisResult {
 }
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  const gate = await guardPaidRequest(req, corsHeaders, 'analyze-pronunciation', 300);
+  if (gate.error) return gate.error;
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });

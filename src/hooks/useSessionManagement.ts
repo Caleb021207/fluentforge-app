@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { recordApiCall } from "@/utils/serverWrites";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalization } from "@/context/LocalizationContext";
 import type { MessageCount, SessionStatus } from "@/types/chat";
@@ -79,14 +80,8 @@ export const useSessionManagement = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Create the session using the correct api_calls_tracking table structure
-      await supabase
-        .from('api_calls_tracking')
-        .insert({
-          user_id: user.id,
-          service: 'premium_voice',
-          endpoint: 'session_start'
-        });
+      // Session records are written server-side (service-role only table)
+      await recordApiCall({ api_type: 'premium_voice', service: 'premium_voice', endpoint: 'session_start' });
 
       setSessionStatus('active');
       console.log('Created premium voice session for:', user.id);

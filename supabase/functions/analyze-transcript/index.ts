@@ -1,17 +1,20 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { buildCorsHeaders } from "../_shared/cors.ts";
+import { guardPaidRequest } from "../_shared/authGuard.ts";
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-};
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  const gate = await guardPaidRequest(req, corsHeaders, 'analyze-transcript', 20);
+  if (gate.error) return gate.error;
+
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
@@ -85,6 +88,18 @@ serve(async (req) => {
     if (Array.isArray(parsedAnalysis.recommendations)) {
       parsedAnalysis.recommendations = parsedAnalysis.recommendations.slice(0, 10).map((r: any) => typeof r === 'string' ? r.slice(0, 500) : String(r.recommendation_text || r).slice(0, 500));
     }
+
+    // Persist server-side: transcript_analyses holds a proficiency level/score,
+    // so it is not client-writable.
+    const { error: saveError } = await supabase.from('transcript_analyses').insert({
+      user_id: user.id,
+      cefr_level: parsedAnalysis.cefr_level ?? null,
+      overall_score: typeof parsedAnalysis.overall_score === 'number'
+        ? Math.min(100, Math.max(0, parsedAnalysis.overall_score))
+        : null,
+      analysis_data: parsedAnalysis,
+    });
+    if (saveError) console.error('Failed to persist transcript analysis:', saveError);
 
     return new Response(JSON.stringify({ success: true, analysis: parsedAnalysis }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (error) {

@@ -154,24 +154,14 @@ export const checkUserRole = async (userId: string, role: 'student' | 'teacher' 
  * Updates a user's role
  */
 export const updateUserRole = async (userId: string, role: 'student' | 'teacher' | 'admin'): Promise<boolean> => {
-  try {
-    const { error } = await supabase
-      .from('profiles')
-      .update({ role })
-      .eq('id', userId);
-    
-    if (error) {
-      console.error('Error updating user role:', error);
-      return false;
-    }
-    
-    // Clear cache
-    clearUserCache(userId);
-    return true;
-  } catch (error) {
-    console.error('Error in updateUserRole:', error);
-    return false;
-  }
+  // SECURITY: role changes are never performed from the browser. The profiles
+  // table has a trigger that rejects any role/tier change made by a non-admin,
+  // and app_role lives in user_roles which students cannot write.
+  console.warn(
+    'updateUserRole is disabled on the client. Role changes must be made by an administrator.',
+    { userId, role }
+  );
+  return false;
 };
 
 /**

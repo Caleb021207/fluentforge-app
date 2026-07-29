@@ -1,12 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { buildCorsHeaders } from "../_shared/cors.ts";
+import { guardPaidRequest } from "../_shared/authGuard.ts";
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-};
 
 const normalizeLanguage = (lang: string): string => {
   const map: Record<string, string> = {
@@ -22,6 +20,11 @@ const normalizeLanguage = (lang: string): string => {
 };
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  const gate = await guardPaidRequest(req, corsHeaders, 'custom-realtime-conversation', 300);
+  if (gate.error) return gate.error;
+
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
@@ -132,8 +135,11 @@ serve(async (req) => {
     const aiResponse = processedSegments.map(s => s.text).join(' ');
 
     // Step 3: Synthesize speech with Azure TTS
-    const azureSpeechKey = Deno.env.get('AZURE_SPEECH_KEY') || Deno.env.get('AWS_ACCESS_KEY_ID');
-    const azureRegion = Deno.env.get('AZURE_REGION') || Deno.env.get('AWS_REGION') || 'eastus';
+    // No cross-provider fallbacks: an AWS credential is not an Azure Speech key
+    // and silently substituting one leaks a credential to the wrong provider.
+    const azureSpeechKey = Deno.env.get('AZURE_SPEECH_KEY');
+    if (!azureSpeechKey) throw new Error('AZURE_SPEECH_KEY is not configured');
+    const azureRegion = Deno.env.get('AZURE_REGION') ?? 'eastus';
 
     if (!azureSpeechKey) {
       // Return text-only response if no TTS configured

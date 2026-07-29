@@ -1,12 +1,15 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, filterProhibitedContent } from "./config.ts";
+import { filterProhibitedContent } from "./config.ts";
 import { generateHints } from "./hints.ts";
 import { getLanguageDisplayName, determineLanguagePair, getUserNativeLanguage } from "./languageUtils.ts";
+import { buildCorsHeaders } from "../_shared/cors.ts";
+import { guardPaidRequest } from "../_shared/authGuard.ts";
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY") || "";
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+if (!LOVABLE_API_KEY) console.error("LOVABLE_API_KEY is not configured");
 const MODEL = "google/gemini-2.5-flash";
 const FALLBACK_MODEL = "google/gemini-2.5-flash-lite";
 
@@ -57,6 +60,11 @@ function validateLanguage(lang: string | undefined): string {
 }
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  const gate = await guardPaidRequest(req, corsHeaders, 'chat-with-tutor', 300);
+  if (gate.error) return gate.error;
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }

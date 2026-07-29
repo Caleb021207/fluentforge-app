@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { recordApiCall } from '@/utils/serverWrites';
 
 export const useSessionManagement = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -11,13 +12,7 @@ export const useSessionManagement = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        await supabase
-          .from('api_calls_tracking')
-          .insert({
-            service: 'session',
-            endpoint: type,
-            user_id: user.id
-          });
+        await recordApiCall({ api_type: 'session', service: 'session', endpoint: type });
       }
     } catch (error) {
       console.error('Error tracking session:', error);

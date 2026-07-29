@@ -1,5 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { recordApiCall } from "@/utils/serverWrites";
 import { ttsCache } from "./tts/cache";
 
 export interface TTSOptions {
@@ -158,21 +159,8 @@ export function trackTTSUsage(userId: string, language: string): void {
   if (!userId) return;
   
   try {
-    // Use the correct table structure for api_calls_tracking
-    supabase
-      .from('api_calls_tracking')
-      .insert([
-        { 
-          user_id: userId,
-          service: 'tts',
-          endpoint: 'usage'
-        }
-      ])
-      .then(({ error }) => {
-        if (error) {
-          console.error("Error tracking TTS usage:", error);
-        }
-      });
+    // Usage records are written server-side (api_calls_tracking is service-role only)
+    void recordApiCall({ api_type: 'tts', service: 'tts', endpoint: 'usage' });
   } catch (error) {
     console.error("Failed to track TTS usage:", error);
   }

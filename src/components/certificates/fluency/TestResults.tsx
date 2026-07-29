@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
+import { createCertificationAttempts } from "@/utils/serverWrites";
 import { useToast } from "@/hooks/use-toast";
 import { determineLevel } from "@/components/certifications/utils/scoreUtils";
 
@@ -41,46 +42,21 @@ const TestResults = ({ testResult, onReset }: TestResultsProps) => {
         return;
       }
       
-      // Create speaking attempt with weighted scoring
+      // All three attempts are written by a service-role edge function.
       const speakingScore = testResult?.speaking?.overallScore || 0;
-      if (speakingScore > 0) {
-        const speakingLevel = determineLevel(speakingScore);
-        await supabase.from('certification_attempts').insert({
-          user_id: user.id,
-          certification_type: 'speaking',
-          score: speakingScore,
-          level: speakingLevel,
-          created_at: new Date().toISOString()
-        });
-      }
-      
-      // Create listening attempt with weighted scoring
       const listeningScore = testResult?.listening?.overallScore || 0;
-      if (listeningScore > 0) {
-        const listeningLevel = determineLevel(listeningScore);
-        await supabase.from('certification_attempts').insert({
-          user_id: user.id,
-          certification_type: 'listening',
-          score: listeningScore,
-          level: listeningLevel,
-          created_at: new Date().toISOString()
-        });
-      }
-      
-      // Create fluency attempt (average of speaking and listening)
-      // Adding weight to prioritize speaking slightly more than listening for fluency
       const fluencyScore = Math.round((speakingScore * 0.6 + listeningScore * 0.4));
-      if (fluencyScore > 0) {
-        const fluencyLevel = determineLevel(fluencyScore);
-        await supabase.from('certification_attempts').insert({
-          user_id: user.id,
-          certification_type: 'fluency',
-          score: fluencyScore,
-          level: fluencyLevel,
-          created_at: new Date().toISOString()
-        });
+
+      const toRecord = [
+        { certification_type: 'speaking', score: speakingScore, level: determineLevel(speakingScore), completed: true },
+        { certification_type: 'listening', score: listeningScore, level: determineLevel(listeningScore), completed: true },
+        { certification_type: 'fluency', score: fluencyScore, level: determineLevel(fluencyScore), completed: true },
+      ].filter(a => a.score > 0);
+
+      if (toRecord.length > 0) {
+        await createCertificationAttempts(toRecord);
       }
-      
+
       // Check if they've achieved functional or professional fluency by getting all scores
       const { data: attempts, error: attemptsError } = await supabase
         .from('certification_attempts')

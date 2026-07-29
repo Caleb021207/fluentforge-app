@@ -5,6 +5,7 @@ import { Mic, MicOff, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RealtimeChat } from "@/utils/RealtimeAudioManager";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { recordSessionUsage } from "@/utils/serverWrites";
 import { useLocalization } from "@/context/LocalizationContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getLanguagePair } from "@/utils/languageUtils";
@@ -206,18 +207,13 @@ const PremiumVoicePractice = () => {
 
     if (customChatRef.current && minutesUsed > 0 && customSessionId) {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user?.id) {
-          await supabase.from('usage_tracking').insert({
-            student_id: user.id,
-            session_type: 'custom_realtime_practice',
-            session_id: customSessionId,
-            started_at: new Date(Date.now() - customElapsedSeconds * 1000).toISOString(),
-            ended_at: new Date().toISOString(),
-            minutes_used: minutesUsed,
-            messages_count: customMessages.length,
-          });
-        }
+        await recordSessionUsage({
+          session_type: 'premium_voice_practice',
+          session_id: customSessionId,
+          minutes_used: minutesUsed,
+          messages_count: customMessages.length,
+          ended: true,
+        });
       } catch (error) {
         console.error('Error tracking custom usage:', error);
       }

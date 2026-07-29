@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { recordSessionUsage, consumeTextMessageQuota, consumeCertificationAttemptQuota } from '@/utils/serverWrites';
 import { useToast } from '@/hooks/use-toast';
 
 interface UsageLimits {
@@ -184,44 +185,15 @@ export const useUsageLimits = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Insert detailed tracking
-      const { error: trackingError } = await supabase
-        .from('usage_tracking')
-        .insert({
-          student_id: user.id,
-          session_type: 'voice_practice',
-          session_id: sessionId,
-          minutes_used: minutesUsed,
-          ended_at: new Date().toISOString()
-        });
-
-      if (trackingError) {
-        console.error('Error tracking voice session:', trackingError);
-        return;
-      }
-
-      // Get current usage first
-      const { data: currentLimits } = await supabase
-        .from('student_usage_limits')
-        .select('voice_minutes_used_current_month')
-        .eq('student_id', user.id)
-        .single();
-
-      const newUsage = (currentLimits?.voice_minutes_used_current_month || 0) + minutesUsed;
-
-      // Update monthly usage
-      const { error: updateError } = await supabase
-        .from('student_usage_limits')
-        .update({
-          voice_minutes_used_current_month: newUsage,
-          updated_at: new Date().toISOString()
-        })
-        .eq('student_id', user.id);
-
-      if (updateError) {
-        console.error('Error updating usage limits:', updateError);
-        return;
-      }
+      // Detailed tracking rows and quota counters are service-role only; the
+      // server derives the student from the JWT.
+      const newUsage = (usageLimits?.whisperSTTMinutesUsed || 0) + minutesUsed;
+      await recordSessionUsage({
+        session_type: 'voice_practice',
+        session_id: sessionId,
+        minutes_used: minutesUsed,
+        ended: true,
+      });
 
       // Refresh limits
       await fetchUsageLimits();
@@ -307,27 +279,15 @@ export const useUsageLimits = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Get current usage first
-      const { data: currentLimits } = await supabase
-        .from('student_usage_limits')
-        .select('text_messages_used_current_month, text_messages_monthly_limit')
-        .eq('student_id', user.id)
-        .single();
-
-      const newMessageCount = (currentLimits?.text_messages_used_current_month || 0) + 1;
-      const textLimit = currentLimits?.text_messages_monthly_limit || 1500;
-
-      // Update text message count
-      const { error } = await supabase
-        .from('student_usage_limits')
-        .update({
-          text_messages_used_current_month: newMessageCount,
-          updated_at: new Date().toISOString()
-        })
-        .eq('student_id', user.id);
-
-      if (error) {
-        console.error('Error tracking text message:', error);
+      const result = await consumeTextMessageQuota();
+      const newMessageCount = (usageLimits?.textPracticeTokensUsed || 0) + 1;
+      const textLimit = usageLimits?.textPracticeTokensLimit || 1500;
+      if (!result?.success) {
+        toast({
+          title: "Message Limit Reached",
+          description: "You've used all your monthly text messages.",
+          variant: "destructive",
+        });
         return;
       }
 
@@ -364,26 +324,13 @@ export const useUsageLimits = () => {
         return false;
       }
 
-      // Get current usage first
-      const { data: currentLimits } = await supabase
-        .from('student_usage_limits')
-        .select('certification_attempts_used_current_semester')
-        .eq('student_id', user.id)
-        .single();
-
-      const newAttemptCount = (currentLimits?.certification_attempts_used_current_semester || 0) + 1;
-
-      // Update attempt count
-      const { error } = await supabase
-        .from('student_usage_limits')
-        .update({
-          certification_attempts_used_current_semester: newAttemptCount,
-          updated_at: new Date().toISOString()
-        })
-        .eq('student_id', user.id);
-
-      if (error) {
-        console.error('Error tracking certification attempt:', error);
+      const result = await consumeCertificationAttemptQuota();
+      if (!result?.success) {
+        toast({
+          title: "Certification Limit Reached",
+          description: `You've used all ${limit} certification attempts this semester.`,
+          variant: "destructive",
+        });
         return false;
       }
 

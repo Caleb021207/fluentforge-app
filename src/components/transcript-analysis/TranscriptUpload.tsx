@@ -163,11 +163,9 @@ const TranscriptUpload: React.FC<TranscriptUploadProps> = ({ onUploadSuccess }) 
             raw_extracted_data: analysisData.analysis
           };
 
-          const { error: dbError } = await supabase
-            .from('transcript_analyses')
-            .insert(analysisRecord);
-
-          if (dbError) throw dbError;
+          // The analysis row is persisted by the analyze-transcript edge function
+          // (transcript_analyses is not client-writable). Nothing to insert here.
+          void analysisRecord;
 
           setUploadProgress(100);
           
