@@ -6,6 +6,7 @@ import { generateHints } from "./hints.ts";
 import { getLanguageDisplayName, determineLanguagePair, getUserNativeLanguage } from "./languageUtils.ts";
 import { buildCorsHeaders } from "../_shared/cors.ts";
 import { guardPaidRequest } from "../_shared/authGuard.ts";
+import { getCurriculumSnapshot, renderCurriculumBlock } from "../_shared/curriculumContext.ts";
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -376,6 +377,19 @@ If no errors: "📝 Grammar note: Great job! No corrections needed."`
 ${assignmentTopic ? `ASSIGNMENT: The student is working on "${assignmentTopic}". Keep the conversation focused on this topic.` : ''}
 
 Always respond primarily in ${targetLangDisplay}.`;
+
+    // Curriculum awareness: steer chat/role-play at the learner's active unit.
+    try {
+      const curriculumDb = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      );
+      const snapshot = await getCurriculumSnapshot(curriculumDb, user.id);
+      const block = renderCurriculumBlock(snapshot);
+      if (block) systemMessage += `\n${block}`;
+    } catch (e) {
+      console.error("curriculum context unavailable", e);
+    }
 
     console.log(`CEFR: ${effectiveCefrLevel}, Grammar: ${correctGrammar}, Fallback: ${usingFallbackModel}`);
 

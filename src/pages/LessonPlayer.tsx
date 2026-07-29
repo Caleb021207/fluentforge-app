@@ -1,311 +1,230 @@
-// @ts-nocheck
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAuthGuard } from '@/hooks/useAuthGuard';
-import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Sparkles } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useGamification } from '@/hooks/useGamification';
-import FlashcardExercise from '@/components/exercises/FlashcardExercise';
-import ClozeExercise from '@/components/exercises/ClozeExercise';
-import ReorderExercise from '@/components/exercises/ReorderExercise';
-import TransformExercise from '@/components/exercises/TransformExercise';
-import GuidedConvoTextExercise from '@/components/exercises/GuidedConvoTextExercise';
-import GuidedConvoVoiceExercise from '@/components/exercises/GuidedConvoVoiceExercise';
-import LevelUpModal from '@/components/gamification/LevelUpModal';
-import XPNotification from '@/components/ui/xp-notification';
-import type { Exercise, Lesson } from '@/types/exercises';
-import { Skeleton } from '@/components/ui/skeleton';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getXPReward } from '@/utils/levelSystem';
-import { GradientBlob } from '@/components/ui/decorative-elements';
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import { useLessonRunner, GradeResult } from "@/hooks/useLessonRunner";
+import { ArrowLeft, CheckCircle2, XCircle, Trophy, Flame } from "lucide-react";
 
-const LessonPlayer = () => {
+/**
+ * Plays a lesson from the persistent curriculum.
+ *
+ * Every item is served without its answer key and graded by `submit-exercise`,
+ * so nothing here can reveal or decide correctness on its own.
+ */
+const LessonPlayer: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthGuard();
-  const { toast } = useToast();
-  const { awardXP, showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
-  
-  const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [earnedXP, setEarnedXP] = useState(0);
-  const [showXPNotification, setShowXPNotification] = useState(false);
-  const [lastXPGain, setLastXPGain] = useState(0);
+  const { isLoading, isAuthenticated } = useAuthGuard();
+  const { lesson, exercises, passage, mastery, loading, error, submit } = useLessonRunner(lessonId);
+
+  const [index, setIndex] = useState(0);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [result, setResult] = useState<GradeResult | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [finished, setFinished] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+
+  const current = exercises[index];
+  const total = exercises.length;
 
   useEffect(() => {
-    if (isAuthenticated && lessonId) {
-      fetchLesson();
+    setStartedAt(Date.now());
+  }, [index]);
+
+  const progressPct = useMemo(
+    () => (total ? Math.round((index / total) * 100) : 0),
+    [index, total],
+  );
+
+  const handleSubmit = async () => {
+    if (!current || !selected || submitting) return;
+    setSubmitting(true);
+    const graded = await submit(current.id, selected, Date.now() - startedAt);
+    setSubmitting(false);
+    if (!graded) {
+      toast.error("Could not submit your answer. Please try again.");
+      return;
     }
-  }, [isAuthenticated, lessonId]);
-
-  const fetchLesson = async () => {
-    if (!lessonId) return;
-
-    try {
-      const { data: lessonData } = await supabase
-        .from('lessons')
-        .select('*')
-        .eq('id', lessonId)
-        .single();
-
-      if (lessonData) {
-        setLesson(lessonData);
-
-        const { data: exercisesData } = await supabase
-          .from('exercises')
-          .select('*')
-          .eq('lesson_id', lessonId)
-          .order('idx');
-
-        setExercises((exercisesData || []) as unknown as Exercise[]);
-      }
-    } catch (error) {
-      console.error('Error fetching lesson:', error);
-    } finally {
-      setLoading(false);
+    setResult(graded);
+    if (graded.correct) setCorrectCount((c) => c + 1);
+    if (graded.xp_awarded > 0) {
+      toast.success(`+${graded.xp_awarded} XP`, {
+        description: graded.xp_reasons.join(" · ") || undefined,
+      });
+    }
+    if (graded.mastery?.newly_mastered) {
+      toast.success("Skill mastered!", { description: lesson?.skill.title });
     }
   };
 
-  const submitAttempt = async (outcome: 'correct' | 'partial' | 'incorrect', score: number) => {
-    const currentExercise = exercises[currentIndex];
-    if (!currentExercise) return;
-
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      await supabase.from('exercise_attempts').insert({
-        user_id: user.id,
-        exercise_id: currentExercise.id,
-        outcome,
-        score,
-        duration_ms: 0
-      });
-
-      // Award XP using levelSystem utility
-      const xp = outcome === 'correct' 
-        ? getXPReward('lesson', { difficulty: 'Medium', score })
-        : 0;
-      setEarnedXP(prev => prev + xp);
-      
-      if (xp > 0) {
-        setLastXPGain(xp);
-        setShowXPNotification(true);
-        setTimeout(() => setShowXPNotification(false), 2000);
-      }
-
-      // Update skill mastery
-      if (lesson) {
-        const { data: skillData } = await supabase
-          .from('skills')
-          .select('id')
-          .eq('id', lesson.skill_id)
-          .single();
-
-        if (skillData) {
-          const { data: progressData } = await supabase
-            .from('user_skill_progress')
-            .select('*')
-            .eq('user_id', user.id)
-            .eq('skill_id', skillData.id)
-            .single();
-
-          const oldMastery = progressData?.mastery || 0;
-          const newMastery = Math.min(100, 0.8 * oldMastery + 0.2 * score);
-
-          await supabase
-            .from('user_skill_progress')
-            .upsert({
-              user_id: user.id,
-              skill_id: skillData.id,
-              mastery: newMastery,
-              last_practiced_at: new Date().toISOString()
-            });
-        }
-      }
-
-      if (currentIndex < exercises.length - 1) {
-        setTimeout(() => setCurrentIndex(prev => prev + 1), 800);
-      } else {
-        // Lesson complete - award bonus XP
-        setTimeout(async () => {
-          await awardXP('lesson', { difficulty: 'Medium' });
-          toast({
-            title: '🎉 Lesson Complete!',
-            description: `You earned ${earnedXP + xp} XP!`
-          });
-          setTimeout(() => navigate('/learn'), 2000);
-        }, 1500);
-      }
-    } catch (error) {
-      console.error('Error submitting attempt:', error);
-    }
+  const handleNext = () => {
+    setResult(null);
+    setSelected(null);
+    if (index + 1 >= total) setFinished(true);
+    else setIndex((i) => i + 1);
   };
 
-  const handleSaveWord = async (word: { lemma: string; display: string; translation: string; ipa?: string }) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      await supabase.from('user_wordbank').upsert({
-        user_id: user.id,
-        lemma: word.lemma,
-        display: word.display,
-        translation: word.translation,
-        ipa: word.ipa,
-        language: 'en',
-        cefr_tag: exercises[currentIndex]?.cefr_tag
-      });
-
-      await awardXP('lesson', { difficulty: 'Easy' });
-
-      toast({
-        title: '💾 Word Saved!',
-        description: `Added "${word.display}" to your word bank (+5 XP)`
-      });
-    } catch (error) {
-      console.error('Error saving word:', error);
-    }
-  };
-
-  if (loading) {
+  if (isLoading || loading) {
     return (
-      <div className="container mx-auto py-8 px-4">
-        <Skeleton className="h-96" />
+      <div className="container mx-auto px-4 py-8 space-y-4">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-64" />
       </div>
     );
   }
 
-  if (!lesson || exercises.length === 0) {
+  if (!isAuthenticated) return <AuthRequiredPrompt />;
+
+  if (error || !lesson) {
     return (
-      <div className="container mx-auto py-8 px-4">
-        <Card className="p-8 text-center">
-          <h2 className="text-2xl font-bold mb-2">Lesson Not Found</h2>
-          <Button onClick={() => navigate('/learn')}>Back to Learning Path</Button>
+      <div className="container mx-auto px-4 py-8">
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <p className="text-destructive">{error ?? "This lesson is not available."}</p>
+            <Button variant="outline" onClick={() => navigate("/learn")}>
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to path
+            </Button>
+          </CardContent>
         </Card>
       </div>
     );
   }
 
-  const currentExercise = exercises[currentIndex];
-  const progress = ((currentIndex + 1) / exercises.length) * 100;
+  if (finished || !total) {
+    const accuracy = total ? Math.round((correctCount / total) * 100) : 0;
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Trophy className="h-5 w-5 text-primary" />
+              {total ? "Lesson complete" : "Nothing to practice yet"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {total > 0 && (
+              <p className="text-muted-foreground">
+                You answered {correctCount} of {total} correctly ({accuracy}%). Skill mastery is now{" "}
+                {Math.round(mastery * 100)}%.
+              </p>
+            )}
+            {!total && (
+              <p className="text-muted-foreground">
+                This lesson has no published exercises yet. Check back once new content is approved.
+              </p>
+            )}
+            <div className="flex gap-2">
+              <Button onClick={() => navigate("/learn")}>Back to path</Button>
+              <Button variant="outline" onClick={() => navigate("/review")}>
+                Vocabulary review
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <XPNotification show={showXPNotification} amount={lastXPGain} />
-      {levelUpData && (
-        <LevelUpModal
-          open={showLevelUpModal}
-          onClose={() => setShowLevelUpModal(false)}
-          oldLevel={levelUpData.oldLevel}
-          newLevel={levelUpData.newLevel}
-          totalXP={progression?.total_xp || 0}
-        />
-      )}
-      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
-        <GradientBlob className="top-20 left-10" />
-        <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
-        
-        <div className="container mx-auto py-8 px-4 max-w-4xl relative z-10">
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <Button variant="outline" onClick={() => navigate('/learn')}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-              <div className="text-sm font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                {currentIndex + 1} / {exercises.length}
-              </div>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold gradient-text">{lesson.title}</h1>
-                {currentExercise?.cefr_tag && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="text-sm bg-gradient-to-r from-primary to-accent text-white px-4 py-1.5 rounded-full font-semibold shadow-lg"
-                  >
-                    {currentExercise.cefr_tag}
-                  </motion.span>
-                )}
-              </div>
-              <div className="relative h-3 bg-muted/50 rounded-full overflow-hidden backdrop-blur-sm">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  className="h-full bg-gradient-to-r from-palavox-accent via-palavox-teal to-green-500 shadow-lg"
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                />
-              </div>
-            </motion.div>
-          </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, x: 50, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -50, scale: 0.95 }}
-              transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
-            >
-              <Card className="p-8 glass shadow-2xl">
-        {currentExercise.type === 'flashcard' && (
-          <FlashcardExercise
-            exercise={currentExercise}
-            onComplete={submitAttempt}
-            onSaveWord={handleSaveWord}
-          />
-        )}
-        {currentExercise.type === 'cloze' && (
-          <ClozeExercise
-            exercise={currentExercise}
-            onComplete={submitAttempt}
-            onSaveWord={handleSaveWord}
-          />
-        )}
-        {currentExercise.type === 'reorder' && (
-          <ReorderExercise
-            exercise={currentExercise}
-            onComplete={submitAttempt}
-          />
-        )}
-        {currentExercise.type === 'transform' && (
-          <TransformExercise
-            exercise={currentExercise}
-            onComplete={submitAttempt}
-            onSaveWord={handleSaveWord}
-          />
-        )}
-        {currentExercise.type === 'guided_convo_text' && (
-          <GuidedConvoTextExercise
-            exercise={currentExercise}
-            onComplete={submitAttempt}
-          />
-        )}
-        {currentExercise.type === 'guided_convo_voice' && (
-          <GuidedConvoVoiceExercise
-            exercise={currentExercise}
-            onComplete={submitAttempt}
-          />
-        )}
-              </Card>
-            </motion.div>
-          </AnimatePresence>
+    <div className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <Button variant="ghost" size="sm" onClick={() => navigate("/learn")}>
+          <ArrowLeft className="mr-2 h-4 w-4" /> Path
+        </Button>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Flame className="h-4 w-4" />
+          Mastery {Math.round(mastery * 100)}%
         </div>
       </div>
-    </>
+
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold">{lesson.title}</h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline">{lesson.unit.title}</Badge>
+          {lesson.unit.cefr_level && <Badge variant="secondary">{lesson.unit.cefr_level}</Badge>}
+          <Badge variant="outline" className="capitalize">
+            {lesson.skill.type}
+          </Badge>
+        </div>
+        {lesson.unit.can_do_statement && (
+          <p className="text-sm text-muted-foreground">{lesson.unit.can_do_statement}</p>
+        )}
+        <Progress value={progressPct} className="h-2" />
+        <p className="text-xs text-muted-foreground">
+          Item {index + 1} of {total}
+        </p>
+      </div>
+
+      {passage && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">{passage.title ?? "Reading"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="whitespace-pre-line leading-relaxed">{passage.body}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">{current.prompt}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {current.options.map((option) => {
+            const isPicked = selected === option.id;
+            const isKey = result?.correct_option_id === option.id;
+            const showWrong = Boolean(result) && isPicked && !result?.correct;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                disabled={Boolean(result) || submitting}
+                onClick={() => setSelected(option.id)}
+                className={`w-full rounded-lg border p-3 text-left transition-colors ${
+                  result && isKey
+                    ? "border-green-500 bg-green-500/10"
+                    : showWrong
+                      ? "border-destructive bg-destructive/10"
+                      : isPicked
+                        ? "border-primary bg-primary/5"
+                        : "hover:bg-muted"
+                }`}
+              >
+                <span className="flex items-center justify-between gap-2">
+                  {option.label}
+                  {result && isKey && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                  {showWrong && <XCircle className="h-4 w-4 text-destructive" />}
+                </span>
+              </button>
+            );
+          })}
+
+          {result?.explanation && (
+            <p className="text-sm text-muted-foreground border-l-2 border-primary/30 pl-3">
+              {result.explanation}
+            </p>
+          )}
+
+          <div className="pt-2">
+            {result ? (
+              <Button onClick={handleNext}>{index + 1 >= total ? "Finish" : "Next"}</Button>
+            ) : (
+              <Button onClick={handleSubmit} disabled={!selected || submitting}>
+                {submitting ? "Checking…" : "Check answer"}
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
