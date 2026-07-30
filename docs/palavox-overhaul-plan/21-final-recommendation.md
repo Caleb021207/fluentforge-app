@@ -28,8 +28,10 @@ The evidence supports three headline conclusions:
    live speaking minutes across the ESL course; delivering every one of them costs ≈$29 per
    learner over the ~2.5 years they take to finish, against ~$150 of license revenue —
    **80.8% gross margin on the most engaged learner**. District-average annual margin is
-   **93.0%**. Allowances are therefore sized to the curriculum (1,000 pooled minutes/student/year,
-   including a **protected 400-minute native-real-time floor**), not to a budget. Hybrid
+   **93.0%**. Allowances are therefore sized to the curriculum — each licensed seat contributes 1,000
+   voice minutes/year to the institution-wide pool, of which **400 min/seat fund a protected
+   districtwide native-realtime sub-pool** (pooled capacity, not an individual balance) — not
+   to a budget. Hybrid
    Pattern-D routing remains correct because it buys *more* realtime where it matters and because
    no S2S vendor returns phoneme data — not because realtime is unaffordable (11, 16). The flat
    price is also a go-to-market choice: $60 sits well beneath established intensive ELL

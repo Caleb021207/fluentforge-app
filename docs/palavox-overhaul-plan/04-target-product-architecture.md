@@ -11,7 +11,9 @@ cite the audits.
 
 One platform, two first-class **language pairs** (L1→EN for ~41 L1s; EN→ES), each carrying a
 finite conversation-first course (A1→A2, ~228 lessons + 8 checkpoint experiences) that graduates
-into a conversation-led continuation system. Consumer and institutional deployments share the
+into a conversation-led continuation system. Every production learner account is provisioned
+under an institutional tenant — learners are either classroom-assigned or use institutionally
+licensed independent practice; both modes are tenant-bound. All deployments share the
 platform; institutions add tenancy, rostering, reporting, and accommodations.
 
 ```mermaid

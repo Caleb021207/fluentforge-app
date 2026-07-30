@@ -3,7 +3,7 @@
 **Phase:** Planning (no implementation). **Repo:** fluentforge-app, branch `overhaul`, commit `7cbaadd9`.
 **Role:** Data-architecture / security / privacy / multitenancy target-state design.
 **Reads (discovery inputs):** `wip-15a-data-security-current-state.md` (data/RLS/tenancy/PII/minors), `wip-01a-product-inventory.md` (quota + schema-drift + edge-function auth), `wip-02-current-user-flows.md` (role/onboarding).
-**Product context:** conversation-first A1→A2 curriculum. Market A = ESL in ~41 UI languages; Market B = Spanish for English speakers. Consumer **and** school/district. **Many learners are minors.** Supabase/Postgres + React today.
+**Product context:** conversation-first A1→A2 curriculum. Market A = ESL in ~41 UI languages; Market B = Spanish for English speakers. **Institutional-only** — every production learner account is provisioned under an institutional tenant (classroom-assigned or institutionally licensed independent practice). **Many learners are minors.** Supabase/Postgres + React today.
 
 **Claim labels used throughout:** `[observed]` (seen in repo, cited) · `[documented]` (external, URL+date) · `[estimated]` · `[proposed]` (this design's target) · `[assumption]` · `[requires validation]`. Current vs. proposed behavior is distinguished at every point.
 
@@ -36,16 +36,22 @@ Every student-data row must be attributable to exactly one tenant path: `distric
 **Option A — Denormalized tenant keys on student-data tables.** Add `school_id` (and optionally `district_id`) columns to `lesson_progress`, `certification_attempts`, `assignment_submissions`, `transcript_analyses`, `student_metrics`, etc., stamped at write time by the service-role writer and referenced directly in RLS.
 
 - **Pros:** RLS predicates are O(1) index lookups (`school_id = <caller's school>`); tenant boundary is explicit and greppable; enables clean per-tenant retention/deletion/export queries; a mis-scoped read fails closed on a single column; supports data-residency partitioning later.
-- **Cons:** Requires backfill; `school_id` can go stale if a learner transfers schools (needs a defined transfer procedure — a learner's *history* should arguably stay with the school where it was produced, so treat `school_id` as write-time-immutable per row, not mutable per profile); more columns to keep consistent; consumer (non-school) users need a sentinel (`school_id IS NULL` = personal tenant).
+- **Cons:** Requires backfill; `school_id` can go stale if a learner transfers schools (needs a defined transfer procedure — a learner's *history* should arguably stay with the school where it was produced, so treat `school_id` as write-time-immutable per row, not mutable per profile); more columns to keep consistent; learners not yet assigned to a school need `school_id NULL` **within their institutional tenant** — never a personal/consumer sentinel.
 
 **Option B — Join-path derivation (no tenant columns).** Keep deriving tenancy through `student_enrollments → classes → schools`, extending the current `is_teacher_of_student` pattern with a `same_tenant_as` helper.
 
 - **Pros:** No new columns, no backfill; matches the existing `same_school_as`/`is_teacher_of_*` definer-helper model already hardened with `search_path=''` `[observed]` (wip-15a §2.1); single source of truth for "which class."
-- **Cons:** Every RLS check becomes a multi-table `EXISTS` traversal (enrollment → class → school) — slower and harder to reason about; **a learner in *no* class has no derivable tenant**, so consumer users and not-yet-rostered students fall outside the model; retention/deletion/DSAR queries must re-run the join every time; a learner enrolled in two schools' classes has an *ambiguous* tenant — exactly the abuse vector in G1.
+- **Cons:** Every RLS check becomes a multi-table `EXISTS` traversal (enrollment → class → school) — slower and harder to reason about; **a learner in *no* class has no derivable tenant**, so not-yet-rostered students fall outside the model; retention/deletion/DSAR queries must re-run the join every time; a learner enrolled in two schools' classes has an *ambiguous* tenant — exactly the abuse vector in G1.
 
 **RECOMMENDATION — Hybrid, Option A as the spine.** `[proposed]`
 
-- Stamp an **immutable `school_id` (nullable) on every student-data table**, written by the service-role writer at row creation, never client-writable (extend the `protect_*` trigger family). `NULL` = consumer/personal tenant.
+- Stamp a **required, non-null root `tenant_id` (the licensing institution) plus an immutable,
+  nullable `school_id` on every production account and student-data table**, written by the
+  service-role writer at row creation, never client-writable (extend the `protect_*` trigger
+  family). `school_id NULL` means only "licensed learner not yet assigned to a school" —
+  it never means a consumer/personal tenant and never means public data. **Cross-tenant
+  enrollment fails closed** (an enrollment whose class tenant contradicts the learner's
+  stamped `tenant_id` is rejected server-side).
 - Keep the **join-path helpers for *classroom* relationships** (teacher↔student within a class), because those are genuinely relational and already hardened.
 - Add `district_id` **only on `schools`** (already present) and derive district scope via `school_id → schools.district_id` in a `SECURITY DEFINER` helper — districts change rarely and don't need denormalization onto every leaf row.
 

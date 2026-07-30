@@ -3,24 +3,26 @@
 Numbering is stable and cross-referenced throughout the plan (other docs cite "19 #6" etc.) —
 **do not renumber**, even as items move from open to approved over time.
 
-Four items are **already settled** by explicit owner direction and are recorded here as
-**approved directives**, not open questions — an implementation agent should treat them as
-fixed and not reopen them. The remaining items still need your call.
+**Execution status (2026-07-30):** the owner's execution directive activates implementation.
+Items 1/3/5/10 are explicit owner approvals; the remaining items carry **default approvals** —
+implement the plan's recommended option unless a benchmark or live repository evidence
+disproves it. External commitments inside #9 (a real school, dates, consent authority,
+recordings of minors, production launch) remain owner actions.
 
 | # | Decision | Status |
 | --- | --- | --- |
-| 1 | Overall product direction | ✅ **APPROVED** |
-| 2 | Voice architecture and providers | Open — benchmark-gated |
-| 3 | Curriculum scope | ✅ **APPROVED** |
-| 4 | Certificates disposition | Open |
-| 5 | Pricing & packaging | ✅ **APPROVED** |
-| 6 | Role-system repair | Open |
-| 7 | Safety enforcement scope | Open |
-| 8 | July-branch disposition | Open |
-| 9 | Pilot commitment | Open |
-| 10 | Roadmap direction | ✅ **APPROVED** (Option B; staffing/cost detail still open — see note) |
-| 11 | Localization investment tier | Open |
-| 12 | Analytics/telemetry stack | Open |
+| 1 | Overall product direction | ✅ **APPROVED** (owner) |
+| 2 | Voice architecture and providers | ✅ **Default-approved** — Pattern D, benchmark-gated; OpenAI path is control |
+| 3 | Curriculum scope | ✅ **APPROVED** (owner) |
+| 4 | Certificates disposition | ✅ **Default-approved** — course-achievement records, no CEFR/ACTFL claims |
+| 5 | Pricing & packaging | ✅ **APPROVED** (owner) — flat $60/activated student |
+| 6 | Role-system repair | ✅ **Default-approved** — re-freeze roles, revert 20260730010000, verified provisioning |
+| 7 | Safety enforcement scope | ✅ **Default-approved** — fail-closed strict SafetyContext incl. unverified-age |
+| 8 | July-branch disposition | ✅ **Default-approved** — reviewed Phase-1 starting point; WIP branch reference-only |
+| 9 | Pilot commitment | Build-to-gate — **external commitments are owner actions** |
+| 10 | Roadmap direction | ✅ **APPROVED** (owner) — Option B, founder-led AI-accelerated where safe |
+| 11 | Localization investment tier | ✅ **Default-approved** — core surfaces + RTL; priority-L1 human review; ES ships English-instruction |
+| 12 | Analytics/telemetry stack | ✅ **Default-approved** — first-party Postgres events; 90-day raw cost telemetry |
 
 ---
 
@@ -48,11 +50,10 @@ execution conditions on an approved scope, not open questions about the scope it
 volume discounts, no usage overages, no consumer plans, no freemium tiers, no alternate
 per-seat rates, no minimum deployment size (16 §10). Implementation, migration, training,
 customization, and other professional services may be priced separately as delivery costs —
-they are not alternatives to the license price. Small pilots are negotiated as fixed-fee
-engagements ($3,000–$7,500 typical), not discounted per-seat rates. Hold $60 flat through the
-first district wave; earn the right to charge more later via efficacy evidence — and even then,
-the plan is additional separately-priced capabilities layered on the $60 foundation, not a
-different per-seat rate (16 §10).
+they are not alternatives to the license price. **Pilot participants pay the same $60 annual
+license per activated student**; a separate pilot fee ($3,000–$7,500 typical) compensates only
+human-delivered professional services (setup, migration, training, evaluation design, support).
+**No future pricing model is authorized by this plan** (16 §10).
 *Unblocks: institutional billing build (Phase 6) can proceed against a fixed price.*
 
 **10. Roadmap direction — APPROVED (Option B; detail still open).**

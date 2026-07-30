@@ -171,7 +171,7 @@ Sized to **deliver the curriculum**, with pooling and safeguards preventing runa
 | Item | Included |
 | --- | --- |
 | **Voice conversation — total pool** | **1,000 minutes/student/year, pooled district-wide** |
-| ↳ guaranteed **native realtime S2S** floor | **400 minutes/student/year** (pooled) |
+| ↳ **native realtime S2S** protected sub-pool | **400 minutes per licensed seat contributed districtwide** — pooled capacity, not an individual entitlement |
 | ↳ remainder across cascade + drill routes | ~600 minutes/student/year |
 | Written AI interaction | Unlimited within fair use (soft cap 500 turns/student/mo) |
 | Pronunciation assessment | Unlimited within lesson flow (rides the pool) |
@@ -207,7 +207,7 @@ Modeled **separately** from the $60 license; never a disguised price change.
 | --- | --- | --- | --- |
 | Standard onboarding | Ordinary paid deployments | Included ($0) | $6.4k–32k |
 | **Implementation fee** | Where significant setup/training is required | **$2,500–$5,000 one-time** | ~$3.2k–5k |
-| **Premium SIS integration** | Optional | **Quoted per engagement** | varies |
+| **Custom SIS integration** | Optional | **Quoted per engagement** | varies |
 | **Extensive professional development** | Optional | **Quoted per engagement** ($1,500/day baseline) | ~$900/day |
 
 ## 9. Operational risks by deployment size
@@ -252,7 +252,7 @@ wave of deployments.
 | Volume discounts | **None.** Every institution pays the same $60/activated student, from a 40-student pilot to a 50,000-student district |
 | Usage overages | **None** — soft-degrade at pool exhaustion (§7), never a variable bill |
 | Consumer plans, freemium tiers, alternate seat rates | **None exist.** Institutional-only, one price |
-| Small pilot | Separately negotiated — typically $3,000–$7,500 total, structured as a fixed-fee pilot engagement, not a discounted per-seat rate |
+| Small pilot | **Pilot students pay the same $60 annual license per activated student.** A separate pilot fee ($3,000–$7,500 typical) may be charged only for human-delivered professional services — setup, migration, training, evaluation design, support — never as substituted or discounted product access |
 | Implementation / migration / training / customization | **Priced separately as professional services** ($2,500–$5,000 typical where significant setup or training is required) — not a license-price alternative |
 | SIS integration, extensive PD, custom reporting | Separate services, quoted per engagement |
 
@@ -262,14 +262,8 @@ intervention, embedded live AI conversation, teacher visibility, assessment inte
 pronunciation analysis, multilingual L1 scaffolding, and actionable progress data.** Every one of
 those is in this plan; none is a pricing argument — they are the product argument.
 
-**Earning the right to charge more — later, not now.** Move toward different pricing only after
-Palavox demonstrates one or more of: measurable proficiency growth · strong usage and completion ·
-teacher time saved · renewal demand · successful district-scale concurrency · formal curriculum
-validation · recognizable district references. Even then, the plan is **not** to introduce volume
-discounts or seat-rate variation — it is to keep $60 as a single foundational license and offer
-*additional, separately-priced capabilities* (advanced reporting, SIS integration, expanded
-conversation allowances) as professional services layered on top, per §7's "may be priced
-separately" principle. This is a future decision, not part of the current packaging.
+**Evidence goals for the first wave.** The first deployments exist to demonstrate: measurable proficiency growth · strong usage and completion · teacher time saved · renewal demand · successful district-scale concurrency · formal curriculum validation · recognizable district references. These are product-proof milestones. **No future pricing model is authorized by this plan**; the license is $60 per activated student per year, full stop.
+
 
 **Models considered and rejected:** volume-tiered per-seat pricing (this document's own earlier
 draft proposed $54/$48/$42 tiers at scale — struck; it is a second pricing model and the owner
@@ -277,8 +271,8 @@ has ruled it out); a $15,000/250-student minimum (struck for the same reason —
 first deals the plan should be winning); per-teacher/site licensing (misaligns with a per-student
 product, invites seat-sharing); metered/usage pricing (districts cannot budget variable AI spend,
 and it penalizes the speaking practice we want to encourage); per-school flat fee (punishes small
-schools, undercharges large ones); premium $99–$130 pricing now (unsupported by evidence and
-harmful to early procurement).
+schools, undercharges large ones); $99–$130 incumbent-level pricing (rejected — unsupported by
+evidence and harmful to procurement).
 
 ## 11. What must be validated
 

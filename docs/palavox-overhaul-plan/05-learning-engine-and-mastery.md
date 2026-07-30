@@ -216,7 +216,8 @@ Self-graded flashcard flips remain possible UX but are capped: a self-reported "
 ### 3.3 Queue construction
 
 ```
-function buildQueue(userId, ctx):                       // ctx: consumer | school_session
+function buildQueue(userId, ctx):        // ctx: independent_practice | classroom_session
+                                         // (both institutionally licensed and tenant-bound)
   caps = ctx==school ? {reviews:40, new:8}  : {reviews:60, new:10}   // [proposed]
   items = eligible(userId)                              // taught-set ∪ existing cards ∪ pinned
   pinned = items where pinned_until >= today, order by due asc

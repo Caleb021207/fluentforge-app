@@ -305,7 +305,7 @@ loop is the product [proposed].
 
 Default 20-min template [proposed]: 2 min warm-up review → 10–12 min conversation (mission or
 free talk with objectives) → 3–4 min focus practice (only if a loop is active) → 2 min review
-top-up → post-session digest (≤4 feedback items, per correction contract). Weekly guidance
+refresh → post-session digest (≤4 feedback items, per correction contract). Weekly guidance
 surfaced on the Today card: ≥3 conversations, ≥1 mission, daily review ≤5 min, 1 listening,
 1 writing. Guidance only — no streak mechanics gate anything (claims policy; consolidated XP
 economy is cosmetic here, 03 row 12).
@@ -392,17 +392,19 @@ generation ≈ $0.5–1.0/mo expected):
 | Expected | ≈**$3.3** | ≈**$2.5** | ≈2.5× |
 | Heavy | ≈$8.0 | ≈$5.8 | 6× — exceeds an $8 plan's entire revenue |
 
-Consequence: graduates are the **most expensive cohort per month**; the D3 district math
-(11 §4.5) is even tighter here. Post-course viability requires the same levers plus metering
-— consistent with 19 #5's "voice minutes are the metered premium unit."
+Consequence: graduates are the **most expensive cohort per active month**. Sustainability comes
+from the same routing levers plus the institution-wide pooled allowance (16 §7): graduates draw
+from the same district pool their seats fund, and non-engaging seats subsidize heavy speakers.
+Voice is never individually metered or billed — the pool degrades honestly at exhaustion.
 
 ### 5.2 Abuse / runaway-cost controls
 
 [proposed] All server-side (the current caps are illusory — 03 row 6, row 24):
 
-1. **Monthly voice pool by tier** (e.g., premium 240 min/mo, district allocation 20–30
-   min/student/mo per 11 §4.5 lever c); pool exhaustion → honest banner + text-mode
-   continuation (Pattern F floor) + top-up path (pricing = 19 #5).
+1. **Institution-wide pooled allowance** (1,000 voice min contributed per licensed seat per
+   year, incl. the 400-min/seat protected native-realtime sub-pool — 16 §7); pool exhaustion →
+   honest banner + text-mode continuation (Pattern F floor). Additional pool blocks may be
+   *granted* on district-admin request — logged, never invoiced (no paid top-ups, 19 #5).
 2. **Daily cap** (default 30 voice-min) and **session hard cap** 25 min with wind-down prompt
    at 20 — also a pedagogical stamina ceiling.
 3. **Idle auto-pause** at 45 s (the contract's auto_escalate field, 08 §9.3) — mic-open
@@ -477,5 +479,5 @@ Consequence: graduates are the **most expensive cohort per month**; the D3 distr
 runtime + machine-enforced contracts), 11 (Pattern D stack + benchmark gate; owner decision
 19 #2), 15 (SafetyContext, retention jobs; decisions 19 #6/#7), 13 (L1-localized explanations),
 wip-03a (Provenance, event taxonomy, provider-cost dashboard; decision 19 #12), 12 (evidence
-model + anti-requirement tests), 07/08 (instruments + §13e machinery), 19 #5 (pricing for
-pools/top-ups), 14 (teacher dashboard for §3.3).
+model + anti-requirement tests), 07/08 (instruments + §13e machinery), 19 #5 (flat license;
+pooled-allowance policy 16 §7), 14 (teacher dashboard for §3.3).

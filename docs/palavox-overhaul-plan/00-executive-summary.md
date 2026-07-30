@@ -34,8 +34,9 @@ no tenancy; LLM-minted "ACTFL" certificates.
   and a measured B1 ramp.
 - **Voice (11, 16):** Pattern-D hybrid on LiveKit (deterministic-first + cascade + reserved
   realtime + Azure Pronunciation Assessment), with **native realtime conversation funded and in
-  the product** — a protected 400-min/student/year floor for the moments that carry the learning.
-  Blended ~$0.013/min expected. Benchmark-gated migration; OpenAI path as control.
+  the product** — 400 min per licensed seat contributed to a protected districtwide realtime
+  pool that degrades last. Blended ~$0.013/min expected. Benchmark-gated migration; OpenAI path
+  as control.
 - **Trust & institutions (12/13/14/15):** tenancy with service-stamped school keys; verified
   teacher onboarding; enforced SafetyContext for minors; restored consent/audit/DSAR scaffolding;
   assessment-flow repair under preservation invariants; language-pair localization architecture
@@ -49,14 +50,17 @@ minutes** across the ESL course; delivering all of it costs **≈$29 per learner
 course** — against ~2.5 years of license (~$150), that is **80.8% gross margin on the most
 engaged learner Palavox will ever have.** Annual margins per activated student: **93.0%
 expected**, 86.3% heavy, 81.3% if every student were fully engaged. Allowance sized to the
-promise: **1,000 pooled voice minutes/student/year including a protected 400-minute native
-real-time floor** (76.3% margin even at 100% pool consumption). Deployment economics: 1,000
+promise: **each licensed seat contributes 1,000 voice minutes/year to the institution-wide
+pool, of which 400 min/seat fund a protected districtwide native-realtime sub-pool that
+degrades last** — pooled capacity, not an individual balance (76.3% margin even at 100% pool
+consumption). Deployment economics: 1,000
 students = $60k ARR → $54k gross profit (90.0%); 10,000 = $600k → $545k (90.9%). Fixed opex
 $110–230k/yr breaks even ≈2,000–4,300 activated students. Fully-validated district-production
 build ~$600–900k (Option B) plus ~9,000 content person-hours; founder time tracked separately
 (~3,500–5,000 h), never as cash — and a founder-led, AI-accelerated pilot-ready build can move
-well below that on the parts AI actually compresses (17 §0). Deal structure: no minimum, pilots
-negotiated as fixed fees ($3–7.5k), implementation priced separately ($2.5–5k), no overages.
+well below that on the parts AI actually compresses (17 §0). Deal structure: no minimum; pilot students pay the same $60
+license (separate pilot fees compensate human-delivered services only, $3–7.5k typical);
+implementation priced separately ($2.5–5k); no overages, no top-ups.
 
 ## Decision
 

@@ -637,7 +637,7 @@ Derived from 11 §4.1 route unit costs (active hosting; "optimized" ≈ ×0.6) �
 | Out-of-course native real-time free talk | A (S2S mini) | 10 min | $0.28–0.35 | $0.45 | 11 §4.1 A-route |
 | Graduation conversation + scoring | B + judges | ~15 min | $0.30–0.50 | $0.75 | 07 §10.4 |
 
-Course-shape sanity check [estimated]: a median ESL learner's interaction minutes (≈19 h guided speaking + 13 h open/missions + 5.3 h written interaction, 07 §7.2) at the blended rates above ≈ **$28–55 total AI-interaction COGS per learner per course** (active), ≈$17–33 optimized — against a $60/student/year institutional license this is comfortable at every usage level (16 §3), and it fits inside the pooled 400-min allowance with its protected 90-min native-realtime floor (16 §7).
+Course-shape sanity check [estimated]: a median ESL learner's interaction minutes (≈19 h guided speaking + 13 h open/missions + 5.3 h written interaction, 07 §7.2) at the blended rates above ≈ **$28–55 total AI-interaction COGS per learner per course** (active), ≈$17–33 optimized — against a $60/student/year institutional license this is comfortable at every usage level (16 §3), and it fits inside the institution-wide pooled allowance (each licensed seat contributes 1,000 voice min/yr, of which 400 min/seat fund a protected districtwide native-realtime sub-pool that degrades last — pooled capacity, not an individual balance; 16 §7).
 
 ---
 
