@@ -5,6 +5,48 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLocalization } from "@/context/LocalizationContext";
 import { handleConnectionError } from "@/utils/authErrorHandler";
 
+/**
+ * Turn raw Supabase auth errors into guidance a learner can act on.
+ * Returns the message plus, where relevant, which mode we should switch to.
+ */
+const describeAuthError = (
+  raw: string,
+  isLogin: boolean,
+): { message: string; switchToLogin?: boolean } => {
+  const m = raw.toLowerCase();
+
+  if (m.includes("invalid login credentials")) {
+    return {
+      message:
+        "That email and password don't match. Check your password, or use “Forgot password?” below to reset it.",
+    };
+  }
+  if (m.includes("user already registered") || m.includes("already been registered")) {
+    return {
+      message:
+        "You already have an account with this email. Switching you to Sign in — enter your password, or reset it below.",
+      switchToLogin: true,
+    };
+  }
+  if (m.includes("email not confirmed")) {
+    return { message: "Please confirm your email first. Check your inbox for the link." };
+  }
+  if (m.includes("password should be at least")) {
+    return { message: "Your password is too short. Use at least 6 characters." };
+  }
+  if (m.includes("unable to validate email") || m.includes("invalid email")) {
+    return { message: "That email address doesn't look right. Please check it." };
+  }
+  if (m.includes("rate limit") || m.includes("too many")) {
+    return { message: "Too many attempts. Please wait a moment and try again." };
+  }
+  if (m.includes("signups not allowed")) {
+    return { message: "New sign-ups are turned off. Ask your teacher for an account." };
+  }
+
+  return { message: raw || (isLogin ? "Could not sign in." : "Could not create your account.") };
+};
+
 export const useAuthFlow = (onAuthSuccess?: () => void) => {
   const { toast } = useToast();
   const { t } = useLocalization();
@@ -90,12 +132,17 @@ export const useAuthFlow = (onAuthSuccess?: () => void) => {
 
       if (result.error) {
         // Check if it's a network error and handle retry
-        if (result.error.message.includes("Failed to fetch") || 
+        if (result.error.message.includes("Failed to fetch") ||
             result.error.message.includes("NetworkError")) {
           setRetryCount(prev => prev + 1);
           setAuthError("Connection issue. Please check your network and try again.");
         } else {
-          setAuthError(result.error.message);
+          const { message, switchToLogin } = describeAuthError(result.error.message, isLogin);
+          setAuthError(message);
+          // Trying to sign up with an existing email is the most common dead
+          // end — put the user on the sign-in form instead of leaving them
+          // stuck on a rejected sign-up.
+          if (switchToLogin) setIsLogin(true);
         }
         throw result.error;
       }

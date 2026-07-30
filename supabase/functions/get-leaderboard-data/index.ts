@@ -93,8 +93,8 @@ serve(async (req) => {
         .select('user_id')
         .eq('school_id', profile.school_id);
 
-      userIds = schoolProfiles?.map(p => p.user_id) || [];
-      console.log('School scope - found user IDs:', userIds);
+      // De-duplicate: a learner must appear on the board exactly once.
+      userIds = [...new Set(schoolProfiles?.map(p => p.user_id) || [])];
     } else if (scope === 'class') {
       // Get classes where user is the teacher
       const { data: teacherClasses } = await supabase
@@ -129,8 +129,11 @@ serve(async (req) => {
 
         console.log('Class enrollments query result:', { data: classEnrollments, error: enrollError });
 
-        userIds = classEnrollments?.map(e => e.student_id) || [];
-        
+        // De-duplicate: a student enrolled in more than one of the teacher's
+        // classes would otherwise be returned once per enrollment, producing
+        // duplicate leaderboard rows (and duplicate React keys).
+        userIds = [...new Set(classEnrollments?.map(e => e.student_id) || [])];
+
         // Always include the current user
         if (!userIds.includes(user.id)) {
           userIds.push(user.id);
