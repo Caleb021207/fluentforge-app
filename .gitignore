@@ -12,6 +12,17 @@ dist
 dist-ssr
 *.local
 
+# Environment variables (never commit real secrets; use .env.example as the template)
+.env
+.env.*
+!.env.example
+
+# Alternate package-manager lockfiles (this project standardizes on npm)
+bun.lock
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
