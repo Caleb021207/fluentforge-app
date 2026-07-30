@@ -2,6 +2,12 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { buildCorsHeaders } from "../_shared/cors.ts";
 import { guardPaidRequest } from "../_shared/authGuard.ts";
+import {
+  buildSafetyPolicyBlock,
+  crisisResourceMessage,
+  resolveSafetyContext,
+  shouldEscalate,
+} from "../_shared/safetyContext.ts";
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
@@ -42,6 +48,25 @@ serve(async (req) => {
       userId = user?.id || null;
     }
 
+    // SafetyContext (plan 15 §3.1): resolve fail-closed from the id VERIFIED
+    // by guardPaidRequest — never a client-supplied id. No resolvable
+    // profile → null → strict.
+    const safetyAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      { auth: { persistSession: false } }
+    );
+    let safetyProfile = null;
+    if (gate.userId) {
+      const { data } = await safetyAdmin
+        .from('profiles')
+        .select('is_minor, safety_mode, age_verified_at')
+        .eq('id', gate.userId)
+        .maybeSingle();
+      safetyProfile = data ?? null;
+    }
+    const safetyCtx = resolveSafetyContext(safetyProfile);
+
     const levelMap: Record<string, string> = { 'basic': 'A1', 'intermediate': 'B1', 'advanced': 'C1' };
     const level = proficiencyLevel || 'intermediate';
     const effectiveCefrLevel = cefrLevel?.toUpperCase().split('/')[0].replace('+', '') || levelMap[level] || 'B1';
@@ -74,7 +99,22 @@ serve(async (req) => {
     };
     const currentLevel = CEFR_BEHAVIOR[effectiveCefrLevel] || CEFR_BEHAVIOR['B1'];
 
-    const systemPrompt = `You are an encouraging ${targetLanguage || 'English'} language tutor at CEFR ${effectiveCefrLevel} level.\n\n${currentLevel.approach}\n\nUse ~${currentLevel.englishPercent}% ${targetLanguage} and ~${currentLevel.nativePercent}% ${userInterfaceLanguage || userLanguage}.\n\nKeep responses 2-3 sentences. Use the speak_bilingual function with segments.`;
+    const systemPrompt = `${buildSafetyPolicyBlock(safetyCtx)}\n\nYou are an encouraging ${targetLanguage || 'English'} language tutor at CEFR ${effectiveCefrLevel} level.\n\n${currentLevel.approach}\n\nUse ~${currentLevel.englishPercent}% ${targetLanguage} and ~${currentLevel.nativePercent}% ${userInterfaceLanguage || userLanguage}.\n\nKeep responses 2-3 sentences. Use the speak_bilingual function with segments.`;
+
+    let segments: Array<{ lang: string; text: string }>;
+
+    // Crisis screen on the learner's transcript (plan 15 §3.4): silent
+    // blocking is forbidden — the crisis resource message replaces the tutor
+    // turn and still flows through TTS below so the voice UX surfaces it.
+    // Log category + timestamp + user id only, never the verbatim transcript
+    // (crisis runbook).
+    const crisis = shouldEscalate(userTranscript);
+    if (crisis.escalate) {
+      console.warn(
+        `safety_event: category=${crisis.category} user=${gate.userId ?? 'unknown'} at=${new Date().toISOString()}`
+      );
+      segments = [{ lang: 'en', text: crisisResourceMessage(crisis.category) }];
+    } else {
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -121,7 +161,6 @@ serve(async (req) => {
     if (!gptResponse.ok) throw new Error(`AI generation failed: ${gptResponse.status}`);
 
     const gptData = await gptResponse.json();
-    let segments: Array<{ lang: string; text: string }>;
 
     const toolCall = gptData.choices[0].message.tool_calls?.[0];
     if (toolCall?.function?.name === 'speak_bilingual') {
@@ -130,6 +169,8 @@ serve(async (req) => {
       const textResponse = gptData.choices[0].message.content || '';
       segments = [{ lang: 'en', text: textResponse }];
     }
+
+    } // end crisis-screen else
 
     const processedSegments = segments.map(s => ({ lang: normalizeLanguage(s.lang), text: s.text.trim() }));
     const aiResponse = processedSegments.map(s => s.text).join(' ');

@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { buildCorsHeaders } from "../_shared/cors.ts";
 import { guardPaidRequest } from "../_shared/authGuard.ts";
+import { buildSafetyPolicyBlock, resolveSafetyContext } from "../_shared/safetyContext.ts";
 
 
 serve(async (req) => {
@@ -48,6 +49,17 @@ serve(async (req) => {
       );
     }
 
+    // SafetyContext (plan 15 §3.1–3.2): resolve fail-closed from the
+    // VERIFIED user id. For realtime voice the policy must ride the session
+    // instructions at token-mint time — post-hoc output filtering of live
+    // audio is impossible (15 §3.3 option D), so this is the control point.
+    const { data: safetyProfile } = await supabase
+      .from('profiles')
+      .select('is_minor, safety_mode, age_verified_at')
+      .eq('id', user.id)
+      .maybeSingle();
+    const safetyCtx = resolveSafetyContext(safetyProfile ?? null);
+
     // Get request body for proficiency info
     const requestBody = await req.json().catch(() => ({}));
     const { cefrLevel, userLanguage, targetLanguage } = requestBody;
@@ -80,7 +92,9 @@ serve(async (req) => {
       languageGuidance = `Use ${targetLang} almost exclusively. Only use ${nativeLang} if absolutely critical for comprehension.`;
     }
     
-    const adaptiveInstructions = `You are an encouraging ${targetLang} language tutor at CEFR ${effectiveLevel} level.
+    const adaptiveInstructions = `${buildSafetyPolicyBlock(safetyCtx)}
+
+You are an encouraging ${targetLang} language tutor at CEFR ${effectiveLevel} level.
 
 LANGUAGE SUPPORT:
 ${languageGuidance}

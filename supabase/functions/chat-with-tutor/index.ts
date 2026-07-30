@@ -7,6 +7,12 @@ import { getLanguageDisplayName, determineLanguagePair, getUserNativeLanguage } 
 import { buildCorsHeaders } from "../_shared/cors.ts";
 import { guardPaidRequest } from "../_shared/authGuard.ts";
 import { getCurriculumSnapshot, renderCurriculumBlock } from "../_shared/curriculumContext.ts";
+import {
+  buildSafetyPolicyBlock,
+  crisisResourceMessage,
+  resolveSafetyContext,
+  shouldEscalate,
+} from "../_shared/safetyContext.ts";
 
 const LOVABLE_AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -98,6 +104,24 @@ serve(async (req) => {
     }
 
     console.log(`Authenticated request from user: ${user.id}`);
+
+    // SafetyContext (plan 15 §3.1): resolve fail-closed from the VERIFIED
+    // user id — never from client-supplied ids. A missing row or failed read
+    // yields null → strict.
+    const safetyAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      { auth: { persistSession: false } }
+    );
+    const { data: safetyProfile } = await safetyAdmin
+      .from('profiles')
+      .select('is_minor, safety_mode, age_verified_at')
+      .eq('id', user.id)
+      .maybeSingle();
+    const safetyCtx = resolveSafetyContext(safetyProfile ?? null);
+    // Injected server-side ahead of every system prompt so the client cannot
+    // strip it (plan 15 §3.2).
+    const safetyBlock = buildSafetyPolicyBlock(safetyCtx);
 
     const requestData = await req.json();
     const { 
@@ -259,7 +283,9 @@ serve(async (req) => {
       
       const isBeginnerLevel = ['A1', 'A2'].includes(effectiveCefrLevel);
       
-      const openingPrompt = `You are a friendly ${targetLangDisplay} language tutor starting a conversation at CEFR ${effectiveCefrLevel} level.
+      const openingPrompt = `${safetyBlock}
+
+You are a friendly ${targetLangDisplay} language tutor starting a conversation at CEFR ${effectiveCefrLevel} level.
 
 ASSIGNMENT TOPIC: "${assignmentTopic}"
 
@@ -303,6 +329,33 @@ ${isBeginnerLevel ? `Since ${effectiveCefrLevel} level: Use very simple, short s
 
     // Main conversation handling
     const input = trimmedMessage;
+
+    // Crisis screen (plan 15 §3.4): runs BEFORE the generic blocklist so a
+    // cry for help is never silently swallowed by the content filter —
+    // silent blocking of crisis signals is forbidden; we must surface the
+    // support message. Log category + timestamp + user id only, never the
+    // learner's verbatim text (crisis runbook).
+    const crisis = shouldEscalate(input);
+    if (crisis.escalate) {
+      console.warn(
+        `safety_event: category=${crisis.category} user=${user.id} at=${new Date().toISOString()}`
+      );
+      const crisisContent = crisisResourceMessage(crisis.category);
+      return new Response(
+        JSON.stringify({
+          content: crisisContent,
+          translation: "",
+          updatedHistory: [
+            ...limitedHistory,
+            { role: "user", content: input },
+            { role: "assistant", content: crisisContent },
+          ].slice(-MAX_HISTORY_LENGTH),
+          usingFallbackModel: false,
+          safetyEscalation: true,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const { filtered, reason } = await filterProhibitedContent(input);
     if (filtered) {
@@ -356,7 +409,9 @@ ${isBeginnerLevel ? `Since ${effectiveCefrLevel} level: Use very simple, short s
       nativeLanguageGuidance = `Use ${targetLangDisplay} almost exclusively (${targetPercent}%+). NEVER include inline translations.`;
     }
     
-    let systemMessage = `You are a patient and encouraging AI language tutor helping users practice ${targetLangDisplay}.
+    let systemMessage = `${safetyBlock}
+
+You are a patient and encouraging AI language tutor helping users practice ${targetLangDisplay}.
 The user's native language is ${userLangDisplay}.
 The user is at CEFR ${currentLevel.cefr} level.
 
