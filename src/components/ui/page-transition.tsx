@@ -1,6 +1,6 @@
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface PageTransitionProps {
@@ -8,7 +8,7 @@ interface PageTransitionProps {
   className?: string;
 }
 
-const variants = {
+const variants: Variants = {
   hidden: {
     opacity: 0,
     y: 20,

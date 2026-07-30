@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, PanInfo } from 'framer-motion';
+import { motion, type PanInfo, type Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface SwipeUpPanelProps {
@@ -24,7 +24,7 @@ export const SwipeUpPanel = ({ children, isOpen, onOpenChange, className }: Swip
     }
   };
 
-  const variants = {
+  const variants: Variants = {
     closed: {
       y: '85%',
       transition: {
