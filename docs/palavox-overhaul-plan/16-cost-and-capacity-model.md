@@ -1,255 +1,272 @@
 # 16 · Cost and Capacity Model
 
-**Institutional-only product. Fixed license price: $60 per student per year.**
+**Institutional-only product. List price: $60 per student per year.**
 
-Owner decisions now binding on this document:
+Binding owner decisions reflected throughout:
 
-1. Palavox is sold **only** to institutions (districts and schools). There is no consumer
-   product, no consumer pricing, and no consumer go-to-market in this plan.
-2. The institutional price is **$60/student/year — fixed**. This document contains no pricing
-   alternatives, no sensitivity on price, and no proposals to change it. Where economics are
-   tight, the levers are engineering and operational, never price.
-3. Light / expected / heavy are **usage** scenarios used to test whether $60 holds. They are
-   not pricing scenarios.
+1. Palavox is sold **only** to institutions. No consumer product, pricing, or go-to-market.
+2. The institutional list price is **$60/student/year**. This document models no alternative
+   prices. Where economics are tight, the levers are engineering and operational — never price.
+3. **The product must deliver the full conversational promise at $60.** Allowances are sized to
+   the curriculum's actual speaking requirement, not the reverse.
+4. Light / expected / heavy are **usage** scenarios used to test whether $60 holds. They are not
+   pricing scenarios.
 
-Unit prices are [documented] as of 2026-07-30 (11b/11c/11d); everything derived is [estimated]
-with assumptions stated. Reconcile monthly against provider invoices.
+Unit prices [documented] as of 2026-07-30 (11b/11c/11d); derived figures [estimated] with
+assumptions stated. Reconcile monthly against provider invoices.
+
+> **Correction from the prior revision.** An earlier draft of this document paired a 400-minute
+> annual voice allowance with a curriculum that specifies **1,920 live speaking minutes across
+> the ESL course** (07 §7.2: 1,140 guided + 780 open; Spanish 08 §7: 931 + 620 = 1,551). Those
+> were irreconcilable, and the headline "95.5% margin" described *average district utilization*,
+> not a fully-engaged learner completing the whole course. Both are corrected below: allowances
+> now cover the curriculum, and margins are stated separately for district-average, fully-engaged
+> annual, and whole-course-lifetime cases.
 
 ---
 
-## 1. Definitions (used consistently below)
+## 1. Definitions
 
 | Term | Meaning here |
 | --- | --- |
-| **Revenue** | $60 × enrolled students × 1 year (recurring license) |
-| **COGS** | Usage-driven cost to serve: AI/voice (STT, TTS, LLM, PA, realtime), agent hosting, database/hosting attributable to serving, moderation, assessment processing |
+| **Revenue** | $60 × enrolled students × year (recurring license) |
+| **COGS** | Cost to serve: AI/voice (STT, TTS, LLM, realtime, pronunciation assessment), agent hosting, serving infrastructure, moderation, assessment processing |
 | **Gross profit / margin** | Revenue − COGS |
-| **Contribution margin** | Gross profit − *direct* customer costs: support, onboarding/implementation delivery, customer-specific success time |
-| **Implementation expense** | One-time per-customer delivery cost (rostering, training, config) — modeled separately; may be recovered by a separate professional-services fee that does **not** alter the $60 license |
-| **Fixed opex** | Monitoring, base infra, security/compliance tooling, curriculum maintenance — does not scale per student |
-| **One-time development** | The build itself (roadmap 17) — capital, not COGS |
+| **Contribution margin** | Gross profit − direct customer costs (support, implementation delivery, allocated content maintenance) |
+| **Implementation expense** | One-time per-customer delivery; may be recovered by a separate fee that never alters the $60 license |
+| **Fixed opex** | Monitoring, base infra, security tooling, curriculum maintenance — does not scale per student |
+| **One-time development** | The build (roadmap 17) — capital, not COGS |
 | **Founder time** | Tracked in hours, **never counted as cash expenditure** |
 
-## 2. Usage scenarios (not pricing scenarios)
+## 2. What the curriculum actually requires
 
-Per enrolled student per month during the ~9-month school year. Enrolled ≠ active: institutional
-deployments reliably carry non-activation.
+The speaking requirement is a curriculum fact, not a budget choice:
 
-| Scenario | Active share of enrolled | Voice min / active / mo | Written AI turns / active / mo |
-| --- | --- | --- | --- |
-| **Light** | 45% | 15 | 60 |
-| **Expected** | 65% | 30 | 120 |
-| **Heavy** | 85% | 60 | 240 |
+| | ESL (07 §7.2) | Spanish (08 §7) |
+| --- | ---: | ---: |
+| Guided speaking (roleplays, guided Q&A, info-gaps, scaffolded missions) | 1,140 min | 931 min |
+| Open conversation + missions + free talk | 780 min | 620 min |
+| **Total live speaking across the whole course** | **1,920 min (32.0 h)** | **1,551 min (25.9 h)** |
 
-**Voice minutes are the cost driver.** The pedagogy requires meaningful speaking practice; the
-expected case (30 min/active/mo ≈ 270 min across a school year, plus in-lesson micro-exchanges)
-is the *floor* consistent with the A2 conversational promise. Margin is never protected by
-cutting below this.
+**Course duration.** The full course is ~117 h (ESL) of active engagement. At typical district
+ELL supplemental pacing (3 × 30 min/week × ~34 instructional weeks ≈ 51 h/year), a learner
+completes it in **~2–3 school years**; intensive newcomer programs (5 × 30 min/week) finish in
+~1.5 years [estimated — validate against real pilot pacing].
 
-### Blended cost per voice minute (from 11 §4)
+**On-pace annual speaking need:** 1,920 min ÷ 2.5 years ≈ **770 min/student/year**; an intensive
+1.5-year learner needs ~1,280 min/year.
 
-| Route | What runs on it | $/min |
-| --- | --- | --- |
-| Deterministic drills + cached TTS | scripted practice, minimal pairs, dictation | **$0.005–0.008** |
-| Cascade (STT → small LLM → Azure TTS) | guided conversation, most missions | **$0.011–0.016** |
-| **Native realtime S2S** (`gpt-realtime`-mini) | **open conversation, graduation, milestone missions** | **$0.018–0.025** |
-| Pronunciation assessment add-on (Azure PA) | phoneme scoring on assessed turns | +$0.0217/assessed-min |
-| **Expected institutional blend** (incl. the realtime share below) | | **$0.013** |
+**Not all speaking minutes cost the same.** Derived from the curriculum's own activity mix:
 
-**Realtime is in the product, funded, by design.** The owner requires genuine dynamic realtime
-conversation, and the economics at $60 comfortably support it (§7). Realtime is *targeted* rather
-than universal — used where unpredictability and latency actually change the learning (open
-conversation, checkpoint/graduation talks, milestone missions) — while scripted drilling runs on
-cheaper routes. That is a pedagogical allocation that happens to be efficient, not a cost cut.
+| Route | Share of course speaking | $/min | What runs here |
+| --- | ---: | ---: | --- |
+| Drill / read-aloud / scripted (cached TTS + STT + Azure PA bursts) | ~24% | $0.006 | minimal pairs, read-aloud, dictation, scripted dialogue |
+| Cascade (STT → small LLM → Azure TTS) | ~35% | $0.013 | guided conversation, most roleplays and missions |
+| **Native realtime S2S** | ~41% | $0.020 | **open conversation, missions at open tier, checkpoint & graduation talks** |
 
-Written AI turns ≈ $0.0004/turn [estimated]; moderation for minors ≈ $0.02/active/mo;
-assessment processing ≈ $0.02/upload, ~1–2 uploads/student/yr.
+Native realtime is the largest single share by design — the curriculum's late-A2 bands call for
+25–35% open conversation, and that is exactly where realtime earns its cost. **Realtime is
+funded, not rationed.**
 
-## 3. Per-student annual COGS at $60
+## 3. Cost to serve — three honest cases
 
-Annualized (9 active months), expected routing at $0.013/min unless noted:
+### 3a. Whole-course lifetime (a learner who completes everything)
 
-| Scenario | Voice | Written AI | Moderation | Assessment | **COGS/student/yr** | **Gross margin** |
-| --- | --- | --- | --- | --- | --- | --- |
-| **Light** | $0.79 | $0.10 | $0.08 | $0.03 | **≈ $1.00** | **98.3%** |
-| **Expected** | $2.28 | $0.28 | $0.12 | $0.04 | **≈ $2.72** | **95.5%** |
-| **Heavy** | $5.96 | $0.73 | $0.15 | $0.04 | **≈ $6.88** | **88.5%** |
-| **Heavy + routing drift ($0.022/min)** | $10.10 | $0.73 | $0.15 | $0.04 | **≈ $11.02** | **81.6%** |
+| Route | Minutes | Cost |
+| --- | ---: | ---: |
+| Drill / scripted | 456 | $2.74 |
+| Cascade guided | 684 | $8.89 |
+| Native realtime | 780 | $15.60 |
+| **Live speaking subtotal** | **1,920** | **$27.23** |
+| Written AI, moderation, assessment processing (course lifetime) | — | ~$1.60 |
+| **Total AI COGS, entire course** | | **≈ $28.83** |
 
-**Verdict: $60/student/year is comfortably sustainable across all usage scenarios**, including
-heavy usage with unoptimized routing. Even the worst modeled case clears an 80% gross margin
-before hosting/support. This is the decisive finding of the repricing: the earlier tension
-(modeled at a far lower assumed institutional price) disappears entirely at $60, and the
-engineering levers in §7 become margin *protection* rather than survival requirements.
+Against ~2.5 years of license at $60 = **$150 revenue → 80.8% gross margin on the most engaged
+learner Palavox will ever have.** This is the number that proves the promise is affordable.
+
+### 3b. Per year, by usage scenario (per *enrolled* student)
+
+Assumes 65% activation (expected); the average active learner uses ~55–60% of on-pace speaking
+minutes because pacing varies and not every activity is voice.
+
+| Scenario | Voice min / enrolled / yr | Voice | Written AI + moderation + assessment | **COGS/student/yr** | **Gross margin** |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| **Light** | 145 | $1.96 | $0.21 | **≈ $2.17** | **96.4%** |
+| **Expected** | 280 | $3.78 | $0.44 | **≈ $4.22** | **93.0%** |
+| **Heavy** | 560 | $7.56 | $0.68 | **≈ $8.24** | **86.3%** |
+| **Fully-engaged individual** (on-pace, 770 min, no pooling relief) | 770 | $10.40 | $0.80 | **≈ $11.20** | **81.3%** |
+
+**$60 sustains the full conversational promise at every level of engagement.** Even the
+theoretical case where *every enrolled student* is fully engaged returns >81%.
 
 ## 4. Economics by deployment size
 
-Assumptions: expected usage; 9-month year; classroom concurrency = 4% of enrolled at peak
-(one class period speaking simultaneously per ~25 students, staggered across a bell schedule)
-[estimated]; support 1 ticket/40 students/yr at $28 loaded/ticket; onboarding delivered once
-per customer in year 1.
+Expected usage; 9-month year; peak synchronized concurrency ≈ 4% of enrolled [estimated];
+support 1 ticket/40 students/yr at $28 loaded; implementation delivered once in year 1.
 
-| Enrolled | ARR | Active | Peak sync. concurrency | AI+voice COGS | DB/hosting | Monitoring/infra | Support | **COGS total** | **Gross profit** | **GM** |
+| Enrolled | ARR | Active | Peak concurrency | AI + voice | DB/hosting | Monitoring | Support | **COGS** | **Gross profit** | **GM** |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 100 | $6,000 | 65 | 4 | $177 | $180 | $120 | $70 | **$547** | **$5,453** | **90.9%** |
-| 500 | $30,000 | 325 | 20 | $884 | $420 | $240 | $350 | **$1,894** | **$28,106** | **93.7%** |
-| 1,000 | $60,000 | 650 | 40 | $1,768 | $720 | $360 | $700 | **$3,548** | **$56,452** | **94.1%** |
-| 5,000 | $300,000 | 3,250 | 200 | $8,840 | $2,400 | $900 | $3,500 | **$15,640** | **$284,360** | **94.8%** |
-| 10,000 | $600,000 | 6,500 | 400 | $17,680 | $4,200 | $1,500 | $7,000 | **$30,380** | **$569,620** | **94.9%** |
-| 25,000 | $1,500,000 | 16,250 | 650¹ | $44,200 | $9,000 | $3,000 | $17,500 | **$73,700** | **$1,426,300** | **95.1%** |
-| 50,000 | $3,000,000 | 32,500 | 1,100¹ | $88,400 | $16,000 | $5,400 | $35,000 | **$144,800** | **$2,855,200** | **95.2%** |
+| 100 | $6,000 | 65 | 4 | $422 | $180 | $120 | $70 | **$792** | **$5,208** | **86.8%** |
+| 500 | $30,000 | 325 | 20 | $2,110 | $420 | $240 | $350 | **$3,120** | **$26,880** | **89.6%** |
+| 1,000 | $60,000 | 650 | 40 | $4,220 | $720 | $360 | $700 | **$6,000** | **$54,000** | **90.0%** |
+| 5,000 | $300,000 | 3,250 | 200 | $21,100 | $2,400 | $900 | $3,500 | **$27,900** | **$272,100** | **90.7%** |
+| 10,000 | $600,000 | 6,500 | 400 | $42,200 | $4,200 | $1,500 | $7,000 | **$54,900** | **$545,100** | **90.9%** |
+| 25,000 | $1,500,000 | 16,250 | 650¹ | $105,500 | $9,000 | $3,000 | $17,500 | **$135,000** | **$1,365,000** | **91.0%** |
+| 50,000 | $3,000,000 | 32,500 | 1,100¹ | $211,000 | $16,000 | $5,400 | $35,000 | **$267,400** | **$2,732,600** | **91.1%** |
 
-¹ Concurrency growth sublinear above ~10k enrolled: larger deployments span more time zones and
-bell schedules [assumption — validate at first 5k+ deployment].
+¹ Concurrency grows sublinearly above ~10k enrolled (more time zones and bell schedules)
+[assumption — validate at first 5k+ deployment].
 
-### Contribution margin (year 1, after direct customer costs)
+### Contribution margin
 
-Implementation is delivered once per customer; it is an expense, not a price change.
-
-| Enrolled | Gross profit | Onboarding/implementation (yr 1) | Content maintenance share² | **Contribution (yr 1)** | **CM %** | Year 2+ CM % |
+| Enrolled | Gross profit | Implementation (yr 1) | Content maintenance share | **Yr-1 contribution** | **CM %** | **Yr 2+ CM %** |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 100 | $5,453 | $3,200 | $600 | **$1,653** | 27.6% | 80.9% |
-| 500 | $28,106 | $6,400 | $3,000 | **$18,706** | 62.4% | 83.7% |
-| 1,000 | $56,452 | $9,600 | $6,000 | **$40,852** | 68.1% | 84.1% |
-| 5,000 | $284,360 | $22,400 | $18,000 | **$243,960** | 81.3% | 88.8% |
-| 10,000 | $569,620 | $32,000 | $30,000 | **$507,620** | 84.6% | 89.9% |
-| 25,000 | $1,426,300 | $56,000 | $60,000 | **$1,310,300** | 87.4% | 91.1% |
-| 50,000 | $2,855,200 | $88,000 | $90,000 | **$2,677,200** | 89.2% | 92.2% |
+| 100 | $5,208 | $3,200 | $600 | **$1,408** | 23.5% | 76.8% |
+| 500 | $26,880 | $6,400 | $3,000 | **$17,480** | 58.3% | 79.6% |
+| 1,000 | $54,000 | $9,600 | $6,000 | **$38,400** | 64.0% | 80.0% |
+| 5,000 | $272,100 | $22,400 | $18,000 | **$231,700** | 77.2% | 84.7% |
+| 10,000 | $545,100 | $32,000 | $30,000 | **$483,100** | 80.5% | 85.9% |
+| 25,000 | $1,365,000 | $56,000 | $60,000 | **$1,249,000** | 83.3% | 87.0% |
+| 50,000 | $3,000,000 → $2,732,600 GP | $88,000 | $90,000 | **$2,554,600** | 85.2% | 88.1% |
 
-² Curriculum maintenance allocated per deployment; the absolute maintenance budget is a fixed
-opex line (§5), shown here allocated for contribution analysis.
+**Sub-500 deployments are thin in year one** — implementation dominates. Fixed with deal
+structure (§10), never with the license price.
 
-**The small-deployment finding:** at 100 students ($6,000 ARR), year-1 contribution is thin —
-implementation cost dominates. This argues for a **minimum deployment size (~500 students) or a
-separate implementation fee for sub-500 deployments** (§8), not for changing the $60 license.
-
-## 5. Fixed operating expenses (not per-student)
+## 5. Fixed operating expenses
 
 | Line | Annual [estimated] |
 | --- | --- |
-| Base infrastructure (Supabase tier, agent-host reserved capacity, CDN, storage) | $18k–36k |
-| Monitoring/observability/error telemetry | $6k–12k |
+| Base infrastructure (Supabase, reserved agent-host capacity, CDN, storage) | $18k–36k |
+| Monitoring / observability / error telemetry | $6k–12k |
 | Security & compliance tooling (scanning, audit, pen-test cadence) | $15k–40k |
 | Curriculum maintenance & content ops (both directions, steady state) | $60k–110k |
-| Provider minimums/commitments (committed-use TTS/STT discounts) | $12k–30k |
-| **Total fixed opex** | **≈ $110k–230k/yr** |
+| Provider commitments (committed-use TTS/STT discounts) | $12k–30k |
+| **Total** | **≈ $110k–230k/yr** |
 
-**Fixed-opex break-even ≈ 2,000–4,100 enrolled students** ($120k–246k ARR) at expected usage —
-before any salaried engineering or founder compensation.
+**Break-even ≈ 2,000–4,300 enrolled students** ($120k–258k ARR) at expected usage, before
+salaried engineering or founder compensation.
 
-## 6. One-time development (capital, not COGS)
+## 6. One-time development and founder time
 
-Roadmap Option B: ~$600–900k (engineering + ~9,000 content person-hours) — see 17 §3.
-Excluded from all margin math above.
+Roadmap Option B: ~$600–900k (engineering + ~9,000 content person-hours) — 17 §3. Capital, not
+COGS. **Founder time** [estimated] 25–35 h/week through Phases 0–4 (~3,500–5,000 hours) on
+architecture, curriculum direction, pilot relationships, and district sales — tracked as hours,
+never as cash expenditure.
 
-**Founder time (tracked, never cash):** [estimated] 25–35 h/week through Phases 0–4 on
-architecture, curriculum direction, pilot relationships, and district sales — ~3,500–5,000 hours
-across the build. Recorded here so the plan never disguises founder labor as zero cost.
+## 7. AI allowances, pooling, and safeguards
 
-## 7. AI allowances, pooling, and safeguards (the recommended policy)
+Sized to **deliver the curriculum**, with pooling and safeguards preventing runaway usage.
 
-Because $60 clears the cost easily, allowances exist to prevent *runaway* usage and abuse — not
-to ration learning.
-
-**Recommended included allowance (per enrolled student, per school year):**
+**Included allowance, per enrolled student per school year:**
 
 | Item | Included |
 | --- | --- |
-| **Voice conversation — total pool** | **400 minutes/student/year, pooled district-wide** |
-| ↳ of which **native realtime S2S** | **90 minutes/student/year** (guaranteed floor, pooled) |
-| ↳ remainder on cascade/guided + drill routes | ~310 minutes/student/year |
+| **Voice conversation — total pool** | **1,000 minutes/student/year, pooled district-wide** |
+| ↳ guaranteed **native realtime S2S** floor | **400 minutes/student/year** (pooled) |
+| ↳ remainder across cascade + drill routes | ~600 minutes/student/year |
 | Written AI interaction | Unlimited within fair use (soft cap 500 turns/student/mo) |
-| Pronunciation assessments | Unlimited within lesson flow (rides the voice pool) |
+| Pronunciation assessment | Unlimited within lesson flow (rides the pool) |
 | Uploaded assessment processing | 4 uploads/student/year |
 
-**Where the 90 realtime minutes go** (the pedagogically load-bearing moments):
-graduation conversation (~15 min) · checkpoint conversations (2 × ~10 min) · milestone missions
-(~6 × 5 min) · monthly open conversation from late A1 onward (~15 min) · post-course/remediation
-sessions for graduates. Late-A2 learners — whose band ratio calls for 25–35% open conversation —
-draw more from the pooled realtime budget, which is exactly what pooling is for.
+**Why 1,000.** An on-pace learner needs ~770 speaking min/year to complete the course in 2.5
+years; an intensive learner needs ~1,280. A 1,000-minute pooled allowance covers on-pace
+learners outright and, because it is **pooled district-wide**, comfortably funds intensive
+learners out of non-activating seats. A 1,000-seat district receives 1,000,000 voice minutes,
+including 400,000 realtime minutes.
 
-- **Pooled, not per-seat.** A 1,000-seat district receives 400,000 voice minutes including
-  90,000 realtime minutes. Non-activating students fund the heavy speakers — pedagogically right
-  and administratively simple. At expected usage a district consumes ~44% of its pool.
-- **Cost if a district exhausted its entire pool:**
-  90 min realtime × $0.020 = $1.80 · 310 min other × $0.011 = $3.41 → **$5.21/student/yr**,
-  i.e. **91.3% gross margin at 100% pool consumption.** The allowance — realtime included — is
-  therefore safe to publish and defend in a district contract.
-- **Realtime is never the first thing cut.** If a pool nears exhaustion, drill and scripted
-  traffic degrade to cached/deterministic routes first; the realtime floor is protected until
-  last, because it carries the learning outcome the product promises.
-- **Fair use:** 25 voice-min/student/day and 120 min/student/week ceilings stop pathological
-  individual usage without touching normal practice.
-- **Overages: not necessary.** Recommend **no overage billing**. Instead: at 80% pool
-  consumption, notify the district admin; at 100%, voice degrades to the cascade/text tier
-  (Pattern F) for the remainder of the term while lessons, review, and written interaction
-  continue unaffected. Districts hate surprise invoices; a soft-degrade preserves the
-  relationship and caps our exposure. Additional pool blocks may be *granted* at admin request
-  (cost is trivial) — logged, not billed.
-- **Abuse prevention:** per-session minute caps, server-measured durations (never client-supplied
-  — fixes wip-11a D1/D8), anomaly alerts on per-student and per-class outliers, automatic
-  session termination on runaway loops, and the rate-limit ledger already in `_shared`.
+**Worst-case cost:** if a district consumed its *entire* pool at the curriculum's route mix —
+$14.22/student/yr → **76.3% gross margin.** Publishable and defensible in a contract.
+
+**Safeguards (runaway prevention, not rationing):**
+- Fair use: 30 voice-min/student/day, 150/week — above any legitimate lesson pattern.
+- Server-measured durations only (never client-supplied — fixes wip-11a D1/D8).
+- Per-session caps, anomaly alerts on per-student/per-class outliers, auto-termination of
+  runaway loops, existing rate-limit ledger.
+- **Realtime is protected.** If a pool nears exhaustion, drill and scripted traffic degrade to
+  cached/deterministic routes **first**; the realtime floor is the last thing to yield, because
+  it carries the outcome the product promises.
+- **No overage billing.** Notify the district admin at 80% pool consumption; at 100%, voice
+  degrades to cascade/text while lessons, review, and written interaction continue. Additional
+  pool blocks are *granted* on admin request (cost is trivial) — logged, never invoiced.
+  Surprise invoices end district renewals.
 
 ## 8. Onboarding, implementation, and professional services
 
-Modeled **separately** from the $60 license; these never change the license price.
+Modeled **separately** from the $60 license; never a disguised price change.
 
-| Package | When | Fee [proposed] | Delivery cost | Purpose |
-| --- | --- | --- | --- | --- |
-| **Standard onboarding** | ≥500 seats | **Included** ($0) | $6.4k–32k | Self-serve rostering + 2 live training sessions + office hours |
-| **Small-deployment implementation** | <500 seats | **$2,500 one-time** | ~$3.2k | Recovers the fixed setup cost that thin ARR can't absorb |
-| **Premium implementation** | optional, any size | **$7,500 one-time** | ~$5k | SIS/roster integration support, custom PD day, admin reporting setup |
-| **Additional PD / training day** | optional | **$1,500/day** | ~$900 | Ongoing teacher development |
-
-Recommendation: **yes to a small-deployment implementation fee** (it fixes the 100-student
-contribution problem shown in §4) and **yes to optional premium services**; **no** to any fee
-that functions as a disguised per-student price change.
+| Package | When | Fee | Delivery cost |
+| --- | --- | --- | --- |
+| Standard onboarding | Ordinary paid deployments | Included ($0) | $6.4k–32k |
+| **Implementation fee** | Where significant setup/training is required | **$2,500–$5,000 one-time** | ~$3.2k–5k |
+| **Premium SIS integration** | Optional | **Quoted per engagement** | varies |
+| **Extensive professional development** | Optional | **Quoted per engagement** ($1,500/day baseline) | ~$900/day |
 
 ## 9. Operational risks by deployment size
 
 | Size | Dominant risks |
 | --- | --- |
-| 100–500 | Implementation cost exceeds year-1 contribution; single-champion dependency; low activation makes the deployment look failed regardless of quality |
-| 1,000–5,000 | Synchronized-classroom bursts (40–200 concurrent) hit the agent host; support load outpaces a founder-only response; rostering errors compound across schools |
-| 10,000–25,000 | Multi-school tenancy correctness becomes existential (15); provider rate ceilings need pre-negotiated headroom; a single privacy incident is contract-ending |
-| 50,000 | Concurrency 1,100+ needs reserved/self-hosted capacity and regional distribution; support requires dedicated staff (~$35k modeled ≈ 0.4 FTE); content maintenance must be a funded team function, not a founder task |
+| 100–500 | Implementation cost exceeds year-1 contribution; single-champion dependency; low activation reads as failure regardless of quality |
+| 1,000–5,000 | Synchronized-classroom bursts (40–200 concurrent) stress the agent host; support outpaces founder-only response; rostering errors compound |
+| 10,000–25,000 | Multi-school tenancy correctness becomes existential (15); provider rate ceilings need pre-negotiated headroom; one privacy incident is contract-ending |
+| 50,000 | 1,100+ concurrency needs reserved/self-hosted capacity; support requires dedicated staff (~0.4 FTE modeled); content maintenance must be a funded team function |
 
-Cross-cutting: provider price moves (abstraction layer + monthly reconciliation), routing drift
-toward realtime (enforced by mission contracts and router config), and the §7 pool exhaustion
-path being tested before first district renewal.
+Cross-cutting: provider price moves (abstraction layer + monthly reconciliation); routing drift
+beyond the funded realtime share (router config + pooled allowances); pool-exhaustion path tested
+before first renewal.
 
-## 10. Pricing-model recommendation
+## 10. Commercial structure — recommendation
 
-The owner fixed the **price** at $60/student/year; the *model* around it is still a design
-choice, and the margin analysis argues for shaping it deliberately.
+**$60/student/year is the right list price for the initial district push**, and should be held
+through the first wave of deployments.
 
-**Recommendation: keep $60 as the list price and add volume banding + a floor, structured as
-follows.**
+**Why $60 is right now:**
+- Produces excellent margins (86–96% at district-average utilization) **even with substantial
+  live AI conversation** — §3 proves the full 1,920-minute promise costs ~$29 across a course.
+- Low enough to enter district conversations as an easy-to-justify supplemental tool.
+- Sits beneath established intensive ELL products — a Louisiana state price list shows Imagine
+  Language & Literacy at **$100/student** [documented:
+  doe.louisiana.gov price list, accessed 2026-07-30].
+- Palavox is **pre-efficacy-study and pre-scaled-deployment.** Charging premium incumbent pricing
+  before quantified district results makes procurement harder, not easier.
+- The immediate objective is **adoption and evidence**, not per-license maximization.
 
-| Element | Recommendation | Why |
-| --- | --- | --- |
-| **List price** | **$60/student/year** — unchanged, published | Simple, defensible, comfortably profitable at every usage scenario |
-| **Minimum contract** | **$15,000/yr** (≈250 seats at list) | Fixes the 100-student contribution problem (§4) without discounting the license |
-| **Volume banding** | 1–999 seats: $60 · 1,000–4,999: $54 · 5,000–24,999: $48 · 25,000+: $42 | District procurement *expects* volume tiers; at 88–95% margins these discounts are affordable and win deals. Even the deepest band holds ~93% gross margin at expected usage |
-| **Multi-year** | 3-year commitment locks the band and adds ~5% discount | Reduces churn risk and renewal load; margin absorbs it easily |
-| **Term** | Annual license, school-year aligned (Jul–Jun) | Matches budget cycles; avoids mid-year proration disputes |
-| **Overages** | **None** — soft-degrade instead (§7) | Surprise invoices kill district renewals; our cost exposure is trivial |
-| **Professional services** | Priced separately (§8), never bundled into the per-student price | Keeps the license clean and comparable |
+**Recommended deal structure:**
 
-**Alternative models considered and rejected:** per-teacher/site licensing (misaligns with a
-per-student learning product and invites seat-sharing); usage-based/metered pricing (districts
-cannot budget variable AI spend, and it would penalize exactly the speaking practice we want to
-encourage); freemium-to-paid (no consumer motion in this plan); per-school flat fee (punishes
-small schools, undercharges large ones).
+| Element | Recommendation |
+| --- | --- |
+| Standard license | **$60/student/year** |
+| Minimum ordinary paid deployment | **250 students or $15,000/year** |
+| Small pilot | **Separately negotiated — typically $3,000–$7,500 total** |
+| Implementation fee | **$2,500–$5,000** where significant setup/training is required |
+| Premium SIS integration / extensive PD | **Separate services, quoted per engagement** |
+| Volume discounts | **Do not publicly commit to automatic volume discounts.** Negotiate larger deployments individually |
+| Overages | None — soft-degrade (§7) |
 
-The banding above is a *recommendation for how to package $60*, not a proposal to change it —
-list price stays $60 and every model in §§3–4 is computed at $60.
+**Competitive positioning.** Duolingo for Schools is free [documented: schools.duolingo.com,
+accessed 2026-07-30], so Palavox must sell what Duolingo does not: **district-controlled ESL
+intervention, embedded live AI conversation, teacher visibility, assessment integration,
+pronunciation analysis, multilingual L1 scaffolding, and actionable progress data.** Every one of
+those is in this plan; none is a pricing argument — they are the product argument.
+
+**Earning the right to charge more.** Move toward higher pricing only after Palavox demonstrates
+one or more of: measurable proficiency growth · strong usage and completion · teacher time saved ·
+renewal demand · successful district-scale concurrency · formal curriculum validation ·
+recognizable district references. At that point the recommended move is **not** raising the base
+license but keeping **$60 as a foundational tier** and charging for advanced reporting, SIS
+integrations, additional administrator functionality, or substantially expanded conversation
+allowances.
+
+**Models considered and rejected:** per-teacher/site licensing (misaligns with a per-student
+learning product, invites seat-sharing); metered/usage pricing (districts cannot budget variable
+AI spend, and it would penalize the speaking practice we want to encourage); per-school flat fee
+(punishes small schools, undercharges large ones); premium $99–$130 pricing now (unsupported by
+evidence and harmful to early procurement).
 
 ## 11. What must be validated
 
-1. Beginner/child speech recognition quality (gates the routing assumptions — 11 §7).
-2. Activation rate in a real deployment — the 65% expected-active figure drives every COGS line.
-3. Peak synchronized concurrency in a real bell schedule (the 4% assumption).
-4. Support ticket rate per 40 students.
-5. Actual voice minutes consumed per active student (the 30 min/mo expected figure).
+1. Beginner/child speech recognition quality (gates routing assumptions — 11 §7).
+2. **Real course pacing** — the 2–3 school-year assumption drives the annual allowance sizing.
+3. Activation rate (65% expected) and voice minutes per active learner.
+4. Peak synchronized concurrency in a real bell schedule (the 4% assumption).
+5. Support ticket rate per 40 students.
 6. Gauntlet pass-rate on generated content (drives the maintenance opex line).

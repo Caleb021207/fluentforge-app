@@ -23,7 +23,15 @@ The evidence supports three headline conclusions:
    Phase 0/1 items precisely because no curriculum or voice work makes the product sellable —
    or defensible — while they stand.
 
-3. **At $60/student/year, the economics are strong and the architecture question changes.** With institutional pricing fixed at $60 (owner decision; institutional-only, no consumer motion), expected-usage gross margin is **95.5%**, heavy usage still returns **88.5%**, and a fully-consumed voice pool returns **91%**. Hybrid Pattern-D routing remains correct — but now because it buys *more realtime conversation where it matters* and because no S2S vendor returns phoneme data, not because realtime is unaffordable. **Native realtime conversation is funded and in the product**, with a protected 90-minute-per-student annual floor that degrades last (11, 16).
+3. **At $60/student/year the full conversational promise is affordable — and that is the test
+   that matters.** The curriculum specifies 1,920 live speaking minutes across the ESL course;
+   delivering every one of them costs ≈$29 per learner over the ~2.5 years they take to finish,
+   against ~$150 of license revenue — **80.8% gross margin on the most engaged learner**.
+   District-average annual margin is **93.0%**. Allowances are therefore sized to the curriculum
+   (1,000 pooled minutes/student/year, including a **protected 400-minute native-realtime
+   floor**), not to a budget. Hybrid Pattern-D routing remains correct because it buys *more*
+   realtime where it matters and because no S2S vendor returns phoneme data — not because
+   realtime is unaffordable (11, 16).
 
 ## What the product becomes
 

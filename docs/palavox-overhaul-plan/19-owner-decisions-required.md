@@ -39,7 +39,13 @@ build a proctored assessment product (out of scope).
 
 **5. Pricing & packaging — PRICE ALREADY DECIDED BY OWNER.**
 Settled: **institutional-only** (no consumer product or consumer sales) at a fixed **$60/student/year**. Modeled throughout at that price; no alternatives are analysed.
-Still open for your call — the *packaging* around it (16 §10 recommends): a $15,000 minimum contract, volume banding (1k+ $54 · 5k+ $48 · 25k+ $42, all still ≥93% margin), 3-year lock with ~5% discount, **no overage billing** (soft-degrade at pool exhaustion instead), and professional-service fees priced separately (small-deployment implementation $2,500; premium $7,500).
+Recommended deal structure (16 §10), for your confirmation: minimum ordinary paid deployment
+**250 students or $15,000/yr**; small pilots **separately negotiated at $3,000–$7,500**;
+implementation fee **$2,500–$5,000** where significant setup/training is required; premium SIS
+integration and extensive PD quoted separately; **no public commitment to automatic volume
+discounts** — larger deployments negotiated individually; **no overage billing** (soft-degrade at
+pool exhaustion). Hold $60 through the first district wave; earn the right to charge more via
+efficacy evidence, then add premium tiers above a $60 foundation rather than raising the base.
 *Blocks: institutional billing build (Phase 6); nothing in Phases 0–2.*
 
 **6. Role-system repair, including reverting one July migration.**

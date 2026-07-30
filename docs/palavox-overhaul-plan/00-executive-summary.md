@@ -43,12 +43,23 @@ no tenancy; LLM-minted "ACTFL" certificates.
 
 ## Numbers that matter
 
-**Institutional-only, fixed at $60/student/year** (owner decision — no consumer product). Gross margin **95.5% at expected usage, 88.5% under heavy usage**; a fully-consumed 400-minute voice pool (including a protected 90-minute native-realtime floor) still returns 91%. Deployment economics: 1,000 students = $60k ARR → $56.5k gross profit; 10,000 = $600k → $570k. Fixed opex $110–230k/yr breaks even around 2,000–4,100 students. One-time build: ~$600–900k (Option B), plus ~9,000 content person-hours; founder time tracked separately (~3,500–5,000 h), never as cash. Calendar: ~12–15 months to district-sellable [estimated, re-baselined at Phase 0].
+**Institutional-only, list price $60/student/year** (owner decision — no consumer product).
+The curriculum requires **1,920 live speaking minutes** across the ESL course; delivering all of
+it costs **≈$29 per learner over the whole course** — against ~2.5 years of license (~$150),
+that is **80.8% gross margin on the most engaged learner Palavox will ever have.** Annual margins
+per enrolled student: **93.0% expected**, 86.3% heavy, 81.3% if every student were fully engaged.
+Allowance sized to the promise: **1,000 pooled voice minutes/student/year including a protected
+400-minute native-realtime floor** (76.3% margin even at 100% pool consumption). Deployment
+economics: 1,000 students = $60k ARR → $54k gross profit (90.0%); 10,000 = $600k → $545k (90.9%).
+Fixed opex $110–230k/yr breaks even ≈2,000–4,300 students. One-time build ~$600–900k (Option B)
+plus ~9,000 content person-hours; founder time tracked separately (~3,500–5,000 h), never as cash.
+Deal structure: 250-student/$15k minimum, pilots negotiated at $3–7.5k, implementation
+$2.5–5k, no public volume discounts. ~12–15 months to district-sellable [estimated].
 
 ## Decision
 
 Approve Option B; sign decisions 19 #1–3, 6, 7 to unblock Phase 0 (schema dump, speech benchmark,
 U1 content slice, test infra, security fixes). Pricing is already settled — $60/student/year,
-institutional-only — so #5 now covers packaging only (minimum contract, volume banding, no
-overages, separate professional-service fees). Full rationale: 21. Risks: 18.
+institutional-only — so #5 now covers deal structure only (minimums, pilot and implementation
+fees, individually negotiated large deployments, no overages). Full rationale: 21. Risks: 18.
 Everything gated on measurement where evidence is missing.
