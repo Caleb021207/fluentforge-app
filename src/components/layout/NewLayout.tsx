@@ -98,7 +98,7 @@ const NewLayout = ({ children }: NewLayoutProps) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               onClick={() => navigate("/")}
-              className="text-[120px] md:text-[180px] font-bold gradient-text cursor-pointer hover:opacity-80 transition-opacity leading-none"
+              className="text-2xl md:text-3xl font-bold gradient-text cursor-pointer hover:opacity-80 transition-opacity leading-none"
             >
               Palavox
             </motion.button>
