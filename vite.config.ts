@@ -19,4 +19,19 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Split large, stable third-party libraries into their own long-lived
+    // chunks so app updates don't invalidate the entire vendor cache.
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          supabase: ["@supabase/supabase-js"],
+          charts: ["recharts"],
+          motion: ["framer-motion"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 900,
+  },
 }));

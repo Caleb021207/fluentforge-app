@@ -1,10 +1,9 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import translations from "@/translations";
+import { eagerTranslations, loadLanguage, SUPPORTED_LANGUAGES } from "@/translations/loader";
+import type { TranslationRecord } from "@/translations/types";
 import { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "@/translations/constants";
-import { LanguageTranslations } from "@/translations/types";
 import { getNativeLanguageDisplayName } from "@/utils/languageUtils";
-import { useLocation } from "react-router-dom";
 import { secureStorage } from "@/utils/security/dataEncryption";
 
 // Create context
@@ -33,31 +32,48 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
   const [missingKeys, setMissingKeys] = useState<Set<string>>(new Set());
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
-  
+  // Translations are loaded on demand. English is always present as a fallback;
+  // other languages are merged in once their chunk finishes loading.
+  const [translations, setTranslations] = useState<Record<string, TranslationRecord>>(
+    eagerTranslations,
+  );
+
   // Update path when it changes
   useEffect(() => {
     const updatePath = () => {
       setCurrentPath(window.location.pathname);
     };
-    
+
     window.addEventListener('popstate', updatePath);
-    
+
     return () => {
       window.removeEventListener('popstate', updatePath);
     };
   }, []);
 
+  // Restore the saved language preference on mount.
   useEffect(() => {
-    // Load language preference from localStorage
     const savedLanguage = secureStorage.getItem("nativeLanguage");
-    if (savedLanguage && translations[savedLanguage]) {
+    if (savedLanguage && SUPPORTED_LANGUAGES.includes(savedLanguage)) {
       setCurrentLanguage(savedLanguage);
     }
-    
-    // Debug - log available translations
-    console.log("Available languages:", Object.keys(AVAILABLE_LANGUAGES));
-    console.log("Available translations:", Object.keys(translations));
   }, []);
+
+  // Load the active language's translation chunk if we don't have it yet.
+  useEffect(() => {
+    if (translations[currentLanguage]) return;
+
+    let cancelled = false;
+    loadLanguage(currentLanguage).then((loaded) => {
+      if (!cancelled && loaded) {
+        setTranslations((prev) => ({ ...prev, [currentLanguage]: loaded }));
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentLanguage, translations]);
 
   // Enhanced translation function with proper interpolation support
   const t = (key: string, replacements?: Record<string, string>): string => {

@@ -1,7 +1,9 @@
 
 import { CLASSROOM_TEXT } from "@/constants/classroomText";
 import { useLocalization } from "@/context/LocalizationContext";
-import translations from "@/translations";
+// Classroom text is always English, so import just the English bundle rather
+// than the full multi-language barrel (which would defeat lazy loading).
+import english from "@/translations/english";
 
 // Helper function to get string value from potentially nested translation
 const getStringTranslation = (obj: any, key: string): string => {
@@ -24,7 +26,7 @@ export const useClassroomText = () => {
   const translatedText = Object.keys(CLASSROOM_TEXT).reduce<ClassroomTextType>((acc, key) => {
     // Get the English translation for this key
     const englishKey = key.toLowerCase();
-    const englishTranslation = translations.english[englishKey];
+    const englishTranslation = english[englishKey];
     
     // Use the English translation instead of the current language translation
     // Only use the value if it's a string
