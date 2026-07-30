@@ -1,15 +1,23 @@
 # 16 · Cost and Capacity Model
 
-**Institutional-only product. List price: $60 per student per year.**
+**Institutional-only product. Flat license: $60 per activated student per year — no exceptions.**
 
 Binding owner decisions reflected throughout:
 
 1. Palavox is sold **only** to institutions. No consumer product, pricing, or go-to-market.
-2. The institutional list price is **$60/student/year**. This document models no alternative
-   prices. Where economics are tight, the levers are engineering and operational — never price.
-3. **The product must deliver the full conversational promise at $60.** Allowances are sized to
+2. The license is **$60 per activated student per year, regardless of district size.** No
+   volume discounts, no usage overages, no consumer plans, no freemium tiers, no alternate
+   per-seat rates. This document models no alternative prices or packaging tiers. Where
+   economics are tight, the levers are engineering and operational — never price.
+3. **"Activated student"** means a student provisioned an account under the institution's
+   license (i.e., on the district's roster for Palavox) — **not** a usage-metered or
+   login-counted figure. Billing is per licensed seat, never per session or per minute used;
+   usage-based billing is explicitly rejected (§7).
+4. Implementation, migration, training, customization, and other professional services **may be
+   priced separately** — they are delivery costs, not alternatives to the license price.
+5. **The product must deliver the full conversational promise at $60.** Allowances are sized to
    the curriculum's actual speaking requirement, not the reverse.
-4. Light / expected / heavy are **usage** scenarios used to test whether $60 holds. They are not
+6. Light / expected / heavy are **usage** scenarios used to test whether $60 holds. They are not
    pricing scenarios.
 
 Unit prices [documented] as of 2026-07-30 (11b/11c/11d); derived figures [estimated] with
@@ -29,7 +37,7 @@ assumptions stated. Reconcile monthly against provider invoices.
 
 | Term | Meaning here |
 | --- | --- |
-| **Revenue** | $60 × enrolled students × year (recurring license) |
+| **Revenue** | $60 × activated students × year (recurring license — billed per licensed seat, never per usage) |
 | **COGS** | Cost to serve: AI/voice (STT, TTS, LLM, realtime, pronunciation assessment), agent hosting, serving infrastructure, moderation, assessment processing |
 | **Gross profit / margin** | Revenue − COGS |
 | **Contribution margin** | Gross profit − direct customer costs (support, implementation delivery, allocated content maintenance) |
@@ -84,12 +92,13 @@ funded, not rationed.**
 Against ~2.5 years of license at $60 = **$150 revenue → 80.8% gross margin on the most engaged
 learner Palavox will ever have.** This is the number that proves the promise is affordable.
 
-### 3b. Per year, by usage scenario (per *enrolled* student)
+### 3b. Per year, by usage scenario (per *activated* student)
 
-Assumes 65% activation (expected); the average active learner uses ~55–60% of on-pace speaking
+Assumes 65% engagement (expected — the share of activated/billed students who actually use
+the product); the average engaged learner uses ~55–60% of on-pace speaking
 minutes because pacing varies and not every activity is voice.
 
-| Scenario | Voice min / enrolled / yr | Voice | Written AI + moderation + assessment | **COGS/student/yr** | **Gross margin** |
+| Scenario | Voice min / activated / yr | Voice | Written AI + moderation + assessment | **COGS/student/yr** | **Gross margin** |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | **Light** | 145 | $1.96 | $0.21 | **≈ $2.17** | **96.4%** |
 | **Expected** | 280 | $3.78 | $0.44 | **≈ $4.22** | **93.0%** |
@@ -97,14 +106,14 @@ minutes because pacing varies and not every activity is voice.
 | **Fully-engaged individual** (on-pace, 770 min, no pooling relief) | 770 | $10.40 | $0.80 | **≈ $11.20** | **81.3%** |
 
 **$60 sustains the full conversational promise at every level of engagement.** Even the
-theoretical case where *every enrolled student* is fully engaged returns >81%.
+theoretical case where *every activated student* is fully engaged returns >81%.
 
 ## 4. Economics by deployment size
 
-Expected usage; 9-month year; peak synchronized concurrency ≈ 4% of enrolled [estimated];
+Expected usage; 9-month year; peak synchronized concurrency ≈ 4% of activated [estimated];
 support 1 ticket/40 students/yr at $28 loaded; implementation delivered once in year 1.
 
-| Enrolled | ARR | Active | Peak concurrency | AI + voice | DB/hosting | Monitoring | Support | **COGS** | **Gross profit** | **GM** |
+| Activated (billed) | ARR | Engaged | Peak concurrency | AI + voice | DB/hosting | Monitoring | Support | **COGS** | **Gross profit** | **GM** |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 100 | $6,000 | 65 | 4 | $422 | $180 | $120 | $70 | **$792** | **$5,208** | **86.8%** |
 | 500 | $30,000 | 325 | 20 | $2,110 | $420 | $240 | $350 | **$3,120** | **$26,880** | **89.6%** |
@@ -114,12 +123,12 @@ support 1 ticket/40 students/yr at $28 loaded; implementation delivered once in 
 | 25,000 | $1,500,000 | 16,250 | 650¹ | $105,500 | $9,000 | $3,000 | $17,500 | **$135,000** | **$1,365,000** | **91.0%** |
 | 50,000 | $3,000,000 | 32,500 | 1,100¹ | $211,000 | $16,000 | $5,400 | $35,000 | **$267,400** | **$2,732,600** | **91.1%** |
 
-¹ Concurrency grows sublinearly above ~10k enrolled (more time zones and bell schedules)
+¹ Concurrency grows sublinearly above ~10k activated students (more time zones and bell schedules)
 [assumption — validate at first 5k+ deployment].
 
 ### Contribution margin
 
-| Enrolled | Gross profit | Implementation (yr 1) | Content maintenance share | **Yr-1 contribution** | **CM %** | **Yr 2+ CM %** |
+| Activated (billed) | Gross profit | Implementation (yr 1) | Content maintenance share | **Yr-1 contribution** | **CM %** | **Yr 2+ CM %** |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 100 | $5,208 | $3,200 | $600 | **$1,408** | 23.5% | 76.8% |
 | 500 | $26,880 | $6,400 | $3,000 | **$17,480** | 58.3% | 79.6% |
@@ -143,7 +152,7 @@ structure (§10), never with the license price.
 | Provider commitments (committed-use TTS/STT discounts) | $12k–30k |
 | **Total** | **≈ $110k–230k/yr** |
 
-**Break-even ≈ 2,000–4,300 enrolled students** ($120k–258k ARR) at expected usage, before
+**Break-even ≈ 2,000–4,300 activated students** ($120k–258k ARR) at expected usage, before
 salaried engineering or founder compensation.
 
 ## 6. One-time development and founder time
@@ -157,7 +166,7 @@ never as cash expenditure.
 
 Sized to **deliver the curriculum**, with pooling and safeguards preventing runaway usage.
 
-**Included allowance, per enrolled student per school year:**
+**Included allowance, per activated student per school year:**
 
 | Item | Included |
 | --- | --- |
@@ -216,31 +225,36 @@ before first renewal.
 
 ## 10. Commercial structure — recommendation
 
-**$60/student/year is the right list price for the initial district push**, and should be held
-through the first wave of deployments.
+**$60 per activated student per year, flat, for every institution regardless of size.** No
+minimum deployment, no volume discounts, no exceptions. This should be held through the first
+wave of deployments.
 
-**Why $60 is right now:**
+**Why $60 flat is right now:**
 - Produces excellent margins (86–96% at district-average utilization) **even with substantial
   live AI conversation** — §3 proves the full 1,920-minute promise costs ~$29 across a course.
 - Low enough to enter district conversations as an easy-to-justify supplemental tool.
 - Sits beneath established intensive ELL products — a Louisiana state price list shows Imagine
   Language & Literacy at **$100/student** [documented:
   doe.louisiana.gov price list, accessed 2026-07-30].
-- Palavox is **pre-efficacy-study and pre-scaled-deployment.** Charging premium incumbent pricing
+- Palavox is **pre-efficacy-study and pre-scaled-deployment.** Charging incumbent-level pricing
   before quantified district results makes procurement harder, not easier.
-- The immediate objective is **adoption and evidence**, not per-license maximization.
+- The immediate objective is **winning adoption and collecting evidence**, not extracting the
+  theoretical maximum from each license.
+- **No minimum deployment size.** A small district, private school network, charter, nonprofit,
+  adult-education program, or pilot may have well under 250 students. A packaging rule should
+  never be the reason Palavox loses an easy first deal.
 
-**Recommended deal structure:**
+**Deal structure:**
 
 | Element | Recommendation |
 | --- | --- |
-| Standard license | **$60/student/year** |
-| Minimum ordinary paid deployment | **250 students or $15,000/year** |
-| Small pilot | **Separately negotiated — typically $3,000–$7,500 total** |
-| Implementation fee | **$2,500–$5,000** where significant setup/training is required |
-| Premium SIS integration / extensive PD | **Separate services, quoted per engagement** |
-| Volume discounts | **Do not publicly commit to automatic volume discounts.** Negotiate larger deployments individually |
-| Overages | None — soft-degrade (§7) |
+| Standard license | **$60 per activated student per year — flat, no size minimum** |
+| Volume discounts | **None.** Every institution pays the same $60/activated student, from a 40-student pilot to a 50,000-student district |
+| Usage overages | **None** — soft-degrade at pool exhaustion (§7), never a variable bill |
+| Consumer plans, freemium tiers, alternate seat rates | **None exist.** Institutional-only, one price |
+| Small pilot | Separately negotiated — typically $3,000–$7,500 total, structured as a fixed-fee pilot engagement, not a discounted per-seat rate |
+| Implementation / migration / training / customization | **Priced separately as professional services** ($2,500–$5,000 typical where significant setup or training is required) — not a license-price alternative |
+| SIS integration, extensive PD, custom reporting | Separate services, quoted per engagement |
 
 **Competitive positioning.** Duolingo for Schools is free [documented: schools.duolingo.com,
 accessed 2026-07-30], so Palavox must sell what Duolingo does not: **district-controlled ESL
@@ -248,25 +262,30 @@ intervention, embedded live AI conversation, teacher visibility, assessment inte
 pronunciation analysis, multilingual L1 scaffolding, and actionable progress data.** Every one of
 those is in this plan; none is a pricing argument — they are the product argument.
 
-**Earning the right to charge more.** Move toward higher pricing only after Palavox demonstrates
-one or more of: measurable proficiency growth · strong usage and completion · teacher time saved ·
-renewal demand · successful district-scale concurrency · formal curriculum validation ·
-recognizable district references. At that point the recommended move is **not** raising the base
-license but keeping **$60 as a foundational tier** and charging for advanced reporting, SIS
-integrations, additional administrator functionality, or substantially expanded conversation
-allowances.
+**Earning the right to charge more — later, not now.** Move toward different pricing only after
+Palavox demonstrates one or more of: measurable proficiency growth · strong usage and completion ·
+teacher time saved · renewal demand · successful district-scale concurrency · formal curriculum
+validation · recognizable district references. Even then, the plan is **not** to introduce volume
+discounts or seat-rate variation — it is to keep $60 as a single foundational license and offer
+*additional, separately-priced capabilities* (advanced reporting, SIS integration, expanded
+conversation allowances) as professional services layered on top, per §7's "may be priced
+separately" principle. This is a future decision, not part of the current packaging.
 
-**Models considered and rejected:** per-teacher/site licensing (misaligns with a per-student
-learning product, invites seat-sharing); metered/usage pricing (districts cannot budget variable
-AI spend, and it would penalize the speaking practice we want to encourage); per-school flat fee
-(punishes small schools, undercharges large ones); premium $99–$130 pricing now (unsupported by
-evidence and harmful to early procurement).
+**Models considered and rejected:** volume-tiered per-seat pricing (this document's own earlier
+draft proposed $54/$48/$42 tiers at scale — struck; it is a second pricing model and the owner
+has ruled it out); a $15,000/250-student minimum (struck for the same reason — it excludes small
+first deals the plan should be winning); per-teacher/site licensing (misaligns with a per-student
+product, invites seat-sharing); metered/usage pricing (districts cannot budget variable AI spend,
+and it penalizes the speaking practice we want to encourage); per-school flat fee (punishes small
+schools, undercharges large ones); premium $99–$130 pricing now (unsupported by evidence and
+harmful to early procurement).
 
 ## 11. What must be validated
 
 1. Beginner/child speech recognition quality (gates routing assumptions — 11 §7).
 2. **Real course pacing** — the 2–3 school-year assumption drives the annual allowance sizing.
-3. Activation rate (65% expected) and voice minutes per active learner.
+3. Engagement rate (65% expected — share of activated/billed students who actually use the
+   product) and voice minutes per engaged learner.
 4. Peak synchronized concurrency in a real bell schedule (the 4% assumption).
 5. Support ticket rate per 40 students.
 6. Gauntlet pass-rate on generated content (drives the maintenance opex line).

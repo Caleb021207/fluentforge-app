@@ -34,7 +34,7 @@ no tenancy; LLM-minted "ACTFL" certificates.
   and a measured B1 ramp.
 - **Voice (11, 16):** Pattern-D hybrid on LiveKit (deterministic-first + cascade + reserved
   realtime + Azure Pronunciation Assessment), with **native realtime conversation funded and in
-  the product** — a protected 90-min/student/year floor for the moments that carry the learning.
+  the product** — a protected 400-min/student/year floor for the moments that carry the learning.
   Blended ~$0.013/min expected. Benchmark-gated migration; OpenAI path as control.
 - **Trust & institutions (12/13/14/15):** tenancy with service-stamped school keys; verified
   teacher onboarding; enforced SafetyContext for minors; restored consent/audit/DSAR scaffolding;
@@ -43,23 +43,27 @@ no tenancy; LLM-minted "ACTFL" certificates.
 
 ## Numbers that matter
 
-**Institutional-only, list price $60/student/year** (owner decision — no consumer product).
-The curriculum requires **1,920 live speaking minutes** across the ESL course; delivering all of
-it costs **≈$29 per learner over the whole course** — against ~2.5 years of license (~$150),
-that is **80.8% gross margin on the most engaged learner Palavox will ever have.** Annual margins
-per enrolled student: **93.0% expected**, 86.3% heavy, 81.3% if every student were fully engaged.
-Allowance sized to the promise: **1,000 pooled voice minutes/student/year including a protected
-400-minute native-realtime floor** (76.3% margin even at 100% pool consumption). Deployment
-economics: 1,000 students = $60k ARR → $54k gross profit (90.0%); 10,000 = $600k → $545k (90.9%).
-Fixed opex $110–230k/yr breaks even ≈2,000–4,300 students. One-time build ~$600–900k (Option B)
-plus ~9,000 content person-hours; founder time tracked separately (~3,500–5,000 h), never as cash.
-Deal structure: 250-student/$15k minimum, pilots negotiated at $3–7.5k, implementation
-$2.5–5k, no public volume discounts. ~12–15 months to district-sellable [estimated].
+**Institutional-only, flat license $60 per activated student per year — no volume discounts, no
+minimum deployment size (owner-approved, 19 #5).** The curriculum requires **1,920 live speaking
+minutes** across the ESL course; delivering all of it costs **≈$29 per learner over the whole
+course** — against ~2.5 years of license (~$150), that is **80.8% gross margin on the most
+engaged learner Palavox will ever have.** Annual margins per activated student: **93.0%
+expected**, 86.3% heavy, 81.3% if every student were fully engaged. Allowance sized to the
+promise: **1,000 pooled voice minutes/student/year including a protected 400-minute native
+real-time floor** (76.3% margin even at 100% pool consumption). Deployment economics: 1,000
+students = $60k ARR → $54k gross profit (90.0%); 10,000 = $600k → $545k (90.9%). Fixed opex
+$110–230k/yr breaks even ≈2,000–4,300 activated students. Fully-validated district-production
+build ~$600–900k (Option B) plus ~9,000 content person-hours; founder time tracked separately
+(~3,500–5,000 h), never as cash — and a founder-led, AI-accelerated pilot-ready build can move
+well below that on the parts AI actually compresses (17 §0). Deal structure: no minimum, pilots
+negotiated as fixed fees ($3–7.5k), implementation priced separately ($2.5–5k), no overages.
 
 ## Decision
 
-Approve Option B; sign decisions 19 #1–3, 6, 7 to unblock Phase 0 (schema dump, speech benchmark,
-U1 content slice, test infra, security fixes). Pricing is already settled — $60/student/year,
-institutional-only — so #5 now covers deal structure only (minimums, pilot and implementation
-fees, individually negotiated large deployments, no overages). Full rationale: 21. Risks: 18.
-Everything gated on measurement where evidence is missing.
+Four foundational decisions are **already approved** by the owner and should not be reopened:
+product direction (19 #1), curriculum scope (19 #3), pricing at flat $60/activated-student with
+no discounts (19 #5), and roadmap direction — Option B (19 #10). What remains is signing the
+items that actually gate Phase 0: **role-system repair (19 #6)** and **minors' safety
+enforcement scope (19 #7)**; the rest (#2, #4, #8, #9, #11, #12) can trail without blocking
+Phase 0's start. Full rationale: 21. Risks: 18. Everything gated on measurement where evidence
+is missing.

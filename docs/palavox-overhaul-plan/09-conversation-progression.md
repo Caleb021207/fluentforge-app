@@ -357,7 +357,7 @@ One schema for every dedicated interaction, micro-exchange, open window, and mis
 | `micro` | 1–2 turn end-of-lesson exchange (mandatory U7+, 07 R11) | structured | text: single-call graded prompt; spoken: C |
 | `controlled` | dialogue completion, guided Q&A from known bank, confirm-echo, dictation-adjacent | structured | **C** deterministic-first, cached TTS |
 | `guided` | info gap, scaffolded roleplay, guided conversation with real information movement | guided | **B** (spoken) / text pipeline (written) |
-| `open` | free talk windows, sustained chat, story swap | open | **B** with graded-output monitor (§4.3); Pattern A reserved for out-of-course premium free talk |
+| `open` | free talk windows, sustained chat, story swap | open | **B** with graded-output monitor (§4.3); Pattern A reserved for out-of-course native real-time free talk |
 | `mission` | goal-card-only scenario chains with rubric + planted breakdowns | open (A2) / guided (A1 scaffolded variant) | **C+B** per scene |
 
 #### 1.3.2 Scaffolding fade — canonical schedules [documented → unified]
@@ -634,7 +634,7 @@ Derived from 11 §4.1 route unit costs (active hosting; "optimized" ≈ ×0.6) �
 | Guided spoken roleplay / info gap (+judge) | B | 4–8 min | $0.09–0.23 | $0.25 | es-13c $0.10–0.25; en-A2L-13c $0.12–0.20 |
 | Mission (scenes, mixed C+B) | C+B | 8–15 min | $0.15–0.35 | $0.40 | es-13d $0.15–0.35; en-A2L-13d $0.18–0.28 |
 | Open window (in-course, monitored) | B | 5–10 min | $0.11–0.29 | $0.35 | B ≈$0.022–0.029/min |
-| Premium out-of-course free talk | A (S2S mini) | 10 min | $0.28–0.35 | $0.45 | 11 §4.1 A-route |
+| Out-of-course native real-time free talk | A (S2S mini) | 10 min | $0.28–0.35 | $0.45 | 11 §4.1 A-route |
 | Graduation conversation + scoring | B + judges | ~15 min | $0.30–0.50 | $0.75 | 07 §10.4 |
 
 Course-shape sanity check [estimated]: a median ESL learner's interaction minutes (≈19 h guided speaking + 13 h open/missions + 5.3 h written interaction, 07 §7.2) at the blended rates above ≈ **$28–55 total AI-interaction COGS per learner per course** (active), ≈$17–33 optimized — against a $60/student/year institutional license this is comfortable at every usage level (16 §3), and it fits inside the pooled 400-min allowance with its protected 90-min native-realtime floor (16 §7).
@@ -653,7 +653,7 @@ Course-shape sanity check [estimated]: a median ESL learner's interaction minute
 
 **Decision O-2 — success evaluation timing:** per-turn judge (too expensive, ~2× tokens) vs post-only (no live checklist UX, late failure detection) vs **incremental deterministic + single post judge (recommended, §2.5)**.
 
-**Decision O-3 — in-course open conversation route:** Pattern A S2S (best prosody; no output lint possible, weakest curriculum control, highest $/min) vs **Pattern B (recommended)** — text-before-TTS enables the graded-output monitor and error harvesting that make open windows curricular rather than decorative; Pattern A remains the premium out-of-course free-talk product (11 §3.2).
+**Decision O-3 — in-course open conversation route:** Pattern A S2S (best prosody; no output lint possible, weakest curriculum control, highest $/min) vs **Pattern B (recommended)** — text-before-TTS enables the graded-output monitor and error harvesting that make open windows curricular rather than decorative; Pattern A remains the out-of-course native real-time free-talk product (11 §3.2).
 
 **ONE recommendation:** adopt the §1.2 unified contract as the single authoring artifact for all eight bands (both directions), executed by the hybrid-compiler engine (O-1C) on the Pattern D stack, with incremental-plus-judge evaluation (O-2) and Pattern-B open windows (O-3).
 

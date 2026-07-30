@@ -23,15 +23,19 @@ The evidence supports three headline conclusions:
    Phase 0/1 items precisely because no curriculum or voice work makes the product sellable —
    or defensible — while they stand.
 
-3. **At $60/student/year the full conversational promise is affordable — and that is the test
-   that matters.** The curriculum specifies 1,920 live speaking minutes across the ESL course;
-   delivering every one of them costs ≈$29 per learner over the ~2.5 years they take to finish,
-   against ~$150 of license revenue — **80.8% gross margin on the most engaged learner**.
-   District-average annual margin is **93.0%**. Allowances are therefore sized to the curriculum
-   (1,000 pooled minutes/student/year, including a **protected 400-minute native-realtime
-   floor**), not to a budget. Hybrid Pattern-D routing remains correct because it buys *more*
-   realtime where it matters and because no S2S vendor returns phoneme data — not because
-   realtime is unaffordable (11, 16).
+3. **At a flat $60/activated-student/year, with no volume discounts, the full conversational
+   promise is affordable — and that is the test that matters.** The curriculum specifies 1,920
+   live speaking minutes across the ESL course; delivering every one of them costs ≈$29 per
+   learner over the ~2.5 years they take to finish, against ~$150 of license revenue —
+   **80.8% gross margin on the most engaged learner**. District-average annual margin is
+   **93.0%**. Allowances are therefore sized to the curriculum (1,000 pooled minutes/student/year,
+   including a **protected 400-minute native-real-time floor**), not to a budget. Hybrid
+   Pattern-D routing remains correct because it buys *more* realtime where it matters and because
+   no S2S vendor returns phoneme data — not because realtime is unaffordable (11, 16). The flat
+   price is also a go-to-market choice: $60 sits well beneath established intensive ELL
+   incumbents (Imagine Language & Literacy at $100/student, Louisiana state pricing) and gives
+   Palavox room to enter district conversations as an easy-to-justify supplemental tool before
+   it has efficacy evidence to price against (16 §10).
 
 ## What the product becomes
 
@@ -57,9 +61,14 @@ curriculum structure (two adversarial reviews), cost *structure*.
 Medium on: absolute cost levels (provider prices move), content-production estimates (±30–50%
 until the P0 slice), calendar estimates.
 Low until measured: beginner/child speech recognition quality, classroom concurrency behavior,
-district price tolerance — all gated, none silently load-bearing (18 §final).
+real-world engagement rate (the 65%-expected assumption every margin figure depends on) — all
+gated, none silently load-bearing (18 §final). Price is not on this list — it is fixed by owner
+decision (19 #5), not a variable to validate.
 
 ## The ask
 
-Decisions 1–12 in doc 19. With #1, #2, #3, #6, #7 signed, Phase 0 can start immediately;
-the rest can trail by up to a month without blocking the critical path.
+Four decisions are already approved (19 #1, #3, #5, #10 — product direction, curriculum scope,
+flat $60/activated-student pricing with no discounts, and Option B) and should not be reopened.
+What's left to sign: **#6 (role-system repair) and #7 (safety enforcement scope)** unblock
+Phase 0 directly; #2, #4, #8, #9, #11, #12 can trail by up to a month without blocking the
+critical path.

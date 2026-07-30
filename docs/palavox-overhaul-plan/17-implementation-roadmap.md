@@ -1,11 +1,59 @@
 # 17 · Implementation Roadmap
 
-Dependency-aware plan. **Nothing here executes until the owner approves the decisions in 19.**
-Effort units: senior-engineer-weeks (ew) and content person-hours (ch); all [estimated] with the
-assumptions in §5. Sequencing rules inherited from the design docs: live-schema dump before any
-DDL (15); characterization tests before behavior changes (12 §T0); security Phase 0 before
-feature work (15); benchmark gate before voice migration (11 §7); vertical content slice before
-bulk authoring (07/08).
+Dependency-aware plan. Roadmap **direction** (Option B) is approved per 19 #10; staffing/cost
+detail below is still open. Effort units: senior-engineer-weeks (ew) and content person-hours
+(ch); all [estimated] with the assumptions in §5. Sequencing rules inherited from the design
+docs: live-schema dump before any DDL (15); characterization tests before behavior changes
+(12 §T0); security Phase 0 before feature work (15); benchmark gate before voice migration
+(11 §7); vertical content slice before bulk authoring (07/08).
+
+## 0. What AI-accelerated founder-led development changes — and what it doesn't
+
+The phase effort figures below (§§Phase 0–8) assume conventional professional staffing (2–3
+engineers, 2–3 curriculum writers, a review pool) and are the right basis for a
+**fully-validated, district-production-ready** system. They are not a prediction of what a
+founder building solo with heavy AI assistance (Claude Max / agent-based development, Lovable,
+AI-assisted curriculum drafting) will actually spend — that path is faster and cheaper on the
+work AI genuinely accelerates, and unchanged on the work it cannot touch.
+
+**Compresses significantly under AI-accelerated founder-led development:**
+- Engineering implementation of the designs in 04–06, 09–10 (the specs are already
+  implementation-ready; a capable agent-assisted developer executes them far faster than a
+  from-scratch design-then-build cycle).
+- First-draft curriculum generation against the authoring schema and content gauntlet (07 §10 /
+  08 §11's authoring-hour estimates assume human-only drafting; generation-assisted drafting was
+  already flagged there as a 30–50% reduction candidate, [requires validation] at the P0 slice).
+- Routine refactors, test scaffolding, documentation, and migration authoring.
+
+**Does not compress — these are fixed, real-world costs regardless of who or what writes the
+first draft:**
+- **Reviewing and validating ~3,600 curriculum items** (both directions combined) — answer
+  keys, distractors, translations, audio, progression dependencies. A human (or a second,
+  independent AI review pass treated as a human-equivalent gate) must check every one against
+  the gauntlet and the unified schema; this is a fixed volume of judgment calls, not typing.
+- **Beginner and child speech-recognition validation** (11 §7) — requires real consented
+  recordings from the actual learner population; no amount of engineering speed produces that
+  data faster.
+- **Privacy and security verification** (15) — the role-system fix, safety enforcement, and
+  tenancy migration need real adversarial testing, not just code that matches the design.
+- **Running a classroom pilot** (14 §7) — calendar time with real students and teachers; cannot
+  be parallelized away.
+- **Human review across priority learner languages** (13) — L1 contrastive content and
+  translation quality require native-speaker judgment per language.
+
+**Practical implication:** treat this roadmap as two tracks that can be pursued in either order
+or in parallel, decided once the P0 vertical slice reports real gauntlet pass-rates and
+review load:
+
+| Track | What it produces | What it does *not* produce |
+| --- | --- | --- |
+| **Founder-built, pilot-ready** | A working system on one ESL band (or similar narrow slice), enough content to run the Phase 8 classroom pilot, core security/safety fixes in place | District-scale content coverage, full localization, validated speech-recognition quality at scale, formal review trail across languages |
+| **Fully-validated, district-production** | Everything in the phase table below, at the effort/calendar figures stated | — this is the target state for paid district deployment |
+
+The pilot-ready track can plausibly move at a fraction of the stated engineering-week figures;
+the fully-validated track should still be estimated at the conventional-staffing figures below,
+because the parts that don't compress (content review volume, speech validation, security
+testing, pilot calendar time) dominate its actual cost and duration.
 
 ---
 

@@ -126,19 +126,19 @@ Routing by activity type [proposed]:
 | Pronunciation drills / minimal pairs / read-aloud | **C** + **Azure Pronunciation Assessment** inline (scripted mode, `NBestPhonemes`) | Only source of real phoneme evidence (fixes D5); fastest perceived turns; cheapest |
 | Scripted dialogue (curriculum-defined turns) | **C** with LLM-on-deviation; all prompt lines pre-generated Azure Neural TTS, CDN-cached (fixes D15) | Deterministic, cacheable, controllable |
 | Guided conversation (bounded topics, A1/A2) | **B** — streaming STT (Deepgram Nova-3-multilingual or AssemblyAI U-3; bake-off in §5) → mini-class text LLM with per-turn curriculum context → streaming Azure Neural TTS with SSML rate control | Full curriculum control + transcript exhaust for assessment; slow-speech control via SSML |
-| Open conversation (premium tier) | **A** — gpt-realtime-2.1-mini via existing ephemeral-token pattern, **if** §5 quality gate passes; else B with a stronger brain | Best prosody/latency where control matters least; smallest surface at S2S prices |
+| Open conversation (native real-time tier) | **A** — gpt-realtime-2.1-mini via existing ephemeral-token pattern, **if** §5 quality gate passes; else B with a stronger brain | Best prosody/latency where control matters least; smallest surface at S2S prices |
 | Dictation | STT-only (word timestamps + confidence required — disqualifies gpt-4o-transcribe family [documented] 11c §2.2) | — |
 | Lesson/listening audio | Pre-generated cached TTS (UC4) | ~$6 one-time for a 5,000-utterance curriculum [estimated] 11c §5.3 |
 | Async speaking reports | **E** — batch self-hosted faster-whisper (~$0.005/audio-hr [reported]) + Azure PA batch | Collapses analysis cost |
 | Network-degraded / quota-exhausted | **F** floor (preserves the existing degradation-ladder strength) | School reality |
 
-**Rationale [estimated/proposed]:** (a) it is the only shape that delivers phoneme-level feedback, which the curriculum docs require and no S2S provides; (b) blended cost ~$0.10–0.20/lesson vs $0.25–3.20 S2S-only — the difference between district pricing working and not working (§4.5); (c) every stage is swappable behind the §6 interface, ending the ElevenLabs-style hostage dynamic; (d) it preserves the incumbent OpenAI path as the premium conversation mode and as the migration control (§6.3), rather than betting the product on a rewrite.
+**Rationale [estimated/proposed]:** (a) it is the only shape that delivers phoneme-level feedback, which the curriculum docs require and no S2S provides; (b) blended cost ~$0.10–0.20/lesson vs $0.25–3.20 S2S-only — the difference between district pricing working and not working (§4.5); (c) every stage is swappable behind the §6 interface, ending the ElevenLabs-style hostage dynamic; (d) it preserves the incumbent OpenAI path as the native real-time conversation mode and as the migration control (§6.3), rather than betting the product on a rewrite.
 
 **FALLBACK [proposed]:** per layer, pre-contracted: S2S — **Azure Voice Live** (same model family, EDU-grade terms) [documented 11b §7]; STT — the Deepgram/AssemblyAI bake-off *loser* kept warm behind the interface (both browser-token WS, near-identical contracts); TTS — Amazon Polly Neural (speech marks, cache-replay explicitly allowed) [documented 11c §3]; PA — SpeechAce (CEFR rubrics, ~2.8× Azure price) [documented 11c §4.2]; orchestration — Pipecat/Daily (OSS, reserved instances at $0.0005/min) or self-host LiveKit (Apache-2.0) [documented 11d §2].
 
 ### 3.3 What this replaces (current → proposed)
 
-- P1 stays (bug-fixed: D2/D3/D4) as "open conversation, premium," now behind the router and admission control.
+- P1 stays (bug-fixed: D2/D3/D4) as "open conversation, native real-time," now behind the router and admission control.
 - P2 (Custom Realtime) is **retired** — Pattern B is its correct implementation (streaming, barge-in, real VAD instead of an `en-US`-hardcoded hack, D11).
 - P3 free chat becomes Pattern B on free-tier quotas with the F floor; `transcribe-audio`'s Gemini-prompt STT is replaced by the contracted STT vendor (fixes D10).
 - LLM-transcript "pronunciation analysis" is retired in favor of Azure PA inline (drills) + Pattern E (reports) — fixes D5.
@@ -368,7 +368,9 @@ interface PaResult {
 type ActivityType = "drill" | "scripted_dialogue" | "guided_conversation"
                   | "open_conversation" | "dictation" | "async_analysis";
 interface RoutePolicy {
-  resolve(a: ActivityType, ctx: { tier: "free" | "premium" | "school"; device: DeviceClass;
+  // No customer tier: one flat institutional product, one $60/activated-student license.
+  // Routing varies only by activity, device/network reality, and remaining pool allowance.
+  resolve(a: ActivityType, ctx: { device: DeviceClass;
     network: NetworkClass; quotaState: QuotaState }): PipelineSpec; // pattern + provider ids + fallback chain
 }
 
@@ -402,7 +404,7 @@ Privacy: no raw audio or transcript text in telemetry; `user_hash` salted; reten
 |---|---|---|
 | **0. Stabilize + instrument** (pre-migration) | Fix D1–D4, D7–D9 on the current stack; add telemetry to all three paths; schedule cleanup via pg_cron; deploy `voice_sessions` ledger + admission RPC. No provider changes. | Accounting drift ≤2% (m12); D1 cap actually enforced; baseline dashboards live 2 weeks |
 | **1. Benchmark study** (§5) | Eval set recorded; 14 measurements run; vendor bake-off (STT, PA, TTS, RT-2.1-mini vs 2.1) | Go/no-go gates §6.4 evaluated; provider picks signed |
-| **2. Agent host + Pattern B pilot** | LiveKit Cloud Ship tier; one activity (guided conversation) behind a feature flag for ≤5% of premium users; **P1 unchanged as control cohort** | B vs P1: latency p50 within +300 ms of control, session-completion rate ≥ control, cost/min ≤ 50% of control; 2 weeks stable |
+| **2. Agent host + Pattern B pilot** | LiveKit Cloud Ship tier; one activity (guided conversation) behind a feature flag for ≤5% of native-real-time-eligible sessions; **P1 unchanged as control cohort** | B vs P1: latency p50 within +300 ms of control, session-completion rate ≥ control, cost/min ≤ 50% of control; 2 weeks stable |
 | **3. Drills on Pattern C + Azure PA** | Deterministic matcher + inline PA for pronunciation drills; retire LLM-transcript scorer for flagged cohort | PA-vs-expert validity gate met (m6); drill turn p50 ≤ 600 ms; teacher-visible phoneme reports render |
 | **4. Open-conversation decision** | A/B: RT-2.1-mini (bug-fixed P1) vs Pattern B-strong for open conversation | Pick by quality gate (m8) + cost; loser becomes documented fallback |
 | **5. Classroom pilot** | 1–3 real classrooms (30 concurrent), C-heavy routing, school-network profile; concurrency rehearsal (m10) | 30-burst admission clean; district-network fallback rate <5%; per-class cost within §4.3 model ±20% |
@@ -421,7 +423,7 @@ Scale-up triggers [proposed]: LiveKit Ship→Scale at 15 sustained concurrent; e
 6. Safari/iOS + Chromebook matrix (m14): every route usable or explicitly F-floored, no silent failures.
 7. Signed DPAs (or ZDR/no-training configurations verified) for every provider student audio reaches.
 
-**NO-GO / redirect rules:** STT gate fails for all vendors → hold migration, keep P1/P3, expand eval set, revisit in one quarter (the pipeline is only as good as its ASR for accented beginners). RT-2.1-mini fails quality gate (m8) but flagship passes → open conversation stays flagship, premium-only, capped minutes (economics §4.5 forbid flagship at scale). Gemini concurrency resolved in writing at ≥500 → re-run cost matrix; Gemini becomes B-brain/S2S challenger.
+**NO-GO / redirect rules:** STT gate fails for all vendors → hold migration, keep P1/P3, expand eval set, revisit in one quarter (the pipeline is only as good as its ASR for accented beginners). RT-2.1-mini fails quality gate (m8) but flagship passes → open conversation stays flagship-only, capped minutes (economics §4.5 forbid flagship at scale). Gemini concurrency resolved in writing at ≥500 → re-run cost matrix; Gemini becomes B-brain/S2S challenger.
 
 ### 6.5 Rollback plan
 
@@ -462,7 +464,7 @@ Scale-up triggers [proposed]: LiveKit Ship→Scale at 15 sustained concurrent; e
 2. Post-Phase 3, ≥90% of drill turns return phoneme-level feedback (vs 0% today [observed]).
 3. Post-Phase 6, blended voice COGS ≤ $0.025/min active (≤$0.015 optimized) reconciled against invoices ±10%.
 4. Concurrency: a rehearsed 300-concurrent event (10 classes) with 0 admission failures and p95 join ≤ 4 s.
-5. Accounting: monthly premium-minutes counter increments correctly (D1 closed), drift ≤2%; zero client-trusted usage writes remain.
+5. Accounting: monthly native-real-time-minutes counter increments correctly (D1 closed), drift ≤2%; zero client-trusted usage writes remain.
 6. Every provider reachable by student audio has a signed DPA or verified ZDR/no-training configuration on file.
 7. Rollback exercised at least once in staging (per-activity revert to legacy path in <15 min).
 

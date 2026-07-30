@@ -327,7 +327,7 @@ Current: `getSpeechSynthesisLanguageCode` covers 30 languages, silently defaults
 Target: TTS config lives in the registry (`tts.locale`, `tts.provider`, `tts.fallback`), consumed via `languagePolicy`:
 - **Per-L1 (gloss/instruction audio):** every enabled locale must declare a `tts.locale`; locales with no viable browser voice (Karen, Tigrinya likely [requires validation per platform]) declare `tts.fallback: null` → UI hides the speak button rather than playing English audio over Karen text (current behavior would mispronounce [inferred]).
 - **Per target variant:** Spanish course default **es-MX** [proposed] — rationale: US school Spanish-speaking population is majority Mexican/Central-American heritage, and es-MX is the conventional US-market neutral pick [estimated; **requires validation** with stakeholders and any district style guide]. Registry supports per-course variant override (`courses.target_locale = 'es-MX'`), so a future Castilian offering is data, not code. English target remains `en-US`.
-- Server TTS (premium voice) and browser TTS read the same registry mapping — one truth for voice selection [proposed].
+- Server TTS (native real-time / cascade voice) and browser TTS read the same registry mapping — one truth for voice selection [proposed].
 
 ---
 

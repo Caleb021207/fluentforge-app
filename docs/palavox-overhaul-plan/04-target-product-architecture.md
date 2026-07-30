@@ -107,7 +107,7 @@ Every AI call goes through one prompt-assembly layer: `SafetyContext` (fail-clos
 snapshot. All AI outputs that persist are schema-validated (zod) with quarantine-on-invalid —
 generation (gauntlet), grading rubrics (bounded, floor-protected), assessment parsing (12),
 error categorization (05). Model tiers: mini-class for turns and rubrics; realtime-mini for
-premium speech; batch/self-host whisper for async re-analysis. Moderation on input+output for
+native real-time speech; batch/self-host whisper for async re-analysis. Moderation on input+output for
 minors.
 
 ## 6. Cross-cutting

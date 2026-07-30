@@ -41,7 +41,7 @@ Sources: discovery audits (01, 02, wip-*), design docs (05–15), voice research
 
 | ID | Risk | I×L | Mitigation | Type |
 |----|------|-----|------------|------|
-| D1 | No billing exists; institutional licensing/invoicing unbuilt (price is fixed at $60/student/yr; packaging/banding per 16 §10) | M×H | Build institutional billing in Phase 6 alongside district systems | Plan |
+| D1 | No billing exists; institutional licensing/invoicing unbuilt (price is fixed and flat at $60/activated-student/yr, no discounts — 16 §10, 19 §5) | M×H | Build institutional billing in Phase 6 alongside district systems | Plan |
 | D2 | District sales blocked on tenancy/consent/audit gaps regardless of product quality | H×H | 14's five-bucket gap analysis sequences this; no pilot before the 12 pre-pilot items | Plan |
 | D3 | Voice COGS drift (routing skewing toward realtime beyond the funded floor) erodes margin | L×M | Pattern-D router config + pooled allowances + soft-degrade (16 §7); margin is 88–95% even under heavy usage, so this is a monitoring concern, not an existential one | Plan |
 | D4 | Rostering/SSO expectations (Clever/ClassLink) exceed MVP | M×H | OneRoster CSV baseline first (14 §2) | Plan |
@@ -58,6 +58,8 @@ Sources: discovery audits (01, 02, wip-*), design docs (05–15), voice research
 
 1. Beginner/child L2 speech recognition meets the WER thresholds on real pilot audio — **untested**.
 2. The live database matches neither migrations nor types; true quota/roster behavior unknown until dumped.
-3. Institutional *usage* assumptions — 65% activation, 30 voice-min/active/month, and the realtime share — are unvalidated and drive every margin line (price itself is fixed at $60).
+3. Institutional *usage* assumptions — 65% engagement rate, voice minutes per engaged student,
+   and the native-real-time share of speaking time — are unvalidated and drive every margin line
+   (price itself is fixed and flat at $60/activated student — not a variable, per 19 §5).
 4. LiveKit Scale's 600-concurrent envelope behaves as documented under synchronized-classroom bursts.
 5. Curriculum production estimates (hours/lesson) hold once the gauntlet's rejection rate on generated content is measured.
