@@ -40,6 +40,9 @@ const NewLandingPage = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsSignedIn(!!session?.user);
+      // Signed-in learners go straight to their learning path — the marketing
+      // landing page is for visitors.
+      if (session?.user) navigate('/learn', { replace: true });
     };
 
     checkAuth();
@@ -49,11 +52,13 @@ const NewLandingPage = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const handleAuthSuccess = () => {
     setIsAuthDialogOpen(false);
-    navigate('/profile');
+    // Profile completeness (role/onboarding) is enforced by the profile flow;
+    // learners land on their learning path.
+    navigate('/learn');
   };
 
   const {

@@ -17,6 +17,17 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ClassStudentsList from '@/components/classroom/ClassStudentsList';
@@ -46,7 +57,7 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const { data: classes, isLoading } = useQuery({
-    queryKey: ['teacher-classes', teacherId],
+    queryKey: ['teacher-classes-cards', teacherId],
     queryFn: async (): Promise<ClassItem[]> => {
       if (!teacherId) return [];
 
@@ -98,7 +109,7 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teacher-classes', teacherId] });
+      queryClient.invalidateQueries({ queryKey: ['teacher-classes-cards', teacherId] });
       setCreateDialogOpen(false);
       setNewClassName('');
       toast({
@@ -125,7 +136,7 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teacher-classes', teacherId] });
+      queryClient.invalidateQueries({ queryKey: ['teacher-classes-cards', teacherId] });
       toast({
         title: t("success") || "Success",
         description: t("classDeleted") || "Class deleted successfully",
@@ -286,15 +297,37 @@ const TeacherClassesTab = ({ teacherId }: TeacherClassesTabProps) => {
                       <span className="truncate">{t("assignments")}</span>
                     </Button>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/30"
-                    onClick={() => deleteClassMutation.mutate(cls.id)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    {t("deleteClass")}
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/30"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {t("deleteClass")}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete "{cls.name}"?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This permanently deletes the class, unenrolls all{' '}
+                          {cls.student_count ?? 0} student{(cls.student_count ?? 0) === 1 ? '' : 's'},
+                          and removes their enrollment history. This cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          onClick={() => deleteClassMutation.mutate(cls.id)}
+                        >
+                          Delete class
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </CardContent>
               </Card>
             </motion.div>

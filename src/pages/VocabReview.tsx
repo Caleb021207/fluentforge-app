@@ -9,13 +9,15 @@ import { toast } from "sonner";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { useVocabReview, ReviewRating } from "@/hooks/useVocabReview";
+import SpeakButton from "@/components/ui/speak-button";
 import { ArrowLeft, Eye, Layers } from "lucide-react";
 
+// Simple-English labels: many reviewers read at A1-A2 level.
 const RATINGS: Array<{ rating: ReviewRating; label: string; hint: string; variant: "destructive" | "outline" | "secondary" | "default" }> = [
-  { rating: 1, label: "Again", hint: "I didn't know it", variant: "destructive" },
-  { rating: 2, label: "Hard", hint: "Recalled with effort", variant: "outline" },
-  { rating: 3, label: "Good", hint: "Recalled correctly", variant: "secondary" },
-  { rating: 4, label: "Easy", hint: "Instant recall", variant: "default" },
+  { rating: 1, label: "Again", hint: "I did not know it", variant: "destructive" },
+  { rating: 2, label: "Hard", hint: "It was difficult", variant: "outline" },
+  { rating: 3, label: "Good", hint: "I knew it", variant: "secondary" },
+  { rating: 4, label: "Easy", hint: "I knew it fast", variant: "default" },
 ];
 
 /** Daily spaced-repetition deck scheduled by FSRS on the server. */
@@ -28,13 +30,17 @@ const VocabReview: React.FC = () => {
   const [revealed, setRevealed] = useState(false);
   const [saving, setSaving] = useState(false);
   const [reviewed, setReviewed] = useState(0);
+  // Session size is fixed when the deck loads so the progress bar is stable.
+  const [sessionTotal, setSessionTotal] = useState(0);
 
   useEffect(() => {
     setIndex(0);
     setRevealed(false);
+    setSessionTotal(cards.length);
   }, [cards.length]);
 
   const card = cards[index];
+  const sessionPct = sessionTotal > 0 ? Math.min(100, Math.round((index / sessionTotal) * 100)) : 0;
 
   const handleGrade = async (rating: ReviewRating) => {
     if (!card || saving) return;
@@ -80,9 +86,7 @@ const VocabReview: React.FC = () => {
         <p className="text-muted-foreground mt-1">
           {dueCount} due · {newCount} new · {reviewed} reviewed today
         </p>
-        {cards.length > 0 && (
-          <Progress value={(reviewed / (reviewed + cards.length - index || 1)) * 100} className="h-2 mt-3" />
-        )}
+        {sessionTotal > 0 && <Progress value={sessionPct} className="h-2 mt-3" />}
       </div>
 
       {error && (
@@ -111,7 +115,10 @@ const VocabReview: React.FC = () => {
         <Card>
           <CardHeader>
             <div className="flex items-start justify-between gap-3">
-              <CardTitle className="text-3xl">{card.vocabulary.lemma}</CardTitle>
+              <div className="flex items-center gap-1">
+                <CardTitle className="text-3xl">{card.vocabulary.lemma}</CardTitle>
+                <SpeakButton text={card.vocabulary.lemma} />
+              </div>
               <div className="flex gap-2">
                 {card.is_new && <Badge variant="secondary">New</Badge>}
                 {card.vocabulary.cefr_level && (
@@ -135,9 +142,12 @@ const VocabReview: React.FC = () => {
                   </p>
                 )}
                 {card.vocabulary.example_sentence && (
-                  <p className="text-sm italic border-l-2 border-primary/30 pl-3">
-                    {card.vocabulary.example_sentence}
-                  </p>
+                  <div className="flex items-start gap-1">
+                    <p className="text-sm italic border-l-2 border-primary/30 pl-3 flex-1">
+                      {card.vocabulary.example_sentence}
+                    </p>
+                    <SpeakButton text={card.vocabulary.example_sentence} />
+                  </div>
                 )}
                 <div className="grid grid-cols-2 gap-2 pt-2 sm:grid-cols-4">
                   {RATINGS.map((r) => (

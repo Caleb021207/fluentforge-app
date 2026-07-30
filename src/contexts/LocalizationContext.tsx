@@ -21,10 +21,10 @@ const LocalizationContext = createContext<LocalizationContextType>({
   getNativeLanguageName: () => "",
 });
 
-// Check if current path is a classroom-related route
+// Teacher-facing classroom management stays English (the dashboard is only
+// authored in English); student-facing pages always honor the learner's L1.
 const isClassroomRoute = (path: string): boolean => {
-  return path.includes("/teacher/classes") || 
-         path.includes("/student/class");
+  return path.startsWith("/teacher");
 };
 
 // Provider component

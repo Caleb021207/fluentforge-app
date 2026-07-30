@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { UsageLimitAlert } from "@/components/usage/UsageLimitAlert";
 import { XPNotificationProvider } from "@/contexts/XPNotificationContext";
 import AgeGate from "@/components/compliance/AgeGate";
+import ErrorBoundary from "@/components/ui/error-boundary";
 import NewLayout from "@/components/layout/NewLayout";
 import NewLandingPage from "@/components/layout/NewLandingPage";
 
@@ -31,7 +32,6 @@ const XPRewards = lazy(() => import("@/pages/XPRewards"));
 const Assignments = lazy(() => import("@/pages/Assignments"));
 const Accuracy = lazy(() => import("@/pages/Accuracy"));
 const Certificates = lazy(() => import("@/pages/Certificates"));
-const Classroom = lazy(() => import("@/pages/Classroom"));
 const Compliance = lazy(() => import("@/pages/Compliance"));
 const Author = lazy(() => import("@/pages/Author"));
 const SafetyPolicy = lazy(() => import("@/pages/SafetyPolicy"));
@@ -61,6 +61,7 @@ function App() {
       <XPNotificationProvider>
         <UsageLimitAlert />
         <NewLayout>
+          <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Core pages */}
@@ -101,7 +102,8 @@ function App() {
               <Route path="/lessons/:lessonId" element={<LessonPlayer />} />
 
               {/* Classroom & Student */}
-              <Route path="/classroom" element={<Classroom />} />
+              {/* The old /classroom stub is gone; teachers land on the dashboard. */}
+              <Route path="/classroom" element={<Navigate to="/teacher/dashboard" replace />} />
               <Route path="/student/class" element={<StudentClass />} />
               <Route path="/student/class/:classId" element={<StudentClass />} />
 
@@ -116,6 +118,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </ErrorBoundary>
           <AgeGate />
           <Toaster />
         </NewLayout>

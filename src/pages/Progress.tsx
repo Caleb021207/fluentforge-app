@@ -1,25 +1,43 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { InteractiveCard } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, BarChart3, TrendingUp, Loader2 } from "lucide-react";
+import { Progress as ProgressBar } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import {
+  FileText,
+  BarChart3,
+  TrendingUp,
+  Loader2,
+  Flame,
+  Trophy,
+  Layers,
+  BookOpen,
+  ArrowRight,
+} from "lucide-react";
 import { useLocalization } from "@/contexts/LocalizationContext";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useProgressData } from "@/hooks/useProgressData";
+import { useLearningPath } from "@/hooks/useLearningPath";
+import { useGamification } from "@/hooks/useGamification";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { GradientBlob } from "@/components/ui/decorative-elements";
 import { motion } from "framer-motion";
 
+/**
+ * The learner's real progress: curriculum mastery, XP/streak, review load, and
+ * transcript-analysis results (uploads live at /analysis).
+ */
 const Progress = () => {
+  const navigate = useNavigate();
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { t } = useLocalization();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { totalAnalyses, currentLevel, latestScore, isLoading: progressLoading } = useProgressData();
+  const { units, loading: pathLoading, dueReviews } = useLearningPath();
+  const { progression } = useGamification();
 
   if (isLoading) {
     return (
-      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 flex items-center justify-center">
-        <GradientBlob className="top-20 left-10" />
-        <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
+      <div className="relative min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
@@ -27,167 +45,147 @@ const Progress = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
-        <GradientBlob className="top-20 left-10" />
-        <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
+      <div className="relative min-h-screen">
         <AuthRequiredPrompt />
       </div>
     );
   }
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
+  const kpis = [
+    {
+      label: t("currentLevel"),
+      value: currentLevel || (progression ? `Level ${progression.current_level}` : "—"),
+      icon: TrendingUp,
+    },
+    {
+      label: "Total XP",
+      value: progression ? progression.total_xp.toLocaleString() : "—",
+      icon: Trophy,
+    },
+    {
+      label: "Day streak",
+      value: progression ? String(progression.current_streak_days ?? 0) : "—",
+      icon: Flame,
+    },
+    {
+      label: "Words to review",
+      value: String(dueReviews),
+      icon: Layers,
+    },
+  ];
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+    <div className="relative min-h-screen">
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto p-4 relative z-10"
+        className="max-w-4xl mx-auto p-4 relative z-10 space-y-6"
       >
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
-            {t("aiProgressAnalysis")}
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground">
-            {t("uploadLanguageTestTranscripts")}
+        <div className="text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-3 gradient-text">Your Progress</h1>
+          <p className="text-lg text-muted-foreground">
+            Everything you have learned, in one place.
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3 mb-6">
-          <InteractiveCard>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">{t("totalAnalyses")}</p>
-                  {progressLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                  ) : (
-                    <p className="text-xl font-bold">{totalAnalyses}</p>
-                  )}
+        {/* KPI row */}
+        <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+          {kpis.map(({ label, value, icon: Icon }) => (
+            <InteractiveCard key={label}>
+              <div className="p-5">
+                <div className="flex items-center justify-between">
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground truncate">{label}</p>
+                    <p className="text-xl font-bold truncate">{value}</p>
+                  </div>
+                  <Icon className="h-7 w-7 shrink-0 text-primary" />
                 </div>
-                <BarChart3 className="h-8 w-8 text-primary" />
               </div>
-            </div>
-          </InteractiveCard>
-          
-          <InteractiveCard>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">{t("currentLevel")}</p>
-                  {progressLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                  ) : (
-                    <p className="text-xl font-bold">{currentLevel || "—"}</p>
-                  )}
-                </div>
-                <TrendingUp className="h-8 w-8 text-primary" />
-              </div>
-            </div>
-          </InteractiveCard>
-          
-          <InteractiveCard>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">{t("latestScore")}</p>
-                  {progressLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                  ) : (
-                    <p className="text-xl font-bold">
-                      {latestScore !== null ? `${latestScore}%` : "—"}
-                    </p>
-                  )}
-                </div>
-                <FileText className="h-8 w-8 text-primary" />
-              </div>
-            </div>
-          </InteractiveCard>
+            </InteractiveCard>
+          ))}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <InteractiveCard>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-2">{t("uploadTestTranscript")}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t("uploadLanguageTestScoreReport")}
-              </p>
-              <div className="space-y-4">
-                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
-                  <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {selectedFile ? selectedFile.name : t("noFileChosen")}
-                  </p>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {t("dragDropOrClickToUpload")}
-                  </p>
-                  <p className="text-xs text-muted-foreground mb-4">
-                    {t("supportsFileFormats")}
-                  </p>
-                  <input
-                    type="file"
-                    accept=".jpg,.jpeg,.png,.webp,.pdf"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <Button asChild>
-                    <label htmlFor="file-upload" className="cursor-pointer">
-                      {t("selectFile")}
-                    </label>
-                  </Button>
-                </div>
-                
-                <Button className="w-full" disabled={!selectedFile}>
-                  {t("uploadAndAnalyze")}
-                </Button>
+        {/* Curriculum mastery */}
+        <InteractiveCard>
+          <div className="p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" /> Course progress
+              </h3>
+              <Button variant="outline" size="sm" onClick={() => navigate("/learn")}>
+                Go to lessons <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+
+            {pathLoading ? (
+              <div className="flex justify-center py-6">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
               </div>
-            </div>
-          </InteractiveCard>
-
-          <InteractiveCard>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">{t("whatOurAiCanAnalyze")}</h3>
-              <ul className="space-y-2 text-sm">
-                <li>{t("overallScoresAndCefrLevels")}</li>
-                <li>{t("individualSkillBreakdowns")}</li>
-                <li>{t("strengthsAndAreasForImprovement")}</li>
-                <li>{t("progressTrackingOverTime")}</li>
-              </ul>
-            </div>
-          </InteractiveCard>
-        </div>
-
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <InteractiveCard>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">{t("analysisResults")}</h3>
-              <p className="text-center text-muted-foreground py-8">
-                {totalAnalyses === 0 
-                  ? "No analysis results yet. Upload a test transcript to get started."
-                  : `You have ${totalAnalyses} analysis${totalAnalyses !== 1 ? 'es' : ''} on record.`
-                }
+            ) : units.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">
+                Your course will appear here once you start learning.
               </p>
-            </div>
-          </InteractiveCard>
+            ) : (
+              <div className="space-y-3">
+                {units.map((unit) => (
+                  <div key={unit.id} className="space-y-1">
+                    <div className="flex items-center justify-between gap-2 text-sm">
+                      <span className="font-medium truncate">
+                        Unit {unit.position + 1}: {unit.title}
+                      </span>
+                      <span className="flex items-center gap-2 shrink-0">
+                        {unit.cefr_level && (
+                          <Badge variant="outline" className="text-[10px]">
+                            {unit.cefr_level}
+                          </Badge>
+                        )}
+                        <span className="text-xs text-muted-foreground">{unit.progressPct}%</span>
+                      </span>
+                    </div>
+                    <ProgressBar value={unit.progressPct} className="h-2" />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </InteractiveCard>
 
-          <InteractiveCard>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">{t("progressTimeline")}</h3>
-              <p className="text-center text-muted-foreground py-8">
-                Progress timeline will appear here after analysis.
-              </p>
+        {/* Transcript analyses */}
+        <InteractiveCard>
+          <div className="p-6 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-primary" /> {t("aiProgressAnalysis")}
+              </h3>
+              <Button variant="outline" size="sm" onClick={() => navigate("/analysis")}>
+                Upload a transcript <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
             </div>
-          </InteractiveCard>
-        </div>
+            <div className="flex flex-wrap gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                {progressLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                ) : (
+                  <span>
+                    {totalAnalyses} {t("totalAnalyses")}
+                  </span>
+                )}
+              </div>
+              {latestScore !== null && (
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  <span>
+                    {t("latestScore")}: {latestScore}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </InteractiveCard>
       </motion.div>
     </div>
   );

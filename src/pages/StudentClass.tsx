@@ -18,7 +18,7 @@ const StudentClass = () => {
   useEffect(() => {
     if (!isLoading) {
       if (isTeacher) {
-        navigate('/teacher/classes');
+        navigate('/teacher/dashboard');
       }
     }
   }, [isTeacher, isLoading, navigate]);

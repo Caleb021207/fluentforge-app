@@ -69,7 +69,14 @@ export function useLessonRunner(lessonId?: string) {
       setExercises([]);
     } else {
       setLesson(data.lesson);
-      setExercises(data.exercises ?? []);
+      // Only multiple-choice items can currently be answered and graded
+      // (submit-exercise checks the picked option against exercise_options).
+      // Filter out anything without options so students never see a prompt
+      // with no way to respond.
+      const answerable = (data.exercises ?? []).filter(
+        (ex: LearnExercise) => Array.isArray(ex.options) && ex.options.length > 0,
+      );
+      setExercises(answerable);
       setPassage(data.passage ?? null);
       setMastery(Number(data.mastery ?? 0));
       setError(null);

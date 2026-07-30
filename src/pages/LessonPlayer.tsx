@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { useLessonRunner, GradeResult } from "@/hooks/useLessonRunner";
+import SpeakButton from "@/components/ui/speak-button";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, Flame } from "lucide-react";
 
 /**
@@ -38,9 +39,10 @@ const LessonPlayer: React.FC = () => {
     setStartedAt(Date.now());
   }, [index]);
 
+  // Count the current item once it's been answered so the bar reaches 100%.
   const progressPct = useMemo(
-    () => (total ? Math.round((index / total) * 100) : 0),
-    [index, total],
+    () => (total ? Math.round(((index + (result ? 1 : 0)) / total) * 100) : 0),
+    [index, total, result],
   );
 
   const handleSubmit = async () => {
@@ -165,7 +167,10 @@ const LessonPlayer: React.FC = () => {
       {passage && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">{passage.title ?? "Reading"}</CardTitle>
+            <CardTitle className="flex items-center justify-between text-base">
+              {passage.title ?? "Reading"}
+              <SpeakButton text={passage.body} />
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="whitespace-pre-line leading-relaxed">{passage.body}</p>
@@ -175,7 +180,10 @@ const LessonPlayer: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{current.prompt}</CardTitle>
+          <CardTitle className="flex items-start justify-between gap-2 text-lg">
+            <span>{current.prompt}</span>
+            <SpeakButton text={current.prompt} />
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {current.options.map((option) => {

@@ -177,39 +177,40 @@ const StudentXPDashboard = ({ progression }: StudentXPDashboardProps) => {
         </CardContent>
       </Card>
 
-      {/* Achievements Section */}
-      <Card className="glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-primary" />
-            Achievements ({userAchievements.length}/{achievements.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <AnimatedLoader size="sm" message="Loading achievements..." />
-          ) : achievements.length === 0 ? (
-            <p className="text-muted-foreground text-center py-4">No achievements available yet.</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {achievements.map((achievement) => {
-                const userAchievement = userAchievements.find(ua => ua.achievement_id === achievement.id);
-                return (
-                  <AchievementCard
-                    key={achievement.id}
-                    name={achievement.name}
-                    description={achievement.description}
-                    icon={achievement.icon}
-                    xpReward={achievement.xp_reward}
-                    unlocked={unlockedAchievementIds.has(achievement.id)}
-                    unlockedAt={userAchievement?.unlocked_at}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Achievements: hidden until the achievements tables exist — showing a
+          permanently empty grid reads as broken to students. */}
+      {achievements.length > 0 && (
+        <Card className="glass">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-primary" />
+              Achievements ({userAchievements.length}/{achievements.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <AnimatedLoader size="sm" message="Loading achievements..." />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {achievements.map((achievement) => {
+                  const userAchievement = userAchievements.find(ua => ua.achievement_id === achievement.id);
+                  return (
+                    <AchievementCard
+                      key={achievement.id}
+                      name={achievement.name}
+                      description={achievement.description}
+                      icon={achievement.icon}
+                      xpReward={achievement.xp_reward}
+                      unlocked={unlockedAchievementIds.has(achievement.id)}
+                      unlockedAt={userAchievement?.unlocked_at}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Class Leaderboard */}
       <LeaderboardSection />

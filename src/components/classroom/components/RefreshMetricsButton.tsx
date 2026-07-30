@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Loader2, RefreshCw } from "lucide-react";
@@ -12,6 +11,11 @@ interface RefreshMetricsButtonProps {
   onSuccess?: () => void;
 }
 
+/**
+ * Recalculates metrics for one student, or — when no student is given — for
+ * every student enrolled in the class. (A previous version silently
+ * recalculated the *teacher's* own metrics in the all-students case.)
+ */
 export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshMetricsButtonProps) => {
   const { toast } = useToast();
   const [refreshing, setRefreshing] = useState(false);
@@ -19,39 +23,52 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      console.log("Starting metrics recalculation for:", studentId || "all students");
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error("User not authenticated");
+      if (studentId) {
+        const { error } = await supabase.rpc('recalculate_student_metrics', {
+          target_student_id: studentId,
+        });
+        if (error) throw error;
+      } else {
+        // Refresh every enrolled student in this class.
+        const { data: enrollments, error: enrollError } = await supabase
+          .from('student_enrollments')
+          .select('student_id')
+          .eq('class_id', classId);
+        if (enrollError) throw enrollError;
+
+        const studentIds = [...new Set((enrollments || []).map(e => e.student_id))];
+        if (studentIds.length === 0) {
+          toast({
+            title: CLASSROOM_TEXT.SUCCESS,
+            description: "No students enrolled in this class yet.",
+          });
+          setRefreshing(false);
+          onSuccess?.();
+          return;
+        }
+
+        const results = await Promise.allSettled(
+          studentIds.map(id =>
+            supabase.rpc('recalculate_student_metrics', { target_student_id: id })
+          )
+        );
+        const failed = results.filter(
+          r => r.status === 'rejected' || (r.status === 'fulfilled' && r.value.error)
+        ).length;
+        if (failed > 0) {
+          console.warn(`Metrics refresh failed for ${failed}/${studentIds.length} students`);
+        }
       }
-      
-      // Call the recalculate_student_metrics function
-      const { data, error } = await supabase.rpc(
-        'recalculate_student_metrics',
-        { target_student_id: studentId || user.id }
-      );
-      
-      if (error) {
-        console.error("Error from recalculate_student_metrics:", error);
-        throw error;
-      }
-      
-      console.log("Metrics recalculation response:", data);
-      
+
       toast({
         title: CLASSROOM_TEXT.SUCCESS,
-        description: studentId 
+        description: studentId
           ? CLASSROOM_TEXT.STUDENT_METRICS_REFRESHED
           : CLASSROOM_TEXT.ALL_METRICS_REFRESHED,
       });
 
-      // Add a small delay to ensure the database has time to update
-      setTimeout(() => {
-        if (onSuccess) onSuccess();
-        setRefreshing(false);
-      }, 2000); // Increased delay for better reliability
-      
+      onSuccess?.();
+      setRefreshing(false);
     } catch (error: any) {
       console.error('Error refreshing metrics:', error);
       toast({
@@ -64,9 +81,9 @@ export const RefreshMetricsButton = ({ classId, studentId, onSuccess }: RefreshM
   };
 
   return (
-    <Button 
-      variant="outline" 
-      size="sm" 
+    <Button
+      variant="outline"
+      size="sm"
       onClick={handleRefresh}
       disabled={refreshing}
     >

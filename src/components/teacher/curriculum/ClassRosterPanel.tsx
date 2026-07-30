@@ -5,6 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, UserPlus, X } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useClassRoster } from "@/hooks/useClassRoster";
 import { rosterProviders } from "@/integrations/rostering";
 
@@ -90,15 +101,38 @@ const ClassRosterPanel: React.FC<Props> = ({ classId }) => {
                       <Badge variant="outline">{entry.profiles.target_level}</Badge>
                     )}
                     <Badge variant="secondary">{entry.status ?? "active"}</Badge>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label="Remove student"
-                      onClick={() => removeStudent.mutate(entry.student_id)}
-                      disabled={removeStudent.isPending}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label="Remove student"
+                          disabled={removeStudent.isPending}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Remove {entry.profiles?.display_name || entry.profiles?.email || "this student"}?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            They will be unenrolled from this class. Their account
+                            and learning history are kept.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={() => removeStudent.mutate(entry.student_id)}
+                          >
+                            Remove
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </li>
               ))}

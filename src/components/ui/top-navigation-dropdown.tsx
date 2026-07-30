@@ -36,16 +36,19 @@ export const TopNavigationDropdown = ({
   };
 
   return (
-    <div className={cn("relative", className)}>
+    // Not position:relative — the panel anchors to the sticky header (the
+    // nearest positioned ancestor) so it can span the full viewport width
+    // directly beneath it.
+    <div className={className}>
       {/* Trigger Button */}
       <Button
         variant="ghost"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 text-foreground"
+        className="flex items-center gap-2 px-3 py-2 text-foreground"
+        aria-label="Open menu"
       >
-        <span className="font-medium">
-          {currentItem?.label || 'Navigate'}
-        </span>
+        <span className="font-medium lg:hidden">{currentItem?.label || 'Menu'}</span>
+        <span className="font-medium hidden lg:inline">Menu</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
@@ -70,7 +73,7 @@ export const TopNavigationDropdown = ({
               animate={{ opacity: 1, y: 0, scaleY: 1 }}
               exit={{ opacity: 0, y: -10, scaleY: 0.95 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="fixed left-0 right-0 top-[120px] bg-background border-b shadow-lg z-50 overflow-hidden"
+              className="absolute left-0 right-0 top-full bg-background border-b shadow-lg z-50 overflow-hidden"
               style={{ transformOrigin: 'top' }}
             >
               {/* Full Width Navigation Grid */}

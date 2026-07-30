@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { TopNavigationDropdown } from "@/components/ui/top-navigation-dropdown";
@@ -7,10 +6,28 @@ import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 
 import LogoutButton from "@/components/auth/LogoutButton";
-import { MessageSquare, Mic, Home, Volume2, User as UserIcon, Settings, Brain, Sparkles, Trophy, ClipboardList, BookOpen, Layers } from "lucide-react";
+import {
+  MessageSquare,
+  Mic,
+  Home,
+  Volume2,
+  User as UserIcon,
+  Settings,
+  Sparkles,
+  Trophy,
+  ClipboardList,
+  BookOpen,
+  Layers,
+  BarChart3,
+  Award,
+  GraduationCap,
+} from "lucide-react";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useGamification } from "@/hooks/useGamification";
+import { useTeacherStatus } from "@/hooks/useTeacherStatus";
 import XPProgressBar from "@/components/gamification/XPProgressBar";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 interface NewLayoutProps {
@@ -22,8 +39,9 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   const location = useLocation();
   const { t } = useLocalization();
   const [user, setUser] = useState<User | null>(null);
-  const { usageLimits, premiumVoiceMinutesRemaining } = useUsageLimits();
+  const { usageLimits } = useUsageLimits();
   const { progression } = useGamification();
+  const { isTeacher } = useTeacherStatus();
 
   useEffect(() => {
     // Get initial session
@@ -43,18 +61,34 @@ const NewLayout = ({ children }: NewLayoutProps) => {
 
   const voiceChatDisabled = (usageLimits?.whisperSTTMinutesRemaining ?? 180) <= 0;
 
-  const navigationItems = [
-    { label: t("home") || "Home", path: "/", icon: <Home className="w-4 h-4" /> },
-    { label: t("learn") || "Learn", path: "/learn", icon: <BookOpen className="w-4 h-4" /> },
-    { label: t("vocabReview") || "Review", path: "/review", icon: <Layers className="w-4 h-4" /> },
-    { label: t("practice") || "Practice", path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
-    { label: t("unlimitedVoicePractice") || "Voice Chat", path: "/voice-chat", icon: <Mic className="w-4 h-4" />, disabled: voiceChatDisabled },
-    { label: t("pronunciationPractice") || "Pronunciation", path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
-    { label: t("xpRewards") || "XP & Rewards", path: "/xp", icon: <Trophy className="w-4 h-4" /> },
-    { label: t("assignments") || "Assignments", path: "/assignments", icon: <ClipboardList className="w-4 h-4" /> },
-    { label: t("profile") || "Profile", path: "/profile", icon: <UserIcon className="w-4 h-4" /> },
-    { label: t("settings") || "Settings", path: "/settings", icon: <Settings className="w-4 h-4" /> },
+  // t() returns the key itself when a translation is missing, so `t(k) || fb`
+  // never falls back. This helper does.
+  const tr = (key: string, fallback: string) => {
+    const value = t(key);
+    return value && value !== key ? value : fallback;
+  };
+
+  // Core destinations stay visible on desktop; everything is reachable from
+  // the dropdown. Low nav depth matters for young ESL learners.
+  const primaryItems = [
+    { label: tr("home", "Home"), path: "/", icon: <Home className="w-4 h-4" /> },
+    { label: tr("learn", "Learn"), path: "/learn", icon: <BookOpen className="w-4 h-4" /> },
+    { label: tr("practice", "Practice"), path: "/practice", icon: <MessageSquare className="w-4 h-4" /> },
+    { label: tr("vocabReview", "Review"), path: "/review", icon: <Layers className="w-4 h-4" /> },
+    { label: tr("assignments", "Assignments"), path: "/assignments", icon: <ClipboardList className="w-4 h-4" /> },
   ];
+
+  const secondaryItems = [
+    { label: tr("progress", "Progress"), path: "/progress", icon: <BarChart3 className="w-4 h-4" /> },
+    { label: tr("unlimitedVoicePractice", "Voice Chat"), path: "/voice-chat", icon: <Mic className="w-4 h-4" />, disabled: voiceChatDisabled },
+    { label: tr("pronunciationPractice", "Pronunciation"), path: "/pronunciation-practice", icon: <Volume2 className="w-4 h-4" /> },
+    { label: tr("certificates", "Certificates"), path: "/certificates", icon: <Award className="w-4 h-4" /> },
+    { label: tr("xpRewards", "XP & Rewards"), path: "/xp", icon: <Trophy className="w-4 h-4" /> },
+    { label: tr("profile", "Profile"), path: "/profile", icon: <UserIcon className="w-4 h-4" /> },
+    { label: tr("settings", "Settings"), path: "/settings", icon: <Settings className="w-4 h-4" /> },
+  ];
+
+  const navigationItems = [...primaryItems, ...secondaryItems];
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -69,18 +103,18 @@ const NewLayout = ({ children }: NewLayoutProps) => {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="px-4 py-3 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 flex justify-between items-center text-sm gap-4"
+            className="px-4 py-2 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 flex justify-between items-center text-sm gap-4"
           >
             <div className="flex items-center gap-2 min-w-0">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-muted-foreground">{t("signedInAs")}</span>
+              <Sparkles className="w-4 h-4 text-primary shrink-0" />
+              <span className="hidden sm:inline text-muted-foreground">{t("signedInAs")}</span>
               <span className="font-semibold truncate max-w-[200px]">{user.email}</span>
             </div>
             {progression && (
               <motion.div
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                className="flex-1 max-w-xs origin-left"
+                className="flex-1 max-w-xs origin-left hidden md:block"
               >
                 <XPProgressBar totalXP={progression.total_xp} />
               </motion.div>
@@ -92,23 +126,54 @@ const NewLayout = ({ children }: NewLayoutProps) => {
         )}
 
         {/* Navigation Bar */}
-        <div className="px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <motion.button
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+        <div className="px-4 py-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <button
               onClick={() => navigate("/")}
-              className="text-2xl md:text-3xl font-bold gradient-text cursor-pointer hover:opacity-80 transition-opacity leading-none"
+              className="text-2xl md:text-3xl font-bold gradient-text cursor-pointer hover:opacity-80 transition-opacity leading-none shrink-0"
             >
               Palavox
-            </motion.button>
+            </button>
+
+            {/* Visible primary nav on desktop */}
+            <nav className="hidden lg:flex items-center gap-1 ml-4">
+              {primaryItems.map((item) => (
+                <Button
+                  key={item.path}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate(item.path)}
+                  className={cn(
+                    "gap-1.5",
+                    location.pathname === item.path && "bg-accent text-accent-foreground",
+                  )}
+                >
+                  {item.icon}
+                  {item.label}
+                </Button>
+              ))}
+            </nav>
+
+            {/* Full menu (all destinations) */}
             <TopNavigationDropdown
               items={navigationItems}
               currentPath={location.pathname}
               onNavigate={handleNavigate}
             />
           </div>
-          
+
+          {/* Teacher entry point */}
+          {isTeacher && (
+            <Button
+              variant={location.pathname.startsWith("/teacher") ? "default" : "outline"}
+              size="sm"
+              onClick={() => navigate("/teacher/dashboard")}
+              className="gap-1.5 shrink-0"
+            >
+              <GraduationCap className="w-4 h-4" />
+              <span className="hidden sm:inline">Teacher</span>
+            </Button>
+          )}
         </div>
       </div>
 

@@ -34,7 +34,7 @@ const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { currentLanguage, t } = useLocalization();
   const { toast } = useToast();
-  const [targetLanguage, setTargetLanguage] = useState<string>("spanish");
+  const [targetLanguage, setTargetLanguage] = useState<string>("english");
   const [conversationLevel, setConversationLevel] = useState<string>("intermediate");
   const [bilingualMode, setBilingualMode] = useState<boolean>(false);
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
@@ -48,48 +48,39 @@ const Practice = () => {
   
   useEffect(() => {
     const savedTargetLanguage = secureStorage.getItem("targetLanguage");
-    const savedNativeLanguage = secureStorage.getItem("nativeLanguage");
-    
-    if (savedNativeLanguage && savedTargetLanguage) {
+
+    if (savedTargetLanguage) {
       setTargetLanguage(savedTargetLanguage);
-    } else {
-      if (currentLanguage === "english") {
-        setTargetLanguage("spanish");
-      } else {
-        setTargetLanguage("english");
-      }
+    } else if (currentLanguage !== "english") {
+      // ESL default: learners whose native language isn't English learn English.
+      setTargetLanguage("english");
     }
-    
-    // Map URL level parameter to conversation level
+
+    const cefrToLevel: Record<string, string> = {
+      'A1': 'basic',
+      'A2': 'basic',
+      'B1': 'intermediate',
+      'B2': 'advanced',
+      'C1': 'advanced',
+      'C2': 'advanced'
+    };
+
     if (urlLevel) {
-      const levelMap: Record<string, string> = {
-        'A1': 'basic',
-        'A2': 'basic',
-        'B1': 'intermediate',
-        'B2': 'advanced',
-        'C1': 'advanced',
-        'C2': 'advanced'
-      };
-      const mappedLevel = levelMap[urlLevel] || 'intermediate';
+      // Deep-link level parameter wins.
+      const mappedLevel = cefrToLevel[urlLevel] || 'intermediate';
       setConversationLevel(mappedLevel);
       localStorage.setItem("conversationLevel", mappedLevel);
     } else {
-      // Initialize conversation level from localStorage
       const storedLevel = localStorage.getItem("conversationLevel");
       if (storedLevel) {
         setConversationLevel(storedLevel);
+      } else {
+        // Fall back to the learner's placement quiz result.
+        const placement = secureStorage.getItem("placementLevel");
+        if (placement && cefrToLevel[placement]) {
+          setConversationLevel(cefrToLevel[placement]);
+        }
       }
-    }
-    
-    // Debug for Thai language - Fix the comparison to use lowercase comparison
-    if (currentLanguage.toLowerCase() === 'thai') {
-      console.log('Practice component initialized with Thai language:', {
-        currentLanguage,
-        targetLanguage: savedTargetLanguage || (currentLanguage === "english" ? "spanish" : "english"),
-        urlLevel,
-        urlTopic,
-        urlFocus
-      });
     }
   }, [currentLanguage, urlLevel]);
   
@@ -145,12 +136,9 @@ const Practice = () => {
     toggleGrammarCorrection
   } = useChatMessages(conversationLevel);
   
-  // Auto-clear conversation on unmount
-  useEffect(() => {
-    return () => {
-      clearConversation();
-    };
-  }, []);
+  // The conversation is intentionally kept when navigating away so a student
+  // who taps into Review or a lesson doesn't lose their chat; they can clear
+  // it explicitly with the Clear Conversation button.
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">
@@ -171,15 +159,6 @@ const Practice = () => {
       msg.translation : 
       msg.translation ? JSON.stringify(msg.translation) : undefined
   }));
-
-  // Additional debug for Thai messages - fix the comparison to use lowercase comparison
-  if (currentLanguage.toLowerCase() === 'thai') {
-    console.log('Practice component rendering with Thai:', {
-      messageCount: messages.length,
-      hasTranslations: messages.filter(m => m.translation).length,
-      currentLanguage
-    });
-  }
 
   return (
     <>

@@ -190,13 +190,17 @@ const StudentHomePanel: React.FC<Props> = ({ units, dueReviews }) => {
                       : ""}
                   </p>
                 </div>
-                {assignment.lesson_id && (
+                {assignment.lesson_id ? (
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => navigate(`/lessons/${assignment.lesson_id}`)}
                   >
                     Open lesson
+                  </Button>
+                ) : (
+                  <Button size="sm" variant="outline" onClick={() => navigate("/learn")}>
+                    Open unit
                   </Button>
                 )}
               </div>
