@@ -78,7 +78,8 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
     codeType: string,
     targetName: string,
     expiresAt: string,
-    maxUses: string
+    maxUses: string,
+    targetId?: string
   ) => {
     if (!codeType || !targetName) {
       toast({
@@ -89,11 +90,23 @@ const CodeManagement = ({ userRole, userSchool }: CodeManagementProps) => {
       return;
     }
 
+    // Class codes must reference a real class id — process_access_code
+    // enrolls the student into classes(target_id), so a synthetic UUID would
+    // fail its foreign key and burn the code's use count.
+    if (codeType === 'class' && !targetId) {
+      toast({
+        title: "Error",
+        description: "Pick which class this code is for",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsGenerating(true);
     try {
       const result = await generateAccessCode(
         codeType as any,
-        crypto.randomUUID(),
+        targetId ?? crypto.randomUUID(),
         targetName,
         expiresAt || undefined,
         maxUses ? parseInt(maxUses) : undefined

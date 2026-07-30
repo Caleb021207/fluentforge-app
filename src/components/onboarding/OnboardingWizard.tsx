@@ -111,6 +111,7 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [createdAccounts, setCreatedAccounts] = useState<StudentRow[]>([]);
+  const [createdClassCode, setCreatedClassCode] = useState<string | null>(null);
   const [accessCode, setAccessCode] = useState("");
 
   const availableTargetLanguages = getAvailableTargetLanguages(nativeLanguage);
@@ -149,15 +150,21 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
 
       if (profileError) throw profileError;
 
+      let newClassCode: string | null = null;
+
       if (role === "teacher" && className.trim()) {
-        // Create class
+        // Create class with a shareable join code (same format as the
+        // dashboard's class creation).
+        const classCode = `CLS-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
         const { data: classData, error: classError } = await supabase
           .from("classes")
-          .insert({ name: className.trim(), teacher_id: user.id })
+          .insert({ name: className.trim(), teacher_id: user.id, class_code: classCode })
           .select()
           .single();
 
         if (classError) throw classError;
+        newClassCode = classData?.class_code ?? classCode;
+        setCreatedClassCode(newClassCode);
 
         // Bulk create students if any valid rows
         const validStudents = students.filter(
@@ -179,12 +186,16 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
 
           if (error) throw error;
 
-          if (data?.created) {
+          if (data?.created?.length) {
             setCreatedAccounts(data.created);
             toast({
               title: "Students created!",
               description: `${data.created.length} student accounts were created successfully.`,
             });
+            // Show the credentials screen instead of closing the wizard —
+            // this is the teacher's only chance to save the passwords.
+            setStep(4);
+            return;
           }
         }
       }
@@ -206,6 +217,23 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
     }
   };
 
+  const downloadCredentials = () => {
+    const rows = [
+      ["Name", "Email", "Password"],
+      ...createdAccounts.map((s) => [s.name, s.email, s.password]),
+    ];
+    const csv = rows
+      .map((r) => r.map((cell) => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${className.trim() || "class"}-student-accounts.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleStudentFinish = async () => {
     setIsLoading(true);
     try {
@@ -221,22 +249,33 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
 
       if (profileError) throw profileError;
 
-      // Process access code if provided
+      // Process the class/access code if provided: class join codes
+      // (CLS-XXXXXX) first, legacy access codes as fallback.
       if (accessCode.trim()) {
-        const { data, error } = await supabase.rpc("process_access_code", {
-          p_code: accessCode.trim(),
-        });
+        const code = accessCode.trim().toUpperCase();
+        let joined = false;
 
-        if (error) throw error;
-        const result = data as unknown as { success: boolean; message: string };
-        if (!result.success) {
-          toast({
-            title: "Invalid Code",
-            description: result.message,
-            variant: "destructive",
+        const { data: joinData } = await supabase.rpc("join_class_by_code" as never, {
+          p_code: code,
+        } as never);
+        const joinResult = joinData as unknown as { success: boolean; message: string } | null;
+        if (joinResult?.success) joined = true;
+
+        if (!joined) {
+          const { data, error } = await supabase.rpc("process_access_code", {
+            p_code: code,
           });
-          setIsLoading(false);
-          return;
+          if (error) throw error;
+          const result = data as unknown as { success: boolean; message: string };
+          if (!result.success) {
+            toast({
+              title: "Invalid Code",
+              description: joinResult?.message || result.message,
+              variant: "destructive",
+            });
+            setIsLoading(false);
+            return;
+          }
         }
       }
 
@@ -502,6 +541,74 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
                 <Check className="h-4 w-4" />
               )}
               {accessCode.trim() ? "Join Class & Finish" : "Skip & Finish"}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 4: Teacher - created student credentials (one-time view) */}
+      {step === 4 && (
+        <div className="space-y-4">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold">Save Your Students' Login Details</h2>
+            <p className="text-muted-foreground mt-2">
+              This is the only time these passwords are shown. Download the list
+              before you finish.
+            </p>
+          </div>
+
+          {createdClassCode && (
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-sm text-muted-foreground">Class join code</p>
+                <p className="text-2xl font-bold tracking-widest">{createdClassCode}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Students with their own accounts can also join with this code.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-muted-foreground">
+                      <th className="py-2 pr-4 font-medium">Name</th>
+                      <th className="py-2 pr-4 font-medium">Email</th>
+                      <th className="py-2 font-medium">Password</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {createdAccounts.map((s, i) => (
+                      <tr key={i} className="border-b last:border-0">
+                        <td className="py-2 pr-4">{s.name}</td>
+                        <td className="py-2 pr-4">{s.email}</td>
+                        <td className="py-2 font-mono">{s.password}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={downloadCredentials} className="gap-2">
+              Download CSV
+            </Button>
+            <Button
+              onClick={() => {
+                toast({
+                  title: "Profile set up!",
+                  description: "Your class is ready to go.",
+                });
+                onComplete();
+              }}
+              className="gap-2"
+            >
+              <Check className="h-4 w-4" /> Done — I saved the list
             </Button>
           </div>
         </div>

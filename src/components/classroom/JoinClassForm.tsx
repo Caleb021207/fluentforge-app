@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,17 +6,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { useClassroomText } from "@/hooks/useClassroomText";
 import { z } from "zod";
 
-// Validation schema for class codes
+// Class codes look like CLS-A1B2C3; legacy access codes are plain A-Z0-9.
 const classCodeSchema = z.string()
   .trim()
   .min(6, "Class code must be at least 6 characters")
-  .max(10, "Class code must be less than 10 characters")
-  .regex(/^[A-Z0-9]+$/, "Class code must contain only uppercase letters and numbers");
+  .max(12, "Class code must be less than 12 characters")
+  .regex(/^[A-Z0-9-]+$/, "Class code must contain only letters, numbers, and dashes");
 
-// Define the interface for the response from process_access_code RPC
-interface AccessCodeResponse {
+interface JoinResponse {
   success: boolean;
   message: string;
+  class_name?: string;
   role?: string;
   assignment?: string;
 }
@@ -31,8 +30,7 @@ const JoinClassForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedCode = classCode.trim().toUpperCase();
-    
-    // Validate input
+
     const validation = classCodeSchema.safeParse(trimmedCode);
     if (!validation.success) {
       toast({
@@ -42,15 +40,12 @@ const JoinClassForm = () => {
       });
       return;
     }
-    
+
     setIsLoading(true);
-    console.log('Attempting to join class with code:', trimmedCode);
 
     try {
-      // Check authentication status first
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        console.error('No authenticated session found');
         toast({
           title: classroomText.ERROR,
           description: "Please sign in to join a class",
@@ -60,8 +55,6 @@ const JoinClassForm = () => {
         return;
       }
 
-      console.log('User authenticated:', session.user.id);
-
       // Log attempt for rate limiting
       await supabase.from('access_code_attempts').insert({
         user_id: session.user.id,
@@ -69,27 +62,35 @@ const JoinClassForm = () => {
         success: false
       });
 
-      const { data, error } = await supabase.rpc('process_access_code', {
-        p_code: trimmedCode
-      });
+      // Try the class join code first (the CLS-XXXXXX code teachers share),
+      // then fall back to legacy access codes.
+      let response: JoinResponse | null = null;
 
-      console.log('Process access code response:', { data, error });
-
-      if (error) {
-        console.error('Error processing access code:', error);
-        toast({
-          title: classroomText.ERROR,
-          description: error.message || classroomText.ERROR_JOINING,
-          variant: "destructive",
-        });
-        return;
+      const { data: joinData, error: joinError } = await supabase.rpc('join_class_by_code' as never, {
+        p_code: trimmedCode,
+      } as never);
+      if (!joinError && joinData) {
+        response = joinData as unknown as JoinResponse;
       }
 
-      // Cast the data to the proper type
-      const response = data as unknown as AccessCodeResponse;
+      if (!response?.success) {
+        const { data: accessData, error: accessError } = await supabase.rpc('process_access_code', {
+          p_code: trimmedCode,
+        });
+        if (accessError) {
+          toast({
+            title: classroomText.ERROR,
+            description: response?.message || accessError.message || classroomText.ERROR_JOINING,
+            variant: "destructive",
+          });
+          return;
+        }
+        const accessResponse = accessData as unknown as JoinResponse;
+        if (accessResponse?.success) response = accessResponse;
+        else if (!response) response = accessResponse;
+      }
 
-      if (response && response.success) {
-        // Log successful attempt
+      if (response?.success) {
         await supabase.from('access_code_attempts').insert({
           user_id: session.user.id,
           attempted_code: trimmedCode,
@@ -98,15 +99,13 @@ const JoinClassForm = () => {
 
         toast({
           title: classroomText.SUCCESS,
-          description: response.message || classroomText.SUCCESS_JOINING,
+          description: response.class_name
+            ? `Joined ${response.class_name}!`
+            : response.message || classroomText.SUCCESS_JOINING,
         });
-        
+
         setClassCode('');
-        console.log('Successfully joined class:', response.assignment);
-        
-        // No need to reload - real-time subscription will update automatically
       } else {
-        console.error('Join class failed:', data);
         toast({
           title: classroomText.ERROR,
           description: response?.message || classroomText.ERROR_JOINING,
