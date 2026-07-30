@@ -113,6 +113,7 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
   const [createdAccounts, setCreatedAccounts] = useState<StudentRow[]>([]);
   const [createdClassCode, setCreatedClassCode] = useState<string | null>(null);
   const [accessCode, setAccessCode] = useState("");
+  const [educatorCode, setEducatorCode] = useState("");
 
   const availableTargetLanguages = getAvailableTargetLanguages(nativeLanguage);
   const targetOptions = Object.fromEntries(
@@ -138,11 +139,36 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
   const handleFinish = async () => {
     setIsLoading(true);
     try {
-      // Update profile with role and languages
+      // Teacher status is provisioned server-side: profiles.role is frozen
+      // for client writes (plan 15 §1.2 role re-freeze, backlog R1), so the
+      // wizard redeems an admin-issued educator access code via the
+      // provision_teacher RPC instead of writing role directly.
+      const { data: provisionData, error: provisionError } = await supabase.rpc(
+        "provision_teacher" as never,
+        { p_code: educatorCode.trim() } as never
+      );
+      if (provisionError) throw provisionError;
+      const provisionResult = provisionData as unknown as {
+        success: boolean;
+        message: string;
+      } | null;
+      if (!provisionResult?.success) {
+        toast({
+          title: "Educator access code",
+          description:
+            provisionResult?.message || "That access code was not accepted.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Languages only — role was set by provision_teacher above, and the
+      // restored privileged-column trigger would discard a client role write
+      // anyway.
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
-          role,
           native_language: nativeLanguage,
           target_language: targetLanguage,
         })
@@ -237,7 +263,10 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
   const handleStudentFinish = async () => {
     setIsLoading(true);
     try {
-      // Update profile
+      // Update profile. role stays in the payload but is now a frozen column:
+      // the restored protect_profile_privileged_columns trigger overwrites
+      // NEW.role with OLD.role for non-admin writes (a silent no-op, not an
+      // error), and 'student' is the signup default anyway (plan 15 §1.2).
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -431,6 +460,28 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
 
           <Card>
             <CardHeader>
+              <CardTitle className="text-lg">Educator Access Code</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Label htmlFor="educator-code" className="sr-only">
+                Educator access code
+              </Label>
+              <Input
+                id="educator-code"
+                placeholder="Enter the code from your school"
+                value={educatorCode}
+                onChange={(e) => setEducatorCode(e.target.value)}
+                className="text-center text-lg tracking-widest uppercase"
+              />
+              <p className="text-sm text-muted-foreground">
+                Teacher accounts require an access code issued by your school or
+                district. Don&apos;t have one? Ask your administrator.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle className="text-lg">Class Name</CardTitle>
             </CardHeader>
             <CardContent>
@@ -496,7 +547,11 @@ const OnboardingWizard = ({ user, onComplete }: OnboardingWizardProps) => {
             <Button variant="outline" onClick={() => setStep(2)} className="gap-2">
               <ArrowLeft className="h-4 w-4" /> Back
             </Button>
-            <Button onClick={handleFinish} disabled={isLoading} className="gap-2">
+            <Button
+              onClick={handleFinish}
+              disabled={isLoading || !educatorCode.trim()}
+              className="gap-2"
+            >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
