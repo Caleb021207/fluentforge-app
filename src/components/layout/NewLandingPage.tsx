@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, BookOpen, Mic, Trophy } from "lucide-react";
+import { Sparkles, BookOpen, Mic, Trophy, ArrowRight } from "lucide-react";
 import { useTheme } from 'next-themes';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -132,19 +132,38 @@ const NewLandingPage = () => {
   ];
 
   return (
-    <div className="relative -mx-4 -my-6 flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-muted/30 px-6 py-12">
-      {/* Ambient background orbs (subtle, decorative) */}
+    <div className="aurora relative -mx-4 -my-6 flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center overflow-hidden px-6 py-12">
+      {/* Ambient brand orbs */}
       <motion.div
         aria-hidden
-        animate={{ y: [0, -20, 0], opacity: [0.25, 0.4, 0.25] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute -top-20 left-[-10%] h-[28rem] w-[28rem] rounded-full bg-primary/20 blur-3xl"
+        animate={{ y: [0, -24, 0], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -top-24 left-[-12%] h-[30rem] w-[30rem] rounded-full bg-brand-sky/25 blur-[100px]"
       />
       <motion.div
         aria-hidden
-        animate={{ y: [0, 24, 0], opacity: [0.2, 0.35, 0.2] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="pointer-events-none absolute bottom-[-10%] right-[-10%] h-[30rem] w-[30rem] rounded-full bg-palavox-teal/20 blur-3xl"
+        animate={{ y: [0, 28, 0], opacity: [0.25, 0.45, 0.25] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="pointer-events-none absolute bottom-[-14%] right-[-12%] h-[32rem] w-[32rem] rounded-full bg-brand-mint/25 blur-[110px]"
+      />
+      <motion.div
+        aria-hidden
+        animate={{ scale: [1, 1.12, 1], opacity: [0.14, 0.26, 0.14] }}
+        transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[38rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-azure/20 blur-[120px]"
+      />
+
+      {/* Fine grid overlay for depth */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.035]"
+        style={{
+          backgroundImage:
+            "linear-gradient(hsl(var(--brand-sky)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--brand-sky)) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 45%, #000 40%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 45%, #000 40%, transparent 100%)",
+        }}
       />
 
       {/* Hero */}
@@ -154,20 +173,40 @@ const NewLandingPage = () => {
         transition={{ duration: 0.7, ease: 'easeOut' }}
         className="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center"
       >
-        <motion.img
+        {/* Logo with a soft brand halo behind it */}
+        <motion.div
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.1, ease: "backOut" }}
-          src={theme === "dark" ? DARK_LOGO : LIGHT_LOGO}
-          alt="Palavox"
-          className="mb-4 h-28 w-28 object-contain drop-shadow-xl md:h-40 md:w-40"
-        />
+          className="relative mb-5"
+        >
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-10 scale-125 rounded-full bg-brand-radial opacity-25 blur-3xl"
+          />
+          <img
+            src={theme === "dark" ? DARK_LOGO : LIGHT_LOGO}
+            alt="Palavox"
+            className="h-28 w-28 object-contain drop-shadow-2xl md:h-40 md:w-40"
+          />
+        </motion.div>
+
+        {/* Eyebrow pill */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="gradient-border mb-5 inline-flex items-center gap-2 rounded-full bg-background/40 px-4 py-1.5 text-xs font-medium backdrop-blur-md"
+        >
+          <Sparkles className="h-3.5 w-3.5 text-brand-mint" />
+          <span className="text-muted-foreground">AI tutor · CEFR curriculum · built for classrooms</span>
+        </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
-          className="bg-gradient-to-r from-primary via-palavox-teal to-accent bg-clip-text pb-2 text-4xl font-bold leading-tight text-transparent md:text-5xl"
+          transition={{ duration: 0.6, delay: 0.28 }}
+          className="gradient-text text-balance pb-2 text-5xl font-bold leading-[1.08] tracking-tight md:text-7xl"
         >
           {t("welcomeToLanguageLearning")}
         </motion.h1>
@@ -175,8 +214,8 @@ const NewLandingPage = () => {
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.35 }}
-          className="mt-4 max-w-xl text-lg text-muted-foreground md:text-xl"
+          transition={{ duration: 0.6, delay: 0.38 }}
+          className="mt-5 max-w-xl text-balance text-lg text-muted-foreground md:text-xl"
         >
           {t("yourPersonalAICompanion")}
         </motion.p>
@@ -187,23 +226,21 @@ const NewLandingPage = () => {
           transition={{ duration: 0.6, delay: 0.45 }}
           className="mt-8"
         >
-          <Button
-            size="lg"
-            onClick={handlePrimaryCta}
-            className="group relative h-auto overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-palavox-teal to-accent px-10 py-6 text-lg font-bold text-white shadow-lg transition-shadow hover:shadow-2xl"
-          >
-            {/* Shine sweep */}
-            <motion.span
-              aria-hidden
-              animate={{ x: ['-120%', '220%'] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0 skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent"
-            />
-            <span className="relative z-10 flex items-center gap-2">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Button size="xl" onClick={handlePrimaryCta} className="sheen group w-full sm:w-auto">
               <Sparkles className="h-5 w-5" />
               {isSignedIn ? t("startPracticing") : t("getStarted")}
-            </span>
-          </Button>
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Button>
+            <Button
+              size="xl"
+              variant="outlineGradient"
+              onClick={() => navigate("/placement-quiz")}
+              className="w-full sm:w-auto"
+            >
+              Find my level
+            </Button>
+          </div>
 
           <p className="mt-4 text-sm text-muted-foreground">
             {t("practiceYourLanguageSkills")}
@@ -218,17 +255,21 @@ const NewLandingPage = () => {
           className="mt-10 grid w-full grid-cols-2 gap-3 sm:grid-cols-4"
         >
           {features.map(({ icon: Icon, label }, i) => (
-            <li
+            <motion.li
               key={i}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-border/60 bg-card/50 p-4 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.65 + i * 0.08 }}
+              whileHover={{ y: -4 }}
+              className="glass gradient-border group flex flex-col items-center gap-2.5 rounded-2xl p-5"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gradient text-[#06263A] shadow-brand transition-transform duration-300 group-hover:scale-110">
                 <Icon className="h-5 w-5" />
               </span>
-              <span className="line-clamp-2 text-xs font-medium text-muted-foreground">
+              <span className="text-sm font-semibold text-foreground/90">
                 {label}
               </span>
-            </li>
+            </motion.li>
           ))}
         </motion.ul>
       </motion.div>

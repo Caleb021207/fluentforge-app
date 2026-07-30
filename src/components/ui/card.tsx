@@ -2,6 +2,10 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Base surface. Glassy by default so the aurora background shows through and
+ * every card picks up the brand treatment without per-page work.
+ */
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -9,7 +13,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "glass rounded-2xl text-card-foreground",
       className
     )}
     {...props}
@@ -36,7 +40,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-xl font-semibold leading-tight tracking-tight",
       className
     )}
     {...props}
@@ -76,28 +80,53 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
+/** Card that lifts and glows on hover — for anything clickable. */
 const InteractiveCard = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <Card
     ref={ref}
-    className={cn("hover-lift cursor-pointer transition-all duration-300", className)}
+    className={cn("hover-lift cursor-pointer", className)}
     {...props}
   />
 ))
 InteractiveCard.displayName = "InteractiveCard"
 
+/** Heavier glass, for modals and hero panels. */
 const GlassCard = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <Card
+  <div
     ref={ref}
-    className={cn("glass", className)}
+    className={cn("glass-strong rounded-2xl text-card-foreground", className)}
     {...props}
   />
 ))
 GlassCard.displayName = "GlassCard"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, InteractiveCard, GlassCard }
+/** Card with the brand gradient as a hairline border — for featured content. */
+const BrandCard = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <Card
+    ref={ref}
+    className={cn("gradient-border hover-lift", className)}
+    {...props}
+  />
+))
+BrandCard.displayName = "BrandCard"
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  InteractiveCard,
+  GlassCard,
+  BrandCard,
+}

@@ -46,11 +46,28 @@ export default {
           primary: '#0B1C36',     // Deep navy
           accent: '#A3D5FF',      // Sky blue
           secondary: '#3A4E68',   // Slate blue
-          teal: '#57D8A1',        // Teal variant
-          white: '#FFFFFF',       // White
-          black: '#000000',       // Black
-          lightBg: '#F7F9FC',     // Soft gray for cards/sections in light mode
-          darkBg: '#1D2B40',      // Dark navy for cards in dark mode
+          teal: '#57D8A1',        // Mint
+          white: '#FFFFFF',
+          black: '#000000',
+          lightBg: '#F7F9FC',
+          darkBg: '#1D2B40',
+        },
+        /* Signature ramp: sky -> azure -> mint, plus the navy it sits on. */
+        brand: {
+          sky: '#A3D5FF',
+          azure: '#6FD3C6',
+          mint: '#57D8A1',
+          deep: '#0B1C36',
+          50:  '#EEF7FF',
+          100: '#D8ECFF',
+          200: '#A3D5FF',
+          300: '#8ADCE0',
+          400: '#6FD3C6',
+          500: '#57D8A1',
+          600: '#33B486',
+          700: '#22826A',
+          800: '#164F4A',
+          900: '#0B1C36',
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -81,7 +98,35 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      backgroundImage: {
+        'brand-gradient': 'linear-gradient(100deg, #A3D5FF 0%, #6FD3C6 52%, #57D8A1 100%)',
+        'brand-gradient-vertical': 'linear-gradient(180deg, #A3D5FF 0%, #57D8A1 100%)',
+        'brand-radial': 'radial-gradient(circle at 30% 20%, #A3D5FF 0%, #6FD3C6 45%, #57D8A1 100%)',
+        'brand-sheen': 'linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.28) 46%, transparent 72%)',
+      },
+      boxShadow: {
+        'brand': '0 10px 40px -12px rgba(163,213,255,0.5), 0 4px 22px -8px rgba(87,216,161,0.35)',
+        'brand-lg': '0 24px 60px -18px rgba(163,213,255,0.55), 0 8px 30px -10px rgba(87,216,161,0.4)',
+        'glass': '0 18px 40px -22px rgba(6,18,32,0.55)',
+      },
       keyframes: {
+        'gradient-pan': {
+          '0%': { backgroundPosition: '0% center' },
+          '100%': { backgroundPosition: '100% center' },
+        },
+        'aurora-drift': {
+          '0%': { transform: 'translate3d(0,0,0) scale(1)' },
+          '50%': { transform: 'translate3d(2%,-2%,0) scale(1.06)' },
+          '100%': { transform: 'translate3d(-2%,2%,0) scale(1.02)' },
+        },
+        'sheen-sweep': {
+          '0%, 65%': { transform: 'translateX(-120%) skewX(-12deg)' },
+          '100%': { transform: 'translateX(220%) skewX(-12deg)' },
+        },
+        'pulse-glow': {
+          '0%, 100%': { boxShadow: '0 0 22px -8px rgba(163,213,255,0.45)' },
+          '50%': { boxShadow: '0 0 40px -6px rgba(87,216,161,0.6)' },
+        },
         overlayShow: {
           from: { opacity: "0" },
           to: { opacity: "1" },
@@ -143,6 +188,10 @@ export default {
         },
       },
       animation: {
+        "gradient-pan": "gradient-pan 6s ease-in-out infinite alternate",
+        "aurora-drift": "aurora-drift 22s ease-in-out infinite alternate",
+        "sheen-sweep": "sheen-sweep 4.5s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
         overlayShow: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",

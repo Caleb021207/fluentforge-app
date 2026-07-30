@@ -1,93 +1,105 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   PALAVOX DESIGN SYSTEM
+   Signature gradient: sky #A3D5FF -> azure #6FD3C6 -> mint #57D8A1
+   Everything below is built from those three stops.
+   ========================================================================== */
+
 @layer base {
   :root {
-    /* Light mode */
-    --background: 0 0% 100%;  /* White */
-    --foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    
-    --card: 210 60% 98%;  /* #F7F9FC - Soft gray */
-    --card-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    
-    --popover: 0 0% 100%;  /* White */
-    --popover-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    
-    --primary: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    --primary-foreground: 0 0% 100%;  /* White */
-    
-    --secondary: 217 30% 32%;  /* #3A4E68 - Slate blue */
-    --secondary-foreground: 0 0% 100%;  /* White */
-    
-    --muted: 210 60% 98%;  /* #F7F9FC - Soft gray */
-    --muted-foreground: 217 20% 45%;  /* Muted text color */
-    
-    --accent: 209 100% 82%;  /* #A3D5FF - Sky blue */
-    --accent-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    
-    --destructive: 0 84.2% 60.2%;  /* Keep existing */
-    --destructive-foreground: 0 0% 98%;  /* Keep existing */
-    
-    --border: 214 32% 91%;  /* Light border */
-    --input: 214 32% 91%;  /* Light input border */
-    --ring: 209 100% 82%;  /* #A3D5FF - Sky blue */
+    /* ---- brand stops (raw HSL triplets, usable in gradients) ---- */
+    --brand-sky: 209 100% 82%;    /* #A3D5FF */
+    --brand-azure: 172 52% 63%;   /* #6FD3C6 */
+    --brand-mint: 158 62% 59%;    /* #57D8A1 */
+    --brand-deep: 213 68% 13%;    /* #0B1C36 */
 
-    --radius: 0.5rem;
+    /* ---- light theme ---- */
+    --background: 205 60% 99%;
+    --foreground: 213 45% 14%;
 
-    --sidebar-background: 210 60% 98%;  /* #F7F9FC - Soft gray */
-    --sidebar-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    --sidebar-primary: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 209 100% 82%;  /* #A3D5FF - Sky blue */
-    --sidebar-accent-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 209 100% 82%;  /* #A3D5FF - Sky blue */
+    --card: 0 0% 100%;
+    --card-foreground: 213 45% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 45% 14%;
+
+    /* Readable on white; the shiny stuff comes from gradient utilities. */
+    --primary: 207 72% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 32% 94%;
+    --secondary-foreground: 213 45% 18%;
+
+    --muted: 210 34% 96%;
+    --muted-foreground: 213 16% 42%;
+
+    --accent: 162 60% 38%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 74% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 28% 89%;
+    --input: 210 28% 89%;
+    --ring: 199 89% 52%;
+
+    --radius: 0.875rem;
+
+    --sidebar-background: 210 34% 97%;
+    --sidebar-foreground: 213 45% 14%;
+    --sidebar-primary: 207 72% 38%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 162 60% 38%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 28% 89%;
+    --sidebar-ring: 199 89% 52%;
   }
 
   .dark {
-    --background: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    --foreground: 0 0% 100%;  /* WHITE instead of muted - for better contrast */
+    /* ---- dark theme (the primary experience) ---- */
+    --background: 215 56% 8%;
+    --foreground: 205 40% 96%;
 
-    --card: 217 37% 18%;  /* #1D2B40 - Darker navy */
-    --card-foreground: 0 0% 100%;  /* WHITE - for better contrast */
+    --card: 215 45% 12%;
+    --card-foreground: 205 40% 96%;
 
-    --popover: 217 37% 18%;  /* #1D2B40 - Darker navy */
-    --popover-foreground: 0 0% 100%;  /* WHITE - for better contrast */
+    --popover: 215 46% 11%;
+    --popover-foreground: 205 40% 96%;
 
-    --primary: 209 100% 82%;  /* #A3D5FF - Sky blue */
-    --primary-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
+    --primary: 209 100% 82%;
+    --primary-foreground: 214 70% 11%;
 
-    --secondary: 217 30% 32%;  /* #3A4E68 - Slate blue */
-    --secondary-foreground: 0 0% 100%;  /* WHITE - for better contrast */
+    --secondary: 214 32% 20%;
+    --secondary-foreground: 205 40% 96%;
 
-    --muted: 217 30% 22%;  /* Darker muted background */
-    --muted-foreground: 0 0% 95%;  /* LIGHTER gray for muted text - better contrast */
+    --muted: 214 30% 18%;
+    --muted-foreground: 210 22% 72%;
 
-    --accent: 158 58% 59%;  /* #57D8A1 - Teal variant */
-    --accent-foreground: 0 0% 100%;  /* WHITE - for better contrast */
+    --accent: 158 62% 59%;
+    --accent-foreground: 214 70% 11%;
 
-    --destructive: 0 62.8% 30.6%;  /* Keep existing */
-    --destructive-foreground: 0 0% 98%;  /* Keep existing */
+    --destructive: 0 72% 56%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217 30% 26%;  /* Darker border */
-    --input: 217 30% 26%;  /* Darker input border */
-    --ring: 209 100% 82%;  /* #A3D5FF - Sky blue */
-    
-    --sidebar-background: 217 37% 18%;  /* #1D2B40 - Darker navy */
-    --sidebar-foreground: 0 0% 100%;  /* WHITE - for better contrast */
-    --sidebar-primary: 209 100% 82%;  /* #A3D5FF - Sky blue */
-    --sidebar-primary-foreground: 217 67% 13%;  /* #0B1C36 - Primary navy */
-    --sidebar-accent: 158 58% 59%;  /* #57D8A1 - Teal variant */
-    --sidebar-accent-foreground: 0 0% 100%;  /* WHITE - for better contrast */
-    --sidebar-border: 217 30% 26%;  /* Darker border */
-    --sidebar-ring: 209 100% 82%;  /* #A3D5FF - Sky blue */
+    --border: 213 28% 24%;
+    --input: 213 28% 24%;
+    --ring: 209 100% 82%;
+
+    --sidebar-background: 215 45% 11%;
+    --sidebar-foreground: 205 40% 96%;
+    --sidebar-primary: 209 100% 82%;
+    --sidebar-primary-foreground: 214 70% 11%;
+    --sidebar-accent: 158 62% 59%;
+    --sidebar-accent-foreground: 214 70% 11%;
+    --sidebar-border: 213 28% 24%;
+    --sidebar-ring: 209 100% 82%;
   }
 
-  /* Global focus style */
   :focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2;
+    @apply outline-none ring-2 ring-ring/70 ring-offset-2 ring-offset-background;
   }
 }
 
@@ -100,145 +112,301 @@
     @apply overflow-x-hidden;
     width: 100%;
     max-width: 100vw;
-    font-size: 18px; /* Increased base font size from default 16px */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
     @apply bg-background text-foreground overflow-x-hidden;
     width: 100%;
     max-width: 100vw;
-    line-height: 1.6; /* Improved line height for readability */
+    line-height: 1.6;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Scale up headings */
-  h1 {
-    @apply text-4xl font-bold tracking-tight;
-    line-height: 1.2;
+  h1 { @apply text-4xl font-bold tracking-tight; line-height: 1.15; }
+  h2 { @apply text-3xl font-bold tracking-tight; line-height: 1.25; }
+  h3 { @apply text-2xl font-semibold tracking-tight; line-height: 1.35; }
+  h4 { @apply text-xl font-semibold; line-height: 1.4; }
+  h5 { @apply text-lg font-semibold; line-height: 1.5; }
+  h6 { @apply text-base font-semibold; line-height: 1.5; }
+
+  p { line-height: 1.7; }
+
+  /* Comfortable touch targets without fighting explicit sizing utilities. */
+  button:not([role="switch"]):not([class*="h-"]):not([class*="size-"]) {
+    min-height: 44px;
   }
 
-  h2 {
-    @apply text-3xl font-semibold tracking-tight;
-    line-height: 1.3;
-  }
-
-  h3 {
-    @apply text-2xl font-semibold;
-    line-height: 1.4;
-  }
-
-  h4 {
-    @apply text-xl font-semibold;
-    line-height: 1.4;
-  }
-
-  h5 {
-    @apply text-lg font-medium;
-    line-height: 1.5;
-  }
-
-  h6 {
-    @apply text-base font-medium;
-    line-height: 1.5;
-  }
-
-  /* Improve paragraph spacing */
-  p {
-    line-height: 1.7;
-    margin-bottom: 0.75em;
-  }
-
-  /* Gradient utilities */
-  .gradient-text {
-    @apply bg-gradient-to-r from-[#A3D5FF] to-[#57D8A1] bg-clip-text text-transparent;
-  }
-  
-  /* Glassmorphism effects */
-  .glass {
-    @apply bg-white/80 dark:bg-[#1D2B40]/80 backdrop-blur-lg border border-white/20;
-  }
-  
-  /* Smooth hover lift */
-  .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
-  }
-  
-  /* Glow effects */
-  .glow-accent {
-    @apply shadow-lg shadow-[#A3D5FF]/20;
-  }
-  
-  .glow-teal {
-    @apply shadow-lg shadow-[#57D8A1]/20;
-  }
-
-  .glow-success {
-    @apply shadow-lg shadow-green-500/30;
-  }
-
-  .glow-error {
-    @apply shadow-lg shadow-red-500/30;
-  }
-
-  /* Scale up buttons globally */
-  button:not([role="switch"]) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
     @apply text-base;
-    padding: 0.75rem 1.25rem;
-    min-height: 44px; /* Better touch targets */
+    min-height: 44px;
   }
 
-  /* Scale up form inputs */
-  input, textarea, select {
-    @apply text-base;
-    padding: 0.75rem 1rem;
-    min-height: 44px; /* Better touch targets */
+  /* Prettier scrollbars in dark surfaces */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full;
+    background: hsl(var(--border));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
   }
 }
 
+/* ==========================================================================
+   COMPONENT LAYER — the shine
+   ========================================================================== */
+@layer components {
+
+  /* ---------- Gradient text ---------- */
+  /* Full sky -> mint span across the element, exactly like the wordmark.
+     Static so it never washes out to a single colour mid-animation. */
+  .gradient-text {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--brand-sky)) 0%,
+      hsl(var(--brand-azure)) 52%,
+      hsl(var(--brand-mint)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Opt-in shimmer, for small accents only. */
+  .gradient-text-shimmer {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--brand-sky)) 0%,
+      hsl(var(--brand-azure)) 30%,
+      hsl(var(--brand-mint)) 55%,
+      hsl(var(--brand-azure)) 80%,
+      hsl(var(--brand-sky)) 100%
+    );
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-pan 7s ease-in-out infinite alternate;
+  }
+
+  /* Alias kept for existing call sites. */
+  .gradient-text-static {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--brand-sky)),
+      hsl(var(--brand-azure)) 55%,
+      hsl(var(--brand-mint))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ---------- Gradient surfaces ---------- */
+  .bg-brand {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--brand-sky)),
+      hsl(var(--brand-azure)) 52%,
+      hsl(var(--brand-mint))
+    );
+  }
+
+  .bg-brand-soft {
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--brand-sky) / 0.16),
+      hsl(var(--brand-mint) / 0.12)
+    );
+  }
+
+  /* ---------- Aurora mesh background ---------- */
+  .aurora {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .aurora::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(38rem 30rem at 12% 18%, hsl(var(--brand-sky) / 0.22), transparent 60%),
+      radial-gradient(34rem 28rem at 88% 22%, hsl(var(--brand-mint) / 0.18), transparent 62%),
+      radial-gradient(40rem 34rem at 60% 92%, hsl(var(--brand-azure) / 0.16), transparent 65%);
+    filter: blur(12px);
+    animation: aurora-drift 22s ease-in-out infinite alternate;
+  }
+
+  /* ---------- Glass ---------- */
+  .glass {
+    @apply backdrop-blur-xl;
+    background:
+      linear-gradient(160deg, hsl(var(--brand-sky) / 0.08), transparent 45%),
+      linear-gradient(320deg, hsl(var(--brand-mint) / 0.07), transparent 45%),
+      linear-gradient(160deg, hsl(var(--card) / 0.92), hsl(var(--card) / 0.72));
+    border: 1px solid hsl(var(--brand-sky) / 0.16);
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.08) inset,
+      0 18px 44px -22px hsl(215 60% 4% / 0.65);
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-2xl;
+    background: linear-gradient(
+      160deg,
+      hsl(var(--card) / 0.95),
+      hsl(var(--card) / 0.8)
+    );
+    border: 1px solid hsl(var(--border));
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.08) inset,
+      0 26px 60px -28px hsl(215 60% 4% / 0.7);
+  }
+
+  /* ---------- Gradient hairline border ---------- */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      hsl(var(--brand-sky) / 0.9),
+      hsl(var(--brand-azure) / 0.45) 45%,
+      hsl(var(--brand-mint) / 0.85)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* ---------- Elevation + hover ---------- */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+  .hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 44px -24px hsl(var(--brand-sky) / 0.5);
+  }
+
+  /* ---------- Glows ---------- */
+  .glow-sky   { box-shadow: 0 0 32px -6px hsl(var(--brand-sky) / 0.55); }
+  .glow-mint  { box-shadow: 0 0 32px -6px hsl(var(--brand-mint) / 0.5); }
+  .glow-brand { box-shadow: 0 10px 40px -12px hsl(var(--brand-sky) / 0.5),
+                            0 4px 22px -8px hsl(var(--brand-mint) / 0.35); }
+  .glow-accent { box-shadow: 0 0 28px -8px hsl(var(--brand-sky) / 0.5); }
+  .glow-teal   { box-shadow: 0 0 28px -8px hsl(var(--brand-mint) / 0.5); }
+  .glow-success { box-shadow: 0 0 28px -8px hsl(152 60% 50% / 0.5); }
+  .glow-error   { box-shadow: 0 0 28px -8px hsl(var(--destructive) / 0.5); }
+
+  /* ---------- Sheen sweep (adds a moving highlight to any element) ---------- */
+  .sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      hsl(0 0% 100% / 0.28) 46%,
+      transparent 72%
+    );
+    transform: translateX(-120%) skewX(-12deg);
+    animation: sheen-sweep 4.5s ease-in-out infinite;
+  }
+
+  /* ---------- Section divider ---------- */
+  .divider-gradient {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--brand-sky) / 0.5),
+      hsl(var(--brand-mint) / 0.5),
+      transparent
+    );
+  }
+
+  /* ---------- Focus ring in brand colors ---------- */
+  .ring-brand {
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--brand-sky) / 0.7);
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  /* Fill a progress/meter bar with the brand gradient */
+  .bar-brand > div,
+  .bar-brand [data-state] {
+    background-image: linear-gradient(
+      90deg,
+      hsl(var(--brand-sky)),
+      hsl(var(--brand-mint))
+    );
+  }
+}
+
+/* ==========================================================================
+   KEYFRAMES
+   ========================================================================== */
+@keyframes gradient-pan {
+  0%   { background-position: 0% center; }
+  100% { background-position: 100% center; }
+}
+
+@keyframes aurora-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, -2%, 0) scale(1.06); }
+  100% { transform: translate3d(-2%, 2%, 0) scale(1.02); }
+}
+
+@keyframes sheen-sweep {
+  0%, 65%  { transform: translateX(-120%) skewX(-12deg); }
+  100%     { transform: translateX(220%) skewX(-12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-text { animation: none; }
+  .aurora::before { animation: none; }
+  .sheen::after { display: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ==========================================================================
+   APP SHELL + THIRD-PARTY FIXES
+   ========================================================================== */
 #root {
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
-  text-align: center;
   overflow-x: hidden;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* Fix for dropdown menus */
+/* Radix portals must sit above the sticky header */
 [data-radix-popper-content-wrapper] {
   z-index: 9999 !important;
 }
@@ -247,13 +415,6 @@
   z-index: 9999 !important;
 }
 
-/* Ensure dark mode dropdown content has proper background and text color */
-.dark [data-radix-popper-content-wrapper] * {
-  background-color: hsl(var(--popover)) !important;
-  color: hsl(var(--popover-foreground)) !important;
-}
-
-/* Fix for select item highlighting in dark mode */
 .dark .radix-select-content [data-radix-select-item][data-highlighted] {
   background-color: hsl(var(--accent)) !important;
   color: hsl(var(--accent-foreground)) !important;

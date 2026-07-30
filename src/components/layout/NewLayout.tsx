@@ -95,9 +95,21 @@ const NewLayout = ({ children }: NewLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background text-foreground">
+    <div className="relative min-h-screen text-foreground">
+      {/* App-wide ambient brand wash */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(60rem 40rem at 8% -5%, hsl(var(--brand-sky) / 0.12), transparent 60%)," +
+            "radial-gradient(55rem 38rem at 96% 8%, hsl(var(--brand-mint) / 0.10), transparent 62%)," +
+            "radial-gradient(50rem 40rem at 50% 105%, hsl(var(--brand-azure) / 0.09), transparent 65%)",
+        }}
+      />
+
       {/* Top Bar */}
-      <div className="bg-card/80 backdrop-blur-lg border-b sticky top-0 z-30 shadow-sm">
+      <div className="sticky top-0 z-30 border-b border-brand-sky/15 bg-background/70 backdrop-blur-2xl">
         {/* User Info Bar */}
         {user && (
           <motion.div
@@ -130,28 +142,43 @@ const NewLayout = ({ children }: NewLayoutProps) => {
           <div className="flex items-center gap-2 min-w-0">
             <button
               onClick={() => navigate("/")}
-              className="text-2xl md:text-3xl font-bold gradient-text cursor-pointer hover:opacity-80 transition-opacity leading-none shrink-0"
+              className="gradient-text shrink-0 text-2xl font-bold leading-none tracking-tight transition-opacity hover:opacity-80 md:text-3xl"
             >
               Palavox
             </button>
 
             {/* Visible primary nav on desktop */}
-            <nav className="hidden lg:flex items-center gap-1 ml-4">
-              {primaryItems.map((item) => (
-                <Button
-                  key={item.path}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate(item.path)}
-                  className={cn(
-                    "gap-1.5",
-                    location.pathname === item.path && "bg-accent text-accent-foreground",
-                  )}
-                >
-                  {item.icon}
-                  {item.label}
-                </Button>
-              ))}
+            <nav className="ml-4 hidden items-center gap-1 lg:flex">
+              {primaryItems.map((item) => {
+                const active = location.pathname === item.path;
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => navigate(item.path)}
+                    className={cn(
+                      "relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300",
+                      active
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:bg-brand-sky/10 hover:text-foreground",
+                    )}
+                  >
+                    {active && (
+                      <span
+                        aria-hidden
+                        className="absolute inset-0 -z-10 rounded-lg bg-brand-sky/12 ring-1 ring-brand-sky/25"
+                      />
+                    )}
+                    {item.icon}
+                    {item.label}
+                    {active && (
+                      <span
+                        aria-hidden
+                        className="absolute -bottom-[9px] left-2 right-2 h-0.5 rounded-full bg-brand-gradient"
+                      />
+                    )}
+                  </button>
+                );
+              })}
             </nav>
 
             {/* Full menu (all destinations) */}
