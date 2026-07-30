@@ -1,0 +1,12 @@
+# Benchmark outputs contain reference-transcript text — keep them out of git.
+results/
+
+# Audio never enters the repo (plan 11 §5.2: frozen audio lives in private
+# storage; plan 11 §5.3 consent scope).
+audio/
+*.wav
+*.mp3
+*.webm
+*.ogg
+*.flac
+*.m4a

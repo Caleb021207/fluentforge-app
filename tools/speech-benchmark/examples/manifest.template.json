@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "name": "TEMPLATE — every value below is a placeholder to be replaced with real consented data; no recordings exist for these entries",
+  "clips": [
+    {
+      "id": "TEMPLATE-en-adult-l1es-001",
+      "path": "audio/REPLACE-ME-001.wav",
+      "language": "en",
+      "speaker": {
+        "ageBand": "adult",
+        "l1": "es",
+        "consent": {
+          "obtained": true,
+          "method": "TEMPLATE — e.g. written consent form v1 (benchmarking + provider evaluation only, vendors listed, deletion on request, retention <=24 months)",
+          "date": "2026-01-01"
+        }
+      },
+      "reference": {
+        "transcript": "TEMPLATE reference transcript exactly as adjudicated by double transcription"
+      },
+      "condition": {
+        "device": "TEMPLATE e.g. chromebook-builtin-mic",
+        "environment": "TEMPLATE e.g. classroom-noise-overlay"
+      },
+      "tags": ["scripted"]
+    },
+    {
+      "id": "TEMPLATE-en-adult-native-baseline-001",
+      "path": "audio/REPLACE-ME-002.wav",
+      "language": "en",
+      "speaker": {
+        "ageBand": "adult",
+        "l1": "en",
+        "consent": {
+          "obtained": true,
+          "method": "TEMPLATE — written consent form v1",
+          "date": "2026-01-01"
+        }
+      },
+      "reference": {
+        "transcript": "TEMPLATE native-adult baseline utterance (required for the equity-bound denominator)"
+      },
+      "condition": {
+        "device": "TEMPLATE e.g. macbook-builtin-mic",
+        "environment": "TEMPLATE e.g. quiet-office"
+      },
+      "tags": ["scripted"]
+    },
+    {
+      "id": "TEMPLATE-es-adult-l1en-001",
+      "path": "audio/REPLACE-ME-003.wav",
+      "language": "es",
+      "speaker": {
+        "ageBand": "adult",
+        "l1": "en",
+        "consent": {
+          "obtained": true,
+          "method": "TEMPLATE — written consent form v1",
+          "date": "2026-01-01"
+        }
+      },
+      "reference": {
+        "transcript": "TEMPLATE transcripción de referencia adjudicada"
+      },
+      "condition": {
+        "device": "TEMPLATE e.g. ipad-builtin-mic",
+        "environment": "TEMPLATE e.g. quiet-home",
+        "network": "TEMPLATE e.g. school-firewall-sim"
+      },
+      "tags": ["minimal-pair"]
+    },
+    {
+      "id": "TEMPLATE-en-child-l1gu-001",
+      "path": "audio/REPLACE-ME-004.wav",
+      "language": "en",
+      "speaker": {
+        "ageBand": "child",
+        "l1": "gu",
+        "consent": {
+          "obtained": true,
+          "method": "TEMPLATE — guardian written consent + child assent (REQUIRED for ageBand child; see plan 11 §5.2/§5.3)",
+          "date": "2026-01-01",
+          "guardianConsent": true
+        }
+      },
+      "reference": {
+        "transcript": "TEMPLATE child-speech reference — recruit real consented 8-13-year-olds only; never pitch-shift adult audio"
+      },
+      "condition": {
+        "device": "TEMPLATE e.g. chromebook-builtin-mic",
+        "environment": "TEMPLATE e.g. classroom"
+      },
+      "tags": ["spontaneous"]
+    }
+  ]
+}
