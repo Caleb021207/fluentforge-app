@@ -75,10 +75,10 @@ const ChallengeMode = () => {
   // Redirect if no assignment state
   useEffect(() => {
     if (!state) {
-      navigate('/profile');
+      navigate('/assignments');
       toast({
         title: "No Assignment",
-        description: "Please start an assignment from your profile",
+        description: "Please start an assignment from your Assignments page",
         variant: "destructive",
       });
     }
@@ -92,13 +92,13 @@ const ChallengeMode = () => {
       try {
         const { data: submission } = await supabase
           .from('assignment_submissions')
-        .select('messages, message_count')
+          .select('transcript, message_count')
           .eq('id', state.submissionId)
           .single();
-        
-        if (submission?.messages && Array.isArray(submission.messages) && submission.messages.length > 0) {
-          console.log('[ChallengeMode] Restoring progress:', submission.message_count, 'messages');
-          setRestoredMessages(submission.messages as any);
+
+        // Auto-save writes the conversation to `transcript`, so restore from it.
+        if (submission?.transcript && Array.isArray(submission.transcript) && submission.transcript.length > 0) {
+          setRestoredMessages(submission.transcript as any);
         }
       } catch (error) {
         console.error('[ChallengeMode] Error restoring progress:', error);
@@ -195,7 +195,7 @@ const ChallengeMode = () => {
           : "Your assignment has been submitted successfully",
       });
 
-      navigate('/profile', { replace: true });
+      navigate('/assignments', { replace: true });
     } catch (error: any) {
       console.error('Submission error:', error);
       toast({
@@ -342,7 +342,7 @@ const ChallengeMode = () => {
             <AlertDialogCancel>Continue Assignment</AlertDialogCancel>
             <AlertDialogAction 
               className="bg-primary hover:bg-primary/90"
-              onClick={() => navigate('/profile', { replace: true })}
+              onClick={() => navigate('/assignments', { replace: true })}
             >
               Save & Exit
             </AlertDialogAction>

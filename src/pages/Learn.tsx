@@ -39,10 +39,16 @@ const Learn: React.FC = () => {
             Structured units aligned to CEFR and WIDA can-do statements.
           </p>
         </div>
-        <Button onClick={() => navigate("/review")} variant={dueReviews > 0 ? "default" : "outline"}>
-          <Layers className="mr-2 h-4 w-4" />
-          Vocabulary review{dueReviews > 0 ? ` (${dueReviews} due)` : ""}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={() => navigate("/placement-quiz")} variant="outline">
+            <Sparkles className="mr-2 h-4 w-4" />
+            Placement quiz
+          </Button>
+          <Button onClick={() => navigate("/review")} variant={dueReviews > 0 ? "default" : "outline"}>
+            <Layers className="mr-2 h-4 w-4" />
+            Vocabulary review{dueReviews > 0 ? ` (${dueReviews} due)` : ""}
+          </Button>
+        </div>
       </header>
 
       <StudentHomePanel units={units} dueReviews={dueReviews} />
@@ -87,14 +93,15 @@ const Learn: React.FC = () => {
               </div>
               <div className="pt-3">
                 <Progress value={unit.progressPct} className="h-2" />
-                <p className="text-xs text-muted-foreground mt-1">{unit.progressPct}% mastered</p>
+                <p className="text-xs text-muted-foreground mt-1">Skill mastery: {unit.progressPct}%</p>
               </div>
             </CardHeader>
 
             <CardContent className="space-y-4">
               {!unit.unlocked && (
                 <p className="text-sm text-muted-foreground">
-                  Master every skill in the previous unit to unlock this one.
+                  Finish the previous unit's lessons (or master its skills) to
+                  unlock this one — or take the placement quiz to skip ahead.
                 </p>
               )}
 

@@ -7,6 +7,8 @@ import { READING_QUESTIONS } from "@/components/certifications/data/readingQuest
 import { QuestionDisplay } from "@/components/certifications/components/QuestionDisplay";
 import { getLevelDescription } from "@/components/certifications/utils/scoreUtils";
 import { gradeQuiz } from "@/utils/serverWrites";
+import { supabase } from "@/integrations/supabase/client";
+import { secureStorage } from "@/utils/security/dataEncryption";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight, Award, BookOpen } from "lucide-react";
 
@@ -67,6 +69,25 @@ const PlacementQuiz = () => {
     });
     setGradedResult(graded ? { score: graded.score, level: graded.level } : null);
     setQuizState("results");
+
+    // Persist the placement so the learning path and practice chat can use it.
+    if (graded?.level) {
+      secureStorage.setItem("placementLevel", graded.level, false);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase
+            .from("profiles")
+            .update({
+              placement_cefr: graded.level,
+              placement_taken_at: new Date().toISOString(),
+            })
+            .eq("id", user.id);
+        }
+      } catch (err) {
+        console.error("Failed to save placement level to profile:", err);
+      }
+    }
   };
 
   const getScore = () => gradedResult?.score ?? 0;
@@ -93,9 +114,8 @@ const PlacementQuiz = () => {
   };
 
   const goToLessons = () => {
-    // Use the starting level (one below recommended) instead of the recommended level
-    const level = getStartingLevel();
-    navigate(`/lessons?level=${level}`);
+    // The learning path reads the persisted placement level itself.
+    navigate("/learn");
   };
 
   if (quizState === "intro") {
@@ -106,7 +126,7 @@ const PlacementQuiz = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="bg-white shadow-lg">
+          <Card className="bg-card shadow-lg">
             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
               <CardTitle className="text-2xl font-bold">Language Placement Quiz</CardTitle>
               <CardDescription className="text-white opacity-90">
@@ -120,25 +140,25 @@ const PlacementQuiz = () => {
                 </p>
                 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="bg-gray-50 p-4 rounded-lg flex gap-3">
+                  <div className="bg-muted/50 p-4 rounded-lg flex gap-3">
                     <div className="mt-1">
                       <BookOpen className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Quiz Format</h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         12 multiple-choice questions covering different proficiency levels
                       </p>
                     </div>
                   </div>
                   
-                  <div className="bg-gray-50 p-4 rounded-lg flex gap-3">
+                  <div className="bg-muted/50 p-4 rounded-lg flex gap-3">
                     <div className="mt-1">
                       <Award className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Results</h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         Receive your CEFR level (A1-C2) and personalized learning recommendations
                       </p>
                     </div>
@@ -146,7 +166,7 @@ const PlacementQuiz = () => {
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="px-6 py-4 bg-gray-50 rounded-b-lg">
+            <CardFooter className="px-6 py-4 bg-muted/40 rounded-b-lg">
               <Button onClick={startQuiz} className="w-full md:w-auto">
                 Start Placement Quiz
                 <ChevronRight className="ml-2 h-4 w-4" />
@@ -172,7 +192,7 @@ const PlacementQuiz = () => {
           <div className="space-y-4">
             <h1 className="text-xl font-bold text-foreground">Placement Quiz</h1>
             <Progress value={progress} className="h-2" />
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Question {currentQuestionIndex + 1} of {quizQuestions.length}
             </p>
           </div>
@@ -207,7 +227,7 @@ const PlacementQuiz = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="bg-white shadow-lg">
+          <Card className="bg-card shadow-lg">
             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
               <CardTitle className="text-2xl font-bold">Your Results</CardTitle>
               <CardDescription className="text-white opacity-90">
@@ -221,24 +241,24 @@ const PlacementQuiz = () => {
                     {recommendedLevel}
                   </div>
                   <h2 className="text-xl font-bold mb-2">Your level: {recommendedLevel}</h2>
-                  <p className="text-center text-gray-600 max-w-md">{levelDescription}</p>
+                  <p className="text-center text-muted-foreground max-w-md">{levelDescription}</p>
                 </div>
                 
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-muted/50 p-6 rounded-lg">
                   <h3 className="font-semibold text-lg mb-2">Next Steps</h3>
                   <p className="mb-4">
                     To ensure a solid foundation, we'll start you at level {startingLevel}, which is one level below your 
                     assessed proficiency. This will help you build confidence while reviewing important concepts.
                   </p>
                   {startingLevel !== recommendedLevel && (
-                    <p className="p-3 bg-blue-50 rounded border border-blue-100 text-sm">
+                    <p className="p-3 bg-primary/10 rounded border border-primary/20 text-sm">
                       <strong>Starting level ({startingLevel}):</strong> {startingLevelDescription}
                     </p>
                   )}
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="px-6 py-4 bg-gray-50 rounded-b-lg">
+            <CardFooter className="px-6 py-4 bg-muted/40 rounded-b-lg">
               <Button onClick={goToLessons} className="w-full md:w-auto">
                 Start Learning
                 <ChevronRight className="ml-2 h-4 w-4" />

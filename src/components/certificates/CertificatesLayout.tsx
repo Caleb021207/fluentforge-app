@@ -59,13 +59,13 @@ const CertificatesLayout = ({
                   key={level}
                   variant="outline" 
                   size="sm"
-                  onClick={() => navigate(`/certificates/reading/${level.toLowerCase()}`)}
+                  onClick={() => navigate(`/reading-certification/${level.toLowerCase()}`)}
                 >
                   {level}
                 </Button>
               ))}
             </div>
-            <Button className="w-full" onClick={() => navigate('/certificates/reading')}>
+            <Button className="w-full" onClick={() => navigate('/reading-certification')}>
               {t("startTest")}
             </Button>
           </CardContent>
@@ -83,7 +83,7 @@ const CertificatesLayout = ({
             <p className="text-gray-600 text-base md:text-lg">
               Test your writing skills with prompts at various CEFR levels.
             </p>
-            <Button className="w-full" onClick={() => navigate('/certificates/writing')}>
+            <Button className="w-full" onClick={() => navigate('/writing-certification')}>
               {t("startTest")}
             </Button>
           </CardContent>

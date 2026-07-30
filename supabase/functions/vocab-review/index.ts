@@ -45,18 +45,33 @@ Deno.serve(async (req) => {
 
     /* -------------------------------------------------------------- queue */
     if (action === "queue") {
-      // Vocabulary the learner has actually been taught: mapped to published lessons.
-      const { data: lessons } = await db
-        .from("lessons")
-        .select("id, status")
-        .in("status", ["operational", "gated"]);
-      const lessonIds = (lessons ?? []).map((l: Record<string, any>) => l.id);
+      // Vocabulary the learner has actually been taught: mapped to lessons
+      // THIS learner has started or completed. (Previously this pulled from
+      // every published lesson, handing brand-new learners C1 vocabulary.)
+      const { data: progressRows } = await db
+        .from("lesson_progress")
+        .select("lesson_id")
+        .eq("user_id", userId);
+      const lessonIds = [...new Set((progressRows ?? []).map((p: Record<string, any>) => p.lesson_id))];
 
       const { data: mapRows } = await db
         .from("vocab_lesson_map")
         .select("vocabulary_id, lesson_id")
         .in("lesson_id", lessonIds.length ? lessonIds : ["00000000-0000-0000-0000-000000000000"]);
-      const taughtIds = [...new Set((mapRows ?? []).map((m: Record<string, any>) => m.vocabulary_id))];
+      const taughtFromLessons = (mapRows ?? []).map((m: Record<string, any>) => m.vocabulary_id);
+
+      // Words the learner already has review history for stay in the deck even
+      // if their source lesson mapping changes.
+      const { data: existingStates } = await db
+        .from("vocab_card_state")
+        .select("vocabulary_id")
+        .eq("user_id", userId);
+      const taughtIds = [
+        ...new Set([
+          ...taughtFromLessons,
+          ...(existingStates ?? []).map((s: Record<string, any>) => s.vocabulary_id),
+        ]),
+      ];
 
       if (!taughtIds.length) return json({ cards: [], due: 0, new: 0, retention: DESIRED_RETENTION });
 

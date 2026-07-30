@@ -1,7 +1,12 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+/**
+ * Reports whether a user is signed in so pages can show a sign-in prompt
+ * instead of empty RLS-filtered content. (A previous version returned
+ * `isAuthenticated: true` in every branch, which made every auth prompt in
+ * the app dead code and left signed-out visitors on blank pages.)
+ */
 export const useAuthGuard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -10,15 +15,10 @@ export const useAuthGuard = () => {
     const checkAuth = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(true);
-        }
+        setIsAuthenticated(!!user);
       } catch (error) {
         console.error('Auth check error:', error);
-        setIsAuthenticated(true);
+        setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
       }
@@ -26,12 +26,8 @@ export const useAuthGuard = () => {
 
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(true);
-      }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session?.user);
     });
 
     return () => subscription.unsubscribe();

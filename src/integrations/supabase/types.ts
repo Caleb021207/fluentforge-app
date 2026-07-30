@@ -1448,6 +1448,8 @@ export type Database = {
           native_language: string | null
           parental_consent_at: string | null
           parental_consent_granted: boolean
+          placement_cefr: string | null
+          placement_taken_at: string | null
           role: string | null
           safety_mode: string
           school_id: string | null
@@ -1473,6 +1475,8 @@ export type Database = {
           native_language?: string | null
           parental_consent_at?: string | null
           parental_consent_granted?: boolean
+          placement_cefr?: string | null
+          placement_taken_at?: string | null
           role?: string | null
           safety_mode?: string
           school_id?: string | null
@@ -1498,6 +1502,8 @@ export type Database = {
           native_language?: string | null
           parental_consent_at?: string | null
           parental_consent_granted?: boolean
+          placement_cefr?: string | null
+          placement_taken_at?: string | null
           role?: string | null
           safety_mode?: string
           school_id?: string | null
