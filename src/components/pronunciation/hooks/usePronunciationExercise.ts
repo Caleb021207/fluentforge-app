@@ -205,7 +205,6 @@ export const usePronunciationExercise = () => {
               pronunciation_accuracy: analysisResult.accuracyScore,
               grammar_accuracy: null,
               conversation_complexity: null,
-              message_count: 1
             });
           
           if (insertError) {

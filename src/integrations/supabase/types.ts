@@ -189,46 +189,76 @@ export type Database = {
       }
       assignment_submissions: {
         Row: {
+          accepted_at: string | null
+          ai_feedback: Json | null
+          ai_score: number | null
           assignment_id: string
+          completed_at: string | null
           created_at: string
+          duration_seconds: number | null
+          expires_at: string | null
           id: string
           message_count: number | null
           messages: Json | null
           score: number | null
+          session_id: string | null
+          started_at: string | null
           status: string | null
           student_id: string
           submitted_at: string | null
           teacher_notes: string | null
           teacher_override_score: number | null
+          transcript: Json | null
           updated_at: string
+          xp_awarded: number | null
         }
         Insert: {
+          accepted_at?: string | null
+          ai_feedback?: Json | null
+          ai_score?: number | null
           assignment_id: string
+          completed_at?: string | null
           created_at?: string
+          duration_seconds?: number | null
+          expires_at?: string | null
           id?: string
           message_count?: number | null
           messages?: Json | null
           score?: number | null
+          session_id?: string | null
+          started_at?: string | null
           status?: string | null
           student_id: string
           submitted_at?: string | null
           teacher_notes?: string | null
           teacher_override_score?: number | null
+          transcript?: Json | null
           updated_at?: string
+          xp_awarded?: number | null
         }
         Update: {
+          accepted_at?: string | null
+          ai_feedback?: Json | null
+          ai_score?: number | null
           assignment_id?: string
+          completed_at?: string | null
           created_at?: string
+          duration_seconds?: number | null
+          expires_at?: string | null
           id?: string
           message_count?: number | null
           messages?: Json | null
           score?: number | null
+          session_id?: string | null
+          started_at?: string | null
           status?: string | null
           student_id?: string
           submitted_at?: string | null
           teacher_notes?: string | null
           teacher_override_score?: number | null
+          transcript?: Json | null
           updated_at?: string
+          xp_awarded?: number | null
         }
         Relationships: [
           {
