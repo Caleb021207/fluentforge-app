@@ -1,8 +1,8 @@
-// @ts-nocheck
+import { languageCodeMap } from './constants';
 
 export { languageCodeMap, TTL_DURATION, CACHE_CLEANUP_INTERVAL } from './constants';
 export { ttsCache } from './cache';
-export { isTTSSupported, useBrowserTTS } from './browserTTS';
+export { isTTSSupported, getBrowserTTS } from './browserTTS';
 export { playTTS, preloadTTS } from './supabaseTTS';
 export { trackTTSUsage } from './tracking';
 export type { TTSOptions } from './types';

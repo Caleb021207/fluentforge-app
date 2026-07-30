@@ -79,7 +79,7 @@ const WritingCertification = () => {
       if (gradeError) throw gradeError;
 
       // Extract score and make sure to use our rubric to determine level
-      let { score, feedback } = gradeResult;
+      const { score, feedback } = gradeResult;
       
       // Use our own determineLevel function to ensure consistency with the rubric
       const level = determineLevel(score);

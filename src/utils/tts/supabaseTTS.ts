@@ -1,7 +1,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { ttsCache } from "./cache";
-import { useBrowserTTS } from "./browserTTS";
+import { getBrowserTTS } from "./browserTTS";
 import type { TTSOptions } from "./types";
 import { toast } from "sonner";
 
@@ -94,7 +94,7 @@ export const playTTS = async ({
       });
       
       // Use browser TTS as fallback
-      const browserTTS = useBrowserTTS();
+      const browserTTS = getBrowserTTS();
       if (browserTTS.isBrowserSupported) {
         console.log("Falling back to browser TTS");
         browserTTS.speak(text, language, onStart, onEnd, onError);
@@ -109,7 +109,7 @@ export const playTTS = async ({
       console.error("TTS error from Supabase:", error || "No audio content returned");
       
       // Fall back to browser TTS if available
-      const browserTTS = useBrowserTTS();
+      const browserTTS = getBrowserTTS();
       if (browserTTS.isBrowserSupported) {
         console.log("Falling back to browser TTS");
         browserTTS.speak(text, language, onStart, onEnd, onError);

@@ -17,7 +17,9 @@ export const getParentalSafetyMode = (): 'strict' | 'standard' => {
  * @deprecated Use setSafetyMode from './safetyModes' instead
  */
 export const setParentalSafetyMode = (mode: 'strict' | 'standard'): void => {
-  localStorage.getItem("parentalControlsLocked") !== "true" && localStorage.setItem("safetyMode", mode);
+  if (localStorage.getItem("parentalControlsLocked") !== "true") {
+    localStorage.setItem("safetyMode", mode);
+  }
 };
 
 /**
@@ -55,6 +57,7 @@ export const getParentalDataConsentStatus = (): boolean => {
  * Sets the parental consent status for data sharing
  */
 export const setParentalDataConsentStatus = (hasConsent: boolean): void => {
-  localStorage.getItem("parentalControlsLocked") !== "true" && 
+  if (localStorage.getItem("parentalControlsLocked") !== "true") {
     localStorage.setItem("parentalDataConsent", hasConsent ? "true" : "false");
+  }
 };

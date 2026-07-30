@@ -34,7 +34,7 @@ const IGNORE_PATTERNS = [
   /^(onClick|onSubmit|onChange|onFocus|onBlur)/, // Event handlers
   /^[A-Z][a-zA-Z]*$/, // Component names (PascalCase)
   /^\$\{/, // Template literal variables
-  /^\/[^\/].*\/$/, // Regex patterns
+  /^\/[^/].*\/$/, // Regex patterns
 ];
 
 interface ExtractedText {

@@ -144,7 +144,7 @@ export const analyzeSpeakingComplexity = (messages: any[]): number => {
   else sentenceComplexityFactor = 0.5;
   
   // Vocabulary diversity factor
-  let vocabDiversityFactor = vocabularyDiversity * 10; // Scale to 0-2 range
+  const vocabDiversityFactor = vocabularyDiversity * 10; // Scale to 0-2 range
   
   // Combine all factors for total complexity score (0-10 scale)
   complexityScore = messageCountFactor + lengthFactor + sentenceComplexityFactor + vocabDiversityFactor;
@@ -169,7 +169,7 @@ export const analyzeSpeakingComplexity = (messages: any[]): number => {
 
 export const calculateEnhancedScore = (speechComplexity: number, messageCount: number): number => {
   // Base score calculation
-  let baseScore = 50; // Start at A2 level
+  const baseScore = 50; // Start at A2 level
   
   // Minimum requirements for higher levels
   if (messageCount < 3) {
@@ -222,8 +222,8 @@ export const generateDetailedFeedback = (
 } => {
   // Dynamic feedback based on conversation characteristics
   let feedback = "";
-  let strengths: string[] = [];
-  let areasToImprove: string[] = [];
+  const strengths: string[] = [];
+  const areasToImprove: string[] = [];
   
   // Calculate factors for feedback
   const hasGoodVocabulary = speechComplexity >= 5;

@@ -69,10 +69,10 @@ export const validateFile = (file: File): { valid: boolean; error?: string } => 
  */
 export const sanitizeFilename = (filename: string): string => {
   // Remove path traversal patterns
-  let sanitized = filename.replace(/[\/\\:*?"<>|]/g, '_');
-  
+  let sanitized = filename.replace(/[/\\:*?"<>|]/g, '_');
+
   // Remove leading/trailing dots and spaces
-  sanitized = sanitized.replace(/^[\.\s]+|[\.\s]+$/g, '');
+  sanitized = sanitized.replace(/^[.\s]+|[.\s]+$/g, '');
   
   // Ensure filename isn't empty
   if (!sanitized) {

@@ -11,7 +11,7 @@ export const isTTSSupported = (): boolean => {
 /**
  * Fallback to browser's built-in TTS as a last resort
  */
-export const useBrowserTTS = () => {
+export const getBrowserTTS = () => {
   return {
     isBrowserSupported: isTTSSupported(),
     speak: (

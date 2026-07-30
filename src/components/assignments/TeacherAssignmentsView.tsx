@@ -25,11 +25,7 @@ const TeacherAssignmentsView = ({ classId, className }: TeacherAssignmentsViewPr
   } = useTeacherAssignments(classId);
 
   const handleCreateAssignment = async (data: any) => {
-    try {
-      await createAssignment(data);
-    } catch (error: any) {
-      throw error;
-    }
+    await createAssignment(data);
   };
 
   const handleDeleteAssignment = async (id: string) => {

@@ -132,7 +132,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
 
     console.log('getExtendedUserProfile: Basic profile found:', profile);
 
-    let extendedProfile: ExtendedUserProfile = {
+    const extendedProfile: ExtendedUserProfile = {
       ...profile,
       school: null,
       district_associations: []

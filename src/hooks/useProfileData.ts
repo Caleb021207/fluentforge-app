@@ -75,7 +75,7 @@ export const useProfileData = () => {
           console.log('👤 User role:', basicProfile.role);
 
           // Build extended profile
-          let extendedProfile: ExtendedUserProfile = {
+          const extendedProfile: ExtendedUserProfile = {
             ...basicProfile,
             school: null,
             district_associations: []

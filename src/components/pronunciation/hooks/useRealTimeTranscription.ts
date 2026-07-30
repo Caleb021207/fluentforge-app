@@ -66,7 +66,7 @@ export const useRealTimeTranscription = ({
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognitionAPI();
     
-    let recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
+    const recognitionLanguage = getSpeechSynthesisLanguageCode(targetLanguage.toLowerCase());
     recognition.lang = recognitionLanguage;
     recognition.interimResults = true;
     recognition.continuous = true;
