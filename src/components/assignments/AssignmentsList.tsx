@@ -16,8 +16,20 @@ import {
 } from "lucide-react";
 import { format } from 'date-fns';
 import { TeacherAssignment, StudentSubmission } from '@/hooks/useTeacherAssignments';
+import { isFinished, isInProgress, needsGrading, statusLabel } from '@/utils/assignmentStatus';
 import SubmissionTranscriptModal from './SubmissionTranscriptModal';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface AssignmentsListProps {
   assignments: TeacherAssignment[];
@@ -39,14 +51,15 @@ const AssignmentsList = ({
     const assignmentSubs = submissions.filter(s => s.assignment_id === assignmentId);
     // Total is all students assigned (all submissions, regardless of status)
     const total = assignmentSubs.length;
-    const completed = assignmentSubs.filter(s => s.status === 'completed' || s.status === 'graded').length;
-    const inProgress = assignmentSubs.filter(s => s.status === 'in_progress').length;
+    const completed = assignmentSubs.filter(s => isFinished(s.status)).length;
+    const inProgress = assignmentSubs.filter(s => isInProgress(s.status)).length;
     const notStarted = assignmentSubs.filter(s => s.status === 'pending').length;
+    const ungraded = assignmentSubs.filter(s => needsGrading(s.status)).length;
     const avgScore = assignmentSubs
       .filter(s => s.score !== null)
       .reduce((acc, s, _, arr) => acc + ((s.score ?? 0) / arr.length), 0);
-    
-    return { total, completed, inProgress, notStarted, avgScore, submissions: assignmentSubs };
+
+    return { total, completed, inProgress, notStarted, ungraded, avgScore, submissions: assignmentSubs };
   };
 
   const toggleExpanded = (assignmentId: string) => {
@@ -96,14 +109,36 @@ const AssignmentsList = ({
                     <p className="text-sm text-muted-foreground">{assignment.description}</p>
                   )}
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="text-destructive hover:text-destructive"
-                  onClick={() => onDeleteAssignment(assignment.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive hover:text-destructive"
+                      aria-label="Delete assignment"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete "{assignment.title}"?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This permanently deletes the assignment and every student
+                        submission attached to it. This cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        onClick={() => onDeleteAssignment(assignment.id)}
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </CardHeader>
             <CardContent>
@@ -145,6 +180,11 @@ const AssignmentsList = ({
                           {stats.inProgress} in progress
                         </Badge>
                       )}
+                      {stats.ungraded > 0 && (
+                        <Badge variant="outline" className="text-xs bg-blue-500/10 border-blue-500/30 text-blue-600">
+                          {stats.ungraded} to grade
+                        </Badge>
+                      )}
                     </div>
                     
                     {stats.total > 0 && (
@@ -171,31 +211,29 @@ const AssignmentsList = ({
                         <p className="text-sm text-muted-foreground">No submissions yet</p>
                       ) : (
                         stats.submissions.map((sub) => {
-                          const isCompleted = sub.status === 'completed' || sub.score === 100;
+                          const finished = isFinished(sub.status);
                           const hasTeacherGrade = sub.teacher_override_score !== null;
-                          
+
                           return (
-                            <div 
-                              key={sub.id} 
+                            <div
+                              key={sub.id}
                               className="flex items-center justify-between bg-background/50 rounded-md px-3 py-2"
                             >
                               <div className="flex items-center gap-3">
+                                <span className="min-w-[8rem] text-sm font-medium">
+                                  {sub.student_name || 'Student'}
+                                </span>
                                 {/* Completion status */}
-                                <Badge 
-                                  variant={isCompleted ? 'default' : 'secondary'}
-                                  className={`text-xs flex items-center gap-1 ${isCompleted ? 'bg-green-600' : 'bg-orange-500'}`}
+                                <Badge
+                                  variant={finished ? 'default' : 'secondary'}
+                                  className={`text-xs flex items-center gap-1 ${finished ? 'bg-green-600' : 'bg-orange-500'}`}
                                 >
-                                  {isCompleted ? (
-                                    <>
-                                      <CheckCircle className="h-3 w-3" />
-                                      Completed
-                                    </>
+                                  {finished ? (
+                                    <CheckCircle className="h-3 w-3" />
                                   ) : (
-                                    <>
-                                      <XCircle className="h-3 w-3" />
-                                      Incomplete
-                                    </>
+                                    <XCircle className="h-3 w-3" />
                                   )}
+                                  {statusLabel(sub.status)}
                                 </Badge>
                                 {/* Teacher grade if present */}
                                 {hasTeacherGrade && (
@@ -236,6 +274,7 @@ const AssignmentsList = ({
 
       <SubmissionTranscriptModal
         submission={selectedSubmission}
+        studentName={selectedSubmission?.student_name}
         isOpen={selectedSubmission !== null}
         onClose={() => setSelectedSubmission(null)}
         onGradeSaved={() => {

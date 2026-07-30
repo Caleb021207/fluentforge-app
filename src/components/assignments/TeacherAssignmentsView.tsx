@@ -13,15 +13,16 @@ interface TeacherAssignmentsViewProps {
   className: string;
 }
 
-const TeacherAssignmentsView = ({ classId, className }: TeacherAssignmentsViewProps) => {
+const TeacherAssignmentsView = ({ classId }: TeacherAssignmentsViewProps) => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { 
-    assignments, 
-    submissions, 
-    isLoading, 
-    createAssignment, 
-    deleteAssignment 
+  const {
+    assignments,
+    submissions,
+    isLoading,
+    createAssignment,
+    deleteAssignment,
+    fetchAssignments
   } = useTeacherAssignments(classId);
 
   const handleCreateAssignment = async (data: any) => {
@@ -62,10 +63,11 @@ const TeacherAssignmentsView = ({ classId, className }: TeacherAssignmentsViewPr
         </Button>
       </div>
 
-      <AssignmentsList 
+      <AssignmentsList
         assignments={assignments}
         submissions={submissions}
         onDeleteAssignment={handleDeleteAssignment}
+        onRefresh={fetchAssignments}
       />
 
       <CreateAssignmentDialog

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { isFinished } from '@/utils/assignmentStatus';
 import { useLocalization } from '@/context/LocalizationContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -151,7 +152,7 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
           s.student_id === studentId && classAssignmentIds.includes(s.assignment_id!)
         ) || [];
         
-        const completedSubmissions = studentSubmissions.filter(s => s.status === 'completed');
+        const completedSubmissions = studentSubmissions.filter(s => isFinished(s.status));
         const avgScore = completedSubmissions.length > 0
           ? completedSubmissions.reduce((sum, s) => sum + (s.score || 0), 0) / completedSubmissions.length
           : 0;
@@ -172,7 +173,9 @@ const StudentProgressTable = ({ teacherId, onStudentSelect }: StudentProgressTab
           classId,
           cefrLevel: cefrMap.get(studentId) || null,
           completedAssignments: completedSubmissions.length,
-          totalAssignments: classAssignmentIds.length,
+          // A submission row exists for every assignment actually given to this
+          // student, so it is the correct denominator for differentiated work.
+          totalAssignments: studentSubmissions.length,
           averageScore: Math.round(avgScore),
           lastActive,
           status

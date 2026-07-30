@@ -29,6 +29,8 @@ export interface StudentSubmission {
   student_name?: string;
   teacher_override_score: number | null;
   teacher_notes: string | null;
+  ai_score?: number | null;
+  ai_feedback?: { summary?: string } | null;
   created_at: string;
   updated_at: string;
 }
@@ -66,7 +68,26 @@ export const useTeacherAssignments = (classId?: string) => {
 
         if (subError) throw subError;
 
-        setSubmissions(submissionsData || []);
+        // Resolve student names so teachers never grade anonymous work.
+        // (RLS lets teachers read profiles of their enrolled students.)
+        const rows = submissionsData || [];
+        const studentIds = [...new Set(rows.map(s => s.student_id))];
+        let nameById = new Map<string, string>();
+        if (studentIds.length > 0) {
+          const { data: profilesData } = await supabase
+            .from('profiles')
+            .select('id, display_name, email')
+            .in('id', studentIds);
+          nameById = new Map(
+            (profilesData || []).map(p => [p.id, p.display_name || p.email || 'Student'])
+          );
+        }
+
+        setSubmissions(
+          rows.map(s => ({ ...s, student_name: nameById.get(s.student_id) })) as StudentSubmission[]
+        );
+      } else {
+        setSubmissions([]);
       }
     } catch (err: any) {
       console.error('Error fetching teacher assignments:', err);

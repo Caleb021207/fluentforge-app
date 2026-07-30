@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from 'date-fns';
 import { User, Bot, Calendar, MessageSquare, CheckCircle, XCircle, Save, Edit } from 'lucide-react';
 import { StudentSubmission } from '@/hooks/useTeacherAssignments';
+import { isFinished, statusLabel } from '@/utils/assignmentStatus';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -47,10 +48,11 @@ const SubmissionTranscriptModal = ({
 
   const transcript = (Array.isArray((submission as any).messages) ? (submission as any).messages : []) as TranscriptMessage[];
   const userMessages = transcript.filter(m => m.role === 'user').length;
-  const feedback = (submission as any).teacher_notes as Record<string, unknown> | null;
-  
-  // Determine completion status
-  const isCompleted = submission.status === 'completed' || submission.score === 100;
+  // Automated completion feedback lives in ai_feedback (written by the
+  // grade-assignment edge function); teacher_notes is the teacher's own text.
+  const aiFeedback = submission.ai_feedback ?? null;
+
+  const finished = isFinished(submission.status);
   const hasTeacherGrade = submission.teacher_override_score !== null;
 
   const handleStartEditing = () => {
@@ -133,21 +135,16 @@ const SubmissionTranscriptModal = ({
             </Badge>
           )}
           {/* Completion status badge */}
-          <Badge 
-            variant={isCompleted ? "default" : "secondary"}
-            className={`flex items-center gap-1 ${isCompleted ? 'bg-green-600' : 'bg-orange-500'}`}
+          <Badge
+            variant={finished ? "default" : "secondary"}
+            className={`flex items-center gap-1 ${finished ? 'bg-green-600' : 'bg-orange-500'}`}
           >
-            {isCompleted ? (
-              <>
-                <CheckCircle className="h-3 w-3" />
-                Completed
-              </>
+            {finished ? (
+              <CheckCircle className="h-3 w-3" />
             ) : (
-              <>
-                <XCircle className="h-3 w-3" />
-                Incomplete
-              </>
+              <XCircle className="h-3 w-3" />
             )}
+            {statusLabel(submission.status)}
           </Badge>
         </div>
 
@@ -258,13 +255,11 @@ const SubmissionTranscriptModal = ({
           )}
         </div>
 
-        {/* Completion Summary */}
-        {feedback && typeof feedback === 'object' && (
+        {/* Automated completion summary from the grading function */}
+        {aiFeedback?.summary && (
           <div className="pt-3 border-t border-border/50">
             <h4 className="text-sm font-medium mb-1">Completion Summary</h4>
-            <p className="text-sm text-muted-foreground">
-              {(feedback as any).summary || 'Assignment submitted.'}
-            </p>
+            <p className="text-sm text-muted-foreground">{aiFeedback.summary}</p>
           </div>
         )}
       </DialogContent>

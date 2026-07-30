@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { isFinished } from '@/utils/assignmentStatus';
 import { useLocalization } from '@/context/LocalizationContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -20,9 +21,11 @@ import ClassPronunciationAccuracyChart from '../ClassPronunciationAccuracyChart'
 
 interface ClassPerformanceOverviewProps {
   teacherId: string | undefined;
+  /** Navigate to the Students tab (e.g. from the needs-attention alert). */
+  onViewStudents?: () => void;
 }
 
-const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) => {
+const ClassPerformanceOverview = ({ teacherId, onViewStudents }: ClassPerformanceOverviewProps) => {
   const { t } = useLocalization();
 
   const { data: stats, isLoading } = useQuery({
@@ -73,7 +76,7 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
         .select('id, score, status, student_id')
         .in('assignment_id', assignmentIds);
 
-      const completedSubmissions = submissions?.filter(s => s.status === 'completed') || [];
+      const completedSubmissions = submissions?.filter(s => isFinished(s.status)) || [];
       const avgGrade = completedSubmissions.length > 0
         ? completedSubmissions.reduce((sum, s) => sum + (s.score || 0), 0) / completedSubmissions.length
         : 0;
@@ -335,15 +338,24 @@ const ClassPerformanceOverview = ({ teacherId }: ClassPerformanceOverviewProps) 
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ scale: 1.01 }}
           >
-            <Card className="glass border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10">
+            <Card
+              className="glass cursor-pointer border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 transition-colors hover:border-amber-500/60"
+              role="button"
+              tabIndex={0}
+              aria-label={t("studentsNeedAttention")}
+              onClick={onViewStudents}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') onViewStudents?.();
+              }}
+            >
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-3 rounded-xl bg-amber-500/20 border border-amber-500/30">
                     <AlertCircle className="h-6 w-6 text-amber-500" />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-semibold text-lg">{stats?.studentsNeedingAttention} {t("studentsNeedAttention")}</p>
-                    <p className="text-sm text-muted-foreground">{t("noActivityIn7Days")}</p>
+                    <p className="text-sm text-muted-foreground">{t("noActivityIn7Days")} · Click to view students</p>
                   </div>
                 </div>
               </CardContent>

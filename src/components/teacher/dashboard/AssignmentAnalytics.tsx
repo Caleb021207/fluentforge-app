@@ -1,18 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  FileText, 
-  Clock, 
-  CheckCircle, 
+import {
+  FileText,
+  Clock,
+  CheckCircle,
   XCircle,
   TrendingUp,
-  Users
+  Users,
+  PlusCircle
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { isFinished, isInProgress } from '@/utils/assignmentStatus';
 import { useLocalization } from '@/context/LocalizationContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
@@ -31,6 +34,8 @@ import {
 
 interface AssignmentAnalyticsProps {
   teacherId: string | undefined;
+  /** Jump to the class management tab, where assignments are created. */
+  onCreateAssignment?: () => void;
 }
 
 interface AssignmentData {
@@ -53,7 +58,7 @@ const STATUS_COLORS = {
   unopened: '#64748b'      // Slate gray - neutral
 };
 
-const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
+const AssignmentAnalytics = ({ teacherId, onCreateAssignment }: AssignmentAnalyticsProps) => {
   const { t } = useLocalization();
 
   const { data: analyticsData, isLoading } = useQuery({
@@ -104,14 +109,15 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
         const totalStudents = studentsPerClass.get(assignment.class_id!) || 0;
         const assignmentSubmissions = submissions?.filter(s => s.assignment_id === assignment.id) || [];
         
-        // Completed: status is 'completed'
-        const completed = assignmentSubmissions.filter(s => s.status === 'completed').length;
-        // In Progress: status is 'in_progress' or 'pending' (student has opened/started)
-        const inProgress = assignmentSubmissions.filter(s => s.status === 'pending' || s.status === 'in_progress').length;
-        // Unopened: students who haven't created a submission at all
+        // Finished: student completed the work (whether or not it's been graded)
+        const completed = assignmentSubmissions.filter(s => isFinished(s.status)).length;
+        // In Progress: student has an open submission (assigned or actively working)
+        const inProgress = assignmentSubmissions.filter(s => isInProgress(s.status) || s.status === 'pending').length;
+        // Everything else (e.g. marked incomplete, or students with no
+        // submission row at all) counts as not completed.
         const unopened = Math.max(0, totalStudents - completed - inProgress);
 
-        const completedWithScores = assignmentSubmissions.filter(s => s.status === 'completed' && s.score != null);
+        const completedWithScores = assignmentSubmissions.filter(s => isFinished(s.status) && s.score != null);
         const avgScore = completedWithScores.length > 0
           ? completedWithScores.reduce((sum, s) => sum + (s.score || 0), 0) / completedWithScores.length
           : 0;
@@ -185,6 +191,16 @@ const AssignmentAnalytics = ({ teacherId }: AssignmentAnalyticsProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Create action — assignment creation lives on each class card. */}
+      {onCreateAssignment && (
+        <div className="flex justify-end">
+          <Button onClick={onCreateAssignment} className="gap-2">
+            <PlusCircle className="h-4 w-4" />
+            {t("createAssignment") || "Create Assignment"}
+          </Button>
+        </div>
+      )}
+
       {/* Summary Cards - Responsive grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <motion.div

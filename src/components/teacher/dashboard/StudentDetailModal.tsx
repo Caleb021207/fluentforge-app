@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { isFinished, statusLabel } from '@/utils/assignmentStatus';
 import { useLocalization } from '@/context/LocalizationContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -112,7 +113,7 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
       })) || [];
 
       // Calculate stats
-      const completedSubmissions = submissions?.filter(s => s.status === 'completed') || [];
+      const completedSubmissions = submissions?.filter(s => isFinished(s.status)) || [];
       const avgScore = completedSubmissions.length > 0
         ? completedSubmissions.reduce((sum, s) => sum + ((s as any).score || 0), 0) / completedSubmissions.length
         : 0;
@@ -400,8 +401,8 @@ const StudentDetailModal = ({ studentId, open, onClose }: StudentDetailModalProp
                           </p>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Badge variant={submission.status === 'completed' ? 'default' : 'secondary'}>
-                            {submission.status}
+                          <Badge variant={isFinished(submission.status) ? 'default' : 'secondary'}>
+                            {statusLabel(submission.status)}
                           </Badge>
                           {submission.score != null && (
                             <span className={`font-bold ${

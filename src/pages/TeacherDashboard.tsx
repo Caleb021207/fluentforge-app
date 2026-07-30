@@ -209,7 +209,10 @@ const TeacherDashboard = () => {
 
 
             <TabsContent value="overview" className="space-y-6 mt-6">
-              <ClassPerformanceOverview teacherId={user?.id} />
+              <ClassPerformanceOverview
+                teacherId={user?.id}
+                onViewStudents={() => setActiveTab('students')}
+              />
             </TabsContent>
 
             <TabsContent value="classes" className="space-y-6 mt-6">
@@ -224,7 +227,10 @@ const TeacherDashboard = () => {
             </TabsContent>
 
             <TabsContent value="assignments" className="space-y-6 mt-6">
-              <AssignmentAnalytics teacherId={user?.id} />
+              <AssignmentAnalytics
+                teacherId={user?.id}
+                onCreateAssignment={() => setActiveTab('classes')}
+              />
             </TabsContent>
 
             <TabsContent value="curriculum" className="space-y-6 mt-6">
