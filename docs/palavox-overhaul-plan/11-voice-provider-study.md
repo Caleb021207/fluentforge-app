@@ -250,9 +250,7 @@ Usage bands [assumption — no current telemetry exists to calibrate; instrument
 | Per 10-min speaking lesson | $0.22 | $0.13 |
 | Per active-learner-month — light/expected/heavy | $0.44 / $1.32 / $3.30 | $0.26 / $0.78 / $1.95 |
 
-**Consumer ($8–15/mo [assumption from brief]):** expected-usage voice COGS $0.78–1.32 = **9–16% of an $8 plan, 5–9% of $15** — healthy; even heavy users stay under 41%/22%. A-only flagship at expected usage is $3.12/mo = 21–39% of price — the current P1 economics do not survive consumer pricing without the D1 cap actually working [estimated].
-**District ($4–8/student/yr [assumption — flagged per brief; must be validated against real district deals]):** revenue is $0.33–0.67/student/**month**. Expected-band usage exceeds revenue at $4/yr even optimized. District viability therefore **requires** [estimated → proposed]: (a) C-heavy classroom routing (~$0.008–0.012/min), (b) cached curriculum TTS, (c) enforced speaking-minute allocations (e.g., 20–30 min/student/mo → COGS $0.16–0.36/mo), and (d) reserved/self-host hosting at volume. Under those four levers: COGS ≈ $2–4.30/student/yr vs $4–8 revenue — thin at $4, workable at $8. **S2S-only architectures are unsellable at district price points; this, not latency, is the decisive architecture argument.**
-Break-even sanity check: at $6/student/yr and optimized C-heavy $0.010/min, the allocation ceiling is 50 min/student/mo [estimated].
+**Institutional ($60/student/year — fixed owner decision; institutional-only product, no consumer motion):** revenue is $5.00/student/**month** across a 9-month year. Expected-usage voice COGS is ~$0.25/student/month (~$2.28/yr), i.e. **>95% gross margin**; a fully-consumed 400-min pool including a protected 90-min native-realtime floor costs ~$5.21/yr (**91% margin**). The four levers below (C-heavy classroom routing, cached curriculum TTS, pooled allowances, reserved hosting at volume) are therefore **margin protection and runaway-usage control, not survival requirements**. Consequence for architecture: hybrid routing remains correct — but because it buys *more realtime where it matters* rather than because realtime is unaffordable. Native realtime S2S is funded and in the product (16 §7); an S2S-*only* architecture is still rejected, on phoneme-data and latency-budget grounds (§2), not price.
 
 ---
 
@@ -444,7 +442,7 @@ Scale-up triggers [proposed]: LiveKit Ship→Scale at 15 sustained concurrent; e
 3. **Curriculum docs**: Pattern C requires machine-readable expected answers per scripted activity — a curriculum authoring requirement, not just an engineering one.
 4. **Owner/billing**: OpenAI org tier, Azure subscription (PA + TTS + possible Voice Live), Deepgram/AAI accounts with training-opt-out; ElevenLabs history confirmation [requires validation].
 5. **New infra**: LiveKit Cloud account (H1); pg_cron enabled; CDN/storage bucket for cached curriculum audio.
-6. **District pricing validation**: the $4–8/student/yr figure is [assumption]; §4.5's viability conclusions must be re-run against real deal terms.
+6. **Usage validation (pricing is fixed):** $60/student/year is an owner decision and is not modeled against alternatives. What must be validated is *usage* — activation rate, voice minutes per active student, and realtime share — since those drive the margin lines in 16 §§3–4.
 
 ### 7.2 Top risks
 

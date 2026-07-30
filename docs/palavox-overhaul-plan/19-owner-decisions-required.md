@@ -37,12 +37,10 @@ uploaded assessment. Alternatives: keep current certificates (carries false-cred
 build a proctored assessment product (out of scope).
 *Blocks: claims policy rollout (wip-03a); trivial engineering either way.*
 
-**5. Pricing & packaging.**
-No billing code exists today; tier flows from access-code metadata and the public pricing copy is
-self-contradictory. Decide: consumer price point ($8–15/mo band assumed in the models), district
-band ($4–8/student/yr assumed — unvalidated), what's free vs premium (recommendation in 16:
-voice minutes are the metered premium unit; structured lessons free-tier generous).
-*Blocks: billing build; unit-economics targets in 16; nothing in Phases 0–2.*
+**5. Pricing & packaging — PRICE ALREADY DECIDED BY OWNER.**
+Settled: **institutional-only** (no consumer product or consumer sales) at a fixed **$60/student/year**. Modeled throughout at that price; no alternatives are analysed.
+Still open for your call — the *packaging* around it (16 §10 recommends): a $15,000 minimum contract, volume banding (1k+ $54 · 5k+ $48 · 25k+ $42, all still ≥93% margin), 3-year lock with ~5% discount, **no overage billing** (soft-degrade at pool exhaustion instead), and professional-service fees priced separately (small-deployment implementation $2,500; premium $7,500).
+*Blocks: institutional billing build (Phase 6); nothing in Phases 0–2.*
 
 **6. Role-system repair, including reverting one July migration.**
 Recommendation (15): fully re-freeze `profiles.role` — which means **reverting the July 30

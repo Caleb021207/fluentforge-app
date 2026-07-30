@@ -23,12 +23,7 @@ The evidence supports three headline conclusions:
    Phase 0/1 items precisely because no curriculum or voice work makes the product sellable —
    or defensible — while they stand.
 
-3. **Conversation-first is economically feasible only as a hybrid.** The provider study's
-   decisive finding: no S2S vendor returns phoneme data, and S2S-only economics fail at
-   district price points. Pattern-D routing (deterministic-first drills, cascade for guided
-   talk, realtime reserved for premium open conversation, Azure PA for pronunciation) delivers
-   the pedagogy at ~$0.013–0.022/min blended — the difference between a sellable district
-   product and an unsellable one (11, 16).
+3. **At $60/student/year, the economics are strong and the architecture question changes.** With institutional pricing fixed at $60 (owner decision; institutional-only, no consumer motion), expected-usage gross margin is **95.5%**, heavy usage still returns **88.5%**, and a fully-consumed voice pool returns **91%**. Hybrid Pattern-D routing remains correct — but now because it buys *more realtime conversation where it matters* and because no S2S vendor returns phoneme data, not because realtime is unaffordable. **Native realtime conversation is funded and in the product**, with a protected 90-minute-per-student annual floor that degrades last (11, 16).
 
 ## What the product becomes
 

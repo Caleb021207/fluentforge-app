@@ -33,9 +33,9 @@ no tenancy; LLM-minted "ACTFL" certificates.
   guarantees; graduation → conversation-led post-course loop with error-driven micro-remediation
   and a measured B1 ramp.
 - **Voice (11, 16):** Pattern-D hybrid on LiveKit (deterministic-first + cascade + reserved
-  realtime + Azure Pronunciation Assessment). Blended ~$0.013–0.022/min; consumer margins >85%;
-  district viability achievable only with this routing. Benchmark-gated migration; OpenAI path
-  as control.
+  realtime + Azure Pronunciation Assessment), with **native realtime conversation funded and in
+  the product** — a protected 90-min/student/year floor for the moments that carry the learning.
+  Blended ~$0.013/min expected. Benchmark-gated migration; OpenAI path as control.
 - **Trust & institutions (12/13/14/15):** tenancy with service-stamped school keys; verified
   teacher onboarding; enforced SafetyContext for minors; restored consent/audit/DSAR scaffolding;
   assessment-flow repair under preservation invariants; language-pair localization architecture
@@ -43,13 +43,12 @@ no tenancy; LLM-minted "ACTFL" certificates.
 
 ## Numbers that matter
 
-One-time: ~9,000 content person-hours (~$410–670k at assumed rates) + engineering per option.
-Run-rate at 10k MAU expected usage: ~$9–15k/mo AI/voice COGS. Roadmap Option B (recommended):
-~7–9 months to consumer beta, ~12–15 months to district-sellable, ~$600–900k total [estimated,
-re-baselined at Phase 0 exit].
+**Institutional-only, fixed at $60/student/year** (owner decision — no consumer product). Gross margin **95.5% at expected usage, 88.5% under heavy usage**; a fully-consumed 400-minute voice pool (including a protected 90-minute native-realtime floor) still returns 91%. Deployment economics: 1,000 students = $60k ARR → $56.5k gross profit; 10,000 = $600k → $570k. Fixed opex $110–230k/yr breaks even around 2,000–4,100 students. One-time build: ~$600–900k (Option B), plus ~9,000 content person-hours; founder time tracked separately (~3,500–5,000 h), never as cash. Calendar: ~12–15 months to district-sellable [estimated, re-baselined at Phase 0].
 
 ## Decision
 
-Approve Option B; sign decisions 19 #1–3, 6, 7 to unblock Phase 0 (schema dump, speech
-benchmark, U1 content slice, test infra, security fixes). Full rationale: 21. Risks: 18.
+Approve Option B; sign decisions 19 #1–3, 6, 7 to unblock Phase 0 (schema dump, speech benchmark,
+U1 content slice, test infra, security fixes). Pricing is already settled — $60/student/year,
+institutional-only — so #5 now covers packaging only (minimum contract, volume banding, no
+overages, separate professional-service fees). Full rationale: 21. Risks: 18.
 Everything gated on measurement where evidence is missing.

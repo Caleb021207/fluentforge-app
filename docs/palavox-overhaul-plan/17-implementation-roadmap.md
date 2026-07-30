@@ -80,7 +80,7 @@ to Scale-tier envelope. **≈ 8–12 ew.**
 
 One-classroom ESL pilot per 14 §7 (entry-gated, hard-fail on data-visibility incidents);
 benchmark reconciliation (cost estimator ±10%, latency, WER); content fixes from pilot telemetry;
-staged consumer beta; district-paid gate review (14 bucket 2). **≈ 4–6 ew + iteration.**
+district-paid gate review (14 bucket 2); institutional billing/licensing live. **≈ 4–6 ew + iteration.**
 
 ---
 
@@ -90,12 +90,12 @@ staged consumer beta; district-paid gate review (14 bucket 2). **≈ 4–6 ew + 
 | --- | --- | --- | --- |
 | Scope | ESL A1 only (U1–6), text+drill voice (Pattern C), 1 classroom pilot; Spanish + A2 + district deferred | Everything above, phased; ESL leads Spanish by ~4 wk; district-ready after P6 | Both directions + district in parallel teams |
 | Team [assumption] | 1–2 eng + 1 curriculum lead + contract writers | 2–3 eng + 2–3 writers + review pool | 4–6 eng + dual curriculum teams |
-| Calendar | **~4–6 mo to pilot** | **~7–9 mo consumer beta · ~12–15 mo district-sellable** | ~8–10 mo to both, compressed |
+| Calendar | **~4–6 mo to pilot** | **~9–11 mo first paid school · ~12–15 mo district-sellable** | ~8–10 mo to both, compressed |
 | Cost (eng + content, [estimated]) | ~$180–280k | ~$600–900k | ~$900k–1.4M |
 | Technical risk | Low (defers voice migration) | Medium (gated) | High (parallel migrations, thin review) |
 | Curriculum risk | Medium (A1 only proves half the thesis) | Low–medium (slice-gated) | High (review pool thins) |
 | District readiness | Not attempted | Full path | Rushed procurement risk |
-| Consumer readiness | Demo-grade | Real | Real but rougher |
+| Revenue readiness (institutional) | Pilot only, unbilled | First paid deployments in-year | Faster but higher delivery risk |
 | Maintainability | Debt if A2 greenlit later | Best | Integration debt likely |
 
 **Recommendation: B.** A is attractive only if funding requires a pilot artifact in <6 months —
