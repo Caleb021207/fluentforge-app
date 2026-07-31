@@ -60,11 +60,11 @@ export default function ChatContainer({
       <Card className="overflow-hidden mb-2">
         {/* Text selection/copy is deliberately allowed: ESL learners need to
             copy words into dictionaries and notes. */}
-        <ScrollArea className="h-[500px] p-4">
+        <ScrollArea className="h-[460px] px-4 py-5 sm:h-[500px] sm:px-5">
           {messages.length === 0 ? (
             <EmptyChatState />
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-5">
               {messages.map((message, index) => (
                 <ChatMessage
                   key={index}
@@ -82,7 +82,7 @@ export default function ChatContainer({
           )}
         </ScrollArea>
         
-        <div className="border-t p-4">
+        <div className="border-t border-border/60 bg-background/30 p-3 sm:p-4">
           <ChatInput
             value={input}
             onChange={setInput}

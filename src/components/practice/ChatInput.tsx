@@ -71,17 +71,16 @@ export default function ChatInput({
           onKeyDown={handleKeyDown}
           rows={rows}
           placeholder={placeholder}
-          className="pr-16 resize-none py-4 min-h-[60px] text-lg md:text-xl"
+          className="min-h-[64px] resize-none rounded-xl py-4 pr-16 text-lg md:text-xl"
           disabled={isLoading}
         />
-        <div className="absolute right-3 bottom-2">
-          <Button 
-            size="lg" 
-            type="submit" 
+        <div className="absolute bottom-2.5 right-2.5">
+          <Button
+            type="submit"
             disabled={isLoading || value.trim().length === 0}
-            className="h-14 w-14 p-0"
+            className="h-11 w-11 rounded-xl p-0 [&_svg]:size-5"
           >
-            <Send className="h-7 w-7" />
+            <Send />
             <span className="sr-only">{t("send")}</span>
           </Button>
         </div>

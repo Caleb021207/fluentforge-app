@@ -26,22 +26,20 @@ const PracticePromptButton: React.FC<PracticePromptButtonProps> = ({
     : "English";
   
   return (
-    <div className="flex justify-center mb-8">
-      <Button
-        onClick={onClick}
-        disabled={isLoading || disabled}
-        className="gap-4 text-2xl md:text-3xl px-12 py-8 min-h-[80px] shadow-lg hover:shadow-xl transition-all"
-        size="lg"
-        variant="success"
-      >
-        {isLoading ? (
-          <Loader2 className="h-8 w-8 animate-spin" />
-        ) : (
-          <MessageSquare className="h-8 w-8" />
-        )}
-        {t("startConversationIn", { language: displayLanguage })}
-      </Button>
-    </div>
+    <Button
+      onClick={onClick}
+      disabled={isLoading || disabled}
+      className="w-full gap-3 sm:w-auto [&_svg]:size-5"
+      size="xl"
+      variant="default"
+    >
+      {isLoading ? (
+        <Loader2 className="animate-spin" />
+      ) : (
+        <MessageSquare />
+      )}
+      {t("startConversationIn", { language: displayLanguage })}
+    </Button>
   );
 };
 

@@ -4,6 +4,7 @@ import { useLocalization } from "@/context/LocalizationContext";
 import { filterContent, isSafeContent } from "@/utils/safety/contentFilter";
 import EmptyMessageWarning from "./chat-message/EmptyMessageWarning";
 import ChatMessageBubble from "./chat-message/ChatMessageBubble";
+import TutorAvatar from "./chat-message/TutorAvatar";
 import { TRANSLATION_REQUIRED_LANGUAGES, getTargetLanguage, getNativeLanguage } from "@/utils/languageConstants";
 import type { ChatMessage as ChatMessageType } from "@/types/chat";
 import type { TranslationType } from "./hooks/useTranslationHandler";
@@ -127,7 +128,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, translation, o
   const nativeLanguage = getNativeLanguage(currentLanguage);
   
   return (
-    <div className={`flex ${role === "user" ? "justify-end" : "justify-start"} mb-6`}>
+    <div
+      className={`flex items-end gap-2.5 ${
+        role === "user" ? "justify-end" : "justify-start"
+      }`}
+    >
+      {role !== "user" && <TutorAvatar />}
       <ChatMessageBubble
         role={role}
         safeContent={safeContent}

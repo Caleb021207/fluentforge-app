@@ -1,7 +1,8 @@
+import { motion, useReducedMotion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { MoveRight, Sparkles, Trophy } from "lucide-react";
 import type { DebriefFeedback } from "./hooks/useChatMessages";
 
 interface ConversationFeedbackCardProps {
@@ -26,6 +27,8 @@ const ConversationFeedbackCard = ({
   onTalkAgain,
   onKeepTalking,
 }: ConversationFeedbackCardProps) => {
+  const reduceMotion = useReducedMotion();
+
   if (isLoading) {
     return (
       <Card>
@@ -55,56 +58,83 @@ const ConversationFeedbackCard = ({
   if (!feedback) return null;
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <CardTitle className="text-lg">How you did</CardTitle>
-          {feedback.goal_met !== null && (
-            <Badge variant="outline" className="text-[10px]">
-              {feedback.goal_met ? "Goal met" : "Goal not met yet"}
-            </Badge>
+    <motion.div
+      initial={
+        reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }
+      }
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
+      <Card className="gradient-border overflow-hidden">
+        <CardHeader className="pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <CardTitle className="text-lg">How you did</CardTitle>
+            {feedback.goal_met !== null &&
+              (feedback.goal_met ? (
+                <Badge className="gap-1.5 border-0 bg-brand-gradient font-semibold text-[#06263A]">
+                  <Trophy aria-hidden className="h-3 w-3" />
+                  Goal met
+                </Badge>
+              ) : (
+                <Badge variant="outline">Goal not met yet</Badge>
+              ))}
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {feedback.strength && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-brand-mint/25 bg-brand-soft p-3.5">
+              <Sparkles
+                aria-hidden
+                className="mt-0.5 h-4 w-4 shrink-0 text-accent"
+              />
+              <p className="text-sm leading-relaxed">
+                <span className="font-semibold">Nice work: </span>
+                {feedback.strength}
+              </p>
+            </div>
           )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {feedback.strength && (
-          <p className="text-sm">
-            <span className="font-semibold">Nice work: </span>
-            {feedback.strength}
-          </p>
-        )}
 
-        {feedback.corrections.length > 0 ? (
-          <div className="space-y-3">
-            {feedback.corrections.map((correction, index) => (
-              <div key={index}>
-                {index > 0 && <Separator className="mb-3" />}
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
+          {feedback.corrections.length > 0 ? (
+            <div className="space-y-2.5">
+              {feedback.corrections.map((correction, index) => (
+                <div
+                  key={index}
+                  className="space-y-1.5 rounded-xl border border-border/50 bg-background/40 p-3.5"
+                >
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     You said: {correction.you_said}
                   </p>
-                  <p className="text-sm font-medium">Better: {correction.better}</p>
+                  <p className="flex items-start gap-1.5 text-sm font-medium leading-relaxed">
+                    <MoveRight
+                      aria-hidden
+                      className="mt-1 h-3.5 w-3.5 shrink-0 text-accent"
+                    />
+                    <span>Better: {correction.better}</span>
+                  </p>
                   {correction.why && (
-                    <p className="text-xs text-muted-foreground">{correction.why}</p>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      {correction.why}
+                    </p>
                   )}
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">No big mistakes. Great job.</p>
-        )}
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No big mistakes. Great job.</p>
+          )}
 
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={onTalkAgain}>
-            Talk again
-          </Button>
-          <Button variant="outline" size="sm" onClick={onKeepTalking}>
-            Keep talking
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          <div className="flex flex-wrap gap-2 pt-1">
+            <Button onClick={onTalkAgain} className="gap-2">
+              <Sparkles aria-hidden className="h-4 w-4" />
+              Talk again
+            </Button>
+            <Button variant="outline" onClick={onKeepTalking}>
+              Keep talking
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 

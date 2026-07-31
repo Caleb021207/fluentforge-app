@@ -19,7 +19,7 @@ const MessageContent: React.FC<MessageContentProps> = ({
 }) => {
   return (
     <div className="flex justify-between items-start gap-3">
-      <p className={`text-lg md:text-xl ${role === "user" ? "text-primary-foreground" : "text-accent-foreground"}`}>{content}</p>
+      <p className={`text-lg leading-relaxed md:text-xl ${role === "user" ? "text-primary-foreground" : "text-foreground"}`}>{content}</p>
       
       {role === "assistant" && onPlayAudio && (
         <AudioButton 

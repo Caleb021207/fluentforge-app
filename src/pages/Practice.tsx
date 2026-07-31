@@ -6,8 +6,10 @@ import ChatContainer from "@/components/practice/ChatContainer";
 import PracticePromptButton from "@/components/practice/PracticePromptButton";
 import PracticeGuide from "@/components/practice/PracticeGuide";
 import ConversationFeedbackCard from "@/components/practice/ConversationFeedbackCard";
+import ScenarioPicker from "@/components/practice/ScenarioPicker";
+import ScenarioChip from "@/components/practice/ScenarioChip";
 import { useChatMessages, type DebriefFeedback } from "@/components/practice/hooks/useChatMessages";
-import { CONVERSATION_SCENARIOS, getScenario } from "@/data/conversationScenarios";
+import { getScenario } from "@/data/conversationScenarios";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,8 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, InteractiveCard } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Trash, Sparkles, Languages } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
@@ -271,7 +272,7 @@ const Practice = () => {
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
-      <div className="max-w-4xl mx-auto p-4 relative z-10">
+      <div className="relative z-10 mx-auto max-w-4xl p-4 pb-16">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -279,121 +280,44 @@ const Practice = () => {
           <PracticeHeader targetLanguage={targetLanguage} />
         </motion.div>
         
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          whileHover={{ scale: 1.01 }}
-        >
-          <InteractiveCard className="mb-6 glass overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50 border-primary/20">
-            <div className="p-6 space-y-4">
-              {/* Grammar Correction Toggle */}
-              <div className="flex items-center justify-between">
-                <Label htmlFor="grammar-correction" className="text-base font-semibold flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  {t("correctGrammar") || "Grammar Correction"}
-                </Label>
-                <Switch
-                  id="grammar-correction"
-                  checked={correctGrammar}
-                  onCheckedChange={toggleGrammarCorrection}
-                />
-              </div>
-              
-              {/* Bilingual Mode Toggle */}
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="bilingual-mode" className="text-base font-semibold flex items-center gap-2">
-                    <Languages className="w-5 h-5 text-primary" />
-                    {t("bilingualMode") || "Bilingual Mode"}
-                  </Label>
-                  <span className="text-xs text-muted-foreground">
-                    {t("showBothLanguagesDescription") || "Display both target and native language in responses"}
-                  </span>
-                </div>
-                <Switch
-                  id="bilingual-mode"
-                  checked={bilingualMode}
-                  onCheckedChange={toggleBilingualMode}
-                />
-              </div>
-            </div>
-          </InteractiveCard>
-        </motion.div>
-      
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="flex justify-between items-center mb-4 gap-4"
-        >
-          <motion.div 
-            className="flex space-x-3 items-center"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <PracticePromptButton
-              onClick={sendLanguageLearningPrompt}
-              isLoading={chatLoading}
-              targetLanguage={targetLanguage}
-            />
-          </motion.div>
-          
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button 
-              variant="outline" 
-              onClick={clearConversation}
-              className="flex items-center gap-3 px-6 py-6 text-lg hover:shadow-xl hover:border-primary/50 transition-all bg-gradient-to-r from-card/80 to-card"
-              size="lg"
-            >
-              <Trash className="h-5 w-5" />
-              {t("clearConversation")}
-            </Button>
-          </motion.div>
-        </motion.div>
-
-        <div className="mb-4">
+        {/* Scenario selection — the hero moment of the page. */}
+        <div className="mb-6">
           {selectedScenario ? (
-            <Card>
-              <CardContent className="flex flex-wrap items-center justify-between gap-3 pt-6">
-                <div className="min-w-0 space-y-1">
-                  <p className="font-semibold">{selectedScenario.emoji} {selectedScenario.title}</p>
-                  <p className="text-sm text-muted-foreground">{selectedScenario.goal}</p>
-                </div>
-                <Button variant="outline" size="sm" onClick={handleScenarioClear}>
-                  Change
-                </Button>
-              </CardContent>
-            </Card>
+            <ScenarioChip
+              scenario={selectedScenario}
+              onChange={handleScenarioClear}
+            />
           ) : (
-            <Card>
-              <CardContent className="space-y-3 pt-6">
-                <p className="font-semibold">Choose a conversation</p>
-                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {CONVERSATION_SCENARIOS.map((scenario) => (
-                    <button
-                      key={scenario.id}
-                      type="button"
-                      onClick={() => handleScenarioSelect(scenario.id)}
-                      className="rounded-xl border border-border/50 bg-background/30 p-4 text-left transition-colors hover:border-brand-sky/30"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="font-semibold">{scenario.emoji} {scenario.title}</span>
-                        <Badge variant="outline" className="text-[10px] capitalize">{scenario.level}</Badge>
-                      </div>
-                      <p className="mt-1 text-xs text-muted-foreground">{scenario.goal}</p>
-                    </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <ScenarioPicker onSelect={handleScenarioSelect} />
           )}
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
+        >
+          <PracticePromptButton
+            onClick={sendLanguageLearningPrompt}
+            isLoading={chatLoading}
+            targetLanguage={targetLanguage}
+          />
+
+          <Button
+            variant="ghost"
+            onClick={clearConversation}
+            className="gap-2 self-end text-muted-foreground hover:text-foreground sm:self-auto"
+          >
+            <Trash className="h-4 w-4" />
+            {t("clearConversation")}
+          </Button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
         >
           <ChatContainer
             messages={compatibleMessages}
@@ -408,7 +332,7 @@ const Practice = () => {
         </motion.div>
 
         {(feedbackLoading || feedbackError || feedback) ? (
-          <div className="mt-4">
+          <div className="mt-5">
             <ConversationFeedbackCard
               feedback={feedback}
               isLoading={feedbackLoading}
@@ -418,17 +342,70 @@ const Practice = () => {
             />
           </div>
         ) : learnerMessageCount >= 4 ? (
-          <div className="mt-4">
-            <Button variant="outline" onClick={handleEndConversation}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-5 flex justify-center"
+          >
+            {/* Finishing is a positive step: it unlocks the feedback reward. */}
+            <Button
+              size="lg"
+              onClick={handleEndConversation}
+              className="w-full gap-2 sm:w-auto"
+            >
+              <Sparkles className="h-4 w-4" />
               End conversation
             </Button>
-          </div>
+          </motion.div>
         ) : null}
+
+        {/* Quiet settings — secondary to the conversation itself. */}
+        <Card className="mt-6">
+          <div className="divide-y divide-border/50 px-5 py-1">
+            {/* Grammar Correction Toggle */}
+            <div className="flex items-center justify-between gap-4 py-4">
+              <Label
+                htmlFor="grammar-correction"
+                className="flex items-center gap-2.5 text-sm font-semibold"
+              >
+                <Sparkles className="h-4 w-4 text-accent" />
+                {t("correctGrammar") || "Grammar Correction"}
+              </Label>
+              <Switch
+                id="grammar-correction"
+                checked={correctGrammar}
+                onCheckedChange={toggleGrammarCorrection}
+              />
+            </div>
+
+            {/* Bilingual Mode Toggle */}
+            <div className="flex items-center justify-between gap-4 py-4">
+              <div className="flex min-w-0 flex-col gap-1">
+                <Label
+                  htmlFor="bilingual-mode"
+                  className="flex items-center gap-2.5 text-sm font-semibold"
+                >
+                  <Languages className="h-4 w-4 text-accent" />
+                  {t("bilingualMode") || "Bilingual Mode"}
+                </Label>
+                <span className="text-xs text-muted-foreground">
+                  {t("showBothLanguagesDescription") || "Display both target and native language in responses"}
+                </span>
+              </div>
+              <Switch
+                id="bilingual-mode"
+                checked={bilingualMode}
+                onCheckedChange={toggleBilingualMode}
+              />
+            </div>
+          </div>
+        </Card>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.3 }}
+          className="mt-6"
         >
          <PracticeGuide targetLanguage={targetLanguage} />
         </motion.div>

@@ -48,10 +48,10 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
   
   return (
     <div
-      className={`max-w-[80%] rounded-lg p-6 md:p-8 ${
+      className={`max-w-[85%] rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 ${
         role === "user"
-          ? "bg-primary text-primary-foreground"
-          : "bg-accent text-accent-foreground dark:bg-accent/80"
+          ? "rounded-br-md bg-primary text-primary-foreground shadow-sm"
+          : "rounded-bl-md border border-border/60 bg-card/80 text-card-foreground shadow-sm"
       }`}
     >
       <SafetyWarning wasContentFiltered={wasContentFiltered} />
@@ -68,7 +68,7 @@ const ChatMessageBubble: React.FC<ChatMessageBubbleProps> = ({
       {showBilingualOutput && nativeContent && role === "assistant" && (
         <div className="mt-3 pt-3 border-t border-border/50">
           <p className={`text-base md:text-lg opacity-80 italic ${
-            role === "assistant" ? "text-accent-foreground/80" : "text-primary-foreground/80"
+            role === "assistant" ? "text-foreground/80" : "text-primary-foreground/80"
           }`}>
             {nativeContent}
           </p>

@@ -19,7 +19,7 @@ const TranslationContent: React.FC<TranslationContentProps> = ({
 }) => {
   return (
     <div className="flex justify-between items-start gap-3">
-      <p className={`text-base md:text-lg ${role === "user" ? "text-primary-foreground/90" : "text-accent-foreground"}`}>
+      <p className={`text-base md:text-lg ${role === "user" ? "text-primary-foreground/90" : "text-foreground/80"}`}>
         {translation}
       </p>
       
