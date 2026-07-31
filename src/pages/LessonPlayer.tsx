@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +20,16 @@ import {
 import { applyGrade, endOfPassOutcome } from "@/utils/lessonQueue";
 import SpeakButton from "@/components/ui/speak-button";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, CheckCircle2, XCircle, Trophy, Flame, RotateCcw } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  XCircle,
+  Trophy,
+  Flame,
+  RotateCcw,
+  Volume2,
+  Loader2,
+} from "lucide-react";
 
 /**
  * Authored content uses **markdown bold** for the target word. Render it as
@@ -95,6 +105,14 @@ const LessonPlayer: React.FC = () => {
   const [round, setRound] = useState(1);
   const [lessonState, setLessonState] = useState<GradeResult["lesson"] | null>(null);
   const [pendingQueue, setPendingQueue] = useState<string[] | null>(null);
+  // Exercise audio (listening/dictation): the transcript never reaches the
+  // client pre-grade — `text-to-speech` returns mp3 for an exercise id only.
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const audioCacheRef = useRef<Map<string, string>>(new Map());
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
+  // Bumped on stop/next-question so stale fetches and "ended" events are ignored.
+  const audioSessionRef = useRef(0);
 
   const byId = useMemo(() => new Map(exercises.map((ex) => [ex.id, ex])), [exercises]);
   const passIds = useMemo(() => queue ?? exercises.map((ex) => ex.id), [queue, exercises]);
@@ -114,9 +132,69 @@ const LessonPlayer: React.FC = () => {
     setMarkDraft([]);
   };
 
+  const stopAudio = useCallback(() => {
+    audioSessionRef.current += 1;
+    audioElRef.current?.pause();
+    audioElRef.current = null;
+    setAudioPlaying(false);
+    setAudioLoading(false);
+  }, []);
+
+  /**
+   * Play (or stop) the hidden-transcript audio for the current exercise.
+   * Fetched once per exercise and cached in a ref, so replays are free.
+   */
+  const playAudio = async () => {
+    if (!current) return;
+    if (audioPlaying) {
+      stopAudio();
+      return;
+    }
+    const exId = current.id;
+    const session = ++audioSessionRef.current;
+    let base64 = audioCacheRef.current.get(exId);
+    if (!base64) {
+      setAudioLoading(true);
+      const { data, error: fnError } = await supabase.functions.invoke("text-to-speech", {
+        body: { exercise_id: exId },
+      });
+      if (audioSessionRef.current !== session) return; // learner moved on
+      setAudioLoading(false);
+      if (fnError || !data?.audioContent) {
+        toast.error("Sound is not ready. Try again.");
+        return;
+      }
+      base64 = String(data.audioContent);
+      audioCacheRef.current.set(exId, base64);
+    }
+    const audio = new Audio("data:audio/mp3;base64," + base64);
+    audioElRef.current = audio;
+    setAudioPlaying(true);
+    audio.addEventListener("ended", () => {
+      if (audioSessionRef.current === session) setAudioPlaying(false);
+    });
+    audio.addEventListener("error", () => {
+      if (audioSessionRef.current === session) {
+        setAudioPlaying(false);
+        toast.error("Sound is not ready. Try again.");
+      }
+    });
+    audio.play().catch(() => {
+      if (audioSessionRef.current === session) {
+        setAudioPlaying(false);
+        toast.error("Sound is not ready. Try again.");
+      }
+    });
+  };
+
   useEffect(() => {
     setStartedAt(Date.now());
-  }, [index, round]);
+    // Never let a previous question's audio bleed into this one.
+    stopAudio();
+  }, [index, round, stopAudio]);
+
+  // Stop playback when the player unmounts mid-audio.
+  useEffect(() => stopAudio, [stopAudio]);
 
   // A fresh exercise set (reload / different lesson) resets the session.
   useEffect(() => {
@@ -129,7 +207,9 @@ const LessonPlayer: React.FC = () => {
     setResult(null);
     setFinished(false);
     resetDrafts();
-  }, [exercises]);
+    stopAudio();
+    audioCacheRef.current.clear();
+  }, [exercises, stopAudio]);
 
   // Count the current item once it's been answered so the bar reaches 100%.
   const progressPct = useMemo(
@@ -140,8 +220,10 @@ const LessonPlayer: React.FC = () => {
   const canSubmit = useMemo(() => {
     switch (kind) {
       case "mcq":
+      case "listening_mcq":
         return !!selected;
       case "text":
+      case "dictation":
         return textDraft.trim().length > 0;
       case "cloze":
         return blanks.length > 0 && blanks.every((b) => (blankDraft[b.id] ?? "").trim().length > 0);
@@ -157,8 +239,10 @@ const LessonPlayer: React.FC = () => {
   const buildResponse = (): AttemptResponse => {
     switch (kind) {
       case "mcq":
+      case "listening_mcq":
         return { selected_option: selected };
       case "text":
+      case "dictation":
         return { text: textDraft };
       case "cloze":
         return { blanks: blankDraft };
@@ -414,8 +498,29 @@ const LessonPlayer: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2.5">
-          {/* ---- multiple choice / meaning recognition ---- */}
-          {kind === "mcq" &&
+          {/* ---- listening audio: play button, transcript stays server-side ---- */}
+          {(kind === "listening_mcq" || kind === "dictation") && (
+            <div className="pb-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={playAudio}
+                disabled={audioLoading}
+                className="w-full border-brand-sky/40 bg-brand-sky/[0.07] hover:bg-brand-sky/10 sm:w-auto"
+              >
+                {audioLoading ? (
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                  <Volume2 className="mr-2 h-5 w-5" />
+                )}
+                {audioLoading ? "Loading sound..." : audioPlaying ? "Stop" : "Listen"}
+              </Button>
+            </div>
+          )}
+
+          {/* ---- multiple choice / meaning + listening recognition ---- */}
+          {(kind === "mcq" || kind === "listening_mcq") &&
             current.options.map((option, i) => {
               const isPicked = selected === option.id;
               const isKey = result?.correct_option_id === option.id;
@@ -459,11 +564,11 @@ const LessonPlayer: React.FC = () => {
               );
             })}
 
-          {/* ---- text input: cloze (single) / word + chunk retrieval ---- */}
-          {kind === "text" && (
+          {/* ---- text input: word + chunk retrieval / dictation ---- */}
+          {(kind === "text" || kind === "dictation") && (
             <div className="space-y-2">
               <label htmlFor="answer-input" className="text-sm font-medium text-muted-foreground">
-                Type your answer
+                {kind === "dictation" ? "Type what you hear." : "Type your answer"}
               </label>
               <Input
                 id="answer-input"
@@ -632,10 +737,19 @@ const LessonPlayer: React.FC = () => {
               )}
               <div className="space-y-0.5 text-sm">
                 <p className="font-medium">{result.correct ? "Correct" : "Not quite"}</p>
-                {!result.correct && expectedText && kind !== "error_spot" && (
+                {/* Listening items reveal their transcript only now, post-grade. */}
+                {expectedText && (kind === "listening_mcq" || kind === "dictation") ? (
                   <p className="text-muted-foreground">
-                    Answer: <span className="text-foreground">{expectedText}</span>
+                    You heard: <span className="text-foreground">{expectedText}</span>
                   </p>
+                ) : (
+                  !result.correct &&
+                  expectedText &&
+                  kind !== "error_spot" && (
+                    <p className="text-muted-foreground">
+                      Answer: <span className="text-foreground">{expectedText}</span>
+                    </p>
+                  )
                 )}
               </div>
             </div>

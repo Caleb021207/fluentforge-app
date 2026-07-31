@@ -8,8 +8,10 @@ import { supabase } from "@/integrations/supabase/client";
  * keys, and `submit-exercise` grades the submitted response server-side
  * (through the Tier-0 grader registry) and returns the verdict plus
  * mastery/XP/streak deltas. Wave-1 primitives (cloze / word + chunk retrieval /
- * sentence construction / meaning recognition / error-spot) are dispatched by
- * primitive server-side; this hook just renders and submits their responses.
+ * sentence construction / meaning recognition / error-spot) and Wave-2
+ * listening primitives (listening selection / dictation, whose transcripts stay
+ * server-side until graded) are dispatched by primitive server-side; this hook
+ * just renders and submits their responses.
  */
 
 export interface LearnOption {
@@ -94,7 +96,15 @@ export interface GradeResult {
   streak: { current_streak: number; freeze_used?: boolean } | null;
 }
 
-export type RenderKind = "mcq" | "text" | "cloze" | "order" | "error_spot" | "unsupported";
+export type RenderKind =
+  | "mcq"
+  | "text"
+  | "cloze"
+  | "order"
+  | "error_spot"
+  | "listening_mcq"
+  | "dictation"
+  | "unsupported";
 
 const KIND_BY_PRIMITIVE: Record<string, RenderKind> = {
   meaning_recognition: "mcq",
@@ -103,6 +113,8 @@ const KIND_BY_PRIMITIVE: Record<string, RenderKind> = {
   sentence_construction: "order",
   cloze: "cloze",
   error_correction: "error_spot",
+  listening_selection: "listening_mcq",
+  dictation: "dictation",
 };
 
 const KIND_BY_TYPE: Record<string, RenderKind> = {
@@ -129,13 +141,18 @@ export function renderKind(ex: LearnExercise): RenderKind {
   switch (resolved) {
     case "mcq":
       return hasOptions ? "mcq" : "unsupported";
+    case "listening_mcq":
+      return hasOptions ? "listening_mcq" : "unsupported";
     case "order":
       return ex.content?.tokens?.length || hasOptions ? "order" : "unsupported";
     case "cloze":
       return ex.content?.blanks?.length ? "cloze" : "unsupported";
     case "text":
     case "error_spot":
-      return resolved; // text input / prompt-derived tokens are always renderable
+    case "dictation":
+      // Text input / prompt-derived tokens are always renderable; dictation
+      // needs only the exercise id (audio is fetched server-side by id).
+      return resolved;
     default:
       return "unsupported";
   }

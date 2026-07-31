@@ -8,14 +8,16 @@ import {
   normalizeText,
   chunkRetrievalGrader,
   clozeGrader,
+  dictationGrader,
   errorCorrectionGrader,
+  listeningSelectionGrader,
   meaningRecognitionGrader,
   sentenceConstructionGrader,
   wordRetrievalGrader,
 } from "../../supabase/functions/_shared/graders";
 
 /**
- * Golden vectors for the Wave-1 Tier-0 grading registry (plan 06 §E10, §T-1:
+ * Golden vectors for the Wave-1/Wave-2 Tier-0 grading registry (plan 06 §E10, §T-1:
  * "fixtures are the normative spec of grading behavior"). Every primitive has
  * a correct / near-miss / partial / wrong vector. These run under vitest
  * because graders.ts is import-clean (no URL imports, no Deno globals), the
@@ -148,6 +150,47 @@ describe("chunk_retrieval (P03) — typed + token-bank", () => {
   });
 });
 
+describe("listening_selection (P04) — aural option match", () => {
+  const g = listeningSelectionGrader;
+  const key = { correct_option: "o2", transcript: "where are you from" };
+  it("correct option → 1.0, expected reveals the transcript (06 §P04)", () => {
+    expect(g.grade({ selected_option: "o2" }, key)).toEqual({
+      correct: true,
+      score: 1,
+      expected: "where are you from",
+    });
+  });
+  it("wrong option → 0, transcript still revealed post-grade", () => {
+    const r = g.grade({ selected_option: "o1" }, key);
+    expect(r.correct).toBe(false);
+    expect(r.score).toBe(0);
+    expect(r.expected).toBe("where are you from");
+  });
+  it("no selection is never correct (empty floor)", () => {
+    expect(g.grade({ selected_option: null }, key).correct).toBe(false);
+    expect(g.grade({}, key).correct).toBe(false);
+  });
+  it("option ids are opaque: match is exact, no case folding", () => {
+    expect(g.grade({ selected_option: "O2" }, key).correct).toBe(false);
+  });
+  it("null-vs-null never matches (broken key can't auto-pass)", () => {
+    expect(g.grade({ selected_option: null }, { transcript: "hola" }).correct).toBe(false);
+    expect(g.grade({}, {}).correct).toBe(false);
+  });
+  it("missing transcript in key → expected null, grading unaffected", () => {
+    const r = g.grade({ selected_option: "o2" }, { correct_option: "o2" });
+    expect(r.correct).toBe(true);
+    expect(r.expected).toBeNull();
+  });
+  it("unicode transcript passes through untouched (reveal is verbatim)", () => {
+    const k = { correct_option: "o1", transcript: "¿Dónde está el baño?" };
+    expect(g.grade({ selected_option: "o1" }, k).expected).toBe("¿Dónde está el baño?");
+  });
+  it("malformed submission/key never throws", () => {
+    expect(() => g.grade(null as never, undefined as never)).not.toThrow();
+  });
+});
+
 describe("sentence_construction (P05) — ordered tokens", () => {
   const g = sentenceConstructionGrader;
   const key = {
@@ -228,6 +271,98 @@ describe("cloze (P06) — multi-blank partial credit", () => {
   });
 });
 
+describe("dictation (P08) — token-aligned WER, spelling is the construct", () => {
+  const g = dictationGrader;
+  const key = { transcript: "where are you from" };
+  it("exact transcript → 1.0, pass", () => {
+    const r = g.grade({ text: "where are you from" }, key);
+    expect(r).toMatchObject({ correct: true, score: 1, expected: "where are you from" });
+    expect(r.partials).toEqual([
+      { part: "t0", score: 1 },
+      { part: "t1", score: 1 },
+      { part: "t2", score: 1 },
+      { part: "t3", score: 1 },
+    ]);
+  });
+  it("case + terminal punctuation are normalized away", () => {
+    expect(g.grade({ text: "  Where are you from? " }, key).score).toBe(1);
+  });
+  it("unicode: curly apostrophes and diacritics fold by default", () => {
+    expect(g.grade({ text: "don’t stop" }, { transcript: "don't stop" }).score).toBe(1);
+    expect(g.grade({ text: "cafe esta aqui" }, { transcript: "café está aquí" }).score).toBe(1);
+  });
+  it("keep_accents makes an accent slip a real substitution", () => {
+    const r = g.grade({ text: "esta aqui" }, { transcript: "está aquí", keep_accents: true });
+    expect(r.correct).toBe(false);
+    expect(r.score).toBe(0);
+  });
+  it("near-miss spelling is NOT forgiven (06 §P08 dictation exception)", () => {
+    // "were"→"where" is 1 edit — word_retrieval would forgive it; dictation must not.
+    const r = g.grade({ text: "were are you from" }, key);
+    expect(r.correct).toBe(false);
+    expect(r.score).toBe(0.75); // 1 substitution over 4 tokens
+    expect(r.partials).toEqual([
+      { part: "t0", score: 0 },
+      { part: "t1", score: 1 },
+      { part: "t2", score: 1 },
+      { part: "t3", score: 1 },
+    ]);
+  });
+  it("WER boundary: 1 error in 10 tokens → score 0.9 exactly, passes", () => {
+    const k = { transcript: "one two three four five six seven eight nine ten" };
+    const r = g.grade({ text: "one two three four five six seven eight nine tin" }, k);
+    expect(r.score).toBe(0.9);
+    expect(r.correct).toBe(true);
+  });
+  it("WER boundary: 1 error in 9 tokens → 0.8889, fails the 0.9 line", () => {
+    const k = { transcript: "one two three four five six seven eight nine" };
+    const r = g.grade({ text: "one two three four five six seven eight nin" }, k);
+    expect(r.score).toBe(0.8889);
+    expect(r.correct).toBe(false);
+  });
+  it("WER boundary: 1 error in 11 tokens → 0.9091, passes", () => {
+    const k = { transcript: "one two three four five six seven eight nine ten eleven" };
+    const r = g.grade({ text: "one two three four five six seven eight nine ten elevun" }, k);
+    expect(r.score).toBe(0.9091);
+    expect(r.correct).toBe(true);
+  });
+  it("token_tolerance 0 demands a perfect transcript", () => {
+    const k = { transcript: "one two three four five six seven eight nine ten", token_tolerance: 0 };
+    expect(g.grade({ text: "one two three four five six seven eight nine tin" }, k).correct).toBe(false);
+  });
+  it("authored token_tolerance loosens the pass line", () => {
+    const r = g.grade({ text: "she is from piru" }, { transcript: "she is from peru", token_tolerance: 0.25 });
+    expect(r.score).toBe(0.75);
+    expect(r.correct).toBe(true);
+  });
+  it("deletion diff: per-token partials mark the missing word", () => {
+    const r = g.grade({ text: "the sat" }, { transcript: "the cat sat" });
+    expect(r.score).toBe(0.6667);
+    expect(r.partials).toEqual([
+      { part: "t0", score: 1 },
+      { part: "t1", score: 0 },
+      { part: "t2", score: 1 },
+    ]);
+  });
+  it("runaway insertions clamp to 0, never negative (WER > 1)", () => {
+    const r = g.grade({ text: "si claro que si senor" }, { transcript: "sí" });
+    expect(r.score).toBe(0);
+    expect(r.correct).toBe(false);
+  });
+  it("empty response → wrong with expected revealed and 'empty' feedback", () => {
+    expect(g.grade({ text: "" }, key)).toMatchObject({
+      correct: false,
+      score: 0,
+      expected: "where are you from",
+      feedback: "empty",
+    });
+  });
+  it("missing/empty transcript key → wrong, never throws", () => {
+    expect(g.grade({ text: "hello" }, {}).correct).toBe(false);
+    expect(g.grade({ text: "hello" }, { transcript: "" }).correct).toBe(false);
+  });
+});
+
 describe("error_correction (P20) — spot / spot_and_fix", () => {
   const g = errorCorrectionGrader;
   it("spot-only: exact token set → correct", () => {
@@ -257,13 +392,15 @@ describe("error_correction (P20) — spot / spot_and_fix", () => {
 });
 
 describe("registry dispatch", () => {
-  it("getGrader resolves every Wave-1 primitive", () => {
+  it("getGrader resolves every Wave-1/Wave-2 primitive", () => {
     for (const p of [
       "meaning_recognition",
       "word_retrieval",
       "chunk_retrieval",
+      "listening_selection",
       "sentence_construction",
       "cloze",
+      "dictation",
       "error_correction",
     ]) {
       expect(getGrader(p)?.type).toBe(p);
@@ -285,5 +422,7 @@ describe("registry dispatch", () => {
     expect(() => sentenceConstructionGrader.grade({} as never, {} as never)).not.toThrow();
     expect(() => chunkRetrievalGrader.grade({} as never, {} as never)).not.toThrow();
     expect(() => errorCorrectionGrader.grade({} as never, {} as never)).not.toThrow();
+    expect(() => listeningSelectionGrader.grade({} as never, {} as never)).not.toThrow();
+    expect(() => dictationGrader.grade({} as never, {} as never)).not.toThrow();
   });
 });

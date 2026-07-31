@@ -1,5 +1,6 @@
 /**
- * Deterministic (Tier-0) grading registry for the Wave-1 exercise primitives.
+ * Deterministic (Tier-0) grading registry for the Wave-1/Wave-2 exercise
+ * primitives.
  *
  * Plan 06 §E2 (grading service) / §E3 (tiers) / §E10 (Wave 1). This module is
  * the pure, server-side core of the grading service: it takes a learner
@@ -139,6 +140,50 @@ function firstDivergence(a: readonly string[], b: readonly string[]): number {
   return -1;
 }
 
+/**
+ * Token-level Levenshtein alignment: distance counts word insertions,
+ * deletions and substitutions; `refHit[i]` marks reference tokens matched
+ * exactly in one optimal alignment (drives the word-level diff, 06 §P08).
+ * Utterances here are short (≤8 words at A1), so a full DP matrix is fine.
+ */
+function alignTokens(
+  ref: readonly string[],
+  hyp: readonly string[],
+): { distance: number; refHit: boolean[] } {
+  const m = ref.length;
+  const n = hyp.length;
+  const d: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) d[i][0] = i;
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,
+        d[i][j - 1] + 1,
+        d[i - 1][j - 1] + (ref[i - 1] === hyp[j - 1] ? 0 : 1),
+      );
+    }
+  }
+  const refHit: boolean[] = new Array(m).fill(false);
+  let i = m;
+  let j = n;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && ref[i - 1] === hyp[j - 1] && d[i][j] === d[i - 1][j - 1]) {
+      refHit[i - 1] = true;
+      i--;
+      j--;
+    } else if (i > 0 && j > 0 && d[i][j] === d[i - 1][j - 1] + 1) {
+      i--;
+      j--; // substitution
+    } else if (i > 0 && d[i][j] === d[i - 1][j] + 1) {
+      i--; // deletion
+    } else {
+      j--; // insertion
+    }
+  }
+  return { distance: d[m][n], refHit };
+}
+
 /** True when two normalized chunks differ by exactly one near-miss token. */
 function oneTokenNearMiss(a: string, b: string): boolean {
   const ta = tokens(a);
@@ -244,6 +289,25 @@ export const chunkRetrievalGrader: Grader<ChunkResponse, ChunkKey> = {
       }
     }
     return { correct: false, score: 0, expected };
+  },
+};
+
+/** P04 listening_selection — aural option match; transcript reveals post-grade. */
+interface ListeningSelectionKey {
+  correct_option?: string | null;
+  transcript?: string | null;
+}
+interface ListeningSelectionResponse {
+  selected_option?: string | null;
+}
+export const listeningSelectionGrader: Grader<ListeningSelectionResponse, ListeningSelectionKey> = {
+  type: "listening_selection",
+  grade(submission, key) {
+    const selected = submission?.selected_option ?? null;
+    const correct = selected != null && selected === (key?.correct_option ?? null);
+    // Expected is the TL transcript, not the option id: post-grade the client
+    // shows what was said (06 §P04 feedback: reveal transcript after grading).
+    return { correct, score: correct ? 1 : 0, expected: key?.transcript ?? null };
   },
 };
 
@@ -357,6 +421,39 @@ export const clozeGrader: Grader<ClozeResponse, ClozeKey> = {
   },
 };
 
+/** P08 dictation — sound→spelling: token-aligned WER, spelling not forgiven. */
+interface DictationKey {
+  transcript?: string;
+  /** Allowed WER; pass at score >= 1 - tolerance. Default 0.1 (06 §P08). */
+  token_tolerance?: number;
+  keep_accents?: boolean;
+}
+export const dictationGrader: Grader<TextResponse, DictationKey> = {
+  type: "dictation",
+  grade(submission, key) {
+    const opts: NormOpts = { keepAccents: !!key?.keep_accents };
+    const expected = typeof key?.transcript === "string" ? key.transcript : null;
+    const ref = tokens(normalizeText(key?.transcript, opts));
+    if (!ref.length) return { correct: false, score: 0, expected };
+    const hyp = tokens(normalizeText(submission?.text, opts));
+    if (!hyp.length) return { correct: false, score: 0, expected, feedback: "empty" };
+    const { distance, refHit } = alignTokens(ref, hyp);
+    // score = 1 - WER clamped to [0,1] (WER can exceed 1 on long insertions).
+    const score = Number(Math.min(1, Math.max(0, 1 - distance / ref.length)).toFixed(4));
+    const tolerance = typeof key?.token_tolerance === "number" ? key.token_tolerance : 0.1;
+    // No isNearMiss forgiveness here: spelling IS the construct (06 §P08,
+    // the WIP grader's dictation exception — adopted).
+    const correct = score >= 1 - tolerance - 1e-9;
+    return {
+      correct,
+      score,
+      expected,
+      // Per-reference-token verdicts, in transcript order (word-level diff).
+      partials: refHit.map((hit, i) => ({ part: `t${i}`, score: hit ? 1 : 0 })),
+    };
+  },
+};
+
 /** P20 error_correction (spot / spot_and_fix) — token-id match + fix accept. */
 interface ErrorCorrectionKey {
   error_tokens?: string[];
@@ -417,8 +514,10 @@ export const GRADERS: Record<string, Grader> = {
   meaning_recognition: meaningRecognitionGrader as Grader,
   word_retrieval: wordRetrievalGrader as Grader,
   chunk_retrieval: chunkRetrievalGrader as Grader,
+  listening_selection: listeningSelectionGrader as Grader,
   sentence_construction: sentenceConstructionGrader as Grader,
   cloze: clozeGrader as Grader,
+  dictation: dictationGrader as Grader,
   error_correction: errorCorrectionGrader as Grader,
 };
 

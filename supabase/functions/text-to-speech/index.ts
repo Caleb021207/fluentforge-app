@@ -50,9 +50,46 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice = 'alloy', language, speechRate = 1.0, userId } = await req.json();
-    
-    if (!text) {
+    const { text, voice = 'alloy', language, speechRate = 1.0, userId, exercise_id } = await req.json();
+
+    // EXERCISE-AUDIO mode (plan 06 §P04/§P08): the client asks for an
+    // exercise's audio by id and never sees the transcript — the text to
+    // speak is read server-side from the exercise_answer_keys store. Only
+    // aural primitives are speakable this way; anything else is a 404 so
+    // the endpoint cannot be used to read out other exercises' keys.
+    let ttsText = text;
+    if (!ttsText && typeof exercise_id === 'string' && /^[0-9a-f-]{36}$/i.test(exercise_id)) {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      );
+      let keyRow: { primitive?: string; key?: Record<string, unknown> } | null = null;
+      try {
+        const { data, error } = await supabaseClient
+          .from('exercise_answer_keys')
+          .select('primitive, key')
+          .eq('exercise_id', exercise_id)
+          .maybeSingle();
+        if (!error) keyRow = data;
+        // Table absent on the live DB (pre-migration) surfaces as an error
+        // here — treated the same as "no key row": 404 below.
+      } catch {
+        // Absent table/schema on the live DB — fall through to the 404.
+      }
+      const primitive = String(keyRow?.primitive ?? '');
+      const transcript = (keyRow?.key as Record<string, unknown> | undefined)?.transcript;
+      const audible = primitive === 'listening_selection' || primitive === 'dictation';
+      if (!keyRow || !audible || typeof transcript !== 'string' || !transcript) {
+        return new Response(
+          JSON.stringify({ error: 'No audio available for this exercise' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      ttsText = transcript;
+    }
+
+    if (!ttsText) {
       throw new Error('Text is required');
     }
 
@@ -91,7 +128,7 @@ serve(async (req) => {
       throw new Error('Azure Speech key not configured');
     }
 
-    console.log(`TTS request - text length: ${text.length}, voice: ${voice}, language: ${language}, rate: ${speechRate}`);
+    console.log(`TTS request - text length: ${ttsText.length}, voice: ${voice}, language: ${language}, rate: ${speechRate}`);
 
     // Determine which Azure voice to use
     let azureVoice: string;
@@ -125,7 +162,7 @@ serve(async (req) => {
     // Build SSML with prosody for rate control
     const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${locale}'>
       <voice name='${azureVoice}'>
-        <prosody rate='${rateString}'>${text}</prosody>
+        <prosody rate='${rateString}'>${ttsText}</prosody>
       </voice>
     </speak>`;
 
@@ -173,7 +210,7 @@ serve(async (req) => {
       );
 
       // Estimate tokens: approximately 4 characters = 1 token
-      const estimatedTokens = Math.ceil(text.length / 4);
+      const estimatedTokens = Math.ceil(ttsText.length / 4);
       
       try {
         // Track to api_calls_tracking for logging

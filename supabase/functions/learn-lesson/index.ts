@@ -8,9 +8,14 @@ import { orderByAbility, preferOperational } from "../_shared/learnerProgress.ts
  *
  * Two invariants:
  *  1. Answer keys never leave the server — option `is_correct` and `rationale`
- *     are stripped and the options are shuffled before they are returned.
+ *     are stripped, options are shuffled, and any key-material fields are
+ *     stripped from the client-safe `content` payload before it is returned.
  *  2. Only human-approved ('operational') content ships, falling back to
  *     gauntlet-passed ('gated') content when a lesson has not been reviewed.
+ *
+ * Each exercise also carries its grading `primitive` (read from the server-only
+ * exercise_answer_keys store — the tag only, never the key) so the client can
+ * dispatch the Wave-1 renderers; null when no key row exists (legacy MCQ).
  */
 
 function service() {
@@ -27,6 +32,40 @@ function shuffle<T>(items: T[]): T[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+/**
+ * Fields that must never reach the browser even if authored into `content` by
+ * mistake — `content` is client-safe by design (06 §5); this is defense in
+ * depth against key material leaking through the serve path.
+ */
+const KEY_MATERIAL_FIELDS = [
+  "answer_key",
+  "accept",
+  "correct_option",
+  "solutions",
+  "solution_texts",
+  "transcript",
+  "key",
+];
+
+function stripKeyMaterial(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripKeyMaterial);
+  if (value && typeof value === "object") {
+    const safe: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      if (KEY_MATERIAL_FIELDS.includes(k)) continue;
+      safe[k] = stripKeyMaterial(v);
+    }
+    return safe;
+  }
+  return value;
+}
+
+/** Client-safe render payload: key-material fields recursively removed. */
+function sanitizeContent(content: unknown): Record<string, unknown> | null {
+  if (!content || typeof content !== "object" || Array.isArray(content)) return null;
+  return stripKeyMaterial(content) as Record<string, unknown>;
 }
 
 Deno.serve(async (req) => {
@@ -77,23 +116,60 @@ Deno.serve(async (req) => {
       .maybeSingle();
     const ability = Number(mastery?.ability ?? 0.3);
 
-    const { data: rawExercises } = await db
-      .from("exercises")
-      .select("id, position, type, prompt, difficulty, receptive_productive, status, passage_id, exercise_options (id, label, position)")
-      .eq("lesson_id", lessonId)
-      .in("status", ["operational", "gated"])
-      .order("position", { ascending: true });
+    // The `content` render payload ships with the Phase-2 primitives; the live
+    // DB may not have the column yet, so retry without it on a missing-column
+    // error (same tolerant pattern as submit-exercise).
+    const selectExercises = async (cols: string) => {
+      const { data, error } = await db
+        .from("exercises")
+        .select(cols)
+        .eq("lesson_id", lessonId)
+        .in("status", ["operational", "gated"])
+        .order("position", { ascending: true });
+      return { data: data as Array<Record<string, any>> | null, error };
+    };
+    const baseCols =
+      "id, position, type, prompt, difficulty, receptive_productive, status, passage_id";
+    const optionCols = "exercise_options (id, label, position)";
+
+    let { data: rawExercises, error: exercisesErr } = await selectExercises(
+      `${baseCols}, content, ${optionCols}`,
+    );
+    if (exercisesErr && /column|schema cache|does not exist/i.test(exercisesErr.message ?? "")) {
+      ({ data: rawExercises } = await selectExercises(`${baseCols}, ${optionCols}`));
+    }
 
     const published = preferOperational((rawExercises ?? []) as Array<{ status: string }>) as Array<
       Record<string, any>
     >;
 
+    // Grading primitive tags from the server-only key store — the tag only,
+    // never `key`/`grading`. Tolerant of the table being absent on the live DB.
+    const primitiveById = new Map<string, string>();
+    if (published.length > 0) {
+      try {
+        const { data: keyRows, error: keysErr } = await db
+          .from("exercise_answer_keys")
+          .select("exercise_id, primitive")
+          .in("exercise_id", published.map((e) => e.id));
+        if (!keysErr) {
+          for (const row of (keyRows ?? []) as Array<Record<string, any>>) {
+            primitiveById.set(row.exercise_id, row.primitive);
+          }
+        }
+      } catch {
+        /* table absent on the live DB yet — primitive stays null */
+      }
+    }
+
     const exercises = orderByAbility(published, ability).map((e) => ({
       id: e.id,
       type: e.type,
+      primitive: primitiveById.get(e.id) ?? null,
       prompt: e.prompt,
       difficulty: e.difficulty,
       receptive_productive: e.receptive_productive,
+      content: sanitizeContent(e.content),
       // Answer key intentionally omitted: only id + label reach the browser.
       options: shuffle((e.exercise_options ?? []).map((o: Record<string, any>) => ({ id: o.id, label: o.label }))),
     }));
