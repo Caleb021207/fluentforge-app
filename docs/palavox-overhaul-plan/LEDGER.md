@@ -21,7 +21,7 @@ Live Supabase project: `afswfqougbfiqbkchoqj` (from `supabase/config.toml`).
 | 0.4 | Role-system repair | 15 §1.2, 19 #6 | **implemented** — commit `d23bed97`; migration prepared-not-applied, **requires staging validation** (auth.uid() GUC escape hatch); staff-code minting + legacy-teacher backfill = owner actions |
 | 0.5 | SafetyContext foundation | 15 §3, 19 #7 | **implemented + tested** (module, 30 vectors) — commit `1f2c1c22`; edge-function injection **requires validation** (no Deno runtime locally); provider output moderation = later workstream |
 | 0.6 | Beginner-speech benchmark harness | 11 §7 | **implemented + tested** (harness; 42 vectors) — commit `9dfb3b6d`; all gates emit insufficient-data; recordings/consent/API keys = **owner action required** |
-| 0.7 | Unit 1 vertical content slice (authoring schema → gauntlet → seeded → playable) | 07 §8, 17 P0 | pending |
+| 0.7 | Unit 1 vertical content slice | 07 §8, 17 P0 | **implemented + measured** — commit `e6d61755`; deterministic gauntlet 94.4% first-run; seed PREPARED NOT APPLIED; AI gates + human review + playable leg **require staging** — CONDITIONAL GO on bulk authoring |
 | 0.8 | Protected-assessment hotfix | 12 §2 | **implemented** — commit `e3e171cd`; parsing module tested (19 vectors); edge function **requires validation** on staging (PDF-to-gateway pass-through spike per 12 §2.1) |
 
 ## Entries
@@ -68,3 +68,26 @@ Live Supabase project: `afswfqougbfiqbkchoqj` (from `supabase/config.toml`).
   owner action as 0.2). Nothing applied to any database. Nothing deployed.
 - **Next:** 0.7 Unit 1 vertical content slice (authoring schema → gauntlet → seeded → playable),
   then Phase 0 boundary report.
+
+### E6 · 2026-07-30 · 0.7 Unit 1 vertical slice (5-agent pipeline)
+- **Commit:** e6d61755. Schema v0.1 + validator + seed-gen (28 test vectors) · 18 lessons /
+  170 exercises / 106 vocab authored to band-file §2/§15 exactly · seed 672 draft rows.
+- **Measured:** deterministic gates G-schema/G-keys/G-counts/G-difficulty 18/18;
+  G-vocab-boundary 17/18 (L12 email literal — judged band-sanctioned, validator blind spot
+  noted). Authoring ~65 min wall-clock vs 6 h/lesson conventional estimate — LOWER BOUND
+  (AI gates + human review unrun).
+- **Verification (orchestrator):** validator re-run on real tree ✓; vitest 188/188 ✓;
+  seed inspected (8 tables, draft-only, prepared header) ✓.
+- **Verdict:** CONDITIONAL GO — bulk authoring waits on AI-judged gauntlet + human
+  review run against staging (owner action: Supabase CLI/staging access).
+
+## PHASE 0 BOUNDARY — summary
+- **Complete:** 0.0 consistency patch · 0.1 baseline/ledger · 0.3 test infra (188 tests) ·
+  0.4 role repair (prepared) · 0.5 SafetyContext · 0.6 benchmark harness · 0.7 U1 slice.
+- **Blocked/owner:** 0.2 live-schema dump (CLI/credentials) · staging validation for all
+  Deno-side changes + the role migration · benchmark recordings/keys/consent · staff-code
+  minting · legacy-teacher backfill decision.
+- **Nothing applied to any database. Nothing deployed. No providers changed.**
+- **Next: Phase 1** — security foundations completion (quota service on reconciled schema,
+  orphan/under-authorized function guard-or-delete, XP consolidation kill-switch, secrets/
+  CORS cleanup, telemetry event tables) per 17 P1.
