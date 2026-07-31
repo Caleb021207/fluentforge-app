@@ -15,7 +15,7 @@ export const useChatMessaging = () => {
   const { processTranslation } = useTranslationProcessor();
   const { hasError, setHasError, handleError, clearError } = useErrorHandler();
 
-  const sendChatMessage = async (message: string, correctGrammar: boolean = false, conversationHistory: {role: 'user' | 'assistant' | 'system'; content: string}[] = [], conversationLevel: string = "intermediate", cefrLevel: string | null = null) => {
+  const sendChatMessage = async (message: string, correctGrammar: boolean = false, conversationHistory: {role: 'user' | 'assistant' | 'system'; content: string}[] = [], conversationLevel: string = "intermediate", cefrLevel: string | null = null, scenarioId: string | null = null) => {
     if (!message || message.trim() === "") {
       return null;
     }
@@ -27,8 +27,8 @@ export const useChatMessaging = () => {
       // Get the targetLanguage from localStorage 
       const targetLanguage = localStorage.getItem("targetLanguage") || "spanish";
       
-      // Send the request with the correctGrammar option, conversation history, level, and CEFR level
-      const response = await sendChatRequest(message, currentLanguage, targetLanguage, correctGrammar, conversationHistory, conversationLevel, cefrLevel);
+      // Send the request with the correctGrammar option, conversation history, level, CEFR level, and scenario
+      const response = await sendChatRequest(message, currentLanguage, targetLanguage, correctGrammar, conversationHistory, conversationLevel, cefrLevel, scenarioId);
       
       if (!response) {
         return null;

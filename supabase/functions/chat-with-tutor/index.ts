@@ -7,6 +7,8 @@ import { getLanguageDisplayName, determineLanguagePair, getUserNativeLanguage } 
 import { buildCorsHeaders } from "../_shared/cors.ts";
 import { guardPaidRequest } from "../_shared/authGuard.ts";
 import { getCurriculumSnapshot, renderCurriculumBlock } from "../_shared/curriculumContext.ts";
+import { getConversationScenario } from "../_shared/conversationScenarios.ts";
+import { chatJson } from "../_shared/aiGateway.ts";
 import {
   buildSafetyPolicyBlock,
   crisisResourceMessage,
@@ -134,8 +136,123 @@ serve(async (req) => {
       cefrLevel = null,
       correctGrammar = false,
       assignmentTopic = "",
-      isOpeningMessage = false
+      isOpeningMessage = false,
+      scenario_id = null,
+      mode = null
     } = requestData;
+
+    // Scenario role-play: validate against the server registry. Unknown or
+    // missing ids simply fall back to plain tutor mode — never an error.
+    const scenario = getConversationScenario(scenario_id);
+
+    // ---- DEBRIEF MODE ----------------------------------------------------
+    // The learner ended a scenario conversation; return structured feedback
+    // as strict JSON: { corrections, strength, goal_met }. This path must
+    // never surface a 500 with raw model text — any model/parse failure
+    // degrades to a safe minimal object.
+    if (mode === "debrief") {
+      const rawTranscript = Array.isArray(requestData.messages) ? requestData.messages : [];
+      const transcript = rawTranscript
+        .filter((m: { role?: unknown; content?: unknown }) =>
+          (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string")
+        .slice(-40);
+
+      if (transcript.length === 0) {
+        return new Response(
+          JSON.stringify({ error: "No conversation to review yet." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const debriefTargetLang = getLanguageDisplayName(validateLanguage(rawTargetLanguage));
+      const transcriptText = transcript
+        .map((m: { role: string; content: string }) =>
+          `${m.role === "user" ? "Learner" : "Partner"}: ${m.content.slice(0, 600)}`)
+        .join("\n");
+
+      const debriefSystem = `You are a kind, precise language coach reviewing a learner's short practice conversation in ${debriefTargetLang}.
+Only correct the LEARNER's messages, never the Partner's.
+Return STRICT JSON with exactly this shape:
+{"corrections": [{"you_said": "...", "better": "...", "why": "..."}], "strength": "...", "goal_met": true}
+Rules:
+- corrections: at most 3, the most useful mistakes only. "you_said" is the learner's exact sentence. "better" is the corrected sentence in ${debriefTargetLang}. "why" is ONE short line in very simple English (A1-friendly). Empty array if the learner made no real mistakes.
+- strength: one genuine, specific thing the learner did well (simple English, one sentence).
+- goal_met: ${scenario ? `true if the learner achieved this goal, else false: "${scenario.goal}"` : "null (there was no set goal)"}.`;
+
+      // Safe minimal fallback — used whenever the model call or parse fails.
+      let feedback: {
+        corrections: { you_said: string; better: string; why: string }[];
+        strength: string;
+        goal_met: boolean | null;
+      } = {
+        corrections: [],
+        strength: "You kept the conversation going. Good practice.",
+        goal_met: null,
+      };
+
+      try {
+        const parsed = await chatJson<{
+          corrections?: { you_said?: unknown; better?: unknown; why?: unknown }[];
+          strength?: unknown;
+          goal_met?: unknown;
+        }>({
+          model: MODEL,
+          system: debriefSystem,
+          prompt: `Conversation transcript:\n${transcriptText}`,
+          maxTokens: 600,
+        });
+
+        if (parsed) {
+          const corrections = (Array.isArray(parsed.corrections) ? parsed.corrections : [])
+            .slice(0, 3)
+            .map((c) => ({
+              you_said: typeof c?.you_said === "string" ? c.you_said.slice(0, 300) : "",
+              better: typeof c?.better === "string" ? c.better.slice(0, 300) : "",
+              why: typeof c?.why === "string" ? c.why.slice(0, 200) : "",
+            }))
+            .filter((c) => c.you_said && c.better);
+          feedback = {
+            corrections,
+            strength: typeof parsed.strength === "string" && parsed.strength.trim()
+              ? parsed.strength.slice(0, 300)
+              : feedback.strength,
+            goal_met: typeof parsed.goal_met === "boolean" ? parsed.goal_met : null,
+          };
+        } else {
+          console.error("Debrief JSON parse failed; returning safe minimal feedback");
+        }
+      } catch (debriefError) {
+        console.error("Debrief model call failed; returning safe minimal feedback:", debriefError);
+      }
+
+      // Tolerant persistence: the hosted DB may not have conversation_sessions
+      // yet (deploy/safe_update_3.sql). Never fail the response over storage.
+      try {
+        const learnerMessageCount = transcript.filter((m: { role: string }) => m.role === "user").length;
+        const { error: insertError } = await safetyAdmin
+          .from("conversation_sessions")
+          .insert({
+            user_id: user.id,
+            scenario_id: scenario ? scenario.id : null,
+            message_count: learnerMessageCount,
+            feedback,
+          });
+        if (insertError) {
+          if (/column|schema cache|does not exist/i.test(insertError.message ?? "")) {
+            console.log("conversation_sessions not deployed yet; skipping persistence");
+          } else {
+            console.error("Failed to store conversation session:", insertError);
+          }
+        }
+      } catch (persistError) {
+        console.error("Error storing conversation session:", persistError);
+      }
+
+      return new Response(
+        JSON.stringify(feedback),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // Input validation
     let trimmedMessage = "";
@@ -432,6 +549,23 @@ If no errors: "📝 Grammar note: Great job! No corrections needed."`
 ${assignmentTopic ? `ASSIGNMENT: The student is working on "${assignmentTopic}". Keep the conversation focused on this topic.` : ''}
 
 Always respond primarily in ${targetLangDisplay}.`;
+
+    // Scenario role-play block (server-validated id): appended after the
+    // SafetyContext-led prompt above. The CEFR/L1 scaffolding tables are
+    // load-bearing pedagogy and stay byte-for-byte untouched.
+    if (scenario) {
+      systemMessage += `
+
+SCENARIO ROLE-PLAY:
+You are playing: ${scenario.persona}.
+Scene goal for the learner: ${scenario.goal}.
+Register: ${scenario.register}.
+Stay in persona the whole conversation — you are a partner inside this scene, not a teacher outside it.
+If the scene has not started yet, open it naturally: ${scenario.opening}.
+${scenario.twist ? `Mid-conversation, after a few exchanges, introduce this complication ONCE, gently: ${scenario.twist}. Do not repeat it.` : 'Keep the conversation flowing wherever the learner takes it.'}
+Keep your turns short${isBeginnerLevel ? ' (at most 2 sentences)' : ''} and end most turns with a question that moves the scene forward.
+CORRECTIONS: at most ONE concise recast per learner message, woven naturally into your reply (e.g. "Oh, you WENT there yesterday — nice!"). Never give a grammar lecture mid-conversation.`;
+    }
 
     // Curriculum awareness: steer chat/role-play at the learner's active unit.
     try {

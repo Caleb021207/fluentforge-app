@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useLocalization } from "@/context/LocalizationContext";
 import PracticeHeader from "@/components/practice/PracticeHeader";
 import ChatContainer from "@/components/practice/ChatContainer";
 import PracticePromptButton from "@/components/practice/PracticePromptButton";
 import PracticeGuide from "@/components/practice/PracticeGuide";
-import { useChatMessages } from "@/components/practice/hooks/useChatMessages";
+import ConversationFeedbackCard from "@/components/practice/ConversationFeedbackCard";
+import { useChatMessages, type DebriefFeedback } from "@/components/practice/hooks/useChatMessages";
+import { CONVERSATION_SCENARIOS, getScenario } from "@/data/conversationScenarios";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { InteractiveCard } from "@/components/ui/card";
+import { Card, CardContent, InteractiveCard } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Trash, Sparkles, Languages } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
@@ -30,6 +35,16 @@ interface MessageWithTranslationType {
   translation?: TranslationType;
 }
 
+// Map CEFR levels (from placement or deep links) to conversation levels.
+const cefrToLevel: Record<string, string> = {
+  'A1': 'basic',
+  'A2': 'basic',
+  'B1': 'intermediate',
+  'B2': 'advanced',
+  'C1': 'advanced',
+  'C2': 'advanced'
+};
+
 const Practice = () => {
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { currentLanguage, t } = useLocalization();
@@ -40,12 +55,12 @@ const Practice = () => {
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   const { showXPNotification, lastXPGain } = useXPNotification();
   
-  // Read URL parameters for deep linking
-  const searchParams = new URLSearchParams(window.location.search);
+  // Read URL parameters for deep linking and scenario selection
+  const [searchParams, setSearchParams] = useSearchParams();
   const urlLevel = searchParams.get('level');
-  const urlTopic = searchParams.get('topic');
-  const urlFocus = searchParams.get('focus');
-  
+  const selectedScenario = getScenario(searchParams.get('scenario'));
+  const scenarioId = selectedScenario?.id ?? null;
+
   useEffect(() => {
     const savedTargetLanguage = appStorage.get("targetLanguage");
 
@@ -55,34 +70,62 @@ const Practice = () => {
       // ESL default: learners whose native language isn't English learn English.
       setTargetLanguage("english");
     }
+  }, [currentLanguage]);
 
-    const cefrToLevel: Record<string, string> = {
-      'A1': 'basic',
-      'A2': 'basic',
-      'B1': 'intermediate',
-      'B2': 'advanced',
-      'C1': 'advanced',
-      'C2': 'advanced'
+  useEffect(() => {
+    let cancelled = false;
+
+    const applyLevel = (level: string) => {
+      if (!cancelled) setConversationLevel(level);
     };
 
-    if (urlLevel) {
-      // Deep-link level parameter wins.
-      const mappedLevel = cefrToLevel[urlLevel] || 'intermediate';
-      setConversationLevel(mappedLevel);
-      localStorage.setItem("conversationLevel", mappedLevel);
-    } else {
+    const resolveLevel = async () => {
+      if (urlLevel) {
+        // Deep-link level parameter wins.
+        const mappedLevel = cefrToLevel[urlLevel] || 'intermediate';
+        applyLevel(mappedLevel);
+        localStorage.setItem("conversationLevel", mappedLevel);
+        return;
+      }
+
+      // Prefer the placement result stored on the learner's profile.
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('placement_cefr')
+            .eq('id', user.id)
+            .maybeSingle();
+          const placementCefr = !error && data?.placement_cefr ? data.placement_cefr : null;
+          if (placementCefr) {
+            const normalized = placementCefr.split('/')[0].replace('+', '').toUpperCase();
+            if (cefrToLevel[normalized]) {
+              applyLevel(cefrToLevel[normalized]);
+              return;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Could not read placement level from profile:', error);
+      }
+
+      // Fall back to the existing local storage path.
       const storedLevel = localStorage.getItem("conversationLevel");
       if (storedLevel) {
-        setConversationLevel(storedLevel);
+        applyLevel(storedLevel);
       } else {
         // Fall back to the learner's placement quiz result.
         const placement = appStorage.get("placementLevel");
         if (placement && cefrToLevel[placement]) {
-          setConversationLevel(cefrToLevel[placement]);
+          applyLevel(cefrToLevel[placement]);
         }
       }
-    }
-  }, [currentLanguage, urlLevel]);
+    };
+
+    resolveLevel();
+    return () => { cancelled = true; };
+  }, [urlLevel]);
   
   // Load bilingual mode preference
   useEffect(() => {
@@ -133,12 +176,64 @@ const Practice = () => {
     clearConversation,
     getPlaceholderText,
     correctGrammar,
-    toggleGrammarCorrection
-  } = useChatMessages(conversationLevel);
-  
+    toggleGrammarCorrection,
+    requestDebrief
+  } = useChatMessages(conversationLevel, scenarioId);
+
   // The conversation is intentionally kept when navigating away so a student
   // who taps into Review or a lesson doesn't lose their chat; they can clear
   // it explicitly with the Clear Conversation button.
+
+  // ----- Scenario selection (stored in the "scenario" query param) -----
+  const handleScenarioSelect = (id: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('scenario', id);
+    setSearchParams(next, { replace: true });
+  };
+
+  const handleScenarioClear = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('scenario');
+    setSearchParams(next, { replace: true });
+  };
+
+  // ----- End-of-conversation feedback -----
+  const [feedback, setFeedback] = useState<DebriefFeedback | null>(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+
+  // A new scenario means a new conversation goal; drop stale feedback.
+  useEffect(() => {
+    setFeedback(null);
+    setFeedbackError(null);
+  }, [scenarioId]);
+
+  const learnerMessageCount = messages.filter(msg => msg.role === "user").length;
+
+  const handleEndConversation = async () => {
+    setFeedbackLoading(true);
+    setFeedbackError(null);
+    setFeedback(null);
+    try {
+      const result = await requestDebrief();
+      setFeedback(result);
+    } catch (error) {
+      console.error('Debrief failed:', error);
+      setFeedbackError("Could not make feedback.");
+    } finally {
+      setFeedbackLoading(false);
+    }
+  };
+
+  const dismissFeedback = () => {
+    setFeedback(null);
+    setFeedbackError(null);
+  };
+
+  const handleTalkAgain = async () => {
+    dismissFeedback();
+    await clearConversation();
+  };
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">
@@ -172,7 +267,7 @@ const Practice = () => {
           totalXP={progression?.total_xp || 0}
         />
       )}
-      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 select-none" onContextMenu={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()}>
+      <div className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       <GradientBlob className="top-20 left-10" />
       <GradientBlob className="bottom-20 right-10" colors="from-palavox-teal to-palavox-accent" />
       
@@ -257,6 +352,44 @@ const Practice = () => {
           </motion.div>
         </motion.div>
 
+        <div className="mb-4">
+          {selectedScenario ? (
+            <Card>
+              <CardContent className="flex flex-wrap items-center justify-between gap-3 pt-6">
+                <div className="min-w-0 space-y-1">
+                  <p className="font-semibold">{selectedScenario.emoji} {selectedScenario.title}</p>
+                  <p className="text-sm text-muted-foreground">{selectedScenario.goal}</p>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleScenarioClear}>
+                  Change
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="space-y-3 pt-6">
+                <p className="font-semibold">Choose a conversation</p>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {CONVERSATION_SCENARIOS.map((scenario) => (
+                    <button
+                      key={scenario.id}
+                      type="button"
+                      onClick={() => handleScenarioSelect(scenario.id)}
+                      className="rounded-xl border border-border/50 bg-background/30 p-4 text-left transition-colors hover:border-brand-sky/30"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="font-semibold">{scenario.emoji} {scenario.title}</span>
+                        <Badge variant="outline" className="text-[10px] capitalize">{scenario.level}</Badge>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">{scenario.goal}</p>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -273,6 +406,24 @@ const Practice = () => {
             bilingualMode={bilingualMode}
           />
         </motion.div>
+
+        {(feedbackLoading || feedbackError || feedback) ? (
+          <div className="mt-4">
+            <ConversationFeedbackCard
+              feedback={feedback}
+              isLoading={feedbackLoading}
+              error={feedbackError}
+              onTalkAgain={handleTalkAgain}
+              onKeepTalking={dismissFeedback}
+            />
+          </div>
+        ) : learnerMessageCount >= 4 ? (
+          <div className="mt-4">
+            <Button variant="outline" onClick={handleEndConversation}>
+              End conversation
+            </Button>
+          </div>
+        ) : null}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

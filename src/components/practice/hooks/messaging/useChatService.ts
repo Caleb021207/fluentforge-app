@@ -18,7 +18,8 @@ export const useChatService = () => {
     correctGrammar: boolean = false,
     conversationHistory: {role: 'user' | 'assistant' | 'system'; content: string}[] = [],
     conversationLevel: string = "intermediate",
-    cefrLevel: string | null = null
+    cefrLevel: string | null = null,
+    scenarioId: string | null = null
   ): Promise<ChatResponse | null> => {
     if (!message || message.trim() === "") {
       toast({
@@ -64,7 +65,8 @@ export const useChatService = () => {
           correctGrammar: correctGrammar,  // Flag to control grammar correction
           conversationHistory: conversationHistory,  // Add conversation history for context
           conversationLevel: conversationLevel,  // Add conversation level
-          cefrLevel: cefrLevel  // Direct CEFR level for adaptive proficiency
+          cefrLevel: cefrLevel,  // Direct CEFR level for adaptive proficiency
+          scenario_id: scenarioId  // Optional scenario role-play (validated server-side)
         }
       });
 

@@ -18,7 +18,14 @@ interface Message {
   translation?: TranslationType;
 }
 
-export const useChatMessages = (conversationLevel: string = "intermediate") => {
+/** Structured end-of-conversation feedback from chat-with-tutor debrief mode. */
+export interface DebriefFeedback {
+  corrections: { you_said: string; better: string; why: string }[];
+  strength: string;
+  goal_met: boolean | null;
+}
+
+export const useChatMessages = (conversationLevel: string = "intermediate", scenarioId: string | null = null) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [correctGrammar, setCorrectGrammar] = useState<boolean>(false);
@@ -164,13 +171,37 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
   const sendChatMessageWithCorrection = async (message: string) => {
     try {
       const effectiveCefrLevel = proficiency?.cefrLevel || null;
-      return await sendChatMessage(message, correctGrammar, apiConversationHistory, conversationLevel, effectiveCefrLevel);
+      return await sendChatMessage(message, correctGrammar, apiConversationHistory, conversationLevel, effectiveCefrLevel, scenarioId);
     } catch (error) {
       console.error("Error sending message with correction flag:", error);
       return null;
     }
   };
   
+  // End-of-conversation debrief: ask the tutor for structured feedback on the
+  // whole transcript. Throws on failure so the caller can show an error state.
+  const requestDebrief = useCallback(async (): Promise<DebriefFeedback> => {
+    const targetLanguage = localStorage.getItem("targetLanguage") || "english";
+    const { data, error } = await supabase.functions.invoke('chat-with-tutor', {
+      body: {
+        mode: 'debrief',
+        messages: apiConversationHistory,
+        scenario_id: scenarioId,
+        userLanguage: currentLanguage,
+        targetLanguage,
+      }
+    });
+
+    if (error) throw error;
+    if (!data || data.error) throw new Error(data?.error || "Empty debrief response");
+
+    return {
+      corrections: Array.isArray(data.corrections) ? data.corrections : [],
+      strength: typeof data.strength === 'string' ? data.strength : "",
+      goal_met: typeof data.goal_met === 'boolean' ? data.goal_met : null,
+    };
+  }, [apiConversationHistory, scenarioId, currentLanguage]);
+
   const toggleGrammarCorrection = () => {
     const newValue = !correctGrammar;
     setCorrectGrammar(newValue);
@@ -222,6 +253,7 @@ export const useChatMessages = (conversationLevel: string = "intermediate") => {
     clearConversation,
     getPlaceholderText,
     correctGrammar,
-    toggleGrammarCorrection
+    toggleGrammarCorrection,
+    requestDebrief
   };
 };

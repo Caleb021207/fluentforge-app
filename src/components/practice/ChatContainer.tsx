@@ -58,7 +58,9 @@ export default function ChatContainer({
   return (
     <div className="space-y-2">
       <Card className="overflow-hidden mb-2">
-        <ScrollArea className="h-[500px] p-4 select-none" onContextMenu={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()}>
+        {/* Text selection/copy is deliberately allowed: ESL learners need to
+            copy words into dictionaries and notes. */}
+        <ScrollArea className="h-[500px] p-4">
           {messages.length === 0 ? (
             <EmptyChatState />
           ) : (
