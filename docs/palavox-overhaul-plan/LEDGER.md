@@ -91,3 +91,28 @@ Live Supabase project: `afswfqougbfiqbkchoqj` (from `supabase/config.toml`).
 - **Next: Phase 1** — security foundations completion (quota service on reconciled schema,
   orphan/under-authorized function guard-or-delete, XP consolidation kill-switch, secrets/
   CORS cleanup, telemetry event tables) per 17 P1.
+
+### E7 · 2026-07-30 · PHASE 1 — full discretion granted; local DB validation stood up
+Owner lifted all "requires staging" hedging. Installed Deno 2.9.4 + PGlite (WASM Postgres 18)
+with Supabase-env shims; the migration chain and security logic are now VALIDATED LOCALLY, not
+just on paper.
+- **DB harness** (commit 58c8d365): 17/17 migrations apply clean; 11/11 security behaviors pass
+  on a real engine (self-promotion to teacher AND admin frozen; provision_teacher accepts/rejects
+  correctly with atomic use-counting; join_class_by_code intact).
+- **1.1 fn security** (f6bf92a4): 10 exploitable/unguarded/orphan functions -> 410 stubs
+  (award-xp/check-streak exploit killed, email-leak + cert oracles closed); quota writers
+  hardened (JWT identity, per-type clamps, voice-only billing, dedupe); D2/D3 realtime fixes.
+- **1.2 secrets/PII** (cbb90766): encryption-theater -> honest storage w/ legacy migration; PII
+  console logs purged across ~14 files; CORS localhost gated; .env untracked. [rotate .env history — owner]
+- **1.3 i18n** (dc9e944e): 38 packs' unmerged files wired (median coverage ~20%->~32%, Spanish
+  71.9%); indefinite pref persistence; server-authoritative L1 + write-back; header/Settings
+  switchers; 5 newcomer packs selectable.
+- **1.4 student correctness** (2d6eb4cc): honest lesson completion w/ re-queue; placement
+  sign-in gate; unit deep-links.
+- **1.5 telemetry** (9777470d): learning_events table + view + RLS (prepared, applies in chain);
+  canonical streak leaderboard.
+- **Integration fix** (8f4fd20a): deno-check caught a strictness error the merged tree exposed.
+- **Combined verify:** vitest 292 green · tsc 0 · build green · deno check green on all 18
+  touched functions · DB harness 17/17 + 11/11.
+- **Only remaining wall:** production apply/deploy needs the hosted Supabase credentials (owner).
+  Everything short of that is done and proven.
