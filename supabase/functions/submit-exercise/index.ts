@@ -8,13 +8,26 @@ import {
   XP,
   preferOperational,
 } from "../_shared/learnerProgress.ts";
+import { GRADER_VERSION, getGrader, gradeAttempt, type GradeResult } from "../_shared/graders.ts";
 
 /**
- * Authoritative exercise grading.
+ * Authoritative exercise grading — the single writer for progress side effects.
  *
- * The browser submits only the option it picked; the answer key is read here,
- * server-side, and the resulting attempt, skill mastery, lesson progress, XP
- * and streak are all written with the service role.
+ * The browser submits only what it picked/typed/ordered; the answer key is read
+ * here, server-side, and the resulting attempt, skill mastery, lesson progress,
+ * XP and streak are all written with the service role. Grading dispatches
+ * through the pure Tier-0 registry in _shared/graders.ts (plan 06 §E2/§E10):
+ *
+ *  - New primitives (cloze / word_retrieval / chunk_retrieval /
+ *    sentence_construction / error_correction, and meaning_recognition) read a
+ *    server-only `exercise_answer_keys` row (06 §2.3) and are graded by
+ *    primitive. Partial credit lands in exercise_attempts.score.
+ *  - Legacy MCQ (options only, no answer-key row) is graded through the same
+ *    registry via the meaning_recognition grader built from exercise_options —
+ *    byte-behavior-compatible with the previous option-match path.
+ *
+ * The progress pipeline (attempt insert → mastery → lesson progress → anti-grind
+ * XP → streak) is unchanged and keys off the boolean pass verdict `grade.correct`.
  */
 
 function service() {
@@ -22,6 +35,38 @@ function service() {
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
   );
+}
+
+// deno-lint-ignore no-explicit-any
+type Db = any;
+
+/** Client-safe response envelope (06 §2.1). Never carries key material. */
+interface AttemptResponse {
+  selected_option?: string | null;
+  text?: string;
+  tokens?: string[];
+  ordered_tokens?: string[];
+  ordered_texts?: string[];
+  blanks?: Record<string, string>;
+  selected_tokens?: string[];
+  corrections?: Record<string, string>;
+}
+
+/**
+ * Insert an attempt row. Writes the partial-credit / provenance columns added
+ * by migration 20260731021000; if the live DB has not applied that migration
+ * yet, falls back to the legacy column set so grading is never blocked
+ * (dual-write window, 06 §5 "Migration of legacy MCQ").
+ */
+async function insertAttempt(
+  db: Db,
+  base: Record<string, unknown>,
+  extra: Record<string, unknown>,
+) {
+  const { error } = await db.from("exercise_attempts").insert({ ...base, ...extra });
+  if (error && /column|schema cache|does not exist/i.test(error.message ?? "")) {
+    await db.from("exercise_attempts").insert(base);
+  }
 }
 
 Deno.serve(async (req) => {
@@ -43,6 +88,15 @@ Deno.serve(async (req) => {
     const exerciseId: string | undefined = body?.exercise_id;
     const optionId: string | null = body?.option_id ?? null;
     const responseMs = Number.isFinite(body?.response_ms) ? Math.max(0, Math.round(body.response_ms)) : null;
+    const hintLevel = Number.isFinite(body?.hint_level) ? Math.max(0, Math.round(body.hint_level)) : 0;
+
+    // The typed/ordered/etc. response; legacy MCQ callers send only option_id.
+    const response: AttemptResponse =
+      body?.response && typeof body.response === "object"
+        ? body.response
+        : optionId != null
+          ? { selected_option: optionId }
+          : {};
 
     if (!exerciseId || !/^[0-9a-f-]{36}$/i.test(exerciseId)) {
       return json({ error: "A valid exercise_id is required" }, 400);
@@ -63,16 +117,60 @@ Deno.serve(async (req) => {
     const lessonId = exercise.lesson_id as string;
     const skillId = (exercise as Record<string, any>).lessons?.skill_id as string | undefined;
 
-    // ---- grade against the server-only answer key ----
-    const { data: options } = await db
-      .from("exercise_options")
-      .select("id, is_correct, rationale, label")
-      .eq("exercise_id", exerciseId);
+    // ---- resolve the server-only answer key + grading primitive ----
+    // Preferred: the exercise_answer_keys store (06 §2.3). If that table has not
+    // been provisioned yet (live DB pre-migration), fall back to legacy MCQ
+    // grading from exercise_options so nothing regresses during the window.
+    let primitive: string | null = null;
+    let key: Record<string, any> = {};
+    let legacyRationale: string | null = null;
+    let legacyCorrectOptionId: string | null = null;
 
-    const key = (options ?? []).find((o: Record<string, any>) => o.is_correct);
-    if (!key) return json({ error: "This exercise has no answer key" }, 409);
+    let keyRow: Record<string, any> | null = null;
+    try {
+      const { data, error } = await db
+        .from("exercise_answer_keys")
+        .select("primitive, key, grading, grader_version")
+        .eq("exercise_id", exerciseId)
+        .maybeSingle();
+      if (!error) keyRow = data;
+    } catch {
+      /* table absent on the live DB yet — legacy path handles it */
+    }
 
-    const isCorrect = optionId === key.id;
+    if (keyRow) {
+      primitive = String(keyRow.primitive ?? "");
+      if (!getGrader(primitive)) {
+        // Authored with a primitive this deploy cannot grade (e.g. a Tier-1/2
+        // voice/AI type). Never silently mark the learner wrong.
+        return json({ error: "This exercise type is not yet gradable", primitive }, 422);
+      }
+      // Per-item key knobs win; the grading block supplies defaults (06 §5).
+      key = { ...(keyRow.grading ?? {}), ...(keyRow.key ?? {}) };
+      legacyCorrectOptionId = key.correct_option ?? null;
+    } else {
+      // ---- legacy MCQ: build a meaning_recognition key from exercise_options ----
+      const { data: options } = await db
+        .from("exercise_options")
+        .select("id, is_correct, rationale, label")
+        .eq("exercise_id", exerciseId);
+      const correct = (options ?? []).find((o: Record<string, any>) => o.is_correct);
+      if (!correct) return json({ error: "This exercise has no answer key" }, 409);
+      primitive = "meaning_recognition";
+      key = { correct_option: correct.id };
+      legacyRationale = correct.rationale ?? null;
+      legacyCorrectOptionId = correct.id;
+    }
+
+    // ---- grade against the key (never trusting the client) ----
+    let grade: GradeResult;
+    try {
+      grade = gradeAttempt(primitive, response, key);
+    } catch (e) {
+      console.error("grade dispatch failed", primitive, e);
+      return json({ error: "This exercise type is not yet gradable", primitive }, 422);
+    }
+    const isCorrect = grade.correct;
 
     const { data: priorCorrect } = await db
       .from("exercise_attempts")
@@ -83,18 +181,29 @@ Deno.serve(async (req) => {
       .limit(1)
       .maybeSingle();
 
-    await db.from("exercise_attempts").insert({
-      user_id: userId,
-      exercise_id: exerciseId,
-      lesson_id: lessonId,
-      skill_id: skillId ?? null,
-      is_correct: isCorrect,
-      selected_option_id: optionId,
-      difficulty: exercise.difficulty,
-      response_ms: responseMs,
-    });
+    await insertAttempt(
+      db,
+      {
+        user_id: userId,
+        exercise_id: exerciseId,
+        lesson_id: lessonId,
+        skill_id: skillId ?? null,
+        is_correct: isCorrect,
+        selected_option_id: response.selected_option ?? null,
+        difficulty: exercise.difficulty,
+        response_ms: responseMs,
+      },
+      {
+        score: grade.score,
+        passed: isCorrect,
+        hint_level: hintLevel,
+        tier: 0,
+        grader_version: GRADER_VERSION,
+        response,
+      },
+    );
 
-    // ---- skill mastery + adaptive ability ----
+    // ---- skill mastery + adaptive ability (signature unchanged) ----
     let masteryState: ReturnType<typeof computeMastery> | null = null;
     if (skillId) {
       const { data: row } = await db
@@ -201,9 +310,15 @@ Deno.serve(async (req) => {
 
     return json({
       correct: isCorrect,
-      correct_option_id: key.id,
+      // Continuous grade + revealed answer are post-grade only (06 §2.1).
+      score: grade.score,
+      passed: isCorrect,
+      correct_option_id: legacyCorrectOptionId,
+      expected: grade.expected ?? null,
+      feedback: grade.feedback ?? null,
+      partials: grade.partials ?? null,
       // The rationale is only revealed *after* the answer is graded.
-      explanation: isCorrect ? key.rationale ?? null : key.rationale ?? null,
+      explanation: legacyRationale ?? null,
       mastery: masteryState
         ? {
             mastery: masteryState.mastery,
