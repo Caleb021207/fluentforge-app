@@ -5,6 +5,10 @@ import { buildCorsHeaders } from "../_shared/cors.ts";
 import { guardPaidRequest } from "../_shared/authGuard.ts";
 import { buildSafetyPolicyBlock, resolveSafetyContext } from "../_shared/safetyContext.ts";
 
+// Single source of truth for the realtime model (wip-11a D3). The mint below
+// pins this model and the response echoes it as "model" so the client's SDP
+// exchange always targets the same model the session was created for.
+const REALTIME_MODEL = "gpt-realtime-2025-08-28";
 
 serve(async (req) => {
   const corsHeaders = buildCorsHeaders(req);
@@ -60,10 +64,24 @@ serve(async (req) => {
       .maybeSingle();
     const safetyCtx = resolveSafetyContext(safetyProfile ?? null);
 
-    // Get request body for proficiency info
+    // Personalization (wip-11a D4): the profile row is authoritative; the
+    // request body is fallback only. Tolerate a hosted DB that lags the
+    // schema (same pattern as submit-exercise insertAttempt).
+    const { data: proficiencyRow, error: proficiencyError } = await supabase
+      .from('profiles')
+      .select('placement_cefr, native_language, target_language')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (proficiencyError && !/column|schema cache|does not exist/i.test(proficiencyError.message ?? '')) {
+      console.error('profile proficiency read failed:', proficiencyError.message);
+    }
+
+    // Get request body for proficiency info (fallback when profile is empty)
     const requestBody = await req.json().catch(() => ({}));
-    const { cefrLevel, userLanguage, targetLanguage } = requestBody;
-    
+    const cefrLevel = proficiencyRow?.placement_cefr || requestBody.cefrLevel;
+    const userLanguage = proficiencyRow?.native_language || requestBody.userLanguage;
+    const targetLanguage = proficiencyRow?.target_language || requestBody.targetLanguage;
+
     // CEFR-based behavior configuration
     const LEVEL_BEHAVIOR: Record<string, { nativeLanguageRatio: number; explanationStyle: string }> = {
       'A1': { nativeLanguageRatio: 0.6, explanationStyle: 'native_heavy' },
@@ -133,7 +151,7 @@ Your job is to maximize ${targetLang} practice time while being supportive when 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-realtime-2025-08-28",
+        model: REALTIME_MODEL,
         voice: "sage",
         instructions: adaptiveInstructions,
       }),
@@ -152,9 +170,11 @@ Your job is to maximize ${targetLang} practice time while being supportive when 
     const sessionId = crypto.randomUUID();
     const sessionStart = Date.now();
 
-    // Return token to client with session tracking info
+    // Return token to client with session tracking info. "model" is pinned
+    // after the spread so the client's SDP URL always matches the mint (D3).
     return new Response(JSON.stringify({
       ...data,
+      model: REALTIME_MODEL,
       user_id: user.id,
       session_id: sessionId,
       session_start: sessionStart

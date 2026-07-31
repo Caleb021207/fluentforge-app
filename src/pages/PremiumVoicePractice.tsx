@@ -40,6 +40,36 @@ const PremiumVoicePractice = () => {
   const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   const sessionStartTimeRef = useRef<number | null>(null);
 
+  // Learner profile for personalization (wip-11a D4): passed into the
+  // realtime init; the server prefers its own profile read anyway.
+  const [profileInfo, setProfileInfo] = useState<{
+    cefrLevel: string | null;
+    nativeLanguage: string | null;
+    targetLanguage: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from('profiles')
+        .select('placement_cefr, native_language, target_language')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (!cancelled && data) {
+        setProfileInfo({
+          cefrLevel: data.placement_cefr,
+          nativeLanguage: data.native_language,
+          targetLanguage: data.target_language,
+        });
+      }
+    };
+    loadProfile();
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -75,6 +105,24 @@ const PremiumVoicePractice = () => {
     }
   };
 
+  // Resilience (wip-11a D5): the manager already ran its cleanup — reset the
+  // page state so the learner can start again instead of hanging.
+  const handleConnectionLost = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setIsConnected(false);
+    setIsSpeaking(false);
+    setSessionId(null);
+    setElapsedSeconds(0);
+    toast({
+      title: "Connection lost",
+      description: "Tap Start to reconnect.",
+      variant: "destructive",
+    });
+  };
+
   const startConversation = async () => {
     // Prevent concurrent calls - check both session states
     if (isStarting || isConnected || customSessionId) {
@@ -96,8 +144,12 @@ const PremiumVoicePractice = () => {
         return;
       }
 
-      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking);
-      await chatRef.current.init();
+      chatRef.current = new RealtimeChat(handleMessage, setIsSpeaking, handleConnectionLost);
+      await chatRef.current.init({
+        cefrLevel: profileInfo?.cefrLevel ?? undefined,
+        userLanguage: profileInfo?.nativeLanguage ?? undefined,
+        targetLanguage: profileInfo?.targetLanguage ?? undefined,
+      });
       
       // Generate and store session ID
       const newSessionId = crypto.randomUUID();

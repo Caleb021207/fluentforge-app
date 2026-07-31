@@ -46,37 +46,15 @@ export const useVoiceConversation = (conversationLevel: string = "intermediate",
     conversationHistoryRef.current = conversationHistory;
   }, [conversationHistory]);
 
-  // Handle cleanup on unmount or page unload
+  // Handle cleanup on unmount
+  // 2026-07-31 (wip-11a D7): removed a beforeunload sendBeacon that targeted
+  // functions/v1/track-session-end — that endpoint does not exist. Unmount
+  // cleanup below still records the session.
   useEffect(() => {
     if (cleanupSetupRef.current) return; // Only set up once
     cleanupSetupRef.current = true;
 
-    const handleBeforeUnload = () => {
-      if (sessionStartedRef.current && !sessionEndedRef.current) {
-        const history = conversationHistoryRef.current;
-        const duration = sessionStartTimeRef.current 
-          ? Math.ceil((Date.now() - sessionStartTimeRef.current) / 60000)
-          : 0;
-        
-        const data = {
-          record_id: usageTrackingRecordIdRef.current,
-          session_id: sessionIdRef.current,
-          ended_at: new Date().toISOString(),
-          messages_count: history.length,
-          minutes_used: duration
-        };
-        
-        navigator.sendBeacon(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/track-session-end`,
-          JSON.stringify(data)
-        );
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
       if (sessionStartedRef.current && !sessionEndedRef.current) {
         // Capture values before cleanup
         trackSessionEnd(

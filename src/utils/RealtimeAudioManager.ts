@@ -175,21 +175,30 @@ export const playAudioData = async (audioContext: AudioContext, audioData: Uint8
   await audioQueueInstance.addToQueue(audioData);
 };
 
+/** Learner personalization sent at token-mint time (wip-11a D4). */
+export interface RealtimeInitOptions {
+  cefrLevel?: string;
+  userLanguage?: string;
+  targetLanguage?: string;
+}
+
 export class RealtimeChat {
   private pc: RTCPeerConnection | null = null;
   private dc: RTCDataChannel | null = null;
   private audioEl: HTMLAudioElement;
   private sessionStartTime: number = 0;
+  private localStream: MediaStream | null = null;
 
   constructor(
     private onMessage: (message: any) => void,
-    private onSpeakingChange: (speaking: boolean) => void
+    private onSpeakingChange: (speaking: boolean) => void,
+    private onDisconnect?: (reason: string) => void
   ) {
     this.audioEl = document.createElement("audio");
     this.audioEl.autoplay = true;
   }
 
-  async init() {
+  async init(options: RealtimeInitOptions = {}) {
     try {
       console.log("🚀 Getting ephemeral token...");
       
@@ -199,18 +208,36 @@ export class RealtimeChat {
         throw new Error('Not authenticated');
       }
 
-      // D2 fix (wip-11a, 2026-07-30): mint the token through the app's own
-      // configured Supabase client instead of a hardcoded foreign project URL
-      // (this previously pointed at dukpljcweixxmpkiblwo, not this project).
-      // functions.invoke targets VITE_SUPABASE_URL and attaches the user JWT.
-      const { data, error: invokeError } = await supabase.functions.invoke(
-        'premium-voice-realtime',
-        { body: {} }
+      // D2 fix (wip-11a, 2026-07-30): mint the token from THIS project's
+      // endpoint (this previously pointed at a hardcoded foreign project URL,
+      // dukpljcweixxmpkiblwo). Plain fetch so non-2xx bodies (e.g. the 403
+      // monthly-limit message) surface to the learner instead of a generic
+      // invoke error.
+      // D4: send proficiency in the body — the server prefers its own
+      // profile read and uses these values as fallback only.
+      const mintResponse = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/premium-voice-realtime`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cefrLevel: options.cefrLevel,
+            userLanguage: options.userLanguage,
+            targetLanguage: options.targetLanguage,
+          }),
+        }
       );
 
-      if (invokeError) {
-        throw new Error(invokeError.message || 'Failed to get token');
+      if (!mintResponse.ok) {
+        const errorBody = await mintResponse.json().catch(() => null);
+        throw new Error(errorBody?.error || `Failed to get token (${mintResponse.status})`);
       }
+
+      const data = await mintResponse.json();
 
       if (!data?.client_secret?.value) {
         throw new Error("No token received");
@@ -222,6 +249,17 @@ export class RealtimeChat {
 
       // Create peer connection
       this.pc = new RTCPeerConnection();
+
+      // Resilience (wip-11a D5): if the connection dies, clean up and tell
+      // the UI so it never hangs in a dead session.
+      this.pc.onconnectionstatechange = () => {
+        const state = this.pc?.connectionState;
+        if (state === 'failed' || state === 'disconnected') {
+          console.warn('⚠️ Realtime connection lost:', state);
+          this.disconnect();
+          this.onDisconnect?.(state);
+        }
+      };
 
       // Set up audio playback
       this.pc.ontrack = (e) => {
@@ -239,6 +277,7 @@ export class RealtimeChat {
           autoGainControl: true
         } 
       });
+      this.localStream = stream;
       this.pc.addTrack(stream.getTracks()[0]);
 
       // Set up data channel for events
@@ -302,8 +341,17 @@ export class RealtimeChat {
   }
 
   disconnect() {
+    // Clear the state handler first so an intentional close never fires
+    // the connection-lost path.
+    if (this.pc) {
+      this.pc.onconnectionstatechange = null;
+    }
     this.dc?.close();
     this.pc?.close();
+    this.dc = null;
+    this.pc = null;
+    this.localStream?.getTracks().forEach(track => track.stop());
+    this.localStream = null;
     this.audioEl.srcObject = null;
   }
 }
