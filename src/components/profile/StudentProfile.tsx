@@ -83,8 +83,8 @@ const StudentProfile = ({ profile }: StudentProfileProps) => {
           table: 'student_enrollments',
           filter: `student_id=eq.${profile.id}`
         },
-        (payload) => {
-          console.log('Enrollment changed, refetching data:', payload);
+        () => {
+          console.log('Enrollment changed, refetching data');
           fetchStudentData();
         }
       )

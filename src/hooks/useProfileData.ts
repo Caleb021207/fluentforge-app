@@ -27,7 +27,6 @@ export const useProfileData = () => {
     }
     
     try {
-      console.log('🔍 useProfileData: Starting fetchUserData');
       const { data: { user }, error } = await supabase.auth.getUser();
       
       if (error) {
@@ -40,12 +39,9 @@ export const useProfileData = () => {
         return;
       }
       
-      console.log('✅ User found:', user?.id, user?.email);
       setState(prev => ({ ...prev, user }));
-      
+
       if (user) {
-        console.log('🔍 useProfileData: Fetching profile for user:', user.id);
-        
         try {
           // Fetch basic profile first
           const { data: basicProfile, error: profileError } = await supabase
@@ -54,10 +50,8 @@ export const useProfileData = () => {
             .eq('id', user.id)
             .single();
 
-          console.log('📋 Profile query result:', basicProfile, 'Error:', profileError);
-          
           if (profileError) {
-            console.log('❌ No profile found, profileError:', profileError);
+            console.error('useProfileData: profile query failed:', profileError.code ?? profileError.message);
             setState(prev => ({
               ...prev,
               profile: null,
@@ -71,9 +65,6 @@ export const useProfileData = () => {
             return;
           }
 
-          console.log('✅ Basic profile found:', basicProfile);
-          console.log('👤 User role:', basicProfile.role);
-
           // Build extended profile
           const extendedProfile: ExtendedUserProfile = {
             ...basicProfile,
@@ -83,7 +74,6 @@ export const useProfileData = () => {
 
           // If user is district admin, fetch district associations
           if (basicProfile.role === 'district') {
-            console.log('🏛️ Fetching district associations for district admin');
             const { data: districtAssociations, error: districtError } = await supabase
               .from('district_users')
               .select(`
@@ -98,36 +88,27 @@ export const useProfileData = () => {
               `)
               .eq('user_id', user.id);
 
-            console.log('🏛️ District associations result:', districtAssociations, 'Error:', districtError);
-
             if (!districtError && districtAssociations) {
               extendedProfile.district_associations = districtAssociations;
-              console.log('✅ District associations added:', districtAssociations.length, 'associations');
-            } else {
-              console.log('❌ Failed to fetch district associations:', districtError);
+            } else if (districtError) {
+              console.error('useProfileData: district associations fetch failed:', districtError.code ?? districtError.message);
             }
           }
 
           // If user has a school_id, fetch school info
           if (basicProfile.school_id) {
-            console.log('🏫 Fetching school info for school_id:', basicProfile.school_id);
             const { data: schoolData, error: schoolError } = await supabase
               .from('schools')
               .select('*')
               .eq('id', basicProfile.school_id)
               .single();
 
-            console.log('🏫 School query result:', schoolData, 'Error:', schoolError);
-
             if (!schoolError && schoolData) {
               extendedProfile.school = schoolData;
-              console.log('✅ School data added:', schoolData.name);
-            } else {
-              console.log('❌ Failed to fetch school data:', schoolError);
+            } else if (schoolError) {
+              console.error('useProfileData: school fetch failed:', schoolError.code ?? schoolError.message);
             }
           }
-
-          console.log('🎯 Final extended profile:', extendedProfile);
 
           setState(prev => ({
             ...prev,
@@ -157,7 +138,6 @@ export const useProfileData = () => {
           }));
         }
       } else {
-        console.log('❌ No user found');
         setState(prev => ({ ...prev, isLoading: false }));
       }
     } catch (error) {

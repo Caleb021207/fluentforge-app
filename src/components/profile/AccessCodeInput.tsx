@@ -34,18 +34,15 @@ const AccessCodeInput = ({ onCodeProcessed, currentRole, currentAssignment }: Ac
 
     setIsProcessing(true);
     try {
-      console.log('Processing access code:', code);
       const result = await processAccessCode(code);
-      console.log('Access code result:', result);
-      
+      console.log('Access code processed, success:', result.success);
+
       if (result.success) {
         toast({
           title: t("success"),
           description: result.message,
         });
         setCode("");
-        
-        console.log('Access code processed successfully, triggering profile update...');
         
         // Force a full page reload to ensure all data refreshes
         setTimeout(() => {

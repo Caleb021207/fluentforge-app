@@ -51,19 +51,15 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
     const fetchStudentData = async () => {
       setIsLoading(true);
       try {
-        console.log('Fetching comprehensive student data for teacher:', teacherId);
-
         // Get teacher's classes
         const { data: rawClasses, error: classError } = await supabase
           .from('classes')
           .select('id, name, class_code, academic_year')
           .eq('teacher_id', teacherId);
 
-        console.log('Teacher classes:', rawClasses);
-        console.log('Class fetch error:', classError);
+        if (classError) console.error('Class fetch error:', classError);
 
         if (!rawClasses || rawClasses.length === 0) {
-          console.log('No classes assigned to this teacher');
           setStudentMetrics([]);
           setIsLoading(false);
           setDebugInfo({ teacherClasses: 0, totalEnrollments: 0 });
@@ -78,11 +74,9 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
           .in('class_id', classIds)
           .eq('status', 'active');
 
-        console.log('Student enrollments:', enrollments);
-        console.log('Enrollment fetch error:', enrollError);
+        if (enrollError) console.error('Enrollment fetch error:', enrollError);
 
         if (!enrollments || enrollments.length === 0) {
-          console.log('No students enrolled in classes');
           setStudentMetrics([]);
           setIsLoading(false);
           setDebugInfo({ teacherClasses: rawClasses.length, totalEnrollments: 0 });
@@ -96,8 +90,7 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
           .select('id, display_name, email')
           .in('id', studentIds);
 
-        console.log('Student profiles:', profiles);
-        console.log('Profile fetch error:', profileError);
+        if (profileError) console.error('Profile fetch error:', profileError);
 
         // Create a map for easy lookup
         const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
@@ -172,7 +165,6 @@ const StudentTestScores = ({ teacherId, onDataUpdate }: StudentTestScoresProps) 
           }
         }
 
-        console.log('All student metrics:', allStudentMetrics);
         setStudentMetrics(allStudentMetrics);
 
         // Calculate class averages

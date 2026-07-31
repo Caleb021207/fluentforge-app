@@ -39,7 +39,7 @@ export const RemoveStudentDialog = ({
     setIsRemoving(true);
     
     try {
-      console.log('Attempting to remove student:', { studentId, classId, studentName });
+      console.log('Attempting to remove student:', { studentId, classId });
       
       // First check how many enrollments exist
       const { data: existingEnrollments, error: checkError } = await supabase
@@ -48,8 +48,8 @@ export const RemoveStudentDialog = ({
         .eq('student_id', studentId)
         .eq('class_id', classId);
       
-      console.log('Existing enrollments found:', existingEnrollments);
-      
+      console.log('Existing enrollments found:', existingEnrollments?.length ?? 0);
+
       if (checkError) {
         console.error('Error checking enrollments:', checkError);
         throw checkError;
@@ -63,7 +63,7 @@ export const RemoveStudentDialog = ({
         .eq('class_id', classId)
         .select();
 
-      console.log('Delete result:', { error, deletedData });
+      console.log('Delete result:', { hasError: !!error, deletedCount: deletedData?.length ?? 0 });
 
       if (error) throw error;
 

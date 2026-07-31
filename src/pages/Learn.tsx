@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { useLearningPath } from "@/hooks/useLearningPath";
+import { unitAnchorId } from "@/utils/learnNavigation";
 import StudentHomePanel from "@/components/learner/StudentHomePanel";
 import { BookOpen, CheckCircle2, Lock, Layers, Sparkles, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,8 +25,17 @@ const BrandBar: React.FC<{ value: number; className?: string }> = ({ value, clas
 /** The learner's path through the persistent curriculum. */
 const Learn: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoading, isAuthenticated } = useAuthGuard();
   const { units, courseTitle, dueReviews, loading, error } = useLearningPath();
+
+  // Deep-link support: /learn#unit-<id> scrolls to that unit's card once the
+  // path has rendered (used by assignment "Open unit" buttons).
+  useEffect(() => {
+    if (loading || !location.hash) return;
+    const el = document.getElementById(location.hash.slice(1));
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [loading, location.hash, units.length]);
 
   if (isLoading || loading) {
     return (
@@ -90,6 +100,7 @@ const Learn: React.FC = () => {
           return (
             <Card
               key={unit.id}
+              id={unitAnchorId(unit.id)}
               className={cn(
                 "overflow-hidden transition-all duration-300",
                 locked ? "opacity-60" : "gradient-border hover:shadow-brand",

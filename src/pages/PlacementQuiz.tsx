@@ -8,12 +8,15 @@ import { QuestionDisplay } from "@/components/certifications/components/Question
 import { getLevelDescription } from "@/components/certifications/utils/scoreUtils";
 import { gradeQuiz } from "@/utils/serverWrites";
 import { supabase } from "@/integrations/supabase/client";
-import { secureStorage } from "@/utils/security/dataEncryption";
+import { appStorage } from "@/utils/security/storage";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight, Award, BookOpen } from "lucide-react";
 
 const PlacementQuiz = () => {
   const navigate = useNavigate();
+  const { isLoading: authLoading, isAuthenticated } = useAuthGuard();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [quizState, setQuizState] = useState<"intro" | "quiz" | "results">("intro");
@@ -72,7 +75,7 @@ const PlacementQuiz = () => {
 
     // Persist the placement so the learning path and practice chat can use it.
     if (graded?.level) {
-      secureStorage.setItem("placementLevel", graded.level, false);
+      appStorage.set("placementLevel", graded.level);
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
@@ -117,6 +120,19 @@ const PlacementQuiz = () => {
     // The learning path reads the persisted placement level itself.
     navigate("/learn");
   };
+
+  if (authLoading) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 flex justify-center items-center min-h-[50vh]">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // `grade-quiz` requires a signed-in user (plan 02 F3-1): gate BEFORE the
+  // quiz starts so an anonymous visitor never answers 12 questions only to
+  // receive a silent default "A1".
+  if (!isAuthenticated) return <AuthRequiredPrompt />;
 
   if (quizState === "intro") {
     return (

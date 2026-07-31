@@ -39,8 +39,8 @@ export const LeaderboardSection = () => {
           schema: 'public',
           table: 'student_enrollments'
         },
-        (payload) => {
-          console.log('Enrollment changed, refreshing leaderboard:', payload);
+        () => {
+          console.log('Enrollment changed, refreshing leaderboard');
           fetchLeaderboard();
         }
       )
@@ -51,8 +51,8 @@ export const LeaderboardSection = () => {
           schema: 'public',
           table: 'user_progression'
         },
-        (payload) => {
-          console.log('User progression updated, refreshing leaderboard:', payload);
+        () => {
+          console.log('User progression updated, refreshing leaderboard');
           fetchLeaderboard();
         }
       )
@@ -80,7 +80,6 @@ export const LeaderboardSection = () => {
       }
 
       console.log('Fetching leaderboard with params:', { type: 'xp', scope: 'class', limit: 50 });
-      console.log('Session token exists:', !!session.access_token, 'Token length:', session.access_token?.length);
       
       const { data, error } = await supabase.functions.invoke('get-leaderboard-data', {
         headers: {
@@ -93,7 +92,7 @@ export const LeaderboardSection = () => {
         }
       });
 
-      console.log('Leaderboard response:', { data, error });
+      console.log('Leaderboard response:', { entries: data?.leaderboard?.length ?? 0, hasError: !!error });
 
       if (error) {
         console.error('Edge function error:', error);

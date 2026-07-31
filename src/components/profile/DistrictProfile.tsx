@@ -51,7 +51,7 @@ const DistrictProfile = ({ profile }: DistrictProfileProps) => {
 
       // Try to fetch district schools data
       const data = await getDistrictSchoolsData(profile.id);
-      console.log('DistrictProfile: Received data:', data);
+      console.log('DistrictProfile: received', data.length, 'schools');
       setSchoolsData(data);
       
       if (data.length === 0) {

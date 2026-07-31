@@ -9,9 +9,10 @@ import { toast } from "sonner";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 import { useLessonRunner, GradeResult } from "@/hooks/useLessonRunner";
+import { applyGrade, endOfPassOutcome } from "@/utils/lessonQueue";
 import SpeakButton from "@/components/ui/speak-button";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, CheckCircle2, XCircle, Trophy, Flame } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, Trophy, Flame, RotateCcw } from "lucide-react";
 
 /**
  * Authored content uses **markdown bold** for the target word. Render it as
@@ -37,7 +38,10 @@ const OPTION_LETTERS = ["A", "B", "C", "D", "E", "F"];
  * Plays a lesson from the persistent curriculum.
  *
  * Every item is served without its answer key and graded by `submit-exercise`,
- * so nothing here can reveal or decide correctness on its own.
+ * so nothing here can reveal or decide correctness on its own. Completion is
+ * the server's verdict too: after each pass, exercises without a correct
+ * answer this session are re-queued until `submit-exercise` reports the
+ * lesson complete or the learner exits (plan 02 F2-2).
  */
 const LessonPlayer: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -51,14 +55,36 @@ const LessonPlayer: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [startedAt, setStartedAt] = useState(() => Date.now());
   const [finished, setFinished] = useState(false);
-  const [correctCount, setCorrectCount] = useState(0);
+  // Re-queue bookkeeping. `queue` is null on the first full pass; after that
+  // it holds the ids being retried. `wrongIds` = no correct answer yet this
+  // session. `lessonState` is the server's own solved/total verdict.
+  const [queue, setQueue] = useState<string[] | null>(null);
+  const [wrongIds, setWrongIds] = useState<string[]>([]);
+  const [round, setRound] = useState(1);
+  const [lessonState, setLessonState] = useState<GradeResult["lesson"] | null>(null);
+  const [pendingQueue, setPendingQueue] = useState<string[] | null>(null);
 
-  const current = exercises[index];
-  const total = exercises.length;
+  const byId = useMemo(() => new Map(exercises.map((ex) => [ex.id, ex])), [exercises]);
+  const passIds = useMemo(() => queue ?? exercises.map((ex) => ex.id), [queue, exercises]);
+  const current = byId.get(passIds[index] ?? "");
+  const total = passIds.length;
 
   useEffect(() => {
     setStartedAt(Date.now());
-  }, [index]);
+  }, [index, round]);
+
+  // A fresh exercise set (reload / different lesson) resets the session.
+  useEffect(() => {
+    setQueue(null);
+    setWrongIds([]);
+    setRound(1);
+    setLessonState(null);
+    setPendingQueue(null);
+    setIndex(0);
+    setSelected(null);
+    setResult(null);
+    setFinished(false);
+  }, [exercises]);
 
   // Count the current item once it's been answered so the bar reaches 100%.
   const progressPct = useMemo(
@@ -76,7 +102,8 @@ const LessonPlayer: React.FC = () => {
       return;
     }
     setResult(graded);
-    if (graded.correct) setCorrectCount((c) => c + 1);
+    setWrongIds((ids) => applyGrade(ids, current.id, graded.correct));
+    setLessonState(graded.lesson ?? null);
     if (graded.xp_awarded > 0) {
       toast.success(`+${graded.xp_awarded} XP`, {
         description: graded.xp_reasons.join(" · ") || undefined,
@@ -90,8 +117,28 @@ const LessonPlayer: React.FC = () => {
   const handleNext = () => {
     setResult(null);
     setSelected(null);
-    if (index + 1 >= total) setFinished(true);
-    else setIndex((i) => i + 1);
+    if (index + 1 < total) {
+      setIndex((i) => i + 1);
+      return;
+    }
+    // End of pass: the server decides completion; missed items get another go.
+    const outcome = endOfPassOutcome({
+      serverComplete: lessonState?.complete ?? false,
+      passOrder: passIds,
+      wrongIds,
+    });
+    if (outcome.kind === "requeue") setPendingQueue(outcome.queue);
+    else setFinished(true);
+  };
+
+  const startRetryPass = () => {
+    if (!pendingQueue) return;
+    setQueue(pendingQueue);
+    setPendingQueue(null);
+    setIndex(0);
+    setSelected(null);
+    setResult(null);
+    setRound((r) => r + 1);
   };
 
   if (isLoading || loading) {
@@ -120,22 +167,68 @@ const LessonPlayer: React.FC = () => {
     );
   }
 
-  if (finished || !total) {
-    const accuracy = total ? Math.round((correctCount / total) * 100) : 0;
+  // Between passes: the server says the lesson is not complete yet, and some
+  // questions from this pass can be practiced again.
+  if (pendingQueue && !finished) {
+    const solved = lessonState?.solved ?? 0;
+    const lessonTotal = lessonState?.total ?? total;
     return (
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-primary" />
-              {total ? "Lesson complete" : "Nothing to practice yet"}
+              <RotateCcw className="h-5 w-5 text-primary" />
+              Almost there
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {total > 0 && (
+            <p className="text-muted-foreground">
+              You solved {solved} of {lessonTotal}. Practice the ones you missed.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={startRetryPass} className="sheen">
+                Practice {pendingQueue.length} missed{" "}
+                {pendingQueue.length === 1 ? "question" : "questions"}
+              </Button>
+              <Button variant="outline" onClick={() => navigate("/learn")}>
+                Stop for now
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (finished || !total) {
+    // Honest end screen: "Lesson complete" only when the server says so.
+    const complete = lessonState?.complete ?? false;
+    const solved = lessonState?.solved ?? 0;
+    const lessonTotal = lessonState?.total ?? total;
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {complete ? (
+                <Trophy className="h-5 w-5 text-primary" />
+              ) : (
+                <Flame className="h-5 w-5 text-primary" />
+              )}
+              {!total ? "Nothing to practice yet" : complete ? "Lesson complete" : "Almost there"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {total > 0 && complete && (
               <p className="text-muted-foreground">
-                You answered {correctCount} of {total} correctly ({accuracy}%). Skill mastery is now{" "}
+                You solved all {lessonTotal} questions. Skill mastery is now{" "}
                 {Math.round(mastery * 100)}%.
+              </p>
+            )}
+            {total > 0 && !complete && (
+              <p className="text-muted-foreground">
+                You solved {solved} of {lessonTotal} questions. Come back later to finish this
+                lesson.
               </p>
             )}
             {!total && (
@@ -154,6 +247,10 @@ const LessonPlayer: React.FC = () => {
       </div>
     );
   }
+
+  // Defensive: index always points into passIds, whose ids come from
+  // `exercises`, so `current` is only missing during an impossible state.
+  if (!current) return null;
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
@@ -200,6 +297,7 @@ const LessonPlayer: React.FC = () => {
           </div>
           <p className="text-xs font-medium text-muted-foreground">
             Question <span className="text-foreground">{index + 1}</span> of {total}
+            {round > 1 ? " · practice round" : ""}
           </p>
         </div>
       </div>
@@ -286,7 +384,11 @@ const LessonPlayer: React.FC = () => {
           <div className="pt-3">
             {result ? (
               <Button onClick={handleNext} size="lg" className="sheen w-full sm:w-auto">
-                {index + 1 >= total ? "Finish lesson" : "Next question"}
+                {index + 1 < total
+                  ? "Next question"
+                  : lessonState?.complete
+                    ? "Finish lesson"
+                    : "Continue"}
               </Button>
             ) : (
               <Button

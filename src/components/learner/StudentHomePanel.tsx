@@ -9,6 +9,7 @@ import { Flame, Layers, Star, Target, CalendarClock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useStudentCurriculumAssignments } from "@/hooks/useCurriculumAssignments";
 import { useMyCanDoReadiness } from "@/hooks/useClassCanDoMastery";
+import { findNextLesson, unitAnchorId } from "@/utils/learnNavigation";
 import type { PathUnit } from "@/hooks/useLearningPath";
 
 /**
@@ -51,12 +52,25 @@ const StudentHomePanel: React.FC<Props> = ({ units, dueReviews }) => {
   const { data: canDo } = useMyCanDoReadiness();
 
   const currentUnit = units.find((u) => u.unlocked && u.progressPct < 100) ?? units[0];
-  const nextLesson = currentUnit?.skills
-    .flatMap((s) => s.lessons)
-    .find((l) => !l.progress?.completed_at);
+  // Next unsolved lesson across ALL unlocked units in path order, so
+  // "Continue" still works when the current unit's lessons are done but its
+  // mastery meter sits below 100%.
+  const nextLesson = findNextLesson(units);
 
   const streakDays =
     data?.streak?.current_streak ?? data?.progression?.current_streak_days ?? 0;
+
+  /** Scroll to the unit's card on /learn (already-rendered), or hash-link it. */
+  const openUnit = (unitId: string | null) => {
+    if (!unitId) {
+      navigate("/learn");
+      return;
+    }
+    const anchor = unitAnchorId(unitId);
+    const el = document.getElementById(anchor);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    else navigate(`/learn#${anchor}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -132,7 +146,7 @@ const StudentHomePanel: React.FC<Props> = ({ units, dueReviews }) => {
                   <p className="text-sm">{currentUnit.can_do_statement}</p>
                 )}
                 {nextLesson && (
-                  <Button onClick={() => navigate(`/lessons/${nextLesson.id}`)}>
+                  <Button onClick={() => navigate(`/lessons/${nextLesson.lessonId}`)}>
                     Continue: {nextLesson.title}
                   </Button>
                 )}
@@ -199,7 +213,11 @@ const StudentHomePanel: React.FC<Props> = ({ units, dueReviews }) => {
                     Open lesson
                   </Button>
                 ) : (
-                  <Button size="sm" variant="outline" onClick={() => navigate("/learn")}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => openUnit(assignment.unit_id)}
+                  >
                     Open unit
                   </Button>
                 )}

@@ -10,8 +10,24 @@ import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
 import pronunciationTranslations from "./pronunciation";
 import premiumVoiceTranslations from "./premium-voice";
+import assignmentsTranslations from "./assignments";
+import certificatesTranslations from "./certificates";
+import generalCoreTranslations from "./general-core";
+import landingAuthTranslations from "./landing-auth";
+import languageFrameworksTranslations from "./language-frameworks";
+import profileTranslations from "./profile";
+import progressTranslations from "./progress";
 
 const frenchTranslations: TranslationRecord = {
+  // Previously-unmerged files, wired in (existing entries below keep
+  // precedence on key collisions).
+  ...assignmentsTranslations,
+  ...certificatesTranslations,
+  ...generalCoreTranslations,
+  ...landingAuthTranslations,
+  ...languageFrameworksTranslations,
+  ...profileTranslations,
+  ...progressTranslations,
   ...generalTranslations,
   ...uiElementsTranslations,
   ...practiceTranslations,

@@ -17,7 +17,7 @@ export const checkAndFixDistrictPermissions = async (userId: string) => {
       return { success: false, error: 'Profile not found', details: profileError };
     }
 
-    console.log('Current profile:', profile);
+    console.log('Profile loaded, role:', profile.role);
 
     // Check district_users table
     const { data: districtUsers, error: districtError } = await supabase
@@ -30,7 +30,7 @@ export const checkAndFixDistrictPermissions = async (userId: string) => {
       return { success: false, error: 'District users query failed', details: districtError };
     }
 
-    console.log('District associations:', districtUsers);
+    console.log('District associations:', districtUsers?.length ?? 0);
 
     // If user has district role but no district associations, this is a problem
     if (profile.role === 'district' && (!districtUsers || districtUsers.length === 0)) {
@@ -43,7 +43,7 @@ export const checkAndFixDistrictPermissions = async (userId: string) => {
         .limit(1);
 
       if (!districtsError && districts && districts.length > 0) {
-        console.log('Attempting to associate user with district:', districts[0]);
+        console.log('Attempting to associate user with district:', districts[0].id);
         
         const { error: insertError } = await supabase
           .from('district_users')

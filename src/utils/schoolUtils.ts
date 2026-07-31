@@ -130,7 +130,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       return null;
     }
 
-    console.log('getExtendedUserProfile: Basic profile found:', profile);
+    console.log('getExtendedUserProfile: Basic profile found');
 
     const extendedProfile: ExtendedUserProfile = {
       ...profile,
@@ -149,7 +149,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
 
         if (!schoolError && school) {
           extendedProfile.school = school;
-          console.log('getExtendedUserProfile: School data loaded:', school);
+          console.log('getExtendedUserProfile: School data loaded');
         } else {
           console.warn('getExtendedUserProfile: Could not load school data:', schoolError);
         }
@@ -185,7 +185,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
           .eq('user_id', userId);
 
         if (!districtError && districtUsers) {
-          console.log('getExtendedUserProfile: District associations found:', districtUsers);
+          console.log('getExtendedUserProfile: District associations found:', districtUsers.length);
           extendedProfile.district_associations = districtUsers;
         } else {
           console.warn('getExtendedUserProfile: No district associations found for district admin:', districtError);
@@ -197,7 +197,7 @@ export const getExtendedUserProfile = async (userId: string): Promise<ExtendedUs
       }
     }
 
-    console.log('getExtendedUserProfile: Extended profile complete:', extendedProfile);
+    console.log('getExtendedUserProfile: Extended profile complete');
     return extendedProfile;
 
   } catch (error) {
@@ -404,7 +404,7 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       return [];
     }
 
-    console.log('getDistrictSchoolsData: District associations:', districtUsers);
+    console.log('getDistrictSchoolsData: District associations:', districtUsers.length);
 
     // Get district IDs
     const districtIds = districtUsers.map(du => du.district_id);
@@ -425,7 +425,7 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       return [];
     }
 
-    console.log('getDistrictSchoolsData: Schools found:', schools);
+    console.log('getDistrictSchoolsData: Schools found:', schools.length);
 
     // For each school, get aggregate data
     const schoolsData: DistrictSchoolData[] = [];
@@ -471,7 +471,7 @@ export const getDistrictSchoolsData = async (userId: string): Promise<DistrictSc
       });
     }
 
-    console.log('getDistrictSchoolsData: District schools data:', schoolsData);
+    console.log('getDistrictSchoolsData: Aggregated data for', schoolsData.length, 'schools');
     return schoolsData;
 
   } catch (error) {

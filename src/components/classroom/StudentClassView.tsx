@@ -25,8 +25,6 @@ const StudentClassView = () => {
         throw new Error("User not authenticated");
       }
 
-      console.log("Refreshing metrics for user:", user.id);
-      
       const { error: recalcError } = await supabase.rpc(
         'recalculate_student_metrics',
         { target_student_id: user.id }

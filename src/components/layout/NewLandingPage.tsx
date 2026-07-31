@@ -17,7 +17,7 @@ import { useLocalization } from '@/context/LocalizationContext';
 import { useAuthFlow } from '@/hooks/useAuthFlow';
 import { useToast } from '@/hooks/use-toast';
 import { hasStudyMaterials } from '@/utils/languageUtils';
-import { secureStorage } from '@/utils/security/dataEncryption';
+import { appStorage } from '@/utils/security/storage';
 import { supabase } from '@/integrations/supabase/client';
 
 const DARK_LOGO = "/lovable-uploads/c1a8d618-54a4-41f8-b53f-06f699ca6180.png";
@@ -77,8 +77,8 @@ const NewLandingPage = () => {
 
   const handleLanguageSelection = () => {
     if (nativeLanguage && targetLanguage) {
-      secureStorage.setItem("nativeLanguage", nativeLanguage, false);
-      secureStorage.setItem("targetLanguage", targetLanguage, false);
+      appStorage.set("nativeLanguage", nativeLanguage);
+      appStorage.set("targetLanguage", targetLanguage);
 
       const languagePair = `${nativeLanguage}-${targetLanguage}`;
       sessionStorage.setItem("languagePair", languagePair);

@@ -18,9 +18,8 @@ const SchoolTestAverages = ({ userId }: SchoolTestAveragesProps) => {
     const fetchSchoolAverages = async () => {
       setIsLoading(true);
       try {
-        console.log('SchoolTestAverages: Fetching data for user:', userId);
         const data = await getDistrictSchoolsData(userId);
-        console.log('SchoolTestAverages: Received data:', data);
+        console.log('SchoolTestAverages: received', data.length, 'schools');
         setSchoolsData(data);
       } catch (error) {
         console.error('Error fetching school averages:', error);

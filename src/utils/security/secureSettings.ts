@@ -20,23 +20,11 @@ export const logSecurityEvent = async (
   _eventType: string,
   _details: Record<string, unknown> = {}
 ): Promise<void> => {
-  // Security audit log table not available - log to console only
-  console.log('Security event:', _eventType, _details);
+  // Security audit log table not available - log event type only.
+  // Details are intentionally NOT printed (they may contain user PII).
+  console.log('Security event:', _eventType);
 };
 
-export const secureStorage = {
-  setItem: (key: string, value: string) => {
-    try {
-      localStorage.setItem(key, btoa(value));
-    } catch { /* ignore */ }
-  },
-  getItem: (key: string): string | null => {
-    try {
-      const val = localStorage.getItem(key);
-      return val ? atob(val) : null;
-    } catch { return null; }
-  },
-  removeItem: (key: string) => {
-    localStorage.removeItem(key);
-  }
-};
+// NOTE: the base64 `secureStorage` that used to live here was unused,
+// duplicated dataEncryption.ts, and implied encryption it did not provide.
+// Use `appStorage` from '@/utils/security/storage' for client prefs.

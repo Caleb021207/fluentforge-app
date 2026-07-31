@@ -15,7 +15,7 @@ import { InteractiveCard } from "@/components/ui/card";
 import { Trash, Sparkles, Languages } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslationType } from "@/components/practice/hooks/useTranslationHandler";
-import { secureStorage } from "@/utils/security/dataEncryption";
+import { appStorage } from "@/utils/security/storage";
 import { motion } from "framer-motion";
 import { GradientBlob } from "@/components/ui/decorative-elements";
 import XPNotification from "@/components/ui/xp-notification";
@@ -47,7 +47,7 @@ const Practice = () => {
   const urlFocus = searchParams.get('focus');
   
   useEffect(() => {
-    const savedTargetLanguage = secureStorage.getItem("targetLanguage");
+    const savedTargetLanguage = appStorage.get("targetLanguage");
 
     if (savedTargetLanguage) {
       setTargetLanguage(savedTargetLanguage);
@@ -76,7 +76,7 @@ const Practice = () => {
         setConversationLevel(storedLevel);
       } else {
         // Fall back to the learner's placement quiz result.
-        const placement = secureStorage.getItem("placementLevel");
+        const placement = appStorage.get("placementLevel");
         if (placement && cefrToLevel[placement]) {
           setConversationLevel(cefrToLevel[placement]);
         }

@@ -6,6 +6,7 @@ import { User } from "@supabase/supabase-js";
 import { useLocalization } from "@/context/LocalizationContext";
 
 import LogoutButton from "@/components/auth/LogoutButton";
+import UiLanguageMenu from "@/components/settings/UiLanguageMenu";
 import {
   MessageSquare,
   Mic,
@@ -189,18 +190,23 @@ const NewLayout = ({ children }: NewLayoutProps) => {
             />
           </div>
 
-          {/* Teacher entry point */}
-          {isTeacher && (
-            <Button
-              variant={location.pathname.startsWith("/teacher") ? "default" : "outline"}
-              size="sm"
-              onClick={() => navigate("/teacher/dashboard")}
-              className="gap-1.5 shrink-0"
-            >
-              <GraduationCap className="w-4 h-4" />
-              <span className="hidden sm:inline">Teacher</span>
-            </Button>
-          )}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Compact UI-language switcher (learner L1) */}
+            <UiLanguageMenu />
+
+            {/* Teacher entry point */}
+            {isTeacher && (
+              <Button
+                variant={location.pathname.startsWith("/teacher") ? "default" : "outline"}
+                size="sm"
+                onClick={() => navigate("/teacher/dashboard")}
+                className="gap-1.5 shrink-0"
+              >
+                <GraduationCap className="w-4 h-4" />
+                <span className="hidden sm:inline">Teacher</span>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

@@ -40,4 +40,12 @@ export const AVAILABLE_LANGUAGES: Record<string, string> = {
   gujarati: "ગુજરાતી",
   punjabi: "ਪੰਜਾਬੀ",
   nepali: "नेपाली",
+  // Newcomer/refugee languages: these packs always existed and loaded
+  // (loader.ts, types.ts LanguageCode) but were missing here, making them
+  // unselectable in every picker built on this map.
+  burmese: "မြန်မာ",
+  karen: "ကညီကျိာ်",
+  tigrinya: "ትግርኛ",
+  marathi: "मराठी",
+  sinhala: "සිංහල",
 };

@@ -1,7 +1,8 @@
 
 import React from "react";
-import { FileText, TrendingUp, Shield, Lock, BookOpen, Sparkles, ExternalLink } from "lucide-react";
+import { FileText, TrendingUp, Shield, Lock, BookOpen, Sparkles, ExternalLink, Globe } from "lucide-react";
 import { TokenUsageLimits } from "@/components/usage/TokenUsageLimits";
+import LanguageSettingsSection from "@/components/settings/LanguageSettingsSection";
 import { useNavigate } from "react-router-dom";
 import { InteractiveCard, Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,28 @@ const Settings = () => {
           </div>
         </motion.div>
         
+        {/* Language Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-8"
+        >
+          <div className="mb-4">
+            <div className="flex items-center gap-3 mb-2">
+              <Globe className="w-7 h-7 text-primary" />
+              <h2 className="text-2xl md:text-3xl font-bold gradient-text">Language</h2>
+            </div>
+            <p className="text-base md:text-lg text-muted-foreground ml-10">
+              Pick the language the app speaks to you in
+            </p>
+          </div>
+
+          <LanguageSettingsSection />
+        </motion.section>
+
+        <Separator className="my-10" />
+
         <motion.section
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

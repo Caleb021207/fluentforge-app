@@ -3,9 +3,27 @@ import minimalTranslations from "./minimal";
 import pronunciationTranslations from "./pronunciation";
 import premiumVoiceTranslations from "./premium-voice";
 import navigationTranslations from "./navigation";
+import assignmentsTranslations from "./assignments";
+import authTranslations from "./auth";
+import classroomTranslations from "./classroom";
+import generalTranslations from "./general";
+import languageSelectionTranslations from "./language-selection";
+import languagesTranslations from "./languages";
+import practiceTranslations from "./practice";
+import voiceChatTranslations from "./voice-chat";
 
-// Use only the minimal translations for Bengali
+// Merge every translated category file for this pack.
 const bengaliTranslations: TranslationRecord = {
+  // Previously-unmerged files, wired in (existing entries below keep
+  // precedence on key collisions).
+  ...assignmentsTranslations,
+  ...authTranslations,
+  ...classroomTranslations,
+  ...generalTranslations,
+  ...languageSelectionTranslations,
+  ...languagesTranslations,
+  ...practiceTranslations,
+  ...voiceChatTranslations,
   ...pronunciationTranslations,
   ...minimalTranslations,
   ...premiumVoiceTranslations,

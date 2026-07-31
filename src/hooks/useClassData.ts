@@ -60,7 +60,7 @@ export const useClassData = () => {
         return;
       }
 
-      console.log("Found class enrollment:", enrollmentData);
+      console.log("Found class enrollment for class:", enrollmentData.class_id);
 
       // Get class details
       const { data: classData, error: classError } = await supabase
@@ -127,7 +127,7 @@ export const useClassData = () => {
         metrics: metricsData || undefined
       };
 
-      console.log('Fetched class data:', classInfo);
+      console.log('Fetched class data for class code:', classInfo.class_code);
       setClassData(classInfo);
       setError(null);
     } catch (error: any) {
@@ -153,8 +153,8 @@ export const useClassData = () => {
           schema: 'public',
           table: 'student_metrics'
         },
-        (payload) => {
-          console.log('Metrics updated:', payload);
+        () => {
+          console.log('Metrics updated, refetching class data');
           fetchClassData();
         }
       )

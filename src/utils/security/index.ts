@@ -1,16 +1,12 @@
-
 /**
  * Security utilities index - exports all security-related functions
  */
 
-// Data encryption for client-side storage
-export {
-  encryptData,
-  decryptData,
-  encryptDataSecure,
-  decryptDataSecure,
-  secureStorage
-} from './dataEncryption';
+// Plain (non-cryptographic) client-side preference storage.
+// The old encryptData/decryptData/encryptDataSecure/decryptDataSecure
+// exports were encryption theater (hardcoded key in the bundle) and have
+// been removed; see storage.ts for the honest replacement.
+export { appStorage, createStorage } from './storage';
 
 // Secure settings management
 export {

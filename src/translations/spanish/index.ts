@@ -10,9 +10,35 @@ import languagesTranslations from "./languages";
 import navigationTranslations from "./navigation";
 import pronunciationTranslations from "./pronunciation";
 import premiumVoiceTranslations from "./premium-voice";
+import assignmentsTranslations from "./assignments";
+import certificatesTranslations from "./certificates";
+import classroomTranslations from "./classroom";
+import dataPrivacyTranslations from "./data-privacy";
+import ferpaTranslations from "./ferpa";
+import generalCoreTranslations from "./general-core";
+import landingAuthTranslations from "./landing-auth";
+import languageFrameworksTranslations from "./language-frameworks";
+import profileTranslations from "./profile";
+import progressTranslations from "./progress";
+import safetyTranslations from "./safety";
+import settingsTranslations from "./settings";
 
-// Prioritize minimal translations
+// Merge every translated category file for this pack.
 const spanishTranslations: TranslationRecord = {
+  // Previously-unmerged files, wired in (existing entries below keep
+  // precedence on key collisions).
+  ...assignmentsTranslations,
+  ...certificatesTranslations,
+  ...classroomTranslations,
+  ...dataPrivacyTranslations,
+  ...ferpaTranslations,
+  ...generalCoreTranslations,
+  ...landingAuthTranslations,
+  ...languageFrameworksTranslations,
+  ...profileTranslations,
+  ...progressTranslations,
+  ...safetyTranslations,
+  ...settingsTranslations,
   ...generalTranslations,
   ...uiElementsTranslations,
   ...practiceTranslations,
